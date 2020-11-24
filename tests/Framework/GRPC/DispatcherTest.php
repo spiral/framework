@@ -18,6 +18,12 @@ use Spiral\RoadRunner\Worker;
 use Spiral\App\Service\Sub\Message;
 use Spiral\Tests\Framework\ConsoleTest;
 
+/**
+ * WARNING: spiral/php-grpc not compatible with PHP 8.0
+ *
+ * @see https://github.com/spiral/php-grpc/issues/53
+ * @requires PHP <= 7.4
+ */
 class DispatcherTest extends ConsoleTest
 {
     public function setUp(): void

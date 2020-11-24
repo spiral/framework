@@ -1,0 +1,51 @@
+{
+    "name": "spiral/attributes",
+    "type": "library",
+    "description": "PHP attributes reader",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/attributes"
+    },
+    "authors": [
+        {
+            "name": "Kirill Nesmeyanov (SerafimArts)",
+            "email": "kirill.nesmeyanov@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "nikic/php-parser": "^4.10"
+    },
+    "require-dev": {
+        "doctrine/annotations": "^1.10",
+        "phpunit/phpunit": "^8.5|^9.0"
+    },
+    "autoload": {
+        "files": [
+            "src/polyfill.php"
+        ],
+        "psr-4": {
+            "Spiral\\Attributes\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Attributes\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.7.x-dev"
+        }
+    },
+    "suggest": {
+        "doctrine/annotations": "^1.0 for Doctrine metadata driver support"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

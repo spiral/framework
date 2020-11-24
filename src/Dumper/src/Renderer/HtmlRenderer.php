@@ -117,9 +117,7 @@ final class HtmlRenderer implements RendererInterface
     public function apply($element, string $type, string $context = ''): string
     {
         if (!empty($style = $this->getStyle($type, $context))) {
-            if (!empty($style = $this->getStyle($type, $context))) {
-                return sprintf($this->style['element'], $style, $element);
-            }
+            return sprintf($this->style['element'], $style, $element);
         }
 
         return $element;

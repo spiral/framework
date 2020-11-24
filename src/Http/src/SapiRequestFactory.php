@@ -96,7 +96,7 @@ final class SapiRequestFactory
             $_GET,
             $_POST,
             $_FILES,
-            \fopen('php://input', 'r') ?: null
+            \fopen('php://input', 'rb') ?: null
         );
     }
 
@@ -121,7 +121,7 @@ final class SapiRequestFactory
     ): ServerRequestInterface {
         $method = $server['REQUEST_METHOD'] ?? 'GET';
 
-        $uri = $this->getUri($server, $headers);
+        $uri = $this->getUri($server);
 
         $request = $this->requestFactory->createServerRequest($method, $uri, $server);
         foreach ($headers as $name => $value) {
@@ -160,10 +160,9 @@ final class SapiRequestFactory
 
     /**
      * @param array $server
-     * @param array $headers
      * @return UriInterface
      */
-    private function getUri(array $server, array $headers): UriInterface
+    private function getUri(array $server): UriInterface
     {
         $uri = $this->uriFactory->createUri();
         if (isset($server['HTTPS'])) {

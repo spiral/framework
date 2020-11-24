@@ -17,7 +17,8 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\ConfiguratorException;
 
 /**
- * Load config files, provides container injection and modifies config data on bootloading.
+ * Load config files, provides container injection and modifies config data on
+ * bootloading.
  */
 final class ConfigManager implements ConfiguratorInterface, SingletonInterface
 {
