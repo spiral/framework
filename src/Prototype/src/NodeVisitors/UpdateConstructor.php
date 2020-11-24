@@ -66,7 +66,7 @@ final class UpdateConstructor extends NodeVisitorAbstract
      */
     private function addDependencies(Node\Stmt\ClassMethod $constructor): void
     {
-        foreach ($this->definition->dependencies as $name => $dependency) {
+        foreach ($this->definition->dependencies as $dependency) {
             $constructor->params[] = (new Param($dependency->var))->setType(
                 new Node\Name($this->getPropertyType($dependency))
             )->getNode();
@@ -153,7 +153,7 @@ final class UpdateConstructor extends NodeVisitorAbstract
 
         $params = [];
 
-        foreach ($this->definition->dependencies as $name => $dependency) {
+        foreach ($this->definition->dependencies as $dependency) {
             $params[] = new Annotation\Line(
                 sprintf('%s $%s', $this->getPropertyType($dependency), $dependency->var),
                 'param'

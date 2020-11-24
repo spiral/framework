@@ -53,6 +53,8 @@ class AnnotatedDeclaration extends AbstractEntityDeclaration
     }
 
     /**
+     * @psalm-suppress UndefinedDocblockClass
+     *
      * @param CommentTrait $target
      * @param string       $comment
      */
