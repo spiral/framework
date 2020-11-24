@@ -16,6 +16,7 @@ if (!function_exists('trimPostfix')) {
      * @param string $name
      * @param string $postfix
      * @return string
+     * @internal
      */
     function trimPostfix(string $name, string $postfix): string
     {
@@ -29,11 +30,12 @@ if (!function_exists('isAssociativeArray')) {
     /**
      * @param array $array
      * @return bool
+     * @internal
      */
     function isAssociativeArray(array $array): bool
     {
         $keys = [];
-        foreach ($array as $key => $value) {
+        foreach ($array as $key => $_) {
             if (!is_int($key)) {
                 return true;
             }
@@ -52,8 +54,9 @@ if (!function_exists('isAssociativeArray')) {
 if (!function_exists('defineArrayType')) {
     /**
      * @param array  $array
-     * @param string $failureType
+     * @param string|null $failureType
      * @return string|null
+     * @internal
      */
     function defineArrayType(array $array, string $failureType = null): ?string
     {

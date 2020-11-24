@@ -21,7 +21,7 @@ use LogicException;
  */
 function hasKey(array $array, $search): bool
 {
-    foreach ($array as $key => $value) {
+    foreach ($array as $key => $_) {
         if (equals($key, $search)) {
             return true;
         }
@@ -37,7 +37,7 @@ function hasKey(array $array, $search): bool
  */
 function hasValue(array $array, $search): bool
 {
-    foreach ($array as $key => $value) {
+    foreach ($array as $value) {
         if (equals($value, $search)) {
             return true;
         }

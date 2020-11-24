@@ -78,6 +78,9 @@ class StreamsTest extends TestCase
         $this->assertSame('sample', stream_get_contents($resource, 6, 0));
     }
 
+    /**
+     * @requires PHP < 8.0
+     */
     public function testException()
     {
         try {
@@ -86,6 +89,23 @@ class StreamsTest extends TestCase
             $this->assertStringContainsString('failed to open stream', $e->getMessage());
         }
 
+        try {
+            filemtime('spiral://non-exists');
+        } catch (\Throwable $e) {
+            $this->assertStringContainsString('stat failed', $e->getMessage());
+        }
+    }
+
+    /**
+     * @requires PHP >= 8.0
+     */
+    public function testExceptionPHP8()
+    {
+        try {
+            fopen('spiral://non-exists', 'rb');
+        } catch (\Throwable $e) {
+            $this->assertStringContainsString('Failed to open stream', $e->getMessage());
+        }
 
         try {
             filemtime('spiral://non-exists');

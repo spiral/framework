@@ -81,9 +81,7 @@ final class Result
         $paths = [];
 
         // We can scan top level only
-
-        /** @var Location $loc */
-        foreach ($this->locations as $offset => $loc) {
+        foreach ($this->locations as $loc) {
             if (!in_array($loc->path, $paths, true)) {
                 $paths[] = $loc->path;
             }

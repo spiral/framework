@@ -79,7 +79,7 @@ final class SchemaBuilder
             if (is_string($definition)) {
                 // simple scalar field definition
                 if (!class_exists($definition)) {
-                    [$source, $origin] = $this->parseDefinition($filter, $field, $definition);
+                    [$source, $origin] = $this->parseDefinition($field, $definition);
                     $result[$field] = [
                         FilterProvider::SOURCE => $source,
                         FilterProvider::ORIGIN => $origin,
@@ -125,11 +125,7 @@ final class SchemaBuilder
             ];
 
             if ($iterate) {
-                [$source, $origin] = $this->parseDefinition(
-                    $filter,
-                    $field,
-                    $definition[self::ITERATE] ?? $origin
-                );
+                [$source, $origin] = $this->parseDefinition($field, $definition[self::ITERATE] ?? $origin);
 
                 $map[FilterProvider::ITERATE_SOURCE] = $source;
                 $map[FilterProvider::ITERATE_ORIGIN] = $origin;
@@ -147,13 +143,12 @@ final class SchemaBuilder
      * field => source        => source:field
      * field => source:origin => source:origin
      *
-     * @param ReflectionEntity $filter
      * @param string           $field
      * @param string           $definition
      *
      * @return array [$source, $origin]
      */
-    private function parseDefinition(ReflectionEntity $filter, string $field, string $definition): array
+    private function parseDefinition(string $field, string $definition): array
     {
         if (strpos($definition, ':') === false) {
             return ['data', $definition ?? $field];
