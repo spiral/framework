@@ -219,7 +219,7 @@ final class FallbackAttributeReader extends AttributeReader
     private function format(iterable $attributes, ?string $name): iterable
     {
         foreach ($attributes as $prototype) {
-            if ($name !== null && ! \is_subclass_of($prototype->name, $name) && $prototype->name !== $name) {
+            if ($name !== null && !\is_subclass_of($prototype->name, $name) && $prototype->name !== $name) {
                 continue;
             }
 
