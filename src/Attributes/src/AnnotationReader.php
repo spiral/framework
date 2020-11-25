@@ -36,17 +36,6 @@ final class AnnotationReader extends BaseReader
     }
 
     /**
-     * @return void
-     */
-    private function bootAnnotations(): void
-    {
-        // doctrine/annotations ^1.0 compatibility.
-        if (\method_exists(AnnotationRegistry::class, 'registerLoader')) {
-            AnnotationRegistry::registerLoader('\\class_exists');
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
@@ -102,6 +91,17 @@ final class AnnotationReader extends BaseReader
     protected function isAvailable(): bool
     {
         return \interface_exists(Reader::class);
+    }
+
+    /**
+     * @return void
+     */
+    private function bootAnnotations(): void
+    {
+        // doctrine/annotations ^1.0 compatibility.
+        if (\method_exists(AnnotationRegistry::class, 'registerLoader')) {
+            AnnotationRegistry::registerLoader('\\class_exists');
+        }
     }
 
     /**

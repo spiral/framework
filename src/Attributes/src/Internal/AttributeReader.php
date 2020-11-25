@@ -55,25 +55,6 @@ abstract class AttributeReader extends Reader
     }
 
     /**
-     * @param \ReflectionClass $class
-     * @param string|null $name
-     * @return iterable<\ReflectionClass, array>
-     */
-    abstract protected function getClassAttributes(\ReflectionClass $class, ?string $name): iterable;
-
-    /**
-     * @param \ReflectionClass $attribute
-     * @param array $arguments
-     * @param string $context
-     * @return object
-     * @throws \ReflectionException
-     */
-    private function instantiate(\ReflectionClass $attribute, array $arguments, string $context): object
-    {
-        return $this->instantiator->instantiate($attribute, $arguments, $context);
-    }
-
-    /**
      * {@inheritDoc}
      * @throws \ReflectionException
      */
@@ -86,13 +67,6 @@ abstract class AttributeReader extends Reader
             yield $this->instantiate($attribute, $arguments, $context);
         }
     }
-
-    /**
-     * @param \ReflectionFunctionAbstract $function
-     * @param string|null $name
-     * @return iterable<\ReflectionClass, array>
-     */
-    abstract protected function getFunctionAttributes(\ReflectionFunctionAbstract $function, ?string $name): iterable;
 
     /**
      * {@inheritDoc}
@@ -109,13 +83,6 @@ abstract class AttributeReader extends Reader
     }
 
     /**
-     * @param \ReflectionProperty $property
-     * @param string|null $name
-     * @return iterable<\ReflectionClass, array>
-     */
-    abstract protected function getPropertyAttributes(\ReflectionProperty $property, ?string $name): iterable;
-
-    /**
      * {@inheritDoc}
      * @throws \ReflectionException
      */
@@ -128,13 +95,6 @@ abstract class AttributeReader extends Reader
             yield $this->instantiate($attribute, $arguments, $context);
         }
     }
-
-    /**
-     * @param \ReflectionClassConstant $const
-     * @param string|null $name
-     * @return iterable<\ReflectionClass, array>
-     */
-    abstract protected function getConstantAttributes(\ReflectionClassConstant $const, ?string $name): iterable;
 
     /**
      * {@inheritDoc}
@@ -151,9 +111,49 @@ abstract class AttributeReader extends Reader
     }
 
     /**
+     * @param \ReflectionClass $class
+     * @param string|null $name
+     * @return iterable<\ReflectionClass, array>
+     */
+    abstract protected function getClassAttributes(\ReflectionClass $class, ?string $name): iterable;
+
+    /**
+     * @param \ReflectionFunctionAbstract $function
+     * @param string|null $name
+     * @return iterable<\ReflectionClass, array>
+     */
+    abstract protected function getFunctionAttributes(\ReflectionFunctionAbstract $function, ?string $name): iterable;
+
+    /**
+     * @param \ReflectionProperty $property
+     * @param string|null $name
+     * @return iterable<\ReflectionClass, array>
+     */
+    abstract protected function getPropertyAttributes(\ReflectionProperty $property, ?string $name): iterable;
+
+    /**
+     * @param \ReflectionClassConstant $const
+     * @param string|null $name
+     * @return iterable<\ReflectionClass, array>
+     */
+    abstract protected function getConstantAttributes(\ReflectionClassConstant $const, ?string $name): iterable;
+
+    /**
      * @param \ReflectionParameter $param
      * @param string|null $name
      * @return iterable<\ReflectionClass, array>
      */
     abstract protected function getParameterAttributes(\ReflectionParameter $param, ?string $name): iterable;
+
+    /**
+     * @param \ReflectionClass $attribute
+     * @param array $arguments
+     * @param string $context
+     * @return object
+     * @throws \ReflectionException
+     */
+    private function instantiate(\ReflectionClass $attribute, array $arguments, string $context): object
+    {
+        return $this->instantiator->instantiate($attribute, $arguments, $context);
+    }
 }
