@@ -10,7 +10,7 @@
 declare(strict_types=1);
 
 namespace Doctrine\Common\Annotations {
-    if (! \interface_exists(NamedArgumentConstructorAnnotation::class)) {
+    if (!\interface_exists(NamedArgumentConstructorAnnotation::class)) {
         interface NamedArgumentConstructorAnnotation
         {
         }
