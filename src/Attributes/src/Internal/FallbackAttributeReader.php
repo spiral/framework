@@ -9,13 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Attributes;
+namespace Spiral\Attributes\Internal;
 
 use PhpParser\Parser;
-use Spiral\Attributes\Internal\AttributeParser;
-use Spiral\Attributes\Internal\AttributePrototype;
-use Spiral\Attributes\Internal\AttributeReader;
 
+/**
+ * @internal FallbackAttributeReader is an internal library class, please do not use it in your code.
+ * @psalm-internal Spiral\Attributes
+ */
 final class FallbackAttributeReader extends AttributeReader
 {
     /**
@@ -225,15 +226,6 @@ final class FallbackAttributeReader extends AttributeReader
 
             yield new \ReflectionClass($prototype->name) => $prototype->params;
         }
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    private function normalize(string $name): string
-    {
-        return \strtolower(\trim($name, '\\'));
     }
 
     /**

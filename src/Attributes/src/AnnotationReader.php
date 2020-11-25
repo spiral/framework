@@ -30,9 +30,16 @@ final class AnnotationReader extends BaseReader
     public function __construct(Reader $reader = null)
     {
         $this->checkAvailability();
+        $this->bootAnnotations();
 
         $this->reader = $reader ?? new DoctrineReader();
+    }
 
+    /**
+     * @return void
+     */
+    private function bootAnnotations(): void
+    {
         // doctrine/annotations ^1.0 compatibility.
         if (\method_exists(AnnotationRegistry::class, 'registerLoader')) {
             AnnotationRegistry::registerLoader('\\class_exists');
