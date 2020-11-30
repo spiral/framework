@@ -46,7 +46,6 @@ class ConflictResolverTest extends TestCase
         $this->assertRegExp('/@var ATest3[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param ATest3 $test3', $r);
     }
-
     /**
      * Override this method for the avoid known phpunit warning (phpunit 8.5 compatibility).
      * This method MUST be removed in spiral/prototype:^3.0 (with phpunit/phpunit: 9.0+ dependency).
@@ -62,25 +61,6 @@ class ConflictResolverTest extends TestCase
         }
 
         Assert::assertRegExp($pattern, $string, $message);
-    }
-
-    /**
-     * @param string $filename
-     * @param array $dependencies
-     *
-     * @return ClassNode
-     * @throws ClassNotDeclaredException|\ReflectionException
-     */
-    private function getDefinition(string $filename, array $dependencies): ClassNode
-    {
-        return $this->getExtractor()->extract($filename, Dependencies::convert($dependencies));
-    }
-
-    private function getExtractor(): NodeExtractor
-    {
-        $container = new Container();
-
-        return $container->get(NodeExtractor::class);
     }
 
     /**
@@ -146,5 +126,24 @@ class ConflictResolverTest extends TestCase
         $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
         $this->assertRegExp('/@var ATestAlias[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param ATestAlias $test3', $r);
+    }
+
+    /**
+     * @param string $filename
+     * @param array $dependencies
+     *
+     * @return ClassNode
+     * @throws ClassNotDeclaredException|\ReflectionException
+     */
+    private function getDefinition(string $filename, array $dependencies): ClassNode
+    {
+        return $this->getExtractor()->extract($filename, Dependencies::convert($dependencies));
+    }
+
+    private function getExtractor(): NodeExtractor
+    {
+        $container = new Container();
+
+        return $container->get(NodeExtractor::class);
     }
 }

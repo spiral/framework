@@ -47,7 +47,8 @@ abstract class AbstractCommand extends Command
      * Fetch class dependencies.
      *
      * @param \ReflectionClass $class
-     * @return string[]
+     * @return null[]|Dependency[]|\Throwable[]
+     * @throws \Throwable
      */
     protected function getPrototypeProperties(\ReflectionClass $class): array
     {
