@@ -11,9 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Cycle;
 
-use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
-use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
@@ -21,6 +19,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Core\Container;
+use Spiral\Cycle\SchemaCompiler;
 
 final class SchemaBootloader extends Bootloader implements Container\SingletonInterface
 {
@@ -40,8 +39,8 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
     /** @var Container */
     private $container;
 
-    /** @var string[]|GeneratorInterface[] */
-    private $generators = [];
+    /** @var string[][]|GeneratorInterface[][] */
+    private $generators;
 
     /**
      * CycleSchemaBootloader constructor.
@@ -81,6 +80,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
 
     /**
      * @return GeneratorInterface[]
+     * @throws \Throwable
      */
     public function getGenerators(): array
     {
@@ -106,17 +106,16 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
      */
     protected function schema(MemoryInterface $memory): SchemaInterface
     {
-        $schema = $memory->loadData('cycle');
-        if (is_null($schema)) {
-            $schema = (new Compiler())->compile(
+        $schemaCompiler = SchemaCompiler::fromMemory($memory);
+        if ($schemaCompiler->isEmpty()) {
+            $schemaCompiler = SchemaCompiler::compile(
                 $this->container->get(Registry::class),
                 $this->getGenerators()
             );
-
-            $memory->saveData('cycle', $schema);
+            $schemaCompiler->toMemory($memory);
         }
 
-        return new Schema($schema);
+        return $schemaCompiler->toSchema();
     }
 
     /**

@@ -369,8 +369,8 @@ final class Files implements FilesInterface
         $filename = tempnam($location, 'spiral');
 
         if (!empty($extension)) {
-            //I should find more original way of doing that
-            rename($filename, $filename = "{$filename}.{$extension}");
+            [$old, $filename] = [$filename, "{$filename}.{$extension}"];
+            rename($old, $filename);
             $this->destructFiles[] = $filename;
         }
 
