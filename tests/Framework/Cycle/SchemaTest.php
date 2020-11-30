@@ -15,12 +15,15 @@ use Cycle\ORM\ORMInterface;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Transaction;
-use Spiral\Boot\FinalizerInterface;
-use Spiral\Console\ConsoleDispatcher;
-use Spiral\Core\CoreInterface;
 use Spiral\App\Controller\SelectController;
+use Spiral\App\TestApp;
 use Spiral\App\User\User;
 use Spiral\App\User\UserRepository;
+use Spiral\Boot\Environment;
+use Spiral\Boot\FinalizerInterface;
+use Spiral\Boot\MemoryInterface;
+use Spiral\Console\ConsoleDispatcher;
+use Spiral\Core\CoreInterface;
 use Spiral\Tests\Framework\ConsoleTest;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -39,8 +42,51 @@ class SchemaTest extends ConsoleTest
         $app = $this->app;
         $app->console()->run('cycle');
 
+        /** @var SchemaInterface $schema */
         $schema = $app->get(SchemaInterface::class);
         $this->assertSame(User::class, $schema->define('user', Schema::ENTITY));
+    }
+
+    public function testRegenerateSchema(): void
+    {
+        $app = $this->app;
+
+        /** @var SchemaInterface $schema */
+        $schema = $app->get(SchemaInterface::class);
+
+        $this->assertTrue($schema->defines('user'));
+        $this->assertSame(User::class, $schema->define('user', Schema::ENTITY));
+    }
+
+    public function testRegenerateEmptySchema(): void
+    {
+        $app = TestApp::init(
+            [
+                'root'    => __DIR__ . '/../../..',
+                'app'     => __DIR__ . '/../../emptyApp',
+                'runtime' => sys_get_temp_dir() . '/spiral',
+                'cache'   => sys_get_temp_dir() . '/spiral',
+            ],
+            new Environment(['SAFE_MIGRATIONS' => true]),
+            false
+        );
+
+        $app->getContainer()->bind(
+            MemoryInterface::class,
+            new TrackedMemory($app->get(MemoryInterface::class))
+        );
+        /** @var TrackedMemory $memory */
+        $memory = $app->get(MemoryInterface::class);
+
+        //Emulate multiple re-generations for empty schemas
+        $app->get(SchemaInterface::class);
+        $app->get(SchemaInterface::class);
+        $app->get(SchemaInterface::class);
+
+        /** @var SchemaInterface $schema */
+        $schema = $app->get(SchemaInterface::class);
+        $this->assertSame(1, $memory->saveCount);
+        $this->assertFalse($schema->defines('user'));
     }
 
     public function testMigrate(): void

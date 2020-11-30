@@ -80,6 +80,14 @@ final class Injector
     public function injectDependencies(string $code, ClassNode $node, bool $removeTrait = false): string
     {
         if (empty($node->dependencies)) {
+            if ($removeTrait) {
+                $tr = new NodeTraverser();
+                $tr->addVisitor(new RemoveUse());
+                $tr->addVisitor(new RemoveTrait());
+
+                return $this->traverse($code, $tr);
+            }
+
             return $code;
         }
 
@@ -95,6 +103,11 @@ final class Injector
         $tr->addVisitor(new DefineConstructor());
         $tr->addVisitor(new UpdateConstructor($node));
 
+        return $this->traverse($code, $tr);
+    }
+
+    private function traverse(string $code, NodeTraverser $tr): string
+    {
         $nodes = $this->parser->parse($code);
         $tokens = $this->lexer->getTokens();
 

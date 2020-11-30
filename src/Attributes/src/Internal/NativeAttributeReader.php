@@ -9,11 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Attributes;
+namespace Spiral\Attributes\Internal;
 
 use Spiral\Attributes\Exception\InitializationException;
-use Spiral\Attributes\Internal\AttributeReader;
 
+/**
+ * @internal NativeAttributeReader is an internal library class, please do not use it in your code.
+ * @psalm-internal Spiral\Attributes
+ */
 class NativeAttributeReader extends AttributeReader
 {
     /**
@@ -97,6 +100,7 @@ class NativeAttributeReader extends AttributeReader
     /**
      * @param iterable<\ReflectionAttribute> $attributes
      * @return iterable<\ReflectionClass, array>
+     * @throws \ReflectionException
      */
     private function format(iterable $attributes): iterable
     {

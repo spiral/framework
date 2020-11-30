@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
 
+use Spiral\Attributes\Internal\Instantiator\Factory;
+use Spiral\Attributes\Internal\Instantiator\InstantiatorInterface;
 use Spiral\Attributes\Reader;
 
 /**
@@ -20,7 +22,7 @@ use Spiral\Attributes\Reader;
 abstract class AttributeReader extends Reader
 {
     /**
-     * @var Instantiator
+     * @var InstantiatorInterface
      */
     private $instantiator;
 
@@ -34,12 +36,13 @@ abstract class AttributeReader extends Reader
      */
     public function __construct()
     {
-        $this->instantiator = new Instantiator();
+        $this->instantiator = new Factory();
         $this->ctx = new Context();
     }
 
     /**
      * {@inheritDoc}
+     * @throws \ReflectionException
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
     {
@@ -53,6 +56,7 @@ abstract class AttributeReader extends Reader
 
     /**
      * {@inheritDoc}
+     * @throws \ReflectionException
      */
     public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
     {
@@ -66,6 +70,7 @@ abstract class AttributeReader extends Reader
 
     /**
      * {@inheritDoc}
+     * @throws \ReflectionException
      */
     public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
     {
@@ -79,6 +84,7 @@ abstract class AttributeReader extends Reader
 
     /**
      * {@inheritDoc}
+     * @throws \ReflectionException
      */
     public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
     {
@@ -92,6 +98,7 @@ abstract class AttributeReader extends Reader
 
     /**
      * {@inheritDoc}
+     * @throws \ReflectionException
      */
     public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
     {
@@ -139,18 +146,11 @@ abstract class AttributeReader extends Reader
     abstract protected function getParameterAttributes(\ReflectionParameter $param, ?string $name): iterable;
 
     /**
-     * @return bool
-     */
-    protected function isNativeAttributesAvailable(): bool
-    {
-        return \version_compare(\PHP_VERSION, '8.0') >= 0;
-    }
-
-    /**
      * @param \ReflectionClass $attribute
      * @param array $arguments
      * @param string $context
      * @return object
+     * @throws \ReflectionException
      */
     private function instantiate(\ReflectionClass $attribute, array $arguments, string $context): object
     {

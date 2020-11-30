@@ -9,16 +9,17 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Attributes\Internal;
+namespace Spiral\Attributes\Internal\Instantiator;
 
+use JetBrains\PhpStorm\Pure;
 use Doctrine\Common\Annotations\DocParser;
 use Spiral\Attributes\Exception\AttributeException;
 
 /**
- * @internal Instantiator is an internal library class, please do not use it in your code.
+ * @internal DoctrineInstantiator is an internal library class, please do not use it in your code.
  * @psalm-internal Spiral\Attributes
  */
-class Instantiator
+final class DoctrineInstantiator extends Instantiator
 {
     /**
      * An error message that occurs when the attribute has no public field in
@@ -46,77 +47,42 @@ class Instantiator
     /**
      * @var string
      */
-    private const CONSTRUCTOR_NAME = '__construct';
-
-    /**
-     * @var string
-     */
     private const DEFAULT_PROPERTY_NAME = 'value';
 
     /**
-     * @param \ReflectionClass $attribute
+     * @param \ReflectionClass $attr
      * @param array $arguments
      * @param string $context
      * @return object
      * @throws \ReflectionException
      */
-    public function instantiate(\ReflectionClass $attribute, array $arguments, string $context): object
+    public function instantiate(\ReflectionClass $attr, array $arguments, string $context): object
     {
         $arguments = $this->formatArguments($arguments);
 
         // Using constructor
-        if ($this->getConstructor($attribute)) {
-            return $attribute->newInstance($arguments);
+        if ($this->getConstructor($attr)) {
+            return $attr->newInstance($arguments);
         }
 
         // Using direct insert
-        $instance = $attribute->newInstanceWithoutConstructor();
+        $instance = $attr->newInstanceWithoutConstructor();
 
         foreach ($arguments as $name => $value) {
             try {
-                $property = $attribute->getProperty($name);
+                $property = $attr->getProperty($name);
 
                 if (!$property->isPublic()) {
-                    throw $this->propertyNotFound($attribute, $name, $context);
+                    throw $this->propertyNotFound($attr, $name, $context);
                 }
 
                 $instance->$name = $value;
             } catch (\Throwable $e) {
-                throw $this->propertyNotFound($attribute, $name, $context);
+                throw $this->propertyNotFound($attr, $name, $context);
             }
         }
 
         return $instance;
-    }
-
-    /**
-     * @param \ReflectionClass $class
-     * @return bool
-     */
-    protected function hasConstructor(\ReflectionClass $class): bool
-    {
-        return $this->getConstructor($class) !== null;
-    }
-
-    /**
-     * @param \ReflectionClass $class
-     * @return \ReflectionMethod|null
-     */
-    protected function getConstructor(\ReflectionClass $class): ?\ReflectionMethod
-    {
-        if ($class->hasMethod(self::CONSTRUCTOR_NAME)) {
-            return $class->getMethod(self::CONSTRUCTOR_NAME);
-        }
-
-        if ($constructor = $this->getTraitConstructors($class)) {
-            return $constructor;
-        }
-
-        if ($parent = $class->getParentClass()) {
-            return $this->getConstructor($parent);
-        }
-
-        return null;
     }
 
     /**
@@ -174,42 +140,9 @@ class Instantiator
      * @param \ReflectionClass $class
      * @return string
      */
+    #[Pure]
     private function getAvailablePropertiesString(\ReflectionClass $class): string
     {
         return \implode(', ', \get_class_vars($class->getName()));
-    }
-
-    /**
-     * @param \ReflectionMethod $construct
-     * @return string
-     */
-    private function getAvailableNamedPropertiesString(\ReflectionMethod $construct): string
-    {
-        $names = [];
-
-        foreach ($construct->getParameters() as $parameter) {
-            $names[] = $parameter->getName();
-        }
-
-        return \implode(', ', $names);
-    }
-
-    /**
-     * @param \ReflectionClass $class
-     * @return \ReflectionMethod|null
-     */
-    private function getTraitConstructors(\ReflectionClass $class): ?\ReflectionMethod
-    {
-        foreach ($class->getTraits() as $trait) {
-            if ($constructor = $this->getConstructor($trait)) {
-                return $constructor;
-            }
-
-            if ($constructor = $this->getTraitConstructors($trait)) {
-                return $constructor;
-            }
-        }
-
-        return null;
     }
 }
