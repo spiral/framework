@@ -18,6 +18,7 @@
         <directory name="src/Framework" />
         <ignoreFiles>
             <directory name="vendor" />
+            <file name="src/Attributes/polyfill.php"/>
         </ignoreFiles>
     </projectFiles>
     <stubs>
