@@ -14,7 +14,7 @@ namespace Spiral\Attributes\Internal\Instantiator;
 use Spiral\Attributes\Internal\Exception;
 
 /**
- * @internal       NamedArgumentsInstantiator is an internal library class, please do not use it in your code.
+ * @internal NamedArgumentsInstantiator is an internal library class, please do not use it in your code.
  * @psalm-internal Spiral\Attributes
  */
 final class NamedArgumentsInstantiator extends Instantiator
@@ -31,8 +31,8 @@ final class NamedArgumentsInstantiator extends Instantiator
 
     /**
      * @param \ReflectionClass $attr
-     * @param array            $arguments
-     * @param string           $context
+     * @param array $arguments
+     * @param string $context
      * @return object
      * @throws \Throwable
      */
@@ -66,9 +66,9 @@ final class NamedArgumentsInstantiator extends Instantiator
     }
 
     /**
-     * @param \ReflectionClass  $ctx
+     * @param \ReflectionClass $ctx
      * @param \ReflectionMethod $constructor
-     * @param array             $arguments
+     * @param array $arguments
      * @return array
      * @throws \Throwable
      */
@@ -93,9 +93,9 @@ final class NamedArgumentsInstantiator extends Instantiator
     }
 
     /**
-     * @param \ReflectionClass     $ctx
+     * @param \ReflectionClass $ctx
      * @param \ReflectionParameter $param
-     * @param array                $arguments
+     * @param array $arguments
      * @return mixed
      * @throws \Throwable
      */
