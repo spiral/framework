@@ -198,7 +198,6 @@ class DatetimeTest extends TestCase
             [true, 0,],
             [true, 1.1,],
             [false, 'date',],
-            [false, 'abc',],
             [false, false,],
             [false, true,],
             [false, null,],

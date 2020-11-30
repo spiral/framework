@@ -83,7 +83,7 @@ class TypesTest extends TestCase
         $this->assertTrue($checker->datetime(date('u')));
         $this->assertTrue($checker->datetime(time()));
 
-        $this->assertFalse($checker->datetime('abc'));
+        $this->assertFalse($checker->datetime('date'));
         $this->assertFalse($checker->datetime(''));
 
         $this->assertFalse($checker->datetime([]));
