@@ -8,7 +8,7 @@
 $_msg_->subject(\Spiral\SendIt\Renderer\ViewRenderer::escapeSubject(inject('subject')));
 
 if (injected('from')) {
-    $_msg_->from(\Symfony\Component\Mime\Address::fromString(inject('from')));
+    $_msg_->from(\Symfony\Component\Mime\Address::create(inject('from')));
 }
 
 /**
