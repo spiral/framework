@@ -41,13 +41,13 @@ class DatetimeTest extends TestCase
     {
         return [
             //the date is 100% in the future
-            [true, $this->inFuture(10), false, false],
-            [true, $this->inFuture(10), true, false],
-            [true, $this->inFuture(10), false, true],
-            [true, $this->inFuture(10), true, true],
+            [true, $this->inFuture(1000), false, false],
+            [true, $this->inFuture(1000), true, false],
+            [true, $this->inFuture(1000), false, true],
+            [true, $this->inFuture(1000), true, true],
 
-            [true, 'tomorrow 10am', false, false],
-            [true, 'now + 10 seconds', false, false],
+            [true, 'tomorrow + 2hours', false, false],
+            [true, 'now + 1000 seconds', false, false],
 
             // the "now" date can differ in ms
             [false, 'now', false, false],
@@ -61,7 +61,7 @@ class DatetimeTest extends TestCase
             [false, 'date', false, true],
             [false, 'date', true, true],
 
-            [false, time() - 10, false, false],
+            [false, $this->inPast(1000), false, false],
             [false, '', false, false],
             [false, 0, false, false],
             [false, 1.1, false, false],
@@ -89,13 +89,6 @@ class DatetimeTest extends TestCase
         $this->assertSame($expected, $checker->past($value, $orNow, $useMicroseconds));
     }
 
-    private function inFuture(int $seconds): \Closure
-    {
-        return static function () use ($seconds) {
-            return \time() + $seconds;
-        };
-    }
-
     /**
      * @return array
      */
@@ -103,13 +96,13 @@ class DatetimeTest extends TestCase
     {
         return [
             //the date is 100% in the past
-            [true, time() - 10, false, false],
-            [true, time() - 10, true, false],
-            [true, time() - 10, false, true],
-            [true, time() - 10, true, true],
+            [true, $this->inPast(1000), false, false],
+            [true, $this->inPast(1000), true, false],
+            [true, $this->inPast(1000), false, true],
+            [true, $this->inPast(1000), true, true],
 
-            [true, 'yesterday 10am', false, false],
-            [true, 'now - 10 seconds', false, false],
+            [true, 'yesterday -2hours', false, false],
+            [true, 'now - 1000 seconds', false, false],
 
             //the "now" date can differ in ms
             [false, 'now', false, false],
@@ -117,7 +110,7 @@ class DatetimeTest extends TestCase
             [true, 'now', true, false],
             [true, 'now', true, true], //the threshold date comes a little bit later (in ms)
 
-            [false, $this->inFuture(10), false, false],
+            [false, $this->inFuture(1000), false, false],
             [true, '', false, false],
             [true, 0, false, false],
             [true, 1.1, false, false],
@@ -185,16 +178,16 @@ class DatetimeTest extends TestCase
     public function validProvider(): array
     {
         return [
-            [true, time() - 10,],
+            [true, time() - 1000,],
             [true, time(),],
             [true, date('u'),],
-            [true, time() + 10,],
+            [true, time() + 1000,],
             [true, '',],
-            [true, 'tomorrow 10am',],
-            [true, 'yesterday 10am',],
+            [true, 'tomorrow +2hours',],
+            [true, 'yesterday -2hours',],
             [true, 'now',],
-            [true, 'now + 10 seconds',],
-            [true, 'now - 10 seconds',],
+            [true, 'now + 1000 seconds',],
+            [true, 'now - 1000 seconds',],
             [true, 0,],
             [true, 1.1,],
             [false, 'date',],
@@ -228,8 +221,6 @@ class DatetimeTest extends TestCase
      */
     public function testBefore(bool $expected, $value, $threshold, bool $orEquals, bool $useMicroseconds): void
     {
-        $this->markTestSkipped('These tests are poorly written and can cause errors. Need to rewrite');
-
         $value = $value instanceof \Closure ? $value() : $value;
 
         $checker = new DatetimeChecker();
@@ -254,23 +245,23 @@ class DatetimeTest extends TestCase
     {
         return [
             //the date is 100% in the past
-            [true, time() - 10, 'now', false, false],
-            [true, time() - 10, 'now', true, false],
-            [true, time() - 10, 'now', false, true],
-            [true, time() - 10, 'now', true, true],
+            [true, $this->inPast(1000), 'now', false, false],
+            [true, $this->inPast(1000), 'now', true, false],
+            [true, $this->inPast(1000), 'now', false, true],
+            [true, $this->inPast(1000), 'now', true, true],
 
-            [true, 'yesterday 10am', 'now', false, false],
-            [true, 'now - 10 seconds', 'now', false, false],
-            [true, 'now + 10 seconds', 'tomorrow', false, false],
+            [true, 'yesterday -2hours', 'now', false, false],
+            [true, 'now - 1000 seconds', 'now', false, false],
+            [true, 'now + 1000 seconds', 'tomorrow', false, false],
 
             //the "now" date can differ in ms
             [false, 'now', 'now', false, false],
-            [true, 'now', 'now + 1 second', false, false],
+            [true, 'now', 'now + 1000 second', false, false],
             [true, 'now', 'now', false, true], //the threshold date comes a little bit later (in ms)
             [true, 'now', 'now', true, false],
             [true, 'now', 'now', true, true], //the threshold date comes a little bit later (in ms)
 
-            [false, time() + 10, 'now', false, false],
+            [false, $this->inFuture(1000), 'now', false, false],
             [true, '', 'now', false, false],
             [true, 0, 'now', false, false],
             [true, 1.1, 'now', false, false],
@@ -293,8 +284,6 @@ class DatetimeTest extends TestCase
      */
     public function testAfter(bool $expected, $value, $threshold, bool $orEquals, bool $useMicroseconds): void
     {
-        $this->markTestSkipped('These tests are poorly written and can cause errors. Need to rewrite');
-
         $value = $value instanceof \Closure ? $value() : $value;
 
         $checker = new DatetimeChecker();
@@ -318,23 +307,23 @@ class DatetimeTest extends TestCase
     public function afterProvider(): array
     {
         return [
-            [true, $this->inFuture(10), 'now', false, false],
-            [true, $this->inFuture(10), 'now', true, false],
-            [true, $this->inFuture(10), 'now', false, true],
-            [true, $this->inFuture(10), 'now', true, true],
+            [true, $this->inFuture(1000), 'now', false, false],
+            [true, $this->inFuture(1000), 'now', true, false],
+            [true, $this->inFuture(1000), 'now', false, true],
+            [true, $this->inFuture(1000), 'now', true, true],
 
-            [true, 'tomorrow 10am', 'now', false, false],
-            [true, 'now + 10 seconds', 'now', false, false],
-            [true, 'now - 10 seconds', 'yesterday', false, false],
+            [true, 'tomorrow +2hours', 'now', false, false],
+            [true, 'now + 1000 seconds', 'now', false, false],
+            [true, 'now - 1000 seconds', 'yesterday', false, false],
 
             //the "now" date can differ in ms
             [false, 'now', 'now', false, false],
-            [true, 'now', 'now - 1 second', false, false],
+            [true, 'now', 'now - 1000 second', false, false],
             [false, 'now', 'now', false, true], //the threshold date comes a little bit later (in ms)
             [true, 'now', 'now', true, false],
             [false, 'now', 'now', true, true], //the threshold date comes a little bit later (in ms)
 
-            [false, time() - 10, 'now', false, false],
+            [false, $this->inPast(1000), 'now', false, false],
             [false, '', 'now', false, false],
             [false, 0, 'now', false, false],
             [false, 1.1, 'now', false, false],
@@ -345,5 +334,26 @@ class DatetimeTest extends TestCase
             [false, [], 'now', false, false],
             [false, new \stdClass(), 'now', false, false],
         ];
+    }
+
+    private function now(): \Closure
+    {
+        return static function () {
+            return \time();
+        };
+    }
+
+    private function inFuture(int $seconds): \Closure
+    {
+        return static function () use ($seconds) {
+            return \time() + $seconds;
+        };
+    }
+
+    private function inPast(int $seconds): \Closure
+    {
+        return static function () use ($seconds) {
+            return \time() - $seconds;
+        };
     }
 }
