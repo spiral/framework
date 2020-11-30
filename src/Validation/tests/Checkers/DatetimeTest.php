@@ -198,7 +198,7 @@ class DatetimeTest extends TestCase
             [true, 0,],
             [true, 1.1,],
             [false, 'date',],
-            [false, '~#@',],
+            [false, 'TEST',],
             [false, false,],
             [false, true,],
             [false, null,],
