@@ -7,4 +7,4 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-return [
+return ;
