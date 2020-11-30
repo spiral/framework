@@ -43,12 +43,20 @@ final class InjectCommand extends AbstractCommand
         foreach ($prototyped as $class) {
             $proto = $this->getPrototypeProperties($class);
             if (empty($proto)) {
+                $modified = $this->modify($class, $proto);
+                if ($modified !== null) {
+                    $targets[] = $modified;
+                }
                 continue;
             }
 
             foreach ($proto as $target) {
                 if ($target instanceof \Throwable) {
-                    $targets[] = [$class->getName(), $target->getMessage(), $target->getFile(), $target->getLine()];
+                    $targets[] = [
+                        $class->getName(),
+                        $target->getMessage(),
+                        "{$target->getFile()}:L{$target->getLine()}",
+                    ];
                     continue 2;
                 }
 
@@ -59,18 +67,9 @@ final class InjectCommand extends AbstractCommand
 
             $targets[] = [$class->getName(), $this->mergeNames($proto), $this->mergeTargets($proto)];
 
-            $classDefinition = $this->extractor->extract($class->getFilename(), $proto);
-
-            try {
-                $modified = (new Injector())->injectDependencies(
-                    file_get_contents($class->getFileName()),
-                    $classDefinition,
-                    $this->option('remove')
-                );
-
-                file_put_contents($class->getFileName(), $modified);
-            } catch (\Throwable $e) {
-                $targets[] = [$class, $e->getMessage(), $e->getFile(), $e->getLine()];
+            $modified = $this->modify($class, $proto);
+            if ($modified !== null) {
+                $targets[] = $modified;
             }
         }
 
@@ -81,6 +80,23 @@ final class InjectCommand extends AbstractCommand
             }
 
             $grid->render();
+        }
+    }
+
+    private function modify(\ReflectionClass $class, array $proto): ?array
+    {
+        $classDefinition = $this->extractor->extract($class->getFilename(), $proto);
+        try {
+            $modified = (new Injector())->injectDependencies(
+                file_get_contents($class->getFileName()),
+                $classDefinition,
+                $this->option('remove')
+            );
+
+            file_put_contents($class->getFileName(), $modified);
+            return null;
+        } catch (\Throwable $e) {
+            return [$class->getName(), $e->getMessage(), "{$e->getFile()}:L{$e->getLine()}"];
         }
     }
 }

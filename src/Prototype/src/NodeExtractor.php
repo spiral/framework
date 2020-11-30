@@ -13,8 +13,8 @@ namespace Spiral\Prototype;
 
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
+use PhpParser\Parser;
 use PhpParser\ParserFactory;
-use Spiral\Prototype\Annotation\Parser;
 use Spiral\Prototype\ClassNode\ConflictResolver;
 use Spiral\Prototype\Exception\ClassNotDeclaredException;
 use Spiral\Prototype\NodeVisitors\ClassNode\DeclareClass;

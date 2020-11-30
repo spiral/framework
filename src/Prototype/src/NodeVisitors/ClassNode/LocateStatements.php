@@ -15,7 +15,7 @@ use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
 /**
- * Pick class's namespace, name, imports.
+ * Pick class's imports.
  */
 final class LocateStatements extends NodeVisitorAbstract
 {
@@ -23,8 +23,7 @@ final class LocateStatements extends NodeVisitorAbstract
     private $imports = [];
 
     /**
-     * @param Node $node
-     * @return int|null|Node|Node[]
+     * @inheritDoc
      */
     public function enterNode(Node $node)
     {
@@ -32,16 +31,8 @@ final class LocateStatements extends NodeVisitorAbstract
             foreach ($node->uses as $use) {
                 $this->imports[] = [
                     'name'  => implode('\\', $use->name->parts),
-                    'alias' => !empty($use->alias) ? $use->alias->name : null,
+                    'alias' => $use->alias->name ?? null,
                 ];
-            }
-        }
-
-        if ($node instanceof Node\Stmt\Class_) {
-            foreach ($node->stmts as $stmt) {
-                if ($stmt instanceof Node\Stmt\ClassMethod && $stmt->name === '__construct') {
-                    return $stmt;
-                }
             }
         }
 

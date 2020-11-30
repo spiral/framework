@@ -18,6 +18,7 @@ use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
 use Spiral\Console\Command;
+use Spiral\Cycle\SchemaCompiler;
 
 final class SyncCommand extends Command
 {
@@ -28,6 +29,7 @@ final class SyncCommand extends Command
      * @param SchemaBootloader $bootloader
      * @param Registry         $registry
      * @param MemoryInterface  $memory
+     * @throws \Throwable
      */
     public function perform(
         SchemaBootloader $bootloader,
@@ -36,12 +38,11 @@ final class SyncCommand extends Command
     ): void {
         $show = new ShowChanges($this->output);
 
-        $schema = (new Compiler())->compile(
+        $schemaCompiler = SchemaCompiler::compile(
             $registry,
             array_merge($bootloader->getGenerators(), [$show, new SyncTables()])
         );
-
-        $memory->saveData('cycle', $schema);
+        $schemaCompiler->toMemory($memory);
 
         if ($show->hasChanges()) {
             $this->writeln("\n<info>ORM Schema has been synchronized</info>");
