@@ -57,7 +57,7 @@ final class MailJob implements HandlerInterface
         $email = $this->renderer->render($message);
 
         if ($email->getFrom() === []) {
-            $email->from(Address::fromString($this->config->getFromAddress()));
+            $email->from(Address::create($this->config->getFromAddress()));
         }
 
         $recipients = $this->getRecipients($email);
