@@ -153,7 +153,7 @@ class ConflictResolverTest extends TestCase
         );
 
         $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var Test[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var Test[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param Test $test', $r);
         $this->assertStringContainsString('__construct(Test $test)', $r);
     }
