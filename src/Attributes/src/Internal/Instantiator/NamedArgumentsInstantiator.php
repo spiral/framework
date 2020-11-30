@@ -103,14 +103,18 @@ final class NamedArgumentsInstantiator extends Instantiator
     {
         switch (true) {
             case \array_key_exists($param->getName(), $arguments):
-                $argument =  $arguments[$param->getName()];
-                unset($arguments[$param->getName()]);
-                return $argument;
+                try {
+                    return $arguments[$param->getName()];
+                } finally {
+                    unset($arguments[$param->getName()]);
+                }
 
             case \array_key_exists($param->getPosition(), $arguments):
-                $argument =  $arguments[$param->getPosition()];
-                unset($arguments[$param->getPosition()]);
-                return $argument;
+                try {
+                    return $arguments[$param->getPosition()];
+                } finally {
+                    unset($arguments[$param->getPosition()]);
+                }
 
             case $param->isDefaultValueAvailable():
                 return $param->getDefaultValue();
