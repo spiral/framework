@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Attributes\Reader;
 
-use Spiral\Attributes\FallbackAttributeReader;
+use Spiral\Attributes\Internal\FallbackAttributeReader;
 use Spiral\Attributes\ReaderInterface;
 
 class FallbackReaderTest extends ReaderTestCase

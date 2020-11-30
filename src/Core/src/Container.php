@@ -106,8 +106,6 @@ final class Container implements
             /**
              * Container do not currently support union types. In the future, we
              * can provide the possibility of autowiring based on priorities (TBD).
-             *
-             * @psalm-suppress UndefinedClass
              */
             if ($type instanceof \ReflectionUnionType) {
                 $error = 'Parameter $%s in %s contains a union type hint that cannot be inferred unambiguously';

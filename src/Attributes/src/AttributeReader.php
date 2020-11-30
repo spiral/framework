@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes;
 
+use Spiral\Attributes\Internal\FallbackAttributeReader;
+use Spiral\Attributes\Internal\NativeAttributeReader;
+
 final class AttributeReader extends Reader
 {
     /**
@@ -27,6 +30,7 @@ final class AttributeReader extends Reader
             ? new NativeAttributeReader()
             : new FallbackAttributeReader();
     }
+
     /**
      * {@inheritDoc}
      */
