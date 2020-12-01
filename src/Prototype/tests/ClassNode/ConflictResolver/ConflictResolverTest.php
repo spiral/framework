@@ -9,6 +9,7 @@ use Spiral\Core\Container;
 use Spiral\Prototype\ClassNode;
 use Spiral\Prototype\Injector;
 use Spiral\Prototype\NodeExtractor;
+use Spiral\Tests\Prototype\BackwardCompatibilityTrait;
 use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures;
 use Spiral\Tests\Prototype\Fixtures\Dependencies;
 
