@@ -85,7 +85,7 @@ final class AddProperty extends NodeVisitorAbstract
         $b = new Property($dependency->property);
         $b->makePrivate();
 
-        if ($this->useTypedProperties) {
+        if ($this->useTypedProperty()) {
             $b->setType($this->getPropertyType($dependency));
         }
 
@@ -94,6 +94,11 @@ final class AddProperty extends NodeVisitorAbstract
         }
 
         return $b->getNode();
+    }
+
+    private function useTypedProperty(): bool
+    {
+        return $this->useTypedProperties && method_exists(Property::class, 'setType');
     }
 
     private function renderDoc(): bool
