@@ -36,6 +36,17 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
         'c' => 'Y-m-d\TH:i:sT',
     ];
 
+    /** @var callable|null */
+    private $now;
+    /** @var DatetimeChecker\ThresholdChecker  */
+    private $threshold;
+
+    public function __construct(callable $now = null)
+    {
+        $this->now = $now;
+        $this->threshold = new DatetimeChecker\ThresholdChecker();
+    }
+
     /**
      * Check if date is in the future. Do not compare if the current date is invalid.
      *
@@ -46,12 +57,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      */
     public function future($value, bool $orNow = false, bool $useMicroSeconds = false): bool
     {
-        $compare = $this->compare($this->date($value), $this->now(), $useMicroSeconds);
-        if (is_bool($compare)) {
-            return $compare;
-        }
-
-        return $orNow ? $compare >= 0 : $compare > 0;
+        return $this->threshold->after($this->date($value), $this->now(), $orNow, $useMicroSeconds);
     }
 
     /**
@@ -64,12 +70,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      */
     public function past($value, bool $orNow = false, bool $useMicroSeconds = false): bool
     {
-        $compare = $this->compare($this->date($value), $this->now(), $useMicroSeconds);
-        if (is_bool($compare)) {
-            return $compare;
-        }
-
-        return $orNow ? $compare <= 0 : $compare < 0;
+        return $this->threshold->before($this->date($value), $this->now(), $orNow, $useMicroSeconds);
     }
 
     /**
@@ -127,12 +128,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      */
     public function before($value, string $field, bool $orEquals = false, bool $useMicroSeconds = false): bool
     {
-        $compare = $this->compare($this->date($value), $this->thresholdFromField($field), $useMicroSeconds);
-        if (is_bool($compare)) {
-            return $compare;
-        }
-
-        return $orEquals ? $compare <= 0 : $compare < 0;
+        return $this->threshold->before($this->date($value), $this->fromField($field), $orEquals, $useMicroSeconds);
     }
 
     /**
@@ -146,30 +142,29 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      */
     public function after($value, string $field, bool $orEquals = false, bool $useMicroSeconds = false): bool
     {
-        $compare = $this->compare($this->date($value), $this->thresholdFromField($field), $useMicroSeconds);
-        if (is_bool($compare)) {
-            return $compare;
-        }
-
-        return $orEquals ? $compare >= 0 : $compare > 0;
+        return $this->threshold->after($this->date($value), $this->fromField($field), $orEquals, $useMicroSeconds);
     }
 
     /**
      * @param mixed $value
-     * @return \DateTimeImmutable|null
+     * @return \DateTimeInterface|null
      */
-    private function date($value): ?\DateTimeImmutable
+    private function date($value): ?\DateTimeInterface
     {
+        if ($value instanceof \DateTimeInterface) {
+            return $value;
+        }
+
         if (!$this->isApplicableValue($value)) {
             return null;
         }
 
         try {
-            if (empty($value)) {
+            if (!$value) {
                 $value = '0';
             }
 
-            return new \DateTimeImmutable(is_numeric($value) ? ('@' . (int)$value) : (string)$value);
+            return new \DateTimeImmutable(is_numeric($value) ? sprintf('@%d', $value) : trim($value));
         } catch (\Throwable $e) {
             //here's the fail;
         }
@@ -187,11 +182,16 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
     }
 
     /**
-     * @return \DateTimeImmutable
+     * @return \DateTimeInterface
      */
-    private function now(): ?\DateTimeImmutable
+    private function now(): ?\DateTimeInterface
     {
         try {
+            if (is_callable($this->now)) {
+                $now = $this->now;
+                return $now();
+            }
+
             return new \DateTimeImmutable('now');
         } catch (\Throwable $e) {
             //here's the fail;
@@ -202,9 +202,9 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
 
     /**
      * @param string $field
-     * @return \DateTimeImmutable|null
+     * @return \DateTimeInterface|null
      */
-    private function thresholdFromField(string $field): ?\DateTimeImmutable
+    private function fromField(string $field): ?\DateTimeInterface
     {
         $before = $this->getValidator()->getValue($field);
         if ($before !== null) {
@@ -212,42 +212,5 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
         }
 
         return null;
-    }
-
-    /**
-     * @param \DateTimeImmutable|null $date
-     * @param \DateTimeImmutable|null $threshold
-     * @param bool                    $useMicroseconds
-     * @return bool|int
-     */
-    private function compare(?\DateTimeImmutable $date, ?\DateTimeImmutable $threshold, bool $useMicroseconds)
-    {
-        if ($date === null) {
-            return false;
-        }
-
-        if ($threshold === null) {
-            return true;
-        }
-
-        if (!$useMicroseconds) {
-            $date = $this->dropMicroSeconds($date);
-            $threshold = $this->dropMicroSeconds($threshold);
-        }
-
-        return $date <=> $threshold;
-    }
-
-    /**
-     * @param \DateTimeImmutable $date
-     * @return \DateTimeImmutable
-     */
-    private function dropMicroSeconds(\DateTimeImmutable $date): \DateTimeImmutable
-    {
-        return $date->setTime(
-            (int)$date->format('H'),
-            (int)$date->format('i'),
-            (int)$date->format('s')
-        );
     }
 }
