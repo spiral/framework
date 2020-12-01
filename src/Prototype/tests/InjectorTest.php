@@ -14,6 +14,7 @@ namespace Spiral\Tests\Prototype;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Prototype\ClassNode;
+use Spiral\Prototype\Exception\ClassNotDeclaredException;
 use Spiral\Prototype\Injector;
 use Spiral\Prototype\NodeExtractor;
 use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures as ResolverFixtures;
@@ -22,6 +23,8 @@ use Spiral\Tests\Prototype\Fixtures\TestClass;
 
 class InjectorTest extends TestCase
 {
+    use BackwardCompatibilityTrait;
+
     public function setUp(): void
     {
         if ((string)ini_get('zend.assertions') === 1) {
@@ -31,7 +34,7 @@ class InjectorTest extends TestCase
 
     /**
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
      */
     public function testSimpleInjection(): void
     {
@@ -47,8 +50,57 @@ class InjectorTest extends TestCase
     }
 
     /**
+     * @dataProvider typedProvider
+     * @param bool $useTypedProperties
+     * @param bool $noPhpDoc
+     * @param bool $expectedTypedProperty
+     * @param bool $expectedPhpDoc
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
+     */
+    public function testTypedInjection(
+        bool $useTypedProperties,
+        bool $noPhpDoc,
+        bool $expectedTypedProperty,
+        bool $expectedPhpDoc
+    ): void {
+        $i = new Injector();
+
+        $filename = __DIR__ . '/Fixtures/TestClass.php';
+        $printed = $i->injectDependencies(
+            file_get_contents($filename),
+            $this->getDefinition($filename, ['testClass' => TestClass::class]),
+            false,
+            $useTypedProperties,
+            $noPhpDoc
+        );
+
+        if ($expectedTypedProperty) {
+            $this->assertStringContainsString('private TestClass $testClass;', $printed);
+        } else {
+            $this->assertStringNotContainsString('private TestClass $testClass;', $printed);
+        }
+
+        if ($expectedPhpDoc) {
+            $this->assertRegExp('/@var TestClass[\s|\r\n]/', $printed);
+        } else {
+            $this->assertNotRegExp('/@var TestClass[\s|\r\n]/', $printed);
+        }
+    }
+
+    public function typedProvider(): iterable
+    {
+        return [
+            [true, true, true, false],
+            [true, false, true, true],
+            [false, false, false, true],
+            [false, true, false, true],
+        ];
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws ClassNotDeclaredException
      */
     public function testEmptyInjection(): void
     {
@@ -66,7 +118,7 @@ class InjectorTest extends TestCase
 
     /**
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
      */
     public function testTraitRemove(): void
     {
@@ -91,7 +143,7 @@ class InjectorTest extends TestCase
 
     /**
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
      */
     public function testParentConstructorCallInjection(): void
     {
@@ -109,7 +161,7 @@ class InjectorTest extends TestCase
 
     /**
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
      */
     public function testNoParentConstructorCallInjection(): void
     {
@@ -127,7 +179,7 @@ class InjectorTest extends TestCase
 
     /**
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
      */
     public function testModifyConstructor(): void
     {
@@ -153,7 +205,7 @@ class InjectorTest extends TestCase
 
     /**
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
      */
     public function testPriorOptionalConstructorParameters(): void
     {
@@ -182,7 +234,7 @@ class InjectorTest extends TestCase
 
     /**
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
      */
     public function testParentConstructorParamsTypeDefinition(): void
     {
@@ -191,11 +243,14 @@ class InjectorTest extends TestCase
         $filename = __DIR__ . '/ClassNode/ConflictResolver/Fixtures/ChildClass.php';
         $printed = $i->injectDependencies(
             file_get_contents($filename),
-            $this->getDefinition($filename, [
-                'test'  => ResolverFixtures\Test::class,
-                'test2' => ResolverFixtures\SubFolder\Test::class,
-                'test3' => ResolverFixtures\ATest3::class,
-            ])
+            $this->getDefinition(
+                $filename,
+                [
+                    'test'  => ResolverFixtures\Test::class,
+                    'test2' => ResolverFixtures\SubFolder\Test::class,
+                    'test3' => ResolverFixtures\ATest3::class,
+                ]
+            )
         );
 
         $traverser = new Traverse\Extractor();
@@ -277,7 +332,7 @@ class InjectorTest extends TestCase
      *
      * @return ClassNode
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
      */
     private function getDefinition(string $filename, array $dependencies): ClassNode
     {
