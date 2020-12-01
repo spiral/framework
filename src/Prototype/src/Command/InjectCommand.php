@@ -26,7 +26,7 @@ final class InjectCommand extends AbstractCommand
             'no-phpdoc',
             '',
             InputOption::VALUE_NONE,
-            'Omit PhpDoc for Properties, can be omitted only for typed properties'
+            'Omit PhpDoc for Properties, can be omitted only for typed properties',
         ],
     ];
 
