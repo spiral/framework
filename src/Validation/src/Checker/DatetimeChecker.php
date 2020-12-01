@@ -153,7 +153,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
         try {
             if (is_callable($this->now)) {
                 $now = $this->now;
-                return $now();
+                return $this->date($now());
             }
 
             if ($this->now !== null) {
