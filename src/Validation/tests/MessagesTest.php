@@ -19,6 +19,18 @@ class MessagesTest extends BaseTest
         $this->assertSame(['name' => 'This value is required.'], $validator->getErrors());
     }
 
+    public function testWithData(): void
+    {
+        $validator = $this->validation->validate([], ['name' => ['type::notEmpty']]);
+        $this->assertSame(['name' => 'This value is required.'], $validator->getErrors());
+
+        $validator = $validator->withData([]);
+        $this->assertSame(['name' => 'This value is required.'], $validator->getErrors());
+
+        $validator = $validator->withData(['name' => 'John']);
+        $this->assertEmpty($validator->getErrors());
+    }
+
     public function testMessage(): void
     {
         $validator = $this->validation->validate([], [
