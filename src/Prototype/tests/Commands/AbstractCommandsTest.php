@@ -26,6 +26,7 @@ abstract class AbstractCommandsTest extends TestCase
         'WithConstructor.php',
         'OptionalConstructorArgsClass.php',
         'InheritedInjection/ParentClass.php',
+        'InheritedInjection/MiddleClass.php',
         'InheritedInjection/ChildClass.php',
     ];
 
