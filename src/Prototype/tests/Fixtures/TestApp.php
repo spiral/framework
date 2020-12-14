@@ -43,6 +43,8 @@ class TestApp extends Kernel
         $registry->bindProperty('test', Fixtures\Test::class);
         $registry->bindProperty('test2', Fixtures\SubFolder\Test::class);
         $registry->bindProperty('test3', Fixtures\ATest3Interface::class);
+        $registry->bindProperty('one', InheritedInjection\InjectionOne::class);
+        $registry->bindProperty('two', InheritedInjection\InjectionTwo::class);
     }
 
     public function get(string $target)
