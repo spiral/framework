@@ -41,7 +41,7 @@ final class InjectCommand extends AbstractCommand
         $targets = [];
 
         foreach ($prototyped as $class) {
-            $proto = $this->getPrototypeProperties($class);
+            $proto = $this->getPrototypeProperties($class, $prototyped);
             if (empty($proto)) {
                 $modified = $this->modify($class, $proto);
                 if ($modified !== null) {

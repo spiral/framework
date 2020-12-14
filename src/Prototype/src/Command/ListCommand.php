@@ -31,7 +31,7 @@ final class ListCommand extends AbstractCommand
         $grid = $this->table(['Class:', 'Property:', 'Target:']);
 
         foreach ($prototyped as $class) {
-            $proto = $this->getPrototypeProperties($class);
+            $proto = $this->getPrototypeProperties($class, $prototyped);
 
             $grid->addRow([$class->getName(), $this->mergeNames($proto), $this->mergeTargets($proto)]);
         }
