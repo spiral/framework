@@ -10,10 +10,11 @@ class ParentClass
 {
     use PrototypeTrait;
 
-    // @codeCoverageIgnoreStart
+    /**
+     * @codeCoverageIgnore
+     */
     public function useOne(): void
     {
         $this->one;
     }
-    // @codeCoverageIgnoreEnd
 }

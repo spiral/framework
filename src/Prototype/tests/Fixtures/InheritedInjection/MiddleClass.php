@@ -6,9 +6,10 @@ namespace Spiral\Tests\Prototype\Fixtures\InheritedInjection;
 
 class MiddleClass extends ParentClass
 {
-    // @codeCoverageIgnoreStart
+    /**
+     * @codeCoverageIgnore
+     */
     public function __construct(\stdClass $ownInjection)
     {
     }
-    // @codeCoverageIgnoreEnd
 }
