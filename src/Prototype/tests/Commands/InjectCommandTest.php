@@ -17,6 +17,7 @@ use Spiral\Tests\Prototype\Commands\Fixtures\EmptyInjectionClass;
 use Spiral\Tests\Prototype\Fixtures\InheritedInjection;
 use Spiral\Tests\Prototype\Fixtures\TestApp;
 use Spiral\Tests\Prototype\Fixtures\TestClass;
+use Spiral\Tests\Prototype\Traverse\Extractor;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -97,5 +98,14 @@ class InjectCommandTest extends AbstractCommandsTest
         $this->assertStringContainsString(InheritedInjection\ParentClass::class, $result);
         $this->assertStringContainsString(InheritedInjection\MiddleClass::class, $result);
         $this->assertStringContainsString(InheritedInjection\ChildClass::class, $result);
+
+        $this->assertSame(['one'], $this->getParameters(InheritedInjection\ParentClass::class));
+        $this->assertSame(['ownInjection', 'one'], $this->getParameters(InheritedInjection\MiddleClass::class));
+        $this->assertSame(['ownInjection', 'one', 'two'], $this->getParameters(InheritedInjection\ChildClass::class));
+    }
+
+    private function getParameters(string $class): array
+    {
+        return array_keys((new Extractor())->extractFromFilename((new \ReflectionClass($class))->getFileName()));
     }
 }

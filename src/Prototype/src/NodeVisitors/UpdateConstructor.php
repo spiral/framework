@@ -47,10 +47,10 @@ final class UpdateConstructor extends NodeVisitorAbstract
         }
 
         $constructor = $this->getConstructorAttribute($node);
-        $this->addDependencies($constructor);
         if (!$this->definition->hasConstructor && $this->definition->constructorParams) {
             $this->addParentConstructorCall($constructor);
         }
+        $this->addDependencies($constructor);
 
         $constructor->setDocComment(
             $this->addComments($constructor->getDocComment())
