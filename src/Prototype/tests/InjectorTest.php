@@ -223,7 +223,7 @@ class InjectorTest extends TestCase
         );
 
         $parameters = $traverser->extractFromString($printed);
-        $this->assertArrayHasKey('testClass', $parameters);
+        $this->assertSame(['a', 'b', 'c', 'd', 'e', 'testClass'], array_keys($parameters));
 
         $this->assertFalse($parameters['a']['optional']);
         $this->assertFalse($parameters['b']['optional']);
