@@ -24,6 +24,13 @@ final class InjectCommand extends AbstractCommand
     public const DESCRIPTION = 'Inject all prototype dependencies';
     public const OPTIONS     = [
         ['remove', 'r', InputOption::VALUE_NONE, 'Remove PrototypeTrait'],
+        ['typedProperties', 't', InputOption::VALUE_NONE, 'Use PHP7.4 Typed Properties'],
+        [
+            'no-phpdoc',
+            '',
+            InputOption::VALUE_NONE,
+            'Omit PhpDoc for Properties, can be omitted only for typed properties',
+        ],
     ];
 
     /** @var Injector */
@@ -106,7 +113,9 @@ final class InjectCommand extends AbstractCommand
             $modified = $this->injector->injectDependencies(
                 file_get_contents($class->getFileName()),
                 $classDefinition,
-                $this->option('remove')
+                $this->option('remove'),
+                $this->option('typedProperties'),
+                $this->option('no-phpdoc')
             );
 
             file_put_contents($class->getFileName(), $modified);
