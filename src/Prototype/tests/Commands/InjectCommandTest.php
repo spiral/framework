@@ -94,6 +94,9 @@ class InjectCommandTest extends AbstractCommandsTest
 
         $this->assertStringContainsString(InheritedInjection\InjectionOne::class, $result);
         $this->assertStringContainsString(InheritedInjection\InjectionTwo::class, $result);
+        $this->assertStringContainsString(InheritedInjection\ParentClass::class, $result);
+        $this->assertStringContainsString(InheritedInjection\MiddleClass::class, $result);
+        $this->assertStringContainsString(InheritedInjection\ChildClass::class, $result);
 
         $child = new \ReflectionClass(InheritedInjection\MiddleClass::class);
         print_r(file_get_contents($child->getFileName()));
