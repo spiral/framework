@@ -84,11 +84,11 @@ class TypesTest extends BaseTest
         $checker = $this->container->get(TypeChecker::class);
 
         $this->assertTrue($checker->datetime('now'));
-        $this->assertTrue($checker->datetime('tomмфorrow 10am'));
+        $this->assertTrue($checker->datetime('tomorrow 10am'));
         $this->assertTrue($checker->datetime(date('u')));
         $this->assertTrue($checker->datetime(time()));
 
-        $this->assertFalse($checker->datetime('~#@'));
+        $this->assertFalse($checker->datetime('date'));
         $this->assertFalse($checker->datetime(''));
 
         $this->assertFalse($checker->datetime([]));
