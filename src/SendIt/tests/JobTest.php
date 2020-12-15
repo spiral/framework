@@ -16,102 +16,113 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Spiral\Mailer\Message;
 use Spiral\SendIt\Config\MailerConfig;
+use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
 use Spiral\SendIt\RendererInterface;
-use Spiral\SendIt\MailJob;
 use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
 class JobTest extends TestCase
 {
+    /** @var MailerInterface */
+    protected $mailer;
+    /** @var RendererInterface */
+    protected $renderer;
+    /** @var LoggerInterface */
+    protected $logger;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->mailer = m::mock(MailerInterface::class);
+        $this->renderer = m::mock(RendererInterface::class);
+        $this->logger = m::mock(LoggerInterface::class);
+    }
+
     public function testHandler(): void
     {
-        $mailer = m::mock(MailerInterface::class);
-        $renderer = m::mock(RendererInterface::class);
-        $logger = m::mock(LoggerInterface::class);
+        $email = $this->getEmail();
 
-        $handler = new MailJob(
-            new MailerConfig(['from' => 'Spiral <no-reply@spiral.dev>']),
-            $mailer,
-            $renderer
-        );
-        $handler->setLogger($logger);
+        $this->expectRenderer($email);
 
-        $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
-        $mail->setFrom('admin@spiral.dev');
-        $mail->setReplyTo('admin@spiral.dev');
-        $mail->setCC('admin@google.com');
-        $mail->setBCC('admin2@google.com');
+        $this->mailer->expects('send')->with($email);
 
-        $email = new Email();
-        $email->to('email@domain.com');
-        $email->html('message body');
-
-        $renderer->expects('render')->withArgs(function (Message $message) {
-            $this->assertSame($message->getSubject(), 'test');
-            return true;
-        })->andReturn($email);
-
-        $mailer->expects('send')->with($email);
-
-        $logger->expects('debug')->with(
+        $this->logger->expects('debug')->with(
             'Sent `test` to "email@domain.com"',
             ['emails' => ['email@domain.com']]
         );
 
-        $handler->handle(
+        $this->getHandler()->handle(
             MailQueue::JOB_NAME,
             'id',
-            json_encode(MessageSerializer::pack($mail))
+            json_encode(MessageSerializer::pack($this->getMail()))
         );
     }
 
     public function testHandlerError(): void
     {
-        $mailer = m::mock(MailerInterface::class);
-        $renderer = m::mock(RendererInterface::class);
-        $logger = m::mock(LoggerInterface::class);
+        $email = $this->getEmail();
 
-        $handler = new MailJob(
-            new MailerConfig(['from' => 'Spiral <no-reply@spiral.dev>']),
-            $mailer,
-            $renderer
-        );
-        $handler->setLogger($logger);
+        $this->expectRenderer($email);
 
-        $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
-        $mail->setFrom('admin@spiral.dev');
-        $mail->setReplyTo('admin@spiral.dev');
-        $mail->setCC('admin@google.com');
-        $mail->setBCC('admin2@google.com');
+        $this->mailer->expects('send')->with($email)->andThrow(new TransportException('failed'));
 
-        $email = new Email();
-        $email->to('email@domain.com');
-        $email->html('message body');
-
-        $renderer->expects('render')->withArgs(function (Message $message) {
-            $this->assertSame($message->getSubject(), 'test');
-            return true;
-        })->andReturn($email);
-
-        $mailer->expects('send')->with($email)->andThrow(new TransportException('failed'));
-
-        $logger->expects('error')->with(
+        $this->logger->expects('error')->with(
             'Failed to send `test` to "email@domain.com": failed',
             ['emails' => ['email@domain.com']]
         );
 
         try {
-            $handler->handle(
+            $this->getHandler()->handle(
                 MailQueue::JOB_NAME,
                 'id',
-                json_encode(MessageSerializer::pack($mail))
+                json_encode(MessageSerializer::pack($this->getMail()))
             );
         } catch (TransportException $e) {
         }
 
-        $logger->mockery_verify();
+        $this->logger->mockery_verify();
+    }
+
+    private function getEmail(): Email
+    {
+        $email = new Email();
+        $email->to('email@domain.com');
+        $email->html('message body');
+        return $email;
+    }
+
+    private function expectRenderer(Email $email): void
+    {
+        $this->renderer->expects('render')->withArgs(
+            function (Message $message) {
+                $this->assertSame($message->getSubject(), 'test');
+                return true;
+            }
+        )->andReturn($email);
+    }
+
+    private function getHandler(): MailJob
+    {
+        $handler = new MailJob(
+            new MailerConfig(['from' => 'no-reply@spiral.dev']),
+            $this->mailer,
+            $this->renderer
+        );
+        $handler->setLogger($this->logger);
+        return $handler;
+    }
+
+    private function getMail(): Message
+    {
+        $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
+        $mail->setFrom('admin@spiral.dev');
+        $mail->setReplyTo('admin@spiral.dev');
+        $mail->setCC('admin@google.com');
+        $mail->setBCC('admin2@google.com');
+        return $mail;
     }
 }

@@ -108,6 +108,7 @@ final class NamedArgumentsInstantiator extends Instantiator
                 } finally {
                     unset($arguments[$param->getName()]);
                 }
+            // no actual falling through
 
             case \array_key_exists($param->getPosition(), $arguments):
                 try {
@@ -115,6 +116,7 @@ final class NamedArgumentsInstantiator extends Instantiator
                 } finally {
                     unset($arguments[$param->getPosition()]);
                 }
+            // no actual falling through
 
             case $param->isDefaultValueAvailable():
                 return $param->getDefaultValue();
