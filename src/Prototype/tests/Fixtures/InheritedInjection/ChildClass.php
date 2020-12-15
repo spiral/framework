@@ -6,6 +6,7 @@ namespace Spiral\Tests\Prototype\Fixtures\InheritedInjection;
 
 class ChildClass extends MiddleClass
 {
+    // @codeCoverageIgnoreStart
     public function useTwo(): void
     {
         $this->two;
