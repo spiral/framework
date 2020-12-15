@@ -75,10 +75,17 @@ final class Injector
      * @param string    $code
      * @param ClassNode $node
      * @param bool      $removeTrait
+     * @param bool      $useTypedProperties
+     * @param bool      $noPhpDoc
      * @return string
      */
-    public function injectDependencies(string $code, ClassNode $node, bool $removeTrait = false): string
-    {
+    public function injectDependencies(
+        string $code,
+        ClassNode $node,
+        bool $removeTrait = false,
+        bool $useTypedProperties = false,
+        bool $noPhpDoc = false
+    ): string {
         if (empty($node->dependencies)) {
             if ($removeTrait) {
                 $tr = new NodeTraverser();
@@ -99,7 +106,7 @@ final class Injector
             $tr->addVisitor(new RemoveTrait());
         }
 
-        $tr->addVisitor(new AddProperty($node));
+        $tr->addVisitor(new AddProperty($node, $useTypedProperties, $noPhpDoc));
         $tr->addVisitor(new DefineConstructor());
         $tr->addVisitor(new UpdateConstructor($node));
 
