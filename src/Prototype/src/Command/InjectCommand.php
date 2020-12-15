@@ -36,14 +36,10 @@ final class InjectCommand extends AbstractCommand
     /** @var Injector */
     private $injector;
 
-    public function __construct(
-        PrototypeLocator $locator,
-        NodeExtractor $extractor,
-        PrototypeRegistry $registry,
-        Injector $injector
-    ) {
+    public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
+    {
         parent::__construct($locator, $extractor, $registry);
-        $this->injector = $injector;
+        $this->injector = new Injector();
     }
 
     /**
