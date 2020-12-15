@@ -90,6 +90,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
                     'timezone'   => 'type::timezone',
                     'bool'       => 'type::boolean',
                     'boolean'    => 'type::boolean',
+                    'arrayOf'    => 'type::arrayOf',
                     'cardNumber' => 'mixed::cardNumber',
                     'regexp'     => 'string::regexp',
                     'email'      => 'address::email',
