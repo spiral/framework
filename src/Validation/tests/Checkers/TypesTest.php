@@ -88,7 +88,7 @@ class TypesTest extends BaseTest
         $this->assertTrue($checker->datetime(date('u')));
         $this->assertTrue($checker->datetime(time()));
 
-        $this->assertFalse($checker->datetime('date'));
+        $this->assertFalse($checker->datetime('~#@'));
         $this->assertFalse($checker->datetime(''));
 
         $this->assertFalse($checker->datetime([]));
