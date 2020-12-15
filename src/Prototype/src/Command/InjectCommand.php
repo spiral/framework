@@ -13,6 +13,9 @@ namespace Spiral\Prototype\Command;
 
 use Spiral\Prototype\Exception\ClassNotDeclaredException;
 use Spiral\Prototype\Injector;
+use Spiral\Prototype\NodeExtractor;
+use Spiral\Prototype\PrototypeLocator;
+use Spiral\Prototype\PrototypeRegistry;
 use Symfony\Component\Console\Input\InputOption;
 
 final class InjectCommand extends AbstractCommand
@@ -22,6 +25,19 @@ final class InjectCommand extends AbstractCommand
     public const OPTIONS     = [
         ['remove', 'r', InputOption::VALUE_NONE, 'Remove PrototypeTrait'],
     ];
+
+    /** @var Injector */
+    private $injector;
+
+    public function __construct(
+        PrototypeLocator $locator,
+        NodeExtractor $extractor,
+        PrototypeRegistry $registry,
+        Injector $injector
+    ) {
+        parent::__construct($locator, $extractor, $registry);
+        $this->injector = $injector;
+    }
 
     /**
      * Perform command.
@@ -87,7 +103,7 @@ final class InjectCommand extends AbstractCommand
     {
         $classDefinition = $this->extractor->extract($class->getFilename(), $proto);
         try {
-            $modified = (new Injector())->injectDependencies(
+            $modified = $this->injector->injectDependencies(
                 file_get_contents($class->getFileName()),
                 $classDefinition,
                 $this->option('remove')
