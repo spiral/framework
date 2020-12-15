@@ -39,7 +39,7 @@ abstract class AbstractCommand extends Command
      */
     public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
     {
-        parent::__construct(null);
+        parent::__construct();
 
         $this->extractor = $extractor;
         $this->locator = $locator;
