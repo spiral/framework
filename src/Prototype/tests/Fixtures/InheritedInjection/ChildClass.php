@@ -11,4 +11,5 @@ class ChildClass extends MiddleClass
     {
         $this->two;
     }
+    // @codeCoverageIgnoreEnd
 }

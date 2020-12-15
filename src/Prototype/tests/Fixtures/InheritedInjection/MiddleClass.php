@@ -10,4 +10,5 @@ class MiddleClass extends ParentClass
     public function __construct(\stdClass $ownInjection)
     {
     }
+    // @codeCoverageIgnoreEnd
 }

@@ -15,4 +15,5 @@ class ParentClass
     {
         $this->one;
     }
+    // @codeCoverageIgnoreEnd
 }
