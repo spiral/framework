@@ -14,6 +14,7 @@ namespace Spiral\Tests\Prototype\Commands;
 use Spiral\Console\Console;
 use Spiral\Prototype\PrototypeRegistry;
 use Spiral\Tests\Prototype\Commands\Fixtures\EmptyInjectionClass;
+use Spiral\Tests\Prototype\Fixtures\InheritedInjection;
 use Spiral\Tests\Prototype\Fixtures\TestApp;
 use Spiral\Tests\Prototype\Fixtures\TestClass;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -79,5 +80,25 @@ class InjectCommandTest extends AbstractCommandsTest
 
         $this->assertStringContainsString('Undefined class', $result);
         $this->assertStringContainsString('Invalid', $result);
+    }
+
+    public function testInheritedInjection(): void
+    {
+        $this->app->bindApp();
+
+        $inp = new ArrayInput([]);
+        $out = new BufferedOutput();
+        $this->app->get(Console::class)->run('prototype:inject', $inp, $out);
+
+        $result = $out->fetch();
+
+        $this->assertStringContainsString(InheritedInjection\InjectionOne::class, $result);
+        $this->assertStringContainsString(InheritedInjection\InjectionTwo::class, $result);
+
+        $child = new \ReflectionClass(InheritedInjection\MiddleClass::class);
+        print_r(file_get_contents($child->getFileName()));
+
+        $child = new \ReflectionClass(InheritedInjection\ChildClass::class);
+        print_r(file_get_contents($child->getFileName()));
     }
 }
