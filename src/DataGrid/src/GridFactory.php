@@ -42,17 +42,24 @@ class GridFactory implements GridFactoryInterface
     /** @var GridInterface */
     private $view;
 
+    /** @var InputMapperInterface */
+    private $mapper;
+
     /**
-     * @param Compiler            $compiler
-     * @param InputInterface|null $input
-     * @param GridInterface|null  $view
+     * @param Compiler                  $compiler
+     * @param InputInterface|null       $input
+     * @param GridInterface|null        $view
+     * @param InputMapperInterface|null $mapper
      */
-    public function __construct(Compiler $compiler, InputInterface $input = null, GridInterface $view = null)
+    public function __construct(Compiler $compiler, InputInterface $input = null, GridInterface $view = null, InputMapperInterface $mapper = null)
     {
+        $mapper = $mapper ?? new NullMapper();
+
         $this->compiler = $compiler;
         $this->input = $input ?? new NullInput();
         $this->defaults = new NullInput();
         $this->view = $view ?? new Grid();
+        $this->mapper = $mapper->withInput($input);
     }
 
     /**
@@ -65,6 +72,7 @@ class GridFactory implements GridFactoryInterface
     {
         $generator = clone $this;
         $generator->input = $input;
+        $generator->mapper = $generator->mapper->withInput($input);
 
         return $generator;
     }
@@ -173,8 +181,8 @@ class GridFactory implements GridFactoryInterface
      */
     private function getOption(string $option)
     {
-        if ($this->input->hasValue($option)) {
-            return $this->input->getValue($option);
+        if ($this->mapper->hasOption($option)) {
+            return $this->mapper->getOption($option);
         }
 
         return $this->defaults->getValue($option);
