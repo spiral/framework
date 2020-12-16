@@ -16,6 +16,7 @@ use Spiral\DataGrid\Exception\CompilerException;
 use Spiral\DataGrid\Exception\GridViewException;
 use Spiral\DataGrid\Input\ArrayInput;
 use Spiral\DataGrid\Input\NullInput;
+use Spiral\DataGrid\Specification\FilterInterface;
 
 /**
  * Generates grid views based on provided inout source and grid specifications.
@@ -102,6 +103,28 @@ class GridFactory implements GridFactoryInterface
     {
         $view = clone $this->view;
 
+        ['view' => $view, 'source' => $source] = $this->applyFilters($view, $source, $schema);
+        ['view' => $view, 'source' => $source] = $this->applyCounter($view, $source, $schema);
+        ['view' => $view, 'source' => $source] = $this->applySorters($view, $source, $schema);
+        ['view' => $view, 'source' => $source] = $this->applyPaginator($view, $source, $schema);
+
+        if (!is_iterable($source)) {
+            throw new GridViewException('GridView expects the source to be iterable after all.');
+        }
+
+        return $view->withSource($source);
+    }
+
+    protected function applyFilters(GridInterface $view, $source, GridSchema $schema): array
+    {
+        ['source' => $source, 'filters' => $filters] = $this->getFilters($source, $schema);
+        $view = $view->withOption(GridInterface::FILTERS, $filters);
+
+        return compact('view', 'source');
+    }
+
+    protected function getFilters($source, GridSchema $schema): array
+    {
         $filters = [];
         foreach ($this->getOptionArray(static::KEY_FILTER) ?? [] as $name => $value) {
             if ($schema->hasFilter($name)) {
@@ -113,12 +136,29 @@ class GridFactory implements GridFactoryInterface
                 }
             }
         }
-        $view = $view->withOption(GridInterface::FILTERS, $filters);
 
+        return compact('source', 'filters');
+    }
+
+    protected function applyCounter(GridInterface $view, $source, GridSchema $schema): array
+    {
         if (is_countable($source) && $this->getOption(static::KEY_FETCH_COUNT)) {
             $view = $view->withOption(GridInterface::COUNT, ($this->count)($source));
         }
 
+        return compact('view', 'source');
+    }
+
+    protected function applySorters(GridInterface $view, $source, GridSchema $schema): array
+    {
+        ['source' => $source, 'sorters' => $sorters] = $this->getSorters($source, $schema);
+        $view = $view->withOption(GridInterface::SORTERS, $sorters);
+
+        return compact('view', 'source');
+    }
+
+    protected function getSorters($source, GridSchema $schema): array
+    {
         $sorters = [];
         foreach ($this->getOptionArray(static::KEY_SORT) ?? [] as $name => $value) {
             if ($schema->hasSorter($name)) {
@@ -130,23 +170,36 @@ class GridFactory implements GridFactoryInterface
                 }
             }
         }
-        $view = $view->withOption(GridInterface::SORTERS, $sorters);
 
+        return compact('source', 'sorters');
+    }
+
+    protected function applyPaginator(GridInterface $view, $source, GridSchema $schema): array
+    {
         if ($schema->getPaginator() !== null) {
-            $paginator = $schema->getPaginator()->withValue($this->getOption(static::KEY_PAGINATE));
-            if ($paginator === null) {
-                throw new CompilerException('The paginator can not be null');
-            }
-
-            $source = $this->compiler->compile($source, $paginator);
-            $view = $view->withOption(GridInterface::PAGINATOR, $paginator->getValue());
+            ['source' => $source, 'paginator' => $paginator] = $this->getPaginator($source, $schema);
+            $view = $view->withOption(GridInterface::PAGINATOR, $paginator);
         }
 
-        if (!is_iterable($source)) {
-            throw new GridViewException('GridView expects the source to be iterable after all.');
+        return compact('view', 'source');
+    }
+
+    protected function getPaginator($source, GridSchema $schema): array
+    {
+        $paginator = $schema->getPaginator();
+        if (!$paginator instanceof FilterInterface) {
+            throw new CompilerException('Paginator can not be null');
         }
 
-        return $view->withSource($source);
+        $withValue = $paginator->withValue($this->getOption(static::KEY_PAGINATE));
+        if ($withValue === null) {
+            throw new CompilerException('Paginator can not be null');
+        }
+
+        return [
+            'source'    => $this->compiler->compile($source, $withValue),
+            'paginator' => $withValue->getValue()
+        ];
     }
 
     /**
@@ -155,7 +208,7 @@ class GridFactory implements GridFactoryInterface
      * @param string $option
      * @return array
      */
-    private function getOptionArray(string $option): array
+    protected function getOptionArray(string $option): array
     {
         $result = $this->getOption($option);
         if (!is_array($result)) {
@@ -171,7 +224,7 @@ class GridFactory implements GridFactoryInterface
      * @param string $option
      * @return mixed
      */
-    private function getOption(string $option)
+    protected function getOption(string $option)
     {
         if ($this->input->hasValue($option)) {
             return $this->input->getValue($option);
