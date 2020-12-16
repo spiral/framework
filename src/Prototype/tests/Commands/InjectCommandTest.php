@@ -100,8 +100,8 @@ class InjectCommandTest extends AbstractCommandsTest
         $this->assertStringContainsString(InheritedInjection\ChildClass::class, $result);
 
         $this->assertSame(['one'], $this->getParameters(InheritedInjection\ParentClass::class));
-        $this->assertSame(['ownInjection', 'one'], $this->getParameters(InheritedInjection\MiddleClass::class));
-        $this->assertSame(['ownInjection', 'one', 'two'], $this->getParameters(InheritedInjection\ChildClass::class));
+        $this->assertSame(['one', 'ownInjection'], $this->getParameters(InheritedInjection\MiddleClass::class));
+        $this->assertSame(['two', 'one', 'ownInjection'], $this->getParameters(InheritedInjection\ChildClass::class));
     }
 
     private function getParameters(string $class): array
