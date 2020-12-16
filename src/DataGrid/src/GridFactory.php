@@ -198,7 +198,7 @@ class GridFactory implements GridFactoryInterface
 
         return [
             'source'    => $this->compiler->compile($source, $withValue),
-            'paginator' => $withValue->getValue()
+            'paginator' => $withValue->getValue(),
         ];
     }
 
