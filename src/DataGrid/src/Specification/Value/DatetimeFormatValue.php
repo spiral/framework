@@ -21,10 +21,10 @@ final class DatetimeFormatValue implements ValueInterface
     /** @var string */
     private $readFrom;
 
-    /** @var string */
+    /** @var string|null */
     private $convertInto;
 
-    public function __construct(string $readFrom, string $convertInto)
+    public function __construct(string $readFrom, ?string $convertInto = null)
     {
         $this->readFrom = $readFrom;
         $this->convertInto = $convertInto;
@@ -40,12 +40,22 @@ final class DatetimeFormatValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return string|null
+     * @return string|null|DateTimeImmutable
      */
-    public function convert($value): ?string
+    public function convert($value)
     {
         try {
-            return DateTimeImmutable::createFromFormat($this->readFrom, (string)$value)->format($this->convertInto);
+            $datetime = DateTimeImmutable::createFromFormat($this->readFrom, (string)$value);
+            if (!$datetime instanceof DateTimeImmutable) {
+                return null;
+            }
+
+            if ($this->convertInto !== null) {
+                $formatted = $datetime->format($this->convertInto);
+                return is_string($formatted) ? $formatted : null;
+            }
+
+            return $datetime;
         } catch (Throwable $e) {
             return null;
         }
