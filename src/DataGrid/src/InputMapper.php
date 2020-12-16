@@ -83,7 +83,7 @@ class InputMapper implements InputMapperInterface
             $data = $this->input->getValue($firstPath);
             $unmappedData = $data;
             if (!empty($paths) && is_array($unmappedData)) {
-                dump(compact('unmappedData','paths'));
+                dump(compact('unmappedData', 'paths'));
                 unset($unmappedData[$paths[0]]);
                 dump(compact('unmappedData'));
             }
