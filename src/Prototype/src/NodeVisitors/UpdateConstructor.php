@@ -67,22 +67,23 @@ final class UpdateConstructor extends NodeVisitorAbstract
     private function addDependencies(Node\Stmt\ClassMethod $constructor): void
     {
         foreach ($this->definition->dependencies as $dependency) {
-            $constructor->params[] = (new Param($dependency->var))->setType(
-                new Node\Name($this->getPropertyType($dependency))
-            )->getNode();
-
-            $prop = new Node\Expr\PropertyFetch(new Node\Expr\Variable('this'), $dependency->property);
-
+            array_unshift($constructor->params, $this->buildConstructorParam($dependency));
             array_unshift(
                 $constructor->stmts,
                 new Node\Stmt\Expression(
                     new Node\Expr\Assign(
-                        $prop,
+                        new Node\Expr\PropertyFetch(new Node\Expr\Variable('this'), $dependency->property),
                         new Node\Expr\Variable($dependency->var)
                     )
                 )
             );
         }
+    }
+
+    private function buildConstructorParam(Dependency $dependency): Node
+    {
+        $param = new Param($dependency->var);
+        return $param->setType(new Node\Name($this->getPropertyType($dependency)))->getNode();
     }
 
     /**

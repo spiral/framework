@@ -29,6 +29,9 @@ abstract class AbstractCommand extends Command
     /** @var PrototypeRegistry */
     protected $registry;
 
+    /** @var array */
+    private $cache = [];
+
     /**
      * @param PrototypeLocator  $locator
      * @param NodeExtractor     $extractor
@@ -36,7 +39,7 @@ abstract class AbstractCommand extends Command
      */
     public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
     {
-        parent::__construct(null);
+        parent::__construct();
 
         $this->extractor = $extractor;
         $this->locator = $locator;
@@ -47,19 +50,20 @@ abstract class AbstractCommand extends Command
      * Fetch class dependencies.
      *
      * @param \ReflectionClass $class
+     * @param array            $all
      * @return null[]|Dependency[]|\Throwable[]
-     * @throws \Throwable
      */
-    protected function getPrototypeProperties(\ReflectionClass $class): array
+    protected function getPrototypeProperties(\ReflectionClass $class, array $all = []): array
     {
-        $proto = $this->getExtractor()->getPrototypeProperties(file_get_contents($class->getFilename()));
+        $results = [$this->readProperties($class)];
 
-        $result = [];
-        foreach ($proto as $name) {
-            $result[$name] = $this->registry->resolveProperty($name);
+        $parent = $class->getParentClass();
+        while ($parent instanceof \ReflectionClass && isset($all[$parent->getName()])) {
+            $results[] = $this->readProperties($parent);
+            $parent = $parent->getParentClass();
         }
 
-        return $result;
+        return iterator_to_array($this->reverse($results));
     }
 
     /**
@@ -107,5 +111,31 @@ abstract class AbstractCommand extends Command
         }
 
         return implode("\n", $result);
+    }
+
+    private function readProperties(\ReflectionClass $class): array
+    {
+        if (isset($this->cache[$class->getFileName()])) {
+            $proto = $this->cache[$class->getFileName()];
+        } else {
+            $proto = $this->getExtractor()->getPrototypeProperties(file_get_contents($class->getFilename()));
+            $this->cache[$class->getFileName()] = $proto;
+        }
+
+        $result = [];
+        foreach ($proto as $name) {
+            if (!isset($result[$name])) {
+                $result[$name] = $this->registry->resolveProperty($name);
+            }
+        }
+
+        return $result;
+    }
+
+    private function reverse(array $results): ?\Generator
+    {
+        foreach (array_reverse($results) as $result) {
+            yield from $result;
+        }
     }
 }

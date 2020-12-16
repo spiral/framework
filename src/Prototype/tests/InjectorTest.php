@@ -184,9 +184,9 @@ class InjectorTest extends TestCase
     public function testModifyConstructor(): void
     {
         $filename = __DIR__ . '/Fixtures/WithConstructor.php';
-        $traverser = new Traverse\Extractor();
+        $extractor = new Traverse\Extractor();
 
-        $parameters = $traverser->extractFromFilename($filename);
+        $parameters = $extractor->extractFromFilename($filename);
         $this->assertArrayNotHasKey('testClass', $parameters);
 
         $i = new Injector();
@@ -199,7 +199,7 @@ class InjectorTest extends TestCase
         $this->assertStringContainsString('@param HydratedClass $h', $printed);
         $this->assertStringContainsString('@param TestClass $testClass', $printed);
 
-        $parameters = $traverser->extractFromString($printed);
+        $parameters = $extractor->extractFromString($printed);
         $this->assertArrayHasKey('testClass', $parameters);
     }
 
@@ -210,9 +210,9 @@ class InjectorTest extends TestCase
     public function testPriorOptionalConstructorParameters(): void
     {
         $filename = __DIR__ . '/Fixtures/OptionalConstructorArgsClass.php';
-        $traverser = new Traverse\Extractor();
+        $extractor = new Traverse\Extractor();
 
-        $parameters = $traverser->extractFromFilename($filename);
+        $parameters = $extractor->extractFromFilename($filename);
         $this->assertArrayNotHasKey('testClass', $parameters);
 
         $i = new Injector();
@@ -222,8 +222,8 @@ class InjectorTest extends TestCase
             $this->getDefinition($filename, ['testClass' => TestClass::class])
         );
 
-        $parameters = $traverser->extractFromString($printed);
-        $this->assertArrayHasKey('testClass', $parameters);
+        $parameters = $extractor->extractFromString($printed);
+        $this->assertSame(['testClass', 'a', 'b', 'c', 'd', 'e'], array_keys($parameters));
 
         $this->assertFalse($parameters['a']['optional']);
         $this->assertFalse($parameters['b']['optional']);
@@ -253,8 +253,8 @@ class InjectorTest extends TestCase
             )
         );
 
-        $traverser = new Traverse\Extractor();
-        $parameters = $traverser->extractFromString($printed);
+        $extractor = new Traverse\Extractor();
+        $parameters = $extractor->extractFromString($printed);
 
         $this->assertArrayHasKey('str1', $parameters);
         $this->assertEquals('string', $parameters['str1']['type']);

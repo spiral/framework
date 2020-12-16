@@ -37,7 +37,7 @@
         "symfony/console": "^5.1",
         "symfony/finder": "^5.1",
         "symfony/mailer": "^5.1",
-        "symfony/polyfill-php73": "v1.18",
+        "symfony/polyfill-php73": "^1.18",
         "symfony/polyfill-php80": "^1.18",
         "symfony/translation": "^5.1"
     },
