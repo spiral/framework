@@ -10,5 +10,5 @@ interface InputMapperInterface
 
     public function hasOption(string $option): bool;
 
-    public function getOption(string $option);
+    public function getOption(string $option, $default = null);
 }

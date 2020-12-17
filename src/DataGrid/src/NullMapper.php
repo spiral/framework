@@ -22,8 +22,8 @@ class NullMapper implements InputMapperInterface
         return $this->input->hasValue($option);
     }
 
-    public function getOption(string $option)
+    public function getOption(string $option, $default = null)
     {
-        return $this->input->getValue($option);
+        return $this->input->getValue($option, $default);
     }
 }

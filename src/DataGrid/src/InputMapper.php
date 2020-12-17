@@ -48,14 +48,10 @@ class InputMapper implements InputMapperInterface
         return false;
     }
 
-    /**
-     * @param string $option
-     * @return array|mixed
-     */
-    public function getOption(string $option)
+    public function getOption(string $option, $default = null)
     {
         if (!isset($this->mapped[$option])) {
-            return $this->input->getValue($option);
+            return $this->input->getValue($option, $default);
         }
 
         $mappedOptions = $this->mapped[$option];

@@ -64,7 +64,7 @@ class GridFactory implements GridFactoryInterface
         $this->input = $input ?? new NullInput();
         $this->defaults = new NullInput();
         $this->view = $view ?? new Grid();
-        $this->mapper = $mapper->withInput($input);
+        $this->mapper = $mapper->withInput($this->input);
     }
 
     public function withMapper(InputMapperInterface $mapper): GridFactoryInterface
