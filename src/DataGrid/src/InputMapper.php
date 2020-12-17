@@ -25,7 +25,7 @@ class InputMapper implements InputMapperInterface
         $mapper = clone $this;
         $mapper->input = $input;
         $mapper->mapped = [];
-        $mapper->mapAll();
+        $mapper->map();
 
         return $mapper;
     }
@@ -90,7 +90,7 @@ class InputMapper implements InputMapperInterface
         return !empty($output) ? array_merge(...$output) : [];
     }
 
-    protected function mapAll(): void
+    protected function map(): void
     {
         foreach ($this->mapping as $from => $to) {
             $to = explode('.', $to);
