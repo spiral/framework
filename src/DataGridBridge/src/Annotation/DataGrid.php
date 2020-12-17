@@ -50,4 +50,12 @@ class DataGrid
      * @var array
      */
     public $options = [];
+
+    /**
+     * Custom user GridFactory
+     *
+     * @Attribute(name="factory", type="string")
+     * @var string
+     */
+    public $factory;
 }

@@ -17,6 +17,7 @@ use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\DataGrid\Annotation\DataGrid;
 use Spiral\DataGrid\GridFactory;
+use Spiral\DataGrid\GridFactoryInterface;
 use Spiral\DataGrid\Response\GridResponseInterface;
 
 /**
@@ -68,7 +69,7 @@ final class GridInterceptor implements CoreInterceptorInterface
         if (is_iterable($result)) {
             $schema = $this->getSchema($controller, $action);
             if ($schema !== null) {
-                $grid = $this->gridFactory
+                $grid = $this->makeFactory($schema)
                     ->withDefaults($schema['defaults'])
                     ->create($result, $schema['grid']);
 
@@ -125,6 +126,7 @@ final class GridInterceptor implements CoreInterceptorInterface
             'view'     => $dataGrid->view,
             'options'  => $dataGrid->options,
             'defaults' => $dataGrid->defaults,
+            'factory'  => $dataGrid->factory,
         ];
 
         if (is_string($schema['view'])) {
@@ -144,5 +146,17 @@ final class GridInterceptor implements CoreInterceptorInterface
         }
 
         return $schema;
+    }
+
+    private function makeFactory(array $schema): GridFactoryInterface
+    {
+        if (!empty($schema['factory']) && $this->container->has($schema['factory'])) {
+            $factory = $this->container->get($schema['factory']);
+            if ($factory instanceof GridFactoryInterface) {
+                return $factory;
+            }
+        }
+
+        return $this->gridFactory;
     }
 }
