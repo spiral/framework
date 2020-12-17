@@ -15,22 +15,18 @@ class MapperTest extends TestCase
         $mapper = new InputMapper(
             [
                 'sortByNewest'         => 'sort.newest',
-                'sortMissed'           => 'sort.missed',
                 'sort.as.super.nested' => 'sort.as.nested',
                 'sort.byOldestSort'    => 'sort.by.oldest',
+                'sortMissed'           => 'sort.missed.value', //not in the input, should be ignored
             ]
         );
         $mapper = $mapper->withInput(
             new ArrayInput(
                 [
-                    'sortByNewest' => true,
+                    'sortByNewest' => 'true',
                     'sort'         => [
-                        'as'           => [
-                            'super' => [
-                                'nested' => 'desc'
-                            ]
-                        ],
-                        'byOldestSort' => false,
+                        'as'           => ['super' => ['nested' => 'desc']],
+                        'byOldestSort' => 'false',
                     ]
                 ]
             )
@@ -40,9 +36,9 @@ class MapperTest extends TestCase
         $this->assertFalse($mapper->hasOption('filter'));
         $this->assertSame(
             [
-                'newest' => true,
+                'newest' => 'true',
                 'as'     => ['nested' => 'desc'],
-                'by'     => ['oldest' => false],
+                'by'     => ['oldest' => 'false'],
             ],
             $mapper->getOption('sort')
         );
@@ -59,17 +55,15 @@ class MapperTest extends TestCase
         $mapper = $mapper->withInput(
             new ArrayInput(
                 [
-                    'sortByNewest' => true,
+                    'sortByNewest' => 'true',
                     'sort'         => [
-                        'as'           => [
-                            'super' => [
-                                'nested' => 'desc'
-                            ]
-                        ],
+                        'as'           => ['super' => ['nested' => 'desc']],
+                        //not in the mapping, should be ignored because sort section is partially mapped
                         'byOldestSort' => false,
                     ],
                     'filter'       => [
-                        'byOldestSort' => false
+                        //not in the mapping, should be added because filter section is not mapped at all
+                        'byOldestFilter' => false,
                     ]
                 ]
             )
@@ -79,21 +73,18 @@ class MapperTest extends TestCase
         $this->assertTrue($mapper->hasOption('filter'));
         $this->assertSame(
             [
-                'newest'       => true,
-                'as'           => ['nested' => 'desc'],
-                'byOldestSort' => false,
+                'newest' => 'true',
+                'as'     => ['nested' => 'desc'],
             ],
             $mapper->getOption('sort')
         );
         $this->assertSame(
-            [
-                'byOldestSort' => false,
-            ],
+            ['byOldestFilter' => false,],
             $mapper->getOption('filter')
         );
     }
 
-    public function testMapperWithExtraValues(): void
+    public function testMapperCrossOptions(): void
     {
         $mapper = new InputMapper(
             [
@@ -107,11 +98,7 @@ class MapperTest extends TestCase
                 [
                     'sortByNewest' => true,
                     'sort'         => [
-                        'as'           => [
-                            'super' => [
-                                'nested' => 'desc'
-                            ]
-                        ],
+                        'as'           => ['super' => ['nested' => 'desc']],
                         'byOldestSort' => false,
                     ],
                     'filter'       => [
@@ -126,14 +113,12 @@ class MapperTest extends TestCase
         $this->assertSame(
             [
                 'newest' => true,
-                'as'     => ['nested' => 'desc']
+                'as'     => ['nested' => 'desc'],
             ],
             $mapper->getOption('sort')
         );
         $this->assertSame(
-            [
-                'by' => ['oldest' => false]
-            ],
+            ['by' => ['oldest' => false],],
             $mapper->getOption('filter')
         );
     }

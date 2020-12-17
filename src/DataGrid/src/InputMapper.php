@@ -25,102 +25,80 @@ class InputMapper implements InputMapperInterface
         $mapper = clone $this;
         $mapper->input = $input;
         $mapper->mapped = [];
+        $mapper->mapAll();
 
         return $mapper;
     }
 
     public function hasOption(string $option): bool
     {
-        $mapped = $this->map($option);
-        if (!isset($mapped[$option])) {
+        if (!isset($this->mapped[$option])) {
             return $this->input->hasValue($option);
         }
 
-        $paths = (array)$mapped[$option][0];
-
-        $firstPath = array_shift($paths);
-        if (!$this->input->hasValue($firstPath)) {
-            return false;
-        }
-
-        if (empty($paths)) {
-            return true;
-        }
-
-        $data = $this->input->getValue($firstPath);
-        foreach ($paths as $path) {
-            if (!is_array($data)) {
-                return false;
+        $mappedOptions = $this->mapped[$option];
+        foreach ($mappedOptions as $mappedOption) {
+            $paths = $mappedOption[0];
+            $firstPath = array_shift($paths);
+            if ($this->input->hasValue($firstPath)) {
+                return true;
             }
-
-            if (!isset($data[$path])) {
-                return false;
-            }
-
-            $data = $data[$path];
         }
 
-        return true;
+        return false;
     }
 
+    /**
+     * @param string $option
+     * @return array|mixed
+     */
     public function getOption(string $option)
     {
-        $mappedOptions = $this->map($option);
-
-        if (!isset($mappedOptions)) {
+        if (!isset($this->mapped[$option])) {
             return $this->input->getValue($option);
         }
 
+        $mappedOptions = $this->mapped[$option];
         $output = [];
         foreach ($mappedOptions as $mappedOption) {
-            $paths = (array)$mappedOption[0];
-
+            [$paths, $to] = $mappedOption;
             $firstPath = array_shift($paths);
-            if (!$this->input->getValue($firstPath)) {
-                return false;
+            if (!$this->input->hasValue($firstPath)) {
+                continue;
             }
 
             $data = $this->input->getValue($firstPath);
-            $unmappedData = $data;
-            if (!empty($paths) && is_array($unmappedData)) {
-                dump(compact('unmappedData','paths'));
-                unset($unmappedData[$paths[0]]);
-                dump(compact('unmappedData'));
+            if (!empty($paths) && !is_array($data)) {
+                continue;
             }
 
             foreach ($paths as $path) {
+                if (!is_array($data) || !isset($data[$path])) {
+                    continue 2;
+                }
                 $data = $data[$path];
             }
 
             $result = $data;
-            foreach ((array)$mappedOption[1] as $path) {
+            foreach ($to as $path) {
                 $result = [$path => $result];
             }
+
             $output[] = $result;
-            if (is_array($unmappedData)) {
-                $output[] = $unmappedData;
-            }
         }
 
         return !empty($output) ? array_merge(...$output) : [];
     }
 
-    protected function map(string $option): array
+    protected function mapAll(): void
     {
-        if (isset($this->mapped[$option])) {
-            return $this->mapped[$option];
-        }
-
-        $result = [];
         foreach ($this->mapping as $from => $to) {
             $to = explode('.', $to);
-            if (isset($to[0]) && $to[0] === $option) {
-                array_shift($to);
-                $result[] = [explode('.', $from), array_reverse($to)];
+            $option = array_shift($to);
+            if (!isset($this->mapped[$option])) {
+                $this->mapped[$option] = [];
             }
+            $this->mapped[$option][] = [explode('.', $from), array_reverse($to)];
         }
-
-        $this->mapped[$option] = $result;
-        return $result;
     }
 }
