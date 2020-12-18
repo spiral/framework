@@ -11,22 +11,29 @@ declare(strict_types=1);
 
 namespace Spiral\App\Bootloader;
 
+use Psr\Container\ContainerInterface;
 use Spiral\App\Checker\MyChecker;
 use Spiral\App\Condition\MyCondition;
 use Spiral\App\Controller\AuthController;
+use Spiral\App\Controller\InterceptedController;
 use Spiral\App\Controller\TestController;
+use Spiral\App\Interceptor;
 use Spiral\App\User\UserRepository;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
 use Spiral\Bootloader\Http\JsonPayloadsBootloader;
 use Spiral\Bootloader\Security\ValidationBootloader;
 use Spiral\Bootloader\Views\ViewsBootloader;
+use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\InterceptableCore;
 use Spiral\Domain\CycleInterceptor;
 use Spiral\Domain\FilterInterceptor;
 use Spiral\Domain\GuardInterceptor;
+use Spiral\Domain\PipelineInterceptor;
 use Spiral\Router\Route;
 use Spiral\Router\RouterInterface;
+use Spiral\Router\Target\Action;
 use Spiral\Router\Target\Controller;
 use Spiral\Security\PermissionsInterface;
 
@@ -41,6 +48,17 @@ class AppBootloader extends DomainBootloader
         GuardInterceptor::class,
         FilterInterceptor::class
     ];
+    /** @var ContainerInterface */
+    private $container;
+
+    /** @var Core */
+    private $core;
+
+    public function __construct(ContainerInterface $container, Core $core)
+    {
+        $this->container = $container;
+        $this->core = $core;
+    }
 
     public function boot(
         \Spiral\Bootloader\Auth\AuthBootloader $authBootloader,
@@ -48,7 +66,8 @@ class AppBootloader extends DomainBootloader
         PermissionsInterface $rbac,
         ViewsBootloader $views,
         ValidationBootloader $validation,
-        JsonPayloadsBootloader $json
+        JsonPayloadsBootloader $json,
+        PipelineInterceptor $pipelineInterceptor
     ): void {
         $authBootloader->addActorProvider(UserRepository::class);
 
@@ -78,5 +97,86 @@ class AppBootloader extends DomainBootloader
         $validation->addCondition('cond', MyCondition::class);
 
         $json->addContentType('application/vnd.api+json');
+
+        $this->registerInterceptedRoute(
+            $router,
+            'without',
+            [
+                new Interceptor\Append('one'),
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+
+        $this->registerInterceptedRoute(
+            $router,
+            'with',
+            [
+                $pipelineInterceptor,
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'mix',
+            [
+                new Interceptor\Append('four'),
+                new Interceptor\Append('five'),
+                $pipelineInterceptor,
+                new Interceptor\Append('six'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'dup',
+            [
+                $pipelineInterceptor,
+                new Interceptor\Append('one'),
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'skip',
+            [
+                new Interceptor\Append('one'),
+                $pipelineInterceptor,
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'first',
+            [
+                $pipelineInterceptor,
+                new Interceptor\Append('four'),
+                new Interceptor\Append('five'),
+                new Interceptor\Append('six'),
+            ]
+        );
+    }
+
+    private function registerInterceptedRoute(RouterInterface $router, string $action, array $interceptors): void
+    {
+        $target = new Action(InterceptedController::class, $action);
+        $router->setRoute(
+            "intercepted:$action",
+            new Route(
+                "/intercepted/$action",
+                $target->withCore($this->getInterceptedCore($interceptors))
+            )
+        );
+    }
+
+    private function getInterceptedCore(array $interceptors = []): InterceptableCore
+    {
+        $core = new InterceptableCore($this->core);
+
+        foreach ($interceptors as $interceptor) {
+            $core->addInterceptor(is_object($interceptor) ? $interceptor : $this->container->get($interceptor));
+        }
+
+        return $core;
     }
 }
