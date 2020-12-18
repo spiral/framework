@@ -50,9 +50,13 @@ class PipelineInterceptor implements CoreInterceptorInterface
 
         $pipeline = $this->getCachedPipeline($controller, $action, $annotation);
         if (!empty($pipeline)) {
-            $core = $core instanceof InterceptorPipeline ? $core : new InterceptableCore($core);
-            foreach ($pipeline as $interceptor) {
-                $core->addInterceptor($interceptor);
+            if ($core instanceof InterceptorPipeline) {
+                $this->injectInterceptorsIntoOriginalPipeline($core, $pipeline);
+            } else {
+                $core = new InterceptableCore($core);
+                foreach ($pipeline as $interceptor) {
+                    $core->addInterceptor($interceptor);
+                }
             }
         }
 
@@ -91,6 +95,28 @@ class PipelineInterceptor implements CoreInterceptorInterface
             $newInterceptors[] = $interceptor;
             if ($interceptor instanceof self) {
                 break;
+            }
+        }
+
+        if (count($newInterceptors) !== count($oldInterceptors)) {
+            $pipelineReflection->setValue($pipeline, $newInterceptors);
+        }
+        $pipelineReflection->setAccessible(false);
+    }
+
+    private function injectInterceptorsIntoOriginalPipeline(InterceptorPipeline $pipeline, array $interceptors): void
+    {
+        $pipelineReflection = new \ReflectionProperty(InterceptorPipeline::class, 'interceptors');
+        $pipelineReflection->setAccessible(true);
+
+        $oldInterceptors = $pipelineReflection->getValue($pipeline);
+        $newInterceptors = [];
+        foreach ($oldInterceptors as $interceptor) {
+            $newInterceptors[] = $interceptor;
+            if ($interceptor instanceof self) {
+                foreach ($interceptors as $newInterceptor) {
+                    $newInterceptors[] = $newInterceptor;
+                }
             }
         }
 
