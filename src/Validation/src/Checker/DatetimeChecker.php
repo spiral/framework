@@ -38,7 +38,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
 
     /** @var callable|\DateTimeInterface|string|number|null */
     private $now;
-    /** @var DatetimeChecker\ThresholdChecker  */
+    /** @var DatetimeChecker\ThresholdChecker */
     private $threshold;
 
     public function __construct($now = null)
@@ -151,16 +151,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
     private function now(): ?\DateTimeInterface
     {
         try {
-            if (is_callable($this->now)) {
-                $now = $this->now;
-                return $this->date($now());
-            }
-
-            if ($this->now !== null) {
-                return $this->date($this->now);
-            }
-
-            return new \DateTimeImmutable('now');
+            return $this->date($this->now ?: 'now');
         } catch (\Throwable $e) {
             //here's the fail;
         }
@@ -174,6 +165,10 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      */
     private function date($value): ?\DateTimeInterface
     {
+        if (is_callable($value)) {
+            $value = $value();
+        }
+
         if ($value instanceof \DateTimeInterface) {
             return $value;
         }
