@@ -14,13 +14,13 @@ use Spiral\Domain\Annotation\Pipeline;
 
 class PipelineInterceptor implements CoreInterceptorInterface
 {
-    /** @var array  */
+    /** @var array */
     private $cache = [];
 
-    /** @var AnnotationReader  */
+    /** @var AnnotationReader */
     private $reader;
 
-    /** @var ContainerInterface  */
+    /** @var ContainerInterface */
     private $container;
 
     /**
@@ -45,7 +45,7 @@ class PipelineInterceptor implements CoreInterceptorInterface
     {
         $annotation = $this->readAnnotation($controller, $action);
         if ($core instanceof InterceptorPipeline && $annotation->skipNext) {
-            $this->cleanOriginalPipeline($core);
+            $this->removeNextInterceptorsFromOriginalPipeline($core);
         }
 
         $pipeline = $this->getCachedPipeline($controller, $action, $annotation);
@@ -80,7 +80,7 @@ class PipelineInterceptor implements CoreInterceptorInterface
     /**
      * @param InterceptorPipeline $pipeline
      */
-    private function cleanOriginalPipeline(InterceptorPipeline $pipeline): void
+    private function removeNextInterceptorsFromOriginalPipeline(InterceptorPipeline $pipeline): void
     {
         $pipelineReflection = new \ReflectionProperty(InterceptorPipeline::class, 'interceptors');
         $pipelineReflection->setAccessible(true);
