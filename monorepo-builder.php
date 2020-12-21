@@ -102,6 +102,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'src/Bridge/DataGrid' => 'git@github.com:spiral/data-grid-bridge.git',
         'src/Bridge/Stempler' => 'git@github.com:spiral/stempler-bridge.git',
         'src/Bridge/Monolog' => 'git@github.com:spiral/monolog-bridge.git',
+        'src/Bridge/Dotenv' => 'git@github.com:spiral/dotenv-bridge.git',
 
         // Components
         'src/AnnotatedRoutes' => 'git@github.com:spiral/annotated-routes.git',

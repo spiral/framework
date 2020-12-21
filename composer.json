@@ -40,7 +40,8 @@
         "symfony/mailer": "^5.1",
         "symfony/polyfill-php73": "^1.18",
         "symfony/polyfill-php80": "^1.18",
-        "symfony/translation": "^5.1"
+        "symfony/translation": "^5.1",
+        "vlucas/phpdotenv": "^5.2"
     },
     "autoload": {
         "files": [
@@ -76,6 +77,7 @@
                 "src/Debug/src",
                 "src/Dumper/src"
             ],
+            "Spiral\\DotEnv\\": "src/Bridge/Dotenv/src",
             "Spiral\\Encrypter\\": "src/Encrypter/src",
             "Spiral\\Exceptions\\": "src/Exceptions/src",
             "Spiral\\Files\\": "src/Files/src",
@@ -155,6 +157,7 @@
                 "src/Debug/tests",
                 "src/Dumper/tests"
             ],
+            "Spiral\\Tests\\DotEnv\\": "src/Bridge/Dotenv/tests",
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
             "Spiral\\Tests\\Exceptions\\": "src/Exceptions/tests",
             "Spiral\\Tests\\Files\\": "src/Files/tests",
@@ -202,6 +205,7 @@
         "spiral/data-grid": "*",
         "spiral/data-grid-bridge": "*",
         "spiral/debug": "*",
+        "spiral/dotenv-bridge": "self.version",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
         "spiral/exceptions": "*",
@@ -212,7 +216,7 @@
         "spiral/logger": "*",
         "spiral/mailer": "*",
         "spiral/models": "*",
-        "spiral/monolog-bridge": "self.version",
+        "spiral/monolog-bridge": "*",
         "spiral/pagination": "*",
         "spiral/prototype": "*",
         "spiral/reactor": "*",
