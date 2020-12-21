@@ -77,7 +77,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         'require-dev'  => [
             'phpunit/phpunit'           => '^8.5|^9.0',
-            'mockery/mockery'           => '^1.3',
+            'mockery/mockery'           => '^1.4',
             'spiral/code-style'         => '^1.0',
             'spiral/database'           => '^2.7.3',
             'spiral/migrations'         => '^2.1',
@@ -93,7 +93,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'cycle/proxy-factory'       => '^1.2',
             'cycle/schema-builder'      => '^1.1',
             'symplify/monorepo-builder' => '^8.3',
-            'vimeo/psalm'               => '^4.1',
+            'vimeo/psalm'               => '^4.3',
         ],
     ]);
 
