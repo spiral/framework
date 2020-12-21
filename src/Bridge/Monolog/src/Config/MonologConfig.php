@@ -23,7 +23,7 @@ final class MonologConfig extends InjectableConfig
     /** @var array */
     protected $config = [
         'globalLevel' => Logger::DEBUG,
-        'handlers'    => []
+        'handlers'    => [],
     ];
 
     /**

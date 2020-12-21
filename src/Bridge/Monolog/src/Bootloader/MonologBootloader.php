@@ -27,11 +27,11 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
 {
     protected const SINGLETONS = [
         LogsInterface::class   => LogFactory::class,
-        LoggerInterface::class => Logger::class
+        LoggerInterface::class => Logger::class,
     ];
 
     protected const BINDINGS = [
-        'log.rotate' => [self::class, 'logRotate']
+        'log.rotate' => [self::class, 'logRotate'],
     ];
 
     /** @var ConfiguratorInterface */
@@ -52,7 +52,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
     {
         $this->config->setDefaults('monolog', [
             'globalLevel' => Logger::DEBUG,
-            'handlers'    => []
+            'handlers'    => [],
         ]);
 
         $container->bindInjector(Logger::class, LogFactory::class);
