@@ -98,6 +98,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     $parameters->set(Option::DIRECTORIES_TO_REPOSITORIES, [
+        // Bridge
+        'src/Bridge/DataGrid' => 'git@github.com:spiral/data-grid-bridge.git',
+        'src/Bridge/Stempler' => 'git@github.com:spiral/stempler-bridge.git',
+        'src/Bridge/Monolog' => 'git@github.com:spiral/monolog-bridge.git',
+
+        // Components
         'src/AnnotatedRoutes' => 'git@github.com:spiral/annotated-routes.git',
         'src/Annotations'     => 'git@github.com:spiral/annotations.git',
         'src/Auth'            => 'git@github.com:spiral/auth.git',
@@ -130,7 +136,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'src/Session'         => 'git@github.com:spiral/session.git',
         'src/Snapshots'       => 'git@github.com:spiral/snapshots.git',
         'src/Stempler'        => 'git@github.com:spiral/stempler.git',
-        'src/StemplerBridge'  => 'git@github.com:spiral/stempler-bridge.git',
         'src/Streams'         => 'git@github.com:spiral/streams.git',
         'src/Tokenizer'       => 'git@github.com:spiral/tokenizer.git',
         'src/Translator'      => 'git@github.com:spiral/translator.git',

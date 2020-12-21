@@ -26,6 +26,7 @@
         "defuse/php-encryption": "^2.2",
         "doctrine/annotations": "^1.11",
         "doctrine/inflector": "^1.4|^2.0",
+        "monolog/monolog": "^2.2",
         "myclabs/deep-copy": "^1.9",
         "nikic/php-parser": "^4.1",
         "psr/container": "^1.0",
@@ -68,8 +69,8 @@
             ],
             "Spiral\\Csrf\\": "src/Csrf/src",
             "Spiral\\DataGrid\\": [
-                "src/DataGrid/src",
-                "src/DataGridBridge/src"
+                "src/Bridge/DataGrid/src",
+                "src/DataGrid/src"
             ],
             "Spiral\\Debug\\": [
                 "src/Debug/src",
@@ -83,6 +84,7 @@
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Mailer\\": "src/Mailer/src",
             "Spiral\\Models\\": "src/Models/src",
+            "Spiral\\Monolog\\": "src/Bridge/Monolog/src",
             "Spiral\\Pagination\\": "src/Pagination/src",
             "Spiral\\Prototype\\": "src/Prototype/src",
             "Spiral\\Reactor\\": "src/Reactor/src",
@@ -96,8 +98,8 @@
             "Spiral\\Session\\": "src/Session/src",
             "Spiral\\Snapshots\\": "src/Snapshots/src",
             "Spiral\\Stempler\\": [
-                "src/Stempler/src",
-                "src/StemplerBridge/src"
+                "src/Bridge/Stempler/src",
+                "src/Stempler/src"
             ],
             "Spiral\\Streams\\": "src/Streams/src",
             "Spiral\\Tokenizer\\": "src/Tokenizer/src",
@@ -107,11 +109,11 @@
         }
     },
     "require-dev": {
-        "cycle/annotated": "^2.0.7",
-        "cycle/migrations": "^1.0.8",
-        "cycle/orm": "^1.2.17",
-        "cycle/proxy-factory": "^1.2.3",
-        "cycle/schema-builder": "^1.1.21",
+        "cycle/annotated": "^2.0.6",
+        "cycle/migrations": "^1.0.1",
+        "cycle/orm": "^1.2.6",
+        "cycle/proxy-factory": "^1.2",
+        "cycle/schema-builder": "^1.1",
         "laminas/laminas-diactoros": "^2.3",
         "laminas/laminas-hydrator": "^3.0",
         "mockery/mockery": "^1.3",
@@ -146,8 +148,8 @@
             ],
             "Spiral\\Tests\\Csrf\\": "src/Csrf/tests",
             "Spiral\\Tests\\DataGrid\\": [
-                "src/DataGrid/tests",
-                "src/DataGridBridge/tests"
+                "src/Bridge/DataGrid/tests",
+                "src/DataGrid/tests"
             ],
             "Spiral\\Tests\\Debug\\": [
                 "src/Debug/tests",
@@ -162,6 +164,7 @@
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
             "Spiral\\Tests\\Mailer\\": "src/Mailer/tests",
             "Spiral\\Tests\\Models\\": "src/Models/tests",
+            "Spiral\\Tests\\Monolog\\": "src/Bridge/Monolog/tests",
             "Spiral\\Tests\\Pagination\\": "src/Pagination/tests",
             "Spiral\\Tests\\Prototype\\": "src/Prototype/tests",
             "Spiral\\Tests\\Reactor\\": "src/Reactor/tests",
@@ -175,8 +178,8 @@
             "Spiral\\Tests\\Session\\": "src/Session/tests",
             "Spiral\\Tests\\Snapshots\\": "src/Snapshots/tests",
             "Spiral\\Tests\\Stempler\\": [
-                "src/Stempler/tests",
-                "src/StemplerBridge/tests"
+                "src/Bridge/Stempler/tests",
+                "src/Stempler/tests"
             ],
             "Spiral\\Tests\\Streams\\": "src/Streams/tests",
             "Spiral\\Tests\\Tokenizer\\": "src/Tokenizer/tests",
@@ -209,6 +212,7 @@
         "spiral/logger": "*",
         "spiral/mailer": "*",
         "spiral/models": "*",
+        "spiral/monolog-bridge": "self.version",
         "spiral/pagination": "*",
         "spiral/prototype": "*",
         "spiral/reactor": "*",
