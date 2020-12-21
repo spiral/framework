@@ -205,7 +205,7 @@
         "spiral/data-grid": "*",
         "spiral/data-grid-bridge": "*",
         "spiral/debug": "*",
-        "spiral/dotenv-bridge": "self.version",
+        "spiral/dotenv-bridge": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
         "spiral/exceptions": "*",
