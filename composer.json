@@ -107,11 +107,11 @@
         }
     },
     "require-dev": {
-        "cycle/annotated": "^2.0.6",
-        "cycle/migrations": "^1.0.1",
-        "cycle/orm": "^1.2.6",
-        "cycle/proxy-factory": "^1.2",
-        "cycle/schema-builder": "^1.1",
+        "cycle/annotated": "^2.0.7",
+        "cycle/migrations": "^1.0.8",
+        "cycle/orm": "^1.2.17",
+        "cycle/proxy-factory": "^1.2.3",
+        "cycle/schema-builder": "^1.1.21",
         "laminas/laminas-diactoros": "^2.3",
         "laminas/laminas-hydrator": "^3.0",
         "mockery/mockery": "^1.3",
