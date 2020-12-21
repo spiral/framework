@@ -7,7 +7,7 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\DotEnv\Tests;
+namespace Spiral\Tests\DotEnv;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Directories;
