@@ -77,7 +77,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         'require-dev'  => [
             'phpunit/phpunit'           => '^8.5|^9.0',
-            'mockery/mockery'           => '^1.4',
+            'mockery/mockery'           => '^1.3',
             'spiral/code-style'         => '^1.0',
             'spiral/database'           => '^2.7.3',
             'spiral/migrations'         => '^2.1',
