@@ -100,7 +100,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::DIRECTORIES_TO_REPOSITORIES, [
         'src/AnnotatedRoutes' => 'git@github.com:spiral/annotated-routes.git',
         'src/Annotations'     => 'git@github.com:spiral/annotations.git',
-        'src/Attributes'      => 'git@github.com:spiral/attributes.git',
         'src/Auth'            => 'git@github.com:spiral/auth.git',
         'src/AuthHttp'        => 'git@github.com:spiral/auth-http.git',
         'src/Boot'            => 'git@github.com:spiral/boot.git',

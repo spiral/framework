@@ -54,7 +54,6 @@
         "psr-4": {
             "Spiral\\": "src/Framework",
             "Spiral\\Annotations\\": "src/Annotations/src",
-            "Spiral\\Attributes\\": "src/Attributes/src",
             "Spiral\\Auth\\": [
                 "src/Auth/src",
                 "src/AuthHttp/src"
@@ -133,7 +132,6 @@
         "psr-4": {
             "Spiral\\App\\": "tests/app/src",
             "Spiral\\Tests\\Annotations\\": "src/Annotations/tests",
-            "Spiral\\Tests\\Attributes\\": "src/Attributes/tests",
             "Spiral\\Tests\\Auth\\": [
                 "src/Auth/tests",
                 "src/AuthHttp/tests"
@@ -190,7 +188,6 @@
     "replace": {
         "spiral/annotated-routes": "*",
         "spiral/annotations": "*",
-        "spiral/attributes": "*",
         "spiral/auth": "*",
         "spiral/auth-http": "*",
         "spiral/boot": "*",
@@ -200,7 +197,7 @@
         "spiral/core": "*",
         "spiral/csrf": "*",
         "spiral/data-grid": "*",
-        "spiral/data-grid-bridge": "self.version",
+        "spiral/data-grid-bridge": "*",
         "spiral/debug": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
