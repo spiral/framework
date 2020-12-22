@@ -14,6 +14,7 @@ namespace Spiral\Validation\Checker;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Validation\AbstractChecker;
 use Spiral\Validation\Checker\Traits\NotEmptyTrait;
+use Spiral\Validation\ValidationInterface;
 
 /**
  * @inherit-messages
@@ -37,6 +38,14 @@ final class TypeChecker extends AbstractChecker implements SingletonInterface
      * {@inheritdoc}
      */
     public const ALLOW_EMPTY_VALUES = ['notEmpty', 'notNull'];
+
+    /** @var ValidationInterface */
+    private $validation;
+
+    public function __construct(ValidationInterface $validation)
+    {
+        $this->validation = $validation;
+    }
 
     /**
      * Value should not be null.
@@ -90,5 +99,20 @@ final class TypeChecker extends AbstractChecker implements SingletonInterface
     public function timezone($value): bool
     {
         return in_array((string)$value, \DateTimeZone::listIdentifiers(), true);
+    }
+
+    public function arrayOf($value, $checker): bool
+    {
+        if (!is_array($value) || empty($value)) {
+            return false;
+        }
+
+        foreach ($value as $item) {
+            if (!$this->validation->validate(['item' => $item], ['item' => [$checker]])->isValid()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

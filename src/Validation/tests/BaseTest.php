@@ -39,6 +39,7 @@ abstract class BaseTest extends TestCase
             'notEmpty' => 'type::notEmpty',
             'email'    => 'address::email',
             'url'      => 'address::url',
+            'integer'  => 'is_int',
         ],
     ];
 

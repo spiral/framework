@@ -23,13 +23,21 @@ final class AddProperty extends NodeVisitorAbstract
 {
     /** @var ClassNode */
     private $definition;
+    /** @var bool */
+    private $useTypedProperties;
+    /** @var bool */
+    private $noPhpDoc;
 
     /**
      * @param ClassNode $definition
+     * @param bool      $useTypedProperties
+     * @param bool      $noPhpDoc
      */
-    public function __construct(ClassNode $definition)
+    public function __construct(ClassNode $definition, bool $useTypedProperties = false, bool $noPhpDoc = false)
     {
         $this->definition = $definition;
+        $this->useTypedProperties = $useTypedProperties;
+        $this->noPhpDoc = $noPhpDoc;
     }
 
     /**
@@ -76,9 +84,26 @@ final class AddProperty extends NodeVisitorAbstract
     {
         $b = new Property($dependency->property);
         $b->makePrivate();
-        $b->setDocComment(new Doc(sprintf('/** @var %s */', $this->getPropertyType($dependency))));
+
+        if ($this->useTypedProperty()) {
+            $b->setType($this->getPropertyType($dependency));
+        }
+
+        if ($this->renderDoc()) {
+            $b->setDocComment(new Doc(sprintf('/** @var %s */', $this->getPropertyType($dependency))));
+        }
 
         return $b->getNode();
+    }
+
+    private function useTypedProperty(): bool
+    {
+        return $this->useTypedProperties && method_exists(Property::class, 'setType');
+    }
+
+    private function renderDoc(): bool
+    {
+        return !($this->useTypedProperties && $this->noPhpDoc);
     }
 
     /**
@@ -88,10 +113,8 @@ final class AddProperty extends NodeVisitorAbstract
     private function getPropertyType(Dependency $dependency): string
     {
         foreach ($this->definition->getStmts() as $stmt) {
-            if ($stmt->name === $dependency->type->fullName) {
-                if ($stmt->alias) {
-                    return $stmt->alias;
-                }
+            if (($stmt->name === $dependency->type->fullName) && $stmt->alias) {
+                return $stmt->alias;
             }
         }
 

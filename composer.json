@@ -24,8 +24,9 @@
         "cocur/slugify": "^3.2",
         "codedungeon/php-cli-colors": "^1.11",
         "defuse/php-encryption": "^2.2",
-        "doctrine/annotations": "^1.10",
+        "doctrine/annotations": "^1.11",
         "doctrine/inflector": "^1.4|^2.0",
+        "monolog/monolog": "^2.2",
         "myclabs/deep-copy": "^1.9",
         "nikic/php-parser": "^4.1",
         "psr/container": "^1.0",
@@ -37,9 +38,10 @@
         "symfony/console": "^5.1",
         "symfony/finder": "^5.1",
         "symfony/mailer": "^5.1",
-        "symfony/polyfill-php73": "v1.18",
+        "symfony/polyfill-php73": "^1.18",
         "symfony/polyfill-php80": "^1.18",
-        "symfony/translation": "^5.1"
+        "symfony/translation": "^5.1",
+        "vlucas/phpdotenv": "^5.2"
     },
     "autoload": {
         "files": [
@@ -54,7 +56,6 @@
         "psr-4": {
             "Spiral\\": "src/Framework",
             "Spiral\\Annotations\\": "src/Annotations/src",
-            "Spiral\\Attributes\\": "src/Attributes/src",
             "Spiral\\Auth\\": [
                 "src/Auth/src",
                 "src/AuthHttp/src"
@@ -69,13 +70,14 @@
             ],
             "Spiral\\Csrf\\": "src/Csrf/src",
             "Spiral\\DataGrid\\": [
-                "src/DataGrid/src",
-                "src/DataGridBridge/src"
+                "src/Bridge/DataGrid/src",
+                "src/DataGrid/src"
             ],
             "Spiral\\Debug\\": [
                 "src/Debug/src",
                 "src/Dumper/src"
             ],
+            "Spiral\\DotEnv\\": "src/Bridge/Dotenv/src",
             "Spiral\\Encrypter\\": "src/Encrypter/src",
             "Spiral\\Exceptions\\": "src/Exceptions/src",
             "Spiral\\Files\\": "src/Files/src",
@@ -84,6 +86,7 @@
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Mailer\\": "src/Mailer/src",
             "Spiral\\Models\\": "src/Models/src",
+            "Spiral\\Monolog\\": "src/Bridge/Monolog/src",
             "Spiral\\Pagination\\": "src/Pagination/src",
             "Spiral\\Prototype\\": "src/Prototype/src",
             "Spiral\\Reactor\\": "src/Reactor/src",
@@ -97,8 +100,8 @@
             "Spiral\\Session\\": "src/Session/src",
             "Spiral\\Snapshots\\": "src/Snapshots/src",
             "Spiral\\Stempler\\": [
-                "src/Stempler/src",
-                "src/StemplerBridge/src"
+                "src/Bridge/Stempler/src",
+                "src/Stempler/src"
             ],
             "Spiral\\Streams\\": "src/Streams/src",
             "Spiral\\Tokenizer\\": "src/Tokenizer/src",
@@ -127,13 +130,12 @@
         "spiral/php-grpc": "^1.4",
         "spiral/roadrunner": "^1.8",
         "symplify/monorepo-builder": "^8.3",
-        "vimeo/psalm": "^4.1"
+        "vimeo/psalm": "^4.3"
     },
     "autoload-dev": {
         "psr-4": {
             "Spiral\\App\\": "tests/app/src",
             "Spiral\\Tests\\Annotations\\": "src/Annotations/tests",
-            "Spiral\\Tests\\Attributes\\": "src/Attributes/tests",
             "Spiral\\Tests\\Auth\\": [
                 "src/Auth/tests",
                 "src/AuthHttp/tests"
@@ -148,13 +150,14 @@
             ],
             "Spiral\\Tests\\Csrf\\": "src/Csrf/tests",
             "Spiral\\Tests\\DataGrid\\": [
-                "src/DataGrid/tests",
-                "src/DataGridBridge/tests"
+                "src/Bridge/DataGrid/tests",
+                "src/DataGrid/tests"
             ],
             "Spiral\\Tests\\Debug\\": [
                 "src/Debug/tests",
                 "src/Dumper/tests"
             ],
+            "Spiral\\Tests\\DotEnv\\": "src/Bridge/Dotenv/tests",
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
             "Spiral\\Tests\\Exceptions\\": "src/Exceptions/tests",
             "Spiral\\Tests\\Files\\": "src/Files/tests",
@@ -164,6 +167,7 @@
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
             "Spiral\\Tests\\Mailer\\": "src/Mailer/tests",
             "Spiral\\Tests\\Models\\": "src/Models/tests",
+            "Spiral\\Tests\\Monolog\\": "src/Bridge/Monolog/tests",
             "Spiral\\Tests\\Pagination\\": "src/Pagination/tests",
             "Spiral\\Tests\\Prototype\\": "src/Prototype/tests",
             "Spiral\\Tests\\Reactor\\": "src/Reactor/tests",
@@ -177,8 +181,8 @@
             "Spiral\\Tests\\Session\\": "src/Session/tests",
             "Spiral\\Tests\\Snapshots\\": "src/Snapshots/tests",
             "Spiral\\Tests\\Stempler\\": [
-                "src/Stempler/tests",
-                "src/StemplerBridge/tests"
+                "src/Bridge/Stempler/tests",
+                "src/Stempler/tests"
             ],
             "Spiral\\Tests\\Streams\\": "src/Streams/tests",
             "Spiral\\Tests\\Tokenizer\\": "src/Tokenizer/tests",
@@ -190,7 +194,6 @@
     "replace": {
         "spiral/annotated-routes": "*",
         "spiral/annotations": "*",
-        "spiral/attributes": "*",
         "spiral/auth": "*",
         "spiral/auth-http": "*",
         "spiral/boot": "*",
@@ -200,8 +203,9 @@
         "spiral/core": "*",
         "spiral/csrf": "*",
         "spiral/data-grid": "*",
-        "spiral/data-grid-bridge": "self.version",
+        "spiral/data-grid-bridge": "*",
         "spiral/debug": "*",
+        "spiral/dotenv-bridge": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
         "spiral/exceptions": "*",
@@ -212,6 +216,7 @@
         "spiral/logger": "*",
         "spiral/mailer": "*",
         "spiral/models": "*",
+        "spiral/monolog-bridge": "*",
         "spiral/pagination": "*",
         "spiral/prototype": "*",
         "spiral/reactor": "*",

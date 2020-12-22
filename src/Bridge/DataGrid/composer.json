@@ -1,0 +1,50 @@
+{
+    "name": "spiral/data-grid-bridge",
+    "type": "library",
+    "description": "Data Grid specification builder adapter for Spiral Framework",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/data-grid-bridge"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "ext-json": "*",
+        "spiral/boot": "^2.7",
+        "spiral/http": "^2.7",
+        "spiral/data-grid": "^2.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.0",
+        "cycle/orm": "^1.2.6",
+        "spiral/hmvc": "^2.7",
+        "doctrine/annotations": "^1.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\DataGrid\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\DataGrid\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.7.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

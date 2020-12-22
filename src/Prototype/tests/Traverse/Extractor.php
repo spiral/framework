@@ -13,8 +13,8 @@ namespace Spiral\Tests\Prototype\Traverse;
 
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
+use PhpParser\Parser;
 use PhpParser\ParserFactory;
-use Spiral\Prototype\Annotation\Parser;
 
 class Extractor
 {
@@ -32,10 +32,7 @@ class Extractor
      */
     public function extractFromFilename(string $filename): array
     {
-        $params = new ConstructorParamsVisitor();
-        $this->traverse(file_get_contents($filename), $params);
-
-        return $params->getParams();
+        return $this->extractFromString(file_get_contents($filename));
     }
 
     /**

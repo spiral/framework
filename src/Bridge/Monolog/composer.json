@@ -1,0 +1,46 @@
+{
+    "name": "spiral/monolog-bridge",
+    "type": "library",
+    "description": "LogFactory integration based on Monolog package",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/monolog-bridge"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "spiral/boot": "^2.7",
+        "monolog/monolog": "^2.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.0",
+        "mockery/mockery": "^1.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Monolog\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Monolog\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.7.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

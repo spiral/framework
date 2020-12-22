@@ -13,6 +13,9 @@ namespace Spiral\Prototype\Command;
 
 use Spiral\Prototype\Exception\ClassNotDeclaredException;
 use Spiral\Prototype\Injector;
+use Spiral\Prototype\NodeExtractor;
+use Spiral\Prototype\PrototypeLocator;
+use Spiral\Prototype\PrototypeRegistry;
 use Symfony\Component\Console\Input\InputOption;
 
 final class InjectCommand extends AbstractCommand
@@ -21,7 +24,23 @@ final class InjectCommand extends AbstractCommand
     public const DESCRIPTION = 'Inject all prototype dependencies';
     public const OPTIONS     = [
         ['remove', 'r', InputOption::VALUE_NONE, 'Remove PrototypeTrait'],
+        ['typedProperties', 't', InputOption::VALUE_NONE, 'Use PHP7.4 Typed Properties'],
+        [
+            'no-phpdoc',
+            '',
+            InputOption::VALUE_NONE,
+            'Omit PhpDoc for Properties, can be omitted only for typed properties',
+        ],
     ];
+
+    /** @var Injector */
+    private $injector;
+
+    public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
+    {
+        parent::__construct($locator, $extractor, $registry);
+        $this->injector = new Injector();
+    }
 
     /**
      * Perform command.
@@ -41,7 +60,7 @@ final class InjectCommand extends AbstractCommand
         $targets = [];
 
         foreach ($prototyped as $class) {
-            $proto = $this->getPrototypeProperties($class);
+            $proto = $this->getPrototypeProperties($class, $prototyped);
             if (empty($proto)) {
                 $modified = $this->modify($class, $proto);
                 if ($modified !== null) {
@@ -87,10 +106,12 @@ final class InjectCommand extends AbstractCommand
     {
         $classDefinition = $this->extractor->extract($class->getFilename(), $proto);
         try {
-            $modified = (new Injector())->injectDependencies(
+            $modified = $this->injector->injectDependencies(
                 file_get_contents($class->getFileName()),
                 $classDefinition,
-                $this->option('remove')
+                $this->option('remove'),
+                $this->option('typedProperties'),
+                $this->option('no-phpdoc')
             );
 
             file_put_contents($class->getFileName(), $modified);

@@ -93,14 +93,20 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'cycle/proxy-factory'       => '^1.2',
             'cycle/schema-builder'      => '^1.1',
             'symplify/monorepo-builder' => '^8.3',
-            'vimeo/psalm'               => '^4.1',
+            'vimeo/psalm'               => '^4.3',
         ],
     ]);
 
     $parameters->set(Option::DIRECTORIES_TO_REPOSITORIES, [
+        // Bridge
+        'src/Bridge/DataGrid' => 'git@github.com:spiral/data-grid-bridge.git',
+        'src/Bridge/Stempler' => 'git@github.com:spiral/stempler-bridge.git',
+        'src/Bridge/Monolog' => 'git@github.com:spiral/monolog-bridge.git',
+        'src/Bridge/Dotenv' => 'git@github.com:spiral/dotenv-bridge.git',
+
+        // Components
         'src/AnnotatedRoutes' => 'git@github.com:spiral/annotated-routes.git',
         'src/Annotations'     => 'git@github.com:spiral/annotations.git',
-        'src/Attributes'      => 'git@github.com:spiral/attributes.git',
         'src/Auth'            => 'git@github.com:spiral/auth.git',
         'src/AuthHttp'        => 'git@github.com:spiral/auth-http.git',
         'src/Boot'            => 'git@github.com:spiral/boot.git',
@@ -131,7 +137,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'src/Session'         => 'git@github.com:spiral/session.git',
         'src/Snapshots'       => 'git@github.com:spiral/snapshots.git',
         'src/Stempler'        => 'git@github.com:spiral/stempler.git',
-        'src/StemplerBridge'  => 'git@github.com:spiral/stempler-bridge.git',
         'src/Streams'         => 'git@github.com:spiral/streams.git',
         'src/Tokenizer'       => 'git@github.com:spiral/tokenizer.git',
         'src/Translator'      => 'git@github.com:spiral/translator.git',
