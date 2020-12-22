@@ -29,7 +29,7 @@ final class GuardBootloader extends Bootloader
         PermissionsInterface::class         => PermissionManager::class,
         RulesInterface::class               => RuleManager::class,
         GuardInterface::class               => GuardScope::class,
-        PermissionsProviderInterface::class => GuardPermissionsProvider::class
+        PermissionsProviderInterface::class => GuardPermissionsProvider::class,
     ];
 
     protected const BINDINGS = [
