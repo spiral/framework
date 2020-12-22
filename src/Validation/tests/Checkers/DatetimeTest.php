@@ -18,6 +18,59 @@ use Spiral\Validation\ValidatorInterface;
 class DatetimeTest extends TestCase
 {
     /**
+     * @dataProvider nowProvider
+     * @param bool $expected
+     * @param      $now
+     * @param      $value
+     * @param bool $orNow
+     * @param bool $useMicroseconds
+     */
+    public function testNow(bool $expected, $now, $value, bool $orNow, bool $useMicroseconds): void
+    {
+        $checker = new DatetimeChecker($now);
+
+        $this->assertSame($expected, $checker->future($value, $orNow, $useMicroseconds));
+    }
+
+    public function nowProvider(): iterable
+    {
+        $now = new \DateTime();
+        $callableNow = static function () use ($now) {
+            return $now;
+        };
+
+        yield from [
+            [false, $callableNow, $now, false, true],
+            [true, $callableNow, $now, true, true]
+        ];
+
+        $callableFutureTime = static function () {
+            return time() + 1000;
+        };
+        yield from [
+            [false, $callableFutureTime, $now, false, true],
+            [false, $callableFutureTime, $now, true, true],
+        ];
+
+        $callablePastTime = static function () {
+            return time() - 1000;
+        };
+        yield from [
+            [true, $callablePastTime, $now, false, true],
+            [true, $callablePastTime, $now, true, true],
+        ];
+
+        return [
+            [false, 'tomorrow + 2hours', $now, false, true],
+            [false, 'tomorrow + 2hours', $now, true, true],
+            [true, 'yesterday - 2hours', $now, false, true],
+            [true, 'yesterday - 2hours', $now, true, true],
+            [false, $now, $now, false, true],
+            [true, $now, $now, true, true],
+        ];
+    }
+
+    /**
      * @dataProvider futureProvider
      *
      * @param bool  $expected
@@ -229,13 +282,16 @@ class DatetimeTest extends TestCase
         $mock->method('getValue')->with('threshold')->willReturn($threshold);
 
         /** @var ValidatorInterface $mock */
-        $this->assertSame($expected, $checker->check(
-            $mock,
-            'before',
-            'field',
-            $value,
-            ['threshold', $orEquals, $useMicroseconds]
-        ));
+        $this->assertSame(
+            $expected,
+            $checker->check(
+                $mock,
+                'before',
+                'field',
+                $value,
+                ['threshold', $orEquals, $useMicroseconds]
+            )
+        );
     }
 
     /**
@@ -292,13 +348,16 @@ class DatetimeTest extends TestCase
         $mock->method('getValue')->with('threshold')->willReturn($threshold);
 
         /** @var ValidatorInterface $mock */
-        $this->assertSame($expected, $checker->check(
-            $mock,
-            'after',
-            'field',
-            $value,
-            ['threshold', $orEquals, $useMicroseconds]
-        ));
+        $this->assertSame(
+            $expected,
+            $checker->check(
+                $mock,
+                'after',
+                'field',
+                $value,
+                ['threshold', $orEquals, $useMicroseconds]
+            )
+        );
     }
 
     /**
