@@ -6,6 +6,15 @@
 - **Medium Impact Changes**
 - **Other Features**
 
+## v2.7.0 - 2020-12-22
+
+- **High Impact Changes**
+    - Added PHP 8 support
+- **Other Features**
+    - [spiral/validation] [arrayOf validation checker](https://github.com/spiral/framework/pull/362)
+    - [spiral/prototype] [Prototype inherited injection](https://github.com/spiral/framework/pull/361)
+    - [spiral/data-grid] [datetime from formatted string value needed](https://github.com/spiral/framework/issues/318)
+
 ## v2.6.0 - 2020-09-17
 
 - **High Impact Changes**
