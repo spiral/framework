@@ -11,15 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Validation\Checkers;
 
-use Spiral\Tests\Validation\BaseTest;
+use PHPUnit\Framework\TestCase;
 use Spiral\Validation\Checker\TypeChecker;
 
-class TypesTest extends BaseTest
+class TypesTest extends TestCase
 {
     public function testNotNull(): void
     {
-        /** @var TypeChecker $checker */
-        $checker = $this->container->get(TypeChecker::class);
+        $checker = new TypeChecker();
 
         $this->assertTrue($checker->notNull('value'));
         $this->assertTrue($checker->notNull(1));
@@ -36,8 +35,7 @@ class TypesTest extends BaseTest
 
     public function testNotEmpty(): void
     {
-        /** @var TypeChecker $checker */
-        $checker = $this->container->get(TypeChecker::class);
+        $checker = new TypeChecker();
 
         $this->assertEquals(!empty('value'), $checker->notEmpty('value'));
         $this->assertEquals(!empty(1), $checker->notEmpty(1));
@@ -52,8 +50,7 @@ class TypesTest extends BaseTest
 
     public function testNotEmptyStrings(): void
     {
-        /** @var TypeChecker $checker */
-        $checker = $this->container->get(TypeChecker::class);
+        $checker = new TypeChecker();
 
         $this->assertTrue($checker->notEmpty('abc'));
         $this->assertTrue($checker->notEmpty(' ', false));
@@ -64,8 +61,7 @@ class TypesTest extends BaseTest
 
     public function testBoolean(): void
     {
-        /** @var TypeChecker $checker */
-        $checker = $this->container->get(TypeChecker::class);
+        $checker = new TypeChecker();
 
         $this->assertTrue($checker->boolean(true));
         $this->assertTrue($checker->boolean(false));
@@ -80,8 +76,7 @@ class TypesTest extends BaseTest
 
     public function testDatetime(): void
     {
-        /** @var TypeChecker $checker */
-        $checker = $this->container->get(TypeChecker::class);
+        $checker = new TypeChecker();
 
         $this->assertTrue($checker->datetime('now'));
         $this->assertTrue($checker->datetime('tomorrow 10am'));
@@ -97,25 +92,11 @@ class TypesTest extends BaseTest
 
     public function testTimezone(): void
     {
-        /** @var TypeChecker $checker */
-        $checker = $this->container->get(TypeChecker::class);
+        $checker = new TypeChecker();
 
         foreach (\DateTimeZone::listIdentifiers() as $identifier) {
             $this->assertTrue($checker->timezone($identifier));
             $this->assertFalse($checker->timezone(str_rot13($identifier)));
         }
-    }
-
-    public function testArrayOf(): void
-    {
-        /** @var TypeChecker $checker */
-        $checker = $this->container->get(TypeChecker::class);
-
-        $this->assertTrue($checker->arrayOf([1], 'is_int'));
-        $this->assertTrue($checker->arrayOf([1], 'integer'));
-        $this->assertTrue($checker->arrayOf(['1'], 'is_string'));
-
-        $this->assertFalse($checker->arrayOf(1, 'is_int'));
-        $this->assertFalse($checker->arrayOf([1], 'is_string'));
     }
 }
