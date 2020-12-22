@@ -36,7 +36,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
         'c' => 'Y-m-d\TH:i:sT',
     ];
 
-    /** @var callable|\DateTimeInterface|string|number|null */
+    /** @var callable|\DateTimeInterface|string|numeric|null */
     private $now;
     /** @var DatetimeChecker\ThresholdChecker */
     private $threshold;
