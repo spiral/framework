@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
+use Laminas\Diactoros\ServerRequest;
 use Mockery as m;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\RrDispatcher;
 use Spiral\RoadRunner\PSR7Client;
 use Spiral\Tests\Framework\ConsoleTest;
-use Zend\Diactoros\ServerRequest;
 
 class RrTest extends ConsoleTest
 {
