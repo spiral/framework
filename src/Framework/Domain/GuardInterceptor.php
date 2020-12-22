@@ -39,7 +39,7 @@ final class GuardInterceptor implements CoreInterceptorInterface
      */
     public function process(string $controller, string $action, array $parameters, CoreInterface $core)
     {
-        $permission = $this->permissions->getPermissions($controller, $action);
+        $permission = $this->permissions->getPermission($controller, $action);
 
         if ($permission !== null && !$this->guard->allows($permission[0], $parameters)) {
             throw new ControllerException($permission[2], $permission[1]);

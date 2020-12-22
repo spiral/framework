@@ -11,8 +11,15 @@ use Spiral\Core\Exception\InterceptorException;
 use Spiral\Domain\Annotation\Guarded;
 use Spiral\Domain\Annotation\GuardNamespace;
 
-class GuardPermissionsProvider implements PermissionsProviderInterface, SingletonInterface
+final class GuardPermissionsProvider implements PermissionsProviderInterface, SingletonInterface
 {
+    private const FAILURE_MAP = [
+        'unauthorized' => ControllerException::UNAUTHORIZED,
+        'badAction'    => ControllerException::BAD_ACTION,
+        'notFound'     => ControllerException::NOT_FOUND,
+        'error'        => ControllerException::ERROR,
+    ];
+
     /** @var array */
     private $cache = [];
 
@@ -36,7 +43,7 @@ class GuardPermissionsProvider implements PermissionsProviderInterface, Singleto
      * @return array|null
      *
      */
-    public function getPermissions(string $controller, string $action): ?array
+    public function getPermission(string $controller, string $action): ?array
     {
         $key = sprintf('%s:%s', $controller, $action);
         if (!array_key_exists($key, $this->cache)) {
@@ -59,63 +66,46 @@ class GuardPermissionsProvider implements PermissionsProviderInterface, Singleto
             return null;
         }
 
-        return $this->makePermission(
-            $guarded,
-            $method,
-            $this->reader->getClassAnnotation($method->getDeclaringClass(), GuardNamespace::class)
+        $namespace = $this->reader->getClassAnnotation($method->getDeclaringClass(), GuardNamespace::class);
+
+        if ($guarded->permission || ($namespace instanceof GuardNamespace && $namespace->namespace)) {
+            return [
+                $this->makePermission($guarded, $method, $namespace),
+                $this->mapFailureException($guarded),
+                $guarded->errorMessage ?: sprintf(
+                    'Unauthorized access `%s`',
+                    $guarded->permission ?: $method->getName()
+                ),
+            ];
+        }
+
+        throw new InterceptorException(
+            sprintf(
+                'Unable to apply @Guarded without name or @GuardNamespace on `%s`->`%s`',
+                $method->getDeclaringClass()->getName(),
+                $method->getName()
+            )
         );
     }
 
-    /**
-     * Generates permissions for the method or controller.
-     *
-     * @param Guarded             $guarded
-     * @param \ReflectionMethod   $method
-     * @param GuardNamespace|null $ns
-     * @return array
-     */
-    private function makePermission(Guarded $guarded, \ReflectionMethod $method, ?GuardNamespace $ns): array
+    private function makePermission(Guarded $guarded, \ReflectionMethod $method, ?GuardNamespace $ns): string
     {
-        $permission = [
-            $guarded->permission ?? $method->getName(),
-            ControllerException::FORBIDDEN,
-            $guarded->errorMessage ?? sprintf('Unauthorized access `%s`', $guarded->permission ?? $method->getName()),
-        ];
-
-        if ($guarded->permission === null && $ns === null) {
-            throw new InterceptorException(
-                sprintf(
-                    'Unable to apply @Guarded without name or @GuardNamespace on `%s`->`%s`',
-                    $method->getDeclaringClass()->getName(),
-                    $method->getName()
-                )
-            );
+        $permission = [];
+        if ($this->namespace) {
+            $permission[] = $this->namespace;
         }
 
-        if ($ns !== null) {
-            $permission[0] = sprintf('%s.%s', $ns->namespace, $permission[0]);
+        if ($ns !== null && $ns->namespace) {
+            $permission[] = $ns->namespace;
         }
 
-        if ($this->namespace !== null) {
-            // global namespace
-            $permission[0] = sprintf('%s.%s', $this->namespace, $permission[0]);
-        }
+        $permission[] = $guarded->permission ?: $method->getName();
 
-        switch ($guarded->else) {
-            case 'unauthorized':
-                $permission[1] = ControllerException::UNAUTHORIZED;
-                break;
-            case 'badAction':
-                $permission[1] = ControllerException::BAD_ACTION;
-                break;
-            case 'notFound':
-                $permission[1] = ControllerException::NOT_FOUND;
-                break;
-            case 'error':
-                $permission[1] = ControllerException::ERROR;
-                break;
-        }
+        return implode('.', $permission);
+    }
 
-        return $permission;
+    private function mapFailureException(Guarded $guarded): int
+    {
+        return self::FAILURE_MAP[$guarded->else] ?? ControllerException::FORBIDDEN;
     }
 }
