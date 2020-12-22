@@ -7,12 +7,14 @@
 
 declare(strict_types=1);
 
-foreach ([
-             __DIR__ . '/../../../autoload.php',
-             __DIR__ . '/../vendor/autoload.php',
-             __DIR__ . '/vendor/autoload.php'
-         ] as $file) {
-    if (file_exists($file)) {
+$autoload = [
+    __DIR__ . '/../../../autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/vendor/autoload.php'
+];
+
+foreach ($autoload as $file) {
+    if (is_file($file)) {
         define('RR_COMPOSER_INSTALL', $file);
 
         break;
@@ -66,7 +68,7 @@ class RRHelper
     public static function getVersion(): string
     {
         $file = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'build.sh';
-        $fileResource = fopen($file, 'r') or die(1);
+        $fileResource = fopen($file, 'rb') or die(1);
 
         while (!feof($fileResource)) {
             $line = fgets($fileResource, 4096);
@@ -121,7 +123,7 @@ class RRHelper
     public static function getBinaryDownloadUrl(): string
     {
         $ext = '.zip';
-        if (self::getOSType() == 'linux') {
+        if (self::getOSType() === 'linux') {
             $ext = '.tar.gz';
         }
 
@@ -157,7 +159,7 @@ class RRHelper
         $zip->open($archive);
 
         $name = self::getSignature() . '/spiral';
-        if (self::getOSType() == 'windows') {
+        if (self::getOSType() === 'windows') {
             $name .= '.exe';
         }
 
@@ -166,7 +168,7 @@ class RRHelper
             return;
         }
 
-        $to = fopen($target, 'w');
+        $to = fopen($target, 'wb');
         stream_copy_to_stream($stream, $to);
         fclose($to);
 
@@ -197,7 +199,7 @@ class RRHelper
         $output->writeln('<info>Updating binary file of Spiral Server</info>');
 
         $finalFile = $input->getOption('location') . DIRECTORY_SEPARATOR . 'spiral';
-        if (RRHelper::getOSType() == 'windows') {
+        if (RRHelper::getOSType() === 'windows') {
             $finalFile .= '.exe';
         }
 
@@ -235,11 +237,11 @@ class RRHelper
         $progressBar->setFormat('verbose');
 
         $zipFileName = 'rr_zip_'.random_int(0, 10000);
-        if (RRHelper::getOSType() == 'linux') {
+        if (RRHelper::getOSType() === 'linux') {
             $zipFileName .= '.tar.gz';
         }
 
-        $zipFile = fopen($zipFileName, "w+");
+        $zipFile = fopen($zipFileName, 'wb+');
         $curlResource = curl_init();
 
         curl_setopt($curlResource, CURLOPT_URL, RRHelper::getBinaryDownloadUrl());
@@ -250,7 +252,7 @@ class RRHelper
         curl_setopt($curlResource, CURLOPT_FILE, $zipFile);
         curl_setopt($curlResource, CURLOPT_PROGRESSFUNCTION,
             function ($resource, $download_size, $downloaded, $upload_size, $uploaded) use ($progressBar) {
-                if ($download_size == 0) {
+                if ($download_size === 0) {
                     return;
                 }
 
