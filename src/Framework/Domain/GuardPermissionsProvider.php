@@ -74,7 +74,7 @@ class GuardPermissionsProvider implements PermissionsProviderInterface, Singleto
      * @param GuardNamespace|null $ns
      * @return array
      */
-    public function makePermission(Guarded $guarded, \ReflectionMethod $method, ?GuardNamespace $ns): array
+    private function makePermission(Guarded $guarded, \ReflectionMethod $method, ?GuardNamespace $ns): array
     {
         $permission = [
             $guarded->permission ?? $method->getName(),
