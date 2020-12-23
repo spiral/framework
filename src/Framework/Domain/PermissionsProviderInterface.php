@@ -6,5 +6,5 @@ namespace Spiral\Domain;
 
 interface PermissionsProviderInterface
 {
-    public function getPermission(string $controller, string $action): ?array;
+    public function getPermission(string $controller, string $action): Permission;
 }
