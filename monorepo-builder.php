@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\MonorepoBuilder\ValueObject\Option;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\AddTagToChangelogReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\PushNextDevReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\PushTagReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetNextMutualDependenciesReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\TagVersionReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorker;
+use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateReplaceReleaseWorker;
 
 /**
  * Monorepo Builder additional fields
@@ -92,7 +100,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'cycle/migrations'          => '^1.0.1',
             'cycle/proxy-factory'       => '^1.2',
             'cycle/schema-builder'      => '^1.1',
-            'symplify/monorepo-builder' => '^8.3',
+            'symplify/monorepo-builder' => '^9.0',
             'vimeo/psalm'               => '^4.3',
         ],
     ]);
@@ -143,4 +151,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'src/Validation'      => 'git@github.com:spiral/validation.git',
         'src/Views'           => 'git@github.com:spiral/views.git',
     ]);
+
+    $services = $containerConfigurator->services();
+
+    # release workers - in order to execute
+    $services->set(UpdateReplaceReleaseWorker::class);
+    $services->set(SetCurrentMutualDependenciesReleaseWorker::class);
+    $services->set(AddTagToChangelogReleaseWorker::class);
+    $services->set(TagVersionReleaseWorker::class);
+    $services->set(PushTagReleaseWorker::class);
+    $services->set(SetNextMutualDependenciesReleaseWorker::class);
+    $services->set(UpdateBranchAliasReleaseWorker::class);
+    $services->set(PushNextDevReleaseWorker::class);
 };
