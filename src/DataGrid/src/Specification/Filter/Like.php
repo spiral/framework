@@ -14,7 +14,7 @@ namespace Spiral\DataGrid\Specification\Filter;
 
 use Spiral\DataGrid\Specification\Value\StringValue;
 
-final class Like extends Expression
+class Like extends Expression
 {
     /** @var string */
     private $pattern;
