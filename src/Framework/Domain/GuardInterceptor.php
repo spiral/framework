@@ -41,8 +41,8 @@ final class GuardInterceptor implements CoreInterceptorInterface
     {
         $permission = $this->permissions->getPermission($controller, $action);
 
-        if ($permission !== null && !$this->guard->allows($permission[0], $parameters)) {
-            throw new ControllerException($permission[2], $permission[1]);
+        if ($permission->ok && !$this->guard->allows($permission->permission, $parameters)) {
+            throw new ControllerException($permission->message, $permission->code);
         }
 
         return $core->callAction($controller, $action, $parameters);
