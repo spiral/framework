@@ -11,7 +11,6 @@ use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesR
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetNextMutualDependenciesReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\TagVersionReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorker;
-use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateReplaceReleaseWorker;
 
 /**
  * Monorepo Builder additional fields
@@ -100,7 +99,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'cycle/migrations'          => '^1.0.1',
             'cycle/proxy-factory'       => '^1.2',
             'cycle/schema-builder'      => '^1.1',
-            'symplify/monorepo-builder' => '^9.0',
+            'symplify/monorepo-builder' => '^8.3',
             'vimeo/psalm'               => '^4.3',
         ],
     ]);
@@ -155,7 +154,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
 
     # release workers - in order to execute
-    $services->set(UpdateReplaceReleaseWorker::class);
     $services->set(SetCurrentMutualDependenciesReleaseWorker::class);
     $services->set(AddTagToChangelogReleaseWorker::class);
     $services->set(TagVersionReleaseWorker::class);
