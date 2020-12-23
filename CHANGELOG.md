@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 2.7.0 - 2020-12-23
 
 - **High Impact Changes**
 - **Medium Impact Changes**
