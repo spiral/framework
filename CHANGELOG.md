@@ -1,11 +1,5 @@
 # CHANGELOG
 
-## 2.7.0 - 2020-12-23
-
-- **High Impact Changes**
-- **Medium Impact Changes**
-- **Other Features**
-
 ## v2.7.0 - 2020-12-22
 
 - **High Impact Changes**
