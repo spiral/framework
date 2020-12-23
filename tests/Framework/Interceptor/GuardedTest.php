@@ -11,13 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Interceptor;
 
+use Spiral\App\Controller\Demo2Controller;
+use Spiral\App\Controller\Demo3Controller;
+use Spiral\App\Controller\DemoController;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\InterceptorException;
 use Spiral\Security\Actor\Actor;
 use Spiral\Security\ActorInterface;
-use Spiral\App\Controller\Demo2Controller;
-use Spiral\App\Controller\DemoController;
 use Spiral\Tests\Framework\ConsoleTest;
 
 class GuardedTest extends ConsoleTest
@@ -29,6 +30,15 @@ class GuardedTest extends ConsoleTest
 
         $this->expectException(InterceptorException::class);
         $core->callAction(DemoController::class, 'guardedButNoName', []);
+    }
+
+    public function testInvalidAnnotationConfigurationIfEmptyGuarded(): void
+    {
+        /** @var CoreInterface $core */
+        $core = $this->app->get(CoreInterface::class);
+
+        $this->expectException(InterceptorException::class);
+        $core->callAction(Demo3Controller::class, 'do', []);
     }
 
     public function testNotAllowed(): void
