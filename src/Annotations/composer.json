@@ -10,7 +10,7 @@
     },
     "require": {
         "php": ">=7.2",
-        "spiral/tokenizer": "^2.8",
+        "spiral/tokenizer": "^2.7.1",
         "doctrine/annotations": "^1.11"
     },
     "require-dev": {
