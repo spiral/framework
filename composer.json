@@ -41,7 +41,7 @@
         "symfony/polyfill-php73": "^1.18",
         "symfony/polyfill-php80": "^1.18",
         "symfony/translation": "^5.1",
-        "vlucas/phpdotenv": "^5.2"
+        "vlucas/phpdotenv": "^3.6"
     },
     "autoload": {
         "files": [
