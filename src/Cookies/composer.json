@@ -16,13 +16,13 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spiral/encrypter": "^2.7.2",
+        "spiral/encrypter": "^2.8",
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0",
         "mockery/mockery": "^1.3",
-        "spiral/http": "^2.7.2",
+        "spiral/http": "^2.8",
         "laminas/laminas-diactoros": "^2.3",
         "spiral/code-style": "^1.0"
     },
