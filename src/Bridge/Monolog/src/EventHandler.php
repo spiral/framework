@@ -38,9 +38,9 @@ final class EventHandler extends AbstractHandler
 
     /**
      * @param array $record
-     * @return bool|void
+     * @return bool
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         $e = new LogEvent(
             $record['datetime'],
@@ -53,5 +53,7 @@ final class EventHandler extends AbstractHandler
         foreach ($this->listenerRegistry->getListeners() as $listener) {
             call_user_func($listener, $e);
         }
+
+        return true;
     }
 }
