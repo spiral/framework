@@ -21,7 +21,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spiral/reactor": "^2.8",
+        "spiral/reactor": "^2.7.2",
         "cocur/slugify": "^3.2",
         "doctrine/inflector": "^1.4|^2.0"
     },
@@ -29,13 +29,13 @@
         "phpunit/phpunit": "^8.5|^9.0",
         "cycle/orm": "^1.2.6",
         "cycle/annotated": "^2.0.6",
-        "spiral/boot": "^2.8",
-        "spiral/console": "^2.8",
-        "spiral/core": "^2.8",
-        "spiral/filters": "^2.8",
-        "spiral/http": "^2.8",
+        "spiral/boot": "^2.7.2",
+        "spiral/console": "^2.7.2",
+        "spiral/core": "^2.7.2",
+        "spiral/filters": "^2.7.2",
+        "spiral/http": "^2.7.2",
         "spiral/migrations": "^2.1",
-        "spiral/prototype": "^2.8",
+        "spiral/prototype": "^2.7.2",
         "spiral/jobs": "^2.2"
     },
     "autoload": {
