@@ -1,13 +1,34 @@
 # CHANGELOG
 
+## v2.8.0 - Unreleased
+
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Other Features**
+- **Bug Fixes**
+
 ## v2.7.0 - 2020-12-22
 
 - **High Impact Changes**
-    - Added PHP 8 support
+    - A minimal version of `monolog/monolog` increased to `^2.2`
+
 - **Other Features**
+    - Added PHP 8 support
+    - [spiral/prototype] [added typed properties support for php 7.4](https://github.com/spiral/framework/pull/357)
     - [spiral/validation] [arrayOf validation checker](https://github.com/spiral/framework/pull/362)
-    - [spiral/prototype] [Prototype inherited injection](https://github.com/spiral/framework/pull/361)
+    - [spiral/validation] introduce `now` parameter in datetime checker
+    - [spiral/validation] [extract abstract validator](https://github.com/spiral/framework/issues/358)
     - [spiral/data-grid] [datetime from formatted string value needed](https://github.com/spiral/framework/issues/318)
+    - [spiral/data-grid] [add mixed specifications](https://github.com/spiral/framework/issues/320)
+    - [spiral/data-grid] [make grid factory more reusable](https://github.com/spiral/framework/issues/319)
+    - [spiral/data-grid] [add `ilike` postgres filter](https://github.com/spiral/framework/pull/376)
+    - [spiral/domain] [add pipeline interceptor](https://github.com/spiral/framework/pull/370)
+    - [spiral/domain] [extract permissions provider for `GuardInterceptor`](https://github.com/spiral/framework/pull/375)
+
+- **Bug Fixes**
+    - [spiral/prototype] [name conflict resolver](https://github.com/spiral/framework/issues/326)
+    - [spiral/prototype] [trait remove problem](https://github.com/spiral/framework/issues/324)
+    - [spiral/prototype] [inherited injections problem](https://github.com/spiral/framework/pull/361)
 
 ## v2.6.0 - 2020-09-17
 
