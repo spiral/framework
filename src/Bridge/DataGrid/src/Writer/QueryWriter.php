@@ -27,7 +27,7 @@ use Spiral\DataGrid\WriterInterface;
 class QueryWriter implements WriterInterface
 {
     // Expression mapping
-    private const COMPARE_OPERATORS = [
+    protected const COMPARE_OPERATORS = [
         Specification\Filter\Lte::class       => '<=',
         Specification\Filter\Lt::class        => '<',
         Specification\Filter\Equals::class    => '=',
@@ -36,13 +36,13 @@ class QueryWriter implements WriterInterface
         Specification\Filter\Gte::class       => '>=',
     ];
 
-    private const ARRAY_OPERATORS = [
+    protected const ARRAY_OPERATORS = [
         Specification\Filter\InArray::class    => 'IN',
         Specification\Filter\NotInArray::class => 'NOT IN',
     ];
 
     // Sorter directions mapping
-    private const SORTER_DIRECTIONS = [
+    protected const SORTER_DIRECTIONS = [
         Specification\Sorter\AscSorter::class  => 'ASC',
         Specification\Sorter\DescSorter::class => 'DESC',
     ];
@@ -132,10 +132,10 @@ class QueryWriter implements WriterInterface
         }
 
         if ($filter instanceof Specification\Filter\InArray || $filter instanceof Specification\Filter\NotInArray) {
-            return self::ARRAY_OPERATORS[get_class($filter)];
+            return static::ARRAY_OPERATORS[get_class($filter)];
         }
 
-        return self::COMPARE_OPERATORS[get_class($filter)];
+        return static::COMPARE_OPERATORS[get_class($filter)];
     }
 
     /**
