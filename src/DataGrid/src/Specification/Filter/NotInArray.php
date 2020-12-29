@@ -15,13 +15,16 @@ namespace Spiral\DataGrid\Specification\Filter;
 use Spiral\DataGrid\Specification\Value\ArrayValue;
 use Spiral\DataGrid\Specification\ValueInterface;
 
-final class NotInArray extends Expression
+class NotInArray extends Expression
 {
     /**
      * @inheritDoc
      */
-    public function __construct(string $expression, $value)
+    public function __construct(string $expression, $value, bool $wrapInArray = true)
     {
-        parent::__construct($expression, $value instanceof ValueInterface ? new ArrayValue($value) : $value);
+        parent::__construct(
+            $expression,
+            $value instanceof ValueInterface && $wrapInArray ? new ArrayValue($value) : $value
+        );
     }
 }
