@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Spiral\DataGrid\Specification\Filter;
 
 use Spiral\DataGrid\Specification\FilterInterface;
