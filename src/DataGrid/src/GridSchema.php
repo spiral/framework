@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Spiral\DataGrid;
 
 use Spiral\DataGrid\Exception\SchemaException;
+use Spiral\DataGrid\Specification\Filter\NullFilter;
 use Spiral\DataGrid\Specification\FilterInterface;
 use Spiral\DataGrid\Specification\SorterInterface;
 
@@ -28,8 +29,41 @@ class GridSchema
     /** @var SorterInterface[] */
     private $sorters = [];
 
+    /** @var string[] */
+    private $wrappedFilters = [];
+
+    /** @var array[] */
+    private $wrappers = [];
+
     /** @var FilterInterface|null */
     private $paginator;
+
+    public function addWrappedFilters(callable $wrapper, string ...$filters): void
+    {
+        foreach ($filters as $filter) {
+            if (isset($this->wrappedFilters[$filter])) {
+                throw new SchemaException("Filter `$filter` is already wrapped");
+            }
+        }
+
+        $this->wrappedFilters = array_merge($this->wrappedFilters, $filters);
+        $this->wrappers[] = compact('wrapper', 'filters');
+    }
+
+    public function wrapFilters(array $input): array
+    {
+        $output = [];
+        foreach ($this->wrappers as $wrapper) {
+            $output[] = $wrapper['wrapper'](...$this->fetchFilters($input, $wrapper['filters']));
+            foreach ($input as $name => $filter) {
+                if (!in_array($name, $wrapper['filters'], true)) {
+                    $output[] = $filter;
+                }
+            }
+        }
+
+        return $output;
+    }
 
     /**
      * Define new data filter.
@@ -147,5 +181,15 @@ class GridSchema
     public function getPaginator(): ?FilterInterface
     {
         return $this->paginator;
+    }
+
+    private function fetchFilters(array $filters, array $names): array
+    {
+        $output = [];
+        foreach ($names as $name) {
+            $output[] = $filters[$name] ?? new NullFilter();
+        }
+
+        return $output;
     }
 }

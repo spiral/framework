@@ -15,17 +15,23 @@ use PHPUnit\Framework\TestCase;
 use Spiral\DataGrid\Compiler;
 use Spiral\DataGrid\Exception\CompilerException;
 use Spiral\DataGrid\Exception\GridViewException;
+use Spiral\DataGrid\Grid;
 use Spiral\DataGrid\GridFactory;
 use Spiral\DataGrid\GridInterface;
 use Spiral\DataGrid\GridSchema;
 use Spiral\DataGrid\Input\ArrayInput;
+use Spiral\DataGrid\Specification\Filter\Any;
 use Spiral\DataGrid\Specification\Filter\Equals;
+use Spiral\DataGrid\Specification\Filter\Gte;
+use Spiral\DataGrid\Specification\Filter\NotEquals;
+use Spiral\DataGrid\Specification\Filter\NullFilter;
 use Spiral\DataGrid\Specification\FilterInterface;
 use Spiral\DataGrid\Specification\Pagination\PagePaginator;
 use Spiral\DataGrid\Specification\Sorter\Sorter;
 use Spiral\DataGrid\Specification\SorterInterface;
 use Spiral\DataGrid\Specification\Value;
 use Spiral\Tests\DataGrid\Fixture\NullPaginator;
+use Spiral\Tests\DataGrid\Fixture\WrapWriter;
 use Spiral\Tests\DataGrid\Fixture\WriterIterateNonIterable;
 use Spiral\Tests\DataGrid\Fixture\WriterOne;
 
@@ -276,6 +282,75 @@ class GridFactoryTest extends TestCase
             [$this->paginatorInput(null, 100), [], $paginator, ['page' => 1, 'limit' => 100]],
             [[], $this->paginatorInput(null, 100), $paginator, ['page' => 1, 'limit' => 100]],
         ];
+    }
+
+    public function testWrapFilters(): void
+    {
+        $schema = new GridSchema();
+        $schema->addFilter(
+            'size',
+            new Equals('size', new Value\EnumValue(new Value\StringValue(), 'xs', 's', 'm', 'l', 'xl'))
+        );
+        $schema->addFilter(
+            'color',
+            new NotEquals('color', new Value\EnumValue(new Value\StringValue(), 'red', 'green', 'yellow'))
+        );
+        $schema->addFilter(
+            'price',
+            new Gte('price', new Value\FloatValue())
+        );
+        $schema->addWrappedFilters(
+            static function (FilterInterface ...$filters) {
+                return new Any(...$filters);
+            },
+            'size',
+            'color'
+        );
+
+        $compiler = new Compiler();
+        $compiler->addWriter(new WrapWriter());
+
+        $factory = new GridFactory(
+            $compiler,
+            new ArrayInput([GridFactory::KEY_FILTER=>['size' => 'xl', 'color' => 'red', 'price' => 1]]),
+            new Grid()
+        );
+
+        /** @var Grid $view */
+        $view = $factory->create([], $schema);
+        $source = $view->getSource();
+
+        $this->assertCount(2, $source);
+        $this->assertInstanceOf(Any::class, $source[0]);
+
+        /** @var Any $any */
+        $any = $source[0];
+        $filters = $any->getFilters();
+        $this->assertCount(2, $filters);
+        $this->assertSame('xl', $filters[0]->getValue());
+        $this->assertSame('red', $filters[1]->getValue());
+        $this->assertInstanceOf(Gte::class, $source[1]);
+
+        $factory = new GridFactory(
+            $compiler,
+            new ArrayInput([GridFactory::KEY_FILTER=>['size' => 'xl', 'price' => 1]]),
+            new Grid()
+        );
+
+        /** @var Grid $view */
+        $view = $factory->create([], $schema);
+        $source = $view->getSource();
+
+        $this->assertCount(2, $source);
+        $this->assertInstanceOf(Any::class, $source[0]);
+
+        /** @var Any $any */
+        $any = $source[0];
+        $filters = $any->getFilters();
+        $this->assertCount(2, $filters);
+        $this->assertSame('xl', $filters[0]->getValue());
+        $this->assertInstanceOf(NullFilter::class, $filters[1]);
+        $this->assertInstanceOf(Gte::class, $source[1]);
     }
 
     /**
