@@ -24,7 +24,6 @@ use Spiral\DataGrid\Specification\Filter\Any;
 use Spiral\DataGrid\Specification\Filter\Equals;
 use Spiral\DataGrid\Specification\Filter\Gte;
 use Spiral\DataGrid\Specification\Filter\NotEquals;
-use Spiral\DataGrid\Specification\Filter\NullFilter;
 use Spiral\DataGrid\Specification\FilterInterface;
 use Spiral\DataGrid\Specification\Pagination\PagePaginator;
 use Spiral\DataGrid\Specification\Sorter\Sorter;
@@ -299,12 +298,16 @@ class GridFactoryTest extends TestCase
             'price',
             new Gte('price', new Value\FloatValue())
         );
-        $schema->addWrappedFilters(
-            static function (FilterInterface ...$filters) {
-                return new Any(...$filters);
-            },
-            'size',
-            'color'
+        $schema->addFilterWrapper(
+            function (array $filters): array {
+                $size = $filters['size'] ?? null;
+                $color = $filters['color'] ?? null;
+                if ($size && $color) {
+                    unset($filters['size'], $filters['color']);
+                    $filters[] = new Any($size, $color);
+                }
+                return $filters;
+            }
         );
 
         $compiler = new Compiler();
@@ -312,7 +315,7 @@ class GridFactoryTest extends TestCase
 
         $factory = new GridFactory(
             $compiler,
-            new ArrayInput([GridFactory::KEY_FILTER=>['size' => 'xl', 'color' => 'red', 'price' => 1]]),
+            new ArrayInput([GridFactory::KEY_FILTER => ['size' => 'xl', 'color' => 'red', 'price' => 1]]),
             new Grid()
         );
 
@@ -321,19 +324,19 @@ class GridFactoryTest extends TestCase
         $source = $view->getSource();
 
         $this->assertCount(2, $source);
-        $this->assertInstanceOf(Any::class, $source[0]);
+        $this->assertInstanceOf(Gte::class, $source[0]);
+        $this->assertInstanceOf(Any::class, $source[1]);
 
         /** @var Any $any */
-        $any = $source[0];
+        $any = $source[1];
         $filters = $any->getFilters();
         $this->assertCount(2, $filters);
         $this->assertSame('xl', $filters[0]->getValue());
         $this->assertSame('red', $filters[1]->getValue());
-        $this->assertInstanceOf(Gte::class, $source[1]);
 
         $factory = new GridFactory(
             $compiler,
-            new ArrayInput([GridFactory::KEY_FILTER=>['size' => 'xl', 'price' => 1]]),
+            new ArrayInput([GridFactory::KEY_FILTER => ['size' => 'xl', 'price' => 1]]),
             new Grid()
         );
 
@@ -342,14 +345,7 @@ class GridFactoryTest extends TestCase
         $source = $view->getSource();
 
         $this->assertCount(2, $source);
-        $this->assertInstanceOf(Any::class, $source[0]);
-
-        /** @var Any $any */
-        $any = $source[0];
-        $filters = $any->getFilters();
-        $this->assertCount(2, $filters);
-        $this->assertSame('xl', $filters[0]->getValue());
-        $this->assertInstanceOf(NullFilter::class, $filters[1]);
+        $this->assertInstanceOf(Equals::class, $source[0]);
         $this->assertInstanceOf(Gte::class, $source[1]);
     }
 
