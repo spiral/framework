@@ -43,7 +43,7 @@ final class EnvironmentCollector implements StateCollectorInterface
     {
         $state->setTag('php', phpversion());
 
-        if ($this->container->get(DispatcherInterface::class)) {
+        if ($this->container->has(DispatcherInterface::class)) {
             switch (get_class($this->container->get(DispatcherInterface::class))) {
                 case RrDispatcher::class:
                     $state->setTag('dispatcher', 'roadrunner');
