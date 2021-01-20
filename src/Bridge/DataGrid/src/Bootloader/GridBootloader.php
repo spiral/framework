@@ -14,6 +14,7 @@ namespace Spiral\DataGrid\Bootloader;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\DataGrid\GridFactoryInterface;
 use Spiral\Database\DatabaseInterface;
 use Spiral\DataGrid\Compiler;
 use Spiral\DataGrid\Config\GridConfig;
@@ -32,7 +33,8 @@ final class GridBootloader extends Bootloader
     protected const SINGLETONS = [
         InputInterface::class        => GridInput::class,
         GridInterface::class         => Grid::class,
-        GridFactory::class           => GridFactory::class,
+        GridFactoryInterface::class  => GridFactory::class,
+        GridFactory::class           => GridFactory::class, // Deprecated behaviour
         Compiler::class              => [self::class, 'compiler'],
         GridResponseInterface::class => GridResponse::class,
     ];
