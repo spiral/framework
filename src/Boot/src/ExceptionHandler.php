@@ -75,6 +75,10 @@ final class ExceptionHandler
      */
     public static function handleError($code, $message, $filename = '', $line = 0): void
     {
+        if (!(error_reporting() & $code)) {
+            return;
+        }
+
         throw new \ErrorException($message, $code, 0, $filename, $line);
     }
 
