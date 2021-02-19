@@ -21,6 +21,8 @@
         </ignoreFiles>
     </projectFiles>
     <stubs>
-        <file name="vendor/vimeo/psalm/stubs/Php80.php" />
+        <file name="resources/stubs/php/reflection/Attribute.phpstub" />
+        <file name="resources/stubs/php/reflection/ReflectionAttribute.phpstub" />
+        <file name="resources/stubs/php/reflection/ReflectionUnionType.phpstub" />
     </stubs>
 </psalm>

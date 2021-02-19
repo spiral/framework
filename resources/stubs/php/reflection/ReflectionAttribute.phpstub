@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * This file is part of Spiral Framework package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/**
+ * @template TClass as object
+ */
+class ReflectionAttribute
+{
+    public const IS_INSTANCEOF = 2;
+
+    /**
+     * @return never-return
+     */
+    private function __construct();
+
+    /**
+     * @psalm-pure
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
+     * @psalm-pure
+     * @return int-mask-of<Attribute::*>
+     */
+    public function getTarget(): int;
+
+    /**
+     * @psalm-pure
+     * @return bool
+     */
+    public function isRepeated(): bool;
+
+    /**
+     * @psalm-pure
+     * @return array<scalar, scalar|array>
+     */
+    public function getArguments(): array;
+
+    /**
+     * @return TClass
+     */
+    public function newInstance(): object;
+
+    /**
+     * @return never-return
+     */
+    private function __clone();
+}
