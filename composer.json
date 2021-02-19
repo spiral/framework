@@ -130,7 +130,7 @@
         "spiral/php-grpc": "^1.4",
         "spiral/roadrunner": "^1.9.1",
         "symplify/monorepo-builder": "^8.3.40",
-        "vimeo/psalm": "^4.3"
+        "vimeo/psalm": "^4.6"
     },
     "autoload-dev": {
         "psr-4": {
