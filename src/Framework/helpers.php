@@ -38,6 +38,8 @@ if (!function_exists('dumprr')) {
      */
     function dumprr($value): void
     {
-        dump($value, Dumper::ERROR_LOG);
+        $result = dump($value, Dumper::RETURN);
+
+        file_put_contents('php://stderr', $result);
     }
 }
