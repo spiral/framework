@@ -17,10 +17,10 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
-        "spiral/core": "^2.8",
-        "spiral/files": "^2.8",
-        "spiral/streams": "^2.8",
-        "spiral/translator": "^2.8"
+        "spiral/core": "^2.7",
+        "spiral/files": "^2.7",
+        "spiral/streams": "^2.7",
+        "spiral/translator": "^2.7"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0",
@@ -39,7 +39,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.7.x-dev"
         }
     },
     "config": {
