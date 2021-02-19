@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spiral/boot": "^2.7",
+        "spiral/boot": "^2.8",
         "monolog/monolog": "^2.2"
     },
     "require-dev": {
@@ -35,7 +35,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.7.x-dev"
+            "dev-master": "2.8.x-dev"
         }
     },
     "config": {

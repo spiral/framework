@@ -17,7 +17,7 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
-        "spiral/core": "^2.7",
+        "spiral/core": "^2.8",
         "defuse/php-encryption": "^2.2"
     },
     "require-dev": {
@@ -35,7 +35,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.7.x-dev"
+            "dev-master": "2.8.x-dev"
         }
     },
     "config": {
