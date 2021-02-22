@@ -20,6 +20,8 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Loader\DirectoryLoader;
+use Spiral\Config\Loader\JsonLoader;
+use Spiral\Config\Loader\PhpLoader;
 use Spiral\Core\ConfigsInterface;
 use Spiral\Core\Container;
 use Spiral\Stempler\Bootloader\PrettyPrintBootloader;
@@ -59,7 +61,10 @@ abstract class BaseTest extends TestCase
         $this->container->bind(
             ConfiguratorInterface::class,
             new ConfigManager(
-                new DirectoryLoader(__DIR__ . '/config/', $this->container),
+                new DirectoryLoader(__DIR__ . '/config/', [
+                    'php'  => $this->container->get(PhpLoader::class),
+                    'json' => $this->container->get(JsonLoader::class),
+                ]),
                 true
             )
         );

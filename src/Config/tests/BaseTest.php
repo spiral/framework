@@ -14,6 +14,8 @@ namespace Spiral\Tests\Config;
 use PHPUnit\Framework\TestCase;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\Loader\DirectoryLoader;
+use Spiral\Config\Loader\JsonLoader;
+use Spiral\Config\Loader\PhpLoader;
 use Spiral\Core\Container;
 
 abstract class BaseTest extends TestCase
@@ -34,6 +36,12 @@ abstract class BaseTest extends TestCase
             $directory = __DIR__ . '/fixtures';
         }
 
-        return new ConfigManager(new DirectoryLoader($directory, $this->container), $strict);
+        return new ConfigManager(
+            new DirectoryLoader($directory, [
+                'php'  => $this->container->get(PhpLoader::class),
+                'json' => $this->container->get(JsonLoader::class),
+            ]),
+            $strict
+        );
     }
 }
