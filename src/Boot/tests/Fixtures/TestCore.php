@@ -17,6 +17,10 @@ use Spiral\Boot\Exception\BootException;
 
 class TestCore extends AbstractKernel
 {
+    protected const LOAD = [
+        ConfigBootloader::class,
+    ];
+
     public function getContainer()
     {
         return $this->container;
