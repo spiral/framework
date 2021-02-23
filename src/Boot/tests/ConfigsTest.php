@@ -32,7 +32,7 @@ class ConfigsTest extends TestCase
         $this->assertSame(['key' => 'value'], $config->toArray());
     }
 
-    public function testDep(): void
+    public function testCustomConfigLoader(): void
     {
         $core = TestCore::init([
             'root'   => __DIR__,
