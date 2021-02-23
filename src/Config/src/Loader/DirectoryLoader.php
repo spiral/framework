@@ -13,32 +13,23 @@ namespace Spiral\Config\Loader;
 
 use Spiral\Config\Exception\LoaderException;
 use Spiral\Config\LoaderInterface;
-use Spiral\Core\FactoryInterface;
 
 final class DirectoryLoader implements LoaderInterface
 {
-    public const LOADERS = [
-        'php'  => PhpLoader::class,
-        'json' => JsonLoader::class,
-    ];
-
     /** @var string */
     private $directory;
 
-    /** @var FactoryInterface */
-    private $factory;
-
     /** @var FileLoaderInterface[] */
-    private $loaders = [];
+    private $loaders;
 
     /**
-     * @param string           $directory
-     * @param FactoryInterface $factory
+     * @param string $directory
+     * @param array  $loaders
      */
-    public function __construct(string $directory, FactoryInterface $factory)
+    public function __construct(string $directory, array $loaders = [])
     {
         $this->directory = rtrim($directory, '/');
-        $this->factory = $factory;
+        $this->loaders = $loaders;
     }
 
     /**
@@ -46,7 +37,7 @@ final class DirectoryLoader implements LoaderInterface
      */
     public function has(string $section): bool
     {
-        foreach (self::LOADERS as $extension => $_) {
+        foreach ($this->loaderExtensions() as $extension) {
             $filename = sprintf('%s/%s.%s', $this->directory, $section, $extension);
             if (file_exists($filename)) {
                 return true;
@@ -61,7 +52,7 @@ final class DirectoryLoader implements LoaderInterface
      */
     public function load(string $section): array
     {
-        foreach (self::LOADERS as $extension => $_) {
+        foreach ($this->loaderExtensions() as $extension) {
             $filename = sprintf('%s/%s.%s', $this->directory, $section, $extension);
             if (!file_exists($filename)) {
                 continue;
@@ -77,14 +68,17 @@ final class DirectoryLoader implements LoaderInterface
         throw new LoaderException("Unable to load config `{$section}`.");
     }
 
+    private function loaderExtensions(): array
+    {
+        return array_keys($this->loaders);
+    }
+
     /**
      * @param string $extension
      * @return FileLoaderInterface
      */
     private function getLoader(string $extension): FileLoaderInterface
     {
-        return $this->loaders[$extension] ?? (
-            $this->loaders[$extension] = $this->factory->make(self::LOADERS[$extension])
-        );
+        return $this->loaders[$extension];
     }
 }
