@@ -30,6 +30,11 @@
                 <file name="src/Framework/Http/LegacyRrDispatcher.php" />
             </errorLevel>
         </UndefinedClass>
+        <UndefinedDocblockClass>
+            <errorLevel type="suppress">
+                <file name="src/Framework/Bootloader/Jobs/JobsBootloader.php" />
+            </errorLevel>
+        </UndefinedDocblockClass>
     </issueHandlers>
     <stubs>
         <file name="resources/stubs/php/reflection/Attribute.phpstub" />

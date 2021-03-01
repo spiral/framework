@@ -36,32 +36,32 @@ class RoadRunnerBootloader extends Bootloader
         //
         // Register RoadRunner Environment
         //
-        $registrar = static function (GlobalEnvironmentInterface $env): EnvironmentInterface {
+        $environmentRegistrar = static function (GlobalEnvironmentInterface $env): EnvironmentInterface {
             return new Environment($env->getAll());
         };
 
-        $container->bindSingleton(EnvironmentInterface::class, $registrar);
-        $container->bindSingleton(Environment::class, $registrar);
+        $container->bindSingleton(EnvironmentInterface::class, $environmentRegistrar);
+        $container->bindSingleton(Environment::class, $environmentRegistrar);
 
         //
         // Register RPC
         //
-        $registrar = static function (EnvironmentInterface $env): RPCInterface {
+        $rpcRegistrar = static function (EnvironmentInterface $env): RPCInterface {
             return RPC::create($env->getRPCAddress());
         };
 
-        $container->bindSingleton(RPCInterface::class, $registrar);
-        $container->bindSingleton(RPC::class, $registrar);
+        $container->bindSingleton(RPCInterface::class, $rpcRegistrar);
+        $container->bindSingleton(RPC::class, $rpcRegistrar);
 
         //
         // Register Worker
         //
-        $registrar = static function (EnvironmentInterface $env): WorkerInterface {
+        $workerRegistrar = static function (EnvironmentInterface $env): WorkerInterface {
             return Worker::createFromEnvironment($env);
         };
 
-        $container->bindSingleton(WorkerInterface::class, $registrar);
-        $container->bindSingleton(Worker::class, $registrar);
+        $container->bindSingleton(WorkerInterface::class, $workerRegistrar);
+        $container->bindSingleton(Worker::class, $workerRegistrar);
 
         //
         // Register PSR Worker
