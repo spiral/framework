@@ -113,7 +113,7 @@ class RrDispatcher implements DispatcherInterface
             if ($state !== null) {
                 $handler = $handler->withState($state);
             }
-        } catch (\Throwable|ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface $se) {
             \file_put_contents('php://stderr', (string)$e);
         }
 
