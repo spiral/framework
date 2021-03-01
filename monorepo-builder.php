@@ -68,6 +68,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'autoload'     => [
             'files' => [
                 'src/Framework/helpers.php',
+                'src/Framework/polyfill.php',
             ],
             'psr-4' => [
                 'Spiral\\' => 'src/Framework',
@@ -88,7 +89,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'spiral/code-style'         => '^1.0',
             'spiral/database'           => '^2.7.3',
             'spiral/migrations'         => '^2.1',
-            'spiral/roadrunner'         => '^1.8',
+            'spiral/roadrunner'         => '^1.9.2',
             'spiral/php-grpc'           => '^1.4',
             'spiral/jobs'               => '^2.2',
             'spiral/broadcast'          => '^2.0',

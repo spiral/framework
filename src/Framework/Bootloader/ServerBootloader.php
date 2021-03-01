@@ -41,7 +41,7 @@ final class ServerBootloader extends Bootloader
      */
     protected function rpc(EnvironmentInterface $env): RPC
     {
-        $conn = $env->get('RR_RPC', static::RPC_DEFAULT);
+        $conn = $env->get('RR_RPC', self::RPC_DEFAULT);
 
         if (!preg_match('#^([a-z]+)://([^:]+):?(\d+)?$#i', $conn, $parts)) {
             throw new BootException(
@@ -70,7 +70,7 @@ final class ServerBootloader extends Bootloader
      */
     protected function worker(EnvironmentInterface $env): Worker
     {
-        $conn = $env->get('RR_RELAY', static::WORKER_DEFAULT);
+        $conn = $env->get('RR_RELAY', self::WORKER_DEFAULT);
 
         if ($conn === 'pipes' || empty($conn)) {
             return new Worker(new StreamRelay(STDIN, STDOUT));
