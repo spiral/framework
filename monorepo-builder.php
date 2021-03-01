@@ -68,7 +68,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'autoload'     => [
             'files' => [
                 'src/Framework/helpers.php',
-                'src/Framework/polyfill.php',
             ],
             'psr-4' => [
                 'Spiral\\' => 'src/Framework',
