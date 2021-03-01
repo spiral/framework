@@ -42,7 +42,7 @@
         "symfony/polyfill-php80": "^1.18",
         "symfony/translation": "^5.1",
         "vlucas/phpdotenv": "^3.6",
-        "laminas/laminas-diactoros": "^2.5"
+        "laminas/laminas-diactoros": "^2.4"
     },
     "autoload": {
         "files": [
