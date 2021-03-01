@@ -60,13 +60,13 @@ class LegacyRoadRunnerBootloader extends Bootloader
     {
         $conn = $env->get('RR_RPC', self::RPC_DEFAULT);
 
-        if (! preg_match('#^([a-z]+)://([^:]+):?(\d+)?$#i', $conn, $parts)) {
+        if (!preg_match('#^([a-z]+)://([^:]+):?(\d+)?$#i', $conn, $parts)) {
             throw new BootException(
                 "Unable to configure RPC connection, invalid DSN given `{$conn}`."
             );
         }
 
-        if (! in_array($parts[1], ['tcp', 'unix'])) {
+        if (!in_array($parts[1], ['tcp', 'unix'])) {
             throw new BootException(
                 "Unable to configure RPC connection, invalid DSN given `{$conn}`."
             );
@@ -93,13 +93,13 @@ class LegacyRoadRunnerBootloader extends Bootloader
             return new Worker(new StreamRelay(STDIN, STDOUT));
         }
 
-        if (! preg_match('#^([a-z]+)://([^:]+):?(\d+)?$#i', $conn, $parts)) {
+        if (!preg_match('#^([a-z]+)://([^:]+):?(\d+)?$#i', $conn, $parts)) {
             throw new BootException(
                 "Unable to configure Worker connection, invalid DSN given `{$conn}`."
             );
         }
 
-        if (! in_array($parts[1], ['tcp', 'unix'])) {
+        if (!in_array($parts[1], ['tcp', 'unix'])) {
             throw new BootException(
                 "Unable to configure Worker connection, invalid DSN given `{$conn}`."
             );

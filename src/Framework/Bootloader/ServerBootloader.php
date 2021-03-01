@@ -48,6 +48,6 @@ final class ServerBootloader extends Bootloader
             return \str_starts_with($version, '1.');
         }
 
-        return ! \class_exists(HttpWorker::class);
+        return !\class_exists(HttpWorker::class);
     }
 }
