@@ -24,7 +24,7 @@ use Spiral\Http\Diactoros\UploadedFileFactory;
 use Spiral\Http\Diactoros\UriFactory;
 
 /**
- * PSR-17 factories using Zend/Diactoros (default package).
+ * PSR-17 factories using Laminas/Diactoros (default package).
  */
 final class DiactorosBootloader extends Bootloader
 {

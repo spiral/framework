@@ -157,7 +157,7 @@ abstract class AbstractKernel implements KernelInterface
     abstract protected function bootstrap();
 
     /**
-     * Normalizes directory list and adds all required alises.
+     * Normalizes directory list and adds all required aliases.
      *
      * @param array $directories
      * @return array

@@ -14,7 +14,7 @@ namespace Spiral\Http\Diactoros;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Zend\Diactoros\ServerRequest;
+use Laminas\Diactoros\ServerRequest;
 
 final class ServerRequestFactory implements ServerRequestFactoryInterface
 {

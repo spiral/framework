@@ -13,7 +13,7 @@ namespace Spiral\Http\Diactoros;
 
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
-use Zend\Diactoros\Uri;
+use Laminas\Diactoros\Uri;
 
 final class UriFactory implements UriFactoryInterface
 {
