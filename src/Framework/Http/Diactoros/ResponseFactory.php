@@ -14,7 +14,7 @@ namespace Spiral\Http\Diactoros;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Http\Config\HttpConfig;
-use Zend\Diactoros\Response;
+use Laminas\Diactoros\Response;
 
 final class ResponseFactory implements ResponseFactoryInterface
 {

@@ -11,89 +11,43 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader;
 
+use Composer\InstalledVersions;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\EnvironmentInterface;
-use Spiral\Boot\Exception\BootException;
-use Spiral\Goridge\RPC;
-use Spiral\Goridge\SocketRelay;
-use Spiral\Goridge\StreamRelay;
-use Spiral\RoadRunner\Metrics;
-use Spiral\RoadRunner\MetricsInterface;
-use Spiral\RoadRunner\Worker;
+use Spiral\Boot\BootloadManager;
+use Spiral\Bootloader\Server\LegacyRoadRunnerBootloader;
+use Spiral\Bootloader\Server\RoadRunnerBootloader;
+use Spiral\RoadRunner\Http\HttpWorker;
 
 /**
  * Configures RPC connection to upper RoadRunner server.
  */
 final class ServerBootloader extends Bootloader
 {
-    protected const SINGLETONS = [
-        RPC::class              => [self::class, 'rpc'],
-        Worker::class           => [self::class, 'worker'],
-        MetricsInterface::class => Metrics::class,
-    ];
-
-    private const RPC_DEFAULT    = 'tcp://127.0.0.1:6001';
-    private const WORKER_DEFAULT = 'pipes';
-
     /**
-     * @param EnvironmentInterface $env
-     * @return RPC
+     * @param BootloadManager $manager
+     * @throws \Throwable
      */
-    protected function rpc(EnvironmentInterface $env): RPC
+    public function boot(BootloadManager $manager): void
     {
-        $conn = $env->get('RR_RPC', static::RPC_DEFAULT);
+        $bootloader = $this->isLegacy()
+            ? LegacyRoadRunnerBootloader::class
+            : RoadRunnerBootloader::class
+        ;
 
-        if (!preg_match('#^([a-z]+)://([^:]+):?(\d+)?$#i', $conn, $parts)) {
-            throw new BootException(
-                "Unable to configure RPC connection, invalid DSN given `{$conn}`."
-            );
-        }
-
-        if (!in_array($parts[1], ['tcp', 'unix'])) {
-            throw new BootException(
-                "Unable to configure RPC connection, invalid DSN given `{$conn}`."
-            );
-        }
-
-        if ($parts[1] == 'unix') {
-            $relay = new SocketRelay($parts[2], null, SocketRelay::SOCK_UNIX);
-        } else {
-            $relay = new SocketRelay($parts[2], (int)$parts[3], SocketRelay::SOCK_TCP);
-        }
-
-        return new RPC($relay);
+        $manager->bootload([$bootloader]);
     }
 
     /**
-     * @param EnvironmentInterface $env
-     * @return Worker
+     * @return bool
      */
-    protected function worker(EnvironmentInterface $env): Worker
+    private function isLegacy(): bool
     {
-        $conn = $env->get('RR_RELAY', static::WORKER_DEFAULT);
+        if (\class_exists(InstalledVersions::class)) {
+            $version = InstalledVersions::getVersion('spiral/roadrunner');
 
-        if ($conn === 'pipes' || empty($conn)) {
-            return new Worker(new StreamRelay(STDIN, STDOUT));
+            return \str_starts_with($version, '1.');
         }
 
-        if (!preg_match('#^([a-z]+)://([^:]+):?(\d+)?$#i', $conn, $parts)) {
-            throw new BootException(
-                "Unable to configure Worker connection, invalid DSN given `{$conn}`."
-            );
-        }
-
-        if (!in_array($parts[1], ['tcp', 'unix'])) {
-            throw new BootException(
-                "Unable to configure Worker connection, invalid DSN given `{$conn}`."
-            );
-        }
-
-        if ($parts[1] == 'unix') {
-            $relay = new SocketRelay($parts[2], null, SocketRelay::SOCK_UNIX);
-        } else {
-            $relay = new SocketRelay($parts[2], (int)$parts[3], SocketRelay::SOCK_TCP);
-        }
-
-        return new Worker($relay);
+        return !\class_exists(HttpWorker::class);
     }
 }

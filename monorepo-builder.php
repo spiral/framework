@@ -75,6 +75,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         'require'      => [
             'spiral/composer-publish-plugin' => '^1.0',
+            'laminas/laminas-diactoros'      => '^2.4',
         ],
         'autoload-dev' => [
             'psr-4' => [
@@ -88,7 +89,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'spiral/code-style'         => '^1.0',
             'spiral/database'           => '^2.7.3',
             'spiral/migrations'         => '^2.1',
-            'spiral/roadrunner'         => '^1.8',
+            'spiral/roadrunner'         => '^1.9.2',
             'spiral/php-grpc'           => '^1.4',
             'spiral/jobs'               => '^2.2',
             'spiral/broadcast'          => '^2.0',

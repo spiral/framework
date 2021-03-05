@@ -25,10 +25,10 @@ final class JobQueue implements QueueInterface
     private $registry;
 
     /**
-     * @param RPC $rpc
+     * @param RPC|RPC\RPCInterface $rpc
      * @param JobRegistry $registry
      */
-    public function __construct(RPC $rpc, JobRegistry $registry)
+    public function __construct($rpc, JobRegistry $registry)
     {
         $this->queue = new Queue($rpc, $registry);
         $this->registry = $registry;

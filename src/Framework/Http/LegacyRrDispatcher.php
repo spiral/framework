@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file is part of Spiral Framework package.
+ * Spiral Framework.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
 
 declare(strict_types=1);
@@ -14,80 +14,72 @@ namespace Spiral\Http;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
 use Spiral\Boot\DispatcherInterface;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
+use Spiral\Core\FactoryInterface;
 use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\HtmlHandler;
-use Spiral\RoadRunner\Environment\Mode;
-use Spiral\RoadRunner\EnvironmentInterface;
-use Spiral\RoadRunner\Http\PSR7WorkerInterface;
+use Spiral\RoadRunner\PSR7Client;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
-class RrDispatcher implements DispatcherInterface
+final class LegacyRrDispatcher implements DispatcherInterface
 {
-    /**
-     * @var EnvironmentInterface
-     */
+    /** @var EnvironmentInterface */
     private $env;
 
-    /**
-     * @var PSR7WorkerInterface
-     */
-    private $worker;
+    /** @var FinalizerInterface */
+    private $finalizer;
 
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     private $container;
 
-    /**
-     * @var FinalizerInterface
-     */
-    private $finalizer;
+    /** @var FactoryInterface */
+    private $factory;
 
     /**
      * @param EnvironmentInterface $env
-     * @param PSR7WorkerInterface $worker
-     * @param ContainerInterface $container
-     * @param FinalizerInterface $finalizer
+     * @param FinalizerInterface   $finalizer
+     * @param ContainerInterface   $container
+     * @param FactoryInterface     $factory
      */
     public function __construct(
         EnvironmentInterface $env,
-        PSR7WorkerInterface $worker,
+        FinalizerInterface $finalizer,
         ContainerInterface $container,
-        FinalizerInterface $finalizer
+        FactoryInterface $factory
     ) {
         $this->env = $env;
-        $this->worker = $worker;
-        $this->container = $container;
         $this->finalizer = $finalizer;
+        $this->container = $container;
+        $this->factory = $factory;
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function canServe(): bool
     {
-        return \PHP_SAPI === 'cli' && $this->env->getMode() === Mode::MODE_HTTP;
+        return (\PHP_SAPI === 'cli' && $this->env->get('RR_HTTP') !== null);
     }
 
     /**
-     * @return void
+     * @inheritdoc
      */
-    public function serve(): void
+    public function serve(PSR7Client $client = null): void
     {
+        // On demand to save some memory.
+
+        $client = $client ?? $this->factory->make(PSR7Client::class);
+
         /** @var Http $http */
         $http = $this->container->get(Http::class);
-
-        while ($request = $this->worker->waitRequest()) {
+        while ($request = $client->acceptRequest()) {
             try {
-                $response = $http->handle($request);
-
-                $this->worker->respond($response);
+                $client->respond($http->handle($request));
             } catch (\Throwable $e) {
-                $this->worker->respond($this->errorToResponse($e));
+                $this->handleException($client, $e);
             } finally {
                 $this->finalizer->finalize(false);
             }
@@ -95,26 +87,25 @@ class RrDispatcher implements DispatcherInterface
     }
 
     /**
+     * @param PSR7Client $client
      * @param \Throwable $e
-     * @return ResponseInterface
      */
-    protected function errorToResponse(\Throwable $e): ResponseInterface
+    protected function handleException(PSR7Client $client, \Throwable $e): void
     {
         $handler = new HtmlHandler();
 
         try {
             /** @var SnapshotInterface $snapshot */
             $snapshot = $this->container->get(SnapshotterInterface::class)->register($e);
-            \file_put_contents('php://stderr', $snapshot->getMessage());
+            error_log($snapshot->getMessage());
 
             // on demand
             $state = $this->container->get(StateInterface::class);
-
             if ($state !== null) {
                 $handler = $handler->withState($state);
             }
         } catch (\Throwable | ContainerExceptionInterface $se) {
-            \file_put_contents('php://stderr', (string)$e);
+            error_log((string)$e);
         }
 
         /** @var ResponseFactoryInterface $responseFactory */
@@ -126,6 +117,6 @@ class RrDispatcher implements DispatcherInterface
             $handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE)
         );
 
-        return $response;
+        $client->respond($response);
     }
 }

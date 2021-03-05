@@ -15,6 +15,9 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\KernelInterface;
 use Spiral\Bootloader\ServerBootloader;
+use Spiral\Core\Container;
+use Spiral\Goridge\RPC as LegacyRPC;
+use Spiral\Goridge\RPC\RPC;
 use Spiral\Jobs\HandlerRegistryInterface;
 use Spiral\Jobs\JobDispatcher;
 use Spiral\Jobs\JobQueue;
@@ -30,19 +33,29 @@ final class JobsBootloader extends Bootloader
     ];
 
     protected const SINGLETONS = [
-        QueueInterface::class              => JobQueue::class,
         HandlerRegistryInterface::class    => JobRegistry::class,
         SerializerRegistryInterface::class => JobRegistry::class,
         JobRegistry::class                 => [self::class, 'jobRegistry'],
     ];
 
     /**
+     * @param Container $container
      * @param KernelInterface $kernel
      * @param JobDispatcher $jobs
      */
-    public function boot(KernelInterface $kernel, JobDispatcher $jobs): void
+    public function boot(Container $container, KernelInterface $kernel, JobDispatcher $jobs): void
     {
         $kernel->addDispatcher($jobs);
+
+        if (\class_exists(LegacyRPC::class)) {
+            $container->bindSingleton(QueueInterface::class, function (LegacyRPC $rpc, JobRegistry $registry) {
+                return new JobQueue($rpc, $registry);
+            });
+        } else {
+            $container->bindSingleton(QueueInterface::class, function (RPC $rpc, JobRegistry $registry) {
+                return new JobQueue($rpc, $registry);
+            });
+        }
     }
 
     /**
