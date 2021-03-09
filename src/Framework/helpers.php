@@ -38,7 +38,7 @@ if (!function_exists('dumprr')) {
      */
     function dumprr($value): void
     {
-        $result = dump($value, Dumper::RETURN);
+        $result = dump($value, Dumper::ROADRUNNER);
 
         file_put_contents('php://stderr', $result);
     }

@@ -35,6 +35,7 @@ class Dumper implements LoggerAwareInterface
     public const ERROR_LOG         = 3;
     public const OUTPUT_CLI        = 4;
     public const OUTPUT_CLI_COLORS = 5;
+    public const ROADRUNNER        = 6;
 
     /** @var int */
     private $maxLevel = 12;
@@ -51,6 +52,7 @@ class Dumper implements LoggerAwareInterface
         self::RETURN            => HtmlRenderer::class,
         self::LOGGER            => PlainRenderer::class,
         self::ERROR_LOG         => PlainRenderer::class,
+        self::ROADRUNNER        => PlainRenderer::class,
     ];
 
     /**
@@ -91,6 +93,7 @@ class Dumper implements LoggerAwareInterface
                 echo $dump;
                 break;
 
+            case self::ROADRUNNER:
             case self::RETURN:
                 return $dump;
 
