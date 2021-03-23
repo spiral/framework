@@ -25,9 +25,9 @@ use Spiral\Stempler\Lexer\Token;
 
 /**
  * Similar to Laravel blade, this grammar defines the ability to echo PHP variables using {{ $var }} statements
- * Grammar also support various component support using @directive(options) pattern.
+ * Grammar also support various component support using [@directive(options)] pattern.
  *
- * Attention, the syntaxt will treat all @sequnce() as directive unless DirectiveRendererInterface is provided.
+ * Attention, the syntaxt will treat all [@sequnce()] as directive unless DirectiveRendererInterface is provided.
  */
 final class DynamicGrammar implements GrammarInterface
 {
