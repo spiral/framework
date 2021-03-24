@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://user-images.githubusercontent.com/2461257/112311949-4fc2c380-8cb7-11eb-8e2c-882b62b0b408.png" width="400" alt="Spiral Framework">
+<img src="https://user-images.githubusercontent.com/2461257/112313394-d926c580-8cb8-11eb-84ea-717df4e4d167.png" width="400" alt="Spiral Framework">
 </p>
 
 <p align="center">
