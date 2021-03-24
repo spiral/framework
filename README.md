@@ -1,19 +1,23 @@
-<center>
+<p align="center">
 <img src="https://user-images.githubusercontent.com/2461257/112311949-4fc2c380-8cb7-11eb-8e2c-882b62b0b408.png" width="400" alt="Spiral Framework">
+</p>
 
-[![Latest Stable Version](https://poser.pugx.org/spiral/framework/version)](https://packagist.org/packages/spiral/framework)
-[![Build Status](https://github.com/spiral/framework/workflows/build/badge.svg)](https://github.com/spiral/framework/actions)
-[![Codecov](https://codecov.io/gh/spiral/framework/graph/badge.svg)](https://codecov.io/gh/spiral/framework)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/framework/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/framework/?branch=master) 
+<p align="center">
+<a href="https://packagist.org/packages/spiral/framework"><img src="https://poser.pugx.org/spiral/framework/version"></a>
+<a href="https://github.com/spiral/framework/actions"><img src="https://github.com/spiral/framework/workflows/build/badge.svg"></a>
+<a href="https://codecov.io/gh/spiral/framework"><img src="https://codecov.io/gh/spiral/framework/graph/badge.svg"></a>
+<a href="https://scrutinizer-ci.com/g/spiral/framework/?branch=master"><img src="https://scrutinizer-ci.com/g/spiral/framework/badges/quality-score.png"></a>
 
-----
+<hr />
 
-[Documentation](https://spiral.dev/docs) &middot;
-[Discord](https://discord.gg/TFeEmCs) &middot; 
-[Telegram](https://t.me/spiralphp) &middot; 
-[Twitter](https://twitter.com/spiralphp)
-
-</center>
+<a href="https://spiral.dev/docs">Documentation</a>
+&middot;
+<a href="https://discord.gg/TFeEmCs">Discord</a>
+&middot;
+<a href="https://t.me/spiralphp">Telegram</a>
+&middot;
+<a href="https://twitter.com/spiralphp">Twitter</a>
+</p>
 
 Spiral Framework is a High-Performance Long-Living Full-Stack framework and group of over sixty 
 PSR-compatible components. The Framework execution model based on a hybrid runtime where some services 
