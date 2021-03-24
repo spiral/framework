@@ -7,9 +7,11 @@
 <a href="https://github.com/spiral/framework/actions"><img src="https://github.com/spiral/framework/workflows/build/badge.svg"></a>
 <a href="https://codecov.io/gh/spiral/framework"><img src="https://codecov.io/gh/spiral/framework/graph/badge.svg"></a>
 <a href="https://scrutinizer-ci.com/g/spiral/framework/?branch=master"><img src="https://scrutinizer-ci.com/g/spiral/framework/badges/quality-score.png"></a>
+</p>
 
 <hr />
 
+<p align="center">
 <a href="https://spiral.dev/docs">Documentation</a>
 &middot;
 <a href="https://discord.gg/TFeEmCs">Discord</a>
