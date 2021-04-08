@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Spiral\DataGrid\Writer;
 
 use Cycle\ORM\Select;
+use Spiral\DataGrid\Specification\Sorter\InjectionSorter;
 use Spiral\Database\Injection\Parameter;
 use Spiral\Database\Query\SelectQuery;
 use Spiral\DataGrid\Compiler;
@@ -178,6 +179,15 @@ class QueryWriter implements WriterInterface
             $direction = static::SORTER_DIRECTIONS[get_class($sorter)];
             foreach ($sorter->getExpressions() as $expression) {
                 $source = $source->orderBy($expression, $direction);
+            }
+
+            return $source;
+        }
+
+        if ($sorter instanceof InjectionSorter) {
+            $direction = static::SORTER_DIRECTIONS[get_class($sorter)] ?? 'ASC';
+            foreach ($sorter->getInjections() as $injection) {
+                $source = $source->orderBy($injection, $direction);
             }
 
             return $source;

@@ -195,6 +195,32 @@ class WriteSorterTest extends BaseTest
         }
     }
 
+    public function testFragmentInjection(): void
+    {
+        $select = $this->compile(
+            $this->initQuery(),
+            new Sorter\FragmentInjectionSorter(new Sorter\AscSorter("json_field->>'date'"))
+        );
+
+        $this->assertEqualSQL(
+            "SELECT * FROM \"users\" ORDER BY json_field->>'date' ASC",
+            $select
+        );
+    }
+
+    public function testExpressionInjection(): void
+    {
+        $select = $this->compile(
+            $this->initQuery(),
+            new Sorter\ExpressionInjectionSorter(new Sorter\AscSorter('date(created)'))
+        );
+
+        $this->assertEqualSQL(
+            'SELECT * FROM "users" ORDER BY date("created") ASC',
+            $select
+        );
+    }
+
     public function binarySortProvider(): array
     {
         return [
