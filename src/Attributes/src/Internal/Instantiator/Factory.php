@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 class Factory implements InstantiatorInterface
 {
@@ -26,12 +28,18 @@ class Factory implements InstantiatorInterface
     private $named;
 
     /**
+     * @var AnnotationReader
+     */
+    private $annotationReader;
+
+    /**
      * Factory constructor.
      */
     public function __construct()
     {
         $this->doctrine = new DoctrineInstantiator();
         $this->named = new NamedArgumentsInstantiator();
+        $this->annotationReader = new AnnotationReader();
     }
 
     /**
@@ -55,6 +63,10 @@ class Factory implements InstantiatorInterface
      */
     private function isNamedArguments(\ReflectionClass $class): bool
     {
-        return \is_subclass_of($class->getName(), NamedArgumentConstructorAnnotation::class);
+        return is_subclass_of($class->getName(), NamedArgumentConstructorAnnotation::class)
+            || (
+                class_exists(NamedArgumentConstructor::class)
+                && null !== $this->annotationReader->getClassAnnotation($class, NamedArgumentConstructor::class)
+            );
     }
 }
