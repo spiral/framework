@@ -31,10 +31,17 @@ class RenderTest extends TestCase
         ]);
     }
 
+    public function tearDown(): void
+    {
+        foreach (glob(__DIR__ . '/App/runtime/cache/views/*.php') as $file) {
+            @unlink($file);
+        }
+    }
+
     public function testRenderError(): void
     {
         $this->expectException(MailerException::class);
-        $email = $this->app->send(new Message('test', ['email@domain.com'], ['name' => 'Antony']));
+        $this->app->send(new Message('test', ['email@domain.com'], ['name' => 'Antony']));
     }
 
     public function testRender(): void
