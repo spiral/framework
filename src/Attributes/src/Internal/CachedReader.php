@@ -37,19 +37,6 @@ abstract class CachedReader extends Decorator
     }
 
     /**
-     * @return KeyGeneratorInterface
-     */
-    protected function createDefaultKeyGenerator(): KeyGeneratorInterface
-    {
-        return new HashKeyGenerator(
-            new ConcatKeyGenerator([
-                new NameKeyGenerator(),
-                new ModificationTimeKeyGenerator(),
-            ])
-        );
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
@@ -59,28 +46,6 @@ abstract class CachedReader extends Decorator
         });
 
         return $this->filter($name, $result);
-    }
-
-    /**
-     * @template T of object
-     * @param string $key
-     * @param callable(): array<T> $then
-     * @return iterable<T>
-     */
-    abstract protected function cached(string $key, callable $then): iterable;
-
-    /**
-     * @template T of object
-     * @param iterable<T> $attributes
-     * @return array<T>
-     */
-    protected function iterableToArray(iterable $attributes): array
-    {
-        if ($attributes instanceof \Traversable) {
-            return \iterator_to_array($attributes, false);
-        }
-
-        return $attributes;
     }
 
     /**
@@ -129,5 +94,40 @@ abstract class CachedReader extends Decorator
         });
 
         return $this->filter($name, $result);
+    }
+
+    /**
+     * @return KeyGeneratorInterface
+     */
+    protected function createDefaultKeyGenerator(): KeyGeneratorInterface
+    {
+        return new HashKeyGenerator(
+            new ConcatKeyGenerator([
+                new NameKeyGenerator(),
+                new ModificationTimeKeyGenerator(),
+            ])
+        );
+    }
+
+    /**
+     * @template T of object
+     * @param string $key
+     * @param callable(): array<T> $then
+     * @return iterable<T>
+     */
+    abstract protected function cached(string $key, callable $then): iterable;
+
+    /**
+     * @template T of object
+     * @param iterable<T> $attributes
+     * @return array<T>
+     */
+    protected function iterableToArray(iterable $attributes): array
+    {
+        if ($attributes instanceof \Traversable) {
+            return \iterator_to_array($attributes, false);
+        }
+
+        return $attributes;
     }
 }

@@ -22,7 +22,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor as DoctrineN
 //
 // In this case, it should be loaded explicitly.
 //
-if (! \class_exists(DoctrineNamedArgumentConstructor::class, false)) {
+if (!\class_exists(DoctrineNamedArgumentConstructor::class, false)) {
     require_once __DIR__ . '/polyfill.php';
 }
 

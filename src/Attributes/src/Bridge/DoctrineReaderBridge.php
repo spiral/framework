@@ -51,19 +51,6 @@ final class DoctrineReaderBridge implements Reader
     }
 
     /**
-     * @param iterable<object> $meta
-     * @return array<object>
-     */
-    private function iterableToArray(iterable $meta): array
-    {
-        if ($meta instanceof \Traversable) {
-            return \iterator_to_array($meta, false);
-        }
-
-        return $meta;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getClassAnnotations(\ReflectionClass $class): array
@@ -115,5 +102,18 @@ final class DoctrineReaderBridge implements Reader
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
     {
         return $this->reader->firstPropertyMetadata($property, $annotationName);
+    }
+
+    /**
+     * @param iterable<object> $meta
+     * @return array<object>
+     */
+    private function iterableToArray(iterable $meta): array
+    {
+        if ($meta instanceof \Traversable) {
+            return \iterator_to_array($meta, false);
+        }
+
+        return $meta;
     }
 }

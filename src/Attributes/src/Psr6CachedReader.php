@@ -46,7 +46,7 @@ final class Psr6CachedReader extends CachedReader
     {
         $item = $this->cache->getItem($key);
 
-        if (! $item->isHit()) {
+        if (!$item->isHit()) {
             $this->cache->save(
                 $item->set($then())
             );

@@ -23,14 +23,13 @@ use Spiral\Attributes\Reader;
 abstract class AttributeReader extends Reader
 {
     /**
-     * @var InstantiatorInterface
-     */
-    private $instantiator;
-
-    /**
      * @var ContextRenderer
      */
     protected $renderer;
+    /**
+     * @var InstantiatorInterface
+     */
+    private $instantiator;
 
     /**
      * @param InstantiatorInterface|null $instantiator
@@ -39,22 +38,6 @@ abstract class AttributeReader extends Reader
     {
         $this->instantiator = $instantiator ?? new Facade($this);
         $this->renderer = new ContextRenderer();
-    }
-
-    /**
-     * @param string $class
-     * @param \Reflector $context
-     */
-    protected function assertClassExists(string $class, \Reflector $context): void
-    {
-        if (! \class_exists($class)) {
-            $message = \vsprintf('The metadata class "%s" in %s was not found', [
-                $class,
-                $this->renderer->render($context)
-            ]);
-
-            throw new SemanticAttributeException($message);
-        }
     }
 
     /**
@@ -119,6 +102,22 @@ abstract class AttributeReader extends Reader
 
         foreach ($attributes as $attribute => $arguments) {
             yield $this->instantiator->instantiate($attribute, $arguments, $parameter);
+        }
+    }
+
+    /**
+     * @param string $class
+     * @param \Reflector $context
+     */
+    protected function assertClassExists(string $class, \Reflector $context): void
+    {
+        if (!\class_exists($class)) {
+            $message = \vsprintf('The metadata class "%s" in %s was not found', [
+                $class,
+                $this->renderer->render($context),
+            ]);
+
+            throw new SemanticAttributeException($message);
         }
     }
 

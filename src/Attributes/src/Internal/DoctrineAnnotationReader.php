@@ -79,30 +79,6 @@ final class DoctrineAnnotationReader extends BaseReader
         return $this->filter($name, $result);
     }
 
-    private function wrapDoctrineExceptions(\Closure $then): iterable
-    {
-        try {
-            return $then();
-        } catch (AnnotationException $e) {
-            switch (true) {
-                case \str_starts_with($e->getMessage(), '[Syntax Error]'):
-                case \str_starts_with($e->getMessage(), '[Type Error]'):
-                    $class = SyntaxAttributeException::class;
-                    break;
-
-                case \str_starts_with($e->getMessage(), '[Semantical Error]'):
-                case \str_starts_with($e->getMessage(), '[Creation Error]'):
-                    $class = SemanticAttributeException::class;
-                    break;
-
-                default:
-                    $class = AttributeException::class;
-            }
-
-            throw new $class($e->getMessage(), (int)$e->getCode(), $e);
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -125,6 +101,30 @@ final class DoctrineAnnotationReader extends BaseReader
     protected function isAvailable(): bool
     {
         return \interface_exists(Reader::class);
+    }
+
+    private function wrapDoctrineExceptions(\Closure $then): iterable
+    {
+        try {
+            return $then();
+        } catch (AnnotationException $e) {
+            switch (true) {
+                case \str_starts_with($e->getMessage(), '[Syntax Error]'):
+                case \str_starts_with($e->getMessage(), '[Type Error]'):
+                    $class = SyntaxAttributeException::class;
+                    break;
+
+                case \str_starts_with($e->getMessage(), '[Semantical Error]'):
+                case \str_starts_with($e->getMessage(), '[Creation Error]'):
+                    $class = SemanticAttributeException::class;
+                    break;
+
+                default:
+                    $class = AttributeException::class;
+            }
+
+            throw new $class($e->getMessage(), (int)$e->getCode(), $e);
+        }
     }
 
     /**

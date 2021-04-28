@@ -49,21 +49,6 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
     }
 
     /**
-     * @param \Closure(KeyGeneratorInterface): string $each
-     * @return string
-     */
-    private function joinBy(\Closure $each): string
-    {
-        $result = [];
-
-        foreach ($this->generators as $generator) {
-            $result[] = $each($generator);
-        }
-
-        return \implode($this->join, $result);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function forClass(\ReflectionClass $class): string
@@ -111,5 +96,20 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
         return $this->joinBy(static function (KeyGeneratorInterface $generator) use ($param): string {
             return $generator->forParameter($param);
         });
+    }
+
+    /**
+     * @param \Closure(KeyGeneratorInterface): string $each
+     * @return string
+     */
+    private function joinBy(\Closure $each): string
+    {
+        $result = [];
+
+        foreach ($this->generators as $generator) {
+            $result[] = $each($generator);
+        }
+
+        return \implode($this->join, $result);
     }
 }

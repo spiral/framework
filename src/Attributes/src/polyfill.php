@@ -13,7 +13,7 @@ namespace Doctrine\Common\Annotations {
 
     use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
-    if (! \interface_exists(NamedArgumentConstructorAnnotation::class)) {
+    if (!\interface_exists(NamedArgumentConstructorAnnotation::class)) {
         /**
          * Marker interface for PHP7/PHP8 compatible support for named
          * arguments (and constructor property promotion).
@@ -30,7 +30,7 @@ namespace Doctrine\Common\Annotations {
 
 namespace Doctrine\Common\Annotations\Annotation {
 
-    if (! \class_exists(NamedArgumentConstructor::class, false)) {
+    if (!\class_exists(NamedArgumentConstructor::class, false)) {
         /**
          * Annotation that indicates that the annotated class should be
          * constructed with a named argument call.
@@ -50,7 +50,7 @@ namespace {
 
     use JetBrains\PhpStorm\ExpectedValues;
 
-    if (! \class_exists(Attribute::class, false)) {
+    if (!\class_exists(Attribute::class, false)) {
         /**
          * @psalm-type AttributeTarget = Attribute::TARGET_*
          * @psalm-type AttributeFlag  = AttributeTarget | Attribute::IS_REPEATABLE

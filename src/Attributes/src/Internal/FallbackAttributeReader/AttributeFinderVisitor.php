@@ -87,6 +87,20 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
     }
 
     /**
+     * @return array
+     */
+    public function __debugInfo(): array
+    {
+        return [
+            'classes'    => $this->classes,
+            'functions'  => $this->functions,
+            'constants'  => $this->constants,
+            'properties' => $this->properties,
+            'parameters' => $this->parameters,
+        ];
+    }
+
+    /**
      * @return array<ClassName, AttributePrototypeList>
      */
     public function getClasses(): array
@@ -191,6 +205,31 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
     /**
      * @param Node $node
      */
+    public function leaveNode(Node $node): void
+    {
+        if ($node instanceof Node\Stmt\Namespace_) {
+            $this->context[AttributeParser::CTX_NAMESPACE] = '';
+
+            return;
+        }
+
+        if ($node instanceof Node\Stmt\ClassLike) {
+            $this->context[AttributeParser::CTX_CLASS] = '';
+            $this->context[AttributeParser::CTX_TRAIT] = '';
+
+            return;
+        }
+
+        if ($node instanceof Node\FunctionLike) {
+            $this->context[AttributeParser::CTX_FUNCTION] = '';
+
+            return;
+        }
+    }
+
+    /**
+     * @param Node $node
+     */
     private function updateContext(Node $node): void
     {
         switch (true) {
@@ -245,44 +284,5 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
         $class = $this->context[AttributeParser::CTX_CLASS] ?? '';
 
         return \trim($namespace . '\\' . $class, '\\');
-    }
-
-    /**
-     * @param Node $node
-     */
-    public function leaveNode(Node $node): void
-    {
-        if ($node instanceof Node\Stmt\Namespace_) {
-            $this->context[AttributeParser::CTX_NAMESPACE] = '';
-
-            return;
-        }
-
-        if ($node instanceof Node\Stmt\ClassLike) {
-            $this->context[AttributeParser::CTX_CLASS] = '';
-            $this->context[AttributeParser::CTX_TRAIT] = '';
-
-            return;
-        }
-
-        if ($node instanceof Node\FunctionLike) {
-            $this->context[AttributeParser::CTX_FUNCTION] = '';
-
-            return;
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function __debugInfo(): array
-    {
-        return [
-            'classes'    => $this->classes,
-            'functions'  => $this->functions,
-            'constants'  => $this->constants,
-            'properties' => $this->properties,
-            'parameters' => $this->parameters,
-        ];
     }
 }

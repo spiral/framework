@@ -41,7 +41,7 @@ final class Psr16CachedReader extends CachedReader
      */
     protected function cached(string $key, callable $then): iterable
     {
-        if (! $this->cache->has($key)) {
+        if (!$this->cache->has($key)) {
             $this->cache->set($key, $then());
         }
 
