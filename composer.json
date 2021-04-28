@@ -26,14 +26,17 @@
         "defuse/php-encryption": "^2.2",
         "doctrine/annotations": "^1.11",
         "doctrine/inflector": "^1.4|^2.0",
+        "laminas/laminas-diactoros": "^2.3",
         "monolog/monolog": "^2.2",
         "myclabs/deep-copy": "^1.9",
         "nikic/php-parser": "^4.1",
+        "psr/cache": ">=1.0",
         "psr/container": "^1.0",
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0",
         "psr/http-server-middleware": "^1.0",
         "psr/log": "^1.0",
+        "psr/simple-cache": ">=1.0",
         "spiral/composer-publish-plugin": "^1.0",
         "symfony/console": "^5.1",
         "symfony/finder": "^5.1",
@@ -41,11 +44,11 @@
         "symfony/polyfill-php73": "^1.18",
         "symfony/polyfill-php80": "^1.18",
         "symfony/translation": "^5.1",
-        "vlucas/phpdotenv": "^3.6",
-        "laminas/laminas-diactoros": "^2.4"
+        "vlucas/phpdotenv": "^3.6"
     },
     "autoload": {
         "files": [
+            "src/Attributes/src/polyfill.php",
             "src/Boot/src/helpers.php",
             "src/DataGrid/src/helpers.php",
             "src/Dumper/src/helpers.php",
@@ -57,6 +60,7 @@
         "psr-4": {
             "Spiral\\": "src/Framework",
             "Spiral\\Annotations\\": "src/Annotations/src",
+            "Spiral\\Attributes\\": "src/Attributes/src",
             "Spiral\\Auth\\": [
                 "src/Auth/src",
                 "src/AuthHttp/src"
@@ -112,11 +116,13 @@
         }
     },
     "require-dev": {
+        "cache/filesystem-adapter": "^1.1|^2.0",
         "cycle/annotated": "^2.0.6",
         "cycle/migrations": "^1.0.1",
         "cycle/orm": "^1.2.6",
         "cycle/proxy-factory": "^1.2",
         "cycle/schema-builder": "^1.1",
+        "jetbrains/phpstorm-attributes": "^1.0",
         "laminas/laminas-hydrator": "^3.0",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5|^9.0",
@@ -129,13 +135,15 @@
         "spiral/migrations": "^2.1",
         "spiral/php-grpc": "^1.4",
         "spiral/roadrunner": "^1.9.2",
-        "symplify/monorepo-builder": "^8.3.40",
-        "vimeo/psalm": "^4.6"
+        "symfony/var-dumper": "^5.2",
+        "symplify/monorepo-builder": "^8.3",
+        "vimeo/psalm": "^4.3"
     },
     "autoload-dev": {
         "psr-4": {
             "Spiral\\App\\": "tests/app/src",
             "Spiral\\Tests\\Annotations\\": "src/Annotations/tests",
+            "Spiral\\Tests\\Attributes\\": "src/Attributes/tests",
             "Spiral\\Tests\\Auth\\": [
                 "src/Auth/tests",
                 "src/AuthHttp/tests"
@@ -194,6 +202,7 @@
     "replace": {
         "spiral/annotated-routes": "*",
         "spiral/annotations": "*",
+        "spiral/attributes": "self.version",
         "spiral/auth": "*",
         "spiral/auth-http": "*",
         "spiral/boot": "*",
