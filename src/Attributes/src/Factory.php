@@ -57,7 +57,9 @@ class Factory implements FactoryInterface
     private function decorateByAnnotations(ReaderInterface $reader): ReaderInterface
     {
         if (\interface_exists(DoctrineReaderInterface::class)) {
-            $reader = new SelectiveReader([$reader, new DoctrineAnnotationReader()]);
+            $doctrine = new AnnotationReader(new DoctrineAnnotationReader());
+
+            $reader = new SelectiveReader([$reader, $doctrine]);
         }
 
         return $reader;
