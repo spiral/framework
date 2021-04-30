@@ -1,0 +1,64 @@
+{
+    "name": "spiral/storage",
+    "type": "library",
+    "description": "Storage Engine for file storage interaction",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/storage"
+    },
+    "authors": [
+        {
+            "name": "Evgeny Barinov",
+            "email": "evgeny.barinov@spiralscout.com"
+        },
+        {
+            "name": "Aleksandr Novikov",
+            "email": "aleksandr.novikov@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "symfony/polyfill-php80": "^1.18",
+        "league/flysystem": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Storage\\": "src"
+        }
+    },
+    "require-dev": {
+        "spiral/core": "^2.8",
+        "spiral/boot": "^2.8",
+        "phpunit/phpunit": "^8.5|^9.0",
+        "mockery/mockery": "^1.3",
+        "spiral/code-style": "^1.0",
+        "mikey179/vfsstream": "^1.6",
+        "league/flysystem-aws-s3-v3": "^2.0",
+        "league/flysystem-async-aws-s3": "^2.0",
+        "symfony/var-dumper": "^5.2",
+        "vimeo/psalm": "^4.3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Storage\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpunit",
+            "psalm --no-cache"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.8.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
