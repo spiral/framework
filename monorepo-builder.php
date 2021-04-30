@@ -146,6 +146,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'src/Session'         => 'git@github.com:spiral/session.git',
         'src/Snapshots'       => 'git@github.com:spiral/snapshots.git',
         'src/Stempler'        => 'git@github.com:spiral/stempler.git',
+        'src/Storage'         => 'git@github.com:spiral/storage.git',
         'src/Streams'         => 'git@github.com:spiral/streams.git',
         'src/Tokenizer'       => 'git@github.com:spiral/tokenizer.git',
         'src/Translator'      => 'git@github.com:spiral/translator.git',
