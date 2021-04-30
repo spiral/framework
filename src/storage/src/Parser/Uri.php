@@ -47,6 +47,14 @@ final class Uri implements UriInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function __toString(): string
+    {
+        return $this->getFileSystem() . self::SCHEME_PATH_DELIMITER . $this->getPath();
+    }
+
+    /**
      * @param string $fs
      * @param string $path
      * @return static
@@ -55,35 +63,6 @@ final class Uri implements UriInterface
     public static function create(string $fs, string $path): self
     {
         return new self($fs, $path);
-    }
-
-    /**
-     * @param string $fs
-     * @throws UriException
-     */
-    private function setFileSystem(string $fs): void
-    {
-        if ($fs === '') {
-            throw new UriException('Filesystem name can not be empty');
-        }
-
-        $this->fs = $fs;
-    }
-
-    /**
-     * @param string $path
-     * @throws UriException
-     */
-    private function setPath(string $path): void
-    {
-        $path = \str_replace(['\\', '/'], self::PATH_DELIMITER, $path);
-        $path = \trim(\trim($path), self::PATH_DELIMITER);
-
-        if ($path === '') {
-            throw new UriException('Filesystem pathname can not be empty');
-        }
-
-        $this->path = $path;
     }
 
     /**
@@ -125,10 +104,31 @@ final class Uri implements UriInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param string $fs
+     * @throws UriException
      */
-    public function __toString(): string
+    private function setFileSystem(string $fs): void
     {
-        return $this->getFileSystem() . self::SCHEME_PATH_DELIMITER . $this->getPath();
+        if ($fs === '') {
+            throw new UriException('Filesystem name can not be empty');
+        }
+
+        $this->fs = $fs;
+    }
+
+    /**
+     * @param string $path
+     * @throws UriException
+     */
+    private function setPath(string $path): void
+    {
+        $path = \str_replace(['\\', '/'], self::PATH_DELIMITER, $path);
+        $path = \trim(\trim($path), self::PATH_DELIMITER);
+
+        if ($path === '') {
+            throw new UriException('Filesystem pathname can not be empty');
+        }
+
+        $this->path = $path;
     }
 }

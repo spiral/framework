@@ -43,7 +43,7 @@ final class UriParser implements UriParserInterface
             default:
                 $message = \vsprintf(self::ERROR_INVALID_URI_TYPE, [
                     \implode(', ', [UriInterface::class, PsrUriInterface::class]),
-                    \get_debug_type($uri)
+                    \get_debug_type($uri),
                 ]);
 
                 throw new UriException($message);

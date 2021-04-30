@@ -384,7 +384,7 @@ class Storage implements StorageInterface
 
         return [
             $this->getFileSystem($uriStructure->getFileSystem()),
-            $uriStructure->getPath()
+            $uriStructure->getPath(),
         ];
     }
 
