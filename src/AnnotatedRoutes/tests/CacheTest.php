@@ -24,11 +24,30 @@ class CacheTest extends TestCase
 
     public function testCache(): void
     {
-        $this->assertFileExists(__DIR__ . '/App/runtime/cache/routes.php');
-        $this->assertCount(2, include __DIR__ . '/App/runtime/cache/routes.php');
+        $cache = __DIR__ . '/App/runtime/cache/routes.php';
+        $this->assertFileExists($cache);
 
-        $this->app->getConsole()->run('route:reset');
+        $this->assertIsIterable($this->include($cache));
+        $this->assertCount(2, $this->include($cache));
 
-        $this->assertSame(null, include __DIR__ . '/App/runtime/cache/routes.php');
+
+        $cli = $this->app->getConsole();
+        $cli->run('route:reset');
+
+        $this->assertNull($this->include($cache));
+    }
+
+    /**
+     * @param string $file
+     * @return mixed
+     */
+    private function include(string $file)
+    {
+        // Required when "opcache.cli_enabled=1"
+        if (\function_exists('\\opcache_invalidate')) {
+            \opcache_invalidate($file);
+        }
+
+        return require $file;
     }
 }
