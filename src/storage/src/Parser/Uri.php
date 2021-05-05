@@ -68,10 +68,10 @@ final class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function withFileSystem(string $fs): UriInterface
+    public function withStorage(string $name): UriInterface
     {
         $self = clone $this;
-        $self->setFileSystem($fs);
+        $self->setFileSystem($name);
 
         return $self;
     }

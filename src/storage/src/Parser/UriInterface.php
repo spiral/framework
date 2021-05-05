@@ -37,11 +37,11 @@ interface UriInterface extends \Stringable
      * Updates a filesystem name which will be
      * returned by {@see UriInterface::getStorage()} method.
      *
-     * @param string $fs
+     * @param string $name
      * @return $this
      * @throws UriException In case of an bad URI scheme (fs name) component.
      */
-    public function withFileSystem(string $fs): self;
+    public function withStorage(string $name): self;
 
     /**
      * Retrieve the filesystem's path component of the URI.
