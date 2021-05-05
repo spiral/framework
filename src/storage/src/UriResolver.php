@@ -11,10 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Storage;
 
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Storage\Config\ConfigInterface;
 use Spiral\Storage\Config\DTO\FileSystemInfo\FileSystemInfoInterface;
-use Spiral\Storage\Config\StorageConfig;
 use Spiral\Storage\Exception\ResolveException;
 use Spiral\Storage\Exception\StorageException;
 use Spiral\Storage\Parser\UriParser;
@@ -43,7 +41,7 @@ class UriResolver implements UriResolverInterface
 
     /**
      * @param ConfigInterface $config
-     * @param UriParserInterface|null $uriParser
+     * @param UriParserInterface|null $parser
      */
     public function __construct(ConfigInterface $config, UriParserInterface $parser = null)
     {
