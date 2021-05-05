@@ -20,7 +20,7 @@ class UriParserTest extends UnitTestCase
     {
         $uriStructure = Uri::create($fs, $path);
 
-        $this->assertEquals($fs, $uriStructure->getFileSystem());
+        $this->assertEquals($fs, $uriStructure->getStorage());
         $this->assertEquals($path, $uriStructure->getPath());
         $this->assertEquals($uri, (string)$uriStructure);
     }
@@ -38,7 +38,7 @@ class UriParserTest extends UnitTestCase
     {
         $uriStructure = $this->getUriParser()->parse($uri);
 
-        $this->assertEquals($fs, $uriStructure->getFileSystem());
+        $this->assertEquals($fs, $uriStructure->getStorage());
         $this->assertEquals($path, $uriStructure->getPath());
         $this->assertEquals($uri, (string)$uriStructure);
     }
@@ -72,7 +72,7 @@ class UriParserTest extends UnitTestCase
     {
         $uriStructure = Uri::create($fs, $path);
 
-        $this->assertEquals($fs, $uriStructure->getFileSystem());
+        $this->assertEquals($fs, $uriStructure->getStorage());
         $this->assertEquals($path, $uriStructure->getPath());
         $this->assertEquals($uri, (string)$uriStructure);
     }

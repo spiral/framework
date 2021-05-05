@@ -31,11 +31,11 @@ interface UriInterface extends \Stringable
      * @see https://tools.ietf.org/html/rfc3986#section-3.1
      * @return string The filesystem name.
      */
-    public function getFileSystem(): string;
+    public function getStorage(): string;
 
     /**
      * Updates a filesystem name which will be
-     * returned by {@see UriInterface::getFileSystem()} method.
+     * returned by {@see UriInterface::getStorage()} method.
      *
      * @param string $fs
      * @return $this

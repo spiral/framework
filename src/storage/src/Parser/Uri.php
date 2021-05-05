@@ -51,7 +51,7 @@ final class Uri implements UriInterface
      */
     public function __toString(): string
     {
-        return $this->getFileSystem() . self::SCHEME_PATH_DELIMITER . $this->getPath();
+        return $this->getStorage() . self::SCHEME_PATH_DELIMITER . $this->getPath();
     }
 
     /**
@@ -90,7 +90,7 @@ final class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function getFileSystem(): string
+    public function getStorage(): string
     {
         return $this->fs;
     }

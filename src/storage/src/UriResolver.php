@@ -67,7 +67,7 @@ class UriResolver implements UriResolverInterface
         try {
             $uri = $this->parser->parse($uri);
 
-            return $this->getResolver($uri->getFileSystem())
+            return $this->getResolver($uri->getStorage())
                 ->buildUrl($uri->getPath())
             ;
         } catch (StorageException $e) {
