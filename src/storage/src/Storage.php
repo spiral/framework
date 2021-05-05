@@ -21,6 +21,7 @@ use Spiral\Storage\Exception\MountException;
 use Spiral\Storage\Exception\StorageException;
 use Spiral\Storage\Exception\UriException;
 use Spiral\Storage\Parser\Uri;
+use Spiral\Storage\Parser\UriParser;
 use Spiral\Storage\Parser\UriParserInterface;
 
 class Storage implements StorageInterface
@@ -42,13 +43,13 @@ class Storage implements StorageInterface
 
     /**
      * @param ConfigInterface $config
-     * @param UriParserInterface $uriParser
+     * @param UriParserInterface|null $parser
      * @throws StorageException
      */
-    public function __construct(ConfigInterface $config, UriParserInterface $uriParser)
+    public function __construct(ConfigInterface $config, UriParserInterface $parser = null)
     {
         $this->config = $config;
-        $this->uriParser = $uriParser;
+        $this->uriParser = $parser ?? new UriParser();
 
         foreach ($config->getBucketsKeys() as $fs) {
             $this->mountFilesystem($fs, new Filesystem(
