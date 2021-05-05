@@ -39,7 +39,7 @@ class StorageConfigTest extends UnitTestCase
 
         new StorageConfig([
             'servers' => ['local' => $this->buildLocalInfoDescription()],
-            'buckets' => [0 => $this->buildBucketNameByServer('local')]
+            'storages' => [0 => $this->buildBucketNameByServer('local')]
         ]);
     }
 
@@ -56,7 +56,7 @@ class StorageConfigTest extends UnitTestCase
 
         new StorageConfig([
             'servers' => ['local' => $this->buildLocalInfoDescription()],
-            'buckets' => []
+            'storages' => []
         ]);
     }
 
@@ -76,7 +76,7 @@ class StorageConfigTest extends UnitTestCase
             'servers' => [
                 $serverName => $serverDescription
             ],
-            'buckets' => [
+            'storages' => [
                 $this->buildBucketNameByServer($serverName) => $this->buildServerBucketInfoDesc($serverName),
             ]
         ]);
@@ -111,7 +111,7 @@ class StorageConfigTest extends UnitTestCase
                     ],
                 ],
             ],
-            'buckets' => [
+            'storages' => [
                 $this->buildBucketNameByServer($localServer) => $this->buildServerBucketInfoDesc($localServer),
             ]
         ]);
@@ -136,7 +136,7 @@ class StorageConfigTest extends UnitTestCase
                     FileSystemInfoInterface::ADAPTER_KEY => LocalFilesystemAdapter::class,
                 ],
             ],
-            'buckets' => [
+            'storages' => [
                 $this->buildBucketNameByServer($localServer) => $this->buildServerBucketInfoDesc($localServer),
             ]
         ]);
@@ -164,7 +164,7 @@ class StorageConfigTest extends UnitTestCase
             'servers' => [
                 $serverName => $this->buildLocalInfoDescription()
             ],
-            'buckets' => [
+            'storages' => [
                 $bucketName => $this->buildServerBucketInfoDesc('missedServer')
             ],
         ]);
@@ -193,7 +193,7 @@ class StorageConfigTest extends UnitTestCase
                     FileSystemInfoInterface::ADAPTER_KEY => \DateTime::class,
                 ],
             ],
-            'buckets' => [
+            'storages' => [
                 $bucket => $this->buildServerBucketInfoDesc($serverName)
             ]
         ]);
@@ -215,7 +215,7 @@ class StorageConfigTest extends UnitTestCase
                     $localServer => $this->buildLocalInfoDescription(),
                     $awsServer => $this->buildAwsS3ServerDescription(),
                 ],
-                'buckets' => [
+                'storages' => [
                     $this->buildBucketNameByServer($localServer) => $this->buildServerBucketInfoDesc($localServer),
                     $this->buildBucketNameByServer($awsServer) => $this->buildServerBucketInfoDesc($awsServer),
                 ]
@@ -237,7 +237,7 @@ class StorageConfigTest extends UnitTestCase
                 'servers' => [
                     $localServer => $this->buildLocalInfoDescription(),
                 ],
-                'buckets' => [
+                'storages' => [
                     'b1' => $this->buildServerBucketInfoDesc($localServer),
                     'b2' => [
                         'server' => $localServer,
@@ -262,7 +262,7 @@ class StorageConfigTest extends UnitTestCase
                 'servers' => [
                     $localServer => $this->buildLocalInfoDescription(),
                 ],
-                'buckets' => [
+                'storages' => [
                     $this->buildBucketNameByServer($localServer) => $this->buildServerBucketInfoDesc($localServer),
                 ],
             ]
@@ -318,7 +318,7 @@ class StorageConfigTest extends UnitTestCase
                     $localServer => $this->buildLocalInfoDescription(),
                     $awsServer => $this->buildAwsS3ServerDescription(),
                 ],
-                'buckets' => [
+                'storages' => [
                     $localBucket1 => [
                         BucketInfoInterface::SERVER_KEY => $localServer,
                         BucketInfoInterface::DIRECTORY_KEY => '/dir1',
@@ -355,7 +355,7 @@ class StorageConfigTest extends UnitTestCase
                     $localServer => $this->buildLocalInfoDescription(),
                     $awsServer => $this->buildAwsS3ServerDescription(),
                 ],
-                'buckets' => [
+                'storages' => [
                     $localBucket1 => [
                         BucketInfoInterface::SERVER_KEY => $localServer,
                         BucketInfoInterface::DIRECTORY_KEY => '/dir1',

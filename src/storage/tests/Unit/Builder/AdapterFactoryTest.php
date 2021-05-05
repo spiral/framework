@@ -43,6 +43,7 @@ class AdapterFactoryTest extends UnitTestCase
             FileSystemInfo\LocalInfo::ROOT_DIR_KEY => self::ROOT_DIR,
             FileSystemInfo\LocalInfo::HOST_KEY => self::CONFIG_HOST,
             FileSystemInfo\LocalInfo::WRITE_FLAGS_KEY => LOCK_NB,
+            // Not required
             FileSystemInfo\LocalInfo::LINK_HANDLING_KEY => LocalFilesystemAdapter::SKIP_LINKS,
             FileSystemInfo\LocalInfo::VISIBILITY_KEY => [
                 'file' => [

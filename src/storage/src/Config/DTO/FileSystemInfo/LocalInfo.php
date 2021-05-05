@@ -15,7 +15,7 @@ use Spiral\Storage\Resolver\LocalSystemResolver;
 
 class LocalInfo extends FileSystemInfo
 {
-    public const ROOT_DIR_KEY = 'rootDir';
+    public const ROOT_DIR_KEY = 'directory';
     public const WRITE_FLAGS_KEY = 'write-flags';
     public const LINK_HANDLING_KEY = 'link-handling';
     public const HOST_KEY = 'host';

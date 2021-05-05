@@ -43,7 +43,7 @@ trait StorageConfigTrait
 
         return new StorageConfig([
             'servers' => $servers,
-            'buckets' => $buckets
+            'storages' => $buckets
         ]);
     }
 

@@ -33,13 +33,13 @@ use Spiral\Storage\Exception\StorageException;
  * @psalm-type ConfigArray = array {
  *      servers: array<string, ConfigServerSection>,
  *      buckets: array<string, ConfigBucketSection>,
- *      tmp-dir: string
+ *      temp:    string
  * }
  *
  * @psalm-type ConfigInputArray = array {
  *      servers?: array<string, ConfigServerSection>|null,
  *      buckets?: array<string, ConfigBucketSection>|null,
- *      tmp-dir?: string|null
+ *      temp?:    string|null
  * }
  *
  * @see FilesystemAdapter
@@ -59,20 +59,20 @@ final class StorageConfig implements ConfigInterface
     /**
      * @var string
      */
-    private const BUCKETS_KEY = 'buckets';
+    private const STORAGES_KEY = 'storages';
 
     /**
      * @var string
      */
-    private const TMP_DIR_KEY = 'tmp-dir';
+    private const TMP_DIR_KEY = 'temp';
 
     /**
      * @var ConfigArray
      */
     protected $config = [
-        self::SERVERS_KEY => [],
-        self::BUCKETS_KEY => [],
-        self::TMP_DIR_KEY => '',
+        self::SERVERS_KEY  => [],
+        self::STORAGES_KEY => [],
+        self::TMP_DIR_KEY  => '',
     ];
 
     /**
@@ -183,13 +183,13 @@ final class StorageConfig implements ConfigInterface
      */
     private function normalizeBuckets(array $config): array
     {
-        if (! isset($config[self::BUCKETS_KEY])) {
-            $config[self::BUCKETS_KEY] = [];
+        if (! isset($config[self::STORAGES_KEY])) {
+            $config[self::STORAGES_KEY] = [];
 
             return $config;
         }
 
-        $buckets = $config[self::BUCKETS_KEY];
+        $buckets = $config[self::STORAGES_KEY];
 
         if (! \is_array($buckets)) {
             $message = 'Storage buckets list must be an array, but `%s` defined';
@@ -307,7 +307,7 @@ final class StorageConfig implements ConfigInterface
      */
     public function getBucketsKeys(): array
     {
-        return \array_keys($this->config[self::BUCKETS_KEY]);
+        return \array_keys($this->config[self::STORAGES_KEY]);
     }
 
     /**
@@ -315,7 +315,7 @@ final class StorageConfig implements ConfigInterface
      */
     public function hasBucket(string $key): bool
     {
-        return isset($this->config[self::BUCKETS_KEY][$key]);
+        return isset($this->config[self::STORAGES_KEY][$key]);
     }
 
     /**
@@ -399,7 +399,7 @@ final class StorageConfig implements ConfigInterface
             return $this->bucketsInfoList[$bucketLabel];
         }
 
-        $bucketInfo = $this->config[self::BUCKETS_KEY][$bucketLabel];
+        $bucketInfo = $this->config[self::STORAGES_KEY][$bucketLabel];
 
         $this->bucketsInfoList[$bucketLabel] = new BucketInfo(
             $bucketLabel,

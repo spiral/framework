@@ -16,7 +16,10 @@ use Spiral\Storage\Config\DTO\Traits\OptionsTrait;
 use Spiral\Storage\Exception\StorageException;
 use Spiral\Storage\Config\DTO\Traits\ClassBasedTrait;
 
-abstract class FileSystemInfo implements FileSystemInfoInterface, ClassBasedInterface, OptionsBasedInterface
+abstract class FileSystemInfo implements
+    FileSystemInfoInterface,
+    ClassBasedInterface,
+    OptionsBasedInterface
 {
     use ClassBasedTrait;
     use OptionsTrait;
