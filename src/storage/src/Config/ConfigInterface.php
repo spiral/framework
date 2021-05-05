@@ -77,4 +77,3 @@ interface ConfigInterface
      */
     public function buildBucketInfo(string $bucketLabel, ?bool $force = false): BucketInfoInterface;
 }
-

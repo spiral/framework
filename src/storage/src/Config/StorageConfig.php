@@ -59,7 +59,7 @@ final class StorageConfig implements ConfigInterface
     /**
      * @var string
      */
-    private const STORAGES_KEY = 'storages';
+    private const STORAGES_KEY = 'buckets';
 
     /**
      * @var string
