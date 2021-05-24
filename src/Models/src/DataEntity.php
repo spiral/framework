@@ -72,6 +72,10 @@ class DataEntity extends AbstractEntity
      */
     protected function isFillable(string $field): bool
     {
+        if (static::FILLABLE === '*') {
+            return true;
+        }
+
         if (!empty(static::FILLABLE)) {
             return in_array($field, static::FILLABLE);
         }
