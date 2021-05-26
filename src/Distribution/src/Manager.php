@@ -65,7 +65,7 @@ final class Manager implements MutableManagerInterface
     {
         $name = $name ?? $this->default;
 
-        if (! isset($this->resolvers[$name])) {
+        if (!isset($this->resolvers[$name])) {
             throw new \InvalidArgumentException(\sprintf(self::ERROR_NOT_FOUND, $name));
         }
 

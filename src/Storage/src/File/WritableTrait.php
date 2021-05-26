@@ -36,7 +36,7 @@ trait WritableTrait
      */
     public function create(array $config = []): FileInterface
     {
-        if (! $this->exists()) {
+        if (!$this->exists()) {
             return $this->write('', $config);
         }
 

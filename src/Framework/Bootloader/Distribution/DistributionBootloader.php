@@ -78,11 +78,11 @@ class DistributionBootloader extends Bootloader
             return $manager;
         });
 
-        $app->bindSingleton(MutableManagerInterface::class, static function(Container $app) {
+        $app->bindSingleton(MutableManagerInterface::class, static function (Container $app) {
             return $app->get(ManagerInterface::class);
         });
 
-        $app->bindSingleton(Manager::class, static function(Container $app) {
+        $app->bindSingleton(Manager::class, static function (Container $app) {
             return $app->get(ManagerInterface::class);
         });
     }

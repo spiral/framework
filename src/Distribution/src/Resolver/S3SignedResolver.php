@@ -54,7 +54,8 @@ class S3SignedResolver extends ExpirationAwareResolver
     {
         $command = $this->createCommand($file);
 
-        $request = $this->client->createPresignedRequest($command,
+        $request = $this->client->createPresignedRequest(
+            $command,
             $this->getExpirationDateTime($expiration)
         );
 

@@ -59,58 +59,6 @@ final class Manager implements MutableManagerInterface
     }
 
     /**
-     * @param UriType $uri
-     * @return string
-     * @throws InvalidArgumentException
-     */
-    private function uriToString($uri): string
-    {
-        switch (true) {
-            case $uri instanceof UriInterface:
-            case $uri instanceof \Stringable:
-            case \is_object($uri) && \method_exists($uri, '__toString'):
-                return (string)$uri;
-
-            case \is_string($uri);
-                return $uri;
-
-            default:
-                $message = 'URI must be a string or instance of Stringable interface, but %s given';
-                throw new InvalidArgumentException(\sprintf($message, \get_debug_type($uri)));
-        }
-    }
-
-    /**
-     * @param UriType $uri
-     * @param bool $withScheme
-     * @return array{0: string|null, 1: string}
-     * @throws InvalidArgumentException
-     */
-    protected function parseUri($uri, bool $withScheme = true): array
-    {
-        $uri = $this->uriToString($uri);
-        $result = \parse_url($uri);
-
-        if ($result === false) {
-            $message = 'URI argument must be a valid URI in "[STORAGE]://[PATH_TO_FILE]" format, but `%s` given';
-            throw new InvalidArgumentException(\sprintf($message, $uri));
-        }
-
-        if (! isset($result['scheme'])) {
-            $result['scheme'] = $withScheme ? $this->default : null;
-        }
-
-        if (!isset($result['host'])) {
-            $result['host'] = '';
-        }
-
-        return [
-            $result['scheme'] ?? null,
-            $result['host'] . \rtrim($result['path'] ?? '', '/')
-        ];
-    }
-
-    /**
      * @param string $name
      * @return $this
      */
@@ -129,7 +77,7 @@ final class Manager implements MutableManagerInterface
     {
         $name = $name ?? $this->default;
 
-        if (! isset($this->storages[$name])) {
+        if (!isset($this->storages[$name])) {
             throw new InvalidArgumentException(\sprintf(self::ERROR_NOT_FOUND, $name));
         }
 
@@ -162,5 +110,57 @@ final class Manager implements MutableManagerInterface
     public function count(): int
     {
         return \count($this->storages);
+    }
+
+    /**
+     * @param UriType $uri
+     * @param bool $withScheme
+     * @return array{0: string|null, 1: string}
+     * @throws InvalidArgumentException
+     */
+    protected function parseUri($uri, bool $withScheme = true): array
+    {
+        $uri = $this->uriToString($uri);
+        $result = \parse_url($uri);
+
+        if ($result === false) {
+            $message = 'URI argument must be a valid URI in "[STORAGE]://[PATH_TO_FILE]" format, but `%s` given';
+            throw new InvalidArgumentException(\sprintf($message, $uri));
+        }
+
+        if (!isset($result['scheme'])) {
+            $result['scheme'] = $withScheme ? $this->default : null;
+        }
+
+        if (!isset($result['host'])) {
+            $result['host'] = '';
+        }
+
+        return [
+            $result['scheme'] ?? null,
+            $result['host'] . \rtrim($result['path'] ?? '', '/'),
+        ];
+    }
+
+    /**
+     * @param UriType $uri
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    private function uriToString($uri): string
+    {
+        switch (true) {
+            case $uri instanceof UriInterface:
+            case $uri instanceof \Stringable:
+            case \is_object($uri) && \method_exists($uri, '__toString'):
+                return (string)$uri;
+
+            case \is_string($uri):
+                return $uri;
+
+            default:
+                $message = 'URI must be a string or instance of Stringable interface, but %s given';
+                throw new InvalidArgumentException(\sprintf($message, \get_debug_type($uri)));
+        }
     }
 }

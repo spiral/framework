@@ -18,14 +18,13 @@ namespace Spiral\Distribution\Internal;
 final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
 {
     /**
-     * @var DateTimeFactoryInterface|null
-     */
-    private $factory;
-
-    /**
      * @var string
      */
     private const ERROR_INVALID_INTERVAL_TYPE = 'The value of type `%s` is not a valid date interval type';
+    /**
+     * @var DateTimeFactoryInterface|null
+     */
+    private $factory;
 
     /**
      * @param DateTimeFactoryInterface|null $factory
@@ -47,6 +46,16 @@ final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
         } catch (\Throwable $e) {
             throw new \InvalidArgumentException($e->getMessage(), (int)$e->getCode(), $e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toDateTime(\DateInterval $interval): \DateTimeImmutable
+    {
+        $now = $this->factory->now();
+
+        return $now->add($interval);
     }
 
     /**
@@ -76,15 +85,5 @@ final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
                 $type = \get_debug_type($duration);
                 throw new \InvalidArgumentException(\sprintf(self::ERROR_INVALID_INTERVAL_TYPE, $type));
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toDateTime(\DateInterval $interval): \DateTimeImmutable
-    {
-        $now = $this->factory->now();
-
-        return $now->add($interval);
     }
 }

@@ -62,14 +62,6 @@ final class Storage implements StorageInterface
     }
 
     /**
-     * @return FilesystemOperator
-     */
-    protected function getOperator(): FilesystemOperator
-    {
-        return $this->fs;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getUriResolver(): ?ResolverInterface
@@ -94,5 +86,13 @@ final class Storage implements StorageInterface
     public function file(string $pathname): FileInterface
     {
         return new File($this, $pathname, $this->resolver);
+    }
+
+    /**
+     * @return FilesystemOperator
+     */
+    protected function getOperator(): FilesystemOperator
+    {
+        return $this->fs;
     }
 }
