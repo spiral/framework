@@ -29,11 +29,6 @@ trait WritableTrait
     abstract public function storage(string $name = null): StorageInterface;
 
     /**
-     * {@see Manager::parseUri()}
-     */
-    abstract protected function parseUri($uri, bool $withScheme = true): array;
-
-    /**
      * {@inheritDoc}
      */
     public function create($uri, array $config = []): FileInterface
@@ -111,4 +106,9 @@ trait WritableTrait
 
         $storage->delete($pathname, $clean);
     }
+
+    /**
+     * {@see Manager::parseUri()}
+     */
+    abstract protected function parseUri($uri, bool $withScheme = true): array;
 }

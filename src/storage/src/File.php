@@ -50,11 +50,11 @@ final class File implements FileInterface
     }
 
     /**
-     * @return ResolverInterface|null
+     * {@inheritDoc}
      */
-    protected function getResolver(): ?ResolverInterface
+    public function __toString(): string
     {
-        return $this->resolver;
+        return $this->getPathname();
     }
 
     /**
@@ -74,10 +74,10 @@ final class File implements FileInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @return ResolverInterface|null
      */
-    public function __toString(): string
+    protected function getResolver(): ?ResolverInterface
     {
-        return $this->getPathname();
+        return $this->resolver;
     }
 }

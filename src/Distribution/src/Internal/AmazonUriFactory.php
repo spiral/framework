@@ -35,6 +35,15 @@ class AmazonUriFactory implements UriFactoryInterface
     }
 
     /**
+     * @param string $uri
+     * @return UriInterface
+     */
+    public function createUri(string $uri = ''): UriInterface
+    {
+        return new Uri($uri);
+    }
+
+    /**
      * @return void
      */
     private function assertAvailable(): void
@@ -44,14 +53,5 @@ class AmazonUriFactory implements UriFactoryInterface
         }
 
         throw new \DomainException(self::ERROR_NOT_AVAILABLE);
-    }
-
-    /**
-     * @param string $uri
-     * @return UriInterface
-     */
-    public function createUri(string $uri = ''): UriInterface
-    {
-        return new Uri($uri);
     }
 }

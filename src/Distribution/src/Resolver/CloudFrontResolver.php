@@ -56,18 +56,6 @@ class CloudFrontResolver extends ExpirationAwareResolver
     }
 
     /**
-     * @return void
-     */
-    protected function assertCloudFrontAvailable(): void
-    {
-        if (\class_exists(UrlSigner::class)) {
-            return;
-        }
-
-        throw new \DomainException('AWS SDK not available. Please install "aws/aws-sdk-php" package');
-    }
-
-    /**
      * @param string $file
      * @param DateIntervalFormat|null $expiration
      * @return UriInterface
@@ -83,6 +71,18 @@ class CloudFrontResolver extends ExpirationAwareResolver
             ->withHost($this->domain)
             ->withPath($url)
         ;
+    }
+
+    /**
+     * @return void
+     */
+    protected function assertCloudFrontAvailable(): void
+    {
+        if (\class_exists(UrlSigner::class)) {
+            return;
+        }
+
+        throw new \DomainException('AWS SDK not available. Please install "aws/aws-sdk-php" package');
     }
 
     /**

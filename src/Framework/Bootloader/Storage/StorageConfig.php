@@ -57,6 +57,30 @@ class StorageConfig
     }
 
     /**
+     * @return string
+     */
+    public function getDefaultBucket(): string
+    {
+        return $this->default;
+    }
+
+    /**
+     * @return array<string, FilesystemAdapter>
+     */
+    public function getAdapters(): array
+    {
+        return $this->adapters;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getDistributions(): array
+    {
+        return $this->distributions;
+    }
+
+    /**
      * @param array $config
      * @return array
      */
@@ -80,7 +104,7 @@ class StorageConfig
             if (!\is_string($name)) {
                 throw new InvalidArgumentException(
                     \vsprintf('Storage bucket config key must be a string, but %s defined', [
-                        \get_debug_type($name)
+                        \get_debug_type($name),
                     ])
                 );
             }
@@ -90,7 +114,7 @@ class StorageConfig
                 throw new InvalidArgumentException(
                     \vsprintf('Storage bucket `%s.server` config key required and must be a string, but %s defined', [
                         $name,
-                        \get_debug_type($serverName)
+                        \get_debug_type($serverName),
                     ])
                 );
             }
@@ -100,7 +124,7 @@ class StorageConfig
                 throw new InvalidArgumentException(
                     \vsprintf('Storage bucket `%s` relates to non-existing server `%s`', [
                         $name,
-                        $serverName
+                        $serverName,
                     ])
                 );
             }
@@ -110,7 +134,7 @@ class StorageConfig
                 throw new InvalidArgumentException(
                     \vsprintf('Storage server `%s.adapter` config key required and must be a string, but %s defined', [
                         $serverName,
-                        \get_debug_type($adapter)
+                        \get_debug_type($adapter),
                     ])
                 );
             }
@@ -171,7 +195,7 @@ class StorageConfig
         $bucket = $bucket['bucket'] ?? $server['bucket'];
 
         if ($async) {
-            if (! \class_exists(AsyncAwsS3Adapter::class)) {
+            if (!\class_exists(AsyncAwsS3Adapter::class)) {
                 throw new InvalidArgumentException(
                     'Can not create async S3 client, please install "league/flysystem-async-aws-s3"'
                 );
@@ -183,7 +207,7 @@ class StorageConfig
             );
         }
 
-        if (! \class_exists(AwsS3V3Adapter::class)) {
+        if (!\class_exists(AwsS3V3Adapter::class)) {
             throw new InvalidArgumentException(
                 'Can not create S3 client, please install "league/flysystem-aws-s3-v3"'
             );
@@ -207,7 +231,7 @@ class StorageConfig
             throw new InvalidArgumentException(
                 \vsprintf('Storage server `%s.directory` config key required and must be a string, but %s defined', [
                     $serverName,
-                    \get_debug_type($server['directory'] ?? null)
+                    \get_debug_type($server['directory'] ?? null),
                 ])
             );
         }
@@ -222,7 +246,7 @@ class StorageConfig
 
         $directory = \implode('/', [
             \rtrim($server['directory'], '/'),
-            \trim($bucket['prefix'] ?? '', '/')
+            \trim($bucket['prefix'] ?? '', '/'),
         ]);
 
         return new LocalFilesystemAdapter(\rtrim($directory, '/'), $visibility);
@@ -243,7 +267,7 @@ class StorageConfig
                 \vsprintf('Storage server `%s` must be a class string of %s, but `%s` defined', [
                     $serverName,
                     FilesystemAdapter::class,
-                    $adapter
+                    $adapter,
                 ])
             );
         }
@@ -254,29 +278,5 @@ class StorageConfig
             $message = 'An error occurred while server `%s` initializing: %s';
             throw new InvalidArgumentException(\sprintf($message, $serverName, $e->getMessage()), 0, $e);
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultBucket(): string
-    {
-        return $this->default;
-    }
-
-    /**
-     * @return array<string, FilesystemAdapter>
-     */
-    public function getAdapters(): array
-    {
-        return $this->adapters;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function getDistributions(): array
-    {
-        return $this->distributions;
     }
 }

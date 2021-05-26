@@ -51,24 +51,40 @@ class DistributionConfig
     }
 
     /**
+     * @return string
+     */
+    public function getDefaultDriver(): string
+    {
+        return $this->default;
+    }
+
+    /**
+     * @return iterable<string, ResolverInterface>
+     */
+    public function getResolvers(): iterable
+    {
+        return $this->resolvers;
+    }
+
+    /**
      * @param array $config
      */
     private function bootResolvers(array $config): void
     {
         foreach ($config['resolvers'] ?? [] as $name => $child) {
-            if (! \is_string($name)) {
+            if (!\is_string($name)) {
                 throw new InvalidArgumentException(
                     \vsprintf('Distribution driver config key must be a string, but %s given', [
-                        \get_debug_type($child)
+                        \get_debug_type($child),
                     ])
                 );
             }
 
-            if (! \is_array($child)) {
+            if (!\is_array($child)) {
                 throw new InvalidArgumentException(
                     \vsprintf('Distribution driver config `%s` must be an array, but %s given', [
                         $name,
-                        \get_debug_type($child)
+                        \get_debug_type($child),
                     ])
                 );
             }
@@ -86,10 +102,10 @@ class DistributionConfig
 
         if ($default !== null) {
             // Validate config
-            if (! \is_string($default)) {
+            if (!\is_string($default)) {
                 throw new InvalidArgumentException(
                     \vsprintf('Distribution config default driver must be a string, but %s given', [
-                        \get_debug_type($default)
+                        \get_debug_type($default),
                     ])
                 );
             }
@@ -134,7 +150,7 @@ class DistributionConfig
      */
     private function createCustomResolver(string $type, string $name, array $config): ResolverInterface
     {
-        if (! \is_subclass_of($type, ResolverInterface::class, true)) {
+        if (!\is_subclass_of($type, ResolverInterface::class, true)) {
             throw $this->invalidConfigKey($name, 'type', ResolverInterface::class);
         }
 
@@ -256,9 +272,9 @@ class DistributionConfig
         switch (true) {
             case isset($config['factory']):
                 /** @var UriFactoryInterface $factory */
-                $factory = new $config['factory'];
+                $factory = new $config['factory']();
 
-                if (! $factory instanceof UriFactoryInterface) {
+                if (!$factory instanceof UriFactoryInterface) {
                     $message = 'Distribution config driver `%s` should contain class that must be a valid PSR-7 ' .
                         'uri factory implementation, but `%s` given';
                     throw new InvalidArgumentException(\sprintf($message, $name, $config['factory']));
@@ -290,21 +306,5 @@ class DistributionConfig
         $message = 'Distribution config of `%s` driver must contain key `%s` that must be a type of %s';
 
         return new InvalidArgumentException(\sprintf($message, $name, $key, $type));
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultDriver(): string
-    {
-        return $this->default;
-    }
-
-    /**
-     * @return iterable<string, ResolverInterface>
-     */
-    public function getResolvers(): iterable
-    {
-        return $this->resolvers;
     }
 }

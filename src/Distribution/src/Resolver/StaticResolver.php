@@ -56,6 +56,18 @@ class StaticResolver extends Resolver
 
     /**
      * @param string $file
+     * @param array<string, string> $query
+     * @return UriInterface
+     */
+    public function resolve(string $file, array $query = []): UriInterface
+    {
+        return $this->host->withPath($this->suffix($file))
+            ->withQuery(\http_build_query($query))
+        ;
+    }
+
+    /**
+     * @param string $file
      * @return string
      */
     private function suffix(string $file): string
@@ -66,17 +78,5 @@ class StaticResolver extends Resolver
             \trim($prefix, self::URI_PATH_DELIMITER),
             \trim($file, self::URI_PATH_DELIMITER),
         ]);
-    }
-
-    /**
-     * @param string $file
-     * @param array<string, string> $query
-     * @return UriInterface
-     */
-    public function resolve(string $file, array $query = []): UriInterface
-    {
-        return $this->host->withPath($this->suffix($file))
-            ->withQuery(\http_build_query($query))
-        ;
     }
 }

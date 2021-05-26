@@ -23,11 +23,6 @@ use Spiral\Storage\Visibility;
 trait ReadableTrait
 {
     /**
-     * @return FilesystemOperator
-     */
-    abstract protected function getOperator(): FilesystemOperator;
-
-    /**
      * {@inheritDoc}
      */
     public function exists(string $pathname): bool
@@ -127,6 +122,10 @@ trait ReadableTrait
             throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
+    /**
+     * @return FilesystemOperator
+     */
+    abstract protected function getOperator(): FilesystemOperator;
 
     /**
      * @param string $visibility
@@ -136,8 +135,7 @@ trait ReadableTrait
     private function fromFlysystemVisibility(
         #[ExpectedValues(valuesFromClass: \League\Flysystem\Visibility::class)]
         string $visibility
-    ): string
-    {
+    ): string {
         return $visibility === \League\Flysystem\Visibility::PUBLIC
             ? Visibility::VISIBILITY_PUBLIC
             : Visibility::VISIBILITY_PRIVATE;

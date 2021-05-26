@@ -25,11 +25,6 @@ use Spiral\Storage\Visibility;
 trait WritableTrait
 {
     /**
-     * @return FilesystemOperator
-     */
-    abstract protected function getOperator(): FilesystemOperator;
-
-    /**
      * {@inheritDoc}
      */
     public function create(string $pathname, array $config = []): FileInterface
@@ -85,20 +80,6 @@ trait WritableTrait
         }
 
         return $this->file($pathname);
-    }
-
-    /**
-     * @param string $visibility
-     * @return string
-     */
-    #[ExpectedValues(valuesFromClass: \League\Flysystem\Visibility::class)]
-    private function toFlysystemVisibility(
-        #[ExpectedValues(valuesFromClass: Visibility::class)]
-        string $visibility
-    ): string {
-        return ($visibility === Visibility::VISIBILITY_PUBLIC)
-            ? \League\Flysystem\Visibility::PUBLIC
-            : \League\Flysystem\Visibility::PRIVATE;
     }
 
     /**
@@ -170,6 +151,24 @@ trait WritableTrait
             throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
+    /**
+     * @return FilesystemOperator
+     */
+    abstract protected function getOperator(): FilesystemOperator;
+
+    /**
+     * @param string $visibility
+     * @return string
+     */
+    #[ExpectedValues(valuesFromClass: \League\Flysystem\Visibility::class)]
+    private function toFlysystemVisibility(
+        #[ExpectedValues(valuesFromClass: Visibility::class)]
+        string $visibility
+    ): string {
+        return ($visibility === Visibility::VISIBILITY_PUBLIC)
+            ? \League\Flysystem\Visibility::PUBLIC
+            : \League\Flysystem\Visibility::PRIVATE;
+    }
 
     /**
      * Internal helper method that returns directory name of passed path.
@@ -223,7 +222,7 @@ trait WritableTrait
         $fs = $this->getOperator();
 
         try {
-            if (! $this->hasFiles($directory)) {
+            if (!$this->hasFiles($directory)) {
                 $fs->deleteDirectory($directory);
 
                 $this->deleteEmptyDirectories($this->getParentDirectory($directory));
@@ -271,7 +270,7 @@ trait WritableTrait
             return true;
         }
 
-        if (! \is_object($value)) {
+        if (!\is_object($value)) {
             return false;
         }
 
