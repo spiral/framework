@@ -64,7 +64,7 @@ abstract class ExpirationAwareResolver extends Resolver implements ExpirationAwa
      * @param DateIntervalFormat $duration
      * @return $this
      */
-    public function withExpirationDate($duration): self
+    public function withExpirationDate($duration): ExpirationAwareResolverInterface
     {
         $self = clone $this;
         $self->expiration = $self->intervals->create($duration);
