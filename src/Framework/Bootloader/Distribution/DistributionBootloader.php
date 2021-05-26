@@ -34,7 +34,7 @@ class DistributionBootloader extends Bootloader
             'servers' => [],
             'buckets' => [],
         ]);
-        $this->registerConfig($config, $app);
+        $this->registerConfig($app);
 
         $this->registerManager($app);
         $this->registerResolver($app);
