@@ -9,11 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Storage\Exception;
+namespace Spiral\Distribution\Resolver;
 
-/**
- * General exception class for storage component.
- */
-class StorageException extends \Exception
+use Spiral\Distribution\ResolverInterface;
+
+abstract class Resolver implements ResolverInterface
 {
 }

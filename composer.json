@@ -83,6 +83,7 @@
                 "src/Debug/src",
                 "src/Dumper/src"
             ],
+            "Spiral\\Distribution\\": "src/Distribution/src",
             "Spiral\\DotEnv\\": "src/Bridge/Dotenv/src",
             "Spiral\\Encrypter\\": "src/Encrypter/src",
             "Spiral\\Exceptions\\": "src/Exceptions/src",
@@ -169,6 +170,7 @@
                 "src/Debug/tests",
                 "src/Dumper/tests"
             ],
+            "Spiral\\Tests\\Distribution\\": "src/Distribution/tests",
             "Spiral\\Tests\\DotEnv\\": "src/Bridge/Dotenv/tests",
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
             "Spiral\\Tests\\Exceptions\\": "src/Exceptions/tests",
@@ -219,6 +221,7 @@
         "spiral/data-grid": "*",
         "spiral/data-grid-bridge": "*",
         "spiral/debug": "*",
+        "spiral/distribution": "self.version",
         "spiral/dotenv-bridge": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",

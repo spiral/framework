@@ -9,11 +9,15 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Storage\Exception;
+namespace Spiral\Distribution;
 
-/**
- * General exception class for storage component.
- */
-class StorageException extends \Exception
+use Psr\Http\Message\UriInterface;
+
+interface ResolverInterface
 {
+    /**
+     * @param string $file
+     * @return UriInterface
+     */
+    public function resolve(string $file): UriInterface;
 }

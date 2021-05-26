@@ -126,6 +126,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'src/Csrf'            => 'git@github.com:spiral/csrf.git',
         'src/DataGrid'        => 'git@github.com:spiral/data-grid.git',
         'src/Debug'           => 'git@github.com:spiral/debug.git',
+        'src/Distribution'    => 'git@github.com:spiral/distribution.git',
         'src/Dumper'          => 'git@github.com:spiral/dumper.git',
         'src/Encrypter'       => 'git@github.com:spiral/encrypter.git',
         'src/Exceptions'      => 'git@github.com:spiral/exceptions.git',

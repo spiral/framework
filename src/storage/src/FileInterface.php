@@ -11,18 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Storage;
 
-use Spiral\Storage\Storage\ReadableInterface;
-use Spiral\Storage\Storage\UriResolvableInterface;
-use Spiral\Storage\Storage\WritableInterface;
+use Spiral\Storage\File\ReadableInterface;
+use Spiral\Storage\File\UriResolvableInterface;
+use Spiral\Storage\File\WritableInterface;
 
-interface StorageInterface extends
+interface FileInterface extends
     ReadableInterface,
     WritableInterface,
     UriResolvableInterface
 {
-    /**
-     * @param string $pathname
-     * @return FileInterface
-     */
-    public function file(string $pathname): FileInterface;
 }

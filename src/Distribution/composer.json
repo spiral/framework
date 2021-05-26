@@ -1,0 +1,54 @@
+{
+    "name": "spiral/distribution",
+    "type": "library",
+    "description": "PHP distribution package",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/distribution"
+    },
+    "authors": [
+        {
+            "name": "Kirill Nesmeyanov (SerafimArts)",
+            "email": "kirill.nesmeyanov@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "symfony/polyfill-php80": "^1.22",
+        "psr/http-factory": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Distribution\\": "src"
+        }
+    },
+    "require-dev": {
+        "aws/aws-sdk-php": "^3.0",
+        "guzzlehttp/psr7": "^1.7",
+        "jetbrains/phpstorm-attributes": "^1.0",
+        "symfony/var-dumper": "^5.2",
+        "phpunit/phpunit": "^8.5|^9.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Distribution\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.7.x-dev"
+        }
+    },
+    "scripts": {
+        "analyze": [
+            "psalm --no-cache"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

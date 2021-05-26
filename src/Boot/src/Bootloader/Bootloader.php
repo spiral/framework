@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
 
+use Spiral\Bootloader\Distribution\DistributionBootloader;
+use Spiral\Bootloader\Storage\StorageBootloader;
+
 /**
  * Provides ability to initiate set of container bindings using simple string form without closures.
  *

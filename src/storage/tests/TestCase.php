@@ -4,57 +4,82 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Storage;
 
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\TestCase as BaseTestCase;
-use Spiral\Storage\Parser\UriParser;
-use Spiral\Storage\Parser\UriParserInterface;
+use Spiral\Storage\Storage;
+use Spiral\Storage\StorageInterface;
 
 class TestCase extends BaseTestCase
 {
     /**
      * @var string
      */
-    protected const SERVER_NAME = 'debugServer';
+    protected const LOCAL_STORAGE_DIRECTORY = __DIR__ . '/storage';
 
     /**
-     * @var string
+     * @var StorageInterface
      */
-    protected const VFS_PREFIX = 'vfs://';
+    protected $local;
 
     /**
-     * @var string
+     * @var StorageInterface
      */
-    protected const ROOT_DIR = __DIR__ . '/storage/testRoot';
+    protected $second;
 
     /**
-     * @var string
+     * @return void
      */
-    protected const CONFIG_HOST = 'http://localhost/debug/';
-
-    /**
-     * @var UriParserInterface|null
-     */
-    protected $uriParser;
-
-    /**
-     * @return UriParserInterface
-     */
-    protected function getUriParser(): UriParserInterface
+    public function setUp(): void
     {
-        if (!$this->uriParser instanceof UriParserInterface) {
-            $this->uriParser = new UriParser();
-        }
+        parent::setUp();
 
-        return $this->uriParser;
+        $this->local = Storage::fromAdapter(
+            new LocalFilesystemAdapter(self::LOCAL_STORAGE_DIRECTORY)
+        );
+
+        $this->second = Storage::fromAdapter(
+            new LocalFilesystemAdapter(self::LOCAL_STORAGE_DIRECTORY . '/second')
+        );
     }
 
     /**
-     * @param string $message
+     * @return void
      */
-    protected function notice(string $message): void
+    public function tearDown(): void
     {
-        if (\method_exists($this, 'addWarning')) {
-            /** @psalm-suppress InternalMethod */
-            $this->addWarning($message);
+        $this->cleanTempDirectory();
+
+        parent::tearDown();
+    }
+
+    /**
+     * @return void
+     */
+    protected function cleanTempDirectory(): void
+    {
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(self::LOCAL_STORAGE_DIRECTORY, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        /** @var \SplFileInfo $file */
+        foreach($iterator as $file) {
+            if ($file->getFilename() === '.gitignore') {
+                continue;
+            }
+
+            \error_clear_last();
+
+            if ($file->isDir()) {
+                @\rmdir($file->getPathname());
+            } else {
+                @\unlink($file->getPathname());
+            }
+
+            if ($error = \error_get_last()) {
+                $prefix = 'An error occurred while clear temporary local storage directory: ';
+                $this->addWarning($prefix . $error['message']);
+            }
         }
     }
 }

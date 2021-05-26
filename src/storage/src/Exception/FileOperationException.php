@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Storage\Exception;
 
 /**
- * Exception on any file operation
+ * An exception that is thrown in case of incorrect file operations.
  */
 class FileOperationException extends StorageException
 {
