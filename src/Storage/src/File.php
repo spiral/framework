@@ -25,12 +25,12 @@ final class File implements FileInterface
     /**
      * @var StorageInterface
      */
-    private StorageInterface $storage;
+    private $storage;
 
     /**
      * @var string
      */
-    private string $pathname;
+    private $pathname;
 
     /**
      * @var ResolverInterface|null
