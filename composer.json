@@ -254,7 +254,6 @@
     },
     "scripts": {
         "tests": [
-            "phpunit --testdox",
             "phpcs --standard=phpcs.xml",
             "psalm"
         ],
