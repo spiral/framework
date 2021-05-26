@@ -41,10 +41,9 @@ class DistributionBootloader extends Bootloader
     }
 
     /**
-     * @param ConfiguratorInterface $config
      * @param Container $app
      */
-    private function registerConfig(ConfiguratorInterface $config, Container $app): void
+    private function registerConfig(Container $app): void
     {
         $app->bindInjector(DistributionConfig::class, ConfiguratorInterface::class);
     }

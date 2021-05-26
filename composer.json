@@ -254,8 +254,9 @@
     },
     "scripts": {
         "tests": [
+            "phpunit --testdox",
             "phpcs --standard=phpcs.xml",
-            "psalm"
+            "psalm --no-cache"
         ],
         "fixers": [
             "phpcbf --standard=phpcs.xml",

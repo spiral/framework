@@ -55,9 +55,8 @@ final class ConstructorParam
         $stmt = new self();
         $stmt->name = $parameter->getName();
 
-        if ($parameter->hasType()) {
-            /** @var \ReflectionType $type */
-            $type = $parameter->getType();
+        $type = $parameter->getType();
+        if ($type instanceof \ReflectionNamedType) {
             $stmt->type = Type::create($type->getName());
             $stmt->builtIn = $type->isBuiltin();
             $stmt->nullable = $type->allowsNull();
