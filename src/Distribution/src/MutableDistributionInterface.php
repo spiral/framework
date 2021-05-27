@@ -11,13 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution;
 
-use Psr\Http\Message\UriInterface;
-
-interface ResolverInterface
+interface MutableDistributionInterface extends DistributionInterface
 {
     /**
-     * @param string $file
-     * @return UriInterface
+     * @param string $name
+     * @param UriResolverInterface $resolver
      */
-    public function resolve(string $file): UriInterface;
+    public function add(string $name, UriResolverInterface $resolver): void;
 }

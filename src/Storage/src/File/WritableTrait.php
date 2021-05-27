@@ -13,7 +13,7 @@ namespace Spiral\Storage\File;
 
 use JetBrains\PhpStorm\ExpectedValues;
 use Spiral\Storage\FileInterface;
-use Spiral\Storage\StorageInterface;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
 /**
@@ -27,20 +27,18 @@ trait WritableTrait
     abstract public function getPathname(): string;
 
     /**
-     * {@see EntryInterface::getStorage()}
+     * {@see EntryInterface::getBucket()}
      */
-    abstract public function getStorage(): StorageInterface;
+    abstract public function getBucket(): BucketInterface;
 
     /**
      * {@inheritDoc}
      */
     public function create(array $config = []): FileInterface
     {
-        if (!$this->exists()) {
-            return $this->write('', $config);
-        }
+        $bucket = $this->getBucket();
 
-        return $this;
+        return $bucket->create($this->getPathname(), $config);
     }
 
     /**
@@ -48,9 +46,9 @@ trait WritableTrait
      */
     public function write($content, array $config = []): FileInterface
     {
-        $storage = $this->getStorage();
+        $bucket = $this->getBucket();
 
-        return $storage->write($this->getPathname(), $content, $config);
+        return $bucket->write($this->getPathname(), $content, $config);
     }
 
     /**
@@ -60,29 +58,29 @@ trait WritableTrait
         #[ExpectedValues(valuesFromClass: Visibility::class)]
         string $visibility
     ): FileInterface {
-        $storage = $this->getStorage();
+        $bucket = $this->getBucket();
 
-        return $storage->setVisibility($this->getPathname(), $visibility);
+        return $bucket->setVisibility($this->getPathname(), $visibility);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function copy(string $pathname, StorageInterface $storage = null, array $config = []): FileInterface
+    public function copy(string $pathname, BucketInterface $bucket = null, array $config = []): FileInterface
     {
-        $source = $this->getStorage();
+        $source = $this->getBucket();
 
-        return $source->copy($this->getPathname(), $pathname, $storage, $config);
+        return $source->copy($this->getPathname(), $pathname, $bucket, $config);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function move(string $pathname, StorageInterface $storage = null, array $config = []): FileInterface
+    public function move(string $pathname, BucketInterface $bucket = null, array $config = []): FileInterface
     {
-        $source = $this->getStorage();
+        $source = $this->getBucket();
 
-        return $source->move($this->getPathname(), $pathname, $storage, $config);
+        return $source->move($this->getPathname(), $pathname, $bucket, $config);
     }
 
     /**
@@ -90,7 +88,7 @@ trait WritableTrait
      */
     public function delete(bool $clean = false): void
     {
-        $source = $this->getStorage();
+        $source = $this->getBucket();
 
         $source->delete($this->getPathname(), $clean);
     }

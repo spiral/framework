@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution;
 
-final class Manager implements MutableManagerInterface
+final class Manager implements MutableDistributionInterface
 {
     /**
      * @var string
@@ -29,7 +29,7 @@ final class Manager implements MutableManagerInterface
     private const ERROR_NOT_FOUND = 'Distribution resolver `%s` has not been defined';
 
     /**
-     * @var array<string, ResolverInterface>
+     * @var array<string, UriResolverInterface>
      */
     private $resolvers = [];
 
@@ -50,7 +50,7 @@ final class Manager implements MutableManagerInterface
      * @param string $name
      * @return $this
      */
-    public function withDefault(string $name): ManagerInterface
+    public function withDefault(string $name): DistributionInterface
     {
         $self = clone $this;
         $self->default = $name;
@@ -61,7 +61,7 @@ final class Manager implements MutableManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function resolver(string $name = null): ResolverInterface
+    public function resolver(string $name = null): UriResolverInterface
     {
         $name = $name ?? $this->default;
 
@@ -75,7 +75,7 @@ final class Manager implements MutableManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function add(string $name, ResolverInterface $resolver, bool $overwrite = false): void
+    public function add(string $name, UriResolverInterface $resolver, bool $overwrite = false): void
     {
         if ($overwrite === false && isset($this->resolvers[$name])) {
             throw new \InvalidArgumentException(\sprintf(self::ERROR_REDEFINITION, $name));

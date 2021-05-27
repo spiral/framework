@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Storage;
 
 use League\Flysystem\Local\LocalFilesystemAdapter;
-use Spiral\Storage\Storage;
+use Spiral\Storage\Bucket;
 use Spiral\Storage\Visibility;
 
 /**

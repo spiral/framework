@@ -13,90 +13,89 @@ namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
 use Spiral\Storage\Exception\FileOperationException;
+use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\FileInterface;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\StorageInterface;
 use Spiral\Storage\Visibility;
 
 /**
  * @psalm-import-type VisibilityType from Visibility
+ *
+ * @psalm-import-type IdType from StorageInterface
+ * @see StorageInterface
  */
 interface WritableInterface
 {
     /**
-     * Creates new empty file.
+     * {@see BucketInterface::create()}
      *
-     * @param string $pathname
+     * @param IdType $id
      * @param array $config
      * @return FileInterface
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function create(string $pathname, array $config = []): FileInterface;
+    public function create($id, array $config = []): FileInterface;
 
     /**
-     * Write provided content to defined filesystem as file by defined filepath.
+     * {@see BucketInterface::write()}
      *
-     * @param string $pathname relative filepath
-     * @param string|\Stringable|resource $content content string or stream to write
-     * @param array $config specific config based on used adapter
+     * @param IdType $id
+     * @param string|\Stringable|resource $content
+     * @param array $config
      * @return FileInterface
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function write(string $pathname, $content, array $config = []): FileInterface;
+    public function write($id, $content, array $config = []): FileInterface;
 
     /**
-     * Sets file visibility.
+     * {@see BucketInterface::setVisibility()}
      *
-     * @param string $pathname
+     * @param IdType $id
      * @param VisibilityType $visibility
      * @return FileInterface
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
     public function setVisibility(
-        string $pathname,
+        $id,
         #[ExpectedValues(valuesFromClass: Visibility::class)]
         string $visibility
     ): FileInterface;
 
     /**
-     * Copies file to similar or another filesystem.
+     * {@see BucketInterface::copy()}
      *
-     * @param string $source source pathname to copy
-     * @param string $destination destination pathname
-     * @param StorageInterface|null $storage destination storage
-     * @param array $config specific config based on used adapter
+     * @param IdType $source
+     * @param IdType $destination
+     * @param array $config
      * @return FileInterface
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function copy(
-        string $source,
-        string $destination,
-        StorageInterface $storage = null,
-        array $config = []
-    ): FileInterface;
+    public function copy($source, $destination, array $config = []): FileInterface;
 
     /**
-     * Moves to similar or another filesystem.
+     * {@see BucketInterface::move()}
      *
-     * @param string $source source pathname to copy
-     * @param string $destination destination pathname
-     * @param StorageInterface|null $storage destination storage
-     * @param array $config specific config based on used adapter
+     * @param IdType $source
+     * @param IdType $destination
+     * @param array $config
      * @return FileInterface
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function move(
-        string $source,
-        string $destination,
-        StorageInterface $storage = null,
-        array $config = []
-    ): FileInterface;
+    public function move($source, $destination, array $config = []): FileInterface;
 
     /**
-     * Deletes file from storage.
+     * {@see BucketInterface::delete()}
      *
-     * @param string $pathname relative filepath
-     * @param bool $clean delete directory if directory is empty
+     * @param IdType $id
+     * @param bool $clean
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function delete(string $pathname, bool $clean = false): void;
+    public function delete($id, bool $clean = false): void;
 }

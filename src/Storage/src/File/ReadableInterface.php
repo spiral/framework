@@ -13,7 +13,7 @@ namespace Spiral\Storage\File;
 
 use JetBrains\PhpStorm\ExpectedValues;
 use Spiral\Storage\Exception\FileOperationException;
-use Spiral\Storage\StorageInterface;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
 /**
@@ -22,7 +22,7 @@ use Spiral\Storage\Visibility;
 interface ReadableInterface extends EntryInterface
 {
     /**
-     * {@see StorageInterface::exists()}
+     * {@see BucketInterface::exists()}
      *
      * @return bool
      * @throws FileOperationException
@@ -30,7 +30,7 @@ interface ReadableInterface extends EntryInterface
     public function exists(): bool;
 
     /**
-     * {@see StorageInterface::getContents()}
+     * {@see BucketInterface::getContents()}
      *
      * @return string
      * @throws FileOperationException
@@ -38,7 +38,7 @@ interface ReadableInterface extends EntryInterface
     public function getContents(): string;
 
     /**
-     * {@see StorageInterface::getStream()}
+     * {@see BucketInterface::getStream()}
      *
      * @return resource
      * @throws FileOperationException
@@ -46,7 +46,7 @@ interface ReadableInterface extends EntryInterface
     public function getStream();
 
     /**
-     * {@see StorageInterface::getLastModified()}
+     * {@see BucketInterface::getLastModified()}
      *
      * @return positive-int
      * @throws FileOperationException
@@ -54,7 +54,7 @@ interface ReadableInterface extends EntryInterface
     public function getLastModified(): int;
 
     /**
-     * {@see StorageInterface::getSize()}
+     * {@see BucketInterface::getSize()}
      *
      * @return positive-int|0
      * @throws FileOperationException
@@ -62,7 +62,7 @@ interface ReadableInterface extends EntryInterface
     public function getSize(): int;
 
     /**
-     * {@see StorageInterface::getMimeType()}
+     * {@see BucketInterface::getMimeType()}
      *
      * @return string
      * @throws FileOperationException
@@ -70,7 +70,7 @@ interface ReadableInterface extends EntryInterface
     public function getMimeType(): string;
 
     /**
-     * {@see StorageInterface::getVisibility()}
+     * {@see BucketInterface::getVisibility()}
      *
      * @return VisibilityType
      * @throws FileOperationException

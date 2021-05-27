@@ -12,11 +12,8 @@ declare(strict_types=1);
 namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
-use League\Flysystem\FilesystemException;
-use League\Flysystem\FilesystemOperator;
-use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\FileInterface;
-use Spiral\Storage\StorageInterface;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
 /**
@@ -25,259 +22,91 @@ use Spiral\Storage\Visibility;
 trait WritableTrait
 {
     /**
+     * {@see StorageInterface::bucket()}
+     */
+    abstract public function bucket(string $name = null): BucketInterface;
+
+    /**
      * {@inheritDoc}
      */
-    public function create(string $pathname, array $config = []): FileInterface
+    public function create($id, array $config = []): FileInterface
     {
-        return $this->write($pathname, '', $config);
+        [$name, $pathname] = $this->parseUri($id);
+
+        $bucket = $this->bucket($name);
+
+        return $bucket->create($pathname, $config);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function write(string $pathname, $content, array $config = []): FileInterface
+    public function write($id, $content, array $config = []): FileInterface
     {
-        assert(\is_resource($content) || $this->isStringable($content));
+        [$name, $pathname] = $this->parseUri($id);
 
-        $fs = $this->getOperator();
+        $bucket = $this->bucket($name);
 
-        try {
-            switch (true) {
-                case \is_object($content):
-                case \is_string($content):
-                    $fs->write($pathname, (string)$content, $config);
-                    break;
-
-                case \is_resource($content):
-                    $fs->writeStream($pathname, $content, $config);
-                    break;
-
-                default:
-                    $message = 'Content must be a resource stream or stringable type, but %s passed';
-                    throw new \InvalidArgumentException(\sprintf($message, \get_debug_type($content)));
-            }
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
-
-        return $this->file($pathname);
+        return $bucket->write($pathname, $content, $config);
     }
 
     /**
      * {@inheritDoc}
      */
     public function setVisibility(
-        string $pathname,
+        $id,
         #[ExpectedValues(valuesFromClass: Visibility::class)]
         string $visibility
     ): FileInterface {
-        $fs = $this->getOperator();
+        [$name, $pathname] = $this->parseUri($id);
 
-        try {
-            $fs->setVisibility($pathname, $this->toFlysystemVisibility($visibility));
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
+        $bucket = $this->bucket($name);
 
-        return $this->file($pathname);
+        return $bucket->setVisibility($pathname, $visibility);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function copy(
-        string $source,
-        string $destination,
-        StorageInterface $storage = null,
-        array $config = []
-    ): FileInterface {
-        $fs = $this->getOperator();
+    public function copy($source, $destination, array $config = []): FileInterface
+    {
+        [$sourceName, $sourcePathname] = $this->parseUri($source);
+        [$destName, $destPathname] = $this->parseUri($destination, false);
 
-        if ($storage === null || $storage === $this) {
-            try {
-                $fs->copy($source, $destination, $config);
-            } catch (FilesystemException $e) {
-                throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-            }
+        $sourceStorage = $this->bucket($sourceName);
+        $destStorage = $destName ? $this->bucket($destName) : null;
 
-            return $this->file($destination);
-        }
-
-        return $storage->write($destination, $this->getStream($source), $config);
+        return $sourceStorage->copy($sourcePathname, $destPathname, $destStorage, $config);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function move(
-        string $source,
-        string $destination,
-        StorageInterface $storage = null,
-        array $config = []
-    ): FileInterface {
-        $fs = $this->getOperator();
+    public function move($source, $destination, array $config = []): FileInterface
+    {
+        [$sourceName, $sourcePathname] = $this->parseUri($source);
+        [$destName, $destPathname] = $this->parseUri($destination, false);
 
-        if ($storage === null || $storage === $this) {
-            try {
-                $fs->move($source, $destination, $config);
-            } catch (FilesystemException $e) {
-                throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-            }
+        $sourceStorage = $this->bucket($sourceName);
+        $destStorage = $destName ? $this->bucket($destName) : null;
 
-            return $this->file($destination);
-        }
-
-        $result = $storage->write($destination, $this->getStream($source), $config);
-
-        $fs->delete($source);
-
-        return $result;
+        return $sourceStorage->move($sourcePathname, $destPathname, $destStorage, $config);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function delete(string $pathname, bool $clean = false): void
+    public function delete($id, bool $clean = false): void
     {
-        $fs = $this->getOperator();
+        [$name, $pathname] = $this->parseUri($id);
 
-        try {
-            $fs->delete($pathname);
+        $bucket = $this->bucket($name);
 
-            if ($clean) {
-                $this->deleteEmptyDirectories($this->getParentDirectory($pathname));
-            }
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
-    }
-    /**
-     * @return FilesystemOperator
-     */
-    abstract protected function getOperator(): FilesystemOperator;
-
-    /**
-     * @param string $visibility
-     * @return string
-     */
-    #[ExpectedValues(valuesFromClass: \League\Flysystem\Visibility::class)]
-    private function toFlysystemVisibility(
-        #[ExpectedValues(valuesFromClass: Visibility::class)]
-        string $visibility
-    ): string {
-        return ($visibility === Visibility::VISIBILITY_PUBLIC)
-            ? \League\Flysystem\Visibility::PUBLIC
-            : \League\Flysystem\Visibility::PRIVATE;
+        $bucket->delete($pathname, $clean);
     }
 
     /**
-     * Internal helper method that returns directory name of passed path.
-     *
-     * Please note that the use of the PHP {@see \dirname()} function depends
-     * on the operating system and it MAY NOT return correct parent directory
-     * in the case of slash character (`/` or `\`) incompatible with the
-     * current runtime.
-     *
-     * @internal This is an internal method, please do not use it in your code.
-     * @psalm-internal Spiral\Storage\Storage
-     *
-     * @param string $path
-     * @return string
+     * {@see Storage::parseUri()}
      */
-    private function getParentDirectory(string $path): string
-    {
-        return \dirname(\str_replace(['\\', '/'], \DIRECTORY_SEPARATOR, $path));
-    }
-
-    /**
-     * Internal helper method that returns bool {@see true} if the passed
-     * directory is the root for the file.
-     *
-     * @internal This is an internal method, please do not use it in your code.
-     * @psalm-internal Spiral\Storage\Storage
-     *
-     * @param string $directory
-     * @return bool
-     */
-    private function hasParentDirectory(string $directory): bool
-    {
-        return $directory !== '' && $directory !== '.';
-    }
-
-    /**
-     * Internal helper method that recursively deletes empty directories.
-     *
-     * @internal This is an internal method, please do not use it in your code.
-     * @psalm-internal Spiral\Storage\Storage
-     *
-     * @param string $directory
-     * @throws FileOperationException
-     */
-    private function deleteEmptyDirectories(string $directory): void
-    {
-        if (!$this->hasParentDirectory($directory)) {
-            return;
-        }
-
-        $fs = $this->getOperator();
-
-        try {
-            if (!$this->hasFiles($directory)) {
-                $fs->deleteDirectory($directory);
-
-                $this->deleteEmptyDirectories($this->getParentDirectory($directory));
-            }
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
-    }
-
-    /**
-     * Internal helper method that returns bool {@see true} if directory
-     * not empty.
-     *
-     * Note: Be careful, this method can be quite slow as it asks for a
-     * list of files from filesystem.
-     *
-     * @internal This is an internal method, please do not use it in your code.
-     * @psalm-internal Spiral\Storage\Storage
-     *
-     * @param string $directory
-     * @return bool
-     * @throws FilesystemException
-     */
-    private function hasFiles(string $directory): bool
-    {
-        $fs = $this->getOperator();
-
-        foreach ($fs->listContents($directory) as $_) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Internal helper method that returns bool {@see true} if passed argument
-     * can be converted to string.
-     *
-     * @param string|\Stringable $value
-     * @return bool
-     */
-    private function isStringable($value): bool
-    {
-        if (\is_string($value)) {
-            return true;
-        }
-
-        if (!\is_object($value)) {
-            return false;
-        }
-
-        if (\PHP_VERSION_ID >= 80000) {
-            return $value instanceof \Stringable;
-        }
-
-        return \method_exists($value, '__toString');
-    }
+    abstract protected function parseUri($uri, bool $withScheme = true): array;
 }

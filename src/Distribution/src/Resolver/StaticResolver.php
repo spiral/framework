@@ -15,7 +15,7 @@ use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
 
-class StaticResolver extends Resolver
+class StaticResolver extends UriResolver
 {
     /**
      * @var string

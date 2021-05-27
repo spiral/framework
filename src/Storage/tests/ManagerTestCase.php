@@ -13,8 +13,8 @@ namespace Spiral\Tests\Storage;
 
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Spiral\Storage\Exception\InvalidArgumentException;
-use Spiral\Storage\Manager;
 use Spiral\Storage\Storage;
+use Spiral\Storage\Bucket;
 use Spiral\Storage\Visibility;
 
 /**
@@ -23,7 +23,7 @@ use Spiral\Storage\Visibility;
 class ManagerTestCase extends TestCase
 {
     /**
-     * @var Manager
+     * @var Storage
      */
     private $manager;
 
@@ -31,34 +31,34 @@ class ManagerTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->manager = new Manager();
-        $this->manager->add(Manager::DEFAULT_STORAGE, $this->local);
+        $this->manager = new Storage();
+        $this->manager->add(Storage::DEFAULT_STORAGE, $this->local);
     }
 
     public function testDefaultResolver(): void
     {
-        $this->assertSame($this->local, $this->manager->storage());
+        $this->assertSame($this->local, $this->manager->bucket());
     }
 
     public function testResolverByName(): void
     {
-        $this->assertSame($this->local, $this->manager->storage('default'));
+        $this->assertSame($this->local, $this->manager->bucket('default'));
     }
 
     public function testUnknownResolver(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Storage `unknown` has not been defined');
+        $this->expectExceptionMessage('Bucket `unknown` has not been defined');
 
-        $this->manager->storage('unknown');
+        $this->manager->bucket('unknown');
     }
 
     public function testAddedResolver(): void
     {
         $this->manager->add('known', $this->second);
 
-        $this->assertSame($this->local, $this->manager->storage());
-        $this->assertSame($this->second, $this->manager->storage('known'));
+        $this->assertSame($this->local, $this->manager->bucket());
+        $this->assertSame($this->second, $this->manager->bucket('known'));
     }
 
     public function testIterator(): void
@@ -66,14 +66,14 @@ class ManagerTestCase extends TestCase
         $manager = clone $this->manager;
 
         $resolvers = \iterator_to_array($manager->getIterator());
-        $this->assertSame([Manager::DEFAULT_STORAGE => $this->local], $resolvers);
+        $this->assertSame([Storage::DEFAULT_STORAGE => $this->local], $resolvers);
 
         $manager->add('example', $this->second);
 
         $resolvers = \iterator_to_array($manager->getIterator());
         $this->assertSame([
-            Manager::DEFAULT_STORAGE => $this->local,
-            'example' => $this->second
+            Storage::DEFAULT_STORAGE => $this->local,
+            'example'                => $this->second
         ], $resolvers);
     }
 
@@ -113,7 +113,7 @@ class ManagerTestCase extends TestCase
     public function testUriWithInvalidStorage(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Storage `invalid` has not been defined');
+        $this->expectExceptionMessage('Bucket `invalid` has not been defined');
 
         $this->manager->create('invalid://file.txt');
 

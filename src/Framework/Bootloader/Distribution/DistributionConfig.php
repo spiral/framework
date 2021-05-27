@@ -21,7 +21,7 @@ use Spiral\Distribution\Manager;
 use Spiral\Distribution\Resolver\CloudFrontResolver;
 use Spiral\Distribution\Resolver\S3SignedResolver;
 use Spiral\Distribution\Resolver\StaticResolver;
-use Spiral\Distribution\ResolverInterface;
+use Spiral\Distribution\UriResolverInterface;
 use Spiral\Config\Exception\InvalidArgumentException;
 
 class DistributionConfig
@@ -37,7 +37,7 @@ class DistributionConfig
     private $default = Manager::DEFAULT_RESOLVER;
 
     /**
-     * @var array<string, ResolverInterface>
+     * @var array<string, UriResolverInterface>
      */
     private $resolvers = [];
 
@@ -59,7 +59,7 @@ class DistributionConfig
     }
 
     /**
-     * @return iterable<string, ResolverInterface>
+     * @return iterable<string, UriResolverInterface>
      */
     public function getResolvers(): iterable
     {
@@ -117,9 +117,9 @@ class DistributionConfig
     /**
      * @param string $name
      * @param array $config
-     * @return ResolverInterface
+     * @return UriResolverInterface
      */
-    private function createResolver(string $name, array $config): ResolverInterface
+    private function createResolver(string $name, array $config): UriResolverInterface
     {
         if (!isset($config['type']) || !\is_string($config['type'])) {
             throw $this->invalidConfigKey($name, 'type', 'string');
@@ -146,12 +146,12 @@ class DistributionConfig
      * @param string $type
      * @param string $name
      * @param array $config
-     * @return ResolverInterface
+     * @return UriResolverInterface
      */
-    private function createCustomResolver(string $type, string $name, array $config): ResolverInterface
+    private function createCustomResolver(string $type, string $name, array $config): UriResolverInterface
     {
-        if (!\is_subclass_of($type, ResolverInterface::class, true)) {
-            throw $this->invalidConfigKey($name, 'type', ResolverInterface::class);
+        if (!\is_subclass_of($type, UriResolverInterface::class, true)) {
+            throw $this->invalidConfigKey($name, 'type', UriResolverInterface::class);
         }
 
         if (isset($config['options']) && !\is_array($config['options'])) {
@@ -169,9 +169,9 @@ class DistributionConfig
     /**
      * @param string $name
      * @param array $config
-     * @return ResolverInterface
+     * @return UriResolverInterface
      */
-    private function createS3Resolver(string $name, array $config): ResolverInterface
+    private function createS3Resolver(string $name, array $config): UriResolverInterface
     {
         // Required config options
         if (!isset($config['region']) || !\is_string($config['region'])) {
@@ -220,9 +220,9 @@ class DistributionConfig
     /**
      * @param string $name
      * @param array $config
-     * @return ResolverInterface
+     * @return UriResolverInterface
      */
-    private function createCloudFrontResolver(string $name, array $config): ResolverInterface
+    private function createCloudFrontResolver(string $name, array $config): UriResolverInterface
     {
         if (!isset($config['key']) || !\is_string($config['key'])) {
             throw $this->invalidConfigKey($name, 'key', 'string');
@@ -246,9 +246,9 @@ class DistributionConfig
     /**
      * @param string $name
      * @param array $config
-     * @return ResolverInterface
+     * @return UriResolverInterface
      */
-    private function createStaticResolver(string $name, array $config): ResolverInterface
+    private function createStaticResolver(string $name, array $config): UriResolverInterface
     {
         if (!isset($config['uri']) || !\is_string($config['uri'])) {
             throw $this->invalidConfigKey($name, 'uri', 'string');

@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution\Resolver;
 
-use Spiral\Distribution\ResolverInterface;
+use Spiral\Distribution\UriResolverInterface;
 
-abstract class Resolver implements ResolverInterface
+abstract class UriResolver implements UriResolverInterface
 {
 }

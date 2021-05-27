@@ -9,13 +9,15 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Storage;
+namespace Spiral\Distribution;
 
-interface MutableManagerInterface extends ManagerInterface
+use Psr\Http\Message\UriInterface;
+
+interface UriResolverInterface
 {
     /**
-     * @param string $name
-     * @param StorageInterface $storage
+     * @param string $file
+     * @return UriInterface
      */
-    public function add(string $name, StorageInterface $storage): void;
+    public function resolve(string $file): UriInterface;
 }

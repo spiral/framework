@@ -14,7 +14,7 @@ namespace Spiral\Storage\File;
 use JetBrains\PhpStorm\ExpectedValues;
 use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\FileInterface;
-use Spiral\Storage\StorageInterface;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
 /**
@@ -23,7 +23,7 @@ use Spiral\Storage\Visibility;
 interface WritableInterface extends EntryInterface
 {
     /**
-     * {@see StorageInterface::create()}
+     * {@see BucketInterface::create()}
      *
      * @param array $config
      * @return FileInterface
@@ -32,7 +32,7 @@ interface WritableInterface extends EntryInterface
     public function create(array $config = []): FileInterface;
 
     /**
-     * {@see StorageInterface::write()}
+     * {@see BucketInterface::write()}
      *
      * @param resource|string|\Stringable $content
      * @param array $config
@@ -42,7 +42,7 @@ interface WritableInterface extends EntryInterface
     public function write($content, array $config = []): FileInterface;
 
     /**
-     * {@see StorageInterface::setVisibility()}
+     * {@see BucketInterface::setVisibility()}
      *
      * @param VisibilityType $visibility
      * @return FileInterface
@@ -54,37 +54,37 @@ interface WritableInterface extends EntryInterface
     ): FileInterface;
 
     /**
-     * {@see StorageInterface::copy()}
+     * {@see BucketInterface::copy()}
      *
      * @param string $pathname
-     * @param StorageInterface|null $storage
+     * @param BucketInterface|null $storage
      * @param array $config
      * @return FileInterface
      * @throws FileOperationException
      */
     public function copy(
         string $pathname,
-        StorageInterface $storage = null,
+        BucketInterface $storage = null,
         array $config = []
     ): FileInterface;
 
     /**
-     * {@see StorageInterface::move()}
+     * {@see BucketInterface::move()}
      *
      * @param string $pathname
-     * @param StorageInterface|null $storage
+     * @param BucketInterface|null $storage
      * @param array $config
      * @return FileInterface
      * @throws FileOperationException
      */
     public function move(
         string $pathname,
-        StorageInterface $storage = null,
+        BucketInterface $storage = null,
         array $config = []
     ): FileInterface;
 
     /**
-     * {@see StorageInterface::delete()}
+     * {@see BucketInterface::delete()}
      *
      * @param bool $clean
      * @throws FileOperationException

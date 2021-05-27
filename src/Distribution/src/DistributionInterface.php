@@ -14,13 +14,13 @@ namespace Spiral\Distribution;
 /**
  * @template-implements \IteratorAggregate<string, ResolverInterface>
  */
-interface ManagerInterface extends \IteratorAggregate, \Countable
+interface DistributionInterface extends \IteratorAggregate, \Countable
 {
     /**
      * @param string|null $name
-     * @return ResolverInterface
+     * @return UriResolverInterface
      */
-    public function resolver(string $name = null): ResolverInterface;
+    public function resolver(string $name = null): UriResolverInterface;
 
     /**
      * @param string $name

@@ -11,18 +11,40 @@ declare(strict_types=1);
 
 namespace Spiral\Storage;
 
+use Psr\Http\Message\UriInterface;
+use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\Storage\ReadableInterface;
-use Spiral\Storage\Storage\UriResolvableInterface;
 use Spiral\Storage\Storage\WritableInterface;
 
+/**
+ * @template-implements \IteratorAggregate<string, StorageInterface>
+ *
+ * @psalm-type IdType = string | UriInterface | \Stringable
+ * @see UriInterface
+ */
 interface StorageInterface extends
     ReadableInterface,
     WritableInterface,
-    UriResolvableInterface
+    \IteratorAggregate,
+    \Countable
 {
     /**
-     * @param string $pathname
-     * @return FileInterface
+     * @param string|null $name
+     * @return BucketInterface
+     * @throws InvalidArgumentException
      */
-    public function file(string $pathname): FileInterface;
+    public function bucket(string $name = null): BucketInterface;
+
+    /**
+     * @param IdType $id
+     * @return FileInterface
+     * @throws InvalidArgumentException
+     */
+    public function file($id): FileInterface;
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function withDefault(string $name): self;
 }

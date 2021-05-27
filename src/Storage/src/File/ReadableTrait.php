@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Storage\File;
 
 use JetBrains\PhpStorm\ExpectedValues;
-use Spiral\Storage\StorageInterface;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
 /**
@@ -26,18 +26,18 @@ trait ReadableTrait
     abstract public function getPathname(): string;
 
     /**
-     * {@see EntryInterface::getStorage()}
+     * {@see EntryInterface::getBucket()}
      */
-    abstract public function getStorage(): StorageInterface;
+    abstract public function getBucket(): BucketInterface;
 
     /**
      * {@inheritDoc}
      */
     public function exists(): bool
     {
-        $storage = $this->getStorage();
+        $bucket = $this->getBucket();
 
-        return $storage->exists($this->getPathname());
+        return $bucket->exists($this->getPathname());
     }
 
     /**
@@ -45,9 +45,9 @@ trait ReadableTrait
      */
     public function getContents(): string
     {
-        $storage = $this->getStorage();
+        $bucket = $this->getBucket();
 
-        return $storage->getContents($this->getPathname());
+        return $bucket->getContents($this->getPathname());
     }
 
     /**
@@ -55,9 +55,9 @@ trait ReadableTrait
      */
     public function getStream()
     {
-        $storage = $this->getStorage();
+        $bucket = $this->getBucket();
 
-        return $storage->getStream($this->getPathname());
+        return $bucket->getStream($this->getPathname());
     }
 
     /**
@@ -65,9 +65,9 @@ trait ReadableTrait
      */
     public function getLastModified(): int
     {
-        $storage = $this->getStorage();
+        $bucket = $this->getBucket();
 
-        return $storage->getLastModified($this->getPathname());
+        return $bucket->getLastModified($this->getPathname());
     }
 
     /**
@@ -75,9 +75,9 @@ trait ReadableTrait
      */
     public function getSize(): int
     {
-        $storage = $this->getStorage();
+        $bucket = $this->getBucket();
 
-        return $storage->getSize($this->getPathname());
+        return $bucket->getSize($this->getPathname());
     }
 
     /**
@@ -85,9 +85,9 @@ trait ReadableTrait
      */
     public function getMimeType(): string
     {
-        $storage = $this->getStorage();
+        $bucket = $this->getBucket();
 
-        return $storage->getMimeType($this->getPathname());
+        return $bucket->getMimeType($this->getPathname());
     }
 
     /**
@@ -96,8 +96,8 @@ trait ReadableTrait
     #[ExpectedValues(valuesFromClass: Visibility::class)]
     public function getVisibility(): string
     {
-        $storage = $this->getStorage();
+        $bucket = $this->getBucket();
 
-        return $storage->getVisibility($this->getPathname());
+        return $bucket->getVisibility($this->getPathname());
     }
 }

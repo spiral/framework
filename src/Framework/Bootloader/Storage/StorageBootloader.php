@@ -14,12 +14,11 @@ namespace Spiral\Bootloader\Storage;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Core\Exception\InvalidArgumentException;
-use Spiral\Storage\Manager;
-use Spiral\Storage\ManagerInterface;
 use Spiral\Storage\Storage;
 use Spiral\Storage\StorageInterface;
-use Spiral\Distribution\ManagerInterface as CdnInterface;
+use Spiral\Storage\Bucket;
+use Spiral\Storage\BucketInterface;
+use Spiral\Distribution\DistributionInterface as CdnInterface;
 
 class StorageBootloader extends Bootloader
 {
@@ -29,10 +28,16 @@ class StorageBootloader extends Bootloader
      */
     public function boot(Container $app, ConfiguratorInterface $config): void
     {
+        $config->setDefaults(StorageConfig::CONFIG, [
+            'default' => Storage::DEFAULT_STORAGE,
+            'servers' => [],
+            'buckets' => [],
+        ]);
+
         $app->bindInjector(StorageConfig::class, ConfiguratorInterface::class);
 
-        $app->bindSingleton(ManagerInterface::class, static function (StorageConfig $config, CdnInterface $cdn) {
-            $manager = new Manager($config->getDefaultBucket());
+        $app->bindSingleton(StorageInterface::class, static function (StorageConfig $config, CdnInterface $cdn) {
+            $manager = new Storage($config->getDefaultBucket());
 
             $distributions = $config->getDistributions();
 
@@ -41,21 +46,21 @@ class StorageBootloader extends Bootloader
                     ? $cdn->resolver($distributions[$name])
                     : null;
 
-                $manager->add($name, Storage::fromAdapter($adapter, $resolver));
+                $manager->add($name, Bucket::fromAdapter($adapter, $resolver));
             }
 
             return $manager;
         });
 
-        $app->bindSingleton(Manager::class, static function (ManagerInterface $manager) {
+        $app->bindSingleton(Storage::class, static function (StorageInterface $manager) {
             return $manager;
         });
 
-        $app->bindSingleton(StorageInterface::class, static function (ManagerInterface $manager) {
-            return $manager->storage();
+        $app->bindSingleton(BucketInterface::class, static function (StorageInterface $manager) {
+            return $manager->bucket();
         });
 
-        $app->bindSingleton(Storage::class, static function (StorageInterface $storage) {
+        $app->bindSingleton(Bucket::class, static function (BucketInterface $storage) {
             return $storage;
         });
     }

@@ -12,9 +12,9 @@ declare(strict_types=1);
 namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
-use League\Flysystem\FilesystemException;
-use League\Flysystem\FilesystemOperator;
-use Spiral\Storage\Exception\FileOperationException;
+use Spiral\Storage\Storage;
+use Spiral\Storage\StorageInterface;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
 /**
@@ -23,121 +23,97 @@ use Spiral\Storage\Visibility;
 trait ReadableTrait
 {
     /**
+     * {@see StorageInterface::bucket()}
+     */
+    abstract public function bucket(string $name = null): BucketInterface;
+
+    /**
      * {@inheritDoc}
      */
-    public function exists(string $pathname): bool
+    public function getContents($id): string
     {
-        $fs = $this->getOperator();
+        [$name, $pathname] = $this->parseUri($id);
 
-        try {
-            return $fs->fileExists($pathname);
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
+        $bucket = $this->bucket($name);
+
+        return $bucket->getContents($pathname);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getContents(string $pathname): string
+    public function getStream($id)
     {
-        $fs = $this->getOperator();
+        [$name, $pathname] = $this->parseUri($id);
 
-        try {
-            return $fs->read($pathname);
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
+        $bucket = $this->bucket($name);
+
+        return $bucket->getStream($pathname);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getStream(string $pathname)
+    public function exists($id): bool
     {
-        $fs = $this->getOperator();
+        [$name, $pathname] = $this->parseUri($id);
 
-        try {
-            return $fs->readStream($pathname);
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
+        $bucket = $this->bucket($name);
+
+        return $bucket->exists($pathname);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getLastModified(string $pathname): int
+    public function getLastModified($id): int
     {
-        $fs = $this->getOperator();
+        [$name, $pathname] = $this->parseUri($id);
 
-        try {
-            return $fs->lastModified($pathname);
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
+        $bucket = $this->bucket($name);
+
+        return $bucket->getLastModified($pathname);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getSize(string $pathname): int
+    public function getSize($id): int
     {
-        $fs = $this->getOperator();
+        [$name, $pathname] = $this->parseUri($id);
 
-        try {
-            return $fs->fileSize($pathname);
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
+        $bucket = $this->bucket($name);
+
+        return $bucket->getSize($pathname);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getMimeType(string $pathname): string
+    public function getMimeType($id): string
     {
-        $fs = $this->getOperator();
+        [$name, $pathname] = $this->parseUri($id);
 
-        try {
-            return $fs->mimeType($pathname);
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
+        $bucket = $this->bucket($name);
+
+        return $bucket->getMimeType($pathname);
     }
 
     /**
      * {@inheritDoc}
      */
     #[ExpectedValues(valuesFromClass: Visibility::class)]
-    public function getVisibility(string $pathname): string
+    public function getVisibility($id): string
     {
-        $fs = $this->getOperator();
+        [$name, $pathname] = $this->parseUri($id);
 
-        try {
-            return $this->fromFlysystemVisibility(
-                $fs->visibility($pathname)
-            );
-        } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
-        }
+        $bucket = $this->bucket($name);
+
+        return $bucket->getVisibility($pathname);
     }
-    /**
-     * @return FilesystemOperator
-     */
-    abstract protected function getOperator(): FilesystemOperator;
 
     /**
-     * @param string $visibility
-     * @return string
+     * {@see Storage::parseUri()}
      */
-    #[ExpectedValues(valuesFromClass: Visibility::class)]
-    private function fromFlysystemVisibility(
-        #[ExpectedValues(valuesFromClass: \League\Flysystem\Visibility::class)]
-        string $visibility
-    ): string {
-        return $visibility === \League\Flysystem\Visibility::PUBLIC
-            ? Visibility::VISIBILITY_PUBLIC
-            : Visibility::VISIBILITY_PRIVATE;
-    }
+    abstract protected function parseUri($uri, bool $withScheme = true): array;
 }

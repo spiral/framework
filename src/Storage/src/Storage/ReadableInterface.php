@@ -13,74 +13,86 @@ namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
 use Spiral\Storage\Exception\FileOperationException;
+use Spiral\Storage\Exception\InvalidArgumentException;
+use Spiral\Storage\StorageInterface;
 use Spiral\Storage\Visibility;
 
 /**
  * @psalm-import-type VisibilityType from Visibility
+ *
+ * @psalm-import-type IdType from StorageInterface
+ * @see StorageInterface
  */
 interface ReadableInterface
 {
     /**
-     * Reads file by relative pathname and return its content as string.
+     * {@see BucketInterface::getContents()}
      *
-     * @param string $pathname
+     * @param IdType $id
      * @return string
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function getContents(string $pathname): string;
+    public function getContents($id): string;
 
     /**
-     * Reads file by relative pathname and return its content as resource stream.
+     * {@see BucketInterface::getStream()}
      *
-     * @param string $pathname
+     * @param IdType $id
      * @return resource
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function getStream(string $pathname);
+    public function getStream($id);
 
     /**
-     * Checks file for existing.
+     * {@see BucketInterface::exists()}
      *
-     * @param string $pathname
+     * @param IdType $id
      * @return bool
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function exists(string $pathname): bool;
+    public function exists($id): bool;
 
     /**
-     * Returns the timestamp of last file modification.
+     * {@see BucketInterface::getLastModified()}
      *
-     * @param string $pathname
+     * @param IdType $id
      * @return positive-int|0
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function getLastModified(string $pathname): int;
+    public function getLastModified($id): int;
 
     /**
-     * Returns the file size in bytes.
+     * {@see BucketInterface::getSize()}
      *
-     * @param string $pathname
+     * @param IdType $id
      * @return positive-int|0
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function getSize(string $pathname): int;
+    public function getSize($id): int;
 
     /**
-     * Returns the file mime type.
+     *{@see BucketInterface::getMimeType()}
      *
-     * @param string $pathname
+     * @param IdType $id
      * @return string
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
-    public function getMimeType(string $pathname): string;
+    public function getMimeType($id): string;
 
     /**
-     * Returns the file visibility.
+     * {@see BucketInterface::getVisibility()}
      *
-     * @param string $pathname
+     * @param IdType $id
      * @return VisibilityType
      * @throws FileOperationException
+     * @throws InvalidArgumentException
      */
     #[ExpectedValues(valuesFromClass: Visibility::class)]
-    public function getVisibility(string $pathname): string;
+    public function getVisibility($id): string;
 }

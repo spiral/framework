@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Storage\File;
 
 use Psr\Http\Message\UriInterface;
-use Spiral\Distribution\ResolverInterface;
+use Spiral\Distribution\UriResolverInterface;
 
 interface UriResolvableInterface extends EntryInterface
 {
@@ -22,8 +22,8 @@ interface UriResolvableInterface extends EntryInterface
     public function toUri(): UriInterface;
 
     /**
-     * @param ResolverInterface $resolver
+     * @param UriResolverInterface $resolver
      * @return UriInterface
      */
-    public function toUriFrom(ResolverInterface $resolver): UriInterface;
+    public function toUriFrom(UriResolverInterface $resolver): UriInterface;
 }

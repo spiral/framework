@@ -20,7 +20,7 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
 /**
  * @psalm-import-type DateIntervalFormat from DateTimeIntervalFactoryInterface
  */
-abstract class ExpirationAwareResolver extends Resolver implements ExpirationAwareResolverInterface
+abstract class ExpirationAwareResolver extends UriResolver implements ExpirationAwareResolverInterface
 {
     /**
      * @var string

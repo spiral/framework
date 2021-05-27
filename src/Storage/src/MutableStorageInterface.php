@@ -9,13 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Distribution;
+namespace Spiral\Storage;
 
-interface MutableManagerInterface extends ManagerInterface
+interface MutableStorageInterface extends StorageInterface
 {
     /**
      * @param string $name
-     * @param ResolverInterface $resolver
+     * @param BucketInterface $storage
      */
-    public function add(string $name, ResolverInterface $resolver): void;
+    public function add(string $name, BucketInterface $storage): void;
 }

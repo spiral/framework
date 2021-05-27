@@ -20,7 +20,7 @@ use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 use Spiral\Config\Exception\InvalidArgumentException;
-use Spiral\Storage\Manager;
+use Spiral\Storage\Storage;
 use Spiral\Storage\Visibility;
 
 class StorageConfig
@@ -87,7 +87,7 @@ class StorageConfig
     private function normalize(array $config): array
     {
         $defaults = [
-            'default' => Manager::DEFAULT_STORAGE,
+            'default' => Storage::DEFAULT_STORAGE,
             'servers' => [],
             'buckets' => [],
         ];
@@ -143,8 +143,8 @@ class StorageConfig
 
             $this->adapters[$name] = $adapter;
 
-            if (isset($bucket['cdn'])) {
-                $this->distributions[$name] = $bucket['cdn'];
+            if (isset($bucket['distribution'])) {
+                $this->distributions[$name] = $bucket['distribution'];
             }
         }
     }

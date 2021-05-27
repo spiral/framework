@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Storage;
 
-use Spiral\Distribution\ResolverInterface;
+use Spiral\Distribution\UriResolverInterface;
 use Spiral\Storage\File\ReadableTrait;
 use Spiral\Storage\File\UriResolvableTrait;
 use Spiral\Storage\File\WritableTrait;
@@ -23,7 +23,7 @@ final class File implements FileInterface
     use WritableTrait;
 
     /**
-     * @var StorageInterface
+     * @var BucketInterface
      */
     private $storage;
 
@@ -33,16 +33,16 @@ final class File implements FileInterface
     private $pathname;
 
     /**
-     * @var ResolverInterface|null
+     * @var UriResolverInterface|null
      */
     private $resolver;
 
     /**
-     * @param StorageInterface $storage
+     * @param BucketInterface $storage
      * @param string $pathname
-     * @param ResolverInterface|null $resolver
+     * @param UriResolverInterface|null $resolver
      */
-    public function __construct(StorageInterface $storage, string $pathname, ResolverInterface $resolver = null)
+    public function __construct(BucketInterface $storage, string $pathname, UriResolverInterface $resolver = null)
     {
         $this->storage = $storage;
         $this->pathname = $pathname;
@@ -50,11 +50,25 @@ final class File implements FileInterface
     }
 
     /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        $name = $this->storage->getName();
+
+        if ($name === null) {
+            return $this->getPathname();
+        }
+
+        return \sprintf('%s://%s', $name, $this->getPathname());
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function __toString(): string
     {
-        return $this->getPathname();
+        return $this->getId();
     }
 
     /**
@@ -68,15 +82,15 @@ final class File implements FileInterface
     /**
      * {@inheritDoc}
      */
-    public function getStorage(): StorageInterface
+    public function getBucket(): BucketInterface
     {
         return $this->storage;
     }
 
     /**
-     * @return ResolverInterface|null
+     * @return UriResolverInterface|null
      */
-    protected function getResolver(): ?ResolverInterface
+    protected function getResolver(): ?UriResolverInterface
     {
         return $this->resolver;
     }

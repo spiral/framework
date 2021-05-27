@@ -61,7 +61,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'router'       => 'Spiral\Router\RouterInterface',
         'server'       => 'Spiral\Goridge\RPC',
         'snapshots'    => 'Spiral\Snapshots\SnapshotterInterface',
-        'storage'      => 'Spiral\Storage\StorageInterface',
+        'storage'      => 'Spiral\Storage\BucketInterface',
         'validator'    => 'Spiral\Validation\ValidationInterface',
         'views'        => 'Spiral\Views\ViewsInterface',
         'auth'         => ['resolve' => 'Spiral\Auth\AuthScope', 'with' => ['Spiral\Auth\AuthContextInterface']],

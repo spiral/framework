@@ -9,20 +9,20 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Storage\Storage;
+namespace Spiral\Storage\Bucket;
 
-use Spiral\Distribution\ResolverInterface;
+use Spiral\Distribution\UriResolverInterface;
 
 interface UriResolvableInterface
 {
     /**
-     * @return ResolverInterface|null
+     * @return UriResolverInterface|null
      */
-    public function getUriResolver(): ?ResolverInterface;
+    public function getUriResolver(): ?UriResolverInterface;
 
     /**
-     * @param ResolverInterface|null $resolver
+     * @param UriResolverInterface|null $resolver
      * @return $this
      */
-    public function withUriResolver(?ResolverInterface $resolver): self;
+    public function withUriResolver(?UriResolverInterface $resolver): self;
 }

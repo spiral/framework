@@ -11,17 +11,22 @@ declare(strict_types=1);
 
 namespace Spiral\Storage\File;
 
-use Spiral\Storage\StorageInterface;
+use Spiral\Storage\BucketInterface;
 
 interface EntryInterface extends \Stringable
 {
     /**
      * @return string
      */
+    public function getId(): string;
+
+    /**
+     * @return string
+     */
     public function getPathname(): string;
 
     /**
-     * @return StorageInterface
+     * @return BucketInterface
      */
-    public function getStorage(): StorageInterface;
+    public function getBucket(): BucketInterface;
 }

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Storage\File;
 
 use Psr\Http\Message\UriInterface;
-use Spiral\Distribution\ResolverInterface;
+use Spiral\Distribution\UriResolverInterface;
 
 /**
  * @mixin UriResolvableInterface
@@ -41,13 +41,13 @@ trait UriResolvableTrait
     /**
      * {@see UriResolvableInterface::toUriFrom()}
      */
-    public function toUriFrom(ResolverInterface $resolver): UriInterface
+    public function toUriFrom(UriResolverInterface $resolver): UriInterface
     {
         return $resolver->resolve($this->getPathname());
     }
 
     /**
-     * @return ResolverInterface|null
+     * @return UriResolverInterface|null
      */
-    abstract protected function getResolver(): ?ResolverInterface;
+    abstract protected function getResolver(): ?UriResolverInterface;
 }

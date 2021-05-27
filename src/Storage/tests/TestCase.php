@@ -6,8 +6,8 @@ namespace Spiral\Tests\Storage;
 
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\TestCase as BaseTestCase;
-use Spiral\Storage\Storage;
-use Spiral\Storage\StorageInterface;
+use Spiral\Storage\Bucket;
+use Spiral\Storage\BucketInterface;
 
 class TestCase extends BaseTestCase
 {
@@ -17,12 +17,12 @@ class TestCase extends BaseTestCase
     protected const LOCAL_STORAGE_DIRECTORY = __DIR__ . '/storage';
 
     /**
-     * @var StorageInterface
+     * @var BucketInterface
      */
     protected $local;
 
     /**
-     * @var StorageInterface
+     * @var BucketInterface
      */
     protected $second;
 
@@ -33,11 +33,11 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->local = Storage::fromAdapter(
+        $this->local = Bucket::fromAdapter(
             new LocalFilesystemAdapter(self::LOCAL_STORAGE_DIRECTORY)
         );
 
-        $this->second = Storage::fromAdapter(
+        $this->second = Bucket::fromAdapter(
             new LocalFilesystemAdapter(self::LOCAL_STORAGE_DIRECTORY . '/second')
         );
     }

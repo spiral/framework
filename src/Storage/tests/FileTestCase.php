@@ -29,7 +29,7 @@ class FileTestCase extends TestCase
     {
         $file = $this->local->file('path/to/file.txt');
 
-        $this->assertSame($this->local, $file->getStorage());
+        $this->assertSame($this->local, $file->getBucket());
     }
 
     public function testCreating(): void

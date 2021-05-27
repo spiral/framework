@@ -11,71 +11,61 @@ declare(strict_types=1);
 
 namespace Spiral\Storage;
 
-use League\Flysystem\Filesystem;
-use League\Flysystem\FilesystemAdapter;
-use League\Flysystem\FilesystemOperator;
-use Spiral\Distribution\ResolverInterface;
-use Spiral\Storage\File\EntryInterface;
+use Psr\Http\Message\UriInterface;
+use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\Storage\ReadableTrait;
-use Spiral\Storage\Storage\UriResolvableInterface;
 use Spiral\Storage\Storage\WritableTrait;
 
 /**
- * @internal Storage is an internal library class, please do not use it in your code.
- * @psalm-internal Spiral\Storage
+ * @psalm-import-type IdType from StorageInterface
+ * @see StorageInterface
  */
-final class Storage implements StorageInterface
+final class Storage implements MutableStorageInterface
 {
     use ReadableTrait;
     use WritableTrait;
 
     /**
-     * @var FilesystemOperator
+     * @var string
      */
-    private $fs;
+    public const DEFAULT_STORAGE = 'default';
 
     /**
-     * @var ResolverInterface|null
+     * @var string
      */
-    private $resolver;
+    private const ERROR_REDEFINITION = 'Can not redefine already defined bucket `%s`';
 
     /**
-     * @param FilesystemOperator $fs
-     * @param ResolverInterface|null $resolver
+     * @var string
      */
-    public function __construct(FilesystemOperator $fs, ResolverInterface $resolver = null)
+    private const ERROR_NOT_FOUND = 'Bucket `%s` has not been defined';
+
+    /**
+     * @var array<string, BucketInterface>
+     */
+    private $buckets = [];
+
+    /**
+     * @var string
+     */
+    private $default;
+
+    /**
+     * @param string $name
+     */
+    public function __construct(string $name = self::DEFAULT_STORAGE)
     {
-        $this->fs = $fs;
-        $this->resolver = $resolver;
+        $this->default = $name;
     }
 
     /**
-     * @param FilesystemAdapter $adapter
-     * @param ResolverInterface|null $resolver
-     * @return static
+     * @param string $name
+     * @return $this
      */
-    public static function fromAdapter(FilesystemAdapter $adapter, ResolverInterface $resolver = null): self
-    {
-        $fs = new Filesystem($adapter);
-
-        return new self($fs, $resolver);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getUriResolver(): ?ResolverInterface
-    {
-        return $this->resolver;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function withUriResolver(?ResolverInterface $resolver): UriResolvableInterface
+    public function withDefault(string $name): StorageInterface
     {
         $self = clone $this;
-        $self->resolver = $resolver;
+        $self->default = $name;
 
         return $self;
     }
@@ -83,16 +73,104 @@ final class Storage implements StorageInterface
     /**
      * {@inheritDoc}
      */
-    public function file(string $pathname): FileInterface
+    public function bucket(string $name = null): BucketInterface
     {
-        return new File($this, $pathname, $this->resolver);
+        $name = $name ?? $this->default;
+
+        if (!isset($this->buckets[$name])) {
+            throw new InvalidArgumentException(\sprintf(self::ERROR_NOT_FOUND, $name));
+        }
+
+        return $this->buckets[$name];
     }
 
     /**
-     * @return FilesystemOperator
+     * {@inheritDoc}
      */
-    protected function getOperator(): FilesystemOperator
+    public function file($id): FileInterface
     {
-        return $this->fs;
+        [$bucket, $file] = $this->parseUri($id);
+
+        return $this->bucket($bucket)->file($file);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function add(string $name, BucketInterface $storage, bool $overwrite = false): void
+    {
+        if ($overwrite === false && isset($this->buckets[$name])) {
+            throw new \InvalidArgumentException(\sprintf(self::ERROR_REDEFINITION, $name));
+        }
+
+        $this->buckets[$name] = $storage;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->buckets);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function count(): int
+    {
+        return \count($this->buckets);
+    }
+
+    /**
+     * @param IdType $uri
+     * @param bool $withScheme
+     * @return array{0: string|null, 1: string}
+     * @throws InvalidArgumentException
+     */
+    protected function parseUri($uri, bool $withScheme = true): array
+    {
+        $uri = $this->uriToString($uri);
+        $result = \parse_url($uri);
+
+        if ($result === false) {
+            $message = 'URI argument must be a valid URI in "[STORAGE]://[PATH_TO_FILE]" format, but `%s` given';
+            throw new InvalidArgumentException(\sprintf($message, $uri));
+        }
+
+        if (!isset($result['scheme'])) {
+            $result['scheme'] = $withScheme ? $this->default : null;
+        }
+
+        if (!isset($result['host'])) {
+            $result['host'] = '';
+        }
+
+        return [
+            $result['scheme'] ?? null,
+            $result['host'] . \rtrim($result['path'] ?? '', '/'),
+        ];
+    }
+
+    /**
+     * @param IdType $uri
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    private function uriToString($uri): string
+    {
+        switch (true) {
+            case $uri instanceof UriInterface:
+            case $uri instanceof \Stringable:
+            case \is_object($uri) && \method_exists($uri, '__toString'):
+                return (string)$uri;
+
+            case \is_string($uri):
+                return $uri;
+
+            default:
+                $message = 'File URI must be a string or instance of Stringable interface, but %s given';
+                throw new InvalidArgumentException(\sprintf($message, \get_debug_type($uri)));
+        }
     }
 }
