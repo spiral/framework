@@ -30,7 +30,7 @@ class DistributionBootloader extends Bootloader
     {
         $config->setDefaults(DistributionConfig::CONFIG, [
             'default' => Manager::DEFAULT_RESOLVER,
-            'resolvers' => []
+            'resolvers' => [],
         ]);
 
         $app->bindInjector(DistributionConfig::class, ConfiguratorInterface::class);

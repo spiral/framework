@@ -29,7 +29,7 @@ trait WritableTrait
      */
     public function create(string $pathname, array $config = []): FileInterface
     {
-        if ($this instanceof ReadableInterface && ! $this->exists($pathname)) {
+        if ($this instanceof ReadableInterface && !$this->exists($pathname)) {
             return $this->write($pathname, '', $config);
         }
 

@@ -50,6 +50,14 @@ final class File implements FileInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function __toString(): string
+    {
+        return $this->getId();
+    }
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -61,14 +69,6 @@ final class File implements FileInterface
         }
 
         return \sprintf('%s://%s', $name, $this->getPathname());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString(): string
-    {
-        return $this->getId();
     }
 
     /**
