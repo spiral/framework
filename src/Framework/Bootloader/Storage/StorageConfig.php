@@ -15,7 +15,9 @@ use AsyncAws\S3\S3Client as S3AsyncClient;
 use Aws\Credentials\Credentials;
 use Aws\S3\S3Client;
 use League\Flysystem\AsyncAwsS3\AsyncAwsS3Adapter;
+use League\Flysystem\AsyncAwsS3\PortableVisibilityConverter as AsyncAwsS3PortableVisibilityConverter;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\AwsS3V3\PortableVisibilityConverter as AwsS3PortableVisibilityConverter;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
@@ -193,6 +195,7 @@ class StorageConfig
         ];
 
         $bucket = $bucket['bucket'] ?? $server['bucket'];
+        $visibility = $bucket['visibility'] ?? $server['bucket'] ?? Visibility::VISIBILITY_PUBLIC;
 
         if ($async) {
             if (!\class_exists(AsyncAwsS3Adapter::class)) {
@@ -203,7 +206,11 @@ class StorageConfig
 
             return new AsyncAwsS3Adapter(
                 new S3AsyncClient($config),
-                $bucket
+                $bucket,
+                $bucket['prefix'] ?? $server['prefix'] ?? '',
+                new AsyncAwsS3PortableVisibilityConverter(
+                    $visibility
+                )
             );
         }
 
@@ -215,7 +222,11 @@ class StorageConfig
 
         return new AwsS3V3Adapter(
             new S3Client($config),
-            $bucket
+            $bucket,
+            $bucket['prefix'] ?? $server['prefix'] ?? '',
+            new AwsS3PortableVisibilityConverter(
+                $visibility
+            )
         );
     }
 

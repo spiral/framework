@@ -22,11 +22,11 @@ interface Visibility
      * @var string
      * @psalm-var VisibilityType
      */
-    public const VISIBILITY_PUBLIC = 'public';
+    public const VISIBILITY_PUBLIC = \League\Flysystem\Visibility::PUBLIC;
 
     /**
      * @var string
      * @psalm-var VisibilityType
      */
-    public const VISIBILITY_PRIVATE = 'private';
+    public const VISIBILITY_PRIVATE = \League\Flysystem\Visibility::PRIVATE;
 }
