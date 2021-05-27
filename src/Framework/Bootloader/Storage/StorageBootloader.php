@@ -46,7 +46,7 @@ class StorageBootloader extends Bootloader
                     ? $cdn->resolver($distributions[$name])
                     : null;
 
-                $manager->add($name, Bucket::fromAdapter($adapter, $resolver));
+                $manager->add($name, Bucket::fromAdapter($adapter, $name, $resolver));
             }
 
             return $manager;
