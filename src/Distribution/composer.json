@@ -36,6 +36,9 @@
             "Spiral\\Tests\\Distribution\\": "tests"
         }
     },
+    "suggest": {
+        "aws/aws-sdk-php": "(^3.0) For use S3 and CloudFront URI Resolvers"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "2.7.x-dev"
