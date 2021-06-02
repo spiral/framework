@@ -184,11 +184,11 @@ class StorageConfig
     {
         $config = [
             'version'     => $server['version'] ?? 'latest',
-            'region'      => $server['region'],
+            'region'      => $bucket['region'] ?? $server['region'] ?? null,
             'endpoint'    => $server['endpoint'] ?? null,
             'credentials' => new Credentials(
-                $server['key'],
-                $server['secret'],
+                $server['key'] ?? null,
+                $server['secret'] ?? null,
                 $server['token'] ?? null,
                 $server['expires'] ?? null
             ),
