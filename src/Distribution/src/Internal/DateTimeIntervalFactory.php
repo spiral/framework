@@ -21,6 +21,7 @@ final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
      * @var string
      */
     private const ERROR_INVALID_INTERVAL_TYPE = 'The value of type `%s` is not a valid date interval type';
+
     /**
      * @var DateTimeFactoryInterface|null
      */
