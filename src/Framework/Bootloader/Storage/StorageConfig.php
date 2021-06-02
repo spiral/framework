@@ -194,7 +194,7 @@ class StorageConfig
             ),
         ];
 
-        $bucket = $bucket['bucket'] ?? $server['bucket'];
+        $name = $bucket['bucket'] ?? $server['bucket'];
         $visibility = $bucket['visibility'] ?? $server['bucket'] ?? Visibility::VISIBILITY_PUBLIC;
 
         if ($async) {
@@ -206,7 +206,7 @@ class StorageConfig
 
             return new AsyncAwsS3Adapter(
                 new S3AsyncClient($config),
-                $bucket,
+                $name,
                 $bucket['prefix'] ?? $server['prefix'] ?? '',
                 new AsyncAwsS3PortableVisibilityConverter(
                     $visibility
@@ -222,7 +222,7 @@ class StorageConfig
 
         return new AwsS3V3Adapter(
             new S3Client($config),
-            $bucket,
+            $name,
             $bucket['prefix'] ?? $server['prefix'] ?? '',
             new AwsS3PortableVisibilityConverter(
                 $visibility
