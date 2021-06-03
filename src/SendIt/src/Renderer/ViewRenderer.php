@@ -72,7 +72,7 @@ final class ViewRenderer implements RendererInterface
     }
 
     /**
-     * Copy-pasted form https://stackoverflow.com/a/54688095
+     * Copy-pasted form https://stackoverflow.com/a/20806227
      * Make sure the subject is ASCII-clean
      *
      * @param string $subject Subject to encode
@@ -86,8 +86,8 @@ final class ViewRenderer implements RendererInterface
         }
 
         // Subject is non-ascii, needs encoding
-        $encoded = quoted_printable_encode($subject);
-        $prefix = '=?UTF-8?q?';
+        $encoded = base64_encode($subject);
+        $prefix = '=?UTF-8?B?';
         $suffix = '?=';
 
         return $prefix . str_replace("=\r\n", $suffix . "\r\n  " . $prefix, $encoded) . $suffix;
