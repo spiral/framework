@@ -33,7 +33,7 @@ trait JsonTrait
             $payload = $payload->jsonSerialize();
         }
 
-        if (is_array($payload) && isset($payload['status'])) {
+        if (is_array($payload) && isset($payload['status']) && is_int($payload['status'])) {
             $code = $payload['status'];
         }
 
