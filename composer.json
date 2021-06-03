@@ -208,7 +208,7 @@
     "replace": {
         "spiral/annotated-routes": "*",
         "spiral/annotations": "*",
-        "spiral/attributes": "self.version",
+        "spiral/attributes": "*",
         "spiral/auth": "*",
         "spiral/auth-http": "*",
         "spiral/boot": "*",
@@ -220,7 +220,7 @@
         "spiral/data-grid": "*",
         "spiral/data-grid-bridge": "*",
         "spiral/debug": "*",
-        "spiral/distribution": "self.version",
+        "spiral/distribution": "*",
         "spiral/dotenv-bridge": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
