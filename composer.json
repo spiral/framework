@@ -26,7 +26,6 @@
         "defuse/php-encryption": "^2.2",
         "doctrine/annotations": "^1.11",
         "doctrine/inflector": "^1.4|^2.0",
-        "laminas/laminas-diactoros": "^2.3",
         "league/flysystem": "^2.0",
         "monolog/monolog": "^2.2",
         "myclabs/deep-copy": "^1.9",
