@@ -36,6 +36,7 @@
             </errorLevel>
         </UndefinedDocblockClass>
         <UnusedClosureParam errorLevel="suppress" />
+        <UnusedPsalmSuppress errorLevel="suppress" />
     </issueHandlers>
     <stubs>
         <file name="resources/stubs/php/reflection/Attribute.phpstub" />

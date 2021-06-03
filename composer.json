@@ -27,6 +27,7 @@
         "doctrine/annotations": "^1.11",
         "doctrine/inflector": "^1.4|^2.0",
         "laminas/laminas-diactoros": "^2.3",
+        "league/flysystem": "^2.0",
         "monolog/monolog": "^2.2",
         "myclabs/deep-copy": "^1.9",
         "nikic/php-parser": "^4.1",
@@ -82,6 +83,7 @@
                 "src/Debug/src",
                 "src/Dumper/src"
             ],
+            "Spiral\\Distribution\\": "src/Distribution/src",
             "Spiral\\DotEnv\\": "src/Bridge/Dotenv/src",
             "Spiral\\Encrypter\\": "src/Encrypter/src",
             "Spiral\\Exceptions\\": "src/Exceptions/src",
@@ -108,6 +110,7 @@
                 "src/Bridge/Stempler/src",
                 "src/Stempler/src"
             ],
+            "Spiral\\Storage\\": "src/Storage/src",
             "Spiral\\Streams\\": "src/Streams/src",
             "Spiral\\Tokenizer\\": "src/Tokenizer/src",
             "Spiral\\Translator\\": "src/Translator/src",
@@ -116,7 +119,6 @@
         }
     },
     "require-dev": {
-        "cache/filesystem-adapter": "^1.1|^2.0",
         "cycle/annotated": "^2.0.6",
         "cycle/migrations": "^1.0.1",
         "cycle/orm": "^1.2.6",
@@ -124,6 +126,9 @@
         "cycle/schema-builder": "^1.1",
         "jetbrains/phpstorm-attributes": "^1.0",
         "laminas/laminas-hydrator": "^3.0",
+        "league/flysystem-async-aws-s3": "^2.0",
+        "league/flysystem-aws-s3-v3": "^2.0",
+        "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5|^9.0",
         "ramsey/uuid": "^3.9",
@@ -165,6 +170,7 @@
                 "src/Debug/tests",
                 "src/Dumper/tests"
             ],
+            "Spiral\\Tests\\Distribution\\": "src/Distribution/tests",
             "Spiral\\Tests\\DotEnv\\": "src/Bridge/Dotenv/tests",
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
             "Spiral\\Tests\\Exceptions\\": "src/Exceptions/tests",
@@ -192,6 +198,7 @@
                 "src/Bridge/Stempler/tests",
                 "src/Stempler/tests"
             ],
+            "Spiral\\Tests\\Storage\\": "src/Storage/tests",
             "Spiral\\Tests\\Streams\\": "src/Streams/tests",
             "Spiral\\Tests\\Tokenizer\\": "src/Tokenizer/tests",
             "Spiral\\Tests\\Translator\\": "src/Translator/tests",
@@ -214,6 +221,7 @@
         "spiral/data-grid": "*",
         "spiral/data-grid-bridge": "*",
         "spiral/debug": "*",
+        "spiral/distribution": "self.version",
         "spiral/dotenv-bridge": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
@@ -237,6 +245,7 @@
         "spiral/snapshots": "*",
         "spiral/stempler": "*",
         "spiral/stempler-bridge": "*",
+        "spiral/storage": "*",
         "spiral/streams": "*",
         "spiral/tokenizer": "*",
         "spiral/translator": "*",
@@ -247,7 +256,7 @@
         "tests": [
             "phpunit --testdox",
             "phpcs --standard=phpcs.xml",
-            "psalm"
+            "psalm --no-cache"
         ],
         "fixers": [
             "phpcbf --standard=phpcs.xml",

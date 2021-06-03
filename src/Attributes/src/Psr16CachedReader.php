@@ -37,6 +37,7 @@ final class Psr16CachedReader extends CachedReader
 
     /**
      * {@inheritDoc}
+     * @psalm-suppress InvalidThrow
      * @throws InvalidArgumentException
      */
     protected function cached(string $key, callable $then): iterable
