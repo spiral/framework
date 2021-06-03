@@ -21,7 +21,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spiral/reactor": "^2.8",
+        "spiral/reactor": "^2.9",
         "cocur/slugify": "^3.2",
         "doctrine/inflector": "^1.4|^2.0"
     },
@@ -29,14 +29,14 @@
         "phpunit/phpunit": "^8.5|^9.0",
         "cycle/orm": "^1.2.6",
         "cycle/annotated": "^2.0.6",
-        "spiral/boot": "^2.8",
-        "spiral/console": "^2.8",
-        "spiral/core": "^2.8",
-        "spiral/filters": "^2.8",
-        "spiral/http": "^2.8",
-        "spiral/migrations": "^2.1",
-        "spiral/prototype": "^2.8",
-        "spiral/jobs": "^2.2"
+        "spiral/boot": "^2.9",
+        "spiral/console": "^2.9",
+        "spiral/core": "^2.9",
+        "spiral/filters": "^2.9",
+        "spiral/http": "^2.9",
+        "spiral/migrations": "^2.9",
+        "spiral/prototype": "^2.9",
+        "spiral/jobs": "^2.9"
     },
     "autoload": {
         "files": [
@@ -53,7 +53,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.9.x-dev"
         }
     },
     "config": {
