@@ -1,11 +1,27 @@
 # CHANGELOG
 
-## v2.8.0 - Unreleased
+## v2.9.0 - Unreleased
 
 - **High Impact Changes**
 - **Medium Impact Changes**
 - **Other Features**
 - **Bug Fixes**
+
+## v2.8.0 - 2021-06-03
+
+- **New Functionality**
+    - Added new `spiral/storage` component (See https://spiral.dev/docs/component-storage)
+    - Added new `spiral/distribution` component (See https://spiral.dev/docs/component-distribution)
+    - Introduced and improved `spiral/attributes` component (See https://spiral.dev/docs/component-attributes)
+
+- **High Impact Changes**
+    - Added `league/flysystem: ^2.0` dependency.
+
+- **Other Features**
+    - Added basic RoadRunner 2.0 support (only HTTP)
+    - [data-grid] Implement fragment/expression injections for DataGrid sorters (#400)
+    - [data-grid] Datagrid/fix inarray accessor edge case (#379)
+    - [boot] ExceptionHandler does not account for error_reporting setting (#386)
 
 ## v2.7.0 - 2020-12-22
 
@@ -44,7 +60,7 @@
 - **Other Features**
     - [spiral/http] [Implementation of RFC7231 "Accept" header parser](https://github.com/spiral/framework/issues/231)
     - [spiral/http] [Simplified ErrorHandlerMiddleware injection](https://github.com/spiral/framework/issues/295)
-    - [spiral/reactor] [Fix render comment for namespace declaration](https://github.com/spiral/reactor/pull/7) 
+    - [spiral/reactor] [Fix render comment for namespace declaration](https://github.com/spiral/reactor/pull/7)
     - [spiral/validation] [Add `any`, `none` conditions](https://github.com/spiral/validation/pull/13)
 
 ## v2.5.0 - 2020-07-18
@@ -85,7 +101,7 @@
 - RouterBootloader no longer blocks the HttpConfig (easier middleware creation)
 - show list of actions in multi-action routes in `route:list` by @ncou
 - added default alias for `notNull` validation rule
-- fixed path behavior in `grpc:generate` command by @matthewhall-ca 
+- fixed path behavior in `grpc:generate` command by @matthewhall-ca
 - FilterInterceptor can automatically detect the validation context
 
 ## v2.4.13 - 2020-03-21
@@ -135,7 +151,7 @@
 ## v2.4.2 - 2019-12-17
 
 - added striker payload validation for jobs
-- added support for SerializerRegistryInterface for spiral/jobs 
+- added support for SerializerRegistryInterface for spiral/jobs
 
 ## v2.4.1 - 2019-12-10
 
@@ -210,7 +226,7 @@
 ## v2.2.1 - 2019-10-28
 
 - the ORM schema can be pre-heated automatically
-- ability to create injectors to interfaces 
+- ability to create injectors to interfaces
 
 ## v2.2.0 - 2019-10-24
 
@@ -236,7 +252,7 @@
 
 ## v2.0.19 - 2019-09-16
 
-- typo fix: `JsonPayloadBootload` to `JsonPayloadParserBootloader` 
+- typo fix: `JsonPayloadBootload` to `JsonPayloadParserBootloader`
 
 ## v2.0.18 - 2019-09-16
 
@@ -272,7 +288,7 @@
 ## v2.0.13 - 2019-07-29
 
 - DatabaseTable command has been modified to display composite FKs
-- added ability to configure worker relay using ENV RR_WORKER by @myavchik 
+- added ability to configure worker relay using ENV RR_WORKER by @myavchik
 - automatically configure worker based on rr relay settings
 
 ## v2.0.12 - 2019-07-16
@@ -412,104 +428,104 @@
 ## 0.9.1 - 2017-02-05
 
 **Encrypter**
-  * Proper exception when encryption key is invalid
+* Proper exception when encryption key is invalid
 
- **Session**
-  * Session does not force session id in cookie when session not started
+**Session**
+* Session does not force session id in cookie when session not started
 
 ## 0.9.0 - 2017-02-05
 
 **Framework**
-  * Dropped support of PHP5+
-  * Added secure session implementation
-  * Code coverage improvements
-  * Twig updated to 2.0 branch
-  * PHPUnit updated to 5.0 branch
-  * Components split into separate repositories
-  * Symfony dependencies updated to 3.0 branch
-  * added `bind()` function to specify IoC dependencies in configs
-  * ViewSource class added into views
+* Dropped support of PHP5+
+* Added secure session implementation
+* Code coverage improvements
+* Twig updated to 2.0 branch
+* PHPUnit updated to 5.0 branch
+* Components split into separate repositories
+* Symfony dependencies updated to 3.0 branch
+* added `bind()` function to specify IoC dependencies in configs
+* ViewSource class added into views
 
- **Common**
-  * Dropped support of PHP5+
-  * Code coverage improvements
-  * Cache component removed (replaced with PSR-16)
-  * Views component moved to Framework bundle
-  * Validation component moved to Framework bundle
-  * Translation component moved to Framework bundle
-  * Encryption component moved to Framework bundle
-  * Migrations component moved in
+**Common**
+* Dropped support of PHP5+
+* Code coverage improvements
+* Cache component removed (replaced with PSR-16)
+* Views component moved to Framework bundle
+* Validation component moved to Framework bundle
+* Translation component moved to Framework bundle
+* Encryption component moved to Framework bundle
+* Migrations component moved in
     * Automatic migration generation is now part of Migration component
-  * Security component moved in
-  * Monolog dependency removed
-  * PHPUnit updated to 5.0 branch
-  * Symfony dependencies updated to 3.0 branch
-  * Schema definitions moved to array constants instead of default property values
-  * Simplified PaginatorInterface
-  * Reactor component moved in
-  * Debugger (log manager) component removed 
-  * Improved implementation of Tokenizer component
-  * Lazy wire declaration for FactoryInterface
+* Security component moved in
+* Monolog dependency removed
+* PHPUnit updated to 5.0 branch
+* Symfony dependencies updated to 3.0 branch
+* Schema definitions moved to array constants instead of default property values
+* Simplified PaginatorInterface
+* Reactor component moved in
+* Debugger (log manager) component removed
+* Improved implementation of Tokenizer component
+* Lazy wire declaration for FactoryInterface
 
- **Core**
-  * ScoperInterface moved into Framework bundle
-  * Container now validates scalar agument types when supplied by user
+**Core**
+* ScoperInterface moved into Framework bundle
+* Container now validates scalar agument types when supplied by user
 
- **DBAL** 
-  * Improved polyfills for SQLServer
-  * Improved SQL injection prevention
-  * Improved timezone management
-  * Refactoring of DBAL schemas
-  * Bugfixes
+**DBAL**
+* Improved polyfills for SQLServer
+* Improved SQL injection prevention
+* Improved timezone management
+* Refactoring of DBAL schemas
+* Bugfixes
     * Unions with ordering in SQLServer
     * Invalid parameter handling for update queries with nested selection
-  * Pagination classes are immutable now
-  * Ability to use nested queries in JOIN statements
-  * on argument in join() methods is deprecated, use on() function directly
+* Pagination classes are immutable now
+* Ability to use nested queries in JOIN statements
+* on argument in join() methods is deprecated, use on() function directly
 
- **Models**
-  * Removed features
+**Models**
+* Removed features
     * Embedded validations
     * Magic getter and setter methods via __call()
-  * setValue and packValue methods added
-  * "fields" property is now private
-  * SolidableTrait is now part of models
- **ORM**
-  * Refactoring of SchemaBuilder
-  * RecordSelector does not extend SelectQuery anymore
-  * Transactional (UnitOfWork) support
-  * Improvements in memory mapping
-  * Improvements in tree operations (save)
-  * Removed features
+* setValue and packValue methods added
+* "fields" property is now private
+* SolidableTrait is now part of models
+  **ORM**
+* Refactoring of SchemaBuilder
+* RecordSelector does not extend SelectQuery anymore
+* Transactional (UnitOfWork) support
+* Improvements in memory mapping
+* Improvements in tree operations (save)
+* Removed features
     * ActiveRecord thought direct table communication
     * MutableNumber accessor
     * Validations
-  * Bugfixes
+* Bugfixes
     * ManyToMany relations to non-saved records
     * BelongsToRelation to non-saved records
-  * Definition of morphed relations must be explicit now
-  * All ORM entities MUST have proper primary key now
-  * Ability to define custom column types in combination with accessors
-  * Relation loaders and schemas are immutable now
-  * Memory scope are optional now
-  * Record does not have "source" method by default now (see SourceTrait)
-  * Optimizations in load method with "using" option
-  * Added late bindings (locate outer record based on Interface or role name)
-  * Added detach() method into HasMany relation
-    
+* Definition of morphed relations must be explicit now
+* All ORM entities MUST have proper primary key now
+* Ability to define custom column types in combination with accessors
+* Relation loaders and schemas are immutable now
+* Memory scope are optional now
+* Record does not have "source" method by default now (see SourceTrait)
+* Optimizations in load method with "using" option
+* Added late bindings (locate outer record based on Interface or role name)
+* Added detach() method into HasMany relation
+
 **Stempler**
-  * StemplerLoader synced with Twig abstraction, StemplerSource introduced
-  * SourceContext (twig like) have been added
-  
+* StemplerLoader synced with Twig abstraction, StemplerSource introduced
+* SourceContext (twig like) have been added
+
 **ODM**
-   * Moved to latest PHP7 mongo drivers
-   * Removed features
-     * Validations
-   * Removed parent document reference in compositions
-   * Scalar array split into multiple versions
-   * CompositableInterface improved
-   * Document does not have "source" method by default now (see SourceTrait)
-   
+* Moved to latest PHP7 mongo drivers
+* Removed features
+    * Validations
+* Removed parent document reference in compositions
+* Scalar array split into multiple versions
+* CompositableInterface improved
+* Document does not have "source" method by default now (see SourceTrait)
+
 **Storage**
-   * Improved implementation of RackspaceServer
-   * Added GridFS server support
+* Improved implementation of RackspaceServer
+* Added GridFS server support
