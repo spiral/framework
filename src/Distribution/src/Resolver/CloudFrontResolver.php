@@ -66,11 +66,7 @@ class CloudFrontResolver extends ExpirationAwareResolver
         $date = $this->getExpirationDateTime($expiration);
         $url = $this->signer->getSignedUrl($this->createUrl($file), $date->getTimestamp());
 
-        return $this->factory->createUri()
-            ->withScheme('https')
-            ->withHost($this->domain)
-            ->withPath($url)
-        ;
+        return $this->factory->createUri($url);
     }
 
     /**
@@ -91,6 +87,6 @@ class CloudFrontResolver extends ExpirationAwareResolver
      */
     private function createUrl(string $file): string
     {
-        return \sprintf('rtmp://%s/%s', $this->domain, \trim($file, '/'));
+        return \sprintf('https://%s/%s', $this->domain, \trim($file, '/'));
     }
 }
