@@ -302,7 +302,7 @@ final class Container implements
      * (will be constructed only once), function array or Closure (executed only once call).
      *
      * @param string $alias
-     * @param string|array|callable $resolver
+     * @param object|string|array|callable $resolver
      */
     public function bindSingleton(string $alias, $resolver): void
     {
