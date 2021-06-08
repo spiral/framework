@@ -24,7 +24,7 @@ trait HelpersTrait
      * OutputInterface is the interface implemented by all Output classes. Only exists when command
      * are being executed.
      *
-     * @var OutputInterface
+     * @var OutputInterface|null
      */
     protected $output;
 
@@ -32,7 +32,7 @@ trait HelpersTrait
      * InputInterface is the interface implemented by all input classes. Only exists when command
      * are being executed.
      *
-     * @var InputInterface
+     * @var InputInterface|null
      */
     protected $input;
 
