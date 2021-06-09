@@ -41,7 +41,7 @@ abstract class Command extends SymfonyCommand
     // getArguments() method.
     protected const ARGUMENTS = [];
 
-    /** @var Container */
+    /** @var Container|null */
     protected $container;
 
     /**
