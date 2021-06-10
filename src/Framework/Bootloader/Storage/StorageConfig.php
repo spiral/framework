@@ -192,7 +192,7 @@ class StorageConfig
                 $server['token'] ?? null,
                 $server['expires'] ?? null
             ),
-        ];
+        ] + ($server['options'] ?? []);
 
         $name = $bucket['bucket'] ?? $server['bucket'];
         $visibility = $bucket['visibility'] ?? $server['bucket'] ?? Visibility::VISIBILITY_PUBLIC;
