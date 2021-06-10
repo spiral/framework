@@ -36,6 +36,20 @@ class IntegrationTest extends TestCase
         $this->assertStringContainsString('method', $r->getBody()->__toString());
     }
 
+    public function testRoute3(): void
+    {
+        $r = $this->get('/page/test');
+
+        $this->assertSame('page-test', $r->getBody()->__toString());
+    }
+
+    public function testRoute4(): void
+    {
+        $r = $this->get('/page/about');
+
+        $this->assertSame('about', $r->getBody()->__toString());
+    }
+
     public function get(
         $uri,
         array $query = [],
