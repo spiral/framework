@@ -24,9 +24,14 @@ class SerializerTest extends TestCase
         $mail->setReplyTo('admin@spiral.dev');
         $mail->setCC('admin@google.com');
         $mail->setBCC('admin2@google.com');
+        $mail->setOptions(['foo' => 'bar']);
 
         $data = MessageSerializer::pack($mail);
 
+        $this->assertSame(
+            ['subject', 'data', 'to', 'cc', 'bcc', 'from', 'replyTo', 'options'],
+            array_keys($data)
+        );
         $this->assertEquals($mail, MessageSerializer::unpack($data));
     }
 }
