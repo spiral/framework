@@ -24,7 +24,7 @@
         "psr/http-message": "^1.0",
         "psr/http-factory": "^1.0",
         "psr/http-server-middleware": "^1.0",
-        "symfony/polyfill-php80": "^1.18"
+        "symfony/polyfill-php80": "^1.22"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0",
