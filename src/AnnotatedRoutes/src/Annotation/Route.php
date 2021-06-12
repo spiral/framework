@@ -62,4 +62,10 @@ final class Route
      * @var array
      */
     public $middleware = [];
+
+    /**
+     * @Attribute(name="priority", type="int")
+     * @var int
+     */
+    public $priority = 0;
 }

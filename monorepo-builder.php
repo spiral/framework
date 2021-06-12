@@ -87,7 +87,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'mockery/mockery'           => '^1.3',
             'spiral/code-style'         => '^1.0',
             'spiral/database'           => '^2.7.3',
-            'spiral/migrations'         => '^2.1',
+            'spiral/migrations'         => '^2.2',
             'spiral/roadrunner'         => '^1.9.2',
             'spiral/php-grpc'           => '^1.4',
             'spiral/jobs'               => '^2.2',
