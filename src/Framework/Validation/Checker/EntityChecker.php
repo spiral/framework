@@ -46,9 +46,9 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
             return $repository->findByPK($value) !== null;
         }
 
-        if ($ignoreCase && is_string($value) && $repository instanceof Repository) {
+        if ($ignoreCase && $repository instanceof Repository) {
             return $this
-                ->getCaseInsensitiveSelect($repository, $field, $value)
+                ->addCaseInsensitiveWhere($repository->select(), $field, $value)
                 ->fetchOne() !== null;
         }
 
@@ -74,10 +74,14 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
 
         $repository = $this->orm->getRepository($role);
 
-        if ($ignoreCase && is_string($value) && $repository instanceof Repository) {
-            return $this
-                ->getCaseInsensitiveSelect($repository, $field, $value)
-                ->fetchOne() === null;
+        if ($ignoreCase && $repository instanceof Repository) {
+            $select = $repository->select();
+
+            foreach ($values as $field => $fieldValue) {
+                $this->addCaseInsensitiveWhere($select, $field, $fieldValue);
+            }
+
+            return $select->fetchOne() === null;
         }
 
         return $repository->findOne($values) === null;
@@ -122,14 +126,17 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
     }
 
     /**
-     * @param Repository $repository
+     * @param Select $select
      * @param string $field
-     * @param string $value
+     * @param mixed $value
      * @return Select
      */
-    private function getCaseInsensitiveSelect(Repository $repository, string $field, string $value): Select
+    private function addCaseInsensitiveWhere(Select $select, string $field, $value): Select
     {
-        $select = $repository->select();
+        if (!is_string($value)) {
+            return $select->where($field, $value);
+        }
+
         $queryBuilder = $select->getBuilder();
 
         return $select
