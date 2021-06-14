@@ -91,7 +91,9 @@ class EntityCheckerTest extends BaseTest
         $transaction->run();
 
         $this->assertFalse($this->isUnique('vaLeNtIN', 'name', [], null, [], true));
+        $this->assertFalse($this->isUnique('1', 'id', ['name' => 'valEntIn'], null, ['name'], true));
         $this->assertTrue($this->isUnique('vaLeNtIN', 'name'));
+        $this->assertTrue($this->isUnique('1', 'id', ['name' => 'valEntIn'], null, ['name']));
     }
 
     /**
