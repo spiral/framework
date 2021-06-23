@@ -12,8 +12,11 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Storage;
 
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Exception\EnvironmentException;
+use Spiral\Bootloader\Distribution\DistributionBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
+use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Storage\Storage;
 use Spiral\Storage\StorageInterface;
 use Spiral\Storage\Bucket;
@@ -36,15 +39,27 @@ class StorageBootloader extends Bootloader
 
         $app->bindInjector(StorageConfig::class, ConfiguratorInterface::class);
 
-        $app->bindSingleton(StorageInterface::class, static function (StorageConfig $config, CdnInterface $cdn) {
+        $app->bindSingleton(StorageInterface::class, static function (StorageConfig $config, Container $app) {
             $manager = new Storage($config->getDefaultBucket());
 
             $distributions = $config->getDistributions();
 
             foreach ($config->getAdapters() as $name => $adapter) {
-                $resolver = isset($distributions[$name])
-                    ? $cdn->resolver($distributions[$name])
-                    : null;
+                $resolver = null;
+
+                if (isset($distributions[$name])) {
+                    try {
+                        $cdn = $app->make(CdnInterface::class);
+                    } catch (NotFoundException $e) {
+                        $message = 'Unable to create distribution for bucket "%s". '
+                            . 'Please make sure that bootloader %s is added in your application';
+                        $message = \sprintf($message, $name, DistributionBootloader::class);
+
+                        throw new EnvironmentException($message, (int)$e->getCode(), $e);
+                    }
+
+                    $resolver = $cdn->resolver($distributions[$name]);
+                }
 
                 $manager->add($name, Bucket::fromAdapter($adapter, $name, $resolver));
             }
