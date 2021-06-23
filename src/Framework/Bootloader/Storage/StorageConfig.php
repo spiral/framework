@@ -22,6 +22,7 @@ use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 use Spiral\Config\Exception\InvalidArgumentException;
+use Spiral\Core\Exception\ConfigException;
 use Spiral\Storage\Storage;
 use Spiral\Storage\Visibility;
 
@@ -164,10 +165,10 @@ class StorageConfig
                 return $this->createLocalAdapter($serverName, $bucket, $server);
 
             case 's3':
-                return $this->createS3Adapter($bucket, $server, false);
+                return $this->createS3Adapter($serverName, $bucket, $server, false);
 
             case 's3-async':
-                return $this->createS3Adapter($bucket, $server, true);
+                return $this->createS3Adapter($serverName, $bucket, $server, true);
 
             default:
                 return $this->createCustomAdapter($serverName, $server);
@@ -175,13 +176,21 @@ class StorageConfig
     }
 
     /**
+     * @param string $serverName
      * @param array $bucket
      * @param array $server
      * @param bool $async
      * @return FilesystemAdapter
      */
-    private function createS3Adapter(array $bucket, array $server, bool $async): FilesystemAdapter
+    private function createS3Adapter(string $serverName, array $bucket, array $server, bool $async): FilesystemAdapter
     {
+        if (! \class_exists(Credentials::class)) {
+            throw new ConfigException(
+                'Can not create AWS credentials while creating "' . $serverName . '" server. '
+                . 'Perhaps you forgot to install the "league/flysystem-aws-s3-v3" package?'
+            );
+        }
+
         $config = [
             'version'     => $server['version'] ?? 'latest',
             'region'      => $bucket['region'] ?? $server['region'] ?? null,
