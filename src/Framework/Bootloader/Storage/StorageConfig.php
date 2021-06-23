@@ -184,7 +184,7 @@ class StorageConfig
      */
     private function createS3Adapter(string $serverName, array $bucket, array $server, bool $async): FilesystemAdapter
     {
-        if (! \class_exists(Credentials::class)) {
+        if (!\class_exists(Credentials::class)) {
             throw new ConfigException(
                 'Can not create AWS credentials while creating "' . $serverName . '" server. '
                 . 'Perhaps you forgot to install the "league/flysystem-aws-s3-v3" package?'
