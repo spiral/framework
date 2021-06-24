@@ -206,7 +206,7 @@ class DistributionConfig
         $client = new S3Client([
             'version'     => $config['version'] ?? 'latest',
             'region'      => $config['region'],
-            'endpoint'    => $server['endpoint'] ?? null,
+            'endpoint'    => $config['endpoint'] ?? null,
             'credentials' => new Credentials(
                 $config['key'],
                 $config['secret'],
