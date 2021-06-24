@@ -27,7 +27,7 @@ trait UriResolvableTrait
     /**
      * {@see UriResolvableInterface::toUri()}
      */
-    public function toUri(): UriInterface
+    public function toUri(...$args): UriInterface
     {
         $resolver = $this->getResolver();
 
@@ -35,15 +35,15 @@ trait UriResolvableTrait
             throw new \LogicException('Can not generate public url: File not accessible by HTTP');
         }
 
-        return $this->toUriFrom($resolver);
+        return $this->toUriFrom($resolver, ...$args);
     }
 
     /**
      * {@see UriResolvableInterface::toUriFrom()}
      */
-    public function toUriFrom(UriResolverInterface $resolver): UriInterface
+    public function toUriFrom(UriResolverInterface $resolver, ...$args): UriInterface
     {
-        return $resolver->resolve($this->getPathname());
+        return $resolver->resolve($this->getPathname(), ...$args);
     }
 
     /**
