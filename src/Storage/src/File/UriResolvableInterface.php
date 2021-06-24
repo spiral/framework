@@ -17,13 +17,15 @@ use Spiral\Distribution\UriResolverInterface;
 interface UriResolvableInterface extends EntryInterface
 {
     /**
+     * @param mixed ...$args An additional uri arguments
      * @return UriInterface
      */
-    public function toUri(): UriInterface;
+    public function toUri(...$args): UriInterface;
 
     /**
      * @param UriResolverInterface $resolver
+     * @param mixed ...$args An additional uri arguments
      * @return UriInterface
      */
-    public function toUriFrom(UriResolverInterface $resolver): UriInterface;
+    public function toUriFrom(UriResolverInterface $resolver, ...$args): UriInterface;
 }
