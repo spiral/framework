@@ -61,6 +61,29 @@ class HeaderTransportTest extends TestCase
         self::assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
     }
 
+    public function testHeaderTokenWithCustomValueFormat(): void
+    {
+        $http = $this->getCore(new HeaderTransport('Authorization', 'Bearer %s'));
+
+        $http->setHandler(
+            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+                if ($request->getAttribute('authContext')->getToken() === null) {
+                    echo 'no token';
+                } else {
+                    echo $request->getAttribute('authContext')->getToken()->getID();
+                    echo ':';
+                    echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
+                }
+            }
+        );
+
+        $response = $http->handle(new ServerRequest([], [], null, 'GET', 'php://input', [
+            'Authorization' => 'Bearer good-token'
+        ]));
+
+        self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+        self::assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
+    }
     public function testBadHeaderToken(): void
     {
         $http = $this->getCore(new HeaderTransport());
@@ -118,6 +141,23 @@ class HeaderTransportTest extends TestCase
         $response = $http->handle(new ServerRequest([], [], null, 'GET', 'php://input', []));
 
         self::assertSame(['new-token'], $response->getHeader('X-Auth-Token'));
+    }
+
+    public function testCommitTokenWithCustomValueFormat(): void
+    {
+        $http = $this->getCore(new HeaderTransport('Authorization', 'Bearer %s'));
+
+        $http->setHandler(
+            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+                $request->getAttribute('authContext')->start(
+                    new TestAuthHttpToken('new-token', ['ok' => 1])
+                );
+            }
+        );
+
+        $response = $http->handle(new ServerRequest([], [], null, 'GET', 'php://input', []));
+
+        self::assertSame(['Bearer new-token'], $response->getHeader('Authorization'));
     }
 
     protected function getCore(HttpTransportInterface $transport): Http
