@@ -23,12 +23,17 @@ final class HeaderTransport implements HttpTransportInterface
     /** @var string */
     private $header;
 
+    /** @var string */
+    private $valueFormat;
+
     /**
      * @param string $header
+     * @param string $valueFormat
      */
-    public function __construct(string $header = 'X-Auth-Token')
+    public function __construct(string $header = 'X-Auth-Token', string $valueFormat = '%s')
     {
         $this->header = $header;
+        $this->valueFormat = $valueFormat;
     }
 
     /**
@@ -37,7 +42,7 @@ final class HeaderTransport implements HttpTransportInterface
     public function fetchToken(Request $request): ?string
     {
         if ($request->hasHeader($this->header)) {
-            return $request->getHeaderLine($this->header);
+            return $this->extractToken($request);
         }
 
         return null;
@@ -52,11 +57,11 @@ final class HeaderTransport implements HttpTransportInterface
         string $tokenID,
         \DateTimeInterface $expiresAt = null
     ): Response {
-        if ($request->hasHeader($this->header) && $request->getHeaderLine($this->header) === $tokenID) {
+        if ($request->hasHeader($this->header) && $this->extractToken($request) === $tokenID) {
             return $response;
         }
 
-        return $response->withAddedHeader($this->header, $tokenID);
+        return $response->withAddedHeader($this->header, sprintf($this->valueFormat, $tokenID));
     }
 
     /**
@@ -65,5 +70,22 @@ final class HeaderTransport implements HttpTransportInterface
     public function removeToken(Request $request, Response $response, string $tokenID): Response
     {
         return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @return null|string
+     */
+    private function extractToken(Request $request): ?string
+    {
+        $headerLine = $request->getHeaderLine($this->header);
+
+        if ($this->valueFormat !== '%s') {
+            [$token] = sscanf($headerLine, $this->valueFormat);
+
+            return $token !== null ? (string) $token : null;
+        }
+
+        return $headerLine;
     }
 }
