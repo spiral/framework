@@ -213,7 +213,7 @@ class DistributionConfig
                 $config['token'] ?? null,
                 $config['expires'] ?? null
             ),
-        ]+ ($config['options'] ?? []));
+        ] + ($config['options'] ?? []));
 
         return new S3SignedResolver($client, $config['bucket']);
     }
