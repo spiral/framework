@@ -5,6 +5,7 @@
 - **High Impact Changes**
 - **Medium Impact Changes**
 - **Other Features**
+    - [spiral/validation] Add array::count, array::range, array::shorter and array::longer rules (#435)
 - **Bug Fixes**
 
 ## v2.8.0 - 2021-06-03
