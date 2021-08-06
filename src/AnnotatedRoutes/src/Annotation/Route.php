@@ -28,10 +28,10 @@ final class Route
     public $route;
 
     /**
-     * @Attribute(name="name", type="string", required=true)
+     * @Attribute(name="name", type="string")
      * @var string
      */
-    public $name;
+    public $name = null;
 
     /**
      * @Attribute(name="verbs", type="mixed", required=true)

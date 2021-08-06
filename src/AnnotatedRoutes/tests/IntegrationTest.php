@@ -50,6 +50,18 @@ class IntegrationTest extends TestCase
         $this->assertSame('about', $r->getBody()->__toString());
     }
 
+    public function testRoutesWithoutNames(): void
+    {
+        $r = $this->get('/nameless');
+        $this->assertSame('index', $r->getBody()->__toString());
+
+        $r = $this->post('/nameless');
+        $this->assertSame('method', $r->getBody()->__toString());
+
+        $r = $this->get('/nameless/route');
+        $this->assertSame('route', $r->getBody()->__toString());
+    }
+
     public function get(
         $uri,
         array $query = [],
