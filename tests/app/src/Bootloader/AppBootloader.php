@@ -155,6 +155,64 @@ class AppBootloader extends DomainBootloader
                 new Interceptor\Append('six'),
             ]
         );
+
+        $this->registerInterceptedRoute(
+            $router,
+            'withoutAttribute',
+            [
+                new Interceptor\Append('one'),
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+
+        $this->registerInterceptedRoute(
+            $router,
+            'withAttribute',
+            [
+                $pipelineInterceptor,
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'mixAttribute',
+            [
+                new Interceptor\Append('four'),
+                new Interceptor\Append('five'),
+                $pipelineInterceptor,
+                new Interceptor\Append('six'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'dupAttribute',
+            [
+                $pipelineInterceptor,
+                new Interceptor\Append('one'),
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'skipAttribute',
+            [
+                new Interceptor\Append('one'),
+                $pipelineInterceptor,
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'firstAttribute',
+            [
+                $pipelineInterceptor,
+                new Interceptor\Append('four'),
+                new Interceptor\Append('five'),
+                new Interceptor\Append('six'),
+            ]
+        );
     }
 
     private function registerInterceptedRoute(RouterInterface $router, string $action, array $interceptors): void
