@@ -11,19 +11,27 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
-use Doctrine\Common\Annotations\Annotation\Target;
+use Attribute;
+use Doctrine\Common\Annotations\Annotation;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
- * @Annotation
- * @Target("CLASS")
- * @Attributes({
- *      @Attribute("property", type="string", required=true),
+ * @Annotation()
+ * @Annotation\Target("CLASS")
+ * @Annotation\Attributes({
+ *      @Annotation\Attribute("property", type="string", required=true),
  * })
+ * @NamedArgumentConstructor()
  */
+#[Attribute(Attribute::TARGET_CLASS)]
+#[NamedArgumentConstructor()]
 class Prototyped
 {
     /** @var string */
     public $property;
+
+    public function __construct(string $property)
+    {
+        $this->property = $property;
+    }
 }
