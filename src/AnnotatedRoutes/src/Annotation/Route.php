@@ -33,8 +33,8 @@ final class Route
     public $route;
 
     /**
-     * @Annotation\Attribute(name="name", type="string", required=true)
-     * @var string
+     * @Attribute(name="name", type="string")
+     * @var null|string
      */
     public $name = null;
 
@@ -79,7 +79,7 @@ final class Route
      */
     public function __construct(
         string $route,
-        string $name,
+        string $name = null,
         $methods = \Spiral\Router\Route::VERBS,
         array $defaults = [],
         string $group = self::DEFAULT_GROUP,
