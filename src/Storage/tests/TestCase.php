@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 use Spiral\Storage\Bucket;
 use Spiral\Storage\BucketInterface;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
     /**
      * @var string
