@@ -11,8 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\DataGrid\Interceptor;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Psr\Container\ContainerInterface;
+use Spiral\Attributes\Factory;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\DataGrid\Annotation\DataGrid;
@@ -36,6 +37,9 @@ final class GridInterceptor implements CoreInterceptorInterface
     /** @var GridFactory */
     private $gridFactory;
 
+    /** @var ReaderInterface */
+    private $reader;
+
     /** @var array */
     private $cache = [];
 
@@ -47,11 +51,13 @@ final class GridInterceptor implements CoreInterceptorInterface
     public function __construct(
         GridResponseInterface $response,
         ContainerInterface $container,
-        GridFactory $gridFactory
+        GridFactory $gridFactory,
+        ReaderInterface $reader = null
     ) {
         $this->response = $response;
         $this->container = $container;
         $this->gridFactory = $gridFactory;
+        $this->reader = $reader ?? (new Factory())->create();
     }
 
     /**
@@ -104,10 +110,8 @@ final class GridInterceptor implements CoreInterceptorInterface
             return null;
         }
 
-        $reader = new AnnotationReader();
-
-        /** @var DataGrid $dataGrid */
-        $dataGrid = $reader->getMethodAnnotation($method, DataGrid::class);
+        /** @var null|DataGrid $dataGrid */
+        $dataGrid = $this->reader->firstFunctionMetadata($method, DataGrid::class);
         if ($dataGrid === null) {
             return null;
         }

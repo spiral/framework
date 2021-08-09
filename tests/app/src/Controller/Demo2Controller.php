@@ -27,6 +27,12 @@ class Demo2Controller
         return 'ok';
     }
 
+    #[Guarded('do')]
+    public function do1Attribute()
+    {
+        return 'ok';
+    }
+
     /**
      * @Guarded("do", else="notFound")
      */

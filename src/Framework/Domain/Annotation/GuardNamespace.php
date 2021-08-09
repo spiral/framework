@@ -11,18 +11,27 @@ declare(strict_types=1);
 
 namespace Spiral\Domain\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Target;
+use Attribute;
+use Doctrine\Common\Annotations\Annotation;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
- * @Annotation
- * @Target({"CLASS"})
+ * @Annotation()
+ * @Annotation\Target({"CLASS"})
+ * @NamedArgumentConstructor()
  */
+#[Attribute(Attribute::TARGET_CLASS)]
+#[NamedArgumentConstructor()]
 final class GuardNamespace
 {
     /**
-     * @Attribute(name="namespace", type="string", required=true)
+     * @Annotation\Attribute(name="namespace", type="string", required=true)
      * @type string
      */
     public $namespace;
+
+    public function __construct(string $namespace)
+    {
+        $this->namespace = $namespace;
+    }
 }

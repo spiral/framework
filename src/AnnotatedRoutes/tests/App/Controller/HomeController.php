@@ -30,4 +30,10 @@ class HomeController
     {
         return 'method';
     }
+
+    #[Route(route: '/attribute', name: 'attribute', methods: 'GET', group: 'test')]
+    public function attribute()
+    {
+        return 'attribute';
+    }
 }

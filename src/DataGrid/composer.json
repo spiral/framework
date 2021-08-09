@@ -20,6 +20,7 @@
     ],
     "require": {
         "php": ">=7.2",
+        "spiral/attributes": "^2.9",
         "symfony/polyfill-php73": "^1.22"
     },
     "require-dev": {

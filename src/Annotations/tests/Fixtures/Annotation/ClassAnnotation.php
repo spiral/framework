@@ -11,11 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Annotations\Fixtures\Annotation;
 
+use Attribute;
+
 /**
  * @Annotation
  */
-class Another
+#[Attribute(Attribute::TARGET_CLASS)]
+class ClassAnnotation
 {
     /** @var string */
-    public $id;
+    public $value;
 }

@@ -4,7 +4,7 @@
  * Spiral Framework.
  *
  * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Vladislav Gorenkin (vladgor)
  */
 
 declare(strict_types=1);
@@ -15,17 +15,13 @@ use Spiral\Tests\Annotations\Fixtures\Annotation\PropertyAnnotation;
 use Spiral\Tests\Annotations\Fixtures\Annotation\MethodAnnotation;
 use Spiral\Tests\Annotations\Fixtures\Annotation\ClassAnnotation;
 
-/**
- * @ClassAnnotation(value="abc")
- */
-class TestClass
+#[ClassAnnotation(value: 'abc')]
+class AttributeTestClass
 {
-    /** @PropertyAnnotation(id="123") */
+    #[PropertyAnnotation(id: '123')]
     public $name;
 
-    /**
-     * @MethodAnnotation(path="/")
-     */
+    #[MethodAnnotation(path: '/')]
     public function testMethod()
     {
     }

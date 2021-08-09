@@ -74,7 +74,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ],
         'require'      => [
-            'laminas/laminas-diactoros' => '^2.6',
+            'laminas/laminas-diactoros' => '^2.4',
             'spiral/composer-publish-plugin' => '^1.0',
         ],
         'autoload-dev' => [
