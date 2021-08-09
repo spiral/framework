@@ -203,7 +203,7 @@ class DistributionConfig
             throw $this->invalidConfigKey($name, 'expires', 'positive int (unix timestamp)');
         }
 
-        $client = new S3Client([
+        $s3Options = [
             'version'     => $config['version'] ?? 'latest',
             'region'      => $config['region'],
             'endpoint'    => $config['endpoint'] ?? null,
@@ -213,7 +213,11 @@ class DistributionConfig
                 $config['token'] ?? null,
                 $config['expires'] ?? null
             ),
-        ]+ ($config['options'] ?? []));
+        ];
+
+        $s3Options += ($config['options'] ?? []);
+
+        $client = new S3Client($s3Options);
 
         return new S3SignedResolver($client, $config['bucket']);
     }

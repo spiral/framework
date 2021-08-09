@@ -71,7 +71,7 @@ final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
                 return $duration;
 
             case $duration instanceof \DateTimeInterface:
-                return $duration->diff($this->factory->now());
+                return $this->factory->now()->diff($duration);
 
             case \is_string($duration):
                 return new \DateInterval($duration);

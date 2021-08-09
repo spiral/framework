@@ -72,11 +72,9 @@ class StaticResolver extends UriResolver
      */
     private function suffix(string $file): string
     {
-        $prefix = $this->host->getPath();
+        $prefix = \trim($this->host->getPath(), self::URI_PATH_DELIMITER);
+        $file = \trim($file, self::URI_PATH_DELIMITER);
 
-        return \implode(self::URI_PATH_DELIMITER, [
-            \trim($prefix, self::URI_PATH_DELIMITER),
-            \trim($file, self::URI_PATH_DELIMITER),
-        ]);
+        return self::URI_PATH_DELIMITER . ('' === $prefix ? '' : $prefix . self::URI_PATH_DELIMITER) . $file;
     }
 }

@@ -34,7 +34,7 @@ the PHP code of your application stays in memory permanently (anti-memory leak t
 ## Features
 
 - Battle-tested since 2013
-- [Lightning fast full-stack PHP framework](https://www.techempower.com/benchmarks/#section=test&runid=ba6c12a4-d54d-4a9e-825b-abde0ef6d6a2&hw=ph&test=fortune&l=zg24n3-f&c=6&a=2&o=e)
+- [Lightning fast full-stack PHP framework](https://www.techempower.com/benchmarks/#section=data-r0&hw=ph&test=fortune&l=yw2xvj-73&c=6&d=1g&a=2&o=e)
 - PSR-{2,3,4,6,7,11,15,16,17} compliant
 - Powerful [application server](https://roadrunner.dev/) and resident memory application kernel
 - Native support of queue (AMQP, SQS, Beanstalk) and background PHP workers
