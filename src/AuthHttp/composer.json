@@ -25,7 +25,7 @@
         "spiral/cookies": "^2.9",
         "spiral/http": "^2.9",
         "spiral/debug": "^2.9",
-        "laminas/laminas-diactoros": "^2.6"
+        "laminas/laminas-diactoros": "^2.4"
     },
     "autoload": {
         "psr-4": {
