@@ -42,8 +42,9 @@ final class RouteLocator
         foreach ($routes as $match) {
             /** @var RouteAnnotation $route */
             $route = $match->getAnnotation();
+            $routeName = $route->name ?? $this->generateName($route);
 
-            $result[$route->name] = [
+            $result[$routeName] = [
                 'pattern'    => $route->route,
                 'controller' => $match->getClass()->getName(),
                 'action'     => $match->getMethod()->getName(),
@@ -55,5 +56,20 @@ final class RouteLocator
         }
 
         return $result;
+    }
+
+    /**
+     * Generates route name based on declared methods and route.
+     *
+     * @param RouteAnnotation $route
+     * @return string
+     */
+    private function generateName(RouteAnnotation $route): string
+    {
+        $methods = is_array($route->methods)
+            ? implode(',', $route->methods)
+            : $route->methods;
+
+        return mb_strtolower(sprintf('%s:%s', $methods, $route->route));
     }
 }
