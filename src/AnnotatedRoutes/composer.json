@@ -17,7 +17,7 @@
     "require": {
         "php": ">=7.2",
         "spiral/annotations": "^2.9",
-        "spiral/attributes": "^2.8",
+        "spiral/attributes": "^2.9",
         "spiral/router": "^2.9"
     },
     "require-dev": {
