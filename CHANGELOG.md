@@ -17,6 +17,9 @@
 - **High Impact Changes**
     - Added `league/flysystem: ^2.0` dependency.
 
+- **Medium Impact Changes**
+    - Modified `required` alias field validation from `notEmpty` to `notNull`
+
 - **Other Features**
     - Added basic RoadRunner 2.0 support (only HTTP)
     - [data-grid] Implement fragment/expression injections for DataGrid sorters (#400)

@@ -87,7 +87,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
                 'aliases'    => [
                     'notEmpty'   => 'type::notEmpty',
                     'notNull'    => 'type::notNull',
-                    'required'   => 'type::notEmpty',
+                    'required'   => 'type::notNull',
                     'datetime'   => 'type::datetime',
                     'timezone'   => 'type::timezone',
                     'bool'       => 'type::boolean',
