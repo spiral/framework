@@ -401,7 +401,7 @@ final class Container implements
      */
     protected function autowire(string $class, array $parameters, string $context = null)
     {
-        if (!\class_exists($class)) {
+        if (!\class_exists($class) && !isset($this->injectors[$class])) {
             throw new NotFoundException(\sprintf("Undefined class or binding '%s'", $class));
         }
 
