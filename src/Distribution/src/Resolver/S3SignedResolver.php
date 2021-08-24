@@ -33,13 +33,20 @@ class S3SignedResolver extends ExpirationAwareResolver
     private $bucket;
 
     /**
+     * @var string|null
+     */
+    private $prefix;
+
+    /**
      * @param S3ClientInterface $client
      * @param string $bucket
+     * @param string|null $prefix
      */
-    public function __construct(S3ClientInterface $client, string $bucket)
+    public function __construct(S3ClientInterface $client, string $bucket, string $prefix = null)
     {
         $this->client = $client;
         $this->bucket = $bucket;
+        $this->prefix = $prefix;
 
         parent::__construct();
     }
@@ -52,7 +59,7 @@ class S3SignedResolver extends ExpirationAwareResolver
      */
     public function resolve(string $file, $expiration = null): UriInterface
     {
-        $command = $this->createCommand($file);
+        $command = $this->createCommand($this->concat($file, $this->prefix));
 
         $request = $this->client->createPresignedRequest(
             $command,

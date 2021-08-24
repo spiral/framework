@@ -40,15 +40,22 @@ class CloudFrontResolver extends ExpirationAwareResolver
     private $factory;
 
     /**
+     * @var string|null
+     */
+    private $prefix;
+
+    /**
      * @param string $keyPairId
      * @param string $privateKey
      * @param string $domain
+     * @param string|null $prefix
      */
-    public function __construct(string $keyPairId, string $privateKey, string $domain)
+    public function __construct(string $keyPairId, string $privateKey, string $domain, string $prefix = null)
     {
         $this->assertCloudFrontAvailable();
 
         $this->domain = $domain;
+        $this->prefix = $prefix;
         $this->factory = new AmazonUriFactory();
         $this->signer = new UrlSigner($keyPairId, $privateKey);
 
@@ -91,6 +98,6 @@ class CloudFrontResolver extends ExpirationAwareResolver
      */
     private function createUrl(string $file): string
     {
-        return \sprintf('rtmp://%s/%s', $this->domain, \trim($file, '/'));
+        return \sprintf('https://%s/%s', $this->domain, $this->concat($file, $this->prefix));
     }
 }
