@@ -73,6 +73,9 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     /** @var ErrorMapper */
     private $errorMapper;
 
+    /** @var array */
+    private $mappings;
+
     /**
      * Filter constructor.
      *
@@ -88,6 +91,8 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         ErrorMapper $errorMapper
     ) {
         parent::__construct($data, $schema);
+
+        $this->mappings = $schema[FilterProvider::MAPPING] ?? [];
         $this->validator = $validator;
         $this->errorMapper = $errorMapper;
     }
@@ -196,16 +201,32 @@ abstract class Filter extends SchematicEntity implements FilterInterface
                 continue;
             }
 
-            if ($value instanceof FilterInterface && !$value->isValid()) {
-                $errors[$index] = $value->getErrors();
-                continue;
+            if ($value instanceof FilterInterface) {
+                $isOptional = $this->mappings[$index][FilterProvider::OPTIONAL] ?? false;
+
+                if ($isOptional && $this->getField($index) !== []) {
+                    continue;
+                }
+
+                if (!$value->isValid()) {
+                    $errors[$index] = $value->getErrors();
+                    continue;
+                }
             }
 
             //Array of nested entities for validation
             if (is_iterable($value)) {
                 foreach ($value as $nIndex => $nValue) {
-                    if ($nValue instanceof FilterInterface && !$nValue->isValid()) {
-                        $errors[$index][$nIndex] = $nValue->getErrors();
+                    if ($nValue instanceof FilterInterface) {
+                        $isOptional = $this->mappings[$index][FilterProvider::OPTIONAL] ?? false;
+
+                        if ($isOptional && $this->getField($nIndex) !== []) {
+                            continue;
+                        }
+
+                        if (!$nValue->isValid()) {
+                            $errors[$index][$nIndex] = $nValue->getErrors();
+                        }
                     }
                 }
             }
@@ -213,4 +234,6 @@ abstract class Filter extends SchematicEntity implements FilterInterface
 
         return $errors;
     }
+
+
 }
