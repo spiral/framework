@@ -234,6 +234,4 @@ abstract class Filter extends SchematicEntity implements FilterInterface
 
         return $errors;
     }
-
-
 }
