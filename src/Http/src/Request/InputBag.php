@@ -95,7 +95,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->has($offset);
     }
@@ -120,6 +120,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);

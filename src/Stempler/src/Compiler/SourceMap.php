@@ -17,7 +17,7 @@ use Spiral\Stempler\Loader\Source;
 /**
  * Stores and resolves offsets and line numbers between templates.
  */
-final class SourceMap implements \Serializable
+final class SourceMap
 {
     /** @var array */
     private $paths = [];
@@ -82,10 +82,18 @@ final class SourceMap implements \Serializable
      */
     public function serialize()
     {
-        return json_encode([
+        return json_encode($this->__serialize());
+    }
+
+    /**
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return [
             'paths' => $this->paths,
             'lines' => $this->lines,
-        ]);
+        ];
     }
 
     /**
@@ -93,8 +101,14 @@ final class SourceMap implements \Serializable
      */
     public function unserialize($serialized): void
     {
-        $data = json_decode($serialized, true);
+        $this->__unserialize(json_decode($serialized, true));
+    }
 
+    /**
+     * @param array $data
+     */
+    public function __unserialize(array $data): void
+    {
         $this->paths = $data['paths'];
         $this->lines = $data['lines'];
     }

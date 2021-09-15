@@ -103,7 +103,7 @@ final class DirectiveGrammar implements \IteratorAggregate
      *
      * @return \Generator|\Traversable
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         if ($this->tokens === []) {
             throw new \LogicException('Directive not parsed');
