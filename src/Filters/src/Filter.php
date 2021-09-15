@@ -235,10 +235,10 @@ abstract class Filter extends SchematicEntity implements FilterInterface
      * Returns {@see true} in case that children filter is optional
      * or {@see false} instead.
      *
-     * @param string $field
+     * @param string|int $field
      * @return bool
      */
-    private function isOptional(string $field): bool
+    private function isOptional($field): bool
     {
         return $this->mappings[$field][FilterProvider::OPTIONAL] ?? false;
     }
@@ -246,13 +246,13 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     /**
      * Returns {@see true} in case that value has been passed.
      *
-     * @param string $field
+     * @param string|int $field
      * @return bool
      * @throws EntityExceptionInterface
      */
-    private function hasBeenPassed(string $field): bool
+    private function hasBeenPassed($field): bool
     {
-        $value = $this->getField($field);
+        $value = $this->getField((string)$field);
 
         if ($value === null) {
             return false;
