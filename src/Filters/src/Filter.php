@@ -108,6 +108,18 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     }
 
     /**
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'valid'  => $this->isValid(),
+            'fields' => $this->getFields(),
+            'errors' => $this->getErrors(),
+        ];
+    }
+
+    /**
      * Force re-validation.
      */
     public function reset(): void
@@ -122,18 +134,6 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     {
         parent::setField($name, $value, $filter);
         $this->reset();
-    }
-
-    /**
-     * @return array
-     */
-    public function __debugInfo()
-    {
-        return [
-            'valid'  => $this->isValid(),
-            'fields' => $this->getFields(),
-            'errors' => $this->getErrors(),
-        ];
     }
 
     /**
@@ -170,6 +170,23 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function setContext($context): void
+    {
+        $this->validator = $this->validator->withContext($context);
+        $this->reset();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getContext()
+    {
+        return $this->validator->getContext();
+    }
+
+    /**
      * Validate inner entities.
      *
      * @param array $errors
@@ -185,11 +202,11 @@ abstract class Filter extends SchematicEntity implements FilterInterface
             }
 
             if ($value instanceof FilterInterface) {
-                if ($this->isOptional($index) && ! $this->hasBeenPassed($index)) {
+                if ($this->isOptional($index) && !$this->hasBeenPassed($index)) {
                     continue;
                 }
 
-                if (! $value->isValid()) {
+                if (!$value->isValid()) {
                     $errors[$index] = $value->getErrors();
                     continue;
                 }
@@ -199,11 +216,11 @@ abstract class Filter extends SchematicEntity implements FilterInterface
             if (is_iterable($value)) {
                 foreach ($value as $nIndex => $nValue) {
                     if ($nValue instanceof FilterInterface) {
-                        if ($this->isOptional($nIndex) && ! $this->hasBeenPassed($nIndex)) {
+                        if ($this->isOptional($nIndex) && !$this->hasBeenPassed($nIndex)) {
                             continue;
                         }
 
-                        if (! $nValue->isValid()) {
+                        if (!$nValue->isValid()) {
                             $errors[$index][$nIndex] = $nValue->getErrors();
                         }
                     }
@@ -246,22 +263,5 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         }
 
         return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setContext($context): void
-    {
-        $this->validator = $this->validator->withContext($context);
-        $this->reset();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getContext()
-    {
-        return $this->validator->getContext();
     }
 }
