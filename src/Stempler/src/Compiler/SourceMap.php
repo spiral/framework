@@ -29,6 +29,26 @@ final class SourceMap
     private $sourceCache = null;
 
     /**
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return [
+            'paths' => $this->paths,
+            'lines' => $this->lines,
+        ];
+    }
+
+    /**
+     * @param array $data
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->paths = $data['paths'];
+        $this->lines = $data['lines'];
+    }
+
+    /**
      * Get all template paths involved in final template.
      *
      * @return array
@@ -86,31 +106,11 @@ final class SourceMap
     }
 
     /**
-     * @return array
-     */
-    public function __serialize(): array
-    {
-        return [
-            'paths' => $this->paths,
-            'lines' => $this->lines,
-        ];
-    }
-
-    /**
      * @param string $serialized
      */
     public function unserialize($serialized): void
     {
         $this->__unserialize(json_decode($serialized, true));
-    }
-
-    /**
-     * @param array $data
-     */
-    public function __unserialize(array $data): void
-    {
-        $this->paths = $data['paths'];
-        $this->lines = $data['lines'];
     }
 
     /**
