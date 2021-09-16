@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader;
 
-use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Attributes\Factory;
 use Spiral\Attributes\ReaderInterface;
@@ -32,9 +32,9 @@ class AttributesBootloader extends Bootloader
                 $factory = $factory->withCache(
                     $container->get(CacheInterface::class)
                 );
-            } elseif ($container->has(CacheItemInterface::class)) {
+            } elseif ($container->has(CacheItemPoolInterface::class)) {
                 $factory = $factory->withCache(
-                    $container->get(CacheItemInterface::class)
+                    $container->get(CacheItemPoolInterface::class)
                 );
             }
 

@@ -191,6 +191,10 @@ class DistributionConfig
         }
 
         // Optional config options
+        if (!\is_string($config['prefix'] ?? '')) {
+            throw $this->invalidConfigKey($name, 'prefix', 'string or null');
+        }
+
         if (!\is_string($config['version'] ?? '')) {
             throw $this->invalidConfigKey($name, 'version', 'string or null');
         }
@@ -219,7 +223,7 @@ class DistributionConfig
 
         $client = new S3Client($s3Options);
 
-        return new S3SignedResolver($client, $config['bucket']);
+        return new S3SignedResolver($client, $config['bucket'], $config['prefix'] ?? null);
     }
 
     /**
@@ -241,10 +245,15 @@ class DistributionConfig
             throw $this->invalidConfigKey($name, 'domain', 'string');
         }
 
+        if (!\is_string($config['prefix'] ?? '')) {
+            throw $this->invalidConfigKey($name, 'prefix', 'string or null');
+        }
+
         return new CloudFrontResolver(
             $config['key'],
             $config['private'],
-            $config['domain']
+            $config['domain'],
+            $config['prefix'] ?? null
         );
     }
 
