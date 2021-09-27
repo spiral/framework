@@ -28,9 +28,7 @@ final class StatusCommand extends AbstractCommand
      */
     public function perform(FilesInterface $files): void
     {
-        if (!$this->verifyConfigured()) {
-            return;
-        }
+        $this->migrator->configure();
 
         if (empty($this->migrator->getMigrations())) {
             $this->writeln('<comment>No migrations were found.</comment>');

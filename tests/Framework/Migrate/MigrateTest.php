@@ -20,7 +20,9 @@ class MigrateTest extends ConsoleTest
     {
         parent::setUp();
 
-        $this->app->getEnvironment()->set('SAFE_MIGRATIONS', true);
+        $this->app = $this->makeApp([
+            'SAFE_MIGRATIONS' => true
+        ]);
     }
 
     public function testMigrate(): void
@@ -29,17 +31,13 @@ class MigrateTest extends ConsoleTest
         $db = $this->app->get(Database::class);
         $this->assertSame([], $db->getTables());
 
-        $out = $this->runCommandDebug('migrate');
-        $this->assertStringContainsString('not', $out);
-
         $this->runCommandDebug('migrate:init');
         $this->runCommandDebug('cycle:migrate');
 
-        $this->assertSame(1, count($db->getTables()));
+        $this->assertCount(0, $db->getTables());
 
         $this->runCommandDebug('migrate');
-
-        $this->assertSame(3, count($db->getTables()));
+        $this->assertCount(3, $db->getTables());
     }
 
     public function testMigrateRollback(): void
@@ -55,15 +53,15 @@ class MigrateTest extends ConsoleTest
 
         $this->runCommandDebug('cycle:migrate');
 
-        $this->assertSame(1, count($db->getTables()));
+        $this->assertCount(0, $db->getTables());
 
         $this->runCommandDebug('migrate');
 
-        $this->assertSame(3, count($db->getTables()));
+        $this->assertCount(3, $db->getTables());
 
         $this->runCommandDebug('migrate:rollback');
 
-        $this->assertSame(1, count($db->getTables()));
+        $this->assertCount(1, $db->getTables());
     }
 
     public function testMigrateReplay(): void
@@ -78,12 +76,12 @@ class MigrateTest extends ConsoleTest
         $this->assertStringContainsString('No', $out);
 
         $this->runCommandDebug('cycle:migrate');
-        $this->assertSame(1, count($db->getTables()));
+        $this->assertCount(0, $db->getTables());
 
         $this->runCommandDebug('migrate');
-        $this->assertSame(3, count($db->getTables()));
+        $this->assertCount(3, $db->getTables());
 
         $this->runCommandDebug('migrate:replay');
-        $this->assertSame(3, count($db->getTables()));
+        $this->assertCount(3, $db->getTables());
     }
 }

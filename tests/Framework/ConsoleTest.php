@@ -26,19 +26,26 @@ abstract class ConsoleTest extends BaseTest
     public function setUp(): void
     {
         $this->app = $this->makeApp();
+        $this->cleanupMigrations();
+    }
+
+    private function cleanupMigrations(): void
+    {
+        $fs = new Files();
+        if ($fs->isDirectory(__DIR__ . '/../app/migrations')) {
+            $fs->deleteDirectory(__DIR__ . '/../app/migrations');
+        }
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
 
+        $this->cleanupMigrations();
+
         $fs = new Files();
-
-        if ($fs->isDirectory(__DIR__ . '/../app/migrations')) {
-            $fs->deleteDirectory(__DIR__ . '/../app/migrations');
-        }
-
         $runtime = $this->app->get(DirectoriesInterface::class)->get('runtime');
+
         if ($fs->isDirectory($runtime)) {
             $fs->deleteDirectory($runtime);
         }
