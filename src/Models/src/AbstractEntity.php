@@ -202,7 +202,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->__isset($offset);
     }
@@ -210,6 +210,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getField($offset);

@@ -95,7 +95,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'spiral/broadcast'          => '^2.0',
             'spiral/broadcast-ws'       => '^1.0',
             'cycle/orm'                 => '^1.2.6',
-            'laminas/laminas-hydrator'  => '^3.0',
+            'laminas/laminas-hydrator'  => '^3.0|^4.0',
             'cycle/annotated'           => '^2.0.6',
             'cycle/migrations'          => '^1.0.1',
             'cycle/proxy-factory'       => '^1.2',

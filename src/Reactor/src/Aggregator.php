@@ -162,7 +162,7 @@ class Aggregator extends AbstractDeclaration implements
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->has($offset);
     }
@@ -170,6 +170,7 @@ class Aggregator extends AbstractDeclaration implements
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
