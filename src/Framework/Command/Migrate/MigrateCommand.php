@@ -26,9 +26,11 @@ final class MigrateCommand extends AbstractCommand
      */
     public function perform(): void
     {
-        if (!$this->verifyConfigured() || !$this->verifyEnvironment()) {
+        if (!$this->verifyEnvironment()) {
             return;
         }
+
+        $this->migrator->configure();
 
         $found = false;
         $count = $this->option('one') ? 1 : PHP_INT_MAX;

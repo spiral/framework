@@ -20,7 +20,9 @@ class InitTest extends ConsoleTest
     {
         parent::setUp();
 
-        $this->app->getEnvironment()->set('SAFE_MIGRATIONS', true);
+        $this->app = $this->makeApp([
+            'SAFE_MIGRATIONS' => true
+        ]);
     }
 
     public function testInit(): void
@@ -32,7 +34,7 @@ class InitTest extends ConsoleTest
 
         $this->runCommandDebug('migrate:init');
 
-        $t = $db->getTables()[0];
-        $this->assertSame('migrations', $t->getName());
+        // Behaviour https://github.com/spiral/migrations/releases/tag/v2.3.0
+        $this->assertCount(0, $db->getTables());
     }
 }

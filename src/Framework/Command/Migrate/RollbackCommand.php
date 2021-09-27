@@ -26,10 +26,12 @@ final class RollbackCommand extends AbstractCommand
      */
     public function perform(): void
     {
-        if (!$this->verifyConfigured() || !$this->verifyEnvironment()) {
+        if (!$this->verifyEnvironment()) {
             //Making sure we can safely migrate in this environment
             return;
         }
+
+        $this->migrator->configure();
 
         $found = false;
         $count = !$this->option('all') ? 1 : PHP_INT_MAX;

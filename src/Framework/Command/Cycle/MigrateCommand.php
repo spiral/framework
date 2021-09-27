@@ -20,8 +20,8 @@ use Spiral\Command\Cycle\Generator\ShowChanges;
 use Spiral\Command\Migrate\AbstractCommand;
 use Spiral\Console\Console;
 use Spiral\Cycle\SchemaCompiler;
+use Spiral\Migrations\Migration\Status;
 use Spiral\Migrations\Migrator;
-use Spiral\Migrations\State;
 use Symfony\Component\Console\Input\InputOption;
 
 final class MigrateCommand extends AbstractCommand
@@ -50,12 +50,10 @@ final class MigrateCommand extends AbstractCommand
         Migrator $migrator,
         Console $console
     ): void {
-        if (!$this->verifyConfigured()) {
-            return;
-        }
+        $migrator->configure();
 
         foreach ($migrator->getMigrations() as $migration) {
-            if ($migration->getState()->getStatus() !== State::STATUS_EXECUTED) {
+            if ($migration->getState()->getStatus() !== Status::STATUS_EXECUTED) {
                 $this->writeln('<fg=red>Outstanding migrations found, run `migrate` first.</fg=red>');
                 return;
             }
