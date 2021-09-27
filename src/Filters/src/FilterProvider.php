@@ -34,6 +34,7 @@ final class FilterProvider implements FilterProviderInterface
     public const ORIGIN         = 'origin';
     public const FILTER         = 'filter';
     public const ARRAY          = 'array';
+    public const OPTIONAL       = 'optional';
     public const ITERATE_SOURCE = 'iterate_source';
     public const ITERATE_ORIGIN = 'iterate_origin';
 

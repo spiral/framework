@@ -18,9 +18,10 @@ use Spiral\Models\Reflection\ReflectionEntity;
 final class SchemaBuilder
 {
     // Used to define multiple nested models.
-    protected const NESTED  = 0;
-    protected const ORIGIN  = 1;
-    protected const ITERATE = 2;
+    protected const NESTED   = 0;
+    protected const ORIGIN   = 1;
+    protected const ITERATE  = 2;
+    protected const OPTIONAL = 'optional';
 
     /** @var ReflectionEntity */
     private $entity;
@@ -75,6 +76,8 @@ final class SchemaBuilder
 
         $result = [];
         foreach ($schema as $field => $definition) {
+            $optional = false;
+
             // short definition
             if (is_string($definition)) {
                 // simple scalar field definition
@@ -89,10 +92,11 @@ final class SchemaBuilder
 
                 // singular nested model
                 $result[$field] = [
-                    FilterProvider::SOURCE => null,
-                    FilterProvider::ORIGIN => $field,
-                    FilterProvider::FILTER => $definition,
-                    FilterProvider::ARRAY  => false,
+                    FilterProvider::SOURCE   => null,
+                    FilterProvider::ORIGIN   => $field,
+                    FilterProvider::FILTER   => $definition,
+                    FilterProvider::ARRAY    => false,
+                    FilterProvider::OPTIONAL => $optional,
                 ];
 
                 continue;
@@ -116,12 +120,17 @@ final class SchemaBuilder
                 $iterate = true;
             }
 
+            if (!empty($definition[self::OPTIONAL]) && $definition[self::OPTIONAL]) {
+                $optional = true;
+            }
+
             // array of models (default isolation prefix)
             $map = [
-                FilterProvider::FILTER => $definition[self::NESTED],
-                FilterProvider::SOURCE => null,
-                FilterProvider::ORIGIN => $origin,
-                FilterProvider::ARRAY  => $iterate,
+                FilterProvider::FILTER   => $definition[self::NESTED],
+                FilterProvider::SOURCE   => null,
+                FilterProvider::ORIGIN   => $origin,
+                FilterProvider::ARRAY    => $iterate,
+                FilterProvider::OPTIONAL => $optional,
             ];
 
             if ($iterate) {

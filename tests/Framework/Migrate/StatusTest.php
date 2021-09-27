@@ -16,6 +16,15 @@ use Spiral\Tests\Framework\ConsoleTest;
 
 class StatusTest extends ConsoleTest
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->app = $this->makeApp([
+            'SAFE_MIGRATIONS' => true
+        ]);
+    }
+
     public function testMigrate(): void
     {
         /** @var Database $db */
@@ -23,21 +32,21 @@ class StatusTest extends ConsoleTest
         $this->assertSame([], $db->getTables());
 
         $out = $this->runCommandDebug('migrate:status');
-        $this->assertStringContainsString('not', $out);
+        $this->assertStringContainsString('No migrations', $out);
 
         $this->runCommandDebug('migrate:init');
 
         $out = $this->runCommandDebug('migrate:status');
-        $this->assertStringContainsString('No', $out);
+        $this->assertStringContainsString('No migrations', $out);
 
         $this->runCommandDebug('cycle:migrate');
-        $this->assertSame(1, count($db->getTables()));
+        $this->assertCount(0, $db->getTables());
 
         $out = $this->runCommandDebug('migrate:status');
         $this->assertStringContainsString('not executed yet', $out);
 
         $this->runCommandDebug('migrate');
-        $this->assertSame(3, count($db->getTables()));
+        $this->assertCount(3, $db->getTables());
 
         $out2 = $this->runCommandDebug('migrate:status');
         $this->assertNotSame($out, $out2);

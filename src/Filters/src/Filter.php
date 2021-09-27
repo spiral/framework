@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Filters;
 
+use Spiral\Models\Exception\EntityExceptionInterface;
 use Spiral\Models\SchematicEntity;
 use Spiral\Translator\Traits\TranslatorTrait;
 use Spiral\Translator\Translator;
@@ -64,22 +65,25 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     protected const SETTERS   = [];
     protected const GETTERS   = [];
 
+    /** @var ErrorMapper */
+    private $errorMapper;
+
     /** @var array|null */
     private $errors;
+
+    /** @var array */
+    private $mappings;
 
     /** @var ValidatorInterface @internal */
     private $validator;
 
-    /** @var ErrorMapper */
-    private $errorMapper;
-
     /**
      * Filter constructor.
      *
-     * @param array              $data
-     * @param array              $schema
+     * @param array $data
+     * @param array $schema
      * @param ValidatorInterface $validator
-     * @param ErrorMapper        $errorMapper
+     * @param ErrorMapper $errorMapper
      */
     public function __construct(
         array $data,
@@ -88,6 +92,8 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         ErrorMapper $errorMapper
     ) {
         parent::__construct($data, $schema);
+
+        $this->mappings = $schema[FilterProvider::MAPPING] ?? [];
         $this->validator = $validator;
         $this->errorMapper = $errorMapper;
     }
@@ -114,20 +120,11 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     }
 
     /**
-     * @inheritdoc
+     * Force re-validation.
      */
-    public function setContext($context): void
+    public function reset(): void
     {
-        $this->validator = $this->validator->withContext($context);
-        $this->reset();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getContext()
-    {
-        return $this->validator->getContext();
+        $this->errors = null;
     }
 
     /**
@@ -138,7 +135,6 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         parent::setField($name, $value, $filter);
         $this->reset();
     }
-
 
     /**
      * @inheritdoc
@@ -174,11 +170,20 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     }
 
     /**
-     * Force re-validation.
+     * @inheritdoc
      */
-    public function reset(): void
+    public function setContext($context): void
     {
-        $this->errors = null;
+        $this->validator = $this->validator->withContext($context);
+        $this->reset();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getContext()
+    {
+        return $this->validator->getContext();
     }
 
     /**
@@ -196,21 +201,67 @@ abstract class Filter extends SchematicEntity implements FilterInterface
                 continue;
             }
 
-            if ($value instanceof FilterInterface && !$value->isValid()) {
-                $errors[$index] = $value->getErrors();
-                continue;
+            if ($value instanceof FilterInterface) {
+                if ($this->isOptional($index) && !$this->hasBeenPassed($index)) {
+                    continue;
+                }
+
+                if (!$value->isValid()) {
+                    $errors[$index] = $value->getErrors();
+                    continue;
+                }
             }
 
             //Array of nested entities for validation
             if (is_iterable($value)) {
                 foreach ($value as $nIndex => $nValue) {
-                    if ($nValue instanceof FilterInterface && !$nValue->isValid()) {
-                        $errors[$index][$nIndex] = $nValue->getErrors();
+                    if ($nValue instanceof FilterInterface) {
+                        if ($this->isOptional($nIndex) && !$this->hasBeenPassed($nIndex)) {
+                            continue;
+                        }
+
+                        if (!$nValue->isValid()) {
+                            $errors[$index][$nIndex] = $nValue->getErrors();
+                        }
                     }
                 }
             }
         }
 
         return $errors;
+    }
+
+    /**
+     * Returns {@see true} in case that children filter is optional
+     * or {@see false} instead.
+     *
+     * @param string|int $field
+     * @return bool
+     */
+    private function isOptional($field): bool
+    {
+        return $this->mappings[$field][FilterProvider::OPTIONAL] ?? false;
+    }
+
+    /**
+     * Returns {@see true} in case that value has been passed.
+     *
+     * @param string|int $field
+     * @return bool
+     * @throws EntityExceptionInterface
+     */
+    private function hasBeenPassed($field): bool
+    {
+        $value = $this->getField((string)$field);
+
+        if ($value === null) {
+            return false;
+        }
+
+        if ($value instanceof FilterInterface) {
+            return $value->getValue() !== [];
+        }
+
+        return true;
     }
 }
