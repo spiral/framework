@@ -55,4 +55,22 @@ abstract class TestCase extends BaseTestCase
 
         return $instance;
     }
+
+    /**
+     * Sets an expected exception message.
+     *
+     * Unlike ->expectExceptionMessage(), this checks full equality, instead of
+     * just a "contains" check.
+     *
+     * @param string $message
+     *   Expected message.
+     */
+    public function expectExceptionMessageEquals(string $message) {
+        // The "contains" check produces a more readable message.
+        $this->expectExceptionMessage($message);
+        // The regex check is the only way to check exact equality.
+        $this->expectExceptionMessageMatches(
+            '@^' . preg_quote($message, '@') . '$@'
+        );
+    }
 }

@@ -14,6 +14,8 @@ namespace Spiral\Tests\Attributes\Instantiator;
 use Spiral\Attributes\Internal\Instantiator\InstantiatorInterface;
 use Spiral\Attributes\Internal\Instantiator\NamedArgumentsInstantiator;
 use Spiral\Tests\Attributes\Instantiator\Fixtures\NamedArgumentConstructorFixture;
+use Spiral\Tests\Attributes\Instantiator\Fixtures\NamedRequiredArgumentConstructorFixture;
+use Spiral\Tests\Attributes\Instantiator\Fixtures\VariadicConstructorFixture;
 
 /**
  * @group unit
@@ -40,5 +42,218 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
         $this->assertSame(23, $object->a);
         $this->assertSame(42, $object->b);
         $this->assertSame(null, $object->c);
+    }
+
+    public function testMixedArgs(): void
+    {
+        /** @var NamedArgumentConstructorFixture $object */
+        $object = $this->new(NamedArgumentConstructorFixture::class, [
+            'A',
+            'B',
+            'c' => 'C',
+        ]);
+
+        $this->assertSame('A', $object->a);
+        $this->assertSame('B', $object->b);
+        $this->assertSame('C', $object->c);
+    }
+
+    public function testMessyIndices()
+    {
+        /** @var NamedArgumentConstructorFixture $object */
+        $object = $this->new(NamedArgumentConstructorFixture::class, [
+            1 => 'one',
+            0 => 'zero',
+        ]);
+
+        if (PHP_VERSION_ID < 80000) {
+            $this->assertSame('zero', $object->a);
+            $this->assertSame('one', $object->b);
+        } else {
+            $this->assertSame('one', $object->a);
+            $this->assertSame('zero', $object->b);
+        }
+
+        $this->assertSame(null, $object->c);
+    }
+
+    public function testUnknownSequentialAfterNamed()
+    {
+        if (PHP_VERSION_ID < 80000) {
+            $this->expectException(\BadMethodCallException::class);
+            /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
+            $this->expectExceptionMessageEquals('Unknown named parameter $5');
+        } else {
+            $this->expectException(\Error::class);
+            $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
+        }
+
+        $this->new(NamedArgumentConstructorFixture::class, [
+            'a' => 'A',
+            5 => 'five',
+        ]);
+    }
+
+    public function testKnownSequentialAfterNamed()
+    {
+        if (PHP_VERSION_ID >= 80000) {
+            $this->expectException(\Error::class);
+            $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
+        }
+
+        /** @var NamedArgumentConstructorFixture $object */
+        $object = $this->new(NamedArgumentConstructorFixture::class, [
+            'a' => 'A',
+            2 => 'five',
+        ]);
+
+        $this->assertSame('A', $object->a);
+        $this->assertSame(null, $object->b);
+        $this->assertSame('five', $object->c);
+    }
+
+    public function testMissingArg()
+    {
+        $this->expectException(\ArgumentCountError::class);
+        $this->expectExceptionMessageEquals(
+            \sprintf(
+                '%s::__construct(): Argument #2 ($b) not passed',
+                NamedRequiredArgumentConstructorFixture::class
+            )
+        );
+
+        $this->new(NamedRequiredArgumentConstructorFixture::class, [
+            'a',
+            'c' => 'C',
+        ]);
+    }
+
+    public function testUnknownArg()
+    {
+        if (PHP_VERSION_ID < 80000) {
+            $this->expectException(\BadMethodCallException::class);
+        } else {
+            $this->expectException(\Error::class);
+        }
+        /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
+        $this->expectExceptionMessageEquals('Unknown named parameter $d');
+
+        $this->new(NamedArgumentConstructorFixture::class, [
+            'd' => 'D',
+        ]);
+    }
+
+    public function testOverwriteArg()
+    {
+        if (PHP_VERSION_ID < 80000) {
+            $this->expectException(\BadMethodCallException::class);
+            /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
+            $this->expectExceptionMessageEquals('Unknown named parameter $0');
+        } else {
+            $this->expectException(\Error::class);
+            $this->expectExceptionMessageEquals('Named parameter $a overwrites previous argument');
+        }
+
+        $this->new(NamedArgumentConstructorFixture::class, [
+            'zero',
+            'a' => 'A',
+        ]);
+    }
+
+    public function testVariadicPositional()
+    {
+        if (PHP_VERSION_ID < 80000) {
+            $this->expectException(\BadMethodCallException::class);
+            /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
+            $this->expectExceptionMessageEquals('Unknown named parameter $3');
+        }
+
+        /** @var VariadicConstructorFixture $object */
+        $object = $this->new(VariadicConstructorFixture::class, [
+            'A',
+            'B',
+            'C',
+            'D',
+        ]);
+
+        $this->assertSame('A', $object->a);
+        $this->assertSame('B', $object->b);
+        $this->assertSame(['C', 'D'], $object->args);
+    }
+
+    public function testVariadicPositionalAfterNamed()
+    {
+        if (PHP_VERSION_ID < 80000) {
+            $this->expectException(\ArgumentCountError::class);
+            /* @see NamedArgumentsInstantiator::ERROR_ARGUMENT_NOT_PASSED */
+            $this->expectExceptionMessageEquals(
+                \sprintf(
+                    '%s::__construct(): Argument #3 ($args) not passed',
+                    VariadicConstructorFixture::class
+                )
+            );
+        } else {
+            $this->expectException(\Error::class);
+            $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
+        }
+
+        $this->new(VariadicConstructorFixture::class, [
+            'A',
+            'b' => 'B',
+            'c' => 'C',
+            5 => 'five',
+        ]);
+    }
+
+    public function testVariadicMixed()
+    {
+        if (PHP_VERSION_ID < 80000) {
+            $this->expectException(\ArgumentCountError::class);
+            /* @see NamedArgumentsInstantiator::ERROR_ARGUMENT_NOT_PASSED */
+            $this->expectExceptionMessageEquals(
+                \sprintf(
+                    '%s::__construct(): Argument #3 ($args) not passed',
+                    VariadicConstructorFixture::class
+                )
+            );
+        }
+
+        /** @var VariadicConstructorFixture $object */
+        $object = $this->new(VariadicConstructorFixture::class, [
+            5 => 'five',
+            4 => 'four',
+            3 => 'three',
+            'x' => 'X',
+        ]);
+
+        $this->assertSame('five', $object->a);
+        $this->assertSame('four', $object->b);
+        $this->assertSame(['three', 'x' => 'X'], $object->args);
+    }
+
+    public function testVariadicNamed()
+    {
+        if (PHP_VERSION_ID < 80000) {
+            $this->expectException(\ArgumentCountError::class);
+            /* @see NamedArgumentsInstantiator::ERROR_ARGUMENT_NOT_PASSED */
+            $this->expectExceptionMessageEquals(
+                \sprintf(
+                    '%s::__construct(): Argument #3 ($args) not passed',
+                    VariadicConstructorFixture::class
+                )
+            );
+        }
+
+        /** @var VariadicConstructorFixture $object */
+        $object = $this->new(VariadicConstructorFixture::class, [
+            5 => 'five',
+            'x' => 'X',
+            'b' => 'B',
+            'y' => 'Y',
+        ]);
+
+        $this->assertSame('five', $object->a);
+        $this->assertSame('B', $object->b);
+        $this->assertSame(['x' => 'X', 'y' => 'Y'], $object->args);
     }
 }
