@@ -27,6 +27,16 @@ final class NamedArgumentsInstantiator extends Instantiator
     /**
      * @var string
      */
+    private const ERROR_OVERWRITE_ARGUMENT = 'Named parameter $%s overwrites previous argument';
+
+    /**
+     * @var string
+     */
+    private const ERROR_NAMED_ARG_TO_VARIADIC = 'Cannot pass named argument $%s to variadic parameter ...$%s in PHP < 8';
+
+    /**
+     * @var string
+     */
     private const ERROR_UNKNOWN_ARGUMENT = 'Unknown named parameter $%s';
 
     /**
@@ -114,54 +124,85 @@ final class NamedArgumentsInstantiator extends Instantiator
             throw new \BadMethodCallException(self::ERROR_POSITIONAL_AFTER_NAMED);
         }
 
-        $passed = [];
+        if ($namedArgsBegin === 0) {
+            // Only named keys exist.
+            $passed = [];
+            $named = $arguments;
+        } else {
+            // Numeric/positional keys followed by named keys.
+            // No need to preserve numeric keys.
+            $passed = array_slice($arguments, 0, $namedArgsBegin);
+            $named = array_slice($arguments, $namedArgsBegin);
+        }
 
-        foreach ($constructor->getParameters() as $i => $parameter) {
-            if ($i < $namedArgsBegin) {
-                $passed[] = $arguments[$i];
-                unset($arguments[$i]);
+        // Analyze the parameters.
+        $parameters = $constructor->getParameters();
+        $n = count($parameters);
+        if ($n > 0 && end($parameters)->isVariadic()) {
+            $variadicParameter = end($parameters);
+            // Don't include the variadic parameter in the mapping process.
+            --$n;
+        } else {
+            $variadicParameter = null;
+        }
+
+        // Process parameters that are not already filled with positional args.
+        // This loop will do nothing if $namedArgsBegin >= $n. That's ok.
+        for ($i = $namedArgsBegin; $i < $n; ++$i) {
+            $parameter = $parameters[$i];
+            $k = $parameter->getName();
+            if (array_key_exists($k, $named)) {
+                $passed[] = $named[$k];
+                unset($named[$k]);
+            } elseif ($parameter->isDefaultValueAvailable()) {
+                $passed[] = $parameter->getDefaultValue();
             } else {
-                $passed[] = $this->resolveParameter($ctx, $parameter, $arguments);
-            }
-        }
-
-        if (\count($arguments)) {
-            $message = \sprintf(self::ERROR_UNKNOWN_ARGUMENT, \array_key_first($arguments));
-            throw new \BadMethodCallException($message);
-        }
-
-        return $passed;
-    }
-
-    /**
-     * @param \ReflectionClass $ctx
-     * @param \ReflectionParameter $param
-     * @param array $arguments
-     * @return mixed
-     * @throws \Throwable
-     */
-    private function resolveParameter(\ReflectionClass $ctx, \ReflectionParameter $param, array &$arguments)
-    {
-        switch (true) {
-            case \array_key_exists($param->getName(), $arguments):
-                try {
-                    return $arguments[$param->getName()];
-                } finally {
-                    unset($arguments[$param->getName()]);
-                }
-                // no actual falling through
-
-            case $param->isDefaultValueAvailable():
-                return $param->getDefaultValue();
-
-            default:
                 $message = \vsprintf(self::ERROR_ARGUMENT_NOT_PASSED, [
                     $ctx->getName(),
-                    $param->getPosition() + 1,
-                    $param->getName(),
+                    $parameter->getPosition() + 1,
+                    $parameter->getName(),
                 ]);
 
                 throw new \ArgumentCountError($message);
+            }
         }
+
+        if ($named === []) {
+            // No unknown argument names exist.
+            return $passed;
+        }
+
+        // Analyze the first bad argument name, ignore the rest.
+        reset($named);
+        $badArgName = key($named);
+
+        // Check collision with positional arguments.
+        foreach ($parameters as $i => $parameter) {
+            if ($i >= $namedArgsBegin) {
+                break;
+            }
+            if ($parameter->getName() === $badArgName) {
+                // The named argument overwrites a positional argument.
+                $message = \sprintf(self::ERROR_OVERWRITE_ARGUMENT, $badArgName);
+                throw new \BadMethodCallException($message);
+            }
+        }
+
+        // Special handling if a variadic parameter is present.
+        if ($variadicParameter !== null) {
+            // The last parameter is variadic.
+            // Since PHP 8+, variadic parameters can consume named arguments.
+            // However, this code only runs if PHP < 8.
+            $message = \vsprintf(self::ERROR_NAMED_ARG_TO_VARIADIC, [
+                $badArgName,
+                $variadicParameter->getName(),
+            ]);
+            throw new \BadMethodCallException($message);
+        }
+
+        // No variadic parameter exists.
+        // Unknown named arguments are illegal in this case, even in PHP 8.
+        $message = \sprintf(self::ERROR_UNKNOWN_ARGUMENT, $badArgName);
+        throw new \BadMethodCallException($message);
     }
 }

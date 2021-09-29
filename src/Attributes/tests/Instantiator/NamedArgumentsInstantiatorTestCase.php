@@ -115,6 +115,7 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
     public function testMissingArg()
     {
         $this->expectException(\ArgumentCountError::class);
+        /* @see NamedArgumentsInstantiator::ERROR_ARGUMENT_NOT_PASSED */
         $this->expectExceptionMessageEquals(
             \sprintf(
                 '%s::__construct(): Argument #2 ($b) not passed',
@@ -165,12 +166,11 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
     {
         if (PHP_VERSION_ID < 80000) {
             $this->expectException(\BadMethodCallException::class);
-            /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
-            $this->expectExceptionMessageEquals('Unknown named parameter $a');
         } else {
             $this->expectException(\Error::class);
-            $this->expectExceptionMessageEquals('Named parameter $a overwrites previous argument');
         }
+        /* @see NamedArgumentsInstantiator::ERROR_OVERWRITE_ARGUMENT */
+        $this->expectExceptionMessageEquals('Named parameter $a overwrites previous argument');
 
         $this->new(NamedArgumentConstructorFixture::class, [
             'zero',
@@ -215,8 +215,8 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
     {
         if (PHP_VERSION_ID < 80000) {
             $this->expectException(\BadMethodCallException::class);
-            /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
-            $this->expectExceptionMessageEquals('Unknown named parameter $x');
+            /* @see NamedArgumentsInstantiator::ERROR_NAMED_ARG_TO_VARIADIC */
+            $this->expectExceptionMessageEquals('Cannot pass named argument $x to variadic parameter ...$args in PHP < 8');
         }
 
         /** @var VariadicConstructorFixture $object */
@@ -235,14 +235,9 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
     public function testVariadicNamed()
     {
         if (PHP_VERSION_ID < 80000) {
-            $this->expectException(\ArgumentCountError::class);
-            /* @see NamedArgumentsInstantiator::ERROR_ARGUMENT_NOT_PASSED */
-            $this->expectExceptionMessageEquals(
-                \sprintf(
-                    '%s::__construct(): Argument #3 ($args) not passed',
-                    VariadicConstructorFixture::class
-                )
-            );
+            $this->expectException(\BadMethodCallException::class);
+            /* @see NamedArgumentsInstantiator::ERROR_NAMED_ARG_TO_VARIADIC */
+            $this->expectExceptionMessageEquals('Cannot pass named argument $x to variadic parameter ...$args in PHP < 8');
         }
 
         /** @var VariadicConstructorFixture $object */
