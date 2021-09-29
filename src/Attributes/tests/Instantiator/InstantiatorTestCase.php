@@ -40,8 +40,12 @@ abstract class InstantiatorTestCase extends TestCase
         $reflection = $this->getReflectionClass($class);
         $instantiator = $this->getInstantiator();
 
-        return $instantiator->instantiate($reflection, $arguments,
+        $object = $instantiator->instantiate($reflection, $arguments,
             $this->getReflectionClass(static::class)
         );
+
+        self::assertInstanceOf($class, $object);
+
+        return $object;
     }
 }
