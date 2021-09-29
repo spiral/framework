@@ -66,14 +66,8 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
             0 => 'zero',
         ]);
 
-        if (PHP_VERSION_ID < 80000) {
-            $this->assertSame('zero', $object->a);
-            $this->assertSame('one', $object->b);
-        } else {
-            $this->assertSame('one', $object->a);
-            $this->assertSame('zero', $object->b);
-        }
-
+        $this->assertSame('one', $object->a);
+        $this->assertSame('zero', $object->b);
         $this->assertSame(null, $object->c);
     }
 
@@ -82,7 +76,7 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
         if (PHP_VERSION_ID < 80000) {
             $this->expectException(\BadMethodCallException::class);
             /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
-            $this->expectExceptionMessageEquals('Unknown named parameter $5');
+            $this->expectExceptionMessageEquals('Unknown named parameter $0');
         } else {
             $this->expectException(\Error::class);
             $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
@@ -105,20 +99,18 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
 
     public function testKnownSequentialAfterNamed()
     {
-        if (PHP_VERSION_ID >= 80000) {
+        if (PHP_VERSION_ID < 80000) {
+            $this->expectException(\BadMethodCallException::class);
+            $this->expectExceptionMessageEquals('Unknown named parameter $0');
+        } else {
             $this->expectException(\Error::class);
             $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
         }
 
-        /** @var NamedArgumentConstructorFixture $object */
-        $object = $this->new(NamedArgumentConstructorFixture::class, [
+        $this->new(NamedArgumentConstructorFixture::class, [
             'a' => 'A',
             2 => 'five',
         ]);
-
-        $this->assertSame('A', $object->a);
-        $this->assertSame(null, $object->b);
-        $this->assertSame('five', $object->c);
     }
 
     public function testMissingArg()
@@ -235,14 +227,9 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
     public function testVariadicMixed()
     {
         if (PHP_VERSION_ID < 80000) {
-            $this->expectException(\ArgumentCountError::class);
-            /* @see NamedArgumentsInstantiator::ERROR_ARGUMENT_NOT_PASSED */
-            $this->expectExceptionMessageEquals(
-                \sprintf(
-                    '%s::__construct(): Argument #3 ($args) not passed',
-                    VariadicConstructorFixture::class
-                )
-            );
+            $this->expectException(\BadMethodCallException::class);
+            /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
+            $this->expectExceptionMessageEquals('Unknown named parameter $x');
         }
 
         /** @var VariadicConstructorFixture $object */
