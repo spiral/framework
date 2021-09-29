@@ -31,6 +31,7 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
 
     public function testNamedConstructorInstantiatable(): void
     {
+        /** @var NamedArgumentConstructorFixture $object */
         $object = $this->new(NamedArgumentConstructorFixture::class, [
             'a' => 23,
             'b' => 42,

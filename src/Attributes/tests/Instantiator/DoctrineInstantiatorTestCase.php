@@ -32,6 +32,7 @@ class DoctrineInstantiatorTestCase extends InstantiatorTestCase
 
     public function testArrayConstructorInstantiatable(): void
     {
+        /** @var DoctrineLikeArrayConstructorFixture $object */
         $object = $this->new(DoctrineLikeArrayConstructorFixture::class, [
             'a' => 23,
             'b' => 42,
@@ -44,6 +45,7 @@ class DoctrineInstantiatorTestCase extends InstantiatorTestCase
 
     public function testNoConstructorInstantiatable(): void
     {
+        /** @var DoctrineLikeNoConstructorFixture $object */
         $object = $this->new(DoctrineLikeNoConstructorFixture::class, [
             'a' => 23,
             'b' => 42,
