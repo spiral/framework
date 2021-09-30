@@ -30,6 +30,11 @@ final class NamedArgumentsInstantiator extends Instantiator
     private const ERROR_UNKNOWN_ARGUMENT = 'Unknown named parameter $%s';
 
     /**
+     * @var string
+     */
+    private const ERROR_POSITIONAL_AFTER_NAMED = 'Cannot use positional argument after named argument';
+
+    /**
      * {@inheritDoc}
      */
     public function instantiate(\ReflectionClass $attr, array $arguments, \Reflector $context = null): object
@@ -72,6 +77,21 @@ final class NamedArgumentsInstantiator extends Instantiator
     {
         // Normalize all numeric keys, but keep string keys.
         $arguments = array_merge($arguments);
+
+        $i = 0;
+        $namedArgsBegin = null;
+        foreach ($arguments as $k => $_) {
+            if ($k !== $i) {
+                $namedArgsBegin = $i;
+                break;
+            }
+            ++$i;
+        }
+
+        // For any further numeric keys, one of them is now $namedArgsBegin.
+        if (array_key_exists($namedArgsBegin, $arguments)) {
+            throw new \BadMethodCallException(self::ERROR_POSITIONAL_AFTER_NAMED);
+        }
 
         $passed = [];
 

@@ -75,12 +75,11 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
     {
         if (PHP_VERSION_ID < 80000) {
             $this->expectException(\BadMethodCallException::class);
-            /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
-            $this->expectExceptionMessageEquals('Unknown named parameter $0');
         } else {
             $this->expectException(\Error::class);
-            $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
         }
+        /* @see NamedArgumentsInstantiator::ERROR_POSITIONAL_AFTER_NAMED */
+        $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
 
         try {
             $this->new($class = NamedArgumentConstructorFixture::class, [
@@ -101,11 +100,11 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
     {
         if (PHP_VERSION_ID < 80000) {
             $this->expectException(\BadMethodCallException::class);
-            $this->expectExceptionMessageEquals('Unknown named parameter $0');
         } else {
             $this->expectException(\Error::class);
-            $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
         }
+        /* @see NamedArgumentsInstantiator::ERROR_POSITIONAL_AFTER_NAMED */
+        $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
 
         $this->new(NamedArgumentConstructorFixture::class, [
             'a' => 'A',
@@ -203,18 +202,12 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
     public function testVariadicPositionalAfterNamed()
     {
         if (PHP_VERSION_ID < 80000) {
-            $this->expectException(\ArgumentCountError::class);
-            /* @see NamedArgumentsInstantiator::ERROR_ARGUMENT_NOT_PASSED */
-            $this->expectExceptionMessageEquals(
-                \sprintf(
-                    '%s::__construct(): Argument #3 ($args) not passed',
-                    VariadicConstructorFixture::class
-                )
-            );
+            $this->expectException(\BadMethodCallException::class);
         } else {
             $this->expectException(\Error::class);
-            $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
         }
+        /* @see NamedArgumentsInstantiator::ERROR_POSITIONAL_AFTER_NAMED */
+        $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
 
         $this->new(VariadicConstructorFixture::class, [
             'A',
