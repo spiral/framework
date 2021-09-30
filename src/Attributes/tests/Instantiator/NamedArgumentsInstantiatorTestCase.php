@@ -180,12 +180,6 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
 
     public function testVariadicPositional()
     {
-        if (PHP_VERSION_ID < 80000) {
-            $this->expectException(\BadMethodCallException::class);
-            /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
-            $this->expectExceptionMessageEquals('Unknown named parameter $3');
-        }
-
         /** @var VariadicConstructorFixture $object */
         $object = $this->new(VariadicConstructorFixture::class, [
             'A',

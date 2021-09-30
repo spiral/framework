@@ -104,6 +104,11 @@ final class NamedArgumentsInstantiator extends Instantiator
             ++$i;
         }
 
+        if ($namedArgsBegin === null) {
+            // Only numeric / positional keys exist.
+            return $arguments;
+        }
+
         // For any further numeric keys, one of them is now $namedArgsBegin.
         if (array_key_exists($namedArgsBegin, $arguments)) {
             throw new \BadMethodCallException(self::ERROR_POSITIONAL_AFTER_NAMED);
