@@ -75,6 +75,22 @@ final class NamedArgumentsInstantiator extends Instantiator
      */
     private function resolveParameters(\ReflectionClass $ctx, \ReflectionMethod $constructor, array $arguments): array
     {
+        try {
+            return $this->doResolveParameters($ctx, $constructor, $arguments);
+        } catch (\Throwable $e) {
+            throw Exception::withLocation($e, $constructor->getFileName(), $constructor->getStartLine());
+        }
+    }
+
+    /**
+     * @param \ReflectionClass $ctx
+     * @param \ReflectionMethod $constructor
+     * @param array $arguments
+     * @return array
+     * @throws \Throwable
+     */
+    private function doResolveParameters(\ReflectionClass $ctx, \ReflectionMethod $constructor, array $arguments): array
+    {
         // Normalize all numeric keys, but keep string keys.
         $arguments = array_merge($arguments);
 
@@ -95,17 +111,13 @@ final class NamedArgumentsInstantiator extends Instantiator
 
         $passed = [];
 
-        try {
-            foreach ($constructor->getParameters() as $parameter) {
-                $passed[] = $this->resolveParameter($ctx, $parameter, $arguments);
-            }
+        foreach ($constructor->getParameters() as $parameter) {
+            $passed[] = $this->resolveParameter($ctx, $parameter, $arguments);
+        }
 
-            if (\count($arguments)) {
-                $message = \sprintf(self::ERROR_UNKNOWN_ARGUMENT, \array_key_first($arguments));
-                throw new \BadMethodCallException($message);
-            }
-        } catch (\Throwable $e) {
-            throw Exception::withLocation($e, $constructor->getFileName(), $constructor->getStartLine());
+        if (\count($arguments)) {
+            $message = \sprintf(self::ERROR_UNKNOWN_ARGUMENT, \array_key_first($arguments));
+            throw new \BadMethodCallException($message);
         }
 
         return $passed;
