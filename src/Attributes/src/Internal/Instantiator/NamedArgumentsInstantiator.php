@@ -116,8 +116,13 @@ final class NamedArgumentsInstantiator extends Instantiator
 
         $passed = [];
 
-        foreach ($constructor->getParameters() as $parameter) {
-            $passed[] = $this->resolveParameter($ctx, $parameter, $arguments);
+        foreach ($constructor->getParameters() as $i => $parameter) {
+            if ($i < $namedArgsBegin) {
+                $passed[] = $arguments[$i];
+                unset($arguments[$i]);
+            } else {
+                $passed[] = $this->resolveParameter($ctx, $parameter, $arguments);
+            }
         }
 
         if (\count($arguments)) {
@@ -143,14 +148,6 @@ final class NamedArgumentsInstantiator extends Instantiator
                     return $arguments[$param->getName()];
                 } finally {
                     unset($arguments[$param->getName()]);
-                }
-                // no actual falling through
-
-            case \array_key_exists($param->getPosition(), $arguments):
-                try {
-                    return $arguments[$param->getPosition()];
-                } finally {
-                    unset($arguments[$param->getPosition()]);
                 }
                 // no actual falling through
 

@@ -166,7 +166,7 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
         if (PHP_VERSION_ID < 80000) {
             $this->expectException(\BadMethodCallException::class);
             /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
-            $this->expectExceptionMessageEquals('Unknown named parameter $0');
+            $this->expectExceptionMessageEquals('Unknown named parameter $a');
         } else {
             $this->expectException(\Error::class);
             $this->expectExceptionMessageEquals('Named parameter $a overwrites previous argument');
