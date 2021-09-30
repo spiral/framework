@@ -101,27 +101,11 @@ final class NamedArgumentsInstantiator extends Instantiator
      */
     private function doResolveParameters(\ReflectionClass $ctx, \ReflectionMethod $constructor, array $arguments): array
     {
-        // Normalize all numeric keys, but keep string keys.
-        $arguments = array_merge($arguments);
-
-        $i = 0;
-        $namedArgsBegin = null;
-        foreach ($arguments as $k => $_) {
-            if ($k !== $i) {
-                $namedArgsBegin = $i;
-                break;
-            }
-            ++$i;
-        }
+        $namedArgsBegin = $this->analyzeKeys($arguments);
 
         if ($namedArgsBegin === null) {
             // Only numeric / positional keys exist.
             return $arguments;
-        }
-
-        // For any further numeric keys, one of them is now $namedArgsBegin.
-        if (array_key_exists($namedArgsBegin, $arguments)) {
-            throw new \BadMethodCallException(self::ERROR_POSITIONAL_AFTER_NAMED);
         }
 
         if ($namedArgsBegin === 0) {
@@ -135,8 +119,75 @@ final class NamedArgumentsInstantiator extends Instantiator
             $named = array_slice($arguments, $namedArgsBegin);
         }
 
-        // Analyze the parameters.
-        $parameters = $constructor->getParameters();
+        return $this->appendNamedArgs(
+            $ctx,
+            $passed,
+            $named,
+            $namedArgsBegin,
+            $constructor->getParameters()
+        );
+    }
+
+    /**
+     * Analyzes keys of an arguments array.
+     *
+     * @param array $arguments
+     *   By reference. Numeric keys will be reordered.
+     *   Before (success): Mixed numeric keys, then only string keys.
+     *   Before (fail): Some string keys are followed by numeric keys.
+     *   After (success): Seq. numeric keys starting from 0, then string keys.
+     *   After (failure): Seq. numeric keys starting from 0, mixed with string
+     *     keys.
+     *
+     * @return int|null
+     *   Position of the first string key, or NULL if all keys are numeric.
+     */
+    private function analyzeKeys(array &$arguments): ?int
+    {
+        // Normalize all numeric keys, but keep string keys.
+        $arguments = array_merge($arguments);
+
+        $i = 0;
+        foreach ($arguments as $k => $_) {
+            if ($k !== $i) {
+                // This must be a string key.
+                // Any further numeric keys are illegal.
+                if (\array_key_exists($i, $arguments)) {
+                    throw new \BadMethodCallException(self::ERROR_POSITIONAL_AFTER_NAMED);
+                }
+                return $i;
+            }
+            ++$i;
+        }
+
+        // All keys must be numeric.
+        return null;
+    }
+
+    /**
+     * @param \ReflectionClass $ctx
+     * @param array $passed
+     *   Positional arguments.
+     *   Format: $[] = $value.
+     * @param array $named
+     *   Named arguments.
+     *   Format: $[$name] = $value.
+     * @param int $namedArgsBegin
+     *   Position of first named argument.
+     *   This is identical to count($passed).
+     * @param \ReflectionParameter[] $parameters
+     *   Full list of parameters.
+     *
+     * @return array
+     *   Sequential list of all parameter values.
+     *   Format: $[] = $value.
+     *
+     * @throws \Throwable
+     *   Arguments provided are incompatible with the parameters.
+     */
+    private function appendNamedArgs(\ReflectionClass $ctx, array $passed, array $named, int $namedArgsBegin, array $parameters): array
+    {
+        // Analyze parameters.
         $n = count($parameters);
         if ($n > 0 && end($parameters)->isVariadic()) {
             $variadicParameter = end($parameters);
