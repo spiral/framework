@@ -88,10 +88,19 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
             $this->expectExceptionMessageEquals('Cannot use positional argument after named argument');
         }
 
-        $this->new(NamedArgumentConstructorFixture::class, [
-            'a' => 'A',
-            5 => 'five',
-        ]);
+        try {
+            $this->new($class = NamedArgumentConstructorFixture::class, [
+                'a' => 'A',
+                5 => 'five',
+            ]);
+        } catch (\Throwable $e) {
+            if (PHP_VERSION_ID < 80000) {
+                self::assertExceptionSource($e, $class, 'function __construct');
+            } else {
+                self::assertExceptionSource($e, $class, 'class ');
+            }
+            throw $e;
+        }
     }
 
     public function testKnownSequentialAfterNamed()
@@ -122,10 +131,19 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
             )
         );
 
-        $this->new(NamedRequiredArgumentConstructorFixture::class, [
-            'a',
-            'c' => 'C',
-        ]);
+        try {
+            $this->new($class = NamedRequiredArgumentConstructorFixture::class, [
+                'a',
+                'c' => 'C',
+            ]);
+        } catch (\Throwable $e) {
+            if (PHP_VERSION_ID < 80000) {
+                self::assertExceptionSource($e, $class, 'function __construct');
+            } else {
+                self::assertExceptionSource($e, $class, 'class ');
+            }
+            throw $e;
+        }
     }
 
     public function testUnknownArg()
@@ -138,9 +156,18 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
         /* @see NamedArgumentsInstantiator::ERROR_UNKNOWN_ARGUMENT */
         $this->expectExceptionMessageEquals('Unknown named parameter $d');
 
-        $this->new(NamedArgumentConstructorFixture::class, [
-            'd' => 'D',
-        ]);
+        try {
+            $this->new($class = NamedArgumentConstructorFixture::class, [
+                'd' => 'D',
+            ]);
+        } catch (\Throwable $e) {
+            if (PHP_VERSION_ID < 80000) {
+                self::assertExceptionSource($e, $class, 'function __construct');
+            } else {
+                self::assertExceptionSource($e, $class, 'class ');
+            }
+            throw $e;
+        }
     }
 
     public function testOverwriteArg()
