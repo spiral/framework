@@ -64,27 +64,35 @@ final class MigrationsBootloader extends Bootloader
         $container->bindSingleton(RepositoryInterface::class, FileRepository::class);
 
         if (\class_exists(CycleMigrator::class)) {
-            $container->bindSingleton(CycleMigratorInterface::class,
+            $container->bindSingleton(
+                CycleMigratorInterface::class,
                 static function (MigratorInterface $migrator) {
                     return $migrator;
-                });
+                }
+            );
 
-            $container->bindSingleton(CycleMigrator::class,
+            $container->bindSingleton(
+                CycleMigrator::class,
                 static function (Migrator $migrator) {
                     return $migrator;
-                });
+                }
+            );
         }
 
         if (\class_exists(CycleFileRepository::class)) {
-            $container->bindSingleton(CycleFileRepository::class,
+            $container->bindSingleton(
+                CycleFileRepository::class,
                 static function (FileRepository $repository) {
                     return $repository;
-                });
+                }
+            );
 
-            $container->bindSingleton(CycleRepositoryInterface::class,
+            $container->bindSingleton(
+                CycleRepositoryInterface::class,
                 static function (RepositoryInterface $repository) {
                     return $repository;
-                });
+                }
+            );
         }
     }
 

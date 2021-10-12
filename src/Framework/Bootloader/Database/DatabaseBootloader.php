@@ -50,27 +50,35 @@ final class DatabaseBootloader extends Bootloader implements SingletonInterface
         $container->bind(SpiralDatabaseInterface::class, SpiralDatabase::class);
 
         if (\class_exists(CycleDatabaseManager::class)) {
-            $container->bindSingleton(CycleDatabaseProviderInterface::class,
+            $container->bindSingleton(
+                CycleDatabaseProviderInterface::class,
                 static function (SpiralDatabaseProviderInterface $manager) {
                     return $manager;
-                });
+                }
+            );
 
-            $container->bindSingleton(CycleDatabaseManager::class,
+            $container->bindSingleton(
+                CycleDatabaseManager::class,
                 static function (SpiralDatabaseManager $manager) {
                     return $manager;
-                });
+                }
+            );
         }
 
         if (\class_exists(CycleDatabase::class)) {
-            $container->bind(CycleDatabaseInterface::class,
+            $container->bind(
+                CycleDatabaseInterface::class,
                 static function (SpiralDatabaseInterface $database) {
                     return $database;
-                });
+                }
+            );
 
-            $container->bind(CycleDatabase::class,
+            $container->bind(
+                CycleDatabase::class,
                 static function (SpiralDatabaseInterface $database) {
                     return $database;
-                });
+                }
+            );
         }
     }
 
