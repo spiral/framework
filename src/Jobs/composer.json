@@ -1,0 +1,36 @@
+{
+    "name": "spiral/jobs",
+    "type": "library",
+    "description": "Spiral: Jobs Jobs and Queue",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wolfy-J",
+            "email": "wolfy.jd@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "ext-json": "*",
+        "spiral/roadrunner": "^1.9.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.0",
+        "spiral/core": "^2.9",
+        "doctrine/inflector": "^1.4|^2.0",
+        "spiral/code-style": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Jobs\\": "src/"
+        }
+    },
+    "config": {
+        "vendor-dir": "vendor_php"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Jobs\\Tests\\": "tests/Jobs/"
+        }
+    }
+}

@@ -39,6 +39,7 @@
         "psr/simple-cache": ">=1.0",
         "spiral/composer-publish-plugin": "^1.0",
         "spiral/jobs": "^2.2",
+        "spiral/roadrunner": "^1.9.2",
         "symfony/console": "^5.3",
         "symfony/finder": "^5.1",
         "symfony/mailer": "^5.1",
@@ -90,6 +91,7 @@
             "Spiral\\Files\\": "src/Files/src",
             "Spiral\\Filters\\": "src/Filters/src",
             "Spiral\\Http\\": "src/Http/src",
+            "Spiral\\Jobs\\": "src/Jobs/src/",
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Mailer\\": "src/Mailer/src",
             "Spiral\\Models\\": "src/Models/src",
@@ -139,7 +141,7 @@
         "spiral/broadcast-ws": "^1.0",
         "spiral/code-style": "^1.0",
         "spiral/database": "^2.7.3",
-        "spiral/migrations": "^2.3",
+        "spiral/migrations": "^2.2",
         "spiral/php-grpc": "^1.4",
         "spiral/roadrunner": "^1.9.2",
         "symfony/var-dumper": "^5.2",
@@ -149,6 +151,7 @@
     "autoload-dev": {
         "psr-4": {
             "Spiral\\App\\": "tests/app/src",
+            "Spiral\\Jobs\\Tests\\": "src/Jobs/tests/Jobs/",
             "Spiral\\Tests\\Annotations\\": "src/Annotations/tests",
             "Spiral\\Tests\\Attributes\\": "src/Attributes/tests",
             "Spiral\\Tests\\Auth\\": [
@@ -232,6 +235,7 @@
         "spiral/filters": "*",
         "spiral/hmvc": "*",
         "spiral/http": "*",
+        "spiral/jobs": "self.version",
         "spiral/logger": "*",
         "spiral/mailer": "*",
         "spiral/models": "*",
