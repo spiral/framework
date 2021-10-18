@@ -58,15 +58,19 @@ final class JobsBootloader extends Bootloader
      */
     private function registerQueueBridge(Container $container): void
     {
-        $container->bindSingleton(Decorator::class,
+        $container->bindSingleton(
+            Decorator::class,
             static function (JobsInterface $jobs, QueueInterface $queue): Decorator {
                 return new Decorator($jobs, $queue);
-            });
+            }
+        );
 
-        $container->bindSingleton(QueueBridgeInterface::class,
+        $container->bindSingleton(
+            QueueBridgeInterface::class,
             static function (Decorator $decorator): QueueBridgeInterface {
                 return $decorator;
-            });
+            }
+        );
     }
 
     /**
@@ -86,15 +90,19 @@ final class JobsBootloader extends Bootloader
      */
     private function registerConsumer(Container $container): void
     {
-        $container->bindSingleton(Consumer::class,
+        $container->bindSingleton(
+            Consumer::class,
             static function (WorkerInterface $worker, SerializerInterface $serializer): Consumer {
                 return new Consumer($worker, $serializer);
-            });
+            }
+        );
 
-        $container->bindSingleton(ConsumerInterface::class,
+        $container->bindSingleton(
+            ConsumerInterface::class,
             static function (Consumer $consumer): ConsumerInterface {
                 return $consumer;
-            });
+            }
+        );
     }
 
     /**
@@ -103,16 +111,20 @@ final class JobsBootloader extends Bootloader
      */
     private function registerJobs(Container $container): void
     {
-        $container->bindSingleton(Jobs::class,
+        $container->bindSingleton(
+            Jobs::class,
             static function (RPCInterface $rpc, SerializerInterface $serializer): Jobs {
                 return new Jobs($rpc, $serializer);
-            });
+            }
+        );
 
 
-        $container->bindSingleton(JobsInterface::class,
+        $container->bindSingleton(
+            JobsInterface::class,
             static function (Jobs $jobs): JobsInterface {
                 return $jobs;
-            });
+            }
+        );
     }
 
     /**

@@ -65,7 +65,7 @@ final class JobDispatcher implements DispatcherInterface
             try {
                 $instance = $this->container->get($task->getName());
 
-                if (! $instance instanceof HandlerInterface) {
+                if (!$instance instanceof HandlerInterface) {
                     throw new \LogicException(
                         \sprintf('Job should be an instance %s', HandlerInterface::class)
                     );

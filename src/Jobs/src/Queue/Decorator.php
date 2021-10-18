@@ -70,21 +70,6 @@ class Decorator implements QueueInterface
     }
 
     /**
-     * @param OptionsInterface|null $options
-     * @return QueueInterface
-     */
-    private function getContext(?OptionsInterface $options): QueueInterface
-    {
-        if ($options instanceof Options && $options->getPipeline() !== null) {
-            $original = $this->jobs->connect($options->getPipeline());
-
-            return new self($this->jobs, $original);
-        }
-
-        return $this;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function dispatch(PreparedTaskInterface $task): QueuedTaskInterface
@@ -135,5 +120,20 @@ class Decorator implements QueueInterface
         $task = $context->dispatch($context->create($name, $payload, $options));
 
         return $task->getId();
+    }
+
+    /**
+     * @param OptionsInterface|null $options
+     * @return QueueInterface
+     */
+    private function getContext(?OptionsInterface $options): QueueInterface
+    {
+        if ($options instanceof Options && $options->getPipeline() !== null) {
+            $original = $this->jobs->connect($options->getPipeline());
+
+            return new self($this->jobs, $original);
+        }
+
+        return $this;
     }
 }

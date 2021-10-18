@@ -33,14 +33,6 @@ abstract class JobHandler implements HandlerInterface
     }
 
     /**
-     * @return string
-     */
-    protected function getHandlerMethod(): string
-    {
-        return static::HANDLE_FUNCTION;
-    }
-
-    /**
      * @inheritdoc
      */
     public function handle(string $name, string $id, array $payload): void
@@ -55,5 +47,13 @@ abstract class JobHandler implements HandlerInterface
             $message = \sprintf('[%s] %s', \get_class($this), $e->getMessage());
             throw new JobException($message, (int)$e->getCode(), $e);
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getHandlerMethod(): string
+    {
+        return static::HANDLE_FUNCTION;
     }
 }
