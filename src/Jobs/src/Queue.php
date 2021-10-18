@@ -57,7 +57,7 @@ final class Queue implements QueueInterface, SingletonInterface
             return $this->rpc->call(self::RR_SERVICE . '.Push', [
                 'job'     => $this->jobName($jobType),
                 'payload' => $this->serialize($jobType, $payload),
-                'options' => $options ?? new Options()
+                'options' => $options ?? new Options(),
             ]);
         } catch (RoadRunnerException | \Throwable $e) {
             throw new JobException($e->getMessage(), $e->getCode(), $e);
@@ -80,7 +80,7 @@ final class Queue implements QueueInterface, SingletonInterface
             return $this->rpc->call(self::RR_SERVICE . '.PushAsync', [
                 'job'     => $this->jobName($jobType),
                 'payload' => $this->serialize($jobType, $payload),
-                'options' => $options ?? new Options()
+                'options' => $options ?? new Options(),
             ]);
         } catch (RoadRunnerException | \Throwable $e) {
             throw new JobException($e->getMessage(), $e->getCode(), $e);

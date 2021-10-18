@@ -67,7 +67,7 @@ final class Options implements \JsonSerializable
     {
         return [
             'delay'    => $this->delay,
-            'pipeline' => $this->pipeline
+            'pipeline' => $this->pipeline,
         ];
     }
 
