@@ -18,7 +18,7 @@ use Spiral\Prototype\PrototypeRegistry;
 
 /**
  * This DocComment is auto-generated, do not edit or commit this file to repository.
- * 
+ *
  * @property \App\App $app
  * @property \Spiral\Tokenizer\ClassesInterface $classLocator
  * @property \Spiral\Console\Console $console

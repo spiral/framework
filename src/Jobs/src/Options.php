@@ -84,8 +84,13 @@ class Options implements OptionsInterface, \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
+<<<<<<< HEAD
             'delay'    => $this->base->delay ?: null,
             'pipeline' => $this->pipeline
+=======
+            'delay'    => $this->delay,
+            'pipeline' => $this->pipeline,
+>>>>>>> origin/feature/rr2-jobs
         ];
     }
 
