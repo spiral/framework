@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "spiral/core": "^2.9",
         "spiral/logger": "^2.9",
         "spiral/tokenizer": "^2.9",

@@ -37,7 +37,7 @@ class TestApp extends Kernel
         Bootloader\Security\GuardBootloader::class,
 
         // Dispatchers
-        Bootloader\Jobs\JobsBootloader::class,
+        \Spiral\Jobs\JobsBootloader::class,
         Bootloader\GRPC\GRPCBootloader::class,
         Bootloader\ConsoleBootloader::class,
 

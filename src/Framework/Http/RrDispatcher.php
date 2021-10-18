@@ -80,7 +80,6 @@ class RrDispatcher implements DispatcherInterface
     {
         /** @var Http $http */
         $http = $this->container->get(Http::class);
-
         while ($request = $this->worker->waitRequest()) {
             try {
                 $response = $http->handle($request);

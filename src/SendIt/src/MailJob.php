@@ -46,11 +46,11 @@ final class MailJob implements HandlerInterface
 
     /**
      * @param string $jobType
-     * @param string $jobID
+     * @param string $id
      * @param string $payload
      * @throws TransportExceptionInterface
      */
-    public function handle(string $jobType, string $jobID, string $payload): void
+    public function handle(string $jobType, string $id, string $payload): void
     {
         $message = MessageSerializer::unpack(json_decode($payload, true));
 

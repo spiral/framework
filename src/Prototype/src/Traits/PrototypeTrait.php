@@ -18,6 +18,37 @@ use Spiral\Prototype\PrototypeRegistry;
 
 /**
  * This DocComment is auto-generated, do not edit or commit this file to repository.
+ * 
+ * @property \App\App $app
+ * @property \Spiral\Tokenizer\ClassesInterface $classLocator
+ * @property \Spiral\Console\Console $console
+ * @property \Psr\Container\ContainerInterface $container
+ * @property \Spiral\Database\DatabaseInterface $db
+ * @property \Spiral\Database\DatabaseProviderInterface $dbal
+ * @property \Spiral\Encrypter\EncrypterInterface $encrypter
+ * @property \Spiral\Boot\EnvironmentInterface $env
+ * @property \Spiral\Files\FilesInterface $files
+ * @property \Spiral\Security\GuardInterface $guard
+ * @property \Spiral\Http\Http $http
+ * @property \Spiral\Translator\TranslatorInterface $i18n
+ * @property \Spiral\Http\Request\InputManager $input
+ * @property \Spiral\Session\SessionScope $session
+ * @property \Spiral\Cookies\CookieManager $cookies
+ * @property \Psr\Log\LoggerInterface $logger
+ * @property \Spiral\Logger\LogsInterface $logs
+ * @property \Spiral\Boot\MemoryInterface $memory
+ * @property \Cycle\ORM\ORMInterface $orm
+ * @property \Spiral\Pagination\PaginationProviderInterface $paginators
+ * @property \Spiral\Jobs\QueueInterface $queue
+ * @property \Spiral\Http\Request\InputManager $request
+ * @property \Spiral\Http\ResponseWrapper $response
+ * @property \Spiral\Router\RouterInterface $router
+ * @property \Spiral\Snapshots\SnapshotterInterface $snapshots
+ * @property \Spiral\Storage\BucketInterface $storage
+ * @property \Spiral\Validation\ValidationInterface $validator
+ * @property \Spiral\Views\ViewsInterface $views
+ * @property \Spiral\Auth\AuthScope $auth
+ * @property \Spiral\Auth\TokenStorageInterface $authTokens
  */
 trait PrototypeTrait
 {
