@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Jobs;
@@ -19,9 +12,9 @@ interface HandlerInterface
     /**
      * Handle incoming job.
      *
-     * @param string $jobType
-     * @param string $jobID
-     * @param string $payload
+     * @param class-string<HandlerInterface> $name
+     * @param non-empty-string $id
+     * @param array $payload
      */
-    public function handle(string $jobType, string $jobID, string $payload): void;
+    public function handle(string $name, string $id, array $payload): void;
 }

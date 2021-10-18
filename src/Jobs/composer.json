@@ -10,9 +10,18 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*",
-        "spiral/roadrunner": "^1.9.2"
+        "spiral/roadrunner": "^2.4",
+        "spiral/roadrunner-jobs": "^2.0"
+    },
+    "autoload": {
+        "files": [
+            "src/polyfill.php"
+        ],
+        "psr-4": {
+            "Spiral\\Jobs\\": "src/"
+        }
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0",
@@ -20,17 +29,19 @@
         "doctrine/inflector": "^1.4|^2.0",
         "spiral/code-style": "^1.0"
     },
-    "autoload": {
+    "autoload-dev": {
         "psr-4": {
-            "Spiral\\Jobs\\": "src/"
+            "Spiral\\Jobs\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.9.x-dev"
         }
     },
     "config": {
-        "vendor-dir": "vendor_php"
+        "sort-packages": true
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Spiral\\Jobs\\Tests\\": "tests/Jobs/"
-        }
-    }
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Jobs;
@@ -17,13 +10,19 @@ use Spiral\Jobs\Exception\JobException;
 /**
  * Handler which can invoke itself.
  */
-abstract class JobHandler implements HandlerInterface, SerializerInterface
+abstract class JobHandler implements HandlerInterface
 {
-    // default function with method injection
+    /**
+     * Default function with method injection.
+     *
+     * @var string
+     */
     protected const HANDLE_FUNCTION = 'invoke';
 
-    /** @var ResolverInterface */
-    protected $resolver;
+    /**
+     * @var ResolverInterface
+     */
+    protected ResolverInterface $resolver;
 
     /**
      * @param ResolverInterface $resolver
@@ -34,42 +33,27 @@ abstract class JobHandler implements HandlerInterface, SerializerInterface
     }
 
     /**
+     * @return string
+     */
+    protected function getHandlerMethod(): string
+    {
+        return static::HANDLE_FUNCTION;
+    }
+
+    /**
      * @inheritdoc
      */
-    public function handle(string $jobType, string $jobID, string $payload): void
+    public function handle(string $name, string $id, array $payload): void
     {
-        $payloadData = $this->unserialize($jobType, $payload);
-
-        $method = new \ReflectionMethod($this, static::HANDLE_FUNCTION);
+        $method = new \ReflectionMethod($this, $this->getHandlerMethod());
         $method->setAccessible(true);
 
         try {
-            $parameters = array_merge(['payload' => $payloadData, 'id' => $jobID], $payloadData);
+            $parameters = \array_merge(['payload' => $payload, 'id' => $id], $payload);
             $method->invokeArgs($this, $this->resolver->resolveArguments($method, $parameters));
         } catch (\Throwable $e) {
-            throw new JobException(
-                sprintf('[%s] %s', get_class($this), $e->getMessage()),
-                $e->getCode(),
-                $e
-            );
+            $message = \sprintf('[%s] %s', \get_class($this), $e->getMessage());
+            throw new JobException($message, (int)$e->getCode(), $e);
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function serialize(string $jobType, array $payload): string
-    {
-        return json_encode($payload);
-    }
-
-    /**
-     * @param string $jobType
-     * @param string $payload
-     * @return array
-     */
-    public function unserialize(string $jobType, string $payload): array
-    {
-        return json_decode($payload, true);
     }
 }
