@@ -18,17 +18,17 @@ class Options implements OptionsInterface, \JsonSerializable
     private OptionsInterface $base;
 
     /**
+     * @var string|null
+     */
+    private ?string $pipeline = null;
+
+    /**
      * Options constructor
      */
     public function __construct()
     {
         $this->base = new RoadRunnerOptions();
     }
-
-    /**
-     * @var string|null
-     */
-    private ?string $pipeline = null;
 
     /**
      * {@inheritDoc}
@@ -85,7 +85,7 @@ class Options implements OptionsInterface, \JsonSerializable
     {
         return [
             'delay'    => $this->base->delay ?: null,
-            'pipeline' => $this->pipeline
+            'pipeline' => $this->pipeline,
         ];
     }
 
