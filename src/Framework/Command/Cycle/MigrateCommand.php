@@ -49,13 +49,13 @@ final class MigrateCommand extends AbstractCommand
         GenerateMigrations $migrations,
         Migrator $migrator,
         Console $console
-    ): void {
+    ): int {
         $migrator->configure();
 
         foreach ($migrator->getMigrations() as $migration) {
             if ($migration->getState()->getStatus() !== Status::STATUS_EXECUTED) {
                 $this->writeln('<fg=red>Outstanding migrations found, run `migrate` first.</fg=red>');
-                return;
+                return self::FAILURE;
             }
         }
 
@@ -74,5 +74,7 @@ final class MigrateCommand extends AbstractCommand
                 $console->run('migrate', [], $this->output);
             }
         }
+
+        return self::SUCCESS;
     }
 }
