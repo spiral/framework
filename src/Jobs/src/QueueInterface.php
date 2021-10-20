@@ -17,5 +17,3 @@ interface QueueInterface extends RoadRunnerQueueInterface
      */
     public function push(string $name, array $payload = [], OptionsInterface $options = null): string;
 }
-
-
