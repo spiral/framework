@@ -62,4 +62,25 @@ class ArrayInputTest extends TestCase
         $arr = new ArrayInput(['key' => ['a' => ['x' => 'y']]]);
         $this->assertSame(['key' => ['a' => ['x' => 'y']]], $arr->getValue('', ''));
     }
+
+    public function testHasValue(): void
+    {
+        $arr = new ArrayInput(['key' => 'value']);
+        $this->assertTrue($arr->hasValue('', 'key'));
+        $this->assertFalse($arr->hasValue('', 'other'));
+    }
+
+    public function testHasValueNullable(): void
+    {
+        $arr = new ArrayInput(['key' => null]);
+        $this->assertTrue($arr->hasValue('', 'key'));
+        $this->assertFalse($arr->hasValue('', 'other'));
+    }
+
+    public function testHasValueNested(): void
+    {
+        $arr = new ArrayInput(['key' => ['foo' => ['bar' => null]]]);
+        $this->assertTrue($arr->hasValue('', 'key.foo.bar'));
+        $this->assertFalse($arr->hasValue('', 'key.bar'));
+    }
 }

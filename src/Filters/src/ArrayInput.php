@@ -60,6 +60,20 @@ final class ArrayInput implements InputInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function hasValue(string $source, string $name)
+    {
+        try {
+            $this->dotGet($name);
+        } catch (DotNotFoundException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get element using dot notation.
      *
      * @param string $name
