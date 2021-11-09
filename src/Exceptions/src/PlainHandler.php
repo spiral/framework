@@ -31,7 +31,7 @@ final class PlainHandler extends AbstractHandler
             $result .= '[' . get_class($e) . "]\n" . $e->getMessage();
         }
 
-        $result .= sprintf("in %s:%s\n", $e->getFile(), $e->getLine());
+        $result .= sprintf(" in %s:%s\n", $e->getFile(), $e->getLine());
 
         if ($verbosity >= self::VERBOSITY_DEBUG) {
             $result .= $this->renderTrace($e, new Highlighter(new PlainStyle()));
