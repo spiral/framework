@@ -23,7 +23,7 @@ class PlainHandlerTest extends TestCase
         $result = $plainHandler->renderException(new Exception('Undefined variable $undefined'));
 
         $this->assertStringContainsString(
-            sprintf('Undefined variable $undefined in %s:24', __FILE__),
+            sprintf('Undefined variable $undefined in %s', __FILE__),
             $result
         );
     }
