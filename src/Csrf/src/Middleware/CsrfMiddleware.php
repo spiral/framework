@@ -46,6 +46,7 @@ final class CsrfMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
+        $cookie = null;
         if (isset($request->getCookieParams()[$this->config->getCookie()])) {
             $token = $request->getCookieParams()[$this->config->getCookie()];
         } else {

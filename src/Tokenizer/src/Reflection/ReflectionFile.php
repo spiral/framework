@@ -255,7 +255,7 @@ final class ReflectionFile
      */
     protected function importSchema(array $cache)
     {
-        list($this->hasIncludes, $this->declarations, $this->functions, $this->namespaces) = $cache;
+        [$this->hasIncludes, $this->declarations, $this->functions, $this->namespaces] = $cache;
     }
 
     /**
@@ -599,7 +599,7 @@ final class ReflectionFile
         //Nested invocations
         $this->locateInvocations($arguments, $invocationLevel + 1);
 
-        list($class, $operator, $name) = $this->fetchContext($invocationID, $argumentsID);
+        [$class, $operator, $name] = $this->fetchContext($invocationID, $argumentsID);
 
         if (!empty($operator) && empty($class)) {
             //Non detectable
@@ -639,7 +639,7 @@ final class ReflectionFile
         }
 
         if (!empty($operator)) {
-            list($class, $name) = explode($operator, $name);
+            [$class, $name] = explode($operator, $name);
 
             //We now have to clarify class name
             if (in_array($class, ['self', 'static', '$this'])) {

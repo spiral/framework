@@ -70,7 +70,7 @@ abstract class Command extends SymfonyCommand
         $resolver = $this->container->get(ResolverInterface::class);
 
         try {
-            list($this->input, $this->output) = [$input, $output];
+            [$this->input, $this->output] = [$input, $output];
 
             //Executing perform method with method injection
             return (int)$reflection->invokeArgs($this, $resolver->resolveArguments(

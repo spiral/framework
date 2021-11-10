@@ -56,7 +56,7 @@ jobs:
         run: composer require --dev roave/security-advisories:dev-latest
 
   static-analysis:
-    name: Psalm
+    name: Psalm and Rector
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -100,7 +100,9 @@ jobs:
 
       # Execution
       - name: Static Analysis
-        run: vendor/bin/psalm --no-cache
+        run: |
+          vendor/bin/psalm --no-cache
+          vendor/bin/rector --dry-run
 
 
   coding-standards:

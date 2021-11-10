@@ -173,7 +173,7 @@ final class StreamWrapper
             return;
         }
 
-        stream_wrapper_register('spiral', __CLASS__);
+        stream_wrapper_register('spiral', self::class);
 
         self::$registered = true;
     }
