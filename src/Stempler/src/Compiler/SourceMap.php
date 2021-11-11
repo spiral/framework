@@ -35,7 +35,6 @@ final class SourceMap implements \Serializable
     {
         $paths = [];
 
-        /** @var Location $loc */
         foreach ($this->lines as $line) {
             if (!in_array($this->paths[$line[0]], $paths, true)) {
                 $paths[] = $this->paths[$line[0]];
