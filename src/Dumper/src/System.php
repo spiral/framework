@@ -59,15 +59,6 @@ final class System
             }
 
             return @stream_isatty($stream);
-
-            if (\function_exists('posix_isatty')) {
-                return @posix_isatty($stream);
-            }
-
-            $stat = @fstat($stream);
-
-            // Check if formatted mode is S_IFCHR
-            return $stat && 0020000 === ($stat['mode'] & 0170000);
         } catch (\Throwable $e) {
             return false;
         }
