@@ -28,7 +28,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         RemoveUnusedPrivatePropertyRector::class,
 
         RemoveUnusedPrivateMethodRector::class => [
-            ConfigurationBootloader::class,
+            __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
         ],
     ]);
 
