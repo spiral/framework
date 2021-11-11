@@ -83,7 +83,7 @@ final class PathParser
         }
 
         if (strpos($filename, LoaderInterface::NS_SEPARATOR) !== false) {
-            list($namespace, $filename) = explode(LoaderInterface::NS_SEPARATOR, $filename);
+            [$namespace, $filename] = explode(LoaderInterface::NS_SEPARATOR, $filename);
         }
 
         //Twig like namespaces
