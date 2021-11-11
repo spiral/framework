@@ -112,6 +112,15 @@ final class AcceptHeader
             $item = AcceptHeaderItem::fromString((string)$item);
         }
 
+        /** @var AcceptHeaderItem|array $item  */
+        if (!$item instanceof AcceptHeaderItem) {
+            throw new AcceptHeaderException(sprintf(
+                'Accept Header item expected to be an instance of `%s` or a string, got `%s`',
+                AcceptHeaderItem::class,
+                is_object($item) ? get_class($item) : gettype($item)
+            ));
+        }
+
         $value = strtolower($item->getValue());
         if ($value !== '' && (!$this->has($value) || self::compare($item, $this->get($value)) === 1)) {
             $this->sorted = false;
