@@ -22,7 +22,6 @@ interface ParserInterface
      * Method must return unique rule id as key.
      *
      * @param mixed $rules
-     * @return \Generator
      *
      * @throws ParserException
      */
@@ -43,7 +42,6 @@ interface ParserInterface
      * Fetch validation rule arguments from rule definition.
      *
      * @param mixed $chunk
-     * @return array
      *
      * @throws ParserException
      */
@@ -64,7 +62,6 @@ interface ParserInterface
      * Parse validation conditions in a form of array [conditionClass => options].
      *
      * @param mixed $chunk
-     * @return array
      *
      * @throws ParserException
      */

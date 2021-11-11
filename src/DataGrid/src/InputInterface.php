@@ -16,20 +16,12 @@ interface InputInterface
 {
     /**
      * Isolate the input into given namespace (prefix).
-     *
-     * @param string $namespace
-     * @return InputInterface
      */
     public function withNamespace(string $namespace): InputInterface;
 
-    /**
-     * @param string $option
-     * @return bool
-     */
     public function hasValue(string $option): bool;
 
     /**
-     * @param string     $option
      * @param mixed|null $default
      * @return mixed
      */

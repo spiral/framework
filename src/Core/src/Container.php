@@ -282,7 +282,6 @@ final class Container implements
      * for each method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
      *
-     * @param string $alias
      * @param string|array|callable $resolver
      */
     public function bind(string $alias, $resolver): void
@@ -301,7 +300,6 @@ final class Container implements
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
      * (will be constructed only once), function array or Closure (executed only once call).
      *
-     * @param string $alias
      * @param string|array|callable $resolver
      */
     public function bindSingleton(string $alias, $resolver): void
@@ -318,9 +316,6 @@ final class Container implements
 
     /**
      * Check if alias points to constructed instance (singleton).
-     *
-     * @param string $alias
-     * @return bool
      */
     public function hasInstance(string $alias): bool
     {
@@ -344,9 +339,6 @@ final class Container implements
         return \array_key_exists($alias, $this->bindings);
     }
 
-    /**
-     * @param string $alias
-     */
     public function removeBinding(string $alias): void
     {
         unset($this->bindings[$alias]);
@@ -354,10 +346,6 @@ final class Container implements
 
     /**
      * Bind class or class interface to the injector source (InjectorInterface).
-     *
-     * @param string $class
-     * @param string $injector
-     * @return self
      */
     public function bindInjector(string $class, string $injector): Container
     {
@@ -367,9 +355,6 @@ final class Container implements
         return $this;
     }
 
-    /**
-     * @param string $class
-     */
     public function removeInjector(string $class): void
     {
         unset($this->injectors[$class]);
@@ -379,8 +364,6 @@ final class Container implements
     /**
      * Every declared Container binding. Must not be used in production code due container format is
      * vary.
-     *
-     * @return array
      */
     public function getBindings(): array
     {
@@ -389,8 +372,6 @@ final class Container implements
 
     /**
      * Every binded injector.
-     *
-     * @return array
      */
     public function getInjectors(): array
     {
@@ -400,9 +381,6 @@ final class Container implements
     /**
      * Automatically create class.
      *
-     * @param string $class
-     * @param array $parameters
-     * @param string $context
      * @return object
      *
      * @throws AutowireException
@@ -421,10 +399,6 @@ final class Container implements
         return $this->registerInstance($instance, $parameters);
     }
 
-    /**
-     * @param ContextFunction $reflection
-     * @return string
-     */
     private function getLocationString(ContextFunction $reflection): string
     {
         $location = $reflection->getName();
@@ -439,10 +413,7 @@ final class Container implements
     /**
      * Assert that given value are matched parameter type.
      *
-     * @param \ReflectionParameter $parameter
-     * @param ContextFunction $context
      * @param mixed $value
-     *
      * @throws ArgumentException
      * @throws \ReflectionException
      */
@@ -481,7 +452,6 @@ final class Container implements
     /**
      * Create instance of desired class.
      *
-     * @param string $class
      * @param array $parameters Constructor parameters.
      * @param string|null $context
      * @return object
@@ -505,16 +475,6 @@ final class Container implements
             try {
                 /** @var InjectorInterface $injectorInstance */
                 $injectorInstance = $this->get($injector);
-
-                if (!$injectorInstance instanceof InjectorInterface) {
-                    throw new InjectionException(
-                        \sprintf(
-                            "Class '%s' must be an instance of InjectorInterface for '%s'",
-                            \get_class($injectorInstance),
-                            $reflection->getName()
-                        )
-                    );
-                }
 
                 $instance = $injectorInstance->createInjection($reflection, $context);
                 if (!$reflection->isInstance($instance)) {
@@ -551,9 +511,6 @@ final class Container implements
 
     /**
      * Checks if given class has associated injector.
-     *
-     * @param \ReflectionClass $reflection
-     * @return bool
      */
     private function checkInjector(\ReflectionClass $reflection): bool
     {
@@ -622,12 +579,9 @@ final class Container implements
     }
 
     /**
-     * @param string $alias
      * @param mixed $target Value binded by user.
-     * @param array $parameters
      * @param string|null $context
      * @return mixed|null|object
-     *
      * @throws ContainerException
      * @throws \Throwable
      */

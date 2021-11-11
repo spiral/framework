@@ -25,7 +25,6 @@ trait AccessTrait
     private $access = AbstractDeclaration::ACCESS_PRIVATE;
 
     /**
-     * @param string $access
      *
      * @return $this
      * @throws ReactorException
@@ -47,9 +46,6 @@ trait AccessTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAccess(): string
     {
         return $this->access;

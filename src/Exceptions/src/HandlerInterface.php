@@ -25,18 +25,11 @@ interface HandlerInterface
 
     /**
      * Method must return prepared exception message.
-     *
-     * @param \Throwable $e
-     * @return string
      */
     public function getMessage(\Throwable $e): string;
 
     /**
      * Render exception debug information into stream.
-     *
-     * @param \Throwable $e
-     * @param int        $verbosity
-     * @return string
      */
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_VERBOSE): string;
 }

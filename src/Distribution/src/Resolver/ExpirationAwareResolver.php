@@ -52,9 +52,6 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
         $this->expiration = $this->intervals->create(static::DEFAULT_EXPIRATION_INTERVAL);
     }
 
-    /**
-     * @return \DateInterval
-     */
     public function getExpirationDate(): \DateInterval
     {
         return $this->expiration;
@@ -72,10 +69,6 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
         return $self;
     }
 
-    /**
-     * @param DateTimeFactoryInterface $factory
-     * @return $this
-     */
     public function withDateTimeFactory(DateTimeFactoryInterface $factory): self
     {
         $self = clone $this;
@@ -84,10 +77,6 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
         return $self;
     }
 
-    /**
-     * @param DateTimeIntervalFactoryInterface $factory
-     * @return $this
-     */
     public function withDateTimeIntervalFactory(DateTimeIntervalFactoryInterface $factory): self
     {
         $self = clone $this;
@@ -98,7 +87,6 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
 
     /**
      * @param DateIntervalFormat|null $expiration
-     * @return \DateTimeInterface
      */
     protected function getExpirationDateTime($expiration): \DateTimeInterface
     {
@@ -109,7 +97,6 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
 
     /**
      * @param DateIntervalFormat|null $expiration
-     * @return \DateInterval
      */
     private function resolveExpirationInterval($expiration): \DateInterval
     {

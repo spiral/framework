@@ -18,8 +18,5 @@ use Psr\Http\Message\StreamInterface;
  */
 interface StreamableInterface
 {
-    /**
-     * @return StreamInterface
-     */
     public function getStream(): StreamInterface;
 }

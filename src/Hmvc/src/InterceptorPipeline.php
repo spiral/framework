@@ -27,18 +27,11 @@ final class InterceptorPipeline implements CoreInterface
     /** @var int */
     private $position = 0;
 
-    /**
-     * @param CoreInterceptorInterface $interceptor
-     */
     public function addInterceptor(CoreInterceptorInterface $interceptor): void
     {
         $this->interceptors[] = $interceptor;
     }
 
-    /**
-     * @param CoreInterface $core
-     * @return $this
-     */
     public function withCore(CoreInterface $core): self
     {
         $pipeline = clone $this;
@@ -48,9 +41,7 @@ final class InterceptorPipeline implements CoreInterface
     }
 
     /**
-     * @param string      $controller
      * @param string|null $action
-     * @param array       $parameters
      * @return mixed
      * @throws \Throwable
      */

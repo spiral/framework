@@ -19,10 +19,6 @@ final class Byte
     /** @var string */
     public $char;
 
-    /**
-     * @param int    $offset
-     * @param string $char
-     */
     public function __construct(int $offset, string $char)
     {
         $this->offset = $offset;

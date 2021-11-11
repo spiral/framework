@@ -20,7 +20,6 @@ final class System
      * Return true if PHP running in CLI mode.
      *
      * @codeCoverageIgnore
-     * @return bool
      */
     public static function isCLI(): bool
     {
@@ -42,7 +41,6 @@ final class System
      * @codeCoverageIgnore
      * @link https://github.com/symfony/Console/blob/master/Output/StreamOutput.php#L94
      * @param mixed $stream
-     * @return bool
      */
     public static function isColorsSupported($stream = STDOUT): bool
     {
@@ -60,9 +58,7 @@ final class System
                     || getenv('TERM') == 'xterm';
             }
 
-            if (\function_exists('stream_isatty')) {
-                return @stream_isatty($stream);
-            }
+            return @stream_isatty($stream);
 
             if (\function_exists('posix_isatty')) {
                 return @posix_isatty($stream);
@@ -71,7 +67,7 @@ final class System
             $stat = @fstat($stream);
 
             // Check if formatted mode is S_IFCHR
-            return $stat ? 0020000 === ($stat['mode'] & 0170000) : false;
+            return $stat && 0020000 === ($stat['mode'] & 0170000);
         } catch (\Throwable $e) {
             return false;
         }

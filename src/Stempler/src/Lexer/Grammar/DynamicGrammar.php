@@ -224,10 +224,6 @@ final class DynamicGrammar implements GrammarInterface
         }
     }
 
-    /**
-     * @param string $body
-     * @return array
-     */
     private function fetchOptions(string $body): array
     {
         $lexer = new Lexer();

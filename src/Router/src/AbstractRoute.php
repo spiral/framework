@@ -30,20 +30,12 @@ abstract class AbstractRoute implements RouteInterface
     /** @var array|null */
     protected $matches;
 
-    /**
-     * @param string $pattern
-     * @param array  $defaults
-     */
     public function __construct(string $pattern, array $defaults = [])
     {
         $this->pattern = $pattern;
         $this->defaults = $defaults;
     }
 
-    /**
-     * @param UriHandler $uriHandler
-     * @return RouteInterface
-     */
     public function withUriHandler(UriHandler $uriHandler): RouteInterface
     {
         $route = clone $this;

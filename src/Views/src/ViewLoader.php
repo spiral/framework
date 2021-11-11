@@ -26,7 +26,7 @@ final class ViewLoader implements LoaderInterface
     private $files;
 
     /** @var PathParser|null */
-    private $parser = null;
+    private $parser;
 
     /** @var array */
     private $namespaces = [];
@@ -34,11 +34,6 @@ final class ViewLoader implements LoaderInterface
     /** @var string */
     private $defaultNamespace = self::DEFAULT_NAMESPACE;
 
-    /**
-     * @param array          $namespaces
-     * @param FilesInterface $files
-     * @param string         $defaultNamespace
-     */
     public function __construct(
         array $namespaces,
         FilesInterface $files = null,
@@ -60,9 +55,6 @@ final class ViewLoader implements LoaderInterface
         return $loader;
     }
 
-    /**
-     * @return string|null
-     */
     public function getExtension(): ?string
     {
         if ($this->parser !== null) {
@@ -74,9 +66,6 @@ final class ViewLoader implements LoaderInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param string   $filename
-     * @param ViewPath $parsed
      */
     public function exists(string $path, string &$filename = null, ViewPath &$parsed = null): bool
     {

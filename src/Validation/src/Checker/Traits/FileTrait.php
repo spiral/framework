@@ -28,7 +28,6 @@ trait FileTrait
      * Internal method to fetch filename using multiple input formats.
      *
      * @param mixed|UploadedFileInterface|StreamableInterface $file
-     * @return string|null
      */
     private function resolveFilename($file): ?string
     {
@@ -62,7 +61,6 @@ trait FileTrait
      * Check if file being uploaded.
      *
      * @param mixed|UploadedFileInterface $file Filename or file array.
-     * @return bool
      */
     private function isUploaded($file): bool
     {

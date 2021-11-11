@@ -16,20 +16,12 @@ namespace Spiral\Auth;
  */
 interface TokenInterface
 {
-    /**
-     * @return string
-     */
     public function getID(): string;
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getExpiresAt(): ?\DateTimeInterface;
 
     /**
      * Actor provider specific payload.
-     *
-     * @return array
      */
     public function getPayload(): array;
 }

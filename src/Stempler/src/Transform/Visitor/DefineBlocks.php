@@ -58,9 +58,6 @@ final class DefineBlocks implements VisitorInterface
 
     /**
      * Tags like '<block:name></block:name>'.
-     *
-     * @param Tag $node
-     * @return NodeInterface|null
      */
     private function makeBlock(Tag $node): ?NodeInterface
     {

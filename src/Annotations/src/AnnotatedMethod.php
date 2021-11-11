@@ -20,7 +20,6 @@ final class AnnotatedMethod
     private $annotation;
 
     /**
-     * @param \ReflectionMethod $method
      * @param mixed             $annotation
      */
     public function __construct(\ReflectionMethod $method, $annotation)
@@ -29,17 +28,11 @@ final class AnnotatedMethod
         $this->annotation = $annotation;
     }
 
-    /**
-     * @return \ReflectionClass
-     */
     public function getClass(): \ReflectionClass
     {
         return $this->method->getDeclaringClass();
     }
 
-    /**
-     * @return \ReflectionMethod
-     */
     public function getMethod(): \ReflectionMethod
     {
         return $this->method;

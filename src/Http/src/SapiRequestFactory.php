@@ -66,12 +66,6 @@ final class SapiRequestFactory
     /** @var UploadedFileFactoryInterface */
     private $uploadedFileFactory;
 
-    /**
-     * @param ServerRequestFactoryInterface $requestFactory
-     * @param StreamFactoryInterface        $streamFactory
-     * @param UploadedFileFactoryInterface  $uploadedFileFactory
-     * @param UriFactoryInterface           $uriFactory
-     */
     public function __construct(
         ServerRequestFactoryInterface $requestFactory,
         UriFactoryInterface $uriFactory,
@@ -84,9 +78,6 @@ final class SapiRequestFactory
         $this->uploadedFileFactory = $uploadedFileFactory;
     }
 
-    /**
-     * @return ServerRequestInterface
-     */
     public function fromGlobals(): ServerRequestInterface
     {
         return $this->createFromParameters(
@@ -101,14 +92,7 @@ final class SapiRequestFactory
     }
 
     /**
-     * @param array                                $server
-     * @param array                                $headers
-     * @param array                                $cookies
-     * @param array                                $get
-     * @param array                                $post
-     * @param array                                $files
      * @param StreamInterface|resource|string|null $body
-     * @return ServerRequestInterface
      */
     public function createFromParameters(
         array $server,
@@ -158,10 +142,6 @@ final class SapiRequestFactory
         return $request->withBody($body);
     }
 
-    /**
-     * @param array $server
-     * @return UriInterface
-     */
     private function getUri(array $server): UriInterface
     {
         $uri = $this->uriFactory->createUri();
@@ -194,9 +174,6 @@ final class SapiRequestFactory
         return $uri;
     }
 
-    /**
-     * @return array
-     */
     private static function getHeadersFromGlobals(): array
     {
         if (\function_exists('getallheaders')) {
@@ -214,10 +191,6 @@ final class SapiRequestFactory
         return $headers;
     }
 
-    /**
-     * @param array $filesArray
-     * @return array
-     */
     private function getUploadedFilesArray(array $filesArray): array
     {
         $files = [];

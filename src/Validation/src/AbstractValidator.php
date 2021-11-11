@@ -28,9 +28,7 @@ abstract class AbstractValidator implements ValidatorInterface
     private $provider;
 
     /**
-     * @param array          $rules
      * @param mixed          $context
-     * @param RulesInterface $ruleProvider
      */
     public function __construct(array $rules, $context, RulesInterface $ruleProvider)
     {
@@ -96,9 +94,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
      * Check if value has any error associated.
      *
-     * @param string $field
      *
-     * @return bool
      */
     public function hasError(string $field): bool
     {

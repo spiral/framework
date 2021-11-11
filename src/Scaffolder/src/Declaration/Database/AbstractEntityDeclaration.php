@@ -52,9 +52,6 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
         $this->mapper = $mapper;
     }
 
-    /**
-     * @param string $repository
-     */
     public function setRepository(string $repository): void
     {
         $this->repository = $repository;
@@ -68,17 +65,11 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
         $this->table = $table;
     }
 
-    /**
-     * @param string $database
-     */
     public function setDatabase(string $database): void
     {
         $this->database = $database;
     }
 
-    /**
-     * @param string $inflection
-     */
     public function setInflection(string $inflection): void
     {
         $this->inflection = $inflection;
@@ -86,11 +77,6 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
 
     /**
      * Add field.
-     *
-     * @param string $name
-     * @param string $accessibility
-     * @param string $type
-     * @return Property
      */
     public function addField(string $name, string $accessibility, string $type): Property
     {
@@ -109,28 +95,16 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
 
     abstract public function declareSchema(): void;
 
-    /**
-     * @param string $type
-     * @return bool
-     */
     protected function isNullableType(string $type): bool
     {
         return strpos($type, '?') === 0;
     }
 
-    /**
-     * @param string $type
-     * @return string
-     */
     private function variableType(string $type): string
     {
         return $this->isNullableType($type) ? (substr($type, 1) . '|null') : $type;
     }
 
-    /**
-     * @param string $field
-     * @param string $type
-     */
     private function declareAccessors(string $field, string $type): void
     {
         $setter = $this->method('set' . $this->classify($field));
@@ -143,10 +117,6 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
         $getter->setSource("return \$this->$field;");
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     private function classify(string $name): string
     {
         return ( new InflectorFactory() )

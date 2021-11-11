@@ -39,9 +39,6 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
      */
     public const ALLOW_EMPTY_VALUES = ['exists', 'uploaded'];
 
-    /**
-     * @param FilesInterface $files
-     */
     public function __construct(FilesInterface $files)
     {
         $this->files = $files;
@@ -51,7 +48,6 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
      * Check if file exist.
      *
      * @param mixed $file
-     * @return bool
      */
     public function exists($file): bool
     {
@@ -62,7 +58,6 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
      * Check if file been uploaded.
      *
      * @param mixed $file Local file or uploaded file array.
-     * @return bool
      */
     public function uploaded($file): bool
     {
@@ -74,7 +69,6 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
      *
      * @param mixed $file Local file or uploaded file array.
      * @param int   $size Size in KBytes.
-     * @return bool
      */
     public function size($file, int $size): bool
     {
@@ -92,7 +86,6 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
      *
      * @param mixed        $file
      * @param array|string $extensions
-     * @return bool
      */
     public function extension($file, $extensions): bool
     {

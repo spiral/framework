@@ -80,10 +80,6 @@ final class AttributeParser
         $this->resolver->addVisitor(new NameResolver());
     }
 
-    /**
-     * @param string $file
-     * @return AttributeFinderVisitor
-     */
     public function parse(string $file): AttributeFinderVisitor
     {
         $ast = $this->parser->parse($this->read($file));
@@ -101,9 +97,7 @@ final class AttributeParser
     }
 
     /**
-     * @param string $file
      * @param AttributeGroup[] $groups
-     * @param array $context
      * @return \Traversable<AttributePrototype>
      * @throws \Throwable
      */
@@ -120,9 +114,6 @@ final class AttributeParser
         }
     }
 
-    /**
-     * @return Parser
-     */
     private function createParser(): Parser
     {
         $factory = new ParserFactory();
@@ -130,10 +121,6 @@ final class AttributeParser
         return $factory->create(ParserFactory::ONLY_PHP7);
     }
 
-    /**
-     * @param string $file
-     * @return string
-     */
     private function read(string $file): string
     {
         if (!\is_readable($file)) {
@@ -143,11 +130,6 @@ final class AttributeParser
         return \file_get_contents($file);
     }
 
-    /**
-     * @param string $file
-     * @param array $context
-     * @return \Closure
-     */
     private function evaluator(string $file, array $context): \Closure
     {
         return static function (Expr $expr) use ($file, $context) {
@@ -195,10 +177,6 @@ final class AttributeParser
     }
 
     /**
-     * @param Attribute $attr
-     * @param string $file
-     * @param ConstExprEvaluator $eval
-     * @return array
      * @throws ConstExprEvaluationException
      * @throws \Throwable
      */

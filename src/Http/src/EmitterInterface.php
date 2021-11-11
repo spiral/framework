@@ -17,8 +17,6 @@ interface EmitterInterface
 {
     /**
      * Emit response to the user.
-     *
-     * @param ResponseInterface $response
      */
     public function emit(ResponseInterface $response);
 }

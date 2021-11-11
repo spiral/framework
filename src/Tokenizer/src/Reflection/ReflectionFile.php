@@ -128,9 +128,6 @@ final class ReflectionFile
      */
     private $invocations = [];
 
-    /**
-     * @param string $filename
-     */
     public function __construct(string $filename)
     {
         $this->filename = $filename;
@@ -143,8 +140,6 @@ final class ReflectionFile
 
     /**
      * Filename.
-     *
-     * @return string
      */
     public function getFilename(): string
     {
@@ -153,8 +148,6 @@ final class ReflectionFile
 
     /**
      * List of declared function names
-     *
-     * @return array
      */
     public function getFunctions(): array
     {
@@ -163,8 +156,6 @@ final class ReflectionFile
 
     /**
      * List of declared class names
-     *
-     * @return array
      */
     public function getClasses(): array
     {
@@ -177,8 +168,6 @@ final class ReflectionFile
 
     /**
      * List of declared trait names
-     *
-     * @return array
      */
     public function getTraits(): array
     {
@@ -191,8 +180,6 @@ final class ReflectionFile
 
     /**
      * List of declared interface names
-     *
-     * @return array
      */
     public function getInterfaces(): array
     {
@@ -205,8 +192,6 @@ final class ReflectionFile
 
     /**
      * Get list of tokens associated with given file.
-     *
-     * @return array
      */
     public function getTokens(): array
     {
@@ -215,8 +200,6 @@ final class ReflectionFile
 
     /**
      * Indication that file contains require/include statements
-     *
-     * @return bool
      */
     public function hasIncludes(): bool
     {
@@ -240,8 +223,6 @@ final class ReflectionFile
 
     /**
      * Export found declaration as array for caching purposes.
-     *
-     * @return array
      */
     public function exportSchema(): array
     {
@@ -250,8 +231,6 @@ final class ReflectionFile
 
     /**
      * Import cached reflection schema.
-     *
-     * @param array $cache
      */
     protected function importSchema(array $cache)
     {
@@ -309,8 +288,6 @@ final class ReflectionFile
 
     /**
      * Handle namespace declaration.
-     *
-     * @param int $tokenID
      */
     private function registerNamespace(int $tokenID)
     {
@@ -353,8 +330,6 @@ final class ReflectionFile
 
     /**
      * Handle use (import class from another namespace).
-     *
-     * @param int $tokenID
      */
     private function registerUse(int $tokenID)
     {
@@ -385,8 +360,6 @@ final class ReflectionFile
 
     /**
      * Handle function declaration (function creation).
-     *
-     * @param int $tokenID
      */
     private function registerFunction(int $tokenID)
     {
@@ -419,9 +392,6 @@ final class ReflectionFile
     /**
      * Handle declaration of class, trait of interface. Declaration will be stored under it's token
      * type in declarations array.
-     *
-     * @param int $tokenID
-     * @param int $tokenType
      */
     private function registerDeclaration(int $tokenID, int $tokenType)
     {
@@ -444,9 +414,7 @@ final class ReflectionFile
     /**
      * Check if token ID represents `ClassName::class` constant statement.
      *
-     * @param int $tokenID
      *
-     * @return bool
      */
     private function isClassNameConst(int $tokenID): bool
     {
@@ -582,12 +550,6 @@ final class ReflectionFile
 
     /**
      * Registering invocation.
-     *
-     * @param int   $invocationID
-     * @param int   $argumentsID
-     * @param int   $endID
-     * @param array $arguments
-     * @param int   $invocationLevel
      */
     private function registerInvocation(
         int $invocationID,
@@ -621,10 +583,7 @@ final class ReflectionFile
     /**
      * Fetching invocation context.
      *
-     * @param int $invocationTID
-     * @param int $argumentsTID
      *
-     * @return array
      */
     private function fetchContext(int $invocationTID, int $argumentsTID): array
     {
@@ -653,7 +612,6 @@ final class ReflectionFile
     /**
      * Get declaration which is active in given token position.
      *
-     * @param int $tokenID
      *
      * @return string|null
      */
@@ -674,9 +632,7 @@ final class ReflectionFile
     /**
      * Get namespace name active at specified token position.
      *
-     * @param int $tokenID
      *
-     * @return string
      */
     private function activeNamespace(int $tokenID): string
     {
@@ -699,9 +655,7 @@ final class ReflectionFile
     /**
      * Find token ID of ending brace.
      *
-     * @param int $tokenID
      *
-     * @return int
      */
     private function endingToken(int $tokenID): int
     {
@@ -728,9 +682,7 @@ final class ReflectionFile
     /**
      * Get line number associated with token.
      *
-     * @param int $tokenID
      *
-     * @return int
      */
     private function lineNumber(int $tokenID): int
     {
@@ -744,10 +696,7 @@ final class ReflectionFile
     /**
      * Get src located between two tokens.
      *
-     * @param int $startID
-     * @param int $endID
      *
-     * @return string
      */
     private function getSource(int $startID, int $endID): string
     {

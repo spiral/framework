@@ -23,8 +23,6 @@ interface DateTimeFactoryInterface
 {
     /**
      * Returns the current time as a DateTimeImmutable instance.
-     *
-     * @return \DateTimeImmutable
      */
     public function now(): \DateTimeImmutable;
 }

@@ -22,10 +22,6 @@ class SyntaxException extends \RuntimeException
     /** @var Token */
     private $token;
 
-    /**
-     * @param string $message
-     * @param Token  $context
-     */
     public function __construct(string $message, Token $context)
     {
         $this->token = $context;
@@ -34,9 +30,6 @@ class SyntaxException extends \RuntimeException
         parent::__construct($message, 0, null);
     }
 
-    /**
-     * @return Token
-     */
     public function getToken(): Token
     {
         return $this->token;

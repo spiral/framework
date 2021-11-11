@@ -79,9 +79,6 @@ abstract class AbstractChecker implements CheckerInterface
         return $this->say(static::DEFAULT_MESSAGE, compact('method'));
     }
 
-    /**
-     * @return ValidatorInterface
-     */
     protected function getValidator(): ValidatorInterface
     {
         return $this->validator;

@@ -105,10 +105,6 @@ abstract class AttributeReader extends Reader
         }
     }
 
-    /**
-     * @param string $class
-     * @param \Reflector $context
-     */
     protected function assertClassExists(string $class, \Reflector $context): void
     {
         if (!\class_exists($class)) {
@@ -122,36 +118,26 @@ abstract class AttributeReader extends Reader
     }
 
     /**
-     * @param \ReflectionClass $class
-     * @param string|null $name
      * @return iterable<\ReflectionClass, array>
      */
     abstract protected function getClassAttributes(\ReflectionClass $class, ?string $name): iterable;
 
     /**
-     * @param \ReflectionFunctionAbstract $function
-     * @param string|null $name
      * @return iterable<\ReflectionClass, array>
      */
     abstract protected function getFunctionAttributes(\ReflectionFunctionAbstract $function, ?string $name): iterable;
 
     /**
-     * @param \ReflectionProperty $property
-     * @param string|null $name
      * @return iterable<\ReflectionClass, array>
      */
     abstract protected function getPropertyAttributes(\ReflectionProperty $property, ?string $name): iterable;
 
     /**
-     * @param \ReflectionClassConstant $const
-     * @param string|null $name
      * @return iterable<\ReflectionClass, array>
      */
     abstract protected function getConstantAttributes(\ReflectionClassConstant $const, ?string $name): iterable;
 
     /**
-     * @param \ReflectionParameter $param
-     * @param string|null $name
      * @return iterable<\ReflectionClass, array>
      */
     abstract protected function getParameterAttributes(\ReflectionParameter $param, ?string $name): iterable;

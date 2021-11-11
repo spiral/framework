@@ -72,12 +72,4 @@ final class ConfigurationBootloader extends Bootloader
             true
         );
     }
-
-    /**
-     * @return ConfiguratorInterface
-     */
-    private function configManager(): ConfiguratorInterface
-    {
-        return $this->configurator;
-    }
 }

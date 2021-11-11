@@ -46,9 +46,6 @@ final class Tag implements NodeInterface, AttributedInterface
         $this->context = $context;
     }
 
-    /**
-     * @return \Generator
-     */
     public function getIterator(): \Generator
     {
         yield 'name' => $this->name;

@@ -18,8 +18,6 @@ interface GridFactoryInterface
      * Generate new grid view using given source and data schema.
      *
      * @param mixed      $source
-     * @param GridSchema $schema
-     * @return GridInterface
      */
     public function create($source, GridSchema $schema): GridInterface;
 }

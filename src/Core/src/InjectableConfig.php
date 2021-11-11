@@ -30,8 +30,6 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
 
     /**
      * At this moment on array based configs can be supported.
-     *
-     * @param array $config
      */
     public function __construct(array $config = [])
     {

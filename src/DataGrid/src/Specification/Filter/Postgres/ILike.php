@@ -27,17 +27,11 @@ final class ILike implements FilterInterface
         return $filter->like->withValue($value);
     }
 
-    /**
-     * @return string
-     */
     public function getExpression(): string
     {
         return $this->like->getExpression();
     }
 
-    /**
-     * @return string
-     */
     public function getPattern(): string
     {
         return $this->like->getPattern();

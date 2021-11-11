@@ -27,8 +27,6 @@ final class LocateProperties extends NodeVisitorAbstract
 
     /**
      * Get names of all virtual properties.
-     *
-     * @return array
      */
     public function getProperties(): array
     {
@@ -41,7 +39,6 @@ final class LocateProperties extends NodeVisitorAbstract
     /**
      * Detected declared and requested nodes.
      *
-     * @param Node $node
      * @return int|null|Node
      */
     public function enterNode(Node $node)

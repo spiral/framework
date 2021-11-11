@@ -28,9 +28,6 @@ final class AuthContext implements AuthContextInterface
     /** @var bool */
     private $closed = false;
 
-    /**
-     * @param ActorProviderInterface $actorProvider
-     */
     public function __construct(ActorProviderInterface $actorProvider)
     {
         $this->actorProvider = $actorProvider;

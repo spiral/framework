@@ -17,20 +17,11 @@ use Spiral\Mailer\MessageInterface;
 
 final class MessageSerializer implements SerializerInterface
 {
-    /**
-     * @param string $jobType
-     * @param array  $payload
-     * @return string
-     */
     public function serialize(string $jobType, array $payload): string
     {
         return json_encode($payload);
     }
 
-    /**
-     * @param MessageInterface $message
-     * @return array
-     */
     public static function pack(MessageInterface $message): array
     {
         return [
@@ -45,10 +36,6 @@ final class MessageSerializer implements SerializerInterface
         ];
     }
 
-    /**
-     * @param array $payload
-     * @return MessageInterface
-     */
     public static function unpack(array $payload): MessageInterface
     {
         $message = new Message($payload['subject'], $payload['to'], $payload['data']);

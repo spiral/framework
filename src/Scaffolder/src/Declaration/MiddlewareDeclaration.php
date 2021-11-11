@@ -24,10 +24,6 @@ use Spiral\Reactor\DependedInterface;
  */
 class MiddlewareDeclaration extends ClassDeclaration implements DependedInterface
 {
-    /**
-     * @param string $name
-     * @param string $comment
-     */
     public function __construct(string $name, string $comment = '')
     {
         parent::__construct($name, '', ['MiddlewareInterface'], $comment);

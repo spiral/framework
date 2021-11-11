@@ -95,9 +95,6 @@ final class DoctrineAnnotationReader extends BaseReader
         return [];
     }
 
-    /**
-     * @return bool
-     */
     protected function isAvailable(): bool
     {
         return \interface_exists(Reader::class);
@@ -127,9 +124,6 @@ final class DoctrineAnnotationReader extends BaseReader
         }
     }
 
-    /**
-     * @return void
-     */
     private function bootAnnotations(): void
     {
         // doctrine/annotations ^1.0 compatibility.
@@ -138,9 +132,6 @@ final class DoctrineAnnotationReader extends BaseReader
         }
     }
 
-    /**
-     * @return void
-     */
     private function checkAvailability(): void
     {
         if ($this->isAvailable()) {

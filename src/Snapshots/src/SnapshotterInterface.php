@@ -15,9 +15,6 @@ interface SnapshotterInterface
 {
     /**
      * Register exception and return snapshot instance to represent error.
-     *
-     * @param \Throwable $e
-     * @return SnapshotInterface
      */
     public function register(\Throwable $e): SnapshotInterface;
 }

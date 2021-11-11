@@ -44,9 +44,6 @@ abstract class Command extends SymfonyCommand
     /** @var Container */
     protected $container;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
@@ -101,8 +98,6 @@ abstract class Command extends SymfonyCommand
 
     /**
      * Define command options.
-     *
-     * @return array
      */
     protected function defineOptions(): array
     {
@@ -111,8 +106,6 @@ abstract class Command extends SymfonyCommand
 
     /**
      * Define command arguments.
-     *
-     * @return array
      */
     protected function defineArguments(): array
     {

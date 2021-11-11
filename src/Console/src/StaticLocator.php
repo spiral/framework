@@ -22,10 +22,6 @@ final class StaticLocator implements LocatorInterface
     /** @var ContainerInterface */
     private $factory;
 
-    /**
-     * @param array               $commands
-     * @param  ContainerInterface $container
-     */
     public function __construct(array $commands, ContainerInterface $container = null)
     {
         $this->commands = $commands;

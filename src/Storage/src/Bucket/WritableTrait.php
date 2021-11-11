@@ -155,15 +155,8 @@ trait WritableTrait
             throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
         }
     }
-    /**
-     * @return FilesystemOperator
-     */
     abstract protected function getOperator(): FilesystemOperator;
 
-    /**
-     * @param string $visibility
-     * @return string
-     */
     #[ExpectedValues(valuesFromClass: \League\Flysystem\Visibility::class)]
     private function toFlysystemVisibility(
         #[ExpectedValues(valuesFromClass: Visibility::class)]
@@ -186,7 +179,6 @@ trait WritableTrait
      * @psalm-internal Spiral\Storage\Storage
      *
      * @param string $path
-     * @return string
      */
     private function getParentDirectory(string $path): string
     {
@@ -199,9 +191,6 @@ trait WritableTrait
      *
      * @internal This is an internal method, please do not use it in your code.
      * @psalm-internal Spiral\Storage\Storage
-     *
-     * @param string $directory
-     * @return bool
      */
     private function hasParentDirectory(string $directory): bool
     {
@@ -214,7 +203,6 @@ trait WritableTrait
      * @internal This is an internal method, please do not use it in your code.
      * @psalm-internal Spiral\Storage\Storage
      *
-     * @param string $directory
      * @throws FileOperationException
      */
     private function deleteEmptyDirectories(string $directory): void
@@ -247,7 +235,6 @@ trait WritableTrait
      * @psalm-internal Spiral\Storage\Storage
      *
      * @param string $directory
-     * @return bool
      * @throws FilesystemException
      */
     private function hasFiles(string $directory): bool
@@ -266,7 +253,6 @@ trait WritableTrait
      * can be converted to string.
      *
      * @param string|\Stringable $value
-     * @return bool
      */
     private function isStringable($value): bool
     {

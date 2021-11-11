@@ -17,8 +17,6 @@ interface ContextInterface
 {
     /**
      * Calculated context id based on values of all dependencies.
-     *
-     * @return string
      */
     public function getID(): string;
 
@@ -32,8 +30,6 @@ interface ContextInterface
     /**
      * Create environment with new variable dependency.
      *
-     * @param DependencyInterface $dependency
-     * @return ContextInterface
      *
      * @throws ContextException
      */
@@ -42,9 +38,7 @@ interface ContextInterface
     /**
      * Get calculated dependency value.
      *
-     * @param string $dependency
      * @return mixed
-     *
      * @throws ContextException
      */
     public function resolveValue(string $dependency);

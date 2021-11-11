@@ -63,8 +63,6 @@ class DataEntity extends AbstractEntity
     /**
      * Check if field can be set using setFields() method.
      *
-     * @param string $field
-     * @return bool
      *
      * @see  $secured
      * @see  setField()
@@ -90,10 +88,8 @@ class DataEntity extends AbstractEntity
     /**
      * Check and return name of mutator (getter, setter, accessor) associated with specific field.
      *
-     * @param string $field
      * @param string $mutator Mutator type (setter, getter, accessor).
      * @return mixed|null
-     *
      * @throws EntityException
      */
     protected function getMutator(string $field, string $mutator)

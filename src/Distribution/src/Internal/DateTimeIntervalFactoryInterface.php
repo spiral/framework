@@ -21,14 +21,9 @@ interface DateTimeIntervalFactoryInterface
 {
     /**
      * @param DateIntervalFormat|null $duration
-     * @return \DateInterval
      * @throws \InvalidArgumentException
      */
     public function create($duration): \DateInterval;
 
-    /**
-     * @param \DateInterval $interval
-     * @return \DateTimeImmutable
-     */
     public function toDateTime(\DateInterval $interval): \DateTimeImmutable;
 }

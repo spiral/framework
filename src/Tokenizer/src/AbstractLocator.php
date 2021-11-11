@@ -28,11 +28,8 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
     public const INJECTOR = Tokenizer::class;
 
     /** @var Finder */
-    protected $finder = null;
+    protected $finder;
 
-    /**
-     * @param Finder $finder
-     */
     public function __construct(Finder $finder)
     {
         $this->finder = $finder;
@@ -67,9 +64,7 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
      * Safely get class reflection, class loading errors will be blocked and reflection will be
      * excluded from analysis.
      *
-     * @param string $class
      *
-     * @return \ReflectionClass
      */
     protected function classReflection(string $class): \ReflectionClass
     {
@@ -113,9 +108,7 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
     /**
      * Get every class trait (including traits used in parents).
      *
-     * @param string $class
      *
-     * @return array
      */
     protected function fetchTraits(string $class): array
     {

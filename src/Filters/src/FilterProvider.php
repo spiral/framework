@@ -54,7 +54,6 @@ final class FilterProvider implements FilterProviderInterface
     private $factory;
 
     /**
-     * @param ValidationInterface   $validation
      * @param FactoryInterface|null $factory
      */
     public function __construct(ValidationInterface $validation, FactoryInterface $factory = null)
@@ -84,11 +83,6 @@ final class FilterProvider implements FilterProviderInterface
         return $instance;
     }
 
-    /**
-     * @param array          $mappingSchema
-     * @param InputInterface $input
-     * @return array
-     */
     public function initValues(array $mappingSchema, InputInterface $input): array
     {
         $result = [];
@@ -124,10 +118,6 @@ final class FilterProvider implements FilterProviderInterface
 
     /**
      * Create set of origins and prefixed for a nested array of models.
-     *
-     * @param array          $schema
-     * @param InputInterface $input
-     * @return Generator
      */
     private function iterate(array $schema, InputInterface $input): Generator
     {
@@ -141,10 +131,6 @@ final class FilterProvider implements FilterProviderInterface
         }
     }
 
-    /**
-     * @param string $filter
-     * @return ErrorMapper
-     */
     private function getErrorMapper(string $filter): ErrorMapper
     {
         if (isset($this->errorMappers[$filter])) {
@@ -157,10 +143,6 @@ final class FilterProvider implements FilterProviderInterface
         return $errorMapper;
     }
 
-    /**
-     * @param string $filter
-     * @return ValidatorInterface
-     */
     private function getValidator(string $filter): ValidatorInterface
     {
         if (isset($this->validators[$filter])) {
@@ -174,8 +156,6 @@ final class FilterProvider implements FilterProviderInterface
     }
 
     /**
-     * @param string $filter
-     * @return array
      *
      * @throws SchemaException
      */

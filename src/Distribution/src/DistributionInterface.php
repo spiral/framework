@@ -18,13 +18,8 @@ interface DistributionInterface extends \IteratorAggregate, \Countable
 {
     /**
      * @param string|null $name
-     * @return UriResolverInterface
      */
     public function resolver(string $name = null): UriResolverInterface;
 
-    /**
-     * @param string $name
-     * @return $this
-     */
     public function withDefault(string $name): self;
 }

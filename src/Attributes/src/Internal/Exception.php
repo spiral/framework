@@ -18,10 +18,6 @@ namespace Spiral\Attributes\Internal;
 final class Exception
 {
     /**
-     * @param \Throwable $e
-     * @param string $file
-     * @param int $line
-     * @return \Throwable
      * @throws \ReflectionException
      */
     public static function withLocation(\Throwable $e, string $file, int $line): \Throwable

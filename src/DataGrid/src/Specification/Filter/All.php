@@ -17,9 +17,6 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class All extends Group
 {
-    /**
-     * @param FilterInterface ...$filter
-     */
     public function __construct(FilterInterface ...$filter)
     {
         $this->filters = $filter;

@@ -26,13 +26,8 @@ final class ViewSource
     private $namespace;
 
     /** @var string|null */
-    private $code = null;
+    private $code;
 
-    /**
-     * @param string $filename
-     * @param string $name
-     * @param string $namespace
-     */
     public function __construct(string $filename, string $namespace, string $name)
     {
         $this->filename = $filename;
@@ -42,8 +37,6 @@ final class ViewSource
 
     /**
      * Template namespace.
-     *
-     * @return string
      */
     public function getNamespace(): string
     {
@@ -52,8 +45,6 @@ final class ViewSource
 
     /**
      * Template name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -62,8 +53,6 @@ final class ViewSource
 
     /**
      * Template filename.
-     *
-     * @return string
      */
     public function getFilename(): string
     {
@@ -72,8 +61,6 @@ final class ViewSource
 
     /**
      * Template code.
-     *
-     * @return string
      */
     public function getCode(): string
     {
@@ -82,9 +69,6 @@ final class ViewSource
 
     /**
      * Get source copy with redefined code.
-     *
-     * @param string $code
-     * @return self
      */
     public function withCode(string $code): ViewSource
     {

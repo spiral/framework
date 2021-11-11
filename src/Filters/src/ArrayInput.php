@@ -24,9 +24,6 @@ final class ArrayInput implements InputInterface
     /** @var string */
     private $prefix = '';
 
-    /**
-     * @param array $data
-     */
     public function __construct(array $data = [])
     {
         $this->data = $data;
@@ -62,9 +59,7 @@ final class ArrayInput implements InputInterface
     /**
      * Get element using dot notation.
      *
-     * @param string $name
      * @return mixed|null
-     *
      * @throws DotNotFoundException
      */
     private function dotGet(string $name)

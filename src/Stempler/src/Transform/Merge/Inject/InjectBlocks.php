@@ -30,9 +30,6 @@ final class InjectBlocks implements VisitorInterface
     /** @var BlockFetcher */
     private $fetcher;
 
-    /**
-     * @param BlockClaims $blocks
-     */
     public function __construct(BlockClaims $blocks)
     {
         $this->blocks = $blocks;

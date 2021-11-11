@@ -57,10 +57,6 @@ final class ContextRenderer
      */
     protected const FORMAT_PARAMETER = 'parameter $%s of %s';
 
-    /**
-     * @param \Reflector|null $reflector
-     * @return string
-     */
     public function render(?\Reflector $reflector): string
     {
         switch (true) {
@@ -84,10 +80,6 @@ final class ContextRenderer
         }
     }
 
-    /**
-     * @param \ReflectionClass $class
-     * @return string
-     */
     public function renderClassContext(\ReflectionClass $class): string
     {
         if ($class->isAnonymous()) {
@@ -97,10 +89,6 @@ final class ContextRenderer
         return \sprintf(self::FORMAT_CLASS, $class->getName());
     }
 
-    /**
-     * @param \ReflectionMethod $method
-     * @return string
-     */
     public function renderMethodContext(\ReflectionMethod $method): string
     {
         $class = $method->getDeclaringClass();
@@ -108,10 +96,6 @@ final class ContextRenderer
         return \sprintf(self::FORMAT_METHOD, $class->getName(), $method->getName());
     }
 
-    /**
-     * @param \ReflectionFunction $fn
-     * @return string
-     */
     public function renderFunctionContext(\ReflectionFunction $fn): string
     {
         if ($fn->isClosure()) {
@@ -121,10 +105,6 @@ final class ContextRenderer
         return \sprintf(self::FORMAT_FUNCTION, $fn->getName());
     }
 
-    /**
-     * @param \ReflectionFunctionAbstract $function
-     * @return string
-     */
     public function renderCallableContext(\ReflectionFunctionAbstract $function): string
     {
         if ($function instanceof \ReflectionMethod) {
@@ -139,10 +119,6 @@ final class ContextRenderer
         return \sprintf(self::FORMAT_FUNCTION, $function->getName());
     }
 
-    /**
-     * @param \ReflectionProperty $property
-     * @return string
-     */
     public function renderPropertyContext(\ReflectionProperty $property): string
     {
         $class = $property->getDeclaringClass();
@@ -150,10 +126,6 @@ final class ContextRenderer
         return \sprintf(self::FORMAT_PROPERTY, $class->getName(), $property->getName());
     }
 
-    /**
-     * @param \ReflectionClassConstant $const
-     * @return string
-     */
     public function renderConstantContext(\ReflectionClassConstant $const): string
     {
         $class = $const->getDeclaringClass();
@@ -161,10 +133,6 @@ final class ContextRenderer
         return \sprintf(self::FORMAT_CONSTANT, $class->getName(), $const->getName());
     }
 
-    /**
-     * @param \ReflectionParameter $param
-     * @return string
-     */
     public function renderParameterContext(\ReflectionParameter $param): string
     {
         $context = $this->renderCallableContext($param->getDeclaringFunction());

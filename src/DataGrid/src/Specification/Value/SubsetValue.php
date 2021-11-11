@@ -20,7 +20,6 @@ final class SubsetValue implements ValueInterface
     private $enum;
 
     /**
-     * @param ValueInterface $enum
      * @param mixed          ...$values
      */
     public function __construct(ValueInterface $enum, ...$values)
@@ -54,9 +53,6 @@ final class SubsetValue implements ValueInterface
         return $this->arrayType()->convert((array)$values);
     }
 
-    /**
-     * @return ArrayValue
-     */
     private function arrayType(): ArrayValue
     {
         return new ArrayValue($this->enum);

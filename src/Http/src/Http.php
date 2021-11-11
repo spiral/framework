@@ -36,12 +36,6 @@ final class Http implements RequestHandlerInterface
     /** @var RequestHandlerInterface */
     protected $handler;
 
-    /**
-     * @param HttpConfig               $config
-     * @param Pipeline                 $pipeline
-     * @param ResponseFactoryInterface $responseFactory
-     * @param ContainerInterface       $container
-     */
     public function __construct(
         HttpConfig $config,
         Pipeline $pipeline,
@@ -58,9 +52,6 @@ final class Http implements RequestHandlerInterface
         }
     }
 
-    /**
-     * @return Pipeline
-     */
     public function getPipeline(): Pipeline
     {
         return $this->pipeline;
@@ -68,7 +59,6 @@ final class Http implements RequestHandlerInterface
 
     /**
      * @param RequestHandlerInterface|callable $handler
-     * @return Http
      */
     public function setHandler($handler): self
     {
@@ -86,8 +76,6 @@ final class Http implements RequestHandlerInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
      *
      * @throws HttpException
      */

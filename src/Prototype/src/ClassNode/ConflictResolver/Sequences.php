@@ -19,8 +19,6 @@ final class Sequences
      *
      *
      * @param int[] $sequences
-     * @param int   $originSequence
-     * @return int
      */
     public function find(array $sequences, int $originSequence): int
     {
@@ -48,10 +46,6 @@ final class Sequences
         return min($gaps);
     }
 
-    /**
-     * @param array $sequences
-     * @return array
-     */
     private function skippedSequences(array $sequences): array
     {
         $skipped = [];

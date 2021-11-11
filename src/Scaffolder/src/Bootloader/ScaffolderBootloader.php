@@ -36,9 +36,6 @@ class ScaffolderBootloader extends Bootloader
 
     /**
      * ScaffolderBootloader constructor.
-     *
-     * @param ConfiguratorInterface $config
-     * @param KernelInterface       $kernel
      */
     public function __construct(ConfiguratorInterface $config, KernelInterface $kernel)
     {
@@ -46,9 +43,6 @@ class ScaffolderBootloader extends Bootloader
         $this->kernel = $kernel;
     }
 
-    /**
-     * @param ConsoleBootloader $console
-     */
     public function boot(ConsoleBootloader $console): void
     {
         $console->addCommand(Command\Database\EntityCommand::class);

@@ -23,18 +23,11 @@ final class ViewRenderer implements RendererInterface
     /** @var ViewsInterface */
     private $views;
 
-    /**
-     * @param ViewsInterface $views
-     */
     public function __construct(ViewsInterface $views)
     {
         $this->views = $views;
     }
 
-    /**
-     * @param MessageInterface $message
-     * @return Email
-     */
     public function render(MessageInterface $message): Email
     {
         try {

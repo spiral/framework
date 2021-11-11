@@ -26,18 +26,14 @@ final class SourceMap implements \Serializable
     private $lines = [];
 
     /** @var Source[] */
-    private $sourceCache = null;
+    private $sourceCache;
 
     /**
      * Get all template paths involved in final template.
-     *
-     * @return array
      */
     public function getPaths(): array
     {
         $paths = [];
-
-        // We can scan top level only
 
         /** @var Location $loc */
         foreach ($this->lines as $line) {
@@ -52,9 +48,6 @@ final class SourceMap implements \Serializable
     /**
      * Calculate the location of all closest nodes based on a line number in generated source. Recursive until top root
      * template.
-     *
-     * @param int $line
-     * @return array
      */
     public function getStack(int $line): array
     {
@@ -99,12 +92,6 @@ final class SourceMap implements \Serializable
         $this->lines = $data['lines'];
     }
 
-    /**
-     * @param string          $content
-     * @param array           $locations
-     * @param LoaderInterface $loader
-     * @return SourceMap
-     */
     public static function calculate(string $content, array $locations, LoaderInterface $loader): SourceMap
     {
         $map = new self();
@@ -121,10 +108,6 @@ final class SourceMap implements \Serializable
         return $map;
     }
 
-    /**
-     * @param array $result
-     * @param array $line
-     */
     private function unpack(array &$result, array $line): void
     {
         $result[] = [
@@ -137,11 +120,6 @@ final class SourceMap implements \Serializable
         }
     }
 
-    /**
-     * @param Location        $location
-     * @param LoaderInterface $loader
-     * @return array
-     */
     private function calculateLine(Location $location, LoaderInterface $loader): array
     {
         if (!isset($this->sourceCache[$location->path])) {

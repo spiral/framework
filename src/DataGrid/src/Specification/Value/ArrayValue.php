@@ -19,9 +19,6 @@ final class ArrayValue implements ValueInterface
     /** @var ValueInterface */
     private $base;
 
-    /**
-     * @param ValueInterface $base
-     */
     public function __construct(ValueInterface $base)
     {
         $this->base = $base instanceof self ? $base->base : $base;
@@ -47,7 +44,6 @@ final class ArrayValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return array
      */
     public function convert($value): array
     {

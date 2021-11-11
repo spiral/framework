@@ -23,8 +23,6 @@ interface WriterInterface
      * Render the specification and return altered source or null if specification can not be applied.
      *
      * @param mixed                  $source
-     * @param SpecificationInterface $specification
-     * @param Compiler               $compiler
      * @return mixed|null
      * @throws SpecificationException
      */

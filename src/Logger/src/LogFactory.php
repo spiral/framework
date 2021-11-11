@@ -22,18 +22,11 @@ final class LogFactory implements LogsInterface
     /** @var ListenerRegistryInterface */
     private $listenedRegistry;
 
-    /**
-     * @param ListenerRegistryInterface $listenedRegistry
-     */
     public function __construct(ListenerRegistryInterface $listenedRegistry)
     {
         $this->listenedRegistry = $listenedRegistry;
     }
 
-    /**
-     * @param string $channel
-     * @return LoggerInterface
-     */
     public function getLogger(string $channel): LoggerInterface
     {
         return new NullLogger([$this, 'log'], $channel);
@@ -43,7 +36,6 @@ final class LogFactory implements LogsInterface
      * @param string $channel
      * @param mixed  $level
      * @param string $message
-     * @param array  $context
      */
     public function log($channel, $level, $message, array $context = []): void
     {

@@ -56,10 +56,6 @@ final class Facade implements InstantiatorInterface
         return $this->doctrine->instantiate($attr, $arguments, $context);
     }
 
-    /**
-     * @param \ReflectionClass $class
-     * @return bool
-     */
     private function isNamedArguments(\ReflectionClass $class): bool
     {
         return $this->providesNamedArgumentsInterface($class) ||
@@ -67,10 +63,6 @@ final class Facade implements InstantiatorInterface
         ;
     }
 
-    /**
-     * @param \ReflectionClass $class
-     * @return bool
-     */
     private function providesNamedArgumentsAttribute(\ReflectionClass $class): bool
     {
         if (\class_exists(MarkerAnnotation::class)) {
@@ -80,10 +72,6 @@ final class Facade implements InstantiatorInterface
         return $this->reader->firstClassMetadata($class, NamedArgumentConstructor::class);
     }
 
-    /**
-     * @param \ReflectionClass $class
-     * @return bool
-     */
     private function providesNamedArgumentsInterface(\ReflectionClass $class): bool
     {
         return \is_subclass_of($class->getName(), MarkerInterface::class);

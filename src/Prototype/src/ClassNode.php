@@ -46,10 +46,6 @@ final class ClassNode
     {
     }
 
-    /**
-     * @param string $class
-     * @return ClassNode
-     */
     public static function create(string $class): ClassNode
     {
         $self = new self();
@@ -58,11 +54,6 @@ final class ClassNode
         return $self;
     }
 
-    /**
-     * @param string $class
-     * @param string $namespace
-     * @return ClassNode
-     */
     public static function createWithNamespace(string $class, string $namespace): ClassNode
     {
         $self = new self();
@@ -72,10 +63,6 @@ final class ClassNode
         return $self;
     }
 
-    /**
-     * @param string      $name
-     * @param string|null $alias
-     */
     public function addImportUsage(string $name, ?string $alias): void
     {
         $this->addStmt(ClassNode\ClassStmt::create($name, $alias));
@@ -90,8 +77,6 @@ final class ClassNode
     }
 
     /**
-     * @param \ReflectionParameter $parameter
-     *
      * @throws \ReflectionException
      */
     public function addParam(\ReflectionParameter $parameter): void
@@ -99,9 +84,6 @@ final class ClassNode
         $this->constructorParams[$parameter->name] = ConstructorParam::createFromReflection($parameter);
     }
 
-    /**
-     * @param ClassNode\ClassStmt $stmt
-     */
     private function addStmt(ClassNode\ClassStmt $stmt): void
     {
         $this->stmts[(string)$stmt] = $stmt;

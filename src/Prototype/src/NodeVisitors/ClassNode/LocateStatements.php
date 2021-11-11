@@ -39,9 +39,6 @@ final class LocateStatements extends NodeVisitorAbstract
         return null;
     }
 
-    /**
-     * @return array
-     */
     public function getImports(): array
     {
         return $this->imports;

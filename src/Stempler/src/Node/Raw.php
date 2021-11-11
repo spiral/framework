@@ -25,7 +25,6 @@ final class Raw implements NodeInterface
     public $content;
 
     /**
-     * @param string       $content
      * @param Context|null $context
      */
     public function __construct(string $content, Context $context = null)

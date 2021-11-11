@@ -100,7 +100,6 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
 
     /**
      * @param \Closure(KeyGeneratorInterface): string $each
-     * @return string
      */
     private function joinBy(\Closure $each): string
     {

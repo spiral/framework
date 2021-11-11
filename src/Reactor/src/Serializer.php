@@ -30,7 +30,6 @@ class Serializer
      * Serialize array.
      *
      * @param mixed $value
-     * @return string
      * @throws ReflectionException
      */
     public function serialize($value): string
@@ -43,9 +42,6 @@ class Serializer
     }
 
     /**
-     * @param array $array
-     * @param int   $level
-     * @return string
      * @throws ReflectionException
      */
     protected function packArray(array $array, int $level = 0): string
@@ -99,7 +95,6 @@ class Serializer
      * Pack array key value into string.
      *
      * @param mixed $value
-     * @return string
      * @throws SerializeException
      * @throws ReflectionException
      */

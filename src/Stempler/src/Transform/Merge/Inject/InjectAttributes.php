@@ -30,9 +30,6 @@ final class InjectAttributes implements VisitorInterface
     /** @var BlockClaims */
     private $blocks;
 
-    /**
-     * @param BlockClaims $blocks
-     */
     public function __construct(BlockClaims $blocks)
     {
         $this->blocks = $blocks;
