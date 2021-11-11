@@ -473,8 +473,18 @@ final class Container implements
 
             $instance = null;
             try {
-                /** @var InjectorInterface $injectorInstance */
+                /** @var InjectorInterface|mixed $injectorInstance */
                 $injectorInstance = $this->get($injector);
+
+                if (!$injectorInstance instanceof InjectorInterface) {
+                    throw new InjectionException(
+                        \sprintf(
+                            "Class '%s' must be an instance of InjectorInterface for '%s'",
+                            \get_class($injectorInstance),
+                            $reflection->getName()
+                        )
+                    );
+                }
 
                 $instance = $injectorInstance->createInjection($reflection, $context);
                 if (!$reflection->isInstance($instance)) {
