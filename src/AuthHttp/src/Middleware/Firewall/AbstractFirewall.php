@@ -25,6 +25,7 @@ abstract class AbstractFirewall implements MiddlewareInterface
 {
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
+        /** @var AuthContextInterface $authContext */
         $authContext = $request->getAttribute(AuthMiddleware::ATTRIBUTE);
 
         if ($authContext === null || $authContext->getActor() === null) {
