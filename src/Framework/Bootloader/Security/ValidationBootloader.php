@@ -69,6 +69,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
                     'image'    => Checker\ImageChecker::class,
                     'datetime' => Checker\DatetimeChecker::class,
                     'entity'   => Checker\EntityChecker::class,
+                    'array'    => Checker\ArrayChecker::class,
                 ],
 
                 // Enable/disable validation conditions
