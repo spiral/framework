@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security;
+namespace Spiral\Tests\Framework\Security;
 
 use Spiral\Tests\Framework\BaseTest;
 use Spiral\Validation\Config\ValidatorConfig;
