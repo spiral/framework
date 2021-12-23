@@ -29,9 +29,6 @@ final class Namespaced extends AbstractTarget
     /** @var \Doctrine\Inflector\Inflector */
     private $inflector;
 
-    /**
-     * @param string $defaultAction
-     */
     public function __construct(
         string $namespace,
         string $postfix = 'Controller',
