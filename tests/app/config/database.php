@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-use Spiral\Database\Driver;
+use Cycle\Database\Driver;
 
 return [
     'default'   => 'default',

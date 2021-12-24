@@ -13,8 +13,8 @@ namespace Spiral\Command\Cycle\Generator;
 
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Spiral\Database\Schema\AbstractTable;
-use Spiral\Database\Schema\Comparator;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Database\Schema\Comparator;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class ShowChanges implements GeneratorInterface

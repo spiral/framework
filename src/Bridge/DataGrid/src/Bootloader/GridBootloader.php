@@ -15,7 +15,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\DataGrid\GridFactoryInterface;
-use Spiral\Database\DatabaseInterface;
+use Cycle\Database\DatabaseInterface;
 use Spiral\DataGrid\Compiler;
 use Spiral\DataGrid\Config\GridConfig;
 use Spiral\DataGrid\Grid;

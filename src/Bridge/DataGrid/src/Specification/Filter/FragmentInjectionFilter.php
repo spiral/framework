@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Filter;
 
-use Spiral\Database\Injection;
+use Cycle\Database\Injection;
 
 class FragmentInjectionFilter extends InjectionFilter
 {

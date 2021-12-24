@@ -26,7 +26,7 @@ use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\Database\DatabaseBootloader;
 use Spiral\Core\Container;
 use Spiral\Cycle\RepositoryInjector;
-use Spiral\Database\DatabaseProviderInterface;
+use Cycle\Database\DatabaseProviderInterface;
 
 final class CycleBootloader extends Bootloader
 {

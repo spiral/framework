@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Validation;
 
 use Cycle\ORM\TransactionInterface;
-use Spiral\Database\Database;
-use Spiral\Database\DatabaseInterface;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseInterface;
 use Spiral\App\TestApp;
 use Spiral\App\User\User;
 use Spiral\Tests\Framework\BaseTest;
