@@ -25,7 +25,7 @@ use Spiral\Command\Views;
 use Spiral\Console;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Container;
-use Spiral\Database\DatabaseProviderInterface;
+use Cycle\Database\DatabaseProviderInterface;
 use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\GRPC\InvokerInterface;

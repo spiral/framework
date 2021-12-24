@@ -14,10 +14,10 @@ namespace Spiral\Bootloader\Database;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Database\Database;
-use Spiral\Database\DatabaseInterface;
-use Spiral\Database\DatabaseManager;
-use Spiral\Database\DatabaseProviderInterface;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseInterface;
+use Cycle\Database\DatabaseManager;
+use Cycle\Database\DatabaseProviderInterface;
 
 final class DatabaseBootloader extends Bootloader implements SingletonInterface
 {
