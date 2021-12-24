@@ -20,7 +20,6 @@ final class IntersectValue implements ValueInterface
     private $enum;
 
     /**
-     * @param ValueInterface $enum
      * @param mixed          ...$values
      */
     public function __construct(ValueInterface $enum, ...$values)
@@ -50,7 +49,6 @@ final class IntersectValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return array
      */
     public function convert($values): array
     {

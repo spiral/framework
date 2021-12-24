@@ -37,11 +37,6 @@ class ValueWrapper
      */
     private $values = [];
 
-    /**
-     * @param Dumper            $dumper
-     * @param RendererInterface $renderer
-     * @param int               $verbosity
-     */
     public function __construct(Dumper $dumper, RendererInterface $renderer, int $verbosity)
     {
         $this->dumper = $dumper;
@@ -49,10 +44,6 @@ class ValueWrapper
         $this->verbosity = $verbosity;
     }
 
-    /**
-     * @param array $args
-     * @return array
-     */
     public function wrap(array $args): array
     {
         $result = [];
@@ -95,8 +86,6 @@ class ValueWrapper
 
     /**
      * Get all aggregated values for later rendering on a page.
-     *
-     * @return array
      */
     public function getValues(): array
     {

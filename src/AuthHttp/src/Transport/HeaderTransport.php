@@ -23,9 +23,6 @@ final class HeaderTransport implements HttpTransportInterface
     /** @var string */
     private $header;
 
-    /**
-     * @param string $header
-     */
     public function __construct(string $header = 'X-Auth-Token')
     {
         $this->header = $header;

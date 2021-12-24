@@ -24,14 +24,11 @@ final class Environment implements EnvironmentInterface
     ];
 
     /** @var string|null */
-    private $id = null;
+    private $id;
 
     /** @var array */
     private $values = [];
 
-    /**
-     * @param array $values
-     */
     public function __construct(array $values = [])
     {
         $this->values = $values + $_ENV + $_SERVER;
@@ -74,8 +71,6 @@ final class Environment implements EnvironmentInterface
 
     /**
      * Get all environment values.
-     *
-     * @return array
      */
     public function getAll(): array
     {

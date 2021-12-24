@@ -54,8 +54,6 @@ class ConsoleHandler extends AbstractHandler
 
     /**
      * Disable or enable colorization support.
-     *
-     * @param bool $enabled
      */
     public function setColorsSupport(bool $enabled = true): void
     {
@@ -97,8 +95,6 @@ class ConsoleHandler extends AbstractHandler
      *
      * @param string $title Title.
      * @param string $style Formatting.
-     * @param int    $padding
-     * @return string
      */
     private function renderHeader(string $title, string $style, int $padding = 0): string
     {
@@ -128,9 +124,7 @@ class ConsoleHandler extends AbstractHandler
     /**
      * Render exception call stack.
      *
-     * @param \Throwable       $e
      * @param Highlighter|null $h
-     * @return string
      */
     private function renderTrace(\Throwable $e, Highlighter $h = null): string
     {
@@ -187,9 +181,7 @@ class ConsoleHandler extends AbstractHandler
     /**
      * Format string and apply color formatting (if enabled).
      *
-     * @param string $format
      * @param mixed  ...$args
-     * @return string
      */
     private function format(string $format, ...$args): string
     {

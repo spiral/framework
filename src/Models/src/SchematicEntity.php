@@ -19,10 +19,6 @@ class SchematicEntity extends AbstractEntity
     /** @var array */
     private $schema = [];
 
-    /**
-     * @param array $data
-     * @param array $schema
-     */
     public function __construct(array $data, array $schema)
     {
         $this->schema = $schema;

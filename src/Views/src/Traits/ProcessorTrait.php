@@ -22,10 +22,6 @@ trait ProcessorTrait
 
     /**
      * Process given view source using set of associated processors.
-     *
-     * @param ViewSource       $source
-     * @param ContextInterface $context
-     * @return ViewSource
      */
     private function process(ViewSource $source, ContextInterface $context): ViewSource
     {

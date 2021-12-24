@@ -26,10 +26,6 @@ final class Catalogue implements CatalogueInterface
     /** @var array */
     private $data = [];
 
-    /**
-     * @param string $locale
-     * @param array  $data
-     */
     public function __construct(string $locale, array $data = [])
     {
         $this->locale = $locale;
@@ -93,7 +89,6 @@ final class Catalogue implements CatalogueInterface
     }
 
     /**
-     * @param MessageCatalogue $catalogue
      * @param bool             $follow When set to true messages from given catalogue will overwrite
      *                                 existed messages.
      */
@@ -115,8 +110,6 @@ final class Catalogue implements CatalogueInterface
 
     /**
      * Converts into one MessageCatalogue.
-     *
-     * @return MessageCatalogue
      */
     public function toMessageCatalogue(): MessageCatalogue
     {

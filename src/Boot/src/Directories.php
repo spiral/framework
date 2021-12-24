@@ -21,9 +21,6 @@ final class Directories implements DirectoriesInterface
     /** @var array */
     private $directories = [];
 
-    /**
-     * @param array $directories
-     */
     public function __construct(array $directories)
     {
         foreach ($directories as $name => $directory) {

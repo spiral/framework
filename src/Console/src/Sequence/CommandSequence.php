@@ -26,12 +26,6 @@ final class CommandSequence extends AbstractSequence
     /** @var array */
     private $options = [];
 
-    /**
-     * @param string $command
-     * @param array  $options
-     * @param string $header
-     * @param string $footer
-     */
     public function __construct(
         string $command,
         array $options = [],

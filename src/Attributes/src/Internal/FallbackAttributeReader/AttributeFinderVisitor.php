@@ -76,19 +76,12 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
      */
     private $parser;
 
-    /**
-     * @param string $file
-     * @param AttributeParser $parser
-     */
     public function __construct(string $file, AttributeParser $parser)
     {
         $this->file = $file;
         $this->parser = $parser;
     }
 
-    /**
-     * @return array
-     */
     public function __debugInfo(): array
     {
         return [
@@ -141,8 +134,6 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node $node
-     * @return int|null
      * @throws \Throwable
      */
     public function enterNode(Node $node): ?int
@@ -202,9 +193,6 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
         return null;
     }
 
-    /**
-     * @param Node $node
-     */
     public function leaveNode(Node $node): void
     {
         if ($node instanceof Node\Stmt\Namespace_) {
@@ -222,14 +210,9 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
 
         if ($node instanceof Node\FunctionLike) {
             $this->context[AttributeParser::CTX_FUNCTION] = '';
-
-            return;
         }
     }
 
-    /**
-     * @param Node $node
-     */
     private function updateContext(Node $node): void
     {
         switch (true) {
@@ -254,7 +237,6 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
 
     /**
      * @param Node\Name|Node\Identifier|null $name
-     * @return string
      */
     private function name($name): string
     {
@@ -275,9 +257,6 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
         return $this->parser->parseAttributes($this->file, $groups, $this->context);
     }
 
-    /**
-     * @return string
-     */
     private function fqn(): string
     {
         $namespace = $this->context[AttributeParser::CTX_NAMESPACE] ?? '';

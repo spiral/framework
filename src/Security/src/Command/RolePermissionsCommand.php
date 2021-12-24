@@ -22,8 +22,6 @@ class RolePermissionsCommand extends Command
     private const TABLE_HEADERS = ['role', 'permission', 'rule', 'allowed'];
 
     /**
-     * @param PermissionsInterface $rbac
-     *
      * @throws CommandException
      */
     protected function perform(PermissionsInterface $rbac): void
@@ -54,9 +52,7 @@ class RolePermissionsCommand extends Command
     /**
      * Can be used in your command to prepare more complex output
      *
-     * @param string $rule
      *
-     * @return string|null
      */
     protected function markPermissionAllowed(string $rule): ?string
     {

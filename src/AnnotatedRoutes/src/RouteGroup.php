@@ -41,11 +41,6 @@ final class RouteGroup
     /** @var CoreInterface */
     private $core;
 
-    /**
-     * @param ContainerInterface $container
-     * @param RouterInterface    $router
-     * @param Pipeline           $pipeline
-     */
     public function __construct(
         ContainerInterface $container,
         RouterInterface $router,
@@ -58,9 +53,6 @@ final class RouteGroup
 
     /**
      * Prefix added to all the routes.
-     *
-     * @param string $prefix
-     * @return $this
      */
     public function setPrefix(string $prefix): self
     {
@@ -74,7 +66,6 @@ final class RouteGroup
 
     /**
      * @param CoreInterface|string|Autowire $core
-     * @return $this
      */
     public function setCore($core): self
     {
@@ -91,7 +82,6 @@ final class RouteGroup
 
     /**
      * @param MiddlewareInterface|string $middleware
-     * @return $this
      */
     public function addMiddleware($middleware): self
     {
@@ -109,14 +99,6 @@ final class RouteGroup
 
     /**
      * Register route to group.
-     *
-     * @param string $name
-     * @param string $pattern
-     * @param string $controller
-     * @param string $action
-     * @param array  $verbs
-     * @param array  $defaults
-     * @param array  $middleware
      */
     public function registerRoute(
         string $name,
@@ -156,12 +138,6 @@ final class RouteGroup
         }
     }
 
-    /**
-     * @param string $pattern
-     * @param string $controller
-     * @param string $action
-     * @return Route
-     */
     public function createRoute(string $pattern, string $controller, string $action): Route
     {
         $action = new Action($controller, $action);

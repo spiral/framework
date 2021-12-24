@@ -22,10 +22,6 @@ final class Snapshot implements SnapshotInterface
     /** @var \Throwable */
     private $exception;
 
-    /**
-     * @param string     $id
-     * @param \Throwable $exception
-     */
     public function __construct(string $id, \Throwable $exception)
     {
         $this->id = $id;

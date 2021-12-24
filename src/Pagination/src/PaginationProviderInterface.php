@@ -20,10 +20,8 @@ interface PaginationProviderInterface
     /**
      * Create paginator for a given parameter, scope request must be resolved automatically.
      *
-     * @param string $parameter
      * @param int    $limit Pagination limit
      *
-     * @return PaginatorInterface
      */
     public function createPaginator(string $parameter, int $limit = 25): PaginatorInterface;
 }

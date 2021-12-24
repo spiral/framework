@@ -32,7 +32,6 @@ final class MixedChecker extends AbstractChecker implements SingletonInterface
      *
      * @link http://en.wikipedia.org/wiki/Luhn_algorithm
      * @param string $value
-     * @return bool
      */
     public function cardNumber($value): bool
     {
@@ -64,9 +63,6 @@ final class MixedChecker extends AbstractChecker implements SingletonInterface
      * Check if value matches value from another field.
      *
      * @param mixed  $value
-     * @param string $field
-     * @param bool   $strict
-     * @return bool
      */
     public function match($value, string $field, bool $strict = false): bool
     {

@@ -19,9 +19,6 @@ final class PlainRenderer extends AbstractRenderer
     /** @var bool */
     private $escapeStrings = false;
 
-    /**
-     * @param bool $escapeStrings
-     */
     public function __construct(bool $escapeStrings = true)
     {
         $this->escapeStrings = $escapeStrings;

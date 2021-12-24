@@ -51,14 +51,7 @@ final class ReflectionInvocation
     /**
      * New call reflection.
      *
-     * @param string               $filename
-     * @param int                  $line
-     * @param string               $class
-     * @param string               $operator
-     * @param string               $name
      * @param ReflectionArgument[] $arguments
-     * @param string               $source
-     * @param int                  $level
      */
     public function __construct(
         string $filename,
@@ -82,8 +75,6 @@ final class ReflectionInvocation
 
     /**
      * Function usage filename.
-     *
-     * @return string
      */
     public function getFilename(): string
     {
@@ -92,8 +83,6 @@ final class ReflectionInvocation
 
     /**
      * Function usage line.
-     *
-     * @return int
      */
     public function getLine(): int
     {
@@ -102,8 +91,6 @@ final class ReflectionInvocation
 
     /**
      * Parent class.
-     *
-     * @return string
      */
     public function getClass(): string
     {
@@ -112,8 +99,6 @@ final class ReflectionInvocation
 
     /**
      * Method operator (:: or ->).
-     *
-     * @return string
      */
     public function getOperator(): string
     {
@@ -122,8 +107,6 @@ final class ReflectionInvocation
 
     /**
      * Function or method name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -132,8 +115,6 @@ final class ReflectionInvocation
 
     /**
      * Call made by class method.
-     *
-     * @return bool
      */
     public function isMethod(): bool
     {
@@ -142,8 +123,6 @@ final class ReflectionInvocation
 
     /**
      * Function usage src.
-     *
-     * @return string
      */
     public function getSource(): string
     {
@@ -152,8 +131,6 @@ final class ReflectionInvocation
 
     /**
      * Count of arguments in call.
-     *
-     * @return int
      */
     public function countArguments(): int
     {
@@ -173,7 +150,6 @@ final class ReflectionInvocation
     /**
      * Get call argument by it's position.
      *
-     * @param int $index
      *
      * @return ReflectionArgument|null
      */
@@ -188,8 +164,6 @@ final class ReflectionInvocation
 
     /**
      * Invoking level.
-     *
-     * @return int
      */
     public function getLevel(): int
     {

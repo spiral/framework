@@ -29,8 +29,6 @@ class ClientException extends HttpException
      * Code and message positions are reverted.
      *
      * @param int $code
-     * @param string $message
-     * @param \Throwable|null $previous
      */
     public function __construct(?int $code = null, string $message = '', ?\Throwable $previous = null)
     {

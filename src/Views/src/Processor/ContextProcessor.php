@@ -26,9 +26,6 @@ final class ContextProcessor implements ProcessorInterface
     /** @var string */
     private $pattern = '';
 
-    /**
-     * @param string $pattern
-     */
     public function __construct(string $pattern = null)
     {
         $this->pattern = $pattern ?? static::PATTERN;

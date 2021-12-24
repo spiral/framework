@@ -13,9 +13,5 @@ namespace Spiral\Storage;
 
 interface MutableStorageInterface extends StorageInterface
 {
-    /**
-     * @param string $name
-     * @param BucketInterface $storage
-     */
     public function add(string $name, BucketInterface $storage): void;
 }

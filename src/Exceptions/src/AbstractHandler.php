@@ -26,9 +26,6 @@ abstract class AbstractHandler implements HandlerInterface
 
     /**
      * Normalized exception stacktrace.
-     *
-     * @param \Throwable $e
-     * @return array
      */
     protected function getStacktrace(\Throwable $e): array
     {

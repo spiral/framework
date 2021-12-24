@@ -29,10 +29,6 @@ final class DynamicRenderer implements Compiler\RendererInterface
     /** @var DirectiveRendererInterface|null */
     private $directiveRenderer;
 
-    /**
-     * @param DirectiveRendererInterface $directiveRenderer
-     * @param string                     $defaultFilter
-     */
     public function __construct(
         DirectiveRendererInterface $directiveRenderer = null,
         string $defaultFilter = self::DEFAULT_FILTER
@@ -59,8 +55,6 @@ final class DynamicRenderer implements Compiler\RendererInterface
     }
 
     /**
-     * @param Compiler\Result $source
-     * @param Directive       $directive
      *
      * @throws DirectiveException
      */
@@ -80,10 +74,6 @@ final class DynamicRenderer implements Compiler\RendererInterface
         );
     }
 
-    /**
-     * @param Compiler\Result $source
-     * @param Output          $output
-     */
     private function output(Compiler\Result $source, Output $output): void
     {
         if ($output->rawOutput) {

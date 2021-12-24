@@ -25,9 +25,6 @@ interface WritableInterface
     /**
      * Creates new empty file.
      *
-     * @param string $pathname
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function create(string $pathname, array $config = []): FileInterface;
@@ -38,7 +35,6 @@ interface WritableInterface
      * @param string $pathname relative filepath
      * @param string|\Stringable|resource $content content string or stream to write
      * @param array $config specific config based on used adapter
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function write(string $pathname, $content, array $config = []): FileInterface;
@@ -46,9 +42,7 @@ interface WritableInterface
     /**
      * Sets file visibility.
      *
-     * @param string $pathname
      * @param VisibilityType $visibility
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function setVisibility(
@@ -64,7 +58,6 @@ interface WritableInterface
      * @param string $destination destination pathname
      * @param BucketInterface|null $storage destination storage
      * @param array $config specific config based on used adapter
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function copy(
@@ -81,7 +74,6 @@ interface WritableInterface
      * @param string $destination destination pathname
      * @param BucketInterface|null $storage destination storage
      * @param array $config specific config based on used adapter
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function move(

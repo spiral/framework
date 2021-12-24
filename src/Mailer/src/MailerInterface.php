@@ -18,7 +18,6 @@ interface MailerInterface
     /**
      * Send one or multiple emails. Transport independent.
      *
-     * @param MessageInterface ...$message
      * @throws MailerException
      */
     public function send(MessageInterface ...$message): void;

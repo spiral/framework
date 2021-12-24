@@ -38,10 +38,6 @@ final class ResolveImports implements VisitorInterface
     /** @var Merger */
     private $merger;
 
-    /**
-     * @param Builder $builder
-     * @param Merger  $merger
-     */
     public function __construct(Builder $builder, Merger $merger = null)
     {
         $this->builder = $builder;
@@ -101,7 +97,6 @@ final class ResolveImports implements VisitorInterface
     /**
      * Create import definition (aka "use").
      *
-     * @param Tag $tag
      * @return ImportInterface|null
      */
     private function makeImport(Tag $tag): ImportInterface
@@ -157,11 +152,6 @@ final class ResolveImports implements VisitorInterface
         }
     }
 
-    /**
-     * @param string $option
-     * @param array  $options
-     * @param Tag    $tag
-     */
     private function assertHasOption(string $option, array $options, Tag $tag): void
     {
         if (!isset($options[$option])) {

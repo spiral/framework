@@ -38,8 +38,6 @@ final class File implements FileInterface
     private $resolver;
 
     /**
-     * @param BucketInterface $storage
-     * @param string $pathname
      * @param UriResolverInterface|null $resolver
      */
     public function __construct(BucketInterface $storage, string $pathname, UriResolverInterface $resolver = null)
@@ -57,9 +55,6 @@ final class File implements FileInterface
         return $this->getId();
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         $name = $this->storage->getName();
@@ -87,9 +82,6 @@ final class File implements FileInterface
         return $this->storage;
     }
 
-    /**
-     * @return UriResolverInterface|null
-     */
     protected function getResolver(): ?UriResolverInterface
     {
         return $this->resolver;

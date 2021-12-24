@@ -51,11 +51,6 @@ final class CoreHandler implements RequestHandlerInterface
     /** @var ResponseFactoryInterface */
     private $responseFactory;
 
-    /**
-     * @param CoreInterface            $core
-     * @param ScopeInterface           $scope
-     * @param ResponseFactoryInterface $responseFactory
-     */
     public function __construct(
         CoreInterface $core,
         ScopeInterface $scope,
@@ -67,10 +62,7 @@ final class CoreHandler implements RequestHandlerInterface
     }
 
     /**
-     * @param string      $controller
      * @param string|null $action
-     * @param array       $parameters
-     * @return CoreHandler
      */
     public function withContext(string $controller, string $action, array $parameters): CoreHandler
     {
@@ -84,9 +76,6 @@ final class CoreHandler implements RequestHandlerInterface
 
     /**
      * Disable or enable HTTP prefix for actions.
-     *
-     * @param bool $verbActions
-     * @return CoreHandler
      */
     public function withVerbActions(bool $verbActions): CoreHandler
     {
@@ -148,10 +137,6 @@ final class CoreHandler implements RequestHandlerInterface
         );
     }
 
-    /**
-     * @param Request $request
-     * @return string
-     */
     private function getAction(Request $request): string
     {
         if ($this->verbActions) {
@@ -167,7 +152,6 @@ final class CoreHandler implements RequestHandlerInterface
      * @param Response $response Initial pipeline response.
      * @param mixed    $result   Generated endpoint output.
      * @param string   $output   Buffer output.
-     * @return Response
      */
     private function wrapResponse(Response $response, $result = null, string $output = ''): Response
     {
@@ -193,9 +177,6 @@ final class CoreHandler implements RequestHandlerInterface
 
     /**
      * Converts core specific ControllerException into HTTP ClientException.
-     *
-     * @param ControllerException $exception
-     * @return ClientException
      */
     private function mapException(ControllerException $exception): ClientException
     {

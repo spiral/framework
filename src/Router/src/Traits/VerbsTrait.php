@@ -22,10 +22,8 @@ trait VerbsTrait
     /**
      * Attach specific list of HTTP verbs to the route.
      *
-     * @param string ...$verbs
      *
      * @return RouteInterface|$this
-     *
      * @throws RouteException
      */
     public function withVerbs(string ...$verbs): RouteInterface
@@ -48,8 +46,6 @@ trait VerbsTrait
 
     /**
      * Return list of HTTP verbs route must handle.
-     *
-     * @return array
      */
     public function getVerbs(): array
     {

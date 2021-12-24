@@ -26,8 +26,6 @@ final class ContainerScope
 
     /**
      * Returns currently active container scope if any.
-     *
-     * @return null|ContainerInterface
      */
     public static function getContainer(): ?ContainerInterface
     {
@@ -37,8 +35,6 @@ final class ContainerScope
     /**
      * Invokes given closure or function withing global IoC scope.
      *
-     * @param ContainerInterface $container
-     * @param callable           $scope
      * @return mixed
      * @throws Throwable
      */

@@ -25,18 +25,11 @@ final class GroupRegistry implements \IteratorAggregate
     /** @var RouteGroup[] */
     private $groups = [];
 
-    /**
-     * @param FactoryInterface $factory
-     */
     public function __construct(FactoryInterface $factory)
     {
         $this->factory = $factory;
     }
 
-    /**
-     * @param string $name
-     * @return RouteGroup
-     */
     public function getGroup(string $name): RouteGroup
     {
         if (!isset($this->groups[$name])) {

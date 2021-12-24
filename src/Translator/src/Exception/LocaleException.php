@@ -32,9 +32,6 @@ class LocaleException extends TranslatorException
         parent::__construct("Undefined locale '{$locale}'", $code, $previous);
     }
 
-    /**
-     * @return string
-     */
     public function getLocale(): string
     {
         return $this->locale;

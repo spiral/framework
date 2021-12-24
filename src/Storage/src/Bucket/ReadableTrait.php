@@ -123,15 +123,8 @@ trait ReadableTrait
         }
     }
 
-    /**
-     * @return FilesystemOperator
-     */
     abstract protected function getOperator(): FilesystemOperator;
 
-    /**
-     * @param string $visibility
-     * @return string
-     */
     #[ExpectedValues(valuesFromClass: Visibility::class)]
     private function fromFlysystemVisibility(
         #[ExpectedValues(valuesFromClass: \League\Flysystem\Visibility::class)]

@@ -21,10 +21,6 @@ interface CoreInterceptorInterface
     /**
      * Process action request to underlying domain core action.
      *
-     * @param string        $controller
-     * @param string        $action
-     * @param array         $parameters
-     * @param CoreInterface $core
      * @return mixed
      *
      * @throws ControllerException

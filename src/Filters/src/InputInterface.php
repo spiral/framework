@@ -28,15 +28,12 @@ interface InputInterface
      *
      * @param string $prefix
      * @param bool   $add When set to false current prefix path will be overwritten.
-     * @return InputInterface
      */
     public function withPrefix(string $prefix, bool $add = true): InputInterface;
 
     /**
      * Get input value based on it's source and name.
      *
-     * @param string $source
-     * @param string $name
      * @return mixed
      *
      * @throws InputException

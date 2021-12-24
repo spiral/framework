@@ -127,7 +127,6 @@ final class RuleParser implements ParserInterface
 
     /**
      * @param $rule
-     * @return string
      */
     protected function getID($rule): string
     {

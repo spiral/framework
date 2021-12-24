@@ -27,10 +27,6 @@ final class AttributePrototype
      */
     public $params;
 
-    /**
-     * @param string $attribute
-     * @param array $arguments
-     */
     public function __construct(string $attribute, array $arguments = [])
     {
         $this->name = $attribute;

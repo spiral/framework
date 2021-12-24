@@ -46,8 +46,5 @@ trait UriResolvableTrait
         return $resolver->resolve($this->getPathname(), ...$args);
     }
 
-    /**
-     * @return UriResolverInterface|null
-     */
     abstract protected function getResolver(): ?UriResolverInterface;
 }

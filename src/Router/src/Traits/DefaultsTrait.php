@@ -21,7 +21,6 @@ trait DefaultsTrait
     /**
      * Returns new route instance with forced default values.
      *
-     * @param array $defaults
      * @return RouteInterface|$this
      */
     public function withDefaults(array $defaults): RouteInterface
@@ -34,8 +33,6 @@ trait DefaultsTrait
 
     /**
      * Get default route values.
-     *
-     * @return array
      */
     public function getDefaults(): array
     {

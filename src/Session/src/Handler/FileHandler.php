@@ -29,11 +29,9 @@ final class FileHandler implements \SessionHandlerInterface
     protected $directory = '';
 
     /**
-     * @param FilesInterface $files
-     * @param string         $directory
      * @param int            $lifetime Default session lifetime.
      */
-    public function __construct(FilesInterface $files, string $directory, int $lifetime = 0)
+    public function __construct(FilesInterface $files, string $directory)
     {
         $this->files = $files;
         $this->directory = $directory;
@@ -104,8 +102,6 @@ final class FileHandler implements \SessionHandlerInterface
      * Session data filename.
      *
      * @param string $session_id
-     *
-     * @return string
      */
     protected function getFilename($session_id): string
     {

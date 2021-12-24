@@ -23,8 +23,6 @@ interface ReadableInterface
     /**
      * Reads file by relative pathname and return its content as string.
      *
-     * @param string $pathname
-     * @return string
      * @throws FileOperationException
      */
     public function getContents(string $pathname): string;
@@ -32,7 +30,6 @@ interface ReadableInterface
     /**
      * Reads file by relative pathname and return its content as resource stream.
      *
-     * @param string $pathname
      * @return resource
      * @throws FileOperationException
      */
@@ -41,8 +38,6 @@ interface ReadableInterface
     /**
      * Checks file for existing.
      *
-     * @param string $pathname
-     * @return bool
      * @throws FileOperationException
      */
     public function exists(string $pathname): bool;
@@ -50,7 +45,6 @@ interface ReadableInterface
     /**
      * Returns the timestamp of last file modification.
      *
-     * @param string $pathname
      * @return positive-int|0
      * @throws FileOperationException
      */
@@ -59,7 +53,6 @@ interface ReadableInterface
     /**
      * Returns the file size in bytes.
      *
-     * @param string $pathname
      * @return positive-int|0
      * @throws FileOperationException
      */
@@ -68,8 +61,6 @@ interface ReadableInterface
     /**
      * Returns the file mime type.
      *
-     * @param string $pathname
-     * @return string
      * @throws FileOperationException
      */
     public function getMimeType(string $pathname): string;
@@ -77,7 +68,6 @@ interface ReadableInterface
     /**
      * Returns the file visibility.
      *
-     * @param string $pathname
      * @return VisibilityType
      * @throws FileOperationException
      */

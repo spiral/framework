@@ -32,11 +32,6 @@ abstract class AbstractCommand extends Command
     /** @var array */
     private $cache = [];
 
-    /**
-     * @param PrototypeLocator  $locator
-     * @param NodeExtractor     $extractor
-     * @param PrototypeRegistry $registry
-     */
     public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
     {
         parent::__construct();
@@ -49,8 +44,6 @@ abstract class AbstractCommand extends Command
     /**
      * Fetch class dependencies.
      *
-     * @param \ReflectionClass $class
-     * @param array            $all
      * @return null[]|Dependency[]|\Throwable[]
      */
     protected function getPrototypeProperties(\ReflectionClass $class, array $all = []): array
@@ -66,9 +59,6 @@ abstract class AbstractCommand extends Command
         return iterator_to_array($this->reverse($results));
     }
 
-    /**
-     * @return PropertyExtractor
-     */
     protected function getExtractor(): PropertyExtractor
     {
         return $this->container->get(PropertyExtractor::class);
@@ -76,7 +66,6 @@ abstract class AbstractCommand extends Command
 
     /**
      * @param Dependency[] $properties
-     * @return string
      */
     protected function mergeNames(array $properties): string
     {
@@ -85,7 +74,6 @@ abstract class AbstractCommand extends Command
 
     /**
      * @param Dependency[] $properties
-     * @return string
      */
     protected function mergeTargets(array $properties): string
     {

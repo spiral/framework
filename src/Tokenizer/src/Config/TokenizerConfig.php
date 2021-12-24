@@ -28,17 +28,11 @@ final class TokenizerConfig extends InjectableConfig
         'exclude'     => [],
     ];
 
-    /**
-     * @return array
-     */
     public function getDirectories(): array
     {
         return $this->config['directories'] ?? [getcwd()];
     }
 
-    /**
-     * @return array
-     */
     public function getExcludes(): array
     {
         return $this->config['exclude'] ?? ['vendor', 'tests'];

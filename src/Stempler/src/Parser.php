@@ -50,7 +50,6 @@ final class Parser
      * Associate template path with Parser (source-map).
      *
      * @param string|null $path
-     * @return Parser
      */
     public function withPath(string $path = null): self
     {
@@ -65,9 +64,6 @@ final class Parser
         return $parser;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPath(): ?string
     {
         return $this->path;
@@ -75,9 +71,6 @@ final class Parser
 
     /**
      * Add new parser grammar and syntax (registration order matter!).
-     *
-     * @param GrammarInterface $grammar
-     * @param SyntaxInterface  $generator
      */
     public function addSyntax(GrammarInterface $grammar, SyntaxInterface $generator): void
     {
@@ -86,8 +79,6 @@ final class Parser
     }
 
     /**
-     * @param StreamInterface $stream
-     * @return Template
      *
      * @throws ParserException
      */
@@ -112,8 +103,6 @@ final class Parser
     }
 
     /**
-     * @param Assembler $asm
-     * @param iterable  $tokens
      *
      * @throws SyntaxException
      */

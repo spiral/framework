@@ -27,12 +27,6 @@ final class CheckerRule extends AbstractRule
     /** @var string|null */
     private $message;
 
-    /**
-     * @param CheckerInterface $checker
-     * @param string           $method
-     * @param array            $args
-     * @param null|string      $message
-     */
     public function __construct(
         CheckerInterface $checker,
         string $method,

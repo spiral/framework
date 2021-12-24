@@ -50,16 +50,12 @@ final class Storage implements MutableStorageInterface
      */
     private $default;
 
-    /**
-     * @param string $name
-     */
     public function __construct(string $name = self::DEFAULT_STORAGE)
     {
         $this->default = $name;
     }
 
     /**
-     * @param string $name
      * @return $this
      */
     public function withDefault(string $name): StorageInterface
@@ -124,7 +120,6 @@ final class Storage implements MutableStorageInterface
 
     /**
      * @param IdType $uri
-     * @param bool $withScheme
      * @return array{0: string|null, 1: string}
      * @throws InvalidArgumentException
      */
@@ -154,7 +149,6 @@ final class Storage implements MutableStorageInterface
 
     /**
      * @param IdType $uri
-     * @return string
      * @throws InvalidArgumentException
      */
     private function uriToString($uri): string

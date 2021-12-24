@@ -23,7 +23,6 @@ final class Source
     private $content;
 
     /**
-     * @param string      $code
      * @param string|null $filename
      */
     public function __construct(string $code, string $filename = null)
@@ -32,27 +31,16 @@ final class Source
         $this->filename = $filename;
     }
 
-    /**
-     * @return string
-     */
     public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFilename(): ?string
     {
         return $this->filename;
     }
 
-    /**
-     * @param string $content
-     * @param int    $offset
-     * @return int
-     */
     public static function resolveLine(string $content, int $offset): int
     {
         $line = 0;

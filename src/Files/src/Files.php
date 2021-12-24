@@ -180,8 +180,6 @@ final class Files implements FilesInterface
      *
      * @see http://stackoverflow.com/questions/3349753/delete-directory-with-files-in-it
      *
-     * @param string $directory
-     * @param bool   $contentOnly
      *
      * @throws FilesException
      */
@@ -424,9 +422,7 @@ final class Files implements FilesInterface
     }
 
     /**
-     * @param string      $location
      * @param string|null $pattern
-     *
      * @return \GlobIterator|\SplFileInfo[]
      */
     private function filesIterator(string $location, string $pattern = null): \GlobIterator

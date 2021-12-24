@@ -52,7 +52,6 @@ class MigrationCommand extends AbstractCommand
     /**
      * Create migration declaration.
      *
-     * @param Migrator $migrator
      * @throws ScaffolderException
      */
     public function perform(Migrator $migrator): void

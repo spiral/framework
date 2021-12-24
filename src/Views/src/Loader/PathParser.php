@@ -25,19 +25,12 @@ final class PathParser
     /** @var string|null */
     private $extension;
 
-    /**
-     * @param string $defaultNamespace
-     * @param string $extension
-     */
     public function __construct(string $defaultNamespace, string $extension)
     {
         $this->defaultNamespace = $defaultNamespace;
         $this->extension = $extension;
     }
 
-    /**
-     * @return string
-     */
     public function getExtension(): string
     {
         return $this->extension;
@@ -45,9 +38,6 @@ final class PathParser
 
     /**
      * Check if filename matches to expected extension.
-     *
-     * @param string $filename
-     * @return bool
      */
     public function match(string $filename): bool
     {
@@ -58,8 +48,6 @@ final class PathParser
     /**
      * Parse view path and extract name, namespace and basename information.
      *
-     * @param string $path
-     * @return null|ViewPath
      *
      * @throws PathException
      */
@@ -71,7 +59,7 @@ final class PathParser
         $filename = preg_replace(
             '#/{2,}#',
             '/',
-            str_replace('\\', '/', (string)$path)
+            str_replace('\\', '/', $path)
         );
 
         $namespace = $this->defaultNamespace;
@@ -106,9 +94,6 @@ final class PathParser
 
     /**
      * Get view name from given filename.
-     *
-     * @param string $filename
-     * @return null|string
      */
     public function fetchName(string $filename): ?string
     {
@@ -118,7 +103,6 @@ final class PathParser
     /**
      * Make sure view filename is OK. Same as in twig.
      *
-     * @param string $path
      * @throws PathException
      */
     private function validatePath(string $path): void

@@ -30,7 +30,6 @@ trait LimitsTrait
      * Set selection limit. Attention, this limit value does not affect values set in paginator but
      * only changes pagination window. Set to 0 to disable limiting.
      *
-     * @param int $limit
      *
      * @return $this
      */
@@ -41,9 +40,6 @@ trait LimitsTrait
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getLimit(): int
     {
         return $this->limit;
@@ -53,7 +49,6 @@ trait LimitsTrait
      * Set selection offset. Attention, this value does not affect associated paginator but only
      * changes pagination window.
      *
-     * @param int $offset
      *
      * @return mixed
      */
@@ -64,9 +59,6 @@ trait LimitsTrait
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getOffset(): int
     {
         return $this->offset;

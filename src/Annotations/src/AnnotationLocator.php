@@ -32,9 +32,7 @@ final class AnnotationLocator implements SingletonInterface
     /**
      * AnnotationLocator constructor.
      *
-     * @param ClassesInterface      $classLocator
      * @param AnnotationReader|null $reader
-     *
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function __construct(ClassesInterface $classLocator, AnnotationReader $reader = null)
@@ -45,9 +43,6 @@ final class AnnotationLocator implements SingletonInterface
 
     /**
      * Limit locator to only specific class types.
-     *
-     * @param array $targets
-     * @return AnnotationLocator
      */
     public function withTargets(array $targets): self
     {
@@ -60,7 +55,6 @@ final class AnnotationLocator implements SingletonInterface
     /**
      * Find all classes with given annotation.
      *
-     * @param string $annotation
      * @return iterable|AnnotatedClass[]
      */
     public function findClasses(string $annotation): iterable
@@ -76,7 +70,6 @@ final class AnnotationLocator implements SingletonInterface
     /**
      * Find all methods with given annotation.
      *
-     * @param string $annotation
      * @return iterable|AnnotatedMethod[]
      */
     public function findMethods(string $annotation): iterable
@@ -94,7 +87,6 @@ final class AnnotationLocator implements SingletonInterface
     /**
      * Find all properties with given annotation.
      *
-     * @param string $annotation
      * @return iterable|AnnotatedProperty[]
      */
     public function findProperties(string $annotation): iterable

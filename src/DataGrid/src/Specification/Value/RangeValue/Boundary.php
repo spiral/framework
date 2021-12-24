@@ -25,9 +25,6 @@ class Boundary
     {
     }
 
-    /**
-     * @return self
-     */
     public static function empty(): self
     {
         return self::create(null, true);
@@ -35,7 +32,6 @@ class Boundary
 
     /**
      * @param mixed|null $value
-     * @return self
      */
     public static function including($value): self
     {
@@ -44,7 +40,6 @@ class Boundary
 
     /**
      * @param mixed|null $value
-     * @return self
      */
     public static function excluding($value): self
     {
@@ -53,8 +48,6 @@ class Boundary
 
     /**
      * @param mixed|null $value
-     * @param bool       $include
-     * @return self
      */
     private static function create($value, bool $include): self
     {

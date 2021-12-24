@@ -30,19 +30,11 @@ abstract class AbstractDirective implements DirectiveRendererInterface
         $this->r = new ReflectionObject($this);
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function hasDirective(string $name): bool
     {
         return $this->r->hasMethod('render' . ucfirst($name));
     }
 
-    /**
-     * @param Directive $directive
-     * @return string|null
-     */
     public function render(Directive $directive): ?string
     {
         if (!$this->hasDirective($directive->name)) {

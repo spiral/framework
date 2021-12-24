@@ -18,8 +18,6 @@ interface LoaderInterface
     /**
      * Load document content by it's path.
      *
-     * @param string $path
-     * @return Source
      *
      * @throws LoaderException
      */

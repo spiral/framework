@@ -17,10 +17,6 @@ use Spiral\Reactor\DependedInterface;
 
 class RepositoryDeclaration extends ClassDeclaration implements DependedInterface
 {
-    /**
-     * @param string $name
-     * @param string $comment
-     */
     public function __construct(string $name, string $comment = '')
     {
         parent::__construct($name, 'Repository', [], $comment);

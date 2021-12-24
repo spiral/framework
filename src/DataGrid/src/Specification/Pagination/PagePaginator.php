@@ -28,10 +28,6 @@ final class PagePaginator implements SequenceInterface, FilterInterface
     /** @var int */
     private $page;
 
-    /**
-     * @param int   $defaultLimit
-     * @param array $allowedLimits
-     */
     public function __construct(int $defaultLimit, array $allowedLimits = [])
     {
         $this->limit = $defaultLimit;
@@ -81,7 +77,6 @@ final class PagePaginator implements SequenceInterface, FilterInterface
 
     /**
      * @inheritDoc
-     * @return array
      */
     public function getValue(): array
     {

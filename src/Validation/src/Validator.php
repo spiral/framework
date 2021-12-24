@@ -18,7 +18,6 @@ final class Validator extends AbstractValidator
 
     /**
      * @param array|\ArrayAccess $data
-     * @param array              $rules
      * @param mixed              $context
      * @param RulesInterface     $ruleProvider
      */
