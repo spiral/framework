@@ -18,7 +18,7 @@
         "bin/spiral"
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.0",
         "ext-json": "*",
         "ext-mbstring": "*",
         "cocur/slugify": "^3.2",

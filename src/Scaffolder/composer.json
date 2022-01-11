@@ -20,7 +20,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.0",
         "spiral/reactor": "^2.8",
         "cocur/slugify": "^3.2",
         "doctrine/inflector": "^1.4|^2.0"

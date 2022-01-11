@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.0",
         "spiral/router": "^2.8",
         "spiral/annotations": "^2.8"
     },

@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.0",
         "ext-json": "*",
         "spiral/core": "^2.8",
         "defuse/php-encryption": "^2.2"

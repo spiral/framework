@@ -9,7 +9,7 @@
         "source": "https://github.com/spiral/annotations"
     },
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.0",
         "spiral/tokenizer": "^2.8",
         "doctrine/annotations": "^1.11"
     },

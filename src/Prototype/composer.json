@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.0",
         "ext-json": "*",
         "nikic/php-parser": "^4.1",
         "doctrine/inflector": "^1.4|^2.0",

@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.0",
         "symfony/polyfill-php73": "^1.22"
     },
     "require-dev": {

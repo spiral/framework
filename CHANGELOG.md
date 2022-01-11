@@ -3,6 +3,7 @@
 ## v2.9.0 - Unreleased
 
 - **High Impact Changes**
+  - A minimal version of `PHP` increased to `^8.0`
 - **Medium Impact Changes**
 - **Other Features**
 - **Bug Fixes**

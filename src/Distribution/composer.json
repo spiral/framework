@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.0",
         "symfony/polyfill-php80": "^1.22",
         "psr/http-factory": "^1.0"
     },
