@@ -48,10 +48,10 @@ class SchematicEntity extends AbstractEntity
     /**
      * {@inheritdoc}
      */
-    protected function getMutator(string $field, string $mutator)
+    protected function getMutator(string $field, string $type)
     {
-        if (isset($this->schema[ModelSchema::MUTATORS][$mutator][$field])) {
-            return $this->schema[ModelSchema::MUTATORS][$mutator][$field];
+        if (isset($this->schema[ModelSchema::MUTATORS][$type][$field])) {
+            return $this->schema[ModelSchema::MUTATORS][$type][$field];
         }
 
         return null;

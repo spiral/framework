@@ -75,27 +75,28 @@ class DataEntity extends AbstractEntity
         }
 
         if (!empty(static::FILLABLE)) {
-            return in_array($field, static::FILLABLE);
+            return \in_array($field, static::FILLABLE, true);
         }
 
         if (static::SECURED === '*') {
             return false;
         }
 
-        return !in_array($field, static::SECURED);
+        return !\in_array($field, static::SECURED, true);
     }
 
     /**
      * Check and return name of mutator (getter, setter, accessor) associated with specific field.
      *
-     * @param string $mutator Mutator type (setter, getter, accessor).
+     * @param string $type Mutator type (setter, getter, accessor).
+     *
      * @return mixed|null
      * @throws EntityException
      */
-    protected function getMutator(string $field, string $mutator)
+    protected function getMutator(string $field, string $type)
     {
         $target = [];
-        switch ($mutator) {
+        switch ($type) {
             case ModelSchema::MUTATOR_ACCESSOR:
                 $target = static::ACCESSORS;
                 break;

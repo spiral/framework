@@ -63,21 +63,21 @@ final class Catalogue implements CatalogueInterface
     /**
      * @inheritdoc
      */
-    public function get(string $domain, string $string): string
+    public function get(string $domain, string $id): string
     {
-        if (!$this->has($domain, $string)) {
+        if (!$this->has($domain, $id)) {
             throw new CatalogueException("Undefined string in domain '{$domain}'");
         }
 
-        return $this->data[$domain][$string];
+        return $this->data[$domain][$id];
     }
 
     /**
      * @inheritdoc
      */
-    public function set(string $domain, string $string, string $value): void
+    public function set(string $domain, string $id, string $string): void
     {
-        $this->data[$domain][$string] = $value;
+        $this->data[$domain][$id] = $string;
     }
 
     /**
