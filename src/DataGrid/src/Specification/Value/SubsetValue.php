@@ -30,27 +30,27 @@ final class SubsetValue implements ValueInterface
     /**
      * @inheritDoc
      */
-    public function accepts($values): bool
+    public function accepts($value): bool
     {
-        $values = (array)$values;
+        $value = (array)$value;
 
-        if (count($values) === 1) {
-            return $this->enum->accepts(array_values($values)[0]);
+        if (count($value) === 1) {
+            return $this->enum->accepts(array_values($value)[0]);
         }
 
-        if (empty($values)) {
+        if (empty($value)) {
             return false;
         }
 
-        return $this->arrayType()->accepts($values);
+        return $this->arrayType()->accepts($value);
     }
 
     /**
      * @inheritDoc
      */
-    public function convert($values)
+    public function convert($value)
     {
-        return $this->arrayType()->convert((array)$values);
+        return $this->arrayType()->convert((array)$value);
     }
 
     private function arrayType(): ArrayValue
