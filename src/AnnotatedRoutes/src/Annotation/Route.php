@@ -12,11 +12,14 @@ declare(strict_types=1);
 namespace Spiral\Router\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target({"METHOD"})
  */
+#[\Attribute(\Attribute::TARGET_METHOD), NamedArgumentConstructor]
 final class Route
 {
     public const DEFAULT_GROUP = 'default';
@@ -62,4 +65,26 @@ final class Route
      * @var array
      */
     public $middleware = [];
+
+    /**
+     * @psalm-param non-empty-string $route
+     * @psalm-param non-empty-string $name
+     * @psalm-param non-empty-string|array<string> $methods
+     * @psalm-param non-empty-string $group
+     */
+    public function __construct(
+        string $route,
+        string $name,
+        $methods = \Spiral\Router\Route::VERBS,
+        array $defaults = [],
+        string $group = self::DEFAULT_GROUP,
+        array $middleware = []
+    ) {
+        $this->route = $route;
+        $this->name = $name;
+        $this->methods = $methods;
+        $this->defaults = $defaults;
+        $this->group = $group;
+        $this->middleware = $middleware;
+    }
 }

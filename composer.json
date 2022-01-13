@@ -25,7 +25,7 @@
         "codedungeon/php-cli-colors": "^1.11",
         "cycle/database": "^1.0.3|^2.0",
         "defuse/php-encryption": "^2.2",
-        "doctrine/annotations": "^1.11",
+        "doctrine/annotations": "^1.12",
         "doctrine/inflector": "^1.4|^2.0",
         "league/flysystem": "^2.0",
         "monolog/monolog": "^2.2",

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Domain;
 
-use Doctrine\Common\Annotations\AnnotationReader;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\InterceptorException;
@@ -26,10 +26,10 @@ final class GuardPermissionsProvider implements PermissionsProviderInterface, Si
     /** @var string|null */
     private $namespace;
 
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
-    public function __construct(AnnotationReader $reader, string $namespace = null)
+    public function __construct(ReaderInterface $reader, string $namespace = null)
     {
         $this->reader = $reader;
         $this->namespace = $namespace;
@@ -60,12 +60,12 @@ final class GuardPermissionsProvider implements PermissionsProviderInterface, Si
             return Permission::failed();
         }
 
-        $guarded = $this->reader->getMethodAnnotation($method, Guarded::class);
+        $guarded = $this->reader->firstFunctionMetadata($method, Guarded::class);
         if (!$guarded instanceof Guarded) {
             return Permission::failed();
         }
 
-        $namespace = $this->reader->getClassAnnotation($method->getDeclaringClass(), GuardNamespace::class);
+        $namespace = $this->reader->firstClassMetadata($method->getDeclaringClass(), GuardNamespace::class);
 
         if ($guarded->permission || ($namespace instanceof GuardNamespace && $namespace->namespace)) {
             return Permission::ok(

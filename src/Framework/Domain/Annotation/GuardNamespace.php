@@ -13,11 +13,14 @@ namespace Spiral\Domain\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target({"CLASS"})
  */
+#[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class GuardNamespace
 {
     /**
@@ -25,4 +28,12 @@ final class GuardNamespace
      * @type string
      */
     public $namespace;
+
+    /**
+     * @psalm-param non-empty-string $namespace
+     */
+    public function __construct(string $namespace)
+    {
+        $this->namespace = $namespace;
+    }
 }

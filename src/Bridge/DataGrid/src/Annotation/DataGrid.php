@@ -12,11 +12,14 @@ declare(strict_types=1);
 namespace Spiral\DataGrid\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Attribute;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target({"METHOD"})
  */
+#[\Attribute(\Attribute::TARGET_METHOD), NamedArgumentConstructor]
 class DataGrid
 {
     /**
@@ -58,4 +61,18 @@ class DataGrid
      * @var string
      */
     public $factory;
+
+    public function __construct(
+        string $grid,
+        ?string $view = null,
+        array $defaults = [],
+        array $options = [],
+        ?string $factory = null
+    ) {
+        $this->grid = $grid;
+        $this->view = $view;
+        $this->defaults = $defaults;
+        $this->options = $options;
+        $this->factory = $factory;
+    }
 }
