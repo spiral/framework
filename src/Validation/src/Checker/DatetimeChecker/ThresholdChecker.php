@@ -8,12 +8,6 @@ class ThresholdChecker
 {
     /**
      * Check if date comes before the given one. Do not compare if the given date is missing or invalid.
-     *
-     * @param \DateTimeInterface|null $value
-     * @param \DateTimeInterface|null $threshold
-     * @param bool                    $orEquals
-     * @param bool                    $useMicroSeconds
-     * @return bool
      */
     public function before(
         ?\DateTimeInterface $value,
@@ -31,12 +25,6 @@ class ThresholdChecker
 
     /**
      * Check if date comes after the given one. Do not compare if the given date is missing or invalid.
-     *
-     * @param \DateTimeInterface|null $value
-     * @param \DateTimeInterface|null $threshold
-     * @param bool                    $orEquals
-     * @param bool                    $useMicroSeconds
-     * @return bool
      */
     public function after(
         ?\DateTimeInterface $value,
@@ -54,7 +42,6 @@ class ThresholdChecker
 
     /**
      * @param mixed $value
-     * @return \DateTimeImmutable|null
      */
     private function date($value): ?\DateTimeImmutable
     {
@@ -70,9 +57,6 @@ class ThresholdChecker
     }
 
     /**
-     * @param \DateTimeImmutable|null $date
-     * @param \DateTimeImmutable|null $threshold
-     * @param bool                    $useMicroseconds
      * @return bool|int
      */
     private function compare(?\DateTimeImmutable $date, ?\DateTimeImmutable $threshold, bool $useMicroseconds)
@@ -93,10 +77,6 @@ class ThresholdChecker
         return $date <=> $threshold;
     }
 
-    /**
-     * @param \DateTimeImmutable $date
-     * @return \DateTimeImmutable
-     */
     private function dropMicroSeconds(\DateTimeImmutable $date): \DateTimeImmutable
     {
         return $date->setTime(

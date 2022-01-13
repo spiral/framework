@@ -40,9 +40,6 @@ final class QuotedValue
         return $this->value;
     }
 
-    /**
-     * @return array
-     */
     public function trimValue(): array
     {
         $value = $this->value;

@@ -22,10 +22,7 @@ trait JsonTrait
     /**
      * Generate JSON response.
      *
-     * @param ResponseInterface $response
      * @param mixed             $payload
-     * @param int               $code
-     * @return ResponseInterface
      */
     private function writeJson(ResponseInterface $response, $payload, int $code = 200): ResponseInterface
     {

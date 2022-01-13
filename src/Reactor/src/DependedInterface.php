@@ -19,8 +19,6 @@ interface DependedInterface
     /**
      * Must return needed uses in array form [class => alias|null] to be automatically merged
      * with existed import set.
-     *
-     * @return array
      */
     public function getDependencies(): array;
 }

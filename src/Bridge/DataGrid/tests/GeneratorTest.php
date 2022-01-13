@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\DataGrid;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Database\Database;
-use Spiral\Database\Driver\SQLite\SQLiteDriver;
+use Cycle\Database\Database;
+use Cycle\Database\Driver\SQLite\SQLiteDriver;
 use Spiral\DataGrid\Compiler;
 use Spiral\DataGrid\GridFactory;
 use Spiral\DataGrid\GridSchema;

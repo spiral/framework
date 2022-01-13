@@ -18,11 +18,6 @@ namespace Spiral\Translator;
  */
 final class Matcher
 {
-    /**
-     * @param string $string
-     *
-     * @return bool
-     */
     public function isPattern(string $string): bool
     {
         return strpos($string, '*') !== false || strpos($string, '|') !== false;
@@ -30,10 +25,6 @@ final class Matcher
 
     /**
      * Checks if string matches given pattern.
-     *
-     * @param string $string
-     * @param string $pattern
-     * @return bool
      */
     public function matches(string $string, string $pattern): bool
     {
@@ -47,10 +38,6 @@ final class Matcher
         return (bool)preg_match($this->getRegex($pattern), $string);
     }
 
-    /**
-     * @param string $pattern
-     * @return string
-     */
     private function getRegex(string $pattern): string
     {
         $regex = str_replace('*', '[a-z0-9_\-]+', addcslashes($pattern, '.-'));

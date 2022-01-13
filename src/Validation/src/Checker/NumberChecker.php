@@ -34,7 +34,6 @@ final class NumberChecker extends AbstractChecker implements SingletonInterface
      * @param float|int $value
      * @param float|int $begin
      * @param float|int $end
-     * @return bool
      */
     public function range($value, $begin, $end): bool
     {
@@ -46,7 +45,6 @@ final class NumberChecker extends AbstractChecker implements SingletonInterface
      *
      * @param float|int $value
      * @param float|int $limit
-     * @return bool
      */
     public function higher($value, $limit): bool
     {
@@ -58,7 +56,6 @@ final class NumberChecker extends AbstractChecker implements SingletonInterface
      *
      * @param float|int $value
      * @param float|int $limit
-     * @return bool
      */
     public function lower($value, $limit): bool
     {

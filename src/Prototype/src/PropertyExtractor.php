@@ -35,7 +35,6 @@ final class PropertyExtractor
     /**
      * Get list of all virtual property names.
      *
-     * @param string $code
      * @return string[]
      */
     public function getPrototypeProperties(string $code): array

@@ -39,8 +39,8 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'classLocator' => 'Spiral\Tokenizer\ClassesInterface',
         'console'      => 'Spiral\Console\Console',
         'container'    => 'Psr\Container\ContainerInterface',
-        'db'           => 'Spiral\Database\DatabaseInterface',
-        'dbal'         => 'Spiral\Database\DatabaseProviderInterface',
+        'db'           => 'Cycle\Database\DatabaseInterface',
+        'dbal'         => 'Cycle\Database\DatabaseProviderInterface',
         'encrypter'    => 'Spiral\Encrypter\EncrypterInterface',
         'env'          => 'Spiral\Boot\EnvironmentInterface',
         'files'        => 'Spiral\Files\FilesInterface',
@@ -77,10 +77,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     /** @var \Doctrine\Inflector\Inflector */
     private $inflector;
 
-    /**
-     * @param MemoryInterface   $memory
-     * @param PrototypeRegistry $registry
-     */
     public function __construct(MemoryInterface $memory, PrototypeRegistry $registry)
     {
         $this->memory = $memory;
@@ -88,10 +84,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
     }
 
-    /**
-     * @param ConsoleBootloader  $console
-     * @param ContainerInterface $container
-     */
     public function boot(ConsoleBootloader $console, ContainerInterface $container): void
     {
         $console->addCommand(Command\DumpCommand::class);
@@ -113,27 +105,16 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         $this->initAnnotations($container, false);
     }
 
-    /**
-     * @param string $property
-     * @param string $type
-     */
     public function bindProperty(string $property, string $type): void
     {
         $this->registry->bindProperty($property, $type);
     }
 
-    /**
-     * @return array
-     */
     public function defineSingletons(): array
     {
         return [PrototypeRegistry::class => $this->registry];
     }
 
-    /**
-     * @param ContainerInterface $container
-     * @param bool               $reset
-     */
     public function initAnnotations(ContainerInterface $container, bool $reset = false): void
     {
         $prototyped = $this->memory->loadData('prototyped');
@@ -157,9 +138,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         $this->memory->saveData('prototyped', $prototyped);
     }
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function initCycle(ContainerInterface $container): void
     {
         if (!$container->has(ORM\SchemaInterface::class)) {
@@ -183,9 +161,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         }
     }
 
-    /**
-     * @param ContainerInterface $container
-     */
     private function initDefaults(ContainerInterface $container): void
     {
         foreach (self::DEFAULT_SHORTCUTS as $property => $shortcut) {

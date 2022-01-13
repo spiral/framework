@@ -42,10 +42,6 @@ final class Indexer
      */
     private $catalogue;
 
-    /**
-     * @param TranslatorConfig   $config
-     * @param CatalogueInterface $catalogue
-     */
     public function __construct(TranslatorConfig $config, CatalogueInterface $catalogue)
     {
         $this->config = $config;
@@ -54,10 +50,6 @@ final class Indexer
 
     /**
      * Register string in active translator.
-     *
-     * @param string $domain
-     * @param string $string
-     * @param bool   $resolveDomain
      */
     public function registerMessage(string $domain, string $string, bool $resolveDomain = true): void
     {
@@ -77,8 +69,6 @@ final class Indexer
     /**
      * Index and register i18n string located in default properties which belongs to TranslatorTrait
      * classes.
-     *
-     * @param ClassesInterface $locator
      */
     public function indexClasses(ClassesInterface $locator): void
     {
@@ -93,8 +83,6 @@ final class Indexer
     /**
      * Index available methods and function invocations, target: l, p, $this->translate()
      * functions.
-     *
-     * @param InvocationsInterface $locator
      */
     public function indexInvocations(InvocationsInterface $locator): void
     {
@@ -134,8 +122,6 @@ final class Indexer
     /**
      * Fetch default string values from class and merge it with parent strings if requested.
      *
-     * @param \ReflectionClass $reflection
-     * @param bool             $inherit
      * @return array
      */
     private function fetchMessages(\ReflectionClass $reflection, bool $inherit = false)
@@ -169,9 +155,6 @@ final class Indexer
 
     /**
      * Get associated domain.
-     *
-     * @param ReflectionInvocation $invocation
-     * @return string
      */
     private function invocationDomain(ReflectionInvocation $invocation): string
     {
@@ -208,9 +191,6 @@ final class Indexer
 
     /**
      * Remove [[ and ]] braces from translated string.
-     *
-     * @param string $string
-     * @return string
      */
     private function prepareMessage(string $string): string
     {

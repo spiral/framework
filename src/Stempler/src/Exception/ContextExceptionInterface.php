@@ -18,14 +18,7 @@ use Spiral\Stempler\Parser\Context;
  */
 interface ContextExceptionInterface extends \Throwable
 {
-    /**
-     * @return Context
-     */
     public function getContext(): Context;
 
-    /**
-     * @param string $filename
-     * @param int    $line
-     */
     public function setLocation(string $filename, int $line);
 }

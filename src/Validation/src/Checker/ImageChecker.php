@@ -72,9 +72,6 @@ final class ImageChecker extends AbstractChecker implements SingletonInterface
         'xbm',
     ];
 
-    /**
-     * @param FilesInterface $files
-     */
     public function __construct(FilesInterface $files)
     {
         $this->files = $files;
@@ -85,7 +82,6 @@ final class ImageChecker extends AbstractChecker implements SingletonInterface
      *
      * @param string|UploadedFileInterface|StreamableInterface $file
      * @param array|string                                     $types
-     * @return bool
      */
     public function type($file, $types): bool
     {
@@ -109,7 +105,6 @@ final class ImageChecker extends AbstractChecker implements SingletonInterface
      * Shortcut to check if image has valid type (JPEG, PNG and GIF are allowed).
      *
      * @param string|UploadedFileInterface|StreamableInterface $file
-     * @return bool
      */
     public function valid($file): bool
     {
@@ -120,9 +115,7 @@ final class ImageChecker extends AbstractChecker implements SingletonInterface
      * Check if image smaller that specified rectangle (height check if optional).
      *
      * @param string|UploadedFileInterface|StreamableInterface $file
-     * @param int                                              $width
      * @param int                                              $height Optional.
-     * @return bool
      */
     public function smaller($file, int $width, int $height): bool
     {
@@ -138,9 +131,7 @@ final class ImageChecker extends AbstractChecker implements SingletonInterface
      * Check if image is bigger that specified rectangle (height check is optional).
      *
      * @param string|UploadedFileInterface|StreamableInterface $file
-     * @param int                                              $width
      * @param int|null                                         $height Optional.
-     * @return bool
      */
     public function bigger($file, int $width, int $height = null): bool
     {

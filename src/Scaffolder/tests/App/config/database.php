@@ -9,12 +9,12 @@
  *
  * @license MIT
  * @author  Valentin V (vvval)
- * @see     \Spiral\Database\Config\DatabaseConfig
+ * @see     \Cycle\Database\Config\DatabaseConfig
  */
 
 declare(strict_types=1);
 
-use Spiral\Database\Driver\SQLite\SQLiteDriver;
+use Cycle\Database\Driver\SQLite\SQLiteDriver;
 
 return [
     'default'     => 'runtime',

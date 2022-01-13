@@ -29,9 +29,6 @@ class Grid implements GridInterface
     /** @var callable */
     private $mapper;
 
-    /**
-     * @return Generator
-     */
     public function getIterator(): Generator
     {
         if ($this->source === null) {
@@ -78,9 +75,6 @@ class Grid implements GridInterface
         return $grid;
     }
 
-    /**
-     * @return iterable|null
-     */
     public function getSource(): ?iterable
     {
         return $this->source;

@@ -43,8 +43,6 @@ abstract class AbstractKernel implements KernelInterface
     protected $dispatchers = [];
 
     /**
-     * @param Container $container
-     * @param array     $directories
      *
      * @throws \Throwable
      */
@@ -79,8 +77,6 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
-     *
-     * @param DispatcherInterface $dispatcher
      */
     public function addDispatcher(DispatcherInterface $dispatcher): void
     {
@@ -158,9 +154,6 @@ abstract class AbstractKernel implements KernelInterface
 
     /**
      * Normalizes directory list and adds all required aliases.
-     *
-     * @param array $directories
-     * @return array
      */
     abstract protected function mapDirectories(array $directories): array;
 

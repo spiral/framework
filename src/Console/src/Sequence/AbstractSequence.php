@@ -22,10 +22,6 @@ abstract class AbstractSequence implements SequenceInterface
     /** @var string */
     private $footer;
 
-    /**
-     * @param string $header
-     * @param string $footer
-     */
     public function __construct(string $header, string $footer)
     {
         $this->header = $header;

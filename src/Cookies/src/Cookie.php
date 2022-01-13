@@ -140,9 +140,6 @@ final class Cookie
         $this->sameSite = new Cookie\SameSite($sameSite, $secure);
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->createHeader();
@@ -150,8 +147,6 @@ final class Cookie
 
     /**
      * The name of the cookie.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -160,8 +155,6 @@ final class Cookie
 
     /**
      * The value of the cookie. This value is stored on the clients computer; do not store sensitive information.
-     *
-     * @return string|null
      */
     public function getValue(): ?string
     {
@@ -173,8 +166,6 @@ final class Cookie
      * within the entire domain. If set to '/foo/', the cookie will only be available within the /foo/ directory and
      * all sub-directories such as /foo/bar/ of domain. The default value is the current directory that the cookie is
      * being set in.
-     *
-     * @return string|null
      */
     public function getPath(): ?string
     {
@@ -186,8 +177,6 @@ final class Cookie
      * you'd set it to '.example.com'. The . is not required but makes it compatible with more browsers. Setting it to
      * www.example.com will make the cookie only available in the www subdomain. Refer to tail matching in the spec for
      * details.
-     *
-     * @return string|null
      */
     public function getDomain(): ?string
     {
@@ -198,8 +187,6 @@ final class Cookie
      * Indicates that the cookie should only be transmitted over a secure HTTPS connection from the client. When set to
      * true, the cookie will only be set if a secure connection exists. On the server-side, it's on the programmer to
      * send this kind of cookie only on secure connection (e.g. with respect to $_SERVER["HTTPS"]).
-     *
-     * @return bool
      */
     public function isSecure(): bool
     {
@@ -210,8 +197,6 @@ final class Cookie
      * When true the cookie will be made accessible only through the HTTP protocol. This means that the cookie won't be
      * accessible by scripting languages, such as JavaScript. This setting can effectively help to reduce identity
      * theft through XSS attacks (although it is not supported by all browsers).
-     *
-     * @return bool
      */
     public function isHttpOnly(): bool
     {
@@ -233,9 +218,6 @@ final class Cookie
 
     /**
      * Get new cookie with altered value. Original cookie object should not be changed.
-     *
-     * @param string $value
-     * @return Cookie
      */
     public function withValue(string $value): self
     {
@@ -249,7 +231,6 @@ final class Cookie
      * Convert cookie instance to string.
      *
      * @link http://www.w3.org/Protocols/rfc2109/rfc2109
-     * @return string
      */
     public function createHeader(): string
     {
@@ -287,8 +268,6 @@ final class Cookie
      * The time the cookie expires. This is a Unix timestamp so is in number of seconds since the epoch. In other
      * words, you'll most likely set this with the time function plus the number of seconds before you want it to
      * expire. Or you might use mktime. Will return null if lifetime is not specified.
-     *
-     * @return int|null
      */
     public function getExpires(): ?int
     {
@@ -332,7 +311,6 @@ final class Cookie
      *                              values of the explicit parameters. If the samesite element is omitted, no SameSite
      *                              cookie attribute is set. When Same-Site attribute is set to "None" it is required
      *                              to have "Secure" attribute enable. Otherwise it will be converted to "Lax".
-     * @return Cookie
      */
     public static function create(
         string $name,

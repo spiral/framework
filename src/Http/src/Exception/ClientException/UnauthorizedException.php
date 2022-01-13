@@ -21,10 +21,6 @@ class UnauthorizedException extends ClientException
     /** @var int */
     protected $code = ClientException::UNAUTHORIZED;
 
-    /**
-     * @param string $message
-     * @param \Throwable|null $previous
-     */
     public function __construct(string $message = '', ?\Throwable $previous = null)
     {
         parent::__construct($this->code, $message, $previous);

@@ -31,8 +31,6 @@ final class Location
     public $parent;
 
     /**
-     * @param string        $path
-     * @param int           $offset
      * @param Location|null $parent
      * @param string|null   $grammar
      */
@@ -45,9 +43,7 @@ final class Location
     }
 
     /**
-     * @param Context       $context
      * @param Location|null $parent
-     * @return Location
      */
     public static function fromContext(Context $context, Location $parent = null): Location
     {

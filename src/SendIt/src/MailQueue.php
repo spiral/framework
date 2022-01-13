@@ -27,19 +27,12 @@ final class MailQueue implements MailerInterface
     /** @var QueueInterface */
     private $queue;
 
-    /**
-     * @param MailerConfig   $config
-     * @param QueueInterface $queue
-     */
     public function __construct(MailerConfig $config, QueueInterface $queue)
     {
         $this->config = $config;
         $this->queue = $queue;
     }
 
-    /**
-     * @param MessageInterface ...$message
-     */
     public function send(MessageInterface ...$message): void
     {
         foreach ($message as $msg) {

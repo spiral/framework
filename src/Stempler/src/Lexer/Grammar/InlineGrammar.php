@@ -41,7 +41,7 @@ final class InlineGrammar implements GrammarInterface
     private $name = [];
 
     /** @var Byte[]|null */
-    private $default = null;
+    private $default;
 
     /**
      * @inheritDoc
@@ -88,8 +88,6 @@ final class InlineGrammar implements GrammarInterface
     }
 
     /**
-     * @param Buffer $src
-     * @param int    $offset
      * @return Token[]|null
      */
     private function parseGrammar(Buffer $src, int $offset): ?array
@@ -174,9 +172,6 @@ final class InlineGrammar implements GrammarInterface
         return $this->tokens;
     }
 
-    /**
-     * @return bool
-     */
     private function isValid(): bool
     {
         if (count($this->tokens) < 3) {

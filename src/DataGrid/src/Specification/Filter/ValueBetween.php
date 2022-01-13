@@ -32,8 +32,6 @@ final class ValueBetween implements FilterInterface
     /**
      * @param ValueInterface|mixed $expression
      * @param string[]             $value
-     * @param bool                 $includeFrom
-     * @param bool                 $includeTo
      */
     public function __construct($expression, array $value, bool $includeFrom = true, bool $includeTo = true)
     {
@@ -61,7 +59,6 @@ final class ValueBetween implements FilterInterface
 
     /**
      * @inheritDoc
-     * @return self|SpecificationInterface|null
      */
     public function withValue($value): ?SpecificationInterface
     {
@@ -97,7 +94,6 @@ final class ValueBetween implements FilterInterface
     }
 
     /**
-     * @param bool $asOriginal
      * @return SpecificationInterface[]
      */
     public function getFilters(bool $asOriginal = false): array
@@ -110,10 +106,6 @@ final class ValueBetween implements FilterInterface
     }
 
 
-    /**
-     * @param array $value
-     * @return bool
-     */
     private function isValidArray(array $value): bool
     {
         if (count($value) !== 2) {
@@ -125,10 +117,6 @@ final class ValueBetween implements FilterInterface
         return is_scalar($from) && is_scalar($to) && $from !== $to;
     }
 
-    /**
-     * @param array $value
-     * @return string
-     */
     private function invalidValueType(array $value): string
     {
         $count = count($value);
@@ -150,7 +138,6 @@ final class ValueBetween implements FilterInterface
 
     /**
      * @param mixed $value
-     * @return string
      */
     private function invalidExpressionType($value): string
     {
@@ -161,9 +148,6 @@ final class ValueBetween implements FilterInterface
         return gettype($value);
     }
 
-    /**
-     * @return FilterInterface
-     */
     private function fromFilter(): FilterInterface
     {
         return $this->includeFrom
@@ -171,13 +155,10 @@ final class ValueBetween implements FilterInterface
             : new Gt($this->value[1], $this->expression);
     }
 
-    /**
-     * @return FilterInterface
-     */
     private function toFilter(): FilterInterface
     {
         return $this->includeTo
-            ? new Lte((string)$this->value[0], $this->expression)
-            : new Lt((string)$this->value[0], $this->expression);
+            ? new Lte($this->value[0], $this->expression)
+            : new Lt($this->value[0], $this->expression);
     }
 }

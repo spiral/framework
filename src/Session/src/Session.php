@@ -55,7 +55,7 @@ final class Session implements SessionInterface
     /**
      * @var string
      */
-    private $id = null;
+    private $id;
 
     /**
      * @var bool
@@ -63,8 +63,6 @@ final class Session implements SessionInterface
     private $started = false;
 
     /**
-     * @param string      $clientSignature
-     * @param int         $lifetime
      * @param string|null $id
      */
     public function __construct(string $clientSignature, int $lifetime, string $id = null)
@@ -220,8 +218,6 @@ final class Session implements SessionInterface
 
     /**
      * Check if session is valid for
-     *
-     * @return bool
      */
     protected function validSession(): bool
     {
@@ -260,9 +256,6 @@ final class Session implements SessionInterface
 
     /**
      * Check if given session ID valid.
-     *
-     * @param string $id
-     * @return bool
      */
     private function validID(string $id): bool
     {

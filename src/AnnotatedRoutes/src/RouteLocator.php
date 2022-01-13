@@ -20,17 +20,11 @@ final class RouteLocator
     /** @var AnnotationLocator */
     private $locator;
 
-    /**
-     * @param AnnotationLocator $locator
-     */
     public function __construct(AnnotationLocator $locator)
     {
         $this->locator = $locator;
     }
 
-    /**
-     * @return array
-     */
     public function findDeclarations(): array
     {
         $routes = iterator_to_array($this->locator->findMethods(RouteAnnotation::class));

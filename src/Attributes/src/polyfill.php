@@ -118,17 +118,6 @@ namespace {
              * @var int-mask-of<Attribute::TARGET_*>
              */
             public $flags;
-
-            /**
-             * @param int-mask-of<Attribute::TARGET_*> $flags A value in the
-             *        form of a bitmask indicating the places where attributes
-             *        can be defined.
-             */
-            public function __construct(
-                #[ExpectedValues(flagsFromClass: Attribute::class)]
-                int $flags = self::TARGET_ALL
-            ) {
-            }
         }
     }
 

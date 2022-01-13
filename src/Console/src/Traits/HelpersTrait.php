@@ -38,8 +38,6 @@ trait HelpersTrait
 
     /**
      * Check if verbosity level of output is higher or equal to VERBOSITY_VERBOSE.
-     *
-     * @return bool
      */
     protected function isVerbose(): bool
     {
@@ -49,7 +47,6 @@ trait HelpersTrait
     /**
      * Input option.
      *
-     * @param string $name
      * @return mixed
      */
     protected function option(string $name)
@@ -60,7 +57,6 @@ trait HelpersTrait
     /**
      * Input argument.
      *
-     * @param string $name
      * @return mixed
      */
     protected function argument(string $name)
@@ -73,7 +69,6 @@ trait HelpersTrait
      *
      * @param string|int|float $format
      * @param mixed ...$args
-     * @return void
      */
     protected function sprintf(string $format, ...$args): void
     {
@@ -85,7 +80,6 @@ trait HelpersTrait
      *
      * @param string|array $messages The message as an array of lines or a single string
      * @param bool         $newline  Whether to add a newline
-     * @return void
      *
      * @throws \InvalidArgumentException When unknown output type is given
      */
@@ -98,7 +92,6 @@ trait HelpersTrait
      * Writes a message to the output and adds a newline at the end.
      *
      * @param string|array $messages The message as an array of lines of a single string
-     * @return void
      *
      * @throws \InvalidArgumentException When unknown output type is given
      */
@@ -109,11 +102,6 @@ trait HelpersTrait
 
     /**
      * Table helper instance with configured header and pre-defined set of rows.
-     *
-     * @param array  $headers
-     * @param array  $rows
-     * @param string $style
-     * @return Table
      */
     protected function table(array $headers, array $rows = [], string $style = 'default'): Table
     {

@@ -45,9 +45,6 @@ class CloudFrontResolver extends ExpirationAwareResolver
     private $prefix;
 
     /**
-     * @param string $keyPairId
-     * @param string $privateKey
-     * @param string $domain
      * @param string|null $prefix
      */
     public function __construct(string $keyPairId, string $privateKey, string $domain, string $prefix = null)
@@ -63,9 +60,7 @@ class CloudFrontResolver extends ExpirationAwareResolver
     }
 
     /**
-     * @param string $file
      * @param DateIntervalFormat|null $expiration
-     * @return UriInterface
      * @throws \Exception
      */
     public function resolve(string $file, $expiration = null): UriInterface
@@ -76,9 +71,6 @@ class CloudFrontResolver extends ExpirationAwareResolver
         return $this->factory->createUri($url);
     }
 
-    /**
-     * @return void
-     */
     protected function assertCloudFrontAvailable(): void
     {
         if (\class_exists(UrlSigner::class)) {
@@ -88,10 +80,6 @@ class CloudFrontResolver extends ExpirationAwareResolver
         throw new \DomainException('AWS SDK not available. Please install "aws/aws-sdk-php" package');
     }
 
-    /**
-     * @param string $file
-     * @return string
-     */
     private function createUrl(string $file): string
     {
         return \sprintf('https://%s/%s', $this->domain, $this->concat($file, $this->prefix));

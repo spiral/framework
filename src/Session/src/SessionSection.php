@@ -29,7 +29,6 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     private $name;
 
     /**
-     * @param SessionInterface $session
      * @param string|null      $name
      */
     public function __construct(SessionInterface $session, string $name = null)
@@ -41,7 +40,6 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * Shortcut for get.
      *
-     * @param string $name
      * @return mixed|null
      */
     public function __get(string $name)
@@ -50,7 +48,6 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     }
 
     /**
-     * @param string $name
      * @param mixed  $value
      */
     public function __set(string $name, $value): void
@@ -59,8 +56,6 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     }
 
     /**
-     * @param string $name
-     *
      * @return bool
      */
     public function __isset(string $name)
@@ -68,9 +63,6 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
         return $this->has($name);
     }
 
-    /**
-     * @param string $name
-     */
     public function __unset(string $name): void
     {
         $this->delete($name);

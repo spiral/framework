@@ -22,7 +22,7 @@ final class StreamFactory implements StreamFactoryInterface
      */
     public function createStream(string $content = ''): StreamInterface
     {
-        $resource = fopen('php://temp', 'r+');
+        $resource = \fopen('php://temp', 'r+');
         fwrite($resource, $content);
         rewind($resource);
         return $this->createStreamFromResource($resource);
@@ -31,9 +31,9 @@ final class StreamFactory implements StreamFactoryInterface
     /**
      * @inheritdoc
      */
-    public function createStreamFromFile(string $file, string $mode = 'r'): StreamInterface
+    public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
-        $resource = fopen($file, $mode);
+        $resource = \fopen($filename, $mode);
         return $this->createStreamFromResource($resource);
     }
 

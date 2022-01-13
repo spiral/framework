@@ -29,7 +29,6 @@ interface ReadableInterface
      * {@see BucketInterface::getContents()}
      *
      * @param IdType $id
-     * @return string
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
@@ -49,7 +48,6 @@ interface ReadableInterface
      * {@see BucketInterface::exists()}
      *
      * @param IdType $id
-     * @return bool
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
@@ -79,7 +77,6 @@ interface ReadableInterface
      *{@see BucketInterface::getMimeType()}
      *
      * @param IdType $id
-     * @return string
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */

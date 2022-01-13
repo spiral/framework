@@ -44,21 +44,12 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
     /** @var GroupRegistry */
     private $groups;
 
-    /**
-     * @param MemoryInterface $memory
-     * @param GroupRegistry   $groupRegistry
-     */
     public function __construct(MemoryInterface $memory, GroupRegistry $groupRegistry)
     {
         $this->memory = $memory;
         $this->groups = $groupRegistry;
     }
 
-    /**
-     * @param EnvironmentInterface $env
-     * @param ConsoleBootloader    $console
-     * @param RouteLocator         $locator
-     */
     public function boot(ConsoleBootloader $console, EnvironmentInterface $env, RouteLocator $locator): void
     {
         $console->addCommand(ResetCommand::class);
@@ -79,17 +70,11 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
         }
     }
 
-    /**
-     * @return GroupRegistry
-     */
     public function getGroups(): GroupRegistry
     {
         return $this->groups;
     }
 
-    /**
-     * @param array $routes
-     */
     private function configureRoutes(array $routes): void
     {
         foreach ($routes as $name => $schema) {

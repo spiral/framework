@@ -21,11 +21,6 @@ final class Controller extends AbstractTarget
     /** @var string */
     private $controller;
 
-    /**
-     * @param string $controller
-     * @param int    $options
-     * @param string $defaultAction
-     */
     public function __construct(string $controller, int $options = 0, string $defaultAction = 'index')
     {
         $this->controller = $controller;

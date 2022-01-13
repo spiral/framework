@@ -33,9 +33,6 @@ final class CsrfMiddleware implements MiddlewareInterface
     /** @var CsrfConfig */
     protected $config;
 
-    /**
-     * @param CsrfConfig $config
-     */
     public function __construct(CsrfConfig $config)
     {
         $this->config = $config;
@@ -46,6 +43,7 @@ final class CsrfMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
+        $cookie = null;
         if (isset($request->getCookieParams()[$this->config->getCookie()])) {
             $token = $request->getCookieParams()[$this->config->getCookie()];
         } else {
@@ -68,9 +66,6 @@ final class CsrfMiddleware implements MiddlewareInterface
 
     /**
      * Generate CSRF cookie.
-     *
-     * @param string $token
-     * @return string
      */
     protected function tokenCookie(string $token): string
     {
@@ -90,7 +85,6 @@ final class CsrfMiddleware implements MiddlewareInterface
      * Create a random string with desired length.
      *
      * @param int $length String length. 32 symbols by default.
-     * @return string
      */
     private function random(int $length = 32): string
     {

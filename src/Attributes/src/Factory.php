@@ -26,7 +26,6 @@ class Factory implements FactoryInterface
 
     /**
      * @param CacheInterface|CacheItemPoolInterface|null $cache
-     * @return $this
      */
     public function withCache($cache): self
     {
@@ -50,10 +49,6 @@ class Factory implements FactoryInterface
         );
     }
 
-    /**
-     * @param ReaderInterface $reader
-     * @return ReaderInterface
-     */
     private function decorateByAnnotations(ReaderInterface $reader): ReaderInterface
     {
         if (\interface_exists(DoctrineReaderInterface::class)) {
@@ -65,10 +60,6 @@ class Factory implements FactoryInterface
         return $reader;
     }
 
-    /**
-     * @param ReaderInterface $reader
-     * @return ReaderInterface
-     */
     private function decorateByCache(ReaderInterface $reader): ReaderInterface
     {
         switch (true) {

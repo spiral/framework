@@ -25,10 +25,6 @@ final class InputProxy implements InputInterface
     /** @var array */
     private $overwrite;
 
-    /**
-     * @param InputInterface $input
-     * @param array          $overwrite
-     */
     public function __construct(InputInterface $input, array $overwrite)
     {
         $this->input = $input;

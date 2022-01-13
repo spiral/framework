@@ -45,8 +45,6 @@ final class DefineStacks implements VisitorInterface
     }
 
     /**
-     * @param StackContext $ctx
-     * @param Tag          $node
      * @return Aggregate|Tag
      */
     private function registerAggregate(StackContext $ctx, Tag $node)
@@ -65,10 +63,6 @@ final class DefineStacks implements VisitorInterface
         return $stack;
     }
 
-    /**
-     * @param Tag $tag
-     * @return string|null
-     */
     private function stackName(Tag $tag): ?string
     {
         $options = [];
@@ -81,10 +75,6 @@ final class DefineStacks implements VisitorInterface
         return $options['name'] ?? null;
     }
 
-    /**
-     * @param Tag $tag
-     * @return int
-     */
     private function stackLevel(Tag $tag): int
     {
         $options = [];

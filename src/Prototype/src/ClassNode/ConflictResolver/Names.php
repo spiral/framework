@@ -19,17 +19,11 @@ final class Names
     /** @var Sequences */
     private $sequences;
 
-    /**
-     * @param Sequences $sequences
-     */
     public function __construct(Sequences $sequences)
     {
         $this->sequences = $sequences;
     }
 
-    /**
-     * @param ClassNode $definition
-     */
     public function resolve(ClassNode $definition): void
     {
         $reservedNames = $this->getConstructorReservedNames($definition);
@@ -38,10 +32,6 @@ final class Names
         $this->addPostfixes($definition, $counters);
     }
 
-    /**
-     * @param ClassNode $definition
-     * @return array
-     */
     private function getConstructorReservedNames(ClassNode $definition): array
     {
         $names = [];
@@ -56,10 +46,6 @@ final class Names
         return $names;
     }
 
-    /**
-     * @param array $names
-     * @return array
-     */
     private function initiateCounters(array $names): array
     {
         $counters = [];
@@ -76,10 +62,6 @@ final class Names
         return $counters;
     }
 
-    /**
-     * @param ClassNode $definition
-     * @param array     $counters
-     */
     private function addPostfixes(ClassNode $definition, array $counters): void
     {
         foreach ($definition->dependencies as $dependency) {
@@ -99,10 +81,6 @@ final class Names
         }
     }
 
-    /**
-     * @param string $name
-     * @return NameEntity
-     */
     private function parseName(string $name): NameEntity
     {
         if (preg_match("/\d+$/", $name, $match)) {

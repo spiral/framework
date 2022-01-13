@@ -18,21 +18,15 @@ interface EncryptionInterface
     /**
      * Generate new random encryption key (binary format).
      *
-     * @return string
      *
      * @throws EncrypterException
      */
     public function generateKey(): string;
 
     /**
-     * @return string
-     *
      * @throws EncrypterException
      */
     public function getKey(): string;
 
-    /**
-     * @return EncrypterInterface
-     */
     public function getEncrypter(): EncrypterInterface;
 }

@@ -79,11 +79,6 @@ abstract class Filter extends SchematicEntity implements FilterInterface
 
     /**
      * Filter constructor.
-     *
-     * @param array $data
-     * @param array $schema
-     * @param ValidatorInterface $validator
-     * @param ErrorMapper $errorMapper
      */
     public function __construct(
         array $data,
@@ -146,8 +141,6 @@ abstract class Filter extends SchematicEntity implements FilterInterface
 
     /**
      * Get all validation messages (including nested models).
-     *
-     * @return array
      */
     public function getErrors(): array
     {
@@ -189,9 +182,7 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     /**
      * Validate inner entities.
      *
-     * @param array $errors
      *
-     * @return array
      */
     protected function validateNested(array $errors): array
     {
@@ -236,7 +227,6 @@ abstract class Filter extends SchematicEntity implements FilterInterface
      * or {@see false} instead.
      *
      * @param string|int $field
-     * @return bool
      */
     private function isOptional($field): bool
     {
@@ -247,7 +237,6 @@ abstract class Filter extends SchematicEntity implements FilterInterface
      * Returns {@see true} in case that value has been passed.
      *
      * @param string|int $field
-     * @return bool
      * @throws EntityExceptionInterface
      */
     private function hasBeenPassed($field): bool

@@ -26,9 +26,6 @@ final class Template implements NodeInterface, AttributedInterface
     /** @var NodeInterface[] */
     public $nodes = [];
 
-    /**
-     * @param array $nodes
-     */
     public function __construct(array $nodes = [])
     {
         $this->nodes = $nodes;

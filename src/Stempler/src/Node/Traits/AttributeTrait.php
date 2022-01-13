@@ -17,7 +17,6 @@ trait AttributeTrait
     private $attributes = [];
 
     /**
-     * @param string $name
      * @param mixed  $value
      */
     public function setAttribute(string $name, $value): void
@@ -26,7 +25,6 @@ trait AttributeTrait
     }
 
     /**
-     * @param string $name
      * @param mixed  $default
      * @return mixed
      */
@@ -35,9 +33,6 @@ trait AttributeTrait
         return $this->attributes[$name] ?? $default;
     }
 
-    /**
-     * @return array
-     */
     public function getAttributes(): array
     {
         return $this->attributes;

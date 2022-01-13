@@ -18,9 +18,6 @@ interface PaginatorInterface
 {
     /**
      * Paginate the target selection and return new paginator instance.
-     *
-     * @param PaginableInterface $target
-     * @return PaginatorInterface
      */
     public function paginate(PaginableInterface $target): PaginatorInterface;
 }

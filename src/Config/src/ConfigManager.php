@@ -37,10 +37,6 @@ final class ConfigManager implements ConfiguratorInterface, SingletonInterface
     /** @var array */
     private $instances = [];
 
-    /**
-     * @param LoaderInterface $loader
-     * @param bool            $strict
-     */
     public function __construct(LoaderInterface $loader, bool $strict = true)
     {
         $this->loader = $loader;

@@ -41,18 +41,11 @@ final class AcceptHeader
         }
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return implode(', ', $this->getAll());
     }
 
-    /**
-     * @param string $raw
-     * @return AcceptHeader
-     */
     public static function fromString(string $raw): self
     {
         $header = new static();
@@ -70,7 +63,6 @@ final class AcceptHeader
 
     /**
      * @param AcceptHeaderItem|string $item
-     * @return $this
      */
     public function add($item): self
     {
@@ -80,19 +72,11 @@ final class AcceptHeader
         return $header;
     }
 
-    /**
-     * @param string $value
-     * @return bool
-     */
     public function has(string $value): bool
     {
         return isset($this->items[strtolower(trim($value))]);
     }
 
-    /**
-     * @param string $value
-     * @return AcceptHeaderItem|null
-     */
     public function get(string $value): ?AcceptHeaderItem
     {
         return $this->items[strtolower(trim($value))] ?? null;
@@ -128,6 +112,7 @@ final class AcceptHeader
             $item = AcceptHeaderItem::fromString((string)$item);
         }
 
+        /** @var AcceptHeaderItem|array $item  */
         if (!$item instanceof AcceptHeaderItem) {
             throw new AcceptHeaderException(sprintf(
                 'Accept Header item expected to be an instance of `%s` or a string, got `%s`',
@@ -149,7 +134,6 @@ final class AcceptHeader
      *
      * @param AcceptHeaderItem|string $a
      * @param AcceptHeaderItem|string $b
-     * @return int
      */
     private static function compare(AcceptHeaderItem $a, AcceptHeaderItem $b): int
     {
@@ -170,10 +154,6 @@ final class AcceptHeader
     /**
      * Compare to header item values. More specific types ( with no "*" ) has more value.
      * Return 1 if first value preferable or -1 if second, 0 in case of same weight.
-     *
-     * @param string $a
-     * @param string $b
-     * @return int
      */
     private static function compareValue(string $a, string $b): int
     {
@@ -192,11 +172,6 @@ final class AcceptHeader
         return static::compareAtomic($a, $b);
     }
 
-    /**
-     * @param string $a
-     * @param string $b
-     * @return int
-     */
     private static function compareAtomic(string $a, string $b): int
     {
         if (mb_strpos($a, '*/') === 0) {

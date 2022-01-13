@@ -22,10 +22,6 @@ final class DirectoryLoader implements LoaderInterface
     /** @var FileLoaderInterface[] */
     private $loaders;
 
-    /**
-     * @param string $directory
-     * @param array  $loaders
-     */
     public function __construct(string $directory, array $loaders = [])
     {
         $this->directory = rtrim($directory, '/');
@@ -73,10 +69,6 @@ final class DirectoryLoader implements LoaderInterface
         return array_keys($this->loaders);
     }
 
-    /**
-     * @param string $extension
-     * @return FileLoaderInterface
-     */
     private function getLoader(string $extension): FileLoaderInterface
     {
         return $this->loaders[$extension];

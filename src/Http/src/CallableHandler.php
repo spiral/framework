@@ -30,10 +30,6 @@ final class CallableHandler implements RequestHandlerInterface
     /** @var ResponseFactoryInterface */
     private $responseFactory;
 
-    /**
-     * @param callable                 $callable
-     * @param ResponseFactoryInterface $responseFactory
-     */
     public function __construct(callable $callable, ResponseFactoryInterface $responseFactory)
     {
         $this->callable = $callable;
@@ -76,8 +72,6 @@ final class CallableHandler implements RequestHandlerInterface
      * @param Response $response Initial pipeline response.
      * @param mixed    $result   Generated endpoint output.
      * @param string   $output   Buffer output.
-
-     * @return Response
      */
     private function wrapResponse(Response $response, $result = null, string $output = ''): Response
     {

@@ -15,14 +15,7 @@ use Spiral\Distribution\UriResolverInterface;
 
 interface UriResolvableInterface
 {
-    /**
-     * @return UriResolverInterface|null
-     */
     public function getUriResolver(): ?UriResolverInterface;
 
-    /**
-     * @param UriResolverInterface|null $resolver
-     * @return $this
-     */
     public function withUriResolver(?UriResolverInterface $resolver): self;
 }

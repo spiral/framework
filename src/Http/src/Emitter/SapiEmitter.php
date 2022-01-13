@@ -33,7 +33,6 @@ final class SapiEmitter implements EmitterInterface
      * body content via the output buffer.
      *
      * @param ResponseInterface $response
-     * @return bool
      */
     public function emit(ResponseInterface $response): bool
     {
@@ -48,8 +47,6 @@ final class SapiEmitter implements EmitterInterface
 
     /**
      * Emit the message body.
-     *
-     * @param ResponseInterface $response
      */
     private function emitBody(ResponseInterface $response): void
     {
@@ -131,9 +128,6 @@ final class SapiEmitter implements EmitterInterface
 
     /**
      * Filter a header name to wordcase
-     *
-     * @param string $header
-     * @return string
      */
     private function filterHeader(string $header): string
     {

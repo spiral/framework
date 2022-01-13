@@ -29,11 +29,9 @@ final class Paginator implements PaginatorInterface, \Countable
     private $count = 0;
 
     /** @var string|null */
-    private $parameter = null;
+    private $parameter;
 
     /**
-     * @param int         $limit
-     * @param int         $count
      * @param string|null $parameter
      */
     public function __construct(int $limit = 25, int $count = 0, string $parameter = null)
@@ -45,8 +43,6 @@ final class Paginator implements PaginatorInterface, \Countable
 
     /**
      * Get parameter paginator depends on. Environment specific.
-     *
-     * @return null|string
      */
     public function getParameter(): ?string
     {
@@ -55,8 +51,6 @@ final class Paginator implements PaginatorInterface, \Countable
 
     /**
      * {@inheritdoc}
-     *
-     * @return self
      */
     public function withLimit(int $limit): self
     {
@@ -88,8 +82,6 @@ final class Paginator implements PaginatorInterface, \Countable
 
     /**
      * {@inheritdoc}
-     *
-     * @return self
      */
     public function withCount(int $count): self
     {
@@ -201,9 +193,7 @@ final class Paginator implements PaginatorInterface, \Countable
     /**
      * Non-Immutable version of withCount.
      *
-     * @param int $count
      *
-     * @return self|$this
      */
     private function setCount(int $count): self
     {

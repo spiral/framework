@@ -26,17 +26,11 @@ final class SchemaBuilder
     /** @var ReflectionEntity */
     private $entity;
 
-    /**
-     * @param ReflectionEntity $entity
-     */
     public function __construct(ReflectionEntity $entity)
     {
         $this->entity = $entity;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->entity->getName();
@@ -45,7 +39,6 @@ final class SchemaBuilder
     /**
      * Generate entity schema based on schema definitions.
      *
-     * @return array
      *
      * @throws SchemaException
      */
@@ -63,10 +56,6 @@ final class SchemaBuilder
         ];
     }
 
-    /**
-     * @param ReflectionEntity $filter
-     * @return array
-     */
     protected function buildMap(ReflectionEntity $filter): array
     {
         $schema = $filter->getProperty('schema', true);

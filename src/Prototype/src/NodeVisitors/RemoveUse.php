@@ -22,7 +22,6 @@ use Spiral\Prototype\Traits\PrototypeTrait;
 final class RemoveUse extends NodeVisitorAbstract
 {
     /**
-     * @param Node $node
      * @return int|null|Node|Node[]
      */
     public function leaveNode(Node $node)

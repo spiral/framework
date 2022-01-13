@@ -31,9 +31,6 @@ final class NativeAttributeReader extends AttributeReader
         parent::__construct($instantiator);
     }
 
-    /**
-     * @return bool
-     */
     public static function isAvailable(): bool
     {
         return \version_compare(\PHP_VERSION, '8.0') >= 0;
@@ -79,9 +76,6 @@ final class NativeAttributeReader extends AttributeReader
         return $this->format($param, $param->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF));
     }
 
-    /**
-     * @return void
-     */
     private function checkAvailability(): void
     {
         if (!self::isAvailable()) {
@@ -90,7 +84,6 @@ final class NativeAttributeReader extends AttributeReader
     }
 
     /**
-     * @param \Reflector $context
      * @param iterable<\ReflectionAttribute> $attributes
      * @return iterable<\ReflectionClass, array>
      * @throws \ReflectionException

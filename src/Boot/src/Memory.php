@@ -25,12 +25,8 @@ final class Memory implements MemoryInterface
     private $directory;
 
     /** @var FilesInterface */
-    private $files = null;
+    private $files;
 
-    /**
-     * @param string         $directory
-     * @param FilesInterface $files
-     */
     public function __construct(string $directory, FilesInterface $files)
     {
         $this->directory = rtrim($directory, '/');
@@ -74,8 +70,6 @@ final class Memory implements MemoryInterface
      * Get extension to use for runtime data or configuration cache.
      *
      * @param string $name Runtime data file name (without extension).
-     *
-     * @return string
      */
     private function getFilename(string $name): string
     {

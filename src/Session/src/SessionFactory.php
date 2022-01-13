@@ -29,10 +29,6 @@ final class SessionFactory implements SingletonInterface
     /** @var FactoryInterface */
     private $factory;
 
-    /**
-     * @param SessionConfig    $config
-     * @param FactoryInterface $factory
-     */
     public function __construct(SessionConfig $config, FactoryInterface $factory)
     {
         $this->config = $config;
@@ -43,12 +39,11 @@ final class SessionFactory implements SingletonInterface
      * @param string      $clientSignature User specific token, does not provide full security but
      *                                     hardens session transfer.
      * @param string|null $id              When null - expect php to create session automatically.
-     * @return SessionInterface
      *
      */
     public function initSession(string $clientSignature, string $id = null): SessionInterface
     {
-        if ((int)session_status() === PHP_SESSION_ACTIVE) {
+        if (session_status() === PHP_SESSION_ACTIVE) {
             throw new MultipleSessionException('Unable to initiate session, session already started');
         }
 

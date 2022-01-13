@@ -20,8 +20,6 @@ interface DependedInterface
      * Return class names of bootloders current bootloader depends on.
      * Related bootloaders will be initiated automatically with nested
      * dependencies.
-     *
-     * @return array
      */
     public function defineDependencies(): array;
 }

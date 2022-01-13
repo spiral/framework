@@ -21,7 +21,6 @@ interface ValueInterface
      * Must return true if user value can be accepted.
      *
      * @param mixed $value
-     * @return bool
      */
     public function accepts($value): bool;
 

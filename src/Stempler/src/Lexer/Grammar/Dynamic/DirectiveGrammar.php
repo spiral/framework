@@ -37,11 +37,6 @@ final class DirectiveGrammar implements \IteratorAggregate
     /** @var array */
     private $body = [];
 
-    /**
-     * @param Buffer $src
-     * @param int    $offset
-     * @return bool
-     */
     public function parse(Buffer $src, int $offset): bool
     {
         $this->tokens = [
@@ -114,8 +109,6 @@ final class DirectiveGrammar implements \IteratorAggregate
 
     /**
      * Return offset after last directive token.
-     *
-     * @return int
      */
     public function getLastOffset(): int
     {
@@ -124,8 +117,6 @@ final class DirectiveGrammar implements \IteratorAggregate
 
     /**
      * Get directive keyword.
-     *
-     * @return string
      */
     public function getKeyword(): string
     {
@@ -168,7 +159,6 @@ final class DirectiveGrammar implements \IteratorAggregate
     }
 
     /**
-     * @param Buffer $src
      * @return bool
      */
     private function parseBody(Buffer $src)
@@ -232,9 +222,6 @@ final class DirectiveGrammar implements \IteratorAggregate
         $this->body = [];
     }
 
-    /**
-     * @return Token
-     */
     private function getLastToken(): Token
     {
         if ($this->tokens === []) {
@@ -246,8 +233,6 @@ final class DirectiveGrammar implements \IteratorAggregate
 
     /**
      * Flush directive and seek buffer before last non WHITESPACE token.
-     *
-     * @return bool
      */
     private function finalize(): bool
     {

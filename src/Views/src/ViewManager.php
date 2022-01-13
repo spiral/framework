@@ -32,10 +32,6 @@ final class ViewManager implements ViewsInterface
     /** @var EngineInterface[] */
     private $engines;
 
-    /**
-     * @param ViewsConfig      $config
-     * @param FactoryInterface $factory
-     */
     public function __construct(ViewsConfig $config, FactoryInterface $factory)
     {
         $this->config = $config;
@@ -59,17 +55,12 @@ final class ViewManager implements ViewsInterface
 
     /**
      * Attach new view context dependency.
-     *
-     * @param DependencyInterface $dependency
      */
     public function addDependency(DependencyInterface $dependency): void
     {
         $this->context = $this->context->withDependency($dependency);
     }
 
-    /**
-     * @return ContextInterface
-     */
     public function getContext(): ContextInterface
     {
         return $this->context;
@@ -77,8 +68,6 @@ final class ViewManager implements ViewsInterface
 
     /**
      * Attach new view engine.
-     *
-     * @param EngineInterface $engine
      */
     public function addEngine(EngineInterface $engine): void
     {
@@ -104,7 +93,6 @@ final class ViewManager implements ViewsInterface
     /**
      * Compile one of multiple cache versions for a given view path.
      *
-     * @param string $path
      *
      * @throws ViewException
      */
@@ -126,8 +114,6 @@ final class ViewManager implements ViewsInterface
 
     /**
      * Reset view cache for a given path. Identical to compile method by effect but faster.
-     *
-     * @param string $path
      */
     public function reset(string $path): void
     {
@@ -147,8 +133,6 @@ final class ViewManager implements ViewsInterface
     /**
      * Get view from one of the associated engines.
      *
-     * @param string $path
-     * @return ViewInterface
      *
      * @throws ViewException
      */
@@ -168,9 +152,6 @@ final class ViewManager implements ViewsInterface
     }
 
     /**
-     * @param string $path
-     * @param array  $data
-     * @return string
      *
      * @throws ViewException
      */
@@ -180,8 +161,6 @@ final class ViewManager implements ViewsInterface
     }
 
     /**
-     * @param string $path
-     * @return EngineInterface
      *
      * @throws ViewException
      */

@@ -41,7 +41,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
     private $source;
 
     /**
-     * @param string       $name
      * @param string|array $source
      * @param string|array $comment
      */
@@ -53,10 +52,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
         $this->initComment($comment);
     }
 
-    /**
-     * @param bool $static
-     * @return self
-     */
     public function setStatic(bool $static = true): Method
     {
         $this->static = $static;
@@ -64,10 +59,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
         return $this;
     }
 
-    /**
-     * @param string $return
-     * @return self
-     */
     public function setReturn(string $return): Method
     {
         $this->return = $return;
@@ -75,9 +66,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isStatic(): bool
     {
         return $this->static;
@@ -85,8 +73,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
 
     /**
      * Rename to getSource()?
-     *
-     * @return Source
      */
     public function getSource(): Source
     {
@@ -97,7 +83,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
      * Set method source.
      *
      * @param string|array $source
-     * @return self
      */
     public function setSource($source): Method
     {
@@ -120,10 +105,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
         return $this->parameters;
     }
 
-    /**
-     * @param string $name
-     * @return Parameter
-     */
     public function parameter(string $name): Parameter
     {
         return $this->parameters->get($name);
@@ -131,7 +112,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
 
     /**
      * {@inheritdoc}
-     * @return $this
      */
     public function replace($search, $replace): Method
     {
@@ -140,10 +120,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
         return $this;
     }
 
-    /**
-     * @param int $indentLevel
-     * @return string
-     */
     public function render(int $indentLevel = 0): string
     {
         $result = '';
@@ -169,14 +145,9 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
             $result .= $this->source->render($indentLevel + 1) . "\n";
         }
 
-        $result .= $this->addIndent('}', $indentLevel);
-
-        return $result;
+        return $result . $this->addIndent('}', $indentLevel);
     }
 
-    /**
-     * @return string
-     */
     private function renderModifiers(): string
     {
         $chunks = [$this->getAccess()];

@@ -24,7 +24,6 @@ final class DumpCommand extends AbstractCommand
     /**
      * Show list of available shortcuts and update trait docComment.
      *
-     * @param PrototypeBootloader $prototypeBootloader
      * @throws \ReflectionException
      */
     public function perform(PrototypeBootloader $prototypeBootloader): void
@@ -76,10 +75,6 @@ final class DumpCommand extends AbstractCommand
         }
     }
 
-    /**
-     * @param array $dependencies
-     * @return string
-     */
     private function buildAnnotation(array $dependencies): string
     {
         $an = new Annotation\Parser('');

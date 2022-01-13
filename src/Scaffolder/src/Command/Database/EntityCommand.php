@@ -95,8 +95,6 @@ class EntityCommand extends AbstractCommand
     /**
      * Create entity declaration.
      *
-     * @param Console          $console
-     * @param ScaffolderConfig $config
      * @throws Throwable
      */
     public function perform(Console $console, ScaffolderConfig $config): void
@@ -142,18 +140,11 @@ class EntityCommand extends AbstractCommand
         }
     }
 
-    /**
-     * @param string $element
-     * @return string
-     */
     protected function declarationClass(string $element): string
     {
         return $this->config->declarationOptions($element)[(string)$this->argument('format')];
     }
 
-    /**
-     * @param string $accessibility
-     */
     private function validateAccessibility(string $accessibility): void
     {
         if (

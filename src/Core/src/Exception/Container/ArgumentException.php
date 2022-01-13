@@ -34,10 +34,6 @@ class ArgumentException extends AutowireException
      */
     protected $context;
 
-    /**
-     * @param ReflectionParameter        $parameter
-     * @param ReflectionFunctionAbstract $context
-     */
     public function __construct(ReflectionParameter $parameter, ReflectionFunctionAbstract $context)
     {
         $this->parameter = $parameter;
@@ -51,17 +47,11 @@ class ArgumentException extends AutowireException
         parent::__construct("Unable to resolve '{$parameter->name}' argument in '{$name}'");
     }
 
-    /**
-     * @return ReflectionParameter
-     */
     public function getParameter(): ReflectionParameter
     {
         return $this->parameter;
     }
 
-    /**
-     * @return ReflectionFunctionAbstract
-     */
     public function getContext(): ReflectionFunctionAbstract
     {
         return $this->context;

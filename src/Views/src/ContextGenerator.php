@@ -22,9 +22,6 @@ final class ContextGenerator
     /** @var ContextInterface */
     private $context;
 
-    /**
-     * @param ContextInterface $context
-     */
     public function __construct(ContextInterface $context)
     {
         $this->context = $context;
@@ -45,9 +42,7 @@ final class ContextGenerator
     /**
      * Rotate all possible context values using recursive tree walk.
      *
-     * @param ContextInterface      $context
      * @param DependencyInterface[] $dependencies
-     *
      * @return ContextInterface[]
      */
     private function rotate(ContextInterface $context, array $dependencies): array

@@ -41,13 +41,8 @@ final class Console
     private $container;
 
     /** @var Application|null */
-    private $application = null;
+    private $application;
 
-    /**
-     * @param ConsoleConfig      $config
-     * @param ContainerInterface $container
-     * @param LocatorInterface   $locator
-     */
     public function __construct(
         ConsoleConfig $config,
         LocatorInterface $locator = null,
@@ -63,7 +58,6 @@ final class Console
      *
      * @param InputInterface|null  $input
      * @param OutputInterface|null $output
-     * @return int
      *
      * @throws \Throwable
      */
@@ -87,7 +81,6 @@ final class Console
      * @param string               $command
      * @param InputInterface|array $input
      * @param OutputInterface|null $output
-     * @return CommandOutput
      *
      * @throws \Throwable
      * @throws CommandNotFoundException
@@ -116,7 +109,6 @@ final class Console
     /**
      * Get associated Symfony Console Application.
      *
-     * @return Application
      *
      * @throws LocatorException
      */
@@ -141,9 +133,6 @@ final class Console
         return $this->application;
     }
 
-    /**
-     * @param iterable $commands
-     */
     private function addCommands(iterable $commands): void
     {
         foreach ($commands as $command) {
@@ -158,8 +147,6 @@ final class Console
     /**
      * Extracted in order to manage command lifecycle.
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
      * @see Application::configureIO()
      */
     private function configureIO(InputInterface $input, OutputInterface $output): void

@@ -39,11 +39,6 @@ final class CoreBootloader extends Bootloader
         Logger\LogsInterface::class             => Logger\LogFactory::class,
     ];
 
-    /**
-     * @param DirectoriesInterface $directories
-     * @param FilesInterface       $files
-     * @return MemoryInterface
-     */
     private function memory(
         DirectoriesInterface $directories,
         FilesInterface $files

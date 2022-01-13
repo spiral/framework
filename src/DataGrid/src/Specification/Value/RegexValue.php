@@ -17,9 +17,6 @@ class RegexValue implements ValueInterface
     /** @var string */
     private $pattern;
 
-    /**
-     * @param string $pattern
-     */
     public function __construct(string $pattern)
     {
         $this->pattern = $pattern;
@@ -35,17 +32,12 @@ class RegexValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return string
      */
     public function convert($value): string
     {
         return (string)$value;
     }
 
-    /**
-     * @param string $value
-     * @return bool
-     */
     private function isValid(string $value): bool
     {
         return (bool)preg_match($this->pattern, $value);

@@ -32,11 +32,6 @@ final class MailJob implements HandlerInterface
     /**  @var RendererInterface */
     private $renderer;
 
-    /**
-     * @param MailerConfig      $config
-     * @param SymfonyMailer     $mailer
-     * @param RendererInterface $renderer
-     */
     public function __construct(MailerConfig $config, SymfonyMailer $mailer, RendererInterface $renderer)
     {
         $this->config = $config;
@@ -45,9 +40,6 @@ final class MailJob implements HandlerInterface
     }
 
     /**
-     * @param string $name
-     * @param string $id
-     * @param array $payload
      * @throws TransportExceptionInterface
      */
     public function handle(string $name, string $id, array $payload): void
@@ -88,10 +80,6 @@ final class MailJob implements HandlerInterface
         );
     }
 
-    /**
-     * @param Email $message
-     * @return array
-     */
     private function getRecipients(Email $message): array
     {
         $emails = [];

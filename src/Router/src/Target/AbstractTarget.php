@@ -44,12 +44,6 @@ abstract class AbstractTarget implements TargetInterface
     /** @var string */
     private $defaultAction;
 
-    /**
-     * @param array  $defaults
-     * @param array  $constrains
-     * @param int    $options
-     * @param string $defaultAction
-     */
     public function __construct(array $defaults, array $constrains, int $options = 0, string $defaultAction = 'index')
     {
         $this->defaults = $defaults;
@@ -74,10 +68,6 @@ abstract class AbstractTarget implements TargetInterface
         return $this->constrains;
     }
 
-    /**
-     * @param CoreInterface $core
-     * @return TargetInterface|$this
-     */
     public function withCore(CoreInterface $core): TargetInterface
     {
         $target = clone $this;
@@ -99,10 +89,6 @@ abstract class AbstractTarget implements TargetInterface
         )->withVerbActions($this->verbActions);
     }
 
-    /**
-     * @param ContainerInterface $container
-     * @return CoreHandler
-     */
     protected function coreHandler(ContainerInterface $container): CoreHandler
     {
         if ($this->handler !== null) {
@@ -126,8 +112,6 @@ abstract class AbstractTarget implements TargetInterface
     /**
      * Return controller class name.
      *
-     * @param array $matches
-     * @return string
      *
      * @throws TargetException
      */
@@ -136,8 +120,6 @@ abstract class AbstractTarget implements TargetInterface
     /**
      * Return target controller action.
      *
-     * @param array $matches
-     * @return string|null
      *
      * @throws TargetException
      */

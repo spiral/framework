@@ -28,8 +28,6 @@ final class PrototypeRegistry
 
     /**
      * PrototypeRegistry constructor.
-     *
-     * @param \Spiral\Core\Container $container
      */
     public function __construct(Container $container)
     {
@@ -38,9 +36,6 @@ final class PrototypeRegistry
 
     /**
      * Assign class to prototype property.
-     *
-     * @param string $property
-     * @param string $type
      */
     public function bindProperty(string $property, string $type): void
     {
@@ -58,7 +53,6 @@ final class PrototypeRegistry
     /**
      * Resolves the name of prototype dependency into target class name.
      *
-     * @param string $name
      * @return Dependency|null|ContainerExceptionInterface
      */
     public function resolveProperty(string $name)

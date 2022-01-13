@@ -43,18 +43,11 @@ final class MailerBootloader extends Bootloader
     /** @var ConfiguratorInterface */
     private $config;
 
-    /**
-     * @param ConfiguratorInterface $config
-     */
     public function __construct(ConfiguratorInterface $config)
     {
         $this->config = $config;
     }
 
-    /**
-     * @param EnvironmentInterface $env
-     * @param JobRegistry          $jobRegistry
-     */
     public function boot(EnvironmentInterface $env, JobRegistry $jobRegistry): void
     {
         $this->config->setDefaults('mailer', [
@@ -67,10 +60,6 @@ final class MailerBootloader extends Bootloader
         $jobRegistry->setSerializer(MailQueue::JOB_NAME, MessageSerializer::class);
     }
 
-    /**
-     * @param MailerConfig $config
-     * @return SymfonyMailer
-     */
     public function mailer(MailerConfig $config): SymfonyMailer
     {
         $transport = Transport::fromDsn($config->getDSN());

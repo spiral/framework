@@ -52,8 +52,6 @@ final class StackCollector implements VisitorInterface
     }
 
     /**
-     * @param StackContext $ctx
-     * @param Tag          $node
      * @return int|Tag
      */
     private function registerPush(StackContext $ctx, Tag $node)
@@ -68,8 +66,6 @@ final class StackCollector implements VisitorInterface
     }
 
     /**
-     * @param StackContext $ctx
-     * @param Tag          $node
      * @return int|Tag
      */
     private function registerPrepend(StackContext $ctx, Tag $node)
@@ -83,10 +79,6 @@ final class StackCollector implements VisitorInterface
         return self::REMOVE_NODE;
     }
 
-    /**
-     * @param Tag $tag
-     * @return string|null
-     */
     private function stackName(Tag $tag): ?string
     {
         foreach ($tag->attrs as $attr) {
@@ -98,10 +90,6 @@ final class StackCollector implements VisitorInterface
         return null;
     }
 
-    /**
-     * @param Tag $tag
-     * @return string|null
-     */
     private function uniqueID(Tag $tag): ?string
     {
         foreach ($tag->attrs as $attr) {

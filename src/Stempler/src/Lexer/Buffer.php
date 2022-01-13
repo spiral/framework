@@ -28,10 +28,6 @@ final class Buffer implements \IteratorAggregate
     /** @var int */
     private $offset = 0;
 
-    /**
-     * @param \Generator $generator
-     * @param int        $offset
-     */
     public function __construct(\Generator $generator, int $offset = 0)
     {
         $this->generator = $generator;
@@ -51,9 +47,6 @@ final class Buffer implements \IteratorAggregate
         }
     }
 
-    /**
-     * @return int
-     */
     public function getOffset(): int
     {
         return $this->offset;
@@ -84,8 +77,6 @@ final class Buffer implements \IteratorAggregate
 
     /**
      * Get all the string content until first token.
-     *
-     * @return string
      */
     public function nextBytes(): string
     {
@@ -122,7 +113,6 @@ final class Buffer implements \IteratorAggregate
      * Get next byte(s) value if any.
      *
      * @param int $size Size of lookup string.
-     * @return string|null
      */
     public function lookaheadByte(int $size = 1): ?string
     {
@@ -150,8 +140,6 @@ final class Buffer implements \IteratorAggregate
 
     /**
      * Replay all the byte and token stream after given offset.
-     *
-     * @param int $offset
      */
     public function replay(int $offset): void
     {

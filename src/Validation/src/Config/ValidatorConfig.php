@@ -31,9 +31,6 @@ final class ValidatorConfig extends InjectableConfig
         'aliases'    => [],
     ];
 
-    /**
-     * @param array $config
-     */
     public function __construct(array $config = [])
     {
         parent::__construct($config);
@@ -42,18 +39,12 @@ final class ValidatorConfig extends InjectableConfig
         }
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function hasChecker(string $name): bool
     {
         return isset($this->config['checkers'][$name]);
     }
 
     /**
-     * @param string $name
-     * @return Autowire
      *
      * @throws ValidationException
      */
@@ -71,19 +62,11 @@ final class ValidatorConfig extends InjectableConfig
         throw new ValidationException("Invalid checker definition for `{$name}`.");
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function hasCondition(string $name): bool
     {
         return isset($this->config['conditions'][$name]);
     }
 
-    /**
-     * @param string $name
-     * @return Autowire
-     */
     public function getCondition(string $name): Autowire
     {
         if (!$this->hasCondition($name)) {
@@ -117,11 +100,6 @@ final class ValidatorConfig extends InjectableConfig
         return $function;
     }
 
-    /**
-     * @param string $section
-     * @param string $name
-     * @return null|Autowire
-     */
     private function wire(string $section, string $name): ?Autowire
     {
         if (is_string($this->config[$section][$name])) {
@@ -140,9 +118,6 @@ final class ValidatorConfig extends InjectableConfig
 
     /**
      * Normalize all defined aliases.
-     *
-     * @param array $aliases
-     * @return array
      */
     private function normalizeAliases(array $aliases): array
     {

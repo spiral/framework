@@ -29,17 +29,10 @@ final class Namespaced extends AbstractTarget
     /** @var \Doctrine\Inflector\Inflector */
     private $inflector;
 
-    /**
-     * @param string $namespace
-     * @param string $postfix
-     * @param int    $options
-     * @param string $defaultAction
-     */
     public function __construct(
         string $namespace,
         string $postfix = 'Controller',
-        int $options = 0,
-        string $defaultAction = 'index'
+        int $options = 0
     ) {
         $this->namespace = rtrim($namespace, '\\');
         $this->postfix = ucfirst($postfix);

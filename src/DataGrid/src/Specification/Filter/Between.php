@@ -30,10 +30,7 @@ final class Between implements FilterInterface
     private $includeTo;
 
     /**
-     * @param string               $expression
      * @param ValueInterface|array $value
-     * @param bool                 $includeFrom
-     * @param bool                 $includeTo
      */
     public function __construct(string $expression, $value, bool $includeFrom = true, bool $includeTo = true)
     {
@@ -53,7 +50,6 @@ final class Between implements FilterInterface
 
     /**
      * @inheritDoc
-     * @return self|SpecificationInterface|null
      */
     public function withValue($value): ?SpecificationInterface
     {
@@ -87,16 +83,12 @@ final class Between implements FilterInterface
         return $this->value;
     }
 
-    /**
-     * @return string
-     */
     public function getExpression(): string
     {
         return $this->expression;
     }
 
     /**
-     * @param bool $asOriginal
      * @return SpecificationInterface[]
      */
     public function getFilters(bool $asOriginal = false): array
@@ -111,7 +103,6 @@ final class Between implements FilterInterface
 
     /**
      * @param mixed|array $value
-     * @return bool
      */
     private function isValidArray($value): bool
     {
@@ -126,7 +117,6 @@ final class Between implements FilterInterface
 
     /**
      * @param mixed $value
-     * @return string
      */
     private function invalidValueType($value): string
     {
@@ -168,9 +158,6 @@ final class Between implements FilterInterface
         return $values;
     }
 
-    /**
-     * @return FilterInterface
-     */
     private function fromFilter(): FilterInterface
     {
         $value = $this->value instanceof ValueInterface ? $this->value : $this->value[0];
@@ -180,9 +167,6 @@ final class Between implements FilterInterface
             : new Gt($this->expression, $value);
     }
 
-    /**
-     * @return FilterInterface
-     */
     private function toFilter(): FilterInterface
     {
         $value = $this->value instanceof ValueInterface ? $this->value : $this->value[1];

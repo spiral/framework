@@ -19,9 +19,6 @@ final class ListenerRegistry implements ListenerRegistryInterface
     /** @var callable[] */
     private $listeners = [];
 
-    /**
-     * @param callable $listener
-     */
     public function addListener(callable $listener): void
     {
         if (!array_search($listener, $this->listeners, true)) {
@@ -29,9 +26,6 @@ final class ListenerRegistry implements ListenerRegistryInterface
         }
     }
 
-    /**
-     * @param callable $listener
-     */
     public function removeListener(callable $listener): void
     {
         $key = array_search($listener, $this->listeners, true);

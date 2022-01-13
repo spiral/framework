@@ -25,7 +25,6 @@ abstract class Expression implements FilterInterface
     protected $value;
 
     /**
-     * @param string               $expression
      * @param ValueInterface|mixed $value
      */
     public function __construct(string $expression, $value)
@@ -56,9 +55,6 @@ abstract class Expression implements FilterInterface
         return $filter;
     }
 
-    /**
-     * @return string
-     */
     public function getExpression(): string
     {
         return $this->expression;

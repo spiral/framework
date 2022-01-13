@@ -22,9 +22,6 @@ use Spiral\Reactor\Partial\Parameter;
  */
 final class Parameters extends Aggregator
 {
-    /**
-     * @param array $constants
-     */
     public function __construct(array $constants)
     {
         parent::__construct([Parameter::class], $constants);
@@ -33,7 +30,6 @@ final class Parameters extends Aggregator
     /**
      * Get named element by it's name.
      *
-     * @param string $name
      * @return Parameter|DeclarationInterface
      */
     public function get(string $name): Parameter
