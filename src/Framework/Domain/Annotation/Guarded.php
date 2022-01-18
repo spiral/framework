@@ -12,18 +12,24 @@ declare(strict_types=1);
 namespace Spiral\Domain\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
+use Doctrine\Common\Annotations\Annotation\Enum;
 use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
  * @NamedArgumentConstructor
  * @Target({"METHOD", "CLASS"})
+ * @Attributes({
+ *     @Attribute("permission", type="string"),
+ *     @Attribute("else", type="string"),
+ *     @Attribute("errorMessage", type="string")
+ * })
  */
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Guarded
 {
     /**
-     * @Attribute(name="permission", type="string")
      * @type string|null
      */
     public $permission;
@@ -37,7 +43,6 @@ final class Guarded
     /**
      * Error message in case of error.
      *
-     * @Attribute(name="errorMessage", type="string")
      * @type string
      */
     public $errorMessage;
