@@ -151,6 +151,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'src/Tokenizer'       => 'git@github.com:spiral/tokenizer.git',
         'src/Translator'      => 'git@github.com:spiral/translator.git',
         'src/Validation'      => 'git@github.com:spiral/validation.git',
+        'src/Queue'           => 'git@github.com:spiral/queue.git',
         'src/Views'           => 'git@github.com:spiral/views.git',
     ]);
 

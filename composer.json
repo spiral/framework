@@ -95,6 +95,7 @@
             "Spiral\\Monolog\\": "src/Bridge/Monolog/src",
             "Spiral\\Pagination\\": "src/Pagination/src",
             "Spiral\\Prototype\\": "src/Prototype/src",
+            "Spiral\\Queue\\": "src/Queue/src",
             "Spiral\\Reactor\\": "src/Reactor/src",
             "Spiral\\Router\\": [
                 "src/AnnotatedRoutes/src",
@@ -187,6 +188,7 @@
             "Spiral\\Tests\\Monolog\\": "src/Bridge/Monolog/tests",
             "Spiral\\Tests\\Pagination\\": "src/Pagination/tests",
             "Spiral\\Tests\\Prototype\\": "src/Prototype/tests",
+            "Spiral\\Tests\\Queue\\": "src/Queue/tests",
             "Spiral\\Tests\\Reactor\\": "src/Reactor/tests",
             "Spiral\\Tests\\Router\\": [
                 "src/AnnotatedRoutes/tests",
@@ -241,6 +243,7 @@
         "spiral/prototype": "*",
         "spiral/reactor": "*",
         "spiral/router": "*",
+        "spiral/queue": "*",
         "spiral/scaffolder": "*",
         "spiral/security": "*",
         "spiral/sendit": "*",
@@ -268,7 +271,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.9.x-dev"
         }
     },
     "config": {
