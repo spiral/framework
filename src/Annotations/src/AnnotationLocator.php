@@ -12,11 +12,14 @@ declare(strict_types=1);
 namespace Spiral\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
 
 /**
  * Locate all available annotations for methods, classes and properties across all the codebase.
+ *
+ * @deprecated since v2.9. Please, use combination of {@see ClassesInterface} and {@see ReaderInterface}
  */
 final class AnnotationLocator implements SingletonInterface
 {

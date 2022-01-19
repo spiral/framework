@@ -11,35 +11,45 @@ declare(strict_types=1);
 
 namespace Spiral\Router;
 
-use Spiral\Annotations\AnnotationLocator;
-use Spiral\Router\Annotation\Route as RouteAnnotation;
+use Spiral\Attributes\ReaderInterface;
+use Spiral\Router\Annotation\Route;
+use Spiral\Tokenizer\ClassLocator;
 
 final class RouteLocator
 {
-    /** @var AnnotationLocator */
+    /** @var ClassLocator */
     private $locator;
 
-    public function __construct(AnnotationLocator $locator)
+    /** @var ReaderInterface */
+    private $reader;
+
+    public function __construct(ClassLocator $locator, ReaderInterface $reader)
     {
         $this->locator = $locator;
+        $this->reader = $reader;
     }
 
     public function findDeclarations(): array
     {
         $result = [];
-        foreach ($this->locator->findMethods(RouteAnnotation::class) as $match) {
-            /** @var RouteAnnotation $route */
-            $route = $match->getAnnotation();
+        foreach ($this->locator->getClasses() as $class) {
+            foreach ($class->getMethods() as $method) {
+                $route = $this->reader->firstFunctionMetadata($method, Route::class);
 
-            $result[$route->name] = [
-                'pattern'    => $route->route,
-                'controller' => $match->getClass()->getName(),
-                'action'     => $match->getMethod()->getName(),
-                'group'      => $route->group,
-                'verbs'      => (array) $route->methods,
-                'defaults'   => $route->defaults,
-                'middleware' => (array) $route->middleware,
-            ];
+                if ($route === null) {
+                    continue;
+                }
+
+                $result[$route->name] = [
+                    'pattern'    => $route->route,
+                    'controller' => $class->getName(),
+                    'action'     => $method->getName(),
+                    'group'      => $route->group,
+                    'verbs'      => (array) $route->methods,
+                    'defaults'   => $route->defaults,
+                    'middleware' => (array) $route->middleware,
+                ];
+            }
         }
 
         return $result;

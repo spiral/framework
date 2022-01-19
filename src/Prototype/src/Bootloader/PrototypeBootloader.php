@@ -14,14 +14,16 @@ namespace Spiral\Prototype\Bootloader;
 use Cycle\ORM;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Spiral\Annotations\AnnotationLocator;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\Bootloader;
 use Spiral\Boot\MemoryInterface;
+use Spiral\Bootloader\AttributesBootloader;
 use Spiral\Bootloader\ConsoleBootloader;
 use Spiral\Core\Container;
 use Spiral\Prototype\Annotation\Prototyped;
 use Spiral\Prototype\Command;
 use Spiral\Prototype\PrototypeRegistry;
+use Spiral\Tokenizer\ClassLocator;
 
 /**
  * Manages ide-friendly container injections via PrototypeTrait.
@@ -31,6 +33,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     protected const DEPENDENCIES = [
         Bootloader\CoreBootloader::class,
         ConsoleBootloader::class,
+        AttributesBootloader::class,
     ];
 
     // Default spiral specific shortcuts, automatically checked on existence.
@@ -126,13 +129,20 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
             return;
         }
 
-        /** @var AnnotationLocator $locator */
-        $locator = $container->get(AnnotationLocator::class);
+        /** @var ClassLocator $locator */
+        $locator = $container->get(ClassLocator::class);
+        $reader = $container->get(ReaderInterface::class);
 
         $prototyped = [];
-        foreach ($locator->findClasses(Prototyped::class) as $class) {
-            $prototyped[$class->getAnnotation()->property] = $class->getClass()->getName();
-            $this->bindProperty($class->getAnnotation()->property, $class->getClass()->getName());
+        foreach ($locator->getClasses() as $class) {
+            $meta = $reader->firstClassMetadata($class, Prototyped::class);
+
+            if ($meta === null) {
+                continue;
+            }
+
+            $prototyped[$meta->property] = $class->getName();
+            $this->bindProperty($meta->property, $class->getName());
         }
 
         $this->memory->saveData('prototyped', $prototyped);

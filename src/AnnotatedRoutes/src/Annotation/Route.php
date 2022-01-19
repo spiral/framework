@@ -11,30 +11,40 @@ declare(strict_types=1);
 
 namespace Spiral\Router\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target({"METHOD"})
+ * @Attributes({
+ *     @Attribute("route", required=true, type="string"),
+ *     @Attribute("name", required=true, type="string"),
+ *     @Attribute("verbs", required=true, type="mixed"),
+ *     @Attribute("defaults", type="array"),
+ *     @Attribute("group", type="string"),
+ *     @Attribute("middleware", type="array")
+ * })
  */
+#[\Attribute(\Attribute::TARGET_METHOD), NamedArgumentConstructor]
 final class Route
 {
     public const DEFAULT_GROUP = 'default';
 
     /**
-     * @Attribute(name="route", type="string", required=true)
      * @var string
      */
     public $route;
 
     /**
-     * @Attribute(name="name", type="string", required=true)
      * @var string
      */
     public $name;
 
     /**
-     * @Attribute(name="verbs", type="mixed", required=true)
      * @var mixed
      */
     public $methods = \Spiral\Router\Route::VERBS;
@@ -42,7 +52,6 @@ final class Route
     /**
      * Default match options.
      *
-     * @Attribute(name="defaults", type="array")
      * @var array
      */
     public $defaults = [];
@@ -50,7 +59,6 @@ final class Route
     /**
      * Route group (set of middlewere), groups can be configured using MiddlewareRegistry.
      *
-     * @Attribute(name="group", type="string")
      * @var string
      */
     public $group = self::DEFAULT_GROUP;
@@ -58,8 +66,29 @@ final class Route
     /**
      * Route specific middleware set, if any.
      *
-     * @Attribute(name="middleware", type="array")
      * @var array
      */
     public $middleware = [];
+
+    /**
+     * @psalm-param non-empty-string $route
+     * @psalm-param non-empty-string $name
+     * @psalm-param non-empty-string|array<string> $methods
+     * @psalm-param non-empty-string $group
+     */
+    public function __construct(
+        string $route,
+        string $name,
+        $methods = \Spiral\Router\Route::VERBS,
+        array $defaults = [],
+        string $group = self::DEFAULT_GROUP,
+        array $middleware = []
+    ) {
+        $this->route = $route;
+        $this->name = $name;
+        $this->methods = $methods;
+        $this->defaults = $defaults;
+        $this->group = $group;
+        $this->middleware = $middleware;
+    }
 }

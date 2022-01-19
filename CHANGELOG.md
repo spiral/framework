@@ -4,6 +4,8 @@
 
 - **High Impact Changes**
 - **Medium Impact Changes**
+  - Component `spiral/annotations` is deprecated. Use `spiral/attributes` instead
+  - A minimal version of `doctrine/annotations` increased to `^1.12`
 - **Other Features**
 - **Bug Fixes**
 

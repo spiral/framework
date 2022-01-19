@@ -15,6 +15,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\MemoryInterface;
+use Spiral\Bootloader\AttributesBootloader;
 use Spiral\Bootloader\ConsoleBootloader;
 use Spiral\Bootloader\Http\RouterBootloader;
 use Spiral\Core\Container\SingletonInterface;
@@ -32,6 +33,7 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
     protected const DEPENDENCIES = [
         RouterBootloader::class,
         ConsoleBootloader::class,
+        AttributesBootloader::class,
     ];
 
     protected const SINGLETONS = [
