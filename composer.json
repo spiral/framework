@@ -66,6 +66,7 @@
                 "src/AuthHttp/src"
             ],
             "Spiral\\Boot\\": "src/Boot/src",
+            "Spiral\\Cache\\": "src/Cache/src",
             "Spiral\\Config\\": "src/Config/src",
             "Spiral\\Console\\": "src/Console/src",
             "Spiral\\Cookies\\": "src/Cookies/src",
@@ -158,7 +159,7 @@
                 "src/AuthHttp/tests"
             ],
             "Spiral\\Tests\\Boot\\": "src/Boot/tests",
-            "Spiral\\Tests\\Config\\": "src/Config/tests",
+            "Spiral\\Tests\\Cache\\": "src/Cache/tests",
             "Spiral\\Tests\\Console\\": "src/Console/tests",
             "Spiral\\Tests\\Cookies\\": "src/Cookies/tests",
             "Spiral\\Tests\\Core\\": [
