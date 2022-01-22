@@ -61,7 +61,7 @@ trait WritableTrait
                     throw new \InvalidArgumentException(\sprintf($message, \get_debug_type($content)));
             }
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->file($pathname);
@@ -80,7 +80,7 @@ trait WritableTrait
         try {
             $fs->setVisibility($pathname, $this->toFlysystemVisibility($visibility));
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->file($pathname);
@@ -101,7 +101,7 @@ trait WritableTrait
             try {
                 $fs->copy($source, $destination, $config);
             } catch (FilesystemException $e) {
-                throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+                throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
             }
 
             return $this->file($destination);
@@ -125,7 +125,7 @@ trait WritableTrait
             try {
                 $fs->move($source, $destination, $config);
             } catch (FilesystemException $e) {
-                throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+                throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
             }
 
             return $this->file($destination);
@@ -152,7 +152,7 @@ trait WritableTrait
                 $this->deleteEmptyDirectories($this->getParentDirectory($pathname));
             }
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
     abstract protected function getOperator(): FilesystemOperator;
@@ -220,7 +220,7 @@ trait WritableTrait
                 $this->deleteEmptyDirectories($this->getParentDirectory($directory));
             }
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
 

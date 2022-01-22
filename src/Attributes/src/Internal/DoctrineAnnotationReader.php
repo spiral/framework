@@ -120,7 +120,7 @@ final class DoctrineAnnotationReader extends BaseReader
                     $class = AttributeException::class;
             }
 
-            throw new $class($e->getMessage(), (int)$e->getCode(), $e);
+            throw new $class($e->getMessage(), $e->getCode(), $e);
         }
     }
 
