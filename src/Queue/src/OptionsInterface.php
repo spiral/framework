@@ -6,6 +6,5 @@ namespace Spiral\Queue;
 
 interface OptionsInterface
 {
-    public function getPipeline(): ?string;
     public function getDelay(): ?int;
 }

@@ -9,9 +9,6 @@ final class Options implements OptionsInterface, \JsonSerializable
     /** @var int|null */
     private $delay = null;
 
-    /** @var string|null */
-    private $pipeline = null;
-
     /**
      * @param int $delay
      * @return self
@@ -20,26 +17,6 @@ final class Options implements OptionsInterface, \JsonSerializable
     {
         $options = clone $this;
         $options->delay = $delay;
-
-        return $options;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPipeline(): ?string
-    {
-        return $this->pipeline;
-    }
-
-    /**
-     * @param string|null $pipeline
-     * @return self
-     */
-    public function withPipeline(?string $pipeline): self
-    {
-        $options = clone $this;
-        $options->pipeline = $pipeline;
 
         return $options;
     }
@@ -60,7 +37,6 @@ final class Options implements OptionsInterface, \JsonSerializable
     {
         return [
             'delay'    => $this->delay,
-            'pipeline' => $this->pipeline
         ];
     }
 
