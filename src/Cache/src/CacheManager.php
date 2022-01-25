@@ -30,6 +30,9 @@ class CacheManager implements CacheStorageProviderInterface, SingletonInterface
     {
         $name = $name ?: $this->config->getDefaultStorage();
 
+        // Replaces alias with real storage name
+        $name = $this->config->getAliases()[$name] ?? $name;
+
         if (isset($this->storages[$name])) {
             return $this->storages[$name];
         }

@@ -44,10 +44,6 @@ final class CacheConfig extends InjectableConfig
 
     public function getStorageConfig(string $name): array
     {
-        if (isset($this->config['aliases'][$name])) {
-            $name = $this->config['aliases'][$name];
-        }
-
         if (! isset($this->config['storages'][$name])) {
             throw new InvalidArgumentException(
                 sprintf('Config for storage `%s` is not defined.', $name)

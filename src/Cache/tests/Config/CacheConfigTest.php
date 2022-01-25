@@ -80,24 +80,6 @@ final class CacheConfigTest extends TestCase
         );
     }
 
-    public function testGetsStorageByAlias()
-    {
-        $this->assertSame(
-            [
-                'type' => 'array-storage',
-            ],
-            $this->config->getStorageConfig('users-data')
-        );
-    }
-
-    public function testGetsStorageByAliasWithNotDefinedStorage()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Config for storage `foo` is not defined.');
-
-        $this->config->getStorageConfig('foo-data');
-    }
-
     public function testNotDefinedStorageShouldThrowAnException()
     {
         $this->expectException(InvalidArgumentException::class);
