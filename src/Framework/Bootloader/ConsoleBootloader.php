@@ -75,6 +75,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     /**
      * @param class-string<\Symfony\Component\Console\Command\Command> $command
      * @param bool $lowPriority A low priority command will be overwritten in a name conflict case.
+     *        The parameter might be removed in the next major update.
      */
     public function addCommand(string $command, bool $lowPriority = false): void
     {
