@@ -116,8 +116,8 @@ final class CommandBootloader extends Bootloader
      */
     private function configureDatabase(ConsoleBootloader $console): void
     {
-        $console->addCommand(Database\ListCommand::class);
-        $console->addCommand(Database\TableCommand::class);
+        $console->addCommand(Database\ListCommand::class, true);
+        $console->addCommand(Database\TableCommand::class, true);
     }
 
     /**
@@ -126,17 +126,17 @@ final class CommandBootloader extends Bootloader
      */
     private function configureCycle(ConsoleBootloader $console, ContainerInterface $container): void
     {
-        $console->addCommand(Cycle\UpdateCommand::class);
+        $console->addCommand(Cycle\UpdateCommand::class, true);
 
         $console->addUpdateSequence(
             'cycle',
             '<fg=magenta>[cycle]</fg=magenta> <fg=cyan>update Cycle schema...</fg=cyan>'
         );
 
-        $console->addCommand(Cycle\SyncCommand::class);
+        $console->addCommand(Cycle\SyncCommand::class, true);
 
         if ($container->has(Migrator::class)) {
-            $console->addCommand(Cycle\MigrateCommand::class);
+            $console->addCommand(Cycle\MigrateCommand::class, true);
         }
     }
 
@@ -182,11 +182,11 @@ final class CommandBootloader extends Bootloader
      */
     private function configureMigrations(ConsoleBootloader $console): void
     {
-        $console->addCommand(Migrate\InitCommand::class);
-        $console->addCommand(Migrate\StatusCommand::class);
-        $console->addCommand(Migrate\MigrateCommand::class);
-        $console->addCommand(Migrate\RollbackCommand::class);
-        $console->addCommand(Migrate\ReplayCommand::class);
+        $console->addCommand(Migrate\InitCommand::class, true);
+        $console->addCommand(Migrate\StatusCommand::class, true);
+        $console->addCommand(Migrate\MigrateCommand::class, true);
+        $console->addCommand(Migrate\RollbackCommand::class, true);
+        $console->addCommand(Migrate\ReplayCommand::class, true);
     }
 
     /**

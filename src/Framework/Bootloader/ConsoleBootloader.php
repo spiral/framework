@@ -17,6 +17,7 @@ use Spiral\Command\CleanCommand;
 use Spiral\Command\PublishCommand;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Config\Patch\Prepend;
 use Spiral\Console\CommandLocator;
 use Spiral\Console\Console;
 use Spiral\Console\ConsoleDispatcher;
@@ -72,13 +73,16 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @param string $command
+     * @param class-string<\Symfony\Component\Console\Command\Command> $command
+     * @param bool $lowPriority A low priority command will be overwritten in a name conflict case.
      */
-    public function addCommand(string $command): void
+    public function addCommand(string $command, bool $lowPriority = false): void
     {
         $this->config->modify(
             'console',
-            new Append('commands', null, $command)
+            $lowPriority
+                ? new Prepend('commands', null, $command)
+                : new Append('commands', null, $command)
         );
     }
 
