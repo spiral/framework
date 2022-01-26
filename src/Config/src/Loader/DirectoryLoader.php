@@ -57,11 +57,11 @@ final class DirectoryLoader implements LoaderInterface
             try {
                 return $this->getLoader($extension)->loadFile($section, $filename);
             } catch (LoaderException $e) {
-                throw new LoaderException("Unable to load config `{$section}`.", $e->getCode(), $e);
+                throw new LoaderException("Unable to load config `{$section}`: {$e->getMessage()}", $e->getCode(), $e);
             }
         }
 
-        throw new LoaderException("Unable to load config `{$section}`.");
+        throw new LoaderException("Unable to load config `{$section}`: no suitable loader found.");
     }
 
     private function loaderExtensions(): array

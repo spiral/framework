@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spiral/distribution": "^2.8",
+        "spiral/distribution": "^2.9",
         "symfony/polyfill-php80": "^1.22",
         "league/flysystem": "^2.0"
     },

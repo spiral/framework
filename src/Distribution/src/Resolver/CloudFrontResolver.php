@@ -68,11 +68,7 @@ class CloudFrontResolver extends ExpirationAwareResolver
         $date = $this->getExpirationDateTime($expiration);
         $url = $this->signer->getSignedUrl($this->createUrl($file), $date->getTimestamp());
 
-        return $this->factory->createUri()
-            ->withScheme('https')
-            ->withHost($this->domain)
-            ->withPath($url)
-        ;
+        return $this->factory->createUri($url);
     }
 
     protected function assertCloudFrontAvailable(): void

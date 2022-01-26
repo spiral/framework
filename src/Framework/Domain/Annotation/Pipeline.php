@@ -24,12 +24,12 @@ class Pipeline
     /**
      * @var array
      */
-    public $pipeline = [];
+    public $pipeline;
 
     /**
      * @var bool
      */
-    public $skipNext = false;
+    public $skipNext;
 
     public function __construct(array $pipeline = [], bool $skipNext = false)
     {

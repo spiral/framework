@@ -4,7 +4,7 @@
  * Spiral Framework.
  *
  * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Vladislav Gorenkin (vladgorenkin)
  */
 
 declare(strict_types=1);
@@ -13,10 +13,10 @@ namespace Spiral\Tests\Router\App\Controller;
 
 use Spiral\Router\Annotation\Route;
 
-class HomeController
+class NamelessRoutesController
 {
     /**
-     * @Route(route="/", name="index", methods="GET")
+     * @Route(route="/nameless",  methods="GET")
      */
     public function index()
     {
@@ -24,16 +24,18 @@ class HomeController
     }
 
     /**
-     * @Route(route="/", name="method", methods="POST")
+     * @Route(route="/nameless", methods="POST")
      */
     public function method()
     {
         return 'method';
     }
 
-    #[Route(route: '/attribute', name: 'attribute', methods: 'GET', group: 'test')]
-    public function attribute()
+    /**
+     * @Route(route="/nameless/route", methods={"GET", "POST"})
+     */
+    public function route()
     {
-        return 'attribute';
+        return 'route';
     }
 }

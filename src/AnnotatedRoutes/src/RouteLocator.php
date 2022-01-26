@@ -32,6 +32,7 @@ final class RouteLocator
     public function findDeclarations(): array
     {
         $result = [];
+        $routes = [];
         foreach ($this->locator->getClasses() as $class) {
             foreach ($class->getMethods() as $method) {
                 $route = $this->reader->firstFunctionMetadata($method, Route::class);
@@ -40,18 +41,43 @@ final class RouteLocator
                     continue;
                 }
 
-                $result[$route->name] = [
-                    'pattern'    => $route->route,
-                    'controller' => $class->getName(),
-                    'action'     => $method->getName(),
-                    'group'      => $route->group,
-                    'verbs'      => (array) $route->methods,
-                    'defaults'   => $route->defaults,
-                    'middleware' => (array) $route->middleware,
-                ];
+                $routes[] = $route;
             }
         }
 
+        \uasort($routes, static function (Route $route1, Route $route2) {
+            return $route1->priority <=> $route2->priority;
+        });
+
+        foreach ($routes as $match) {
+            $routeName = $route->name ?? $this->generateName($route);
+
+            $result[$routeName] = [
+                'pattern'    => $route->route,
+                'controller' => $class->getName(),
+                'action'     => $method->getName(),
+                'group'      => $route->group,
+                'verbs'      => (array) $route->methods,
+                'defaults'   => $route->defaults,
+                'middleware' => (array) $route->middleware,
+            ];
+        }
+
         return $result;
+    }
+
+    /**
+     * Generates route name based on declared methods and route.
+     *
+     * @param Route $route
+     * @return string
+     */
+    private function generateName(Route $route): string
+    {
+        $methods = \is_array($route->methods)
+            ? \implode(',', $route->methods)
+            : $route->methods;
+
+        return \mb_strtolower(\sprintf('%s:%s', $methods, $route->route));
     }
 }

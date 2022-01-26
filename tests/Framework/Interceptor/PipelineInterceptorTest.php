@@ -54,4 +54,43 @@ class PipelineInterceptorTest extends HttpTest
         //interceptors after current pipeline are ignored
         $this->assertSame(['first', 'three', 'two', 'one'], $output);
     }
+
+    public function testWithAttribute(): void
+    {
+        $response = $this->get('/intercepted/withAttribute')->getBody();
+        $output = json_decode((string)$response, true);
+        $this->assertSame(['withAttribute', 'three', 'two', 'one'], $output);
+    }
+
+    public function testMixAttribute(): void
+    {
+        $response = $this->get('/intercepted/mixAttribute')->getBody();
+        $output = json_decode((string)$response, true);
+        //pipeline interceptors are injected into the middle
+        $this->assertSame(['mixAttribute', 'six', 'three', 'two', 'one', 'five', 'four'], $output);
+    }
+
+    public function testDupAttribute(): void
+    {
+        $response = $this->get('/intercepted/dupAttribute')->getBody();
+        $output = json_decode((string)$response, true);
+        //pipeline interceptors are added to the end
+        $this->assertSame(['dupAttribute', 'three', 'two', 'one', 'three', 'two', 'one'], $output);
+    }
+
+    public function testSkipNextAttribute(): void
+    {
+        $response = $this->get('/intercepted/skipAttribute')->getBody();
+        $output = json_decode((string)$response, true);
+        //interceptors after current pipeline are ignored
+        $this->assertSame(['skipAttribute', 'three', 'two', 'one', 'one'], $output);
+    }
+
+    public function testSkipIfFirstAttribute(): void
+    {
+        $response = $this->get('/intercepted/firstAttribute')->getBody();
+        $output = json_decode((string)$response, true);
+        //interceptors after current pipeline are ignored
+        $this->assertSame(['firstAttribute', 'three', 'two', 'one'], $output);
+    }
 }

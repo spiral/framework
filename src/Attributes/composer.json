@@ -21,7 +21,7 @@
         "nikic/php-parser": "^4.1"
     },
     "require-dev": {
-        "doctrine/annotations": "^1.11",
+        "doctrine/annotations": "^1.12",
         "jetbrains/phpstorm-attributes": "^1.0",
         "symfony/var-dumper": "^5.2",
         "phpunit/phpunit": "^8.5|^9.0"
@@ -41,7 +41,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.9.x-dev"
         }
     },
     "scripts": {
