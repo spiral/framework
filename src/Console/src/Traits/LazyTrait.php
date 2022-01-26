@@ -25,7 +25,6 @@ trait LazyTrait
      * Check if command can be lazy-loaded.
      *
      * @param class-string $class
-     * @return bool
      */
     private function supportsLazyLoading(string $class): bool
     {
@@ -37,7 +36,6 @@ trait LazyTrait
      * Wrap given command into LazyCommand which will be executed only on run.
      *
      * @param class-string $class
-     * @return LazyCommand
      */
     private function createLazyCommand(string $class): LazyCommand
     {

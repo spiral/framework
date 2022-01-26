@@ -43,7 +43,7 @@ final class Route
     /**
      * @var null|string
      */
-    public $name = null;
+    public $name;
 
     /**
      * @var mixed

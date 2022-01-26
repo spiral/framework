@@ -26,10 +26,6 @@ final class HeaderTransport implements HttpTransportInterface
     /** @var string */
     private $valueFormat;
 
-    /**
-     * @param string $header
-     * @param string $valueFormat
-     */
     public function __construct(string $header = 'X-Auth-Token', string $valueFormat = '%s')
     {
         $this->header = $header;
@@ -72,10 +68,6 @@ final class HeaderTransport implements HttpTransportInterface
         return $response;
     }
 
-    /**
-     * @param Request $request
-     * @return null|string
-     */
     private function extractToken(Request $request): ?string
     {
         $headerLine = $request->getHeaderLine($this->header);

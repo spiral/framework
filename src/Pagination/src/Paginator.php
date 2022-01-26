@@ -130,9 +130,6 @@ final class Paginator implements PaginatorInterface, \Countable
         return $paginator;
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return $this->count;

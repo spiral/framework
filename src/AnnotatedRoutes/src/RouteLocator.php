@@ -63,9 +63,6 @@ final class RouteLocator
 
     /**
      * Generates route name based on declared methods and route.
-     *
-     * @param Route $route
-     * @return string
      */
     private function generateName(Route $route): string
     {

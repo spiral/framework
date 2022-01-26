@@ -28,9 +28,6 @@ final class SourceMap
     /** @var Source[] */
     private $sourceCache;
 
-    /**
-     * @return array
-     */
     public function __serialize(): array
     {
         return [
@@ -39,9 +36,6 @@ final class SourceMap
         ];
     }
 
-    /**
-     * @param array $data
-     */
     public function __unserialize(array $data): void
     {
         $this->paths = $data['paths'];
