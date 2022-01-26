@@ -32,7 +32,6 @@ final class RouteLocator
     public function findDeclarations(): array
     {
         $result = [];
-        $routes = [];
         foreach ($this->locator->getClasses() as $class) {
             foreach ($class->getMethods() as $method) {
                 $route = $this->reader->firstFunctionMetadata($method, Route::class);
@@ -41,27 +40,23 @@ final class RouteLocator
                     continue;
                 }
 
-                $routes[] = $route;
+                $route->name = $route->name ?? $this->generateName($route);
+                $result[$route->name] = [
+                    'pattern'    => $route->route,
+                    'controller' => $class->getName(),
+                    'action'     => $method->getName(),
+                    'group'      => $route->group,
+                    'verbs'      => (array) $route->methods,
+                    'defaults'   => $route->defaults,
+                    'middleware' => (array) $route->middleware,
+                    'priority'   => $route->priority,
+                ];
             }
         }
 
-        \uasort($routes, static function (Route $route1, Route $route2) {
-            return $route1->priority <=> $route2->priority;
+        \uasort($result, static function (array $route1, array $route2) {
+            return $route1['priority'] <=> $route2['priority'];
         });
-
-        foreach ($routes as $match) {
-            $routeName = $route->name ?? $this->generateName($route);
-
-            $result[$routeName] = [
-                'pattern'    => $route->route,
-                'controller' => $class->getName(),
-                'action'     => $method->getName(),
-                'group'      => $route->group,
-                'verbs'      => (array) $route->methods,
-                'defaults'   => $route->defaults,
-                'middleware' => (array) $route->middleware,
-            ];
-        }
 
         return $result;
     }
