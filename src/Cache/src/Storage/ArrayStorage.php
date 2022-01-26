@@ -44,7 +44,7 @@ class ArrayStorage implements CacheInterface
         return $item['value'];
     }
 
-    public function set($key, $value, $ttl = null)
+    public function set($key, $value, $ttl = null): bool
     {
         $this->storage[$key] = [
             'value' => $value,
@@ -54,7 +54,7 @@ class ArrayStorage implements CacheInterface
         return true;
     }
 
-    public function delete($key)
+    public function delete($key): bool
     {
         if ($this->has($key)) {
             unset($this->storage[$key]);

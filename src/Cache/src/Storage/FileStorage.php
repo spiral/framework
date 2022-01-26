@@ -33,7 +33,7 @@ final class FileStorage implements CacheInterface
         return $this->getPayload($key)['value'] ?? $default;
     }
 
-    public function set($key, $value, $ttl = null)
+    public function set($key, $value, $ttl = null): bool
     {
         return $this->files->write(
             $this->makePath($key),
@@ -43,7 +43,7 @@ final class FileStorage implements CacheInterface
         );
     }
 
-    public function delete($key)
+    public function delete($key): bool
     {
         if ($this->has($key)) {
             return $this->files->delete($this->makePath($key));
@@ -52,7 +52,7 @@ final class FileStorage implements CacheInterface
         return false;
     }
 
-    public function clear()
+    public function clear(): bool
     {
         if (! $this->files->isDirectory($this->path)) {
             return false;

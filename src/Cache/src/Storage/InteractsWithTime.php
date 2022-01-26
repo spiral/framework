@@ -9,9 +9,9 @@ use Spiral\Cache\Exception\InvalidArgumentException;
 trait InteractsWithTime
 {
     /**
-     * @param null|int|\DateInterval $ttl
-     * @return string
-     * @throws \Spiral\RoadRunner\KeyValue\Exception\InvalidArgumentException
+     * @param null|int|\DateInterval|\DateTimeInterface $ttl
+     * @return int
+     * @throws InvalidArgumentException
      */
     private function ttlToTimestamp($ttl): int
     {
