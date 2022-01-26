@@ -63,7 +63,7 @@ final class FileStorageTest extends TestCase
 
         $this->files->shouldReceive('read')->with($path)->andReturn(time() . 's:3:"bar";');
         $this->files->shouldReceive('exists')->with($path)->andReturn(true);
-        $this->files->shouldReceive('delete')->with($path);
+        $this->files->shouldReceive('delete')->with($path)->andReturnTrue();
 
         $this->assertNull($this->storage->get('foo'));
     }
@@ -75,8 +75,8 @@ final class FileStorageTest extends TestCase
         $path = self::DEFAULT_PATH;
 
         $this->files->shouldReceive('read')->with($path)->andReturn($value);
-        $this->files->shouldReceive('exists')->with($path)->andReturn(true);
-        $this->files->shouldReceive('delete')->with($path);
+        $this->files->shouldReceive('exists')->with($path)->andReturnTrue();
+        $this->files->shouldReceive('delete')->with($path)->andReturnTrue();
 
         $this->assertNull($this->storage->get('foo'));
     }
@@ -126,7 +126,7 @@ final class FileStorageTest extends TestCase
         $path = self::DEFAULT_PATH;
 
         $this->files->shouldReceive('exists')->with($path)->andReturnTrue();
-        $this->files->shouldReceive('delete')->with($path);
+        $this->files->shouldReceive('delete')->with($path)->andReturnTrue();
 
         $this->storage->delete('foo');
     }
