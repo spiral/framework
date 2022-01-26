@@ -46,9 +46,6 @@ abstract class JobHandler implements HandlerInterface
         }
     }
 
-    /**
-     * @return string
-     */
     protected function getHandlerMethod(): string
     {
         return static::HANDLE_FUNCTION;

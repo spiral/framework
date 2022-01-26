@@ -10,7 +10,6 @@ trait InteractsWithTime
 {
     /**
      * @param null|int|\DateInterval|\DateTimeInterface $ttl
-     * @return int
      * @throws InvalidArgumentException
      */
     private function ttlToTimestamp($ttl): int
@@ -52,7 +51,6 @@ trait InteractsWithTime
      *
      * @codeCoverageIgnore Ignore time-aware-mutable value.
      *                     Must be covered with a stub.
-     * @return \DateTimeImmutable
      * @throws \Exception
      */
     protected function now(): \DateTimeImmutable

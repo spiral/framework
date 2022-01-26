@@ -7,11 +7,10 @@ namespace Spiral\Queue;
 final class Options implements OptionsInterface, \JsonSerializable
 {
     /** @var int|null */
-    private $delay = null;
+    private $delay;
 
     /**
      * @param int $delay
-     * @return self
      */
     public function withDelay(?int $delay): self
     {
@@ -21,9 +20,6 @@ final class Options implements OptionsInterface, \JsonSerializable
         return $options;
     }
 
-    /**
-     * @return int|null
-     */
     public function getDelay(): ?int
     {
         return $this->delay;
@@ -40,10 +36,6 @@ final class Options implements OptionsInterface, \JsonSerializable
         ];
     }
 
-    /**
-     * @param int $delay
-     * @return Options
-     */
     public static function delayed(int $delay): Options
     {
         $options = new self();
