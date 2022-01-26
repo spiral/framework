@@ -35,9 +35,10 @@ final class NullHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function gc($maxlifetime): bool
+    #[\ReturnTypeWillChange]
+    public function gc($maxlifetime)
     {
-        return true;
+        return $maxlifetime;
     }
 
     /**

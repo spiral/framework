@@ -16,9 +16,9 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spiral/core": "^2.8",
-        "spiral/logger": "^2.8",
-        "spiral/tokenizer": "^2.8",
+        "spiral/core": "^2.9",
+        "spiral/logger": "^2.9",
+        "spiral/tokenizer": "^2.9",
         "symfony/translation": "^5.1"
     },
     "require-dev": {
@@ -40,7 +40,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.9.x-dev"
         }
     },
     "config": {

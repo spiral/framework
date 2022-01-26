@@ -17,7 +17,7 @@ use Spiral\Stempler\Loader\Source;
 /**
  * Stores and resolves offsets and line numbers between templates.
  */
-final class SourceMap implements \Serializable
+final class SourceMap
 {
     /** @var array */
     private $paths = [];
@@ -27,6 +27,20 @@ final class SourceMap implements \Serializable
 
     /** @var Source[] */
     private $sourceCache;
+
+    public function __serialize(): array
+    {
+        return [
+            'paths' => $this->paths,
+            'lines' => $this->lines,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->paths = $data['paths'];
+        $this->lines = $data['lines'];
+    }
 
     /**
      * Get all template paths involved in final template.
@@ -74,10 +88,7 @@ final class SourceMap implements \Serializable
      */
     public function serialize()
     {
-        return json_encode([
-            'paths' => $this->paths,
-            'lines' => $this->lines,
-        ]);
+        return json_encode($this->__serialize());
     }
 
     /**
@@ -85,10 +96,7 @@ final class SourceMap implements \Serializable
      */
     public function unserialize($serialized): void
     {
-        $data = json_decode($serialized, true);
-
-        $this->paths = $data['paths'];
-        $this->lines = $data['lines'];
+        $this->__unserialize(json_decode($serialized, true));
     }
 
     public static function calculate(string $content, array $locations, LoaderInterface $loader): SourceMap

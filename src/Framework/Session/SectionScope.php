@@ -71,7 +71,7 @@ final class SectionScope implements SessionSectionInterface
     /**
      * @inheritDoc
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->getActiveSection()->getIterator();
     }
@@ -87,6 +87,7 @@ final class SectionScope implements SessionSectionInterface
     /**
      * @inheritDoc
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getActiveSection()->offsetGet($offset);

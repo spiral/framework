@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Validation\Checker;
 
 use Cycle\ORM\ORMInterface;
+use Cycle\ORM\Select;
+use Cycle\ORM\Select\Repository;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Database\Injection\Expression;
 use Spiral\Validation\AbstractChecker;
 
 class EntityChecker extends AbstractChecker implements SingletonInterface
@@ -33,13 +36,20 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
      * @param string|int  $value
      * @param string      $role
      * @param string|null $field
+     * @param bool        $ignoreCase
      * @return bool
      */
-    public function exists($value, string $role, ?string $field = null): bool
+    public function exists($value, string $role, ?string $field = null, bool $ignoreCase = false): bool
     {
         $repository = $this->orm->getRepository($role);
         if ($field === null) {
             return $repository->findByPK($value) !== null;
+        }
+
+        if ($ignoreCase && $repository instanceof Repository) {
+            return $this
+                ->addCaseInsensitiveWhere($repository->select(), $field, $value)
+                ->fetchOne() !== null;
         }
 
         return $repository->findOne([$field => $value]) !== null;
@@ -50,9 +60,10 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
      * @param string   $role
      * @param string   $field
      * @param string[] $withFields
+     * @param bool     $ignoreCase
      * @return bool
      */
-    public function unique($value, string $role, string $field, array $withFields = []): bool
+    public function unique($value, string $role, string $field, array $withFields = [], bool $ignoreCase = false): bool
     {
         $values = $this->withValues($withFields);
         $values[$field] = $value;
@@ -61,7 +72,19 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
             return true;
         }
 
-        return $this->orm->getRepository($role)->findOne($values) === null;
+        $repository = $this->orm->getRepository($role);
+
+        if ($ignoreCase && $repository instanceof Repository) {
+            $select = $repository->select();
+
+            foreach ($values as $field => $fieldValue) {
+                $this->addCaseInsensitiveWhere($select, $field, $fieldValue);
+            }
+
+            return $select->fetchOne() === null;
+        }
+
+        return $repository->findOne($values) === null;
     }
 
     /**
@@ -100,5 +123,27 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param Select $select
+     * @param string $field
+     * @param mixed $value
+     * @return Select
+     */
+    private function addCaseInsensitiveWhere(Select $select, string $field, $value): Select
+    {
+        if (!is_string($value)) {
+            return $select->where($field, $value);
+        }
+
+        $queryBuilder = $select->getBuilder();
+
+        return $select
+            ->where(
+                new Expression("LOWER({$queryBuilder->resolve($field)})"),
+                mb_strtolower($value)
+            )
+        ;
     }
 }

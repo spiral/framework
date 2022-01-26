@@ -30,20 +30,20 @@ use Spiral\Attributes\NamedArgumentConstructor;
 final class Guarded
 {
     /**
-     * @type string|null
+     * @var string|null
      */
     public $permission;
 
     /**
      * @Enum({"notFound","unauthorized","forbidden","badAction","error"})
-     * @type string
+     * @var string
      */
     public $else = 'forbidden';
 
     /**
      * Error message in case of error.
      *
-     * @type string
+     * @var string|null
      */
     public $errorMessage;
 

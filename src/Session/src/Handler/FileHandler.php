@@ -58,13 +58,16 @@ final class FileHandler implements \SessionHandlerInterface
      * @inheritdoc
      * @codeCoverageIgnore
      */
-    public function gc($maxlifetime): void
+    #[\ReturnTypeWillChange]
+    public function gc($maxlifetime)
     {
         foreach ($this->files->getFiles($this->directory) as $filename) {
             if ($this->files->time($filename) < time() - $maxlifetime) {
                 $this->files->delete($filename);
             }
         }
+
+        return $maxlifetime;
     }
 
     /**
