@@ -24,11 +24,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         // for PHP 8
         RemoveUnusedPromotedPropertyRector::class,
 
-        RemoveUnusedPrivatePropertyRector::class => [
-            // buggy when used in middle of parameter along with RemoveUnusedConstructorParamRector that may cause BC break
-            __DIR__ . '/src/Console/src/Sequence/CallableSequence.php',
-        ],
-
         RemoveUnusedPrivateMethodRector::class => [
             __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
         ],
