@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Annotations;
 
-use Doctrine\Common\Annotations\AnnotationReader;
+use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\Factory;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
@@ -26,7 +27,7 @@ final class AnnotationLocator implements SingletonInterface
     /** @var ClassesInterface */
     private $classLocator;
 
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
     /** @var array */
@@ -35,13 +36,13 @@ final class AnnotationLocator implements SingletonInterface
     /**
      * AnnotationLocator constructor.
      *
-     * @param AnnotationReader|null $reader
+     * @param ReaderInterface|null $reader
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
-    public function __construct(ClassesInterface $classLocator, AnnotationReader $reader = null)
+    public function __construct(ClassesInterface $classLocator, ReaderInterface $reader = null)
     {
         $this->classLocator = $classLocator;
-        $this->reader = $reader ?? new AnnotationReader();
+        $this->reader = $reader ?? (new Factory())->create();
     }
 
     /**
@@ -63,7 +64,7 @@ final class AnnotationLocator implements SingletonInterface
     public function findClasses(string $annotation): iterable
     {
         foreach ($this->getTargets() as $target) {
-            $found = $this->reader->getClassAnnotation($target, $annotation);
+            $found = $this->reader->firstClassMetadata($target, $annotation);
             if ($found !== null) {
                 yield new AnnotatedClass($target, $found);
             }
@@ -79,7 +80,7 @@ final class AnnotationLocator implements SingletonInterface
     {
         foreach ($this->getTargets() as $target) {
             foreach ($target->getMethods() as $method) {
-                $found = $this->reader->getMethodAnnotation($method, $annotation);
+                $found = $this->reader->firstFunctionMetadata($method, $annotation);
                 if ($found !== null) {
                     yield new AnnotatedMethod($method, $found);
                 }
@@ -96,7 +97,7 @@ final class AnnotationLocator implements SingletonInterface
     {
         foreach ($this->getTargets() as $target) {
             foreach ($target->getProperties() as $property) {
-                $found = $this->reader->getPropertyAnnotation($property, $annotation);
+                $found = $this->reader->firstPropertyMetadata($property, $annotation);
                 if ($found !== null) {
                     yield new AnnotatedProperty($property, $found);
                 }

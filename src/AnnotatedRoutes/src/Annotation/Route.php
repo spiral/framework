@@ -22,11 +22,12 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target({"METHOD"})
  * @Attributes({
  *     @Attribute("route", required=true, type="string"),
- *     @Attribute("name", required=true, type="string"),
+ *     @Attribute("name", type="string"),
  *     @Attribute("verbs", required=true, type="mixed"),
  *     @Attribute("defaults", type="array"),
  *     @Attribute("group", type="string"),
- *     @Attribute("middleware", type="array")
+ *     @Attribute("middleware", type="array"),
+ *     @Attribute("priority", type="int")
  * })
  */
 #[\Attribute(\Attribute::TARGET_METHOD), NamedArgumentConstructor]
@@ -40,7 +41,7 @@ final class Route
     public $route;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $name;
 
@@ -71,18 +72,24 @@ final class Route
     public $middleware = [];
 
     /**
+     * @var int
+     */
+    public $priority;
+
+    /**
      * @psalm-param non-empty-string $route
-     * @psalm-param non-empty-string $name
+     * @psalm-param non-empty-string|null $name
      * @psalm-param non-empty-string|array<string> $methods
      * @psalm-param non-empty-string $group
      */
     public function __construct(
         string $route,
-        string $name,
+        string $name = null,
         $methods = \Spiral\Router\Route::VERBS,
         array $defaults = [],
         string $group = self::DEFAULT_GROUP,
-        array $middleware = []
+        array $middleware = [],
+        int $priority = 0
     ) {
         $this->route = $route;
         $this->name = $name;
@@ -90,5 +97,6 @@ final class Route
         $this->defaults = $defaults;
         $this->group = $group;
         $this->middleware = $middleware;
+        $this->priority = $priority;
     }
 }

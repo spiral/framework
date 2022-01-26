@@ -27,6 +27,7 @@
         "defuse/php-encryption": "^2.2",
         "doctrine/annotations": "^1.12",
         "doctrine/inflector": "^1.4|^2.0",
+        "laminas/laminas-diactoros": "^2.4",
         "league/flysystem": "^2.0",
         "monolog/monolog": "^2.2",
         "myclabs/deep-copy": "^1.9",
@@ -39,7 +40,7 @@
         "psr/log": "^1.0",
         "psr/simple-cache": ">=1.0",
         "spiral/composer-publish-plugin": "^1.0",
-        "symfony/console": "^5.1",
+        "symfony/console": "^5.3",
         "symfony/finder": "^5.1",
         "symfony/mailer": "^5.1",
         "symfony/polyfill-php73": "^1.22",
@@ -127,13 +128,13 @@
         "cycle/schema-builder": "^1.1",
         "guzzlehttp/psr7": "^1.7",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "laminas/laminas-diactoros": "^2.3",
+        "laminas/laminas-hydrator": "^3.0|^4.0",
         "league/flysystem-async-aws-s3": "^2.0",
         "league/flysystem-aws-s3-v3": "^2.0",
         "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5|^9.0",
-        "ramsey/uuid": "^3.9",
+        "ramsey/uuid": "^4.2",
         "rector/rector": "0.12.3",
         "spiral/broadcast": "^2.0",
         "spiral/broadcast-ws": "^1.0",
@@ -267,7 +268,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.9.x-dev"
         }
     },
     "config": {

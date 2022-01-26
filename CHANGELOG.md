@@ -6,7 +6,12 @@
 - **Medium Impact Changes**
   - Component `spiral/annotations` is deprecated. Use `spiral/attributes` instead
   - A minimal version of `doctrine/annotations` increased to `^1.12`
+  - [spiral/validation] Error messages for 'number::lower' and
+    'number::higher' rules were changed to reflect that these checks are in
+    fact 'lower or equal' and 'higher or equal'. You may need to adjust
+    translations file accordingly.
 - **Other Features**
+    - [spiral/validation] Add array::count, array::range, array::shorter and array::longer rules (#435)
 - **Bug Fixes**
 
 ## v2.8.0 - 2021-06-03

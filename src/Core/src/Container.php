@@ -301,7 +301,7 @@ final class Container implements
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
      * (will be constructed only once), function array or Closure (executed only once call).
      *
-     * @param string|array|callable $resolver
+     * @param object|string|array|callable $resolver
      */
     public function bindSingleton(string $alias, $resolver): void
     {

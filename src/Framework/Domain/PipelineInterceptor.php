@@ -76,6 +76,7 @@ class PipelineInterceptor implements CoreInterceptorInterface
             return new Pipeline();
         }
 
+        /** @var Pipeline $annotation */
         $annotation = $this->reader->firstFunctionMetadata($method, Pipeline::class);
         return $annotation ?? new Pipeline();
     }

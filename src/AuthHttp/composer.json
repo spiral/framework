@@ -16,16 +16,16 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
-        "spiral/auth": "^2.8",
+        "spiral/auth": "^2.9",
         "psr/http-message": "^1.0",
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0",
-        "spiral/cookies": "^2.8",
-        "spiral/http": "^2.8",
-        "spiral/debug": "^2.8",
-        "laminas/laminas-diactoros": "^2.3"
+        "spiral/cookies": "^2.9",
+        "spiral/http": "^2.9",
+        "spiral/debug": "^2.9",
+        "laminas/laminas-diactoros": "^2.4"
     },
     "autoload": {
         "psr-4": {
@@ -39,7 +39,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.9.x-dev"
         }
     },
     "config": {

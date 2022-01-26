@@ -11,36 +11,36 @@ declare(strict_types=1);
 
 namespace Spiral\DataGrid\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
-use Doctrine\Common\Annotations\Annotation\Attributes;
+use Attribute;
+use Doctrine\Common\Annotations\Annotation;
 use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
  * @NamedArgumentConstructor
  * @Target({"METHOD"})
- * @Attributes({
- *     @Attribute("grid", required=true, type="string"),
- *     @Attribute("view", type="string"),
- *     @Attribute("defaults", type="array"),
- *     @Attribute("options", type="array"),
- *     @Attribute("factory", type="string")
+ * @Annotation\Attributes({
+ *     @Annotation\Attribute("grid", required=true, type="string"),
+ *     @Annotation\Attribute("view", type="string"),
+ *     @Annotation\Attribute("defaults", type="array"),
+ *     @Annotation\Attribute("options", type="array"),
+ *     @Annotation\Attribute("factory", type="string")
  * })
  */
-#[\Attribute(\Attribute::TARGET_METHOD), NamedArgumentConstructor]
+#[Attribute(Attribute::TARGET_METHOD), NamedArgumentConstructor]
 class DataGrid
 {
     /**
      * Points to grid schema.
      *
-     * @type string
+     * @var string
      */
     public $grid;
 
     /**
      * Response options, default to GridSchema->__invoke() if such method exists.
      *
-     * @var string
+     * @var string|null
      */
     public $view;
 
@@ -49,19 +49,19 @@ class DataGrid
      *
      * @var array
      */
-    public $defaults = [];
+    public $defaults;
 
     /**
      * Response options, default to GridSchema->getOptions() if such method exists.
      *
      * @var array
      */
-    public $options = [];
+    public $options;
 
     /**
      * Custom user GridFactory
      *
-     * @var string
+     * @var string|null
      */
     public $factory;
 
