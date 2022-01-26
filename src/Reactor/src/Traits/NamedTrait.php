@@ -23,9 +23,6 @@ trait NamedTrait
 
     /**
      * Attention, element name will be automatically classified.
-     *
-     *
-     * @return $this|self
      */
     public function setName(string $name): self
     {

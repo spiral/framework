@@ -32,7 +32,7 @@ trait ReadableTrait
         try {
             return $fs->fileExists($pathname);
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -46,7 +46,7 @@ trait ReadableTrait
         try {
             return $fs->read($pathname);
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -60,7 +60,7 @@ trait ReadableTrait
         try {
             return $fs->readStream($pathname);
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -74,7 +74,7 @@ trait ReadableTrait
         try {
             return $fs->lastModified($pathname);
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -88,7 +88,7 @@ trait ReadableTrait
         try {
             return $fs->fileSize($pathname);
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -102,7 +102,7 @@ trait ReadableTrait
         try {
             return $fs->mimeType($pathname);
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -119,7 +119,7 @@ trait ReadableTrait
                 $fs->visibility($pathname)
             );
         } catch (FilesystemException $e) {
-            throw new FileOperationException($e->getMessage(), (int)$e->getCode(), $e);
+            throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
