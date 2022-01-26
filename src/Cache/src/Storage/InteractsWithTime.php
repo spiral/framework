@@ -36,7 +36,10 @@ trait InteractsWithTime
         }
 
         throw new InvalidArgumentException(
-            \sprintf('Cache item ttl (expiration) must be of type int or \DateInterval, but %s passed', \get_debug_type($ttl))
+            \sprintf(
+                'Cache item ttl (expiration) must be of type int or \DateInterval, but %s passed',
+                \get_debug_type($ttl)
+            )
         );
     }
 
