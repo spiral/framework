@@ -54,7 +54,7 @@ final class CacheManagerTest extends TestCase
         $this->manager = new CacheManager($config, $this->factory);
     }
 
-    public function testGetDefaultStorage()
+    public function testGetDefaultStorage(): void
     {
         $storage = m::mock(CacheInterface::class);
 
@@ -66,7 +66,7 @@ final class CacheManagerTest extends TestCase
         $this->assertSame($storage, $this->manager->storage());
     }
 
-    public function testGetStorageByName()
+    public function testGetStorageByName(): void
     {
         $storage = m::mock(CacheInterface::class);
 
@@ -78,7 +78,7 @@ final class CacheManagerTest extends TestCase
         $this->assertSame($storage, $this->manager->storage('file'));
     }
 
-    public function testGetStorageWithStorageTypeAlias()
+    public function testGetStorageWithStorageTypeAlias(): void
     {
         $storage = m::mock(CacheInterface::class);
 
@@ -90,7 +90,7 @@ final class CacheManagerTest extends TestCase
         $this->assertSame($storage, $this->manager->storage('inMemory'));
     }
 
-    public function testGetStorageByAlias()
+    public function testGetStorageByAlias(): void
     {
         $storage = m::mock(CacheInterface::class);
 
@@ -102,7 +102,7 @@ final class CacheManagerTest extends TestCase
         $this->assertSame($storage, $this->manager->storage('user-data'));
     }
 
-    public function testStorageShouldBeCreatedOnlyOnce()
+    public function testStorageShouldBeCreatedOnlyOnce(): void
     {
         $storage1 = m::mock(CacheInterface::class);
         $storage2 = m::mock(CacheInterface::class);

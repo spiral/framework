@@ -31,11 +31,11 @@ final class CacheConfig extends InjectableConfig
      */
     public function getDefaultStorage(): string
     {
-        if (! isset($this->config['default']) || empty($this->config['default'])) {
+        if (!isset($this->config['default']) || empty($this->config['default'])) {
             throw new InvalidArgumentException('Default cache storage is not defined.');
         }
 
-        if (! \is_string($this->config['default'])) {
+        if (!\is_string($this->config['default'])) {
             throw new InvalidArgumentException('Default cache storage config value must be a string');
         }
 
@@ -44,7 +44,7 @@ final class CacheConfig extends InjectableConfig
 
     public function getStorageConfig(string $name): array
     {
-        if (! isset($this->config['storages'][$name])) {
+        if (!isset($this->config['storages'][$name])) {
             throw new InvalidArgumentException(
                 sprintf('Config for storage `%s` is not defined.', $name)
             );
@@ -52,13 +52,13 @@ final class CacheConfig extends InjectableConfig
 
         $config = $this->config['storages'][$name];
 
-        if (! isset($config['type'])) {
+        if (!isset($config['type'])) {
             throw new InvalidArgumentException(
                 sprintf('Storage type for `%s` is not defined.', $name)
             );
         }
 
-        if (! \is_string($config['type'])) {
+        if (!\is_string($config['type'])) {
             throw new InvalidArgumentException(
                 \sprintf('Storage type value for `%s` must be a string', $name)
             );

@@ -6,5 +6,4 @@ namespace Spiral\Cache\Exception;
 
 class StorageException extends InvalidArgumentException
 {
-
 }

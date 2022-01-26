@@ -37,7 +37,7 @@ final class FileStorage implements CacheInterface
     {
         return $this->files->write(
             $this->makePath($key),
-            $this->ttlToTimestamp($ttl).serialize($value),
+            $this->ttlToTimestamp($ttl) . serialize($value),
             null,
             true
         );
@@ -54,7 +54,7 @@ final class FileStorage implements CacheInterface
 
     public function clear(): bool
     {
-        if (! $this->files->isDirectory($this->path)) {
+        if (!$this->files->isDirectory($this->path)) {
             return false;
         }
 
@@ -109,7 +109,7 @@ final class FileStorage implements CacheInterface
     {
         $parts = array_slice(str_split($hash = sha1($key), 2), 0, 2);
 
-        return $this->path.'/'.implode('/', $parts).'/'.$hash;
+        return $this->path . '/' . implode('/', $parts) . '/' . $hash;
     }
 
     /**

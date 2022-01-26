@@ -42,7 +42,7 @@ final class CacheConfigTest extends TestCase
     }
 
 
-    public function testGetdDefaultDriver()
+    public function testGetdDefaultDriver(): void
     {
         $this->assertSame(
             'array',
@@ -50,7 +50,7 @@ final class CacheConfigTest extends TestCase
         );
     }
 
-    public function testNotDefinedDefaultKeyShouldThrowAnException()
+    public function testNotDefinedDefaultKeyShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectErrorMessage('Default cache storage is not defined.');
@@ -60,7 +60,7 @@ final class CacheConfigTest extends TestCase
         $config->getDefaultStorage();
     }
 
-    public function testGetsStorageConfigByStorageName()
+    public function testGetsStorageConfigByStorageName(): void
     {
         $this->assertSame(
             [
@@ -70,7 +70,7 @@ final class CacheConfigTest extends TestCase
         );
     }
 
-    public function testGetsStorageWithAliasTypeShouldBeReplacedWithRealType()
+    public function testGetsStorageWithAliasTypeShouldBeReplacedWithRealType(): void
     {
         $this->assertSame(
             [
@@ -80,7 +80,7 @@ final class CacheConfigTest extends TestCase
         );
     }
 
-    public function testNotDefinedStorageShouldThrowAnException()
+    public function testNotDefinedStorageShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectErrorMessage('Config for storage `foo` is not defined.');
@@ -88,7 +88,7 @@ final class CacheConfigTest extends TestCase
         $this->config->getStorageConfig('foo');
     }
 
-    public function testStorageWithoutDefinedTypeShouldThrowAnException()
+    public function testStorageWithoutDefinedTypeShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectErrorMessage('Storage type for `memory` is not defined.');
