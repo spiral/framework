@@ -51,6 +51,9 @@ class TestApp extends Kernel
         Bootloader\Http\CsrfBootloader::class,
         Bootloader\Http\PaginationBootloader::class,
 
+        // Cache
+        Bootloader\Cache\CacheBootloader::class,
+
         // Auth
         Bootloader\Auth\HttpAuthBootloader::class,
 
