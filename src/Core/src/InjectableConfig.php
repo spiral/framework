@@ -59,7 +59,7 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->config);
     }
@@ -67,6 +67,7 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
@@ -103,7 +104,7 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->config);
     }

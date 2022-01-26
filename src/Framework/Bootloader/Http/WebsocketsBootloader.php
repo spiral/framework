@@ -25,12 +25,17 @@ use Spiral\Core\Container\SingletonInterface;
  */
 final class WebsocketsBootloader extends Bootloader implements SingletonInterface
 {
+    /**
+     * @var array<Bootloader>
+     */
     protected const DEPENDENCIES = [
         HttpBootloader::class,
         BroadcastBootloader::class,
     ];
 
-    /** @var ConfiguratorInterface */
+    /**
+     * @var ConfiguratorInterface
+     */
     private $config;
 
     /**
@@ -42,19 +47,16 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
     }
 
     /**
-     * @param HttpBootloader       $http
+     * @param HttpBootloader $http
      * @param EnvironmentInterface $env
      */
     public function boot(HttpBootloader $http, EnvironmentInterface $env): void
     {
-        $this->config->setDefaults(
-            'websockets',
-            [
-                'path'            => $env->get('RR_BROADCAST_PATH', null),
-                'authorizeServer' => null,
-                'authorizeTopics' => [],
-            ]
-        );
+        $this->config->setDefaults('websockets', [
+            'path'            => $env->get('RR_BROADCAST_PATH', null),
+            'authorizeServer' => null,
+            'authorizeTopics' => [],
+        ]);
 
         if ($env->get('RR_BROADCAST_PATH', null) !== null) {
             $http->addMiddleware(WebsocketsMiddleware::class);
@@ -70,7 +72,7 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
     }
 
     /**
-     * @param string   $topic
+     * @param string $topic
      * @param callable $callback
      */
     public function authorizeTopic(string $topic, callable $callback): void

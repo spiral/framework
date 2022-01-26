@@ -30,10 +30,42 @@ class IntegrationTest extends TestCase
         $this->assertStringContainsString('index', $r->getBody()->__toString());
     }
 
+    public function testAttributeRoute(): void
+    {
+        $r = $this->get('/attribute');
+        $this->assertStringContainsString('attribute', $r->getBody()->__toString());
+    }
+
     public function testRoute2(): void
     {
         $r = $this->post('/');
         $this->assertStringContainsString('method', $r->getBody()->__toString());
+    }
+
+    public function testRoute3(): void
+    {
+        $r = $this->get('/page/test');
+
+        $this->assertSame('page-test', $r->getBody()->__toString());
+    }
+
+    public function testRoute4(): void
+    {
+        $r = $this->get('/page/about');
+
+        $this->assertSame('about', $r->getBody()->__toString());
+    }
+
+    public function testRoutesWithoutNames(): void
+    {
+        $r = $this->get('/nameless');
+        $this->assertSame('index', $r->getBody()->__toString());
+
+        $r = $this->post('/nameless');
+        $this->assertSame('method', $r->getBody()->__toString());
+
+        $r = $this->get('/nameless/route');
+        $this->assertSame('route', $r->getBody()->__toString());
     }
 
     public function get(

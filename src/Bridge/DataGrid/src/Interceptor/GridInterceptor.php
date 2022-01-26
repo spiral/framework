@@ -109,6 +109,7 @@ final class GridInterceptor implements CoreInterceptorInterface
             return null;
         }
 
+        /** @var null|DataGrid $dataGrid */
         $dataGrid = $this->reader->firstFunctionMetadata($method, DataGrid::class);
         if ($dataGrid === null) {
             return null;

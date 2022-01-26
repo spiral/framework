@@ -37,10 +37,28 @@ class DemoController
     }
 
     /**
+     * @return string
+     */
+    #[Guarded()]
+    public function guardedButNoNameAttribute()
+    {
+        return 'ok';
+    }
+
+    /**
      * @Guarded("do")
      * @return string
      */
     public function do()
+    {
+        return 'ok';
+    }
+
+    /**
+     * @return string
+     */
+    #[Guarded(permission: 'do')]
+    public function doAttribute()
     {
         return 'ok';
     }

@@ -20,11 +20,12 @@
     ],
     "require": {
         "php": ">=7.2",
+        "spiral/attributes": "^2.9",
         "symfony/polyfill-php73": "^1.22"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0",
-        "ramsey/uuid": "^3.9"
+        "ramsey/uuid": "^4.2"
     },
     "autoload": {
         "files": [
@@ -41,7 +42,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.9.x-dev"
         }
     },
     "config": {

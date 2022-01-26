@@ -79,7 +79,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->getAll());
     }
@@ -166,6 +166,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);

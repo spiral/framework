@@ -32,6 +32,15 @@ class GuardedTest extends ConsoleTest
         $core->callAction(DemoController::class, 'guardedButNoName', []);
     }
 
+    public function testInvalidAnnotationConfigurationWithAttribute(): void
+    {
+        /** @var CoreInterface $core */
+        $core = $this->app->get(CoreInterface::class);
+
+        $this->expectException(InterceptorException::class);
+        $core->callAction(DemoController::class, 'guardedButNoNameAttribute', []);
+    }
+
     public function testInvalidAnnotationConfigurationIfEmptyGuarded(): void
     {
         /** @var CoreInterface $core */
@@ -107,6 +116,16 @@ class GuardedTest extends ConsoleTest
         $this->assertSame('ok', $core->callAction(DemoController::class, 'do', []));
     }
 
+    public function testAllowedWithAttribute(): void
+    {
+        /** @var CoreInterface $core */
+        $core = $this->app->get(CoreInterface::class);
+
+        $this->app->getContainer()->bind(ActorInterface::class, new Actor(['user']));
+
+        $this->assertSame('ok', $core->callAction(DemoController::class, 'doAttribute', []));
+    }
+
     public function testNotAllowed3(): void
     {
         /** @var CoreInterface $core */
@@ -125,5 +144,14 @@ class GuardedTest extends ConsoleTest
 
         $this->app->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
         $this->assertSame('ok', $core->callAction(Demo2Controller::class, 'do1', []));
+    }
+
+    public function testNotAllowed2WithAttribute(): void
+    {
+        /** @var CoreInterface $core */
+        $core = $this->app->get(CoreInterface::class);
+
+        $this->app->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
+        $this->assertSame('ok', $core->callAction(Demo2Controller::class, 'do1Attribute', []));
     }
 }

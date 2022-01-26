@@ -40,6 +40,7 @@ final class RouteLocator
                     continue;
                 }
 
+                $route->name = $route->name ?? $this->generateName($route);
                 $result[$route->name] = [
                     'pattern'    => $route->route,
                     'controller' => $class->getName(),
@@ -48,10 +49,27 @@ final class RouteLocator
                     'verbs'      => (array) $route->methods,
                     'defaults'   => $route->defaults,
                     'middleware' => (array) $route->middleware,
+                    'priority'   => $route->priority,
                 ];
             }
         }
 
+        \uasort($result, static function (array $route1, array $route2) {
+            return $route1['priority'] <=> $route2['priority'];
+        });
+
         return $result;
+    }
+
+    /**
+     * Generates route name based on declared methods and route.
+     */
+    private function generateName(Route $route): string
+    {
+        $methods = \is_array($route->methods)
+            ? \implode(',', $route->methods)
+            : $route->methods;
+
+        return \mb_strtolower(\sprintf('%s:%s', $methods, $route->route));
     }
 }

@@ -40,7 +40,7 @@ final class Buffer implements \IteratorAggregate
      *
      * @return \Generator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         while ($n = $this->next()) {
             yield $n;
