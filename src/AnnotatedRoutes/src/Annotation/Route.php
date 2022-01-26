@@ -22,7 +22,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * @Target({"METHOD"})
  * @Attributes({
  *     @Attribute("route", required=true, type="string"),
- *     @Attribute("name", required=true, type="string"),
+ *     @Attribute("name", type="string"),
  *     @Attribute("verbs", required=true, type="mixed"),
  *     @Attribute("defaults", type="array"),
  *     @Attribute("group", type="string"),
