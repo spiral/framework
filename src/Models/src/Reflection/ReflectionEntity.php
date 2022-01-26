@@ -45,12 +45,10 @@ class ReflectionEntity
     private $propertyCache = [];
 
     /** @var \ReflectionClass */
-    private $reflection = null;
+    private $reflection;
 
     /**
      * Only support SchematicEntity classes!
-     *
-     * @param string $class
      */
     public function __construct(string $class)
     {
@@ -60,8 +58,6 @@ class ReflectionEntity
     /**
      * Bypassing call to reflection.
      *
-     * @param string $name
-     * @param array  $arguments
      *
      * @return mixed
      */
@@ -79,9 +75,6 @@ class ReflectionEntity
         $this->propertyCache = [];
     }
 
-    /**
-     * @return \ReflectionClass
-     */
     public function getReflection(): \ReflectionClass
     {
         return $this->reflection;
@@ -99,33 +92,21 @@ class ReflectionEntity
         return array_unique((array)$this->getProperty('secured', true));
     }
 
-    /**
-     * @return array
-     */
     public function getFillable(): array
     {
         return array_unique((array)$this->getProperty('fillable', true));
     }
 
-    /**
-     * @return array
-     */
     public function getSetters(): array
     {
         return $this->getMutators()[self::MUTATOR_SETTER];
     }
 
-    /**
-     * @return array
-     */
     public function getGetters(): array
     {
         return $this->getMutators()[self::MUTATOR_GETTER];
     }
 
-    /**
-     * @return array
-     */
     public function getAccessors(): array
     {
         return $this->getMutators()[self::MUTATOR_ACCESSOR];
@@ -152,8 +133,6 @@ class ReflectionEntity
 
     /**
      * Entity schema.
-     *
-     * @return array
      */
     public function getSchema(): array
     {
@@ -163,8 +142,6 @@ class ReflectionEntity
 
     /**
      * Model mutators grouped by their type.
-     *
-     * @return array
      */
     public function getMutators(): array
     {

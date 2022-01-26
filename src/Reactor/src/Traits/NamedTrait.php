@@ -24,7 +24,6 @@ trait NamedTrait
     /**
      * Attention, element name will be automatically classified.
      *
-     * @param string $name
      *
      * @return $this|self
      */
@@ -35,9 +34,6 @@ trait NamedTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;

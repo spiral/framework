@@ -54,9 +54,6 @@ final class UuidValue implements ValueInterface
     /** @var RegexValue */
     private $regex;
 
-    /**
-     * @param string $mask
-     */
     public function __construct(string $mask = self::VALID)
     {
         $this->mask = strtolower($mask);
@@ -78,17 +75,12 @@ final class UuidValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return string
      */
     public function convert($value): string
     {
         return (string)$value;
     }
 
-    /**
-     * @param string $value
-     * @return bool
-     */
     private function isValid(string $value): bool
     {
         $uuid = str_replace(['urn:', 'uuid:', '{', '}'], '', $value);

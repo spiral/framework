@@ -22,9 +22,6 @@ final class ArrayInput implements InputInterface
     /** @var array */
     private $data;
 
-    /**
-     * @param array $data
-     */
     public function __construct(array $data)
     {
         $this->data = $data;

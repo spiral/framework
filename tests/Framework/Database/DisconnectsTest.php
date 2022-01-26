@@ -13,7 +13,7 @@ namespace Spiral\Tests\Framework\Database;
 
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\Database\DisconnectsBootloader;
-use Spiral\Database\DatabaseInterface;
+use Cycle\Database\DatabaseInterface;
 use Spiral\Tests\Framework\BaseTest;
 
 class DisconnectsTest extends BaseTest

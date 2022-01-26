@@ -25,8 +25,6 @@ trait SerializerTrait
 
     /**
      * Set custom serializer.
-     *
-     * @param Serializer $serializer
      */
     public function setSerializer(Serializer $serializer): void
     {
@@ -35,8 +33,6 @@ trait SerializerTrait
 
     /**
      * Associated serializer.
-     *
-     * @return Serializer
      */
     private function getSerializer(): Serializer
     {

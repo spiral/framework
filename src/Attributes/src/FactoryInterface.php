@@ -13,8 +13,5 @@ namespace Spiral\Attributes;
 
 interface FactoryInterface
 {
-    /**
-     * @return ReaderInterface
-     */
     public function create(): ReaderInterface;
 }

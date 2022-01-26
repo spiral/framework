@@ -20,9 +20,6 @@ abstract class AbstractSorter implements SorterInterface
     /** @var array */
     private $expressions;
 
-    /**
-     * @param string ...$expressions
-     */
     public function __construct(string ...$expressions)
     {
         $this->expressions = $expressions;
@@ -36,9 +33,6 @@ abstract class AbstractSorter implements SorterInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getExpressions(): array
     {
         return $this->expressions;

@@ -26,11 +26,6 @@ class SameSite
         return $this->sameSite;
     }
 
-    /**
-     * @param string|null $sameSite
-     * @param bool        $secure
-     * @return string|null
-     */
     private function defineValue(?string $sameSite, bool $secure): ?string
     {
         if ($sameSite === null) {

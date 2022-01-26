@@ -21,10 +21,6 @@ class BadRequestException extends ClientException
     /** @var int */
     protected $code = ClientException::BAD_DATA;
 
-    /**
-     * @param string $message
-     * @param \Throwable|null $previous
-     */
     public function __construct(string $message = '', ?\Throwable $previous = null)
     {
         parent::__construct($this->code, $message, $previous);

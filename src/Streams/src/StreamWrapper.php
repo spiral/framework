@@ -24,7 +24,7 @@ final class StreamWrapper
      *
      * @var resource
      */
-    public $context = null;
+    public $context;
     /** @var bool */
     private static $registered = false;
 
@@ -46,7 +46,7 @@ final class StreamWrapper
     ];
 
     /** @var StreamInterface */
-    private $stream = null;
+    private $stream;
 
     /** @var int */
     private $mode = 0;
@@ -196,9 +196,7 @@ final class StreamWrapper
     /**
      * Create StreamInterface associated resource.
      *
-     * @param StreamInterface $stream
      * @return resource
-     *
      * @throws WrapperException
      */
     public static function getResource(StreamInterface $stream)
@@ -222,7 +220,6 @@ final class StreamWrapper
     /**
      * Register StreamInterface and get unique url for it.
      *
-     * @param StreamInterface $stream
      * @return string
      */
     public static function getFilename(StreamInterface $stream)
@@ -253,7 +250,6 @@ final class StreamWrapper
     /**
      * Helper method used to correctly resolve StreamInterface stats.
      *
-     * @param StreamInterface $stream
      * @return array
      */
     private function getStreamStats(StreamInterface $stream)

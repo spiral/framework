@@ -103,9 +103,6 @@ final class HtmlRenderer implements RendererInterface
      */
     protected $style = self::DEFAULT;
 
-    /**
-     * @param array $style
-     */
     public function __construct(array $style = self::DEFAULT)
     {
         $this->style = $style;
@@ -154,10 +151,7 @@ final class HtmlRenderer implements RendererInterface
     /**
      * Get valid stype based on type and context/.
      *
-     * @param string $type
-     * @param string $context
      *
-     * @return string
      */
     private function getStyle(string $type, string $context): string
     {

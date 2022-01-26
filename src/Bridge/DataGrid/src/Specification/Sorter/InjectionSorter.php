@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Sorter;
 
-use Spiral\Database\Injection\FragmentInterface;
-use Spiral\DataGrid\Specification\Sorter\AbstractSorter;
+use Cycle\Database\Injection\FragmentInterface;
 use Spiral\DataGrid\SpecificationInterface;
 
 abstract class InjectionSorter extends AbstractSorter

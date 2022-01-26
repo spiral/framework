@@ -29,7 +29,6 @@ final class RangeValue implements ValueInterface
     private $to;
 
     /**
-     * @param ValueInterface           $base
      * @param RangeValue\Boundary|null $from
      * @param RangeValue\Boundary|null $to
      */
@@ -59,10 +58,6 @@ final class RangeValue implements ValueInterface
         return $this->base->convert($value);
     }
 
-    /**
-     * @param RangeValue\Boundary $from
-     * @param RangeValue\Boundary $to
-     */
     private function validateBoundaries(RangeValue\Boundary $from, RangeValue\Boundary $to): void
     {
         if (!$this->acceptsBoundary($from) || !$this->acceptsBoundary($to)) {
@@ -74,17 +69,12 @@ final class RangeValue implements ValueInterface
         }
     }
 
-    /**
-     * @param RangeValue\Boundary $boundary
-     * @return bool
-     */
     private function acceptsBoundary(RangeValue\Boundary $boundary): bool
     {
         return $boundary->empty || $this->base->accepts($boundary->value);
     }
 
     /**
-     * @param RangeValue\Boundary $boundary
      * @return mixed|null
      */
     private function convertBoundaryValue(RangeValue\Boundary $boundary)
@@ -94,7 +84,6 @@ final class RangeValue implements ValueInterface
 
     /**
      * @param mixed $value
-     * @return bool
      */
     private function acceptsFrom($value): bool
     {
@@ -109,7 +98,6 @@ final class RangeValue implements ValueInterface
 
     /**
      * @param mixed $value
-     * @return bool
      */
     private function acceptsTo($value): bool
     {
@@ -122,10 +110,6 @@ final class RangeValue implements ValueInterface
         return $this->to->include ? ($value <= $to) : ($value < $to);
     }
 
-    /**
-     * @param RangeValue\Boundary $from
-     * @param RangeValue\Boundary $to
-     */
     private function setBoundaries(RangeValue\Boundary $from, RangeValue\Boundary $to): void
     {
         //Swap if from < to and both not empty

@@ -35,11 +35,6 @@ final class CallableRule extends AbstractRule
     /** @var string|null */
     private $message;
 
-    /**
-     * @param callable    $check
-     * @param array       $args
-     * @param null|string $message
-     */
     public function __construct(callable $check, array $args = [], ?string $message = null)
     {
         $this->check = $check;

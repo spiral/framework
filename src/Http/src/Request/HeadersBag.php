@@ -68,9 +68,6 @@ final class HeadersBag extends InputBag
     /**
      * Normalize header name.
      *
-     * @param string $header
-
-     * @return string
      */
     protected function normalize(string $header): string
     {

@@ -22,7 +22,6 @@ trait ContextTrait
     private $context;
 
     /**
-     * @param string          $message
      * @param Context|null    $context
      * @param \Throwable|null $previous
      */
@@ -32,18 +31,11 @@ trait ContextTrait
         $this->context = $context;
     }
 
-    /**
-     * @return Context
-     */
     public function getContext(): Context
     {
         return $this->context;
     }
 
-    /**
-     * @param string $filename
-     * @param int    $line
-     */
     public function setLocation(string $filename, int $line): void
     {
         $this->file = $filename;

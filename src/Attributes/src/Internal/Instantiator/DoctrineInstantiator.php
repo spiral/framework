@@ -82,10 +82,6 @@ final class DoctrineInstantiator extends Instantiator
         return $instance;
     }
 
-    /**
-     * @param iterable $arguments
-     * @return array
-     */
     private function formatArguments(iterable $arguments): array
     {
         $result = [];
@@ -104,7 +100,6 @@ final class DoctrineInstantiator extends Instantiator
     }
 
     /**
-     * @param int $index
      * @param mixed $value
      */
     private function validateArgumentPosition(int $index, $value): void
@@ -119,12 +114,6 @@ final class DoctrineInstantiator extends Instantiator
         throw new SyntaxAttributeException($message);
     }
 
-    /**
-     * @param \ReflectionClass $attr
-     * @param string $name
-     * @param \Reflector|null $context
-     * @return AttributeException
-     */
     private function propertyNotFound(\ReflectionClass $attr, string $name, ?\Reflector $context): AttributeException
     {
         $available = $this->getAvailablePropertiesString($attr);
@@ -135,10 +124,6 @@ final class DoctrineInstantiator extends Instantiator
         return new SemanticAttributeException($message);
     }
 
-    /**
-     * @param \ReflectionClass $class
-     * @return string
-     */
     private function getAvailablePropertiesString(\ReflectionClass $class): string
     {
         return \implode(', ', \get_class_vars($class->getName()));

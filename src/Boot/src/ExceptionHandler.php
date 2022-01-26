@@ -84,8 +84,6 @@ final class ExceptionHandler
 
     /**
      * Handle exception and output error to the user.
-     *
-     * @param \Throwable $e
      */
     public static function handleException(\Throwable $e): void
     {

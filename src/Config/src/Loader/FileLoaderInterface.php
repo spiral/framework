@@ -18,9 +18,6 @@ interface FileLoaderInterface
     /**
      * Load file content.
      *
-     * @param string $section
-     * @param string $filename
-     * @return array
      *
      * @throws LoaderException
      */

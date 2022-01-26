@@ -41,9 +41,6 @@ final class Attr implements NodeInterface
         $this->context = $context;
     }
 
-    /**
-     * @return \Generator
-     */
     public function getIterator(): \Generator
     {
         yield 'name' => $this->name;

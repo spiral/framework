@@ -22,11 +22,6 @@ final class ViewPath
     /** @var string */
     private $basename;
 
-    /**
-     * @param string $namespace
-     * @param string $name
-     * @param string $basename
-     */
     public function __construct(string $namespace, string $name, string $basename)
     {
         $this->namespace = $namespace;
@@ -34,25 +29,16 @@ final class ViewPath
         $this->basename = $basename;
     }
 
-    /**
-     * @return string
-     */
     public function getNamespace(): string
     {
         return $this->namespace;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getBasename(): string
     {
         return $this->basename;

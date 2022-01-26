@@ -15,15 +15,11 @@ interface ListenerRegistryInterface
 {
     /**
      * Add new even listener.
-     *
-     * @param callable $listener
      */
     public function addListener(callable $listener);
 
     /**
      * Add LogEvent listener.
-     *
-     * @param callable $listener
      */
     public function removeListener(callable $listener);
 

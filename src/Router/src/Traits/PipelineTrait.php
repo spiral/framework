@@ -74,7 +74,6 @@ trait PipelineTrait
     /**
      * Get associated route pipeline.
      *
-     * @return Pipeline
      *
      * @throws RouteException
      */

@@ -56,18 +56,12 @@ class AnnotatedDeclaration extends AbstractEntityDeclaration
      * @psalm-suppress UndefinedDocblockClass
      *
      * @param CommentTrait $target
-     * @param string       $comment
      */
     protected function addCommentLine($target, string $comment): void
     {
         $target->setComment(array_merge($this->getComment()->getLines(), [$comment]));
     }
 
-    /**
-     * @param string $name
-     * @param string $type
-     * @return string
-     */
     private function makeFieldComment(string $name, string $type): string
     {
         $columns = [];
@@ -85,21 +79,11 @@ class AnnotatedDeclaration extends AbstractEntityDeclaration
         return "@Cycle\Column($column)";
     }
 
-    /**
-     * @param string $type
-     * @return string
-     */
     private function annotatedType(string $type): string
     {
         return $this->isNullableType($type) ? substr($type, 1) : $type;
     }
 
-    /**
-     * @param string $inflection
-     * @param string $name
-     * @param array  $columns
-     * @return array
-     */
     private function addInflectedName(string $inflection, string $name, array $columns): array
     {
         $inflected = $this->inflect($inflection, $name);
@@ -110,11 +94,6 @@ class AnnotatedDeclaration extends AbstractEntityDeclaration
         return $columns;
     }
 
-    /**
-     * @param string $inflection
-     * @param string $value
-     * @return string|null
-     */
     private function inflect(string $inflection, string $value): ?string
     {
         switch ($inflection) {
@@ -131,10 +110,6 @@ class AnnotatedDeclaration extends AbstractEntityDeclaration
         }
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     private function tableize(string $name): string
     {
         return ( new InflectorFactory() )
@@ -142,10 +117,6 @@ class AnnotatedDeclaration extends AbstractEntityDeclaration
             ->tableize($name);
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     private function camelize(string $name): string
     {
         return ( new InflectorFactory() )

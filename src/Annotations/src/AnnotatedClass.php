@@ -20,7 +20,6 @@ final class AnnotatedClass
     private $annotation;
 
     /**
-     * @param \ReflectionClass $class
      * @param mixed            $annotation
      */
     public function __construct(\ReflectionClass $class, $annotation)
@@ -29,9 +28,6 @@ final class AnnotatedClass
         $this->annotation = $annotation;
     }
 
-    /**
-     * @return \ReflectionClass
-     */
     public function getClass(): \ReflectionClass
     {
         return $this->class;

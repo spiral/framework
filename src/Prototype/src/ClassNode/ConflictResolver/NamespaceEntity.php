@@ -16,12 +16,6 @@ final class NamespaceEntity extends AbstractEntity
     /** @var string */
     private $fullName;
 
-    /**
-     * @param string $name
-     * @param string $fullName
-     * @param int    $sequence
-     * @return NamespaceEntity
-     */
     public static function createWithSequence(string $name, string $fullName, int $sequence): NamespaceEntity
     {
         $self = new self();
@@ -32,11 +26,6 @@ final class NamespaceEntity extends AbstractEntity
         return $self;
     }
 
-    /**
-     * @param string $name
-     * @param string $fullName
-     * @return NamespaceEntity
-     */
     public static function create(string $name, string $fullName): NamespaceEntity
     {
         $self = new self();
@@ -46,10 +35,6 @@ final class NamespaceEntity extends AbstractEntity
         return $self;
     }
 
-    /**
-     * @param NamespaceEntity $namespace
-     * @return bool
-     */
     public function equals(NamespaceEntity $namespace): bool
     {
         return $this->fullName === $namespace->fullName;

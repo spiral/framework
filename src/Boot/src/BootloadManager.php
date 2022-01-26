@@ -26,9 +26,6 @@ final class BootloadManager implements Container\SingletonInterface
     /** @var array */
     private $classes = [];
 
-    /**
-     * @param Container $container
-     */
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -36,8 +33,6 @@ final class BootloadManager implements Container\SingletonInterface
 
     /**
      * Get bootloaded classes.
-     *
-     * @return array
      */
     public function getClasses(): array
     {
@@ -70,7 +65,6 @@ final class BootloadManager implements Container\SingletonInterface
     /**
      * Bootloader all given classes.
      *
-     * @param array $classes
      *
      * @throws \Throwable
      */
@@ -99,8 +93,6 @@ final class BootloadManager implements Container\SingletonInterface
     }
 
     /**
-     * @param BootloaderInterface $bootloader
-     * @param array               $options
      *
      * @throws \Throwable
      */
@@ -126,9 +118,6 @@ final class BootloadManager implements Container\SingletonInterface
 
     /**
      * Bind declared bindings.
-     *
-     * @param array $bindings
-     * @param array $singletons
      */
     protected function initBindings(array $bindings, array $singletons): void
     {

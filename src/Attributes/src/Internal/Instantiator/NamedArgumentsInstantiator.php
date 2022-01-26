@@ -53,19 +53,12 @@ final class NamedArgumentsInstantiator extends Instantiator
         );
     }
 
-    /**
-     * @return bool
-     */
     private function isNamedArgumentsSupported(): bool
     {
         return \version_compare(\PHP_VERSION, '8.0') >= 0;
     }
 
     /**
-     * @param \ReflectionClass $ctx
-     * @param \ReflectionMethod $constructor
-     * @param array $arguments
-     * @return array
      * @throws \Throwable
      */
     private function resolveParameters(\ReflectionClass $ctx, \ReflectionMethod $constructor, array $arguments): array
@@ -89,9 +82,6 @@ final class NamedArgumentsInstantiator extends Instantiator
     }
 
     /**
-     * @param \ReflectionClass $ctx
-     * @param \ReflectionParameter $param
-     * @param array $arguments
      * @return mixed
      * @throws \Throwable
      */

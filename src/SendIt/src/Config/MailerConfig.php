@@ -24,25 +24,16 @@ final class MailerConfig extends InjectableConfig
         'pipeline' => '',
     ];
 
-    /**
-     * @return string
-     */
     public function getDSN(): string
     {
         return $this->config['dsn'];
     }
 
-    /**
-     * @return string
-     */
     public function getFromAddress(): string
     {
         return $this->config['from'];
     }
 
-    /**
-     * @return string
-     */
     public function getQueuePipeline(): string
     {
         return $this->config['pipeline'];

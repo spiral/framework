@@ -22,7 +22,6 @@ use Spiral\Security\GuardInterface;
 trait GuardedTrait
 {
     /**
-     * @return GuardInterface
      * @throws ScopeException
      */
     public function getGuard(): GuardInterface
@@ -37,21 +36,11 @@ trait GuardedTrait
         return $container->get(GuardInterface::class);
     }
 
-    /**
-     * @param string $permission
-     * @param array  $context
-     * @return bool
-     */
     protected function allows(string $permission, array $context = []): bool
     {
         return $this->getGuard()->allows($this->resolvePermission($permission), $context);
     }
 
-    /**
-     * @param string $permission
-     * @param array  $context
-     * @return bool
-     */
     protected function denies(string $permission, array $context = []): bool
     {
         return !$this->allows($permission, $context);
@@ -59,9 +48,6 @@ trait GuardedTrait
 
     /**
      * Automatically prepend permission name with local RBAC namespace.
-     *
-     * @param string $permission
-     * @return string
      */
     protected function resolvePermission(string $permission): string
     {

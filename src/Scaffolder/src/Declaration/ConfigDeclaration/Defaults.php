@@ -30,10 +30,6 @@ class Defaults
         'null'     => null,
     ];
 
-    /**
-     * @param array $values
-     * @return array
-     */
     public function get(array $values): array
     {
         $output = [];

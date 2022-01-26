@@ -24,7 +24,6 @@ interface FactoryInterface
      * by user, rest of constructor parameters must be filled by container. Method might return
      * pre-constructed singleton when no parameters are specified.
      *
-     * @param string $alias
      * @param array  $parameters Parameters to construct new class.
      *
      * @return mixed|null|object

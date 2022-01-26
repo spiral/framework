@@ -26,9 +26,6 @@ abstract class AbstractEntity
     {
     }
 
-    /**
-     * @return string
-     */
     public function fullName(): string
     {
         $name = $this->name;

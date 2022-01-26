@@ -35,11 +35,6 @@ final class Translator implements TranslatorInterface, SingletonInterface
     /** @var CatalogueManagerInterface */
     private $catalogueManager;
 
-    /**
-     * @param TranslatorConfig          $config
-     * @param CatalogueManagerInterface $catalogueManager
-     * @param IdentityTranslator        $identityTranslator
-     */
     public function __construct(
         TranslatorConfig $config,
         CatalogueManagerInterface $catalogueManager,
@@ -159,7 +154,6 @@ final class Translator implements TranslatorInterface, SingletonInterface
      * @param array  $values Arguments (key => value). Will skip unknown names.
      * @param string $prefix Placeholder prefix, "{" by default.
      * @param string $postfix Placeholder postfix, "}" by default.
-     * @return string
      */
     public static function interpolate(
         string $string,
@@ -187,9 +181,6 @@ final class Translator implements TranslatorInterface, SingletonInterface
 
     /**
      * Check if string has translation braces [[ and ]].
-     *
-     * @param string $string
-     * @return bool
      */
     public static function isMessage(string $string): bool
     {
@@ -199,11 +190,6 @@ final class Translator implements TranslatorInterface, SingletonInterface
 
     /**
      * Get translation message from the locale bundle or fallback to default locale.
-     *
-     * @param string $locale
-     * @param string $domain
-     * @param string $string
-     * @return string
      */
     protected function get(string &$locale, string $domain, string $string): string
     {

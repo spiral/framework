@@ -38,10 +38,6 @@ class Aggregator extends AbstractDeclaration implements
      */
     private $elements;
 
-    /**
-     * @param array $allowed
-     * @param array $elements
-     */
     public function __construct(array $allowed, array $elements = [])
     {
         $this->allowed = $allowed;
@@ -60,17 +56,11 @@ class Aggregator extends AbstractDeclaration implements
         return $this->get($name);
     }
 
-    /**
-     * @return bool
-     */
     public function isEmpty(): bool
     {
         return empty($this->elements);
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return count($this->elements);
@@ -78,9 +68,6 @@ class Aggregator extends AbstractDeclaration implements
 
     /**
      * Check if aggregation has named element with given name.
-     *
-     * @param string $name
-     * @return bool
      */
     public function has(string $name): bool
     {
@@ -96,8 +83,6 @@ class Aggregator extends AbstractDeclaration implements
     /**
      * Add new element.
      *
-     * @param DeclarationInterface $element
-     * @return self
      * @throws ReactorException
      */
     public function add(DeclarationInterface $element): Aggregator
@@ -125,7 +110,6 @@ class Aggregator extends AbstractDeclaration implements
     /**
      * Get named element by it's name.
      *
-     * @param string $name
      * @return DeclarationInterface
      * @throws ReactorException
      */
@@ -136,9 +120,6 @@ class Aggregator extends AbstractDeclaration implements
 
     /**
      * Remove element by it's name.
-     *
-     * @param string $name
-     * @return self
      */
     public function remove(string $name): Aggregator
     {
@@ -151,9 +132,6 @@ class Aggregator extends AbstractDeclaration implements
         return $this;
     }
 
-    /**
-     * @return ArrayIterator
-     */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->elements);
@@ -193,7 +171,6 @@ class Aggregator extends AbstractDeclaration implements
 
     /**
      * {@inheritdoc}
-     * @return self
      */
     public function replace($search, $replace): Aggregator
     {
@@ -223,8 +200,6 @@ class Aggregator extends AbstractDeclaration implements
     /**
      * Find element by it's name (NamedDeclarations only).
      *
-     * @param string $name
-     * @return DeclarationInterface
      * @throws ReactorException When unable to find.
      */
     protected function find(string $name): DeclarationInterface

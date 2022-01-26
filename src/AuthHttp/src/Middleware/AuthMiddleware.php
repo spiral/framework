@@ -43,12 +43,6 @@ final class AuthMiddleware implements MiddlewareInterface
     /** @var TransportRegistry */
     private $transportRegistry;
 
-    /**
-     * @param ScopeInterface         $scope
-     * @param ActorProviderInterface $actorProvider
-     * @param TokenStorageInterface  $tokenStorage
-     * @param TransportRegistry      $transportRegistry
-     */
     public function __construct(
         ScopeInterface $scope,
         ActorProviderInterface $actorProvider,
@@ -62,9 +56,6 @@ final class AuthMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
      *
      * @throws \Throwable
      */
@@ -82,11 +73,6 @@ final class AuthMiddleware implements MiddlewareInterface
         return $this->closeContext($request, $response, $authContext);
     }
 
-    /**
-     * @param Request              $request
-     * @param AuthContextInterface $authContext
-     * @return AuthContextInterface
-     */
     private function initContext(Request $request, AuthContextInterface $authContext): AuthContextInterface
     {
         foreach ($this->transportRegistry->getTransports() as $name => $transport) {
@@ -108,12 +94,6 @@ final class AuthMiddleware implements MiddlewareInterface
         return $authContext;
     }
 
-    /**
-     * @param Request              $request
-     * @param Response             $response
-     * @param AuthContextInterface $authContext
-     * @return Response
-     */
     private function closeContext(Request $request, Response $response, AuthContextInterface $authContext): Response
     {
         if ($authContext->getToken() === null) {

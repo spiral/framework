@@ -44,17 +44,11 @@ final class ReflectionArgument
         $this->value = $value;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @return string
-     */
     public function getValue(): string
     {
         return $this->value;
@@ -63,7 +57,6 @@ final class ReflectionArgument
     /**
      * Convert argument value into valid string. Can be applied only for STRING type arguments.
      *
-     * @return string
      *
      * @throws ReflectionException When value can not be converted into string.
      */
@@ -82,7 +75,6 @@ final class ReflectionArgument
     /**
      * Create Argument reflections based on provided set of tokens (fetched from invoke).
      *
-     * @param array $tokens
      * @return self[]
      */
     public static function locateArguments(array $tokens): array
@@ -148,8 +140,6 @@ final class ReflectionArgument
      * Create Argument reflection using token definition. Internal method.
      *
      * @see locateArguments
-     * @param array $definition
-     * @return self
      */
     private static function createArgument(array $definition): ReflectionArgument
     {

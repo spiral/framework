@@ -30,7 +30,6 @@ final class Set implements PatchInterface
     private $value;
 
     /**
-     * @param string $key
      * @param mixed  $value
      */
     public function __construct(string $key, $value)
@@ -39,10 +38,6 @@ final class Set implements PatchInterface
         $this->value = $value;
     }
 
-    /**
-     * @param array $config
-     * @return array
-     */
     public function patch(array $config): array
     {
         try {

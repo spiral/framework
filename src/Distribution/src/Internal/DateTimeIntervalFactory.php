@@ -61,7 +61,6 @@ final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
 
     /**
      * @param mixed $duration
-     * @return \DateInterval
      * @throws \Exception
      */
     private function createOrFail($duration): \DateInterval

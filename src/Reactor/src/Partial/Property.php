@@ -41,7 +41,6 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
     private $defaultValue;
 
     /**
-     * @param string       $name
      * @param mixed        $defaultValue
      * @param string|array $comment
      */
@@ -57,8 +56,6 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
 
     /**
      * Has default value.
-     *
-     * @return bool
      */
     public function hasDefaultValue(): bool
     {
@@ -69,7 +66,6 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
      * Set default value.
      *
      * @param mixed $value
-     * @return self
      */
     public function setDefaultValue($value): Property
     {
@@ -81,8 +77,6 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
 
     /**
      * Remove default value.
-     *
-     * @return self
      */
     public function removeDefaultValue(): Property
     {
@@ -141,10 +135,6 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
 
     /**
      * Mount indentation to value. Attention, to be applied to arrays only!
-     *
-     * @param string $serialized
-     * @param int    $indentLevel
-     * @return string
      */
     private function mountIndents(string $serialized, int $indentLevel): string
     {

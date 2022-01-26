@@ -34,7 +34,6 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
     private $rules = [];
 
     /**
-     * @param ValidatorConfig       $config
      * @param ParserInterface|null  $parser
      * @param FactoryInterface|null $factory
      */
@@ -62,10 +61,8 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
 
     /**
      * @param array|\ArrayAccess $data
-     * @param array              $rules
      * @param null               $context
      *
-     * @return ValidatorInterface
      */
     public function validate($data, array $rules, $context = null): ValidatorInterface
     {
@@ -118,7 +115,6 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
      *
      * @param mixed $check
      * @param mixed $rule
-     * @return RuleInterface
      *
      * @throws ContainerException
      */
@@ -145,9 +141,7 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
     }
 
     /**
-     * @param array $conditions
      * @return \SplObjectStorage
-     *
      * @throws ContainerException
      */
     protected function makeConditions(array $conditions): ?\SplObjectStorage

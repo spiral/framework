@@ -34,8 +34,6 @@ class GridSchema
     /**
      * Define new data filter.
      *
-     * @param string          $name
-     * @param FilterInterface $filter
      * @throws SchemaException
      */
     public function addFilter(string $name, FilterInterface $filter): void
@@ -47,10 +45,6 @@ class GridSchema
         $this->filters[strtolower($name)] = $filter;
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function hasFilter(string $name): bool
     {
         return isset($this->filters[strtolower($name)]);
@@ -59,8 +53,6 @@ class GridSchema
     /**
      * Get the filter configuration.
      *
-     * @param string $name
-     * @return FilterInterface
      * @throws SchemaException
      */
     public function getFilter(string $name): FilterInterface
@@ -83,8 +75,6 @@ class GridSchema
     /**
      * Define new value sorter.
      *
-     * @param string          $name
-     * @param SorterInterface $sorter
      * @throws SchemaException
      */
     public function addSorter(string $name, SorterInterface $sorter): void
@@ -96,10 +86,6 @@ class GridSchema
         $this->sorters[strtolower($name)] = $sorter;
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function hasSorter(string $name): bool
     {
         return isset($this->sorters[strtolower($name)]);
@@ -108,8 +94,6 @@ class GridSchema
     /**
      * Get the sorter configuration.
      *
-     * @param string $name
-     * @return SorterInterface
      * @throws SchemaException
      */
     public function getSorter(string $name): SorterInterface
@@ -131,8 +115,6 @@ class GridSchema
 
     /**
      * Set the pagination filter.
-     *
-     * @param FilterInterface $paginator
      */
     public function setPaginator(FilterInterface $paginator): void
     {
@@ -141,8 +123,6 @@ class GridSchema
 
     /**
      * Get the pagination configuration associated with data source. When null - no pagination can be applied.
-     *
-     * @return FilterInterface|null
      */
     public function getPaginator(): ?FilterInterface
     {

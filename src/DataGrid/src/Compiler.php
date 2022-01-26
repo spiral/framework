@@ -23,9 +23,6 @@ final class Compiler
     /** @var WriterInterface[] */
     private $writers = [];
 
-    /**
-     * @param WriterInterface $writer
-     */
     public function addWriter(WriterInterface $writer): void
     {
         $this->writers[] = $writer;
@@ -35,7 +32,6 @@ final class Compiler
      * Compile the source constrains based on a given specification. Returns altered source.
      *
      * @param mixed                  $source
-     * @param SpecificationInterface ...$specifications
      * @return mixed|null
      * @throws CompilerException
      */

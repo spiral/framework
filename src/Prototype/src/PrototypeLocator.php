@@ -19,9 +19,6 @@ final class PrototypeLocator
     /** @var ClassesInterface */
     private $classes;
 
-    /**
-     * @param ClassesInterface $classes
-     */
     public function __construct(ClassesInterface $classes)
     {
         $this->classes = $classes;

@@ -37,11 +37,6 @@ final class ResponseWrapper
     /** @var FilesInterface */
     private $files;
 
-    /**
-     * @param ResponseFactoryInterface $responseFactory
-     * @param StreamFactoryInterface   $streamFactory
-     * @param FilesInterface           $files
-     */
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
@@ -52,10 +47,6 @@ final class ResponseWrapper
         $this->files = $files;
     }
 
-    /**
-     * @param int $code
-     * @return ResponseInterface
-     */
     public function create(int $code): ResponseInterface
     {
         return $this->responseFactory->createResponse($code);
@@ -65,8 +56,6 @@ final class ResponseWrapper
      * Mount redirect headers into response
      *
      * @param UriInterface|string $uri
-     * @param int                 $code
-     * @return ResponseInterface
      *
      * @throws ResponseException
      */
@@ -83,8 +72,6 @@ final class ResponseWrapper
      * Write json data into response.
      *
      * @param     $data
-     * @param int $code
-     * @return ResponseInterface
      */
     public function json($data, int $code = 200): ResponseInterface
     {
@@ -98,8 +85,6 @@ final class ResponseWrapper
      * @param string                                     $name     Public file name (in attachment), by default local
      *                                                             filename. Name is mandratory when filename supplied
      *                                                             in a form of stream or resource.
-     * @param string                                     $mime
-     * @return ResponseInterface
      *
      * @throws ResponseException
      */
@@ -131,11 +116,6 @@ final class ResponseWrapper
 
     /**
      * Write html content into response and set content-type header.
-     *
-     * @param string $html
-     * @param int    $code
-     * @param string $contentType
-     * @return ResponseInterface
      */
     public function html(
         string $html,
@@ -152,7 +132,6 @@ final class ResponseWrapper
      * Create stream for given filename.
      *
      * @param string|StreamInterface|StreamableInterface $file
-     * @return StreamInterface
      */
     private function getStream($file): StreamInterface
     {

@@ -27,7 +27,7 @@ final class CatalogueManager implements CatalogueManagerInterface
      * @internal
      * @var CacheInterface
      */
-    private $cache = null;
+    private $cache;
 
     /** @var array */
     private $locales = [];
@@ -35,10 +35,6 @@ final class CatalogueManager implements CatalogueManagerInterface
     /** @var Catalogue[] */
     private $catalogues = [];
 
-    /**
-     * @param LoaderInterface $loader
-     * @param CacheInterface  $cache
-     */
     public function __construct(LoaderInterface $loader, CacheInterface $cache = null)
     {
         $this->loader = $loader;

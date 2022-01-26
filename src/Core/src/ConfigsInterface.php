@@ -24,8 +24,6 @@ interface ConfigsInterface extends InjectorInterface
      * Return config for one specified section. Config has to be returned in component specific
      * array.
      *
-     * @param string $section
-     * @return array
      *
      * @throws ConfiguratorException
      */

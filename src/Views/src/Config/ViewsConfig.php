@@ -33,17 +33,11 @@ final class ViewsConfig extends InjectableConfig
         ],
     ];
 
-    /**
-     * @return bool
-     */
     public function isCacheEnabled(): bool
     {
         return !empty($this->config['cache']['enable']) || !empty($this->config['cache']['enabled']);
     }
 
-    /**
-     * @return string
-     */
     public function getCacheDirectory(): string
     {
         return rtrim($this->config['cache']['directory'], '/') . '/';
@@ -51,8 +45,6 @@ final class ViewsConfig extends InjectableConfig
 
     /**
      * Return all namespaces and their associated directories.
-     *
-     * @return array
      */
     public function getNamespaces(): array
     {
@@ -95,7 +87,6 @@ final class ViewsConfig extends InjectableConfig
 
     /**
      * @param mixed $item
-     * @return Autowire
      *
      * @throws ConfigException
      */

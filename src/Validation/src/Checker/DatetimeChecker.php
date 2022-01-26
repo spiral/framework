@@ -51,9 +51,6 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      * Check if date is in the future. Do not compare if the current date is invalid.
      *
      * @param mixed $value
-     * @param bool  $orNow
-     * @param bool  $useMicroSeconds
-     * @return bool
      */
     public function future($value, bool $orNow = false, bool $useMicroSeconds = false): bool
     {
@@ -64,9 +61,6 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      * Check if date is in the past. Do not compare if the current date is invalid.
      *
      * @param mixed $value
-     * @param bool  $orNow
-     * @param bool  $useMicroSeconds
-     * @return bool
      */
     public function past($value, bool $orNow = false, bool $useMicroSeconds = false): bool
     {
@@ -77,8 +71,6 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      * Check if date format matches the provided one.
      *
      * @param mixed  $value
-     * @param string $format
-     * @return bool
      */
     public function format($value, string $format): bool
     {
@@ -95,7 +87,6 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      * Check if date is valid. Empty values are acceptable.
      *
      * @param mixed $value
-     * @return bool
      */
     public function valid($value): bool
     {
@@ -106,7 +97,6 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      * Value has to be a valid timezone.
      *
      * @param mixed $value
-     * @return bool
      */
     public function timezone($value): bool
     {
@@ -121,10 +111,6 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      * Check if date comes before the given one. Do not compare if the given date is missing or invalid.
      *
      * @param mixed  $value
-     * @param string $field
-     * @param bool   $orEquals
-     * @param bool   $useMicroSeconds
-     * @return bool
      */
     public function before($value, string $field, bool $orEquals = false, bool $useMicroSeconds = false): bool
     {
@@ -135,10 +121,6 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
      * Check if date comes after the given one. Do not compare if the given date is missing or invalid.
      *
      * @param mixed  $value
-     * @param string $field
-     * @param bool   $orEquals
-     * @param bool   $useMicroSeconds
-     * @return bool
      */
     public function after($value, string $field, bool $orEquals = false, bool $useMicroSeconds = false): bool
     {
@@ -161,7 +143,6 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
 
     /**
      * @param mixed $value
-     * @return \DateTimeInterface|null
      */
     private function date($value): ?\DateTimeInterface
     {
@@ -192,17 +173,12 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
 
     /**
      * @param mixed $value
-     * @return bool
      */
     private function isApplicableValue($value): bool
     {
         return is_string($value) || is_numeric($value);
     }
 
-    /**
-     * @param string $field
-     * @return \DateTimeInterface|null
-     */
     private function fromField(string $field): ?\DateTimeInterface
     {
         $before = $this->getValidator()->getValue($field);

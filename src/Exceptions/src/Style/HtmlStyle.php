@@ -171,9 +171,6 @@ class HtmlStyle implements StyleInterface
      */
     protected $style = self::DEFAULT;
 
-    /**
-     * @param array $style
-     */
     public function __construct(array $style = self::DEFAULT)
     {
         $this->style = $style;
@@ -208,10 +205,6 @@ class HtmlStyle implements StyleInterface
 
     /**
      * Get styles for a given token.
-     *
-     * @param array $token
-     * @param array $previous
-     * @return string
      */
     private function getStyle(array $token, array $previous): string
     {

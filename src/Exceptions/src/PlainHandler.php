@@ -25,11 +25,7 @@ final class PlainHandler extends AbstractHandler
     {
         $result = '';
 
-        if ($e instanceof \Error) {
-            $result .= '[' . get_class($e) . "]\n" . $e->getMessage();
-        } else {
-            $result .= '[' . get_class($e) . "]\n" . $e->getMessage();
-        }
+        $result .= '[' . get_class($e) . "]\n" . $e->getMessage();
 
         $result .= sprintf(" in %s:%s\n", $e->getFile(), $e->getLine());
 
@@ -45,9 +41,7 @@ final class PlainHandler extends AbstractHandler
     /**
      * Render exception call stack.
      *
-     * @param \Throwable       $e
      * @param Highlighter|null $h
-     * @return string
      */
     private function renderTrace(\Throwable $e, Highlighter $h = null): string
     {

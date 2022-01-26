@@ -28,9 +28,6 @@ final class CallableSequence extends AbstractSequence
 
     /**
      * @param callable $function
-     * @param array    $parameters
-     * @param string   $header
-     * @param string   $footer
      */
     public function __construct(
         $function,

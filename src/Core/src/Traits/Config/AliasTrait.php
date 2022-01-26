@@ -18,10 +18,6 @@ namespace Spiral\Core\Traits\Config;
  */
 trait AliasTrait
 {
-    /**
-     * @param string $alias
-     * @return string
-     */
     public function resolveAlias(string $alias): string
     {
         while (is_string($alias) && isset($this->config) && isset($this->config['aliases'][$alias])) {

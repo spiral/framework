@@ -15,9 +15,5 @@ use Psr\Http\Message\UriInterface;
 
 interface UriResolverInterface
 {
-    /**
-     * @param string $file
-     * @return UriInterface
-     */
     public function resolve(string $file): UriInterface;
 }

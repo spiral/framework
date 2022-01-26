@@ -44,7 +44,6 @@ final class HashKeyGenerator implements KeyGeneratorInterface
 
     /**
      * @param KeyGeneratorInterface|null $base
-     * @param string $algo
      */
     public function __construct(KeyGeneratorInterface $base, string $algo = self::DEFAULT_HASH_ALGO)
     {

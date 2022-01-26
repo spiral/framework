@@ -31,8 +31,6 @@ interface WritableInterface
      * {@see BucketInterface::create()}
      *
      * @param IdType $id
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
@@ -43,8 +41,6 @@ interface WritableInterface
      *
      * @param IdType $id
      * @param string|\Stringable|resource $content
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
@@ -55,7 +51,6 @@ interface WritableInterface
      *
      * @param IdType $id
      * @param VisibilityType $visibility
-     * @return FileInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
@@ -70,8 +65,6 @@ interface WritableInterface
      *
      * @param IdType $source
      * @param IdType $destination
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
@@ -82,8 +75,6 @@ interface WritableInterface
      *
      * @param IdType $source
      * @param IdType $destination
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
@@ -93,7 +84,6 @@ interface WritableInterface
      * {@see BucketInterface::delete()}
      *
      * @param IdType $id
-     * @param bool $clean
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */

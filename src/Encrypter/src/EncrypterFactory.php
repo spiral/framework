@@ -24,11 +24,8 @@ use Spiral\Encrypter\Exception\EncrypterException;
 final class EncrypterFactory implements InjectorInterface, EncryptionInterface, SingletonInterface
 {
     /** @var EncrypterConfig */
-    protected $config = null;
+    protected $config;
 
-    /**
-     * @param EncrypterConfig $config
-     */
     public function __construct(EncrypterConfig $config)
     {
         $this->config = $config;
@@ -61,9 +58,6 @@ final class EncrypterFactory implements InjectorInterface, EncryptionInterface, 
         return $this->config->getKey();
     }
 
-    /**
-     * @return EncrypterInterface
-     */
     public function getEncrypter(): EncrypterInterface
     {
         return new Encrypter($this->getKey());

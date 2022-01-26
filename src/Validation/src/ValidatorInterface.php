@@ -22,25 +22,19 @@ interface ValidatorInterface
      * Create validator copy with new data set.
      *
      * @param iterable $data
-     * @return ValidatorInterface
      */
     public function withData($data): ValidatorInterface;
 
     /**
      * Receive field from context data or return default value.
      *
-     * @param string $field
      * @param mixed  $default
-     *
      * @return mixed
      */
     public function getValue(string $field, $default = null);
 
     /**
      * Check if field is provided in the given data.
-     *
-     * @param string $field
-     * @return bool
      */
     public function hasValue(string $field): bool;
 
@@ -48,7 +42,6 @@ interface ValidatorInterface
      * Create new validator instance with new context.
      *
      * @param mixed $context
-     * @return ValidatorInterface
      */
     public function withContext($context): ValidatorInterface;
 
@@ -62,7 +55,6 @@ interface ValidatorInterface
     /**
      * Check if context data valid accordingly to provided rules.
      *
-     * @return bool
      *
      * @throws ValidationException
      */
@@ -71,7 +63,6 @@ interface ValidatorInterface
     /**
      * List of errors associated with parent field, every field should have only one error assigned.
      *
-     * @return array
      *
      * @throws ValidationException
      */

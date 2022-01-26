@@ -18,9 +18,6 @@ trait ContextTrait
     /** @var Context|null @internal */
     private $context;
 
-    /**
-     * @return Context|null
-     */
     public function getContext(): ?Context
     {
         return $this->context;
