@@ -30,7 +30,6 @@ interface CatalogueInterface
     /**
      * Get message from the catalogue.
      *
-     *
      * @throws CatalogueException
      */
     public function get(string $domain, string $id): string;
@@ -38,7 +37,7 @@ interface CatalogueInterface
     /**
      * Set/replace translation in catalogue.
      */
-    public function set(string $domain, string $id, string $string);
+    public function set(string $domain, string $id, string $translation);
 
     /**
      * Must return all locale data.

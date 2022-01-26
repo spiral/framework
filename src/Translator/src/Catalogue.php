@@ -23,7 +23,7 @@ final class Catalogue implements CatalogueInterface
     /** @var string */
     private $locale;
 
-    /** @var array */
+    /** @var array<string, array<string, string>> */
     private $data = [];
 
     public function __construct(string $locale, array $data = [])
@@ -75,9 +75,9 @@ final class Catalogue implements CatalogueInterface
     /**
      * @inheritdoc
      */
-    public function set(string $domain, string $id, string $string): void
+    public function set(string $domain, string $id, string $translation): void
     {
-        $this->data[$domain][$id] = $string;
+        $this->data[$domain][$id] = $translation;
     }
 
     /**
@@ -89,8 +89,8 @@ final class Catalogue implements CatalogueInterface
     }
 
     /**
-     * @param bool             $follow When set to true messages from given catalogue will overwrite
-     *                                 existed messages.
+     * @param bool $follow When set to true messages from given catalogue will overwrite
+     *                     existed messages.
      */
     public function mergeFrom(MessageCatalogue $catalogue, bool $follow = true): void
     {
