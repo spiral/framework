@@ -219,6 +219,7 @@
         "spiral/auth": "*",
         "spiral/auth-http": "*",
         "spiral/boot": "*",
+        "spiral/cache": "*",
         "spiral/config": "*",
         "spiral/console": "*",
         "spiral/cookies": "*",
