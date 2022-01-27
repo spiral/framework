@@ -29,10 +29,10 @@ final class ViewLoader implements LoaderInterface
     private $parser;
 
     /** @var array */
-    private $namespaces = [];
+    private $namespaces;
 
     /** @var string */
-    private $defaultNamespace = self::DEFAULT_NAMESPACE;
+    private $defaultNamespace;
 
     public function __construct(
         array $namespaces,
