@@ -21,7 +21,6 @@ use Throwable;
 class KernelTest extends TestCase
 {
     /**
-     *
      * @throws Throwable
      */
     public function testKernelException(): void
@@ -103,5 +102,44 @@ class KernelTest extends TestCase
             'VALUE',
             $kernel->getContainer()->get(EnvironmentInterface::class)->get('INTERNAL')
         );
+    }
+
+    public function testBootingCallbacks()
+    {
+        $kernel = TestCore::create([
+            'root' => __DIR__,
+        ]);
+
+        $kernel->booting(static function (TestCore $core) {
+            $core->getContainer()->bind('abc', 'foo');
+        });
+
+        $kernel->booting(static function (TestCore $core) {
+            $core->getContainer()->bind('bcd', 'foo');
+        });
+
+        $kernel->booted( static function (TestCore $core) {
+            $core->getContainer()->bind('cde', 'foo');
+        });
+
+        $kernel->booted( static function (TestCore $core) {
+            $core->getContainer()->bind('def', 'foo');
+        });
+
+        $kernel->run();
+
+        $this->assertTrue($kernel->getContainer()->has('abc'));
+        $this->assertTrue($kernel->getContainer()->has('bcd'));
+        $this->assertTrue($kernel->getContainer()->has('cde'));
+        $this->assertTrue($kernel->getContainer()->has('def'));
+        $this->assertTrue($kernel->getContainer()->has('efg'));
+        $this->assertFalse($kernel->getContainer()->has('fgh'));
+        $this->assertFalse($kernel->getContainer()->has('ghi'));
+        $this->assertTrue($kernel->getContainer()->has('hij'));
+        $this->assertTrue($kernel->getContainer()->has('ijk'));
+        $this->assertTrue($kernel->getContainer()->has('jkl'));
+        $this->assertFalse($kernel->getContainer()->has('klm'));
+        $this->assertTrue($kernel->getContainer()->has('lmn'));
+        $this->assertTrue($kernel->getContainer()->has('mno'));
     }
 }
