@@ -194,8 +194,8 @@ final class CommandBootloader extends Bootloader
      */
     private function configureGRPC(ConsoleBootloader $console): void
     {
-        $console->addCommand(GRPC\GenerateCommand::class);
-        $console->addCommand(GRPC\ListCommand::class);
+        $console->addCommand(GRPC\GenerateCommand::class, true);
+        $console->addCommand(GRPC\ListCommand::class, true);
     }
 
     /**

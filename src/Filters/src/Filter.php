@@ -96,16 +96,18 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function __unset($offset): void
+    public function __unset(string $offset): void
     {
         parent::__unset($offset);
         $this->reset();
     }
 
     /**
-     * @return array
+     * @return array<string, bool|array>
+     *
+     * @psalm-return array{valid: bool, fields: array, errors: array}
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'valid'  => $this->isValid(),
@@ -181,8 +183,6 @@ abstract class Filter extends SchematicEntity implements FilterInterface
 
     /**
      * Validate inner entities.
-     *
-     *
      */
     protected function validateNested(array $errors): array
     {

@@ -65,7 +65,7 @@ class Constant extends AbstractDeclaration implements NamedInterface
      *
      * @param mixed $value
      */
-    public function setValue($value): Constant
+    public function setValue($value): self
     {
         $this->value = $value;
 

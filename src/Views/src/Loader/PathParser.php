@@ -22,7 +22,7 @@ final class PathParser
     /** @var string */
     private $defaultNamespace;
 
-    /** @var string|null */
+    /** @var string */
     private $extension;
 
     public function __construct(string $defaultNamespace, string $extension)
@@ -95,9 +95,9 @@ final class PathParser
     /**
      * Get view name from given filename.
      */
-    public function fetchName(string $filename): ?string
+    public function fetchName(string $filename): string
     {
-        return str_replace('\\', '/', substr($filename, 0, -1 * (1 + strlen($this->extension))));
+        return \str_replace('\\', '/', \substr($filename, 0, -1 * (1 + \strlen($this->extension))));
     }
 
     /**

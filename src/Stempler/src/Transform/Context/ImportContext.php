@@ -35,9 +35,9 @@ final class ImportContext
     {
         $node = $this->ctx->getParentNode();
         if (!$node instanceof AttributedInterface) {
-            throw new LogicException(sprintf(
+            throw new LogicException(\sprintf(
                 'Unable to create import on node without attribute storage (%s)',
-                is_object($node) ? get_class($node) : gettype($node)
+                \is_object($node) ? \get_class($node) : \gettype($node)
             ));
         }
 

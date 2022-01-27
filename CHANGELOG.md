@@ -12,7 +12,6 @@
     translations file accordingly.
 - **Other Features**
   - [spiral/validation] Add array::count, array::range, array::shorter and array::longer rules (#435)
-  - [spiral/cache] New component with common interfaces (RR2.0 support)
   - [spiral/queue] New component with common interfaces (RR2.0 support)
   - [spiral/views] [Allow custom loader in ViewManager](https://github.com/spiral/framework/issues/488)
 

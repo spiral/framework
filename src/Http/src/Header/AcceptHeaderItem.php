@@ -39,7 +39,7 @@ final class AcceptHeaderItem
 
     public function __toString(): string
     {
-        if ($this->value === '') {
+        if ($this->value === '' || $this->value === null) {
             return '';
         }
 
@@ -53,41 +53,39 @@ final class AcceptHeaderItem
             $parts[] = "$name=$value";
         }
 
-        return implode('; ', $parts);
+        return \implode('; ', $parts);
     }
 
     /**
      * Parse accept header string.
-     *
-     * @return static|null
      */
     public static function fromString(string $string): self
     {
-        $elements = explode(';', $string);
+        $elements = \explode(';', $string);
 
-        $mime = trim(array_shift($elements));
+        $mime = \trim(\array_shift($elements));
         $quality = 1.0;
         $params = [];
 
         foreach ($elements as $element) {
-            $parsed = explode('=', trim($element), 2);
+            $parsed = \explode('=', \trim($element), 2);
 
             // Wrong params must be ignored
-            if (count($parsed) !== 2) {
+            if (\count($parsed) !== 2) {
                 continue;
             }
 
-            $name = trim($parsed[0]);
-            $value = trim($parsed[1]);
+            $name = \trim($parsed[0]);
+            $value = \trim($parsed[1]);
 
-            if (strcasecmp($name, 'q') === 0) {
+            if (\strcasecmp($name, 'q') === 0) {
                 $quality = (float)$value;
             } else {
                 $params[$name] = $value;
             }
         }
 
-        return new static($mime, $quality, $params);
+        return new self($mime, $quality, $params);
     }
 
     public function withValue(string $value): self
@@ -98,7 +96,7 @@ final class AcceptHeaderItem
         return $item;
     }
 
-    public function getValue(): string
+    public function getValue(): ?string
     {
         return $this->value;
     }

@@ -36,17 +36,11 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
     /** @var string|null */
     protected $inflection;
 
-    /**
-     * @param string|null $role
-     */
     public function setRole(string $role): void
     {
         $this->role = $role;
     }
 
-    /**
-     * @param string|null $mapper
-     */
     public function setMapper(string $mapper): void
     {
         $this->mapper = $mapper;
@@ -57,9 +51,6 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
         $this->repository = $repository;
     }
 
-    /**
-     * @param string|null $table
-     */
     public function setTable(string $table): void
     {
         $this->table = $table;

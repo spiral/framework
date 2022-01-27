@@ -63,7 +63,7 @@ class Aggregator extends AbstractDeclaration implements
 
     public function count(): int
     {
-        return count($this->elements);
+        return \count($this->elements);
     }
 
     /**
@@ -85,7 +85,7 @@ class Aggregator extends AbstractDeclaration implements
      *
      * @throws ReactorException
      */
-    public function add(DeclarationInterface $element): Aggregator
+    public function add(DeclarationInterface $element): self
     {
         $reflector = new ReflectionObject($element);
 
@@ -121,7 +121,7 @@ class Aggregator extends AbstractDeclaration implements
     /**
      * Remove element by it's name.
      */
-    public function remove(string $name): Aggregator
+    public function remove(string $name): self
     {
         foreach ($this->elements as $index => $element) {
             if ($element instanceof NamedInterface && $element->getName() === $name) {
@@ -132,6 +132,9 @@ class Aggregator extends AbstractDeclaration implements
         return $this;
     }
 
+    /**
+     * @return ArrayIterator<array-key, DeclarationInterface>
+     */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->elements);

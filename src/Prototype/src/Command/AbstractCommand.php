@@ -17,6 +17,7 @@ use Spiral\Prototype\NodeExtractor;
 use Spiral\Prototype\PropertyExtractor;
 use Spiral\Prototype\PrototypeLocator;
 use Spiral\Prototype\PrototypeRegistry;
+use Psr\Container\ContainerExceptionInterface;
 
 abstract class AbstractCommand extends Command
 {
@@ -56,7 +57,7 @@ abstract class AbstractCommand extends Command
             $parent = $parent->getParentClass();
         }
 
-        return iterator_to_array($this->reverse($results));
+        return \iterator_to_array($this->reverse($results));
     }
 
     protected function getExtractor(): PropertyExtractor
@@ -101,6 +102,9 @@ abstract class AbstractCommand extends Command
         return implode("\n", $result);
     }
 
+    /**
+     * @return array<string, Dependency|ContainerExceptionInterface|null>
+     */
     private function readProperties(\ReflectionClass $class): array
     {
         if (isset($this->cache[$class->getFileName()])) {
@@ -120,9 +124,14 @@ abstract class AbstractCommand extends Command
         return $result;
     }
 
-    private function reverse(array $results): ?\Generator
+    /**
+     * @param null[]|Dependency[]|\Throwable[] $results
+     *
+     * @return \Generator<array-key, null|Dependency|\Throwable, mixed, void>
+     */
+    private function reverse(array $results): \Generator
     {
-        foreach (array_reverse($results) as $result) {
+        foreach (\array_reverse($results) as $result) {
             yield from $result;
         }
     }

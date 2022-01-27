@@ -175,7 +175,7 @@ class StorageTestCase extends TestCase
      */
     public function testLastModified(): void
     {
-        $now = \time();
+        $now = (int) \floor(\microtime(true));
 
         $this->local->create('file.txt');
         $before = $this->local->getLastModified('file.txt');

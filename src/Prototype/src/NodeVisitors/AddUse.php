@@ -34,7 +34,7 @@ final class AddUse extends NodeVisitorAbstract
     }
 
     /**
-     * @return int|null|Node|Node[]
+     * @return Node\Stmt\Namespace_|null
      */
     public function leaveNode(Node $node)
     {
@@ -117,6 +117,10 @@ final class AddUse extends NodeVisitorAbstract
 
     /**
      * @param Node\Stmt[] $stmts
+     *
+     * @return string[][]
+     *
+     * @psalm-return list<non-empty-list<string>>
      */
     private function getExistingUseParts(array $stmts): array
     {

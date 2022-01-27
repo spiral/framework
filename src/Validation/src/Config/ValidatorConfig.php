@@ -118,6 +118,8 @@ final class ValidatorConfig extends InjectableConfig
 
     /**
      * Normalize all defined aliases.
+     *
+     * @return array<string>
      */
     private function normalizeAliases(array $aliases): array
     {

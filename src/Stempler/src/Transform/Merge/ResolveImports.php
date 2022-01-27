@@ -68,7 +68,7 @@ final class ResolveImports implements VisitorInterface
         $importCtx = ImportContext::on($ctx);
 
         // import definition
-        if (strpos($node->name, $this->useKeyword) === 0) {
+        if (\strpos($node->name, $this->useKeyword) === 0) {
             $importCtx->add($this->makeImport($node));
 
             return self::REMOVE_NODE;
@@ -103,12 +103,13 @@ final class ResolveImports implements VisitorInterface
     {
         $options = [];
         foreach ($tag->attrs as $attr) {
-            if (is_string($attr->value)) {
-                $options[$attr->name] = trim($attr->value, '\'"');
+            if (!\is_string($attr->value) || !\is_string($attr->name)) {
+                continue;
             }
+            $options[$attr->name] = trim($attr->value, '\'"');
         }
 
-        switch (strtolower($tag->name)) {
+        switch (\strtolower($tag->name)) {
             case 'use':
             case 'use:element':
                 $this->assertHasOption('path', $options, $tag);
@@ -148,7 +149,7 @@ final class ResolveImports implements VisitorInterface
                 );
 
             default:
-                return null;
+                throw new ImportException(\sprintf('Can not import tag `%s`.', $tag->name), $tag->getContext());
         }
     }
 

@@ -55,7 +55,7 @@ class AccessorsTest extends TestCase
             'name' => new NameValue(null),
         ], $e->getFields());
 
-        $e->setFields(null);
+        $e->setFields();
     }
 
     public function testReflection(): void

@@ -41,6 +41,11 @@ final class Attr implements NodeInterface
         $this->context = $context;
     }
 
+    /**
+     * @return \Generator<string, Mixin|Nil|string, mixed, void>
+     *
+     * @psalm-return \Generator<'name'|'value', Mixin|Nil|string, mixed, void>
+     */
     public function getIterator(): \Generator
     {
         yield 'name' => $this->name;

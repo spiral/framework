@@ -71,9 +71,7 @@ interface RouteInterface extends RequestHandlerInterface
     /**
      * Generate valid route URL using set of routing parameters.
      *
-     * @param array|\Traversable $parameters
-     *
      * @throws RouteException
      */
-    public function uri($parameters = []): UriInterface;
+    public function uri(iterable $parameters = []): UriInterface;
 }

@@ -36,7 +36,7 @@ final class AddProperty extends NodeVisitorAbstract
     }
 
     /**
-     * @return int|null|Node|Node[]
+     * @return Node\Stmt\Class_|null
      */
     public function leaveNode(Node $node)
     {

@@ -54,7 +54,7 @@ final class ViewsConfig extends InjectableConfig
     /**
      * Class names of all view dependencies.
      *
-     * @return Autowire[]
+     * @return array<int, Autowire>
      *
      * @throws ConfigException
      */
@@ -71,7 +71,7 @@ final class ViewsConfig extends InjectableConfig
     /**
      * Get all the engines associated with view component.
      *
-     * @return Autowire[]
+     * @return array<int, Autowire>
      *
      * @throws ConfigException
      */
@@ -86,7 +86,7 @@ final class ViewsConfig extends InjectableConfig
     }
 
     /**
-     * @param mixed $item
+     * @param Autowire|class-string $item
      *
      * @throws ConfigException
      */
