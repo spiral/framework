@@ -20,7 +20,7 @@ final class ViewManager implements ViewsInterface
     /** @var ViewsConfig */
     private $config;
 
-    /** @var ViewContext */
+    /** @var ContextInterface */
     private $context;
 
     /** @var LoaderInterface */
@@ -30,7 +30,7 @@ final class ViewManager implements ViewsInterface
     private $cache;
 
     /** @var EngineInterface[] */
-    private $engines;
+    private $engines = [];
 
     public function __construct(ViewsConfig $config, FactoryInterface $factory)
     {
@@ -73,11 +73,11 @@ final class ViewManager implements ViewsInterface
     {
         $this->engines[] = $engine->withLoader($this->loader);
 
-        uasort($this->engines, function (EngineInterface $a, EngineInterface $b) {
-            return strcmp($a->getLoader()->getExtension(), $b->getLoader()->getExtension());
+        \uasort($this->engines, static function (EngineInterface $a, EngineInterface $b) {
+            return \strcmp($a->getLoader()->getExtension(), $b->getLoader()->getExtension());
         });
 
-        $this->engines = array_values($this->engines);
+        $this->engines = \array_values($this->engines);
     }
 
     /**
@@ -164,7 +164,7 @@ final class ViewManager implements ViewsInterface
      *
      * @throws ViewException
      */
-    protected function findEngine(string $path): EngineInterface
+    private function findEngine(string $path): EngineInterface
     {
         foreach ($this->engines as $engine) {
             if ($engine->getLoader()->exists($path)) {

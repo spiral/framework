@@ -36,6 +36,9 @@ abstract class AbstractRoute implements RouteInterface
         $this->defaults = $defaults;
     }
 
+    /**
+     * @return static
+     */
     public function withUriHandler(UriHandler $uriHandler): RouteInterface
     {
         $route = clone $this;
@@ -83,7 +86,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * @inheritdoc
      */
-    public function uri($parameters = []): UriInterface
+    public function uri(iterable $parameters = []): UriInterface
     {
         return $this->uriHandler->uri(
             $parameters,

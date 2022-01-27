@@ -36,37 +36,28 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
         $this->flushFields();
     }
 
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function __isset($offset)
+    public function __isset(string $offset): bool
     {
         return $this->hasField($offset);
     }
 
     /**
-     * @param mixed $offset
      * @return mixed
      */
-    public function __get($offset)
+    public function __get(string $offset)
     {
         return $this->getField($offset);
     }
 
     /**
-     * @param mixed $offset
      * @param mixed $value
      */
-    public function __set($offset, $value): void
+    public function __set(string $offset, $value): void
     {
         $this->setField($offset, $value);
     }
 
-    /**
-     * @param mixed $offset
-     */
-    public function __unset($offset): void
+    public function __unset(string $offset): void
     {
         unset($this->fields[$offset]);
     }
@@ -146,10 +137,8 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array|\Traversable $fields
-     * @param bool               $all Fill all fields including non fillable.
+     * @param iterable $fields
+     * @param bool $all Fill all fields including non fillable.
      * @return $this
      *
      * @throws AccessException
@@ -158,7 +147,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
      * @see   isFillable()
      * @see   $fillable
      */
-    public function setFields($fields = [], bool $all = false)
+    public function setFields(iterable $fields = [], bool $all = false)
     {
         if (!is_array($fields) && !$fields instanceof \Traversable) {
             return $this;
@@ -239,8 +228,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
 
     /**
      * AccessorInterface dependency.
-     *
-     * {@inheritdoc}
      */
     public function setValue($data)
     {
@@ -276,18 +263,21 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     }
 
     /**
-     * {@inheritdoc}
-     *
      * By default use publicFields to be json serialized.
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->getValue();
     }
 
+    /**
+     * @return int[]|string[]
+     *
+     * @psalm-return list<array-key>
+     */
     protected function getKeys(): array
     {
-        return array_keys($this->fields);
+        return \array_keys($this->fields);
     }
 
     /**
@@ -316,7 +306,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * Nullable fields would not require automatic accessor creation.
      *
-     *
+     * @return false
      */
     protected function isNullable(string $field): bool
     {

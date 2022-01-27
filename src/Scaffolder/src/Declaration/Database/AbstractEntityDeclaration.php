@@ -37,7 +37,7 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
     protected $inflection;
 
     /**
-     * @param string|null $role
+     * @param string $role
      */
     public function setRole(string $role): void
     {
@@ -45,7 +45,7 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
     }
 
     /**
-     * @param string|null $mapper
+     * @param string $mapper
      */
     public function setMapper(string $mapper): void
     {
@@ -58,7 +58,7 @@ abstract class AbstractEntityDeclaration extends ClassDeclaration implements Dep
     }
 
     /**
-     * @param string|null $table
+     * @param string $table
      */
     public function setTable(string $table): void
     {

@@ -29,6 +29,9 @@ final class VisitorContext
         return $context;
     }
 
+    /**
+     * @return NodeInterface[]
+     */
     public function getScope(): array
     {
         return $this->scope;
