@@ -13,7 +13,6 @@
 - **Other Features**
   - [spiral/validation] Add array::count, array::range, array::shorter and array::longer rules (#435)
   - [spiral/cache] New component with common interfaces (RR2.0 support)
-  - [spiral/queue] New component with common interfaces (RR2.0 support)
 
 ## v2.8.0 - 2021-06-03
 

@@ -28,7 +28,7 @@ final class Compositor
     }
 
     /**
-     * @return ConditionInterface[]
+     * @return iterable<ConditionInterface>
      */
     public function makeConditions(string $field, array $options): iterable
     {
