@@ -90,7 +90,7 @@ abstract class AbstractRoute implements RouteInterface
     {
         return $this->uriHandler->uri(
             $parameters,
-            array_merge($this->defaults, $this->matches ?? [])
+            \array_merge($this->defaults, $this->matches ?? [])
         );
     }
 }

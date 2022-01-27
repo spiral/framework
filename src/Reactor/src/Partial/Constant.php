@@ -64,8 +64,10 @@ class Constant extends AbstractDeclaration implements NamedInterface
      * Array values allowed (but works in PHP7 only).
      *
      * @param mixed $value
+     *
+     * @return static
      */
-    public function setValue($value): Constant
+    public function setValue($value): self
     {
         $this->value = $value;
 

@@ -149,7 +149,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
      */
     public function setFields(iterable $fields = [], bool $all = false)
     {
-        if (!is_array($fields) && !$fields instanceof \Traversable) {
+        if (!\is_array($fields) && !$fields instanceof \Traversable) {
             return $this;
         }
 
@@ -158,7 +158,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
                 try {
                     $this->setField($name, $value, true);
                 } catch (AccessExceptionInterface $e) {
-                    //We are suppressing field setting exceptions
+                    // We are suppressing field setting exceptions
                 }
             }
         }
