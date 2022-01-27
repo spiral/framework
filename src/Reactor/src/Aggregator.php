@@ -120,8 +120,6 @@ class Aggregator extends AbstractDeclaration implements
 
     /**
      * Remove element by it's name.
-     *
-     * @return static
      */
     public function remove(string $name): self
     {
