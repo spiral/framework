@@ -32,11 +32,11 @@ final class ViewManager implements ViewsInterface
     /** @var EngineInterface[] */
     private $engines = [];
 
-    public function __construct(ViewsConfig $config, FactoryInterface $factory)
+    public function __construct(ViewsConfig $config, FactoryInterface $factory, ?ContextInterface $context = null)
     {
         $this->config = $config;
-        $this->context = new ViewContext();
-        $this->loader = $factory->make(ViewLoader::class, [
+        $this->context = $context ?? new ViewContext();
+        $this->loader = $factory->make(LoaderInterface::class, [
             'namespaces' => $config->getNamespaces(),
         ]);
 
