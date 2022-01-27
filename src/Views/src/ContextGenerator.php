@@ -43,7 +43,10 @@ final class ContextGenerator
      * Rotate all possible context values using recursive tree walk.
      *
      * @param DependencyInterface[] $dependencies
+     *
      * @return ContextInterface[]
+     *
+     * @psalm-return list<ContextInterface>
      */
     private function rotate(ContextInterface $context, array $dependencies): array
     {
@@ -51,7 +54,7 @@ final class ContextGenerator
             return [];
         }
 
-        $top = array_shift($dependencies);
+        $top = \array_shift($dependencies);
 
         $variants = [];
         foreach ($top->getVariants() as $value) {

@@ -29,6 +29,11 @@ final class RouteLocator
         $this->reader = $reader;
     }
 
+    /**
+     * @return array<string, array<string, array|int|string>>
+     *
+     * @psalm-return array<string, array{pattern: string, controller: class-string, action: string, group: string, verbs: array, defaults: array, middleware: array, priority: int}>
+     */
     public function findDeclarations(): array
     {
         $result = [];

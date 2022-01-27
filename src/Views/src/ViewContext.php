@@ -37,9 +37,14 @@ final class ViewContext implements ContextInterface
         return md5($calculated);
     }
 
+    /**
+     * @return DependencyInterface[]
+     *
+     * @psalm-return list<DependencyInterface>
+     */
     public function getDependencies(): array
     {
-        return array_values($this->dependencies);
+        return \array_values($this->dependencies);
     }
 
     /**

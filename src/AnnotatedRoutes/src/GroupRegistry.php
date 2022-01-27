@@ -40,7 +40,7 @@ final class GroupRegistry implements \IteratorAggregate
     }
 
     /**
-     * @return RouteGroup[]|\ArrayIterator
+     * @return \ArrayIterator<array-key, RouteGroup>
      */
     public function getIterator(): \Traversable
     {
