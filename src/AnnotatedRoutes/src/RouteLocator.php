@@ -32,7 +32,17 @@ final class RouteLocator
     /**
      * @return array<string, array<string, array|int|string>>
      *
-     * @psalm-return array<string, array{pattern: string, controller: class-string, action: string, group: string, verbs: array, defaults: array, middleware: array, priority: int}>
+     * @psalm-type _AssocArray = array{
+     *    pattern: string,
+     *    controller: class-string,
+     *    action: string,
+     *    group: string,
+     *    verbs: array,
+     *    defaults: array,
+     *    middleware: array,
+     *    priority: int
+     * }
+     * @psalm-return array<string, _AssocArray>
      */
     public function findDeclarations(): array
     {

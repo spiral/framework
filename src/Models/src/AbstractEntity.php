@@ -137,7 +137,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     }
 
     /**
-     * @param iterable $fields
      * @param bool $all Fill all fields including non fillable.
      * @return $this
      *
@@ -305,8 +304,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
 
     /**
      * Nullable fields would not require automatic accessor creation.
-     *
-     * @return false
      */
     protected function isNullable(string $field): bool
     {

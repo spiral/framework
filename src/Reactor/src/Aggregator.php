@@ -61,14 +61,9 @@ class Aggregator extends AbstractDeclaration implements
         return empty($this->elements);
     }
 
-    /**
-     * @return int
-     *
-     * @psalm-return 0|positive-int
-     */
     public function count(): int
     {
-        return count($this->elements);
+        return \count($this->elements);
     }
 
     /**
@@ -89,8 +84,6 @@ class Aggregator extends AbstractDeclaration implements
      * Add new element.
      *
      * @throws ReactorException
-     *
-     * @return static
      */
     public function add(DeclarationInterface $element): self
     {

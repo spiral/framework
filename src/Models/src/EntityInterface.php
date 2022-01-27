@@ -46,8 +46,6 @@ interface EntityInterface extends \ArrayAccess
     /**
      * Update entity fields using mass assignment. Only allowed fields must be set.
      *
-     * @param iterable $fields
-     *
      * @throws EntityExceptionInterface
      */
     public function setFields(iterable $fields = []);

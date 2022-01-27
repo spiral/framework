@@ -20,8 +20,6 @@ interface ValidatorInterface
 {
     /**
      * Create validator copy with new data set.
-     *
-     * @param iterable $data
      */
     public function withData(iterable $data): ValidatorInterface;
 
