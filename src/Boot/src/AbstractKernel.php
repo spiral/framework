@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
+use Closure;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
@@ -42,8 +43,89 @@ abstract class AbstractKernel implements KernelInterface
     /** @var DispatcherInterface[] */
     protected $dispatchers = [];
 
+    /** @var array<Closure> */
+    private $bootingCallbacks = [];
+
+    /** @var array<Closure> */
+    private $bootedCallbacks = [];
+
     /**
+     * Create and initiate an application instance.
      *
+     * @param array<string,string> $directories Directory map, "root" is required.
+     * @param EnvironmentInterface|null $environment Application specific environment if any.
+     * @param bool $handleErrors Enable global error handling.
+     * @return self|static
+     *
+     * @throws \Throwable
+     *
+     * @deprecated since 3.0. Use Kernel::create(...)->run() instead.
+     */
+    public static function init(
+        array $directories,
+        EnvironmentInterface $environment = null,
+        bool $handleErrors = true
+    ): ?self {
+        $core = self::create(
+            $directories,
+            $handleErrors
+        );
+
+        $core->container->bindSingleton(
+            EnvironmentInterface::class,
+            $environment ?? new Environment()
+        );
+
+        return $core->run($environment);
+    }
+
+    /**
+     * Create an application instance.
+     * @throws \Throwable
+     */
+    public static function create(
+        array $directories,
+        bool $handleErrors = true
+    ): self {
+        if ($handleErrors) {
+            ExceptionHandler::register();
+        }
+
+        return new static(new Container(), $directories);
+    }
+
+    /**
+     * Run the application with given Environment
+     *
+     * $app = App::create([...]);
+     * $app->booting(...);
+     * $app->booted(...);
+     * $app->run(new Environment([
+     *     'APP_ENV' => 'production'
+     * ]));
+     *
+     */
+    public function run(?EnvironmentInterface $environment = null): ?self
+    {
+        try {
+            // will protect any against env overwrite action
+            $this->container->runScope(
+                [EnvironmentInterface::class => $environment ?? new Environment()],
+                function (): void {
+                    $this->bootload();
+                    $this->bootstrap();
+                }
+            );
+        } catch (\Throwable $e) {
+            ExceptionHandler::handleException($e);
+
+            return null;
+        }
+
+        return $this;
+    }
+
+    /**
      * @throws \Throwable
      */
     public function __construct(Container $container, array $directories)
@@ -67,11 +149,35 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Terminate the application.
+     * Register a new callback, that will be fired before application boot. (Before all bootloaders will be booted)
+     *
+     * $kernel->booting(static function(KernelInterface $kernel) {
+     *     $kernel->getContainer()->...
+     * });
+     *
+     * @internal
      */
-    public function __destruct()
+    public function booting(Closure ...$callbacks): void
     {
-        $this->finalizer->finalize(true);
+        foreach ($callbacks as $callback) {
+            $this->bootingCallbacks[] = $callback;
+        }
+    }
+
+    /**
+     * Register a new callback, that will be fired after application boot. (After booting all bootloaders)
+     *
+     * $kernel->booted(static function(KernelInterface $kernel) {
+     *     $kernel->getContainer()->...
+     * });
+     *
+     * @internal
+     */
+    public function booted(Closure ...$callbacks): void
+    {
+        foreach ($callbacks as $callback) {
+            $this->bootedCallbacks[] = $callback;
+        }
     }
 
     /**
@@ -106,45 +212,11 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Initiate application core.
-     *
-     * @param array                     $directories Directory map, "root" is required.
-     * @param EnvironmentInterface|null $environment Application specific environment if any.
-     * @param bool                      $handleErrors Enable global error handling.
-     * @return self|static
-     *
-     * @throws \Throwable
+     * Terminate the application.
      */
-    public static function init(
-        array $directories,
-        EnvironmentInterface $environment = null,
-        bool $handleErrors = true
-    ): ?self {
-        if ($handleErrors) {
-            ExceptionHandler::register();
-        }
-
-        $environment = $environment ?? new Environment();
-
-        $core = new static(new Container(), $directories);
-        $core->container->bindSingleton(EnvironmentInterface::class, $environment);
-
-        try {
-            // will protect any against env overwrite action
-            $core->container->runScope(
-                [EnvironmentInterface::class => $environment],
-                function () use ($core): void {
-                    $core->bootload();
-                    $core->bootstrap();
-                }
-            );
-        } catch (\Throwable $e) {
-            ExceptionHandler::handleException($e);
-
-            return null;
-        }
-
-        return $core;
+    public function __destruct()
+    {
+        $this->finalizer->finalize(true);
     }
 
     /**
@@ -162,6 +234,31 @@ abstract class AbstractKernel implements KernelInterface
      */
     private function bootload(): void
     {
-        $this->bootloader->bootload(static::LOAD);
+        $self = $this;
+        $this->bootloader->bootload(
+            static::LOAD, [
+                static function () use ($self): void {
+                    $self->fireCallbacks($self->bootingCallbacks);
+                },
+            ]
+        );
+
+        $this->fireCallbacks($this->bootedCallbacks);
+    }
+
+    /**
+     * Call the registered booting callbacks.
+     */
+    private function fireCallbacks(array &$callbacks): void
+    {
+        if ($callbacks === []) {
+            return;
+        }
+
+        do {
+            \current($callbacks)($this);
+        } while (\next($callbacks));
+
+        $callbacks = [];
     }
 }
