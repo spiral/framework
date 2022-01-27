@@ -68,13 +68,6 @@ final class Container implements
     private $injectors = [];
 
     /**
-     * Contains names of all classes which were checked for the available injectors.
-     *
-     * @var array
-     */
-    private $injectorsCache = [];
-
-    /**
      * Container constructor.
      */
     public function __construct()
@@ -351,7 +344,6 @@ final class Container implements
     public function bindInjector(string $class, string $injector): Container
     {
         $this->injectors[$class] = $injector;
-        $this->injectorsCache = [];
 
         return $this;
     }
@@ -359,7 +351,6 @@ final class Container implements
     public function removeInjector(string $class): void
     {
         unset($this->injectors[$class]);
-        $this->injectorsCache = [];
     }
 
     /**
@@ -389,7 +380,7 @@ final class Container implements
      */
     protected function autowire(string $class, array $parameters, string $context = null)
     {
-        if (!\class_exists($class)) {
+        if (!\class_exists($class) && !isset($this->injectors[$class])) {
             throw new NotFoundException(\sprintf("Undefined class or binding '%s'", $class));
         }
 
@@ -539,28 +530,24 @@ final class Container implements
             return true;
         }
 
-        if (!isset($this->injectorsCache[$class])) {
-            $this->injectorsCache[$class] = null;
+        // check interfaces
+        foreach ($this->injectors as $target => $injector) {
+            if (
+                \class_exists($target, true)
+                && $reflection->isSubclassOf($target)
+            ) {
+                $this->injectors[$class] = $injector;
 
-            // check interfaces
-            foreach ($this->injectors as $target => $injector) {
-                if (
-                    \class_exists($target, true)
-                    && $reflection->isSubclassOf($target)
-                ) {
-                    $this->injectors[$class] = $injector;
+                return true;
+            }
 
-                    return true;
-                }
+            if (
+                \interface_exists($target, true)
+                && $reflection->implementsInterface($target)
+            ) {
+                $this->injectors[$class] = $injector;
 
-                if (
-                    \interface_exists($target, true)
-                    && $reflection->implementsInterface($target)
-                ) {
-                    $this->injectors[$class] = $injector;
-
-                    return true;
-                }
+                return true;
             }
         }
 

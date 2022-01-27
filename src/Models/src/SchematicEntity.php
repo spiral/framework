@@ -35,14 +35,14 @@ class SchematicEntity extends AbstractEntity
         }
 
         if (!empty($this->schema[ModelSchema::FILLABLE])) {
-            return in_array($field, $this->schema[ModelSchema::FILLABLE]);
+            return in_array($field, $this->schema[ModelSchema::FILLABLE], true);
         }
 
         if (!empty($this->schema[ModelSchema::SECURED]) && $this->schema[ModelSchema::SECURED] === '*') {
             return false;
         }
 
-        return !in_array($field, $this->schema[ModelSchema::SECURED]);
+        return !in_array($field, $this->schema[ModelSchema::SECURED], true);
     }
 
     /**
