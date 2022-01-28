@@ -11,6 +11,9 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Database\Injection\Expression;
 use Spiral\Validation\AbstractChecker;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 class EntityChecker extends AbstractChecker implements SingletonInterface
 {
     /**

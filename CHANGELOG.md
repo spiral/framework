@@ -4,6 +4,20 @@
 
 - **High Impact Changes**
 - **Medium Impact Changes**
+  - Classes `Spiral\Validation\Checker\EntityChecker`, `Spiral\Auth\Cycle\Token`, `Spiral\Auth\Cycle\TokenStorage`, 
+    `Spiral\Cycle\RepositoryInjector`, `Spiral\Cycle\SchemaCompiler`, is deprecated. 
+    Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - Console commands `Spiral\Command\Cycle\MigrateCommand`, `Spiral\Command\Cycle\SyncCommand`, 
+    `Spiral\Command\Cycle\UpdateCommand` is deprecated. Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - Bootloaders `Spiral\Bootloader\Cycle\AnnotatedBootloader`, `Spiral\Bootloader\Cycle\CycleBootloader`,
+    `Spiral\Bootloader\Cycle\ProxiesBootloader`, `Spiral\Bootloader\Cycle\SchemaBootloader` is deprecated.
+    Use `spiral/cycle-bridge` instead
+  - Interceptor `Spiral\Domain\CycleInterceptor` is deprecated. 
+    Will be moved to `spiral/cycle-bridge` and removed in v3.0 
+  - Scaffolders `Spiral\Scaffolder\Declaration\Database\Entity\AnnotatedDeclaration`, 
+    `Spiral\Scaffolder\Declaration\Database\RepositoryDeclaration` is deprecated. Will be moved to `spiral/cycle-bridge` 
+    and removed in v3.0 
+  - Component `spiral/data-grid-bridge` is deprecated. Will be moved to spiral/cycle-bridge and removed in v3.0
   - Component `spiral/annotations` is deprecated. Use `spiral/attributes` instead
   - A minimal version of `doctrine/annotations` increased to `^1.12`
   - [spiral/validation] Error messages for 'number::lower' and

@@ -16,6 +16,9 @@ use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\DependedInterface;
 use Spiral\Reactor\Partial\Property;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 abstract class AbstractEntityDeclaration extends ClassDeclaration implements DependedInterface
 {
     /** @var string|null */
