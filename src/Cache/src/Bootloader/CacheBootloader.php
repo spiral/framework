@@ -49,6 +49,9 @@ final class CacheBootloader extends Bootloader
         });
     }
 
+    /**
+     * @noRector RemoveUnusedPrivateMethodRector
+     */
     private function initCacheManager(Container $container, CacheConfig $config): CacheManager
     {
         $manager = new CacheManager($config, $container);
