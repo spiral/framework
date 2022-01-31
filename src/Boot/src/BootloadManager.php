@@ -102,6 +102,13 @@ final class BootloadManager implements Container\SingletonInterface
                 $options = [];
             }
 
+            // Replace class aliases with source classes
+            try {
+                $class = (new \ReflectionClass($class))->getName();
+            } catch (\ReflectionException $e) {
+                throw new \Spiral\Boot\Exception\ClassNotFoundException();
+            }
+
             if (\in_array($class, $this->classes, true)) {
                 continue;
             }
@@ -116,7 +123,7 @@ final class BootloadManager implements Container\SingletonInterface
             yield from $this->initBootloader($bootloader);
             $this->invokeBootloader($bootloader, 'boot', $options);
 
-            yield compact('bootloader', 'options');
+            yield \compact('bootloader', 'options');
         }
     }
 
