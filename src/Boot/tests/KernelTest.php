@@ -104,25 +104,25 @@ class KernelTest extends TestCase
         );
     }
 
-    public function testBootingCallbacks()
+    public function testStartingCallbacks()
     {
         $kernel = TestCore::create([
             'root' => __DIR__,
         ]);
 
-        $kernel->booting(static function (TestCore $core) {
+        $kernel->starting(static function (TestCore $core) {
             $core->getContainer()->bind('abc', 'foo');
         });
 
-        $kernel->booting(static function (TestCore $core) {
+        $kernel->starting(static function (TestCore $core) {
             $core->getContainer()->bind('bcd', 'foo');
         });
 
-        $kernel->booted( static function (TestCore $core) {
+        $kernel->started( static function (TestCore $core) {
             $core->getContainer()->bind('cde', 'foo');
         });
 
-        $kernel->booted( static function (TestCore $core) {
+        $kernel->started( static function (TestCore $core) {
             $core->getContainer()->bind('def', 'foo');
         });
 

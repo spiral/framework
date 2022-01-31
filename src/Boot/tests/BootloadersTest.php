@@ -14,7 +14,7 @@ namespace Spiral\Tests\Boot;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\BootloadManager;
 use Spiral\Tests\Boot\Fixtures\SampleBoot;
-use Spiral\Tests\Boot\Fixtures\SampleBootWithRegister;
+use Spiral\Tests\Boot\Fixtures\SampleBootWithStarted;
 use Spiral\Tests\Boot\Fixtures\SampleClass;
 use Spiral\Core\Container;
 
@@ -28,7 +28,7 @@ class BootloadersTest extends TestCase
         $bootloader->bootload($classes = [
             SampleClass::class,
             SampleBoot::class,
-            SampleBootWithRegister::class
+            SampleBootWithStarted::class
         ], [
             static function(Container $container) {
                 $container->bind('efg', new SampleBoot());
