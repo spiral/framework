@@ -25,6 +25,7 @@ use Spiral\Console\LocatorInterface;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 
 /**
  * Bootloads console and provides ability to register custom bootload commands.
