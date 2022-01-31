@@ -44,6 +44,6 @@ final class ContainerRegistry implements HandlerRegistryInterface
             return $this->inflector->classify($value);
         }, $names);
 
-        return join('\\', $names);
+        return implode('\\', $names);
     }
 }

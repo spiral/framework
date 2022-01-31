@@ -50,6 +50,37 @@ abstract class AbstractKernel implements KernelInterface
     private $bootedCallbacks = [];
 
     /**
+     * @throws \Throwable
+     */
+    public function __construct(Container $container, array $directories)
+    {
+        $this->container = $container;
+
+        $this->container->bindSingleton(KernelInterface::class, $this);
+        $this->container->bindSingleton(self::class, $this);
+        $this->container->bindSingleton(static::class, $this);
+
+        $this->container->bindSingleton(
+            DirectoriesInterface::class,
+            new Directories($this->mapDirectories($directories))
+        );
+
+        $this->finalizer = new Finalizer();
+        $this->container->bindSingleton(FinalizerInterface::class, $this->finalizer);
+
+        $this->bootloader = new BootloadManager($this->container);
+        $this->bootloader->bootload(static::SYSTEM);
+    }
+
+    /**
+     * Terminate the application.
+     */
+    public function __destruct()
+    {
+        $this->finalizer->finalize(true);
+    }
+
+    /**
      * Create and initiate an application instance.
      *
      * @param array<string,string> $directories Directory map, "root" is required.
@@ -126,29 +157,6 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * @throws \Throwable
-     */
-    public function __construct(Container $container, array $directories)
-    {
-        $this->container = $container;
-
-        $this->container->bindSingleton(KernelInterface::class, $this);
-        $this->container->bindSingleton(self::class, $this);
-        $this->container->bindSingleton(static::class, $this);
-
-        $this->container->bindSingleton(
-            DirectoriesInterface::class,
-            new Directories($this->mapDirectories($directories))
-        );
-
-        $this->finalizer = new Finalizer();
-        $this->container->bindSingleton(FinalizerInterface::class, $this->finalizer);
-
-        $this->bootloader = new BootloadManager($this->container);
-        $this->bootloader->bootload(static::SYSTEM);
-    }
-
-    /**
      * Register a new callback, that will be fired before application boot. (Before all bootloaders will be booted)
      *
      * $kernel->booting(static function(KernelInterface $kernel) {
@@ -212,14 +220,6 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Terminate the application.
-     */
-    public function __destruct()
-    {
-        $this->finalizer->finalize(true);
-    }
-
-    /**
      * Bootstrap application. Must be executed before serve method.
      */
     abstract protected function bootstrap();
@@ -236,7 +236,8 @@ abstract class AbstractKernel implements KernelInterface
     {
         $self = $this;
         $this->bootloader->bootload(
-            static::LOAD, [
+            static::LOAD,
+            [
                 static function () use ($self): void {
                     $self->fireCallbacks($self->bootingCallbacks);
                 },
