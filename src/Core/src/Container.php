@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use Spiral\Core\Container\Autowire;
@@ -46,6 +45,7 @@ final class Container implements
     BinderInterface,
     FactoryInterface,
     ResolverInterface,
+    InvokerInterface,
     ScopeInterface
 {
     /**
@@ -57,6 +57,7 @@ final class Container implements
         FactoryInterface::class   => self::class,
         ScopeInterface::class     => self::class,
         ResolverInterface::class  => self::class,
+        InvokerInterface::class   => self::class,
     ];
 
     /**
@@ -594,6 +595,18 @@ final class Container implements
             return $target->resolve($this, $parameters);
         }
 
+        try {
+            return $this->call($target, $parameters);
+        } catch (\Throwable $e) {
+            throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function call(callable $target, array $parameters = [])
+    {
         if ($target instanceof \Closure) {
             try {
                 $reflection = new \ReflectionFunction($target);
@@ -629,6 +642,6 @@ final class Container implements
             );
         }
 
-        throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias));
+        throw new ContainerException('Invalid callable');
     }
 }

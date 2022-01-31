@@ -10,12 +10,12 @@ use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\Job\CallableJob;
 use Spiral\Queue\Job\ObjectJob;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
-use Spiral\Queue\Driver\ShortCircuit;
+use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Tests\Queue\TestCase;
 
 final class ShortCircuitTest extends TestCase
 {
-    /** @var ShortCircuit */
+    /** @var SyncDriver */
     private $queue;
     /** @var m\LegacyMockInterface|m\MockInterface|HandlerRegistryInterface */
     private $registry;
@@ -26,7 +26,7 @@ final class ShortCircuitTest extends TestCase
     {
         parent::setUp();
 
-        $this->queue = new ShortCircuit(
+        $this->queue = new SyncDriver(
             $this->registry = m::mock(HandlerRegistryInterface::class),
             $this->failedJobHandler = m::mock(FailedJobHandlerInterface::class)
         );

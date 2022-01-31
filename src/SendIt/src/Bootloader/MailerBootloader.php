@@ -11,12 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt\Bootloader;
 
+use Psr\Container\ContainerInterface;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Bootloader\Jobs\JobsBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Jobs\JobRegistry;
 use Spiral\Mailer\MailerInterface;
+use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
@@ -30,9 +32,7 @@ use Symfony\Component\Mailer\Transport;
  */
 final class MailerBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        JobsBootloader::class,
-    ];
+    protected const DEPENDENCIES = [];
 
     protected const SINGLETONS = [
         MailerInterface::class => MailQueue::class,
@@ -48,16 +48,26 @@ final class MailerBootloader extends Bootloader
         $this->config = $config;
     }
 
-    public function boot(EnvironmentInterface $env, JobRegistry $jobRegistry): void
+    public function boot(EnvironmentInterface $env, AbstractKernel $kernel): void
     {
         $this->config->setDefaults('mailer', [
             'dsn'      => $env->get('MAILER_DSN', ''),
             'pipeline' => $env->get('MAILER_PIPELINE', 'local'),
             'from'     => $env->get('MAILER_FROM', 'Spiral <sendit@local.host>'),
         ]);
+    }
 
-        $jobRegistry->setHandler(MailQueue::JOB_NAME, MailJob::class);
-        $jobRegistry->setSerializer(MailQueue::JOB_NAME, MessageSerializer::class);
+    public function start(ContainerInterface $container): void
+    {
+        if ($container->has(JobRegistry::class)) {
+            // Will be removed since v3.0
+            $registry = $container->get(JobRegistry::class);
+            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
+            $registry->setSerializer(MailQueue::JOB_NAME, MessageSerializer::class);
+        } else if($container->has(HandlerRegistryInterface::class)) {
+            $registry = $container->get(HandlerRegistryInterface::class);
+            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
+        }
     }
 
     public function mailer(MailerConfig $config): SymfonyMailer

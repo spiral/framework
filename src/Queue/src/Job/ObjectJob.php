@@ -4,42 +4,38 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Job;
 
-use Spiral\Core\ResolverInterface;
-use Spiral\Queue\HandlerInterface;
+use Spiral\Core\InvokerInterface;
 use Spiral\Queue\Exception\InvalidArgumentException;
+use Spiral\Queue\HandlerInterface;
 
 final class ObjectJob implements HandlerInterface
 {
-    /** @var ResolverInterface  */
-    private $resolver;
+    /** @var InvokerInterface */
+    private $invoker;
 
-    public function __construct(ResolverInterface $resolver)
+    public function __construct(InvokerInterface $invoker)
     {
-        $this->resolver = $resolver;
+        $this->invoker = $invoker;
     }
 
     public function handle(string $name, string $id, array $payload): void
     {
-        if (!isset($payload['object'])) {
+        if (! isset($payload['object'])) {
             throw new InvalidArgumentException('Payload `object` key is required.');
         }
 
-        if (!is_object($payload['object'])) {
+        if (! is_object($payload['object'])) {
             throw new InvalidArgumentException('Payload `object` key value type should be an object.');
         }
 
         $job = $payload['object'];
         $handler = new \ReflectionClass($job);
-
-        $method = $handler->getMethod(
-            $handler->hasMethod('handle') ? 'handle' : '__invoke'
+        $this->invoker->call(
+            [$job, $handler->hasMethod('handle') ? 'handle' : '__invoke'],
+            [
+                'name' => $name,
+                'id' => $id,
+            ]
         );
-
-        $args = $this->resolver->resolveArguments($method, [
-            'name' => $name,
-            'id' => $id,
-        ]);
-
-        $method->invokeArgs($job, $args);
     }
 }

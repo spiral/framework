@@ -14,13 +14,13 @@ use Spiral\Queue\QueueTrait;
 /**
  * Runs all the jobs in the same process.
  */
-final class ShortCircuit implements QueueInterface
+final class SyncDriver implements QueueInterface
 {
     use QueueTrait;
 
     /** @var HandlerRegistryInterface */
     private $registry;
-    /** @var FailedJobHandlerInterface*/
+    /** @var FailedJobHandlerInterface */
     private $failedJobHandler;
 
     public function __construct(

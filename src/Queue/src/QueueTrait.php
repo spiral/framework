@@ -9,6 +9,11 @@ use Spiral\Queue\Job\ObjectJob;
 
 trait QueueTrait
 {
+    /**
+     * @param object $job
+     * @param OptionsInterface|null $options
+     * @return string
+     */
     public function pushObject(object $job, OptionsInterface $options = null): string
     {
         return $this->push(ObjectJob::class, ['object' => $job], $options);

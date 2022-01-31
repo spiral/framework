@@ -14,7 +14,7 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\DefaultSerializer;
-use Spiral\Queue\Driver\ShortCircuit;
+use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\Failed\LogFailedJobHandler;
 use Spiral\Queue\HandlerRegistryInterface;
@@ -61,7 +61,7 @@ final class QueueBootloader extends Bootloader
 
     protected function initQueueManager(FactoryInterface $factory): QueueManager
     {
-        $this->registerDriverAlias(ShortCircuit::class, 'sync');
+        $this->registerDriverAlias(SyncDriver::class, 'sync');
 
         return $factory->make(QueueManager::class);
     }
@@ -110,7 +110,9 @@ final class QueueBootloader extends Bootloader
                         MailQueue::JOB_NAME => MailJob::class,
                     ],
                 ],
-                'driverAliases' => [],
+                'driverAliases' => [
+                    'sync' => SyncDriver::class
+                ],
             ]
         );
     }

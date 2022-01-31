@@ -10,7 +10,7 @@ use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\QueueManager;
-use Spiral\Queue\Driver\ShortCircuit;
+use Spiral\Queue\Driver\SyncDriver;
 
 final class QueueManagerTest extends TestCase
 {
@@ -27,7 +27,7 @@ final class QueueManagerTest extends TestCase
                 ]
             ],
             'driverAliases' => [
-                'sync' => ShortCircuit::class,
+                'sync' => SyncDriver::class,
             ],
         ]);
 
@@ -44,7 +44,7 @@ final class QueueManagerTest extends TestCase
     public function testGetsDefaultConnection(): void
     {
         $this->assertInstanceOf(
-            ShortCircuit::class,
+            SyncDriver::class,
             $this->manager->getConnection()
         );
     }
@@ -52,7 +52,7 @@ final class QueueManagerTest extends TestCase
     public function testGetsConnectionByNameWithDriverAlias(): void
     {
         $this->assertInstanceOf(
-            ShortCircuit::class,
+            SyncDriver::class,
             $this->manager->getConnection('sync')
         );
     }
@@ -60,7 +60,7 @@ final class QueueManagerTest extends TestCase
     public function testGetsPipelineByAlias(): void
     {
         $this->assertInstanceOf(
-            ShortCircuit::class,
+            SyncDriver::class,
             $queue = $this->manager->getConnection('user-data')
         );
 

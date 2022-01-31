@@ -4,39 +4,36 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Job;
 
-use Spiral\Core\ResolverInterface;
-use Spiral\Queue\HandlerInterface;
+use Spiral\Core\InvokerInterface;
 use Spiral\Queue\Exception\InvalidArgumentException;
+use Spiral\Queue\HandlerInterface;
 
 final class CallableJob implements HandlerInterface
 {
-    /** @var ResolverInterface */
-    private $resolver;
+    /** @var InvokerInterface */
+    private $invoker;
 
-    public function __construct(ResolverInterface $resolver)
+    public function __construct(InvokerInterface $invoker)
     {
-        $this->resolver = $resolver;
+        $this->invoker = $invoker;
     }
 
     public function handle(string $name, string $id, array $payload): void
     {
-        if (!isset($payload['callback'])) {
+        if (! isset($payload['callback'])) {
             throw new InvalidArgumentException('Payload `callback` key is required.');
         }
 
-        if (!$payload['callback'] instanceof \Closure) {
+        if (! $payload['callback'] instanceof \Closure) {
             throw new InvalidArgumentException('Payload `callback` key value type should be a closure.');
         }
 
-        $callback = $payload['callback'];
-
-        $reflection = new \ReflectionFunction($callback);
-
-        $reflection->invokeArgs(
-            $this->resolver->resolveArguments($reflection, [
+        $this->invoker->call(
+            $payload['callback'],
+            [
                 'name' => $name,
                 'id' => $id,
-            ])
+            ]
         );
     }
 }
