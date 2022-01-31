@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Bootloader;
+namespace Spiral\Tokenizer\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;

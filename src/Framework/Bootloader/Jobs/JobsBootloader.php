@@ -26,6 +26,9 @@ use Spiral\Jobs\QueueInterface;
 use Spiral\Jobs\Registry\ContainerRegistry;
 use Spiral\Jobs\SerializerRegistryInterface;
 
+/**
+ * @deprecated since 3.0
+ */
 final class JobsBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [

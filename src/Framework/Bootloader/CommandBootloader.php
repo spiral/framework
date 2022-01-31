@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader;
 
+use Cycle\Database\DatabaseProviderInterface;
 use Cycle\ORM\ORMInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
@@ -23,9 +24,9 @@ use Spiral\Command\Router;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
 use Spiral\Console;
+use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Container;
-use Cycle\Database\DatabaseProviderInterface;
 use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\GRPC\InvokerInterface;

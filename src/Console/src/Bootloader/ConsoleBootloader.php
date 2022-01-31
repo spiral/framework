@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Bootloader;
+namespace Spiral\Console\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\KernelInterface;

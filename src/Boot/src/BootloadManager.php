@@ -80,6 +80,9 @@ final class BootloadManager implements Container\SingletonInterface
                 $options = [];
             }
 
+            $refl = new \ReflectionClass($class);
+            $class = $refl->getName();
+
             if (\in_array($class, $this->classes, true)) {
                 continue;
             }

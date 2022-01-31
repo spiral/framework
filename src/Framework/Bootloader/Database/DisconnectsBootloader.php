@@ -18,6 +18,8 @@ use Cycle\Database\DatabaseManager;
 
 /**
  * Close all the connections after each serve() cycle.
+ *
+ * @deprecated since 3.0
  */
 final class DisconnectsBootloader extends Bootloader
 {
