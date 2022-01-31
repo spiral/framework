@@ -33,18 +33,11 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
     /** @var ConfiguratorInterface */
     private $config;
 
-    /**
-     * @param ConfiguratorInterface $config
-     */
     public function __construct(ConfiguratorInterface $config)
     {
         $this->config = $config;
     }
 
-    /**
-     * @param Container            $container
-     * @param DirectoriesInterface $dirs
-     */
     public function boot(Container $container, DirectoriesInterface $dirs): void
     {
         $container->bindInjector(ClassLocator::class, Tokenizer::class);
@@ -66,8 +59,6 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
 
     /**
      * Add directory for indexation.
-     *
-     * @param string $directory
      */
     public function addDirectory(string $directory): void
     {

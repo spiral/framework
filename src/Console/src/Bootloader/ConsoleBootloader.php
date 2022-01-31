@@ -44,18 +44,11 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     /** @var ConfiguratorInterface */
     private $config;
 
-    /**
-     * @param ConfiguratorInterface $config
-     */
     public function __construct(ConfiguratorInterface $config)
     {
         $this->config = $config;
     }
 
-    /**
-     * @param KernelInterface   $kernel
-     * @param ConsoleDispatcher $console
-     */
     public function boot(KernelInterface $kernel, ConsoleDispatcher $console): void
     {
         $kernel->addDispatcher($console);
@@ -90,9 +83,6 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
 
     /**
      * @param array|string $sequence
-     * @param string       $header
-     * @param string       $footer
-     * @param array        $options
      */
     public function addConfigureSequence(
         $sequence,
@@ -108,9 +98,6 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
 
     /**
      * @param array|string $sequence
-     * @param string       $header
-     * @param string       $footer
-     * @param array        $options
      */
     public function addUpdateSequence(
         $sequence,
@@ -125,12 +112,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @param string $target
      * @param mixed  $sequence
-     * @param string $header
-     * @param string $footer
-     * @param array  $options
-     * @return Append
      */
     private function sequence(
         string $target,
