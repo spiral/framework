@@ -22,6 +22,7 @@ use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\InjectionException;
+use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\LogicException;
 
@@ -343,7 +344,7 @@ final class Container implements
     /**
      * {@inheritdoc}
      */
-    public function call(callable $target, array $parameters = [])
+    public function call($target, array $parameters = [])
     {
         if (\is_array($target) && isset($target[1])) {
             // In a form of resolver and method
@@ -386,7 +387,10 @@ final class Container implements
             );
         }
 
-        throw new ContainerException('Invalid callable');
+        throw new NotCallableException(sprintf(
+            '%s is not a callable',
+            is_object($target) ? 'Instance of ' . get_class($target) : var_export($target, true)
+        ));
     }
 
     /**
@@ -647,7 +651,7 @@ final class Container implements
 
         try {
             return $this->call($target, $parameters);
-        } catch (\Throwable $e) {
+        } catch (NotCallableException $e) {
             throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias), $e->getCode(), $e);
         }
     }
