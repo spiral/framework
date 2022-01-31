@@ -370,7 +370,7 @@ final class Container implements
             );
         }
 
-        if (\is_string($target)) {
+        if (\is_string($target) && \is_callable($target)) {
             $target = Closure::fromCallable($target);
         }
 
@@ -387,10 +387,14 @@ final class Container implements
             );
         }
 
-        throw new NotCallableException(sprintf(
-            '%s is not a callable',
-            is_object($target) ? 'Instance of ' . get_class($target) : var_export($target, true)
-        ));
+        throw new NotCallableException(
+            sprintf(
+                '%s is not a callable',
+                \is_object($target)
+                    ? 'Instance of '.\get_class($target)
+                    : \str_replace("\n", '', var_export($target, true))
+            )
+        );
     }
 
     /**
