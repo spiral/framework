@@ -30,7 +30,7 @@ final class ContainerRegistry implements HandlerRegistryInterface
             throw new JobException($e->getMessage(), $e->getCode(), $e);
         }
 
-        if (! $handler instanceof HandlerInterface) {
+        if (!$handler instanceof HandlerInterface) {
             throw new JobException("Unable to resolve job handler for `{$jobType}`");
         }
 

@@ -20,11 +20,11 @@ final class CallableJob implements HandlerInterface
 
     public function handle(string $name, string $id, array $payload): void
     {
-        if (! isset($payload['callback'])) {
+        if (!isset($payload['callback'])) {
             throw new InvalidArgumentException('Payload `callback` key is required.');
         }
 
-        if (! $payload['callback'] instanceof \Closure) {
+        if (!$payload['callback'] instanceof \Closure) {
             throw new InvalidArgumentException('Payload `callback` key value type should be a closure.');
         }
 

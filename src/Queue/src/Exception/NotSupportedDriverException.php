@@ -6,5 +6,4 @@ namespace Spiral\Queue\Exception;
 
 class NotSupportedDriverException extends \RuntimeException
 {
-
 }

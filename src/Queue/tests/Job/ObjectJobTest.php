@@ -21,7 +21,7 @@ final class ObjectJobTest extends TestCase
         $this->container = new Container();
     }
 
-    public function testPayloadObjectKeyIsRequired()
+    public function testPayloadObjectKeyIsRequired(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectErrorMessage('Payload `object` key is required.');
@@ -30,7 +30,7 @@ final class ObjectJobTest extends TestCase
         $job->handle('foo', 'foo-id', []);
     }
 
-    public function testPayloadObjectValueShouldBeObject()
+    public function testPayloadObjectValueShouldBeObject(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectErrorMessage('Payload `object` key value type should be an object.');
@@ -39,7 +39,7 @@ final class ObjectJobTest extends TestCase
         $job->handle('foo', 'foo-id', ['object' => 'test']);
     }
 
-    public function testHandleWithHandleMethod()
+    public function testHandleWithHandleMethod(): void
     {
         $object = new class($this) {
             private $testCase;
@@ -49,7 +49,7 @@ final class ObjectJobTest extends TestCase
                 $this->testCase = $testCase;
             }
 
-            public function handle(string $name, string $id, ContainerInterface $container)
+            public function handle(string $name, string $id, ContainerInterface $container): void
             {
                 $this->testCase->assertSame('foo', $name);
                 $this->testCase->assertSame('foo-id', $id);
@@ -62,7 +62,7 @@ final class ObjectJobTest extends TestCase
         $job->handle('foo', 'foo-id', ['object' => $object]);
     }
 
-    public function testHandleWithInvokeMethod()
+    public function testHandleWithInvokeMethod(): void
     {
         $object = new class($this) {
             private $testCase;
@@ -72,7 +72,7 @@ final class ObjectJobTest extends TestCase
                 $this->testCase = $testCase;
             }
 
-            public function __invoke(string $name, string $id, ContainerInterface $container)
+            public function __invoke(string $name, string $id, ContainerInterface $container): void
             {
                 $this->testCase->assertSame('foo', $name);
                 $this->testCase->assertSame('foo-id', $id);

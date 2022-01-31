@@ -6,5 +6,4 @@ namespace Spiral\Queue\Exception;
 
 class QueueException extends \Exception
 {
-
 }

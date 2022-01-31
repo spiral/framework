@@ -66,22 +66,6 @@ final class QueueBootloader extends Bootloader
         return $factory->make(QueueManager::class);
     }
 
-    private function registerJobsSerializer(Container $container): void
-    {
-        $container->bindSingleton(SerializerInterface::class, static function () {
-            return new DefaultSerializer();
-        });
-    }
-
-    private function registerQueue(Container $container): void
-    {
-        $container->bindSingleton(QueueInterface::class,
-            static function (QueueManager $manager): QueueInterface {
-                return $manager->getConnection();
-            }
-        );
-    }
-
     protected function initRegistry(ContainerInterface $container, ContainerRegistry $registry, QueueConfig $config)
     {
         $registry = new QueueRegistry($container, $registry);
@@ -93,7 +77,24 @@ final class QueueBootloader extends Bootloader
         return $registry;
     }
 
-    private function initQueueConfig(EnvironmentInterface $env)
+    private function registerJobsSerializer(Container $container): void
+    {
+        $container->bindSingleton(SerializerInterface::class, static function () {
+            return new DefaultSerializer();
+        });
+    }
+
+    private function registerQueue(Container $container): void
+    {
+        $container->bindSingleton(
+            QueueInterface::class,
+            static function (QueueManager $manager): QueueInterface {
+                return $manager->getConnection();
+            }
+        );
+    }
+
+    private function initQueueConfig(EnvironmentInterface $env): void
     {
         $this->config->setDefaults(
             \Spiral\Queue\Config\QueueConfig::CONFIG,

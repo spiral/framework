@@ -29,7 +29,7 @@ final class QueueRegistryTest extends TestCase
         );
     }
 
-    public function testGetsHandlerForNotRegisteredJobType()
+    public function testGetsHandlerForNotRegisteredJobType(): void
     {
         $this->fallbackHandlers->shouldReceive('getHandler')->once()->with('foo')
             ->andReturn($handler = m::mock(HandlerInterface::class));
@@ -37,7 +37,7 @@ final class QueueRegistryTest extends TestCase
         $this->assertSame($handler, $this->registry->getHandler('foo'));
     }
 
-    public function testGetsRegisteredHandler()
+    public function testGetsRegisteredHandler(): void
     {
         $handler = m::mock(HandlerInterface::class);
         $this->registry->setHandler('foo', $handler);
@@ -45,7 +45,7 @@ final class QueueRegistryTest extends TestCase
         $this->assertSame($handler, $this->registry->getHandler('foo'));
     }
 
-    public function testGetsRegisteredHandlerFromContainer()
+    public function testGetsRegisteredHandlerFromContainer(): void
     {
         $this->registry->setHandler('foo', 'bar');
         $this->mockContainer->shouldReceive('get')->once()->with('bar')

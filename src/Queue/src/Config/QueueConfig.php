@@ -32,11 +32,11 @@ final class QueueConfig extends InjectableConfig
      */
     public function getDefaultDriver(): string
     {
-        if (! isset($this->config['default']) || empty($this->config['default'])) {
+        if (!isset($this->config['default']) || empty($this->config['default'])) {
             throw new InvalidArgumentException('Default queue connection is not defined.');
         }
 
-        if (! \is_string($this->config['default'])) {
+        if (!\is_string($this->config['default'])) {
             throw new InvalidArgumentException('Default queue connection config value must be a string');
         }
 
@@ -65,7 +65,7 @@ final class QueueConfig extends InjectableConfig
         $driverAliases = $this->getDriverAliases();
 
         if (isset($driverAliases[$driver])) {
-            if (! \is_string($this->config['driverAliases'][$driver])) {
+            if (!\is_string($this->config['driverAliases'][$driver])) {
                 throw new InvalidArgumentException(
                     sprintf('Driver alias for `%s` value must be a string', $driver)
                 );
@@ -93,18 +93,18 @@ final class QueueConfig extends InjectableConfig
     {
         $connections = $this->getConnections();
 
-        if (! isset($connections[$name])) {
+        if (!isset($connections[$name])) {
             throw new InvalidArgumentException(sprintf('Queue connection with given name `%s` is not defined.', $name));
         }
 
-        if (! isset($connections[$name]['driver'])) {
+        if (!isset($connections[$name]['driver'])) {
             throw new InvalidArgumentException(sprintf('Driver for queue connection `%s` is not defined.', $name));
         }
 
         $connection = $connections[$name];
         $driver = $connection['driver'];
 
-        if (! \is_string($driver)) {
+        if (!\is_string($driver)) {
             throw new InvalidArgumentException(
                 sprintf('Driver for queue connection `%s` value must be a string', $name)
             );
@@ -114,7 +114,7 @@ final class QueueConfig extends InjectableConfig
             $connection['driver'] = $this->config['driverAliases'][$driver];
         }
 
-        if (! \is_string($connection['driver'])) {
+        if (!\is_string($connection['driver'])) {
             throw new InvalidArgumentException(
                 sprintf('Driver alias for queue connection `%s` value must be a string', $name)
             );

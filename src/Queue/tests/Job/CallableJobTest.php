@@ -21,7 +21,7 @@ final class CallableJobTest extends TestCase
         $this->container = new Container();
     }
 
-    public function testPayloadCallbackKeyIsRequired()
+    public function testPayloadCallbackKeyIsRequired(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectErrorMessage('Payload `callback` key is required.');
@@ -30,7 +30,7 @@ final class CallableJobTest extends TestCase
         $job->handle('foo', 'foo-id', []);
     }
 
-    public function testPayloadCallbackValueShouldBeClosure()
+    public function testPayloadCallbackValueShouldBeClosure(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectErrorMessage('Payload `callback` key value type should be a closure.');
@@ -39,9 +39,9 @@ final class CallableJobTest extends TestCase
         $job->handle('foo', 'foo-id', ['callback' => 'test']);
     }
 
-    public function testHandle()
+    public function testHandle(): void
     {
-        $callback = function (string $name, string $id, ContainerInterface $container) {
+        $callback = function (string $name, string $id, ContainerInterface $container): void {
             $this->assertSame('foo', $name);
             $this->assertSame('foo-id', $id);
             $this->assertInstanceOf(Container::class, $container);

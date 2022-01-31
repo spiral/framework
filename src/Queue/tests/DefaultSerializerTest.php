@@ -18,7 +18,7 @@ final class DefaultSerializerTest extends TestCase
         $this->serializer = new DefaultSerializer();
     }
 
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $object = new \stdClass();
         $object->foo = 'bar';

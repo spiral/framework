@@ -32,7 +32,7 @@ final class QueueManager implements QueueConnectionProviderInterface
         // Replaces alias with real pipeline name
         $name = $this->config->getAliases()[$name] ?? $name;
 
-        if (! isset($this->pipelines[$name])) {
+        if (!isset($this->pipelines[$name])) {
             $this->pipelines[$name] = $this->resolveConnection($name);
         }
 

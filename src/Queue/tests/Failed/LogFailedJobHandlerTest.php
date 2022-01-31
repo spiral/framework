@@ -11,7 +11,7 @@ use Spiral\Snapshots\SnapshotterInterface;
 
 final class LogFailedJobHandlerTest extends TestCase
 {
-    public function testHandle()
+    public function testHandle(): void
     {
         $handler = new LogFailedJobHandler(
             $snapshotter = m::mock(SnapshotterInterface::class)

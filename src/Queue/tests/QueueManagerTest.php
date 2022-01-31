@@ -41,7 +41,7 @@ final class QueueManagerTest extends TestCase
         $this->manager = new QueueManager($config, $container);
     }
 
-    public function testGetsDefaultConnection()
+    public function testGetsDefaultConnection(): void
     {
         $this->assertInstanceOf(
             ShortCircuit::class,
@@ -49,7 +49,7 @@ final class QueueManagerTest extends TestCase
         );
     }
 
-    public function testGetsConnectionByNameWithDriverAlias()
+    public function testGetsConnectionByNameWithDriverAlias(): void
     {
         $this->assertInstanceOf(
             ShortCircuit::class,
@@ -57,7 +57,7 @@ final class QueueManagerTest extends TestCase
         );
     }
 
-    public function testGetsPipelineByAlias()
+    public function testGetsPipelineByAlias(): void
     {
         $this->assertInstanceOf(
             ShortCircuit::class,

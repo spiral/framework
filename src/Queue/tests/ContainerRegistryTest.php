@@ -24,7 +24,7 @@ final class ContainerRegistryTest extends TestCase
         $this->registry = new ContainerRegistry($this->container);
     }
 
-    public function testGetsHandlerByJobType()
+    public function testGetsHandlerByJobType(): void
     {
         $this->container->bind('Mail\Job', $handler = \Mockery::mock(HandlerInterface::class));
         $this->registry->getHandler('mail.job');
@@ -32,7 +32,7 @@ final class ContainerRegistryTest extends TestCase
         $this->assertSame($handler, $this->registry->getHandler('mail.job'));
     }
 
-    public function testGetsHandlerWithWrongInterface()
+    public function testGetsHandlerWithWrongInterface(): void
     {
         $this->expectException(JobException::class);
         $this->expectErrorMessage('Unable to resolve job handler for `mail.job`');
@@ -41,7 +41,7 @@ final class ContainerRegistryTest extends TestCase
         $this->registry->getHandler('mail.job');
     }
 
-    public function testGetsNotExistsHandler()
+    public function testGetsNotExistsHandler(): void
     {
         $this->expectException(JobException::class);
         $this->expectErrorMessage("Undefined class or binding 'Mail\Job'");
