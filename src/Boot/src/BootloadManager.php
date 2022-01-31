@@ -123,7 +123,7 @@ final class BootloadManager implements Container\SingletonInterface
     /**
      * Resolve all bootloader dependencies and init bindings
      */
-    protected function initBootloader(BootloaderInterface $bootloader): \Generator
+    protected function initBootloader(BootloaderInterface $bootloader): iterable
     {
         if ($bootloader instanceof DependedInterface) {
             yield from $this->initBootloaders($bootloader->defineDependencies());
