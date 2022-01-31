@@ -129,8 +129,8 @@ abstract class AbstractKernel implements KernelInterface
      * Run the application with given Environment
      *
      * $app = App::create([...]);
-     * $app->booting(...);
-     * $app->booted(...);
+     * $app->starting(...);
+     * $app->started(...);
      * $app->run(new Environment([
      *     'APP_ENV' => 'production'
      * ]));
@@ -248,7 +248,7 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Call the registered booting callbacks.
+     * Call the registered starting callbacks.
      */
     private function fireCallbacks(array &$callbacks): void
     {

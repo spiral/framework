@@ -14,7 +14,7 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\BinderInterface;
 
-class SampleBootWithBooted extends Bootloader
+class SampleBootWithStarted extends Bootloader
 {
     public const BOOT = true;
 

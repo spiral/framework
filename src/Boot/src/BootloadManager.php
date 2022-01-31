@@ -51,16 +51,17 @@ final class BootloadManager implements Container\SingletonInterface
      * ]
      *
      * @param array<class-string>|array<class-string,array<string,mixed>> $classes
-     * @param array<Closure> $bootingCallbacks
-     * @param array<Closure> $bootedCallbacks
+     * @param array<Closure> $staringCallbacks
+     * @param array<Closure> $startedCallbacks
+     *
      * @throws \Throwable
      */
-    public function bootload(array $classes, array $bootingCallbacks = [], array $bootedCallbacks = []): void
+    public function bootload(array $classes, array $staringCallbacks = [], array $startedCallbacks = []): void
     {
         $this->container->runScope(
             [self::class => $this],
-            function () use ($classes, $bootingCallbacks, $bootedCallbacks): void {
-                $this->boot($classes, $bootingCallbacks, $bootedCallbacks);
+            function () use ($classes, $staringCallbacks, $startedCallbacks): void {
+                $this->boot($classes, $staringCallbacks, $startedCallbacks);
             }
         );
     }

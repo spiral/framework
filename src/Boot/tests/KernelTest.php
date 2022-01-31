@@ -104,7 +104,7 @@ class KernelTest extends TestCase
         );
     }
 
-    public function testBootingCallbacks()
+    public function testStartingCallbacks()
     {
         $kernel = TestCore::create([
             'root' => __DIR__,
