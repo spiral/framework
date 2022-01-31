@@ -14,19 +14,19 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\BinderInterface;
 
-class SampleBootWithRegister extends Bootloader
+class SampleBootWithBooted extends Bootloader
 {
     public const BOOT = true;
 
     public const BINDINGS   = ['abc' => self::class];
     public const SINGLETONS = ['single' => self::class];
 
-    public function register(BinderInterface $binder): void
+    public function boot(BinderInterface $binder): void
     {
         $binder->bind('def', new SampleBoot());
     }
 
-    public function boot(BinderInterface $binder): void
+    public function booted(BinderInterface $binder): void
     {
         $binder->bind('efg', new SampleClass());
         $binder->bind('ghi', 'foo');
