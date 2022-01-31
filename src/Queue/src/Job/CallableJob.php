@@ -28,7 +28,6 @@ final class CallableJob implements HandlerInterface
             throw new InvalidArgumentException('Payload `callback` key value type should be a closure.');
         }
 
-        /** @var \Closure $callback */
         $callback = $payload['callback'];
 
         $reflection = new \ReflectionFunction($callback);

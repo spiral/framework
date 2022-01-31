@@ -39,7 +39,7 @@ final class DefaultSerializerTest extends TestCase
 
         $this->assertSame(1, $payload['int']);
         $this->assertSame('foo', $payload['string']);
-        $this->assertInstanceOf($object::class, $payload['object']);
+        $this->assertInstanceOf(get_class($object), $payload['object']);
         $this->assertTrue($payload['closure'] instanceof \Closure);
     }
 }
