@@ -20,7 +20,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Bootloader\Auth\HttpAuthBootloader;
 use Spiral\Bootloader\Cycle\AnnotatedBootloader;
 use Spiral\Bootloader\Cycle\CycleBootloader;
-use Spiral\Bootloader\TokenizerBootloader;
+use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 
 /**
  * Stores authentication token in database via Cycle ORM.

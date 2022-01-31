@@ -15,6 +15,9 @@ use Cycle\Annotated;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Spiral\Boot\Bootloader\Bootloader;
 
+/**
+ * @deprecated since 3.0
+ */
 final class AnnotatedBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
