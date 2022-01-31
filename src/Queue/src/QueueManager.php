@@ -57,7 +57,7 @@ final class QueueManager implements QueueConnectionProviderInterface
                     $name,
                     $e->getMessage()
                 ),
-                (int) $e->getCode(),
+                $e->getCode(),
                 $e
             );
         }

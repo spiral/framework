@@ -59,7 +59,7 @@ final class QueueBootloader extends Bootloader
         );
     }
 
-    private function initQueueManager(FactoryInterface $factory): QueueManager
+    protected function initQueueManager(FactoryInterface $factory): QueueManager
     {
         $this->registerDriverAlias(ShortCircuit::class, 'sync');
 
@@ -82,7 +82,7 @@ final class QueueBootloader extends Bootloader
         );
     }
 
-    private function initRegistry(ContainerInterface $container, ContainerRegistry $registry, QueueConfig $config)
+    protected function initRegistry(ContainerInterface $container, ContainerRegistry $registry, QueueConfig $config)
     {
         $registry = new QueueRegistry($container, $registry);
 
