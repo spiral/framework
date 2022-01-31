@@ -13,7 +13,6 @@ namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\BootloadManager;
-use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Boot\Fixtures\SampleBoot;
 use Spiral\Tests\Boot\Fixtures\SampleBootWithRegister;
 use Spiral\Tests\Boot\Fixtures\SampleClass;
@@ -54,7 +53,7 @@ class BootloadersTest extends TestCase
 
     public function testException(): void
     {
-        $this->expectException(NotFoundException::class);
+        $this->expectException(\Spiral\Boot\Exception\ClassNotFoundException::class);
 
         $container = new Container();
 

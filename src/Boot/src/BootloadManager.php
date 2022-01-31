@@ -80,8 +80,12 @@ final class BootloadManager implements Container\SingletonInterface
                 $options = [];
             }
 
-            $refl = new \ReflectionClass($class);
-            $class = $refl->getName();
+            // Replace class aliases with source classes
+            try {
+                $class = (new \ReflectionClass($class))->getName();
+            } catch (\ReflectionException $e) {
+                throw new \Spiral\Boot\Exception\ClassNotFoundException();
+            }
 
             if (\in_array($class, $this->classes, true)) {
                 continue;
@@ -95,7 +99,7 @@ final class BootloadManager implements Container\SingletonInterface
             }
 
             $this->initBootloader($bootloader, $bootingCallbacks, $bootedCallbacks);
-            $bootloaders[] = compact('bootloader', 'options');
+            $bootloaders[] = \compact('bootloader', 'options');
 
             $this->invokeBootloader($bootloader, 'register', $options);
         }
