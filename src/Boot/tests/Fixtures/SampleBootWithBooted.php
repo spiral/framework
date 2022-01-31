@@ -26,7 +26,7 @@ class SampleBootWithBooted extends Bootloader
         $binder->bind('def', new SampleBoot());
     }
 
-    public function booted(BinderInterface $binder): void
+    public function start(BinderInterface $binder): void
     {
         $binder->bind('efg', new SampleClass());
         $binder->bind('ghi', 'foo');

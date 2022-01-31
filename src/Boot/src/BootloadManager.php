@@ -72,19 +72,19 @@ final class BootloadManager implements Container\SingletonInterface
      *
      * @throws \Throwable
      */
-    protected function boot(array $classes, array $bootingCallbacks, array $bootedCallbacks): void
+    protected function boot(array $classes, array $startingCallbacks, array $startedCallbacks): void
     {
-        $bootloaders = $this->initBootloaders($classes);
+        $bootloaders = \iterator_to_array($this->initBootloaders($classes));
 
-        $this->fireCallbacks($bootingCallbacks);
+        $this->fireCallbacks($startingCallbacks);
 
         foreach ($bootloaders as $data) {
             $bootloader = $data['bootloader'];
             $options = $data['options'];
-            $this->invokeBootloader($bootloader, 'booted', $options);
+            $this->invokeBootloader($bootloader, 'start', $options);
         }
 
-        $this->fireCallbacks($bootedCallbacks);
+        $this->fireCallbacks($startedCallbacks);
     }
 
     /**
@@ -165,9 +165,12 @@ final class BootloadManager implements Container\SingletonInterface
         $boot->invokeArgs($bootloader, \array_values($args));
     }
 
-    private function fireCallbacks(array $bootingCallbacks): void
+    /**
+     * @param array<Closure> $callbacks
+     */
+    private function fireCallbacks(array $callbacks): void
     {
-        foreach ($bootingCallbacks as $callback) {
+        foreach ($callbacks as $callback) {
             $callback($this->container);
         }
     }
