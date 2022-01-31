@@ -16,8 +16,6 @@ interface InvokerInterface
      * @param array $parameters
      * @return mixed
      * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \ReflectionException
      * @throws \Throwable
      */
     public function call(callable $target, array $parameters = []);

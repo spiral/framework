@@ -13,7 +13,7 @@ use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Tests\Queue\TestCase;
 
-final class ShortCircuitTest extends TestCase
+final class SyncDriverTest extends TestCase
 {
     /** @var SyncDriver */
     private $queue;
