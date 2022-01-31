@@ -19,6 +19,9 @@ use Cycle\Database\DatabaseInterface;
 use Cycle\Database\DatabaseManager;
 use Cycle\Database\DatabaseProviderInterface;
 
+/**
+ * @deprecated since 3.0
+ */
 final class DatabaseBootloader extends Bootloader implements SingletonInterface
 {
     protected const SINGLETONS = [

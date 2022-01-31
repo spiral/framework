@@ -328,7 +328,7 @@ final class Container implements
     /**
      * {@inheritdoc}
      */
-    public function has(string $id): bool
+    public function has($id): bool
     {
         return \array_key_exists($id, $this->bindings);
     }

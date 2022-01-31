@@ -17,8 +17,8 @@ use ReflectionClass;
 use ReflectionException;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\KernelInterface;
-use Spiral\Bootloader\ConsoleBootloader;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Scaffolder\Command;
 use Spiral\Scaffolder\Declaration;
 

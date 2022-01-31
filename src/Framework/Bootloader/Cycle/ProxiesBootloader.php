@@ -17,6 +17,9 @@ use Cycle\ORM\Promise\ProxyFactory;
 use Cycle\ORM\PromiseFactoryInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 
+/**
+ * @deprecated since 3.0
+ */
 final class ProxiesBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [

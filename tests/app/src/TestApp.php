@@ -12,6 +12,9 @@ declare(strict_types=1);
 namespace Spiral\App;
 
 use Psr\Container\ContainerInterface;
+use Spiral\App\Bootloader\AppBootloader;
+use Spiral\App\Bootloader\AuthBootloader;
+use Spiral\App\Bootloader\WSBootloader;
 use Spiral\Boot\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -19,9 +22,6 @@ use Spiral\Bootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
-use Spiral\App\Bootloader\AppBootloader;
-use Spiral\App\Bootloader\AuthBootloader;
-use Spiral\App\Bootloader\WSBootloader;
 
 class TestApp extends Kernel
 {
@@ -39,7 +39,7 @@ class TestApp extends Kernel
         // Dispatchers
         Bootloader\Jobs\JobsBootloader::class,
         Bootloader\GRPC\GRPCBootloader::class,
-        Bootloader\ConsoleBootloader::class,
+        \Spiral\Console\Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
         Bootloader\Http\DiactorosBootloader::class,
@@ -52,7 +52,7 @@ class TestApp extends Kernel
         Bootloader\Http\PaginationBootloader::class,
 
         // Cache
-        Bootloader\Cache\CacheBootloader::class,
+        \Spiral\Cache\Bootloader\CacheBootloader::class,
 
         // Auth
         Bootloader\Auth\HttpAuthBootloader::class,
