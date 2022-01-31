@@ -20,6 +20,8 @@ use Spiral\RoadRunner\Http\HttpWorker;
 
 /**
  * Configures RPC connection to upper RoadRunner server.
+ *
+ * @deprecated since 3.0
  */
 final class ServerBootloader extends Bootloader
 {

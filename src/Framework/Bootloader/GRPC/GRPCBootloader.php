@@ -19,6 +19,9 @@ use Spiral\GRPC\InvokerInterface;
 use Spiral\GRPC\LocatorInterface;
 use Spiral\GRPC\ServiceLocator;
 
+/**
+ * @deprecated since 3.0
+ */
 final class GRPCBootloader extends Bootloader
 {
     protected const SINGLETONS = [

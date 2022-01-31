@@ -26,6 +26,8 @@ interface BootloaderInterface
      *      'interface' => 'class',
      *      'class' => [self::class, 'createMethod']
      * ]
+     *
+     * @return array<string, class-string|callable>
      */
     public function defineBindings(): array;
 
@@ -39,6 +41,8 @@ interface BootloaderInterface
      *
      * You don't need to bind classes which are declared with SINGLETON constant here, spiral will
      * resolve them as singleton automatically.
+     *
+     * @return array<string, class-string|callable>
      */
     public function defineSingletons(): array;
 }

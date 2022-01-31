@@ -28,6 +28,9 @@ use Spiral\Core\Container;
 use Spiral\Cycle\RepositoryInjector;
 use Cycle\Database\DatabaseProviderInterface;
 
+/**
+ * @deprecated since 3.0
+ */
 final class CycleBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
