@@ -230,13 +230,23 @@ abstract class AbstractKernel implements KernelInterface
     abstract protected function mapDirectories(array $directories): array;
 
     /**
+     * Get list of defined kernel bootloaders
+     *
+     * @return array<int, class-string>|array<class-string, array<non-empty-string, mixed>>
+     */
+    protected function defineBootloaders(): array
+    {
+        return static::LOAD;
+    }
+
+    /**
      * Bootload all registered classes using BootloadManager.
      */
     private function bootload(): void
     {
         $self = $this;
         $this->bootloader->bootload(
-            static::LOAD,
+            $this->defineBootloaders(),
             [
                 static function () use ($self): void {
                     $self->fireCallbacks($self->startingCallbacks);
