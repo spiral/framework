@@ -21,6 +21,7 @@ use Spiral\Auth\TokenStorageInterface;
 use Throwable;
 
 /**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
  * Provides the ability to fetch token information from the database via Cycle ORM.
  */
 final class TokenStorage implements TokenStorageInterface

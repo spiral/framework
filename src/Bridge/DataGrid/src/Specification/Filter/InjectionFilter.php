@@ -16,6 +16,9 @@ use Cycle\Database\Injection;
 use Spiral\DataGrid\Specification\FilterInterface;
 use Spiral\DataGrid\SpecificationInterface;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 abstract class InjectionFilter implements FilterInterface
 {
     protected const INJECTION = '';

@@ -17,6 +17,9 @@ use Spiral\Reactor\Traits\CommentTrait;
 use Spiral\Scaffolder\Declaration\Database\AbstractEntityDeclaration;
 use Spiral\Scaffolder\Exception\ScaffolderException;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 class AnnotatedDeclaration extends AbstractEntityDeclaration
 {
     /**

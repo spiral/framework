@@ -18,7 +18,7 @@ use Cycle\ORM\PromiseFactoryInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 
 /**
- * @deprecated since 3.0
+ * @deprecated since v2.9. Will be removed in v3.0
  */
 final class ProxiesBootloader extends Bootloader
 {

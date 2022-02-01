@@ -122,6 +122,7 @@ final class CommandBootloader extends Bootloader
     }
 
     /**
+     * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
      * @param ConsoleBootloader  $console
      * @param ContainerInterface $container
      */

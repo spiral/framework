@@ -10,6 +10,9 @@ use Cycle\Schema\Compiler;
 use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 final class SchemaCompiler
 {
     private const MEMORY_SECTION = 'cycle';
