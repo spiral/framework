@@ -20,7 +20,7 @@ use Spiral\GRPC\LocatorInterface;
 use Spiral\GRPC\ServiceLocator;
 
 /**
- * @deprecated since 3.0
+ * @deprecated since v2.9. Will be moved to spiral/roadrunner-bridge and removed in v3.0
  */
 final class GRPCBootloader extends Bootloader
 {
