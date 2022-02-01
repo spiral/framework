@@ -9,6 +9,9 @@ use Spiral\Queue\Exception\JobException;
 use Spiral\Queue\HandlerInterface;
 use Spiral\Queue\ContainerRegistry;
 
+/**
+ * @runTestsInSeparateProcesses This test case breaks some test if it runs with codecov + xdebug in the same process
+ */
 final class ContainerRegistryTest extends TestCase
 {
     /** @var ContainerRegistry */

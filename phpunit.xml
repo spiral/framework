@@ -18,6 +18,10 @@
             <directory>src</directory>
             <directory>src/*/src</directory>
         </include>
+        <exclude>
+            <directory>src/*/tests</directory>
+            <directory>tests</directory>
+        </exclude>
     </coverage>
     <testsuites>
         <testsuite name="Components Test Suite">
