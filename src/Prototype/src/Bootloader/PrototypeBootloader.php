@@ -18,7 +18,7 @@ use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\Bootloader;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\AttributesBootloader;
-use Spiral\Bootloader\ConsoleBootloader;
+use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Core\Container;
 use Spiral\Prototype\Annotation\Prototyped;
 use Spiral\Prototype\Command;

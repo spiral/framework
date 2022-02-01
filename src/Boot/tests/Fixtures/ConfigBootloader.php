@@ -16,24 +16,24 @@ class ConfigBootloader extends Bootloader
         CoreBootloader::class,
     ];
 
-    public function register(Container $container, AbstractKernel $kernel): void
+    public function boot(Container $container, AbstractKernel $kernel): void
     {
-        $kernel->booting(function (AbstractKernel $kernel) use ($container) {
+        $kernel->starting(static function (AbstractKernel $kernel) use ($container) {
             $container->bind('hij', 'foo');
 
-            $kernel->booting(function () use ($container) {
+            $kernel->starting(static function () use ($container) {
                 $container->bind('ijk', 'foo');
             });
         });
 
-        $kernel->booted(function (AbstractKernel $kernel) use ($container) {
+        $kernel->started(function (AbstractKernel $kernel) use ($container) {
             $container->bind('jkl', 'foo');
 
-            $kernel->booting(function () use ($container) {
+            $kernel->starting(function () use ($container) {
                 $container->bind('klm', 'foo');
             });
 
-            $kernel->booted(function () use ($container) {
+            $kernel->started(function () use ($container) {
                 $container->bind('lmn', 'foo');
             });
         });
@@ -41,14 +41,14 @@ class ConfigBootloader extends Bootloader
         $container->bind('efg', 'foo');
     }
 
-    public function boot(ConfigurationBootloader $configuration, AbstractKernel $kernel, Container $container): void
+    public function start(ConfigurationBootloader $configuration, AbstractKernel $kernel, Container $container): void
     {
         // won't be executed
-        $kernel->booting(function (AbstractKernel $kernel) use ($container) {
+        $kernel->starting(function (AbstractKernel $kernel) use ($container) {
             $container->bind('ghi', 'foo');
         });
 
-        $kernel->booted(function (AbstractKernel $kernel) use ($container) {
+        $kernel->started(function (AbstractKernel $kernel) use ($container) {
             $container->bind('mno', 'foo');
         });
 

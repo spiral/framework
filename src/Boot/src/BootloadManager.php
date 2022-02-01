@@ -24,7 +24,7 @@ final class BootloadManager implements Container\SingletonInterface
     /* @var Container @internal */
     protected $container;
 
-    /** @var array<string> */
+    /** @var array<class-string> */
     private $classes = [];
 
     public function __construct(Container $container)
@@ -34,6 +34,7 @@ final class BootloadManager implements Container\SingletonInterface
 
     /**
      * Get bootloaded classes.
+     * @return array<class-string>
      */
     public function getClasses(): array
     {
@@ -49,17 +50,18 @@ final class BootloadManager implements Container\SingletonInterface
      *    CustomizedBootloader::class => ["option" => "value"]
      * ]
      *
-     * @param array<int,string>|array<string,array<string,mixed>> $classes
-     * @param array<Closure> $bootingCallbacks
-     * @param array<Closure> $bootedCallbacks
+     * @param array<class-string>|array<class-string,array<string,mixed>> $classes
+     * @param array<Closure> $staringCallbacks
+     * @param array<Closure> $startedCallbacks
+     *
      * @throws \Throwable
      */
-    public function bootload(array $classes, array $bootingCallbacks = [], array $bootedCallbacks = []): void
+    public function bootload(array $classes, array $staringCallbacks = [], array $startedCallbacks = []): void
     {
         $this->container->runScope(
             [self::class => $this],
-            function () use ($classes, $bootingCallbacks, $bootedCallbacks): void {
-                $this->boot($classes, $bootingCallbacks, $bootedCallbacks);
+            function () use ($classes, $staringCallbacks, $startedCallbacks): void {
+                $this->boot($classes, $staringCallbacks, $startedCallbacks);
             }
         );
     }
@@ -67,17 +69,44 @@ final class BootloadManager implements Container\SingletonInterface
     /**
      * Bootloader all given classes.
      *
+     * @param array<class-string>|array<class-string, array<string,mixed>> $classes
+     *
      * @throws \Throwable
      */
-    protected function boot(array $classes, array $bootingCallbacks, array $bootedCallbacks): void
+    protected function boot(array $classes, array $startingCallbacks, array $startedCallbacks): void
     {
-        $bootloaders = [];
+        $bootloaders = \iterator_to_array($this->initBootloaders($classes));
 
+        $this->fireCallbacks($startingCallbacks);
+
+        foreach ($bootloaders as $data) {
+            $bootloader = $data['bootloader'];
+            $options = $data['options'];
+            $this->invokeBootloader($bootloader, 'start', $options);
+        }
+
+        $this->fireCallbacks($startedCallbacks);
+    }
+
+    /**
+     * Instantiate bootloader objects and resolve dependencies
+     *
+     * @param array<class-string>|array<class-string, array<string,mixed>> $classes
+     */
+    private function initBootloaders(array $classes): \Generator
+    {
         foreach ($classes as $class => $options) {
             // default bootload syntax as simple array
             if (\is_string($options)) {
                 $class = $options;
                 $options = [];
+            }
+
+            // Replace class aliases with source classes
+            try {
+                $class = (new \ReflectionClass($class))->getName();
+            } catch (\ReflectionException $e) {
+                throw new \Spiral\Boot\Exception\ClassNotFoundException();
             }
 
             if (\in_array($class, $this->classes, true)) {
@@ -91,33 +120,20 @@ final class BootloadManager implements Container\SingletonInterface
                 continue;
             }
 
-            $this->initBootloader($bootloader, $bootingCallbacks, $bootedCallbacks);
-            $bootloaders[] = compact('bootloader', 'options');
-
-            $this->invokeBootloader($bootloader, 'register', $options);
-        }
-
-        $this->fireCallbacks($bootingCallbacks);
-        foreach ($bootloaders as $data) {
-            $bootloader = $data['bootloader'];
-            $options = $data['options'];
+            yield from $this->initBootloader($bootloader);
             $this->invokeBootloader($bootloader, 'boot', $options);
-        }
-        $this->fireCallbacks($bootedCallbacks);
 
-        unset($bootloaders);
+            yield \compact('bootloader', 'options');
+        }
     }
 
     /**
-     * @throws \Throwable
+     * Resolve all bootloader dependencies and init bindings
      */
-    protected function initBootloader(
-        BootloaderInterface $bootloader,
-        array $bootingCallbacks,
-        array $bootedCallbacks
-    ): void {
+    protected function initBootloader(BootloaderInterface $bootloader): iterable
+    {
         if ($bootloader instanceof DependedInterface) {
-            $this->boot($bootloader->defineDependencies(), $bootingCallbacks, $bootedCallbacks);
+            yield from $this->initBootloaders($bootloader->defineDependencies());
         }
 
         $this->initBindings(
@@ -157,9 +173,12 @@ final class BootloadManager implements Container\SingletonInterface
         $boot->invokeArgs($bootloader, \array_values($args));
     }
 
-    private function fireCallbacks(array $bootingCallbacks): void
+    /**
+     * @param array<Closure> $callbacks
+     */
+    private function fireCallbacks(array $callbacks): void
     {
-        foreach ($bootingCallbacks as $callback) {
+        foreach ($callbacks as $callback) {
             $callback($this->container);
         }
     }

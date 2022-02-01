@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Bootloader\Cache;
+namespace Spiral\Cache\Bootloader;
 
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Boot\Bootloader\Bootloader;
@@ -49,6 +49,9 @@ final class CacheBootloader extends Bootloader
         });
     }
 
+    /**
+     * @noRector RemoveUnusedPrivateMethodRector
+     */
     private function initCacheManager(Container $container, CacheConfig $config): CacheManager
     {
         $manager = new CacheManager($config, $container);

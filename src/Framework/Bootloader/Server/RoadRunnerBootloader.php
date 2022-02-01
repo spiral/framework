@@ -26,6 +26,9 @@ use Spiral\RoadRunner\Http\PSR7WorkerInterface;
 use Spiral\RoadRunner\Worker;
 use Spiral\RoadRunner\WorkerInterface;
 
+/**
+ * @deprecated since 3.0
+ */
 class RoadRunnerBootloader extends Bootloader
 {
     /**
