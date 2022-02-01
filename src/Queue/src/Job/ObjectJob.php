@@ -30,7 +30,7 @@ final class ObjectJob implements HandlerInterface
 
         $job = $payload['object'];
         $handler = new \ReflectionClass($job);
-        $this->invoker->call(
+        $this->invoker->invoke(
             [$job, $handler->hasMethod('handle') ? 'handle' : '__invoke'],
             [
                 'name' => $name,

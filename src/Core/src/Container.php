@@ -344,7 +344,7 @@ final class Container implements
     /**
      * {@inheritdoc}
      */
-    public function call($target, array $parameters = [])
+    public function invoke($target, array $parameters = [])
     {
         if (\is_array($target) && isset($target[1])) {
             // In a form of resolver and method
@@ -387,14 +387,7 @@ final class Container implements
             );
         }
 
-        throw new NotCallableException(
-            sprintf(
-                '%s is not a callable',
-                \is_object($target)
-                    ? 'Instance of '.\get_class($target)
-                    : \str_replace("\n", '', var_export($target, true))
-            )
-        );
+        throw new NotCallableException('Unsupported callable');
     }
 
     /**
@@ -654,7 +647,7 @@ final class Container implements
         }
 
         try {
-            return $this->call($target, $parameters);
+            return $this->invoke($target, $parameters);
         } catch (NotCallableException $e) {
             throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias), $e->getCode(), $e);
         }

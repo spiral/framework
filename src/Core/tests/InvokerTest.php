@@ -29,7 +29,7 @@ class InvokerTest extends TestCase
         $this->container->bindSingleton(Bucket::class, $bucket = new Bucket('foo'));
         $object = new Storage();
 
-        $result = $this->container->call([$object, 'makeBucket'], ['name' => 'bar']);
+        $result = $this->container->invoke([$object, 'makeBucket'], ['name' => 'bar']);
 
         $this->assertSame($bucket, $result['bucket']);
         $this->assertInstanceOf(SampleClass::class, $result['class']);
@@ -41,7 +41,7 @@ class InvokerTest extends TestCase
     {
         $this->container->bindSingleton(Bucket::class, $bucket = new Bucket('foo'));
 
-        $result = $this->container->call([Storage::class, 'makeBucket'], ['name' => 'bar']);
+        $result = $this->container->invoke([Storage::class, 'makeBucket'], ['name' => 'bar']);
 
         $this->assertSame($bucket, $result['bucket']);
         $this->assertInstanceOf(SampleClass::class, $result['class']);
@@ -54,7 +54,7 @@ class InvokerTest extends TestCase
         $this->container->bindSingleton('foo', new Storage());
         $this->container->bindSingleton(Bucket::class, $bucket = new Bucket('foo'));
 
-        $result = $this->container->call(['foo', 'makeBucket'], ['name' => 'bar']);
+        $result = $this->container->invoke(['foo', 'makeBucket'], ['name' => 'bar']);
 
         $this->assertSame($bucket, $result['bucket']);
         $this->assertInstanceOf(SampleClass::class, $result['class']);
@@ -70,14 +70,14 @@ class InvokerTest extends TestCase
         );
         $object = new Storage();
 
-        $this->container->call([$object, 'makeBucket'], ['name' => 'bar']);
+        $this->container->invoke([$object, 'makeBucket'], ['name' => 'bar']);
     }
 
     public function testCallValidCallableString(): void
     {
         $this->container->bindSingleton(Bucket::class, $bucket = new Bucket('foo'));
 
-        $result = $this->container->call(Storage::class.'::createBucket', ['name' => 'bar']);
+        $result = $this->container->invoke(Storage::class.'::createBucket', ['name' => 'bar']);
 
         $this->assertSame($bucket, $result['bucket']);
         $this->assertInstanceOf(SampleClass::class, $result['class']);
@@ -91,14 +91,14 @@ class InvokerTest extends TestCase
         $this->expectErrorMessage(
             "Unable to resolve 'name' argument in 'Spiral\Tests\Core\Fixtures\Bucket::__construct'"
         );
-        $this->container->call(Storage::class.'::createBucket', ['name' => 'bar']);
+        $this->container->invoke(Storage::class.'::createBucket', ['name' => 'bar']);
     }
 
     public function testCallValidClosure(): void
     {
         $this->container->bindSingleton(Bucket::class, $bucket = new Bucket('foo'));
 
-        $result = $this->container->call(
+        $result = $this->container->invoke(
             static function (Bucket $bucket, SampleClass $class, string $name, string $path = 'baz') {
                 return \compact('bucket', 'class', 'name', 'path');
             },
@@ -114,11 +114,9 @@ class InvokerTest extends TestCase
     public function testCallValidClosureWithNotResolvableDependencies(): void
     {
         $this->expectException(ArgumentException::class);
-        $this->expectErrorMessage(
-            "Unable to resolve 'name' argument in 'Spiral\Tests\Core\Fixtures\Bucket::__construct'"
-        );
+        $this->expectErrorMessage("Unable to resolve 'name' argument in 'Spiral\Tests\Core\Fixtures\Bucket::__construct'");
 
-        $this->container->call(
+        $this->container->invoke(
             static function (Bucket $bucket, SampleClass $class, string $name, string $path = 'baz') {
                 return \compact('bucket', 'class', 'name', 'path');
             },
@@ -129,21 +127,18 @@ class InvokerTest extends TestCase
     public function testInvalidCallableStringShouldThrowAnException(): void
     {
         $this->expectException(NotCallableException::class);
-        $this->expectErrorMessage(
-            "'foobar' is not a callable"
-        );
+        $this->expectErrorMessage('Unsupported callable');
 
-        $this->container->call('foobar');
+        $this->container->invoke('foobar');
     }
 
     public function testInvalidCallableArrayShouldThrowAnException(): void
     {
         $this->expectException(NotCallableException::class);
-        $this->expectErrorMessage(
-            "array (  0 =>   Spiral\Tests\Core\Fixtures\Storage::__set_state(array(  )),) is not a callable"
-        );
+        $this->expectErrorMessage('Unsupported callable');
+
         $object = new Storage();
 
-        $this->container->call([$object]);
+        $this->container->invoke([$object]);
     }
 }

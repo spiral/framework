@@ -28,7 +28,7 @@ final class CallableJob implements HandlerInterface
             throw new InvalidArgumentException('Payload `callback` key value type should be a closure.');
         }
 
-        $this->invoker->call(
+        $this->invoker->invoke(
             $payload['callback'],
             [
                 'name' => $name,

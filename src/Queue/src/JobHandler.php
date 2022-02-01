@@ -33,7 +33,7 @@ abstract class JobHandler implements HandlerInterface
     public function handle(string $name, string $id, array $payload): void
     {
         try {
-            $this->invoker->call(
+            $this->invoker->invoke(
                 [$this, $this->getHandlerMethod()],
                 \array_merge(['payload' => $payload, 'id' => $id], $payload)
             );
