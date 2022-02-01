@@ -18,6 +18,9 @@ final class DefaultSerializerTest extends TestCase
         $this->serializer = new DefaultSerializer();
     }
 
+    /**
+     * @requires PHP < 8.1
+     */
     public function testSerialize(): void
     {
         $object = new \stdClass();
