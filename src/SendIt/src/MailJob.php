@@ -43,8 +43,10 @@ final class MailJob implements HandlerInterface, \Spiral\Queue\HandlerInterface
     /**
      * @throws TransportExceptionInterface
      * @throws InvalidArgumentException
+     *
+     * @psalm-suppress ParamNameMismatch
      */
-    public function handle(string $jobType, string $jobID, $payload): void
+    public function handle(string $name, string $id, $payload): void
     {
         if (\is_string($payload)) {
             $payload = json_decode($payload, true);
