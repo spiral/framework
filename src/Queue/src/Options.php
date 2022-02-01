@@ -9,9 +9,22 @@ final class Options implements OptionsInterface, \JsonSerializable
     /** @var int|null */
     private $delay;
 
-    /**
-     * @param int $delay
-     */
+    /** @var string|null */
+    private $queue;
+
+    public function withQueue(string $queue): self
+    {
+        $options = clone $this;
+        $options->queue = $queue;
+
+        return $options;
+    }
+
+    public function getQueue(): ?string
+    {
+        return $this->queue;
+    }
+
     public function withDelay(?int $delay): self
     {
         $options = clone $this;
@@ -32,7 +45,8 @@ final class Options implements OptionsInterface, \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'delay'    => $this->delay,
+            'delay' => $this->delay,
+            'queue' => $this->queue,
         ];
     }
 
@@ -40,6 +54,14 @@ final class Options implements OptionsInterface, \JsonSerializable
     {
         $options = new self();
         $options->delay = $delay;
+
+        return $options;
+    }
+
+    public static function onQueue(string $queue): Options
+    {
+        $options = new self();
+        $options->queue = $queue;
 
         return $options;
     }

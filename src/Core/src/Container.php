@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
-use Psr\Container\ContainerExceptionInterface;
+use Closure;
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use Spiral\Core\Container\Autowire;
@@ -22,6 +22,7 @@ use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\InjectionException;
+use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\LogicException;
 
@@ -46,6 +47,7 @@ final class Container implements
     BinderInterface,
     FactoryInterface,
     ResolverInterface,
+    InvokerInterface,
     ScopeInterface
 {
     /**
@@ -57,6 +59,7 @@ final class Container implements
         FactoryInterface::class   => self::class,
         ScopeInterface::class     => self::class,
         ResolverInterface::class  => self::class,
+        InvokerInterface::class   => self::class,
     ];
 
     /**
@@ -280,7 +283,7 @@ final class Container implements
      */
     public function bind(string $alias, $resolver): void
     {
-        if (\is_array($resolver) || $resolver instanceof \Closure || $resolver instanceof Autowire) {
+        if (\is_array($resolver) || $resolver instanceof Closure || $resolver instanceof Autowire) {
             // array means = execute me, false = not singleton
             $this->bindings[$alias] = [$resolver, false];
 
@@ -298,7 +301,7 @@ final class Container implements
      */
     public function bindSingleton(string $alias, $resolver): void
     {
-        if (\is_object($resolver) && !$resolver instanceof \Closure && !$resolver instanceof Autowire) {
+        if (\is_object($resolver) && !$resolver instanceof Closure && !$resolver instanceof Autowire) {
             // direct binding to an instance
             $this->bindings[$alias] = $resolver;
 
@@ -336,6 +339,55 @@ final class Container implements
     public function removeBinding(string $alias): void
     {
         unset($this->bindings[$alias]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function invoke($target, array $parameters = [])
+    {
+        if (\is_array($target) && isset($target[1])) {
+            // In a form of resolver and method
+            [$resolver, $method] = $target;
+
+            // Resolver instance (i.e. [ClassName::class, 'method'])
+            if (\is_string($resolver)) {
+                $resolver = $this->get($resolver);
+            }
+
+            try {
+                $method = new \ReflectionMethod($resolver, $method);
+            } catch (\ReflectionException $e) {
+                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
+            }
+
+            $method->setAccessible(true);
+
+            // Invoking factory method with resolved arguments
+            return $method->invokeArgs(
+                $resolver,
+                $this->resolveArguments($method, $parameters)
+            );
+        }
+
+        if (\is_string($target) && \is_callable($target)) {
+            $target = Closure::fromCallable($target);
+        }
+
+        if ($target instanceof Closure) {
+            try {
+                $reflection = new \ReflectionFunction($target);
+            } catch (\ReflectionException $e) {
+                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
+            }
+
+            // Invoking Closure with resolved arguments
+            return $reflection->invokeArgs(
+                $this->resolveArguments($reflection, $parameters)
+            );
+        }
+
+        throw new NotCallableException('Unsupported callable');
     }
 
     /**
@@ -594,41 +646,10 @@ final class Container implements
             return $target->resolve($this, $parameters);
         }
 
-        if ($target instanceof \Closure) {
-            try {
-                $reflection = new \ReflectionFunction($target);
-            } catch (\ReflectionException $e) {
-                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
-            }
-
-            // Invoking Closure with resolved arguments
-            return $reflection->invokeArgs(
-                $this->resolveArguments($reflection, $parameters)
-            );
+        try {
+            return $this->invoke($target, $parameters);
+        } catch (NotCallableException $e) {
+            throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias), $e->getCode(), $e);
         }
-
-        if (is_array($target) && isset($target[1])) {
-            // In a form of resolver and method
-            [$resolver, $method] = $target;
-
-            // Resolver instance (i.e. [ClassName::class, 'method'])
-            $resolver = $this->get($resolver);
-
-            try {
-                $method = new \ReflectionMethod($resolver, $method);
-            } catch (\ReflectionException $e) {
-                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
-            }
-
-            $method->setAccessible(true);
-
-            // Invoking factory method with resolved arguments
-            return $method->invokeArgs(
-                $resolver,
-                $this->resolveArguments($method, $parameters)
-            );
-        }
-
-        throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias));
     }
 }

@@ -7,4 +7,6 @@ namespace Spiral\Queue;
 interface OptionsInterface
 {
     public function getDelay(): ?int;
+
+    public function getQueue(): ?string;
 }

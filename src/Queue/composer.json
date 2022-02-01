@@ -15,7 +15,8 @@
     ],
     "require": {
         "php": ">=7.2",
-        "ext-json": "*"
+        "ext-json": "*",
+        "opis/closure": "^3.6"
     },
     "autoload": {
         "psr-4": {
@@ -30,7 +31,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Spiral\\Queue\\Tests\\": "tests"
+            "Spiral\\Tests\\Queue\\": "tests"
         }
     },
     "extra": {

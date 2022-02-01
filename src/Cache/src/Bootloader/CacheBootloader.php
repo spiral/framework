@@ -78,7 +78,7 @@ final class CacheBootloader extends Bootloader
                     ],
                     'file' => [
                         'type' => 'file',
-                        'path' => $dirs->get('runtime').'cache',
+                        'path' => $dirs->get('runtime') . 'cache',
                     ],
                 ],
                 'typeAliases' => [

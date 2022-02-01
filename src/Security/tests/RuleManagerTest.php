@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Security;
 
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Security\Exception\RuleException;
@@ -27,28 +28,26 @@ class RuleManagerTest extends TestCase
 {
     public const RULE_NAME = 'test';
 
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     private $container;
 
-    /**
-     * @var RuleInterface
-     */
+    /** @var RuleInterface */
     private $rule;
 
     public function setUp(): void
     {
-        $this->container = $this->createMock(ContainerInterface::class);
-        $this->rule = $this->createMock(RuleInterface::class);
+        $this->container = m::mock(ContainerInterface::class);
+        $this->rule = m::mock(RuleInterface::class);
     }
 
     public function testFlow(): void
     {
         $ruleClass = get_class($this->rule);
 
-        $this->container->expects($this->once())->method('get')
-            ->with($ruleClass)->willReturn($this->rule);
+        $this->container->shouldReceive('get')
+            ->once()
+            ->with($ruleClass)
+            ->andReturn($this->rule);
 
         $manager = new RuleManager($this->container);
 
@@ -86,7 +85,9 @@ class RuleManagerTest extends TestCase
 
     public function testRemoveException(): void
     {
-        $this->container->method('has')->with(self::RULE_NAME)->willReturn(false);
+        $this->container->shouldReceive('has')
+            ->with(self::RULE_NAME)
+            ->andReturnFalse();
 
         $manager = new RuleManager($this->container);
 
@@ -96,7 +97,9 @@ class RuleManagerTest extends TestCase
 
     public function testGetWithUndefinedRule(): void
     {
-        $this->container->method('has')->with(self::RULE_NAME)->willReturn(false);
+        $this->container->shouldReceive('has')
+            ->with(self::RULE_NAME)
+            ->andReturnFalse();
 
         $manager = new RuleManager($this->container);
 
@@ -107,7 +110,13 @@ class RuleManagerTest extends TestCase
     public function testGetWithSomethingOtherThanRule(): void
     {
         $ruleClass = \stdClass::class;
-        $this->container->method('has')->with(self::RULE_NAME)->willReturn(true);
+        $this->container->shouldReceive('has')
+            ->with(self::RULE_NAME)
+            ->andReturnTrue();
+
+        $this->container->shouldReceive('get')
+            ->with($ruleClass)
+            ->andReturn(new $ruleClass);
 
         $manager = new RuleManager($this->container);
 

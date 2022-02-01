@@ -15,6 +15,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * Provides the ability to associate custom handlers and serializes with the specific job name.
+ *
+ * @deprecated since 2.9. Will be removed since 3.0
  */
 final class JobRegistry implements HandlerRegistryInterface, SerializerRegistryInterface
 {

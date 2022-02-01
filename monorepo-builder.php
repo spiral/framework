@@ -140,7 +140,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'src/Models'          => 'git@github.com:spiral/models.git',
         'src/Pagination'      => 'git@github.com:spiral/pagination.git',
         'src/Prototype'       => 'git@github.com:spiral/prototype.git',
-        'src/Queue'           => 'git@github.com:spiral/queue.git',
         'src/Reactor'         => 'git@github.com:spiral/reactor.git',
         'src/Router'          => 'git@github.com:spiral/router.git',
         'src/Scaffolder'      => 'git@github.com:spiral/scaffolder.git',

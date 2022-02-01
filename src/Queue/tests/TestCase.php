@@ -9,10 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Jobs\Tests;
+namespace Spiral\Tests\Queue;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    use MockeryPHPUnitIntegration;
 }
