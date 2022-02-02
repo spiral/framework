@@ -65,7 +65,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
     public function boot(KernelInterface $kernel, FactoryInterface $factory): void
     {
         $this->config->setDefaults(
-            HttpConfig::class,
+            HttpConfig::CONFIG,
             [
                 'basePath'   => '/',
                 'headers'    => [
