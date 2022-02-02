@@ -74,7 +74,7 @@ final class MailerBootloader extends Bootloader
             $registry->setSerializer(MailQueue::JOB_NAME, MessageSerializer::class);
             $container->bindSingleton(
                 MailerInterface::class,
-                static function (MailerConfig $config) use($container) {
+                static function (MailerConfig $config) use ($container) {
                     if ($config->getQueueConnection() === 'sync') {
                         $queue = $container->get(ShortCircuit::class);
                     } else {
