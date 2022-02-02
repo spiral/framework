@@ -122,13 +122,31 @@ final class LogFactory implements LogsInterface, InjectorInterface
     }
 
     /**
-     * Get list of channel specific log processors. Falls back to PsrLogMessageProcessor for now.
+     * Get list of channel specific log processors.
      *
      * @param string $channel
      * @return callable[]
      */
     protected function getProcessors(string $channel): array
     {
-        return [new PsrLogMessageProcessor()];
+        $processors = [];
+        foreach ($this->config->getProcessors($channel) as $processor) {
+            if (!$processor instanceof Autowire) {
+                $processors[] = $processor;
+                continue;
+            }
+
+            try {
+                $processors[] = $processor->resolve($this->factory);
+            } catch (ContainerExceptionInterface $e) {
+                throw new ConfigException($e->getMessage(), $e->getCode(), $e);
+            }
+        }
+
+        if ($processors === []) {
+            $processors[] = new PsrLogMessageProcessor();
+        }
+
+        return $processors;
     }
 }

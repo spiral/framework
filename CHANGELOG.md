@@ -28,6 +28,7 @@
   - [spiral/validation] Add array::count, array::range, array::shorter and array::longer rules (#435)
   - [spiral/queue] New component with common interfaces (RR2.0 support)
   - [spiral/views] [Allow custom loader in ViewManager](https://github.com/spiral/framework/issues/488)
+  - [spiral/monolog-bridge] [Added ability to configure Monolog processors](https://github.com/spiral/framework/issues/474)
 
 ## v2.8.0 - 2021-06-03
 
