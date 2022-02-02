@@ -474,10 +474,7 @@ final class Container implements
     private function assertType(\ReflectionParameter $parameter, ContextFunction $context, $value): void
     {
         if ($value === null) {
-            if (
-                !$parameter->isOptional() &&
-                !($parameter->isDefaultValueAvailable() && $parameter->getDefaultValue() === null)
-            ) {
+            if (!$parameter->allowsNull()) {
                 throw new ArgumentException($parameter, $context);
             }
 
