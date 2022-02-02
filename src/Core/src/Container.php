@@ -182,8 +182,13 @@ final class Container implements
      *
      * Attention, context ignored when outer container has instance by alias.
      *
-     * @param string|Autowire $id
+     * @template T
+     *
+     * @param class-string<T>|string|Autowire $id
      * @param string|null $context Call context.
+     *
+     * @return T
+     * @psalm-return ($id is class-string ? T : mixed)
      *
      * @throws ContainerException
      * @throws \Throwable
@@ -200,7 +205,12 @@ final class Container implements
     /**
      * {@inheritdoc}
      *
+     * @template T
+     *
+     * @param class-string<T> $alias
      * @param string|null $context Related to parameter caused injection if any.
+     *
+     * @return T
      *
      * @throws \Throwable
      */
