@@ -111,6 +111,18 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
+    public function testConsoleHandlerWithPrevious(): void
+    {
+        $handler = new ConsoleHandler();
+        $handler->setColorsSupport(true);
+        $result = $handler->renderException(new \Error('message', 100, new \Error('previous')));
+
+        $this->assertStringContainsString('Error', $result);
+        $this->assertStringContainsString('message', $result);
+        $this->assertStringContainsString('previous', $result);
+        $this->assertStringContainsString(__FILE__, $result);
+    }
+
     public function testHtmlHandlerDefaultBasic(): void
     {
         $handler = new HtmlHandler(HtmlHandler::DEFAULT);

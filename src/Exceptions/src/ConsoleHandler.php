@@ -65,19 +65,11 @@ class ConsoleHandler extends AbstractHandler
      */
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
-        $result = '';
-
-        if ($e instanceof \Error) {
-            $result .= $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:magenta,white');
-        } else {
-            $result .= $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:red,white');
+        $exceptions = [];
+        for ($prev = $e->getPrevious(); $prev !== null; $prev = $prev->getPrevious()) {
+            $exceptions[] = $this->renderFormatted($prev);
         }
-
-        $result .= $this->format(
-            "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>\n",
-            $e->getFile(),
-            $e->getLine()
-        );
+        $result = implode("\n", array_merge(array_reverse($exceptions), [$this->renderFormatted($e)]));
 
         if ($verbosity >= self::VERBOSITY_DEBUG) {
             $result .= $this->renderTrace($e, new Highlighter(
@@ -201,5 +193,25 @@ class ConsoleHandler extends AbstractHandler
         }
 
         return sprintf($format, ...$args);
+    }
+
+    /**
+     * Convert exception to a formatted string.
+     */
+    private function renderFormatted(\Throwable $e): string
+    {
+        if ($e instanceof \Error) {
+            $result = $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:magenta,white');
+        } else {
+            $result = $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:red,white');
+        }
+
+        $result .= $this->format(
+            "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>",
+            $e->getFile(),
+            $e->getLine()
+        );
+
+        return $result;
     }
 }
