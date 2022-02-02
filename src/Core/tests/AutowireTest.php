@@ -229,6 +229,20 @@ class AutowireTest extends TestCase
         $this->assertInstanceOf(TypedClass::class, $object);
     }
 
+    public function testCallMethodWithNullValueOnNullableScalar(): void
+    {
+        $container = new Container();
+
+        $result = $container->invoke(
+            [SampleClass::class, 'nullableScalar'],
+            [
+                'nullable' => null,
+            ]
+        );
+
+        $this->assertNull($result);
+    }
+
     public function testAutowireTypecastingAndValidatingWrongInt(): void
     {
         $expected = "Unable to resolve 'int' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
