@@ -19,9 +19,10 @@ final class MailerConfig extends InjectableConfig
 
     /** @var array */
     protected $config = [
-        'dsn'      => '',
-        'from'     => '',
+        'dsn' => '',
+        'from' => '',
         'pipeline' => '',
+        'queueConnection' => null,
     ];
 
     public function getDSN(): string
@@ -37,5 +38,10 @@ final class MailerConfig extends InjectableConfig
     public function getQueuePipeline(): string
     {
         return $this->config['pipeline'];
+    }
+
+    public function getQueueConnection(): ?string
+    {
+        return $this->config['queueConnection'] ?? null;
     }
 }

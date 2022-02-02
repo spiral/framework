@@ -11,16 +11,19 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt\Bootloader;
 
-use Psr\Container\ContainerInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader\Jobs\JobsBootloader;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Core\Container;
 use Spiral\Jobs\JobRegistry;
+use Spiral\Jobs\QueueInterface;
+use Spiral\Jobs\ShortCircuit;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Queue\Bootloader\QueueBootloader;
 use Spiral\Queue\HandlerRegistryInterface;
+use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
@@ -40,9 +43,8 @@ final class MailerBootloader extends Bootloader
     ];
 
     protected const SINGLETONS = [
-        MailerInterface::class => MailQueue::class,
-        MailJob::class         => MailJob::class,
-        SymfonyMailer::class   => [self::class, 'mailer'],
+        MailJob::class => MailJob::class,
+        SymfonyMailer::class => [self::class, 'mailer'],
     ];
 
     /** @var ConfiguratorInterface */
@@ -55,32 +57,55 @@ final class MailerBootloader extends Bootloader
 
     public function boot(EnvironmentInterface $env, AbstractKernel $kernel): void
     {
-        $this->config->setDefaults('mailer', [
-            'dsn'      => $env->get('MAILER_DSN', ''),
+        $this->config->setDefaults(MailerConfig::CONFIG, [
+            'dsn' => $env->get('MAILER_DSN', ''),
             'pipeline' => $env->get('MAILER_PIPELINE', 'local'),
-            'from'     => $env->get('MAILER_FROM', 'Spiral <sendit@local.host>'),
+            'from' => $env->get('MAILER_FROM', 'Spiral <sendit@local.host>'),
+            'queueConnection' => null,
         ]);
     }
 
-    public function start(ContainerInterface $container): void
+    public function start(Container $container): void
     {
         if ($container->has(JobRegistry::class)) {
             // Will be removed since v3.0
             $registry = $container->get(JobRegistry::class);
             $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
             $registry->setSerializer(MailQueue::JOB_NAME, MessageSerializer::class);
+            $container->bindSingleton(
+                MailerInterface::class,
+                static function (MailerConfig $config) use($container) {
+                    if ($config->getQueueConnection() === 'sync') {
+                        $queue = $container->get(ShortCircuit::class);
+                    } else {
+                        $queue = $container->get(QueueInterface::class);
+                    }
+
+                    return new MailQueue($config, $queue);
+                }
+            );
         }
 
         if ($container->has(HandlerRegistryInterface::class)) {
             $registry = $container->get(HandlerRegistryInterface::class);
             $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
+
+            $container->bindSingleton(
+                MailerInterface::class,
+                static function (MailerConfig $config, QueueConnectionProviderInterface $provider) {
+                    return new MailQueue(
+                        $config,
+                        $provider->getConnection($config->getQueueConnection())
+                    );
+                }
+            );
         }
     }
 
     public function mailer(MailerConfig $config): SymfonyMailer
     {
-        $transport = Transport::fromDsn($config->getDSN());
-
-        return new Mailer($transport);
+        return new Mailer(
+            Transport::fromDsn($config->getDSN())
+        );
     }
 }
