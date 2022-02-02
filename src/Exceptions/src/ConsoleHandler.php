@@ -206,12 +206,10 @@ class ConsoleHandler extends AbstractHandler
             $result = $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:red,white');
         }
 
-        $result .= $this->format(
+        return $result . $this->format(
             "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>",
             $e->getFile(),
             $e->getLine()
         );
-
-        return $result;
     }
 }

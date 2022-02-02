@@ -240,6 +240,19 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString('makeException', $result);
     }
 
+    public function testPlainHandlerWithPrevious(): void
+    {
+        $handler = new PlainHandler();
+
+        $result = $handler->renderException(
+            new \Error('message', 100, new \Error('previous')),
+            HandlerInterface::VERBOSITY_DEBUG
+        );
+
+        $this->assertStringContainsString('message', $result);
+        $this->assertStringContainsString('previous', $result);
+    }
+
     public function testJsonHandler(): void
     {
         $handler = new JsonHandler();

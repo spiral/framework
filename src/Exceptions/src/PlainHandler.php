@@ -23,11 +23,11 @@ final class PlainHandler extends AbstractHandler
      */
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
-        $result = '';
-
-        $result .= '[' . get_class($e) . "]\n" . $e->getMessage();
-
-        $result .= sprintf(" in %s:%s\n", $e->getFile(), $e->getLine());
+        $exceptions = [$this->renderFormatted($e)];
+        for ($prev = $e->getPrevious(); $prev !== null; $prev = $prev->getPrevious()) {
+            $exceptions[] = $this->renderFormatted($prev);
+        }
+        $result = implode("\n", $exceptions);
 
         if ($verbosity >= self::VERBOSITY_DEBUG) {
             $result .= $this->renderTrace($e, new Highlighter(new PlainStyle()));
@@ -82,5 +82,13 @@ final class PlainHandler extends AbstractHandler
         }
 
         return $result;
+    }
+
+    /**
+     * Convert exception to a formatted string.
+     */
+    private function renderFormatted(\Throwable $e): string
+    {
+        return '[' . \get_class($e) . "]\n" . $e->getMessage() . sprintf(" in %s:%s\n", $e->getFile(), $e->getLine());
     }
 }
