@@ -24,9 +24,11 @@
     'number::higher' rules were changed to reflect that these checks are in
     fact 'lower or equal' and 'higher or equal'. You may need to adjust
     translations file accordingly.
+  - [spiral/sendit] Added ability to use `sync` driver for mail queue (#398)
 - **Other Features**
-  - [spiral/validation] Add array::count, array::range, array::shorter and array::longer rules (#435)
-  - [spiral/queue] New component with common interfaces (RR2.0 support)
+  - [spiral/validation] Add array::count, array::range, array::shorter and array::longer
+  - [spiral/queue] New component with common interfaces (RR2.0 support) rules (#435)
+  - [spiral/cache] New component with common interfaces (RR2.0 support)
   - [spiral/views] [Allow custom loader in ViewManager](https://github.com/spiral/framework/issues/488)
   - [spiral/monolog-bridge] [Added ability to configure Monolog processors](https://github.com/spiral/framework/issues/474)
 
