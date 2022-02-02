@@ -84,12 +84,7 @@ final class MailerBootloader extends Bootloader
                     return new MailQueue($config, $queue);
                 }
             );
-        }
-
-        if ($container->has(HandlerRegistryInterface::class)) {
-            $registry = $container->get(HandlerRegistryInterface::class);
-            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
-
+        } else {
             $container->bindSingleton(
                 MailerInterface::class,
                 static function (MailerConfig $config, QueueConnectionProviderInterface $provider) {
@@ -99,6 +94,11 @@ final class MailerBootloader extends Bootloader
                     );
                 }
             );
+        }
+
+        if ($container->has(HandlerRegistryInterface::class)) {
+            $registry = $container->get(HandlerRegistryInterface::class);
+            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
         }
     }
 

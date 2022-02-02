@@ -6,14 +6,14 @@ namespace Spiral\Tests\SendIt;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Spiral\Jobs\Options;
+use Spiral\Jobs\QueueInterface;
 use Spiral\Mailer\Message;
-use Spiral\Queue\Options;
-use Spiral\Queue\QueueInterface;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
 
-class QueueTest extends TestCase
+class JobsQueueTest extends TestCase
 {
     public function testQueue(): void
     {
@@ -36,7 +36,7 @@ class QueueTest extends TestCase
             function ($job, $data, Options $options) use ($mail) {
                 $this->assertSame(MailQueue::JOB_NAME, $job);
                 $this->assertSame($data, MessageSerializer::pack($mail));
-                $this->assertSame('mailer', $options->getQueue());
+                $this->assertSame('mailer', $options->getPipeline());
 
                 return true;
             }
