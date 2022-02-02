@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Queue\Bootloader;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
@@ -44,11 +45,22 @@ final class QueueBootloader extends Bootloader
         $this->config = $config;
     }
 
-    public function boot(Container $container, EnvironmentInterface $env): void
+    public function boot(Container $container, EnvironmentInterface $env, AbstractKernel $kernel): void
     {
         $this->initQueueConfig($env);
         $this->registerJobsSerializer($container);
         $this->registerQueue($container);
+
+        $this->registerDriverAlias(SyncDriver::class, 'sync');
+
+        $kernel->started(static function () use ($container): void {
+            $registry = $container->get(HandlerRegistryInterface::class);
+            $config = $container->get(QueueConfig::class);
+
+            foreach ($config->getRegistryHandlers() as $jobType => $handler) {
+                $registry->setHandler($jobType, $handler);
+            }
+        });
     }
 
     public function registerDriverAlias(string $driverClass, string $alias): void
@@ -61,20 +73,12 @@ final class QueueBootloader extends Bootloader
 
     protected function initQueueManager(FactoryInterface $factory): QueueManager
     {
-        $this->registerDriverAlias(SyncDriver::class, 'sync');
-
         return $factory->make(QueueManager::class);
     }
 
-    protected function initRegistry(ContainerInterface $container, ContainerRegistry $registry, QueueConfig $config)
+    protected function initRegistry(ContainerInterface $container, ContainerRegistry $registry)
     {
-        $registry = new QueueRegistry($container, $registry);
-
-        foreach ($config->getRegistryHandlers() as $jobType => $handler) {
-            $registry->setHandler($jobType, $handler);
-        }
-
-        return $registry;
+        return new QueueRegistry($container, $registry);
     }
 
     private function registerJobsSerializer(Container $container): void
