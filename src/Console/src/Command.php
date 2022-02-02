@@ -63,7 +63,6 @@ abstract class Command extends SymfonyCommand
         $reflection = new \ReflectionMethod($this, 'perform');
         $reflection->setAccessible(true);
 
-        /** @var ResolverInterface $resolver */
         $resolver = $this->container->get(ResolverInterface::class);
 
         try {
