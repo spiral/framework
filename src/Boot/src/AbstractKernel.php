@@ -102,10 +102,8 @@ abstract class AbstractKernel implements KernelInterface
             $handleErrors
         );
 
-        $core->container->bindSingleton(
-            EnvironmentInterface::class,
-            $environment ?? new Environment()
-        );
+        $environment = $environment ?? new Environment();
+        $core->container->bindSingleton(EnvironmentInterface::class, $environment);
 
         return $core->run($environment);
     }
