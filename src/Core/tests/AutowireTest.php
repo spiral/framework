@@ -21,6 +21,7 @@ use Spiral\Tests\Core\Fixtures\ExtendedSample;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\SoftDependedClass;
 use Spiral\Tests\Core\Fixtures\TypedClass;
+use Spiral\Tests\Core\Fixtures\UnionTypes;
 
 /**
  * The most fun test.
@@ -235,6 +236,23 @@ class AutowireTest extends TestCase
 
         $result = $container->invoke(
             [SampleClass::class, 'nullableScalar'],
+            [
+                'nullable' => null,
+            ]
+        );
+
+        $this->assertNull($result);
+    }
+
+    /**
+     * @requires PHP >= 8.0
+     */
+    public function testCallMethodWithNullValueOnScalarUnionNull(): void
+    {
+        $container = new Container();
+
+        $result = $container->invoke(
+            [UnionTypes::class, 'unionNull'],
             [
                 'nullable' => null,
             ]
