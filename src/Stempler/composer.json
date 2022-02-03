@@ -22,7 +22,7 @@
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",
         "mockery/mockery": "^1.3",
-        "spiral/dumper": "^2.9"
+        "spiral/dumper": "^2.10"
     },
     "autoload": {
         "files": [
@@ -39,7 +39,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.9.x-dev"
+            "dev-master": "2.10.x-dev"
         }
     },
     "config": {

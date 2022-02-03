@@ -16,11 +16,11 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spiral/core": "^2.9",
-        "spiral/files": "^2.9",
-        "spiral/config": "^2.9",
-        "spiral/debug": "^2.9",
-        "spiral/exceptions": "^2.9"
+        "spiral/core": "^2.10",
+        "spiral/files": "^2.10",
+        "spiral/config": "^2.10",
+        "spiral/debug": "^2.10",
+        "spiral/exceptions": "^2.10"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",
@@ -41,7 +41,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.9.x-dev"
+            "dev-master": "2.10.x-dev"
         }
     },
     "config": {

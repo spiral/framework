@@ -10,8 +10,8 @@
     },
     "require": {
         "php": ">=7.2",
-        "spiral/attributes": "^2.9",
-        "spiral/tokenizer": "^2.9"
+        "spiral/attributes": "^2.10",
+        "spiral/tokenizer": "^2.10"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5"
@@ -28,7 +28,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.9.x-dev"
+            "dev-master": "2.10.x-dev"
         }
     },
     "config": {

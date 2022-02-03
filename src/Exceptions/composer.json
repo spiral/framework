@@ -18,8 +18,8 @@
         "php": ">=7.2",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "spiral/dumper": "^2.9",
-        "spiral/debug": "^2.9"
+        "spiral/dumper": "^2.10",
+        "spiral/debug": "^2.10"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5"
@@ -36,7 +36,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.9.x-dev"
+            "dev-master": "2.10.x-dev"
         }
     },
     "config": {
