@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Fixtures;
 
-class UnionTypes
-{
-    public static function example(SampleClass|TypedClass $example)
-    {
-    }
+use Countable;
+use IteratorAggregate;
 
-    public static function unionNull(null|string $nullable): null|string
+class IntersectionTypes
+{
+    public static function example(Countable&IteratorAggregate $example)
     {
-        return $nullable;
     }
 }

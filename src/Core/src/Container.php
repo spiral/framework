@@ -110,6 +110,16 @@ final class Container implements
                 throw new ContainerException($error);
             }
 
+            /**
+             * Container do not currently support intersection types.
+             */
+            if ($type instanceof \ReflectionIntersectionType) {
+                $error = 'Parameter $%s in %s contains a intersection type hint that cannot be inferred unambiguously';
+                $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
+
+                throw new ContainerException($error);
+            }
+
             if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
                 try {
                     $class = new \ReflectionClass($type->getName());
