@@ -15,6 +15,7 @@ use Composer\InstalledVersions;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\KernelInterface;
 use Spiral\Bootloader\ServerBootloader;
@@ -62,7 +63,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
      * @param KernelInterface  $kernel
      * @param FactoryInterface $factory
      */
-    public function boot(KernelInterface $kernel, FactoryInterface $factory): void
+    public function boot(AbstractKernel $kernel, FactoryInterface $factory): void
     {
         $this->config->setDefaults(
             HttpConfig::CONFIG,
@@ -75,7 +76,10 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
             ]
         );
 
-        $kernel->addDispatcher($factory->make(SapiDispatcher::class));
+        // Lowest priority
+        $kernel->started(static function (AbstractKernel $kernel) use ($factory): void {
+            $kernel->addDispatcher($factory->make(SapiDispatcher::class));
+        });
 
         if (! InstalledVersions::isInstalled('spiral/roadrunner-bridge')) {
             if (class_exists(PSR7Client::class)) {
