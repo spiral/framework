@@ -21,7 +21,7 @@
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.0",
+        "phpunit/phpunit": "^8.5|^9.5",
         "spiral/cookies": "^2.9",
         "spiral/http": "^2.9",
         "spiral/debug": "^2.9",

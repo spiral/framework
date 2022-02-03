@@ -29,7 +29,7 @@
         "guzzlehttp/psr7": "^1.7",
         "jetbrains/phpstorm-attributes": "^1.0",
         "symfony/var-dumper": "^5.2",
-        "phpunit/phpunit": "^8.5|^9.0"
+        "phpunit/phpunit": "^8.5|^9.5"
     },
     "autoload-dev": {
         "psr-4": {

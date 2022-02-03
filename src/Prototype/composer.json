@@ -28,9 +28,9 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.0",
+        "phpunit/phpunit": "^8.5|^9.5",
         "mockery/mockery": "^1.3",
-        "cycle/orm": "^1.2.6",
+        "cycle/orm": "^1.8.1",
         "spiral/debug": "^2.9"
     },
     "autoload-dev": {
