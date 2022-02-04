@@ -123,7 +123,7 @@ final class BootloadManager implements Container\SingletonInterface
             yield from $this->initBootloader($bootloader);
             $this->invokeBootloader($bootloader, 'boot', $options);
 
-            yield \compact('bootloader', 'options');
+            yield $class => \compact('bootloader', 'options');
         }
     }
 
