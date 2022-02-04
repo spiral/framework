@@ -1,6 +1,15 @@
 # CHANGELOG
 
-## v2.9.0 - Unreleased
+## v2.10.0 - Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - Console commands `Spiral\Scaffolder\Command\MigrationCommand`, `Spiral\Scaffolder\Command\Database\RepositoryCommand`, 
+    `Spiral\Scaffolder\Command\Database\EntityCommand` is deprecated. Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - Scaffolder `Spiral\Scaffolder\Declaration\MigrationDeclaration` is deprecated. Will be moved to `spiral/cycle-bridge`
+    and removed in v3.0
+- **Other Features**
+
+## v2.9.0 - 2022-02-03
 
 - **High Impact Changes**
 - **Medium Impact Changes**
