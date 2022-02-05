@@ -179,7 +179,7 @@ final class BootloadManager implements Container\SingletonInterface
     private function fireCallbacks(array $callbacks): void
     {
         foreach ($callbacks as $callback) {
-            $callback($this->container);
+            $this->container->invoke($callback);
         }
     }
 }

@@ -265,7 +265,7 @@ abstract class AbstractKernel implements KernelInterface
         }
 
         do {
-            \current($callbacks)($this);
+            $this->container->invoke(\current($callbacks));
         } while (\next($callbacks));
 
         $callbacks = [];

@@ -32,12 +32,12 @@ class BootloadersTest extends TestCase
             SampleBootWithStarted::class,
             SampleBoot::class,
         ], [
-            static function(Container $container) {
-                $container->bind('efg', new SampleBoot());
+            static function(Container $container, SampleBoot $boot) {
+                $container->bind('efg', $boot);
             }
         ], [
-            static function(Container $container) {
-                $container->bind('ghi', new SampleBoot());
+            static function(Container $container, SampleBoot $boot) {
+                $container->bind('ghi', $boot);
             }
         ]);
 
