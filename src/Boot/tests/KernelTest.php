@@ -141,5 +141,11 @@ class KernelTest extends TestCase
         $this->assertFalse($kernel->getContainer()->has('klm'));
         $this->assertTrue($kernel->getContainer()->has('lmn'));
         $this->assertTrue($kernel->getContainer()->has('mno'));
+
+
+        $this->assertInstanceOf(
+            EnvironmentInterface::class,
+            $kernel->getContainer()->get(EnvironmentInterface::class)
+        );
     }
 }
