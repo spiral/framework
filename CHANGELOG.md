@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## v2.9.0 - Unreleased
+## v2.10.0 - Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Other Features**
+  - [spiral/mailer] Added ability to set delay for messages
+- 
+## v2.9.0
 
 - **High Impact Changes**
 - **Medium Impact Changes**

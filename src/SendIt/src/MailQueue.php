@@ -46,7 +46,7 @@ final class MailQueue implements MailerInterface
             $this->queue->push(
                 self::JOB_NAME,
                 MessageSerializer::pack($msg),
-                $options
+                $options->withDelay($msg->getOptions()['delay'] ?? null)
             );
         }
     }
