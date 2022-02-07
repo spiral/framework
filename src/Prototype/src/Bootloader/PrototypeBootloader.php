@@ -58,7 +58,8 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'memory'       => 'Spiral\Boot\MemoryInterface',
         'orm'          => 'Cycle\ORM\ORMInterface',
         'paginators'   => 'Spiral\Pagination\PaginationProviderInterface',
-        'queue'        => 'Spiral\Jobs\QueueInterface',
+        'queue'        => 'Spiral\Queue\QueueInterface',
+        'queueManager' => 'Spiral\Queue\QueueConnectionProviderInterface',
         'request'      => 'Spiral\Http\Request\InputManager',
         'response'     => 'Spiral\Http\ResponseWrapper',
         'router'       => 'Spiral\Router\RouterInterface',
@@ -69,6 +70,8 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'views'        => 'Spiral\Views\ViewsInterface',
         'auth'         => ['resolve' => 'Spiral\Auth\AuthScope', 'with' => ['Spiral\Auth\AuthContextInterface']],
         'authTokens'   => 'Spiral\Auth\TokenStorageInterface',
+        'cache'        => 'Psr\SimpleCache\CacheInterface',
+        'cacheManager' => 'Spiral\Cache\CacheStorageProviderInterface',
     ];
 
     /** @var MemoryInterface */
