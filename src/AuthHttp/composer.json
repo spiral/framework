@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*",
         "spiral/auth": "^2.10",
         "psr/http-message": "^1.0",
