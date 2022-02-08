@@ -23,6 +23,9 @@ use Throwable;
 
 use function Spiral\Scaffolder\trimPostfix;
 
+/**
+ * @deprecated since v2.10. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 class EntityCommand extends AbstractCommand
 {
     protected const ELEMENT = 'entity';
