@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## v2.9.0 - Unreleased
+## v2.10.0 - Unreleased
+- **High Impact Changes**
+  - A minimal version of `PHP` increased to `^7.4`
+- **Medium Impact Changes**
+- **Other Features**
+
+## v2.9.0 - 2022-02-03
 
 - **High Impact Changes**
 - **Medium Impact Changes**
