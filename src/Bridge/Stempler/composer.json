@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "spiral/stempler": "^2.10",
         "spiral/boot": "^2.10",
         "spiral/files": "^2.10",
