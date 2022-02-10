@@ -1,13 +1,24 @@
 # CHANGELOG
 
-## v2.9.1 - Unreleased
+## v2.10.0 - Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - Console commands `Spiral\Scaffolder\Command\MigrationCommand`, `Spiral\Scaffolder\Command\Database\RepositoryCommand`, 
+    `Spiral\Scaffolder\Command\Database\EntityCommand` is deprecated. Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - Scaffolder `Spiral\Scaffolder\Declaration\MigrationDeclaration` is deprecated. Will be moved to `spiral/cycle-bridge`
+    and removed in v3.0
+  - A minimal version of `PHP` increased to `^7.4`
+- **Other Features**
+  - Class `Spiral\Mailer\Message` is no longer final and is available for extension
+
+## v2.9.1 - 2022-02-11
 
 - **High Impact Changes**
 - **Medium Impact Changes**
   - [spiral/sendit] Method `getQueuePipeline` of `Spiral\SendIt\Config\MailerConfig` class is deprecated.
     Use method `getQueue` instead. Added environment variables `MAILER_QUEUE` and `MAILER_QUEUE_CONNECTION`
 - **Other Features**
-
+- 
 ## v2.9.0 - 2022-02-03
 
 - **High Impact Changes**
