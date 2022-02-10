@@ -20,8 +20,6 @@
         "symfony/console": "^5.3"
     },
     "require-dev": {
-        "spiral/boot": "^2.10",
-        "symfony/tokenizer": "^2.10",
         "phpunit/phpunit": "^8.5|^9.5",
         "mockery/mockery": "^1.3"
     },
