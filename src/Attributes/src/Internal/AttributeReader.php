@@ -52,7 +52,7 @@ abstract class AttributeReader extends Reader
             yield $this->instantiator->instantiate($attribute, $arguments, $class);
         }
 
-        foreach ($class->getTraits() as $trait){
+        foreach ($class->getTraits() as $trait) {
             yield from $this->getClassMetadata($trait, $name);
         }
     }
