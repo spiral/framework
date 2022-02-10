@@ -19,17 +19,17 @@ use Spiral\Router\Router;
 use Spiral\Router\Target\AbstractTarget;
 use Spiral\Router\Target\Action;
 use Spiral\Router\UriHandler;
-use Spiral\Tests\Router\Stub\AnnotatedRoutesTestCore;
+use Spiral\Tests\Router\Stub\RoutesTestCore;
 use Spiral\Tests\Router\Stub\TestMiddleware;
 
-class AnnotatedRoutesGroupTest extends TestCase
+class RoutesGroupTest extends TestCase
 {
     public function testCoreString(): void
     {
         $router = new Router('/', new UriHandler(new UriFactory()), new Container());
         $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()));
 
-        $group->setCore(AnnotatedRoutesTestCore::class);
+        $group->setCore(RoutesTestCore::class);
 
         $r = $group->createRoute('/', 'controller', 'method');
         $t = $this->getProperty($r, 'target');
@@ -39,7 +39,7 @@ class AnnotatedRoutesGroupTest extends TestCase
         $this->assertSame('controller', $this->getProperty($t, 'controller'));
         $this->assertSame('method', $this->getProperty($t, 'action'));
 
-        $this->assertInstanceOf(AnnotatedRoutesTestCore::class, $this->getActionProperty($t, 'core'));
+        $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'core'));
     }
 
     public function testCoreObject(): void
@@ -47,7 +47,7 @@ class AnnotatedRoutesGroupTest extends TestCase
         $router = new Router('/', new UriHandler(new UriFactory()), new Container());
         $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()));
 
-        $group->setCore(new AnnotatedRoutesTestCore(new Container()));
+        $group->setCore(new RoutesTestCore(new Container()));
 
         $r = $group->createRoute('/', 'controller', 'method');
         $t = $this->getProperty($r, 'target');
@@ -57,7 +57,7 @@ class AnnotatedRoutesGroupTest extends TestCase
         $this->assertSame('controller', $this->getProperty($t, 'controller'));
         $this->assertSame('method', $this->getProperty($t, 'action'));
 
-        $this->assertInstanceOf(AnnotatedRoutesTestCore::class, $this->getActionProperty($t, 'core'));
+        $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'core'));
     }
 
     public function testMiddleware(): void
