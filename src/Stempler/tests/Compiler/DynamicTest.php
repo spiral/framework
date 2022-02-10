@@ -37,7 +37,7 @@ class DynamicTest extends BaseTest
         $doc = $this->parse('{{ $name }}');
 
         $this->assertSame(
-            "<?php echo htmlspecialchars((string) \$name, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8'); ?>",
+            "<?php echo htmlspecialchars((string) (\$name), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8'); ?>",
             $this->compile($doc)
         );
     }
