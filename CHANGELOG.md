@@ -1,6 +1,14 @@
 # CHANGELOG
 
-## v2.9.0 - Unreleased
+## v2.9.1 - Unreleased
+
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - [spiral/sendit] Method `getQueuePipeline` of `Spiral\SendIt\Config\MailerConfig` class is deprecated.
+    Use method `getQueue` instead. Added environment variables `MAILER_QUEUE` and `MAILER_QUEUE_CONNECTION`
+- **Other Features**
+
+## v2.9.0 - 2022-02-03
 
 - **High Impact Changes**
 - **Medium Impact Changes**
