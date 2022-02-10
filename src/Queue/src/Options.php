@@ -12,7 +12,7 @@ final class Options implements OptionsInterface, \JsonSerializable
     /** @var string|null */
     private $queue;
 
-    public function withQueue(string $queue): self
+    public function withQueue(?string $queue): self
     {
         $options = clone $this;
         $options->queue = $queue;
@@ -58,7 +58,7 @@ final class Options implements OptionsInterface, \JsonSerializable
         return $options;
     }
 
-    public static function onQueue(string $queue): Options
+    public static function onQueue(?string $queue): Options
     {
         $options = new self();
         $options->queue = $queue;

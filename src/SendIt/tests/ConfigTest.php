@@ -71,6 +71,17 @@ class ConfigTest extends TestCase
         $this->assertSame('emails', $config->getQueuePipeline());
     }
 
+    public function testQueueWithNull(): void
+    {
+        $config = new MailerConfig([
+            'pipeline' => null,
+            'queue' => null,
+        ]);
+
+        $this->assertNull($config->getQueue());
+        $this->assertNull($config->getQueuePipeline());
+    }
+
     public function testDefaultConfigWithPippeline(): void
     {
         $env = new Environment(['MAILER_PIPELINE' => 'emails']);
