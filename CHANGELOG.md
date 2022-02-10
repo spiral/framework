@@ -9,6 +9,7 @@
     and removed in v3.0
   - A minimal version of `PHP` increased to `^7.4`
 - **Other Features**
+  - Class `Spiral\Mailer\Message` is no longer final and is available for extension
 
 ## v2.9.0 - 2022-02-03
 
