@@ -25,7 +25,7 @@ use Spiral\Exceptions\HtmlHandler;
 final class ExceptionHandler
 {
     /** @var resource */
-    private static $output = STDERR;
+    private static $output = null;
 
     /**
      * @param resource $output
@@ -87,6 +87,10 @@ final class ExceptionHandler
      */
     public static function handleException(\Throwable $e): void
     {
+        if (self::$output === null) {
+            self::$output = defined('STDERR') ? STDERR : fopen('php://stderr', 'w+');
+        }
+
         if (php_sapi_name() == 'cli') {
             $handler = new ConsoleHandler(self::$output);
         } else {
