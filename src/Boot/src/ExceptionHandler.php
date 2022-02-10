@@ -25,7 +25,7 @@ use Spiral\Exceptions\HtmlHandler;
 final class ExceptionHandler
 {
     /** @var resource */
-    private static $output = null;
+    private static $output;
 
     /**
      * @param resource $output
