@@ -51,7 +51,7 @@ class SourcemapTest extends BaseTest
             preg_replace("/\s+/", '', '
 <div>
     <?php foreach ([\'a\', \'b\', \'c\'] as $value): ?>
-    <b><?php echo htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?></b>
+    <b><?php echo htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?></b>
     <?php endforeach; ?>
 </div>'),
             preg_replace("/\s+/", '', $res->getContent())

@@ -84,7 +84,7 @@ class ImportElementTest extends BaseTest
         $builder = $this->getBuilder($loader, []);
 
         $this->assertSame(
-            '<a href="<?php echo htmlspecialchars($url, ENT_QUOTES |'
+            '<a href="<?php echo htmlspecialchars((string) $url, ENT_QUOTES |'
             . ' ENT_SUBSTITUTE, \'utf-8\'); ?>">hello world</a>',
             $builder->compile('root')->getContent()
         );
@@ -102,8 +102,8 @@ class ImportElementTest extends BaseTest
         $builder = $this->getBuilder($loader, []);
 
         $this->assertSame(
-            '<a href="<?php echo htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
-            . '<?php echo htmlspecialchars(strtoupper(\'hello world\'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
+            '<a href="<?php echo htmlspecialchars((string) $url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
+            . '<?php echo htmlspecialchars((string) strtoupper(\'hello world\'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
             . '</a>',
             $builder->compile('root')->getContent()
         );
@@ -121,8 +121,8 @@ class ImportElementTest extends BaseTest
         $builder = $this->getBuilder($loader, []);
 
         $this->assertSame(
-            '<a href="<?php echo htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
-            . '<?php echo htmlspecialchars(strtoupper(\'bad\'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
+            '<a href="<?php echo htmlspecialchars((string) $url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
+            . '<?php echo htmlspecialchars((string) strtoupper(\'bad\'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
             . '</a>',
             $builder->compile('root')->getContent()
         );
@@ -140,8 +140,8 @@ class ImportElementTest extends BaseTest
         $builder = $this->getBuilder($loader, []);
 
         $this->assertSame(
-            '<a href="<?php echo htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
-            . '<?php echo htmlspecialchars(strtoupper(\'OK\'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
+            '<a href="<?php echo htmlspecialchars((string) $url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
+            . '<?php echo htmlspecialchars((string) strtoupper(\'OK\'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
             . '</a>',
             $builder->compile('root')->getContent()
         );
@@ -159,8 +159,8 @@ class ImportElementTest extends BaseTest
         $builder = $this->getBuilder($loader, []);
 
         $this->assertSame(
-            '<a href="<?php echo htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
-            . '<?php echo htmlspecialchars(strtoupper(\'hello \'.\'OK\'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
+            '<a href="<?php echo htmlspecialchars((string) $url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
+            . '<?php echo htmlspecialchars((string) strtoupper(\'hello \'.\'OK\'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
             . '</a>',
             $builder->compile('root')->getContent()
         );
@@ -178,8 +178,8 @@ class ImportElementTest extends BaseTest
         $builder = $this->getBuilder($loader, []);
 
         $this->assertSame(
-            '<a href="<?php echo htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
-            . '<?php echo htmlspecialchars(strtoupper(\'OK\'.\' '
+            '<a href="<?php echo htmlspecialchars((string) $url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
+            . '<?php echo htmlspecialchars((string) strtoupper(\'OK\'.\' '
             . ' \'.\'cool\'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
             . '</a>',
             $builder->compile('root')->getContent()
@@ -199,8 +199,8 @@ class ImportElementTest extends BaseTest
         $builder = $this->getBuilder($loader, []);
 
         $this->assertSame(
-            '<a href="<?php echo htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
-            . '<?php echo htmlspecialchars(strtoupper'
+            '<a href="<?php echo htmlspecialchars((string) $url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
+            . '<?php echo htmlspecialchars((string) strtoupper'
             . '(\' \'.\'OK\'.\' \'.\'cool\'.\' \'), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
             . '</a>',
             $builder->compile('root')->getContent()
@@ -219,8 +219,8 @@ class ImportElementTest extends BaseTest
         $builder = $this->getBuilder($loader, []);
 
         $this->assertSame(
-            '<a href="<?php echo htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
-            . '<?php echo htmlspecialchars(strtoupper(inject(\'value\', '
+            '<a href="<?php echo htmlspecialchars((string) $url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
+            . '<?php echo htmlspecialchars((string) strtoupper(inject(\'value\', '
             . '\'default\'.\'xxx\')), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
             . '</a>',
             $builder->compile('root')->getContent()
@@ -239,8 +239,8 @@ class ImportElementTest extends BaseTest
         $builder = $this->getBuilder($loader, []);
 
         $this->assertSame(
-            '<a href="<?php echo htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
-            . '<?php echo htmlspecialchars(strtoupper(inject(\'value\', '
+            '<a href="<?php echo htmlspecialchars((string) $url, ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>">'
+            . '<?php echo htmlspecialchars((string) strtoupper(inject(\'value\', '
             . '[\'abc\'])), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>'
             . '</a>',
             $builder->compile('root')->getContent()
