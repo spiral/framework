@@ -19,6 +19,7 @@
         "spiral/core": "^2.9"
     },
     "require-dev": {
+        "spiral/console": "^2.9",
         "phpunit/phpunit": "^8.5|^9.5"
     },
     "autoload": {
