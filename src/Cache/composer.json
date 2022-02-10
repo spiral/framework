@@ -18,9 +18,11 @@
         "php": ">=7.2",
         "spiral/core": "^2.9",
         "spiral/config": "^2.9",
+        "spiral/files": "^2.9",
         "psr/simple-cache": "1 - 2"
     },
     "require-dev": {
+        "spiral/boot": "^2.9",
         "phpunit/phpunit": "^8.5|^9.5"
     },
     "autoload": {

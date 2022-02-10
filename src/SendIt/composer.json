@@ -17,15 +17,18 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
+        "spiral/core": "^2.9",
         "spiral/jobs": "^2.2",
+        "spiral/queue": "^2.9",
         "spiral/logger": "^2.9",
         "spiral/mailer": "^2.9",
+        "spiral/views": "^2.9",
         "symfony/mailer": "^5.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",
         "mockery/mockery": "^1.3",
-        "spiral/views": "^2.9",
+        "spiral/boot": "^2.9",
         "spiral/stempler-bridge": "^2.9"
     },
     "autoload": {
