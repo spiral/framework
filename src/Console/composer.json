@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spiral/core": "^2.9",
+        "spiral/core": "^2.9.1",
         "symfony/console": "^5.3"
     },
     "require-dev": {

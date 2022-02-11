@@ -16,11 +16,11 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spiral/core": "^2.9",
-        "spiral/files": "^2.9",
-        "spiral/config": "^2.9",
-        "spiral/debug": "^2.9",
-        "spiral/exceptions": "^2.9"
+        "spiral/core": "^2.9.1",
+        "spiral/files": "^2.9.1",
+        "spiral/config": "^2.9.1",
+        "spiral/debug": "^2.9.1",
+        "spiral/exceptions": "^2.9.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",
