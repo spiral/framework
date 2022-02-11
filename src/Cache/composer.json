@@ -21,14 +21,14 @@
         "spiral/files": "^2.10",
         "psr/simple-cache": "1 - 2"
     },
-    "require-dev": {
-        "spiral/boot": "^2.10",
-        "phpunit/phpunit": "^8.5|^9.5"
-    },
     "autoload": {
         "psr-4": {
             "Spiral\\Cache\\": "src"
         }
+    },
+    "require-dev": {
+        "spiral/boot": "^2.10",
+        "phpunit/phpunit": "^8.5|^9.5"
     },
     "autoload-dev": {
         "psr-4": {

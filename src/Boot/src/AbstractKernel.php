@@ -102,9 +102,6 @@ abstract class AbstractKernel implements KernelInterface
             $handleErrors
         );
 
-        $environment = $environment ?? new Environment();
-        $core->container->bindSingleton(EnvironmentInterface::class, $environment);
-
         return $core->run($environment);
     }
 
@@ -136,10 +133,13 @@ abstract class AbstractKernel implements KernelInterface
      */
     public function run(?EnvironmentInterface $environment = null): ?self
     {
+        $environment = $environment ?? new Environment();
+        $this->container->bindSingleton(EnvironmentInterface::class, $environment);
+
         try {
             // will protect any against env overwrite action
             $this->container->runScope(
-                [EnvironmentInterface::class => $environment ?? new Environment()],
+                [EnvironmentInterface::class => $environment],
                 function (): void {
                     $this->bootload();
                     $this->bootstrap();
@@ -265,7 +265,7 @@ abstract class AbstractKernel implements KernelInterface
         }
 
         do {
-            \current($callbacks)($this);
+            $this->container->invoke(\current($callbacks));
         } while (\next($callbacks));
 
         $callbacks = [];

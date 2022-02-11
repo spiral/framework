@@ -57,11 +57,14 @@ final class MailerBootloader extends Bootloader
 
     public function boot(EnvironmentInterface $env, AbstractKernel $kernel): void
     {
+        $queue = $env->get('MAILER_QUEUE', $env->get('MAILER_PIPELINE', 'local'));
+
         $this->config->setDefaults(MailerConfig::CONFIG, [
             'dsn' => $env->get('MAILER_DSN', ''),
-            'pipeline' => $env->get('MAILER_PIPELINE', 'local'),
+            'pipeline' => $queue,
+            'queue' => $queue,
             'from' => $env->get('MAILER_FROM', 'Spiral <sendit@local.host>'),
-            'queueConnection' => null,
+            'queueConnection' => $env->get('MAILER_QUEUE_CONNECTION'),
         ]);
     }
 

@@ -24,8 +24,6 @@ use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
 use Spiral\Queue\SerializerInterface;
-use Spiral\SendIt\MailJob;
-use Spiral\SendIt\MailQueue;
 
 final class QueueBootloader extends Bootloader
 {
@@ -101,7 +99,7 @@ final class QueueBootloader extends Bootloader
     private function initQueueConfig(EnvironmentInterface $env): void
     {
         $this->config->setDefaults(
-            \Spiral\Queue\Config\QueueConfig::CONFIG,
+            QueueConfig::CONFIG,
             [
                 'default' => $env->get('QUEUE_CONNECTION', 'sync'),
                 'connections' => [
@@ -110,9 +108,7 @@ final class QueueBootloader extends Bootloader
                     ],
                 ],
                 'registry' => [
-                    'handlers' => [
-                        MailQueue::JOB_NAME => MailJob::class,
-                    ],
+                    'handlers' => [],
                 ],
                 'driverAliases' => [
                     'sync' => SyncDriver::class

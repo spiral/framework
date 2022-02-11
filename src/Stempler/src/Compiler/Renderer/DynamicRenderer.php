@@ -21,7 +21,7 @@ use Spiral\Stempler\Node\NodeInterface;
 final class DynamicRenderer implements Compiler\RendererInterface
 {
     // default output filter
-    public const DEFAULT_FILTER = "htmlspecialchars(%s, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8')";
+    public const DEFAULT_FILTER = "htmlspecialchars((string) (%s), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8')";
 
     /** @var string */
     private $defaultFilter = '';

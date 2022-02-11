@@ -90,6 +90,7 @@ class AppBootloader extends DomainBootloader
         );
 
         $views->addDirectory('custom', __DIR__ . '/../../views/custom/');
+        $views->addDirectory('stempler', __DIR__ . '/../../views/stempler/');
         $views->addEngine(TestEngine::class);
 
         $validation->addAlias('aliased', 'notEmpty');
