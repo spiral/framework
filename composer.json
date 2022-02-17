@@ -127,7 +127,7 @@
         "aws/aws-sdk-php": "^3.0",
         "cycle/annotated": "^2.0.6",
         "cycle/migrations": "^1.0.1",
-        "cycle/orm": "^1.8.1",
+        "cycle/orm": "^2.0",
         "cycle/proxy-factory": "^1.2",
         "cycle/schema-builder": "^2.0",
         "guzzlehttp/psr7": "^1.7",
