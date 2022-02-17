@@ -198,19 +198,19 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
       - name: Install Dependencies
+        if: ${{ matrix.php >= '8.1' }}
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer require phpunit/phpunit:^9.5 --prefer-dist --no-interaction --no-progress
+      - name: Install Dependencies
         if: ${{ matrix.php < '8.1' }}
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
-      - name: Install Dependencies
-        if: ${{ matrix.php >= '8.1' }}
-        uses: nick-invision/retry@v1
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer update phpunit/phpunit:9.5 --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
       # Upgrade mockery on PHP 8
       - name: Install Dependencies
         if: ${{ matrix.php >= '8.0' }}
