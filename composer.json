@@ -125,7 +125,7 @@
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.0",
-        "cycle/annotated": "^2.0.6",
+        "cycle/annotated": "^2.0.7",
         "cycle/migrations": "^1.0.1",
         "cycle/orm": "^2.0",
         "cycle/proxy-factory": "^1.2",
