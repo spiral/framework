@@ -210,7 +210,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --prefer-stable --prefer-dist --no-interaction --no-progress
+          command: composer update phpunit/phpunit:9.5 --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
       # Upgrade mockery on PHP 8
       - name: Install Dependencies
         if: ${{ matrix.php >= '8.0' }}
