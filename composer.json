@@ -28,7 +28,7 @@
         "doctrine/annotations": "^1.12",
         "doctrine/inflector": "^1.4|^2.0",
         "laminas/laminas-diactoros": "^2.4",
-        "league/flysystem": "^2.0",
+        "league/flysystem": "^2.3.1",
         "monolog/monolog": "^2.2",
         "myclabs/deep-copy": "^1.9",
         "nikic/php-parser": "^4.1",
