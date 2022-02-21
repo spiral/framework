@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Mailer;
 
-final class Message implements MessageInterface
+class Message implements MessageInterface
 {
     /** @var string */
     private $subject;

@@ -14,25 +14,26 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*",
-        "opis/closure": "^3.6"
+        "spiral/snapshots": "^2.10",
+        "doctrine/inflector": "^1.4|^2.0",
+        "opis/closure": "^3.6",
+        "ramsey/uuid": "^4.2"
     },
     "autoload": {
         "psr-4": {
             "Spiral\\Queue\\": "src/"
         }
     },
-    "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.5",
-        "spiral/core": "^2.10",
-        "doctrine/inflector": "^1.4|^2.0",
-        "spiral/code-style": "^1.0"
-    },
     "autoload-dev": {
         "psr-4": {
             "Spiral\\Tests\\Queue\\": "tests"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.5",
+        "spiral/boot": "^2.10"
     },
     "extra": {
         "branch-alias": {

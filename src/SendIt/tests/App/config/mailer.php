@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'dsn'      => 'smtp://user:pass@smtp.example.com',
-    'pipeline' => 'local',
-    'from'     => 'test@spiral.framework'
+    'dsn'   => 'smtp://user:pass@smtp.example.com',
+    'queue' => 'local',
+    'from'  => 'test@spiral.framework'
 ];

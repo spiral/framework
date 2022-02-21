@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "spiral/core": "^2.10",
         "spiral/models": "^2.10",
         "spiral/translator": "^2.10",

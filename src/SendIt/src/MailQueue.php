@@ -37,9 +37,9 @@ final class MailQueue implements MailerInterface
     public function send(MessageInterface ...$message): void
     {
         if ($this->queue instanceof QueueInterface) {
-            $options = (new JobOptions())->withPipeline($this->config->getQueuePipeline());
+            $options = (new JobOptions())->withPipeline($this->config->getQueue());
         } else {
-            $options = Options::onQueue($this->config->getQueuePipeline());
+            $options = Options::onQueue($this->config->getQueue());
         }
 
         foreach ($message as $msg) {

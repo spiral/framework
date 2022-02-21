@@ -22,6 +22,7 @@ use Spiral\Bootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
+use Spiral\Stempler\Bootloader\StemplerBootloader;
 
 class TestApp extends Kernel
 {
@@ -72,6 +73,7 @@ class TestApp extends Kernel
         Bootloader\Cycle\ProxiesBootloader::class,
 
         // Template engines and rendering
+        StemplerBootloader::class,
         Bootloader\Views\ViewsBootloader::class,
         Bootloader\Views\TranslatedCacheBootloader::class,
 
