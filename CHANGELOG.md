@@ -9,18 +9,17 @@
     and removed in v3.0
   - A minimal version of `PHP` increased to `^7.4`
 - **Other Features**
+  - [spiral/mailer] Added ability to set delay for messages
   - Class `Spiral\Mailer\Message` is no longer final and is available for extension
 
 ## v2.9.1 - 2022-02-11
-
 - **High Impact Changes**
 - **Medium Impact Changes**
   - [spiral/sendit] Method `getQueuePipeline` of `Spiral\SendIt\Config\MailerConfig` class is deprecated.
     Use method `getQueue` instead. Added environment variables `MAILER_QUEUE` and `MAILER_QUEUE_CONNECTION`
 - **Other Features**
-- 
-## v2.9.0 - 2022-02-03
 
+## v2.9.0 - 2022-02-03
 - **High Impact Changes**
 - **Medium Impact Changes**
   - Classes `Spiral\Validation\Checker\EntityChecker`, `Spiral\Auth\Cycle\Token`, `Spiral\Auth\Cycle\TokenStorage`, 
