@@ -14,6 +14,7 @@ namespace Spiral\Boot;
 use Closure;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\Bootloader\DependedInterface;
+use Spiral\Boot\Exception\ClassNotFoundException;
 use Spiral\Core\Container;
 
 /**
@@ -106,7 +107,9 @@ final class BootloadManager implements Container\SingletonInterface
             try {
                 $class = (new \ReflectionClass($class))->getName();
             } catch (\ReflectionException $e) {
-                throw new \Spiral\Boot\Exception\ClassNotFoundException();
+                throw new ClassNotFoundException(
+                    \sprintf('Bootloader class `%s` is not exist.', $class)
+                );
             }
 
             if (\in_array($class, $this->classes, true)) {
