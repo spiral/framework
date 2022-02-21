@@ -127,7 +127,7 @@ class RRHelper
             $ext = '.tar.gz';
         }
 
-        return 'https://github.com/spiral/framework/releases/download/v'
+        return 'https://github.com/spiral/framework/releases/download/'
             . static::getVersion() . '/' . self::getSignature()
             . $ext;
     }
