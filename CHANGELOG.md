@@ -10,6 +10,7 @@
   - A minimal version of `PHP` increased to `^7.4`
 - **Other Features**
   - [spiral/mailer] Added ability to set delay for messages
+  - [spiral/queue] Added NullDriver
   - Class `Spiral\Mailer\Message` is no longer final and is available for extension
 
 ## v2.9.1 - 2022-02-11
