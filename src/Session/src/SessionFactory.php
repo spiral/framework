@@ -21,7 +21,7 @@ use Spiral\Session\Exception\SessionException;
 /**
  * Initiates session instance and configures session handlers.
  */
-final class SessionFactory implements SingletonInterface
+final class SessionFactory implements SessionFactoryInterface, SingletonInterface
 {
     /** @var SessionConfig */
     private $config;
@@ -35,19 +35,13 @@ final class SessionFactory implements SingletonInterface
         $this->factory = $factory;
     }
 
-    /**
-     * @param string      $clientSignature User specific token, does not provide full security but
-     *                                     hardens session transfer.
-     * @param string|null $id              When null - expect php to create session automatically.
-     *
-     */
     public function initSession(string $clientSignature, string $id = null): SessionInterface
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             throw new MultipleSessionException('Unable to initiate session, session already started');
         }
 
-        //Initiating proper session handler
+        // Initiating proper session handler
         if ($this->config->getHandler() !== null) {
             try {
                 $handler = $this->config->getHandler()->resolve($this->factory);
@@ -60,8 +54,8 @@ final class SessionFactory implements SingletonInterface
 
         return $this->factory->make(Session::class, [
             'clientSignature' => $clientSignature,
-            'lifetime'        => $this->config->getLifetime(),
-            'id'              => $id,
+            'lifetime' => $this->config->getLifetime(),
+            'id' => $id,
         ]);
     }
 }
