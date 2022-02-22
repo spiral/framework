@@ -62,7 +62,7 @@ final class SessionBootloader extends Bootloader
                 'handler' => new Autowire(
                     FileHandler::class,
                     [
-                        'directory' => $directories->get('runtime').'session',
+                        'directory' => $directories->get('runtime') . 'session',
                         'lifetime' => 86400,
                     ]
                 ),
