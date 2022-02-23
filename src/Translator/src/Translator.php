@@ -94,7 +94,7 @@ final class Translator implements TranslatorInterface, SingletonInterface
      *
      * @throws LocaleException
      */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    public function trans(string $id, array $parameters = [], $domain = null, $locale = null): string
     {
         $domain = $domain ?? $this->config->getDefaultDomain();
         $locale = $locale ?? $this->locale;
