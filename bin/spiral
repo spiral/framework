@@ -127,8 +127,13 @@ class RRHelper
             $ext = '.tar.gz';
         }
 
-        return 'https://github.com/spiral/framework/releases/download/v'
-            . static::getVersion() . '/' . self::getSignature()
+        $version = static::getVersion();
+        if (version_compare($version, '2.9.0', '<')) {
+            $version = 'v'.$version;
+        }
+
+        return 'https://github.com/spiral/framework/releases/download/'
+            . $version . '/' . self::getSignature()
             . $ext;
     }
 
@@ -243,6 +248,8 @@ class RRHelper
 
         $zipFile = fopen($zipFileName, 'wb+');
         $curlResource = curl_init();
+
+        var_dump(RRHelper::getBinaryDownloadUrl());
 
         curl_setopt($curlResource, CURLOPT_URL, RRHelper::getBinaryDownloadUrl());
         curl_setopt($curlResource, CURLOPT_RETURNTRANSFER, true);
