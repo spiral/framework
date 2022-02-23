@@ -84,7 +84,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
         $this->config->modify(
             $name,
             new Append(
-                'handlers.'.$channel,
+                'handlers.' . $channel,
                 null,
                 $handler
             )
