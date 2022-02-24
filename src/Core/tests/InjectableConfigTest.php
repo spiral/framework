@@ -132,4 +132,20 @@ class InjectableConfigTest extends TestCase
         $this->assertEquals('test', $this->resolveAlias('default'));
         $this->assertEquals('test', $this->resolveAlias('value'));
     }
+
+    public function testCircleReference(): void
+    {
+        self::expectException(\LogicException::class);
+        self::expectExceptionMessage('Circle reference detected for alias `foo`');
+
+        $config = new TestConfig([
+            'key' => 'value',
+            'aliases' => [
+                'foo' => 'bar',
+                'bar' => 'foo'
+            ]
+        ]);
+
+        $config->resolveAlias('foo');
+    }
 }

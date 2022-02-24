@@ -20,7 +20,13 @@ trait AliasTrait
 {
     public function resolveAlias(string $alias): string
     {
+        $antiCircleReference = [];
         while (is_string($alias) && isset($this->config) && isset($this->config['aliases'][$alias])) {
+            if (in_array($alias, $antiCircleReference)) {
+                throw new \LogicException("Circle reference detected for alias `$alias`");
+            }
+            $antiCircleReference[] = $alias;
+
             $alias = $this->config['aliases'][$alias];
         }
 
