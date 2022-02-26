@@ -105,58 +105,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
     ]);
 
-    $parameters->set(Option::DIRECTORIES_TO_REPOSITORIES, [
-        // Bridge
-        'src/Bridge/DataGrid' => 'git@github.com:spiral/data-grid-bridge.git',
-        'src/Bridge/Stempler' => 'git@github.com:spiral/stempler-bridge.git',
-        'src/Bridge/Monolog' => 'git@github.com:spiral/monolog-bridge.git',
-        'src/Bridge/Dotenv' => 'git@github.com:spiral/dotenv-bridge.git',
-
-        // Components
-        'src/AnnotatedRoutes' => 'git@github.com:spiral/annotated-routes.git',
-        'src/Annotations'     => 'git@github.com:spiral/annotations.git',
-        'src/Attributes'      => 'git@github.com:spiral/attributes.git',
-        'src/Auth'            => 'git@github.com:spiral/auth.git',
-        'src/AuthHttp'        => 'git@github.com:spiral/auth-http.git',
-        'src/Boot'            => 'git@github.com:spiral/boot.git',
-        'src/Cache'           => 'git@github.com:spiral/cache.git',
-        'src/Config'          => 'git@github.com:spiral/config.git',
-        'src/Console'         => 'git@github.com:spiral/console.git',
-        'src/Cookies'         => 'git@github.com:spiral/cookies.git',
-        'src/Core'            => 'git@github.com:spiral/core.git',
-        'src/Csrf'            => 'git@github.com:spiral/csrf.git',
-        'src/DataGrid'        => 'git@github.com:spiral/data-grid.git',
-        'src/Debug'           => 'git@github.com:spiral/debug.git',
-        'src/Distribution'    => 'git@github.com:spiral/distribution.git',
-        'src/Dumper'          => 'git@github.com:spiral/dumper.git',
-        'src/Encrypter'       => 'git@github.com:spiral/encrypter.git',
-        'src/Exceptions'      => 'git@github.com:spiral/exceptions.git',
-        'src/Files'           => 'git@github.com:spiral/files.git',
-        'src/Filters'         => 'git@github.com:spiral/filters.git',
-        'src/Hmvc'            => 'git@github.com:spiral/hmvc.git',
-        'src/Http'            => 'git@github.com:spiral/http.git',
-        'src/Logger'          => 'git@github.com:spiral/logger.git',
-        'src/Mailer'          => 'git@github.com:spiral/mailer.git',
-        'src/Models'          => 'git@github.com:spiral/models.git',
-        'src/Pagination'      => 'git@github.com:spiral/pagination.git',
-        'src/Prototype'       => 'git@github.com:spiral/prototype.git',
-        'src/Reactor'         => 'git@github.com:spiral/reactor.git',
-        'src/Router'          => 'git@github.com:spiral/router.git',
-        'src/Scaffolder'      => 'git@github.com:spiral/scaffolder.git',
-        'src/Security'        => 'git@github.com:spiral/security.git',
-        'src/SendIt'          => 'git@github.com:spiral/sendit.git',
-        'src/Session'         => 'git@github.com:spiral/session.git',
-        'src/Snapshots'       => 'git@github.com:spiral/snapshots.git',
-        'src/Stempler'        => 'git@github.com:spiral/stempler.git',
-        'src/Storage'         => 'git@github.com:spiral/storage.git',
-        'src/Streams'         => 'git@github.com:spiral/streams.git',
-        'src/Tokenizer'       => 'git@github.com:spiral/tokenizer.git',
-        'src/Translator'      => 'git@github.com:spiral/translator.git',
-        'src/Validation'      => 'git@github.com:spiral/validation.git',
-        'src/Queue'           => 'git@github.com:spiral/queue.git',
-        'src/Views'           => 'git@github.com:spiral/views.git',
-    ]);
-
     $services = $containerConfigurator->services();
 
     # release workers - in order to execute
