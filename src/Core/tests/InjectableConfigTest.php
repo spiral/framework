@@ -14,6 +14,7 @@ namespace Spiral\Tests\Core;
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Exception\ConfigException;
+use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Traits\Config\AliasTrait;
 use Spiral\Tests\Core\Fixtures\TestConfig;
 
@@ -135,7 +136,7 @@ class InjectableConfigTest extends TestCase
 
     public function testCircleReference(): void
     {
-        self::expectException(\LogicException::class);
+        self::expectException(ContainerException::class);
         self::expectExceptionMessage('Circle reference detected for alias `foo`');
 
         $config = new TestConfig([
