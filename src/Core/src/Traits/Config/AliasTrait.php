@@ -22,8 +22,8 @@ trait AliasTrait
     {
         $antiCircleReference = [];
         while (is_string($alias) && isset($this->config) && isset($this->config['aliases'][$alias])) {
-            if (in_array($alias, $antiCircleReference)) {
-                throw new \LogicException("Circle reference detected for alias `$alias`");
+            if (\in_array($alias, $antiCircleReference, true)) {
+                throw new \LogicException("Circle reference detected for alias `$alias`.");
             }
             $antiCircleReference[] = $alias;
 
