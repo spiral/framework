@@ -7,6 +7,7 @@
   - [spiral/sendit] Method `getQueuePipeline` of `Spiral\SendIt\Config\MailerConfig` class is deprecated.
     Use method `getQueue` instead. Added environment variables `MAILER_QUEUE` and `MAILER_QUEUE_CONNECTION`
 - **Other Features**
+  - Added Symfony 6 support
 
 ## v2.9.0 - 2022-02-03
 
