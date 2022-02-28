@@ -100,7 +100,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'cycle/migrations'          => '^1.0.1',
             'cycle/proxy-factory'       => '^1.2',
             'cycle/schema-builder'      => '^1.1',
-            'symplify/monorepo-builder' => '^8.3',
+            'symplify/monorepo-builder' => '^10.0',
             'vimeo/psalm'               => '^4.3',
         ],
     ]);
