@@ -1,7 +1,22 @@
 # CHANGELOG
 
-## v2.9.1 - Unreleased
+## v2.10.0 - Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - [spiral/session] Added `Spiral\Session\SessionFactoryInterface`. Now you can use custom implementation of sessions.
+  - [spiral/scaffolder] Console commands `Spiral\Scaffolder\Command\MigrationCommand`, `Spiral\Scaffolder\Command\Database\RepositoryCommand`, 
+    `Spiral\Scaffolder\Command\Database\EntityCommand` is deprecated. Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - [spiral/scaffolder] Scaffolder `Spiral\Scaffolder\Declaration\MigrationDeclaration` is deprecated. Will be moved to `spiral/cycle-bridge`
+    and removed in v3.0
+  - [spiral/attributes] Class annotations will be discovered from class traits.
+  - A minimal version of `PHP` increased to `^7.4`
+- **Other Features**
+  - [spiral/prototype] Added `queue` and `cache` properties
+  - [spiral/mailer] Added ability to set delay for messages
+  - [spiral/queue] Added NullDriver
+  - [spiral/mailer] Class `Spiral\Mailer\Message` is no longer final and is available for extension
 
+## v2.9.1 - 2022-02-11
 - **High Impact Changes**
 - **Medium Impact Changes**
   - [spiral/sendit] Method `getQueuePipeline` of `Spiral\SendIt\Config\MailerConfig` class is deprecated.
@@ -10,7 +25,6 @@
   - Added Symfony 6 support
 
 ## v2.9.0 - 2022-02-03
-
 - **High Impact Changes**
 - **Medium Impact Changes**
   - Classes `Spiral\Validation\Checker\EntityChecker`, `Spiral\Auth\Cycle\Token`, `Spiral\Auth\Cycle\TokenStorage`, 

@@ -15,33 +15,79 @@ use Spiral\SendIt\MessageSerializer;
 
 class QueueTest extends TestCase
 {
-    public function testQueue(): void
-    {
-        $queue = m::mock(QueueInterface::class);
+    /** @var m\LegacyMockInterface|m\MockInterface|QueueInterface */
+    private $queue;
+    /** @var MailQueue */
+    private $mailer;
 
-        $mailer = new MailQueue(
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->queue = m::mock(QueueInterface::class);
+
+        $this->mailer = new MailQueue(
             new MailerConfig([
                 'pipeline' => 'mailer',
             ]),
-            $queue
+            $this->queue
         );
+    }
 
+    public function testQueue(): void
+    {
         $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
         $mail->setFrom('admin@spiral.dev');
         $mail->setReplyTo('admin@spiral.dev');
         $mail->setCC('admin@google.com');
         $mail->setBCC('admin2@google.com');
 
-        $queue->expects('push')->withArgs(
+        $this->queue->expects('push')->withArgs(
             function ($job, $data, Options $options) use ($mail) {
                 $this->assertSame(MailQueue::JOB_NAME, $job);
                 $this->assertSame($data, MessageSerializer::pack($mail));
                 $this->assertSame('mailer', $options->getQueue());
+                $this->assertNull($options->getDelay());
 
                 return true;
             }
         );
 
-        $mailer->send($mail);
+        $this->mailer->send($mail);
+    }
+
+    public function testQueueWithDelay(): void
+    {
+        $mail1 = new Message('test', ['email@domain.com'], ['key' => 'value']);
+        $mail1->setDelay(new \DateInterval('PT30S'));
+
+        $mail2 = new Message('test', ['email@domain.com'], ['key' => 'value']);
+        $mail2->setDelay((new \DateTimeImmutable('+100 second')));
+
+        $mail3 = new Message('test', ['email@domain.com'], ['key' => 'value']);
+        $mail3->setDelay(200);
+
+        $this->queue->expects('push')->once()->withArgs(
+            function ($job, $data, Options $options) {
+                $this->assertSame(30, $options->getDelay());
+                return true;
+            }
+        );
+
+        $this->queue->expects('push')->once()->withArgs(
+            function ($job, $data, Options $options) {
+                $this->assertSame(100, $options->getDelay());
+                return true;
+            }
+        );
+
+        $this->queue->expects('push')->once()->withArgs(
+            function ($job, $data, Options $options) {
+                $this->assertSame(200, $options->getDelay());
+                return true;
+            }
+        );
+
+        $this->mailer->send($mail1, $mail2, $mail3);
     }
 }

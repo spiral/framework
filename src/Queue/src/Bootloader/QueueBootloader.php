@@ -15,6 +15,7 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\DefaultSerializer;
+use Spiral\Queue\Driver\NullDriver;
 use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\Failed\LogFailedJobHandler;
@@ -111,7 +112,8 @@ final class QueueBootloader extends Bootloader
                     'handlers' => [],
                 ],
                 'driverAliases' => [
-                    'sync' => SyncDriver::class
+                    'sync' => SyncDriver::class,
+                    'null' => NullDriver::class,
                 ],
             ]
         );

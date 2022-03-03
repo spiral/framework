@@ -21,6 +21,7 @@ use Spiral\Tests\Attributes\Reader\Fixture\Annotation\FunctionParameterAnnotatio
 use Spiral\Tests\Attributes\Reader\Fixture\Annotation\MethodAnnotation;
 use Spiral\Tests\Attributes\Reader\Fixture\Annotation\MethodParameterAnnotation;
 use Spiral\Tests\Attributes\Reader\Fixture\Annotation\PropertyAnnotation;
+use Spiral\Tests\Attributes\Reader\Fixture\ClassWithAnnotatedTrait;
 use Spiral\Tests\Attributes\Reader\Fixture\UndefinedMeta;
 use Spiral\Tests\Attributes\TestCase;
 
@@ -94,6 +95,10 @@ abstract class ReaderTestCase extends TestCase
         $this->assertCount($this->classMetadataCount,
             $this->getClassMetadata(AnnotatedClass::class)
         );
+
+        $this->assertCount($this->classMetadataCount,
+            $this->getClassMetadata(ClassWithAnnotatedTrait::class)
+        );
     }
 
     public function testClassMetadataObjects(): void
@@ -107,6 +112,10 @@ abstract class ReaderTestCase extends TestCase
         }
 
         foreach ($this->getClassMetadata(AnnotatedClass::class) as $actual) {
+            $this->assertEquals($expected, $actual);
+        }
+
+        foreach ($this->getClassMetadata(ClassWithAnnotatedTrait::class) as $actual) {
             $this->assertEquals($expected, $actual);
         }
     }

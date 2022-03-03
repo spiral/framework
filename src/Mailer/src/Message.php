@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Mailer;
 
-final class Message implements MessageInterface
+class Message implements MessageInterface
 {
     /** @var string */
     private $subject;
@@ -43,7 +43,7 @@ final class Message implements MessageInterface
     public function __construct(string $subject, $to, array $data = [])
     {
         $this->setSubject($subject);
-        $this->setTo(...(array) $to);
+        $this->setTo(...(array)$to);
         $this->setData($data);
     }
 
@@ -139,7 +139,7 @@ final class Message implements MessageInterface
     }
 
     /**
-     * @param mixed  $value
+     * @param mixed $value
      */
     public function setOption(string $name, $value): self
     {
@@ -151,5 +151,21 @@ final class Message implements MessageInterface
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    /**
+     * @param int|\DateTimeInterface|\DateInterval $delay
+     */
+    public function setDelay($delay): self
+    {
+        if ($delay instanceof \DateInterval) {
+            $delay = (new \DateTimeImmutable('NOW'))->add($delay);
+        }
+
+        if ($delay instanceof \DateTimeInterface) {
+            $delay = max(0, $delay->getTimestamp() - time());
+        }
+
+        return $this->setOption('delay', (int)$delay);
     }
 }
