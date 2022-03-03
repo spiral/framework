@@ -9,6 +9,21 @@ use Spiral\Cache\Exception\InvalidArgumentException;
 trait InteractsWithTime
 {
     /**
+     * Please note that this interface currently emulates the behavior of the
+     * PSR-20 implementation and may be replaced by the `psr/clock`
+     * implementation in future versions.
+     *
+     * Returns the current time as a DateTimeImmutable instance.
+     *
+     * @codeCoverageIgnore Ignore time-aware-mutable value.
+     *                     Must be covered with a stub.
+     * @throws \Exception
+     */
+    protected function now(): \DateTimeImmutable
+    {
+        return new \DateTimeImmutable('NOW');
+    }
+    /**
      * @param null|int|\DateInterval|\DateTimeInterface $ttl
      * @throws InvalidArgumentException
      */
@@ -40,21 +55,5 @@ trait InteractsWithTime
                 \get_debug_type($ttl)
             )
         );
-    }
-
-    /**
-     * Please note that this interface currently emulates the behavior of the
-     * PSR-20 implementation and may be replaced by the `psr/clock`
-     * implementation in future versions.
-     *
-     * Returns the current time as a DateTimeImmutable instance.
-     *
-     * @codeCoverageIgnore Ignore time-aware-mutable value.
-     *                     Must be covered with a stub.
-     * @throws \Exception
-     */
-    protected function now(): \DateTimeImmutable
-    {
-        return new \DateTimeImmutable('NOW');
     }
 }

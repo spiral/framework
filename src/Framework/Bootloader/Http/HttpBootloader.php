@@ -81,7 +81,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
             $kernel->addDispatcher($factory->make(SapiDispatcher::class));
         });
 
-        if (! class_exists('Spiral\RoadRunnerBridge\Http\Dispatcher')) {
+        if (!class_exists('Spiral\RoadRunnerBridge\Http\Dispatcher')) {
             if (class_exists(PSR7Client::class)) {
                 $kernel->addDispatcher($factory->make(LegacyRrDispatcher::class));
             }

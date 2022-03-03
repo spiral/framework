@@ -77,7 +77,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
     {
         $name = MonologConfig::CONFIG;
 
-        if (! isset($this->config->getConfig($name)['handlers'][$channel])) {
+        if (!isset($this->config->getConfig($name)['handlers'][$channel])) {
             $this->config->modify($name, new Append('handlers', $channel, []));
         }
 
