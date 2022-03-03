@@ -17,14 +17,18 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\Middleware\SessionMiddleware;
-
-//use Spiral\Session\SectionInterface;
+use Spiral\Session\SessionFactory;
+use Spiral\Session\SessionFactoryInterface;
 
 final class SessionBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         HttpBootloader::class,
         CookiesBootloader::class,
+    ];
+
+    protected const SINGLETONS = [
+        SessionFactoryInterface::class => SessionFactory::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -41,11 +45,6 @@ final class SessionBootloader extends Bootloader
     /**
      * Automatically registers session starter middleware and excludes session cookie from
      * cookie protection.
-     *
-     * @param ConfiguratorInterface $config
-     * @param CookiesBootloader     $cookies
-     * @param HttpBootloader        $http
-     * @param DirectoriesInterface  $directories
      */
     public function boot(
         ConfiguratorInterface $config,
@@ -57,14 +56,14 @@ final class SessionBootloader extends Bootloader
             'session',
             [
                 'lifetime' => 86400,
-                'cookie'   => 'sid',
-                'secure'   => true,
+                'cookie' => 'sid',
+                'secure' => true,
                 'sameSite' => null,
-                'handler'  => new Autowire(
+                'handler' => new Autowire(
                     FileHandler::class,
                     [
                         'directory' => $directories->get('runtime') . 'session',
-                        'lifetime'  => 86400,
+                        'lifetime' => 86400,
                     ]
                 ),
             ]

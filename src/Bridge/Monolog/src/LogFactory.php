@@ -14,6 +14,7 @@ namespace Spiral\Monolog;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use Monolog\ResettableInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Core\Container\Autowire;
@@ -24,7 +25,7 @@ use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
-final class LogFactory implements LogsInterface, InjectorInterface
+final class LogFactory implements LogsInterface, InjectorInterface, ResettableInterface
 {
     // Default logger channel (supplied via injection)
     public const DEFAULT = 'default';
@@ -42,9 +43,9 @@ final class LogFactory implements LogsInterface, InjectorInterface
     private $eventHandler;
 
     /**
-     * @param MonologConfig             $config
+     * @param MonologConfig $config
      * @param ListenerRegistryInterface $listenerRegistry
-     * @param FactoryInterface          $factory
+     * @param FactoryInterface $factory
      */
     public function __construct(
         MonologConfig $config,
@@ -104,7 +105,7 @@ final class LogFactory implements LogsInterface, InjectorInterface
         $handlers = [];
 
         foreach ($this->config->getHandlers($channel) as $handler) {
-            if (!$handler instanceof Autowire) {
+            if (! $handler instanceof Autowire) {
                 $handlers[] = $handler;
                 continue;
             }
@@ -131,7 +132,7 @@ final class LogFactory implements LogsInterface, InjectorInterface
     {
         $processors = [];
         foreach ($this->config->getProcessors($channel) as $processor) {
-            if (!$processor instanceof Autowire) {
+            if (! $processor instanceof Autowire) {
                 $processors[] = $processor;
                 continue;
             }
@@ -148,5 +149,12 @@ final class LogFactory implements LogsInterface, InjectorInterface
         }
 
         return $processors;
+    }
+
+    public function reset()
+    {
+        if ($this->default instanceof ResettableInterface) {
+            $this->default->reset();
+        }
     }
 }

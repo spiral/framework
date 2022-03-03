@@ -48,7 +48,11 @@ final class DoctrineAnnotationReader extends BaseReader
             return $this->reader->getClassAnnotations($class);
         });
 
-        return $this->filter($name, $result);
+        yield from $this->filter($name, $result);
+
+        foreach ($class->getTraits() as $trait) {
+            yield from $this->getClassMetadata($trait, $name);
+        }
     }
 
     /**

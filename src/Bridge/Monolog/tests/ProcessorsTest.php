@@ -7,6 +7,7 @@ namespace Spiral\Tests\Monolog;
 use Monolog\Processor\PsrLogMessageProcessor;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\BootloadManager;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\LoaderInterface;
@@ -26,6 +27,10 @@ class ProcessorsTest extends TestCase
     public function setUp(): void
     {
         $this->container = new Container();
+
+        $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
+        $finalizer->shouldReceive('addFinalizer')->once();
+
         $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
             new class() implements LoaderInterface {
                 public function has(string $section): bool
