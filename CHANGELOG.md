@@ -1,6 +1,11 @@
 # CHANGELOG
 
-## v2.10.0 - Unreleased
+## v2.11.0 - Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Other Features**
+
+## v2.10.0 - 2022-03-04
 - **High Impact Changes**
 - **Medium Impact Changes**
   - [spiral/session] Added `Spiral\Session\SessionFactoryInterface`. Now you can use custom implementation of sessions.
