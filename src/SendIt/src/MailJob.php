@@ -52,7 +52,7 @@ final class MailJob implements HandlerInterface, \Spiral\Queue\HandlerInterface
             $payload = json_decode($payload, true);
         }
 
-        if (! \is_array($payload)) {
+        if (!\is_array($payload)) {
             throw new InvalidArgumentException('Mail job payload should be an array.');
         }
 

@@ -27,7 +27,7 @@ use Spiral\Security\RulesInterface;
 final class GuardBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
-        AttributesBootloader::class
+        AttributesBootloader::class,
     ];
 
     protected const SINGLETONS = [

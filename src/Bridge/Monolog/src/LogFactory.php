@@ -91,6 +91,13 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         return $this->getLogger();
     }
 
+    public function reset()
+    {
+        if ($this->default instanceof ResettableInterface) {
+            $this->default->reset();
+        }
+    }
+
     /**
      * Get list of channel specific handlers.
      *
@@ -105,7 +112,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         $handlers = [];
 
         foreach ($this->config->getHandlers($channel) as $handler) {
-            if (! $handler instanceof Autowire) {
+            if (!$handler instanceof Autowire) {
                 $handlers[] = $handler;
                 continue;
             }
@@ -132,7 +139,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
     {
         $processors = [];
         foreach ($this->config->getProcessors($channel) as $processor) {
-            if (! $processor instanceof Autowire) {
+            if (!$processor instanceof Autowire) {
                 $processors[] = $processor;
                 continue;
             }
@@ -149,12 +156,5 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         }
 
         return $processors;
-    }
-
-    public function reset()
-    {
-        if ($this->default instanceof ResettableInterface) {
-            $this->default->reset();
-        }
     }
 }

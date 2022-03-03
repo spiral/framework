@@ -20,11 +20,11 @@ final class ObjectJob implements HandlerInterface
 
     public function handle(string $name, string $id, array $payload): void
     {
-        if (! isset($payload['object'])) {
+        if (!isset($payload['object'])) {
             throw new InvalidArgumentException('Payload `object` key is required.');
         }
 
-        if (! is_object($payload['object'])) {
+        if (!is_object($payload['object'])) {
             throw new InvalidArgumentException('Payload `object` key value type should be an object.');
         }
 

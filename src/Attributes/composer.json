@@ -23,7 +23,7 @@
     "require-dev": {
         "doctrine/annotations": "^1.12",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "symfony/var-dumper": "^5.2",
+        "symfony/var-dumper": "^5.2|^6.0",
         "phpunit/phpunit": "^8.5|^9.5"
     },
     "autoload": {
