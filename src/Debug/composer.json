@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/logger": "^2.10.1"
+        "spiral/logger": "^2.11"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5"
@@ -33,7 +33,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.10.x-dev"
+            "dev-master": "2.11.x-dev"
         }
     },
     "config": {
