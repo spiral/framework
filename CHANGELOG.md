@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## v2.10.0 - Unreleased
+## v2.10.1 - 2022-03-05
+ - [spiral/console] Fixed compatibility with `symfony/console` 6.x
+
+## v2.10.0 - 2022-03-04
 - **High Impact Changes**
 - **Medium Impact Changes**
   - [spiral/session] Added `Spiral\Session\SessionFactoryInterface`. Now you can use custom implementation of sessions.
