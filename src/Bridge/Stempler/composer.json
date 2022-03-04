@@ -16,19 +16,19 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/stempler": "^2.10",
-        "spiral/boot": "^2.10",
-        "spiral/files": "^2.10",
-        "spiral/config": "^2.10",
-        "spiral/translator": "^2.10",
-        "spiral/router": "^2.10",
-        "spiral/views": "^2.10",
-        "spiral/core": "^2.10"
+        "spiral/stempler": "^2.10.1",
+        "spiral/boot": "^2.10.1",
+        "spiral/files": "^2.10.1",
+        "spiral/config": "^2.10.1",
+        "spiral/translator": "^2.10.1",
+        "spiral/router": "^2.10.1",
+        "spiral/views": "^2.10.1",
+        "spiral/core": "^2.10.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",
         "mockery/mockery": "^1.3",
-        "spiral/dumper": "^2.10"
+        "spiral/dumper": "^2.10.1"
     },
     "autoload": {
         "psr-4": {

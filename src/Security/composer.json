@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/core": "^2.10"
+        "spiral/core": "^2.10.1"
     },
     "autoload": {
         "psr-4": {
@@ -24,7 +24,7 @@
         }
     },
     "require-dev": {
-        "spiral/console": "^2.10",
+        "spiral/console": "^2.10.1",
         "phpunit/phpunit": "^8.5|^9.5"
     },
     "autoload-dev": {

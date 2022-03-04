@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/boot": "^2.10",
+        "spiral/boot": "^2.10.1",
         "monolog/monolog": "^2.2"
     },
     "require-dev": {
