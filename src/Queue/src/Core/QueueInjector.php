@@ -10,6 +10,9 @@ use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
 
+/**
+ * @implements InjectorInterface<QueueInterface>
+ */
 class QueueInjector implements InjectorInterface
 {
     private QueueConnectionProviderInterface $queueManager;
@@ -21,10 +24,10 @@ class QueueInjector implements InjectorInterface
 
     public function createInjection(ReflectionClass $class, string $context = null): QueueInterface
     {
-        // Get Queue by context
         if ($context === null) {
             $connection = $this->queueManager->getConnection();
         } else {
+            // Get Queue by context
             try {
                 $connection = $this->queueManager->getConnection($context);
             } catch (InvalidArgumentException $e) {
