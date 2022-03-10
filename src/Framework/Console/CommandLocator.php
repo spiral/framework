@@ -13,24 +13,20 @@ namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Console\Traits\LazyTrait;
-use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Tokenizer\ScopedClassesInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 final class CommandLocator implements LocatorInterface
 {
     use LazyTrait;
 
-    /** @var ClassesInterface */
+    /** @var ScopedClassesInterface */
     private $classes;
 
     /** @var ContainerInterface */
     private $container;
 
-    /**
-     * @param ClassesInterface   $classes
-     * @param ContainerInterface $container
-     */
-    public function __construct(ClassesInterface $classes, ContainerInterface $container)
+    public function __construct(ScopedClassesInterface $classes, ContainerInterface $container)
     {
         $this->classes = $classes;
         $this->container = $container;
@@ -42,7 +38,7 @@ final class CommandLocator implements LocatorInterface
     public function locateCommands(): array
     {
         $commands = [];
-        foreach ($this->classes->getClasses(SymfonyCommand::class) as $class) {
+        foreach ($this->classes->getScopedClasses('consoleCommands', SymfonyCommand::class) as $class) {
             if ($class->isAbstract()) {
                 continue;
             }
