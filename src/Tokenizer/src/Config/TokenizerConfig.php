@@ -24,7 +24,7 @@ final class TokenizerConfig extends InjectableConfig
     protected $config = [
         'directories' => [],
         'exclude' => [],
-        'scopes' => []
+        'scopes' => [],
     ];
 
     public function getDirectories(): array
@@ -47,7 +47,7 @@ final class TokenizerConfig extends InjectableConfig
 
         return [
             'directories' => $directories,
-            'exclude' => $excludes
+            'exclude' => $excludes,
         ];
     }
 }
