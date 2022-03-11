@@ -38,7 +38,6 @@ final class TokenizerConfig extends InjectableConfig
     }
 
     /**
-     * @param string $scope
      * @return array{directories: array<string>, exclude: array<string>}
      */
     public function getScope(string $scope): array
