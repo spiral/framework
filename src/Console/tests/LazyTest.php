@@ -14,6 +14,7 @@ use Spiral\Console\CommandLocator;
 use Spiral\Console\StaticLocator;
 use Spiral\Tests\Console\Fixtures\LazyLoadedCommand;
 use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Tokenizer\ScopedClassesInterface;
 use Symfony\Component\Console\Command\LazyCommand;
 
 class LazyTest extends BaseTest
@@ -21,8 +22,8 @@ class LazyTest extends BaseTest
     public function testLazyCommandCreationInCommandLocator(): void
     {
         $locator = new CommandLocator(
-            new class() implements ClassesInterface {
-                public function getClasses($target = null): array
+            new class() implements ScopedClassesInterface {
+                public function getScopedClasses(string $scope, $target = null): array
                 {
                     return [
                         new \ReflectionClass(LazyLoadedCommand::class),
