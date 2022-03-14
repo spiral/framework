@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "psr/cache": ">=1.0",
         "psr/simple-cache": ">=1.0",
         "nikic/php-parser": "^4.1"
@@ -24,7 +24,7 @@
         "doctrine/annotations": "^1.12",
         "jetbrains/phpstorm-attributes": "^1.0",
         "symfony/var-dumper": "^5.2|^6.0",
-        "phpunit/phpunit": "^8.5|^9.5"
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "files": [

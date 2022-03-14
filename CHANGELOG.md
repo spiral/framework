@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v3.0.0 - Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - A minimal version of `PHP` increased to `^8.1`
+- **Other Features**
+
 ## v2.11.0 - Unreleased
 - **High Impact Changes**
 - **Medium Impact Changes**

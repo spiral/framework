@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "ext-json": "*",
         "ext-mbstring": "*",
         "spiral/core": "^2.11",
@@ -27,7 +27,7 @@
         "symfony/polyfill-php80": "^1.22"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.5",
+        "phpunit/phpunit": "^9.5",
         "mockery/mockery": "^1.3",
         "laminas/laminas-diactoros": "^2.4"
     },
