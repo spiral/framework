@@ -26,6 +26,9 @@ use Spiral\Http\Exception\EmitterException;
  */
 final class SapiEmitter implements EmitterInterface
 {
+    private const DEFAULT_BUFFER_SIZE = 8_388_608; // 8MB
+    private $bufferSize = self::DEFAULT_BUFFER_SIZE;
+
     /**
      * Emits a response for a PHP SAPI environment.
      *
@@ -36,6 +39,9 @@ final class SapiEmitter implements EmitterInterface
      */
     public function emit(ResponseInterface $response): bool
     {
+        while (\ob_get_level() > 0) {
+            \ob_end_clean();
+        }
         $this->assertNoPreviousOutput();
 
         $this->emitHeaders($response);
@@ -50,9 +56,15 @@ final class SapiEmitter implements EmitterInterface
      */
     private function emitBody(ResponseInterface $response): void
     {
-        echo $response->getBody();
+        $body = $response->getBody();
+        if ($body->isSeekable()) {
+            $body->rewind();
+        }
+        while (!$body->eof()) {
+            echo $body->read($this->bufferSize);
+            flush();
+        }
     }
-
     /**
      * Checks to see if content has previously been sent.
      *
