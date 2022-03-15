@@ -1,0 +1,21 @@
+checks:
+  php: true
+
+filter:
+  paths:
+    - "src/*"
+
+tools:
+  external_code_coverage:
+    timeout: 900    # Timeout in seconds.
+    runs: 2         # How many code coverage submissions Scrutinizer will wait
+
+build:
+  nodes:
+    analysis:
+      environment:
+        php: 8.1
+
+      tests:
+        override:
+          - php-scrutinizer-run
