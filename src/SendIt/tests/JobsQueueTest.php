@@ -6,8 +6,8 @@ namespace Spiral\Tests\SendIt;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Spiral\Jobs\Options;
-use Spiral\Jobs\QueueInterface;
+use Spiral\Queue\Options;
+use Spiral\Queue\QueueInterface;
 use Spiral\Mailer\Message;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailQueue;
@@ -36,7 +36,7 @@ class JobsQueueTest extends TestCase
             function ($job, $data, Options $options) use ($mail) {
                 $this->assertSame(MailQueue::JOB_NAME, $job);
                 $this->assertSame($data, MessageSerializer::pack($mail));
-                $this->assertSame('mailer', $options->getPipeline());
+                $this->assertSame('mailer', $options->getQueue());
 
                 return true;
             }

@@ -27,7 +27,6 @@ use Spiral\Bootloader\Views\ViewsBootloader;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptableCore;
-use Spiral\Domain\CycleInterceptor;
 use Spiral\Domain\FilterInterceptor;
 use Spiral\Domain\GuardInterceptor;
 use Spiral\Domain\PipelineInterceptor;
@@ -44,7 +43,6 @@ class AppBootloader extends DomainBootloader
     ];
 
     protected const INTERCEPTORS = [
-        CycleInterceptor::class,
         GuardInterceptor::class,
         FilterInterceptor::class
     ];

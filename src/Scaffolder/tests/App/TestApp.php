@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Scaffolder\App;
 
 use Spiral\Boot;
-use Spiral\Migrations;
 use Spiral\Scaffolder;
 use Throwable;
 
@@ -50,7 +49,6 @@ class TestApp extends Boot\AbstractKernel
      */
     protected function bootstrap(): void
     {
-        $this->container->bind(Migrations\RepositoryInterface::class, Migrations\FileRepository::class);
     }
 
     /**

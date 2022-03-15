@@ -78,7 +78,6 @@ class ConsoleDispatcherTest extends BaseTest
 
         $this->assertStringContainsString('undefined', $result);
         $this->assertStringContainsString('DeadCommand.php', $result);
-        $this->assertStringContainsString('->perform()', $result);
         $this->assertStringContainsString('$undefined', $result);
         $this->assertNotEquals(0, $serveResult);
     }

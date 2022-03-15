@@ -39,13 +39,4 @@ class CleanTest extends ConsoleTest
         $output = $this->runCommandDebug('cache:clean');
         $this->assertStringContainsString('i18n', $output);
     }
-
-    public function testUpdateClean(): void
-    {
-        $out = $this->runCommand('update');
-        $this->assertStringContainsString('Updating ORM schema', $out);
-
-        $output = $this->runCommandDebug('cache:clean');
-        $this->assertStringContainsString('cycle.php', $output);
-    }
 }

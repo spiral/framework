@@ -31,7 +31,6 @@ class ValidationBootloaderTest extends BaseTest
         yield ['file'];
         yield ['image'];
         yield ['datetime'];
-        yield ['entity'];
         yield ['array'];
     }
 }

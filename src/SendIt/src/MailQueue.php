@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt;
 
-use Spiral\Jobs\Options as JobOptions;
-use Spiral\Jobs\QueueInterface;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Mailer\MessageInterface;
 use Spiral\Queue\Options;
@@ -25,7 +23,7 @@ final class MailQueue implements MailerInterface
     /** @var MailerConfig */
     private $config;
 
-    /** @var QueueInterface|\Spiral\Queue\QueueInterface */
+    /** @var \Spiral\Queue\QueueInterface */
     private $queue;
 
     public function __construct(MailerConfig $config, $queue)
@@ -36,11 +34,7 @@ final class MailQueue implements MailerInterface
 
     public function send(MessageInterface ...$message): void
     {
-        if ($this->queue instanceof QueueInterface) {
-            $options = (new JobOptions())->withPipeline($this->config->getQueue());
-        } else {
-            $options = Options::onQueue($this->config->getQueue());
-        }
+        $options = Options::onQueue($this->config->getQueue());
 
         foreach ($message as $msg) {
             $this->queue->push(

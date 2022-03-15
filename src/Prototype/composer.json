@@ -20,7 +20,7 @@
         "nikic/php-parser": "^4.1",
         "doctrine/inflector": "^1.4|^2.0",
         "spiral/console": "^2.11",
-        "spiral/annotations": "^2.11"
+        "spiral/attributes": "^2.11"
     },
     "autoload": {
         "psr-4": {

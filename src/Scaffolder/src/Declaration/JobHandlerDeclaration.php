@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Declaration;
 
-use Spiral\Jobs\JobHandler;
+use Spiral\Queue\JobHandler;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\DependedInterface;
 

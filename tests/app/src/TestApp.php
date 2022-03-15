@@ -14,7 +14,6 @@ namespace Spiral\App;
 use Psr\Container\ContainerInterface;
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\App\Bootloader\AuthBootloader;
-use Spiral\App\Bootloader\WSBootloader;
 use Spiral\Boot\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -38,8 +37,6 @@ class TestApp extends Kernel
         Bootloader\Security\GuardBootloader::class,
 
         // Dispatchers
-        Bootloader\Jobs\JobsBootloader::class,
-        Bootloader\GRPC\GRPCBootloader::class,
         \Spiral\Console\Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
@@ -58,19 +55,8 @@ class TestApp extends Kernel
         // Auth
         Bootloader\Auth\HttpAuthBootloader::class,
 
-        // Websocket authentication
-        Bootloader\Http\WebsocketsBootloader::class,
-
         // selects between session and cycle based on env configuration
         AuthBootloader::class,
-
-        // Data and Storage
-        Bootloader\Database\DatabaseBootloader::class,
-        Bootloader\Database\MigrationsBootloader::class,
-
-        Bootloader\Cycle\CycleBootloader::class,
-        Bootloader\Cycle\AnnotatedBootloader::class,
-        Bootloader\Cycle\ProxiesBootloader::class,
 
         // Template engines and rendering
         StemplerBootloader::class,
@@ -88,7 +74,6 @@ class TestApp extends Kernel
 
     public const APP = [
         AppBootloader::class,
-        WSBootloader::class
     ];
 
     /**

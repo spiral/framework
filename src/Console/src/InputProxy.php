@@ -34,7 +34,7 @@ final class InputProxy implements InputInterface
     /**
      * @inheritDoc
      */
-    public function getFirstArgument()
+    public function getFirstArgument(): ?string
     {
         return $this->overwrite['firstArgument'] ?? $this->input->getFirstArgument();
     }
@@ -42,7 +42,7 @@ final class InputProxy implements InputInterface
     /**
      * @inheritDoc
      */
-    public function hasParameterOption($values, $onlyParams = false)
+    public function hasParameterOption($values, $onlyParams = false): bool
     {
         return $this->input->hasParameterOption($values, $onlyParams = false);
     }
@@ -74,7 +74,7 @@ final class InputProxy implements InputInterface
     /**
      * @inheritDoc
      */
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->input->getArguments();
     }
@@ -98,7 +98,7 @@ final class InputProxy implements InputInterface
     /**
      * @inheritDoc
      */
-    public function hasArgument($name)
+    public function hasArgument($name): bool
     {
         return $this->input->hasArgument($name);
     }
@@ -106,7 +106,7 @@ final class InputProxy implements InputInterface
     /**
      * @inheritDoc
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->input->getOptions();
     }
@@ -130,7 +130,7 @@ final class InputProxy implements InputInterface
     /**
      * @inheritDoc
      */
-    public function hasOption($name)
+    public function hasOption($name): bool
     {
         return $this->input->hasOption($name);
     }
@@ -138,7 +138,7 @@ final class InputProxy implements InputInterface
     /**
      * @inheritDoc
      */
-    public function isInteractive()
+    public function isInteractive(): bool
     {
         return $this->input->isInteractive();
     }

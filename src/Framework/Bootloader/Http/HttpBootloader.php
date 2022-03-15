@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
-use Composer\InstalledVersions;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\KernelInterface;
-use Spiral\Bootloader\ServerBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
@@ -27,22 +25,14 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Emitter\SapiEmitter;
 use Spiral\Http\EmitterInterface;
 use Spiral\Http\Http;
-use Spiral\Http\LegacyRrDispatcher;
 use Spiral\Http\Pipeline;
-use Spiral\Http\RrDispatcher;
 use Spiral\Http\SapiDispatcher;
-use Spiral\RoadRunner\Http\PSR7Worker;
-use Spiral\RoadRunner\PSR7Client;
 
 /**
  * Configures Http dispatcher in SAPI and RoadRunner modes (if available).
  */
 final class HttpBootloader extends Bootloader implements SingletonInterface
 {
-    protected const DEPENDENCIES = [
-        ServerBootloader::class,
-    ];
-
     protected const SINGLETONS = [
         Http::class             => [self::class, 'httpCore'],
         EmitterInterface::class => SapiEmitter::class,
@@ -80,16 +70,6 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         $kernel->started(static function (AbstractKernel $kernel) use ($factory): void {
             $kernel->addDispatcher($factory->make(SapiDispatcher::class));
         });
-
-        if (!class_exists('Spiral\RoadRunnerBridge\Http\Dispatcher')) {
-            if (class_exists(PSR7Client::class)) {
-                $kernel->addDispatcher($factory->make(LegacyRrDispatcher::class));
-            }
-
-            if (class_exists(PSR7Worker::class)) {
-                $kernel->addDispatcher($factory->make(RrDispatcher::class));
-            }
-        }
     }
 
     /**

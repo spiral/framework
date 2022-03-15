@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt;
 
-use Spiral\Jobs\HandlerInterface;
 use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\SendIt\Config\MailerConfig;
@@ -20,7 +19,7 @@ use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-final class MailJob implements HandlerInterface, \Spiral\Queue\HandlerInterface
+final class MailJob implements \Spiral\Queue\HandlerInterface
 {
     use LoggerTrait;
 
