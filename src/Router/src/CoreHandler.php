@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
+use roxblnfk\SmartStream\Stream\GeneratorStream;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\ScopeInterface;
@@ -163,7 +164,11 @@ final class CoreHandler implements RequestHandlerInterface
             return $result;
         }
 
-        if (is_array($result) || $result instanceof \JsonSerializable) {
+        if ($result instanceof \Generator) {
+            return $response->withBody(new GeneratorStream($result));
+        }
+
+        if (\is_array($result) || $result instanceof \JsonSerializable) {
             $response = $this->writeJson($response, $result);
         } else {
             $response->getBody()->write((string)$result);
