@@ -214,12 +214,12 @@ jobs:
 
       # Execution
       - name: Execute Tests
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        run: vendor/bin/phpunit --coverage-clover=coverage.clover
       - name: Upload Coverage To Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
+          file: ./coverage.clover
           fail_ci_if_error: false
       - name: Upload coverage to Scrutinizer
         continue-on-error: true # if is fork
