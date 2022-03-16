@@ -76,14 +76,10 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     /** @var PrototypeRegistry */
     private $registry;
 
-    /** @var \Doctrine\Inflector\Inflector */
-    private $inflector;
-
     public function __construct(MemoryInterface $memory, PrototypeRegistry $registry)
     {
         $this->memory = $memory;
         $this->registry = $registry;
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
     }
 
     public function boot(ConsoleBootloader $console, ContainerInterface $container): void
