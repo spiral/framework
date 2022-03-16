@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
@@ -59,25 +52,14 @@ final class ContextRenderer
 
     public function render(?\Reflector $reflector): string
     {
-        switch (true) {
-            case $reflector instanceof \ReflectionClass:
-                return $this->renderClassContext($reflector);
-
-            case $reflector instanceof \ReflectionFunctionAbstract:
-                return $this->renderCallableContext($reflector);
-
-            case $reflector instanceof \ReflectionProperty:
-                return $this->renderPropertyContext($reflector);
-
-            case $reflector instanceof \ReflectionClassConstant:
-                return $this->renderConstantContext($reflector);
-
-            case $reflector instanceof \ReflectionParameter:
-                return $this->renderParameterContext($reflector);
-
-            default:
-                return '<unknown>';
-        }
+        return match (true) {
+            $reflector instanceof \ReflectionClass => $this->renderClassContext($reflector),
+            $reflector instanceof \ReflectionFunctionAbstract => $this->renderCallableContext($reflector),
+            $reflector instanceof \ReflectionProperty => $this->renderPropertyContext($reflector),
+            $reflector instanceof \ReflectionClassConstant => $this->renderConstantContext($reflector),
+            $reflector instanceof \ReflectionParameter => $this->renderParameterContext($reflector),
+            default => '<unknown>',
+        };
     }
 
     public function renderClassContext(\ReflectionClass $class): string
