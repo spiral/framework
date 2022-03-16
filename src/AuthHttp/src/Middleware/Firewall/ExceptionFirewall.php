@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth\Middleware\Firewall;
@@ -20,17 +13,12 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class ExceptionFirewall extends AbstractFirewall
 {
-    /** @var \Throwable */
-    private $e;
-
-    public function __construct(\Throwable $e)
-    {
-        $this->e = $e;
+    public function __construct(
+        private readonly \Throwable $e
+    ) {
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws \Throwable
      */
     protected function denyAccess(Request $request, RequestHandlerInterface $handler): Response

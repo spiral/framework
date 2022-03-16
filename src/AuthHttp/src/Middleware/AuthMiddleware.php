@@ -1,19 +1,10 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth\Middleware;
 
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -31,32 +22,15 @@ final class AuthMiddleware implements MiddlewareInterface
 {
     public const ATTRIBUTE = 'authContext';
 
-    /** @var ScopeInterface */
-    private $scope;
-
-    /** @var ActorProviderInterface */
-    private $actorProvider;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var TransportRegistry */
-    private $transportRegistry;
-
     public function __construct(
-        ScopeInterface $scope,
-        ActorProviderInterface $actorProvider,
-        TokenStorageInterface $tokenStorage,
-        TransportRegistry $transportRegistry
+        private readonly ScopeInterface $scope,
+        private readonly ActorProviderInterface $actorProvider,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly TransportRegistry $transportRegistry
     ) {
-        $this->scope = $scope;
-        $this->actorProvider = $actorProvider;
-        $this->tokenStorage = $tokenStorage;
-        $this->transportRegistry = $transportRegistry;
     }
 
     /**
-     *
      * @throws \Throwable
      */
     public function process(Request $request, RequestHandlerInterface $handler): Response
@@ -65,9 +39,7 @@ final class AuthMiddleware implements MiddlewareInterface
 
         $response = $this->scope->runScope(
             [AuthContextInterface::class => $authContext],
-            static function () use ($request, $handler, $authContext) {
-                return $handler->handle($request->withAttribute(self::ATTRIBUTE, $authContext));
-            }
+            static fn() => $handler->handle($request->withAttribute(self::ATTRIBUTE, $authContext))
         );
 
         return $this->closeContext($request, $response, $authContext);
