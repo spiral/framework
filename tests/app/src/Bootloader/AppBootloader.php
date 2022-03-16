@@ -18,7 +18,6 @@ use Spiral\App\Controller\AuthController;
 use Spiral\App\Controller\InterceptedController;
 use Spiral\App\Controller\TestController;
 use Spiral\App\Interceptor;
-use Spiral\App\User\UserRepository;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
 use Spiral\Bootloader\Http\JsonPayloadsBootloader;
@@ -59,7 +58,6 @@ class AppBootloader extends DomainBootloader
     }
 
     public function boot(
-        \Spiral\Bootloader\Auth\AuthBootloader $authBootloader,
         RouterInterface $router,
         PermissionsInterface $rbac,
         ViewsBootloader $views,
@@ -67,8 +65,6 @@ class AppBootloader extends DomainBootloader
         JsonPayloadsBootloader $json,
         PipelineInterceptor $pipelineInterceptor
     ): void {
-        $authBootloader->addActorProvider(UserRepository::class);
-
         $rbac->addRole('user');
         $rbac->associate('user', '*');
 

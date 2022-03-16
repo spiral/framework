@@ -22,8 +22,8 @@
     "require-dev": {
         "spiral/boot": "^2.11",
         "symfony/tokenizer": "^2.10",
-        "phpunit/phpunit": "^9.5",
-        "mockery/mockery": "^1.3"
+        "phpunit/phpunit": "^9.5.5",
+        "mockery/mockery": "^1.3.5"
     },
     "autoload": {
         "psr-4": {

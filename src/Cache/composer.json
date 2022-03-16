@@ -28,7 +28,7 @@
     },
     "require-dev": {
         "spiral/boot": "^2.11",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5.5"
     },
     "autoload-dev": {
         "psr-4": {
