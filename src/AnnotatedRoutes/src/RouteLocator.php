@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -17,16 +10,10 @@ use Spiral\Tokenizer\ClassLocator;
 
 final class RouteLocator
 {
-    /** @var ClassLocator */
-    private $locator;
-
-    /** @var ReaderInterface */
-    private $reader;
-
-    public function __construct(ClassLocator $locator, ReaderInterface $reader)
-    {
-        $this->locator = $locator;
-        $this->reader = $reader;
+    public function __construct(
+        private readonly ClassLocator $locator,
+        private readonly ReaderInterface $reader
+    ) {
     }
 
     /**
@@ -55,7 +42,7 @@ final class RouteLocator
                     continue;
                 }
 
-                $route->name = $route->name ?? $this->generateName($route);
+                $route->name ??= $this->generateName($route);
                 $result[$route->name] = [
                     'pattern'    => $route->route,
                     'controller' => $class->getName(),
@@ -69,9 +56,7 @@ final class RouteLocator
             }
         }
 
-        \uasort($result, static function (array $route1, array $route2) {
-            return $route1['priority'] <=> $route2['priority'];
-        });
+        \uasort($result, static fn(array $route1, array $route2) => $route1['priority'] <=> $route2['priority']);
 
         return $result;
     }

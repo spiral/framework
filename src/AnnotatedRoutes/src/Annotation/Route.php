@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router\Annotation;
@@ -36,67 +29,20 @@ final class Route
     public const DEFAULT_GROUP = 'default';
 
     /**
-     * @var string
-     */
-    public $route;
-
-    /**
-     * @var null|string
-     */
-    public $name;
-
-    /**
-     * @var mixed
-     */
-    public $methods = \Spiral\Router\Route::VERBS;
-
-    /**
-     * Default match options.
-     *
-     * @var array
-     */
-    public $defaults = [];
-
-    /**
-     * Route group (set of middlewere), groups can be configured using MiddlewareRegistry.
-     *
-     * @var string
-     */
-    public $group = self::DEFAULT_GROUP;
-
-    /**
-     * Route specific middleware set, if any.
-     *
-     * @var array
-     */
-    public $middleware = [];
-
-    /**
-     * @var int
-     */
-    public $priority;
-
-    /**
      * @psalm-param non-empty-string $route
      * @psalm-param non-empty-string|null $name
      * @psalm-param non-empty-string|array<string> $methods
-     * @psalm-param non-empty-string $group
+     * @psalm-param non-empty-string $group Route group, groups can be configured using MiddlewareRegistry
+     * @param array $middleware Route specific middleware set, if any
      */
     public function __construct(
-        string $route,
-        string $name = null,
-        $methods = \Spiral\Router\Route::VERBS,
-        array $defaults = [],
-        string $group = self::DEFAULT_GROUP,
-        array $middleware = [],
-        int $priority = 0
+        public string $route,
+        public ?string $name = null,
+        public array|string $methods = \Spiral\Router\Route::VERBS,
+        public array $defaults = [],
+        public string $group = self::DEFAULT_GROUP,
+        public array $middleware = [],
+        public int $priority = 0
     ) {
-        $this->route = $route;
-        $this->name = $name;
-        $this->methods = $methods;
-        $this->defaults = $defaults;
-        $this->group = $group;
-        $this->middleware = $middleware;
-        $this->priority = $priority;
     }
 }
