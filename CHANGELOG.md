@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v3.0.0 - Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - A minimal version of `PHP` increased to `^8.1`
+  - A minimal version of `symfony/finder` increased to `^5.3`
+  - A minimal version of `league/flysystem` increased to `^2.3`
+- **Other Features**
+
 ## v2.11.0 - Unreleased
 - **High Impact Changes**
 - **Medium Impact Changes**
