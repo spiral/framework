@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console;
@@ -19,21 +12,15 @@ final class StaticLocator implements LocatorInterface
 {
     use LazyTrait;
 
-    /** @var string[] */
-    private $commands;
-
-    /** @var ContainerInterface */
-    private $container;
-
-    public function __construct(array $commands, ContainerInterface $container = null)
-    {
-        $this->commands = $commands;
-        $this->container = $container ?? new Container();
+    /**
+     * @psalm-param class-string[] $commands
+     */
+    public function __construct(
+        private array $commands,
+        private ContainerInterface $container = new Container()
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function locateCommands(): array
     {
         $commands = [];

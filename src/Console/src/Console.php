@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console;
@@ -31,67 +24,45 @@ final class Console
     // Undefined response code for command (errors). See below.
     public const CODE_NONE = 102;
 
-    /** @var ConsoleConfig */
-    private $config;
-
-    /** @var LocatorInterface|null */
-    private $locator;
-
-    /** @var ContainerInterface */
-    private $container;
-
-    /** @var Application|null */
-    private $application;
+    private ?Application $application = null;
 
     public function __construct(
-        ConsoleConfig $config,
-        LocatorInterface $locator = null,
-        ContainerInterface $container = null
+        private readonly ConsoleConfig $config,
+        private readonly ?LocatorInterface $locator = null,
+        private readonly ContainerInterface $container = new Container()
     ) {
-        $this->config = $config;
-        $this->locator = $locator;
-        $this->container = $container ?? new Container();
     }
 
     /**
      * Run console application.
      *
-     * @param InputInterface|null  $input
-     * @param OutputInterface|null $output
-     *
      * @throws \Throwable
      */
     public function start(InputInterface $input = null, OutputInterface $output = null): int
     {
-        $input = $input ?? new ArgvInput();
-        $output = $output ?? new ConsoleOutput();
+        $input ??= new ArgvInput();
+        $output ??= new ConsoleOutput();
 
-        return ContainerScope::runScope($this->container, function () use ($input, $output) {
-            return $this->run(
-                $input->getFirstArgument() ?? 'list',
-                $input,
-                $output
-            )->getCode();
-        });
+        return ContainerScope::runScope($this->container, fn() => $this->run(
+            $input->getFirstArgument() ?? 'list',
+            $input,
+            $output
+        )->getCode());
     }
 
     /**
      * Run selected command.
      *
-     * @param string               $command
-     * @param InputInterface|array $input
-     * @param OutputInterface|null $output
-     *
      * @throws \Throwable
      * @throws CommandNotFoundException
      */
     public function run(
-        ?string $command,
-        $input = [],
-        OutputInterface $output = null
+        ?string              $command,
+        array|InputInterface $input = [],
+        OutputInterface      $output = null
     ): CommandOutput {
-        $input = is_array($input) ? new ArrayInput($input) : $input;
-        $output = $output ?? new BufferedOutput();
+        $input = \is_array($input) ? new ArrayInput($input) : $input;
+        $output ??= new BufferedOutput();
 
         $this->configureIO($input, $output);
 
@@ -99,16 +70,13 @@ final class Console
             $input = new InputProxy($input, ['firstArgument' => $command]);
         }
 
-        $code = ContainerScope::runScope($this->container, function () use ($input, $output) {
-            return $this->getApplication()->doRun($input, $output);
-        });
+        $code = ContainerScope::runScope($this->container, fn() => $this->getApplication()->doRun($input, $output));
 
         return new CommandOutput($code ?? self::CODE_NONE, $output);
     }
 
     /**
      * Get associated Symfony Console Application.
-     *
      *
      * @throws LocatorException
      */
@@ -151,13 +119,13 @@ final class Console
      */
     private function configureIO(InputInterface $input, OutputInterface $output): void
     {
-        if (true === $input->hasParameterOption(['--ansi'], true)) {
+        if ($input->hasParameterOption(['--ansi'], true)) {
             $output->setDecorated(true);
-        } elseif (true === $input->hasParameterOption(['--no-ansi'], true)) {
+        } elseif ($input->hasParameterOption(['--no-ansi'], true)) {
             $output->setDecorated(false);
         }
 
-        if (true === $input->hasParameterOption(['--no-interaction', '-n'], true)) {
+        if ($input->hasParameterOption(['--no-interaction', '-n'], true)) {
             $input->setInteractive(false);
         } elseif (\function_exists('posix_isatty')) {
             $inputStream = null;
@@ -171,27 +139,15 @@ final class Console
             }
         }
 
-        switch ($shellVerbosity = (int)getenv('SHELL_VERBOSITY')) {
-            case -1:
-                $output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
-                break;
-            case 1:
-                $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
-                break;
-            case 2:
-                $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
-                break;
-            case 3:
-                $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
-                break;
-            default:
-                $shellVerbosity = 0;
-                break;
-        }
+        match ($shellVerbosity = (int) getenv('SHELL_VERBOSITY')) {
+            -1 => $output->setVerbosity(OutputInterface::VERBOSITY_QUIET),
+            1 => $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE),
+            2 => $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE),
+            3 => $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG),
+            default => $shellVerbosity = 0
+        };
 
-        if (
-            true === $input->hasParameterOption(['--quiet', '-q'], true)
-        ) {
+        if ($input->hasParameterOption(['--quiet', '-q'], true)) {
             $output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
             $shellVerbosity = -1;
         } else {
@@ -224,7 +180,7 @@ final class Console
             $input->setInteractive(false);
         }
 
-        putenv('SHELL_VERBOSITY=' . $shellVerbosity);
+        \putenv('SHELL_VERBOSITY=' . $shellVerbosity);
         $_ENV['SHELL_VERBOSITY'] = $shellVerbosity;
         $_SERVER['SHELL_VERBOSITY'] = $shellVerbosity;
     }

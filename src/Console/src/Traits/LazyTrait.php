@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Vladislav Gorenkin (vladgorenkin)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console\Traits;
@@ -18,17 +11,16 @@ use Symfony\Component\Console\Command\LazyCommand;
 
 trait LazyTrait
 {
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * Check if command can be lazy-loaded.
      *
-     * @param class-string $class
+     * @psalm-param class-string $class
      */
     private function supportsLazyLoading(string $class): bool
     {
-        return is_subclass_of($class, SpiralCommand::class)
+        return \is_subclass_of($class, SpiralCommand::class)
             && \defined(sprintf('%s::%s', $class, 'NAME'));
     }
 
@@ -42,7 +34,7 @@ trait LazyTrait
         return new LazyCommand(
             $class::NAME,
             [],
-            \defined(sprintf('%s::%s', $class, 'DESCRIPTION'))
+            \defined(\sprintf('%s::%s', $class, 'DESCRIPTION'))
                 ? $class::DESCRIPTION
                 : '',
             false,
