@@ -4,6 +4,7 @@
 - **High Impact Changes**
 - **Medium Impact Changes**
 - **Other Features**
+  - [spiral/boot] Added ability to disable overwriting env variables for `Spiral\Boot\Environment`
 
 ## v2.10.0 - 2022-03-04
 - **High Impact Changes**
