@@ -8,7 +8,7 @@ use ReflectionClass;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Cache\Exception\InvalidArgumentException;
-use \Spiral\Cache\CacheStorageProviderInterface;
+use Spiral\Cache\CacheStorageProviderInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
