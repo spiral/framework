@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Monolog\Config;
@@ -26,18 +19,13 @@ final class MonologConfig extends InjectableConfig
         'handlers'    => [],
     ];
 
-    /**
-     * @return int
-     */
     public function getEventLevel(): int
     {
         return $this->config['globalLevel'] ?? Logger::DEBUG;
     }
 
     /**
-     * @param string $channel
      * @return \Generator|Autowire[]
-     *
      * @throws ConfigException
      */
     public function getHandlers(string $channel): \Generator
@@ -47,14 +35,14 @@ final class MonologConfig extends InjectableConfig
         }
 
         foreach ($this->config['handlers'][$channel] as $handler) {
-            if (is_object($handler) && !$handler instanceof Autowire) {
+            if (\is_object($handler) && !$handler instanceof Autowire) {
                 yield $handler;
                 continue;
             }
 
             $wire = $this->wire($handler);
             if (\is_null($wire)) {
-                throw new ConfigException("Invalid handler definition for channel `{$channel}`.");
+                throw new ConfigException(\sprintf('Invalid handler definition for channel `%s`.', $channel));
             }
 
             yield $wire;
@@ -75,20 +63,20 @@ final class MonologConfig extends InjectableConfig
 
             $wire = $this->wire($processor);
             if (\is_null($wire)) {
-                throw new ConfigException("Invalid processor definition for channel `{$channel}`.");
+                throw new ConfigException(\sprintf('Invalid processor definition for channel `%s`.', $channel));
             }
 
             yield $wire;
         }
     }
 
-    private function wire($definition): ?Autowire
+    private function wire(Autowire|string|array $definition): ?Autowire
     {
         if ($definition instanceof Autowire) {
             return $definition;
         }
 
-        if (is_string($definition)) {
+        if (\is_string($definition)) {
             return new Autowire($definition);
         }
 
