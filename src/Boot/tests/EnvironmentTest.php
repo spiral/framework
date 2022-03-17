@@ -72,6 +72,24 @@ class EnvironmentTest extends TestCase
         $this->assertSame('foo', $env->get('key'));
     }
 
+    public function testSetNullValueWithOverwriting(): void
+    {
+        $env = $this->getEnv(['key' => null]);
+
+        $this->assertNull($env->get('key'));
+        $env->set('key', 'bar');
+        $this->assertSame('bar', $env->get('key'));
+    }
+
+    public function testSetNullValueWithoutOverwriting(): void
+    {
+        $env = $this->getEnv(['key' => null], false);
+
+        $this->assertNull($env->get('key'));
+        $env->set('key', 'bar');
+        $this->assertNull($env->get('key'));
+    }
+
     /**
      * @param array $env
      * @return EnvironmentInterface
