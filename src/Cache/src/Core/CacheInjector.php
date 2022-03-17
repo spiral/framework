@@ -51,14 +51,14 @@ final class CacheInjector implements InjectorInterface
      *
      * @throws \RuntimeException
      */
-    private function matchType(ReflectionClass $class, string $context, CacheInterface $connection): void
+    private function matchType(ReflectionClass $class, ?string $context, CacheInterface $connection): void
     {
         $className = $class->getName();
         if ($className !== CacheInterface::class && !$connection instanceof $className) {
             throw new \RuntimeException(
                 \sprintf(
                     "The cache obtained by the context `%s` doesn't match the type `%s`.",
-                    $context,
+                    $context ?? 'NULL',
                     $className
                 )
             );

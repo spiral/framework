@@ -51,14 +51,14 @@ final class QueueInjector implements InjectorInterface
      *
      * @throws \RuntimeException
      */
-    private function matchType(ReflectionClass $class, string $context, QueueInterface $connection): void
+    private function matchType(ReflectionClass $class, ?string $context, QueueInterface $connection): void
     {
         $className = $class->getName();
         if ($className !== QueueInterface::class && !$connection instanceof $className) {
             throw new \RuntimeException(
                 \sprintf(
                     "The queue obtained by the context `%s` doesn't match the type `%s`.",
-                    $context,
+                    $context ?? 'NULL',
                     $className
                 )
             );
