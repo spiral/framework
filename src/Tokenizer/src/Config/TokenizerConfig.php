@@ -20,7 +20,7 @@ final class TokenizerConfig extends InjectableConfig
 {
     public const CONFIG = 'tokenizer';
 
-    /** @var array */
+    /** @var array<non-empty-string, array<int, non-empty-string>> */
     protected $config = [
         'directories' => [],
         'exclude' => [],
