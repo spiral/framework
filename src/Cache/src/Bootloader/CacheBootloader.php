@@ -11,6 +11,7 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Cache\CacheManager;
 use Spiral\Cache\CacheStorageProviderInterface;
 use Spiral\Cache\Config\CacheConfig;
+use Spiral\Cache\Core\CacheInjector;
 use Spiral\Cache\Storage\ArrayStorage;
 use Spiral\Cache\Storage\FileStorage;
 use Spiral\Config\ConfiguratorInterface;
@@ -44,9 +45,7 @@ final class CacheBootloader extends Bootloader
     {
         $this->initConfig($env, $dirs);
 
-        $container->bind(CacheInterface::class, function (CacheManager $manager) {
-            return $manager->storage();
-        });
+        $container->bindInjector(CacheInterface::class, CacheInjector::class);
     }
 
     /**
