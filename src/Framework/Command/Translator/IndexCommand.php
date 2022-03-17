@@ -32,7 +32,7 @@ final class IndexCommand extends Command implements SingletonInterface
      * @param TranslatorConfig     $config
      * @param CatalogueManager     $manager
      * @param InvocationsInterface $invocations
-     * @param ScopedClassesInterface     $classes
+     * @param ScopedClassesInterface $classes
      */
     public function perform(
         TranslatorConfig $config,
