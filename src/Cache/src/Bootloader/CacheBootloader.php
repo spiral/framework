@@ -25,8 +25,7 @@ final class CacheBootloader extends Bootloader
         CacheManager::class => [self::class, 'initCacheManager'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
+    private ConfiguratorInterface $config;
 
     public function __construct(ConfiguratorInterface $config)
     {
