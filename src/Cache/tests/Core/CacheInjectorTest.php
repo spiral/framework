@@ -4,15 +4,15 @@ namespace Spiral\Tests\Cache\Core;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 use RuntimeException;
-use Spiral\Core\Exception\Container\NotFoundException;
-use Spiral\Core\FactoryInterface;
+use Spiral\Cache\CacheManager;
 use Spiral\Cache\Config\CacheConfig;
 use Spiral\Cache\Core\CacheInjector;
-use Psr\SimpleCache\CacheInterface;
-use Spiral\Cache\CacheManager;
-use Spiral\Tests\Cache\ArrayCache;
+use Spiral\Cache\Storage\ArrayStorage;
+use Spiral\Core\Exception\Container\NotFoundException;
+use Spiral\Core\FactoryInterface;
 
 final class CacheInjectorTest extends TestCase
 {
@@ -21,11 +21,11 @@ final class CacheInjectorTest extends TestCase
     public function testGetByContext(): void
     {
         $injector = $this->createInjector();
-        $reflection = new ReflectionClass(ArrayCache::class);
+        $reflection = new ReflectionClass(ArrayStorage::class);
 
         $result = $injector->createInjection($reflection, 'array');
 
-        $this->assertInstanceOf(ArrayCache::class, $result);
+        $this->assertInstanceOf(ArrayStorage::class, $result);
     }
 
     public function testGetByIncorrectContext(): void
@@ -45,7 +45,7 @@ final class CacheInjectorTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('The cache obtained by the context');
 
-        $reflection = new ReflectionClass(ArrayCache::class);
+        $reflection = new ReflectionClass(ArrayStorage::class);
         $injector->createInjection($reflection, 'cache');
     }
 
@@ -74,7 +74,7 @@ final class CacheInjectorTest extends TestCase
         $factory->shouldReceive('make')->andReturnUsing(function (string $name): CacheInterface {
             $result = [
                     'test' => $this->defaultCache,
-                    'array' => new ArrayCache(),
+                    'array' => new ArrayStorage(),
                 ][$name] ?? null;
             if ($result === null) {
                 throw new NotFoundException();
