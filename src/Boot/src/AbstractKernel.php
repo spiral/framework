@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -31,31 +24,25 @@ abstract class AbstractKernel implements KernelInterface
      */
     protected const LOAD = [];
 
-    /** @var Container */
-    protected $container;
-
-    /** @var FinalizerInterface */
-    protected $finalizer;
-
-    /** @var BootloadManager */
-    protected $bootloader;
+    protected FinalizerInterface $finalizer;
+    protected BootloadManager $bootloader;
 
     /** @var DispatcherInterface[] */
-    protected $dispatchers = [];
+    protected array $dispatchers = [];
 
     /** @var array<Closure> */
-    private $startingCallbacks = [];
+    private array $startingCallbacks = [];
 
     /** @var array<Closure> */
-    private $startedCallbacks = [];
+    private array $startedCallbacks = [];
 
     /**
      * @throws \Throwable
      */
-    public function __construct(Container $container, array $directories)
-    {
-        $this->container = $container;
-
+    public function __construct(
+        protected Container $container,
+        array $directories
+    ) {
         $this->container->bindSingleton(KernelInterface::class, $this);
         $this->container->bindSingleton(self::class, $this);
         $this->container->bindSingleton(static::class, $this);
@@ -133,7 +120,7 @@ abstract class AbstractKernel implements KernelInterface
      */
     public function run(?EnvironmentInterface $environment = null): ?self
     {
-        $environment = $environment ?? new Environment();
+        $environment ??= new Environment();
         $this->container->bindSingleton(EnvironmentInterface::class, $environment);
 
         try {
@@ -199,17 +186,16 @@ abstract class AbstractKernel implements KernelInterface
      * Start application and serve user requests using selected dispatcher or throw
      * an exception.
      *
-     * @return mixed
      * @throws BootException
      * @throws \Throwable
      */
-    public function serve()
+    public function serve(): mixed
     {
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
-                    [$dispatcher, 'serve']
+                    fn() => $dispatcher->serve()
                 );
             }
         }
@@ -220,7 +206,7 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Bootstrap application. Must be executed before serve method.
      */
-    abstract protected function bootstrap();
+    abstract protected function bootstrap(): void;
 
     /**
      * Normalizes directory list and adds all required aliases.

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -22,15 +15,13 @@ use Spiral\Core\Container;
  */
 final class BootloadManager implements Container\SingletonInterface
 {
-    /* @var Container @internal */
-    protected $container;
-
     /** @var array<class-string> */
-    private $classes = [];
+    private array $classes = [];
 
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        /* @internal */
+        protected Container $container
+    ) {
     }
 
     /**

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -21,46 +14,38 @@ final class Memory implements MemoryInterface
     // data file extension
     private const EXTENSION = 'php';
 
-    /** @var string */
-    private $directory;
+    private readonly string $directory;
 
-    /** @var FilesInterface */
-    private $files;
-
-    public function __construct(string $directory, FilesInterface $files)
-    {
-        $this->directory = rtrim($directory, '/');
-        $this->files = $files;
+    public function __construct(
+        string $directory,
+        private readonly FilesInterface $files
+    ) {
+        $this->directory = \rtrim($directory, '/');
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param string $filename Cache filename.
      */
-    public function loadData(string $section, string &$filename = null)
+    public function loadData(string $section, string &$filename = null): mixed
     {
         $filename = $this->getFilename($section);
 
-        if (!file_exists($filename)) {
+        if (!\file_exists($filename)) {
             return null;
         }
 
         try {
             return include($filename);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return null;
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function saveData(string $section, $data): void
+    public function saveData(string $section, mixed $data): void
     {
         $this->files->write(
             $this->getFilename($section),
-            '<?php return ' . var_export($data, true) . ';',
+            '<?php return ' . \var_export($data, true) . ';',
             FilesInterface::RUNTIME,
             true
         );
@@ -74,10 +59,10 @@ final class Memory implements MemoryInterface
     private function getFilename(string $name): string
     {
         //Runtime cache
-        return sprintf(
+        return \sprintf(
             '%s/%s.%s',
             $this->directory,
-            strtolower(str_replace(['/', '\\'], '-', $name)),
+            \strtolower(\str_replace(['/', '\\'], '-', $name)),
             self::EXTENSION
         );
     }

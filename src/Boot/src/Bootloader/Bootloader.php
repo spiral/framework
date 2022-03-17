@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
@@ -23,31 +16,24 @@ namespace Spiral\Boot\Bootloader;
 abstract class Bootloader implements BootloaderInterface, DependedInterface
 {
     /** @var array<string, class-string|callable> */
-    protected const BINDINGS     = [];
+    protected const BINDINGS = [];
+    
     /** @var array<string, class-string|callable> */
-    protected const SINGLETONS   = [];
+    protected const SINGLETONS = [];
+    
     /** @var array<int, class-string<BootloaderInterface|DependedInterface>> */
     protected const DEPENDENCIES = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function defineBindings(): array
     {
         return static::BINDINGS;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function defineSingletons(): array
     {
         return static::SINGLETONS;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function defineDependencies(): array
     {
         return static::DEPENDENCIES;
