@@ -17,8 +17,7 @@ use Spiral\Tokenizer\ScopedClassesInterface;
 
 final class RouteLocator
 {
-    /** @var ScopedClassesInterface */
-    private $locator;
+    private ScopedClassesInterface $locator;
 
     /** @var ReaderInterface */
     private $reader;
