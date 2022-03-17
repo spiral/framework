@@ -50,7 +50,7 @@ final class Environment implements EnvironmentInterface
      */
     public function set(string $name, $value): void
     {
-        if (isset($this->values[$name]) && !$this->overwrite) {
+        if (\array_key_exists($name, $this->values) && !$this->overwrite) {
             return;
         }
 
