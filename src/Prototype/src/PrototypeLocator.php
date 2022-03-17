@@ -16,8 +16,7 @@ use Spiral\Tokenizer\ScopedClassesInterface;
 
 final class PrototypeLocator
 {
-    /** @var ScopedClassesInterface */
-    private $classes;
+    private ScopedClassesInterface $classes;
 
     public function __construct(ScopedClassesInterface $classes)
     {
