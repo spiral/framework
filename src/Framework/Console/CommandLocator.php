@@ -20,8 +20,7 @@ final class CommandLocator implements LocatorInterface
 {
     use LazyTrait;
 
-    /** @var ScopedClassesInterface */
-    private $classes;
+    private ScopedClassesInterface $classes;
 
     /** @var ContainerInterface */
     private $container;
