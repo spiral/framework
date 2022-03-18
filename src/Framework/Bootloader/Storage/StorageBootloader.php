@@ -29,7 +29,7 @@ class StorageBootloader extends Bootloader
 {
     /** @var array<string, class-string|callable> */
     protected const SINGLETONS = [
-        BucketFactoryInterface::class => BucketFactory::class
+        BucketFactoryInterface::class => BucketFactory::class,
     ];
 
     /**
