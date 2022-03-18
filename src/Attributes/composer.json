@@ -41,7 +41,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.11.x-dev"
+            "dev-master": "2.12.x-dev"
         }
     },
     "scripts": {

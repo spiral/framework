@@ -16,7 +16,7 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "spiral/snapshots": "^2.11",
+        "spiral/snapshots": "^2.12",
         "doctrine/inflector": "^1.4|^2.0",
         "opis/closure": "^3.6",
         "ramsey/uuid": "^4.2"
@@ -34,11 +34,11 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "mockery/mockery": "^1.5",
-        "spiral/boot": "^2.11"
+        "spiral/boot": "^2.12"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.11.x-dev"
+            "dev-master": "2.12.x-dev"
         }
     },
     "config": {

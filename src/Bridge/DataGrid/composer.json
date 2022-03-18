@@ -17,15 +17,15 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "spiral/attributes": "^2.11",
-        "spiral/boot": "^2.11",
-        "spiral/data-grid": "^2.11",
-        "spiral/http": "^2.11"
+        "spiral/attributes": "^2.12",
+        "spiral/boot": "^2.12",
+        "spiral/data-grid": "^2.12",
+        "spiral/http": "^2.12"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",
         "cycle/orm": "^1.8.1",
-        "spiral/hmvc": "^2.11"
+        "spiral/hmvc": "^2.12"
     },
     "autoload": {
         "psr-4": {
@@ -39,7 +39,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.11.x-dev"
+            "dev-master": "2.12.x-dev"
         }
     },
     "config": {

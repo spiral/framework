@@ -16,9 +16,9 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/core": "^2.11",
-        "spiral/config": "^2.11",
-        "spiral/files": "^2.11",
+        "spiral/core": "^2.12",
+        "spiral/config": "^2.12",
+        "spiral/files": "^2.12",
         "psr/simple-cache": "1 - 2"
     },
     "autoload": {
@@ -27,7 +27,7 @@
         }
     },
     "require-dev": {
-        "spiral/boot": "^2.11",
+        "spiral/boot": "^2.12",
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^8.5|^9.5"
     },
@@ -38,7 +38,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.11.x-dev"
+            "dev-master": "2.12.x-dev"
         }
     },
     "config": {
