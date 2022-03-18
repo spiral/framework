@@ -77,6 +77,9 @@ class TestApp extends Kernel
         Bootloader\Views\ViewsBootloader::class,
         Bootloader\Views\TranslatedCacheBootloader::class,
 
+        // Storage
+        Bootloader\Storage\StorageBootloader::class,
+
         // Framework commands
         Bootloader\CommandBootloader::class,
 
