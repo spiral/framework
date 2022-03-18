@@ -1,58 +1,34 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core\Exception\Container;
-
-use ReflectionFunctionAbstract;
-use ReflectionMethod;
-use ReflectionParameter;
 
 /**
  * Unable to resolve argument value.
  */
 class ArgumentException extends AutowireException
 {
-    /**
-     * Parameter caused error.
-     *
-     * @var ReflectionParameter
-     */
-    protected $parameter;
-
-    /**
-     * Context method or constructor or function.
-     *
-     * @var ReflectionFunctionAbstract
-     */
-    protected $context;
-
-    public function __construct(ReflectionParameter $parameter, ReflectionFunctionAbstract $context)
-    {
-        $this->parameter = $parameter;
-        $this->context = $context;
-
+    public function __construct(
+        /** Parameter caused error. */
+        protected \ReflectionParameter $parameter,
+        /** Context method or constructor or function. */
+        protected \ReflectionFunctionAbstract $context
+    ) {
         $name = $context->getName();
-        if ($context instanceof ReflectionMethod) {
+        if ($context instanceof \ReflectionMethod) {
             $name = $context->class . '::' . $name;
         }
 
-        parent::__construct("Unable to resolve '{$parameter->name}' argument in '{$name}'");
+        parent::__construct(\sprintf("Unable to resolve '%s' argument in '%s'", $parameter->name, $name));
     }
 
-    public function getParameter(): ReflectionParameter
+    public function getParameter(): \ReflectionParameter
     {
         return $this->parameter;
     }
 
-    public function getContext(): ReflectionFunctionAbstract
+    public function getContext(): \ReflectionFunctionAbstract
     {
         return $this->context;
     }

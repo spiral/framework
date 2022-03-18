@@ -1,17 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core;
 
-use Closure;
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use Spiral\Core\Container\Autowire;
@@ -50,10 +42,7 @@ final class Container implements
     InvokerInterface,
     ScopeInterface
 {
-    /**
-     * @var array
-     */
-    private $bindings = [
+    private array $bindings = [
         ContainerInterface::class => self::class,
         BinderInterface::class    => self::class,
         FactoryInterface::class   => self::class,
@@ -65,10 +54,8 @@ final class Container implements
     /**
      * List of classes responsible for handling specific instance or interface. Provides ability to
      * delegate container functionality.
-     *
-     * @var array
      */
-    private $injectors = [];
+    private array $injectors = [];
 
     /**
      * Container constructor.
@@ -87,9 +74,6 @@ final class Container implements
         throw new LogicException('Container is not clonable');
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function resolveArguments(ContextFunction $reflection, array $parameters = []): array
     {
         $arguments = [];
@@ -133,7 +117,7 @@ final class Container implements
                 }
             }
 
-            if (isset($parameters[$name]) && is_object($parameters[$name])) {
+            if (isset($parameters[$name]) && \is_object($parameters[$name])) {
                 if ($parameters[$name] instanceof Autowire) {
                     // Supplied by user as late dependency
                     $arguments[] = $parameters[$name]->resolve($this);
@@ -183,8 +167,6 @@ final class Container implements
     }
 
     /**
-     * {@inheritdoc}
-     *
      * Context parameter will be passed to class injectors, which makes possible to use this method
      * as:
      *
@@ -203,7 +185,7 @@ final class Container implements
      * @throws ContainerException
      * @throws \Throwable
      */
-    public function get($id, string $context = null)
+    public function get(string|Autowire $id, string $context = null): mixed
     {
         if ($id instanceof Autowire) {
             return $id->resolve($this);
@@ -224,7 +206,7 @@ final class Container implements
      *
      * @throws \Throwable
      */
-    public function make(string $alias, array $parameters = [], string $context = null)
+    public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
         if (!isset($this->bindings[$alias])) {
             //No direct instructions how to construct class, make is automatically
@@ -261,10 +243,7 @@ final class Container implements
         return $instance;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function runScope(array $bindings, callable $scope)
+    public function runScope(array $bindings, callable $scope): mixed
     {
         $cleanup = $previous = [];
         foreach ($bindings as $alias => $resolver) {
@@ -298,12 +277,10 @@ final class Container implements
      * Bind value resolver to container alias. Resolver can be class name (will be constructed
      * for each method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
-     *
-     * @param string|array|callable $resolver
      */
-    public function bind(string $alias, $resolver): void
+    public function bind(string $alias, string|array|callable|object $resolver): void
     {
-        if (\is_array($resolver) || $resolver instanceof Closure || $resolver instanceof Autowire) {
+        if (\is_array($resolver) || $resolver instanceof \Closure || $resolver instanceof Autowire) {
             // array means = execute me, false = not singleton
             $this->bindings[$alias] = [$resolver, false];
 
@@ -316,12 +293,10 @@ final class Container implements
     /**
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
      * (will be constructed only once), function array or Closure (executed only once call).
-     *
-     * @param object|string|array|callable $resolver
      */
-    public function bindSingleton(string $alias, $resolver): void
+    public function bindSingleton(string $alias, string|array|callable|object $resolver): void
     {
-        if (\is_object($resolver) && !$resolver instanceof Closure && !$resolver instanceof Autowire) {
+        if (\is_object($resolver) && !$resolver instanceof \Closure && !$resolver instanceof Autowire) {
             // direct binding to an instance
             $this->bindings[$alias] = $resolver;
 
@@ -348,10 +323,7 @@ final class Container implements
         return isset($this->bindings[$alias]) && \is_object($this->bindings[$alias]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function has($id): bool
+    public function has(string $id): bool
     {
         return \array_key_exists($id, $this->bindings);
     }
@@ -361,10 +333,7 @@ final class Container implements
         unset($this->bindings[$alias]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function invoke($target, array $parameters = [])
+    public function invoke(array|callable|string|\Closure $target, array $parameters = []): mixed
     {
         if (\is_array($target) && isset($target[1])) {
             // In a form of resolver and method
@@ -381,8 +350,6 @@ final class Container implements
                 throw new ContainerException($e->getMessage(), $e->getCode(), $e);
             }
 
-            $method->setAccessible(true);
-
             // Invoking factory method with resolved arguments
             return $method->invokeArgs(
                 $resolver,
@@ -391,10 +358,10 @@ final class Container implements
         }
 
         if (\is_string($target) && \is_callable($target)) {
-            $target = Closure::fromCallable($target);
+            $target = \Closure::fromCallable($target);
         }
 
-        if ($target instanceof Closure) {
+        if ($target instanceof \Closure) {
             try {
                 $reflection = new \ReflectionFunction($target);
             } catch (\ReflectionException $e) {
@@ -520,7 +487,7 @@ final class Container implements
      * @throws ContainerException
      * @throws \Throwable
      */
-    private function createInstance(string $class, array $parameters, string $context = null)
+    private function createInstance(string $class, array $parameters, string $context = null): object
     {
         try {
             $reflection = new \ReflectionClass($class);
@@ -541,7 +508,7 @@ final class Container implements
                     throw new InjectionException(
                         \sprintf(
                             "Class '%s' must be an instance of InjectorInterface for '%s'",
-                            \get_class($injectorInstance),
+                            $injectorInstance::class,
                             $reflection->getName()
                         )
                     );
@@ -631,11 +598,11 @@ final class Container implements
      * @param array $parameters Parameters which been passed with created instance.
      * @return object
      */
-    private function registerInstance($instance, array $parameters)
+    private function registerInstance(object $instance, array $parameters)
     {
         //Declarative singletons (only when class received via direct get)
         if ($parameters === [] && $instance instanceof SingletonInterface) {
-            $alias = \get_class($instance);
+            $alias = $instance::class;
             if (!isset($this->bindings[$alias])) {
                 $this->bindings[$alias] = $instance;
             }
@@ -652,8 +619,12 @@ final class Container implements
      * @throws ContainerException
      * @throws \Throwable
      */
-    private function evaluateBinding(string $alias, $target, array $parameters, string $context = null)
-    {
+    private function evaluateBinding(
+        string $alias,
+        string|array|Autowire|\Closure $target,
+        array $parameters,
+        string $context = null
+    ) {
         if (\is_string($target)) {
             // Reference
             return $this->make($target, $parameters, $context);

@@ -19,5 +19,5 @@ interface InvokerInterface
      * @return mixed
      * @throws NotCallableException
      */
-    public function invoke($target, array $parameters = []);
+    public function invoke(array|callable|string $target, array $parameters = []);
 }

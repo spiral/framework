@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core;
@@ -21,8 +14,7 @@ use Throwable;
  */
 final class ContainerScope
 {
-    /** @var ContainerInterface */
-    private static $container;
+    private static ?ContainerInterface $container = null;
 
     /**
      * Returns currently active container scope if any.
