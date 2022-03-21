@@ -10,8 +10,14 @@
 
 ## v2.11.0 - Unreleased
 - **High Impact Changes**
+  - [spiral/queue] Added queue injector #592
+  - [spiral/cache] Added cache injector #600
 - **Medium Impact Changes**
+  - [spiral/tokenizer] Added ability to use scopes for indexing files with specific scopes #593
 - **Other Features**
+  - [spiral/boot] Added ability to disable overwriting env variables for `Spiral\Boot\Environment` #599
+  - [spiral/storage] Added storage bucket factory #601
+  - [spiral/console] Added return types for interface compatibility #591
 
 ## v2.10.0 - 2022-03-04
 - **High Impact Changes**

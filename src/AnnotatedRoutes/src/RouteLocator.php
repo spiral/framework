@@ -13,17 +13,16 @@ namespace Spiral\Router;
 
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Router\Annotation\Route;
-use Spiral\Tokenizer\ClassLocator;
+use Spiral\Tokenizer\ScopedClassesInterface;
 
 final class RouteLocator
 {
-    /** @var ClassLocator */
-    private $locator;
+    private ScopedClassesInterface $locator;
 
     /** @var ReaderInterface */
     private $reader;
 
-    public function __construct(ClassLocator $locator, ReaderInterface $reader)
+    public function __construct(ScopedClassesInterface $locator, ReaderInterface $reader)
     {
         $this->locator = $locator;
         $this->reader = $reader;
@@ -47,7 +46,7 @@ final class RouteLocator
     public function findDeclarations(): array
     {
         $result = [];
-        foreach ($this->locator->getClasses() as $class) {
+        foreach ($this->locator->getScopedClasses('routes') as $class) {
             foreach ($class->getMethods() as $method) {
                 $route = $this->reader->firstFunctionMetadata($method, Route::class);
 
