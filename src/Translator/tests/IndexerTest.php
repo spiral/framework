@@ -18,6 +18,8 @@ use Spiral\Tokenizer\ClassLocator;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\InvocationLocator;
 use Spiral\Tokenizer\InvocationsInterface;
+use Spiral\Tokenizer\ScopedClassesInterface;
+use Spiral\Tokenizer\ScopedClassLocator;
 use Spiral\Translator\Catalogue;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Indexer;
@@ -65,7 +67,7 @@ class IndexerTest extends TestCase
             ]
         ]), $catalogue);
 
-        $indexer->indexClasses($this->tContainer()->get(ClassesInterface::class));
+        $indexer->indexClasses($this->tContainer()->get(ScopedClassesInterface::class));
 
         $this->assertTrue($catalogue->has('spiral', 'indexer-message'));
         $this->assertFalse($catalogue->has('spiral', 'not-message'));
@@ -80,12 +82,17 @@ class IndexerTest extends TestCase
     protected function tContainer(): Container
     {
         $container = new Container();
-        $container->bind(ClassesInterface::class, ClassLocator::class);
+        $container->bind(ScopedClassesInterface::class, ScopedClassLocator::class);
         $container->bind(InvocationsInterface::class, InvocationLocator::class);
 
         $container->bind(TokenizerConfig::class, new TokenizerConfig([
             'directories' => [__DIR__],
-            'exclude'     => []
+            'exclude'     => [],
+            'scopes' => [
+                'translations' => [
+                    'directories' => [__DIR__],
+                ]
+            ]
         ]));
 
         return $container;
