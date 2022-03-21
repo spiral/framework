@@ -41,6 +41,16 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     }
 
     /**
+     * Get pre-configured class locator for specific scope.
+     */
+    public function scopedClassLocator(string $scope): ClassesInterface
+    {
+        $dirs = $this->config->getScope($scope);
+
+        return $this->classLocator($dirs['directories'], $dirs['exclude']);
+    }
+
+    /**
      * Get pre-configured class locator.
      */
     public function classLocator(
