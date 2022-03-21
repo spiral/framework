@@ -21,12 +21,15 @@ use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
 use Spiral\Tokenizer\InvocationLocator;
 use Spiral\Tokenizer\InvocationsInterface;
+use Spiral\Tokenizer\ScopedClassesInterface;
+use Spiral\Tokenizer\ScopedClassLocator;
 use Spiral\Tokenizer\Tokenizer;
 
 final class TokenizerBootloader extends Bootloader implements SingletonInterface
 {
     protected const BINDINGS = [
-        ClassesInterface::class     => ClassLocator::class,
+        ScopedClassesInterface::class => ScopedClassLocator::class,
+        ClassesInterface::class => ClassLocator::class,
         InvocationsInterface::class => InvocationLocator::class,
     ];
 

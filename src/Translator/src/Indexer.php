@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Translator;
 
 use Spiral\Logger\Traits\LoggerTrait;
-use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\Reflection\ReflectionArgument;
 use Spiral\Tokenizer\Reflection\ReflectionInvocation;
@@ -70,9 +70,9 @@ final class Indexer
      * Index and register i18n string located in default properties which belongs to TranslatorTrait
      * classes.
      */
-    public function indexClasses(ClassesInterface $locator): void
+    public function indexClasses(ScopedClassesInterface $locator): void
     {
-        foreach ($locator->getClasses(TranslatorTrait::class) as $class) {
+        foreach ($locator->getScopedClasses('translations', TranslatorTrait::class) as $class) {
             $strings = $this->fetchMessages($class, true);
             foreach ($strings as $string) {
                 $this->registerMessage($class->getName(), $string);
