@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Distribution\Internal;
@@ -20,10 +13,9 @@ namespace Spiral\Distribution\Internal;
 interface DateTimeIntervalFactoryInterface
 {
     /**
-     * @param DateIntervalFormat|null $duration
      * @throws \InvalidArgumentException
      */
-    public function create($duration): \DateInterval;
+    public function create(mixed $duration): \DateInterval;
 
     public function toDateTime(\DateInterval $interval): \DateTimeImmutable;
 }
