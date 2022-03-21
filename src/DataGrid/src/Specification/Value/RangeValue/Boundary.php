@@ -1,25 +1,14 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @author Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value\RangeValue;
 
 class Boundary
 {
-    /** @var mixed */
-    public $value;
-
-    /** @var bool */
-    public $include = false;
-
-    /** @var bool */
-    public $empty = false;
+    public mixed $value;
+    public bool $include = false;
+    public bool $empty = false;
 
     private function __construct()
     {
@@ -30,26 +19,17 @@ class Boundary
         return self::create(null, true);
     }
 
-    /**
-     * @param mixed|null $value
-     */
-    public static function including($value): self
+    public static function including(mixed $value): self
     {
         return self::create($value, true);
     }
 
-    /**
-     * @param mixed|null $value
-     */
-    public static function excluding($value): self
+    public static function excluding(mixed $value): self
     {
         return self::create($value, false);
     }
 
-    /**
-     * @param mixed|null $value
-     */
-    private static function create($value, bool $include): self
+    private static function create(mixed $value, bool $include): self
     {
         $self = new self();
         $self->value = $value;

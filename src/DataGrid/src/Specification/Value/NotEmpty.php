@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @author Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value;
@@ -14,18 +8,12 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class NotEmpty implements ValueInterface
 {
-    /** @var ValueInterface|null */
-    private $value;
-
-    public function __construct(?ValueInterface $value = null)
-    {
-        $this->value = $value;
+    public function __construct(
+        private readonly ?ValueInterface $value = null
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
         if (empty($value)) {
             return false;
@@ -38,10 +26,7 @@ final class NotEmpty implements ValueInterface
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function convert($value)
+    public function convert(mixed $value): mixed
     {
         if ($this->value instanceof ValueInterface) {
             return $this->value->convert($value);
