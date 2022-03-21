@@ -19,8 +19,10 @@ final class Environment implements EnvironmentInterface
     private ?string $id = null;
     private array $values;
 
-    public function __construct(array $values = [])
-    {
+    public function __construct(
+        array $values = [],
+        private bool $overwrite = true
+    ) {
         $this->values = $values + $_ENV + $_SERVER;
     }
 
@@ -35,6 +37,10 @@ final class Environment implements EnvironmentInterface
 
     public function set(string $name, mixed $value): void
     {
+        if (\array_key_exists($name, $this->values) && !$this->overwrite) {
+            return;
+        }
+
         $this->values[$name] = $_ENV[$name] = $value;
         \putenv("$name=$value");
 
