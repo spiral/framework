@@ -14,6 +14,7 @@ use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
+use Spiral\Queue\Core\QueueInjector;
 use Spiral\Queue\DefaultSerializer;
 use Spiral\Queue\Driver\NullDriver;
 use Spiral\Queue\Driver\SyncDriver;
@@ -51,6 +52,7 @@ final class QueueBootloader extends Bootloader
         $this->registerQueue($container);
 
         $this->registerDriverAlias(SyncDriver::class, 'sync');
+        $container->bindInjector(QueueInterface::class, QueueInjector::class);
 
         $kernel->started(static function () use ($container): void {
             $registry = $container->get(HandlerRegistryInterface::class);

@@ -17,6 +17,10 @@ use Spiral\Tests\Prototype\Fixtures\HydratedClass;
 use Spiral\Tests\Prototype\Fixtures\TestClass;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
+use Spiral\Tokenizer\Config\TokenizerConfig;
+use Spiral\Tokenizer\ScopedClassesInterface;
+use Spiral\Tokenizer\ScopedClassLocator;
+use Spiral\Tokenizer\Tokenizer;
 use Symfony\Component\Finder\Finder;
 
 class LocatorTest extends TestCase
@@ -37,10 +41,15 @@ class LocatorTest extends TestCase
         $this->assertArrayNotHasKey(HydratedClass::class, $l->getTargetClasses());
     }
 
-    private function makeClasses(): ClassesInterface
+    private function makeClasses(): ScopedClassesInterface
     {
-        return new ClassLocator(
-            (new Finder())->in([__DIR__ . '/Fixtures'])->files()
-        );
+        return new ScopedClassLocator(new Tokenizer(new TokenizerConfig([
+            'directories' => [],
+            'scopes' => [
+                'prototypes' => [
+                    'directories' => [__DIR__ . '/Fixtures']
+                ]
+            ]
+        ])));
     }
 }

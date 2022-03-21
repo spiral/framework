@@ -139,7 +139,7 @@ class ClassLocatorTest extends TestCase
          */
         $locator->setLogger($logger);
 
-        $classes = $locator->getClasses(ClassB::class);
+        $locator->getClasses(ClassB::class);
 
         $this->assertStringContainsString(
             ' has includes and excluded from analysis',

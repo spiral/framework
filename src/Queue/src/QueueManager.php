@@ -23,9 +23,6 @@ final class QueueManager implements QueueConnectionProviderInterface
         $this->factory = $factory;
     }
 
-    /**
-     * @throws Exception\InvalidArgumentException
-     */
     public function getConnection(?string $name = null): QueueInterface
     {
         $name = $name ?: $this->getDefaultDriver();
@@ -51,7 +48,7 @@ final class QueueManager implements QueueConnectionProviderInterface
             return $this->factory->make($config['driver'], $config);
         } catch (ContainerException $e) {
             throw new Exception\NotSupportedDriverException(
-                sprintf(
+                \sprintf(
                     'Driver `%s` is not supported. Connection `%s` cannot be created. Reason: `%s`',
                     $config['driver'],
                     $name,
