@@ -412,6 +412,11 @@ final class Container implements
 
     /**
      * Bind class or class interface to the injector source (InjectorInterface).
+     *
+     * @template TClass
+     *
+     * @param class-string<TClass> $class
+     * @param class-string<InjectorInterface<TClass>> $injector
      */
     public function bindInjector(string $class, string $injector): Container
     {
