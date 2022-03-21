@@ -20,12 +20,11 @@ final class TokenizerConfig extends InjectableConfig
 {
     public const CONFIG = 'tokenizer';
 
-    /**
-     * @var array
-     */
+    /** @var array<non-empty-string, array<int, non-empty-string>> */
     protected $config = [
         'directories' => [],
-        'exclude'     => [],
+        'exclude' => [],
+        'scopes' => [],
     ];
 
     public function getDirectories(): array
@@ -36,5 +35,19 @@ final class TokenizerConfig extends InjectableConfig
     public function getExcludes(): array
     {
         return $this->config['exclude'] ?? ['vendor', 'tests'];
+    }
+
+    /**
+     * @return array{directories: array<string>, exclude: array<string>}
+     */
+    public function getScope(string $scope): array
+    {
+        $directories = $this->config['scopes'][$scope]['directories'] ?? $this->getDirectories();
+        $excludes = $this->config['scopes'][$scope]['exclude'] ?? $this->getExcludes();
+
+        return [
+            'directories' => $directories,
+            'exclude' => $excludes,
+        ];
     }
 }
