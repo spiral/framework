@@ -6,5 +6,8 @@ namespace Spiral\Queue;
 
 interface QueueConnectionProviderInterface
 {
+    /**
+     * @throws Exception\InvalidArgumentException
+     */
     public function getConnection(?string $name = null): QueueInterface;
 }
