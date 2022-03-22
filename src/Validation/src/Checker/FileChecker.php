@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation\Checker;
@@ -24,20 +17,14 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
 {
     use FileTrait;
 
-    /**
-     * {@inheritdoc}
-     */
-    public const MESSAGES = [
+    public final const MESSAGES = [
         'exists'    => '[[File does not exists.]]',
         'uploaded'  => '[[File not received, please try again.]]',
         'size'      => '[[File exceeds the maximum file size of {1}KB.]]',
         'extension' => '[[File has an invalid file format.]]',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
-    public const ALLOW_EMPTY_VALUES = ['exists', 'uploaded'];
+    public final const ALLOW_EMPTY_VALUES = ['exists', 'uploaded'];
 
     public function __construct(FilesInterface $files)
     {
@@ -46,10 +33,8 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
 
     /**
      * Check if file exist.
-     *
-     * @param mixed $file
      */
-    public function exists($file): bool
+    public function exists(mixed $file): bool
     {
         return !empty($this->resolveFilename($file));
     }
@@ -59,7 +44,7 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
      *
      * @param mixed $file Local file or uploaded file array.
      */
-    public function uploaded($file): bool
+    public function uploaded(mixed $file): bool
     {
         return $this->isUploaded($file);
     }
@@ -70,7 +55,7 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
      * @param mixed $file Local file or uploaded file array.
      * @param int   $size Size in KBytes.
      */
-    public function size($file, int $size): bool
+    public function size(mixed $file, int $size): bool
     {
         if (empty($filename = $this->resolveFilename($file))) {
             return false;
@@ -83,24 +68,21 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
      * Check if file extension in whitelist. Client name of uploaded file will be used!
      * It is recommended to use external validation like media type based on file mimetype or
      * ensure that resource is properly converted.
-     *
-     * @param mixed        $file
-     * @param array|string $extensions
      */
-    public function extension($file, $extensions): bool
+    public function extension(UploadedFileInterface|string $file, array|string $extensions): bool
     {
-        if (!is_array($extensions)) {
-            $extensions = array_slice(func_get_args(), 1);
+        if (!\is_array($extensions)) {
+            $extensions = \array_slice(\func_get_args(), 1);
         }
 
         if ($file instanceof UploadedFileInterface) {
-            return in_array(
+            return \in_array(
                 $this->files->extension($file->getClientFilename()),
                 $extensions,
                 true
             );
         }
 
-        return in_array($this->files->extension($file), $extensions, true);
+        return \in_array($this->files->extension($file), $extensions, true);
     }
 }

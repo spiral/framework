@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation\Checker\Traits;
@@ -22,9 +15,9 @@ trait NotEmptyTrait
      * @param mixed $value
      * @param bool  $asString Cut spaces and make sure it's not empty when value is string.
      */
-    public function notEmpty($value, bool $asString = true): bool
+    public function notEmpty(mixed $value, bool $asString = true): bool
     {
-        if ($asString && is_string($value) && trim($value) === '') {
+        if ($asString && \is_string($value) && \trim($value) === '') {
             return false;
         }
 
