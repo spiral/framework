@@ -70,7 +70,6 @@ final class FilterProvider implements FilterProviderInterface
                 if ($value !== null) {
                     $result[$field] = $value;
                 }
-                
                 continue;
             }
 

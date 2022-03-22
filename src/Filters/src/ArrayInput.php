@@ -27,7 +27,6 @@ final class ArrayInput implements InputInterface
         } else {
             $input->prefix = $prefix;
         }
-        
         return $input;
     }
 
@@ -60,7 +59,6 @@ final class ArrayInput implements InputInterface
             if (!\is_array($data) || !\array_key_exists($step, $data)) {
                 throw new DotNotFoundException(\sprintf("Unable to find requested element '%s'", $name));
             }
-            
             $data = &$data[$step];
         }
 
