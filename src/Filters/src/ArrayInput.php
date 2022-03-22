@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Filters;
@@ -18,40 +11,31 @@ use Spiral\Filters\Exception\DotNotFoundException;
  */
 final class ArrayInput implements InputInterface
 {
-    /** @var array */
-    private $data;
+    private string $prefix = '';
 
-    /** @var string */
-    private $prefix = '';
-
-    public function __construct(array $data = [])
-    {
-        $this->data = $data;
+    public function __construct(
+        private readonly array $data = []
+    ) {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function withPrefix(string $prefix, bool $add = true): InputInterface
     {
         $input = clone $this;
         if ($add) {
             $input->prefix .= '.' . $prefix;
-            $input->prefix = trim($input->prefix, '.');
+            $input->prefix = \trim($input->prefix, '.');
         } else {
             $input->prefix = $prefix;
         }
+        
         return $input;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getValue(string $source, string $name = null)
+    public function getValue(string $source, string $name = null): mixed
     {
         try {
             return $this->dotGet($name);
-        } catch (DotNotFoundException $e) {
+        } catch (DotNotFoundException) {
             return null;
         }
     }
@@ -59,10 +43,9 @@ final class ArrayInput implements InputInterface
     /**
      * Get element using dot notation.
      *
-     * @return mixed|null
      * @throws DotNotFoundException
      */
-    private function dotGet(string $name)
+    private function dotGet(string $name): mixed
     {
         $data = $this->data;
 
@@ -72,11 +55,12 @@ final class ArrayInput implements InputInterface
             return $data;
         }
 
-        $path = explode('.', rtrim($path, '.'));
+        $path = \explode('.', \rtrim($path, '.'));
         foreach ($path as $step) {
-            if (!is_array($data) || !array_key_exists($step, $data)) {
-                throw new DotNotFoundException("Unable to find requested element '{$name}'");
+            if (!\is_array($data) || !\array_key_exists($step, $data)) {
+                throw new DotNotFoundException(\sprintf("Unable to find requested element '%s'", $name));
             }
+            
             $data = &$data[$step];
         }
 

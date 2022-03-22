@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Filters;
@@ -65,17 +58,8 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     protected const SETTERS   = [];
     protected const GETTERS   = [];
 
-    /** @var ErrorMapper */
-    private $errorMapper;
-
-    /** @var array|null */
-    private $errors;
-
-    /** @var array */
-    private $mappings;
-
-    /** @var ValidatorInterface @internal */
-    private $validator;
+    private ?array $errors = null;
+    private array $mappings = [];
 
     /**
      * Filter constructor.
@@ -83,19 +67,15 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     public function __construct(
         array $data,
         array $schema,
-        ValidatorInterface $validator,
-        ErrorMapper $errorMapper
+        /** @internal */
+        private ValidatorInterface $validator,
+        private ErrorMapper $errorMapper
     ) {
         parent::__construct($data, $schema);
 
         $this->mappings = $schema[FilterProvider::MAPPING] ?? [];
-        $this->validator = $validator;
-        $this->errorMapper = $errorMapper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __unset(string $offset): void
     {
         parent::__unset($offset);
@@ -124,18 +104,12 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         $this->errors = null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setField(string $name, $value, bool $filter = true): void
+    public function setField(string $name, mixed $value, bool $filter = true): void
     {
         parent::setField($name, $value, $filter);
         $this->reset();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isValid(): bool
     {
         return $this->getErrors() === [];
@@ -149,7 +123,7 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         if ($this->errors === null) {
             $this->errors = [];
             foreach ($this->validator->withData($this)->getErrors() as $field => $error) {
-                if (is_string($error) && Translator::isMessage($error)) {
+                if (\is_string($error) && Translator::isMessage($error)) {
                     // translate error message
                     $error = $this->say($error);
                 }
@@ -164,19 +138,13 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         return $this->errorMapper->mapErrors($this->errors);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function setContext($context): void
+    public function setContext(mixed $context): void
     {
         $this->validator = $this->validator->withContext($context);
         $this->reset();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getContext()
+    public function getContext(): mixed
     {
         return $this->validator->getContext();
     }
@@ -225,10 +193,8 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     /**
      * Returns {@see true} in case that children filter is optional
      * or {@see false} instead.
-     *
-     * @param string|int $field
      */
-    private function isOptional($field): bool
+    private function isOptional(int|string $field): bool
     {
         return $this->mappings[$field][FilterProvider::OPTIONAL] ?? false;
     }
@@ -236,10 +202,9 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     /**
      * Returns {@see true} in case that value has been passed.
      *
-     * @param string|int $field
      * @throws EntityExceptionInterface
      */
-    private function hasBeenPassed($field): bool
+    private function hasBeenPassed(int|string $field): bool
     {
         $value = $this->getField((string)$field);
 
