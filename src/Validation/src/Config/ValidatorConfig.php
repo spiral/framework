@@ -13,7 +13,7 @@ final class ValidatorConfig extends InjectableConfig
 {
     use AliasTrait;
 
-    public final const CONFIG = 'validation';
+    final public const CONFIG = 'validation';
 
     /**
      * @var array

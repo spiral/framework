@@ -12,7 +12,6 @@ trait NotEmptyTrait
     /**
      * Value should not be empty.
      *
-     * @param mixed $value
      * @param bool  $asString Cut spaces and make sure it's not empty when value is string.
      */
     public function notEmpty(mixed $value, bool $asString = true): bool

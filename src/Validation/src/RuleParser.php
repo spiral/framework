@@ -11,9 +11,9 @@ use Spiral\Validation\Exception\ParserException;
  */
 final class RuleParser implements ParserInterface
 {
-    public final const ARGUMENTS  = ['args', 'params', 'arguments', 'parameters'];
-    public final const MESSAGES   = ['message', 'msg', 'error', 'err'];
-    public final const CONDITIONS = ['if', 'condition', 'conditions', 'where', 'when'];
+    final public const ARGUMENTS  = ['args', 'params', 'arguments', 'parameters'];
+    final public const MESSAGES   = ['message', 'msg', 'error', 'err'];
+    final public const CONDITIONS = ['if', 'condition', 'conditions', 'where', 'when'];
 
     public function split(mixed $rules): \Generator
     {

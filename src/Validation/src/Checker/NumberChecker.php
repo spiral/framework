@@ -12,7 +12,7 @@ use Spiral\Validation\AbstractChecker;
  */
 final class NumberChecker extends AbstractChecker implements SingletonInterface
 {
-    public final const MESSAGES = [
+    final public const MESSAGES = [
         'range'  => '[[Your value should be in range of {1}-{2}.]]',
         'higher' => '[[Your value should be equal to or higher than {1}.]]',
         'lower'  => '[[Your value should be equal to or lower than {1}.]]',

@@ -15,7 +15,7 @@ final class TypeChecker extends AbstractChecker implements SingletonInterface
 {
     use NotEmptyTrait;
 
-    public final const MESSAGES = [
+    final public const MESSAGES = [
         'notNull'  => '[[This value is required.]]',
         'notEmpty' => '[[This value is required.]]',
         'boolean'  => '[[Not a valid boolean.]]',
@@ -23,7 +23,7 @@ final class TypeChecker extends AbstractChecker implements SingletonInterface
         'timezone' => '[[Not a valid timezone.]]',
     ];
 
-    public final const ALLOW_EMPTY_VALUES = ['notEmpty', 'notNull'];
+    final public const ALLOW_EMPTY_VALUES = ['notEmpty', 'notNull'];
 
     /**
      * Value should not be null.

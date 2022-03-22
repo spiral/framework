@@ -17,14 +17,14 @@ final class FileChecker extends AbstractChecker implements SingletonInterface
 {
     use FileTrait;
 
-    public final const MESSAGES = [
+    final public const MESSAGES = [
         'exists'    => '[[File does not exists.]]',
         'uploaded'  => '[[File not received, please try again.]]',
         'size'      => '[[File exceeds the maximum file size of {1}KB.]]',
         'extension' => '[[File has an invalid file format.]]',
     ];
 
-    public final const ALLOW_EMPTY_VALUES = ['exists', 'uploaded'];
+    final public const ALLOW_EMPTY_VALUES = ['exists', 'uploaded'];
 
     public function __construct(FilesInterface $files)
     {

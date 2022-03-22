@@ -13,7 +13,7 @@ use Spiral\Validation\Checker\DatetimeChecker\ThresholdChecker;
  */
 final class DatetimeChecker extends AbstractChecker implements SingletonInterface
 {
-    public final const MESSAGES = [
+    final public const MESSAGES = [
         'future'   => '[[Should be a date in the future.]]',
         'past'     => '[[Should be a date in the past.]]',
         'valid'    => '[[Not a valid date.]]',
@@ -22,7 +22,6 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
         'before'   => '[[Value {1} should come before value {2}.]]',
         'after'    => '[[Value {1} should come after value {2}.]]',
     ];
-    
     //Possible format mapping
     private const MAP_FORMAT = [
         'c' => 'Y-m-d\TH:i:sT',
