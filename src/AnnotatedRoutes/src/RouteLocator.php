@@ -42,8 +42,7 @@ final class RouteLocator
                     continue;
                 }
 
-                $route->name ??= $this->generateName($route);
-                $result[$route->name] = [
+                $result[$route->name ?? $this->generateName($route)] = [
                     'pattern'    => $route->route,
                     'controller' => $class->getName(),
                     'action'     => $method->getName(),

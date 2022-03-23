@@ -36,13 +36,13 @@ final class Route
      * @param array $middleware Route specific middleware set, if any
      */
     public function __construct(
-        public string $route,
-        public ?string $name = null,
-        public array|string $methods = \Spiral\Router\Route::VERBS,
-        public array $defaults = [],
-        public string $group = self::DEFAULT_GROUP,
-        public array $middleware = [],
-        public int $priority = 0
+        public readonly string $route,
+        public readonly ?string $name = null,
+        public readonly array|string $methods = \Spiral\Router\Route::VERBS,
+        public readonly array $defaults = [],
+        public readonly string $group = self::DEFAULT_GROUP,
+        public readonly array $middleware = [],
+        public readonly int $priority = 0
     ) {
     }
 }
