@@ -45,7 +45,7 @@ final class InputScope implements InputInterface
     /**
      * @inheritdoc
      */
-    public function getValue(string $source, string $name = null)
+    public function getValue(string $source, string $name = null): mixed
     {
         if (!method_exists($this->input, $source)) {
             throw new InputException("Undefined input source '{$source}'");
