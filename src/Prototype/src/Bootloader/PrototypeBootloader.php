@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Bootloader;
 
-use Cycle\ORM;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Attributes\ReaderInterface;
@@ -42,8 +41,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'classLocator' => 'Spiral\Tokenizer\ClassesInterface',
         'console'      => 'Spiral\Console\Console',
         'container'    => 'Psr\Container\ContainerInterface',
-        'db'           => 'Cycle\Database\DatabaseInterface',
-        'dbal'         => 'Cycle\Database\DatabaseProviderInterface',
         'encrypter'    => 'Spiral\Encrypter\EncrypterInterface',
         'env'          => 'Spiral\Boot\EnvironmentInterface',
         'files'        => 'Spiral\Files\FilesInterface',
@@ -56,7 +53,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'logger'       => 'Psr\Log\LoggerInterface',
         'logs'         => 'Spiral\Logger\LogsInterface',
         'memory'       => 'Spiral\Boot\MemoryInterface',
-        'orm'          => 'Cycle\ORM\ORMInterface',
         'paginators'   => 'Spiral\Pagination\PaginationProviderInterface',
         'queue'        => 'Spiral\Queue\QueueInterface',
         'queueManager' => 'Spiral\Queue\QueueConnectionProviderInterface',
@@ -80,14 +76,10 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     /** @var PrototypeRegistry */
     private $registry;
 
-    /** @var \Doctrine\Inflector\Inflector */
-    private $inflector;
-
     public function __construct(MemoryInterface $memory, PrototypeRegistry $registry)
     {
         $this->memory = $memory;
         $this->registry = $registry;
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
     }
 
     public function boot(ConsoleBootloader $console, ContainerInterface $container): void
@@ -107,7 +99,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         );
 
         $this->initDefaults($container);
-        $this->initCycle($container);
         $this->initAnnotations($container, false);
     }
 
@@ -149,29 +140,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         }
 
         $this->memory->saveData('prototyped', $prototyped);
-    }
-
-    public function initCycle(ContainerInterface $container): void
-    {
-        if (!$container->has(ORM\SchemaInterface::class)) {
-            return;
-        }
-
-        /** @var ORM\SchemaInterface|null $schema */
-        $schema = $container->get(ORM\SchemaInterface::class);
-        if ($schema === null) {
-            return;
-        }
-
-        foreach ($schema->getRoles() as $role) {
-            $repository = $schema->define($role, ORM\SchemaInterface::REPOSITORY);
-            if ($repository === ORM\Select\Repository::class || $repository === null) {
-                // default repository can not be wired
-                continue;
-            }
-
-            $this->bindProperty($this->inflector->pluralize($role), $repository);
-        }
     }
 
     private function initDefaults(ContainerInterface $container): void

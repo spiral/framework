@@ -20,20 +20,6 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <file name="src/Framework/Bootloader/Server/RoadRunnerBootloader.php" />
-                <file name="src/Framework/Bootloader/Server/LegacyRoadRunnerBootloader.php" />
-                <file name="src/Framework/Bootloader/Jobs/JobsBootloader.php" />
-                <file name="src/Framework/Http/RrDispatcher.php" />
-                <file name="src/Framework/Http/LegacyRrDispatcher.php" />
-            </errorLevel>
-        </UndefinedClass>
-        <UndefinedDocblockClass>
-            <errorLevel type="suppress">
-                <file name="src/Framework/Jobs/JobQueue.php" />
-            </errorLevel>
-        </UndefinedDocblockClass>
         <UnusedClosureParam errorLevel="suppress" />
         <UnusedPsalmSuppress errorLevel="suppress" />
         <InvalidThrow>

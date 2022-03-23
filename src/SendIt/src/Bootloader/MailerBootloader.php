@@ -14,12 +14,8 @@ namespace Spiral\SendIt\Bootloader;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Bootloader\Jobs\JobsBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Jobs\JobRegistry;
-use Spiral\Jobs\QueueInterface;
-use Spiral\Jobs\ShortCircuit;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Queue\Bootloader\QueueBootloader;
 use Spiral\Queue\HandlerRegistryInterface;
@@ -27,7 +23,6 @@ use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
-use Spiral\SendIt\MessageSerializer;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mailer\Transport;
@@ -38,7 +33,6 @@ use Symfony\Component\Mailer\Transport;
 final class MailerBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
-        JobsBootloader::class,
         QueueBootloader::class,
     ];
 
@@ -57,7 +51,7 @@ final class MailerBootloader extends Bootloader
 
     public function boot(EnvironmentInterface $env, AbstractKernel $kernel): void
     {
-        $queue = $env->get('MAILER_QUEUE', $env->get('MAILER_PIPELINE', 'local'));
+        $queue = $env->get('MAILER_QUEUE', 'local');
 
         $this->config->setDefaults(MailerConfig::CONFIG, [
             'dsn' => $env->get('MAILER_DSN', ''),
@@ -70,34 +64,15 @@ final class MailerBootloader extends Bootloader
 
     public function start(Container $container): void
     {
-        if ($container->has(JobRegistry::class)) {
-            // Will be removed since v3.0
-            $registry = $container->get(JobRegistry::class);
-            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
-            $registry->setSerializer(MailQueue::JOB_NAME, MessageSerializer::class);
-            $container->bindSingleton(
-                MailerInterface::class,
-                static function (MailerConfig $config) use ($container) {
-                    if ($config->getQueueConnection() === 'sync') {
-                        $queue = $container->get(ShortCircuit::class);
-                    } else {
-                        $queue = $container->get(QueueInterface::class);
-                    }
-
-                    return new MailQueue($config, $queue);
-                }
-            );
-        } else {
-            $container->bindSingleton(
-                MailerInterface::class,
-                static function (MailerConfig $config, QueueConnectionProviderInterface $provider) {
-                    return new MailQueue(
-                        $config,
-                        $provider->getConnection($config->getQueueConnection())
-                    );
-                }
-            );
-        }
+        $container->bindSingleton(
+            MailerInterface::class,
+            static function (MailerConfig $config, QueueConnectionProviderInterface $provider) {
+                return new MailQueue(
+                    $config,
+                    $provider->getConnection($config->getQueueConnection())
+                );
+            }
+        );
 
         if ($container->has(HandlerRegistryInterface::class)) {
             $registry = $container->get(HandlerRegistryInterface::class);

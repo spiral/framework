@@ -11,15 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader;
 
-use Cycle\Database\DatabaseProviderInterface;
-use Cycle\ORM\ORMInterface;
-use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Command\Cycle;
-use Spiral\Command\Database;
 use Spiral\Command\Encrypter;
-use Spiral\Command\GRPC;
-use Spiral\Command\Migrate;
 use Spiral\Command\Router;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
@@ -29,8 +22,6 @@ use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Container;
 use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\GRPC\InvokerInterface;
-use Spiral\Migrations\Migrator;
 use Spiral\Router\RouterInterface;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\TranslatorInterface;
@@ -79,14 +70,6 @@ final class CommandBootloader extends Bootloader
      */
     private function configureExtensions(ConsoleBootloader $console, Container $container): void
     {
-        if ($container->has(DatabaseProviderInterface::class)) {
-            $this->configureDatabase($console);
-        }
-
-        if ($container->has(ORMInterface::class)) {
-            $this->configureCycle($console, $container);
-        }
-
         if ($container->has(TranslatorInterface::class)) {
             $this->configureTranslator($console);
         }
@@ -95,50 +78,12 @@ final class CommandBootloader extends Bootloader
             $this->configureViews($console);
         }
 
-        if ($container->has(Migrator::class)) {
-            $this->configureMigrations($console);
-        }
-
-        if ($container->has(InvokerInterface::class)) {
-            $this->configureGRPC($console);
-        }
-
         if ($container->has(EncryptionInterface::class)) {
             $this->configureEncrypter($console);
         }
 
         if ($container->has(RouterInterface::class)) {
             $console->addCommand(Router\ListCommand::class);
-        }
-    }
-
-    /**
-     * @param ConsoleBootloader $console
-     */
-    private function configureDatabase(ConsoleBootloader $console): void
-    {
-        $console->addCommand(Database\ListCommand::class, true);
-        $console->addCommand(Database\TableCommand::class, true);
-    }
-
-    /**
-     * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
-     * @param ConsoleBootloader  $console
-     * @param ContainerInterface $container
-     */
-    private function configureCycle(ConsoleBootloader $console, ContainerInterface $container): void
-    {
-        $console->addCommand(Cycle\UpdateCommand::class, true);
-
-        $console->addUpdateSequence(
-            'cycle',
-            '<fg=magenta>[cycle]</fg=magenta> <fg=cyan>update Cycle schema...</fg=cyan>'
-        );
-
-        $console->addCommand(Cycle\SyncCommand::class, true);
-
-        if ($container->has(Migrator::class)) {
-            $console->addCommand(Cycle\MigrateCommand::class, true);
         }
     }
 
@@ -177,27 +122,6 @@ final class CommandBootloader extends Bootloader
             'views:compile',
             '<fg=magenta>[views]</fg=magenta> <fg=cyan>warm up view cache...</fg=cyan>'
         );
-    }
-
-    /**
-     * @param ConsoleBootloader $console
-     */
-    private function configureMigrations(ConsoleBootloader $console): void
-    {
-        $console->addCommand(Migrate\InitCommand::class, true);
-        $console->addCommand(Migrate\StatusCommand::class, true);
-        $console->addCommand(Migrate\MigrateCommand::class, true);
-        $console->addCommand(Migrate\RollbackCommand::class, true);
-        $console->addCommand(Migrate\ReplayCommand::class, true);
-    }
-
-    /**
-     * @param ConsoleBootloader $console
-     */
-    private function configureGRPC(ConsoleBootloader $console): void
-    {
-        $console->addCommand(GRPC\GenerateCommand::class, true);
-        $console->addCommand(GRPC\ListCommand::class, true);
     }
 
     /**

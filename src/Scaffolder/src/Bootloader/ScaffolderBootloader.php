@@ -47,8 +47,6 @@ class ScaffolderBootloader extends Bootloader
 
     public function boot(ConsoleBootloader $console): void
     {
-        $console->addCommand(Command\Database\EntityCommand::class, true);
-        $console->addCommand(Command\Database\RepositoryCommand::class, true);
         $console->addCommand(Command\BootloaderCommand::class);
         $console->addCommand(Command\CommandCommand::class);
         $console->addCommand(Command\ConfigCommand::class);
@@ -56,7 +54,6 @@ class ScaffolderBootloader extends Bootloader
         $console->addCommand(Command\FilterCommand::class);
         $console->addCommand(Command\JobHandlerCommand::class);
         $console->addCommand(Command\MiddlewareCommand::class);
-        $console->addCommand(Command\MigrationCommand::class, true);
 
         try {
             $defaultNamespace = (new ReflectionClass($this->kernel))->getNamespaceName();
@@ -126,11 +123,6 @@ class ScaffolderBootloader extends Bootloader
                     'postfix'   => 'Job',
                     'class'     => Declaration\JobHandlerDeclaration::class,
                 ],
-                'migration'  => [
-                    'namespace' => '',
-                    'postfix'   => 'Migration',
-                    'class'     => Declaration\MigrationDeclaration::class,
-                ],
                 'filter'     => [
                     'namespace' => 'Request',
                     'postfix'   => 'Request',
@@ -193,18 +185,6 @@ class ScaffolderBootloader extends Bootloader
                             ],
                         ],
                     ],
-                ],
-                'entity'     => [
-                    'namespace' => 'Database',
-                    'postfix'   => '',
-                    'options'   => [
-                        'annotated' => Declaration\Database\Entity\AnnotatedDeclaration::class,
-                    ],
-                ],
-                'repository' => [
-                    'namespace' => 'Repository',
-                    'postfix'   => 'Repository',
-                    'class'     => Declaration\Database\RepositoryDeclaration::class,
                 ],
             ],
         ]);

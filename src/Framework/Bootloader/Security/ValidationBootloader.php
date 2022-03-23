@@ -68,7 +68,6 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
                     'file'     => Checker\FileChecker::class,
                     'image'    => Checker\ImageChecker::class,
                     'datetime' => Checker\DatetimeChecker::class,
-                    'entity'   => Checker\EntityChecker::class,
                     'array'    => Checker\ArrayChecker::class,
                 ],
 

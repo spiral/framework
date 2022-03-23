@@ -23,8 +23,8 @@
         "spiral/translator": "^2.12"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "mockery/mockery": "^1.3",
+        "phpunit/phpunit": "^9.5.5",
+        "mockery/mockery": "^1.3.5",
         "laminas/laminas-diactoros": "^2.4"
     },
     "autoload": {

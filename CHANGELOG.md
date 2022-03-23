@@ -2,6 +2,39 @@
 
 ## v3.0.0 - Unreleased
 - **High Impact Changes**
+  - Component `spiral/data-grid-bridge` is removed. Use `spiral/cycle-bridge` instead.
+  - Console commands `Spiral\Command\Cycle\MigrateCommand`, `Spiral\Command\Cycle\SyncCommand`,
+    `Spiral\Command\Cycle\UpdateCommand`, `Spiral\Scaffolder\Command\MigrationCommand`, 
+    `Spiral\Scaffolder\Command\Database\EntityCommand`, `Spiral\Scaffolder\Command\Database\RepositoryCommand`,
+    `Spiral\Command\Database\ListCommand`, `Spiral\Command\Database\TableCommand`, 
+    `Spiral\Command\Migrate\InitCommand`, `Spiral\Command\Migrate\MigrateCommand`, 
+    `Spiral\Command\Migrate\ReplayCommand`, `Spiral\Command\Migrate\RollbackCommand`,
+    `Spiral\Command\Migrate\StatusCommand` is removed. 
+    Use same console commands from `spiral/cycle-bridge` package.
+  - Console commands `Spiral\Command\GRPC\ListCommand`, `Spiral\Command\GRPC\GenerateCommand` is removed.
+    Use same console commands from `spiral/roadrunner-bridge` package.
+  - Classes `Spiral\Auth\Cycle\Token`, `Spiral\Auth\Cycle\TokenStorage`, `Spiral\Cycle\RepositoryInjector`,
+    `Spiral\Cycle\SchemaCompiler`, `Spiral\Domain\CycleInterceptor` is removed. 
+    Use same classes from `spiral/cycle-bridge` instead.
+  - Bootloaders `Spiral\Bootloader\Jobs\JobsBootloader`, `Spiral\Bootloader\Server\LegacyRoadRunnerBootloader`,
+    `Spiral\Bootloader\Server\RoadRunnerBootloader`, `Spiral\Bootloader\ServerBootloader`, 
+    `Spiral\Bootloader\GRPC\GRPCBootloader` is removed. 
+    Use `spiral/roadrunner-bridge` package.
+  - Bootloaders `Spiral\Bootloader\Cycle\AnnotatedBootloader`, `Spiral\Bootloader\Cycle\CycleBootloader`,
+    `Spiral\Bootloader\Cycle\ProxiesBootloader`, `Spiral\Bootloader\Cycle\SchemaBootloader`, 
+    `Spiral\Bootloader\Database\DatabaseBootloader`, `Spiral\Bootloader\Database\DisconnectsBootloader`,
+    `Spiral\Bootloader\Database\MigrationsBootloader` is removed.
+    Use `spiral/cycle-bridge` package.
+  - Bootloader `Spiral\Bootloader\Broadcast\BroadcastBootloader` is removed. Use `spiral/roadrunner-broadcast` package instead.
+  - Bootloader `Spiral\Bootloader\Http\WebsocketsBootloader` is removed.
+  - Component `spiral/annotations` is removed. Use `spiral/attributes` instead.
+  - [spiral/router] Removed deprecated method `addRoute` in the `Spiral\Router\RouterInterface` and `Spiral\Router\Router`.
+    Use method `setRoute` instead.
+  - [spiral/validation] `Spiral\Validation\Checker\EntityChecker` is removed. 
+    Use `Spiral\Cycle\Bootloader\ValidationBootloader` with `Spiral\Cycle\Validation\EntityChecker` from package `spiral/cycle-bridge`
+  - [spiral/validation] Removed deprecated methods `datetime` and `timezone` in the 
+    `Spiral\Validation\Checker\TypeChecker` class. Use `Spiral\Validation\Checker\DatetimeChecker::valid()` and 
+    `Spiral\Validation\Checker\DatetimeChecker::timezone()` instead.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`

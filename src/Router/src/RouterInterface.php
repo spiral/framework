@@ -14,17 +14,10 @@ namespace Spiral\Router;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Router\Exception\RouteException;
-use Spiral\Router\Exception\RouterException;
 use Spiral\Router\Exception\UndefinedRouteException;
 
 interface RouterInterface extends RequestHandlerInterface
 {
-    /**
-     * @throws RouterException
-     * @deprecated see setRoute()
-     */
-    public function addRoute(string $name, RouteInterface $route): void;
-
     /**
      * Set route.
      */

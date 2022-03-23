@@ -16,10 +16,7 @@ use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Debug\StateCollectorInterface;
 use Spiral\Debug\StateInterface;
-use Spiral\GRPC\GRPCDispatcher;
-use Spiral\Http\LegacyRrDispatcher;
 use Spiral\Http\SapiDispatcher;
-use Spiral\Jobs\JobDispatcher;
 
 final class EnvironmentCollector implements StateCollectorInterface
 {
@@ -45,17 +42,8 @@ final class EnvironmentCollector implements StateCollectorInterface
 
         if ($this->container->has(DispatcherInterface::class)) {
             switch (get_class($this->container->get(DispatcherInterface::class))) {
-                case LegacyRrDispatcher::class:
-                    $state->setTag('dispatcher', 'roadrunner');
-                    break;
                 case SapiDispatcher::class:
                     $state->setTag('dispatcher', 'sapi');
-                    break;
-                case JobDispatcher::class:
-                    $state->setTag('dispatcher', 'jobs');
-                    break;
-                case GRPCDispatcher::class:
-                    $state->setTag('dispatcher', 'grpc');
                     break;
             }
         }

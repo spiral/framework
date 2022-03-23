@@ -26,8 +26,8 @@
         "symfony/mailer": "^5.1|^6.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "mockery/mockery": "^1.3",
+        "phpunit/phpunit": "^9.5.5",
+        "mockery/mockery": "^1.3.5",
         "spiral/boot": "^2.12",
         "spiral/stempler-bridge": "^2.12"
     },

@@ -57,34 +57,4 @@ final class TypeChecker extends AbstractChecker implements SingletonInterface
     {
         return is_bool($value) || (is_numeric($value) && ($value === 0 || $value === 1));
     }
-
-    /**
-     * Value has to be valid datetime definition including numeric timestamp.
-     *
-     * @param mixed $value
-     * @deprecated Use \Spiral\Validation\Checker\DatetimeChecker::valid(). Be aware that empty values are now valid.
-     */
-    public function datetime($value): bool
-    {
-        if (!is_scalar($value)) {
-            return false;
-        }
-
-        if (is_numeric($value)) {
-            return true;
-        }
-
-        return (int)strtotime($value) !== 0;
-    }
-
-    /**
-     * Value has to be valid timezone.
-     *
-     * @param mixed $value
-     * @deprecated Use \Spiral\Validation\Checker\DatetimeChecker::timezone().
-     */
-    public function timezone($value): bool
-    {
-        return in_array((string)$value, \DateTimeZone::listIdentifiers(), true);
-    }
 }

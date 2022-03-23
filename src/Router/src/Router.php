@@ -84,17 +84,6 @@ final class Router implements RouterInterface
 
     /**
      * @inheritdoc
-     *
-     * @deprecated see setRoute()
-     */
-    public function addRoute(string $name, RouteInterface $route): void
-    {
-        //Each added route must inherit basePath prefix
-        $this->setRoute($name, $route);
-    }
-
-    /**
-     * @inheritdoc
      */
     public function setRoute(string $name, RouteInterface $route): void
     {
