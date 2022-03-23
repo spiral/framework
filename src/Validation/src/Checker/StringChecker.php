@@ -12,7 +12,7 @@ use Spiral\Validation\AbstractChecker;
  */
 final class StringChecker extends AbstractChecker implements SingletonInterface
 {
-    final public const MESSAGES = [
+    public const MESSAGES = [
         'regexp'  => '[[Value does not match required pattern.]]',
         'shorter' => '[[Enter text shorter or equal to {1}.]]',
         'longer'  => '[[Text must be longer or equal to {1}.]]',

@@ -13,7 +13,7 @@ use Spiral\Validation\Checker\DatetimeChecker\ThresholdChecker;
  */
 final class DatetimeChecker extends AbstractChecker implements SingletonInterface
 {
-    final public const MESSAGES = [
+    public const MESSAGES = [
         'future'   => '[[Should be a date in the future.]]',
         'past'     => '[[Should be a date in the past.]]',
         'valid'    => '[[Not a valid date.]]',

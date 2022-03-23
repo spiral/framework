@@ -13,7 +13,7 @@ final class ValidatorConfig extends InjectableConfig
 {
     use AliasTrait;
 
-    final public const CONFIG = 'validation';
+    public const CONFIG = 'validation';
 
     /**
      * @var array
@@ -81,8 +81,8 @@ final class ValidatorConfig extends InjectableConfig
     {
         if (\is_string($function)) {
             $function = $this->resolveAlias($function);
-            if (str_contains($function, ':')) {
-                $function = explode(':', $function);
+            if (\str_contains($function, ':')) {
+                $function = \explode(':', $function);
             }
         }
 

@@ -17,7 +17,7 @@ final class CallableRule extends AbstractRule
     /**
      * Default validation message for custom rules.
      */
-    final public const DEFAULT_MESSAGE = '[[The condition `{name}` was not met.]]';
+    public const DEFAULT_MESSAGE = '[[The condition `{name}` was not met.]]';
 
     private \Closure|array|string $check;
 

@@ -12,7 +12,7 @@ use Spiral\Validation\AbstractChecker;
  */
 final class MixedChecker extends AbstractChecker implements SingletonInterface
 {
-    final public const MESSAGES = [
+    public const MESSAGES = [
         'cardNumber' => '[[Please enter valid card number.]]',
         'match'      => '[[Fields {1} and {2} do not match.]]',
     ];

@@ -21,25 +21,25 @@ final class ImageChecker extends AbstractChecker implements SingletonInterface
     /**
      * Getimagesize constants.
      */
-    final public const WIDTH      = 0;
-    final public const HEIGHT     = 1;
-    final public const IMAGE_TYPE = 2;
+    public const WIDTH      = 0;
+    public const HEIGHT     = 1;
+    public const IMAGE_TYPE = 2;
 
-    final public const MESSAGES = [
+    public const MESSAGES = [
         'type'    => '[[Image format not supported.]]',
         'valid'   => '[[Image format not supported (allowed JPEG, PNG or GIF).]]',
         'smaller' => '[[Image size should not exceed {1}x{2}px.]]',
         'bigger'  => '[[The image dimensions should be at least {1}x{2}px.]]',
     ];
 
-    final public const ALLOW_EMPTY_VALUES = ['type', 'valid'];
+    public const ALLOW_EMPTY_VALUES = ['type', 'valid'];
 
     /**
      * Known image types.
      *
      * @var array
      */
-    final public const IMAGE_TYPES = [
+    public const IMAGE_TYPES = [
         'null',
         'gif',
         'jpeg',
