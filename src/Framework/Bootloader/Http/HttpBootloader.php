@@ -1,22 +1,15 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\KernelInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
@@ -38,21 +31,11 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         EmitterInterface::class => SapiEmitter::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /**
-     * @param ConfiguratorInterface $config
-     */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
-    /**
-     * @param KernelInterface  $kernel
-     * @param FactoryInterface $factory
-     */
     public function boot(AbstractKernel $kernel, FactoryInterface $factory): void
     {
         $this->config->setDefaults(
@@ -75,21 +58,13 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
     /**
      * Register new http middleware.
      *
-     * @param mixed $middleware
+     * @psalm-param MiddlewareInterface|class-string<MiddlewareInterface>
      */
-    public function addMiddleware($middleware): void
+    public function addMiddleware(string|MiddlewareInterface $middleware): void
     {
         $this->config->modify('http', new Append('middleware', null, $middleware));
     }
 
-    /**
-     * @param HttpConfig               $config
-     * @param Pipeline                 $pipeline
-     * @param RequestHandlerInterface  $handler
-     * @param ResponseFactoryInterface $responseFactory
-     * @param ContainerInterface       $container
-     * @return Http
-     */
     protected function httpCore(
         HttpConfig $config,
         Pipeline $pipeline,

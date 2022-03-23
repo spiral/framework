@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- * @author    Valentin V (Vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Middleware;
@@ -36,39 +28,15 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
 {
     use LoggerTrait;
 
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
-
-    /** @var SuppressErrorsInterface */
-    private $suppressErrors;
-
-    /** @var RendererInterface */
-    private $renderer;
-
-    /** @var ContainerInterface @internal */
-    private $container;
-
-    /**
-     * @param SuppressErrorsInterface  $suppressErrors
-     * @param RendererInterface        $renderer
-     * @param ResponseFactoryInterface $responseFactory
-     * @param ContainerInterface       $container
-     */
     public function __construct(
-        SuppressErrorsInterface $suppressErrors,
-        RendererInterface $renderer,
-        ResponseFactoryInterface $responseFactory,
-        ContainerInterface $container
+        private readonly SuppressErrorsInterface $suppressErrors,
+        private readonly RendererInterface $renderer,
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly ContainerInterface $container
     ) {
-        $this->suppressErrors = $suppressErrors;
-        $this->renderer = $renderer;
-        $this->responseFactory = $responseFactory;
-        $this->container = $container;
     }
 
     /**
-     * @inheritdoc
-     *
      * @psalm-suppress UnusedVariable
      * @throws \Throwable
      */
@@ -102,10 +70,6 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param Request    $request
-     * @param \Throwable $e
-     * @return Response
-     *
      * @throws \Throwable
      */
     private function renderError(Request $request, \Throwable $e): Response
@@ -116,9 +80,9 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
             $response = $response->withHeader('Content-Type', 'application/json');
             $handler = new JsonHandler();
             $response->getBody()->write(
-                json_encode(
+                \json_encode(
                     ['status' => 500]
-                    + json_decode(
+                    + \json_decode(
                         $handler->renderException($e, JsonHandler::VERBOSITY_VERBOSE),
                         true
                     )
@@ -137,15 +101,10 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         return $response;
     }
 
-    /**
-     * @param Request $request
-     * @param int     $code
-     * @param string  $message
-     */
     private function logError(Request $request, int $code, string $message): void
     {
         $this->getLogger()->error(
-            sprintf(
+            \sprintf(
                 '%s://%s%s caused the error %s (%s) by client %s.',
                 $request->getUri()->getScheme(),
                 $request->getUri()->getHost(),
@@ -157,15 +116,11 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         );
     }
 
-    /**
-     * @param string $class
-     * @return mixed|null
-     */
-    private function getOptional(string $class)
+    private function getOptional(string $class): mixed
     {
         try {
             return $this->container->get($class);
-        } catch (\Throwable | ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface) {
             return null;
         }
     }

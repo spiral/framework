@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
@@ -23,21 +16,14 @@ final class JsonPayloadsBootloader extends Bootloader
         HttpBootloader::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
     /**
      * JsonPayloadsBootloader constructor.
-     * @param ConfiguratorInterface $config
      */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
-    /**
-     * @param HttpBootloader $http
-     */
     public function boot(HttpBootloader $http): void
     {
         $this->config->setDefaults(
@@ -54,8 +40,6 @@ final class JsonPayloadsBootloader extends Bootloader
 
     /**
      * Add custom MIME type to be parsed as JSON.
-     *
-     * @param string $contentType
      */
     public function addContentType(string $contentType): void
     {

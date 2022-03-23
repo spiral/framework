@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
@@ -38,32 +31,23 @@ final class RouterBootloader extends Bootloader
         RequestHandlerInterface::class => RouterInterface::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /**
-     * @param ConfiguratorInterface $config
-     */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
     /**
-     * @param UriHandler         $uriHandler
-     * @param ContainerInterface $container
-     * @return RouterInterface
+     * @noRector RemoveUnusedPrivateMethodRector
      */
     private function router(
         UriHandler $uriHandler,
         ContainerInterface $container
     ): RouterInterface {
-        return new Router($this->config->getConfig('http')['basePath'], $uriHandler, $container);
+        return new Router($this->config->getConfig(HttpConfig::CONFIG)['basePath'], $uriHandler, $container);
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return RouteInterface
+     * @noRector RemoveUnusedPrivateMethodRector
      */
     private function route(ServerRequestInterface $request): RouteInterface
     {

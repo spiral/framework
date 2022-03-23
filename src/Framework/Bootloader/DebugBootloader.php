@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader;
@@ -31,18 +24,9 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
         StateInterface::class => [self::class, 'state'],
     ];
 
-    /** @var StateCollectorInterface[]|string[] */
-    private $collectors = [];
-
-    /** @var FactoryInterface */
-    private $factory;
-
-    /**
-     * @param FactoryInterface $factory
-     */
-    public function __construct(FactoryInterface $factory)
-    {
-        $this->factory = $factory;
+    public function __construct(
+        private readonly FactoryInterface $factory
+    ) {
     }
 
     /**
@@ -54,36 +38,31 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @param string|StateCollectorInterface $collector
+     * @psalm-param class-string<StateCollectorInterface>|StateCollectorInterface $collector
      */
-    public function addStateCollector($collector): void
+    public function addStateCollector(string|StateCollectorInterface $collector): void
     {
         $this->collectors[] = $collector;
     }
 
     /**
      * Create state and populate it with collectors.
-     *
-     * @return StateInterface
      */
     private function state(): StateInterface
     {
         $state = new State();
 
         foreach ($this->collectors as $collector) {
-            if (is_string($collector)) {
-                $collector = $this->factory->make($collector);
-            }
-
-            if ($collector instanceof Autowire) {
-                $collector = $collector->resolve($this->factory);
-            }
+            $collector = match (true) {
+                \is_string($collector) => $this->factory->make($collector),
+                $collector instanceof Autowire => $collector->resolve($this->factory)
+            };
 
             if (!$collector instanceof StateCollectorInterface) {
                 throw new StateException(
-                    sprintf(
+                    \sprintf(
                         'Unable to populate state, invalid state collector %s',
-                        is_object($collector) ? get_class($collector) : gettype($collector)
+                        \is_object($collector) ? $collector::class : \gettype($collector)
                     )
                 );
             }

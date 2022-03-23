@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Distribution;
@@ -15,7 +8,6 @@ use Aws\Credentials\Credentials;
 use Aws\S3\S3Client;
 use GuzzleHttp\Psr7\Uri as GuzzleUri;
 use Laminas\Diactoros\Uri as LaminasUri;
-use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Distribution\Manager;
 use Spiral\Distribution\Resolver\CloudFrontResolver;
@@ -31,28 +23,19 @@ class DistributionConfig
      */
     public const CONFIG = 'distribution';
 
-    /**
-     * @var string
-     */
-    private $default = Manager::DEFAULT_RESOLVER;
+    private string $default = Manager::DEFAULT_RESOLVER;
 
     /**
      * @var array<string, UriResolverInterface>
      */
-    private $resolvers = [];
+    private array $resolvers = [];
 
-    /**
-     * @param array $config
-     */
     public function __construct(array $config = [])
     {
         $this->bootDefaultDriver($config);
         $this->bootResolvers($config);
     }
 
-    /**
-     * @return string
-     */
     public function getDefaultDriver(): string
     {
         return $this->default;
@@ -66,9 +49,6 @@ class DistributionConfig
         return $this->resolvers;
     }
 
-    /**
-     * @param array $config
-     */
     private function bootResolvers(array $config): void
     {
         foreach ($config['resolvers'] ?? [] as $name => $child) {
@@ -93,9 +73,6 @@ class DistributionConfig
         }
     }
 
-    /**
-     * @param array $config
-     */
     private function bootDefaultDriver(array $config): void
     {
         $default = $config['default'] ?? null;
@@ -114,40 +91,20 @@ class DistributionConfig
         }
     }
 
-    /**
-     * @param string $name
-     * @param array $config
-     * @return UriResolverInterface
-     */
     private function createResolver(string $name, array $config): UriResolverInterface
     {
         if (!isset($config['type']) || !\is_string($config['type'])) {
             throw $this->invalidConfigKey($name, 'type', 'string');
         }
 
-        $type = $config['type'];
-
-        switch ($type) {
-            case 'static':
-                return $this->createStaticResolver($name, $config);
-
-            case 's3':
-                return $this->createS3Resolver($name, $config);
-
-            case 'cloudfront':
-                return $this->createCloudFrontResolver($name, $config);
-
-            default:
-                return $this->createCustomResolver($type, $name, $config);
-        }
+        return match ($config['type']) {
+            'static' => $this->createStaticResolver($name, $config),
+            's3' => $this->createS3Resolver($name, $config),
+            'cloudfront' => $this->createCloudFrontResolver($name, $config),
+            default => $this->createCustomResolver($config['type'], $name, $config),
+        };
     }
 
-    /**
-     * @param string $type
-     * @param string $name
-     * @param array $config
-     * @return UriResolverInterface
-     */
     private function createCustomResolver(string $type, string $name, array $config): UriResolverInterface
     {
         if (!\is_subclass_of($type, UriResolverInterface::class, true)) {
@@ -166,11 +123,6 @@ class DistributionConfig
         }
     }
 
-    /**
-     * @param string $name
-     * @param array $config
-     * @return UriResolverInterface
-     */
     private function createS3Resolver(string $name, array $config): UriResolverInterface
     {
         // Required config options
@@ -226,11 +178,6 @@ class DistributionConfig
         return new S3SignedResolver($client, $config['bucket'], $config['prefix'] ?? null);
     }
 
-    /**
-     * @param string $name
-     * @param array $config
-     * @return UriResolverInterface
-     */
     private function createCloudFrontResolver(string $name, array $config): UriResolverInterface
     {
         if (!isset($config['key']) || !\is_string($config['key'])) {
@@ -257,11 +204,6 @@ class DistributionConfig
         );
     }
 
-    /**
-     * @param string $name
-     * @param array $config
-     * @return UriResolverInterface
-     */
     private function createStaticResolver(string $name, array $config): UriResolverInterface
     {
         if (!isset($config['uri']) || !\is_string($config['uri'])) {
@@ -271,50 +213,23 @@ class DistributionConfig
         return new StaticResolver($this->createUri($name, $config['uri'], $config));
     }
 
-    /**
-     * @param string $name
-     * @param string $uri
-     * @param array $config
-     * @return UriInterface
-     */
     private function createUri(string $name, string $uri, array $config): UriInterface
     {
         if (!\is_string($config['factory'] ?? '')) {
             throw $this->invalidConfigKey($name, 'factory', 'string (PSR-7 uri factory implementation)');
         }
 
-        switch (true) {
-            case isset($config['factory']):
-                /** @var UriFactoryInterface $factory */
-                $factory = new $config['factory']();
-
-                if (!$factory instanceof UriFactoryInterface) {
-                    $message = 'Distribution config driver `%s` should contain class that must be a valid PSR-7 ' .
-                        'uri factory implementation, but `%s` given';
-                    throw new InvalidArgumentException(\sprintf($message, $name, $config['factory']));
-                }
-
-                return $factory->createUri($uri);
-
-            case \class_exists(LaminasUri::class):
-                return new LaminasUri($uri);
-
-            case \class_exists(GuzzleUri::class):
-                return new GuzzleUri($uri);
-
-            default:
-                $message = 'Can not resolve available PSR-7 UriFactory implementation; ' .
-                    'Please define `factory` config section in `%s` distribution driver config';
-                throw new InvalidArgumentException(\sprintf($message, $name));
-        }
+        return match (true) {
+            isset($config['factory']) => (new $config['factory']())->createUri($uri),
+            \class_exists(LaminasUri::class) => new LaminasUri($uri),
+            \class_exists(GuzzleUri::class) => new GuzzleUri($uri),
+            default => throw new InvalidArgumentException(
+                \sprintf('Can not resolve available PSR-7 UriFactory implementation; 
+                    Please define `factory` config section in `%s` distribution driver config', $name)
+            )
+        };
     }
 
-    /**
-     * @param string $name
-     * @param string $key
-     * @param string $type
-     * @return InvalidArgumentException
-     */
     private function invalidConfigKey(string $name, string $key, string $type): InvalidArgumentException
     {
         $message = 'Distribution config of `%s` driver must contain key `%s` that must be a type of %s';

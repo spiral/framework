@@ -85,11 +85,8 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         );
     }
 
-    /**
-     * @param array|string $sequence
-     */
     public function addConfigureSequence(
-        $sequence,
+        string|array|\Closure $sequence,
         string $header,
         string $footer = '',
         array $options = []
