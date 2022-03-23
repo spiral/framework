@@ -17,9 +17,9 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
     private array $rules = [];
 
     public function __construct(
-        private ?ValidatorConfig $config = null,
+        private ValidatorConfig $config,
         private readonly ParserInterface $parser = new RuleParser(),
-        private ?FactoryInterface $factory = new Container()
+        private FactoryInterface $factory = new Container()
     ) {
     }
 
@@ -30,8 +30,8 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
      */
     public function __destruct()
     {
-        $this->config = null;
-        $this->factory = null;
+        unset($this->config);
+        unset($this->factory);
         $this->resetCache();
     }
 
