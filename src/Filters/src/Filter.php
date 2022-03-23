@@ -208,14 +208,10 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     {
         $value = $this->getField((string)$field);
 
-        if ($value === null) {
-            return false;
-        }
-
-        if ($value instanceof FilterInterface) {
-            return $value->getValue() !== [];
-        }
-
-        return true;
+        return match (true) {
+            $value === null => false,
+            $value instanceof FilterInterface => $value->getValue() !== [],
+            default => true
+        };
     }
 }
