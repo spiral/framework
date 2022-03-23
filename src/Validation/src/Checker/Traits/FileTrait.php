@@ -30,7 +30,7 @@ trait FileTrait
         };
     }
 
-    private function isStreamableFile(UploadedFileInterface|StreamableInterface|array|string $file): bool
+    private function isStreamableFile(mixed $file): bool
     {
         return
             $file instanceof StreamableInterface ||
