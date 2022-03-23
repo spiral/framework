@@ -112,6 +112,6 @@ final class ValidatorConfig extends InjectableConfig
      */
     private function normalizeAliases(array $aliases): array
     {
-        return \array_map(static fn($value) => \str_replace('::', ':', $value), $aliases);
+        return \array_map(static fn ($value) => \str_replace('::', ':', $value), $aliases);
     }
 }

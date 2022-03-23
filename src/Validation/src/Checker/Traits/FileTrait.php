@@ -42,7 +42,7 @@ trait FileTrait
      */
     private function isUploaded(mixed $file): bool
     {
-        $isUploadedArray = static fn(array $file) =>
+        $isUploadedArray = static fn (array $file) =>
             isset($file['tmp_name']) &&
             (\is_uploaded_file($file['tmp_name']) || isset($file['uploaded']));
 
