@@ -91,7 +91,7 @@ final class SchemaBuilder
                 $origin = $definition[self::ORIGIN];
 
                 // [class, 'data:something.*'] vs [class, 'data:something']
-                $iterate = str_contains((string) $origin, '.*') || !empty($definition[self::ITERATE]);
+                $iterate = \str_contains((string) $origin, '.*') || !empty($definition[self::ITERATE]);
                 $origin = \rtrim($origin, '.*');
             } else {
                 $origin = $field;
@@ -137,7 +137,7 @@ final class SchemaBuilder
      */
     private function parseDefinition(string $field, string $definition): array
     {
-        if (!str_contains($definition, ':')) {
+        if (!\str_contains($definition, ':')) {
             return ['data', $definition ?? $field];
         }
 
