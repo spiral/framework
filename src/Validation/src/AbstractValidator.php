@@ -8,6 +8,7 @@ use Spiral\Validation\Exception\ValidationException;
 
 abstract class AbstractValidator implements ValidatorInterface
 {
+    /** @var array<string, string> */
     private array $errors = [];
 
     public function __construct(
@@ -36,7 +37,6 @@ abstract class AbstractValidator implements ValidatorInterface
     {
         $validator = clone $this;
         $validator->context = $context;
-        $validator->errors = [];
 
         return $validator;
     }

@@ -46,6 +46,8 @@ interface ValidatorInterface
     /**
      * List of errors associated with parent field, every field should have only one error assigned.
      *
+     * @return array<string, string> Keys are fields, values are messages
+     *
      * @throws ValidationException
      */
     public function getErrors(): array;

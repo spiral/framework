@@ -30,8 +30,7 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
      */
     public function __destruct()
     {
-        unset($this->config);
-        unset($this->factory);
+        unset($this->config, $this->factory);
         $this->resetCache();
     }
 
