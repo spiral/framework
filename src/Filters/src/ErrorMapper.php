@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Filters;
@@ -18,12 +11,9 @@ use Spiral\Filters\Exception\SchemaException;
  */
 final class ErrorMapper
 {
-    /** @var array */
-    private $schema;
-
-    public function __construct(array $schema)
-    {
-        $this->schema = $schema;
+    public function __construct(
+        private readonly array $schema
+    ) {
     }
 
     public function mapErrors(array $errors): array
@@ -45,20 +35,18 @@ final class ErrorMapper
     /**
      * Set element using dot notation.
      *
-     * @param mixed  $message
-     *
      * @throws SchemaException
      */
-    private function mount(array &$array, string $path, $message): void
+    private function mount(array &$array, string $path, mixed $message): void
     {
         if ($path === '.') {
             throw new SchemaException(
-                "Unable to mount error `{$message}` to `{$path}` (root path is forbidden)"
+                \sprintf('Unable to mount error `%s` to `%s` (root path is forbidden)', $message, $path)
             );
         }
 
-        $step = explode('.', $path);
-        while ($name = array_shift($step)) {
+        $step = \explode('.', $path);
+        while ($name = \array_shift($step)) {
             $array = &$array[$name];
         }
 
