@@ -13,7 +13,7 @@ abstract class AbstractValidator implements ValidatorInterface
     public function __construct(
         private array $rules,
         private mixed $context,
-        private ?RulesInterface $provider = null
+        private RulesInterface $provider
     ) {
     }
 
@@ -23,7 +23,7 @@ abstract class AbstractValidator implements ValidatorInterface
     public function __destruct()
     {
         $this->rules = [];
-        $this->provider = null;
+        unset($this->provider);
         $this->errors = [];
     }
 
