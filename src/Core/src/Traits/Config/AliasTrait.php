@@ -20,7 +20,6 @@ trait AliasTrait
             if (\in_array($alias, $antiCircleReference, true)) {
                 throw new ContainerException(\sprintf('Circle reference detected for alias `%s`.', $alias));
             }
-            
             $antiCircleReference[] = $alias;
 
             $alias = $this->config['aliases'][$alias];
