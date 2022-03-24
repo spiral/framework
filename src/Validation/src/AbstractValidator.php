@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation;
@@ -15,27 +8,14 @@ use Spiral\Validation\Exception\ValidationException;
 
 abstract class AbstractValidator implements ValidatorInterface
 {
-    /** @var array */
-    private $errors;
+    /** @var array<string, string> */
+    private array $errors = [];
 
-    /** @var array */
-    private $rules;
-
-    /** @var mixed */
-    private $context;
-
-    /** @var RulesInterface */
-    private $provider;
-
-    /**
-     * @param mixed          $context
-     */
-    public function __construct(array $rules, $context, RulesInterface $ruleProvider)
-    {
-        $this->errors = [];
-        $this->rules = $rules;
-        $this->context = $context;
-        $this->provider = $ruleProvider;
+    public function __construct(
+        private array $rules,
+        private mixed $context,
+        private RulesInterface $provider
+    ) {
     }
 
     /**
@@ -44,7 +24,7 @@ abstract class AbstractValidator implements ValidatorInterface
     public function __destruct()
     {
         $this->rules = [];
-        $this->provider = null;
+        unset($this->provider);
         $this->errors = [];
     }
 
@@ -53,37 +33,24 @@ abstract class AbstractValidator implements ValidatorInterface
         $this->errors = [];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function withContext($context): ValidatorInterface
+    public function withContext(mixed $context): ValidatorInterface
     {
         $validator = clone $this;
         $validator->context = $context;
-        $validator->errors = [];
 
         return $validator;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getContext()
+    public function getContext(): mixed
     {
         return $this->context;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isValid(): bool
     {
         return $this->getErrors() === [];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getErrors(): array
     {
         $this->validate();
@@ -93,8 +60,6 @@ abstract class AbstractValidator implements ValidatorInterface
 
     /**
      * Check if value has any error associated.
-     *
-     *
      */
     public function hasError(string $field): bool
     {

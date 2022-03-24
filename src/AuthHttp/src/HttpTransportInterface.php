@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth;
@@ -26,8 +19,6 @@ interface HttpTransportInterface
 
     /**
      * Commit (write) token to the outgoing response.
-     *
-     * @param \DateTimeInterface|null $expiresAt
      */
     public function commitToken(
         Request $request,

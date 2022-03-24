@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
@@ -22,18 +15,9 @@ use Spiral\Attributes\Reader;
  */
 abstract class AttributeReader extends Reader
 {
-    /**
-     * @var ContextRenderer
-     */
-    protected $renderer;
-    /**
-     * @var InstantiatorInterface
-     */
-    private $instantiator;
+    protected ContextRenderer $renderer;
+    private InstantiatorInterface $instantiator;
 
-    /**
-     * @param InstantiatorInterface|null $instantiator
-     */
     public function __construct(InstantiatorInterface $instantiator = null)
     {
         $this->instantiator = $instantiator ?? new Facade($this);
@@ -41,7 +25,6 @@ abstract class AttributeReader extends Reader
     }
 
     /**
-     * {@inheritDoc}
      * @throws \Throwable
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
@@ -58,7 +41,6 @@ abstract class AttributeReader extends Reader
     }
 
     /**
-     * {@inheritDoc}
      * @throws \Throwable
      */
     public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
@@ -71,7 +53,6 @@ abstract class AttributeReader extends Reader
     }
 
     /**
-     * {@inheritDoc}
      * @throws \Throwable
      */
     public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
@@ -84,7 +65,6 @@ abstract class AttributeReader extends Reader
     }
 
     /**
-     * {@inheritDoc}
      * @throws \Throwable
      */
     public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
@@ -97,7 +77,6 @@ abstract class AttributeReader extends Reader
     }
 
     /**
-     * {@inheritDoc}
      * @throws \Throwable
      */
     public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable

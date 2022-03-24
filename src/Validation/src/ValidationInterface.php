@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation;
@@ -24,5 +17,5 @@ interface ValidationInterface
      * @param mixed              $context Validation context (available for checkers and validation
      *                                    methods but is not validated).
      */
-    public function validate($data, array $rules, $context = null): ValidatorInterface;
+    public function validate(array|\ArrayAccess $data, array $rules, mixed $context = null): ValidatorInterface;
 }
