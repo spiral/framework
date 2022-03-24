@@ -13,7 +13,6 @@ namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Config\JsonPayloadConfig;
 use Spiral\Config\Patch\Append;
 use Spiral\Http\Middleware\JsonPayloadMiddleware;
 

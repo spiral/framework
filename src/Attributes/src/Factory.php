@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes;
@@ -19,17 +12,11 @@ use Spiral\Attributes\Composite\SelectiveReader;
 
 class Factory implements FactoryInterface
 {
-    /**
-     * @var CacheInterface|CacheItemPoolInterface|null
-     */
-    private $cache;
+    private CacheInterface|CacheItemPoolInterface|null $cache = null;
 
-    /**
-     * @param CacheInterface|CacheItemPoolInterface|null $cache
-     */
-    public function withCache($cache): self
+    public function withCache(CacheInterface|CacheItemPoolInterface|null $cache): self
     {
-        assert($cache instanceof CacheItemPoolInterface || $cache instanceof CacheInterface || $cache === null);
+        \assert($cache instanceof CacheItemPoolInterface || $cache instanceof CacheInterface || $cache === null);
 
         $self = clone $this;
         $self->cache = $cache;
@@ -37,9 +24,6 @@ class Factory implements FactoryInterface
         return $self;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function create(): ReaderInterface
     {
         return $this->decorateByCache(
@@ -62,15 +46,10 @@ class Factory implements FactoryInterface
 
     private function decorateByCache(ReaderInterface $reader): ReaderInterface
     {
-        switch (true) {
-            case $this->cache instanceof CacheInterface:
-                return new Psr16CachedReader($reader, $this->cache);
-
-            case $this->cache instanceof CacheItemPoolInterface:
-                return new Psr6CachedReader($reader, $this->cache);
-
-            default:
-                return $reader;
-        }
+        return match (true) {
+            $this->cache instanceof CacheInterface => new Psr16CachedReader($reader, $this->cache),
+            $this->cache instanceof CacheItemPoolInterface => new Psr6CachedReader($reader, $this->cache),
+            default => $reader,
+        };
     }
 }

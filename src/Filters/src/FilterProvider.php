@@ -1,18 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Filters;
 
-use Generator;
-use ReflectionException;
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Filters\Exception\SchemaException;
@@ -38,34 +29,20 @@ final class FilterProvider implements FilterProviderInterface
     public const ITERATE_SOURCE = 'iterate_source';
     public const ITERATE_ORIGIN = 'iterate_origin';
 
-    /** @var array */
-    private $cache;
+    private array $cache = [];
 
     /** @var ErrorMapper[] */
-    private $errorMappers = [];
+    private array $errorMappers = [];
 
     /** @var ValidatorInterface[] */
-    private $validators = [];
+    private array $validators = [];
 
-    /** @var ValidationInterface */
-    private $validation;
-
-    /** @var FactoryInterface */
-    private $factory;
-
-    /**
-     * @param FactoryInterface|null $factory
-     */
-    public function __construct(ValidationInterface $validation, FactoryInterface $factory = null)
-    {
-        $this->validation = $validation;
-        $this->factory = $factory ?? new Container();
-        $this->cache = [];
+    public function __construct(
+        private readonly ValidationInterface $validation,
+        private readonly FactoryInterface $factory = new Container()
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
         $schema = $this->getSchema($name);
@@ -119,14 +96,14 @@ final class FilterProvider implements FilterProviderInterface
     /**
      * Create set of origins and prefixed for a nested array of models.
      */
-    private function iterate(array $schema, InputInterface $input): Generator
+    private function iterate(array $schema, InputInterface $input): \Generator
     {
         $values = $input->getValue($schema[self::ITERATE_SOURCE], $schema[self::ITERATE_ORIGIN]);
-        if (empty($values) || !is_array($values)) {
+        if (empty($values) || !\is_array($values)) {
             return [];
         }
 
-        foreach (array_keys($values) as $key) {
+        foreach (\array_keys($values) as $key) {
             yield $key => $schema[self::ORIGIN] . '.' . $key;
         }
     }
@@ -172,7 +149,7 @@ final class FilterProvider implements FilterProviderInterface
             }
 
             $builder = new SchemaBuilder(new ReflectionEntity($filter));
-        } catch (ReflectionException $e) {
+        } catch (\ReflectionException $e) {
             throw new SchemaException('Invalid filter schema', $e->getCode(), $e);
         }
 
