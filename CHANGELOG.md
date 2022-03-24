@@ -49,6 +49,16 @@
     added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface. 
     Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
   - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
+  - [spiral/data-grid] Added return type `mixed` and `mixed` parameter type of `$source` to the method `write` in
+    `Spiral\DataGrid\WriterInterface` interface.
+  - [spiral/data-grid] Added return type `mixed` to the method `getValue` in `Spiral\DataGrid\SpecificationInterface` interface.
+  - [spiral/data-grid] Added return type `mixed`, added `mixed` parameter type of `$default` to the method `getValue` 
+    in `Spiral\DataGrid\InputInterface` interface.
+  - [spiral/data-grid] Added return type `mixed` to the method `getOption` in `Spiral\DataGrid\GridInterface` interface.
+  - [spiral/data-grid] Added return type `mixed`, added `mixed` parameter type of `$value` to the method `convert` 
+    in `Spiral\DataGrid\Specification\ValueInterface` interface.
+  - [spiral/data-grid] Added `string` type for parameter `$direction` in the method `withDirection` 
+    in `Spiral\DataGrid\Specification\SorterInterface`
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`

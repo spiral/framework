@@ -15,15 +15,11 @@ final class NotEmpty implements ValueInterface
 
     public function accepts(mixed $value): bool
     {
-        if (empty($value)) {
-            return false;
-        }
-
-        if ($this->value instanceof ValueInterface) {
-            return $this->value->accepts($value);
-        }
-
-        return true;
+        return match (true) {
+            empty($value) => false,
+            $this->value instanceof ValueInterface => $this->value->accepts($value),
+            default => true
+        };
     }
 
     public function convert(mixed $value): mixed

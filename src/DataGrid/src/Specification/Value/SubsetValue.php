@@ -17,17 +17,13 @@ final class SubsetValue implements ValueInterface
 
     public function accepts(mixed $value): bool
     {
-        $value = (array)$value;
+        $value = (array) $value;
 
-        if (\count($value) === 1) {
-            return $this->enum->accepts(\array_values($value)[0]);
-        }
-
-        if (empty($value)) {
-            return false;
-        }
-
-        return $this->arrayType()->accepts($value);
+        return match(true) {
+            \count($value) === 1 => $this->enum->accepts(\array_values($value)[0]),
+            empty($value) => false,
+            default => $this->arrayType()->accepts($value)
+        };
     }
 
     public function convert(mixed $value): mixed

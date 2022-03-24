@@ -11,7 +11,7 @@ use Spiral\DataGrid\SpecificationInterface;
 class SortedFilter implements SequenceInterface, FilterInterface
 {
     /** @var SpecificationInterface[] */
-    private $specifications;
+    private array $specifications;
 
     public function __construct(
         private string $value,
