@@ -56,6 +56,7 @@
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`
   - A minimal version of `league/flysystem` increased to `^2.3`
+  - A minimal version of `symfony/console` increased to `^6.0`
 - **Other Features**
 
 ## v2.11.0 - Unreleased
