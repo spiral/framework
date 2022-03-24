@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth\Middleware\Firewall;
@@ -21,21 +14,12 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class OverwriteFirewall extends AbstractFirewall
 {
-    /** @var UriInterface */
-    private $uri;
-
-    /** @var int */
-    private $status;
-
-    public function __construct(UriInterface $uri, int $status = 401)
-    {
-        $this->uri = $uri;
-        $this->status = $status;
+    public function __construct(
+        private readonly UriInterface $uri,
+        private readonly int $status = 401
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function denyAccess(Request $request, RequestHandlerInterface $handler): Response
     {
         return $handler->handle($request->withUri($this->uri))->withStatus($this->status);

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
@@ -20,17 +13,9 @@ abstract class Instantiator implements InstantiatorInterface
      */
     private const CONSTRUCTOR_NAME = '__construct';
 
-    /**
-     * @var ContextRenderer
-     */
-    protected $renderer;
-
-    /**
-     * @param ContextRenderer|null $renderer
-     */
-    public function __construct(ContextRenderer $renderer = null)
-    {
-        $this->renderer = $renderer ?? new ContextRenderer();
+    public function __construct(
+        protected ContextRenderer $renderer = new ContextRenderer()
+    ) {
     }
 
     protected function getConstructor(\ReflectionClass $class): ?\ReflectionMethod
@@ -39,7 +24,8 @@ abstract class Instantiator implements InstantiatorInterface
             return $class->getMethod(self::CONSTRUCTOR_NAME);
         }
 
-        if ($constructor = $this->getTraitConstructors($class)) {
+        $constructor = $this->getTraitConstructors($class);
+        if ($constructor !== null) {
             return $constructor;
         }
 
@@ -53,11 +39,11 @@ abstract class Instantiator implements InstantiatorInterface
     private function getTraitConstructors(\ReflectionClass $class): ?\ReflectionMethod
     {
         foreach ($class->getTraits() as $trait) {
-            if ($constructor = $this->getConstructor($trait)) {
+            if (($constructor = $this->getConstructor($trait)) !== null) {
                 return $constructor;
             }
 
-            if ($constructor = $this->getTraitConstructors($trait)) {
+            if (($constructor = $this->getTraitConstructors($trait)) !== null) {
                 return $constructor;
             }
         }
