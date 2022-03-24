@@ -24,7 +24,6 @@ trait DotTrait
             if (!\is_array($data) || !\array_key_exists($step, $data)) {
                 throw new DotNotFoundException(\sprintf("Unable to find config element '%s'.", $name));
             }
-            
             $data = &$data[$step];
         }
 
