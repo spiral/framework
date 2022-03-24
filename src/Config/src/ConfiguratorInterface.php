@@ -40,9 +40,6 @@ interface ConfiguratorInterface extends ConfigsInterface
      *      "key": ["value3"]
      * }
      *
-     * @param string $section
-     * @param array  $data
-     *
      * @throws ConfiguratorException
      * @throws ConfigDeliveredException
      */
@@ -51,7 +48,6 @@ interface ConfiguratorInterface extends ConfigsInterface
     /**
      * Modifies selected config section. Must throw `PatchDeliveredException` if modification is
      * not allowed due config has already been delivered.
-     *
      *
      * @throws ConfiguratorException
      * @throws ConfigDeliveredException
