@@ -89,8 +89,6 @@ final class CookieQueue
 
     /**
      * Schedule new cookie instance to be send while dispatching request.
-     *
-     *
      */
     public function schedule(Cookie $cookie): CookieQueue
     {
