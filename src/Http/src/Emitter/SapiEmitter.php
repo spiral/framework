@@ -21,11 +21,14 @@ use Spiral\Http\Exception\EmitterException;
 
 /**
  * Source code has been extracted from Zend/Diactoros.
- *
- * @codeCoverageIgnore
  */
 final class SapiEmitter implements EmitterInterface
 {
+    /**
+     * @var positive-int Preferred chunk size to be read from the stream before emitting.
+     */
+    public int $bufferSize = 2_097_152; // 2MB
+
     /**
      * Emits a response for a PHP SAPI environment.
      *
@@ -50,7 +53,17 @@ final class SapiEmitter implements EmitterInterface
      */
     private function emitBody(ResponseInterface $response): void
     {
-        echo $response->getBody();
+        $body = $response->getBody();
+        if ($body->isSeekable()) {
+            $body->rewind();
+        }
+        if (!$body->isReadable()) {
+            return;
+        }
+        while (!$body->eof()) {
+            echo $body->read($this->bufferSize);
+            flush();
+        }
     }
 
     /**
