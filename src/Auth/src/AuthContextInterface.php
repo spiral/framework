@@ -11,8 +11,6 @@ interface AuthContextInterface
 {
     /**
      * Start new auth context based on a given token. Actor can be received on demand.
-     *
-     * @param string|null    $transport
      */
     public function start(TokenInterface $token, string $transport = null): void;
 
