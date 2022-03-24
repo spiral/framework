@@ -49,6 +49,13 @@
     added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface. 
     Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
   - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
+  - [spiral/core] Added return type `mixed` to the method `runScope` in `Spiral\Core\ScopeInterface` interface.
+  - [spiral/core] Added return type `mixed` and `array|callable|string` parameter type of `$target` 
+    to the method `invoke` in `Spiral\Core\InvokerInterface` interface.
+  - [spiral/core] Added return type `mixed` to the method `make` in `Spiral\Core\FactoryInterface` interface.
+  - [spiral/core] Added `string|array|callable|object` parameter type of `$resolver` in the method `bind`,
+    added `string|array|callable|object` parameter type of `$resolver` in the method `bindSingleton` in `Spiral\Core\BinderInterface` interface.
+  - [spiral/core] Added return type `object` to the method `createInjection` in `Spiral\Core\Container\InjectorInterface` interface.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`

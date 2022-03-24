@@ -195,8 +195,6 @@ final class Container implements
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @template T
      *
      * @param class-string<T> $alias
@@ -417,12 +415,10 @@ final class Container implements
     /**
      * Automatically create class.
      *
-     * @return object
-     *
      * @throws AutowireException
      * @throws \Throwable
      */
-    protected function autowire(string $class, array $parameters, string $context = null)
+    protected function autowire(string $class, array $parameters, string $context = null): object
     {
         if (!\class_exists($class) && !isset($this->injectors[$class])) {
             throw new NotFoundException(\sprintf("Undefined class or binding '%s'", $class));
@@ -449,11 +445,10 @@ final class Container implements
     /**
      * Assert that given value are matched parameter type.
      *
-     * @param mixed $value
      * @throws ArgumentException
      * @throws \ReflectionException
      */
-    private function assertType(\ReflectionParameter $parameter, ContextFunction $context, $value): void
+    private function assertType(\ReflectionParameter $parameter, ContextFunction $context, mixed $value): void
     {
         if ($value === null) {
             if (!$parameter->allowsNull()) {
@@ -486,8 +481,6 @@ final class Container implements
      * Create instance of desired class.
      *
      * @param array $parameters Constructor parameters.
-     * @param string|null $context
-     * @return object
      *
      * @throws ContainerException
      * @throws \Throwable
@@ -619,8 +612,7 @@ final class Container implements
 
     /**
      * @param mixed $target Value binded by user.
-     * @param string|null $context
-     * @return mixed|null|object
+     *
      * @throws ContainerException
      * @throws \Throwable
      */
@@ -629,7 +621,7 @@ final class Container implements
         string|array|Autowire|\Closure $target,
         array $parameters,
         string $context = null
-    ) {
+    ): mixed {
         if (\is_string($target)) {
             // Reference
             return $this->make($target, $parameters, $context);

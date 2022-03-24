@@ -16,8 +16,8 @@ interface InvokerInterface
      *
      * @param callable|non-empty-string|array{class-string, non-empty-string} $target
      * @param array<non-empty-string,mixed> $parameters
-     * @return mixed
+     *
      * @throws NotCallableException
      */
-    public function invoke(array|callable|string $target, array $parameters = []);
+    public function invoke(array|callable|string $target, array $parameters = []): mixed;
 }

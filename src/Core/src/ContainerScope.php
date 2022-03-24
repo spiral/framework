@@ -27,10 +27,9 @@ final class ContainerScope
     /**
      * Invokes given closure or function withing global IoC scope.
      *
-     * @return mixed
      * @throws Throwable
      */
-    public static function runScope(ContainerInterface $container, callable $scope)
+    public static function runScope(ContainerInterface $container, callable $scope): mixed
     {
         [$previous, self::$container] = [self::$container, $container];
 

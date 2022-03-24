@@ -85,7 +85,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
     /**
      * @inheritdoc
      */
-    public function createInjection(\ReflectionClass $class, string $context = null)
+    public function createInjection(\ReflectionClass $class, string $context = null): LoggerInterface
     {
         // always return default logger as injection
         return $this->getLogger();
