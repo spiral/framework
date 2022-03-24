@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Request;
@@ -44,9 +37,8 @@ final class InputManager implements SingletonInterface
      * Associations between bags and representing class/request method.
      *
      * @invisible
-     * @var array
      */
-    protected $bagAssociations = [
+    protected array $bagAssociations = [
         'headers'    => [
             'class'  => HeadersBag::class,
             'source' => 'getHeaders',
@@ -76,40 +68,33 @@ final class InputManager implements SingletonInterface
             'source' => 'getAttributes',
         ],
     ];
+    
     /**
      * @invisible
-     * @var Request
      */
-    protected $request;
-
-    /**
-     * @invisible
-     * @var ContainerInterface
-     */
-    protected $container;
+    protected ?Request $request = null;
 
     /** @var InputBag[] */
-    private $bags = [];
+    private array $bags = [];
 
     /**
      * Prefix to add for each input request.
      *
      * @see self::withPrefix();
-     * @var string
      */
-    private $prefix = '';
+    private string $prefix = '';
 
     /**
      * List of content types that must be considered as JSON.
-     * @var array
      */
-    private $jsonTypes = [
+    private array $jsonTypes = [
         'application/json',
     ];
 
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        /** @invisible */
+        private ContainerInterface $container
+    ) {
     }
 
     public function __get(string $name): InputBag
@@ -134,7 +119,7 @@ final class InputManager implements SingletonInterface
 
         if ($add) {
             $input->prefix .= '.' . $prefix;
-            $input->prefix = trim($input->prefix, '.');
+            $input->prefix = \trim($input->prefix, '.');
         } else {
             $input->prefix = $prefix;
         }
@@ -149,15 +134,11 @@ final class InputManager implements SingletonInterface
     {
         $path = $this->uri()->getPath();
 
-        if (empty($path)) {
-            return '/';
-        }
-
-        if ($path[0] !== '/') {
-            return '/' . $path;
-        }
-
-        return $path;
+        return match (true) {
+            empty($path) => '/',
+            $path[0] !== '/' => '/' . $path,
+            default => $path
+        };
     }
 
     /**
@@ -170,7 +151,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Get active instance of ServerRequestInterface and reset all bags if instance changed.
-     *
      *
      * @throws ScopeException
      */
@@ -200,7 +180,7 @@ final class InputManager implements SingletonInterface
      */
     public function method(): string
     {
-        return strtoupper($this->request()->getMethod());
+        return \strtoupper($this->request()->getMethod());
     }
 
     /**
@@ -227,7 +207,7 @@ final class InputManager implements SingletonInterface
      */
     public function isXmlHttpRequest(): bool
     {
-        return mb_strtolower(
+        return \mb_strtolower(
             $this->request()->getHeaderLine('X-Requested-With')
         ) === 'xmlhttprequest';
     }
@@ -246,8 +226,8 @@ final class InputManager implements SingletonInterface
 
         if ($softMatch) {
             foreach ($acceptHeader->getAll() as $item) {
-                $itemValue = strtolower($item->getValue());
-                if (str_ends_with($itemValue, '/json') || str_ends_with($itemValue, '+json')) {
+                $itemValue = \strtolower($item->getValue());
+                if (\str_ends_with($itemValue, '/json') || \str_ends_with($itemValue, '+json')) {
                     return true;
                 }
             }
@@ -291,13 +271,13 @@ final class InputManager implements SingletonInterface
         }
 
         if (!isset($this->bagAssociations[$name])) {
-            throw new InputException("Undefined input bag '{$name}'");
+            throw new InputException(\sprintf("Undefined input bag '%s'", $name));
         }
 
         $class = $this->bagAssociations[$name]['class'];
-        $data = call_user_func([$this->request(), $this->bagAssociations[$name]['source']]);
+        $data = \call_user_func([$this->request(), $this->bagAssociations[$name]['source']]);
 
-        if (!is_array($data)) {
+        if (!\is_array($data)) {
             $data = (array)$data;
         }
 
@@ -307,84 +287,54 @@ final class InputManager implements SingletonInterface
     /**
      * @param mixed       $default
      * @param bool|string $implode Implode header lines, false to return header as array.
-     * @return mixed
      */
-    public function header(string $name, $default = null, $implode = ',')
+    public function header(string $name, $default = null, bool|string $implode = ','): mixed
     {
         return $this->headers->get($name, $default, $implode);
     }
 
     /**
-     * @param mixed  $default
-     * @return mixed
      * @see data()
      */
-    public function post(string $name, $default = null)
+    public function post(string $name, mixed $default = null): mixed
     {
         return $this->data($name, $default);
     }
 
-    /**
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function data(string $name, $default = null)
+    public function data(string $name, mixed $default = null): mixed
     {
         return $this->data->get($name, $default);
     }
 
     /**
      * Reads data from data array, if not found query array will be used as fallback.
-     *
-     * @param mixed  $default
-     * @return mixed
      */
-    public function input(string $name, $default = null)
+    public function input(string $name, mixed $default = null): mixed
     {
         return $this->data($name, $this->query($name, $default));
     }
 
-    /**
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function query(string $name, $default = null)
+    public function query(string $name, mixed $default = null): mixed
     {
         return $this->query->get($name, $default);
     }
 
-    /**
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function cookie(string $name, $default = null)
+    public function cookie(string $name, mixed $default = null): mixed
     {
         return $this->cookies->get($name, $default);
     }
 
-    /**
-     * @param mixed  $default
-     *
-     */
-    public function file(string $name, $default = null): ?UploadedFileInterface
+    public function file(string $name, mixed $default = null): ?UploadedFileInterface
     {
         return $this->files->get($name, $default);
     }
 
-    /**
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function server(string $name, $default = null)
+    public function server(string $name, mixed $default = null): mixed
     {
         return $this->server->get($name, $default);
     }
 
-    /**
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function attribute(string $name, $default = null)
+    public function attribute(string $name, mixed $default = null): mixed
     {
         return $this->attributes->get($name, $default);
     }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http;
@@ -28,23 +21,11 @@ final class ResponseWrapper
 {
     use JsonTrait;
 
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
-
-    /** @var StreamFactoryInterface */
-    private $streamFactory;
-
-    /** @var FilesInterface */
-    private $files;
-
     public function __construct(
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        FilesInterface $files
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly StreamFactoryInterface $streamFactory,
+        private readonly FilesInterface $files
     ) {
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory = $streamFactory;
-        $this->files = $files;
     }
 
     public function create(int $code): ResponseInterface
@@ -55,25 +36,19 @@ final class ResponseWrapper
     /**
      * Mount redirect headers into response
      *
-     * @param UriInterface|string $uri
-     *
      * @throws ResponseException
      */
-    public function redirect($uri, int $code = 302): ResponseInterface
-    {
-        if (!is_string($uri) && !$uri instanceof UriInterface) {
-            throw new ResponseException('Redirect allowed only for string or UriInterface uris');
-        }
-
+    public function redirect(
+        string|UriInterface $uri,
+        int $code = 302
+    ): ResponseInterface {
         return $this->responseFactory->createResponse($code)->withHeader('Location', (string)$uri);
     }
 
     /**
      * Write json data into response.
-     *
-     * @param     $data
      */
-    public function json($data, int $code = 200): ResponseInterface
+    public function json(mixed $data, int $code = 200): ResponseInterface
     {
         return $this->writeJson($this->responseFactory->createResponse($code), $data, $code);
     }
@@ -89,16 +64,16 @@ final class ResponseWrapper
      * @throws ResponseException
      */
     public function attachment(
-        $filename,
+        mixed $filename,
         string $name = '',
         string $mime = 'application/octet-stream'
     ): ResponseInterface {
         if (empty($name)) {
-            if (!is_string($filename)) {
+            if (!\is_string($filename)) {
                 throw new ResponseException('Unable to resolve public filename');
             }
 
-            $name = basename($filename);
+            $name = \basename($filename);
         }
 
         $stream = $this->getStream($filename);
@@ -108,7 +83,7 @@ final class ResponseWrapper
         $response = $response->withHeader('Content-Length', (string)$stream->getSize());
         $response = $response->withHeader(
             'Content-Disposition',
-            'attachment; filename="' . addcslashes($name, '"') . '"'
+            'attachment; filename="' . \addcslashes($name, '"') . '"'
         );
 
         return $response->withBody($stream);
@@ -130,27 +105,16 @@ final class ResponseWrapper
 
     /**
      * Create stream for given filename.
-     *
-     * @param string|StreamInterface|StreamableInterface $file
      */
-    private function getStream($file): StreamInterface
+    private function getStream(mixed $file): StreamInterface
     {
-        if ($file instanceof StreamableInterface) {
-            return $file->getStream();
-        }
-
-        if ($file instanceof StreamInterface) {
-            return $file;
-        }
-
-        if (is_resource($file)) {
-            return $this->streamFactory->createStreamFromResource($file);
-        }
-
-        if (!$this->files->isFile($file)) {
-            throw new ResponseException('Unable to allocate response body stream, file does not exist');
-        }
-
-        return $this->streamFactory->createStreamFromFile($file);
+        return match (true) {
+            $file instanceof StreamableInterface => $file->getStream(),
+            $file instanceof StreamInterface => $file,
+            \is_resource($file) => $this->streamFactory->createStreamFromResource($file),
+            !$this->files->isFile($file) =>
+                throw new ResponseException('Unable to allocate response body stream, file does not exist'),
+            default => $this->streamFactory->createStreamFromFile($file)
+        };
     }
 }

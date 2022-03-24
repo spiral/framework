@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http;
@@ -26,23 +19,16 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 {
     use MiddlewareTrait;
 
-    /** @var ScopeInterface */
-    private $scope;
+    private int $position = 0;
+    private ?RequestHandlerInterface $handler = null;
 
-    /** @var int */
-    private $position = 0;
-
-    /** @var RequestHandlerInterface */
-    private $handler;
-
-    public function __construct(ScopeInterface $scope)
-    {
-        $this->scope = $scope;
+    public function __construct(
+        private readonly ScopeInterface $scope
+    ) {
     }
 
     /**
      * Configures pipeline with target endpoint.
-     *
      *
      * @throws PipelineException
      */
@@ -55,17 +41,11 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
         return $pipeline;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
         return $this->withHandler($handler)->handle($request);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(Request $request): Response
     {
         if (empty($this->handler)) {
@@ -77,8 +57,6 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             return $this->middleware[$position]->process($request, $this);
         }
 
-        return $this->scope->runScope([Request::class => $request], function () use ($request) {
-            return $this->handler->handle($request);
-        });
+        return $this->scope->runScope([Request::class => $request], fn () => $this->handler->handle($request));
     }
 }
