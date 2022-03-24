@@ -54,9 +54,9 @@ final class Console
      * @throws CommandNotFoundException
      */
     public function run(
-        ?string              $command,
+        ?string $command,
         array|InputInterface $input = [],
-        OutputInterface      $output = null
+        OutputInterface $output = null
     ): CommandOutput {
         $input = \is_array($input) ? new ArrayInput($input) : $input;
         $output ??= new BufferedOutput();
