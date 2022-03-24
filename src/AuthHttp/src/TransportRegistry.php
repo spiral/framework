@@ -30,7 +30,7 @@ final class TransportRegistry
         $name ??= $this->default;
 
         if (!isset($this->transports[$name])) {
-            throw new TransportException(sprintf('Undefined auth transport %s', $name));
+            throw new TransportException(\sprintf('Undefined auth transport %s', $name));
         }
 
         return $this->transports[$name];
