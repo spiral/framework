@@ -42,7 +42,7 @@ final class DoctrineReaderBridge implements Reader
         );
     }
 
-    public function getClassAnnotation(\ReflectionClass $class, $annotationName)
+    public function getClassAnnotation(\ReflectionClass $class, $annotationName): ?object
     {
         return $this->reader->firstClassMetadata($class, $annotationName);
     }
@@ -54,7 +54,7 @@ final class DoctrineReaderBridge implements Reader
         );
     }
 
-    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
+    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName): ?object
     {
         return $this->reader->firstFunctionMetadata($method, $annotationName);
     }
@@ -66,7 +66,7 @@ final class DoctrineReaderBridge implements Reader
         );
     }
 
-    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
+    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName): ?object
     {
         return $this->reader->firstPropertyMetadata($property, $annotationName);
     }

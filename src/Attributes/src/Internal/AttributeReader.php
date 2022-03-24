@@ -16,8 +16,7 @@ use Spiral\Attributes\Reader;
 abstract class AttributeReader extends Reader
 {
     protected ContextRenderer $renderer;
-    
-    private readonly InstantiatorInterface $instantiator;
+    private InstantiatorInterface $instantiator;
 
     public function __construct(InstantiatorInterface $instantiator = null)
     {

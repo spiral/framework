@@ -4,19 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
 
-use Spiral\Attributes\Internal\Instantiator\InstantiatorInterface;
-
 /**
  * @internal NativeAttributeReader is an internal library class, please do not use it in your code.
  * @psalm-internal Spiral\Attributes
  */
 final class NativeAttributeReader extends AttributeReader
 {
-    public function __construct(InstantiatorInterface $instantiator = null)
-    {
-        parent::__construct($instantiator);
-    }
-
     protected function getClassAttributes(\ReflectionClass $class, ?string $name): iterable
     {
         return $this->format($class, $class->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF));

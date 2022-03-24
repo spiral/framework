@@ -16,7 +16,7 @@ class Factory implements FactoryInterface
 
     public function withCache(CacheInterface|CacheItemPoolInterface|null $cache): self
     {
-        assert($cache instanceof CacheItemPoolInterface || $cache instanceof CacheInterface || $cache === null);
+        \assert($cache instanceof CacheItemPoolInterface || $cache instanceof CacheInterface || $cache === null);
 
         $self = clone $this;
         $self->cache = $cache;

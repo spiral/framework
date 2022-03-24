@@ -18,7 +18,7 @@ trait ReaderAwareTrait
 
     public function getReader(): ReaderInterface
     {
-        assert($this->reader !== null, 'Invariant violation');
+        \assert($this->reader !== null, 'Invariant violation');
 
         return $this->reader;
     }

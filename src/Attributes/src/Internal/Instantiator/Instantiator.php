@@ -13,11 +13,9 @@ abstract class Instantiator implements InstantiatorInterface
      */
     private const CONSTRUCTOR_NAME = '__construct';
 
-    protected ContextRenderer $renderer;
-
-    public function __construct(ContextRenderer $renderer = null)
-    {
-        $this->renderer = $renderer ?? new ContextRenderer();
+    public function __construct(
+        protected ContextRenderer $renderer = new ContextRenderer()
+    ) {
     }
 
     protected function getConstructor(\ReflectionClass $class): ?\ReflectionMethod
