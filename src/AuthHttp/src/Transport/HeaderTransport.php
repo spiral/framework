@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth\Transport;
@@ -20,21 +13,12 @@ use Spiral\Auth\HttpTransportInterface;
  */
 final class HeaderTransport implements HttpTransportInterface
 {
-    /** @var string */
-    private $header;
-
-    /** @var string */
-    private $valueFormat;
-
-    public function __construct(string $header = 'X-Auth-Token', string $valueFormat = '%s')
-    {
-        $this->header = $header;
-        $this->valueFormat = $valueFormat;
+    public function __construct(
+        private readonly string $header = 'X-Auth-Token',
+        private readonly string $valueFormat = '%s'
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function fetchToken(Request $request): ?string
     {
         if ($request->hasHeader($this->header)) {
@@ -44,9 +28,6 @@ final class HeaderTransport implements HttpTransportInterface
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function commitToken(
         Request $request,
         Response $response,
@@ -60,9 +41,6 @@ final class HeaderTransport implements HttpTransportInterface
         return $response->withAddedHeader($this->header, sprintf($this->valueFormat, $tokenID));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function removeToken(Request $request, Response $response, string $tokenID): Response
     {
         return $response;
