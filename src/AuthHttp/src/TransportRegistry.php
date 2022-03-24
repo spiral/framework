@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth;
@@ -19,10 +12,8 @@ use Spiral\Auth\Exception\TransportException;
 final class TransportRegistry
 {
     /** @var HttpTransportInterface[] */
-    private $transports = [];
-
-    /** @var string */
-    private $default;
+    private array $transports = [];
+    private ?string $default = null;
 
     public function setDefaultTransport(string $name): void
     {
@@ -34,15 +25,12 @@ final class TransportRegistry
         $this->transports[$name] = $transport;
     }
 
-    /**
-     * @param string|null $name
-     */
     public function getTransport(string $name = null): HttpTransportInterface
     {
-        $name = $name ?? $this->default;
+        $name ??= $this->default;
 
         if (!isset($this->transports[$name])) {
-            throw new TransportException("Undefined auth transport {$name}");
+            throw new TransportException(\sprintf('Undefined auth transport %s', $name));
         }
 
         return $this->transports[$name];
