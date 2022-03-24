@@ -33,27 +33,27 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
 
     public function forClass(\ReflectionClass $class): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forClass($class));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forClass($class));
     }
 
     public function forProperty(\ReflectionProperty $prop): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forProperty($prop));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forProperty($prop));
     }
 
     public function forConstant(\ReflectionClassConstant $const): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forConstant($const));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forConstant($const));
     }
 
     public function forFunction(\ReflectionFunctionAbstract $fn): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forFunction($fn));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forFunction($fn));
     }
 
     public function forParameter(\ReflectionParameter $param): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forParameter($param));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forParameter($param));
     }
 
     private function joinBy(\Closure $each): string
