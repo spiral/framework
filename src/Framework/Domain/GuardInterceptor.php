@@ -37,7 +37,7 @@ final class GuardInterceptor implements CoreInterceptorInterface
     /**
      * @inheritDoc
      */
-    public function process(string $controller, string $action, array $parameters, CoreInterface $core)
+    public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed
     {
         $permission = $this->permissions->getPermission($controller, $action);
 

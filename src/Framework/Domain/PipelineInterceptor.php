@@ -41,7 +41,7 @@ class PipelineInterceptor implements CoreInterceptorInterface
      * @return mixed
      * @throws \Throwable
      */
-    public function process(string $controller, string $action, array $parameters, CoreInterface $core)
+    public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed
     {
         $annotation = $this->readAnnotation($controller, $action);
         if ($core instanceof InterceptorPipeline && $annotation->skipNext) {
