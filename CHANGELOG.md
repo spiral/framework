@@ -49,6 +49,9 @@
     added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface. 
     Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
   - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
+  - [spiral/console] Added return type `void` to the method `writeHeader`, added return type `void` to the method `execute`,
+    method `whiteFooter` renamed to `writeFooter`, added return type `void` to the method `writeFooter`
+    in `Spiral\Console\SequenceInterface` interface.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`

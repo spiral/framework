@@ -38,12 +38,9 @@ final class Console
      *
      * @throws \Throwable
      */
-    public function start(InputInterface $input = null, OutputInterface $output = null): int
+    public function start(InputInterface $input = new ArgvInput(), OutputInterface $output = new ConsoleOutput()): int
     {
-        $input ??= new ArgvInput();
-        $output ??= new ConsoleOutput();
-
-        return ContainerScope::runScope($this->container, fn() => $this->run(
+        return ContainerScope::runScope($this->container, fn () => $this->run(
             $input->getFirstArgument() ?? 'list',
             $input,
             $output
@@ -70,7 +67,7 @@ final class Console
             $input = new InputProxy($input, ['firstArgument' => $command]);
         }
 
-        $code = ContainerScope::runScope($this->container, fn() => $this->getApplication()->doRun($input, $output));
+        $code = ContainerScope::runScope($this->container, fn () => $this->getApplication()->doRun($input, $output));
 
         return new CommandOutput($code ?? self::CODE_NONE, $output);
     }
