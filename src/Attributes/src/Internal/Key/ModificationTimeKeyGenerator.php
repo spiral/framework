@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Key;
@@ -20,9 +13,6 @@ namespace Spiral\Attributes\Internal\Key;
  */
 final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function forClass(\ReflectionClass $class): string
     {
         if ($class->isUserDefined()) {
@@ -36,9 +26,6 @@ final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
         ;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forProperty(\ReflectionProperty $prop): string
     {
         return $this->forClass(
@@ -46,9 +33,6 @@ final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forConstant(\ReflectionClassConstant $const): string
     {
         return $this->forClass(
@@ -56,9 +40,6 @@ final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forFunction(\ReflectionFunctionAbstract $fn): string
     {
         if ($fn instanceof \ReflectionMethod) {
@@ -80,9 +61,6 @@ final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
         throw new \LogicException('Can not determine modification time of [' . $fn->getName() . ']');
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forParameter(\ReflectionParameter $param): string
     {
         return $this->forFunction(

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
@@ -19,24 +12,10 @@ use Spiral\Attributes\ReaderInterface;
 
 final class Facade implements InstantiatorInterface
 {
-    /**
-     * @var DoctrineInstantiator
-     */
-    private $doctrine;
+    private readonly DoctrineInstantiator $doctrine;
+    private readonly NamedArgumentsInstantiator $named;
+    private readonly ReaderInterface $reader;
 
-    /**
-     * @var NamedArgumentsInstantiator
-     */
-    private $named;
-
-    /**
-     * @var ReaderInterface
-     */
-    private $reader;
-
-    /**
-     * @param ReaderInterface|null $reader
-     */
     public function __construct(ReaderInterface $reader = null)
     {
         $this->reader = $reader ?? new AttributeReader($this);
@@ -44,9 +23,6 @@ final class Facade implements InstantiatorInterface
         $this->named = new NamedArgumentsInstantiator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function instantiate(\ReflectionClass $attr, array $arguments, \Reflector $context = null): object
     {
         if ($this->isNamedArguments($attr)) {

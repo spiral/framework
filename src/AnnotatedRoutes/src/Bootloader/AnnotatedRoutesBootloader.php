@@ -1,17 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router\Bootloader;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\MemoryInterface;
@@ -40,16 +32,10 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
         GroupRegistry::class => [self::class, 'getGroups'],
     ];
 
-    /** @var MemoryInterface */
-    private $memory;
-
-    /** @var GroupRegistry */
-    private $groups;
-
-    public function __construct(MemoryInterface $memory, GroupRegistry $groupRegistry)
-    {
-        $this->memory = $memory;
-        $this->groups = $groupRegistry;
+    public function __construct(
+        private readonly MemoryInterface $memory,
+        private readonly GroupRegistry $groups
+    ) {
     }
 
     public function boot(ConsoleBootloader $console, EnvironmentInterface $env, RouteLocator $locator): void
@@ -57,7 +43,6 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
         $console->addCommand(ResetCommand::class);
 
         $cached = $env->get('ROUTE_CACHE', !$env->get('DEBUG'));
-        AnnotationRegistry::registerLoader('class_exists');
 
         $schema = $this->memory->loadData(self::MEMORY_SECTION);
         if (empty($schema) || !$cached) {
