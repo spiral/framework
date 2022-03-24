@@ -66,17 +66,18 @@ class ConsoleHandler extends AbstractHandler
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
         $exceptions = [];
-        for ($prev = $e->getPrevious(); $prev !== null; $prev = $prev->getPrevious()) {
+        while ($prev = $e->getPrevious()) {
             $exceptions[] = $this->renderFormatted($prev);
         }
-        $result = implode("\n", array_merge(array_reverse($exceptions), [$this->renderFormatted($e)]));
+        $result = \implode("\n", \array_merge(\array_reverse($exceptions), [$this->renderFormatted($e)]));
 
         if ($verbosity >= self::VERBOSITY_DEBUG) {
-            $result .= $this->renderTrace($e, new Highlighter(
+            return $result . $this->renderTrace($e, new Highlighter(
                 $this->colorsSupport ? new ConsoleStyle() : new PlainStyle()
             ));
-        } elseif ($verbosity >= self::VERBOSITY_VERBOSE) {
-            $result .= $this->renderTrace($e);
+        }
+        if ($verbosity >= self::VERBOSITY_VERBOSE) {
+            return $result . $this->renderTrace($e);
         }
 
         return $result;
@@ -92,11 +93,11 @@ class ConsoleHandler extends AbstractHandler
     {
         $result = '';
 
-        $lines = explode("\n", str_replace("\r", '', $title));
+        $lines = \explode("\n", \str_replace("\r", '', $title));
 
         $length = 0;
-        array_walk($lines, function ($v) use (&$length): void {
-            $length = max($length, mb_strlen($v));
+        \array_walk($lines, static function ($v) use (&$length): void {
+            $length = \max($length, \mb_strlen($v));
         });
 
         $length += $padding;
@@ -104,9 +105,9 @@ class ConsoleHandler extends AbstractHandler
         foreach ($lines as $line) {
             $result .= $this->format(
                 "<{$style}>%s%s%s</reset>\n",
-                str_repeat(' ', $padding + 1),
+                \str_repeat(' ', $padding + 1),
                 $line,
-                str_repeat(' ', $length - mb_strlen($line) + 1)
+                \str_repeat(' ', $length - \mb_strlen($line) + 1)
             );
         }
 
@@ -128,19 +129,17 @@ class ConsoleHandler extends AbstractHandler
         $result = $this->format("\n<red>Exception Trace:</reset>\n");
 
         foreach ($stacktrace as $trace) {
-            if (isset($trace['type']) && isset($trace['class'])) {
-                $line = $this->format(
+            $line = isset($trace['type'], $trace['class'])
+                ? $this->format(
                     ' <white>%s%s%s()</reset>',
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
-                );
-            } else {
-                $line = $this->format(
+                )
+                : $this->format(
                     ' <white>%s()</reset>',
                     $trace['function']
                 );
-            }
 
             if (isset($trace['file'])) {
                 $line .= $this->format(
@@ -158,9 +157,9 @@ class ConsoleHandler extends AbstractHandler
 
             $result .= $line . "\n";
 
-            if (!empty($h) && !empty($trace['file'])) {
+            if ($h !== null && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
-                    file_get_contents($trace['file']),
+                    \file_get_contents($trace['file']),
                     $trace['line'],
                     static::SHOW_LINES
                 ) . "\n";
@@ -178,11 +177,11 @@ class ConsoleHandler extends AbstractHandler
     private function format(string $format, ...$args): string
     {
         if (!$this->colorsSupport) {
-            $format = preg_replace('/<[^>]+>/', '', $format);
+            $format = \preg_replace('/<[^>]+>/', '', $format);
         } else {
-            $format = preg_replace_callback('/(<([^>]+)>)/', function ($partial) {
+            $format = \preg_replace_callback('/(<([^>]+)>)/', static function ($partial) {
                 $style = '';
-                foreach (explode(',', trim($partial[2], '/')) as $color) {
+                foreach (\explode(',', \trim($partial[2], '/')) as $color) {
                     if (isset(self::COLORS[$color])) {
                         $style .= self::COLORS[$color];
                     }
@@ -192,7 +191,7 @@ class ConsoleHandler extends AbstractHandler
             }, $format);
         }
 
-        return sprintf($format, ...$args);
+        return \sprintf($format, ...$args);
     }
 
     /**
@@ -200,14 +199,11 @@ class ConsoleHandler extends AbstractHandler
      */
     private function renderFormatted(\Throwable $e): string
     {
-        if ($e instanceof \Error) {
-            $result = $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:magenta,white');
-        } else {
-            $result = $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:red,white');
-        }
-
-        return $result . $this->format(
-            "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>",
+        return $this->renderHeader(
+            \sprintf("[%s]\n%s", \get_class($e), $e->getMessage()),
+            $e instanceof \Error ? 'bg:magenta,white' : 'bg:red,white'
+        ) . $this->format(
+            '<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>',
             $e->getFile(),
             $e->getLine()
         );

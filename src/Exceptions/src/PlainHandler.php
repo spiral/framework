@@ -27,7 +27,7 @@ final class PlainHandler extends AbstractHandler
         for ($prev = $e->getPrevious(); $prev !== null; $prev = $prev->getPrevious()) {
             $exceptions[] = $this->renderFormatted($prev);
         }
-        $result = implode("\n", $exceptions);
+        $result = \implode("\n", $exceptions);
 
         if ($verbosity >= self::VERBOSITY_DEBUG) {
             $result .= $this->renderTrace($e, new Highlighter(new PlainStyle()));
@@ -40,8 +40,6 @@ final class PlainHandler extends AbstractHandler
 
     /**
      * Render exception call stack.
-     *
-     * @param Highlighter|null $h
      */
     private function renderTrace(\Throwable $e, Highlighter $h = null): string
     {
@@ -53,28 +51,24 @@ final class PlainHandler extends AbstractHandler
         $result = "\nException Trace:\n";
 
         foreach ($stacktrace as $trace) {
-            if (isset($trace['type']) && isset($trace['class'])) {
-                $line = sprintf(
+            $line = isset($trace['type'], $trace['class'])
+                ? \sprintf(
                     ' %s%s%s()',
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
-                );
-            } else {
-                $line = $trace['function'];
-            }
+                )
+                : $trace['function'];
 
-            if (isset($trace['file'])) {
-                $line .= sprintf(' at %s:%s', $trace['file'], $trace['line']);
-            } else {
-                $line .= sprintf(' at %s:%s', 'n/a', 'n/a');
-            }
+            $line .= isset($trace['file'])
+                ? \sprintf(' at %s:%s', $trace['file'], $trace['line'])
+                : \sprintf(' at %s:%s', 'n/a', 'n/a');
 
             $result .= $line . "\n";
 
-            if (!empty($h) && !empty($trace['file'])) {
+            if ($h !== null && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
-                    file_get_contents($trace['file']),
+                    \file_get_contents($trace['file']),
                     $trace['line'],
                     static::SHOW_LINES
                 ) . "\n";
@@ -89,6 +83,12 @@ final class PlainHandler extends AbstractHandler
      */
     private function renderFormatted(\Throwable $e): string
     {
-        return '[' . \get_class($e) . "]\n" . $e->getMessage() . sprintf(" in %s:%s\n", $e->getFile(), $e->getLine());
+        return \sprintf(
+            "[%s]\n%s in %s:%s\n",
+            \get_class($e),
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine()
+        );
     }
 }
