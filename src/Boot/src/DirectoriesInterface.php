@@ -19,7 +19,7 @@ interface DirectoriesInterface
      *
      * @throws DirectoryException
      */
-    public function set(string $name, string $path): DirectoriesInterface;
+    public function set(string $name, string $path): self;
 
     /**
      * Get directory value.

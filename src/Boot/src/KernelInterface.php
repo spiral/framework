@@ -12,7 +12,7 @@ interface KernelInterface
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
      */
-    public function addDispatcher(DispatcherInterface $dispatcher): void;
+    public function addDispatcher(DispatcherInterface $dispatcher): self;
 
     /**
      * Start application and serve user requests using selected dispatcher or throw

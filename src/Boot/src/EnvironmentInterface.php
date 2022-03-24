@@ -17,7 +17,7 @@ interface EnvironmentInterface
     /**
      * Set environment value.
      */
-    public function set(string $name, mixed $value): void;
+    public function set(string $name, mixed $value): self;
 
     /**
      * Get environment value.

@@ -9,9 +9,11 @@ final class Finalizer implements FinalizerInterface
     /** @var callable[] */
     private array $finalizers = [];
 
-    public function addFinalizer(callable $finalizer): void
+    public function addFinalizer(callable $finalizer): self
     {
         $this->finalizers[] = $finalizer;
+
+        return $this;
     }
 
     public function finalize(bool $terminate = false): void

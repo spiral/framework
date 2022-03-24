@@ -35,16 +35,18 @@ final class Environment implements EnvironmentInterface
         return $this->id;
     }
 
-    public function set(string $name, mixed $value): void
+    public function set(string $name, mixed $value): self
     {
         if (\array_key_exists($name, $this->values) && !$this->overwrite) {
-            return;
+            return $this;
         }
 
         $this->values[$name] = $_ENV[$name] = $value;
         \putenv("$name=$value");
 
         $this->id = null;
+
+        return $this;
     }
 
     public function get(string $name, mixed $default = null): mixed

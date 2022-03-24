@@ -18,12 +18,12 @@ use Spiral\Exceptions\HtmlHandler;
 final class ExceptionHandler
 {
     /** @var resource */
-    private static $output;
+    private static mixed $output;
 
     /**
      * @param resource $output
      */
-    public static function setOutput($output): void
+    public static function setOutput(mixed $output): void
     {
         self::$output = $output;
     }
@@ -43,7 +43,7 @@ final class ExceptionHandler
      */
     public static function handleShutdown(): void
     {
-        if (!empty($error = error_get_last())) {
+        if (!empty($error = \error_get_last())) {
             self::handleException(
                 new FatalException(
                     $error['message'],

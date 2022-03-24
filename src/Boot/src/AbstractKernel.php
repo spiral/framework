@@ -177,9 +177,11 @@ abstract class AbstractKernel implements KernelInterface
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
      */
-    public function addDispatcher(DispatcherInterface $dispatcher): void
+    public function addDispatcher(DispatcherInterface $dispatcher): self
     {
         $this->dispatchers[] = $dispatcher;
+
+        return $this;
     }
 
     /**
