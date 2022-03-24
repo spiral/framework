@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth\Transport;
@@ -23,52 +15,22 @@ use Spiral\Cookies\CookieQueue;
  */
 final class CookieTransport implements HttpTransportInterface
 {
-    /** @var string */
-    private $cookie;
-
-    /** @var string */
-    private $basePath;
-
-    /** @var string|null */
-    private $domain;
-
-    /** @var bool */
-    private $secure;
-
-    /** @var bool */
-    private $httpOnly;
-
-    /** @var string|null */
-    private $sameSite;
-
     public function __construct(
-        string $cookie,
-        string $basePath = '/',
-        ?string $domain = null,
-        bool $secure = false,
-        bool $httpOnly = true,
-        ?string $sameSite = null
+        private string $cookie,
+        private readonly string $basePath = '/',
+        private readonly ?string $domain = null,
+        private readonly bool $secure = false,
+        private readonly bool $httpOnly = true,
+        private readonly ?string $sameSite = null
     ) {
-        $this->cookie = $cookie;
-        $this->basePath = $basePath;
-        $this->domain = $domain;
-        $this->secure = $secure;
-        $this->httpOnly = $httpOnly;
-        $this->sameSite = $sameSite;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function fetchToken(Request $request): ?string
     {
         $cookies = $request->getCookieParams();
         return $cookies[$this->cookie] ?? null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function commitToken(
         Request $request,
         Response $response,
@@ -111,18 +73,12 @@ final class CookieTransport implements HttpTransportInterface
         return $response;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function removeToken(Request $request, Response $response, string $tokenID): Response
     {
         // reset to null
         return $this->commitToken($request, $response, null, null);
     }
 
-    /**
-     * @param \DateTimeInterface|null $expiresAt
-     */
     private function getLifetime(\DateTimeInterface $expiresAt = null): ?int
     {
         if ($expiresAt === null) {
