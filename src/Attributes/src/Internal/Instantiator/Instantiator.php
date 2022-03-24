@@ -24,7 +24,8 @@ abstract class Instantiator implements InstantiatorInterface
             return $class->getMethod(self::CONSTRUCTOR_NAME);
         }
 
-        if (($constructor = $this->getTraitConstructors($class)) !== null) {
+        $constructor = $this->getTraitConstructors($class);
+        if ($constructor !== null) {
             return $constructor;
         }
 

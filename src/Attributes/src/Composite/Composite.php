@@ -12,7 +12,7 @@ abstract class Composite extends Reader
     /**
      * @var ReaderInterface[]
      */
-    protected array $readers = [];
+    protected array $readers;
 
     /**
      * @param ReaderInterface[] $readers
