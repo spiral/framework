@@ -35,6 +35,20 @@
   - [spiral/validation] Removed deprecated methods `datetime` and `timezone` in the 
     `Spiral\Validation\Checker\TypeChecker` class. Use `Spiral\Validation\Checker\DatetimeChecker::valid()` and 
     `Spiral\Validation\Checker\DatetimeChecker::timezone()` instead.
+  - [spiral/validation] Added return type `array|callable|string` to the method `parseCheck` 
+    in `Spiral\Validation\ParserInterface` interface.
+  - [spiral/validation] Added `array|string|\Closure` parameter type of `$rules` to the method `getRules`
+    in `Spiral\Validation\RulesInterface` interface.
+  - [spiral/validation] Added `array|\ArrayAccess` parameter type of `$data` to the method `validate`
+    in `Spiral\Validation\ValidationInterface` interface.
+  - [spiral/validation] Added return type `mixed` to the method `getValue`, 
+    added `mixed` parameter type of `$default` to the method `getValue`,
+    added `mixed` parameter type of `$context` to the method `withContext`,
+    added return type `mixed` to the method `getContext` in `Spiral\Validation\ValidatorInterface` interface.
+  - [spiral/filters] Added return type `void` and `mixed` parameter type of `$context` to the method `setContext`,
+    added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface. 
+    Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
+  - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`
