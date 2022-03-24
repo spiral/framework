@@ -21,9 +21,6 @@ interface EnvironmentInterface
 
     /**
      * Get environment value.
-     *
-     * @param mixed  $default
-     * @return mixed
      */
     public function get(string $name, mixed $default = null): mixed;
 

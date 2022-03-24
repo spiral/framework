@@ -30,7 +30,6 @@ final class ConfigurationBootloader extends Bootloader
 
     /** @var FileLoaderInterface[] */
     private array $loaders;
-    
 
     public function __construct(
         private readonly DirectoriesInterface $directories,

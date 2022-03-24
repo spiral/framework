@@ -17,10 +17,8 @@ abstract class Bootloader implements BootloaderInterface, DependedInterface
 {
     /** @var array<string, class-string|callable> */
     protected const BINDINGS = [];
-    
     /** @var array<string, class-string|callable> */
     protected const SINGLETONS = [];
-    
     /** @var array<int, class-string<BootloaderInterface|DependedInterface>> */
     protected const DEPENDENCIES = [];
 
