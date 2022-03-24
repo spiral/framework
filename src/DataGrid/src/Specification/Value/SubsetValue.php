@@ -19,7 +19,7 @@ final class SubsetValue implements ValueInterface
     {
         $value = (array) $value;
 
-        return match(true) {
+        return match (true) {
             \count($value) === 1 => $this->enum->accepts(\array_values($value)[0]),
             empty($value) => false,
             default => $this->arrayType()->accepts($value)

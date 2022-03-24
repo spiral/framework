@@ -26,7 +26,6 @@ final class Between implements FilterInterface
                 $this->invalidValueType($value)
             ));
         }
-        
         $this->value = $this->convertValue($value);
     }
 
