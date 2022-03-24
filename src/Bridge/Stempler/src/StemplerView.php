@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Stempler;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Stempler\Compiler\SourceMap;
 use Spiral\Views\ContextInterface;
 use Spiral\Views\ViewInterface;
 use Spiral\Views\ViewSource;
@@ -35,7 +34,7 @@ abstract class StemplerView implements ViewInterface
             $this->context
         );
 
-        if (!$sourcemap instanceof SourceMap) {
+        if ($sourcemap === null) {
             return $e;
         }
 

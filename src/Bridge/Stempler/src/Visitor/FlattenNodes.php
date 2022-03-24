@@ -32,7 +32,6 @@ final class FlattenNodes implements VisitorInterface
                 foreach ($child->nodes as $childNode) {
                     $flatten[] = $childNode;
                 }
-                
                 continue;
             }
 

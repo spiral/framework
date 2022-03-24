@@ -71,7 +71,7 @@ final class FormatHTML implements VisitorInterface
 
     private function indentContent(string $content, int $level, int $position = self::BETWEEN_TAGS): string
     {
-        if (!str_contains($content, "\n")) {
+        if (!\str_contains($content, "\n")) {
             // no need to do anything
             return $content;
         }
@@ -149,6 +149,6 @@ final class FormatHTML implements VisitorInterface
             return \str_replace("\r\n", "\n", $string);
         }
 
-        return \preg_replace('#[\n\r]+#', "\n", $string);
+        return preg_replace('/[\n\r]+/', "\n", $string);
     }
 }

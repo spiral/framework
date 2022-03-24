@@ -23,8 +23,7 @@ final class StemplerLoader implements StemplerLoaderInterface
     public function __construct(
         private readonly LoaderInterface $loader,
         array $processors
-    )
-    {
+    ) {
         $this->processors = $processors;
     }
 
