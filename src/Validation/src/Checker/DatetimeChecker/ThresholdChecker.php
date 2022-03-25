@@ -16,7 +16,7 @@ class ThresholdChecker
         bool $useMicroSeconds = false
     ): bool {
         $compare = $this->compare($this->date($value), $this->date($threshold), $useMicroSeconds);
-        if (is_bool($compare)) {
+        if (\is_bool($compare)) {
             return $compare;
         }
 
@@ -33,33 +33,23 @@ class ThresholdChecker
         bool $useMicroSeconds = false
     ): bool {
         $compare = $this->compare($this->date($value), $this->date($threshold), $useMicroSeconds);
-        if (is_bool($compare)) {
+        if (\is_bool($compare)) {
             return $compare;
         }
 
         return $orEquals ? $compare >= 0 : $compare > 0;
     }
 
-    /**
-     * @param mixed $value
-     */
-    private function date($value): ?\DateTimeImmutable
+    private function date(mixed $value = null): ?\DateTimeImmutable
     {
-        if ($value instanceof \DateTimeImmutable) {
-            return $value;
-        }
-
-        if ($value instanceof \DateTime) {
-            return \DateTimeImmutable::createFromMutable($value);
-        }
-
-        return null;
+        return match (true) {
+            $value instanceof \DateTimeImmutable => $value,
+            $value instanceof \DateTime => \DateTimeImmutable::createFromMutable($value),
+            default => null
+        };
     }
 
-    /**
-     * @return bool|int
-     */
-    private function compare(?\DateTimeImmutable $date, ?\DateTimeImmutable $threshold, bool $useMicroseconds)
+    private function compare(?\DateTimeImmutable $date, ?\DateTimeImmutable $threshold, bool $useMicroseconds): bool|int
     {
         if ($date === null) {
             return false;
