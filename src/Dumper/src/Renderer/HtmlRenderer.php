@@ -130,7 +130,7 @@ final class HtmlRenderer implements RendererInterface
      */
     private function getStyle(string $type, string $context): string
     {
-        return match(true) {
+        return match (true) {
             isset($this->style[$type][$context]) => $this->style[$type][$context],
             isset($this->style[$type]['common']) => $this->style[$type]['common'],
             isset($this->style[$type]) && \is_string($this->style[$type]) => $this->style[$type],

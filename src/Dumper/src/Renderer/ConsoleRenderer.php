@@ -65,7 +65,7 @@ final class ConsoleRenderer extends AbstractRenderer
      */
     private function getStyle(string $type, string $context): string
     {
-        return match(true) {
+        return match (true) {
             isset($this->styles[$type][$context]) => $this->styles[$type][$context],
             isset($this->styles[$type]['common']) => $this->styles[$type]['common'],
             isset($this->styles[$type]) && \is_string($this->styles[$type]) => $this->styles[$type],

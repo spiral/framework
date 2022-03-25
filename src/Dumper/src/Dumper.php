@@ -59,7 +59,7 @@ class Dumper implements LoggerAwareInterface
      */
     public function setMaxLevel(int $maxLevel): void
     {
-        $this->maxLevel = max($maxLevel, 1);
+        $this->maxLevel = \max($maxLevel, 1);
     }
 
     /**
@@ -91,7 +91,7 @@ class Dumper implements LoggerAwareInterface
                 break;
 
             case self::ERROR_LOG:
-                error_log($dump, 0);
+                \error_log($dump, 0);
                 break;
         }
 
@@ -167,7 +167,7 @@ class Dumper implements LoggerAwareInterface
             return $r->indent($level) . $r->apply('-too deep-', 'maxLevel') . "\n";
         }
 
-        $type = \strtolower(gettype($value));
+        $type = \strtolower(\gettype($value));
 
         if ($type === 'array') {
             return $header . $this->renderArray($r, $value, $level, $hideHeader);
