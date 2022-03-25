@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Config;
+namespace Spiral\Bootloader\Http;
 
 use Spiral\Core\InjectableConfig;
 

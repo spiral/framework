@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation\Checker;
@@ -22,9 +15,6 @@ final class TypeChecker extends AbstractChecker implements SingletonInterface
 {
     use NotEmptyTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public const MESSAGES = [
         'notNull'  => '[[This value is required.]]',
         'notEmpty' => '[[This value is required.]]',
@@ -33,28 +23,21 @@ final class TypeChecker extends AbstractChecker implements SingletonInterface
         'timezone' => '[[Not a valid timezone.]]',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     public const ALLOW_EMPTY_VALUES = ['notEmpty', 'notNull'];
 
     /**
      * Value should not be null.
-     *
-     * @param mixed $value
      */
-    public function notNull($value): bool
+    public function notNull(mixed $value): bool
     {
         return $value !== null;
     }
 
     /**
      * Value has to be boolean or integer[0,1].
-     *
-     * @param mixed $value
      */
-    public function boolean($value): bool
+    public function boolean(mixed $value): bool
     {
-        return is_bool($value) || (is_numeric($value) && ($value === 0 || $value === 1));
+        return \is_bool($value) || (\is_numeric($value) && ($value === 0 || $value === 1));
     }
 }
