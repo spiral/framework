@@ -23,6 +23,7 @@ use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Http\Exception\ClientException\UnauthorizedException;
+use Spiral\Http\Stream\GeneratorStream;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Router\Exception\HandlerException;
 
@@ -163,7 +164,11 @@ final class CoreHandler implements RequestHandlerInterface
             return $result;
         }
 
-        if (is_array($result) || $result instanceof \JsonSerializable) {
+        if ($result instanceof \Generator) {
+            return $response->withBody(new GeneratorStream($result));
+        }
+
+        if (\is_array($result) || $result instanceof \JsonSerializable) {
             $response = $this->writeJson($response, $result);
         } else {
             $response->getBody()->write((string)$result);
