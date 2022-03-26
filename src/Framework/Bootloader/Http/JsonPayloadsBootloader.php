@@ -16,9 +16,6 @@ final class JsonPayloadsBootloader extends Bootloader
         HttpBootloader::class,
     ];
 
-    /**
-     * JsonPayloadsBootloader constructor.
-     */
     public function __construct(
         private readonly ConfiguratorInterface $config
     ) {

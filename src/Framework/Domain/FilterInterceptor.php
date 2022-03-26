@@ -18,11 +18,11 @@ class FilterInterceptor implements CoreInterceptorInterface
     public const STRATEGY_JSON_RESPONSE = 1;
     public const STRATEGY_EXCEPTION     = 2;
 
-    /** @var @internal */
+    /** @internal */
     private array $cache = [];
 
     public function __construct(
-        /** @var @internal */
+        /** @internal */
         private ContainerInterface $container,
         private int $strategy = self::STRATEGY_JSON_RESPONSE
     ) {

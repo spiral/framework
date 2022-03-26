@@ -91,7 +91,7 @@ final class ListCommand extends Command implements SingletonInterface
                 $reflection = new \ReflectionFunction($target);
                 return \sprintf(
                     'Closure(%s:%s)',
-                    basename($reflection->getFileName()),
+                    \basename($reflection->getFileName()),
                     $reflection->getStartLine()
                 );
 
@@ -99,7 +99,7 @@ final class ListCommand extends Command implements SingletonInterface
                 return \sprintf(
                     '%s->%s',
                     $this->relativeClass($this->getValue($target, 'controller'), $kernel),
-                    implode('|', (array) $this->getValue($target, 'action'))
+                    \implode('|', (array) $this->getValue($target, 'action'))
                 );
 
             case $target instanceof Controller:
