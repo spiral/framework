@@ -328,7 +328,6 @@ final class Files implements FilesInterface
         $from = $this->normalizePath($from);
 
         $from = \explode('/', $from);
-        
         $path = \explode('/', $path);
         $relative = $path;
 
@@ -346,7 +345,6 @@ final class Files implements FilesInterface
                     $relative = \array_pad($relative, $padLength, '..');
                     break;
                 }
-                
                 $relative[0] = './' . $relative[0];
             }
         }
