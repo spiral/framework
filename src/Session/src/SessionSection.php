@@ -117,7 +117,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
-    public function get(string $name, $default = null)
+    public function get(string $name, mixed $default = null): mixed
     {
         if (!$this->has($name)) {
             return $default;
@@ -129,7 +129,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
-    public function pull(string $name, $default = null)
+    public function pull(string $name, $default = null): mixed
     {
         $value = $this->get($name, $default);
         $this->delete($name);

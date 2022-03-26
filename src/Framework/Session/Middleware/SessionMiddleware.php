@@ -45,7 +45,7 @@ final class SessionMiddleware implements MiddlewareInterface
         try {
             $response = $this->scope->runScope(
                 [SessionInterface::class => $session],
-                fn() => $handler->handle($request->withAttribute(static::ATTRIBUTE, $session))
+                fn () => $handler->handle($request->withAttribute(static::ATTRIBUTE, $session))
             );
         } catch (\Throwable $e) {
             $session->abort();

@@ -56,7 +56,7 @@ final class FileSnapshooter implements SnapshotterInterface
     {
         $finder = new Finder();
         $finder->in($this->directory)->sort(
-            static fn(SplFileInfo $a, SplFileInfo $b) => $b->getMTime() - $a->getMTime()
+            static fn (SplFileInfo $a, SplFileInfo $b) => $b->getMTime() - $a->getMTime()
         );
 
         $count = 0;

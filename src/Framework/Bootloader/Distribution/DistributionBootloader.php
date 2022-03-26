@@ -30,9 +30,9 @@ class DistributionBootloader extends Bootloader
 
     private function registerResolver(Container $app): void
     {
-        $app->bindSingleton(UriResolverInterface::class, static fn(DistributionInterface $dist) => $dist->resolver());
+        $app->bindSingleton(UriResolverInterface::class, static fn (DistributionInterface $dist) => $dist->resolver());
 
-        $app->bindSingleton(UriResolver::class, static fn(Container $app) => $app->get(UriResolverInterface::class));
+        $app->bindSingleton(UriResolver::class, static fn (Container $app) => $app->get(UriResolverInterface::class));
     }
 
     private function registerManager(Container $app): void
@@ -49,9 +49,9 @@ class DistributionBootloader extends Bootloader
 
         $app->bindSingleton(
             MutableDistributionInterface::class,
-            static fn(Container $app) => $app->get(DistributionInterface::class)
+            static fn (Container $app) => $app->get(DistributionInterface::class)
         );
 
-        $app->bindSingleton(Manager::class, static fn(Container $app) => $app->get(DistributionInterface::class));
+        $app->bindSingleton(Manager::class, static fn (Container $app) => $app->get(DistributionInterface::class));
     }
 }

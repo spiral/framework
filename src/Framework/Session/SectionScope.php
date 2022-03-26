@@ -82,12 +82,12 @@ final class SectionScope implements SessionSectionInterface
         return $this->getActiveSection()->has($name);
     }
 
-    public function get(string $name, mixed $default = null)
+    public function get(string $name, mixed $default = null): mixed
     {
         return $this->getActiveSection()->get($name, $default);
     }
 
-    public function pull(string $name, mixed $default = null)
+    public function pull(string $name, mixed $default = null): mixed
     {
         return $this->getActiveSection()->pull($name, $default);
     }

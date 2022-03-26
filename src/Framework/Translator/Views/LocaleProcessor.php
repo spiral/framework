@@ -38,7 +38,7 @@ final class LocaleProcessor implements ProcessorInterface
         return $source->withCode(
             \preg_replace_callback(
                 self::REGEXP,
-                fn($matches) => $this->translator->trans(
+                fn ($matches) => $this->translator->trans(
                     $matches[1],
                     [],
                     $domain,

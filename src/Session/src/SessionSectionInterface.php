@@ -52,7 +52,7 @@ interface SessionSectionInterface extends \IteratorAggregate, \ArrayAccess
      * @return mixed
      * @throws SessionException
      */
-    public function get(string $name, $default = null);
+    public function get(string $name, mixed $default = null): mixed;
 
     /**
      * Read item from session and delete it after.
@@ -61,7 +61,7 @@ interface SessionSectionInterface extends \IteratorAggregate, \ArrayAccess
      * @return mixed
      * @throws SessionException
      */
-    public function pull(string $name, $default = null);
+    public function pull(string $name, $default = null): mixed;
 
     /**
      * Delete data from session.
