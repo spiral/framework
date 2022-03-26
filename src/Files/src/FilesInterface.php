@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Files;
@@ -92,7 +85,7 @@ interface FilesInterface
     /**
      * Delete directory all content in it.
      */
-    public function deleteDirectory(string $directory, bool $contentOnly = false): void;
+    public function deleteDirectory(string $directory, bool $contentOnly = false): bool;
 
     /**
      * Move file from one location to another. Location must exist.

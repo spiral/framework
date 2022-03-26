@@ -158,7 +158,7 @@ final class Files implements FilesInterface
      *
      * @throws FilesException
      */
-    public function deleteDirectory(string $directory, bool $contentOnly = false): void
+    public function deleteDirectory(string $directory, bool $contentOnly = false): bool
     {
         if (!$this->isDirectory($directory)) {
             throw new FilesException(\sprintf('Undefined or invalid directory %s', $directory));
@@ -178,8 +178,10 @@ final class Files implements FilesInterface
         }
 
         if (!$contentOnly) {
-            \rmdir($directory);
+            return \rmdir($directory);
         }
+
+        return true;
     }
 
     public function move(string $filename, string $destination): bool

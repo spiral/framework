@@ -87,7 +87,7 @@ class ConsoleStyle implements StyleInterface
     {
         $style = $this->getStyle($token, $previous);
 
-        if (!str_contains((string) $token[1], "\n")) {
+        if (!\str_contains((string) $token[1], "\n")) {
             return \sprintf($this->templates['token'], $style, $token[1]);
         }
 

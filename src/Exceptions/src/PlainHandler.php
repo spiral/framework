@@ -11,9 +11,6 @@ final class PlainHandler extends AbstractHandler
     // Lines to show around targeted line.
     private const SHOW_LINES = 2;
 
-    /**
-     * @inheritdoc
-     */
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
         $result = '';

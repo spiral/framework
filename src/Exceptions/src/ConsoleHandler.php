@@ -112,8 +112,6 @@ class ConsoleHandler extends AbstractHandler
 
     /**
      * Render exception call stack.
-     *
-     * @param Highlighter|null $h
      */
     private function renderTrace(\Throwable $e, Highlighter $h = null): string
     {
@@ -169,15 +167,13 @@ class ConsoleHandler extends AbstractHandler
 
     /**
      * Format string and apply color formatting (if enabled).
-     *
-     * @param mixed  ...$args
      */
     private function format(string $format, mixed ...$args): string
     {
         if (!$this->colorsSupport) {
-            $format = \preg_replace('#<[^>]+>#', '', $format);
+            $format = \preg_replace('/<[^>]+>/', '', $format);
         } else {
-            $format = \preg_replace_callback('#(<([^>]+)>)#', function ($partial) {
+            $format = \preg_replace_callback('/(<([^>]+)>)/', function ($partial) {
                 $style = '';
                 foreach (\explode(',', \trim($partial[2], '/')) as $color) {
                     if (isset(self::COLORS[$color])) {
