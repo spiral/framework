@@ -43,7 +43,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'input'        => \Spiral\Http\Request\InputManager::class,
         'session'      => [
             'resolve' => \Spiral\Session\SessionScope::class,
-            'with' => [\Spiral\Session\SessionInterface::class]
+            'with' => [\Spiral\Session\SessionInterface::class],
         ],
         'cookies'      => \Spiral\Cookies\CookieManager::class,
         'logger'       => \Psr\Log\LoggerInterface::class,
@@ -61,7 +61,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'views'        => \Spiral\Views\ViewsInterface::class,
         'auth'         => [
             'resolve' => \Spiral\Auth\AuthScope::class,
-            'with' => [\Spiral\Auth\AuthContextInterface::class]
+            'with' => [\Spiral\Auth\AuthContextInterface::class],
         ],
         'authTokens'   => \Spiral\Auth\TokenStorageInterface::class,
         'cache'        => \Psr\SimpleCache\CacheInterface::class,
