@@ -153,11 +153,18 @@ final class AcceptHeader implements \Stringable
             $b = '*';
         }
 
-        return match (true) {
-            \strtolower($a) === \strtolower($b) => 0,
-            $a === '*' => -1,
-            $b === '*' => 1,
-            default => 0
-        };
+        if (\strtolower($a) === \strtolower($b)) {
+            return 0;
+        }
+
+        if ($a === '*') {
+            return -1;
+        }
+
+        if ($b === '*') {
+            return 1;
+        }
+
+        return 0;
     }
 }
