@@ -135,6 +135,6 @@ class Message implements MessageInterface
             $delay = \max(0, $delay->getTimestamp() - \time());
         }
 
-        return $this->setOption('delay', (int)$delay);
+        return $this->setOption('delay', $delay);
     }
 }
