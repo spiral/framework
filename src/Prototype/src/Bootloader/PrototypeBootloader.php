@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\Bootloader;
@@ -37,49 +30,48 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
 
     // Default spiral specific shortcuts, automatically checked on existence.
     private const DEFAULT_SHORTCUTS = [
-        'app'          => ['resolve' => 'Spiral\Boot\KernelInterface'],
-        'classLocator' => 'Spiral\Tokenizer\ClassesInterface',
-        'console'      => 'Spiral\Console\Console',
-        'container'    => 'Psr\Container\ContainerInterface',
-        'encrypter'    => 'Spiral\Encrypter\EncrypterInterface',
-        'env'          => 'Spiral\Boot\EnvironmentInterface',
-        'files'        => 'Spiral\Files\FilesInterface',
-        'guard'        => 'Spiral\Security\GuardInterface',
-        'http'         => 'Spiral\Http\Http',
-        'i18n'         => 'Spiral\Translator\TranslatorInterface',
-        'input'        => 'Spiral\Http\Request\InputManager',
-        'session'      => ['resolve' => 'Spiral\Session\SessionScope', 'with' => ['Spiral\Session\SessionInterface']],
-        'cookies'      => 'Spiral\Cookies\CookieManager',
-        'logger'       => 'Psr\Log\LoggerInterface',
-        'logs'         => 'Spiral\Logger\LogsInterface',
-        'memory'       => 'Spiral\Boot\MemoryInterface',
-        'paginators'   => 'Spiral\Pagination\PaginationProviderInterface',
-        'queue'        => 'Spiral\Queue\QueueInterface',
-        'queueManager' => 'Spiral\Queue\QueueConnectionProviderInterface',
-        'request'      => 'Spiral\Http\Request\InputManager',
-        'response'     => 'Spiral\Http\ResponseWrapper',
-        'router'       => 'Spiral\Router\RouterInterface',
-        'server'       => 'Spiral\Goridge\RPC',
-        'snapshots'    => 'Spiral\Snapshots\SnapshotterInterface',
-        'storage'      => 'Spiral\Storage\BucketInterface',
-        'validator'    => 'Spiral\Validation\ValidationInterface',
-        'views'        => 'Spiral\Views\ViewsInterface',
-        'auth'         => ['resolve' => 'Spiral\Auth\AuthScope', 'with' => ['Spiral\Auth\AuthContextInterface']],
-        'authTokens'   => 'Spiral\Auth\TokenStorageInterface',
-        'cache'        => 'Psr\SimpleCache\CacheInterface',
-        'cacheManager' => 'Spiral\Cache\CacheStorageProviderInterface',
+        'app'          => ['resolve' => \Spiral\Boot\KernelInterface::class],
+        'classLocator' => \Spiral\Tokenizer\ClassesInterface::class,
+        'console'      => \Spiral\Console\Console::class,
+        'container'    => ContainerInterface::class,
+        'encrypter'    => \Spiral\Encrypter\EncrypterInterface::class,
+        'env'          => \Spiral\Boot\EnvironmentInterface::class,
+        'files'        => \Spiral\Files\FilesInterface::class,
+        'guard'        => \Spiral\Security\GuardInterface::class,
+        'http'         => \Spiral\Http\Http::class,
+        'i18n'         => \Spiral\Translator\TranslatorInterface::class,
+        'input'        => \Spiral\Http\Request\InputManager::class,
+        'session'      => [
+            'resolve' => \Spiral\Session\SessionScope::class,
+            'with' => [\Spiral\Session\SessionInterface::class]
+        ],
+        'cookies'      => \Spiral\Cookies\CookieManager::class,
+        'logger'       => \Psr\Log\LoggerInterface::class,
+        'logs'         => \Spiral\Logger\LogsInterface::class,
+        'memory'       => MemoryInterface::class,
+        'paginators'   => \Spiral\Pagination\PaginationProviderInterface::class,
+        'queue'        => \Spiral\Queue\QueueInterface::class,
+        'queueManager' => \Spiral\Queue\QueueConnectionProviderInterface::class,
+        'request'      => \Spiral\Http\Request\InputManager::class,
+        'response'     => \Spiral\Http\ResponseWrapper::class,
+        'router'       => \Spiral\Router\RouterInterface::class,
+        'snapshots'    => \Spiral\Snapshots\SnapshotterInterface::class,
+        'storage'      => \Spiral\Storage\BucketInterface::class,
+        'validator'    => \Spiral\Validation\ValidationInterface::class,
+        'views'        => \Spiral\Views\ViewsInterface::class,
+        'auth'         => [
+            'resolve' => \Spiral\Auth\AuthScope::class,
+            'with' => [\Spiral\Auth\AuthContextInterface::class]
+        ],
+        'authTokens'   => \Spiral\Auth\TokenStorageInterface::class,
+        'cache'        => \Psr\SimpleCache\CacheInterface::class,
+        'cacheManager' => \Spiral\Cache\CacheStorageProviderInterface::class,
     ];
 
-    /** @var MemoryInterface */
-    private $memory;
-
-    /** @var PrototypeRegistry */
-    private $registry;
-
-    public function __construct(MemoryInterface $memory, PrototypeRegistry $registry)
-    {
-        $this->memory = $memory;
-        $this->registry = $registry;
+    public function __construct(
+        private readonly MemoryInterface $memory,
+        private readonly PrototypeRegistry $registry
+    ) {
     }
 
     public function boot(ConsoleBootloader $console, ContainerInterface $container): void
@@ -145,11 +137,11 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     private function initDefaults(ContainerInterface $container): void
     {
         foreach (self::DEFAULT_SHORTCUTS as $property => $shortcut) {
-            if (is_array($shortcut) && isset($shortcut['resolve'])) {
+            if (\is_array($shortcut) && isset($shortcut['resolve'])) {
                 if (isset($shortcut['with'])) {
                     // check dependencies
                     foreach ($shortcut['with'] as $dep) {
-                        if (!class_exists($dep, true) && !interface_exists($dep, true)) {
+                        if (!\class_exists($dep, true) && !\interface_exists($dep, true)) {
                             continue 2;
                         }
                     }
@@ -157,21 +149,17 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
 
                 try {
                     $target = $container->get($shortcut['resolve']);
-                    if (is_object($target)) {
-                        $this->bindProperty($property, get_class($target));
+                    if (\is_object($target)) {
+                        $this->bindProperty($property, $target::class);
                     }
-                } catch (ContainerExceptionInterface $e) {
+                } catch (ContainerExceptionInterface) {
                     continue;
                 }
 
                 continue;
             }
 
-            if (
-                is_string($shortcut)
-                && (class_exists($shortcut, true)
-                    || interface_exists($shortcut, true))
-            ) {
+            if (\is_string($shortcut) && (\class_exists($shortcut, true) || \interface_exists($shortcut, true))) {
                 $this->bindProperty($property, $shortcut);
             }
         }

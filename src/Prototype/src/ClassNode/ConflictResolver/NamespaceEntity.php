@@ -1,20 +1,12 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\ClassNode\ConflictResolver;
 
 final class NamespaceEntity extends AbstractEntity
 {
-    /** @var string */
-    private $fullName;
+    private ?string $fullName = null;
 
     public static function createWithSequence(string $name, string $fullName, int $sequence): NamespaceEntity
     {
