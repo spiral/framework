@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Traits;
 
-use JsonSerializable;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -17,7 +16,7 @@ trait JsonTrait
      */
     private function writeJson(ResponseInterface $response, mixed $payload, int $code = 200): ResponseInterface
     {
-        if ($payload instanceof JsonSerializable) {
+        if ($payload instanceof \JsonSerializable) {
             $payload = $payload->jsonSerialize();
         }
 

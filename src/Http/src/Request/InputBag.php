@@ -47,7 +47,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      * Fetch only specified keys from property values. Missed values can be filled with defined
      * filler. Only one variable layer can be fetched (no dot notation).
      *
-     * @param bool  $fill Fill missing key with filler value.
+     * @param bool $fill Fill missing key with filler value.
      */
     public function fetch(array $keys, bool $fill = false, mixed $filler = null): array
     {

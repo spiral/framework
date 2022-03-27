@@ -151,7 +151,7 @@ final class SapiRequestFactory
     private static function getHeadersFromGlobals(): array
     {
         if (\function_exists('getallheaders')) {
-            $headers = getallheaders();
+            $headers = \getallheaders();
         } else {
             $headers = [];
             foreach ($_SERVER as $name => $value) {

@@ -15,7 +15,7 @@ final class ServerBag extends InputBag
         return parent::has($this->normalize($name));
     }
 
-    public function get(string $name, $default = null): mixed
+    public function get(string $name, mixed $default = null): mixed
     {
         return parent::get($this->normalize($name), $default);
     }

@@ -285,10 +285,9 @@ final class InputManager implements SingletonInterface
     }
 
     /**
-     * @param mixed       $default
      * @param bool|string $implode Implode header lines, false to return header as array.
      */
-    public function header(string $name, $default = null, bool|string $implode = ','): mixed
+    public function header(string $name, mixed $default = null, bool|string $implode = ','): mixed
     {
         return $this->headers->get($name, $default, $implode);
     }
