@@ -9,7 +9,7 @@ final class LogEvent
     public function __construct(
         private readonly \DateTimeInterface $time,
         private readonly string $channel,
-        private readonly mixed $level,
+        private readonly int|string $level,
         private readonly string $message,
         private readonly array $context = []
     ) {
@@ -25,9 +25,9 @@ final class LogEvent
         return $this->channel;
     }
 
-    public function getLevel(): mixed
+    public function getLevel(): string
     {
-        return $this->level;
+        return (string) $this->level;
     }
 
     public function getMessage(): string
