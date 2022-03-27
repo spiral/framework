@@ -68,7 +68,6 @@ final class InputManager implements SingletonInterface
             'source' => 'getAttributes',
         ],
     ];
-    
     /**
      * @invisible
      */
