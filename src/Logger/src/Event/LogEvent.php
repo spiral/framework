@@ -1,45 +1,18 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Logger\Event;
 
 final class LogEvent
 {
-    /** @var \DateTimeInterface */
-    private $time;
-
-    /** @var string */
-    private $channel;
-
-    /** @var string */
-    private $level;
-
-    /** @var string */
-    private $message;
-
-    /** @var array */
-    private $context;
-
     public function __construct(
-        \DateTimeInterface $time,
-        string $channel,
-        string $level,
-        string $message,
-        array $context = []
+        private readonly \DateTimeInterface $time,
+        private readonly string $channel,
+        private readonly mixed $level,
+        private readonly string $message,
+        private readonly array $context = []
     ) {
-        $this->time = $time;
-        $this->channel = $channel;
-        $this->level = $level;
-        $this->message = $message;
-        $this->context = $context;
     }
 
     public function getTime(): \DateTimeInterface
@@ -52,7 +25,7 @@ final class LogEvent
         return $this->channel;
     }
 
-    public function getLevel(): string
+    public function getLevel(): mixed
     {
         return $this->level;
     }
