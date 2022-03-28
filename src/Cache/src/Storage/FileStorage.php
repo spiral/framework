@@ -12,38 +12,29 @@ final class FileStorage implements CacheInterface
 {
     use InteractsWithTime;
 
-    /** @var string */
-    private $path;
-
-    /** @var FilesInterface */
-    private $files;
-
-    /** @var int */
-    private $ttl;
-
-    public function __construct(FilesInterface $files, string $path, int $ttl = 2592000)
-    {
-        $this->path = $path;
-        $this->files = $files;
-        $this->ttl = $ttl;
+    public function __construct(
+        private readonly FilesInterface $files,
+        private readonly string $path,
+        private readonly int $ttl = 2_592_000
+    ) {
     }
 
-    public function get($key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         return $this->getPayload($key)['value'] ?? $default;
     }
 
-    public function set($key, $value, $ttl = null): bool
+    public function set(string $key, mixed $value, null|int|\DateInterval|\DateTimeInterface $ttl = null): bool
     {
         return $this->files->write(
             $this->makePath($key),
-            $this->ttlToTimestamp($ttl) . serialize($value),
+            $this->ttlToTimestamp($ttl) . \serialize($value),
             null,
             true
         );
     }
 
-    public function delete($key): bool
+    public function delete(string $key): bool
     {
         if ($this->has($key)) {
             return $this->files->delete($this->makePath($key));
@@ -63,7 +54,7 @@ final class FileStorage implements CacheInterface
         return true;
     }
 
-    public function getMultiple($keys, $default = null)
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
         $result = [];
 
@@ -74,30 +65,30 @@ final class FileStorage implements CacheInterface
         return $result;
     }
 
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple(iterable $values, null|int|\DateInterval|\DateTimeInterface $ttl = null): bool
     {
         $state = null;
 
         foreach ($values as $key => $value) {
             $result = $this->set($key, $value, $ttl);
-            $state = is_null($state) ? $result : $result && $state;
+            $state = \is_null($state) ? $result : $result && $state;
         }
 
         return $state ?: false;
     }
 
-    public function deleteMultiple($keys)
+    public function deleteMultiple(iterable $keys): bool
     {
         $state = null;
         foreach ($keys as $key) {
             $result = $this->delete($key);
-            $state = is_null($state) ? $result : $result && $state;
+            $state = \is_null($state) ? $result : $result && $state;
         }
 
         return $state ?: false;
     }
 
-    public function has($key)
+    public function has(string $key): bool
     {
         return $this->files->exists($this->makePath($key));
     }
@@ -107,9 +98,9 @@ final class FileStorage implements CacheInterface
      */
     protected function makePath(string $key): string
     {
-        $parts = array_slice(str_split($hash = sha1($key), 2), 0, 2);
+        $parts = \array_slice(\str_split($hash = \sha1($key), 2), 0, 2);
 
-        return $this->path . '/' . implode('/', $parts) . '/' . $hash;
+        return $this->path . '/' . \implode('/', $parts) . '/' . $hash;
     }
 
     /**
@@ -120,30 +111,30 @@ final class FileStorage implements CacheInterface
         $path = $this->makePath($key);
 
         try {
-            $expire = (int) substr(
+            $expire = (int) \substr(
                 $contents = $this->files->read($path),
                 0,
                 10
             );
-        } catch (FileNotFoundException $e) {
+        } catch (FileNotFoundException) {
             return $this->makeEmptyPayload();
         }
 
-        if (time() >= $expire) {
+        if (\time() >= $expire) {
             $this->delete($key);
 
             return $this->makeEmptyPayload();
         }
 
         try {
-            $data = unserialize(substr($contents, 10));
-        } catch (\Exception $e) {
+            $data = \unserialize(\substr($contents, 10));
+        } catch (\Exception) {
             $this->delete($key);
 
             return $this->makeEmptyPayload();
         }
 
-        $time = $expire - time();
+        $time = $expire - \time();
 
         return ['value' => $data, 'timestamp' => $time];
     }
