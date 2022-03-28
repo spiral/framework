@@ -54,7 +54,7 @@ final class FileStorage implements CacheInterface
         return true;
     }
 
-    public function getMultiple(iterable $keys, mixed $default = null): mixed
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
         $result = [];
 
