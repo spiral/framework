@@ -1,21 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor;
 
-use ArrayAccess;
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
-use ReflectionObject;
 use Spiral\Reactor\Exception\ReactorException;
 
 /**
@@ -23,35 +11,26 @@ use Spiral\Reactor\Exception\ReactorException;
  * apply set of operations.
  */
 class Aggregator extends AbstractDeclaration implements
-    ArrayAccess,
-    IteratorAggregate,
-    Countable,
+    \ArrayAccess,
+    \IteratorAggregate,
+    \Countable,
     ReplaceableInterface
 {
     /**
-     * @var array
+     * @param DeclarationInterface[] $elements
      */
-    private $allowed;
-
-    /**
-     * @var DeclarationInterface[]
-     */
-    private $elements;
-
-    public function __construct(array $allowed, array $elements = [])
-    {
-        $this->allowed = $allowed;
-        $this->elements = $elements;
+    public function __construct(
+        private array $allowed,
+        private array $elements = []
+    ) {
     }
 
     /**
      * Get element by it's name.
      *
-     * @param string $name
-     * @return DeclarationInterface
      * @throws ReactorException
      */
-    public function __get($name)
+    public function __get($name): DeclarationInterface
     {
         return $this->get($name);
     }
@@ -87,19 +66,19 @@ class Aggregator extends AbstractDeclaration implements
      */
     public function add(DeclarationInterface $element): self
     {
-        $reflector = new ReflectionObject($element);
+        $reflector = new \ReflectionObject($element);
 
         $allowed = false;
         foreach ($this->allowed as $class) {
-            if ($reflector->isSubclassOf($class) || get_class($element) === $class) {
+            if ($reflector->isSubclassOf($class) || $element::class === $class) {
                 $allowed = true;
                 break;
             }
         }
 
         if (!$allowed) {
-            $type = get_class($element);
-            throw new ReactorException("Elements with type '{$type}' are not allowed");
+            $type = $element::class;
+            throw new ReactorException(\sprintf("Elements with type '%s' are not allowed", $type));
         }
 
         $this->elements[] = $element;
@@ -110,10 +89,9 @@ class Aggregator extends AbstractDeclaration implements
     /**
      * Get named element by it's name.
      *
-     * @return DeclarationInterface
      * @throws ReactorException
      */
-    public function get(string $name)
+    public function get(string $name): DeclarationInterface
     {
         return $this->find($name);
     }
@@ -133,50 +111,34 @@ class Aggregator extends AbstractDeclaration implements
     }
 
     /**
-     * @return ArrayIterator<array-key, DeclarationInterface>
+     * @return \ArrayIterator<array-key, DeclarationInterface>
      */
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
-        return new ArrayIterator($this->elements);
+        return new \ArrayIterator($this->elements);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return $this->has($offset);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->get($offset);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->remove($offset)->add($value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         $this->remove($offset);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function replace($search, $replace): Aggregator
+    public function replace(array|string $search, array|string $replace): Aggregator
     {
         foreach ($this->elements as $element) {
             if ($element instanceof ReplaceableInterface) {
@@ -187,9 +149,6 @@ class Aggregator extends AbstractDeclaration implements
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render(int $indentLevel = 0): string
     {
         $result = '';
@@ -198,7 +157,7 @@ class Aggregator extends AbstractDeclaration implements
             $result .= $element->render($indentLevel) . "\n\n";
         }
 
-        return rtrim($result, "\n");
+        return \rtrim($result, "\n");
     }
 
     /**
@@ -214,6 +173,6 @@ class Aggregator extends AbstractDeclaration implements
             }
         }
 
-        throw new ReactorException("Unable to find element '{$name}'");
+        throw new ReactorException(\sprintf("Unable to find element '%s'", $name));
     }
 }

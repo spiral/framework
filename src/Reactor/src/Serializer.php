@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor;
@@ -29,12 +22,11 @@ class Serializer
     /**
      * Serialize array.
      *
-     * @param mixed $value
      * @throws ReflectionException
      */
-    public function serialize($value): string
+    public function serialize(mixed $value): string
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return $this->packArray($value);
         }
 
@@ -50,16 +42,16 @@ class Serializer
             return '[]';
         }
         //Delimiters between rows and sub-arrays.
-        $subIndent = "\n" . str_repeat(self::INDENT, $level + 2);
-        $keyIndent = "\n" . str_repeat(self::INDENT, $level + 1);
+        $subIndent = "\n" . \str_repeat(self::INDENT, $level + 2);
+        $keyIndent = "\n" . \str_repeat(self::INDENT, $level + 1);
         //No keys for associated array
-        $associated = array_diff_key($array, array_keys(array_keys($array)));
+        $associated = \array_diff_key($array, \array_keys(\array_keys($array)));
         $result = [];
         $innerIndent = 0;
         if (!empty($associated)) {
-            foreach ($array as $key => $_) {
+            foreach (\array_keys($array) as $key) {
                 //Based on biggest key length
-                $innerIndent = max(strlen(var_export($key, true)), $innerIndent);
+                $innerIndent = \max(\strlen(\var_export($key, true)), $innerIndent);
             }
         }
         foreach ($array as $key => $value) {
@@ -67,13 +59,13 @@ class Serializer
             if (!empty($associated)) {
                 //Key prefix
                 $prefix = str_pad(
-                    var_export($key, true),
+                    \var_export($key, true),
                     $innerIndent,
                     ' ',
                     STR_PAD_RIGHT
                 ) . ' => ';
             }
-            if (!is_array($value)) {
+            if (!\is_array($value)) {
                 $result[] = $prefix . $this->packValue($value);
                 continue;
             }
@@ -85,20 +77,19 @@ class Serializer
             $result[] = $prefix . "[{$subIndent}" . $subArray . "{$keyIndent}]";
         }
         if ($level !== 0) {
-            return $result ? implode(",{$keyIndent}", $result) : '';
+            return $result ? \implode(",{$keyIndent}", $result) : '';
         }
 
-        return "[{$keyIndent}" . implode(",{$keyIndent}", $result) . "\n]";
+        return "[{$keyIndent}" . \implode(",{$keyIndent}", $result) . "\n]";
     }
 
     /**
      * Pack array key value into string.
      *
-     * @param mixed $value
      * @throws SerializeException
      * @throws ReflectionException
      */
-    protected function packValue($value): string
+    protected function packValue(mixed $value): string
     {
         if ($value instanceof DeclarationInterface) {
             //No indentation here
@@ -109,25 +100,25 @@ class Serializer
             return 'null';
         }
 
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             return ($value ? 'true' : 'false');
         }
 
-        if (is_object($value) && method_exists($value, '__set_state')) {
-            return '\\' . var_export($value, true);
+        if (\is_object($value) && \method_exists($value, '__set_state')) {
+            return '\\' . \var_export($value, true);
         }
 
-        if (!is_string($value) && !is_numeric($value)) {
+        if (!\is_string($value) && !\is_numeric($value)) {
             throw new SerializeException('Unable to pack non scalar value');
         }
 
-        if (is_string($value) && class_exists($value)) {
+        if (\is_string($value) && \class_exists($value)) {
             $reflection = new ReflectionClass($value);
             if ($value === $reflection->getName()) {
                 return '\\' . $reflection->getName() . '::class';
             }
         }
 
-        return var_export($value, true);
+        return \var_export($value, true);
     }
 }
