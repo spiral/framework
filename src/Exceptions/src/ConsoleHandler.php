@@ -54,13 +54,10 @@ class ConsoleHandler extends AbstractHandler
 
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
-        $result = '';
-
-        if ($e instanceof \Error) {
-            $result .= $this->renderHeader('[' . $e::class . "]\n" . $e->getMessage(), 'bg:magenta,white');
-        } else {
-            $result .= $this->renderHeader('[' . $e::class . "]\n" . $e->getMessage(), 'bg:red,white');
-        }
+        $result = $this->renderHeader(
+            \sprintf("[%s]\n%s", $e::class, $e->getMessage()),
+            $e instanceof \Error ? 'bg:magenta,white' : 'bg:red,white'
+        );
 
         $result .= $this->format(
             "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>\n",
@@ -92,7 +89,7 @@ class ConsoleHandler extends AbstractHandler
         $lines = \explode("\n", \str_replace("\r", '', $title));
 
         $length = 0;
-        \array_walk($lines, function ($v) use (&$length): void {
+        \array_walk($lines, static function ($v) use (&$length): void {
             $length = max($length, \mb_strlen($v));
         });
 
@@ -123,7 +120,7 @@ class ConsoleHandler extends AbstractHandler
         $result = $this->format("\n<red>Exception Trace:</reset>\n");
 
         foreach ($stacktrace as $trace) {
-            if (isset($trace['type']) && isset($trace['class'])) {
+            if (isset($trace['type'], $trace['class'])) {
                 $line = $this->format(
                     ' <white>%s%s%s()</reset>',
                     $trace['class'],
@@ -153,7 +150,7 @@ class ConsoleHandler extends AbstractHandler
 
             $result .= $line . "\n";
 
-            if (!empty($h) && !empty($trace['file'])) {
+            if ($h !== null && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
                     \file_get_contents($trace['file']),
                     $trace['line'],

@@ -13,9 +13,13 @@ final class PlainHandler extends AbstractHandler
 
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
-        $result = '';
-        $result .= '[' . $e::class . "]\n" . $e->getMessage();
-        $result .= \sprintf(" in %s:%s\n", $e->getFile(), $e->getLine());
+        $result = \sprintf(
+            "[%s]\n%s in %s:%s\n",
+            $e::class,
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine()
+        );
 
         if ($verbosity >= self::VERBOSITY_DEBUG) {
             $result .= $this->renderTrace($e, new Highlighter(new PlainStyle()));

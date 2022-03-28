@@ -54,7 +54,7 @@ final class Files implements FilesInterface
         }
 
         //Directories always executable
-        $mode |= 0111;
+        $mode |= 0o111;
         if (\is_dir($directory)) {
             //Exists :(
             return $this->setPermissions($directory, $mode);
