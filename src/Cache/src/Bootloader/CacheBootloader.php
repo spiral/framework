@@ -53,7 +53,10 @@ final class CacheBootloader extends Bootloader
         $manager = new CacheManager($config, $container);
 
         foreach ($config->getAliases() as $alias => $storageName) {
-            $container->bind($alias, static fn (CacheManager $manager) => $manager->storage($storageName));
+            $container->bind(
+                $alias,
+                static fn (CacheManager $manager): CacheInterface => $manager->storage($storageName)
+            );
         }
 
         return $manager;

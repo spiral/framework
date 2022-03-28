@@ -15,11 +15,10 @@ trait InteractsWithTime
      *
      * @codeCoverageIgnore Ignore time-aware-mutable value.
      *                     Must be covered with a stub.
-     * @throws \Exception
      */
     protected function now(): \DateTimeImmutable
     {
-        return new \DateTimeImmutable('NOW');
+        return new \DateTimeImmutable();
     }
 
     private function ttlToTimestamp(null|int|\DateInterval|\DateTimeInterface $ttl = null): int
