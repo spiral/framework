@@ -102,7 +102,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
 
     private function sequence(
         string $target,
-        string|callable $sequence,
+        string|array|callable $sequence,
         string $header,
         string $footer,
         array $options
@@ -110,7 +110,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         return new Append(
             $target,
             null,
-            \is_callable($sequence)
+            \is_array($sequence) || \is_callable($sequence)
                 ? new CallableSequence($sequence, $header, $footer)
                 : new CommandSequence($sequence, $options, $header, $footer)
         );

@@ -13,11 +13,14 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CallableSequence extends AbstractSequence
 {
-    /** @var callable */
+    /** @var string|callable|array<class-string, string> */
     private readonly mixed $function;
 
+    /**
+     * @param string|callable|array<class-string, string> $function
+     */
     public function __construct(
-        callable $function,
+        string|array|callable $function,
         string $header = '',
         string $footer = ''
     ) {
@@ -28,7 +31,7 @@ final class CallableSequence extends AbstractSequence
     public function execute(ContainerInterface $container, OutputInterface $output): void
     {
         $function = $this->function;
-        if (\is_string($function) && \strpos($function, ':') !== false) {
+        if (\is_string($function) && \str_contains($function, ':')) {
             $function = \explode(':', \str_replace('::', ':', $function));
         }
 
