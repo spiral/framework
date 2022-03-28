@@ -50,9 +50,9 @@ final class SessionScope implements SessionInterface, SingletonInterface
      *
      * @throws ScopeException
      */
-    public function resume()
+    public function resume(): void
     {
-        return $this->getActiveSession()->resume();
+        $this->getActiveSession()->resume();
     }
 
     /**

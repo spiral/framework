@@ -128,9 +128,9 @@ final class SectionScope implements SessionSectionInterface
     /**
      * @inheritDoc
      */
-    public function set(string $name, $value): void
+    public function set(string $name, $value): SessionSectionInterface
     {
-        $this->getActiveSection()->set($name, $value);
+        return $this->getActiveSection()->set($name, $value);
     }
 
     /**
@@ -144,7 +144,7 @@ final class SectionScope implements SessionSectionInterface
     /**
      * @inheritDoc
      */
-    public function get(string $name, $default = null)
+    public function get(string $name, mixed $default = null): mixed
     {
         return $this->getActiveSection()->get($name, $default);
     }
@@ -152,7 +152,7 @@ final class SectionScope implements SessionSectionInterface
     /**
      * @inheritDoc
      */
-    public function pull(string $name, $default = null)
+    public function pull(string $name, mixed $default = null): mixed
     {
         return $this->getActiveSection()->pull($name, $default);
     }
