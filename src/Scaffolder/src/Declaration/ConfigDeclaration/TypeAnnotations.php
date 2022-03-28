@@ -44,7 +44,6 @@ class TypeAnnotations
         foreach ($value as $item) {
             $types[] = \gettype($item);
         }
-        
         $types = \array_unique($types);
 
         return \count($types) === 1 ? \sprintf('array|%s[]', $this->mapType($types[0])) : 'array';

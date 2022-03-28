@@ -16,7 +16,8 @@ class FilterDeclaration extends ClassDeclaration implements DependedInterface
     private const DEFAULT_SOURCE = 'data';
 
     public function __construct(
-        string $name, string $comment = '',
+        string $name,
+        string $comment = '',
         private readonly array $mapping = []
     ) {
         parent::__construct($name, 'Filter', [], $comment);
