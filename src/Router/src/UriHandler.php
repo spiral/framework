@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -41,44 +34,22 @@ final class UriHandler
         '//'  => '/',
     ];
 
-    /** @var UriFactoryInterface */
-    private $uriFactory;
+    private ?string $pattern = null;
 
-    /** @var string */
-    private $pattern;
+    /** @internal */
+    private readonly SlugifyInterface $slugify;
+    private array $constrains = [];
+    private array $defaults = [];
+    private bool $matchHost = false;
+    private string $prefix = '';
+    private ?string $compiled = null;
+    private ?string $template = null;
+    private array $options = [];
 
-    /** @var SlugifyInterface @internal */
-    private $slugify;
-
-    /** @var array */
-    private $constrains = [];
-
-    /** @var array */
-    private $defaults = [];
-
-    /** @var bool */
-    private $matchHost = false;
-
-    /** @var string */
-    private $prefix = '';
-
-    /** @var string|null */
-    private $compiled;
-
-    /** @var string|null */
-    private $template;
-
-    /** @var array */
-    private $options = [];
-
-    /**
-     * @param SlugifyInterface|null $slugify
-     */
     public function __construct(
-        UriFactoryInterface $uriFactory,
+        private readonly UriFactoryInterface $uriFactory,
         SlugifyInterface $slugify = null
     ) {
-        $this->uriFactory = $uriFactory;
         $this->slugify = $slugify ?? new Slugify();
     }
 
@@ -102,10 +73,7 @@ final class UriHandler
         return $this->constrains;
     }
 
-    /**
-     * @param string $prefix
-     */
-    public function withPrefix($prefix): self
+    public function withPrefix(string $prefix): self
     {
         $uriHandler = clone $this;
         $uriHandler->compiled = null;
@@ -124,7 +92,7 @@ final class UriHandler
         $uriHandler = clone $this;
         $uriHandler->pattern = $pattern;
         $uriHandler->compiled = null;
-        $uriHandler->matchHost = strpos($pattern, self::HOST_PREFIX) === 0;
+        $uriHandler->matchHost = \str_starts_with($pattern, self::HOST_PREFIX);
 
         return $uriHandler;
     }
@@ -145,35 +113,33 @@ final class UriHandler
         }
 
         $matches = [];
-        if (!preg_match($this->compiled, $this->fetchTarget($uri), $matches)) {
+        if (!\preg_match($this->compiled, $this->fetchTarget($uri), $matches)) {
             return null;
         }
 
-        $matches = array_intersect_key($matches, $this->options);
+        $matches = \array_intersect_key($matches, $this->options);
 
-        return array_merge($this->options, $defaults, $matches);
+        return \array_merge($this->options, $defaults, $matches);
     }
 
     /**
      * Generate Uri for a given parameters and default values.
-     *
-     * @param array|\Traversable $parameters
      */
-    public function uri($parameters = [], array $defaults = []): UriInterface
+    public function uri(iterable $parameters = [], array $defaults = []): UriInterface
     {
         if (!$this->isCompiled()) {
             $this->compile();
         }
 
-        $parameters = array_merge(
+        $parameters = \array_merge(
             $this->options,
             $defaults,
             $this->fetchOptions($parameters, $query)
         );
 
-        foreach ($this->constrains as $key => $_) {
+        foreach (\array_keys($this->constrains) as $key) {
             if (empty($parameters[$key])) {
-                throw new UriHandlerException("Unable to generate Uri, parameter `{$key}` is missing");
+                throw new UriHandlerException(\sprintf('Unable to generate Uri, parameter `%s` is missing', $key));
             }
         }
 
@@ -183,32 +149,31 @@ final class UriHandler
         //Uri with added prefix
         $uri = $this->uriFactory->createUri(($this->matchHost ? '' : $this->prefix) . trim($path, '/'));
 
-        return empty($query) ? $uri : $uri->withQuery(http_build_query($query));
+        return empty($query) ? $uri : $uri->withQuery(\http_build_query($query));
     }
 
     /**
      * Fetch uri segments and query parameters.
      *
-     * @param \Traversable|array $parameters
      * @param array|null         $query Query parameters.
      */
-    private function fetchOptions($parameters, &$query): array
+    private function fetchOptions(iterable $parameters, ?array &$query): array
     {
-        $allowed = array_keys($this->options);
+        $allowed = \array_keys($this->options);
 
         $result = [];
         foreach ($parameters as $key => $parameter) {
-            if (is_numeric($key) && isset($allowed[$key])) {
+            if (\is_numeric($key) && isset($allowed[$key])) {
                 // this segment fetched keys from given parameters either by name or by position
                 $key = $allowed[$key];
-            } elseif (!array_key_exists($key, $this->options) && is_array($parameters)) {
+            } elseif (!\array_key_exists($key, $this->options) && \is_array($parameters)) {
                 // all additional parameters given in array form can be glued to query string
                 $query[$key] = $parameter;
                 continue;
             }
 
             //String must be normalized here
-            if (is_string($parameter) && !preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
+            if (\is_string($parameter) && !\preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
                 $result[$key] = $this->slugify->slugify($parameter);
                 continue;
             }
@@ -233,13 +198,13 @@ final class UriHandler
         if ($this->matchHost) {
             $uriString = $uri->getHost() . $path;
         } else {
-            $uriString = substr($path, strlen($this->prefix));
+            $uriString = \substr($path, \strlen($this->prefix));
             if ($uriString === false) {
                 $uriString = '';
             }
         }
 
-        return trim($uriString, '/');
+        return \trim($uriString, '/');
     }
 
     /**
@@ -251,26 +216,27 @@ final class UriHandler
             throw new UriHandlerException('Unable to compile UriHandler, pattern is not set');
         }
 
-        $options = $replaces = [];
-        $pattern = rtrim(ltrim($this->pattern, ':/'), '/');
+        $options = [];
+        $replaces = [];
+        $pattern = \rtrim(\ltrim($this->pattern, ':/'), '/');
 
         // correct [/ first occurrence]
-        if (strpos($pattern, '[/') === 0) {
-            $pattern = '[' . substr($pattern, 2);
+        if (\str_starts_with($pattern, '[/')) {
+            $pattern = '[' . \substr($pattern, 2);
         }
 
-        if (preg_match_all('/<(\w+):?(.*?)?>/', $pattern, $matches)) {
-            $variables = array_combine($matches[1], $matches[2]);
+        if (\preg_match_all('/<(\w+):?(.*?)?>/', $pattern, $matches)) {
+            $variables = \array_combine($matches[1], $matches[2]);
 
             foreach ($variables as $key => $segment) {
                 $segment = $this->prepareSegment($key, $segment);
-                $replaces["<$key>"] = "(?P<$key>$segment)";
+                $replaces[\sprintf('<%s>', $key)] = \sprintf('(?P<%s>%s)', $key, $segment);
                 $options[] = $key;
             }
         }
 
-        $template = preg_replace('/<(\w+):?.*?>/', '<\1>', $pattern);
-        $options = array_fill_keys($options, null);
+        $template = \preg_replace('/<(\w+):?.*?>/', '<\1>', $pattern);
+        $options = \array_fill_keys($options, null);
 
         foreach ($this->constrains as $key => $value) {
             if ($value instanceof Autofill) {
@@ -278,9 +244,9 @@ final class UriHandler
                 continue;
             }
 
-            if (!array_key_exists($key, $options) && !isset($this->defaults[$key])) {
+            if (!\array_key_exists($key, $options) && !isset($this->defaults[$key])) {
                 throw new ConstrainException(
-                    sprintf(
+                    \sprintf(
                         'Route `%s` does not define routing parameter `<%s>`.',
                         $this->pattern,
                         $key
@@ -289,8 +255,8 @@ final class UriHandler
             }
         }
 
-        $this->compiled = '/^' . strtr($template, $replaces + self::PATTERN_REPLACES) . '$/iu';
-        $this->template = stripslashes(str_replace('?', '', $template));
+        $this->compiled = '/^' . \strtr($template, $replaces + self::PATTERN_REPLACES) . '$/iu';
+        $this->template = \stripslashes(\str_replace('?', '', $template));
         $this->options = $options;
     }
 
@@ -301,11 +267,11 @@ final class UriHandler
     {
         $replaces = [];
         foreach ($values as $key => $value) {
-            $value = (is_array($value) || $value instanceof \Closure) ? '' : $value;
-            $replaces["<{$key}>"] = is_object($value) ? (string)$value : $value;
+            $value = (\is_array($value) || $value instanceof \Closure) ? '' : $value;
+            $replaces[\sprintf('<%s>', $key)] = \is_object($value) ? (string)$value : $value;
         }
 
-        return strtr($string, $replaces + self::URI_FIXERS);
+        return \strtr($string, $replaces + self::URI_FIXERS);
     }
 
     /**
@@ -313,25 +279,19 @@ final class UriHandler
      */
     private function prepareSegment(string $name, string $segment): string
     {
-        if ($segment !== '') {
-            return self::SEGMENT_TYPES[$segment] ?? $segment;
-        }
-
-        if (!isset($this->constrains[$name])) {
-            return self::DEFAULT_SEGMENT;
-        }
-
-        if (is_array($this->constrains[$name])) {
-            $values = array_map([$this, 'filterSegment'], $this->constrains[$name]);
-
-            return implode('|', $values);
-        }
-
-        return $this->filterSegment((string)$this->constrains[$name]);
+        return match (true) {
+            $segment !== '' => self::SEGMENT_TYPES[$segment] ?? $segment,
+            !isset($this->constrains[$name]) => self::DEFAULT_SEGMENT,
+            \is_array($this->constrains[$name]) => \implode(
+                '|',
+                \array_map(fn(string $segment): string => $this->filterSegment($segment), $this->constrains[$name])
+            ),
+            default => $this->filterSegment((string)$this->constrains[$name])
+        };
     }
 
     private function filterSegment(string $segment): string
     {
-        return strtr($segment, self::SEGMENT_REPLACES);
+        return \strtr($segment, self::SEGMENT_REPLACES);
     }
 }

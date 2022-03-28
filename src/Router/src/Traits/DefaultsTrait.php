@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router\Traits;
@@ -15,8 +8,7 @@ use Spiral\Router\RouteInterface;
 
 trait DefaultsTrait
 {
-    /** @var array */
-    protected $defaults = [];
+    protected array $defaults = [];
 
     /**
      * Returns new route instance with forced default values.

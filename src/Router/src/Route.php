@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -47,20 +40,18 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     public const ROUTE_ATTRIBUTE = 'route';
 
     /** @var string|callable|RequestHandlerInterface|TargetInterface */
-    private $target;
-
-    /** @var RequestHandlerInterface */
-    private $requestHandler;
+    private string|array|object $target;
+    private ?RequestHandlerInterface $requestHandler = null;
 
     /**
      * @param string                                                  $pattern  Uri pattern.
      * @param string|callable|RequestHandlerInterface|TargetInterface $target   Callable route target.
      * @param array                                                   $defaults Default value set.
      */
-    public function __construct(string $pattern, $target, array $defaults = [])
+    public function __construct(string $pattern, string|array|object $target, array $defaults = [])
     {
         if ($target instanceof TargetInterface) {
-            parent::__construct($pattern, array_merge($target->getDefaults(), $defaults));
+            parent::__construct($pattern, \array_merge($target->getDefaults(), $defaults));
         } else {
             parent::__construct($pattern, $defaults);
         }
@@ -83,8 +74,6 @@ final class Route extends AbstractRoute implements ContainerizedInterface
 
     /**
      * Associated route with given container.
-     *
-     * @return self
      */
     public function withContainer(ContainerInterface $container): ContainerizedInterface
     {
@@ -101,7 +90,6 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     }
 
     /**
-     *
      * @throws RouteException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -138,7 +126,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
         }
 
         try {
-            if (is_object($this->target) || is_array($this->target)) {
+            if (\is_object($this->target) || \is_array($this->target)) {
                 $target = $this->target;
             } else {
                 $target = $this->container->get($this->target);
