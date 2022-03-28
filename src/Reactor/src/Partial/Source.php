@@ -138,7 +138,6 @@ class Source extends AbstractDeclaration implements \Stringable
             }
             $minIndent = \min($minIndent, \strlen((string) $matches[1]));
         }
-        
         //Fixing indent
         foreach ($lines as &$line) {
             if (empty($line)) {
@@ -151,7 +150,6 @@ class Source extends AbstractDeclaration implements \Stringable
                 $line = '';
                 continue;
             }
-            
             //Getting new indent
             $useIndent = \str_repeat(
                 ' ',
