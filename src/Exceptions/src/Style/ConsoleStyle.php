@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Exceptions\Style;
@@ -19,15 +12,13 @@ use Spiral\Exceptions\StyleInterface;
  */
 class ConsoleStyle implements StyleInterface
 {
-    /** @var array */
-    protected $templates = [
+    protected array $templates = [
         'token'  => '%s%s' . Color::RESET,
         'line'   => Color::LIGHT_CYAN . ' %s ' . Color::RESET . " %s\n",
         'active' => Color::BG_RED . ' ' . Color::LIGHT_WHITE . '%s ' . Color::RESET . " %s\n",
     ];
 
-    /** @var array */
-    protected $style = [
+    protected array $style = [
         Color::YELLOW        => [
             T_STATIC,
             T_PUBLIC,
@@ -92,33 +83,27 @@ class ConsoleStyle implements StyleInterface
         ],
     ];
 
-    /**
-     * @inheritdoc
-     */
     public function token(array $token, array $previous): string
     {
         $style = $this->getStyle($token, $previous);
 
-        if (strpos($token[1], "\n") === false) {
-            return sprintf($this->templates['token'], $style, $token[1]);
+        if (!\str_contains((string) $token[1], "\n")) {
+            return \sprintf($this->templates['token'], $style, $token[1]);
         }
 
         $lines = [];
-        foreach (explode("\n", $token[1]) as $line) {
-            $lines[] = sprintf($this->templates['token'], $style, $line);
+        foreach (\explode("\n", (string) $token[1]) as $line) {
+            $lines[] = \sprintf($this->templates['token'], $style, $line);
         }
 
-        return implode("\n", $lines);
+        return \implode("\n", $lines);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function line(int $number, string $code, bool $target = false): string
     {
-        return sprintf(
+        return \sprintf(
             $this->templates[$target ? 'active' : 'line'],
-            str_pad((string)$number, 4, ' ', STR_PAD_LEFT),
+            \str_pad((string)$number, 4, ' ', STR_PAD_LEFT),
             $code
         );
     }
@@ -130,14 +115,14 @@ class ConsoleStyle implements StyleInterface
     {
         if (!empty($previous)) {
             foreach ($this->style as $style => $tokens) {
-                if (in_array($previous[1] . $token[0], $tokens)) {
+                if (\in_array($previous[1] . $token[0], $tokens)) {
                     return $style;
                 }
             }
         }
 
         foreach ($this->style as $style => $tokens) {
-            if (in_array($token[0], $tokens)) {
+            if (\in_array($token[0], $tokens)) {
                 return $style;
             }
         }
