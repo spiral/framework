@@ -7,13 +7,14 @@ namespace Spiral\Console;
 use Psr\Container\ContainerInterface;
 use Spiral\Console\Traits\LazyTrait;
 use Spiral\Core\Container;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 final class StaticLocator implements LocatorInterface
 {
     use LazyTrait;
 
     /**
-     * @psalm-param class-string[] $commands
+     * @param array<array-key, class-string<SymfonyCommand>> $commands
      */
     public function __construct(
         private array $commands,

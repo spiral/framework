@@ -52,7 +52,7 @@ trait HelpersTrait
     /**
      * Identical to write function but provides ability to format message. Does not add new line.
      */
-    protected function sprintf(string $format, ...$args): void
+    protected function sprintf(string $format, mixed ...$args): void
     {
         $this->output->write(\sprintf($format, ...$args), false);
     }
@@ -73,7 +73,7 @@ trait HelpersTrait
     /**
      * Writes a message to the output and adds a newline at the end.
      *
-     * @param string|array $messages The message as an array of lines of a single string
+     * @param string|iterable<mixed, string> $messages The message as an array of lines of a single string
      *
      * @throws \InvalidArgumentException When unknown output type is given
      */

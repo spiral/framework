@@ -87,7 +87,7 @@ final class ConsoleConfig extends InjectableConfig
             return $item;
         }
 
-        if (\is_string($item)) {
+        if (\is_callable($item)) {
             return new CallableSequence($item);
         }
 

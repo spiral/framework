@@ -56,10 +56,9 @@ final class Console
     public function run(
         ?string $command,
         array|InputInterface $input = [],
-        OutputInterface $output = null
+        OutputInterface $output = new BufferedOutput()
     ): CommandOutput {
         $input = \is_array($input) ? new ArrayInput($input) : $input;
-        $output ??= new BufferedOutput();
 
         $this->configureIO($input, $output);
 

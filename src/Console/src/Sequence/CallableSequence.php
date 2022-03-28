@@ -13,14 +13,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CallableSequence extends AbstractSequence
 {
-    /**
-     * @param callable $function
-     */
+    /** @var callable */
+    private readonly mixed $function;
+
     public function __construct(
-        private readonly string|array|\Closure $function,
+        callable $function,
         string $header = '',
         string $footer = ''
     ) {
+        $this->function = $function;
         parent::__construct($header, $footer);
     }
 

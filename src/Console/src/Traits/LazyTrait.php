@@ -16,7 +16,7 @@ trait LazyTrait
     /**
      * Check if command can be lazy-loaded.
      *
-     * @psalm-param class-string $class
+     * @param class-string $class
      */
     private function supportsLazyLoading(string $class): bool
     {
@@ -27,7 +27,7 @@ trait LazyTrait
     /**
      * Wrap given command into LazyCommand which will be executed only on run.
      *
-     * @param class-string $class
+     * @param class-string<SpiralCommand> $class
      */
     private function createLazyCommand(string $class): LazyCommand
     {
