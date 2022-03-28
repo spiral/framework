@@ -25,8 +25,7 @@ final class MonologConfig extends InjectableConfig
     }
 
     /**
-     * @return \Generator|Autowire[]
-     * @throws ConfigException
+     * @return \Generator<int, Autowire>
      */
     public function getHandlers(string $channel): \Generator
     {

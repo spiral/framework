@@ -24,7 +24,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
     public const DEFAULT = 'default';
 
     private ?LoggerInterface $default = null;
-    private HandlerInterface $eventHandler;
+    private readonly HandlerInterface $eventHandler;
 
     public function __construct(
         private readonly MonologConfig $config,
@@ -36,7 +36,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
 
     public function getLogger(string $channel = null): LoggerInterface
     {
-        if ($channel === null || $channel == self::DEFAULT) {
+        if ($channel === null || $channel === self::DEFAULT) {
             if ($this->default !== null) {
                 // we should use only one default logger per system
                 return $this->default;

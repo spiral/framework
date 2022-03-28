@@ -30,7 +30,7 @@ final class EventHandler extends AbstractHandler
         );
 
         foreach ($this->listenerRegistry->getListeners() as $listener) {
-            \call_user_func($listener, $e);
+            $listener($e);
         }
 
         return true;
