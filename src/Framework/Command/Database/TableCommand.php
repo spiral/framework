@@ -23,6 +23,9 @@ use Cycle\Database\Schema\AbstractTable;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class TableCommand extends Command
 {
     protected const NAME        = 'db:table';

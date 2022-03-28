@@ -25,6 +25,9 @@ use Spiral\RoadRunner\Http\PSR7WorkerInterface;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 class RrDispatcher implements DispatcherInterface
 {
     /**

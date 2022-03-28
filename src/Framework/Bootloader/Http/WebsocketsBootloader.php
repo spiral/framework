@@ -21,6 +21,7 @@ use Spiral\Config\Patch\Set;
 use Spiral\Core\Container\SingletonInterface;
 
 /**
+ * @deprecated since v2.12. Will be removed in v3.0
  * Authorizes websocket and server connections using interceptor middleware.
  */
 final class WebsocketsBootloader extends Bootloader implements SingletonInterface

@@ -113,6 +113,7 @@ final class CommandBootloader extends Bootloader
     }
 
     /**
+     * @deprecated since v2.12. Will be moved to spiral/cycle-bridge and removed in v3.0
      * @param ConsoleBootloader $console
      */
     private function configureDatabase(ConsoleBootloader $console): void
@@ -180,6 +181,7 @@ final class CommandBootloader extends Bootloader
     }
 
     /**
+     * @deprecated since v2.12. Will be moved to spiral/cycle-bridge and removed in v3.0
      * @param ConsoleBootloader $console
      */
     private function configureMigrations(ConsoleBootloader $console): void
@@ -192,6 +194,7 @@ final class CommandBootloader extends Bootloader
     }
 
     /**
+     * @deprecated since v2.12. Will be moved to spiral/roadrunner-bridge and removed in v3.0
      * @param ConsoleBootloader $console
      */
     private function configureGRPC(ConsoleBootloader $console): void

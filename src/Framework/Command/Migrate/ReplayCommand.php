@@ -14,6 +14,9 @@ namespace Spiral\Command\Migrate;
 use Spiral\Console\Console;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * @deprecated since v2.12. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 final class ReplayCommand extends AbstractCommand
 {
     protected const NAME        = 'migrate:replay';

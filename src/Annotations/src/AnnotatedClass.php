@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Annotations;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class AnnotatedClass
 {
     /** @var \ReflectionClass */

@@ -151,6 +151,9 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         $this->memory->saveData('prototyped', $prototyped);
     }
 
+    /**
+     * @deprecated since v2.12. Will be moved to spiral/cycle-bridge and removed in v3.0
+     */
     public function initCycle(ContainerInterface $container): void
     {
         if (!$container->has(ORM\SchemaInterface::class)) {

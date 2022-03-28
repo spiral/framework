@@ -15,6 +15,7 @@ use Spiral\Files\FilesInterface;
 use Spiral\GRPC\Exception\CompileException;
 
 /**
+ * @deprecated since v2.12. Will be removed in v3.0
  * Compiles GRPC protobuf declaration and moves files into proper location.
  */
 final class ProtoCompiler

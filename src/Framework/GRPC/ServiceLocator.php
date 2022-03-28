@@ -14,6 +14,9 @@ namespace Spiral\GRPC;
 use Psr\Container\ContainerInterface;
 use Spiral\Tokenizer\ClassesInterface;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class ServiceLocator implements LocatorInterface
 {
     /** @var ClassesInterface */
