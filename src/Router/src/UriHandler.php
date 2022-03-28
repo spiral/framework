@@ -284,7 +284,7 @@ final class UriHandler
             !isset($this->constrains[$name]) => self::DEFAULT_SEGMENT,
             \is_array($this->constrains[$name]) => \implode(
                 '|',
-                \array_map(fn(string $segment): string => $this->filterSegment($segment), $this->constrains[$name])
+                \array_map(fn (string $segment): string => $this->filterSegment($segment), $this->constrains[$name])
             ),
             default => $this->filterSegment((string)$this->constrains[$name])
         };
