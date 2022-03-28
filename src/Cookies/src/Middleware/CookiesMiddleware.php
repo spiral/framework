@@ -142,13 +142,14 @@ final class CookiesMiddleware implements MiddlewareInterface
 
     private function encodeCookie(Cookie $cookie): Cookie
     {
+        $value = $cookie->getValue() ?? '';
         if ($this->config->getProtectionMethod() === CookiesConfig::COOKIE_ENCRYPT) {
             $encryptor = $this->encryption->getEncrypter();
 
-            return $cookie->withValue($encryptor->encrypt($cookie->getValue()));
+            return $cookie->withValue($encryptor->encrypt($value));
         }
 
         //VALUE.HMAC
-        return $cookie->withValue($cookie->getValue() . $this->hmacSign($cookie->getValue()));
+        return $cookie->withValue($value . $this->hmacSign($value));
     }
 }
