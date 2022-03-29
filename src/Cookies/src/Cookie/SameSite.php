@@ -13,8 +13,7 @@ class SameSite
     private const VALUES  = [self::STRICT, self::LAX, self::NONE];
     private const DEFAULT = self::LAX;
 
-    /** @var string|null */
-    private $sameSite;
+    private ?string $sameSite = null;
 
     public function __construct(?string $sameSite = null, bool $secure = false)
     {
@@ -32,8 +31,8 @@ class SameSite
             return null;
         }
 
-        $sameSite = ucfirst(strtolower($sameSite));
-        if (!in_array($sameSite, self::VALUES, true)) {
+        $sameSite = \ucfirst(\strtolower($sameSite));
+        if (!\in_array($sameSite, self::VALUES, true)) {
             return null;
         }
 
