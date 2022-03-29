@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -24,18 +17,16 @@ interface PermissionsInterface
     /**
      * Register new role.
      *
-     *
      * @throws RoleException
      */
-    public function addRole(string $role);
+    public function addRole(string $role): self;
 
     /**
      * Remove existed guard role and every association it has.
      *
-     *
      * @throws RoleException
      */
-    public function removeRole(string $role);
+    public function removeRole(string $role): self;
 
     /**
      * List of every known role.
@@ -45,14 +36,12 @@ interface PermissionsInterface
     /**
      * Get list of all permissions and their rules associated with given role.
      *
-     *
      * @throws RoleException
      */
     public function getPermissions(string $role): array;
 
     /**
      * Get role/permission behaviour.
-     *
      *
      * @throws RoleException
      * @throws PermissionException
