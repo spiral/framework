@@ -25,17 +25,15 @@ final class CacheBootloader extends Bootloader
         CacheManager::class => [self::class, 'initCacheManager'],
     ];
 
-    private ConfiguratorInterface $config;
-
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
     public function registerTypeAlias(string $storageClass, string $alias): void
     {
         $this->config->modify(
-            'cache',
+            CacheConfig::CONFIG,
             new Append('typeAliases', $alias, $storageClass)
         );
     }
@@ -55,9 +53,10 @@ final class CacheBootloader extends Bootloader
         $manager = new CacheManager($config, $container);
 
         foreach ($config->getAliases() as $alias => $storageName) {
-            $container->bind($alias, static function (CacheManager $manager) use ($storageName) {
-                return $manager->storage($storageName);
-            });
+            $container->bind(
+                $alias,
+                static fn (CacheManager $manager): CacheInterface => $manager->storage($storageName)
+            );
         }
 
         return $manager;
