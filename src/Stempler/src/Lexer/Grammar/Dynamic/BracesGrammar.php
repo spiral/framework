@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar\Dynamic;
@@ -24,31 +17,17 @@ final class BracesGrammar
 {
     use TokenTrait;
 
-    /** @var bool */
-    private $active;
+    private bool $active = true;
+    private ?string $startSequence = null;
+    private ?string $endSequence = null;
+    private array $body = [];
 
-    /** @var int */
-    private $startToken;
-
-    /** @var int */
-    private $endToken;
-
-    /** @var string */
-    private $startSequence;
-
-    /** @var string */
-    private $endSequence;
-
-    /** @var array */
-    private $body = [];
-
-    public function __construct(string $startSequence, string $endSequence, int $startToken, int $closeToken)
-    {
-        $this->active = true;
-
-        $this->startToken = $startToken;
-        $this->endToken = $closeToken;
-
+    public function __construct(
+        string $startSequence,
+        string $endSequence,
+        private readonly int $startToken,
+        private readonly int $endToken
+    ) {
         $this->setStartSequence($startSequence);
         $this->setEndSequence($endSequence);
     }
@@ -89,7 +68,7 @@ final class BracesGrammar
 
     public function nextToken(Buffer $src): bool
     {
-        return $this->active && $src->lookaheadByte(strlen($this->startSequence)) === $this->startSequence;
+        return $this->active && $src->lookaheadByte(\strlen((string) $this->startSequence)) === $this->startSequence;
     }
 
     /**
@@ -101,7 +80,7 @@ final class BracesGrammar
             return false;
         }
 
-        return $this->startSequence === ($n->char . $src->lookaheadByte(strlen($this->startSequence) - 1));
+        return $this->startSequence === ($n->char . $src->lookaheadByte(\strlen((string) $this->startSequence) - 1));
     }
 
     /**
@@ -113,7 +92,7 @@ final class BracesGrammar
             new Token(
                 $this->startToken,
                 $n->offset,
-                $n->char . $this->nextBytes($src, strlen($this->startSequence) - 1)
+                $n->char . $this->nextBytes($src, \strlen((string) $this->startSequence) - 1)
             ),
         ];
 
@@ -146,7 +125,7 @@ final class BracesGrammar
                     $this->tokens[] = new Token(
                         $this->endToken,
                         $n->offset,
-                        $n->char . $this->nextBytes($src, strlen($this->endSequence) - 1)
+                        $n->char . $this->nextBytes($src, strlen((string) $this->endSequence) - 1)
                     );
 
                     break 2;
@@ -155,7 +134,7 @@ final class BracesGrammar
             }
         }
 
-        if (count($this->tokens) !== 3) {
+        if (\count($this->tokens) !== 3) {
             return null;
         }
 
@@ -167,7 +146,7 @@ final class BracesGrammar
      */
     private function ends(Buffer $src, Byte $n): bool
     {
-        return $this->endSequence === ($n->char . $src->lookaheadByte(strlen($this->endSequence) - 1));
+        return $this->endSequence === ($n->char . $src->lookaheadByte(\strlen((string) $this->endSequence) - 1));
     }
 
     /**

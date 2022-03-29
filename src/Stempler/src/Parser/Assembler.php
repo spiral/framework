@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser;
@@ -18,19 +11,13 @@ use Spiral\Stempler\Node\NodeInterface;
  */
 final class Assembler
 {
-    /** @var NodeInterface */
-    private $node;
-
-    /** @var string */
-    private $path;
-
     /** @var NodeInterface[] */
-    private $stack = [];
+    private array $stack = [];
 
-    public function __construct(NodeInterface $node, string $path)
-    {
-        $this->node = $node;
-        $this->path = $path;
+    public function __construct(
+        private NodeInterface $node,
+        private string $path
+    ) {
     }
 
     public function getNode(): NodeInterface
@@ -45,7 +32,7 @@ final class Assembler
             $path[] = $this->nodeName($tuple[0]);
         }
 
-        return implode('.', array_reverse($path));
+        return \implode('.', \array_reverse($path));
     }
 
     public function push(NodeInterface $node): void
@@ -57,7 +44,7 @@ final class Assembler
     {
         $this->push($node);
 
-        array_push($this->stack, [$this->node, $this->path]);
+        $this->stack[] = [$this->node, $this->path];
         $this->node = $node;
         $this->path = $path;
     }
@@ -67,16 +54,16 @@ final class Assembler
      */
     public function close(): void
     {
-        [$this->node, $this->path] = array_pop($this->stack);
+        [$this->node, $this->path] = \array_pop($this->stack);
     }
 
     private function nodeName(NodeInterface $node): string
     {
         $r = new \ReflectionClass($node);
-        if (property_exists($node, 'name')) {
-            return lcfirst($r->getShortName()) . "[{$node->name}]";
+        if (\property_exists($node, 'name')) {
+            return \lcfirst($r->getShortName()) . \sprintf('[%s]', $node->name);
         }
 
-        return lcfirst($r->getShortName());
+        return \lcfirst($r->getShortName());
     }
 }

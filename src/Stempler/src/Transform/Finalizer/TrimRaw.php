@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Finalizer;
@@ -21,27 +14,19 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class TrimRaw implements VisitorInterface
 {
-    /** @var string */
-    private $trim;
-
-    public function __construct(string $charset = " \n\t\r")
-    {
-        $this->trim = $charset;
+    public function __construct(
+        private readonly string $characters = " \n\t\r"
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx): void
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx)
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
-        if ($node instanceof Raw && trim($node->content, $this->trim) === '') {
+        if ($node instanceof Raw && \trim($node->content, $this->characters) === '') {
             foreach ($ctx->getScope() as $scope) {
                 if ($scope instanceof Attr) {
                     // do not trim attribute values

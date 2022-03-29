@@ -1,34 +1,19 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Node\Traits;
 
 trait AttributeTrait
 {
-    /** @var array */
-    private $attributes = [];
+    private array $attributes = [];
 
-    /**
-     * @param mixed  $value
-     */
-    public function setAttribute(string $name, $value): void
+    public function setAttribute(string $name, mixed $value): void
     {
         $this->attributes[$name] = $value;
     }
 
-    /**
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function getAttribute(string $name, $default = null)
+    public function getAttribute(string $name, mixed $default = null): mixed
     {
         return $this->attributes[$name] ?? $default;
     }

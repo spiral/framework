@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Compiler;
@@ -22,14 +15,12 @@ use Spiral\Stempler\Parser\Context;
  */
 final class Result
 {
-    /** @var string */
-    private $content = '';
+    private string $content = '';
 
     /** @var Location[] */
-    private $locations = [];
+    private array $locations = [];
 
-    /** @var Location|null */
-    private $parent;
+    private ?Location $parent = null;
 
     public function withinContext(?Context $ctx, callable $body): void
     {
@@ -46,13 +37,10 @@ final class Result
         }
     }
 
-    /**
-     * @param Context|null $ctx
-     */
     public function push(string $content, Context $ctx = null): void
     {
         if ($ctx !== null && $ctx->getPath() !== null) {
-            $this->locations[strlen($this->content)] = Location::fromContext($ctx, $this->parent);
+            $this->locations[\strlen($this->content)] = Location::fromContext($ctx, $this->parent);
         }
 
         $this->content .= $content;
@@ -72,7 +60,7 @@ final class Result
 
         // We can scan top level only
         foreach ($this->locations as $loc) {
-            if (!in_array($loc->path, $paths, true)) {
+            if (!\in_array($loc->path, $paths, true)) {
                 $paths[] = $loc->path;
             }
         }

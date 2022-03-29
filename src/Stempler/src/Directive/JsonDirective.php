@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Directive;
@@ -19,7 +12,7 @@ final class JsonDirective extends AbstractDirective
 
     public function renderJson(Directive $directive): string
     {
-        return sprintf(
+        return \sprintf(
             '<?php echo json_encode(%s, %s, %s) ?>',
             $directive->values[0] ?? $directive->body,
             $directive->values[1] ?? self::DEFAULT_OPTIONS,

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Import;
@@ -23,23 +16,17 @@ final class Element implements ImportInterface
 {
     use ContextTrait;
 
-    /** @var string */
-    private $path;
+    private string $alias;
 
-    /** @var string */
-    private $alias;
-
-    /**
-     * @param string|null  $alias
-     * @param Context|null $context
-     */
-    public function __construct(string $path, string $alias = null, Context $context = null)
-    {
-        $this->path = $path;
+    public function __construct(
+        private string $path,
+        string $alias = null,
+        Context $context = null
+    ) {
         $this->alias = $alias ?? $path;
 
-        if ($alias === null && strrpos($this->alias, '/') !== false) {
-            $this->alias = substr($this->alias, strrpos($this->alias, '/') + 1);
+        if ($alias === null && \strrpos($this->alias, '/') !== false) {
+            $this->alias = \substr($this->alias, \strrpos($this->alias, '/') + 1);
         }
 
         $this->context = $context;
@@ -55,9 +42,6 @@ final class Element implements ImportInterface
         return $this->alias;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function resolve(Builder $builder, string $name): ?Template
     {
         if ($this->alias !== $name) {

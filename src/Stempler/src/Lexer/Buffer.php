@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer;
@@ -16,22 +9,17 @@ namespace Spiral\Stempler\Lexer;
  */
 final class Buffer implements \IteratorAggregate
 {
-    /** @var \Generator @internal */
-    private $generator;
+    /** @var Byte[]|Token[] */
+    private array $buffer = [];
 
     /** @var Byte[]|Token[] */
-    private $buffer = [];
+    private array $replay = [];
 
-    /** @var Byte[]|Token[] */
-    private $replay = [];
-
-    /** @var int */
-    private $offset = 0;
-
-    public function __construct(\Generator $generator, int $offset = 0)
-    {
-        $this->generator = $generator;
-        $this->offset = $offset;
+    public function __construct(
+        /** @internal */
+        private readonly \Generator $generator,
+        private int $offset = 0
+    ) {
     }
 
     /**
@@ -52,13 +40,10 @@ final class Buffer implements \IteratorAggregate
         return $this->offset;
     }
 
-    /**
-     * @return Byte|Token
-     */
-    public function next()
+    public function next(): Byte|Token|null
     {
         if ($this->replay !== []) {
-            $n = array_shift($this->replay);
+            $n = \array_shift($this->replay);
         } else {
             $n = $this->generator->current();
             if ($n === null) {
@@ -103,7 +88,7 @@ final class Buffer implements \IteratorAggregate
 
         $n = $this->next();
         if ($n !== null) {
-            array_unshift($this->replay, $n);
+            \array_unshift($this->replay, $n);
         }
 
         return $n;
@@ -131,8 +116,8 @@ final class Buffer implements \IteratorAggregate
             $result .= $n->char;
         }
 
-        foreach (array_reverse($replay) as $n) {
-            array_unshift($this->replay, $n);
+        foreach (\array_reverse($replay) as $n) {
+            \array_unshift($this->replay, $n);
         }
 
         return $result;

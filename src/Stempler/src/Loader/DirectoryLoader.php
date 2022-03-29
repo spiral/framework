@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Loader;
@@ -18,25 +11,18 @@ use Spiral\Stempler\Exception\LoaderException;
  */
 final class DirectoryLoader implements LoaderInterface
 {
-    /** @var string */
-    private $directory;
-
-    /** @var string */
-    private $extension;
-
-    public function __construct(string $directory, string $extension = '.dark.php')
-    {
-        $this->directory = $directory;
-        $this->extension = $extension;
+    public function __construct(
+        private readonly string $directory,
+        private readonly string $extension = '.dark.php'
+    ) {
     }
 
     /**
-     *
      * @throws LoaderException
      */
     public function load(string $path): Source
     {
-        $filename = sprintf(
+        $filename = \sprintf(
             '%s%s%s%s',
             $this->directory,
             DIRECTORY_SEPARATOR,
@@ -44,10 +30,10 @@ final class DirectoryLoader implements LoaderInterface
             $this->extension
         );
 
-        if (!file_exists($filename)) {
-            throw new LoaderException("Unable to load `{$path}`, no such file");
+        if (!\file_exists($filename)) {
+            throw new LoaderException(\sprintf('Unable to load `%s`, no such file', $path));
         }
 
-        return new Source(file_get_contents($filename), $filename);
+        return new Source(\file_get_contents($filename), $filename);
     }
 }

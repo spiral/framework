@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer;
@@ -20,7 +13,7 @@ use Spiral\Stempler\Lexer\Grammar\RawGrammar;
 final class Lexer
 {
     /** @var GrammarInterface[] */
-    private $grammars = [];
+    private array $grammars = [];
 
     /**
      * Attach grammar layer.
@@ -29,7 +22,7 @@ final class Lexer
     {
         $this->grammars[] = $grammar;
 
-        return count($this->grammars) - 1;
+        return \count($this->grammars) - 1;
     }
 
     /**
@@ -52,7 +45,7 @@ final class Lexer
     {
         foreach ($grammar->parse($stream) as $n) {
             if ($n instanceof Token && $n->grammar === null) {
-                $n->grammar = get_class($grammar);
+                $n->grammar = $grammar::class;
             }
 
             yield $n;
@@ -61,10 +54,8 @@ final class Lexer
 
     /**
      * Generate character stream and aggregate grammar results.
-     *
-     * @return array|\Generator
      */
-    private function generate(StreamInterface $src)
+    private function generate(StreamInterface $src): array|\Generator
     {
         while (!$src->isEOI()) {
             yield new Byte($src->getOffset(), $src->peak());
