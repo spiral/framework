@@ -118,6 +118,63 @@ final class GeneratorStreamTest extends TestCase
         $this->assertSame($rValue, $result);
     }
 
+    public function testUnableReadStream(): void
+    {
+        $stream = $this->createStream();
+        $stream->close();
+
+        $this->assertSame('', (string) $stream);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectErrorMessage('Unable to read stream contents.');
+
+        $stream->getContents();
+    }
+
+    public function testClose(): void
+    {
+        $stream = $this->createStream();
+        $stream->close();
+
+        $this->expectException(RuntimeException::class);
+        $this->expectErrorMessage('Cannot read from non-readable stream.');
+
+        $stream->read(1);
+
+        $this->assertFalse($stream->isReadable());
+        $this->assertNull($stream->getSize());
+        $this->assertSame(0, $stream->tell());
+    }
+
+    public function testEof(): void
+    {
+        $stream = $this->createStream();
+
+        $this->assertFalse($stream->eof());
+
+        $stream->close();
+
+        $this->assertTrue($stream->eof());
+    }
+
+    public function testIsReadable(): void
+    {
+        $stream = $this->createStream();
+
+        $this->assertTrue($stream->isReadable());
+
+        $stream->close();
+
+        $this->assertFalse($stream->isReadable());
+    }
+
+    public function testGetMetadata(): void
+    {
+        $stream = $this->createStream();
+
+        $this->assertSame(['seekable' => false, 'eof' => false], $stream->getMetadata());
+    }
+
     private function createStream(iterable $sequence = self::DEFAULT_SEQUENCE, $return = null): GeneratorStream
     {
         $function = static function (iterable $iterable, $return): Generator {
