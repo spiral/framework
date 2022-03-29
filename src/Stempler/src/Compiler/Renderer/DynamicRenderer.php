@@ -58,7 +58,7 @@ final class DynamicRenderer implements Compiler\RendererInterface
     private function output(Compiler\Result $source, Output $output): void
     {
         if ($output->rawOutput) {
-            $source->push(\sprintf('<?php echo %s; ?>',\trim($output->body)), $output->getContext());
+            $source->push(\sprintf('<?php echo %s; ?>', \trim($output->body)), $output->getContext());
             return;
         }
 

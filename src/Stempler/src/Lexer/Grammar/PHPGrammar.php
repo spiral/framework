@@ -67,7 +67,6 @@ final class PHPGrammar implements GrammarInterface
                 $buffer .= $token;
                 continue;
             }
-            
             $buffer .= $token[1];
         }
 
