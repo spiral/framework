@@ -32,7 +32,7 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
     public function __construct(
         private readonly RulesInterface $rules,
         private readonly string $defaultRule = ForbidRule::class
-    ){
+    ) {
         $this->matcher = new Matcher();
     }
 
