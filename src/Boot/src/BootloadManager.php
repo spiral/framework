@@ -20,7 +20,7 @@ final class BootloadManager implements Container\SingletonInterface
 
     public function __construct(
         /* @internal */
-        protected Container $container
+        private readonly Container $container
     ) {
     }
 

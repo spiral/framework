@@ -52,7 +52,7 @@
   - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
   - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
     added in `Spiral\Boot\EnvironmentInterface` interface.
-  - [spiral/boot] Added return type `self` to the method `addFinalizer`,
+  - [spiral/boot] Added return type `static` to the method `addFinalizer`,
     added return type `void` to the method `finalize` in `Spiral\Boot\FinalizerInterface` interface.
   - [spiral/boot] Added return type `self` to the method `addDispatcher`,
     added return type `mixed` to the method `serve` in `Spiral\Boot\KernelInterface` interface.

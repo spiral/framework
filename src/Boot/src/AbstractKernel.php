@@ -68,31 +68,6 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Create and initiate an application instance.
-     *
-     * @param array<string,string> $directories Directory map, "root" is required.
-     * @param EnvironmentInterface|null $environment Application specific environment if any.
-     * @param bool $handleErrors Enable global error handling.
-     * @return self|static
-     *
-     * @throws \Throwable
-     *
-     * @deprecated since 3.0. Use Kernel::create(...)->run() instead.
-     */
-    public static function init(
-        array $directories,
-        EnvironmentInterface $environment = null,
-        bool $handleErrors = true
-    ): ?self {
-        $core = self::create(
-            $directories,
-            $handleErrors
-        );
-
-        return $core->run($environment);
-    }
-
-    /**
      * Create an application instance.
      * @throws \Throwable
      */
@@ -197,7 +172,7 @@ abstract class AbstractKernel implements KernelInterface
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
-                    fn () => $dispatcher->serve()
+                    static fn () => $dispatcher->serve()
                 );
             }
         }

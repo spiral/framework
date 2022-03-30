@@ -27,9 +27,9 @@ class KernelTest extends TestCase
     {
         $this->expectException(BootException::class);
 
-        $kernel = TestCore::init([
+        $kernel = TestCore::create([
             'root' => __DIR__,
-        ]);
+        ])->run();
 
         $kernel->serve();
     }
@@ -39,9 +39,9 @@ class KernelTest extends TestCase
      */
     public function testDispatcher(): void
     {
-        $kernel = TestCore::init([
+        $kernel = TestCore::create([
             'root' => __DIR__,
-        ]);
+        ])->run();
 
         $d = new class() implements DispatcherInterface {
             public $fired = false;
@@ -68,9 +68,9 @@ class KernelTest extends TestCase
      */
     public function testDispatcherReturnCode(): void
     {
-        $kernel = TestCore::init([
+        $kernel = TestCore::create([
             'root' => __DIR__,
-        ]);
+        ])->run();
 
         $d = new class() implements DispatcherInterface {
             public function canServe(): bool
@@ -94,9 +94,9 @@ class KernelTest extends TestCase
      */
     public function testEnv(): void
     {
-        $kernel = TestCore::init([
+        $kernel = TestCore::create([
             'root' => __DIR__,
-        ]);
+        ])->run();
 
         $this->assertSame(
             'VALUE',
