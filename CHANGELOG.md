@@ -54,6 +54,12 @@
     in `Spiral\Console\SequenceInterface` interface.
   - [spiral/files] Added return type `bool` to the method `delete`, added return type `bool` to the method `deleteDirectory`,
     added return type `bool` to the method `touch`, added return type `bool` to the method `setPermissions` in `Spiral\Files\FilesInterface`.
+  - [spiral/storage] Added `string|UriInterface|\Stringable` parameter type of `$id` to a methods `getContents`, `getStream`,
+    `exists`, `getLastModified`, `getSize`, `getMimeType`, `getVisibility` in `Spiral\Storage\Storage\ReadableInterface`.
+  - [spiral/storage] Added `string|UriInterface|\Stringable` parameter type of `$id` to a methods `create`, `setVisibility`,
+    `delete`. Added `string|UriInterface|\Stringable` parameter type of `$id` and `mixed` parameter type of `$content` 
+    to the method `write`, added `string|UriInterface|\Stringable` parameter type of `$source` and `$destination` to a methods
+    `copy`, `move` in `Spiral\Storage\Storage\WritableInterface`.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`

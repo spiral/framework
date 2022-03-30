@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage;
@@ -16,40 +9,19 @@ use Spiral\Storage\File\ReadableTrait;
 use Spiral\Storage\File\UriResolvableTrait;
 use Spiral\Storage\File\WritableTrait;
 
-final class File implements FileInterface
+final class File implements \Stringable, FileInterface
 {
     use UriResolvableTrait;
     use ReadableTrait;
     use WritableTrait;
 
-    /**
-     * @var BucketInterface
-     */
-    private $storage;
-
-    /**
-     * @var string
-     */
-    private $pathname;
-
-    /**
-     * @var UriResolverInterface|null
-     */
-    private $resolver;
-
-    /**
-     * @param UriResolverInterface|null $resolver
-     */
-    public function __construct(BucketInterface $storage, string $pathname, UriResolverInterface $resolver = null)
-    {
-        $this->storage = $storage;
-        $this->pathname = $pathname;
-        $this->resolver = $resolver;
+    public function __construct(
+        private readonly BucketInterface $storage,
+        private readonly string $pathname,
+        private readonly ?UriResolverInterface $resolver = null
+    ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString(): string
     {
         return $this->getId();
@@ -66,17 +38,11 @@ final class File implements FileInterface
         return \sprintf('%s://%s', $name, $this->getPathname());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getPathname(): string
     {
         return $this->pathname;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getBucket(): BucketInterface
     {
         return $this->storage;

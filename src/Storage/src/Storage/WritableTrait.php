@@ -1,17 +1,11 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
+use Psr\Http\Message\UriInterface;
 use Spiral\Storage\FileInterface;
 use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
@@ -26,50 +20,35 @@ trait WritableTrait
      */
     abstract public function bucket(string $name = null): BucketInterface;
 
-    /**
-     * {@inheritDoc}
-     */
-    public function create($id, array $config = []): FileInterface
+    public function create(string|UriInterface|\Stringable $id, array $config = []): FileInterface
     {
         [$name, $pathname] = $this->parseUri($id);
 
-        $bucket = $this->bucket($name);
-
-        return $bucket->create($pathname, $config);
+        return $this->bucket($name)->create($pathname, $config);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function write($id, $content, array $config = []): FileInterface
+    public function write(string|UriInterface|\Stringable $id, mixed $content, array $config = []): FileInterface
     {
         [$name, $pathname] = $this->parseUri($id);
 
-        $bucket = $this->bucket($name);
-
-        return $bucket->write($pathname, $content, $config);
+        return $this->bucket($name)->write($pathname, $content, $config);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function setVisibility(
-        $id,
+        string|UriInterface|\Stringable $id,
         #[ExpectedValues(valuesFromClass: Visibility::class)]
         string $visibility
     ): FileInterface {
         [$name, $pathname] = $this->parseUri($id);
 
-        $bucket = $this->bucket($name);
-
-        return $bucket->setVisibility($pathname, $visibility);
+        return $this->bucket($name)->setVisibility($pathname, $visibility);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function copy($source, $destination, array $config = []): FileInterface
-    {
+    public function copy(
+        string|UriInterface|\Stringable $source,
+        string|UriInterface|\Stringable $destination,
+        array $config = []
+    ): FileInterface {
         [$sourceName, $sourcePathname] = $this->parseUri($source);
         [$destName, $destPathname] = $this->parseUri($destination, false);
 
@@ -79,11 +58,11 @@ trait WritableTrait
         return $sourceStorage->copy($sourcePathname, $destPathname, $destStorage, $config);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function move($source, $destination, array $config = []): FileInterface
-    {
+    public function move(
+        string|UriInterface|\Stringable $source,
+        string|UriInterface|\Stringable $destination,
+        array $config = []
+    ): FileInterface {
         [$sourceName, $sourcePathname] = $this->parseUri($source);
         [$destName, $destPathname] = $this->parseUri($destination, false);
 
@@ -93,10 +72,7 @@ trait WritableTrait
         return $sourceStorage->move($sourcePathname, $destPathname, $destStorage, $config);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function delete($id, bool $clean = false): void
+    public function delete(string|UriInterface|\Stringable $id, bool $clean = false): void
     {
         [$name, $pathname] = $this->parseUri($id);
 
@@ -108,5 +84,5 @@ trait WritableTrait
     /**
      * {@see Storage::parseUri()}
      */
-    abstract protected function parseUri($uri, bool $withScheme = true): array;
+    abstract protected function parseUri(string|UriInterface|\Stringable $uri, bool $withScheme = true): array;
 }
