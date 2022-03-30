@@ -35,8 +35,6 @@ final class ContainerScope
 
         try {
             return $scope();
-        } catch (Throwable $e) {
-            throw $e;
         } finally {
             self::$container = $previous;
         }

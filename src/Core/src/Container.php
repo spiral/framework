@@ -594,9 +594,8 @@ final class Container implements
      *
      * @param object $instance  Created object.
      * @param array $parameters Parameters which been passed with created instance.
-     * @return object
      */
-    private function registerInstance(object $instance, array $parameters)
+    private function registerInstance(object $instance, array $parameters): object
     {
         //Declarative singletons (only when class received via direct get)
         if ($parameters === [] && $instance instanceof SingletonInterface) {

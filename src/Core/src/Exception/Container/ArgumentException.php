@@ -9,10 +9,12 @@ namespace Spiral\Core\Exception\Container;
  */
 class ArgumentException extends AutowireException
 {
+    /**
+     * @param \ReflectionParameter $parameter Parameter caused error.
+     * @param \ReflectionFunctionAbstract $context Context method or constructor or function.
+     */
     public function __construct(
-        /** Parameter caused error. */
         protected \ReflectionParameter $parameter,
-        /** Context method or constructor or function. */
         protected \ReflectionFunctionAbstract $context
     ) {
         $name = $context->getName();
