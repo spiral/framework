@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -25,45 +18,38 @@ final class Environment implements EnvironmentInterface
 
     private ?string $id = null;
     private array $values;
-    private bool $overwrite;
 
-    public function __construct(array $values = [], bool $overwrite = true)
-    {
+    public function __construct(
+        array $values = [],
+        private bool $overwrite = true
+    ) {
         $this->values = $values + $_ENV + $_SERVER;
-        $this->overwrite = $overwrite;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getID(): string
     {
         if (empty($this->id)) {
-            $this->id = md5(serialize($this->values));
+            $this->id = \md5(\serialize($this->values));
         }
 
         return $this->id;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function set(string $name, $value): void
+    public function set(string $name, mixed $value): self
     {
         if (\array_key_exists($name, $this->values) && !$this->overwrite) {
-            return;
+            return $this;
         }
 
         $this->values[$name] = $_ENV[$name] = $value;
-        putenv("$name=$value");
+        \putenv("$name=$value");
 
         $this->id = null;
+
+        return $this;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function get(string $name, $default = null)
+    public function get(string $name, mixed $default = null): mixed
     {
         if (isset($this->values[$name])) {
             return $this->normalize($this->values[$name]);
@@ -86,17 +72,13 @@ final class Environment implements EnvironmentInterface
         return $result;
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    protected function normalize($value)
+    protected function normalize(mixed $value): mixed
     {
-        if (!is_string($value)) {
+        if (!\is_string($value)) {
             return $value;
         }
 
-        $alias = strtolower($value);
+        $alias = \strtolower($value);
         if (isset(self::VALUE_MAP[$alias])) {
             return self::VALUE_MAP[$alias];
         }
