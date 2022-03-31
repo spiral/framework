@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Translator\Config;
@@ -37,8 +30,7 @@ final class TranslatorConfig extends InjectableConfig
         'dumpers'        => [],
     ];
 
-    /** @var Matcher */
-    private $matcher;
+    private readonly Matcher $matcher;
 
     public function __construct(array $config = [])
     {
@@ -84,7 +76,7 @@ final class TranslatorConfig extends InjectableConfig
      */
     public function resolveDomain(string $bundle): string
     {
-        $bundle = strtolower(str_replace(['/', '\\'], '-', $bundle));
+        $bundle = \strtolower(\str_replace(['/', '\\'], '-', $bundle));
 
         foreach ($this->config['domains'] as $domain => $patterns) {
             foreach ($patterns as $pattern) {

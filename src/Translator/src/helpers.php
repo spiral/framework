@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 use Spiral\Core\ContainerScope;
@@ -14,7 +7,7 @@ use Spiral\Core\Exception\ScopeException;
 use Spiral\Translator\Exception\TranslatorException;
 use Spiral\Translator\TranslatorInterface;
 
-if (!function_exists('l')) {
+if (!\function_exists('l')) {
     /**
      * Translate message using default or specific bundle name.
      *
@@ -26,7 +19,6 @@ if (!function_exists('l')) {
      * @param array  $options
      * @param string $domain
      *
-     * @return string
      *
      * @throws TranslatorException
      * @throws ScopeException
@@ -47,7 +39,7 @@ if (!function_exists('l')) {
     }
 }
 
-if (!function_exists('p')) {
+if (!\function_exists('p')) {
     /**
      * Pluralize string using language pluralization options and specified numeric value.
      *
@@ -59,7 +51,6 @@ if (!function_exists('p')) {
      * @param array  $options
      * @param string $domain
      *
-     * @return string
      *
      * @throws TranslatorException
      * @throws ScopeException
