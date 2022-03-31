@@ -33,6 +33,8 @@ use Spiral\Core\Exception\LogicException;
  *
  * @see InjectableInterface
  * @see SingletonInterface
+ *
+ * @psalm-type TResolver = class-string|non-empty-string|callable|array{class-string, non-empty-string}
  */
 final class Container implements
     ContainerInterface,
@@ -42,6 +44,9 @@ final class Container implements
     InvokerInterface,
     ScopeInterface
 {
+    /**
+     * @psalm-var array<non-empty-string, string|object|array{TResolver, bool}>
+     */
     private array $bindings = [
         ContainerInterface::class => self::class,
         BinderInterface::class    => self::class,
@@ -62,7 +67,7 @@ final class Container implements
      */
     public function __construct()
     {
-        $this->bindings[static::class] = self::class;
+        $this->bindings[self::class] = self::class;
         $this->bindings[self::class] = $this;
     }
 
@@ -224,17 +229,15 @@ final class Container implements
 
         unset($this->bindings[$alias]);
         try {
-            if ($binding[0] === $alias) {
-                $instance = $this->autowire($alias, $parameters, $context);
-            } else {
-                $instance = $this->evaluateBinding($alias, $binding[0], $parameters, $context);
-            }
+            $instance = $binding[0] === $alias
+                ? $this->autowire($alias, $parameters, $context)
+                : $this->evaluateBinding($alias, $binding[0], $parameters, $context);
         } finally {
             $this->bindings[$alias] = $binding;
         }
 
         if ($binding[1]) {
-            //Indicates singleton
+            // Indicates singleton
             $this->bindings[$alias] = $instance;
         }
 
@@ -275,6 +278,8 @@ final class Container implements
      * Bind value resolver to container alias. Resolver can be class name (will be constructed
      * for each method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
+     *
+     * @psalm-param TResolver|object $resolver
      */
     public function bind(string $alias, string|array|callable|object $resolver): void
     {
@@ -291,6 +296,8 @@ final class Container implements
     /**
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
      * (will be constructed only once), function array or Closure (executed only once call).
+     *
+     * @psalm-param TResolver|object $resolver
      */
     public function bindSingleton(string $alias, string|array|callable|object $resolver): void
     {
@@ -331,7 +338,10 @@ final class Container implements
         unset($this->bindings[$alias]);
     }
 
-    public function invoke(array|callable|string|\Closure $target, array $parameters = []): mixed
+    /**
+     * @psalm-param TResolver $target
+     */
+    public function invoke(mixed $target, array $parameters = []): mixed
     {
         if (\is_array($target) && isset($target[1])) {
             // In a form of resolver and method
@@ -356,7 +366,7 @@ final class Container implements
         }
 
         if (\is_string($target) && \is_callable($target)) {
-            $target = \Closure::fromCallable($target);
+            $target = $target(...);
         }
 
         if ($target instanceof \Closure) {
@@ -372,7 +382,7 @@ final class Container implements
             );
         }
 
-        throw new NotCallableException('Unsupported callable');
+        throw new NotCallableException('Unsupported callable.');
     }
 
     /**
@@ -617,7 +627,7 @@ final class Container implements
      */
     private function evaluateBinding(
         string $alias,
-        string|array|Autowire|\Closure $target,
+        mixed $target,
         array $parameters,
         string $context = null
     ): mixed {
@@ -633,7 +643,7 @@ final class Container implements
         try {
             return $this->invoke($target, $parameters);
         } catch (NotCallableException $e) {
-            throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias), $e->getCode(), $e);
+            throw new ContainerException(\sprintf("Invalid binding for '%s'.", $alias), $e->getCode(), $e);
         }
     }
 }

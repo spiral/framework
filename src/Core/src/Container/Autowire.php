@@ -31,19 +31,21 @@ final class Autowire
 
     /**
      * Init the autowire based on string or array definition.
+     *
+     * @throws AutowireException
      */
-    public static function wire(string|array|object $definition): Autowire
+    public static function wire(mixed $definition): Autowire
     {
         if ($definition instanceof self) {
             return $definition;
         }
 
         if (\is_string($definition)) {
-            return new Autowire($definition);
+            return new self($definition);
         }
 
         if (\is_array($definition) && isset($definition['class'])) {
-            return new Autowire(
+            return new self(
                 $definition['class'],
                 $definition['options'] ?? $definition['params'] ?? []
             );
@@ -55,7 +57,7 @@ final class Autowire
             return $autowire;
         }
 
-        throw new AutowireException('Invalid autowire definition');
+        throw new AutowireException('Invalid autowire definition.');
     }
 
     /**
@@ -66,11 +68,6 @@ final class Autowire
      */
     public function resolve(FactoryInterface $factory, array $parameters = []): object
     {
-        if ($this->target !== null) {
-            // pre-wired
-            return $this->target;
-        }
-
-        return $factory->make($this->alias, \array_merge($this->parameters, $parameters));
+        return $this->target ?? $factory->make($this->alias, \array_merge($this->parameters, $parameters));
     }
 }
