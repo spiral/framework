@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Exceptions;
@@ -41,13 +34,12 @@ class ConsoleHandler extends AbstractHandler
         'reset'      => Color::RESET,
     ];
 
-    /** @var StyleInterface */
-    private $colorsSupport;
+    private bool $colorsSupport;
 
     /**
      * @param bool|resource $stream
      */
-    public function __construct($stream = STDOUT)
+    public function __construct(mixed $stream = STDOUT)
     {
         $this->colorsSupport = System::isColorsSupported($stream);
     }
@@ -60,18 +52,12 @@ class ConsoleHandler extends AbstractHandler
         $this->colorsSupport = $enabled;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
-        $result = '';
-
-        if ($e instanceof \Error) {
-            $result .= $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:magenta,white');
-        } else {
-            $result .= $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:red,white');
-        }
+        $result = $this->renderHeader(
+            \sprintf("[%s]\n%s", $e::class, $e->getMessage()),
+            $e instanceof \Error ? 'bg:magenta,white' : 'bg:red,white'
+        );
 
         $result .= $this->format(
             "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>\n",
@@ -100,11 +86,11 @@ class ConsoleHandler extends AbstractHandler
     {
         $result = '';
 
-        $lines = explode("\n", str_replace("\r", '', $title));
+        $lines = \explode("\n", \str_replace("\r", '', $title));
 
         $length = 0;
-        array_walk($lines, function ($v) use (&$length): void {
-            $length = max($length, mb_strlen($v));
+        \array_walk($lines, static function ($v) use (&$length): void {
+            $length = max($length, \mb_strlen($v));
         });
 
         $length += $padding;
@@ -112,9 +98,9 @@ class ConsoleHandler extends AbstractHandler
         foreach ($lines as $line) {
             $result .= $this->format(
                 "<{$style}>%s%s%s</reset>\n",
-                str_repeat(' ', $padding + 1),
+                \str_repeat(' ', $padding + 1),
                 $line,
-                str_repeat(' ', $length - mb_strlen($line) + 1)
+                \str_repeat(' ', $length - \mb_strlen($line) + 1)
             );
         }
 
@@ -123,8 +109,6 @@ class ConsoleHandler extends AbstractHandler
 
     /**
      * Render exception call stack.
-     *
-     * @param Highlighter|null $h
      */
     private function renderTrace(\Throwable $e, Highlighter $h = null): string
     {
@@ -136,7 +120,7 @@ class ConsoleHandler extends AbstractHandler
         $result = $this->format("\n<red>Exception Trace:</reset>\n");
 
         foreach ($stacktrace as $trace) {
-            if (isset($trace['type']) && isset($trace['class'])) {
+            if (isset($trace['type'], $trace['class'])) {
                 $line = $this->format(
                     ' <white>%s%s%s()</reset>',
                     $trace['class'],
@@ -166,9 +150,9 @@ class ConsoleHandler extends AbstractHandler
 
             $result .= $line . "\n";
 
-            if (!empty($h) && !empty($trace['file'])) {
+            if ($h !== null && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
-                    file_get_contents($trace['file']),
+                    \file_get_contents($trace['file']),
                     $trace['line'],
                     static::SHOW_LINES
                 ) . "\n";
@@ -180,17 +164,15 @@ class ConsoleHandler extends AbstractHandler
 
     /**
      * Format string and apply color formatting (if enabled).
-     *
-     * @param mixed  ...$args
      */
-    private function format(string $format, ...$args): string
+    private function format(string $format, mixed ...$args): string
     {
         if (!$this->colorsSupport) {
-            $format = preg_replace('/<[^>]+>/', '', $format);
+            $format = \preg_replace('/<[^>]+>/', '', $format);
         } else {
-            $format = preg_replace_callback('/(<([^>]+)>)/', function ($partial) {
+            $format = \preg_replace_callback('/(<([^>]+)>)/', function ($partial) {
                 $style = '';
-                foreach (explode(',', trim($partial[2], '/')) as $color) {
+                foreach (\explode(',', \trim($partial[2], '/')) as $color) {
                     if (isset(self::COLORS[$color])) {
                         $style .= self::COLORS[$color];
                     }
@@ -200,6 +182,6 @@ class ConsoleHandler extends AbstractHandler
             }, $format);
         }
 
-        return sprintf($format, ...$args);
+        return \sprintf($format, ...$args);
     }
 }

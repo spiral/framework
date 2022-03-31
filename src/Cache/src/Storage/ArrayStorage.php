@@ -12,20 +12,15 @@ class ArrayStorage implements CacheInterface
 
     /**
      * The array of stored values.
-     *
-     * @var array
      */
-    protected $storage = [];
+    protected array $storage = [];
 
-    /** @var int */
-    private $ttl;
-
-    public function __construct(int $ttl = 2592000)
-    {
-        $this->ttl = $ttl;
+    public function __construct(
+        private readonly int $ttl = 2_592_000
+    ) {
     }
 
-    public function get($key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         if (!isset($this->storage[$key])) {
             return $default;
@@ -35,7 +30,7 @@ class ArrayStorage implements CacheInterface
 
         $expiresAt = $item['timestamp'] ?? 0;
 
-        if ($expiresAt !== 0 && time() >= $expiresAt) {
+        if ($expiresAt !== 0 && \time() >= $expiresAt) {
             $this->delete($key);
 
             return $default;
@@ -44,7 +39,7 @@ class ArrayStorage implements CacheInterface
         return $item['value'];
     }
 
-    public function set($key, $value, $ttl = null): bool
+    public function set(string $key, mixed $value, null|int|\DateInterval|\DateTimeInterface $ttl = null): bool
     {
         $this->storage[$key] = [
             'value' => $value,
@@ -54,7 +49,7 @@ class ArrayStorage implements CacheInterface
         return true;
     }
 
-    public function delete($key): bool
+    public function delete(string $key): bool
     {
         if ($this->has($key)) {
             unset($this->storage[$key]);
@@ -72,7 +67,7 @@ class ArrayStorage implements CacheInterface
         return true;
     }
 
-    public function getMultiple($keys, $default = null): iterable
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
         $return = [];
 
@@ -83,7 +78,7 @@ class ArrayStorage implements CacheInterface
         return $return;
     }
 
-    public function setMultiple($values, $ttl = null): bool
+    public function setMultiple(iterable $values, null|int|\DateInterval|\DateTimeInterface $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             $this->set($key, $value, $ttl);
@@ -92,20 +87,20 @@ class ArrayStorage implements CacheInterface
         return false;
     }
 
-    public function deleteMultiple($keys): bool
+    public function deleteMultiple(iterable $keys): bool
     {
         $state = null;
 
         foreach ($keys as $key) {
             $result = $this->delete($key);
 
-            $state = is_null($state) ? $result : $result && $state;
+            $state = \is_null($state) ? $result : $result && $state;
         }
 
         return $state ?: false;
     }
 
-    public function has($key): bool
+    public function has(string $key): bool
     {
         return \array_key_exists($key, $this->storage);
     }

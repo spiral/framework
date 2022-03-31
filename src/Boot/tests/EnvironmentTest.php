@@ -97,7 +97,7 @@ class EnvironmentTest extends TestCase
      */
     protected function getEnv(array $env, bool $overwite= true): EnvironmentInterface
     {
-        $core = TestCore::init(['root' => __DIR__], new Environment($env, $overwite));
+        $core = TestCore::create(['root' => __DIR__])->run(new Environment($env, $overwite));
 
         return $core->getContainer()->get(EnvironmentInterface::class);
     }
