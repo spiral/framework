@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Filter;
@@ -31,12 +23,9 @@ final class Map extends Group
         $this->filters = $filters;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function withValue($value): ?SpecificationInterface
+    public function withValue(mixed $value): ?SpecificationInterface
     {
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             // only array values are expected
             return null;
         }

@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid;
@@ -21,7 +13,7 @@ use Spiral\DataGrid\Specification\SequenceInterface;
 final class Compiler
 {
     /** @var WriterInterface[] */
-    private $writers = [];
+    private array $writers = [];
 
     public function addWriter(WriterInterface $writer): void
     {
@@ -31,11 +23,9 @@ final class Compiler
     /**
      * Compile the source constrains based on a given specification. Returns altered source.
      *
-     * @param mixed                  $source
-     * @return mixed|null
      * @throws CompilerException
      */
-    public function compile($source, SpecificationInterface ...$specifications)
+    public function compile(mixed $source, SpecificationInterface ...$specifications): mixed
     {
         if ($source === null) {
             return null;
@@ -59,10 +49,10 @@ final class Compiler
                 continue;
             }
 
-            throw new CompilerException(sprintf(
+            throw new CompilerException(\sprintf(
                 'Unable to compile specification `%s` for `%s`, no compiler found',
-                get_class($specification),
-                is_object($source) ? get_class($source) : gettype($source)
+                $specification::class,
+                \get_debug_type($source)
             ));
         }
 

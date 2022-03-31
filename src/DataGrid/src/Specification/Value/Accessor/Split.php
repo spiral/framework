@@ -8,22 +8,20 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 class Split extends Accessor
 {
-    /** @var string */
-    private $char;
-
-    public function __construct(ValueInterface $next, string $char = ',')
-    {
+    public function __construct(
+        ValueInterface $next,
+        private string $char = ','
+    ) {
         parent::__construct($next);
-        $this->char = $char;
     }
 
-    protected function acceptsCurrent($value): bool
+    protected function acceptsCurrent(mixed $value): bool
     {
-        return is_string($value);
+        return \is_string($value);
     }
 
-    protected function convertCurrent($value)
+    protected function convertCurrent(mixed $value): array
     {
-        return explode($this->char, $value);
+        return \explode($this->char, (string) $value);
     }
 }

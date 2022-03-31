@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Pagination;
@@ -15,39 +7,29 @@ namespace Spiral\DataGrid\Specification\Pagination;
 use Spiral\DataGrid\Specification\FilterInterface;
 use Spiral\DataGrid\Specification\SequenceInterface;
 use Spiral\DataGrid\Specification\Value;
+use Spiral\DataGrid\Specification\Value\EnumValue;
 use Spiral\DataGrid\SpecificationInterface;
 
 final class PagePaginator implements SequenceInterface, FilterInterface
 {
-    /** @var Value\EnumValue */
-    private $limitValue;
+    private readonly EnumValue $limitValue;
+    private int $page = 1;
 
-    /** @var int */
-    private $limit;
+    public function __construct(
+        private int $limit,
+        array $allowedLimits = []
+    ) {
+        $allowedLimits[] = $limit;
 
-    /** @var int */
-    private $page;
+        \sort($allowedLimits);
 
-    public function __construct(int $defaultLimit, array $allowedLimits = [])
-    {
-        $this->limit = $defaultLimit;
-        $this->page = 1;
-
-        $allowedLimits[] = $defaultLimit;
-
-        sort($allowedLimits);
-
-        $this->limitValue = new Value\EnumValue(new Value\IntValue(), ...$allowedLimits);
+        $this->limitValue = new EnumValue(new Value\IntValue(), ...$allowedLimits);
     }
 
-    /**
-     * @param mixed $value
-     * @return FilterInterface|null
-     */
-    public function withValue($value): ?SpecificationInterface
+    public function withValue(mixed $value): ?SpecificationInterface
     {
         $paginator = clone $this;
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             return $paginator;
         }
 
@@ -55,16 +37,13 @@ final class PagePaginator implements SequenceInterface, FilterInterface
             $paginator->limit = $paginator->limitValue->convert($value['limit']);
         }
 
-        if (isset($value['page']) && is_numeric($value['page'])) {
-            $paginator->page = max((int)$value['page'], 1);
+        if (isset($value['page']) && \is_numeric($value['page'])) {
+            $paginator->page = \max((int)$value['page'], 1);
         }
 
         return $paginator;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getSpecifications(): array
     {
         $specifications = [new Limit($this->limit)];
@@ -75,9 +54,6 @@ final class PagePaginator implements SequenceInterface, FilterInterface
         return $specifications;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getValue(): array
     {
         return [
