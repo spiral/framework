@@ -66,7 +66,7 @@ final class EncrypterFactory implements InjectorInterface, EncryptionInterface, 
     /**
      * {@inheritdoc}
      */
-    public function createInjection(\ReflectionClass $class, string $context = null)
+    public function createInjection(\ReflectionClass $class, string $context = null): EncrypterInterface
     {
         return $this->getEncrypter();
     }

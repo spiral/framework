@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -31,31 +24,25 @@ abstract class AbstractKernel implements KernelInterface
      */
     protected const LOAD = [];
 
-    /** @var Container */
-    protected $container;
-
-    /** @var FinalizerInterface */
-    protected $finalizer;
-
-    /** @var BootloadManager */
-    protected $bootloader;
+    protected FinalizerInterface $finalizer;
+    protected BootloadManager $bootloader;
 
     /** @var DispatcherInterface[] */
-    protected $dispatchers = [];
+    protected array $dispatchers = [];
 
     /** @var array<Closure> */
-    private $startingCallbacks = [];
+    private array $startingCallbacks = [];
 
     /** @var array<Closure> */
-    private $startedCallbacks = [];
+    private array $startedCallbacks = [];
 
     /**
      * @throws \Throwable
      */
-    public function __construct(Container $container, array $directories)
-    {
-        $this->container = $container;
-
+    public function __construct(
+        protected Container $container,
+        array $directories
+    ) {
         $this->container->bindSingleton(KernelInterface::class, $this);
         $this->container->bindSingleton(self::class, $this);
         $this->container->bindSingleton(static::class, $this);
@@ -78,31 +65,6 @@ abstract class AbstractKernel implements KernelInterface
     public function __destruct()
     {
         $this->finalizer->finalize(true);
-    }
-
-    /**
-     * Create and initiate an application instance.
-     *
-     * @param array<string,string> $directories Directory map, "root" is required.
-     * @param EnvironmentInterface|null $environment Application specific environment if any.
-     * @param bool $handleErrors Enable global error handling.
-     * @return self|static
-     *
-     * @throws \Throwable
-     *
-     * @deprecated since 3.0. Use Kernel::create(...)->run() instead.
-     */
-    public static function init(
-        array $directories,
-        EnvironmentInterface $environment = null,
-        bool $handleErrors = true
-    ): ?self {
-        $core = self::create(
-            $directories,
-            $handleErrors
-        );
-
-        return $core->run($environment);
     }
 
     /**
@@ -133,7 +95,7 @@ abstract class AbstractKernel implements KernelInterface
      */
     public function run(?EnvironmentInterface $environment = null): ?self
     {
-        $environment = $environment ?? new Environment();
+        $environment ??= new Environment();
         $this->container->bindSingleton(EnvironmentInterface::class, $environment);
 
         try {
@@ -190,26 +152,27 @@ abstract class AbstractKernel implements KernelInterface
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
      */
-    public function addDispatcher(DispatcherInterface $dispatcher): void
+    public function addDispatcher(DispatcherInterface $dispatcher): self
     {
         $this->dispatchers[] = $dispatcher;
+
+        return $this;
     }
 
     /**
      * Start application and serve user requests using selected dispatcher or throw
      * an exception.
      *
-     * @return mixed
      * @throws BootException
      * @throws \Throwable
      */
-    public function serve()
+    public function serve(): mixed
     {
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
-                    [$dispatcher, 'serve']
+                    static fn () => $dispatcher->serve()
                 );
             }
         }
@@ -220,7 +183,7 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Bootstrap application. Must be executed before serve method.
      */
-    abstract protected function bootstrap();
+    abstract protected function bootstrap(): void;
 
     /**
      * Normalizes directory list and adds all required aliases.

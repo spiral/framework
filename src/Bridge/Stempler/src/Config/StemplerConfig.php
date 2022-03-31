@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Config;
@@ -33,7 +26,7 @@ final class StemplerConfig extends InjectableConfig
     {
         $directives = [];
         foreach ($this->config['directives'] as $directive) {
-            if (is_object($directive) && !$directive instanceof Autowire) {
+            if (\is_object($directive) && !$directive instanceof Autowire) {
                 $directives[] = $directive;
                 continue;
             }
@@ -62,15 +55,11 @@ final class StemplerConfig extends InjectableConfig
         return $processors;
     }
 
-    /**
-     * @param int $stage
-     * @return array
-     */
     public function getVisitors(int $stage): array
     {
         $visitors = [];
         foreach ($this->config['visitors'][$stage] ?? [] as $visitor) {
-            if (is_object($visitor) && !$visitor instanceof Autowire) {
+            if (\is_object($visitor) && !$visitor instanceof Autowire) {
                 $visitors[] = $visitor;
                 continue;
             }
@@ -82,18 +71,15 @@ final class StemplerConfig extends InjectableConfig
     }
 
     /**
-     * @param mixed $item
-     * @return Autowire
-     *
      * @throws ConfigException
      */
-    private function wire($item): Autowire
+    private function wire(mixed $item): Autowire
     {
         if ($item instanceof Autowire) {
             return $item;
         }
 
-        if (is_string($item)) {
+        if (\is_string($item)) {
             return new Autowire($item);
         }
 

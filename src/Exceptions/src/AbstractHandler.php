@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Exceptions;
@@ -16,12 +9,9 @@ namespace Spiral\Exceptions;
  */
 abstract class AbstractHandler implements HandlerInterface
 {
-    /**
-     * @inheritdoc
-     */
     public function getMessage(\Throwable $e): string
     {
-        return sprintf('%s: %s in %s at line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine());
+        return \sprintf('%s: %s in %s at line %s', $e::class, $e->getMessage(), $e->getFile(), $e->getLine());
     }
 
     /**
@@ -41,7 +31,7 @@ abstract class AbstractHandler implements HandlerInterface
             ] + $stacktrace[0];
 
         if ($stacktrace[0] != $header) {
-            array_unshift($stacktrace, $header);
+            \array_unshift($stacktrace, $header);
         }
 
         return $stacktrace;
