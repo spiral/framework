@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Http;
 
+use Closure;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -17,10 +18,14 @@ final class CallableHandler implements RequestHandlerInterface
 {
     use JsonTrait;
 
+    /** @var callable */
+    private mixed $callable;
+
     public function __construct(
-        private array|string|object $callable,
+        callable $callable,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
+        $this->callable = $callable;
     }
 
     /**

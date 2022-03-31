@@ -48,7 +48,7 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
     public function handle(Request $request): Response
     {
-        if (empty($this->handler)) {
+        if ($this->handler === null) {
             throw new PipelineException('Unable to run pipeline, no handler given.');
         }
 
@@ -57,6 +57,10 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             return $this->middleware[$position]->process($request, $this);
         }
 
-        return $this->scope->runScope([Request::class => $request], fn () => $this->handler->handle($request));
+        $handler = $this->handler;
+        return $this->scope->runScope(
+            [Request::class => $request],
+            static fn (): Response => $handler->handle($request)
+        );
     }
 }

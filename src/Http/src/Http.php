@@ -34,10 +34,9 @@ final class Http implements RequestHandlerInterface
 
     public function setHandler(callable|RequestHandlerInterface $handler): self
     {
-        $this->handler = match (true) {
-            $handler instanceof RequestHandlerInterface => $handler,
-            \is_callable($handler) => new CallableHandler($handler, $this->responseFactory)
-        };
+        $this->handler = $handler instanceof RequestHandlerInterface
+            ? $handler
+            : new CallableHandler($handler, $this->responseFactory);
 
         return $this;
     }
@@ -47,7 +46,7 @@ final class Http implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if (empty($this->handler)) {
+        if ($this->handler === null) {
             throw new HttpException('Unable to run HttpCore, no handler is set.');
         }
 

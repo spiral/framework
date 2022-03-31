@@ -57,9 +57,8 @@ final class ResponseWrapper
      * Configure response to send given attachment to client.
      *
      * @param string|StreamInterface|StreamableInterface $filename Local filename or stream or streamable or resource.
-     * @param string                                     $name     Public file name (in attachment), by default local
-     *                                                             filename. Name is mandratory when filename supplied
-     *                                                             in a form of stream or resource.
+     * @param string $name Public file name (in attachment), by default local filename. Name is mandratory when
+     *        filename supplied in a form of stream or resource.
      *
      * @throws ResponseException
      */
@@ -112,8 +111,9 @@ final class ResponseWrapper
             $file instanceof StreamableInterface => $file->getStream(),
             $file instanceof StreamInterface => $file,
             \is_resource($file) => $this->streamFactory->createStreamFromResource($file),
-            !$this->files->isFile($file) =>
-                throw new ResponseException('Unable to allocate response body stream, file does not exist'),
+            !$this->files->isFile($file) => throw new ResponseException(
+                'Unable to allocate response body stream, file does not exist.'
+            ),
             default => $this->streamFactory->createStreamFromFile($file)
         };
     }
