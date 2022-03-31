@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views\Context;
@@ -18,44 +11,26 @@ use Spiral\Views\DependencyInterface;
  */
 final class ValueDependency implements DependencyInterface
 {
-    /** @var string */
-    private $name;
+    private array $variants;
 
-    /** @var mixed */
-    private $value;
-
-    /** @var array */
-    private $variants;
-
-    /**
-     * @param mixed  $value
-     */
-    public function __construct(string $name, $value, array $variants = null)
-    {
-        $this->name = $name;
-        $this->value = $value;
+    public function __construct(
+        private readonly string $name,
+        private mixed $value,
+        array $variants = null
+    ) {
         $this->variants = $variants ?? [$value];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getVariants(): array
     {
         return $this->variants;

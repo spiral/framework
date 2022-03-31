@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views;
@@ -32,14 +25,12 @@ interface LoaderInterface
     /**
      * Check if given view path has associated view in a loader. Path might include namespace prefix or extension.
      *
-     *
      * @throws PathException
      */
     public function exists(string $path): bool;
 
     /**
      * Get source for given name. Path might include namespace prefix or extension.
-     *
      *
      * @throws LoaderException
      * @throws PathException
@@ -49,8 +40,6 @@ interface LoaderInterface
     /**
      * Get names of all available views within this loader. Result will include namespace prefix and view name without
      * extension.
-     *
-     * @param string|null $namespace
      *
      * @throws LoaderException
      */

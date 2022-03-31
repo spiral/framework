@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views;
@@ -31,7 +24,6 @@ interface EngineInterface
     /**
      * Compile (and reset cache) for the given view path in a provided context. This method must be
      * called each time view must be re-compiled.
-     *
      *
      * @throws EngineException
      * @throws LoaderException

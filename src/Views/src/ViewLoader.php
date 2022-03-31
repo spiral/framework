@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views;
@@ -22,31 +15,17 @@ use Spiral\Views\Loader\ViewPath;
  */
 final class ViewLoader implements LoaderInterface
 {
-    /** @var FilesInterface */
-    private $files;
-
-    /** @var PathParser|null */
-    private $parser;
-
-    /** @var array */
-    private $namespaces;
-
-    /** @var string */
-    private $defaultNamespace;
+    private ?PathParser $parser = null;
+    private readonly FilesInterface $files;
 
     public function __construct(
-        array $namespaces,
+        private readonly array $namespaces,
         FilesInterface $files = null,
-        string $defaultNamespace = self::DEFAULT_NAMESPACE
+        private readonly string $defaultNamespace = self::DEFAULT_NAMESPACE
     ) {
-        $this->namespaces = $namespaces;
         $this->files = $files ?? new Files();
-        $this->defaultNamespace = $defaultNamespace;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withExtension(string $extension): LoaderInterface
     {
         $loader = clone $this;
@@ -64,9 +43,6 @@ final class ViewLoader implements LoaderInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exists(string $path, string &$filename = null, ViewPath &$parsed = null): bool
     {
         if (empty($this->parser)) {
@@ -84,8 +60,8 @@ final class ViewLoader implements LoaderInterface
 
         foreach ((array)$this->namespaces[$parsed->getNamespace()] as $directory) {
             $directory = $this->files->normalizePath($directory, true);
-            if ($this->files->exists(sprintf('%s%s', $directory, $parsed->getBasename()))) {
-                $filename = sprintf('%s%s', $directory, $parsed->getBasename());
+            if ($this->files->exists(\sprintf('%s%s', $directory, $parsed->getBasename()))) {
+                $filename = \sprintf('%s%s', $directory, $parsed->getBasename());
 
                 return true;
             }
@@ -94,22 +70,16 @@ final class ViewLoader implements LoaderInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(string $path): ViewSource
     {
         if (!$this->exists($path, $filename, $parsed)) {
-            throw new LoaderException("Unable to load view `$path`, file does not exists.");
+            throw new LoaderException(\sprintf('Unable to load view `%s`, file does not exists.', $path));
         }
 
         /** @var ViewPath $parsed */
         return new ViewSource($filename, $parsed->getNamespace(), $parsed->getName());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function list(string $namespace = null): array
     {
         if (empty($this->parser)) {
@@ -132,7 +102,7 @@ final class ViewLoader implements LoaderInterface
                     }
 
                     $name = $this->parser->fetchName($this->files->relativePath($filename, $directory));
-                    $result[] = sprintf('%s%s%s', $ns, self::NS_SEPARATOR, $name);
+                    $result[] = \sprintf('%s%s%s', $ns, self::NS_SEPARATOR, $name);
                 }
             }
         }

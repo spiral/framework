@@ -55,10 +55,7 @@ final class LocaleDependency implements DependencyInterface
         return self::NAME;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->translator->getLocale();
     }

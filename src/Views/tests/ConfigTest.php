@@ -17,7 +17,6 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\Context\ValueDependency;
 use Spiral\Views\Engine\Native\NativeEngine;
-use Spiral\Views\Exception\ConfigException;
 
 class ConfigTest extends TestCase
 {
@@ -88,20 +87,5 @@ class ConfigTest extends TestCase
             $dependency,
             $config->getDependencies()[0]->resolve($container)
         );
-    }
-
-    public function testDependenciesError(): void
-    {
-        $this->expectException(ConfigException::class);
-
-        $container = new Container();
-
-        $config = new ViewsConfig([
-            'dependencies' => [
-                $this,
-            ],
-        ]);
-
-        $config->getDependencies();
     }
 }

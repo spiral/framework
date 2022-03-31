@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views;
@@ -30,7 +23,6 @@ interface ContextInterface
     /**
      * Create environment with new variable dependency.
      *
-     *
      * @throws ContextException
      */
     public function withDependency(DependencyInterface $dependency): ContextInterface;
@@ -38,8 +30,7 @@ interface ContextInterface
     /**
      * Get calculated dependency value.
      *
-     * @return mixed
      * @throws ContextException
      */
-    public function resolveValue(string $dependency);
+    public function resolveValue(string $dependency): mixed;
 }

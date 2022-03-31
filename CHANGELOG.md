@@ -75,6 +75,8 @@
     in `Spiral\Console\SequenceInterface` interface.
   - [spiral/files] Added return type `bool` to the method `delete`, added return type `bool` to the method `deleteDirectory`,
     added return type `bool` to the method `touch`, added return type `bool` to the method `setPermissions` in `Spiral\Files\FilesInterface`.
+  - [spiral/views] Added return type `mixed` to the method `resolveValue` in `Spiral\Views\ContextInterface`.
+  - [spiral/views] Added return type `mixed` to the method `getValue` in `Spiral\Views\DependencyInterface`.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`
