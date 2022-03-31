@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Monolog;
@@ -30,39 +23,20 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
     // Default logger channel (supplied via injection)
     public const DEFAULT = 'default';
 
-    /** @var MonologConfig */
-    private $config;
+    private ?LoggerInterface $default = null;
+    private readonly HandlerInterface $eventHandler;
 
-    /** @var LoggerInterface */
-    private $default;
-
-    /** @var FactoryInterface */
-    private $factory;
-
-    /** @var HandlerInterface|null */
-    private $eventHandler;
-
-    /**
-     * @param MonologConfig $config
-     * @param ListenerRegistryInterface $listenerRegistry
-     * @param FactoryInterface $factory
-     */
     public function __construct(
-        MonologConfig $config,
+        private readonly MonologConfig $config,
         ListenerRegistryInterface $listenerRegistry,
-        FactoryInterface $factory
+        private readonly FactoryInterface $factory
     ) {
-        $this->config = $config;
-        $this->factory = $factory;
         $this->eventHandler = new EventHandler($listenerRegistry, $config->getEventLevel());
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getLogger(string $channel = null): LoggerInterface
     {
-        if ($channel === null || $channel == self::DEFAULT) {
+        if ($channel === null || $channel === self::DEFAULT) {
             if ($this->default !== null) {
                 // we should use only one default logger per system
                 return $this->default;
@@ -82,16 +56,13 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function createInjection(\ReflectionClass $class, string $context = null): LoggerInterface
     {
         // always return default logger as injection
         return $this->getLogger();
     }
 
-    public function reset()
+    public function reset(): void
     {
         if ($this->default instanceof ResettableInterface) {
             $this->default->reset();
@@ -101,8 +72,6 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
     /**
      * Get list of channel specific handlers.
      *
-     * @param string $channel
-     * @return array
      *
      * @throws ConfigException
      */
@@ -132,7 +101,6 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
     /**
      * Get list of channel specific log processors.
      *
-     * @param string $channel
      * @return callable[]
      */
     protected function getProcessors(string $channel): array

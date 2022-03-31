@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Exceptions;
@@ -18,16 +11,15 @@ final class PlainHandler extends AbstractHandler
     // Lines to show around targeted line.
     private const SHOW_LINES = 2;
 
-    /**
-     * @inheritdoc
-     */
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
-        $result = '';
-
-        $result .= '[' . get_class($e) . "]\n" . $e->getMessage();
-
-        $result .= sprintf(" in %s:%s\n", $e->getFile(), $e->getLine());
+        $result = \sprintf(
+            "[%s]\n%s in %s:%s\n",
+            $e::class,
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine()
+        );
 
         if ($verbosity >= self::VERBOSITY_DEBUG) {
             $result .= $this->renderTrace($e, new Highlighter(new PlainStyle()));
@@ -40,8 +32,6 @@ final class PlainHandler extends AbstractHandler
 
     /**
      * Render exception call stack.
-     *
-     * @param Highlighter|null $h
      */
     private function renderTrace(\Throwable $e, Highlighter $h = null): string
     {
@@ -54,7 +44,7 @@ final class PlainHandler extends AbstractHandler
 
         foreach ($stacktrace as $trace) {
             if (isset($trace['type']) && isset($trace['class'])) {
-                $line = sprintf(
+                $line = \sprintf(
                     ' %s%s%s()',
                     $trace['class'],
                     $trace['type'],
@@ -65,16 +55,16 @@ final class PlainHandler extends AbstractHandler
             }
 
             if (isset($trace['file'])) {
-                $line .= sprintf(' at %s:%s', $trace['file'], $trace['line']);
+                $line .= \sprintf(' at %s:%s', $trace['file'], $trace['line']);
             } else {
-                $line .= sprintf(' at %s:%s', 'n/a', 'n/a');
+                $line .= \sprintf(' at %s:%s', 'n/a', 'n/a');
             }
 
             $result .= $line . "\n";
 
             if (!empty($h) && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
-                    file_get_contents($trace['file']),
+                    \file_get_contents($trace['file']),
                     $trace['line'],
                     static::SHOW_LINES
                 ) . "\n";

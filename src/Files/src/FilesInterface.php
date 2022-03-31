@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Files;
@@ -40,15 +33,13 @@ interface FilesInterface
     /**
      * Ensure location (directory) existence with specified mode.
      *
-     * @param int    $mode When NULL class can pick default mode.
+     * @param int $mode When NULL class can pick default mode.
      *
      */
     public function ensureDirectory(string $directory, int $mode = null): bool;
 
     /**
      * Read file content into string.
-     *
-     *
      *
      * @throws FileNotFoundException
      */
@@ -58,8 +49,8 @@ interface FilesInterface
      * Write file data with specified mode. Ensure location option should be used only if desired
      * location may not exist to ensure such location/directory (slow operation).
      *
-     * @param int    $mode            When NULL class can pick default mode.
-     * @param bool   $ensureDirectory Ensure final destination!
+     * @param int  $mode            When NULL class can pick default mode.
+     * @param bool $ensureDirectory Ensure final destination!
      *
      * @throws WriteErrorException
      */
@@ -75,8 +66,7 @@ interface FilesInterface
      *
      * @see write()
      *
-     * @param int    $mode When NULL class can pick default mode.
-     *
+     * @param int $mode When NULL class can pick default mode.
      *
      * @throws WriteErrorException
      */
@@ -90,17 +80,15 @@ interface FilesInterface
     /**
      * Delete local file if possible. No error should be raised if file does not exists.
      */
-    public function delete(string $filename);
+    public function delete(string $filename): bool;
 
     /**
      * Delete directory all content in it.
      */
-    public function deleteDirectory(string $directory, bool $contentOnly = false);
+    public function deleteDirectory(string $directory, bool $contentOnly = false): bool;
 
     /**
      * Move file from one location to another. Location must exist.
-     *
-     *
      *
      * @throws FileNotFoundException
      */
@@ -109,8 +97,6 @@ interface FilesInterface
     /**
      * Copy file at new location. Location must exist.
      *
-     *
-     *
      * @throws FileNotFoundException
      */
     public function copy(string $filename, string $destination): bool;
@@ -118,21 +104,17 @@ interface FilesInterface
     /**
      * Touch file to update it's timeUpdated value or create new file. Location must exist.
      *
-     * @param int    $mode When NULL class can pick default mode.
+     * @param int $mode When NULL class can pick default mode.
      */
-    public function touch(string $filename, int $mode = null);
+    public function touch(string $filename, int $mode = null): bool;
 
     /**
      * Check if file exists.
-     *
-     *
      */
     public function exists(string $filename): bool;
 
     /**
      * Get filesize in bytes if file does exists.
-     *
-     *
      *
      * @throws FileNotFoundException
      */
@@ -140,15 +122,11 @@ interface FilesInterface
 
     /**
      * Get file extension using it's name. Simple but pretty common method.
-     *
-     *
      */
     public function extension(string $filename): string;
 
     /**
      * Get file MD5 hash.
-     *
-     *
      *
      * @throws FileNotFoundException
      */
@@ -156,8 +134,6 @@ interface FilesInterface
 
     /**
      * Timestamp when file being updated/created.
-     *
-     *
      *
      * @throws FileNotFoundException
      */
@@ -170,7 +146,6 @@ interface FilesInterface
     /**
      * Current file permissions (if exists).
      *
-     *
      * @return int|bool
      * @throws FileNotFoundException
      */
@@ -179,10 +154,9 @@ interface FilesInterface
     /**
      * Update file permissions.
      *
-     *
      * @throws FileNotFoundException
      */
-    public function setPermissions(string $filename, int $mode);
+    public function setPermissions(string $filename, int $mode): bool;
 
     /**
      * Flat list of every file in every sub location. Locations must be normalized.
@@ -199,7 +173,6 @@ interface FilesInterface
      * file in desired location.
      *
      * @param string $extension Desired file extension.
-     *
      */
     public function tempFilename(string $extension = '', string $location = null): string;
 

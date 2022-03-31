@@ -56,10 +56,25 @@
   - [spiral/core] Added `string|array|callable|object` parameter type of `$resolver` in the method `bind`,
     added `string|array|callable|object` parameter type of `$resolver` in the method `bindSingleton` in `Spiral\Core\BinderInterface` interface.
   - [spiral/core] Added return type `object` to the method `createInjection` in `Spiral\Core\Container\InjectorInterface` interface.
+  - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
+  - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
+    added in `Spiral\Boot\EnvironmentInterface` interface.
+  - [spiral/boot] Added return type `static` to the method `addFinalizer`,
+    added return type `void` to the method `finalize` in `Spiral\Boot\FinalizerInterface` interface.
+  - [spiral/boot] Added return type `self` to the method `addDispatcher`,
+    added return type `mixed` to the method `serve` in `Spiral\Boot\KernelInterface` interface.
+  - [spiral/boot] Added return type `mixed` to the method `loadData`,
+    added return type `void` and `mixed` parameter type of `$data` to the method `saveData` in `Spiral\Boot\MemoryInterface` interface.
+  - [spiral/console] Added return type `void` to the method `writeHeader`, added return type `void` to the method `execute`,
+    method `whiteFooter` renamed to `writeFooter`, added return type `void` to the method `writeFooter`
+    in `Spiral\Console\SequenceInterface` interface.
+  - [spiral/files] Added return type `bool` to the method `delete`, added return type `bool` to the method `deleteDirectory`,
+    added return type `bool` to the method `touch`, added return type `bool` to the method `setPermissions` in `Spiral\Files\FilesInterface`.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`
   - A minimal version of `league/flysystem` increased to `^2.3`
+  - A minimal version of `symfony/console` increased to `^6.0`
 - **Other Features**
 
 ## v2.11.0 - Unreleased

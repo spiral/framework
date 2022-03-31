@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Debug;
@@ -26,10 +19,7 @@ interface StateInterface
 
     public function setVariables(array $extras): void;
 
-    /**
-     * @param        $value
-     */
-    public function setVariable(string $key, $value): void;
+    public function setVariable(string $key, mixed $value): void;
 
     /**
      * Get current state metadata. Arbitrary array form.
