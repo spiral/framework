@@ -26,7 +26,9 @@ final class ContextProcessor implements ProcessorInterface
     public function process(ViewSource $source, ContextInterface $context): ViewSource
     {
         return $source->withCode(\preg_replace_callback(
-            $this->pattern, static fn (array $matches) => $context->resolveValue($matches[1]), $source->getCode()
+            $this->pattern,
+            static fn (array $matches) => $context->resolveValue($matches[1]),
+            $source->getCode()
         ));
     }
 }
