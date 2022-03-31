@@ -36,7 +36,7 @@ final class StreamWrapper
     ];
 
     private ?StreamInterface $stream = null;
-    private int|string $mode = 0;
+    private string $mode = '';
 
     /**
      * Check if StreamInterface ended.
@@ -49,7 +49,7 @@ final class StreamWrapper
     /**
      * Open pre-mocked StreamInterface by it's unique uri.
      */
-    public function stream_open(string $path, int|string $mode, mixed $options, mixed &$opened_path): bool
+    public function stream_open(string $path, string $mode, mixed $options, mixed &$opened_path): bool
     {
         if (!isset(self::$uris[$path])) {
             return false;
