@@ -21,7 +21,7 @@ class ExceptionsTest extends TestCase
     {
         $output = fopen('php://memory', 'rwb');
         ExceptionHandler::setOutput($output);
-        $kernel = BrokenCore::init(['root' => __DIR__]);
+        BrokenCore::create(['root' => __DIR__])->run();
 
         ExceptionHandler::setOutput(STDERR);
 

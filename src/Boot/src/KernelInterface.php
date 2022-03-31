@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -19,7 +12,7 @@ interface KernelInterface
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
      */
-    public function addDispatcher(DispatcherInterface $dispatcher);
+    public function addDispatcher(DispatcherInterface $dispatcher): self;
 
     /**
      * Start application and serve user requests using selected dispatcher or throw
@@ -28,5 +21,5 @@ interface KernelInterface
      * @throws BootException
      * @throws \Throwable
      */
-    public function serve();
+    public function serve(): mixed;
 }
