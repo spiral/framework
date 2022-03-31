@@ -127,7 +127,7 @@ final class ConfigManager implements ConfiguratorInterface, SingletonInterface
     /**
      * @inheritdoc
      */
-    public function createInjection(\ReflectionClass $class, string $context = null)
+    public function createInjection(\ReflectionClass $class, string $context = null): object
     {
         $config = $class->getConstant('CONFIG');
         if (isset($this->instances[$config])) {
