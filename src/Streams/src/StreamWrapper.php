@@ -49,7 +49,7 @@ final class StreamWrapper
     /**
      * Open pre-mocked StreamInterface by it's unique uri.
      */
-    public function stream_open(string $path, string $mode, mixed $options, mixed &$opened_path): bool
+    public function stream_open(string $path, string $mode, int $options, ?string &$opened_path): bool
     {
         if (!isset(self::$uris[$path])) {
             return false;
@@ -66,9 +66,9 @@ final class StreamWrapper
     /**
      * Read data from StreamInterface.
      */
-    public function stream_read(int $length): string
+    public function stream_read(int $length): string|false
     {
-        return $this->stream->read($length);
+        return $this->stream->isReadable() ? $this->stream->read($length) : false;
     }
 
     /**
@@ -88,7 +88,7 @@ final class StreamWrapper
      *
      * @see stat()
      */
-    public function stream_stat(): ?array
+    public function stream_stat(): array
     {
         return $this->getStreamStats($this->stream);
     }
@@ -116,13 +116,20 @@ final class StreamWrapper
      *
      * @see stat()
      */
-    public function url_stat(string $path): ?array
+    public function url_stat(string $path, int $flag): array|false
     {
-        if (!isset(self::$uris[$path])) {
-            return null;
+        try {
+            if (isset(self::$uris[$path])) {
+                return $this->getStreamStats(self::$uris[$path]);
+            }
+        } catch (\Throwable $e) {
+            if (($flag & \STREAM_URL_STAT_QUIET) === \STREAM_URL_STAT_QUIET) {
+                return false;
+            }
+            \trigger_error($e->getMessage(), \E_USER_ERROR);
         }
 
-        return $this->getStreamStats(self::$uris[$path]);
+        return false;
     }
 
     /**
