@@ -8,11 +8,9 @@ use Spiral\Config\PatchInterface;
 
 final class Group implements PatchInterface
 {
+    /** @var PatchInterface[] */
     private array $patches;
 
-    /**
-     * @param PatchInterface[] $patches
-     */
     public function __construct(PatchInterface ...$patch)
     {
         $this->patches = $patch;
