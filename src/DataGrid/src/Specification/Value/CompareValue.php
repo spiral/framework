@@ -9,7 +9,7 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 abstract class CompareValue implements ValueInterface
 {
-    private ValueInterface $base;
+    private readonly ValueInterface $base;
 
     public function __construct(ValueInterface $base)
     {

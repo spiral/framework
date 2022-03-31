@@ -25,7 +25,7 @@ final class Compiler
      *
      * @throws CompilerException
      */
-    public function compile($source, SpecificationInterface ...$specifications): mixed
+    public function compile(mixed $source, SpecificationInterface ...$specifications): mixed
     {
         if ($source === null) {
             return null;
@@ -52,7 +52,7 @@ final class Compiler
             throw new CompilerException(\sprintf(
                 'Unable to compile specification `%s` for `%s`, no compiler found',
                 $specification::class,
-                get_debug_type($source)
+                \get_debug_type($source)
             ));
         }
 

@@ -20,7 +20,7 @@ class GridFactory implements GridFactoryInterface
     public const KEY_PAGINATE    = 'paginate';
     public const KEY_FETCH_COUNT = 'fetchCount';
 
-    private array|string|\Closure $count = 'count';
+    private \Closure $count;
     private InputInterface $defaults;
 
     public function __construct(
@@ -29,6 +29,7 @@ class GridFactory implements GridFactoryInterface
         private GridInterface $view = new Grid()
     ) {
         $this->defaults = new NullInput();
+        $this->count = count(...);
     }
 
     /**
@@ -56,7 +57,7 @@ class GridFactory implements GridFactoryInterface
     public function withCounter(callable $counter): self
     {
         $generator = clone $this;
-        $generator->count = $counter;
+        $generator->count = $counter(...);
 
         return $generator;
     }
@@ -70,7 +71,7 @@ class GridFactory implements GridFactoryInterface
         ['view' => $view, 'source' => $source] = $this->applySorters($view, $source, $schema);
         ['view' => $view, 'source' => $source] = $this->applyPaginator($view, $source, $schema);
 
-        if (!is_iterable($source)) {
+        if (!\is_iterable($source)) {
             throw new GridViewException('GridView expects the source to be iterable after all.');
         }
 

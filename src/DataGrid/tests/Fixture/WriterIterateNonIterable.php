@@ -21,7 +21,7 @@ class WriterIterateNonIterable implements WriterInterface
      */
     public function write($source, SpecificationInterface $specification, Compiler $compiler): mixed
     {
-        if (!is_iterable($source)) {
+        if (!\is_iterable($source)) {
             return [$source];
         }
 

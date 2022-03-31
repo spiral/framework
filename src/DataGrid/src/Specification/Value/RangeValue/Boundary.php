@@ -6,12 +6,11 @@ namespace Spiral\DataGrid\Specification\Value\RangeValue;
 
 class Boundary
 {
-    public mixed $value;
-    public bool $include = false;
-    public bool $empty = false;
-
-    private function __construct()
-    {
+    private function __construct(
+        public mixed $value,
+        public bool $include,
+        public bool $empty,
+    ) {
     }
 
     public static function empty(): self
@@ -31,11 +30,6 @@ class Boundary
 
     private static function create(mixed $value, bool $include): self
     {
-        $self = new self();
-        $self->value = $value;
-        $self->empty = ($value === null);
-        $self->include = $include;
-
-        return $self;
+        return new self($value, $include, $value === null);
     }
 }

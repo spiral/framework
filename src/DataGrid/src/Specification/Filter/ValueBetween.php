@@ -11,16 +11,14 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class ValueBetween implements FilterInterface
 {
-    private ValueInterface|string|int|float $expression;
-
     /** @var string[] */
-    private array $value = [];
+    private readonly array $value;
 
     /**
      * @param string[] $value
      */
     public function __construct(
-        ValueInterface|string|int|float $expression,
+        private ValueInterface|string|int|float $expression,
         array $value,
         private readonly bool $includeFrom = true,
         private readonly bool $includeTo = true
@@ -31,8 +29,6 @@ final class ValueBetween implements FilterInterface
                 $this->invalidValueType($value)
             ));
         }
-
-        $this->expression = $expression;
         $this->value = \array_values($value);
     }
 

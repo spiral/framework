@@ -10,7 +10,7 @@ final class FloatValue implements ValueInterface
 {
     public function accepts(mixed $value): bool
     {
-        return \is_numeric($value) || (is_string($value) && $value === '');
+        return \is_numeric($value) || $value === '';
     }
 
     public function convert(mixed $value): float

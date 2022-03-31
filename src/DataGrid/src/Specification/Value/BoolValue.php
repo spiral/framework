@@ -37,7 +37,7 @@ final class BoolValue implements ValueInterface
 
         throw new ValueException(\sprintf(
             'Value is expected to be boolean, got `%s`. Check the value with `accepts()` method first.',
-            get_debug_type($value)
+            \get_debug_type($value)
         ));
     }
 }

@@ -18,7 +18,7 @@ final class ScalarValue implements ValueInterface
         return \is_scalar($value) && ($this->allowEmpty || $value !== '');
     }
 
-    public function convert(mixed $value): int|float|string|bool
+    public function convert(mixed $value): mixed
     {
         return $value;
     }

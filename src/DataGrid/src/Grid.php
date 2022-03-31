@@ -13,7 +13,8 @@ class Grid implements GridInterface
 {
     private array $options = [];
     private ?iterable $source = null;
-    private array|string|\Closure|null $mapper = null;
+    /** @var callable|null */
+    private mixed $mapper = null;
 
     public function getIterator(): \Generator
     {

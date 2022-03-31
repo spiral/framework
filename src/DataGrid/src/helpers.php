@@ -11,7 +11,7 @@ use LogicException;
  */
 function hasKey(array $array, float|int|string $search): bool
 {
-    foreach (\array_keys($array) as $key) {
+    foreach ($array as $key => $_) {
         if (equals($key, $search)) {
             return true;
         }
@@ -45,7 +45,7 @@ function getValue(array $array, string $search)
         }
     }
 
-    throw new LogicException(sprintf('`%s` key is not presented in the array.', $search));
+    throw new LogicException(\sprintf('`%s` key is not presented in the array.', $search));
 }
 
 /**
@@ -53,11 +53,11 @@ function getValue(array $array, string $search)
  */
 function equals(mixed $value1, mixed $value2): bool
 {
-    if (is_string($value1) && is_string($value2) && strcasecmp($value1, $value2) === 0) {
+    if (\is_string($value1) && \is_string($value2) && \strcasecmp($value1, $value2) === 0) {
         return true;
     }
 
-    if (is_numeric($value1) && is_numeric($value2) && strcasecmp((string)$value1, (string)$value2) === 0) {
+    if (\is_numeric($value1) && \is_numeric($value2) && \strcasecmp((string)$value1, (string)$value2) === 0) {
         return true;
     }
 

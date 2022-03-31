@@ -14,8 +14,8 @@ use Spiral\DataGrid\Specification\ValueInterface;
  */
 final class RangeValue implements ValueInterface
 {
-    private ?Boundary $from = null;
-    private ?Boundary $to = null;
+    private Boundary $from;
+    private Boundary $to;
 
     public function __construct(
         private readonly ValueInterface $base,

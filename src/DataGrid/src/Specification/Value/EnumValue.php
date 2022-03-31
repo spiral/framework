@@ -9,16 +9,16 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class EnumValue implements ValueInterface
 {
-    private readonly ValueInterface $base;
-    private array $values = [];
+    private readonly array $values;
 
-    public function __construct(ValueInterface $base, mixed ...$values)
-    {
-        if ($base instanceof static) {
+    public function __construct(
+        private readonly ValueInterface $base,
+        mixed ...$values
+    ) {
+        if ($base instanceof self) {
             throw new ValueException(\sprintf('Nested value type not allowed, got `%s`', $base::class));
         }
 
-        $this->base = $base;
         $this->values = $this->convertEnum(\array_unique($values));
     }
 

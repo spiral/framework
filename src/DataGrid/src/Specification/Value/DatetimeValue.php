@@ -10,7 +10,10 @@ final class DatetimeValue implements ValueInterface
 {
     public function accepts(mixed $value): bool
     {
-        return (is_numeric($value) || is_string($value)) && ($this->convert($value) !== null || (string)$value === '');
+        if ($value === '') {
+            return true;
+        }
+        return (\is_numeric($value) || \is_string($value)) && $this->convert($value) !== null;
     }
 
     public function convert(mixed $value): ?\DateTimeImmutable
