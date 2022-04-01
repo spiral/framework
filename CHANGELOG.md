@@ -49,6 +49,7 @@
     added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface. 
     Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
   - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
+  - [spiral/encrypter] Added return type `mixed` to the method `decrypt` in `Spiral\Encrypter\EncrypterInterface` interface.
   - [spiral/data-grid] Added return type `mixed` and `mixed` parameter type of `$source` to the method `write` in
     `Spiral\DataGrid\WriterInterface` interface.
   - [spiral/data-grid] Added return type `mixed` to the method `getValue` in `Spiral\DataGrid\SpecificationInterface` interface.
