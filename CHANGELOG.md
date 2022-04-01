@@ -15,6 +15,8 @@
   - [spiral/data-grid-bridge] Removed deprecation in classes `Spiral\DataGrid\Annotation\DataGrid`, `Spiral\DataGrid\Bootloader\GridBootloader`,
     `Spiral\DataGrid\Config\GridConfig`, `Spiral\DataGrid\Interceptor\GridInterceptor`, `Spiral\DataGrid\Response\GridResponse`,
     `Spiral\DataGrid\Response\GridResponseInterface`, `Spiral\DataGrid\GridInput`.
+- **Other Features**
+  - [spiral/data-grid-bridge] Added method `addWriter` in `Spiral\DataGrid\Bootloader\GridBootloader`.
 ## v2.11.0 - 2022-03-18
 - **High Impact Changes**
   - [spiral/queue] Added queue injector #592
