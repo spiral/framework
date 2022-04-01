@@ -22,7 +22,7 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
 {
     public const INJECTOR = EncrypterFactory::class;
 
-    private ?Key $key = null;
+    private Key $key;
 
     /**
      * @param string $key Loads a Key from its encoded form (ANSI).
