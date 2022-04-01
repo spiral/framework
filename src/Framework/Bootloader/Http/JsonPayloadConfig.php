@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Pavel Z
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
@@ -24,9 +17,6 @@ class JsonPayloadConfig extends InjectableConfig
         ],
     ];
 
-    /**
-     * @return mixed
-     */
     public function getContentTypes(): array
     {
         return $this->config['contentTypes'];

@@ -48,20 +48,17 @@ interface SessionSectionInterface extends \IteratorAggregate, \ArrayAccess
     /**
      * Get value stored in session.
      *
-     * @param mixed  $default
-     * @return mixed
      * @throws SessionException
      */
-    public function get(string $name, $default = null);
+    public function get(string $name, mixed $default = null): mixed;
 
     /**
      * Read item from session and delete it after.
      *
-     * @param mixed  $default Default value when no such item exists.
-     * @return mixed
+     * @param mixed $default Default value when no such item exists.
      * @throws SessionException
      */
-    public function pull(string $name, $default = null);
+    public function pull(string $name, mixed $default = null): mixed;
 
     /**
      * Delete data from session.

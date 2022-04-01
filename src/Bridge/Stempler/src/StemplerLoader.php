@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler;
@@ -25,26 +18,17 @@ final class StemplerLoader implements StemplerLoaderInterface
 {
     use ProcessorTrait;
 
-    /** @var LoaderInterface */
-    private $loader;
+    private ?ContextInterface $context = null;
 
-    /** @var ContextInterface */
-    private $context;
-
-    /**
-     * @param LoaderInterface $loader
-     * @param array           $processors
-     */
-    public function __construct(LoaderInterface $loader, array $processors)
-    {
-        $this->loader = $loader;
+    public function __construct(
+        private readonly LoaderInterface $loader,
+        array $processors
+    ) {
         $this->processors = $processors;
     }
 
     /**
      * Lock loader to specific context.
-     *
-     * @param ContextInterface $context
      */
     public function setContext(ContextInterface $context): void
     {
