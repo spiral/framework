@@ -10,14 +10,7 @@ namespace Spiral\Distribution\Internal;
  */
 final class DateTimeFactory implements DateTimeFactoryInterface
 {
-    /**
-     * @var string
-     */
     private const DEFAULT_TIMEZONE = 'UTC';
-
-    /**
-     * @var string
-     */
     private const DATE_NOW = 'now';
 
     private \DateTimeZone $timezone;

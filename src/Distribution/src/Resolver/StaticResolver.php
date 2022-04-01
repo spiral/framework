@@ -10,9 +10,6 @@ use Psr\Http\Message\UriInterface;
 
 class StaticResolver extends UriResolver
 {
-    /**
-     * @var string
-     */
     private const URI_PATH_DELIMITER = '/';
 
     private UriInterface $host;
@@ -38,8 +35,7 @@ class StaticResolver extends UriResolver
     public function resolve(string $file, array $query = []): UriInterface
     {
         return $this->host->withPath($this->suffix($file))
-            ->withQuery(\http_build_query($query))
-        ;
+            ->withQuery(\http_build_query($query));
     }
 
     private function suffix(string $file): string

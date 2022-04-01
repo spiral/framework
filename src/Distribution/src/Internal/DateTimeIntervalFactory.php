@@ -10,10 +10,7 @@ namespace Spiral\Distribution\Internal;
  */
 final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
 {
-    /**
-     * @var string
-     */
-    private const ERROR_INVALID_INTERVAL_TYPE = 'The value of type `%s` is not a valid date interval type';
+    private const ERROR_INVALID_INTERVAL_TYPE = 'The value of type `%s` is not a valid date interval type.';
 
     public function __construct(
         private DateTimeFactoryInterface $factory = new DateTimeFactory()

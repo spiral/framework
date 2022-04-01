@@ -6,19 +6,8 @@ namespace Spiral\Distribution;
 
 final class Manager implements MutableDistributionInterface
 {
-    /**
-     * @var string
-     */
     public const DEFAULT_RESOLVER = 'default';
-
-    /**
-     * @var string
-     */
     private const ERROR_REDEFINITION = 'Can not redefine already defined distribution resolver `%s`';
-
-    /**
-     * @var string
-     */
     private const ERROR_NOT_FOUND = 'Distribution resolver `%s` has not been defined';
 
     /**

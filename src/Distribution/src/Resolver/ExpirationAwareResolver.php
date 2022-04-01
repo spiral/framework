@@ -15,9 +15,6 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 abstract class ExpirationAwareResolver extends UriResolver implements ExpirationAwareResolverInterface
 {
-    /**
-     * @var string
-     */
     protected const DEFAULT_EXPIRATION_INTERVAL = 'PT60M';
 
     protected \DateInterval $expiration;
