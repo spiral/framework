@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Logger;
@@ -17,18 +10,20 @@ namespace Spiral\Logger;
 final class ListenerRegistry implements ListenerRegistryInterface
 {
     /** @var callable[] */
-    private $listeners = [];
+    private array $listeners = [];
 
-    public function addListener(callable $listener): void
+    public function addListener(callable $listener): self
     {
-        if (!array_search($listener, $this->listeners, true)) {
+        if (!\in_array($listener, $this->listeners, true)) {
             $this->listeners[] = $listener;
         }
+
+        return $this;
     }
 
     public function removeListener(callable $listener): void
     {
-        $key = array_search($listener, $this->listeners, true);
+        $key = \array_search($listener, $this->listeners, true);
         if ($key !== null) {
             unset($this->listeners[$key]);
         }
