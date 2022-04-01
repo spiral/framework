@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
@@ -25,18 +18,12 @@ use Spiral\Prototype\Utils;
  */
 final class UpdateConstructor extends NodeVisitorAbstract
 {
-    /** @var ClassNode */
-    private $definition;
-
-    public function __construct(ClassNode $definition)
-    {
-        $this->definition = $definition;
+    public function __construct(
+        private readonly ClassNode $definition
+    ) {
     }
 
-    /**
-     * @return int|null|Node|Node[]
-     */
-    public function leaveNode(Node $node)
+    public function leaveNode(Node $node): int|Node|null
     {
         if (!$node instanceof Node\Stmt\Class_) {
             return null;
@@ -61,8 +48,8 @@ final class UpdateConstructor extends NodeVisitorAbstract
     private function addDependencies(Node\Stmt\ClassMethod $constructor): void
     {
         foreach ($this->definition->dependencies as $dependency) {
-            array_unshift($constructor->params, $this->buildConstructorParam($dependency));
-            array_unshift(
+            \array_unshift($constructor->params, $this->buildConstructorParam($dependency));
+            \array_unshift(
                 $constructor->stmts,
                 new Node\Stmt\Expression(
                     new Node\Expr\Assign(
@@ -90,7 +77,7 @@ final class UpdateConstructor extends NodeVisitorAbstract
             if (!empty($param->type)) {
                 $type = $this->getParamType($param);
                 if ($param->nullable) {
-                    $type = "?$type";
+                    $type = \sprintf('?%s', $type);
                 }
 
                 $cp->setType(new Node\Name($type));
@@ -110,8 +97,8 @@ final class UpdateConstructor extends NodeVisitorAbstract
             $constructor->params[] = $cp->getNode();
         }
 
-        if ($parentConstructorDependencies) {
-            array_unshift(
+        if ($parentConstructorDependencies !== []) {
+            \array_unshift(
                 $constructor->stmts,
                 new Node\Stmt\Expression(
                     new Node\Expr\StaticCall(
@@ -131,8 +118,6 @@ final class UpdateConstructor extends NodeVisitorAbstract
 
     /**
      * Add PHPDoc comments into __construct.
-     *
-     * @param Doc|null $doc
      */
     private function addComments(Doc $doc = null): Doc
     {
@@ -142,7 +127,7 @@ final class UpdateConstructor extends NodeVisitorAbstract
 
         foreach ($this->definition->dependencies as $dependency) {
             $params[] = new Annotation\Line(
-                sprintf('%s $%s', $this->getPropertyType($dependency), $dependency->var),
+                \sprintf('%s $%s', $this->getPropertyType($dependency), $dependency->var),
                 'param'
             );
         }
@@ -152,16 +137,16 @@ final class UpdateConstructor extends NodeVisitorAbstract
                 if (!empty($param->type)) {
                     $type = $this->getParamType($param);
                     if ($param->nullable) {
-                        $type = "$type|null";
+                        $type = \sprintf('%s|null', $type);
                     }
 
                     $params[] = new Annotation\Line(
-                        sprintf($param->isVariadic ? '%s ...$%s' : '%s $%s', $type, $param->name),
+                        \sprintf($param->isVariadic ? '%s ...$%s' : '%s $%s', $type, $param->name),
                         'param'
                     );
                 } else {
                     $params[] = new Annotation\Line(
-                        sprintf('$%s', $param->name),
+                        \sprintf('$%s', $param->name),
                         'param'
                     );
                 }
@@ -196,10 +181,8 @@ final class UpdateConstructor extends NodeVisitorAbstract
     private function getPropertyType(Dependency $dependency): string
     {
         foreach ($this->definition->getStmts() as $stmt) {
-            if ($stmt->name === $dependency->type->fullName) {
-                if ($stmt->alias) {
-                    return $stmt->alias;
-                }
+            if ($stmt->name === $dependency->type->fullName && $stmt->alias) {
+                return $stmt->alias;
             }
         }
 
@@ -209,10 +192,8 @@ final class UpdateConstructor extends NodeVisitorAbstract
     private function getParamType(ClassNode\ConstructorParam $param): string
     {
         foreach ($this->definition->getStmts() as $stmt) {
-            if ($stmt->name === $param->type->fullName) {
-                if ($stmt->alias) {
-                    return $stmt->alias;
-                }
+            if ($stmt->name === $param->type->fullName && $stmt->alias) {
+                return $stmt->alias;
             }
         }
 
