@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Diactoros;
@@ -18,22 +11,11 @@ use Laminas\Diactoros\Response;
 
 final class ResponseFactory implements ResponseFactoryInterface
 {
-    /** @var HttpConfig */
-    private $config;
-
-    /**
-     * @param HttpConfig $config
-     */
-    public function __construct(HttpConfig $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly HttpConfig $config
+    ) {
     }
 
-    /**
-     * @param int    $code
-     * @param string $reasonPhrase
-     * @return ResponseInterface
-     */
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
         $response = new Response('php://memory', $code, []);

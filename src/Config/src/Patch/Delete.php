@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Config\Patch;
@@ -19,28 +12,16 @@ final class Delete implements PatchInterface
 {
     use DotTrait;
 
-    /** @var string */
-    private $position;
+    private string $position;
 
-    /** @var null|string */
-    private $key;
-
-    /** @var mixed */
-    private $value;
-
-    /**
-     * @param mixed       $value
-     */
-    public function __construct(string $position, ?string $key, $value = null)
-    {
+    public function __construct(
+        string $position,
+        private readonly ?string $key,
+        private mixed $value = null
+    ) {
         $this->position = $position === '.' ? '' : $position;
-        $this->key = $key;
-        $this->value = $value;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function patch(array $config): array
     {
         try {
@@ -56,7 +37,7 @@ final class Delete implements PatchInterface
                     }
                 }
             }
-        } catch (DotNotFoundException $e) {
+        } catch (DotNotFoundException) {
             // doing nothing when section not found
         }
 

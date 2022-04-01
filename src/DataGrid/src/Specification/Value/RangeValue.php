@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @author Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value;
 
 use Spiral\DataGrid\Exception\ValueException;
+use Spiral\DataGrid\Specification\Value\RangeValue\Boundary;
 use Spiral\DataGrid\Specification\ValueInterface;
 
 /**
@@ -19,41 +14,27 @@ use Spiral\DataGrid\Specification\ValueInterface;
  */
 final class RangeValue implements ValueInterface
 {
-    /** @var ValueInterface */
-    private $base;
+    private Boundary $from;
+    private Boundary $to;
 
-    /** @var RangeValue\Boundary */
-    private $from;
-
-    /** @var RangeValue\Boundary */
-    private $to;
-
-    /**
-     * @param RangeValue\Boundary|null $from
-     * @param RangeValue\Boundary|null $to
-     */
-    public function __construct(ValueInterface $base, RangeValue\Boundary $from = null, RangeValue\Boundary $to = null)
-    {
-        $this->base = $base;
-        $from = $from ?? RangeValue\Boundary::empty();
-        $to = $to ?? RangeValue\Boundary::empty();
+    public function __construct(
+        private readonly ValueInterface $base,
+        RangeValue\Boundary $from = null,
+        RangeValue\Boundary $to = null
+    ) {
+        $from ??= RangeValue\Boundary::empty();
+        $to ??= RangeValue\Boundary::empty();
 
         $this->validateBoundaries($from, $to);
         $this->setBoundaries($from, $to);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
         return $this->base->accepts($value) && $this->acceptsFrom($value) && $this->acceptsTo($value);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function convert($value)
+    public function convert(mixed $value): mixed
     {
         return $this->base->convert($value);
     }
@@ -74,18 +55,12 @@ final class RangeValue implements ValueInterface
         return $boundary->empty || $this->base->accepts($boundary->value);
     }
 
-    /**
-     * @return mixed|null
-     */
     private function convertBoundaryValue(RangeValue\Boundary $boundary)
     {
         return $boundary->empty ? null : $this->base->convert($boundary->value);
     }
 
-    /**
-     * @param mixed $value
-     */
-    private function acceptsFrom($value): bool
+    private function acceptsFrom(mixed $value): bool
     {
         if ($this->from->empty) {
             return true;
@@ -96,10 +71,7 @@ final class RangeValue implements ValueInterface
         return $this->from->include ? ($value >= $from) : ($value > $from);
     }
 
-    /**
-     * @param mixed $value
-     */
-    private function acceptsTo($value): bool
+    private function acceptsTo(mixed $value): bool
     {
         if ($this->to->empty) {
             return true;

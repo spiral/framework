@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Domain\Exception;
@@ -19,24 +12,18 @@ use Spiral\Filters\FilterInterface;
  */
 final class InvalidFilterException extends ControllerException
 {
-    /** @var array */
-    private $errors;
+    private array $errors = [];
 
     /**
      * FilterException constructor.
-     *
-     * @param FilterInterface $filter
      */
     public function __construct(FilterInterface $filter)
     {
         $this->errors = $filter->getErrors();
 
-        parent::__construct(sprintf('Invalid `%s`', get_class($filter)), self::BAD_ARGUMENT);
+        parent::__construct(\sprintf('Invalid `%s`', $filter::class), self::BAD_ARGUMENT);
     }
 
-    /**
-     * @return array
-     */
     public function getErrors(): array
     {
         return $this->errors;

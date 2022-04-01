@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Storage;
@@ -32,10 +25,6 @@ class StorageBootloader extends Bootloader
         BucketFactoryInterface::class => BucketFactory::class,
     ];
 
-    /**
-     * @param Container $app
-     * @param ConfiguratorInterface $config
-     */
     public function boot(Container $app, ConfiguratorInterface $config): void
     {
         $config->setDefaults(StorageConfig::CONFIG, [
@@ -78,16 +67,10 @@ class StorageBootloader extends Bootloader
             return $manager;
         });
 
-        $app->bindSingleton(Storage::class, static function (StorageInterface $manager) {
-            return $manager;
-        });
+        $app->bindSingleton(Storage::class, static fn (StorageInterface $manager) => $manager);
 
-        $app->bindSingleton(BucketInterface::class, static function (StorageInterface $manager) {
-            return $manager->bucket();
-        });
+        $app->bindSingleton(BucketInterface::class, static fn (StorageInterface $manager) => $manager->bucket());
 
-        $app->bindSingleton(Bucket::class, static function (BucketInterface $storage) {
-            return $storage;
-        });
+        $app->bindSingleton(Bucket::class, static fn (BucketInterface $storage) => $storage);
     }
 }
