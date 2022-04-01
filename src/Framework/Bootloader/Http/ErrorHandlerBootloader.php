@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- * @author    Valentin V (Vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
@@ -30,9 +22,6 @@ final class ErrorHandlerBootloader extends Bootloader
         ErrorHandler\RendererInterface::class                 => ErrorHandler\PlainRenderer::class,
     ];
 
-    /**
-     * @param HttpBootloader $http
-     */
     public function boot(HttpBootloader $http): void
     {
         $http->addMiddleware(ErrorHandlerMiddleware::class);

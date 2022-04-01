@@ -21,19 +21,9 @@ use Spiral\Attributes\NamedArgumentConstructor;
 #[\Attribute(\Attribute::TARGET_METHOD), NamedArgumentConstructor]
 class Pipeline
 {
-    /**
-     * @var array
-     */
-    public $pipeline;
-
-    /**
-     * @var bool
-     */
-    public $skipNext;
-
-    public function __construct(array $pipeline = [], bool $skipNext = false)
-    {
-        $this->pipeline = $pipeline;
-        $this->skipNext = $skipNext;
+    public function __construct(
+        public readonly array $pipeline = [],
+        public readonly bool $skipNext = false
+    ) {
     }
 }

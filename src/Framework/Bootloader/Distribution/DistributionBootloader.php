@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Distribution;
@@ -22,10 +15,6 @@ use Spiral\Distribution\UriResolverInterface;
 
 class DistributionBootloader extends Bootloader
 {
-    /**
-     * @param ConfiguratorInterface $config
-     * @param Container $app
-     */
     public function boot(ConfiguratorInterface $config, Container $app): void
     {
         $config->setDefaults(DistributionConfig::CONFIG, [
@@ -39,23 +28,13 @@ class DistributionBootloader extends Bootloader
         $this->registerResolver($app);
     }
 
-    /**
-     * @param Container $app
-     */
     private function registerResolver(Container $app): void
     {
-        $app->bindSingleton(UriResolverInterface::class, static function (DistributionInterface $manager) {
-            return $manager->resolver();
-        });
+        $app->bindSingleton(UriResolverInterface::class, static fn (DistributionInterface $dist) => $dist->resolver());
 
-        $app->bindSingleton(UriResolver::class, static function (Container $app) {
-            return $app->get(UriResolverInterface::class);
-        });
+        $app->bindSingleton(UriResolver::class, static fn (Container $app) => $app->get(UriResolverInterface::class));
     }
 
-    /**
-     * @param Container $app
-     */
     private function registerManager(Container $app): void
     {
         $app->bindSingleton(DistributionInterface::class, static function (DistributionConfig $config) {
@@ -68,12 +47,11 @@ class DistributionBootloader extends Bootloader
             return $manager;
         });
 
-        $app->bindSingleton(MutableDistributionInterface::class, static function (Container $app) {
-            return $app->get(DistributionInterface::class);
-        });
+        $app->bindSingleton(
+            MutableDistributionInterface::class,
+            static fn (Container $app) => $app->get(DistributionInterface::class)
+        );
 
-        $app->bindSingleton(Manager::class, static function (Container $app) {
-            return $app->get(DistributionInterface::class);
-        });
+        $app->bindSingleton(Manager::class, static fn (Container $app) => $app->get(DistributionInterface::class));
     }
 }
