@@ -52,6 +52,7 @@
   - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
   - [spiral/pagination] Added return type `self` to the method `limit`, added return type `self` to the method `offset`
     in `Spiral\Pagination\PaginableInterface`
+  - [spiral/prototype] Parameter `$printer` now is not nullable in `Spiral\Prototype\Injector` constructor.
   - [spiral/models] Added return type `self`, added `mixed` parameter type of `$value` to the method `setField`,
     added return type `mixed`, added `mixed` parameter type of `$default` to the method `getField`,
     added return type `self` to the method `setFields` in `Spiral\Models\EntityInterface`.

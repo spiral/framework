@@ -24,30 +24,26 @@ final class Injector
 {
     private readonly Parser $parser;
     private readonly Lexer $lexer;
-    private PrettyPrinterAbstract|Standard|null $printer = null;
     private readonly NodeTraverser $cloner;
 
-    public function __construct(Lexer $lexer = null, PrettyPrinterAbstract $printer = null)
-    {
-        if ($lexer === null) {
-            $lexer = new Lexer\Emulative([
-                'usedAttributes' => [
-                    'comments',
-                    'startLine',
-                    'endLine',
-                    'startTokenPos',
-                    'endTokenPos',
-                ],
-            ]);
-        }
+    public function __construct(
+        Lexer $lexer = null,
+        private readonly PrettyPrinterAbstract $printer = new Standard()
+    ) {
+        $this->lexer = $lexer ?? new Lexer\Emulative([
+            'usedAttributes' => [
+                'comments',
+                'startLine',
+                'endLine',
+                'startTokenPos',
+                'endTokenPos',
+            ],
+        ]);
 
-        $this->lexer = $lexer;
         $this->parser = new Parser\Php7($this->lexer);
 
         $this->cloner = new NodeTraverser();
         $this->cloner->addVisitor(new CloningVisitor());
-
-        $this->printer = $printer ?? new Standard();
     }
 
     /**
