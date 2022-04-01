@@ -13,9 +13,6 @@ namespace Spiral\DataGrid\Response;
 
 use Spiral\DataGrid\GridInterface;
 
-/**
- * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
- */
 final class GridResponse implements \JsonSerializable, GridResponseInterface
 {
     /** @var GridInterface */

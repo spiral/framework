@@ -12,6 +12,9 @@
     `Spiral\GRPC\Exception\CompileException`, `Spiral\GRPC\GRPCDispatcher`, `Spiral\GRPC\LocatorInterface`, 
     `Spiral\GRPC\ProtoCompiler`, `Spiral\GRPC\ServiceLocator`, `Spiral\Http\LegacyRrDispatcher`, `Spiral\Http\RrDispatcher`
     is deprecated. Will be removed in v3.0.
+  - [spiral/data-grid-bridge] Removed deprecation in classes `Spiral\DataGrid\Annotation\DataGrid`, `Spiral\DataGrid\Bootloader\GridBootloader`,
+    `Spiral\DataGrid\Config\GridConfig`, `Spiral\DataGrid\Interceptor\GridInterceptor`, `Spiral\DataGrid\Response\GridResponse`,
+    `Spiral\DataGrid\Response\GridResponseInterface`, `Spiral\DataGrid\GridInput`.
 ## v2.11.0 - 2022-03-18
 - **High Impact Changes**
   - [spiral/queue] Added queue injector #592
