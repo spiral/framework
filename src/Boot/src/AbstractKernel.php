@@ -90,7 +90,7 @@ abstract class AbstractKernel implements KernelInterface
      *
      * @throws \Throwable
      *
-     * @deprecated since 3.0. Use Kernel::create(...)->run() instead.
+     * @deprecated since 2.12. Will be removed in v3.0. Use Kernel::create(...)->run() instead.
      */
     public static function init(
         array $directories,

@@ -13,6 +13,9 @@ namespace Spiral\Broadcast\Config;
 
 use Spiral\Core\InjectableConfig;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class WebsocketsConfig extends InjectableConfig
 {
     public const CONFIG = 'websockets';

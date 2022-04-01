@@ -19,6 +19,9 @@ use Spiral\Files\FilesInterface;
 use Spiral\GRPC\ProtoCompiler;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class GenerateCommand extends Command
 {
     protected const NAME        = 'grpc:generate';

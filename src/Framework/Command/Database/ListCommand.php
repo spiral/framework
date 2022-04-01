@@ -20,6 +20,9 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class ListCommand extends Command
 {
     protected const NAME        = 'db:list';

@@ -23,6 +23,7 @@ use Spiral\Core\ScopeInterface;
 use Spiral\Http\Exception\ClientException;
 
 /**
+ * @deprecated since v2.12. Will be removed in v3.0
  * Authorizes websocket connections to server and topics.
  */
 final class WebsocketsMiddleware implements MiddlewareInterface

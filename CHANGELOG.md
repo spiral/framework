@@ -1,6 +1,23 @@
 # CHANGELOG
 
-## v2.11.0 - Unreleased
+## v2.12.0 - Unreleased
+- **Medium Impact Changes**
+  - Bootloaders `Spiral\Bootloader\Broadcast\BroadcastBootloader`, `Spiral\Bootloader\Http\WebsocketsBootloader`
+    are deprecated. Will be removed in v3.0.
+  - Console commands `Spiral\Command\Database\ListCommand`, `Spiral\Command\Database\TableCommand`,
+    `Spiral\Command\GRPC\GenerateCommand`, `Spiral\Command\GRPC\ListCommand`, `Spiral\Command\Migrate\AbstractCommand`,
+    `Spiral\Command\Migrate\InitCommand`, `Spiral\Command\Migrate\MigrateCommand`, `Spiral\Command\Migrate\ReplayCommand`,
+    `Spiral\Command\Migrate\RollbackCommand`, `Spiral\Command\Migrate\StatusCommand` are deprecated. Will be removed in v3.0.
+  - Classes `Spiral\Broadcast\Config\WebsocketsConfig`, `Spiral\Broadcast\Middleware\WebsocketsMiddleware`, 
+    `Spiral\GRPC\Exception\CompileException`, `Spiral\GRPC\GRPCDispatcher`, `Spiral\GRPC\LocatorInterface`, 
+    `Spiral\GRPC\ProtoCompiler`, `Spiral\GRPC\ServiceLocator`, `Spiral\Http\LegacyRrDispatcher`, `Spiral\Http\RrDispatcher`
+    are deprecated. Will be removed in v3.0.
+  - [spiral/data-grid-bridge] Removed deprecation in classes `Spiral\DataGrid\Annotation\DataGrid`, `Spiral\DataGrid\Bootloader\GridBootloader`,
+    `Spiral\DataGrid\Config\GridConfig`, `Spiral\DataGrid\Interceptor\GridInterceptor`, `Spiral\DataGrid\Response\GridResponse`,
+    `Spiral\DataGrid\Response\GridResponseInterface`, `Spiral\DataGrid\GridInput`.
+- **Other Features**
+  - [spiral/data-grid-bridge] Added method `addWriter` in `Spiral\DataGrid\Bootloader\GridBootloader`.
+## v2.11.0 - 2022-03-18
 - **High Impact Changes**
   - [spiral/queue] Added queue injector #592
   - [spiral/cache] Added cache injector #600

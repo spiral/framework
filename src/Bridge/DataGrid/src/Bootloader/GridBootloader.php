@@ -14,6 +14,7 @@ namespace Spiral\DataGrid\Bootloader;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Config\Patch\Append;
 use Spiral\DataGrid\GridFactoryInterface;
 use Cycle\Database\DatabaseInterface;
 use Spiral\DataGrid\Compiler;
@@ -28,9 +29,6 @@ use Spiral\DataGrid\Response\GridResponseInterface;
 use Spiral\DataGrid\Writer\BetweenWriter;
 use Spiral\DataGrid\Writer\QueryWriter;
 
-/**
- * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
- */
 final class GridBootloader extends Bootloader
 {
     protected const SINGLETONS = [
@@ -78,5 +76,13 @@ final class GridBootloader extends Bootloader
         }
 
         return $compiler;
+    }
+
+    /**
+     * @psalm-param class-string $writer
+     */
+    public function addWriter(string $writer): void
+    {
+        $this->config->modify(GridConfig::CONFIG, new Append('writers', null, $writer));
     }
 }

@@ -17,6 +17,7 @@ use Spiral\Broadcast\BroadcastInterface;
 
 /**
  * Enables support for event/message publishing.
+ * @deprecated since v2.12. Will be removed in v3.0
  */
 final class BroadcastBootloader extends Bootloader
 {
