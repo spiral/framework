@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Exception;
@@ -27,8 +20,6 @@ class ClientException extends HttpException
 
     /**
      * Code and message positions are reverted.
-     *
-     * @param int $code
      */
     public function __construct(?int $code = null, string $message = '', ?\Throwable $previous = null)
     {
@@ -37,7 +28,7 @@ class ClientException extends HttpException
         }
 
         if (empty($message)) {
-            $message = "Http Error - {$code}";
+            $message = \sprintf('Http Error - %s', $code);
         }
 
         parent::__construct($message, $code, $previous);

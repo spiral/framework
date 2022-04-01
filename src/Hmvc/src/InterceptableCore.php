@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core;
@@ -16,16 +9,12 @@ namespace Spiral\Core;
  */
 final class InterceptableCore implements CoreInterface
 {
-    /** @var InterceptorPipeline */
-    private $pipeline;
+    private InterceptorPipeline $pipeline;
 
-    /** @var CoreInterface */
-    private $core;
-
-    public function __construct(CoreInterface $core)
-    {
+    public function __construct(
+        private readonly CoreInterface $core
+    ) {
         $this->pipeline = new InterceptorPipeline();
-        $this->core = $core;
     }
 
     public function addInterceptor(CoreInterceptorInterface $interceptor): void
@@ -33,10 +22,7 @@ final class InterceptableCore implements CoreInterface
         $this->pipeline->addInterceptor($interceptor);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function callAction(string $controller, string $action, array $parameters = [])
+    public function callAction(string $controller, string $action, array $parameters = []): mixed
     {
         return $this->pipeline->withCore($this->core)->callAction($controller, $action, $parameters);
     }

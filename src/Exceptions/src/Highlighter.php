@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Exceptions;
@@ -16,12 +9,9 @@ namespace Spiral\Exceptions;
  */
 class Highlighter
 {
-    /** @var StyleInterface */
-    private $r;
-
-    public function __construct(StyleInterface $renderer)
-    {
-        $this->r = $renderer;
+    public function __construct(
+        private StyleInterface $renderer
+    ) {
     }
 
     /**
@@ -29,7 +19,7 @@ class Highlighter
      */
     public function highlightLines(string $source, int $line, int $around = 5): string
     {
-        $lines = explode("\n", str_replace("\r\n", "\n", $this->highlight($source)));
+        $lines = \explode("\n", \str_replace("\r\n", "\n", $this->highlight($source)));
 
         $result = '';
         foreach ($lines as $number => $code) {
@@ -39,7 +29,7 @@ class Highlighter
                 continue;
             }
 
-            $result .= $this->r->line($human, mb_convert_encoding($code, 'utf-8'), $human === $line);
+            $result .= $this->renderer->line($human, \mb_convert_encoding($code, 'utf-8'), $human === $line);
         }
 
         return $result;
@@ -53,7 +43,7 @@ class Highlighter
         $result = '';
         $previous = [];
         foreach ($this->getTokens($source) as $token) {
-            $result .= $this->r->token($token, $previous);
+            $result .= $this->renderer->token($token, $previous);
             $previous = $token;
         }
 
@@ -68,12 +58,12 @@ class Highlighter
         $tokens = [];
         $line = 0;
 
-        foreach (token_get_all($source) as $token) {
+        foreach (\token_get_all($source) as $token) {
             if (isset($token[2])) {
                 $line = $token[2];
             }
 
-            if (!is_array($token)) {
+            if (!\is_array($token)) {
                 $token = [$token, $token, $line];
             }
 

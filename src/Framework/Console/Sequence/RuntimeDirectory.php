@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console\Sequence;
@@ -20,25 +13,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class RuntimeDirectory
 {
-    /** @var FilesInterface */
-    private $files;
-
-    /** @var DirectoriesInterface */
-    private $dirs;
-
-    /**
-     * @param FilesInterface       $files
-     * @param DirectoriesInterface $dirs
-     */
-    public function __construct(FilesInterface $files, DirectoriesInterface $dirs)
-    {
-        $this->files = $files;
-        $this->dirs = $dirs;
+    public function __construct(
+        private readonly FilesInterface $files,
+        private readonly DirectoriesInterface $dirs
+    ) {
     }
 
-    /**
-     * @param OutputInterface $output
-     */
     public function ensure(OutputInterface $output): void
     {
         $output->write('Verifying runtime directory... ');
@@ -56,11 +36,11 @@ final class RuntimeDirectory
         foreach ($this->files->getFiles($runtimeDirectory) as $filename) {
             try {
                 $this->files->setPermissions($filename, FilesInterface::RUNTIME);
-                $this->files->setPermissions(dirname($filename), FilesInterface::RUNTIME);
+                $this->files->setPermissions(\dirname($filename), FilesInterface::RUNTIME);
             } catch (\Throwable $e) {
                 // @codeCoverageIgnoreStart
                 $output->writeln(
-                    sprintf(
+                    \sprintf(
                         '<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>',
                         $this->files->relativePath($filename, $runtimeDirectory),
                         $e->getMessage()
@@ -72,7 +52,7 @@ final class RuntimeDirectory
 
             if ($output->isVerbose()) {
                 $output->writeln(
-                    sprintf(
+                    \sprintf(
                         '<fg=green>[updated]</fg=green> `%s`',
                         $this->files->relativePath($filename, $runtimeDirectory)
                     )
