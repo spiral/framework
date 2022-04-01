@@ -27,7 +27,7 @@ final class LogFactory implements LogsInterface
         $e = new LogEvent(
             new \DateTime(),
             $channel,
-            $level,
+            (string) $level,
             $message,
             $context
         );

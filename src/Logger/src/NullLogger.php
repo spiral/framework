@@ -14,10 +14,13 @@ final class NullLogger implements LoggerInterface
 {
     use LoggerTrait;
 
+    private readonly \Closure $receptor;
+
     public function __construct(
-        private string|array|\Closure $receptor,
+        callable $receptor,
         private string $channel
     ) {
+        $this->receptor = $receptor(...);
     }
 
     public function log(mixed $level, $message, array $context = []): void
