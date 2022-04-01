@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core;
@@ -18,14 +11,12 @@ use Spiral\Core\Exception\InterceptorException;
  */
 final class InterceptorPipeline implements CoreInterface
 {
-    /** @var CoreInterface */
-    private $core;
+    private ?CoreInterface $core = null;
 
     /** @var CoreInterceptorInterface[] */
-    private $interceptors = [];
+    private array $interceptors = [];
 
-    /** @var int */
-    private $position = 0;
+    private int $position = 0;
 
     public function addInterceptor(CoreInterceptorInterface $interceptor): void
     {
@@ -41,11 +32,9 @@ final class InterceptorPipeline implements CoreInterface
     }
 
     /**
-     * @param string|null $action
-     * @return mixed
      * @throws \Throwable
      */
-    public function callAction(string $controller, string $action, array $parameters = [])
+    public function callAction(string $controller, string $action, array $parameters = []): mixed
     {
         if ($this->core === null) {
             throw new InterceptorException('Unable to invoke pipeline without assigned core');

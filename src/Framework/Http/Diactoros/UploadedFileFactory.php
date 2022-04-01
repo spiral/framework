@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Diactoros;
@@ -18,9 +11,6 @@ use Laminas\Diactoros\UploadedFile;
 
 final class UploadedFileFactory implements UploadedFileFactoryInterface
 {
-    /**
-     * @inheritdoc
-     */
     public function createUploadedFile(
         StreamInterface $stream,
         int $size = null,

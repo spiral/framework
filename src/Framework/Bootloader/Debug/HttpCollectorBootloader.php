@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Debug;
@@ -31,12 +24,6 @@ final class HttpCollectorBootloader extends Bootloader
         HttpCollector::class => HttpCollector::class,
     ];
 
-    /**
-     * @param HttpCollector      $httpCollector
-     * @param HttpBootloader     $http
-     * @param DebugBootloader    $debug
-     * @param FinalizerInterface $finalizer
-     */
     public function boot(
         HttpCollector $httpCollector,
         HttpBootloader $http,

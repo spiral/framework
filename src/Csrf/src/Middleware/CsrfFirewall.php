@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Csrf\Middleware;
@@ -38,21 +31,12 @@ final class CsrfFirewall implements MiddlewareInterface
      */
     public const ALLOW_METHODS = ['GET', 'HEAD', 'OPTIONS'];
 
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
-
-    /** @var array */
-    private $allowMethods;
-
-    public function __construct(ResponseFactoryInterface $responseFactory, array $allowMethods = self::ALLOW_METHODS)
-    {
-        $this->responseFactory = $responseFactory;
-        $this->allowMethods = $allowMethods;
+    public function __construct(
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly array $allowMethods = self::ALLOW_METHODS
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
         $token = $request->getAttribute(CsrfMiddleware::ATTRIBUTE);
@@ -61,7 +45,7 @@ final class CsrfFirewall implements MiddlewareInterface
             throw new \LogicException('Unable to apply CSRF firewall, attribute is missing');
         }
 
-        if ($this->isRequired($request) && !hash_equals($token, $this->fetchToken($request))) {
+        if ($this->isRequired($request) && !\hash_equals($token, $this->fetchToken($request))) {
             return $this->responseFactory->createResponse(412, 'Bad CSRF Token');
         }
 
@@ -73,7 +57,7 @@ final class CsrfFirewall implements MiddlewareInterface
      */
     protected function isRequired(Request $request): bool
     {
-        return !in_array($request->getMethod(), $this->allowMethods, true);
+        return !\in_array($request->getMethod(), $this->allowMethods, true);
     }
 
     /**
@@ -86,7 +70,7 @@ final class CsrfFirewall implements MiddlewareInterface
         }
 
         $data = $request->getParsedBody();
-        if (is_array($data) && isset($data[self::PARAMETER]) && is_string($data[self::PARAMETER])) {
+        if (\is_array($data) && isset($data[self::PARAMETER]) && \is_string($data[self::PARAMETER])) {
             return $data[self::PARAMETER];
         }
 

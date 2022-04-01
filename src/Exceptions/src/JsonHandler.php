@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Exceptions;
@@ -15,15 +8,15 @@ final class JsonHandler extends AbstractHandler
 {
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_VERBOSE): string
     {
-        return json_encode([
-            'error'      => sprintf(
+        return \json_encode([
+            'error'      => \sprintf(
                 '[%s] %s as %s:%s',
-                get_class($e),
+                $e::class,
                 $e->getMessage(),
                 $e->getFile(),
                 $e->getLine()
             ),
-            'stacktrace' => iterator_to_array($this->renderTrace($e->getTrace(), $verbosity)),
+            'stacktrace' => \iterator_to_array($this->renderTrace($e->getTrace(), $verbosity)),
         ]);
     }
 
@@ -33,14 +26,14 @@ final class JsonHandler extends AbstractHandler
             $result = [];
 
             if (isset($item['class'])) {
-                $result['function'] = sprintf(
+                $result['function'] = \sprintf(
                     '%s%s%s()',
                     $item['class'],
                     $item['type'],
                     $item['function']
                 );
             } else {
-                $result['function'] = sprintf(
+                $result['function'] = \sprintf(
                     '%s()',
                     $item['function']
                 );
@@ -53,7 +46,7 @@ final class JsonHandler extends AbstractHandler
                 ];
             }
 
-            yield$result;
+            yield $result;
         }
     }
 }

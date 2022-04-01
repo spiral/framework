@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Distribution\Resolver;
@@ -17,15 +10,9 @@ use Psr\Http\Message\UriInterface;
 
 class StaticResolver extends UriResolver
 {
-    /**
-     * @var string
-     */
     private const URI_PATH_DELIMITER = '/';
 
-    /**
-     * @var UriInterface
-     */
-    private $host;
+    private UriInterface $host;
 
     public function __construct(UriInterface $host)
     {
@@ -48,8 +35,7 @@ class StaticResolver extends UriResolver
     public function resolve(string $file, array $query = []): UriInterface
     {
         return $this->host->withPath($this->suffix($file))
-            ->withQuery(\http_build_query($query))
-        ;
+            ->withQuery(\http_build_query($query));
     }
 
     private function suffix(string $file): string

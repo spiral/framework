@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -26,7 +19,7 @@ interface DirectoriesInterface
      *
      * @throws DirectoryException
      */
-    public function set(string $name, string $path);
+    public function set(string $name, string $path): self;
 
     /**
      * Get directory value.
