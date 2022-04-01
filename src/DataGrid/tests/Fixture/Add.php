@@ -29,7 +29,7 @@ class Add extends Accessor
         return is_numeric($value);
     }
 
-    protected function convertCurrent($value)
+    protected function convertCurrent($value): mixed
     {
         return $value + $this->val;
     }

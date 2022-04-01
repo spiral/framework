@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console\Bootloader;
@@ -19,6 +12,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Config\Patch\Prepend;
 use Spiral\Console\CommandLocator;
+use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Console;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Console\LocatorInterface;
@@ -42,12 +36,9 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         LocatorInterface::class => CommandLocator::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
     public function boot(AbstractKernel $kernel, FactoryInterface $factory): void
@@ -58,7 +49,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         });
 
         $this->config->setDefaults(
-            'console',
+            ConsoleConfig::CONFIG,
             [
                 'commands' => [],
                 'configure' => [],
@@ -78,7 +69,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     public function addCommand(string $command, bool $lowPriority = false): void
     {
         $this->config->modify(
-            'console',
+            ConsoleConfig::CONFIG,
             $lowPriority
                 ? new Prepend('commands', null, $command)
                 : new Append('commands', null, $command)
@@ -92,48 +83,36 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         array $options = []
     ): void {
         $this->config->modify(
-            'console',
+            ConsoleConfig::CONFIG,
             $this->sequence('configure', $sequence, $header, $footer, $options)
         );
     }
 
-    /**
-     * @param array|string $sequence
-     */
     public function addUpdateSequence(
-        $sequence,
+        string|array|\Closure $sequence,
         string $header,
         string $footer = '',
         array $options = []
     ): void {
         $this->config->modify(
-            'console',
+            ConsoleConfig::CONFIG,
             $this->sequence('update', $sequence, $header, $footer, $options)
         );
     }
 
-    /**
-     * @param mixed $sequence
-     */
     private function sequence(
         string $target,
-        $sequence,
+        string|array|callable $sequence,
         string $header,
         string $footer,
         array $options
     ): Append {
-        if (is_array($sequence) || $sequence instanceof \Closure) {
-            return new Append(
-                $target,
-                null,
-                new CallableSequence($sequence, $options, $header, $footer)
-            );
-        }
-
         return new Append(
             $target,
             null,
-            new CommandSequence($sequence, $options, $header, $footer)
+            \is_array($sequence) || \is_callable($sequence)
+                ? new CallableSequence($sequence, $header, $footer)
+                : new CommandSequence($sequence, $options, $header, $footer)
         );
     }
 }

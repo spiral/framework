@@ -50,10 +50,48 @@
     added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface. 
     Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
   - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
+  - [spiral/encrypter] Added return type `mixed` to the method `decrypt` in `Spiral\Encrypter\EncrypterInterface` interface.
+  - [spiral/data-grid] Added return type `mixed` and `mixed` parameter type of `$source` to the method `write` in
+    `Spiral\DataGrid\WriterInterface` interface.
+  - [spiral/data-grid] Added return type `mixed` to the method `getValue` in `Spiral\DataGrid\SpecificationInterface` interface.
+  - [spiral/data-grid] Added return type `mixed`, added `mixed` parameter type of `$default` to the method `getValue` 
+    in `Spiral\DataGrid\InputInterface` interface.
+  - [spiral/data-grid] Added return type `mixed` to the method `getOption` in `Spiral\DataGrid\GridInterface` interface.
+  - [spiral/data-grid] Added return type `mixed`, added `mixed` parameter type of `$value` to the method `convert` 
+    in `Spiral\DataGrid\Specification\ValueInterface` interface.
+  - [spiral/data-grid] Added `string` type for parameter `$direction` in the method `withDirection` 
+    in `Spiral\DataGrid\Specification\SorterInterface`
+  - [spiral/http] Added return type `array` and `mixed` parameter type of `$filler` to the method `fetch`, 
+    added return type `mixed` to the method `offsetGet`, added return type `mixed` and `mixed` parameter type 
+    of `$default` to the method `get`  in `Spiral\Http\Request\InputBag` class.
+  - [spiral/http] Added return type `bool` to the method `emit`  in `Spiral\Http\EmitterInterface` interface.
+  - [spiral/config] Added return type `void` to the method `setDefaults` in `Spiral\Config\ConfiguratorInterface` interface.
+  - [spiral/core] Added return type `mixed` to the method `runScope` in `Spiral\Core\ScopeInterface` interface.
+  - [spiral/core] Added return type `mixed` and `array|callable|string` parameter type of `$target` 
+    to the method `invoke` in `Spiral\Core\InvokerInterface` interface.
+  - [spiral/core] Added return type `mixed` to the method `make` in `Spiral\Core\FactoryInterface` interface.
+  - [spiral/core] Added `string|array|callable|object` parameter type of `$resolver` in the method `bind`,
+    added `string|array|callable|object` parameter type of `$resolver` in the method `bindSingleton` in `Spiral\Core\BinderInterface` interface.
+  - [spiral/core] Added return type `object` to the method `createInjection` in `Spiral\Core\Container\InjectorInterface` interface.
+  - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
+  - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
+    added in `Spiral\Boot\EnvironmentInterface` interface.
+  - [spiral/boot] Added return type `static` to the method `addFinalizer`,
+    added return type `void` to the method `finalize` in `Spiral\Boot\FinalizerInterface` interface.
+  - [spiral/boot] Added return type `self` to the method `addDispatcher`,
+    added return type `mixed` to the method `serve` in `Spiral\Boot\KernelInterface` interface.
+  - [spiral/boot] Added return type `mixed` to the method `loadData`,
+    added return type `void` and `mixed` parameter type of `$data` to the method `saveData` in `Spiral\Boot\MemoryInterface` interface.
+  - [spiral/console] Added return type `void` to the method `writeHeader`, added return type `void` to the method `execute`,
+    method `whiteFooter` renamed to `writeFooter`, added return type `void` to the method `writeFooter`
+    in `Spiral\Console\SequenceInterface` interface.
+  - [spiral/files] Added return type `bool` to the method `delete`, added return type `bool` to the method `deleteDirectory`,
+    added return type `bool` to the method `touch`, added return type `bool` to the method `setPermissions` in `Spiral\Files\FilesInterface`.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`
   - A minimal version of `league/flysystem` increased to `^2.3`
+  - A minimal version of `symfony/console` increased to `^6.0`
 - **Other Features**
 
 ## v2.11.0 - Unreleased
