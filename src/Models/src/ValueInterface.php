@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Models;
@@ -26,18 +19,14 @@ interface ValueInterface
      * methods. Attention, method declaration MUST contain internal validation and filters, MUST NOT
      * affect mocked data directly.
      *
-     * @param mixed $data
-     *
      * @throws AccessException
      */
-    public function setValue($data);
+    public function setValue(mixed $data): self;
 
     /**
      * Convert object data into serialized value (array or string for example).
      *
-     * @return mixed
-     *
      * @throws AccessException
      */
-    public function getValue();
+    public function getValue(): mixed;
 }
