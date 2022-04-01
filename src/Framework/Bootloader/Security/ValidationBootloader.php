@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Security;
@@ -18,7 +11,10 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Security\RulesInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 use Spiral\Validation\Checker;
+use Spiral\Validation\CheckerInterface;
 use Spiral\Validation\Condition;
+use Spiral\Validation\ConditionInterface;
+use Spiral\Validation\Config\ValidatorConfig;
 use Spiral\Validation\ParserInterface;
 use Spiral\Validation\RuleParser;
 use Spiral\Validation\ValidationInterface;
@@ -37,24 +33,15 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
         ParserInterface::class     => RuleParser::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /**
-     * @param ConfiguratorInterface $config
-     */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
-    /**
-     * @param TokenizerBootloader $tokenizer
-     */
     public function boot(TokenizerBootloader $tokenizer): void
     {
         $this->config->setDefaults(
-            'validation',
+            ValidatorConfig::CONFIG,
             [
                 // Checkers are resolved using container and provide ability to isolate some validation rules
                 // under common name and class. You can register new checkers at any moment without any
@@ -128,29 +115,23 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
     }
 
     /**
-     * @param string $alias
-     * @param mixed  $checker
+     * @psalm-param CheckerInterface|class-string<CheckerInterface>|non-empty-string $checker
      */
-    public function addChecker(string $alias, $checker): void
+    public function addChecker(string $alias, CheckerInterface|string $checker): void
     {
-        $this->config->modify('validation', new Append('checkers', $alias, $checker));
+        $this->config->modify(ValidatorConfig::CONFIG, new Append('checkers', $alias, $checker));
     }
 
     /**
-     * @param string $alias
-     * @param mixed  $condition
+     * @psalm-param ConditionInterface|class-string<ConditionInterface>|non-empty-string $checker
      */
-    public function addCondition(string $alias, $condition): void
+    public function addCondition(string $alias, ConditionInterface|string $condition): void
     {
-        $this->config->modify('validation', new Append('conditions', $alias, $condition));
+        $this->config->modify(ValidatorConfig::CONFIG, new Append('conditions', $alias, $condition));
     }
 
-    /**
-     * @param string $alias
-     * @param string $target
-     */
     public function addAlias(string $alias, string $target): void
     {
-        $this->config->modify('validation', new Append('aliases', $alias, $target));
+        $this->config->modify(ValidatorConfig::CONFIG, new Append('aliases', $alias, $target));
     }
 }

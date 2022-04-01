@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid;
@@ -28,31 +20,16 @@ class GridFactory implements GridFactoryInterface
     public const KEY_PAGINATE    = 'paginate';
     public const KEY_FETCH_COUNT = 'fetchCount';
 
-    /** @var callable */
-    private $count = 'count';
+    private \Closure $count;
+    private InputInterface $defaults;
 
-    /** @var Compiler */
-    private $compiler;
-
-    /** @var InputInterface */
-    private $input;
-
-    /** @var InputInterface */
-    private $defaults;
-
-    /** @var GridInterface */
-    private $view;
-
-    /**
-     * @param InputInterface|null $input
-     * @param GridInterface|null  $view
-     */
-    public function __construct(Compiler $compiler, InputInterface $input = null, GridInterface $view = null)
-    {
-        $this->compiler = $compiler;
-        $this->input = $input ?? new NullInput();
+    public function __construct(
+        private Compiler $compiler,
+        private InputInterface $input = new NullInput(),
+        private GridInterface $view = new Grid()
+    ) {
         $this->defaults = new NullInput();
-        $this->view = $view ?? new Grid();
+        $this->count = count(...);
     }
 
     /**
@@ -80,15 +57,12 @@ class GridFactory implements GridFactoryInterface
     public function withCounter(callable $counter): self
     {
         $generator = clone $this;
-        $generator->count = $counter;
+        $generator->count = $counter(...);
 
         return $generator;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function create($source, GridSchema $schema): GridInterface
+    public function create(mixed $source, GridSchema $schema): GridInterface
     {
         $view = clone $this->view;
 
@@ -97,22 +71,22 @@ class GridFactory implements GridFactoryInterface
         ['view' => $view, 'source' => $source] = $this->applySorters($view, $source, $schema);
         ['view' => $view, 'source' => $source] = $this->applyPaginator($view, $source, $schema);
 
-        if (!is_iterable($source)) {
+        if (!\is_iterable($source)) {
             throw new GridViewException('GridView expects the source to be iterable after all.');
         }
 
         return $view->withSource($source);
     }
 
-    protected function applyFilters(GridInterface $view, $source, GridSchema $schema): array
+    protected function applyFilters(GridInterface $view, mixed $source, GridSchema $schema): array
     {
         ['source' => $source, 'filters' => $filters] = $this->getFilters($source, $schema);
         $view = $view->withOption(GridInterface::FILTERS, $filters);
 
-        return compact('view', 'source');
+        return ['view' => $view, 'source' => $source];
     }
 
-    protected function getFilters($source, GridSchema $schema): array
+    protected function getFilters(mixed $source, GridSchema $schema): array
     {
         $filters = [];
         foreach ($this->getOptionArray(static::KEY_FILTER) ?? [] as $name => $value) {
@@ -126,32 +100,32 @@ class GridFactory implements GridFactoryInterface
             }
         }
 
-        return compact('source', 'filters');
+        return ['source' => $source, 'filters' => $filters];
     }
 
-    protected function applyCounter(GridInterface $view, $source, GridSchema $schema): array
+    protected function applyCounter(GridInterface $view, mixed $source, GridSchema $schema): array
     {
         if (is_countable($source) && $this->getOption(static::KEY_FETCH_COUNT)) {
             $view = $view->withOption(GridInterface::COUNT, ($this->count)($source));
         }
 
-        return compact('view', 'source');
+        return ['view' => $view, 'source' => $source];
     }
 
-    protected function applySorters(GridInterface $view, $source, GridSchema $schema): array
+    protected function applySorters(GridInterface $view, mixed $source, GridSchema $schema): array
     {
         ['source' => $source, 'sorters' => $sorters] = $this->getSorters($source, $schema);
         $view = $view->withOption(GridInterface::SORTERS, $sorters);
 
-        return compact('view', 'source');
+        return ['view' => $view, 'source' => $source];
     }
 
-    protected function getSorters($source, GridSchema $schema): array
+    protected function getSorters(mixed $source, GridSchema $schema): array
     {
         $sorters = [];
         foreach ($this->getOptionArray(static::KEY_SORT) ?? [] as $name => $value) {
             if ($schema->hasSorter($name)) {
-                $sorter = $schema->getSorter($name)->withDirection($value);
+                $sorter = $schema->getSorter($name)->withDirection((string) $value);
 
                 if ($sorter !== null) {
                     $source = $this->compiler->compile($source, $sorter);
@@ -160,20 +134,20 @@ class GridFactory implements GridFactoryInterface
             }
         }
 
-        return compact('source', 'sorters');
+        return ['source' => $source, 'sorters' => $sorters];
     }
 
-    protected function applyPaginator(GridInterface $view, $source, GridSchema $schema): array
+    protected function applyPaginator(GridInterface $view, mixed $source, GridSchema $schema): array
     {
         if ($schema->getPaginator() !== null) {
             ['source' => $source, 'paginator' => $paginator] = $this->getPaginator($source, $schema);
             $view = $view->withOption(GridInterface::PAGINATOR, $paginator);
         }
 
-        return compact('view', 'source');
+        return ['view' => $view, 'source' => $source];
     }
 
-    protected function getPaginator($source, GridSchema $schema): array
+    protected function getPaginator(mixed $source, GridSchema $schema): array
     {
         $paginator = $schema->getPaginator();
         if (!$paginator instanceof FilterInterface) {
@@ -197,7 +171,7 @@ class GridFactory implements GridFactoryInterface
     protected function getOptionArray(string $option): array
     {
         $result = $this->getOption($option);
-        if (!is_array($result)) {
+        if (!\is_array($result)) {
             return [];
         }
 
@@ -206,10 +180,8 @@ class GridFactory implements GridFactoryInterface
 
     /**
      * Return array of options for the input. Checks the default input in case of value missing in parent.
-     *
-     * @return mixed
      */
-    protected function getOption(string $option)
+    protected function getOption(string $option): mixed
     {
         if ($this->input->hasValue($option)) {
             return $this->input->getValue($option);

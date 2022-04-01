@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Cookies\Middleware;
@@ -29,21 +22,12 @@ use Spiral\Encrypter\Exception\EncryptException;
  */
 final class CookiesMiddleware implements MiddlewareInterface
 {
-    /** @var CookiesConfig */
-    private $config;
-
-    /** @var EncryptionInterface */
-    private $encryption;
-
-    public function __construct(CookiesConfig $config, EncryptionInterface $encryption)
-    {
-        $this->config = $config;
-        $this->encryption = $encryption;
+    public function __construct(
+        private readonly CookiesConfig $config,
+        private readonly EncryptionInterface $encryption
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
         //Aggregates all user cookies
@@ -82,7 +66,7 @@ final class CookiesMiddleware implements MiddlewareInterface
      */
     protected function isProtected(string $cookie): bool
     {
-        if (in_array($cookie, $this->config->getExcludedCookies(), true)) {
+        if (\in_array($cookie, $this->config->getExcludedCookies(), true)) {
             //Excluded
             return false;
         }
@@ -92,7 +76,6 @@ final class CookiesMiddleware implements MiddlewareInterface
 
     /**
      * Pack outcoming cookies with encrypted value.
-     *
      *
      * @throws EncryptException
      */
@@ -116,17 +99,13 @@ final class CookiesMiddleware implements MiddlewareInterface
         return $response->withHeader('Set-Cookie', $cookies);
     }
 
-    /**
-     * @param string|array $cookie
-     * @return array|mixed|null
-     */
-    private function decodeCookie($cookie)
+    private function decodeCookie(array|string $cookie): mixed
     {
         try {
-            if (is_array($cookie)) {
-                return array_map([$this, 'decodeCookie'], $cookie);
+            if (\is_array($cookie)) {
+                return \array_map(fn (array|string $cookie) => $this->decodeCookie($cookie), $cookie);
             }
-        } catch (DecryptException $exception) {
+        } catch (DecryptException) {
             return null;
         }
 
@@ -134,14 +113,14 @@ final class CookiesMiddleware implements MiddlewareInterface
             case CookiesConfig::COOKIE_ENCRYPT:
                 try {
                     return $this->encryption->getEncrypter()->decrypt($cookie);
-                } catch (DecryptException $e) {
+                } catch (DecryptException) {
                 }
                 return null;
             case CookiesConfig::COOKIE_HMAC:
-                $hmac = substr($cookie, -1 * CookiesConfig::MAC_LENGTH);
-                $value = substr($cookie, 0, strlen($cookie) - strlen($hmac));
+                $hmac = \substr($cookie, -1 * CookiesConfig::MAC_LENGTH);
+                $value = \substr($cookie, 0, \strlen($cookie) - \strlen($hmac));
 
-                if (hash_equals($this->hmacSign($value), $hmac)) {
+                if (\hash_equals($this->hmacSign($value), $hmac)) {
                     return $value;
                 }
         }
@@ -151,12 +130,10 @@ final class CookiesMiddleware implements MiddlewareInterface
 
     /**
      * Sign string.
-     *
-     * @param string|null $value
      */
-    private function hmacSign($value): string
+    private function hmacSign(string $value): string
     {
-        return hash_hmac(
+        return \hash_hmac(
             CookiesConfig::HMAC_ALGORITHM,
             $value,
             $this->encryption->getKey()
@@ -165,13 +142,14 @@ final class CookiesMiddleware implements MiddlewareInterface
 
     private function encodeCookie(Cookie $cookie): Cookie
     {
+        $value = $cookie->getValue() ?? '';
         if ($this->config->getProtectionMethod() === CookiesConfig::COOKIE_ENCRYPT) {
             $encryptor = $this->encryption->getEncrypter();
 
-            return $cookie->withValue($encryptor->encrypt($cookie->getValue()));
+            return $cookie->withValue($encryptor->encrypt($value));
         }
 
         //VALUE.HMAC
-        return $cookie->withValue($cookie->getValue() . $this->hmacSign($cookie->getValue()));
+        return $cookie->withValue($value . $this->hmacSign($value));
     }
 }

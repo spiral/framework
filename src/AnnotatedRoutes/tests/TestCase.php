@@ -32,6 +32,6 @@ abstract class TestCase extends BaseTestCase
             'app'  => __DIR__ . '/App',
         ];
 
-        return App::init($config, new Environment($env), false);
+        return (App::create($config, false))->run(new Environment($env));
     }
 }

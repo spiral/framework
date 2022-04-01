@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @author Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid;
@@ -14,12 +8,8 @@ use LogicException;
 
 /**
  * Case insensitive search for a key existence in the given array.
- *
- * @param array            $array
- * @param string|int|float $search
- * @return bool
  */
-function hasKey(array $array, $search): bool
+function hasKey(array $array, float|int|string $search): bool
 {
     foreach ($array as $key => $_) {
         if (equals($key, $search)) {
@@ -30,12 +20,7 @@ function hasKey(array $array, $search): bool
     return false;
 }
 
-/**
- * @param array $array
- * @param       $search
- * @return bool
- */
-function hasValue(array $array, $search): bool
+function hasValue(array $array, mixed $search): bool
 {
     foreach ($array as $value) {
         if (equals($value, $search)) {
@@ -49,8 +34,6 @@ function hasValue(array $array, $search): bool
 /**
  * Get value by a key in the given array using case insensitive case.
  *
- * @param array  $array
- * @param string $search
  * @return mixed
  * @throws LogicException
  */
@@ -62,22 +45,19 @@ function getValue(array $array, string $search)
         }
     }
 
-    throw new LogicException("`$search` key is not presented in the array.");
+    throw new LogicException(\sprintf('`%s` key is not presented in the array.', $search));
 }
 
 /**
- * @param mixed $value1
- * @param mixed $value2
- * @return bool
  * @internal
  */
-function equals($value1, $value2): bool
+function equals(mixed $value1, mixed $value2): bool
 {
-    if (is_string($value1) && is_string($value2) && strcasecmp($value1, $value2) === 0) {
+    if (\is_string($value1) && \is_string($value2) && \strcasecmp($value1, $value2) === 0) {
         return true;
     }
 
-    if (is_numeric($value1) && is_numeric($value2) && strcasecmp((string)$value1, (string)$value2) === 0) {
+    if (\is_numeric($value1) && \is_numeric($value2) && \strcasecmp((string)$value1, (string)$value2) === 0) {
         return true;
     }
 

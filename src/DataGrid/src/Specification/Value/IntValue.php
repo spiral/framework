@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value;
@@ -16,10 +8,7 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class IntValue implements ValueInterface
 {
-    /**
-     * @inheritDoc
-     */
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
         /**
          * Note: Starting from PHP 8 all whitespaces are ignored when checking
@@ -37,10 +26,7 @@ final class IntValue implements ValueInterface
         return $value === '' || (\is_numeric($value) && \trim((string)$value) === (string)$value);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function convert($value): int
+    public function convert(mixed $value): int
     {
         return (int)$value;
     }

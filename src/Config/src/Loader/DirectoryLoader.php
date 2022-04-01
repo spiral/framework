@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Config\Loader;
@@ -16,26 +9,23 @@ use Spiral\Config\LoaderInterface;
 
 final class DirectoryLoader implements LoaderInterface
 {
-    /** @var string */
-    private $directory;
-
-    /** @var FileLoaderInterface[] */
-    private $loaders;
-
-    public function __construct(string $directory, array $loaders = [])
-    {
-        $this->directory = rtrim($directory, '/');
-        $this->loaders = $loaders;
-    }
+    private readonly string $directory;
 
     /**
-     * @inheritdoc
+     * @param FileLoaderInterface[] $loaders
      */
+    public function __construct(
+        string $directory,
+        private readonly array $loaders = []
+    ) {
+        $this->directory = \rtrim($directory, '/');
+    }
+
     public function has(string $section): bool
     {
         foreach ($this->loaderExtensions() as $extension) {
-            $filename = sprintf('%s/%s.%s', $this->directory, $section, $extension);
-            if (file_exists($filename)) {
+            $filename = \sprintf('%s/%s.%s', $this->directory, $section, $extension);
+            if (\file_exists($filename)) {
                 return true;
             }
         }
@@ -43,14 +33,11 @@ final class DirectoryLoader implements LoaderInterface
         return false;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function load(string $section): array
     {
         foreach ($this->loaderExtensions() as $extension) {
-            $filename = sprintf('%s/%s.%s', $this->directory, $section, $extension);
-            if (!file_exists($filename)) {
+            $filename = \sprintf('%s/%s.%s', $this->directory, $section, $extension);
+            if (!\file_exists($filename)) {
                 continue;
             }
 
@@ -61,12 +48,12 @@ final class DirectoryLoader implements LoaderInterface
             }
         }
 
-        throw new LoaderException("Unable to load config `{$section}`: no suitable loader found.");
+        throw new LoaderException(\sprintf('Unable to load config `%s`: no suitable loader found.', $section));
     }
 
     private function loaderExtensions(): array
     {
-        return array_keys($this->loaders);
+        return \array_keys($this->loaders);
     }
 
     private function getLoader(string $extension): FileLoaderInterface

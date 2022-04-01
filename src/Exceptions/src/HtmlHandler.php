@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Exceptions;
@@ -27,24 +20,14 @@ class HtmlHandler extends AbstractHandler
     public const DEFAULT  = 'default';
     public const INVERTED = 'inverted';
 
-    /** @var HtmlRenderer */
-    protected $renderer;
+    protected HtmlRenderer $renderer;
+    protected Highlighter $highlighter;
+    protected Dumper $dumper;
+    protected ?StateInterface $state = null;
 
-    /** @var Highlighter */
-    protected $highlighter;
-
-    /** @var string */
-    protected $style = self::DEFAULT;
-
-    /** @var Dumper */
-    protected $dumper;
-
-    /** @var StateInterface|null */
-    protected $state;
-
-    public function __construct(string $style = self::DEFAULT)
-    {
-        $this->style = $style;
+    public function __construct(
+        protected string $style = self::DEFAULT
+    ) {
         $this->dumper = new Dumper();
 
         if ($style == self::INVERTED) {
@@ -66,9 +49,6 @@ class HtmlHandler extends AbstractHandler
         return $handler;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
         $options = [
@@ -126,12 +106,12 @@ class HtmlHandler extends AbstractHandler
      */
     private function render(string $view, array $options = []): string
     {
-        extract($options, EXTR_OVERWRITE);
+        \extract($options, EXTR_OVERWRITE);
 
-        ob_start();
+        \ob_start();
         require $this->getFilename($view);
 
-        return ob_get_clean();
+        return \ob_get_clean();
     }
 
     /**
@@ -139,6 +119,6 @@ class HtmlHandler extends AbstractHandler
      */
     private function getFilename(string $view): string
     {
-        return sprintf('%s/views/%s.php', dirname(__DIR__), $view);
+        return \sprintf('%s/views/%s.php', \dirname(__DIR__), $view);
     }
 }

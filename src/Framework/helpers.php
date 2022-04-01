@@ -1,18 +1,11 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 use Spiral\Core\Container\Autowire;
 use Spiral\Debug\Dumper;
 
-if (!function_exists('bind')) {
+if (!\function_exists('bind')) {
     /**
      * Shortcut to container Autowire definition.
      *
@@ -20,9 +13,6 @@ if (!function_exists('bind')) {
      * 'name' => bind(SomeClass::name, [...])
      *
      * @param string $alias Class name or alias.
-     * @param array  $parameters
-     *
-     * @return Autowire
      */
     function bind(string $alias, array $parameters = []): Autowire
     {
@@ -30,16 +20,14 @@ if (!function_exists('bind')) {
     }
 }
 
-if (!function_exists('dumprr')) {
+if (!\function_exists('dumprr')) {
     /**
      * Dumprr is similar to Dump function but always redirect output to STDERR.
-     *
-     * @param mixed $value
      */
-    function dumprr($value): void
+    function dumprr(mixed $value): void
     {
         $result = dump($value, Dumper::ROADRUNNER);
 
-        file_put_contents('php://stderr', $result);
+        \file_put_contents('php://stderr', $result);
     }
 }

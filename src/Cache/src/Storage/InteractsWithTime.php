@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Storage;
 
-use Spiral\Cache\Exception\InvalidArgumentException;
-
 trait InteractsWithTime
 {
     /**
@@ -17,43 +15,19 @@ trait InteractsWithTime
      *
      * @codeCoverageIgnore Ignore time-aware-mutable value.
      *                     Must be covered with a stub.
-     * @throws \Exception
      */
     protected function now(): \DateTimeImmutable
     {
-        return new \DateTimeImmutable('NOW');
+        return new \DateTimeImmutable();
     }
-    /**
-     * @param null|int|\DateInterval|\DateTimeInterface $ttl
-     * @throws InvalidArgumentException
-     */
-    private function ttlToTimestamp($ttl): int
+
+    private function ttlToTimestamp(null|int|\DateInterval|\DateTimeInterface $ttl = null): int
     {
-        if ($ttl === null) {
-            return $this->ttl + time();
-        }
-
-        if ($ttl instanceof \DateInterval) {
-            return $this->now()
-                ->add($ttl)
-                ->getTimestamp();
-        }
-
-        if ($ttl instanceof \DateTimeInterface) {
-            return $ttl->getTimestamp();
-        }
-
-        if (\is_int($ttl)) {
-            $now = $this->now();
-
-            return $now->getTimestamp() + $ttl;
-        }
-
-        throw new InvalidArgumentException(
-            \sprintf(
-                'Cache item ttl (expiration) must be of type int or \DateInterval, but %s passed',
-                \get_debug_type($ttl)
-            )
-        );
+        return match (true) {
+            $ttl instanceof \DateInterval => $this->now()->add($ttl)->getTimestamp(),
+            $ttl instanceof \DateTimeInterface => $ttl->getTimestamp(),
+            $ttl === null => $this->ttl + \time(),
+            default => $this->now()->getTimestamp() + $ttl
+        };
     }
 }

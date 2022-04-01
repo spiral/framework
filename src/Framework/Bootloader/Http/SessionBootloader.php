@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
@@ -15,6 +8,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\Autowire;
+use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SessionFactory;
@@ -31,17 +25,6 @@ final class SessionBootloader extends Bootloader
         SessionFactoryInterface::class => SessionFactory::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /**
-     * @param ConfiguratorInterface $config
-     */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
-    }
-
     /**
      * Automatically registers session starter middleware and excludes session cookie from
      * cookie protection.
@@ -53,7 +36,7 @@ final class SessionBootloader extends Bootloader
         DirectoriesInterface $directories
     ): void {
         $config->setDefaults(
-            'session',
+            SessionConfig::CONFIG,
             [
                 'lifetime' => 86400,
                 'cookie' => 'sid',
@@ -69,7 +52,7 @@ final class SessionBootloader extends Bootloader
             ]
         );
 
-        $session = $config->getConfig('session');
+        $session = $config->getConfig(SessionConfig::CONFIG);
 
         $http->addMiddleware(SessionMiddleware::class);
         $cookies->whitelistCookie($session['cookie']);
