@@ -23,7 +23,7 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
         ActorProviderInterface::class => self::class,
     ];
 
-    /** @var ActorProviderInterface[]|string[] */
+    /** @var array<int, ActorProviderInterface|Autowire|string> */
     private array $actorProvider = [];
 
     public function __construct(
@@ -68,7 +68,7 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
     }
 
     /**
-     * @return \Generator|ActorProviderInterface[]
+     * @return \Generator<int, ActorProviderInterface>
      */
     private function getProviders(): \Generator
     {

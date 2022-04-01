@@ -24,12 +24,6 @@ final class HttpCollectorBootloader extends Bootloader
         HttpCollector::class => HttpCollector::class,
     ];
 
-    /**
-     * @param HttpCollector      $httpCollector
-     * @param HttpBootloader     $http
-     * @param DebugBootloader    $debug
-     * @param FinalizerInterface $finalizer
-     */
     public function boot(
         HttpCollector $httpCollector,
         HttpBootloader $http,

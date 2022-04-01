@@ -32,6 +32,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         private readonly SuppressErrorsInterface $suppressErrors,
         private readonly RendererInterface $renderer,
         private readonly ResponseFactoryInterface $responseFactory,
+        /** @internal */
         private readonly ContainerInterface $container
     ) {
     }
@@ -120,7 +121,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     {
         try {
             return $this->container->get($class);
-        } catch (\Throwable | ContainerExceptionInterface) {
+        } catch (\Throwable) {
             return null;
         }
     }

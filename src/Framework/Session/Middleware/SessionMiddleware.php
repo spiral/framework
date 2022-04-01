@@ -34,6 +34,9 @@ final class SessionMiddleware implements MiddlewareInterface
     ) {
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function process(Request $request, Handler $handler): Response
     {
         //Initiating session, this can only be done once!
@@ -45,7 +48,7 @@ final class SessionMiddleware implements MiddlewareInterface
         try {
             $response = $this->scope->runScope(
                 [SessionInterface::class => $session],
-                fn () => $handler->handle($request->withAttribute(static::ATTRIBUTE, $session))
+                static fn () => $handler->handle($request->withAttribute(self::ATTRIBUTE, $session))
             );
         } catch (\Throwable $e) {
             $session->abort();
@@ -103,7 +106,7 @@ final class SessionMiddleware implements MiddlewareInterface
     protected function clientSignature(Request $request): string
     {
         $signature = '';
-        foreach (static::SIGNATURE_HEADERS as $header) {
+        foreach (self::SIGNATURE_HEADERS as $header) {
             $signature .= $request->getHeaderLine($header) . ';';
         }
 

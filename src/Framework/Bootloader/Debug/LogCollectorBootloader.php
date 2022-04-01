@@ -23,12 +23,6 @@ final class LogCollectorBootloader extends Bootloader
         LogCollector::class => LogCollector::class,
     ];
 
-    /**
-     * @param LogCollector              $logCollector
-     * @param DebugBootloader           $debug
-     * @param ListenerRegistryInterface $listenerRegistry
-     * @param FinalizerInterface        $finalizer
-     */
     public function boot(
         LogCollector $logCollector,
         DebugBootloader $debug,

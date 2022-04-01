@@ -115,7 +115,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
     }
 
     /**
-     * @psalm-param CheckerInterface|non-empty-string<CheckerInterface> $checker
+     * @psalm-param CheckerInterface|class-string<CheckerInterface>|non-empty-string $checker
      */
     public function addChecker(string $alias, CheckerInterface|string $checker): void
     {
@@ -123,7 +123,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
     }
 
     /**
-     * @psalm-param ConditionInterface|non-empty-string<ConditionInterface> $checker
+     * @psalm-param ConditionInterface|class-string<ConditionInterface>|non-empty-string $checker
      */
     public function addCondition(string $alias, ConditionInterface|string $condition): void
     {

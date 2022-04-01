@@ -98,10 +98,6 @@ class FilterInterceptor implements CoreInterceptorInterface
         return $this->cache[$key];
     }
 
-
-    /**
-     * @param \ReflectionParameter $parameter
-     */
     private function getParameterClass(\ReflectionParameter $parameter): ?\ReflectionClass
     {
         $type = $parameter->getType();

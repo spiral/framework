@@ -18,9 +18,6 @@ use Spiral\Config\Exception\InvalidArgumentException;
 
 class DistributionConfig
 {
-    /**
-     * @var string
-     */
     public const CONFIG = 'distribution';
 
     private string $default = Manager::DEFAULT_RESOLVER;

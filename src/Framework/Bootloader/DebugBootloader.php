@@ -24,6 +24,9 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
         StateInterface::class => [self::class, 'state'],
     ];
 
+    /** @var array<int, StateCollectorInterface|string> */
+    private array $collectors = [];
+
     public function __construct(
         private readonly FactoryInterface $factory
     ) {

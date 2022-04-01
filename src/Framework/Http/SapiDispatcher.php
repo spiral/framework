@@ -67,7 +67,7 @@ final class SapiDispatcher implements DispatcherInterface
             if ($state !== null) {
                 $handler = $handler->withState($state);
             }
-        } catch (\Throwable | ContainerExceptionInterface) {
+        } catch (\Throwable) {
             // nothing to report
         }
 
