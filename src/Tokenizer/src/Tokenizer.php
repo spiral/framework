@@ -75,8 +75,10 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
      *
      * @throws InjectionException
      */
-    public function createInjection(\ReflectionClass $class, string $context = null)
-    {
+    public function createInjection(
+        \ReflectionClass $class,
+        string $context = null
+    ): ClassesInterface|InvocationsInterface {
         if ($class->isSubclassOf(ClassesInterface::class)) {
             return $this->classLocator();
         } elseif ($class->isSubclassOf(InvocationsInterface::class)) {

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http;
@@ -54,28 +47,12 @@ use Psr\Http\Message\UriInterface;
  */
 final class SapiRequestFactory
 {
-    /** @var ServerRequestFactoryInterface */
-    private $requestFactory;
-
-    /** @var UriFactoryInterface */
-    private $uriFactory;
-
-    /** @var StreamFactoryInterface */
-    private $streamFactory;
-
-    /** @var UploadedFileFactoryInterface */
-    private $uploadedFileFactory;
-
     public function __construct(
-        ServerRequestFactoryInterface $requestFactory,
-        UriFactoryInterface $uriFactory,
-        StreamFactoryInterface $streamFactory,
-        UploadedFileFactoryInterface $uploadedFileFactory
+        private readonly ServerRequestFactoryInterface $requestFactory,
+        private readonly UriFactoryInterface $uriFactory,
+        private readonly StreamFactoryInterface $streamFactory,
+        private readonly UploadedFileFactoryInterface $uploadedFileFactory
     ) {
-        $this->requestFactory = $requestFactory;
-        $this->uriFactory = $uriFactory;
-        $this->streamFactory = $streamFactory;
-        $this->uploadedFileFactory = $uploadedFileFactory;
     }
 
     public function fromGlobals(): ServerRequestInterface
@@ -91,9 +68,6 @@ final class SapiRequestFactory
         );
     }
 
-    /**
-     * @param StreamInterface|resource|string|null $body
-     */
     public function createFromParameters(
         array $server,
         array $headers = [],
@@ -101,7 +75,7 @@ final class SapiRequestFactory
         array $get = [],
         array $post = [],
         array $files = [],
-        $body = null
+        mixed $body = null
     ): ServerRequestInterface {
         $method = $server['REQUEST_METHOD'] ?? 'GET';
 
@@ -114,7 +88,7 @@ final class SapiRequestFactory
 
         $protocol = '1.1';
         if (!empty($_SERVER['SERVER_PROTOCOL'])) {
-            $protocol = str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']);
+            $protocol = \str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']);
         }
 
         $request = $request
@@ -164,7 +138,7 @@ final class SapiRequestFactory
         }
 
         if (isset($server['REQUEST_URI'])) {
-            $uri = $uri->withPath(\explode('?', $server['REQUEST_URI'])[0]);
+            $uri = $uri->withPath(\explode('?', (string) $server['REQUEST_URI'])[0]);
         }
 
         if (isset($server['QUERY_STRING'])) {
@@ -177,12 +151,12 @@ final class SapiRequestFactory
     private static function getHeadersFromGlobals(): array
     {
         if (\function_exists('getallheaders')) {
-            $headers = getallheaders();
+            $headers = \getallheaders();
         } else {
             $headers = [];
             foreach ($_SERVER as $name => $value) {
-                if (strncmp($name, 'HTTP_', 5) === 0) {
-                    $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+                if (\str_starts_with($name, 'HTTP_')) {
+                    $name = \str_replace(' ', '-', \ucwords(\strtolower(\str_replace('_', ' ', \substr($name, 5)))));
                     $headers[$name] = $value;
                 }
             }
@@ -212,16 +186,22 @@ final class SapiRequestFactory
     /**
      * Populates uploaded files array from $_FILE data structure recursively.
      *
-     * @param array $files     uploaded files array to be populated.
-     * @param mixed $names     file names provided by PHP
-     * @param mixed $tempNames temporary file names provided by PHP
-     * @param mixed $types     file types provided by PHP
-     * @param mixed $sizes     file sizes provided by PHP
-     * @param mixed $errors    uploading issues provided by PHP
+     * @param array $files            uploaded files array to be populated.
+     * @param array|string $names     file names provided by PHP
+     * @param array|string $tempNames temporary file names provided by PHP
+     * @param array|string $types     file types provided by PHP
+     * @param array|int $sizes        file sizes provided by PHP
+     * @param array|int $errors       uploading issues provided by PHP
      * @since 3.0.0
      */
-    private function populateUploadedFileRecursive(&$files, $names, $tempNames, $types, $sizes, $errors): void
-    {
+    private function populateUploadedFileRecursive(
+        array &$files,
+        array|string $names,
+        array|string $tempNames,
+        array|string $types,
+        array|int $sizes,
+        array|int $errors
+    ): void {
         if (\is_array($names)) {
             foreach ($names as $i => $name) {
                 $files[$i] = [];
@@ -237,7 +217,7 @@ final class SapiRequestFactory
         } else {
             try {
                 $stream = $this->streamFactory->createStreamFromFile($tempNames);
-            } catch (\RuntimeException $e) {
+            } catch (\RuntimeException) {
                 $stream = $this->streamFactory->createStream();
             }
 

@@ -19,10 +19,10 @@ class SequenceWriter implements WriterInterface
     /**
      * {@inheritDoc}
      */
-    public function write($source, SpecificationInterface $specification, Compiler $compiler)
+    public function write($source, SpecificationInterface $specification, Compiler $compiler): mixed
     {
-        if (is_array($source)) {
-            $source[] = get_class($specification);
+        if (\is_array($source)) {
+            $source[] = $specification::class;
         }
 
         return $source;

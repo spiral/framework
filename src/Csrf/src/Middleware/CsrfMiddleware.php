@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Csrf\Middleware;
@@ -30,17 +23,11 @@ final class CsrfMiddleware implements MiddlewareInterface
 {
     public const ATTRIBUTE = 'csrfToken';
 
-    /** @var CsrfConfig */
-    protected $config;
-
-    public function __construct(CsrfConfig $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly CsrfConfig $config
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
         $cookie = null;
@@ -96,6 +83,6 @@ final class CsrfMiddleware implements MiddlewareInterface
             throw new \RuntimeException('Unable to generate random string', $e->getCode(), $e);
         }
 
-        return substr(base64_encode($string), 0, $length);
+        return \substr(\base64_encode($string), 0, $length);
     }
 }

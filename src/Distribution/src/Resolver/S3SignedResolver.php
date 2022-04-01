@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Distribution\Resolver;
@@ -22,38 +15,18 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 class S3SignedResolver extends ExpirationAwareResolver
 {
-    /**
-     * @var S3ClientInterface
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $bucket;
-
-    /**
-     * @var string|null
-     */
-    private $prefix;
-
-    /**
-     * @param string|null $prefix
-     */
-    public function __construct(S3ClientInterface $client, string $bucket, string $prefix = null)
-    {
-        $this->client = $client;
-        $this->bucket = $bucket;
-        $this->prefix = $prefix;
-
+    public function __construct(
+        private S3ClientInterface $client,
+        private string $bucket,
+        private ?string $prefix = null
+    ) {
         parent::__construct();
     }
 
     /**
-     * @param DateIntervalFormat|null $expiration
      * @throws \Exception
      */
-    public function resolve(string $file, $expiration = null): UriInterface
+    public function resolve(string $file, mixed $expiration = null): UriInterface
     {
         $command = $this->createCommand($this->concat($file, $this->prefix));
 
