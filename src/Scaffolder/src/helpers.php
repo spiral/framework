@@ -23,7 +23,7 @@ if (!\function_exists('isAssociativeArray')) {
     function isAssociativeArray(array $array): bool
     {
         $keys = [];
-        foreach (\array_keys($array) as $key) {
+        foreach ($array as $key => $_) {
             if (!\is_int($key)) {
                 return true;
             }
