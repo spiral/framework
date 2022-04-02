@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Declaration\ConfigDeclaration;
@@ -30,9 +23,6 @@ class TypeHints
         'iterable' => 'iterable',
     ];
 
-    /**
-     * @return string
-     */
     public function getHint(string $type): ?string
     {
         return self::MAPPED_HINT_TYPES[$type] ?? self::REAL_HINT_TYPES[$type] ?? null;

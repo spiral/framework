@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
@@ -44,7 +36,7 @@ class CommandCommand extends AbstractCommand
     /**
      * Create command declaration.
      */
-    public function perform(): void
+    public function perform(): int
     {
         /** @var CommandDeclaration $declaration */
         $declaration = $this->createDeclaration();
@@ -53,5 +45,7 @@ class CommandCommand extends AbstractCommand
         $declaration->setDescription((string)$this->option('description'));
 
         $this->writeDeclaration($declaration);
+
+        return self::SUCCESS;
     }
 }
