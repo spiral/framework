@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Files\Exception;
@@ -16,11 +9,8 @@ namespace Spiral\Files\Exception;
  */
 class FileNotFoundException extends FilesException
 {
-    /**
-     * @param string $filename
-     */
-    public function __construct($filename)
+    public function __construct(string $filename)
     {
-        parent::__construct("File '{$filename}' not found");
+        parent::__construct(\sprintf('File \'%s\' not found', $filename));
     }
 }

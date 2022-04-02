@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Domain\Annotation;
@@ -28,15 +21,10 @@ use Spiral\Attributes\NamedArgumentConstructor;
 final class GuardNamespace
 {
     /**
-     * @type string
-     */
-    public $namespace;
-
-    /**
      * @psalm-param non-empty-string $namespace
      */
-    public function __construct(string $namespace)
-    {
-        $this->namespace = $namespace;
+    public function __construct(
+        public readonly string $namespace
+    ) {
     }
 }

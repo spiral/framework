@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader;
@@ -21,6 +14,7 @@ use Spiral\Translator\Catalogue\CatalogueLoader;
 use Spiral\Translator\Catalogue\CatalogueManager;
 use Spiral\Translator\Catalogue\LoaderInterface;
 use Spiral\Translator\CatalogueManagerInterface;
+use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\MemoryCache;
 use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
@@ -43,21 +37,11 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
         IdentityTranslator::class                                 => [self::class, 'identityTranslator'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /**
-     * @param ConfiguratorInterface $config
-     */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
-    /**
-     * @param EnvironmentInterface $env
-     * @param DirectoriesInterface $dirs
-     */
     public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs): void
     {
         if (!$dirs->has('locale')) {
@@ -65,7 +49,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
         }
 
         $this->config->setDefaults(
-            'translator',
+            TranslatorConfig::CONFIG,
             [
                 'locale'         => $env->get('LOCALE', 'en'),
                 'fallbackLocale' => $env->get('LOCALE', 'en'),
@@ -92,7 +76,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @return IdentityTranslator
+     * @noRector RemoveUnusedPrivateMethodRector
      */
     private function identityTranslator(): IdentityTranslator
     {

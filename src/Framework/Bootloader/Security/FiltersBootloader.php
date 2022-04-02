@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Security;
@@ -31,15 +24,9 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         InputInterface::class          => InputScope::class,
     ];
 
-    /** @var Container */
-    private $container;
-
-    /**
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly Container $container
+    ) {
     }
 
     /**
@@ -51,10 +38,6 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
     }
 
     /**
-     * @param \ReflectionClass $class
-     * @param string|null      $context
-     * @return FilterInterface
-     *
      * @throws \Throwable
      */
     public function createInjection(\ReflectionClass $class, string $context = null): FilterInterface

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Command\Views;
@@ -23,16 +16,12 @@ final class ResetCommand extends Command
     protected const NAME        = 'views:reset';
     protected const DESCRIPTION = 'Clear view cache';
 
-    /**
-     * @param ViewsConfig    $config
-     * @param FilesInterface $files
-     */
-    public function perform(ViewsConfig $config, FilesInterface $files): void
+    public function perform(ViewsConfig $config, FilesInterface $files): int
     {
         if (!$files->exists($config->getCacheDirectory())) {
             $this->writeln('Cache directory is missing, no cache to be cleaned.');
 
-            return;
+            return self::FAILURE;
         }
 
         if ($this->isVerbose()) {
@@ -63,5 +52,7 @@ final class ResetCommand extends Command
         }
 
         $this->writeln('<info>View cache has been cleared.</info>');
+
+        return self::SUCCESS;
     }
 }

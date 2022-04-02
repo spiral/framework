@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Storage;
@@ -33,24 +26,18 @@ class StorageConfig
      */
     public const CONFIG = 'storage';
 
-    /**
-     * @var string
-     */
-    private $default;
+    private string $default;
 
     /**
      * @var array<string, FilesystemAdapter>
      */
-    private $adapters = [];
+    private array $adapters = [];
 
     /**
      * @var array<string, string>
      */
-    private $distributions = [];
+    private array $distributions = [];
 
-    /**
-     * @param array $config
-     */
     public function __construct(array $config = [])
     {
         $config = $this->normalize($config);
@@ -59,9 +46,6 @@ class StorageConfig
         $this->bootStorages($config);
     }
 
-    /**
-     * @return string
-     */
     public function getDefaultBucket(): string
     {
         return $this->default;
@@ -83,10 +67,6 @@ class StorageConfig
         return $this->distributions;
     }
 
-    /**
-     * @param array $config
-     * @return array
-     */
     private function normalize(array $config): array
     {
         $defaults = [
@@ -98,9 +78,6 @@ class StorageConfig
         return \array_merge($defaults, $config);
     }
 
-    /**
-     * @param array $config
-     */
     private function bootStorages(array $config): void
     {
         foreach ($config['buckets'] as $name => $bucket) {
@@ -152,36 +129,16 @@ class StorageConfig
         }
     }
 
-    /**
-     * @param string $serverName
-     * @param array $bucket
-     * @param array $server
-     * @return FilesystemAdapter
-     */
     private function createAdapter(string $serverName, array $bucket, array $server): FilesystemAdapter
     {
-        switch ($server['adapter']) {
-            case 'local':
-                return $this->createLocalAdapter($serverName, $bucket, $server);
-
-            case 's3':
-                return $this->createS3Adapter($serverName, $bucket, $server, false);
-
-            case 's3-async':
-                return $this->createS3Adapter($serverName, $bucket, $server, true);
-
-            default:
-                return $this->createCustomAdapter($serverName, $server);
-        }
+        return match ($server['adapter']) {
+            'local' => $this->createLocalAdapter($serverName, $bucket, $server),
+            's3' => $this->createS3Adapter($serverName, $bucket, $server, false),
+            's3-async' => $this->createS3Adapter($serverName, $bucket, $server, true),
+            default => $this->createCustomAdapter($serverName, $server),
+        };
     }
 
-    /**
-     * @param string $serverName
-     * @param array $bucket
-     * @param array $server
-     * @param bool $async
-     * @return FilesystemAdapter
-     */
     private function createS3Adapter(string $serverName, array $bucket, array $server, bool $async): FilesystemAdapter
     {
         if (!\class_exists(Credentials::class)) {
@@ -239,12 +196,6 @@ class StorageConfig
         );
     }
 
-    /**
-     * @param string $serverName
-     * @param array $bucket
-     * @param array $server
-     * @return FilesystemAdapter
-     */
     private function createLocalAdapter(string $serverName, array $bucket, array $server): FilesystemAdapter
     {
         if (!\is_string($server['directory'] ?? null)) {
@@ -272,11 +223,6 @@ class StorageConfig
         return new LocalFilesystemAdapter(\rtrim($directory, '/'), $visibility);
     }
 
-    /**
-     * @param string $serverName
-     * @param array $server
-     * @return FilesystemAdapter
-     */
     private function createCustomAdapter(string $serverName, array $server): FilesystemAdapter
     {
         $adapter = $server['adapter'];

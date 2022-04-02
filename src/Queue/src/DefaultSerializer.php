@@ -11,9 +11,6 @@ use Spiral\Queue\Exception\SerializationException;
  */
 final class DefaultSerializer implements SerializerInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function serialize(array $payload): string
     {
         try {
@@ -23,9 +20,6 @@ final class DefaultSerializer implements SerializerInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function deserialize(string $payload): array
     {
         try {

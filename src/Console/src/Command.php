@@ -1,19 +1,11 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Console\Traits\HelpersTrait;
-use Spiral\Core\Container;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Core\ResolverInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
@@ -41,8 +33,7 @@ abstract class Command extends SymfonyCommand
     // getArguments() method.
     protected const ARGUMENTS = [];
 
-    /** @var Container|null */
-    protected $container;
+    protected ?ContainerInterface $container = null;
 
     public function setContainer(ContainerInterface $container): void
     {
@@ -50,18 +41,15 @@ abstract class Command extends SymfonyCommand
     }
 
     /**
-     * {@inheritdoc}
-     *
      * Pass execution to "perform" method using container to resolve method dependencies.
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($this->container === null) {
             throw new ScopeException('Container is not set');
         }
 
         $reflection = new \ReflectionMethod($this, 'perform');
-        $reflection->setAccessible(true);
 
         $resolver = $this->container->get(ResolverInterface::class);
 
@@ -71,7 +59,7 @@ abstract class Command extends SymfonyCommand
             //Executing perform method with method injection
             return (int)$reflection->invokeArgs($this, $resolver->resolveArguments(
                 $reflection,
-                compact('input', 'output')
+                \compact('input', 'output')
             ));
         } finally {
             [$this->input, $this->output] = [null, null];
@@ -87,11 +75,11 @@ abstract class Command extends SymfonyCommand
         $this->setDescription(static::DESCRIPTION);
 
         foreach ($this->defineOptions() as $option) {
-            call_user_func_array([$this, 'addOption'], $option);
+            \call_user_func_array([$this, 'addOption'], $option);
         }
 
         foreach ($this->defineArguments() as $argument) {
-            call_user_func_array([$this, 'addArgument'], $argument);
+            \call_user_func_array([$this, 'addArgument'], $argument);
         }
     }
 

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype;
@@ -16,11 +9,9 @@ use Spiral\Tokenizer\ScopedClassesInterface;
 
 final class PrototypeLocator
 {
-    private ScopedClassesInterface $classes;
-
-    public function __construct(ScopedClassesInterface $classes)
-    {
-        $this->classes = $classes;
+    public function __construct(
+        private readonly ScopedClassesInterface $classes
+    ) {
     }
 
     /**

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
@@ -22,21 +15,15 @@ use Spiral\Prototype\Utils;
  */
 final class AddUse extends NodeVisitorAbstract
 {
-    /** @var ClassNode */
-    private $node;
-
     /** @var Node\Stmt\Use_[] */
-    private $nodes = [];
+    private array $nodes = [];
 
-    public function __construct(ClassNode $node)
-    {
-        $this->node = $node;
+    public function __construct(
+        private readonly ClassNode $node
+    ) {
     }
 
-    /**
-     * @return Node\Stmt\Namespace_|null
-     */
-    public function leaveNode(Node $node)
+    public function leaveNode(Node $node): ?Node
     {
         if (!$node instanceof Node\Stmt\Namespace_) {
             return null;
@@ -47,7 +34,7 @@ final class AddUse extends NodeVisitorAbstract
             foreach ($this->node->constructorParams as $param) {
                 if (!empty($param->type) && $param->type->fullName) {
                     $import = [$param->type->fullName, $param->type->alias];
-                    if (in_array($import, $imported, true)) {
+                    if (\in_array($import, $imported, true)) {
                         continue;
                     }
 
@@ -59,7 +46,7 @@ final class AddUse extends NodeVisitorAbstract
 
         foreach ($this->node->dependencies as $dependency) {
             $import = [$dependency->type->fullName, $dependency->type->alias];
-            if (in_array($import, $imported, true)) {
+            if (\in_array($import, $imported, true)) {
                 continue;
             }
 
@@ -106,7 +93,7 @@ final class AddUse extends NodeVisitorAbstract
             }
 
             foreach ($node->uses as $use) {
-                if (in_array($use->name->parts, $uses, true)) {
+                if (\in_array($use->name->parts, $uses, true)) {
                     unset($nodes[$i]);
                 }
             }
