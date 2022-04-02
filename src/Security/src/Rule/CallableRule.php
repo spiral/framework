@@ -12,15 +12,15 @@ use Spiral\Security\RuleInterface;
  */
 final class CallableRule implements RuleInterface
 {
-    private string|array|object $callable;
+    private \Closure $callable;
 
     public function __construct(callable $callable)
     {
-        $this->callable = $callable;
+        $this->callable = $callable(...);
     }
 
     public function allows(ActorInterface $actor, string $permission, array $context): bool
     {
-        return (bool) \call_user_func($this->callable, $actor, $permission, $context);
+        return (bool) ($this->callable)($actor, $permission, $context);
     }
 }
