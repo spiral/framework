@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Models\Reflection;
@@ -41,11 +34,9 @@ class ReflectionEntity
     private const MUTATOR_SETTER   = 'setter';
     private const MUTATOR_ACCESSOR = 'accessor';
 
-    /** @var array @internal */
-    private $propertyCache = [];
-
-    /** @var \ReflectionClass */
-    private $reflection;
+    /** @internal */
+    private array $propertyCache = [];
+    private \ReflectionClass $reflection;
 
     /**
      * Only support SchematicEntity classes!
@@ -57,13 +48,10 @@ class ReflectionEntity
 
     /**
      * Bypassing call to reflection.
-     *
-     *
-     * @return mixed
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
-        return call_user_func_array([$this->reflection, $name], $arguments);
+        return \call_user_func_array([$this->reflection, $name], $arguments);
     }
 
 
@@ -80,21 +68,18 @@ class ReflectionEntity
         return $this->reflection;
     }
 
-    /**
-     * @return array|string
-     */
-    public function getSecured()
+    public function getSecured(): mixed
     {
         if ($this->getProperty('secured', true) === '*') {
             return $this->getProperty('secured', true);
         }
 
-        return array_unique((array)$this->getProperty('secured', true));
+        return \array_unique((array)$this->getProperty('secured', true));
     }
 
     public function getFillable(): array
     {
-        return array_unique((array)$this->getProperty('fillable', true));
+        return \array_unique((array)$this->getProperty('fillable', true));
     }
 
     public function getSetters(): array
@@ -172,10 +157,8 @@ class ReflectionEntity
      *
      * @param string $property Property name.
      * @param bool   $merge    If true value will be merged with all parent declarations.
-     *
-     * @return mixed
      */
-    public function getProperty(string $property, bool $merge = false)
+    public function getProperty(string $property, bool $merge = false): mixed
     {
         if (isset($this->propertyCache[$property])) {
             //Property merging and trait events are pretty slow
@@ -188,20 +171,20 @@ class ReflectionEntity
         if (isset($properties[$property])) {
             //Read from default value
             $value = $properties[$property];
-        } elseif (isset($constants[strtoupper($property)])) {
+        } elseif (isset($constants[\strtoupper($property)])) {
             //Read from a constant
-            $value = $constants[strtoupper($property)];
+            $value = $constants[\strtoupper($property)];
         } else {
             return null;
         }
 
         //Merge with parent value requested
-        if ($merge && is_array($value) && !empty($parent = $this->parentReflection())) {
+        if ($merge && \is_array($value) && !empty($parent = $this->parentReflection())) {
             $parentValue = $parent->getProperty($property, $merge);
 
-            if (is_array($parentValue)) {
+            if (\is_array($parentValue)) {
                 //Class values prior to parent values
-                $value = array_merge($parentValue, $value);
+                $value = \array_merge($parentValue, $value);
             }
         }
 
@@ -214,11 +197,9 @@ class ReflectionEntity
     }
 
     /**
-     * Parent entity schema/
-     *
-     * @return ReflectionEntity|null
+     * Parent entity schema
      */
-    public function parentReflection()
+    public function parentReflection(): ?self
     {
         $parentClass = $this->reflection->getParentClass();
 

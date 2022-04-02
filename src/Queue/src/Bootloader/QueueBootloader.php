@@ -37,12 +37,9 @@ final class QueueBootloader extends Bootloader
         QueueRegistry::class => [self::class, 'initRegistry'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
     public function boot(Container $container, EnvironmentInterface $env, AbstractKernel $kernel): void
@@ -67,7 +64,7 @@ final class QueueBootloader extends Bootloader
     public function registerDriverAlias(string $driverClass, string $alias): void
     {
         $this->config->modify(
-            'queue',
+            QueueConfig::CONFIG,
             new Append('driverAliases', $alias, $driverClass)
         );
     }
@@ -84,18 +81,14 @@ final class QueueBootloader extends Bootloader
 
     private function registerJobsSerializer(Container $container): void
     {
-        $container->bindSingleton(SerializerInterface::class, static function () {
-            return new DefaultSerializer();
-        });
+        $container->bindSingleton(SerializerInterface::class, static fn () => new DefaultSerializer());
     }
 
     private function registerQueue(Container $container): void
     {
         $container->bindSingleton(
             QueueInterface::class,
-            static function (QueueManager $manager): QueueInterface {
-                return $manager->getConnection();
-            }
+            static fn (QueueManager $manager): QueueInterface => $manager->getConnection()
         );
     }
 

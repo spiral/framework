@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Traits;
@@ -18,10 +11,7 @@ use Spiral\Reactor\Serializer;
  */
 trait SerializerTrait
 {
-    /**
-     * @var Serializer|null
-     */
-    private $serializer;
+    private ?Serializer $serializer = null;
 
     /**
      * Set custom serializer.

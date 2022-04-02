@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
@@ -45,9 +38,6 @@ final class Parameters extends Aggregator
         return parent::get($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render(int $indentLevel = 0): string
     {
         /**
@@ -58,6 +48,6 @@ final class Parameters extends Aggregator
             $parameters[] = $element->render(0);
         }
 
-        return implode(', ', $parameters);
+        return \implode(', ', $parameters);
     }
 }

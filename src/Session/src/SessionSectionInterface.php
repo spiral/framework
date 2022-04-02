@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Session;
@@ -31,48 +24,41 @@ interface SessionSectionInterface extends \IteratorAggregate, \ArrayAccess
     /**
      * Set data in session.
      *
-     * @param mixed  $value
-     * @return mixed
      * @throws SessionException
      */
-    public function set(string $name, $value);
+    public function set(string $name, mixed $value): self;
 
     /**
      * Check if value presented in session.
      *
-     * @return bool
      * @throws SessionException
      */
-    public function has(string $name);
+    public function has(string $name): bool;
 
     /**
      * Get value stored in session.
      *
-     * @param mixed  $default
-     * @return mixed
      * @throws SessionException
      */
-    public function get(string $name, $default = null);
+    public function get(string $name, mixed $default = null): mixed;
 
     /**
      * Read item from session and delete it after.
      *
-     * @param mixed  $default Default value when no such item exists.
-     * @return mixed
+     * @param mixed $default Default value when no such item exists.
      * @throws SessionException
      */
-    public function pull(string $name, $default = null);
+    public function pull(string $name, mixed $default = null): mixed;
 
     /**
      * Delete data from session.
      *
-     *
      * @throws SessionException
      */
-    public function delete(string $name);
+    public function delete(string $name): void;
 
     /**
      * Clear all session section data.
      */
-    public function clear();
+    public function clear(): void;
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console;
@@ -30,47 +23,24 @@ use Throwable;
  */
 final class ConsoleDispatcher implements DispatcherInterface
 {
-    /** @var EnvironmentInterface */
-    private $env;
-
-    /** @var ContainerInterface */
-    private $container;
-
-    /** @var FinalizerInterface */
-    private $finalizer;
-
-    /**
-     * @param EnvironmentInterface $env
-     * @param FinalizerInterface   $finalizer
-     * @param ContainerInterface   $container
-     */
     public function __construct(
-        EnvironmentInterface $env,
-        FinalizerInterface $finalizer,
-        ContainerInterface $container
+        private readonly EnvironmentInterface $env,
+        private readonly FinalizerInterface $finalizer,
+        private readonly ContainerInterface $container
     ) {
-        $this->env = $env;
-        $this->finalizer = $finalizer;
-        $this->container = $container;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function canServe(): bool
     {
         // only run in pure CLI more, ignore under RoadRunner
         return (PHP_SAPI === 'cli' && $this->env->get('RR') === null);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function serve(InputInterface $input = null, OutputInterface $output = null): int
     {
         // On demand to save some memory.
 
-        $output = $output ?? new ConsoleOutput();
+        $output ??= new ConsoleOutput();
 
         /** @var DebugListener $listener */
         $listener = $this->container->get(DebugListener::class);
@@ -91,15 +61,11 @@ final class ConsoleDispatcher implements DispatcherInterface
         }
     }
 
-    /**
-     * @param Throwable      $e
-     * @param OutputInterface $output
-     */
     protected function handleException(Throwable $e, OutputInterface $output): void
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (Throwable | ContainerExceptionInterface $se) {
+        } catch (Throwable | ContainerExceptionInterface) {
             // no need to notify when unable to register an exception
         }
 
@@ -108,20 +74,12 @@ final class ConsoleDispatcher implements DispatcherInterface
         $output->write($handler->renderException($e, $this->mapVerbosity($output)));
     }
 
-    /**
-     * @param OutputInterface $output
-     * @return int
-     */
     private function mapVerbosity(OutputInterface $output): int
     {
-        if ($output->isDebug()) {
-            return ConsoleHandler::VERBOSITY_DEBUG;
-        }
-
-        if ($output->isVeryVerbose()) {
-            return ConsoleHandler::VERBOSITY_VERBOSE;
-        }
-
-        return ConsoleHandler::VERBOSITY_BASIC;
+        return match (true) {
+            $output->isDebug() => ConsoleHandler::VERBOSITY_DEBUG,
+            $output->isVeryVerbose() => ConsoleHandler::VERBOSITY_VERBOSE,
+            default => ConsoleHandler::VERBOSITY_BASIC
+        };
     }
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype;
@@ -15,18 +8,10 @@ use Spiral\Prototype\ClassNode\Type;
 
 final class Dependency
 {
-    /** @var Type */
-    public $type;
+    public Type $type;
+    public string $property;
+    public string $var;
 
-    /** @var string */
-    public $property;
-
-    /** @var string */
-    public $var;
-
-    /**
-     * Dependency constructor.
-     */
     private function __construct()
     {
     }

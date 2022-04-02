@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core\Traits\Config;
@@ -23,9 +16,9 @@ trait AliasTrait
     public function resolveAlias(string $alias): string
     {
         $antiCircleReference = [];
-        while (is_string($alias) && isset($this->config) && isset($this->config['aliases'][$alias])) {
+        while (\is_string($alias) && isset($this->config) && isset($this->config['aliases'][$alias])) {
             if (\in_array($alias, $antiCircleReference, true)) {
-                throw new ContainerException("Circle reference detected for alias `$alias`.");
+                throw new ContainerException(\sprintf('Circle reference detected for alias `%s`.', $alias));
             }
             $antiCircleReference[] = $alias;
 

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core;
@@ -21,10 +14,8 @@ interface CoreInterceptorInterface
     /**
      * Process action request to underlying domain core action.
      *
-     * @return mixed
-     *
      * @throws ControllerException
      * @throws \Throwable
      */
-    public function process(string $controller, string $action, array $parameters, CoreInterface $core);
+    public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed;
 }

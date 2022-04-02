@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid;
@@ -23,13 +15,12 @@ use Spiral\DataGrid\Specification\SorterInterface;
 class GridSchema
 {
     /** @var FilterInterface[] */
-    private $filters = [];
+    private array $filters = [];
 
     /** @var SorterInterface[] */
-    private $sorters = [];
+    private array $sorters = [];
 
-    /** @var FilterInterface|null */
-    private $paginator;
+    private ?FilterInterface $paginator = null;
 
     /**
      * Define new data filter.
@@ -39,15 +30,15 @@ class GridSchema
     public function addFilter(string $name, FilterInterface $filter): void
     {
         if ($this->hasFilter($name)) {
-            throw new SchemaException("Filter `$name` is already defined");
+            throw new SchemaException(\sprintf('Filter `%s` is already defined', $name));
         }
 
-        $this->filters[strtolower($name)] = $filter;
+        $this->filters[\strtolower($name)] = $filter;
     }
 
     public function hasFilter(string $name): bool
     {
-        return isset($this->filters[strtolower($name)]);
+        return isset($this->filters[\strtolower($name)]);
     }
 
     /**
@@ -58,10 +49,10 @@ class GridSchema
     public function getFilter(string $name): FilterInterface
     {
         if (!$this->hasFilter($name)) {
-            throw new SchemaException("No such filter `$name`");
+            throw new SchemaException(\sprintf('No such filter `%s`', $name));
         }
 
-        return $this->filters[strtolower($name)];
+        return $this->filters[\strtolower($name)];
     }
 
     /**
@@ -80,15 +71,15 @@ class GridSchema
     public function addSorter(string $name, SorterInterface $sorter): void
     {
         if ($this->hasSorter($name)) {
-            throw new SchemaException("Sorter `$name` is already defined");
+            throw new SchemaException(\sprintf('Sorter `%s` is already defined', $name));
         }
 
-        $this->sorters[strtolower($name)] = $sorter;
+        $this->sorters[\strtolower($name)] = $sorter;
     }
 
     public function hasSorter(string $name): bool
     {
-        return isset($this->sorters[strtolower($name)]);
+        return isset($this->sorters[\strtolower($name)]);
     }
 
     /**
@@ -99,10 +90,10 @@ class GridSchema
     public function getSorter(string $name): SorterInterface
     {
         if (!$this->hasSorter($name)) {
-            throw new SchemaException("No such sorter `$name`");
+            throw new SchemaException(\sprintf('No such sorter `%s`', $name));
         }
 
-        return $this->sorters[strtolower($name)];
+        return $this->sorters[\strtolower($name)];
     }
 
     /**

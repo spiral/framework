@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Domain;
@@ -22,22 +15,13 @@ use Spiral\Security\GuardInterface;
  */
 final class GuardInterceptor implements CoreInterceptorInterface
 {
-    /** @var GuardInterface */
-    private $guard;
-
-    /** @var PermissionsProviderInterface */
-    private $permissions;
-
-    public function __construct(GuardInterface $guard, PermissionsProviderInterface $permissions)
-    {
-        $this->guard = $guard;
-        $this->permissions = $permissions;
+    public function __construct(
+        private readonly GuardInterface $guard,
+        private readonly PermissionsProviderInterface $permissions
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function process(string $controller, string $action, array $parameters, CoreInterface $core)
+    public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed
     {
         $permission = $this->permissions->getPermission($controller, $action);
 

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype;
@@ -26,27 +19,17 @@ use Spiral\Prototype\NodeVisitors\ClassNode\LocateVariables;
  */
 final class NodeExtractor
 {
-    /** @var Parser */
-    private $parser;
-
-    /** @var ConflictResolver\Names */
-    private $namesResolver;
-
-    /** @var ConflictResolver\Namespaces */
-    private $namespacesResolver;
+    private readonly Parser $parser;
 
     public function __construct(
-        ConflictResolver\Names $namesResolver,
-        ConflictResolver\Namespaces $namespacesResolver,
+        private readonly ConflictResolver\Names $namesResolver,
+        private readonly ConflictResolver\Namespaces $namespacesResolver,
         Parser $parser = null
     ) {
-        $this->namesResolver = $namesResolver;
-        $this->namespacesResolver = $namespacesResolver;
         $this->parser = $parser ?? (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
     }
 
     /**
-     *
      * @throws ClassNotDeclaredException
      * @throws \ReflectionException
      */
@@ -68,7 +51,6 @@ final class NodeExtractor
     }
 
     /**
-     *
      * @throws ClassNotDeclaredException
      */
     private function makeDefinition(string $filename): ClassNode
@@ -95,7 +77,7 @@ final class NodeExtractor
             $tr->addVisitor($visitor);
         }
 
-        $tr->traverse($this->parser->parse(file_get_contents($filename)));
+        $tr->traverse($this->parser->parse(\file_get_contents($filename)));
     }
 
     private function fillStmts(ClassNode $definition, array $imports): void
@@ -110,7 +92,7 @@ final class NodeExtractor
      */
     private function fillConstructorParams(ClassNode $definition): void
     {
-        $reflection = new \ReflectionClass("{$definition->namespace}\\{$definition->class}");
+        $reflection = new \ReflectionClass(\sprintf('%s\%s', $definition->namespace, $definition->class));
 
         $constructor = $reflection->getConstructor();
         if ($constructor !== null) {

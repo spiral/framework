@@ -46,8 +46,6 @@ class ValueBetweenTest extends TestCase
             [new IntValue(), ['created', 'updated'], null],
             [1, ['created', 'updated'], null],
             ['value', ['created', 'updated'], null],
-            [new stdClass(), ['created', 'updated'], ValueException::class],
-            [[], ['created', 'updated'], ValueException::class],
 
             //check values
             [1, [], ValueException::class],
@@ -85,7 +83,6 @@ class ValueBetweenTest extends TestCase
             [],
             [1],
             [1, 2, 3],
-            new stdClass()
         ];
 
         foreach ($incorrectValues as $incorrectValue) {

@@ -22,7 +22,7 @@ class NullHandlerTest extends TestCase
 
         $this->assertTrue($handler->destroy('abc'));
         $this->assertSame(1, $handler->gc(1));
-        $this->assertTrue($handler->open('path', 1));
+        $this->assertTrue($handler->open('path', '1'));
         $this->assertSame('', $handler->read(''));
         $this->assertTrue($handler->write('abc', 'data'));
         $this->assertTrue($handler->close());

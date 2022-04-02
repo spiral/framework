@@ -11,21 +11,17 @@ use Spiral\Queue\Config\QueueConfig;
 final class QueueManager implements QueueConnectionProviderInterface
 {
     /** @var QueueInterface[] */
-    private $pipelines = [];
-    /** @var QueueConfig */
-    private $config;
-    /** @var FactoryInterface */
-    private $factory;
+    private array $pipelines = [];
 
-    public function __construct(QueueConfig $config, FactoryInterface $factory)
-    {
-        $this->config = $config;
-        $this->factory = $factory;
+    public function __construct(
+        private readonly QueueConfig $config,
+        private readonly FactoryInterface $factory
+    ) {
     }
 
     public function getConnection(?string $name = null): QueueInterface
     {
-        $name = $name ?: $this->getDefaultDriver();
+        $name ??= $this->getDefaultDriver();
         // Replaces alias with real pipeline name
         $name = $this->config->getAliases()[$name] ?? $name;
 
