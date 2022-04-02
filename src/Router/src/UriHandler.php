@@ -137,7 +137,7 @@ final class UriHandler
             $this->fetchOptions($parameters, $query)
         );
 
-        foreach (\array_keys($this->constrains) as $key) {
+        foreach ($this->constrains as $key => $_) {
             if (empty($parameters[$key])) {
                 throw new UriHandlerException(\sprintf('Unable to generate Uri, parameter `%s` is missing', $key));
             }

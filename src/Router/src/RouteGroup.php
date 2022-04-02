@@ -53,6 +53,12 @@ final class RouteGroup
         return $this;
     }
 
+    /**
+     * @param MiddlewareInterface|class-string<MiddlewareInterface>|non-empty-string $middleware
+     *
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     public function addMiddleware(MiddlewareInterface|string $middleware): self
     {
         if (!$middleware instanceof MiddlewareInterface) {
@@ -110,16 +116,13 @@ final class RouteGroup
 
     public function createRoute(string $pattern, string $controller, string $action): Route
     {
-        $action = new Action($controller, $action);
+        $actionObject = new Action($controller, $action);
         if ($this->core !== null) {
-            $action = $action->withCore($this->core);
+            $actionObject = $actionObject->withCore($this->core);
         }
 
-        $route = new Route($this->prefix . $pattern, $action);
-
-        // all routes within group share the same middleware pipeline
-        $route = $route->withMiddleware($this->pipeline);
-
-        return $route;
+        return (new Route($this->prefix . $pattern, $actionObject))
+            // all routes within group share the same middleware pipeline
+            ->withMiddleware($this->pipeline);
     }
 }

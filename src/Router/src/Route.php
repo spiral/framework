@@ -40,21 +40,25 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     public const ROUTE_ATTRIBUTE = 'route';
 
     /** @var string|callable|RequestHandlerInterface|TargetInterface */
-    private string|array|object $target;
+    private mixed $target;
     private ?RequestHandlerInterface $requestHandler = null;
 
     /**
-     * @param string                                                  $pattern  Uri pattern.
-     * @param string|callable|RequestHandlerInterface|TargetInterface $target   Callable route target.
-     * @param array                                                   $defaults Default value set.
+     * @param string $pattern Uri pattern.
+     * @param string|callable|RequestHandlerInterface|TargetInterface $target Callable route target.
+     * @param array $defaults Default value set.
      */
-    public function __construct(string $pattern, string|array|object $target, array $defaults = [])
-    {
-        if ($target instanceof TargetInterface) {
-            parent::__construct($pattern, \array_merge($target->getDefaults(), $defaults));
-        } else {
-            parent::__construct($pattern, $defaults);
-        }
+    public function __construct(
+        string $pattern,
+        string|callable|RequestHandlerInterface|TargetInterface $target,
+        array $defaults = []
+    ) {
+        parent::__construct(
+            $pattern,
+            $target instanceof TargetInterface
+                ? \array_merge($target->getDefaults(), $defaults)
+                : $defaults
+        );
 
         $this->target = $target;
     }
@@ -126,11 +130,9 @@ final class Route extends AbstractRoute implements ContainerizedInterface
         }
 
         try {
-            if (\is_object($this->target) || \is_array($this->target)) {
-                $target = $this->target;
-            } else {
-                $target = $this->container->get($this->target);
-            }
+            $target = \is_string($this->target)
+                ? $this->container->get($this->target)
+                : $this->target;
 
             if ($target instanceof RequestHandlerInterface) {
                 return $target;
