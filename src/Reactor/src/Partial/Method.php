@@ -74,9 +74,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
         return $this;
     }
 
-    /**
-     * @return Parameters|Parameter[]
-     */
     public function getParameters(): Parameters
     {
         return $this->parameters;
@@ -140,9 +137,7 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
      */
     private function initSource(array|string $source): void
     {
-        if (empty($this->source)) {
-            $this->source = new Source();
-        }
+        $this->source ??= new Source();
 
         if (!empty($source)) {
             if (\is_array($source)) {

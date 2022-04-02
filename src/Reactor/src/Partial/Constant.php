@@ -26,7 +26,7 @@ class Constant extends AbstractDeclaration implements NamedInterface
     public function __construct(
         string $name,
         private mixed $value,
-        $comment = ''
+        array|string $comment = ''
     ) {
         $this->setName($name);
         $this->initComment($comment);
@@ -72,7 +72,7 @@ class Constant extends AbstractDeclaration implements NamedInterface
             $value = $this->mountIndents($value, $indentLevel);
         }
 
-        return $result . "{$value};";
+        return $result . $value . ';';
     }
 
     /**
