@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -25,12 +18,12 @@ use Spiral\Exceptions\HtmlHandler;
 final class ExceptionHandler
 {
     /** @var resource */
-    private static $output;
+    private static mixed $output;
 
     /**
      * @param resource $output
      */
-    public static function setOutput($output): void
+    public static function setOutput(mixed $output): void
     {
         self::$output = $output;
     }
@@ -40,9 +33,9 @@ final class ExceptionHandler
      */
     public static function register(): void
     {
-        register_shutdown_function([self::class, 'handleShutdown']);
-        set_error_handler([self::class, 'handleError']);
-        set_exception_handler([self::class, 'handleException']);
+        \register_shutdown_function([self::class, 'handleShutdown']);
+        \set_error_handler([self::class, 'handleError']);
+        \set_exception_handler([self::class, 'handleException']);
     }
 
     /**
@@ -50,7 +43,7 @@ final class ExceptionHandler
      */
     public static function handleShutdown(): void
     {
-        if (!empty($error = error_get_last())) {
+        if (!empty($error = \error_get_last())) {
             self::handleException(
                 new FatalException(
                     $error['message'],
@@ -66,16 +59,11 @@ final class ExceptionHandler
     /**
      * Convert application error into exception.
      *
-     * @param int    $code
-     * @param string $message
-     * @param string $filename
-     * @param int    $line
-     *
      * @throws \ErrorException
      */
-    public static function handleError($code, $message, $filename = '', $line = 0): void
+    public static function handleError(int $code, string $message, string $filename = '', int $line = 0): void
     {
-        if (!(error_reporting() & $code)) {
+        if (!(\error_reporting() & $code)) {
             return;
         }
 
@@ -88,16 +76,16 @@ final class ExceptionHandler
     public static function handleException(\Throwable $e): void
     {
         if (self::$output === null) {
-            self::$output = defined('STDERR') ? STDERR : fopen('php://stderr', 'w+');
+            self::$output = \defined('STDERR') ? STDERR : \fopen('php://stderr', 'w+');
         }
 
-        if (php_sapi_name() == 'cli') {
+        if (\php_sapi_name() === 'cli') {
             $handler = new ConsoleHandler(self::$output);
         } else {
             $handler = new HtmlHandler(HtmlHandler::INVERTED);
         }
 
         // we are safe to handle global exceptions (system level) with maximum verbosity
-        fwrite(self::$output, $handler->renderException($e, AbstractHandler::VERBOSITY_VERBOSE));
+        \fwrite(self::$output, $handler->renderException($e, AbstractHandler::VERBOSITY_VERBOSE));
     }
 }

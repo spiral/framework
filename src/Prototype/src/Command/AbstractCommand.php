@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\Command;
@@ -21,25 +14,14 @@ use Psr\Container\ContainerExceptionInterface;
 
 abstract class AbstractCommand extends Command
 {
-    /** @var PrototypeLocator */
-    protected $locator;
+    private array $cache = [];
 
-    /** @var NodeExtractor */
-    protected $extractor;
-
-    /** @var PrototypeRegistry */
-    protected $registry;
-
-    /** @var array */
-    private $cache = [];
-
-    public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
-    {
+    public function __construct(
+        protected PrototypeLocator $locator,
+        protected NodeExtractor $extractor,
+        protected PrototypeRegistry $registry
+    ) {
         parent::__construct();
-
-        $this->extractor = $extractor;
-        $this->locator = $locator;
-        $this->registry = $registry;
     }
 
     /**
@@ -70,7 +52,7 @@ abstract class AbstractCommand extends Command
      */
     protected function mergeNames(array $properties): string
     {
-        return implode("\n", array_keys($properties));
+        return \implode("\n", \array_keys($properties));
     }
 
     /**
@@ -82,7 +64,7 @@ abstract class AbstractCommand extends Command
 
         foreach ($properties as $target) {
             if ($target instanceof \Throwable) {
-                $result[] = sprintf(
+                $result[] = \sprintf(
                     '<fg=red>%s [f: %s, l: %s]</fg=red>',
                     $target->getMessage(),
                     $target->getFile(),
@@ -99,7 +81,7 @@ abstract class AbstractCommand extends Command
             $result[] = $target->type->fullName;
         }
 
-        return implode("\n", $result);
+        return \implode("\n", $result);
     }
 
     /**
@@ -110,7 +92,7 @@ abstract class AbstractCommand extends Command
         if (isset($this->cache[$class->getFileName()])) {
             $proto = $this->cache[$class->getFileName()];
         } else {
-            $proto = $this->getExtractor()->getPrototypeProperties(file_get_contents($class->getFilename()));
+            $proto = $this->getExtractor()->getPrototypeProperties(\file_get_contents($class->getFileName()));
             $this->cache[$class->getFileName()] = $proto;
         }
 

@@ -36,7 +36,7 @@
         "spiral/http": "^2.12",
         "spiral/migrations": "^2.3",
         "spiral/prototype": "^2.12",
-        "spiral/jobs": "^2.2"
+        "spiral/queue": "^2.12"
     },
     "autoload": {
         "files": [

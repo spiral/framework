@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -42,22 +35,17 @@ abstract class Rule implements RuleInterface
         'user' => 'actor',
     ];
 
-    /* @var ResolverInterface */
-    protected $resolver;
-
-    public function __construct(ResolverInterface $resolver)
-    {
-        $this->resolver = $resolver;
+    public function __construct(
+        protected ResolverInterface $resolver
+    ) {
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws RuleException
      */
     public function allows(ActorInterface $actor, string $permission, array $context): bool
     {
-        $parameters = compact('actor', 'permission', 'context') + $context;
+        $parameters = \compact('actor', 'permission', 'context') + $context;
 
         //Mounting aliases
         foreach (static::ALIASES as $target => $alias) {
@@ -66,7 +54,6 @@ abstract class Rule implements RuleInterface
 
         try {
             $method = new \ReflectionMethod($this, static::CHECK_METHOD);
-            $method->setAccessible(true);
         } catch (\ReflectionException $e) {
             throw new RuleException($e->getMessage(), $e->getCode(), $e);
         }
@@ -74,7 +61,7 @@ abstract class Rule implements RuleInterface
         try {
             return $method->invokeArgs($this, $this->resolver->resolveArguments($method, $parameters));
         } catch (\Throwable $e) {
-            throw new RuleException(sprintf('[%s] %s', get_class($this), $e->getMessage()), $e->getCode(), $e);
+            throw new RuleException(\sprintf('[%s] %s', $this::class, $e->getMessage()), $e->getCode(), $e);
         }
     }
 }

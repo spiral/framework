@@ -1,18 +1,9 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid;
 
-use Generator;
 use Spiral\DataGrid\Exception\GridViewException;
 
 /**
@@ -20,16 +11,12 @@ use Spiral\DataGrid\Exception\GridViewException;
  */
 class Grid implements GridInterface
 {
-    /** @var array */
-    private $options = [];
+    private array $options = [];
+    private ?iterable $source = null;
+    /** @var callable|null */
+    private mixed $mapper = null;
 
-    /** @var iterable */
-    private $source;
-
-    /** @var callable */
-    private $mapper;
-
-    public function getIterator(): Generator
+    public function getIterator(): \Generator
     {
         if ($this->source === null) {
             throw new GridViewException('GridView does not have associated data source');
@@ -45,10 +32,7 @@ class Grid implements GridInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function withOption(string $name, $value): GridInterface
+    public function withOption(string $name, mixed $value): GridInterface
     {
         $grid = clone $this;
         $grid->options[$name] = $value;
@@ -56,17 +40,11 @@ class Grid implements GridInterface
         return $grid;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getOption(string $name)
+    public function getOption(string $name): mixed
     {
         return $this->options[$name] ?? null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withSource(iterable $source): GridInterface
     {
         $grid = clone $this;
@@ -80,9 +58,6 @@ class Grid implements GridInterface
         return $this->source;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withView(callable $view): GridInterface
     {
         $grid = clone $this;

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Traits;
@@ -16,22 +9,17 @@ namespace Spiral\Reactor\Traits;
  */
 trait UsesTrait
 {
-    /**
-     * @var array
-     */
-    private $uses = [];
+    private array $uses = [];
 
     public function uses(string $class): bool
     {
-        $class = ltrim($class, '\\');
+        $class = \ltrim($class, '\\');
 
-        return array_key_exists($class, $this->uses);
+        return \array_key_exists($class, $this->uses);
     }
 
     /**
      * Declare uses in a form of array [class => alias|null]. Existed uses will be dropped.
-     *
-     *
      */
     public function setUses(array $uses): self
     {
@@ -42,8 +30,6 @@ trait UsesTrait
 
     /**
      * Add additional set of uses.
-     *
-     *
      */
     public function addUses(array $uses): self
     {
@@ -56,18 +42,17 @@ trait UsesTrait
 
     /**
      * @param string $alias Optional.
-     *
      */
     public function addUse(string $class, string $alias = null): self
     {
-        $this->uses[ltrim($class, '\\')] = $alias;
+        $this->uses[\ltrim($class, '\\')] = $alias;
 
         return $this;
     }
 
     public function removeUse(string $class): self
     {
-        unset($this->uses[ltrim($class, '\\')]);
+        unset($this->uses[\ltrim($class, '\\')]);
 
         return $this;
     }
@@ -94,6 +79,6 @@ trait UsesTrait
             $lines[] = $this->addIndent($line, $indentLevel);
         }
 
-        return implode("\n", $lines);
+        return \implode("\n", $lines);
     }
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader;
@@ -35,18 +28,14 @@ final class SnapshotsBootloader extends Bootloader
     private const MAX_SNAPSHOTS = 25;
 
     /**
-     * @param EnvironmentInterface $env
-     * @param DirectoriesInterface $dirs
-     * @param FilesInterface       $files
-     * @param LoggerInterface|null $logger
-     * @return FileSnapshooter
+     * @noRector RemoveUnusedPrivateMethodRector
      */
     private function fileSnapshooter(
         EnvironmentInterface $env,
         DirectoriesInterface $dirs,
         FilesInterface $files,
         LoggerInterface $logger = null
-    ) {
+    ): SnapshotterInterface {
         return new FileSnapshooter(
             $dirs->get('runtime') . '/snapshots/',
             (int) $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),

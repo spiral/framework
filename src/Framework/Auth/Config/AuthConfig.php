@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth\Config;
@@ -22,9 +15,6 @@ final class AuthConfig extends InjectableConfig
     // Configuration source.
     public const CONFIG = 'auth';
 
-    /**
-     * @return string
-     */
     public function getDefaultTransport(): string
     {
         return $this->config['defaultTransport'];
@@ -35,6 +25,6 @@ final class AuthConfig extends InjectableConfig
      */
     public function getTransports(): array
     {
-        return array_map([Autowire::class, 'wire'], $this->config['transports']);
+        return \array_map([Autowire::class, 'wire'], $this->config['transports']);
     }
 }

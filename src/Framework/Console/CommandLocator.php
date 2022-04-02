@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console;
@@ -20,17 +13,13 @@ final class CommandLocator implements LocatorInterface
 {
     use LazyTrait;
 
-    private ScopedClassesInterface $classes;
-
-    public function __construct(ScopedClassesInterface $classes, ContainerInterface $container)
-    {
-        $this->classes = $classes;
+    public function __construct(
+        private readonly ScopedClassesInterface $classes,
+        ContainerInterface $container
+    ) {
         $this->container = $container;
     }
 
-    /**
-     * @return array
-     */
     public function locateCommands(): array
     {
         $commands = [];

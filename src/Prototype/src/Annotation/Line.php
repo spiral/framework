@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\Annotation;
@@ -16,19 +9,10 @@ namespace Spiral\Prototype\Annotation;
  */
 final class Line
 {
-    /** @var string */
-    public $value = '';
-
-    /** @var string|null */
-    public $type;
-
-    /**
-     * @param string|null $type
-     */
-    public function __construct(string $value, string $type = null)
-    {
-        $this->value = $value;
-        $this->type = $type;
+    public function __construct(
+        public string $value,
+        public ?string $type = null
+    ) {
     }
 
     public function is(array $type): bool
@@ -37,7 +21,7 @@ final class Line
             return false;
         }
 
-        return in_array(strtolower($this->type), $type, true);
+        return \in_array(\strtolower($this->type), $type, true);
     }
 
     public function isStructured(): bool
@@ -47,6 +31,6 @@ final class Line
 
     public function isEmpty(): bool
     {
-        return !$this->isStructured() && trim($this->value) === '';
+        return !$this->isStructured() && \trim($this->value) === '';
     }
 }

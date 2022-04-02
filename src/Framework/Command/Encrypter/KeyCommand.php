@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Command\Encrypter;
@@ -36,11 +29,7 @@ final class KeyCommand extends Command
         ],
     ];
 
-    /**
-     * @param EncrypterFactory $enc
-     * @param FilesInterface   $files
-     */
-    public function perform(EncrypterFactory $enc, FilesInterface $files): void
+    public function perform(EncrypterFactory $enc, FilesInterface $files): int
     {
         $key = $enc->generateKey();
 
@@ -48,25 +37,27 @@ final class KeyCommand extends Command
 
         $file = $this->option('mount');
         if ($file === null) {
-            return;
+            return self::SUCCESS;
         }
 
         if (!$files->exists($file)) {
             $this->sprintf('<error>Unable to find `%s`</error>', $file);
-            return;
+            return self::FAILURE;
         }
 
         $content = $files->read($file);
 
         try {
-            $content = str_replace($this->option('placeholder'), $key, $content);
-            $content = str_replace($enc->getKey(), $key, $content);
-        } catch (\Throwable $e) {
+            $content = \str_replace($this->option('placeholder'), $key, $content);
+            $content = \str_replace($enc->getKey(), $key, $content);
+        } catch (\Throwable) {
             // current keys is not set
         }
 
         $files->write($file, $content);
 
         $this->writeln('<comment>Encryption key has been updated.</comment>');
+
+        return self::SUCCESS;
     }
 }

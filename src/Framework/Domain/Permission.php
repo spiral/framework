@@ -6,17 +6,10 @@ namespace Spiral\Domain;
 
 class Permission
 {
-    /** @var bool */
-    public $ok = false;
-
-    /** @var string */
-    public $permission;
-
-    /** @var int */
-    public $code;
-
-    /** @var string */
-    public $message;
+    public bool $ok = false;
+    public string $permission;
+    public int $code;
+    public string $message;
 
     protected function __construct()
     {
