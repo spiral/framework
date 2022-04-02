@@ -10,12 +10,9 @@ use Spiral\Queue\HandlerInterface;
 
 final class ObjectJob implements HandlerInterface
 {
-    /** @var InvokerInterface */
-    private $invoker;
-
-    public function __construct(InvokerInterface $invoker)
-    {
-        $this->invoker = $invoker;
+    public function __construct(
+        private readonly InvokerInterface $invoker
+    ) {
     }
 
     public function handle(string $name, string $id, array $payload): void
@@ -24,7 +21,7 @@ final class ObjectJob implements HandlerInterface
             throw new InvalidArgumentException('Payload `object` key is required.');
         }
 
-        if (!is_object($payload['object'])) {
+        if (!\is_object($payload['object'])) {
             throw new InvalidArgumentException('Payload `object` key value type should be an object.');
         }
 
