@@ -54,7 +54,7 @@ final class MailerBootloader extends Bootloader
     {
         $container->bindSingleton(
             MailerInterface::class,
-            static fn (MailerConfig $config, QueueConnectionProviderInterface $provider) => new MailQueue(
+            static fn (MailerConfig $config, QueueConnectionProviderInterface $provider): MailQueue => new MailQueue(
                 $config,
                 $provider->getConnection($config->getQueueConnection())
             )
