@@ -11,24 +11,18 @@ use Spiral\Core\FactoryInterface;
 
 class CacheManager implements CacheStorageProviderInterface, SingletonInterface
 {
-    /** @var CacheConfig */
-    private $config;
-
     /** @var CacheInterface[] */
-    private $storages = [];
+    private array $storages = [];
 
-    /** @var FactoryInterface */
-    private $factory;
-
-    public function __construct(CacheConfig $config, FactoryInterface $factory)
-    {
-        $this->config = $config;
-        $this->factory = $factory;
+    public function __construct(
+        private readonly CacheConfig $config,
+        private readonly FactoryInterface $factory
+    ) {
     }
 
     public function storage(?string $name = null): CacheInterface
     {
-        $name = $name ?: $this->config->getDefaultStorage();
+        $name ??= $this->config->getDefaultStorage();
 
         // Replaces alias with real storage name
         $name = $this->config->getAliases()[$name] ?? $name;

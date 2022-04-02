@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Sorter;
@@ -17,18 +9,14 @@ use Spiral\DataGrid\SpecificationInterface;
 
 abstract class AbstractSorter implements SorterInterface
 {
-    /** @var array */
-    private $expressions;
+    private array $expressions;
 
     public function __construct(string ...$expressions)
     {
         $this->expressions = $expressions;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function withDirection($direction): SpecificationInterface
+    public function withDirection(string $direction): SpecificationInterface
     {
         return $this;
     }

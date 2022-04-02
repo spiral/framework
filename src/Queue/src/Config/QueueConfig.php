@@ -67,14 +67,14 @@ final class QueueConfig extends InjectableConfig
         if (isset($driverAliases[$driver])) {
             if (!\is_string($this->config['driverAliases'][$driver])) {
                 throw new InvalidArgumentException(
-                    sprintf('Driver alias for `%s` value must be a string', $driver)
+                    \sprintf('Driver alias for `%s` value must be a string', $driver)
                 );
             }
 
             $driver = $driverAliases[$driver];
         }
 
-        return array_filter($connections, static function (array $connection) use ($driverAliases, $driver): bool {
+        return \array_filter($connections, static function (array $connection) use ($driverAliases, $driver): bool {
             if (empty($connection['driver'])) {
                 return false;
             }
@@ -98,7 +98,7 @@ final class QueueConfig extends InjectableConfig
         }
 
         if (!isset($connections[$name]['driver'])) {
-            throw new InvalidArgumentException(sprintf('Driver for queue connection `%s` is not defined.', $name));
+            throw new InvalidArgumentException(\sprintf('Driver for queue connection `%s` is not defined.', $name));
         }
 
         $connection = $connections[$name];
@@ -106,7 +106,7 @@ final class QueueConfig extends InjectableConfig
 
         if (!\is_string($driver)) {
             throw new InvalidArgumentException(
-                sprintf('Driver for queue connection `%s` value must be a string', $name)
+                \sprintf('Driver for queue connection `%s` value must be a string', $name)
             );
         }
 
@@ -116,7 +116,7 @@ final class QueueConfig extends InjectableConfig
 
         if (!\is_string($connection['driver'])) {
             throw new InvalidArgumentException(
-                sprintf('Driver alias for queue connection `%s` value must be a string', $name)
+                \sprintf('Driver alias for queue connection `%s` value must be a string', $name)
             );
         }
 

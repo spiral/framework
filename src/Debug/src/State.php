@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Debug;
@@ -19,23 +12,18 @@ use Spiral\Logger\Event\LogEvent;
  */
 final class State implements StateInterface
 {
-    /** @var array */
-    private $tags = [];
-
-    /** @var array */
-    private $extras = [];
-
-    /** @var array */
-    private $logEvents = [];
+    private array $tags = [];
+    private array $extras = [];
+    private array $logEvents = [];
 
     public function setTags(array $tags): void
     {
         $setTags = [];
         foreach ($tags as $key => $value) {
-            if (!is_string($value)) {
-                throw new StateException(sprintf(
+            if (!\is_string($value)) {
+                throw new StateException(\sprintf(
                     'Invalid tag value, string expected got %s',
-                    is_object($value) ? get_class($value) : gettype($value)
+                    get_debug_type($value)
                 ));
             }
 
@@ -63,10 +51,7 @@ final class State implements StateInterface
         $this->extras = $extras;
     }
 
-    /**
-     * @param        $value
-     */
-    public function setVariable(string $key, $value): void
+    public function setVariable(string $key, mixed $value): void
     {
         $this->extras[$key] = $value;
     }
@@ -81,7 +66,7 @@ final class State implements StateInterface
 
     public function addLogEvent(LogEvent ...$events): void
     {
-        $this->logEvents = array_merge($this->logEvents, $events);
+        $this->logEvents = \array_merge($this->logEvents, $events);
     }
 
     /**

@@ -10,12 +10,9 @@ use Spiral\Queue\HandlerInterface;
 
 final class CallableJob implements HandlerInterface
 {
-    /** @var InvokerInterface */
-    private $invoker;
-
-    public function __construct(InvokerInterface $invoker)
-    {
-        $this->invoker = $invoker;
+    public function __construct(
+        private readonly InvokerInterface $invoker
+    ) {
     }
 
     public function handle(string $name, string $id, array $payload): void

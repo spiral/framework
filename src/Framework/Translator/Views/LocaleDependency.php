@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Translator\Views;
@@ -21,24 +14,14 @@ final class LocaleDependency implements DependencyInterface
 {
     public const NAME = 'locale';
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private array $locales = [];
 
-    /** @var array */
-    private $locales;
-
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
+    public function __construct(
+        private readonly TranslatorInterface $translator
+    ) {
         $this->locales = $translator->getCatalogueManager()->getLocales();
     }
 
-    /**
-     * @return array
-     */
     public function __debugInfo(): array
     {
         return [
@@ -47,25 +30,16 @@ final class LocaleDependency implements DependencyInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getName(): string
     {
         return self::NAME;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->translator->getLocale();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getVariants(): array
     {
         return $this->locales;

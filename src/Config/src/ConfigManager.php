@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Config;
@@ -22,25 +15,14 @@ use Spiral\Core\Exception\ConfiguratorException;
  */
 final class ConfigManager implements ConfiguratorInterface, SingletonInterface
 {
-    /** @var LoaderInterface */
-    private $loader;
+    private array $data = [];
+    private array $defaults = [];
+    private array $instances = [];
 
-    /** @var bool */
-    private $strict;
-
-    /** @var array */
-    private $data = [];
-
-    /** @var array */
-    private $defaults = [];
-
-    /** @var array */
-    private $instances = [];
-
-    public function __construct(LoaderInterface $loader, bool $strict = true)
-    {
-        $this->loader = $loader;
-        $this->strict = $strict;
+    public function __construct(
+        private readonly LoaderInterface $loader,
+        private readonly bool $strict = true
+    ) {
     }
 
     /**
@@ -53,39 +35,32 @@ final class ConfigManager implements ConfiguratorInterface, SingletonInterface
         $this->instances = [];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function exists(string $section): bool
     {
         return isset($this->defaults[$section]) || isset($this->data[$section]) || $this->loader->has($section);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function setDefaults(string $section, array $data): void
     {
         if (isset($this->defaults[$section])) {
-            throw new ConfiguratorException("Unable to set default config `{$section}` more than once.");
+            throw new ConfiguratorException(\sprintf('Unable to set default config `%s` more than once.', $section));
         }
 
         if (isset($this->data[$section])) {
-            throw new ConfigDeliveredException("Unable to set default config `{$section}`, config has been loaded.");
+            throw new ConfigDeliveredException(
+                \sprintf('Unable to set default config `%s`, config has been loaded.', $section)
+            );
         }
 
         $this->defaults[$section] = $data;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function modify(string $section, PatchInterface $patch): array
     {
         if (isset($this->instances[$section])) {
             if ($this->strict) {
                 throw new ConfigDeliveredException(
-                    "Unable to patch config `{$section}`, config object has already been delivered."
+                    \sprintf('Unable to patch config `%s`, config object has already been delivered.', $section)
                 );
             }
 
@@ -97,13 +72,10 @@ final class ConfigManager implements ConfiguratorInterface, SingletonInterface
         try {
             return $this->data[$section] = $patch->patch($data);
         } catch (PatchException $e) {
-            throw new PatchException("Unable to modify config `{$section}`.", $e->getCode(), $e);
+            throw new PatchException(\sprintf('Unable to modify config `%s`.', $section), $e->getCode(), $e);
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getConfig(string $section = null): array
     {
         if (isset($this->data[$section])) {
@@ -116,7 +88,7 @@ final class ConfigManager implements ConfiguratorInterface, SingletonInterface
                 $data = $this->loader->load($section);
             }
 
-            $data = array_merge($this->defaults[$section], $data);
+            $data = \array_merge($this->defaults[$section], $data);
         } else {
             $data = $this->loader->load($section);
         }
@@ -124,10 +96,7 @@ final class ConfigManager implements ConfiguratorInterface, SingletonInterface
         return $this->data[$section] = $data;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function createInjection(\ReflectionClass $class, string $context = null)
+    public function createInjection(\ReflectionClass $class, string $context = null): object
     {
         $config = $class->getConstant('CONFIG');
         if (isset($this->instances[$config])) {

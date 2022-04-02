@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Session\Handler;
@@ -16,51 +9,32 @@ namespace Spiral\Session\Handler;
  */
 final class NullHandler implements \SessionHandlerInterface
 {
-    /**
-     * @inheritdoc
-     */
     public function close(): bool
     {
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function destroy($session_id): bool
+    public function destroy(string $id): bool
     {
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
-    #[\ReturnTypeWillChange]
-    public function gc($maxlifetime)
+    public function gc(int $maxlifetime): int
     {
         return $maxlifetime;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function open($save_path, $session_id): bool
+    public function open(string $path, string $id): bool
     {
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function read($session_id): string
+    public function read(string $id): string
     {
         return '';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function write($session_id, $session_data): bool
+    public function write(string $id, string $data): bool
     {
         return true;
     }

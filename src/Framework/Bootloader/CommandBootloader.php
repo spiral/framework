@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader;
@@ -37,10 +30,6 @@ final class CommandBootloader extends Bootloader
         ConsoleBootloader::class,
     ];
 
-    /**
-     * @param ConsoleBootloader $console
-     * @param Container         $container
-     */
     public function boot(ConsoleBootloader $console, Container $container): void
     {
         $console->addCommand(Console\Command\ConfigureCommand::class);
@@ -54,9 +43,6 @@ final class CommandBootloader extends Bootloader
         $this->configureExtensions($console, $container);
     }
 
-    /**
-     * @return array
-     */
     public function defineDependencies(): array
     {
         return [
@@ -64,10 +50,6 @@ final class CommandBootloader extends Bootloader
         ];
     }
 
-    /**
-     * @param ConsoleBootloader $console
-     * @param Container         $container
-     */
     private function configureExtensions(ConsoleBootloader $console, Container $container): void
     {
         if ($container->has(TranslatorInterface::class)) {
@@ -87,9 +69,6 @@ final class CommandBootloader extends Bootloader
         }
     }
 
-    /**
-     * @param ConsoleBootloader $console
-     **/
     private function configureTranslator(ConsoleBootloader $console): void
     {
         $console->addCommand(Translator\IndexCommand::class);
@@ -110,9 +89,6 @@ final class CommandBootloader extends Bootloader
         );
     }
 
-    /**
-     * @param ConsoleBootloader $console
-     */
     private function configureViews(ConsoleBootloader $console): void
     {
         $console->addCommand(Views\ResetCommand::class);
@@ -124,9 +100,6 @@ final class CommandBootloader extends Bootloader
         );
     }
 
-    /**
-     * @param ConsoleBootloader $console
-     */
     private function configureEncrypter(ConsoleBootloader $console): void
     {
         $console->addCommand(Encrypter\KeyCommand::class);

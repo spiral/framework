@@ -43,7 +43,6 @@ class KernelTest extends BaseTest
     {
         $this->expectException(BootException::class);
 
-        TestApp::init([
-        ], new Environment(), false);
+        TestApp::create([], false)->run();
     }
 }

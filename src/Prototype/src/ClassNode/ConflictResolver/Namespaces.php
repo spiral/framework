@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\ClassNode\ConflictResolver;
@@ -16,12 +9,9 @@ use Spiral\Prototype\Utils;
 
 final class Namespaces
 {
-    /** @var Sequences */
-    private $sequences;
-
-    public function __construct(Sequences $sequences)
-    {
-        $this->sequences = $sequences;
+    public function __construct(
+        private readonly Sequences $sequences
+    ) {
     }
 
     public function resolve(ClassNode $definition): void
@@ -97,7 +87,7 @@ final class Namespaces
                         continue;
                     }
 
-                    $sequence = $this->sequences->find(array_keys($counters[$namespace->name]), $namespace->sequence);
+                    $sequence = $this->sequences->find(\array_keys($counters[$namespace->name]), $namespace->sequence);
                     if ($sequence !== $namespace->sequence) {
                         $namespace->sequence = $sequence;
 
@@ -121,7 +111,7 @@ final class Namespaces
                     continue;
                 }
 
-                $sequence = $this->sequences->find(array_keys($counters[$namespace->name]), $namespace->sequence);
+                $sequence = $this->sequences->find(\array_keys($counters[$namespace->name]), $namespace->sequence);
                 if ($sequence !== $namespace->sequence) {
                     $namespace->sequence = $sequence;
 
@@ -156,7 +146,7 @@ final class Namespaces
 
     private function parseNamespace(string $shortName, string $fullName): NamespaceEntity
     {
-        if (preg_match("/\d+$/", $shortName, $match)) {
+        if (\preg_match("/\d+$/", $shortName, $match)) {
             $sequence = (int)$match[0];
             if ($sequence > 0) {
                 return NamespaceEntity::createWithSequence(

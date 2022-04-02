@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Config;
@@ -47,18 +40,14 @@ interface ConfiguratorInterface extends ConfigsInterface
      *      "key": ["value3"]
      * }
      *
-     * @param string $section
-     * @param array  $data
-     *
      * @throws ConfiguratorException
      * @throws ConfigDeliveredException
      */
-    public function setDefaults(string $section, array $data);
+    public function setDefaults(string $section, array $data): void;
 
     /**
      * Modifies selected config section. Must throw `PatchDeliveredException` if modification is
      * not allowed due config has already been delivered.
-     *
      *
      * @throws ConfiguratorException
      * @throws ConfigDeliveredException
