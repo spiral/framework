@@ -14,8 +14,6 @@ abstract class JobHandler implements HandlerInterface
 {
     /**
      * Default function with method injection.
-     *
-     * @var string
      */
     protected const HANDLE_FUNCTION = 'invoke';
 
