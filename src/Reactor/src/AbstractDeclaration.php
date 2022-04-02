@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor;
@@ -25,6 +18,6 @@ abstract class AbstractDeclaration implements DeclarationInterface
 
     protected function addIndent(string $string, int $indent = 0): string
     {
-        return str_repeat(self::INDENT, max($indent, 0)) . $string;
+        return \str_repeat(self::INDENT, \max($indent, 0)) . $string;
     }
 }

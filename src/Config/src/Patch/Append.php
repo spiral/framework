@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Config\Patch;
@@ -20,28 +13,16 @@ final class Append implements PatchInterface
 {
     use DotTrait;
 
-    /** @var string */
-    private $position;
+    private string $position;
 
-    /** @var null|string */
-    private $key;
-
-    /** @var mixed */
-    private $value;
-
-    /**
-     * @param mixed       $value
-     */
-    public function __construct(string $position, ?string $key, $value)
-    {
+    public function __construct(
+        string $position,
+        private ?string $key,
+        private mixed $value
+    ) {
         $this->position = $position === '.' ? '' : $position;
-        $this->key = $key;
-        $this->value = $value;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function patch(array $config): array
     {
         try {

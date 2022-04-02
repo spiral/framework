@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
@@ -27,28 +19,12 @@ abstract class AbstractCommand extends Command
      */
     protected const ELEMENT = '';
 
-    /**
-     * @var ScaffolderConfig
-     */
-    protected $config;
-
-    /**
-     * @var FilesInterface
-     */
-    protected $files;
-
-    /** @var FactoryInterface */
-    private $factory;
-
     public function __construct(
-        ScaffolderConfig $config,
-        FilesInterface $files,
+        protected ScaffolderConfig $config,
+        protected FilesInterface $files,
         ContainerInterface $container,
-        FactoryInterface $factory
+        private readonly FactoryInterface $factory
     ) {
-        $this->config = $config;
-        $this->files = $files;
-        $this->factory = $factory;
         $this->setContainer($container);
 
         parent::__construct();
@@ -84,19 +60,19 @@ abstract class AbstractCommand extends Command
     /**
      * Write declaration into file.
      *
-     * @param string           $type If null static::ELEMENT to be used.
+     * @param string $type If null static::ELEMENT to be used.
      */
     protected function writeDeclaration(ClassDeclaration $declaration, string $type = null): void
     {
-        $type = $type ?? static::ELEMENT;
+        $type ??= static::ELEMENT;
 
         $filename = $this->config->classFilename($type, (string)$this->argument('name'));
         $filename = $this->files->normalizePath($filename);
 
         if ($this->files->exists($filename)) {
             $this->writeln(
-                "<fg=red>Unable to create '<comment>{$declaration->getName()}</comment>' declaration, "
-                . "file '<comment>{$filename}</comment>' already exists.</fg=red>"
+                \sprintf("<fg=red>Unable to create '<comment>%s</comment>' declaration, ", $declaration->getName())
+                . \sprintf("file '<comment>%s</comment>' already exists.</fg=red>", $filename)
             );
 
             return;
@@ -119,8 +95,8 @@ abstract class AbstractCommand extends Command
         );
 
         $this->writeln(
-            "Declaration of '<info>{$declaration->getName()}</info>' "
-            . "has been successfully written into '<comment>{$filename}</comment>'."
+            \sprintf("Declaration of '<info>%s</info>' ", $declaration->getName())
+            . \sprintf("has been successfully written into '<comment>%s</comment>'.", $filename)
         );
     }
 

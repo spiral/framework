@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor;
@@ -20,30 +13,21 @@ use Spiral\Reactor\Traits\UsesTrait;
 /**
  * Provides ability to render file content.
  */
-class FileDeclaration extends AbstractDeclaration implements ReplaceableInterface
+class FileDeclaration extends AbstractDeclaration implements ReplaceableInterface, \Stringable
 {
     use UsesTrait;
     use CommentTrait;
 
-    /**
-     * File namespace.
-     *
-     * @var string
-     */
-    private $namespace;
-
-    /** @var Directives|null */
-    private $directives;
+    private ?Directives $directives = null;
+    private Aggregator $elements;
 
     /**
-     * @var Aggregator
+     * @param string $namespace File namespace.
      */
-    private $elements;
-
-    public function __construct(string $namespace = '', string $comment = '')
-    {
-        $this->namespace = $namespace;
-
+    public function __construct(
+        private string $namespace = '',
+        string $comment = ''
+    ) {
         $this->elements = new Aggregator([
             ClassDeclaration::class,
             NamespaceDeclaration::class,
@@ -93,10 +77,7 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function replace($search, $replace): FileDeclaration
+    public function replace(array|string $search, array|string $replace): FileDeclaration
     {
         $this->docComment->replace($search, $replace);
         $this->elements->replace($search, $replace);
@@ -104,9 +85,6 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render(int $indentLevel = 0): string
     {
         $result = "<?php\n";

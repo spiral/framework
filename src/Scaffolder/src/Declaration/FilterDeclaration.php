@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Declaration;
@@ -23,20 +15,16 @@ class FilterDeclaration extends ClassDeclaration implements DependedInterface
      */
     private const DEFAULT_SOURCE = 'data';
 
-    /** @var array */
-    private $mapping;
-
-    public function __construct(string $name, string $comment = '', array $mapping = [])
-    {
+    public function __construct(
+        string $name,
+        string $comment = '',
+        private readonly array $mapping = []
+    ) {
         parent::__construct($name, 'Filter', [], $comment);
-        $this->mapping = $mapping;
 
         $this->declareStructure();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies(): array
     {
         return [Filter::class => null];
@@ -61,7 +49,7 @@ class FilterDeclaration extends ClassDeclaration implements DependedInterface
         $definition = $this->mapping[$type];
 
         //Source can depend on type
-        $source = $source ?? $definition['source'];
+        $source ??= $definition['source'];
         $schema[$field] = $source . ':' . ($origin ?: $field);
 
         if (!empty($definition['validates'])) {

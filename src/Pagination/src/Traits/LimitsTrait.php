@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Pagination\Traits;
@@ -16,24 +9,14 @@ namespace Spiral\Pagination\Traits;
  */
 trait LimitsTrait
 {
-    /**
-     * @var int
-     */
-    private $limit = 0;
-
-    /**
-     * @var int
-     */
-    private $offset = 0;
+    private int $limit = 0;
+    private int $offset = 0;
 
     /**
      * Set selection limit. Attention, this limit value does not affect values set in paginator but
      * only changes pagination window. Set to 0 to disable limiting.
-     *
-     *
-     * @return $this
      */
-    public function limit(int $limit = 0)
+    public function limit(int $limit = 0): self
     {
         $this->limit = $limit;
 
@@ -48,11 +31,8 @@ trait LimitsTrait
     /**
      * Set selection offset. Attention, this value does not affect associated paginator but only
      * changes pagination window.
-     *
-     *
-     * @return mixed
      */
-    public function offset(int $offset = 0)
+    public function offset(int $offset = 0): self
     {
         $this->offset = $offset;
 

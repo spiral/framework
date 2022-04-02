@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Pavel Z
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Header;
@@ -16,16 +9,11 @@ namespace Spiral\Http\Header;
  *
  * Can be used for comparing each item weight or constructing the "Accept" headers.
  */
-final class AcceptHeaderItem
+final class AcceptHeaderItem implements \Stringable
 {
-    /** @var string|null */
-    private $value;
-
-    /** @var float */
-    private $quality;
-
-    /** @var array */
-    private $params = [];
+    private ?string $value = null;
+    private ?float $quality = null;
+    private array $params = [];
 
     /**
      * AcceptHeaderItem constructor.
@@ -46,11 +34,11 @@ final class AcceptHeaderItem
         $parts = [$this->value];
 
         if ($this->quality < 1) {
-            $parts[] = "q=$this->quality";
+            $parts[] = \sprintf('q=%s', $this->quality);
         }
 
         foreach ($this->getParams() as $name => $value) {
-            $parts[] = "$name=$value";
+            $parts[] = \sprintf('%s=%s', $name, $value);
         }
 
         return \implode('; ', $parts);
@@ -129,23 +117,23 @@ final class AcceptHeaderItem
 
     private function setValue(string $value): void
     {
-        $this->value = trim($value);
+        $this->value = \trim($value);
     }
 
     private function setQuality(float $quality): void
     {
-        $this->quality = min(max($quality, 0), 1);
+        $this->quality = \min(\max($quality, 0), 1);
     }
 
     private function setParams(array $params): void
     {
         foreach ($params as $name => $value) {
-            if (is_numeric($name) || !is_scalar($value)) {
+            if (\is_numeric($name) || !\is_scalar($value)) {
                 continue;
             }
 
-            $name = trim($name);
-            $value = trim($value);
+            $name = \trim($name);
+            $value = \trim($value);
 
             if ($name === '' || $value === '') {
                 continue;

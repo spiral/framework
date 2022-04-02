@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Declaration\ConfigDeclaration;
@@ -31,16 +24,13 @@ class TypeAnnotations
         'resource' => 'resource',
     ];
 
-    /**
-     * @param mixed $value
-     */
-    public function getAnnotation($value): string
+    public function getAnnotation(mixed $value): string
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return $this->arrayAnnotationString($value);
         }
 
-        return $this->mapType(gettype($value));
+        return $this->mapType(\gettype($value));
     }
 
     public function mapType(string $type): string
@@ -52,10 +42,10 @@ class TypeAnnotations
     {
         $types = [];
         foreach ($value as $item) {
-            $types[] = gettype($item);
+            $types[] = \gettype($item);
         }
-        $types = array_unique($types);
+        $types = \array_unique($types);
 
-        return count($types) === 1 ? "array|{$this->mapType($types[0])}[]" : 'array';
+        return \count($types) === 1 ? \sprintf('array|%s[]', $this->mapType($types[0])) : 'array';
     }
 }

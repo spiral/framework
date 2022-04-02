@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Command\Translator;
@@ -28,21 +21,13 @@ final class IndexCommand extends Command implements SingletonInterface
         ['locale', InputArgument::OPTIONAL, 'Locale to aggregate indexed translations into'],
     ];
 
-    /**
-     * @param TranslatorConfig     $config
-     * @param CatalogueManager     $manager
-     * @param InvocationsInterface $invocations
-     * @param ScopedClassesInterface $classes
-     */
     public function perform(
         TranslatorConfig $config,
         CatalogueManager $manager,
         InvocationsInterface $invocations,
         ScopedClassesInterface $classes
-    ): void {
-        $catalogue = $manager->load(
-            $this->argument('locale') ?? $config->getDefaultLocale()
-        );
+    ): int {
+        $catalogue = $manager->load($this->argument('locale') ?? $config->getDefaultLocale());
 
         $indexer = new Indexer($config, $catalogue);
 
@@ -58,5 +43,7 @@ final class IndexCommand extends Command implements SingletonInterface
         );
 
         $manager->save($catalogue->getLocale());
+
+        return self::SUCCESS;
     }
 }

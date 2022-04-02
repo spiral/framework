@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Debug;
@@ -16,8 +9,5 @@ namespace Spiral\Debug;
  */
 interface StateCollectorInterface
 {
-    /**
-     * @param StateInterface $state
-     */
     public function populate(StateInterface $state): void;
 }

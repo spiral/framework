@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core;
@@ -23,7 +16,6 @@ interface ConfigsInterface extends InjectorInterface
     /**
      * Return config for one specified section. Config has to be returned in component specific
      * array.
-     *
      *
      * @throws ConfiguratorException
      */
