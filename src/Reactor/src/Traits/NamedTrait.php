@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Traits;
@@ -16,10 +9,7 @@ namespace Spiral\Reactor\Traits;
  */
 trait NamedTrait
 {
-    /**
-     * @var string
-     */
-    private $name = '';
+    private string $name = '';
 
     /**
      * Attention, element name will be automatically classified.

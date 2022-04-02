@@ -50,6 +50,8 @@
     added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface. 
     Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
   - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
+  - [spiral/reactor] Added return type `mixed` and `array|string` parameter type of `$search`, 
+    `array|string` parameter type of `$replace` to the method `replace` in `Spiral\Reactor\ReplaceableInterface`.
   - [spiral/session] Added return type `void` to the method `resume` in `Spiral\Session\SessionInterface`.
   - [spiral/session] Added return type `self` and `mixed` parameter type of `$value` to the method `set` 
     in `Spiral\Session\SessionSectionInterface`.
