@@ -21,7 +21,7 @@ class JobsQueueTest extends TestCase
 
         $mailer = new MailQueue(
             new MailerConfig([
-                'pipeline' => 'mailer',
+                'queue' => 'mailer',
             ]),
             $queue
         );

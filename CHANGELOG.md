@@ -110,6 +110,7 @@
     in `Spiral\Console\SequenceInterface` interface.
   - [spiral/files] Added return type `bool` to the method `delete`, added return type `bool` to the method `deleteDirectory`,
     added return type `bool` to the method `touch`, added return type `bool` to the method `setPermissions` in `Spiral\Files\FilesInterface`.
+  - [spiral/sendit] Dropped support `pipeline` parameter in `mailer` config. Please, use the parameter `queue` instead.
   - [spiral/security] Added return type `self` to a methods `addRole`, `removeRole` in `Spiral\Security\PermissionsInterface`
   - [spiral/security] Added return type `self` to a methods `set`, `remove` in `Spiral\Security\RulesInterface`
 - **Medium Impact Changes**

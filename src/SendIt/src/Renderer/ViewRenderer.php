@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\SendIt\Renderer;
@@ -20,12 +13,9 @@ use Symfony\Component\Mime\Email;
 
 final class ViewRenderer implements RendererInterface
 {
-    /** @var ViewsInterface */
-    private $views;
-
-    public function __construct(ViewsInterface $views)
-    {
-        $this->views = $views;
+    public function __construct(
+        private readonly ViewsInterface $views
+    ) {
     }
 
     public function render(MessageInterface $message): Email
@@ -34,7 +24,7 @@ final class ViewRenderer implements RendererInterface
             $view = $this->views->get($message->getSubject());
         } catch (ViewException $e) {
             throw new MailerException(
-                sprintf('Invalid email template `%s`: %s', $message->getSubject(), $e->getMessage()),
+                \sprintf('Invalid email template `%s`: %s', $message->getSubject(), $e->getMessage()),
                 $e->getCode(),
                 $e
             );
@@ -43,7 +33,7 @@ final class ViewRenderer implements RendererInterface
         $msg = new Email();
 
         if ($message->getFrom() !== null) {
-            $msg->from([$message->getFrom()]);
+            $msg->from($message->getFrom());
         }
 
         $msg->to(...$message->getTo());
@@ -52,10 +42,10 @@ final class ViewRenderer implements RendererInterface
 
         try {
             // render message partials
-            $view->render(array_merge(['_msg_' => $msg], $message->getData()));
+            $view->render(\array_merge(['_msg_' => $msg], $message->getData()));
         } catch (ViewException $e) {
             throw new MailerException(
-                sprintf('Unable to render email `%s`: %s', $message->getSubject(), $e->getMessage()),
+                \sprintf('Unable to render email `%s`: %s', $message->getSubject(), $e->getMessage()),
                 $e->getCode(),
                 $e
             );
@@ -79,10 +69,10 @@ final class ViewRenderer implements RendererInterface
         }
 
         // Subject is non-ascii, needs encoding
-        $encoded = base64_encode($subject);
+        $encoded = \base64_encode($subject);
         $prefix = '=?UTF-8?B?';
         $suffix = '?=';
 
-        return $prefix . str_replace("=\r\n", $suffix . "\r\n  " . $prefix, $encoded) . $suffix;
+        return $prefix . \str_replace("=\r\n", $suffix . "\r\n  " . $prefix, $encoded) . $suffix;
     }
 }
