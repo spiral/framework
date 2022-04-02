@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @author Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Filter;
@@ -17,41 +11,25 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class Between implements FilterInterface
 {
-    /** @var string */
-    private $expression;
+    private array|ValueInterface $value;
 
-    /** @var ValueInterface|array */
-    private $value;
-
-    /** @var bool */
-    private $includeFrom;
-
-    /** @var bool */
-    private $includeTo;
-
-    /**
-     * @param ValueInterface|array $value
-     */
-    public function __construct(string $expression, $value, bool $includeFrom = true, bool $includeTo = true)
-    {
+    public function __construct(
+        private readonly string $expression,
+        array|ValueInterface $value,
+        private readonly bool $includeFrom = true,
+        private readonly bool $includeTo = true
+    ) {
         if (!$value instanceof ValueInterface && !$this->isValidArray($value)) {
-            throw new ValueException(sprintf(
+            throw new ValueException(\sprintf(
                 'Value expected to be instance of `%s` or an array of 2 different elements, got %s.',
                 ValueInterface::class,
                 $this->invalidValueType($value)
             ));
         }
-
-        $this->expression = $expression;
         $this->value = $this->convertValue($value);
-        $this->includeFrom = $includeFrom;
-        $this->includeTo = $includeTo;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function withValue($value): ?SpecificationInterface
+    public function withValue(mixed $value): ?SpecificationInterface
     {
         $between = clone $this;
         if (!$between->value instanceof ValueInterface) {
@@ -74,11 +52,7 @@ final class Between implements FilterInterface
         return $between;
     }
 
-    /**
-     * @inheritDoc
-     * @return ValueInterface|array
-     */
-    public function getValue()
+    public function getValue(): array|ValueInterface
     {
         return $this->value;
     }
@@ -100,57 +74,46 @@ final class Between implements FilterInterface
         return [$this->fromFilter(), $this->toFilter()];
     }
 
-
-    /**
-     * @param mixed|array $value
-     */
-    private function isValidArray($value): bool
+    private function isValidArray(mixed $value): bool
     {
-        if (!is_array($value) || count($value) !== 2) {
+        if (!\is_array($value) || \count($value) !== 2) {
             return false;
         }
 
-        [$from, $to] = array_values($value);
+        [$from, $to] = \array_values($value);
 
         return $from !== $to;
     }
 
-    /**
-     * @param mixed $value
-     */
-    private function invalidValueType($value): string
+    private function invalidValueType(mixed $value): string
     {
-        if (is_object($value)) {
-            return get_class($value);
+        if (\is_object($value)) {
+            return $value::class;
         }
 
-        if (is_array($value)) {
-            $count = count($value);
+        if (\is_array($value)) {
+            $count = \count($value);
             if ($count === 0) {
                 return 'empty array';
             }
 
             if ($count !== 2) {
-                return "array of $count elements";
+                return \sprintf('array of %s elements', $count);
             }
 
             return 'array of 2 same elements';
         }
 
-        return gettype($value);
+        return \gettype($value);
     }
 
-    /**
-     * @param ValueInterface|array $value
-     * @return ValueInterface|array
-     */
-    private function convertValue($value)
+    private function convertValue(array|ValueInterface $value): array|ValueInterface
     {
         if ($value instanceof ValueInterface) {
             return $value;
         }
 
-        $values = array_values($value);
+        $values = \array_values($value);
         if ($values[1] < $values[0]) {
             return [$values[1], $values[0]];
         }

@@ -33,12 +33,6 @@ class ResponsesTest extends TestCase
         $this->assertSame(301, $response->getStatusCode());
     }
 
-    public function testRedirectException(): void
-    {
-        $this->expectException(ResponseException::class);
-        $this->getWrapper()->redirect(true);
-    }
-
     public function testJson(): void
     {
         $response = $this->getWrapper()->json([

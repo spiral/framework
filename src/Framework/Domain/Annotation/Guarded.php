@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Domain\Annotation;
@@ -30,27 +23,13 @@ use Spiral\Attributes\NamedArgumentConstructor;
 final class Guarded
 {
     /**
-     * @var string|null
+     * @param string|null $errorMessage Error message in case of error.
      */
-    public $permission;
-
-    /**
-     * @Enum({"notFound","unauthorized","forbidden","badAction","error"})
-     * @var string
-     */
-    public $else = 'forbidden';
-
-    /**
-     * Error message in case of error.
-     *
-     * @var string|null
-     */
-    public $errorMessage;
-
-    public function __construct(?string $permission = null, string $else = 'forbidden', ?string $errorMessage = null)
-    {
-        $this->permission = $permission;
-        $this->else = $else;
-        $this->errorMessage = $errorMessage;
+    public function __construct(
+        public readonly ?string $permission = null,
+        /** @Enum({"notFound","unauthorized","forbidden","badAction","error"}) */
+        public readonly string $else = 'forbidden',
+        public readonly ?string $errorMessage = null
+    ) {
     }
 }

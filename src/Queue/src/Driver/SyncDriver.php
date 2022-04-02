@@ -18,24 +18,17 @@ final class SyncDriver implements QueueInterface
 {
     use QueueTrait;
 
-    /** @var HandlerRegistryInterface */
-    private $registry;
-    /** @var FailedJobHandlerInterface */
-    private $failedJobHandler;
-
     public function __construct(
-        HandlerRegistryInterface $registry,
-        FailedJobHandlerInterface $failedJobHandler
+        private readonly HandlerRegistryInterface $registry,
+        private readonly FailedJobHandlerInterface $failedJobHandler
     ) {
-        $this->registry = $registry;
-        $this->failedJobHandler = $failedJobHandler;
     }
 
     /** @inheritdoc */
     public function push(string $name, array $payload = [], OptionsInterface $options = null): string
     {
         if ($options !== null && $options->getDelay()) {
-            sleep($options->getDelay());
+            \sleep($options->getDelay());
         }
 
         $id = (string)Uuid::uuid4();

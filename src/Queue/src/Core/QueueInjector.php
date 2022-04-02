@@ -16,11 +16,9 @@ use Spiral\Queue\QueueInterface;
  */
 final class QueueInjector implements InjectorInterface
 {
-    private QueueConnectionProviderInterface $queueManager;
-
-    public function __construct(QueueConnectionProviderInterface $queueManager)
-    {
-        $this->queueManager = $queueManager;
+    public function __construct(
+        private readonly QueueConnectionProviderInterface $queueManager
+    ) {
     }
 
     public function createInjection(ReflectionClass $class, string $context = null): QueueInterface
@@ -32,7 +30,7 @@ final class QueueInjector implements InjectorInterface
                 // Get Queue by context
                 try {
                     $connection = $this->queueManager->getConnection($context);
-                } catch (InvalidArgumentException $e) {
+                } catch (InvalidArgumentException) {
                     // Case when context doesn't match to configured connections
                     return $this->queueManager->getConnection();
                 }
@@ -40,7 +38,7 @@ final class QueueInjector implements InjectorInterface
 
             $this->matchType($class, $context, $connection);
         } catch (\Throwable $e) {
-            throw new ContainerException(sprintf("Can't inject the required queue. %s", $e->getMessage()), 0, $e);
+            throw new ContainerException(\sprintf("Can't inject the required queue. %s", $e->getMessage()), 0, $e);
         }
 
         return $connection;

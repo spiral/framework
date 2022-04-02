@@ -31,8 +31,6 @@ final class SapiEmitter implements EmitterInterface
      *
      * Emits the status line and headers via the header() function, and the
      * body content via the output buffer.
-     *
-     * @param ResponseInterface $response
      */
     public function emit(ResponseInterface $response): bool
     {
@@ -64,11 +62,11 @@ final class SapiEmitter implements EmitterInterface
      */
     private function assertNoPreviousOutput(): void
     {
-        if (headers_sent()) {
+        if (\headers_sent()) {
             throw new EmitterException('Unable to emit response, headers already send.');
         }
 
-        if (ob_get_level() > 0 && ob_get_length() > 0) {
+        if (\ob_get_level() > 0 && \ob_get_length() > 0) {
             throw new EmitterException('Unable to emit response, found non closed buffered output.');
         }
     }
@@ -82,15 +80,13 @@ final class SapiEmitter implements EmitterInterface
      * It is important to mention that this method should be called after
      * `emitHeaders()` in order to prevent PHP from changing the status code of
      * the emitted response.
-     *
-     * @param ResponseInterface $response
      */
     private function emitStatusLine(ResponseInterface $response): void
     {
         $reasonPhrase = $response->getReasonPhrase();
         $statusCode = $response->getStatusCode();
 
-        header(sprintf(
+        \header(\sprintf(
             'HTTP/%s %d%s',
             $response->getProtocolVersion(),
             $statusCode,
@@ -105,8 +101,6 @@ final class SapiEmitter implements EmitterInterface
      * is an array with multiple values, ensures that each is sent
      * in such a way as to create aggregate headers (instead of replace
      * the previous).
-     *
-     * @param ResponseInterface $response
      */
     private function emitHeaders(ResponseInterface $response): void
     {
@@ -116,7 +110,7 @@ final class SapiEmitter implements EmitterInterface
             $name = $this->filterHeader($header);
             $first = $name === 'Set-Cookie' ? false : true;
             foreach ($values as $value) {
-                header(sprintf(
+                \header(\sprintf(
                     '%s: %s',
                     $name,
                     $value
@@ -131,6 +125,6 @@ final class SapiEmitter implements EmitterInterface
      */
     private function filterHeader(string $header): string
     {
-        return ucwords($header, '-');
+        return \ucwords($header, '-');
     }
 }

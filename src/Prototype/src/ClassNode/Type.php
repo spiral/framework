@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\ClassNode;
@@ -15,14 +8,9 @@ use Spiral\Prototype\Utils;
 
 final class Type
 {
-    /** @var string|null */
-    public $shortName;
-
-    /** @var string|null */
-    public $alias;
-
-    /** @var string|null */
-    public $fullName;
+    public ?string $shortName = null;
+    public ?string $alias = null;
+    public ?string $fullName = null;
 
     public static function create(string $name): Type
     {
@@ -62,6 +50,6 @@ final class Type
 
     private function hasShortName(string $type): bool
     {
-        return mb_strpos($type, '\\') !== false;
+        return \mb_strpos($type, '\\') !== false;
     }
 }

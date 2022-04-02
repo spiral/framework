@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Logger\Traits;
@@ -21,8 +14,8 @@ use Spiral\Logger\LogsInterface;
  */
 trait LoggerTrait
 {
-    /** @var LoggerInterface|null @internal */
-    private $logger;
+    /** @internal */
+    private ?LoggerInterface $logger = null;
 
     /**
      * Sets a logger.

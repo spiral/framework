@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value;
@@ -17,27 +9,20 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class NumericValue implements ValueInterface
 {
-    /**
-     * @inheritDoc
-     */
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
-        return is_numeric($value) || (is_string($value) && $value === '');
+        return \is_numeric($value) || $value === '';
     }
 
-    /**
-     * @inheritDoc
-     * @return int|float|double
-     */
-    public function convert($value)
+    public function convert(mixed $value): float|int
     {
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             return $value + 0;
         }
 
-        throw new ValueException(sprintf(
+        throw new ValueException(\sprintf(
             'Value is expected to be numeric, got `%s`. Check the value with `accepts()` method first.',
-            is_object($value) ? get_class($value) : gettype($value)
+            \get_debug_type($value)
         ));
     }
 }

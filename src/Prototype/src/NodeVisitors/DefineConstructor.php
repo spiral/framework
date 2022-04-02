@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
@@ -21,10 +14,7 @@ use Spiral\Prototype\Utils;
  */
 final class DefineConstructor extends NodeVisitorAbstract
 {
-    /**
-     * @return int|null|Node|Node[]
-     */
-    public function leaveNode(Node $node)
+    public function leaveNode(Node $node): ?Node
     {
         if (!$node instanceof Node\Stmt\Class_) {
             return null;

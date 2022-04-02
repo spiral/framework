@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Framework;
@@ -37,9 +30,6 @@ abstract class Kernel extends AbstractKernel
 
     /**
      * Normalizes directory list and adds all required aliases.
-     *
-     * @param array $directories
-     * @return array
      */
     protected function mapDirectories(array $directories): array
     {
@@ -51,7 +41,7 @@ abstract class Kernel extends AbstractKernel
             $directories['app'] = $directories['root'] . '/app/';
         }
 
-        return array_merge(
+        return \array_merge(
             [
                 // public root
                 'public'    => $directories['root'] . '/public/',

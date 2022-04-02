@@ -46,7 +46,6 @@ interface SessionSectionInterface extends \IteratorAggregate, \ArrayAccess
      * Read item from session and delete it after.
      *
      * @param mixed $default Default value when no such item exists.
-     *
      * @throws SessionException
      */
     public function pull(string $name, mixed $default = null): mixed;

@@ -1,30 +1,18 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @author Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value\Accessor;
 
 final class ToLower extends Accessor
 {
-    /**
-     * @inheritDoc
-     */
-    protected function acceptsCurrent($value): bool
+    protected function acceptsCurrent(mixed $value): bool
     {
-        return is_string($value);
+        return \is_string($value);
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function convertCurrent($value)
+    protected function convertCurrent(mixed $value): mixed
     {
-        return is_string($value) ? strtolower($value) : $value;
+        return \is_string($value) ? \strtolower($value) : $value;
     }
 }

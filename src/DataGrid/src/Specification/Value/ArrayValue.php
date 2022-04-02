@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value;
@@ -16,20 +8,16 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class ArrayValue implements ValueInterface
 {
-    /** @var ValueInterface */
-    private $base;
+    private readonly ValueInterface $base;
 
     public function __construct(ValueInterface $base)
     {
         $this->base = $base instanceof self ? $base->base : $base;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             return false;
         }
 
@@ -39,13 +27,10 @@ final class ArrayValue implements ValueInterface
             }
         }
 
-        return count($value) > 0;
+        return $value !== [];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function convert($value): array
+    public function convert(mixed $value): array
     {
         $result = [];
         foreach ($value as $child) {

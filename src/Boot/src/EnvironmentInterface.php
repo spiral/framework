@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -23,18 +16,13 @@ interface EnvironmentInterface
 
     /**
      * Set environment value.
-     *
-     * @param mixed  $value
      */
-    public function set(string $name, $value);
+    public function set(string $name, mixed $value): self;
 
     /**
      * Get environment value.
-     *
-     * @param mixed  $default
-     * @return mixed
      */
-    public function get(string $name, $default = null);
+    public function get(string $name, mixed $default = null): mixed;
 
     /**
      * Get all environment values.
