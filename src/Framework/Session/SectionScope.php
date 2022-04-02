@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Session;
 
-use Spiral\Core\Exception\ScopeException;
-
 final class SectionScope implements SessionSectionInterface
 {
     public function __construct(
@@ -72,7 +70,7 @@ final class SectionScope implements SessionSectionInterface
         return $this->getActiveSection()->getAll();
     }
 
-    public function set(string $name, mixed $value): void
+    public function set(string $name, mixed $value): SessionSectionInterface
     {
         return $this->getActiveSection()->set($name, $value);
     }
