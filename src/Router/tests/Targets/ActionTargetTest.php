@@ -14,7 +14,6 @@ namespace Spiral\Tests\Router\Targets;
 use PHPUnit\Framework\TestCase;
 use Spiral\Router\Autofill;
 use Spiral\Router\Exception\ConstrainException;
-use Spiral\Router\Exception\InvalidArgumentException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Diactoros\UriFactory;
@@ -96,12 +95,5 @@ class ActionTargetTest extends TestCase
         );
 
         $this->assertSame(['action' => 'other'], $match->getMatches());
-    }
-
-    public function testActionException(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        new Action(TestController::class, $this);
     }
 }
