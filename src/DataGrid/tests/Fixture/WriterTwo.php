@@ -21,9 +21,9 @@ class WriterTwo implements WriterInterface
     /**
      * {@inheritDoc}
      */
-    public function write($source, SpecificationInterface $specification, Compiler $compiler)
+    public function write($source, SpecificationInterface $specification, Compiler $compiler): mixed
     {
-        if (is_array($source)) {
+        if (\is_array($source)) {
             $source[] = self::OUTPUT;
         }
 

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Config\Patch\Traits;
@@ -16,10 +9,9 @@ use Spiral\Config\Exception\DotNotFoundException;
 trait DotTrait
 {
     /**
-     * @param array  $data Pointer.
-     * @return array|mixed
+     * @param array $data Pointer.
      */
-    private function &dotGet(array &$data, string $name)
+    private function &dotGet(array &$data, string $name): mixed
     {
         //Generating path relative to a given name and prefix
         $path = (!empty($this->prefix) ? $this->prefix . '.' : '') . $name;
@@ -27,10 +19,10 @@ trait DotTrait
             return $data;
         }
 
-        $path = explode('.', rtrim($path, '.'));
+        $path = \explode('.', \rtrim($path, '.'));
         foreach ($path as $step) {
-            if (!is_array($data) || !array_key_exists($step, $data)) {
-                throw new DotNotFoundException("Unable to find config element '{$name}'.");
+            if (!\is_array($data) || !\array_key_exists($step, $data)) {
+                throw new DotNotFoundException(\sprintf("Unable to find config element '%s'.", $name));
             }
             $data = &$data[$step];
         }

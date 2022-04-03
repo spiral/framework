@@ -1,26 +1,14 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
 
-final class Autofill
+final class Autofill implements \Stringable
 {
-    /**
-     * @var string
-     */
-    private $value;
-
-    public function __construct(string $value)
-    {
-        $this->value = $value;
+    public function __construct(
+        private readonly string $value
+    ) {
     }
 
     public function __toString(): string

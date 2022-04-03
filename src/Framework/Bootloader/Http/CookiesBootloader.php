@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
@@ -31,24 +24,15 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
         CookieQueue::class => [self::class, 'cookieQueue'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /**
-     * @param ConfiguratorInterface $config
-     */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
-    /**
-     * @param HttpBootloader $http
-     */
     public function boot(HttpBootloader $http): void
     {
         $this->config->setDefaults(
-            'cookies',
+            CookiesConfig::CONFIG,
             [
                 'domain'   => '.%s',
                 'method'   => CookiesConfig::COOKIE_ENCRYPT,
@@ -61,17 +45,14 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
 
     /**
      * Disable protection for given cookie.
-     *
-     * @param string $cookie
      */
     public function whitelistCookie(string $cookie): void
     {
-        $this->config->modify('cookies', new Append('excluded', null, $cookie));
+        $this->config->modify(CookiesConfig::CONFIG, new Append('excluded', null, $cookie));
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return CookieQueue
+     * @noRector RemoveUnusedPrivateMethodRector
      */
     private function cookieQueue(ServerRequestInterface $request): CookieQueue
     {

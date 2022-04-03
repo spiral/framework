@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
+use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\Container\ContainerException;
@@ -11,14 +12,11 @@ use Spiral\Queue\Exception\JobException;
 
 final class ContainerRegistry implements HandlerRegistryInterface
 {
-    /** @var ContainerInterface  */
-    private $container;
-    /** @var \Doctrine\Inflector\Inflector */
-    private $inflector;
+    private readonly Inflector $inflector;
 
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container
+    ) {
         $this->inflector = (new InflectorFactory())->build();
     }
 
@@ -31,7 +29,7 @@ final class ContainerRegistry implements HandlerRegistryInterface
         }
 
         if (!$handler instanceof HandlerInterface) {
-            throw new JobException("Unable to resolve job handler for `{$jobType}`");
+            throw new JobException(\sprintf('Unable to resolve job handler for `%s`', $jobType));
         }
 
         return $handler;
@@ -39,11 +37,9 @@ final class ContainerRegistry implements HandlerRegistryInterface
 
     private function className(string $jobType): string
     {
-        $names = explode('.', $jobType);
-        $names = array_map(function (string $value) {
-            return $this->inflector->classify($value);
-        }, $names);
+        $names = \explode('.', $jobType);
+        $names = \array_map(fn (string $value) => $this->inflector->classify($value), $names);
 
-        return implode('\\', $names);
+        return \implode('\\', $names);
     }
 }

@@ -28,7 +28,7 @@ class QueueTest extends TestCase
 
         $this->mailer = new MailQueue(
             new MailerConfig([
-                'pipeline' => 'mailer',
+                'queue' => 'mailer',
             ]),
             $this->queue
         );

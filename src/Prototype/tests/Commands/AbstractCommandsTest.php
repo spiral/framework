@@ -52,12 +52,12 @@ abstract class AbstractCommandsTest extends TestCase
             $this->markTestSkipped('A "spiral/framework" dependency is required to run these tests');
         }
 
-        $this->app = TestApp::init([
+        $this->app = TestApp::create([
             'root'   => $this->dir(),
             'config' => $this->dir(),
             'app'    => $this->dir(),
             'cache'  => sys_get_temp_dir()
-        ], null, false);
+        ], false)->run();
 
         foreach (static::STORE as $name) {
             $this->storage->store($name);

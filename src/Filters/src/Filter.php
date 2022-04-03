@@ -104,10 +104,12 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         $this->errors = null;
     }
 
-    public function setField(string $name, mixed $value, bool $filter = true): void
+    public function setField(string $name, mixed $value, bool $filter = true): self
     {
         parent::setField($name, $value, $filter);
         $this->reset();
+
+        return $this;
     }
 
     public function isValid(): bool
@@ -172,7 +174,7 @@ abstract class Filter extends SchematicEntity implements FilterInterface
             }
 
             //Array of nested entities for validation
-            if (is_iterable($value)) {
+            if (\is_iterable($value)) {
                 foreach ($value as $nIndex => $nValue) {
                     if ($nValue instanceof FilterInterface) {
                         if ($this->isOptional($nIndex) && !$this->hasBeenPassed($nIndex)) {

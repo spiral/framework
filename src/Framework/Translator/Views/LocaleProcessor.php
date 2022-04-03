@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Translator\Views;
@@ -24,44 +17,34 @@ final class LocaleProcessor implements ProcessorInterface
     private const PREFIX = 'view';
     private const REGEXP = '/\[\[(.*?)\]\]/s';
 
-    /** @var TranslatorInterface */
-    private $translator = null;
-
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
+    public function __construct(
+        private readonly TranslatorInterface $translator
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ViewSource $source, ContextInterface $context): ViewSource
     {
+        $translator = $this->translator;
         //Translator options must automatically route this view name to specific domain
-        $domain = $this->translator->getDomain(
-            sprintf(
+        $domain = $translator->getDomain(
+            \sprintf(
                 '%s-%s-%s',
                 self::PREFIX,
-                str_replace(['/', '\\'], '-', $source->getNamespace()),
-                str_replace(['/', '\\'], '-', $source->getName())
+                \str_replace(['/', '\\'], '-', $source->getNamespace()),
+                \str_replace(['/', '\\'], '-', $source->getName())
             )
         );
 
         //We are not forcing locale for now
         return $source->withCode(
-            preg_replace_callback(
+            \preg_replace_callback(
                 self::REGEXP,
-                function ($matches) use ($domain, $context) {
-                    return $this->translator->trans(
-                        $matches[1],
-                        [],
-                        $domain,
-                        $context->resolveValue(LocaleDependency::NAME)
-                    );
-                },
+                static fn ($matches) => $translator->trans(
+                    $matches[1],
+                    [],
+                    $domain,
+                    $context->resolveValue(LocaleDependency::NAME)
+                ),
                 $source->getCode()
             )
         );

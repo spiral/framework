@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors\ClassNode;
@@ -17,16 +10,13 @@ use PhpParser\NodeVisitorAbstract;
 
 final class DeclareClass extends NodeVisitorAbstract
 {
-    private $namespace;
-    private $class;
+    private ?string $namespace = null;
+    private ?string $class = null;
 
-    /**
-     * @return int|null|Node|Node[]
-     */
-    public function enterNode(Node $node)
+    public function enterNode(Node $node): ?int
     {
         if ($node instanceof Node\Stmt\Namespace_) {
-            $this->namespace = implode('\\', $node->name->parts);
+            $this->namespace = \implode('\\', $node->name->parts);
         }
 
         if ($node instanceof Node\Stmt\Class_) {

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Session;
@@ -24,20 +17,12 @@ final class SessionScope implements SessionInterface, SingletonInterface
     /** Locations for unnamed segments i.e. default segment. */
     private const DEFAULT_SECTION = '_DEFAULT';
 
-    /** @var ContainerInterface */
-    private $container;
-
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container
+    ) {
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function isStarted(): bool
@@ -46,18 +31,14 @@ final class SessionScope implements SessionInterface, SingletonInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
-    public function resume()
+    public function resume(): void
     {
-        return $this->getActiveSession()->resume();
+        $this->getActiveSession()->resume();
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function getID(): ?string
@@ -66,8 +47,6 @@ final class SessionScope implements SessionInterface, SingletonInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function regenerateID(): SessionInterface
@@ -78,8 +57,6 @@ final class SessionScope implements SessionInterface, SingletonInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function commit(): bool
@@ -88,8 +65,6 @@ final class SessionScope implements SessionInterface, SingletonInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function abort(): bool
@@ -98,8 +73,6 @@ final class SessionScope implements SessionInterface, SingletonInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function destroy(): bool
@@ -108,8 +81,6 @@ final class SessionScope implements SessionInterface, SingletonInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function getSection(string $name = null): SessionSectionInterface
@@ -118,8 +89,6 @@ final class SessionScope implements SessionInterface, SingletonInterface
     }
 
     /**
-     * @return SessionInterface
-     *
      * @throws ScopeException
      */
     public function getActiveSession(): SessionInterface

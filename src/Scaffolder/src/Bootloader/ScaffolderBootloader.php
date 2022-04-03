@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Bootloader;
@@ -30,19 +23,10 @@ class ScaffolderBootloader extends Bootloader
         SlugifyInterface::class => Slugify::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /** @var KernelInterface */
-    private $kernel;
-
-    /**
-     * ScaffolderBootloader constructor.
-     */
-    public function __construct(ConfiguratorInterface $config, KernelInterface $kernel)
-    {
-        $this->config = $config;
-        $this->kernel = $kernel;
+    public function __construct(
+        private readonly ConfiguratorInterface $config,
+        private readonly KernelInterface $kernel
+    ) {
     }
 
     public function boot(ConsoleBootloader $console): void
@@ -57,7 +41,7 @@ class ScaffolderBootloader extends Bootloader
 
         try {
             $defaultNamespace = (new ReflectionClass($this->kernel))->getNamespaceName();
-        } catch (ReflectionException $e) {
+        } catch (ReflectionException) {
             $defaultNamespace = '';
         }
 

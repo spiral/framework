@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http;
@@ -24,33 +17,17 @@ use Spiral\Snapshots\SnapshotterInterface;
 
 final class SapiDispatcher implements DispatcherInterface
 {
-    /** @var FinalizerInterface */
-    private $finalizer;
-
-    /** @var ContainerInterface */
-    private $container;
-
-    /**
-     * @param FinalizerInterface $finalizer
-     * @param ContainerInterface $container
-     */
-    public function __construct(FinalizerInterface $finalizer, ContainerInterface $container)
-    {
-        $this->finalizer = $finalizer;
-        $this->container = $container;
+    public function __construct(
+        private readonly FinalizerInterface $finalizer,
+        private readonly ContainerInterface $container
+    ) {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function canServe(): bool
     {
-        return php_sapi_name() != 'cli';
+        return \php_sapi_name() !== 'cli';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function serve(EmitterInterface $emitter = null): void
     {
         // On demand to save some memory.
@@ -72,18 +49,11 @@ final class SapiDispatcher implements DispatcherInterface
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function initRequest(): ServerRequestInterface
     {
         return $this->container->get(SapiRequestFactory::class)->fromGlobals();
     }
 
-    /**
-     * @param EmitterInterface $emitter
-     * @param \Throwable       $e
-     */
     protected function handleException(EmitterInterface $emitter, \Throwable $e): void
     {
         $handler = new HtmlHandler();
@@ -97,7 +67,7 @@ final class SapiDispatcher implements DispatcherInterface
             if ($state !== null) {
                 $handler = $handler->withState($state);
             }
-        } catch (\Throwable | ContainerExceptionInterface $se) {
+        } catch (\Throwable) {
             // nothing to report
         }
 

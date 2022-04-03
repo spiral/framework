@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Encrypter;
@@ -23,16 +16,12 @@ use Spiral\Encrypter\Exception\EncrypterException;
  */
 final class EncrypterFactory implements InjectorInterface, EncryptionInterface, SingletonInterface
 {
-    /** @var EncrypterConfig */
-    protected $config;
-
-    public function __construct(EncrypterConfig $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly EncrypterConfig $config
+    ) {
     }
 
     /**
-     * @inheritdoc
      * @codeCoverageIgnore
      */
     public function generateKey(): string
@@ -44,9 +33,6 @@ final class EncrypterFactory implements InjectorInterface, EncryptionInterface, 
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getKey(): string
     {
         try {
@@ -63,10 +49,7 @@ final class EncrypterFactory implements InjectorInterface, EncryptionInterface, 
         return new Encrypter($this->getKey());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createInjection(\ReflectionClass $class, string $context = null)
+    public function createInjection(\ReflectionClass $class, string $context = null): EncrypterInterface
     {
         return $this->getEncrypter();
     }
