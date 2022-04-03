@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views;
@@ -19,12 +12,9 @@ use Spiral\Views\Context\ValueDependency;
  */
 final class ContextGenerator
 {
-    /** @var ContextInterface */
-    private $context;
-
-    public function __construct(ContextInterface $context)
-    {
-        $this->context = $context;
+    public function __construct(
+        private readonly ContextInterface $context
+    ) {
     }
 
     /**

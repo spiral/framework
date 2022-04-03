@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views;
@@ -16,23 +9,13 @@ namespace Spiral\Views;
  */
 final class ViewSource
 {
-    /** @var string */
-    private $filename;
+    private ?string $code = null;
 
-    /** @var string */
-    private $name;
-
-    /** @var string */
-    private $namespace;
-
-    /** @var string|null */
-    private $code;
-
-    public function __construct(string $filename, string $namespace, string $name)
-    {
-        $this->filename = $filename;
-        $this->namespace = $namespace;
-        $this->name = $name;
+    public function __construct(
+        private readonly string $filename,
+        private readonly string $namespace,
+        private readonly string $name
+    ) {
     }
 
     /**
@@ -64,7 +47,7 @@ final class ViewSource
      */
     public function getCode(): string
     {
-        return $this->code ?? file_get_contents($this->getFilename());
+        return $this->code ?? \file_get_contents($this->getFilename());
     }
 
     /**

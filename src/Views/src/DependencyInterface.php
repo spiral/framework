@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views;
@@ -20,10 +13,8 @@ interface DependencyInterface
 
     /**
      * Get current dependency value.
-     *
-     * @return mixed
      */
-    public function getValue();
+    public function getValue(): mixed;
 
     /**
      * Return list of all possible dependency values.

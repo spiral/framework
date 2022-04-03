@@ -1,30 +1,19 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views\Exception;
 
 class CompileException extends EngineException
 {
-    /** @var array */
-    private $userTrace = [];
+    private array $userTrace = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(\Throwable $previous = null)
     {
-        parent::__construct($previous->getMessage(), $previous->getCode(), $previous);
+        parent::__construct($previous?->getMessage(), $previous?->getCode() ?? 0, $previous);
 
-        $this->file = $previous->getFile();
-        $this->line = $previous->getLine();
+        $this->file = $previous?->getFile();
+        $this->line = $previous?->getLine();
     }
 
     /**

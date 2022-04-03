@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views\Engine;
@@ -22,15 +15,9 @@ abstract class AbstractEngine implements EngineInterface
 {
     protected const EXTENSION = '';
 
-    /** @var string */
-    protected $extension;
+    protected ?string $extension = null;
+    protected ?LoaderInterface $loader = null;
 
-    /** @var LoaderInterface */
-    protected $loader;
-
-    /**
-     * {@inheritdoc}
-     */
     public function withLoader(LoaderInterface $loader): EngineInterface
     {
         $engine = clone $this;
@@ -39,9 +26,6 @@ abstract class AbstractEngine implements EngineInterface
         return $engine;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLoader(): LoaderInterface
     {
         if (empty($this->loader)) {

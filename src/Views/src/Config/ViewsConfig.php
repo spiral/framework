@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views\Config;
@@ -14,7 +7,6 @@ namespace Spiral\Views\Config;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\InjectableConfig;
 use Spiral\Views\Engine\Native\NativeEngine;
-use Spiral\Views\Exception\ConfigException;
 
 final class ViewsConfig extends InjectableConfig
 {
@@ -40,7 +32,7 @@ final class ViewsConfig extends InjectableConfig
 
     public function getCacheDirectory(): string
     {
-        return rtrim($this->config['cache']['directory'], '/') . '/';
+        return \rtrim($this->config['cache']['directory'], '/') . '/';
     }
 
     /**
@@ -55,8 +47,6 @@ final class ViewsConfig extends InjectableConfig
      * Class names of all view dependencies.
      *
      * @return array<int, Autowire>
-     *
-     * @throws ConfigException
      */
     public function getDependencies(): array
     {
@@ -72,8 +62,6 @@ final class ViewsConfig extends InjectableConfig
      * Get all the engines associated with view component.
      *
      * @return array<int, Autowire>
-     *
-     * @throws ConfigException
      */
     public function getEngines(): array
     {
@@ -87,19 +75,13 @@ final class ViewsConfig extends InjectableConfig
 
     /**
      * @param Autowire|class-string $item
-     *
-     * @throws ConfigException
      */
-    private function wire($item): Autowire
+    private function wire(Autowire|string $item): Autowire
     {
         if ($item instanceof Autowire) {
             return $item;
         }
 
-        if (is_string($item)) {
-            return new Autowire($item);
-        }
-
-        throw new ConfigException('Invalid class reference in view config.');
+        return new Autowire($item);
     }
 }
