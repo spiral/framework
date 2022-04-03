@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Distribution\Resolver;
@@ -22,25 +15,11 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 abstract class ExpirationAwareResolver extends UriResolver implements ExpirationAwareResolverInterface
 {
-    /**
-     * @var string
-     */
     protected const DEFAULT_EXPIRATION_INTERVAL = 'PT60M';
 
-    /**
-     * @var \DateInterval
-     */
-    protected $expiration;
-
-    /**
-     * @var DateTimeIntervalFactoryInterface
-     */
-    protected $intervals;
-
-    /**
-     * @var DateTimeFactoryInterface
-     */
-    protected $dates;
+    protected \DateInterval $expiration;
+    protected DateTimeIntervalFactoryInterface $intervals;
+    protected DateTimeFactoryInterface $dates;
 
     /**
      * ExpirationAwareResolver constructor.
@@ -58,10 +37,9 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
     }
 
     /**
-     * @param DateIntervalFormat $duration
      * @return $this
      */
-    public function withExpirationDate($duration): ExpirationAwareResolverInterface
+    public function withExpirationDate(mixed $duration): ExpirationAwareResolverInterface
     {
         $self = clone $this;
         $self->expiration = $self->intervals->create($duration);
@@ -85,20 +63,14 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
         return $self;
     }
 
-    /**
-     * @param DateIntervalFormat|null $expiration
-     */
-    protected function getExpirationDateTime($expiration): \DateTimeInterface
+    protected function getExpirationDateTime(mixed $expiration): \DateTimeInterface
     {
         $expiration = $this->resolveExpirationInterval($expiration);
 
         return $this->intervals->toDateTime($expiration);
     }
 
-    /**
-     * @param DateIntervalFormat|null $expiration
-     */
-    private function resolveExpirationInterval($expiration): \DateInterval
+    private function resolveExpirationInterval(mixed $expiration): \DateInterval
     {
         if ($expiration === null) {
             return $this->expiration;

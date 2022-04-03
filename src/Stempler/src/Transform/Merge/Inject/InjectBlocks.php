@@ -1,19 +1,11 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Merge\Inject;
 
 use Spiral\Stempler\Node\Block;
 use Spiral\Stempler\Transform\BlockClaims;
-use Spiral\Stempler\Transform\BlockFetcher;
 use Spiral\Stempler\Transform\QuotedValue;
 use Spiral\Stempler\Traverser;
 use Spiral\Stempler\VisitorContext;
@@ -24,26 +16,17 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class InjectBlocks implements VisitorInterface
 {
-    /** @var BlockClaims */
-    private $blocks;
-
-    public function __construct(BlockClaims $blocks)
-    {
-        $this->blocks = $blocks;
+    public function __construct(
+        private readonly BlockClaims $blocks
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx): void
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
-        // nothing to do
+        return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx)
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
         if (!$node instanceof Block || $node->name === null || !$this->blocks->has($node->name)) {
             return null;
@@ -53,7 +36,7 @@ final class InjectBlocks implements VisitorInterface
 
         if ($inject instanceof QuotedValue) {
             // exclude quotes
-            $inject = $inject->trimvalue();
+            $inject = $inject->trimValue();
         }
 
         // mount block:parent content
@@ -67,5 +50,7 @@ final class InjectBlocks implements VisitorInterface
         }
 
         $node->nodes = $inject;
+
+        return null;
     }
 }

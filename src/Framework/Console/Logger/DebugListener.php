@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console\Logger;
@@ -30,24 +23,15 @@ final class DebugListener
         LogLevel::EMERGENCY => 'fg=red',
     ];
 
-    /** @var ListenerRegistryInterface */
-    private $listenerRegistry;
+    private ?OutputInterface $output = null;
 
-    /** @var OutputInterface|null */
-    private $output;
-
-    /**
-     * @param ListenerRegistryInterface $listenerRegistry
-     */
-    public function __construct(ListenerRegistryInterface $listenerRegistry)
-    {
-        $this->listenerRegistry = $listenerRegistry;
+    public function __construct(
+        private readonly ListenerRegistryInterface $listenerRegistry
+    ) {
     }
 
     /**
      * Handle and display log event.
-     *
-     * @param LogEvent $event
      */
     public function __invoke(LogEvent $event): void
     {
@@ -63,7 +47,7 @@ final class DebugListener
          * We are going to format message our own style.
          */
         $this->output->writeln(
-            sprintf(
+            \sprintf(
                 '<%1$s>%2$s</%1$s> %3$s',
                 $this->getStyle($event->getLevel()),
                 $this->getChannel($event->getChannel()),
@@ -74,9 +58,6 @@ final class DebugListener
 
     /**
      * Configure listener with new output.
-     *
-     * @param OutputInterface $output
-     * @return DebugListener
      */
     public function withOutput(OutputInterface $output): self
     {
@@ -88,8 +69,6 @@ final class DebugListener
 
     /**
      * Enable logging in console mode.
-     *
-     * @return DebugListener
      */
     public function enable(): self
     {
@@ -102,8 +81,6 @@ final class DebugListener
 
     /**
      * Disable displaying logs in console.
-     *
-     * @return DebugListener
      */
     public function disable(): self
     {
@@ -114,40 +91,26 @@ final class DebugListener
         return $this;
     }
 
-    /**
-     * @param string $level
-     *
-     * @return string
-     */
     protected function getStyle(string $level): string
     {
         return self::STYLES[$level];
     }
 
-    /**
-     * @param string $channel
-     * @return string
-     */
     private function getChannel(string $channel): string
     {
-        if (!class_exists($channel, false)) {
-            return "[{$channel}]";
+        if (!\class_exists($channel, false)) {
+            return \sprintf('[%s]', $channel);
         }
 
         try {
             $reflection = new \ReflectionClass($channel);
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             return $channel;
         }
 
-        return "[{$reflection->getShortName()}]";
+        return \sprintf('[%s]', $reflection->getShortName());
     }
 
-    /**
-     * @param bool   $decorated
-     * @param string $message
-     * @return string
-     */
     private function getMessage(bool $decorated, string $message): string
     {
         if (!$decorated) {

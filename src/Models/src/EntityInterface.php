@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Models;
@@ -20,39 +13,32 @@ interface EntityInterface extends \ArrayAccess
 {
     /**
      * Check if field known to entity, field value can be null!
-     *
-     *
      */
     public function hasField(string $name): bool;
 
     /**
      * Set entity field value.
      *
-     * @param mixed  $value
      * @throws EntityExceptionInterface
      */
-    public function setField(string $name, $value);
+    public function setField(string $name, mixed $value): self;
 
     /**
      * Get value of entity field.
      *
-     * @param mixed  $default
-     *
-     * @return mixed
      * @throws EntityExceptionInterface
      */
-    public function getField(string $name, $default = null);
+    public function getField(string $name, mixed $default = null): mixed;
 
     /**
      * Update entity fields using mass assignment. Only allowed fields must be set.
      *
      * @throws EntityExceptionInterface
      */
-    public function setFields(iterable $fields = []);
+    public function setFields(iterable $fields = []): self;
 
     /**
      * Get entity field values.
-     *
      *
      * @throws EntityExceptionInterface
      */

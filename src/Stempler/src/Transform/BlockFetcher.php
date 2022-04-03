@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform;
@@ -31,7 +24,7 @@ final class BlockFetcher
         foreach ($caller->attrs as $attr) {
             if (!$attr instanceof Attr || $attr->name instanceof NodeInterface) {
                 // ignore name when attribute is dynamic
-                $blocks[sprintf('attr-%s', count($blocks))] = $attr;
+                $blocks[\sprintf('attr-%s', \count($blocks))] = $attr;
                 continue;
             }
 

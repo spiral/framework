@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @author Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value\Accessor;
@@ -17,41 +11,22 @@ use Spiral\DataGrid\Specification\ValueInterface;
  */
 abstract class Accessor implements ValueInterface
 {
-    /** @var ValueInterface */
-    protected $next;
-
-    /**
-     * @inheritDoc
-     */
-    public function __construct(ValueInterface $next)
-    {
-        $this->next = $next;
+    public function __construct(
+        protected ValueInterface $next
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    final public function accepts($value): bool
+    final public function accepts(mixed $value): bool
     {
         return $this->acceptsCurrent($value) || $this->next->accepts($value);
     }
 
-    /**
-     * @inheritDoc
-     */
-    final public function convert($value)
+    final public function convert(mixed $value): mixed
     {
         return $this->next->convert($this->convertCurrent($value));
     }
 
-    /**
-     * @param mixed $value
-     */
-    abstract protected function acceptsCurrent($value): bool;
+    abstract protected function acceptsCurrent(mixed $value): bool;
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    abstract protected function convertCurrent($value);
+    abstract protected function convertCurrent(mixed $value): mixed;
 }

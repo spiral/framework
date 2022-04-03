@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Compiler;
@@ -19,14 +12,10 @@ use Spiral\Stempler\Loader\Source;
  */
 final class SourceMap
 {
-    /** @var array */
-    private $paths = [];
-
-    /** @var array */
-    private $lines = [];
-
-    /** @var Source[] */
-    private $sourceCache;
+    /** @var Source[]|null */
+    private ?array $sourceCache = null;
+    private array $paths = [];
+    private array $lines = [];
 
     public function __serialize(): array
     {
@@ -50,7 +39,7 @@ final class SourceMap
         $paths = [];
 
         foreach ($this->lines as $line) {
-            if (!in_array($this->paths[$line[0]], $paths, true)) {
+            if (!\in_array($this->paths[$line[0]], $paths, true)) {
                 $paths[] = $this->paths[$line[0]];
             }
         }
@@ -83,20 +72,15 @@ final class SourceMap
 
     /**
      * Compress.
-     *
-     * @return false|string
      */
-    public function serialize()
+    public function serialize(): string|false
     {
-        return json_encode($this->__serialize());
+        return \json_encode($this->__serialize());
     }
 
-    /**
-     * @param string $serialized
-     */
-    public function unserialize($serialized): void
+    public function unserialize(string $serialized): void
     {
-        $this->__unserialize(json_decode($serialized, true));
+        $this->__unserialize(\json_decode($serialized, true));
     }
 
     public static function calculate(string $content, array $locations, LoaderInterface $loader): SourceMap
@@ -134,12 +118,12 @@ final class SourceMap
         }
         $path = $this->sourceCache[$location->path]->getFilename();
 
-        if (!in_array($path, $this->paths, true)) {
+        if (!\in_array($path, $this->paths, true)) {
             $this->paths[] = $path;
         }
 
         return [
-            array_search($path, $this->paths),
+            \array_search($path, $this->paths),
             Source::resolveLine($this->sourceCache[$location->path]->getContent(), $location->offset),
             $location->parent === null ? null : $this->calculateLine($location->parent, $loader),
         ];

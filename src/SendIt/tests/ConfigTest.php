@@ -63,7 +63,6 @@ class ConfigTest extends TestCase
     public function testQueueWithNull(): void
     {
         $config = new MailerConfig([
-            'pipeline' => null,
             'queue' => null,
         ]);
 

@@ -25,7 +25,8 @@
     },
     "require-dev": {
         "spiral/console": "^2.12",
-        "phpunit/phpunit": "^9.5.5"
+        "phpunit/phpunit": "^9.5.5",
+        "mockery/mockery": "^1.5"
     },
     "autoload-dev": {
         "psr-4": {

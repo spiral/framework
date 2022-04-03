@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform;
@@ -27,15 +20,9 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class Merger
 {
-    /** @var DeepCopy */
-    private $deepCopy;
+    private readonly DeepCopy $deepCopy;
+    private readonly BlockFetcher $fetcher;
 
-    /** @var BlockFetcher */
-    private $fetcher;
-
-    /**
-     * Merger constructor.
-     */
     public function __construct()
     {
         $this->deepCopy = new DeepCopy();
@@ -77,9 +64,9 @@ final class Merger
     }
 
     /**
-     * @return array|NodeInterface[]
+     * @return NodeInterface[]
      */
-    protected function traverse(array $nodes, VisitorInterface ...$visitors)
+    protected function traverse(array $nodes, VisitorInterface ...$visitors): array
     {
         $traverser = new Traverser();
         foreach ($visitors as $visitor) {

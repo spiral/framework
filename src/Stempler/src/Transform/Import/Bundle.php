@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Import;
@@ -24,28 +17,16 @@ final class Bundle implements ImportInterface
 {
     use ContextTrait;
 
-    /** @var string */
-    private $path;
+    private ?Template $template = null;
 
-    /** @var Template */
-    private $template;
-
-    /** @var string|null */
-    private $prefix;
-
-    /**
-     * @param Context|null $context
-     */
-    public function __construct(string $path, string $prefix = null, Context $context = null)
-    {
-        $this->path = $path;
-        $this->prefix = $prefix;
+    public function __construct(
+        private readonly string $path,
+        private readonly ?string $prefix = null,
+        Context $context = null
+    ) {
         $this->context = $context;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function resolve(Builder $builder, string $name): ?Template
     {
         if ($this->template === null) {
@@ -54,7 +35,7 @@ final class Bundle implements ImportInterface
 
         $path = $name;
         if ($this->prefix !== null) {
-            $path = substr($path, strlen($this->prefix) + 1);
+            $path = \substr($path, \strlen($this->prefix) + 1);
         }
 
         /** @var ImportInterface $import */

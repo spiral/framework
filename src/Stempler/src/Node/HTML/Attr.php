@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Node\HTML;
@@ -23,21 +16,11 @@ final class Attr implements NodeInterface
 {
     use ContextTrait;
 
-    /** @var Mixin|string */
-    public $name;
-
-    /** @var Mixin|Nil|string */
-    public $value;
-
-    /**
-     * @param Mixin|string     $name
-     * @param Mixin|Nil|string $value
-     * @param Context          $context
-     */
-    public function __construct($name, $value, Context $context = null)
-    {
-        $this->name = $name;
-        $this->value = $value;
+    public function __construct(
+        public Mixin|string $name,
+        public mixed $value,
+        Context $context = null
+    ) {
         $this->context = $context;
     }
 

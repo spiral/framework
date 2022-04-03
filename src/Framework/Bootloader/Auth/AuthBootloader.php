@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Auth;
@@ -30,34 +23,25 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
         ActorProviderInterface::class => self::class,
     ];
 
-    /** @var FactoryInterface */
-    private $factory;
+    /** @var array<int, ActorProviderInterface|Autowire|string> */
+    private array $actorProvider = [];
 
-    /** @var ActorProviderInterface[]|string[] */
-    private $actorProvider = [];
-
-    /**
-     * @param FactoryInterface $factory
-     */
-    public function __construct(FactoryInterface $factory)
-    {
-        $this->factory = $factory;
+    public function __construct(
+        private readonly FactoryInterface $factory
+    ) {
     }
 
     /**
      * Find actor by first matching actor provider.
-     *
-     * @param TokenInterface $token
-     * @return object|null
      */
     public function getActor(TokenInterface $token): ?object
     {
         foreach ($this->getProviders() as $provider) {
             if (!$provider instanceof ActorProviderInterface) {
                 throw new AuthException(
-                    sprintf(
+                    \sprintf(
                         'Expected `ActorProviderInterface`, got `%s`',
-                        get_class($provider)
+                        $provider::class
                     )
                 );
             }
@@ -77,16 +61,14 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
 
     /**
      * Register new actor provider.
-     *
-     * @param ActorProviderInterface|Autowire|string $actorProvider
      */
-    public function addActorProvider($actorProvider): void
+    public function addActorProvider(ActorProviderInterface|Autowire|string $actorProvider): void
     {
         $this->actorProvider[] = $actorProvider;
     }
 
     /**
-     * @return \Generator|ActorProviderInterface[]
+     * @return \Generator<int, ActorProviderInterface>
      */
     private function getProviders(): \Generator
     {
@@ -96,7 +78,7 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
                 continue;
             }
 
-            if (is_object($provider)) {
+            if (\is_object($provider)) {
                 yield $provider;
                 continue;
             }

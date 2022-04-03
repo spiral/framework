@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Visitor;
@@ -22,32 +15,23 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class DefineStacks implements VisitorInterface
 {
-    /** @var string */
-    private $stackKeyword = 'stack:collect';
+    private string $stackKeyword = 'stack:collect';
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx)
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
-        if ($node instanceof Tag && strpos($node->name, $this->stackKeyword) === 0) {
+        if ($node instanceof Tag && \str_starts_with($node->name, $this->stackKeyword)) {
             return $this->registerAggregate(StackContext::on($ctx), $node);
         }
 
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx): void
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
-    /**
-     * @return Aggregate|Tag
-     */
-    private function registerAggregate(StackContext $ctx, Tag $node)
+    private function registerAggregate(StackContext $ctx, Tag $node): Aggregate|Tag
     {
         $name = $this->stackName($node);
         if ($name === null) {
@@ -55,7 +39,7 @@ final class DefineStacks implements VisitorInterface
         }
 
         $stack = new Aggregate($node->getContext());
-        $stack->pattern = sprintf('include:%s', $name);
+        $stack->pattern = \sprintf('include:%s', $name);
         $stack->nodes = $node->nodes;
 
         $ctx->register($stack, $this->stackLevel($node));
@@ -67,8 +51,8 @@ final class DefineStacks implements VisitorInterface
     {
         $options = [];
         foreach ($tag->attrs as $attr) {
-            if (is_string($attr->value)) {
-                $options[$attr->name] = trim($attr->value, '\'"');
+            if (\is_string($attr->value)) {
+                $options[$attr->name] = \trim($attr->value, '\'"');
             }
         }
 
@@ -79,11 +63,11 @@ final class DefineStacks implements VisitorInterface
     {
         $options = [];
         foreach ($tag->attrs as $attr) {
-            if (is_string($attr->value)) {
-                $options[$attr->name] = trim($attr->value, '\'"');
+            if (\is_string($attr->value)) {
+                $options[$attr->name] = \trim($attr->value, '\'"');
             }
         }
 
-        return abs((int)($options['level'] ?? 0));
+        return \abs((int)($options['level'] ?? 0));
     }
 }

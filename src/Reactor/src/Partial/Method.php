@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Partial;
@@ -28,23 +21,12 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
     use CommentTrait;
     use AccessTrait;
 
-    /** @var bool */
-    private $static = false;
+    private bool $static = false;
+    private ?string $return = null;
+    private Parameters $parameters;
+    private ?Source $source = null;
 
-    /** @var string */
-    private $return;
-
-    /** @var Parameters */
-    private $parameters;
-
-    /** @var Source */
-    private $source;
-
-    /**
-     * @param string|array $source
-     * @param string|array $comment
-     */
-    public function __construct(string $name, $source = '', $comment = '')
+    public function __construct(string $name, string|array $source = '', string|array $comment = '')
     {
         $this->setName($name);
         $this->parameters = new Parameters([]);
@@ -71,9 +53,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
         return $this->static;
     }
 
-    /**
-     * Rename to getSource()?
-     */
     public function getSource(): Source
     {
         return $this->source;
@@ -81,15 +60,13 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
 
     /**
      * Set method source.
-     *
-     * @param string|array $source
      */
-    public function setSource($source): Method
+    public function setSource(array|string $source): Method
     {
         if (!empty($source)) {
-            if (is_array($source)) {
+            if (\is_array($source)) {
                 $this->source->setLines($source);
-            } elseif (is_string($source)) {
+            } elseif (\is_string($source)) {
                 $this->source->setString($source);
             }
         }
@@ -97,9 +74,6 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
         return $this;
     }
 
-    /**
-     * @return Parameters|Parameter[]
-     */
     public function getParameters(): Parameters
     {
         return $this->parameters;
@@ -110,10 +84,7 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
         return $this->parameters->get($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function replace($search, $replace): Method
+    public function replace(string|array $search, string|array $replace): Method
     {
         $this->docComment->replace($search, $replace);
 
@@ -158,24 +129,20 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
 
         $chunks[] = "function {$this->getName()}";
 
-        return implode(' ', $chunks);
+        return \implode(' ', $chunks);
     }
 
     /**
      * Init source value.
-     *
-     * @param string|array $source
      */
-    private function initSource($source): void
+    private function initSource(array|string $source): void
     {
-        if (empty($this->source)) {
-            $this->source = new Source();
-        }
+        $this->source ??= new Source();
 
         if (!empty($source)) {
-            if (is_array($source)) {
+            if (\is_array($source)) {
                 $this->source->setLines($source);
-            } elseif (is_string($source)) {
+            } elseif (\is_string($source)) {
                 $this->source->setString($source);
             }
         }

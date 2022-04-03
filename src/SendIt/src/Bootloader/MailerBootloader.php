@@ -1,17 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\SendIt\Bootloader;
 
-use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
@@ -41,21 +33,17 @@ final class MailerBootloader extends Bootloader
         SymfonyMailer::class => [self::class, 'mailer'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
-    public function boot(EnvironmentInterface $env, AbstractKernel $kernel): void
+    public function boot(EnvironmentInterface $env): void
     {
         $queue = $env->get('MAILER_QUEUE', 'local');
 
         $this->config->setDefaults(MailerConfig::CONFIG, [
             'dsn' => $env->get('MAILER_DSN', ''),
-            'pipeline' => $queue,
             'queue' => $queue,
             'from' => $env->get('MAILER_FROM', 'Spiral <sendit@local.host>'),
             'queueConnection' => $env->get('MAILER_QUEUE_CONNECTION'),
@@ -66,12 +54,10 @@ final class MailerBootloader extends Bootloader
     {
         $container->bindSingleton(
             MailerInterface::class,
-            static function (MailerConfig $config, QueueConnectionProviderInterface $provider) {
-                return new MailQueue(
-                    $config,
-                    $provider->getConnection($config->getQueueConnection())
-                );
-            }
+            static fn (MailerConfig $config, QueueConnectionProviderInterface $provider): MailQueue => new MailQueue(
+                $config,
+                $provider->getConnection($config->getQueueConnection())
+            )
         );
 
         if ($container->has(HandlerRegistryInterface::class)) {

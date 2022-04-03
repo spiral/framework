@@ -10,14 +10,13 @@ use Spiral\DataGrid\SpecificationInterface;
 
 class SortedFilter implements SequenceInterface, FilterInterface
 {
-    private $value;
-
     /** @var SpecificationInterface[] */
-    private $specifications;
+    private array $specifications;
 
-    public function __construct(string $value, SpecificationInterface ...$specifications)
-    {
-        $this->value = $value;
+    public function __construct(
+        private string $value,
+        SpecificationInterface ...$specifications
+    ) {
         $this->specifications = $specifications;
     }
 
@@ -34,7 +33,7 @@ class SortedFilter implements SequenceInterface, FilterInterface
         return $this->value;
     }
 
-    public function withValue($value): ?SpecificationInterface
+    public function withValue(mixed $value): ?SpecificationInterface
     {
         return $this;
     }

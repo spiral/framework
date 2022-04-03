@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Visitor;
@@ -25,13 +18,9 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class DefineBlocks implements VisitorInterface
 {
-    /** @var array */
-    private $prefix = ['block:', 'define:', 'yield:', 'section:'];
+    private array $prefix = ['block:', 'define:', 'yield:', 'section:'];
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx)
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
         if ($node instanceof Tag) {
             return $this->makeBlock($node);
@@ -49,11 +38,9 @@ final class DefineBlocks implements VisitorInterface
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx): void
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
     /**
@@ -63,8 +50,8 @@ final class DefineBlocks implements VisitorInterface
     {
         $name = null;
         foreach ($this->prefix as $prefix) {
-            if (strpos($node->name, $prefix) === 0) {
-                $name = substr($node->name, strlen($prefix));
+            if (\str_starts_with($node->name, $prefix)) {
+                $name = \substr($node->name, \strlen((string) $prefix));
                 break;
             }
         }
