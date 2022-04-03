@@ -44,8 +44,6 @@ class BetweenTest extends TestCase
             [new IntValue(), null],
             [[1, 2], null],
             [[3, 2], null],
-            ['string', ValueException::class],
-            [new stdClass(), ValueException::class],
             [[], ValueException::class],
             [[1], ValueException::class],
             [[2, 2], ValueException::class],

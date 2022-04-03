@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Merge\Inject;
@@ -14,11 +7,9 @@ namespace Spiral\Stempler\Transform\Merge\Inject;
 use Spiral\Stempler\Node\Block;
 use Spiral\Stempler\Node\Dynamic\Output;
 use Spiral\Stempler\Node\Mixin;
-use Spiral\Stempler\Node\NodeInterface;
 use Spiral\Stempler\Node\PHP;
 use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Transform\BlockClaims;
-use Spiral\Stempler\Transform\BlockFetcher;
 use Spiral\Stempler\Transform\QuotedValue;
 use Spiral\Stempler\VisitorContext;
 use Spiral\Stempler\VisitorInterface;
@@ -33,24 +24,18 @@ final class InjectPHP implements VisitorInterface
 
     private const PHP_MARCO_EXISTS_FUNCTION = 'injected';
 
-    /** @var BlockClaims */
-    private $blocks;
-
-    public function __construct(BlockClaims $blocks)
-    {
-        $this->blocks = $blocks;
+    public function __construct(
+        private readonly BlockClaims $blocks
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx)
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
         if (
             !$node instanceof PHP
             || (
-                strpos($node->content, self::PHP_MACRO_FUNCTION) === false
-                && strpos($node->content, self::PHP_MARCO_EXISTS_FUNCTION) === false
+                !\str_contains($node->content, self::PHP_MACRO_FUNCTION)
+                && !\str_contains($node->content, self::PHP_MARCO_EXISTS_FUNCTION)
             )
         ) {
             return null;
@@ -71,7 +56,7 @@ final class InjectPHP implements VisitorInterface
         }
 
         $node->content = $php->compile();
-        $node->tokens = token_get_all($node->content);
+        $node->tokens = \token_get_all($node->content);
 
         $exists = new PHPMixin($node->tokens, self::PHP_MARCO_EXISTS_FUNCTION);
         foreach ($this->blocks->getNames() as $name) {
@@ -88,23 +73,20 @@ final class InjectPHP implements VisitorInterface
         }
 
         $node->content = $exists->compile();
-        $node->tokens = token_get_all($node->content);
+        $node->tokens = \token_get_all($node->content);
+
+        return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx): void
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
-    /**
-     * @param array|NodeInterface $node
-     */
-    private function isReference($node): bool
+    private function isReference(mixed $node): bool
     {
         switch (true) {
-            case is_array($node):
+            case \is_array($node):
                 foreach ($node as $child) {
                     if ($this->isReference($child)) {
                         return true;
@@ -132,19 +114,16 @@ final class InjectPHP implements VisitorInterface
         return false;
     }
 
-    /**
-     * @param array|NodeInterface $node
-     */
-    private function trimPHP($node): string
+    private function trimPHP(mixed $node): string
     {
         switch (true) {
-            case is_array($node):
+            case \is_array($node):
                 $result = [];
                 foreach ($node as $child) {
                     $result[] = $this->trimPHP($child);
                 }
 
-                return implode('.', $result);
+                return \implode('.', $result);
 
             case $node instanceof Mixin:
                 $result = [];
@@ -152,20 +131,17 @@ final class InjectPHP implements VisitorInterface
                     $result[] = $this->trimPHP($child);
                 }
 
-                return implode('.', $result);
+                return \implode('.', $result);
 
             case $node instanceof Raw:
                 return $this->exportValue($node);
 
             case $node instanceof Output:
-                return trim($node->body);
+                return \trim($node->body);
 
             case $node instanceof PHP:
-                if ($node->getContext()->getValue(PHP::ORIGINAL_BODY) !== null) {
-                    return $node->getContext()->getValue(PHP::ORIGINAL_BODY);
-                }
-
-                return (new PHPMixin($node->tokens, self::PHP_MACRO_FUNCTION))->trimBody();
+                return $node->getContext()?->getValue(PHP::ORIGINAL_BODY)
+                    ?? (new PHPMixin($node->tokens, self::PHP_MACRO_FUNCTION))->trimBody();
 
             case $node instanceof QuotedValue:
                 return $this->trimPHP($node->trimValue());
@@ -177,15 +153,11 @@ final class InjectPHP implements VisitorInterface
     private function exportValue(Raw $node): string
     {
         $value = $node->content;
-        switch (true) {
-            case strtolower($value) === 'true':
-                return 'true';
-            case strtolower($value) === 'false':
-                return 'false';
-            case is_float($value) || is_numeric($value):
-                return (string) $value;
-        }
-
-        return var_export($node->content, true);
+        return match (true) {
+            \strtolower($value) === 'true' => 'true',
+            \strtolower($value) === 'false' => 'false',
+            \is_float($value) || \is_numeric($value) => (string) $value,
+            default => \var_export($node->content, true),
+        };
     }
 }

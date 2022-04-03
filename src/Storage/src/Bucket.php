@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage;
@@ -24,43 +17,18 @@ class Bucket implements BucketInterface
     use ReadableTrait;
     use WritableTrait;
 
-    /**
-     * @var FilesystemOperator
-     */
-    protected $fs;
-
-    /**
-     * @var UriResolverInterface|null
-     */
-    protected $resolver;
-
-    /**
-     * @var string|null
-     */
-    protected $name;
-
-    /**
-     * @param string|null $name
-     * @param UriResolverInterface|null $resolver
-     */
-    public function __construct(FilesystemOperator $fs, string $name = null, UriResolverInterface $resolver = null)
-    {
-        $this->fs = $fs;
-        $this->resolver = $resolver;
-        $this->name = $name;
+    public function __construct(
+        protected FilesystemOperator $fs,
+        protected ?string $name = null,
+        protected ?UriResolverInterface $resolver = null
+    ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function withName(?string $name): BucketInterface
     {
         $self = clone $this;
@@ -69,17 +37,11 @@ class Bucket implements BucketInterface
         return $self;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getUriResolver(): ?UriResolverInterface
     {
         return $this->resolver;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function withUriResolver(?UriResolverInterface $resolver): UriResolvableInterface
     {
         $self = clone $this;
@@ -88,18 +50,11 @@ class Bucket implements BucketInterface
         return $self;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function file(string $pathname): FileInterface
     {
         return new File($this, $pathname, $this->resolver);
     }
 
-    /**
-     * @param string|null $name
-     * @param UriResolverInterface|null $resolver
-     */
     public static function fromAdapter(
         FilesystemAdapter $adapter,
         string $name = null,

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser;
@@ -18,8 +11,6 @@ use Spiral\Stempler\Parser;
 interface SyntaxInterface
 {
     /**
-     *
-     *
      * @throws SyntaxException
      */
     public function handle(Parser $parser, Assembler $asm, Token $token): void;

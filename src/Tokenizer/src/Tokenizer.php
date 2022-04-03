@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
@@ -29,15 +22,9 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     public const CODE = 1;
     public const LINE = 2;
 
-    /** @var TokenizerConfig */
-    protected $config;
-
-    /**
-     * Tokenizer constructor.
-     */
-    public function __construct(TokenizerConfig $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly TokenizerConfig $config
+    ) {
     }
 
     /**
@@ -71,8 +58,6 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws InjectionException
      */
     public function createInjection(
@@ -81,11 +66,13 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     ): ClassesInterface|InvocationsInterface {
         if ($class->isSubclassOf(ClassesInterface::class)) {
             return $this->classLocator();
-        } elseif ($class->isSubclassOf(InvocationsInterface::class)) {
+        }
+
+        if ($class->isSubclassOf(InvocationsInterface::class)) {
             return $this->invocationLocator();
         }
 
-        throw new InjectionException("Unable to create injection for {$class}");
+        throw new InjectionException(\sprintf('Unable to create injection for %s', $class));
     }
 
     /**
@@ -93,7 +80,7 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
      */
     public static function getTokens(string $filename): array
     {
-        $tokens = token_get_all(file_get_contents($filename));
+        $tokens = \token_get_all(\file_get_contents($filename));
 
         $line = 0;
         foreach ($tokens as &$token) {
@@ -101,7 +88,7 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
                 $line = $token[self::LINE];
             }
 
-            if (!is_array($token)) {
+            if (!\is_array($token)) {
                 $token = [$token, $token, $line];
             }
 

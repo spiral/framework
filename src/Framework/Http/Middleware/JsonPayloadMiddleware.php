@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Middleware;
@@ -23,31 +16,21 @@ use Spiral\Http\Exception\ClientException;
  */
 final class JsonPayloadMiddleware implements MiddlewareInterface
 {
-    /** @var JsonPayloadConfig */
-    private $config;
-
     /**
      * JsonPayloadMiddleware constructor.
-     *
-     * @param JsonPayloadConfig $config
      */
-    public function __construct(JsonPayloadConfig $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly JsonPayloadConfig $config
+    ) {
     }
 
-    /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->isJsonPayload($request)) {
             $body = (string)$request->getBody();
             if ($body !== '') {
-                $request = $request->withParsedBody(json_decode($body, true));
-                if (json_last_error() !== 0) {
+                $request = $request->withParsedBody(\json_decode($body, true));
+                if (\json_last_error() !== 0) {
                     throw new ClientException(400, 'invalid json payload');
                 }
             }
@@ -56,16 +39,12 @@ final class JsonPayloadMiddleware implements MiddlewareInterface
         return $handler->handle($request);
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return bool
-     */
     private function isJsonPayload(ServerRequestInterface $request): bool
     {
         $contentType = $request->getHeaderLine('Content-Type');
 
         foreach ($this->config->getContentTypes() as $allowedType) {
-            if (stripos($contentType, $allowedType) === 0) {
+            if (\stripos($contentType, $allowedType) === 0) {
                 return true;
             }
         }

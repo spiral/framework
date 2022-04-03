@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
@@ -47,12 +40,14 @@ class ConfigCommand extends AbstractCommand
     /**
      * Create config declaration.
      */
-    public function perform(): void
+    public function perform(): int
     {
         /** @var ConfigDeclaration $declaration */
         $declaration = $this->createDeclaration(['configName' => $this->argument('name')]);
         $declaration->create((bool)$this->option('reverse'));
 
         $this->writeDeclaration($declaration);
+
+        return self::SUCCESS;
     }
 }

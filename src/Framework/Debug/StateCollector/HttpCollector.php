@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Debug\StateCollector;
@@ -20,23 +13,14 @@ use Spiral\Debug\StateInterface;
 
 final class HttpCollector implements MiddlewareInterface, StateCollectorInterface
 {
-    /** @var ServerRequestInterface */
-    private $request;
+    private ServerRequestInterface $request;
 
-    /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $this->request = $request;
         return $handler->handle($request);
     }
 
-    /**
-     * @param StateInterface $state
-     */
     public function populate(StateInterface $state): void
     {
         if ($this->request === null) {
@@ -62,6 +46,6 @@ final class HttpCollector implements MiddlewareInterface, StateCollectorInterfac
      */
     public function reset(): void
     {
-        $this->request = null;
+        unset($this->request);
     }
 }

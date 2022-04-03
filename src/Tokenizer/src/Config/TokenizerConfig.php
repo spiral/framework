@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Config;
@@ -29,7 +22,7 @@ final class TokenizerConfig extends InjectableConfig
 
     public function getDirectories(): array
     {
-        return $this->config['directories'] ?? [getcwd()];
+        return $this->config['directories'] ?? [\getcwd()];
     }
 
     public function getExcludes(): array

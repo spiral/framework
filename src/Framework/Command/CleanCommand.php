@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Command;
@@ -21,17 +14,13 @@ final class CleanCommand extends Command implements SingletonInterface
     protected const NAME        = 'cache:clean';
     protected const DESCRIPTION = 'Clean application runtime cache';
 
-    /**
-     * @param FilesInterface       $files
-     * @param DirectoriesInterface $directories
-     */
-    public function perform(FilesInterface $files, DirectoriesInterface $directories): void
+    public function perform(FilesInterface $files, DirectoriesInterface $directories): int
     {
         $cacheDirectory = $directories->get('cache');
         if (!$files->exists($cacheDirectory)) {
             $this->writeln('Cache directory is missing, no cache to be cleaned.');
 
-            return;
+            return self::FAILURE;
         }
 
         if ($this->isVerbose()) {
@@ -62,5 +51,7 @@ final class CleanCommand extends Command implements SingletonInterface
         }
 
         $this->writeln('<info>Runtime cache has been cleared.</info>');
+
+        return self::SUCCESS;
     }
 }

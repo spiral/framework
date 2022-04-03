@@ -1,19 +1,11 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype;
 
 use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Container;
-use Spiral\Core\Exception\Container\ContainerException;
 
 /**
  * Contains aliases and targets for all declared prototype dependencies.
@@ -21,17 +13,14 @@ use Spiral\Core\Exception\Container\ContainerException;
 final class PrototypeRegistry
 {
     /** @var Dependency[] */
-    private $dependencies = [];
-
-    /** @var \Spiral\Core\Container */
-    private $container;
+    private array $dependencies = [];
 
     /**
      * PrototypeRegistry constructor.
      */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly Container $container
+    ) {
     }
 
     /**
@@ -55,7 +44,7 @@ final class PrototypeRegistry
      *
      * @return Dependency|null|ContainerExceptionInterface
      */
-    public function resolveProperty(string $name)
+    public function resolveProperty(string $name): mixed
     {
         $dependency = $this->dependencies[$name] ?? null;
         if ($dependency === null) {

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @author Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value;
@@ -48,15 +42,12 @@ final class UuidValue implements ValueInterface
      */
     private const NIL_VALUE = '00000000-0000-0000-0000-000000000000';
 
-    /** @var string */
-    private $mask;
-
-    /** @var RegexValue */
-    private $regex;
+    private readonly string $mask;
+    private readonly RegexValue $regex;
 
     public function __construct(string $mask = self::VALID)
     {
-        $this->mask = strtolower($mask);
+        $this->mask = \strtolower($mask);
 
         if ($this->mask !== self::NIL && !isset(self::PATTERNS[$this->mask])) {
             throw new ValueException('Invalid UUID version mask given. Please choose one of the constants.');
@@ -65,25 +56,19 @@ final class UuidValue implements ValueInterface
         $this->regex = new RegexValue(self::PATTERNS[$this->mask !== self::NIL ? $this->mask : self::VALID]);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
-        return (is_numeric($value) || is_string($value)) && $this->isValid($this->convert($value));
+        return (\is_numeric($value) || \is_string($value)) && $this->isValid($this->convert($value));
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function convert($value): string
+    public function convert(mixed $value): string
     {
         return (string)$value;
     }
 
     private function isValid(string $value): bool
     {
-        $uuid = str_replace(['urn:', 'uuid:', '{', '}'], '', $value);
+        $uuid = \str_replace(['urn:', 'uuid:', '{', '}'], '', $value);
 
         if ($this->mask === self::NIL) {
             return $value === self::NIL_VALUE;

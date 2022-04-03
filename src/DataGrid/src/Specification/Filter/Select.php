@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Filter;
@@ -30,10 +22,7 @@ final class Select extends Group
         $this->filters = $filters;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function withValue($value): ?SpecificationInterface
+    public function withValue(mixed $value): ?SpecificationInterface
     {
         $select = $this->clone($value);
         $value = (array)$value;
@@ -51,8 +40,8 @@ final class Select extends Group
             return null;
         }
 
-        $filters = array_values($select->filters);
+        $filters = \array_values($select->filters);
 
-        return count($filters) === 1 ? $filters[0] : new All(...$filters);
+        return \count($filters) === 1 ? $filters[0] : new All(...$filters);
     }
 }

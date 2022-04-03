@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -23,32 +16,15 @@ use Spiral\Router\Target\Action;
  */
 final class RouteGroup
 {
-    /** @var ContainerInterface */
-    private $container;
-
-    /** @var string */
-    private $prefix = '';
-
-    /** @var Pipeline */
-    private $pipeline;
-
-    /** @var Router */
-    private $router;
-
-    /** @var array */
-    private $routes = [];
-
-    /** @var CoreInterface */
-    private $core;
+    private string $prefix = '';
+    private array $routes = [];
+    private ?CoreInterface $core = null;
 
     public function __construct(
-        ContainerInterface $container,
-        RouterInterface $router,
-        Pipeline $pipeline
+        private readonly ContainerInterface $container,
+        private readonly RouterInterface $router,
+        private readonly Pipeline $pipeline
     ) {
-        $this->container = $container;
-        $this->router = $router;
-        $this->pipeline = $pipeline;
     }
 
     /**
@@ -64,10 +40,7 @@ final class RouteGroup
         return $this;
     }
 
-    /**
-     * @param CoreInterface|string|Autowire $core
-     */
-    public function setCore($core): self
+    public function setCore(Autowire|CoreInterface|string $core): self
     {
         if (!$core instanceof CoreInterface) {
             $core = $this->container->get($core);
@@ -81,9 +54,12 @@ final class RouteGroup
     }
 
     /**
-     * @param MiddlewareInterface|string $middleware
+     * @param MiddlewareInterface|class-string<MiddlewareInterface>|non-empty-string $middleware
+     *
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function addMiddleware($middleware): self
+    public function addMiddleware(MiddlewareInterface|string $middleware): self
     {
         if (!$middleware instanceof MiddlewareInterface) {
             $middleware = $this->container->get($middleware);
@@ -108,7 +84,7 @@ final class RouteGroup
         array $verbs,
         array $defaults,
         array $middleware
-    ) {
+    ): void {
         $this->routes[$name] = [
             'pattern'    => $pattern,
             'controller' => $controller,
@@ -122,7 +98,7 @@ final class RouteGroup
     /**
      * Push routes to router.
      */
-    public function flushRoutes()
+    public function flushRoutes(): void
     {
         foreach ($this->routes as $name => $schema) {
             $route = $this->createRoute($schema['pattern'], $schema['controller'], $schema['action']);
@@ -140,16 +116,13 @@ final class RouteGroup
 
     public function createRoute(string $pattern, string $controller, string $action): Route
     {
-        $action = new Action($controller, $action);
+        $actionObject = new Action($controller, $action);
         if ($this->core !== null) {
-            $action = $action->withCore($this->core);
+            $actionObject = $actionObject->withCore($this->core);
         }
 
-        $route = new Route($this->prefix . $pattern, $action);
-
-        // all routes within group share the same middleware pipeline
-        $route = $route->withMiddleware($this->pipeline);
-
-        return $route;
+        return (new Route($this->prefix . $pattern, $actionObject))
+            // all routes within group share the same middleware pipeline
+            ->withMiddleware($this->pipeline);
     }
 }

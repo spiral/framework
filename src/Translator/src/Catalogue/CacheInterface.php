@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Translator\Catalogue;
@@ -16,7 +9,7 @@ interface CacheInterface
     /**
      * Cache list of available locates.
      */
-    public function setLocales(?array $locales);
+    public function setLocales(?array $locales): void;
 
     /**
      * Get cached list of locales.
@@ -26,7 +19,7 @@ interface CacheInterface
     /**
      * Store locale data.
      */
-    public function saveLocale(string $locale, ?array $data);
+    public function saveLocale(string $locale, ?array $data): void;
 
     /**
      * Load cached locale data.

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
@@ -21,24 +14,14 @@ use Spiral\Prototype\Utils;
 
 final class AddProperty extends NodeVisitorAbstract
 {
-    /** @var ClassNode */
-    private $definition;
-    /** @var bool */
-    private $useTypedProperties;
-    /** @var bool */
-    private $noPhpDoc;
-
-    public function __construct(ClassNode $definition, bool $useTypedProperties = false, bool $noPhpDoc = false)
-    {
-        $this->definition = $definition;
-        $this->useTypedProperties = $useTypedProperties;
-        $this->noPhpDoc = $noPhpDoc;
+    public function __construct(
+        private readonly ClassNode $definition,
+        private readonly bool $useTypedProperties = false,
+        private readonly bool $noPhpDoc = false
+    ) {
     }
 
-    /**
-     * @return Node\Stmt\Class_|null
-     */
-    public function leaveNode(Node $node)
+    public function leaveNode(Node $node): ?Node
     {
         if (!$node instanceof Node\Stmt\Class_) {
             return null;
@@ -76,7 +59,7 @@ final class AddProperty extends NodeVisitorAbstract
         }
 
         if ($this->renderDoc()) {
-            $b->setDocComment(new Doc(sprintf('/** @var %s */', $this->getPropertyType($dependency))));
+            $b->setDocComment(new Doc(\sprintf('/** @var %s */', $this->getPropertyType($dependency))));
         }
 
         return $b->getNode();
@@ -84,7 +67,7 @@ final class AddProperty extends NodeVisitorAbstract
 
     private function useTypedProperty(): bool
     {
-        return $this->useTypedProperties && method_exists(Property::class, 'setType');
+        return $this->useTypedProperties && \method_exists(Property::class, 'setType');
     }
 
     private function renderDoc(): bool

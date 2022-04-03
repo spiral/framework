@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\Command;
@@ -33,8 +26,7 @@ final class InjectCommand extends AbstractCommand
         ],
     ];
 
-    /** @var Injector */
-    private $injector;
+    private readonly Injector $injector;
 
     public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
     {
@@ -48,13 +40,13 @@ final class InjectCommand extends AbstractCommand
      * @throws \ReflectionException
      * @throws ClassNotDeclaredException
      */
-    public function perform(): void
+    public function perform(): int
     {
         $prototyped = $this->locator->getTargetClasses();
         if ($prototyped === []) {
             $this->writeln('<comment>No prototyped classes found.</comment>');
 
-            return;
+            return self::SUCCESS;
         }
 
         $targets = [];
@@ -74,7 +66,7 @@ final class InjectCommand extends AbstractCommand
                     $targets[] = [
                         $class->getName(),
                         $target->getMessage(),
-                        "{$target->getFile()}:L{$target->getLine()}",
+                        \sprintf('%s:L%d', $target->getFile(), $target->getLine()),
                     ];
                     continue 2;
                 }
@@ -100,24 +92,26 @@ final class InjectCommand extends AbstractCommand
 
             $grid->render();
         }
+
+        return self::SUCCESS;
     }
 
     private function modify(\ReflectionClass $class, array $proto): ?array
     {
-        $classDefinition = $this->extractor->extract($class->getFilename(), $proto);
+        $classDefinition = $this->extractor->extract($class->getFileName(), $proto);
         try {
             $modified = $this->injector->injectDependencies(
-                file_get_contents($class->getFileName()),
+                \file_get_contents($class->getFileName()),
                 $classDefinition,
                 $this->option('remove'),
                 $this->option('typedProperties'),
                 $this->option('no-phpdoc')
             );
 
-            file_put_contents($class->getFileName(), $modified);
+            \file_put_contents($class->getFileName(), $modified);
             return null;
         } catch (\Throwable $e) {
-            return [$class->getName(), $e->getMessage(), "{$e->getFile()}:L{$e->getLine()}"];
+            return [$class->getName(), $e->getMessage(), \sprintf('%s:L%s', $e->getFile(), $e->getLine())];
         }
     }
 }

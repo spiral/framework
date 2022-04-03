@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax;
@@ -25,15 +18,9 @@ use Spiral\Stempler\Parser\SyntaxInterface;
  */
 final class DynamicSyntax implements SyntaxInterface
 {
-    /** @var Directive|null */
-    private $directive;
+    private ?Directive $directive = null;
+    private ?Output $output = null;
 
-    /** @var Output|null */
-    private $output;
-
-    /**
-     * @inheritDoc
-     */
     public function handle(Parser $parser, Assembler $asm, Token $token): void
     {
         switch ($token->type) {
@@ -93,10 +80,10 @@ final class DynamicSyntax implements SyntaxInterface
         $src = new StringStream($body);
 
         while ($n = $src->peak()) {
-            if (in_array($n, ['"', '"'])) {
-                $values[count($values) - 1] .= $n;
+            if (\in_array($n, ['"', '"'])) {
+                $values[\count($values) - 1] .= $n;
                 while ($nn = $src->peak()) {
-                    $values[count($values) - 1] .= $nn;
+                    $values[\count($values) - 1] .= $nn;
                     if ($nn === $n) {
                         break;
                     }
@@ -109,7 +96,7 @@ final class DynamicSyntax implements SyntaxInterface
                 continue;
             }
 
-            $values[count($values) - 1] .= $n;
+            $values[\count($values) - 1] .= $n;
 
             if ($n === '(' || $n === '[' || $n === '{') {
                 $level++;
@@ -121,6 +108,6 @@ final class DynamicSyntax implements SyntaxInterface
             }
         }
 
-        return array_map('trim', $values);
+        return \array_map('trim', $values);
     }
 }

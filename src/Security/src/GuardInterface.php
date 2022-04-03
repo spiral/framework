@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -22,7 +15,7 @@ interface GuardInterface
      * Check if given operation are allowed. Has to check associations between operation and
      * actor/session roles based on given rules (binary vs context specific).
      *
-     * @param array  $context Permissions specific context.
+     * @param array $context Permissions specific context.
      *
      * @throws GuardException
      */
@@ -30,7 +23,6 @@ interface GuardInterface
 
     /**
      * Get associated actor instance.
-     *
      *
      * @throws GuardException
      */

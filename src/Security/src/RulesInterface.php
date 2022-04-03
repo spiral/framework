@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -35,14 +28,14 @@ interface RulesInterface
      *                                                  treated as class name for RuleInterface.
      * @throws RuleException
      */
-    public function set(string $name, $rule = null);
+    public function set(string $name, mixed $rule = null): self;
 
     /**
      * Remove created rule.
      *
      * @throws RuleException
      */
-    public function remove(string $name);
+    public function remove(string $name): self;
 
     /**
      * Check if requested rule exists.
@@ -51,7 +44,6 @@ interface RulesInterface
 
     /**
      * Get rule object based on it's name.
-     *
      *
      * @throws RuleException
      */

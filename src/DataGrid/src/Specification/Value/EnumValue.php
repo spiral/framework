@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value;
@@ -17,41 +9,29 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class EnumValue implements ValueInterface
 {
-    /** @var ValueInterface */
-    private $base;
+    private readonly array $values;
 
-    /** @var array|mixed[] */
-    private $values;
-
-    /**
-     * @param mixed          ...$values
-     */
-    public function __construct(ValueInterface $base, ...$values)
-    {
-        if ($base instanceof static) {
-            throw new ValueException(sprintf('Nested value type not allowed, got `%s`', get_class($base)));
+    public function __construct(
+        private readonly ValueInterface $base,
+        mixed ...$values
+    ) {
+        if ($base instanceof self) {
+            throw new ValueException(\sprintf('Nested value type not allowed, got `%s`', $base::class));
         }
 
-        $this->base = $base;
-        $this->values = $this->convertEnum(array_unique($values));
+        $this->values = $this->convertEnum(\array_unique($values));
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
         if (!$this->base->accepts($value)) {
             return false;
         }
 
-        return in_array($this->base->convert($value), $this->values, true);
+        return \in_array($this->base->convert($value), $this->values, true);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function convert($value)
+    public function convert(mixed $value): mixed
     {
         return $this->base->convert($value);
     }
@@ -65,9 +45,9 @@ final class EnumValue implements ValueInterface
         $type = new ArrayValue($this->base);
         if (!$type->accepts($values)) {
             throw new ValueException(
-                sprintf(
+                \sprintf(
                     '"Got non-compatible values, expected only compatible with `%s`.',
-                    get_class($this->base)
+                    $this->base::class
                 )
             );
         }

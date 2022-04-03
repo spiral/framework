@@ -6,14 +6,12 @@ namespace Spiral\Tokenizer;
 
 final class ScopedClassLocator implements ScopedClassesInterface
 {
-    private Tokenizer $tokenizer;
-
-    public function __construct(Tokenizer $tokenizer)
-    {
-        $this->tokenizer = $tokenizer;
+    public function __construct(
+        private readonly Tokenizer $tokenizer
+    ) {
     }
 
-    public function getScopedClasses(string $scope, $target = null): array
+    public function getScopedClasses(string $scope, object|string|null $target = null): array
     {
         return $this->tokenizer->scopedClassLocator($scope)->getClasses($target);
     }

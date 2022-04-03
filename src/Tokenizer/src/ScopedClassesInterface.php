@@ -17,5 +17,5 @@ interface ScopedClassesInterface
      *                       results.
      * @return \ReflectionClass[]
      */
-    public function getScopedClasses(string $scope, $target = null): array;
+    public function getScopedClasses(string $scope, object|string|null $target = null): array;
 }

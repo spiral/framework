@@ -28,6 +28,7 @@
   - Bootloader `Spiral\Bootloader\Broadcast\BroadcastBootloader` is removed. Use `spiral/roadrunner-broadcast` package instead.
   - Bootloader `Spiral\Bootloader\Http\WebsocketsBootloader` is removed.
   - Component `spiral/annotations` is removed. Use `spiral/attributes` instead.
+  - Added return type `void` to a methods `publish`, `publishDirectory`, `ensureDirectory` in `Spiral\Module\PublisherInterface` interface.
   - [spiral/router] Removed deprecated method `addRoute` in the `Spiral\Router\RouterInterface` and `Spiral\Router\Router`.
     Use method `setRoute` instead.
   - [spiral/validation] `Spiral\Validation\Checker\EntityChecker` is removed. 
@@ -49,6 +50,40 @@
     added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface. 
     Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
   - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
+  - [spiral/reactor] Added return type `mixed` and `array|string` parameter type of `$search`, 
+    `array|string` parameter type of `$replace` to the method `replace` in `Spiral\Reactor\ReplaceableInterface`.
+  - [spiral/session] Added return type `void` to the method `resume` in `Spiral\Session\SessionInterface`.
+  - [spiral/session] Added return type `self` and `mixed` parameter type of `$value` to the method `set` 
+    in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `bool` to the method `has` in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`
+    in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `mixed` and `mixed` parameter type of `$default` to the method `pull`
+    in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `void` to the method `delete` in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `void` to the method `clear` in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/pagination] Added return type `self` to the method `limit`, added return type `self` to the method `offset`
+    in `Spiral\Pagination\PaginableInterface`
+  - [spiral/prototype] Parameter `$printer` now is not nullable in `Spiral\Prototype\Injector` constructor.
+  - [spiral/models] Added return type `self`, added `mixed` parameter type of `$value` to the method `setField`,
+    added return type `mixed`, added `mixed` parameter type of `$default` to the method `getField`,
+    added return type `self` to the method `setFields` in `Spiral\Models\EntityInterface`.
+  - [spiral/models] Added return type `mixed` to the method `getValue` in `Spiral\Models\ValueInterface`.
+  - [spiral/logger] Added return type `self` to the method `addListener`, added return type `void` to the method `removeListener`
+    in `Spiral\Logger\ListenerRegistryInterface` interface.
+  - [spiral/hmvc] Added return type `mixed` to the method `process` in `Spiral\Core\CoreInterceptorInterface` interface.
+  - [spiral/hmvc] Added return type `mixed` to the method `callAction` in `Spiral\Core\CoreInterface` interface.
+  - [spiral/encrypter] Added return type `mixed` to the method `decrypt` in `Spiral\Encrypter\EncrypterInterface` interface.
+  - [spiral/data-grid] Added return type `mixed` and `mixed` parameter type of `$source` to the method `write` in
+    `Spiral\DataGrid\WriterInterface` interface.
+  - [spiral/data-grid] Added return type `mixed` to the method `getValue` in `Spiral\DataGrid\SpecificationInterface` interface.
+  - [spiral/data-grid] Added return type `mixed`, added `mixed` parameter type of `$default` to the method `getValue` 
+    in `Spiral\DataGrid\InputInterface` interface.
+  - [spiral/data-grid] Added return type `mixed` to the method `getOption` in `Spiral\DataGrid\GridInterface` interface.
+  - [spiral/data-grid] Added return type `mixed`, added `mixed` parameter type of `$value` to the method `convert` 
+    in `Spiral\DataGrid\Specification\ValueInterface` interface.
+  - [spiral/data-grid] Added `string` type for parameter `$direction` in the method `withDirection` 
+    in `Spiral\DataGrid\Specification\SorterInterface`
   - [spiral/http] Added return type `array` and `mixed` parameter type of `$filler` to the method `fetch`, 
     added return type `mixed` to the method `offsetGet`, added return type `mixed` and `mixed` parameter type 
     of `$default` to the method `get`  in `Spiral\Http\Request\InputBag` class.
@@ -77,6 +112,21 @@
     added return type `bool` to the method `touch`, added return type `bool` to the method `setPermissions` in `Spiral\Files\FilesInterface`.
   - [spiral/views] Added return type `mixed` to the method `resolveValue` in `Spiral\Views\ContextInterface`.
   - [spiral/views] Added return type `mixed` to the method `getValue` in `Spiral\Views\DependencyInterface`.
+  - [spiral/translator] Added return type `void` to a methods `setLocales`, `saveLocale` in `Spiral\Translator\Catalogue\CacheInterface`.
+  - [spiral/translator] Added return type `void` to the method `save` in `Spiral\Translator\CatalogueManagerInterface`.
+  - [spiral/storage] Added `string|\Stringable` parameter type of `$id` to a methods `getContents`, `getStream`,
+    `exists`, `getLastModified`, `getSize`, `getMimeType`, `getVisibility` in `Spiral\Storage\Storage\ReadableInterface`.
+  - [spiral/storage] Added `string|\Stringable` parameter type of `$id` to a methods `create`, `setVisibility`,
+    `delete`. Added `string|\Stringable` parameter type of `$id` and `mixed` parameter type of `$content` 
+    to the method `write`, added `string|\Stringable` parameter type of `$source` and `$destination` to a methods
+    `copy`, `move` in `Spiral\Storage\Storage\WritableInterface`.
+  - [spiral/stempler] Added return type `mixed` and `mixed` parameter type of `$default` to the method `getAttribute` in 
+    `Spiral\Stempler\Node\AttributedInterface`.
+  - [spiral/stempler] Added return type `mixed` and `mixed` parameter type of `$node` to the method `enterNode`,
+    added return type `mixed` and `mixed` parameter type of `$node` to the method `leaveNode` in `Spiral\Stempler\VisitorInterface`.
+  - [spiral/sendit] Dropped support `pipeline` parameter in `mailer` config. Please, use the parameter `queue` instead.
+  - [spiral/security] Added return type `self` to a methods `addRole`, `removeRole` in `Spiral\Security\PermissionsInterface`
+  - [spiral/security] Added return type `self` to a methods `set`, `remove` in `Spiral\Security\RulesInterface`
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`

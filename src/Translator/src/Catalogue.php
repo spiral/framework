@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Translator;
@@ -20,69 +13,48 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 final class Catalogue implements CatalogueInterface
 {
-    /** @var string */
-    private $locale;
-
-    /** @var array<string, array<string, string>> */
-    private $data = [];
-
-    public function __construct(string $locale, array $data = [])
-    {
-        $this->locale = $locale;
-        $this->data = $data;
+    /**
+     * @param array<string, array<string, string>> $data
+     */
+    public function __construct(
+        private readonly string $locale,
+        private array $data = []
+    ) {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getLocale(): string
     {
         return $this->locale;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getDomains(): array
     {
-        return array_keys($this->data);
+        return \array_keys($this->data);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function has(string $domain, string $id): bool
     {
         if (!isset($this->data[$domain])) {
             return false;
         }
 
-        return array_key_exists($id, $this->data[$domain]);
+        return \array_key_exists($id, $this->data[$domain]);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function get(string $domain, string $id): string
     {
         if (!$this->has($domain, $id)) {
-            throw new CatalogueException("Undefined string in domain '{$domain}'");
+            throw new CatalogueException(\sprintf("Undefined string in domain '%s'", $domain));
         }
 
         return $this->data[$domain][$id];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function set(string $domain, string $id, string $translation): void
     {
         $this->data[$domain][$id] = $translation;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getData(): array
     {
         return $this->data;
@@ -101,9 +73,9 @@ final class Catalogue implements CatalogueInterface
 
             if ($follow) {
                 //MessageCatalogue string has higher priority that string stored in memory
-                $this->data[$domain] = array_merge($messages, $this->data[$domain]);
+                $this->data[$domain] = \array_merge($messages, $this->data[$domain]);
             } else {
-                $this->data[$domain] = array_merge($this->data[$domain], $messages);
+                $this->data[$domain] = \array_merge($this->data[$domain], $messages);
             }
         }
     }
