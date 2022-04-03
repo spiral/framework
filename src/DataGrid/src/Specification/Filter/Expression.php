@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. PHP Data Grid
- *
- * @license MIT
- * @author  Anton Tsitou (Wolfy-J)
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Filter;
@@ -18,25 +10,13 @@ use Spiral\DataGrid\SpecificationInterface;
 
 abstract class Expression implements FilterInterface
 {
-    /** @var string */
-    protected $expression;
-
-    /** @var ValueInterface|mixed */
-    protected $value;
-
-    /**
-     * @param ValueInterface|mixed $value
-     */
-    public function __construct(string $expression, $value)
-    {
-        $this->expression = $expression;
-        $this->value = $value;
+    public function __construct(
+        protected string $expression,
+        protected mixed $value
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function withValue($value): ?SpecificationInterface
+    public function withValue(mixed $value): ?SpecificationInterface
     {
         $filter = clone $this;
         if (!$filter->value instanceof ValueInterface) {
@@ -60,10 +40,7 @@ abstract class Expression implements FilterInterface
         return $this->expression;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }

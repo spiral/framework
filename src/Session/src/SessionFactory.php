@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Session;
@@ -23,21 +16,15 @@ use Spiral\Session\Exception\SessionException;
  */
 final class SessionFactory implements SessionFactoryInterface, SingletonInterface
 {
-    /** @var SessionConfig */
-    private $config;
-
-    /** @var FactoryInterface */
-    private $factory;
-
-    public function __construct(SessionConfig $config, FactoryInterface $factory)
-    {
-        $this->config = $config;
-        $this->factory = $factory;
+    public function __construct(
+        private readonly SessionConfig $config,
+        private readonly FactoryInterface $factory
+    ) {
     }
 
     public function initSession(string $clientSignature, string $id = null): SessionInterface
     {
-        if (session_status() === PHP_SESSION_ACTIVE) {
+        if (\session_status() === PHP_SESSION_ACTIVE) {
             throw new MultipleSessionException('Unable to initiate session, session already started');
         }
 
@@ -49,7 +36,7 @@ final class SessionFactory implements SessionFactoryInterface, SingletonInterfac
                 throw new SessionException($e->getMessage(), $e->getCode(), $e);
             }
 
-            session_set_save_handler($handler, true);
+            \session_set_save_handler($handler, true);
         }
 
         return $this->factory->make(Session::class, [

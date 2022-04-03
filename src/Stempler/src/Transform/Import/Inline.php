@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Import;
@@ -23,25 +16,14 @@ final class Inline implements ImportInterface
 {
     use ContextTrait;
 
-    /** @var string */
-    private $name;
-
-    /** @var array */
-    private $nodes;
-
-    /**
-     * @param Context|null $context
-     */
-    public function __construct(string $name, array $nodes, Context $context = null)
-    {
-        $this->name = $name;
-        $this->nodes = $nodes;
+    public function __construct(
+        private readonly string $name,
+        private readonly array $nodes,
+        Context $context = null
+    ) {
         $this->context = $context;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function resolve(Builder $builder, string $name): ?Template
     {
         if ($name !== $this->name) {

@@ -20,10 +20,10 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class FlattenNodes implements VisitorInterface
 {
-    public function enterNode(mixed $node, VisitorContext $ctx): void
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
         if (!$node instanceof Tag) {
-            return;
+            return null;
         }
 
         $flatten = [];
@@ -39,10 +39,13 @@ final class FlattenNodes implements VisitorInterface
         }
 
         $node->nodes = $this->mergeRaw($flatten);
+
+        return null;
     }
 
-    public function leaveNode(mixed $node, VisitorContext $ctx): void
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
     private function mergeRaw(array $nodes): array

@@ -21,8 +21,5 @@ interface ExpirationAwareResolverInterface
 {
     public function getExpirationDate(): \DateInterval;
 
-    /**
-     * @param DateIntervalFormat $duration
-     */
-    public function withExpirationDate($duration): self;
+    public function withExpirationDate(mixed $duration): self;
 }

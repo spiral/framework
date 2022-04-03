@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Directive;
@@ -20,7 +13,7 @@ final class LoopDirective extends AbstractDirective
 {
     public function renderFor(Directive $directive): string
     {
-        return sprintf('<?php for(%s): ?>', $directive->body);
+        return \sprintf('<?php for(%s): ?>', $directive->body);
     }
 
     public function renderEndfor(Directive $directive): string
@@ -30,7 +23,7 @@ final class LoopDirective extends AbstractDirective
 
     public function renderForeach(Directive $directive): string
     {
-        return sprintf('<?php foreach(%s): ?>', $directive->body);
+        return \sprintf('<?php foreach(%s): ?>', $directive->body);
     }
 
     public function renderEndforeach(Directive $directive): string
@@ -41,7 +34,7 @@ final class LoopDirective extends AbstractDirective
     public function renderBreak(Directive $directive): string
     {
         if (isset($directive->values[0])) {
-            return sprintf('<?php break %s; ?>', $directive->values[0]);
+            return \sprintf('<?php break %s; ?>', $directive->values[0]);
         }
 
         return '<?php break; ?>';
@@ -50,7 +43,7 @@ final class LoopDirective extends AbstractDirective
     public function renderContinue(Directive $directive): string
     {
         if (isset($directive->values[0])) {
-            return sprintf('<?php continue %s; ?>', $directive->values[0]);
+            return \sprintf('<?php continue %s; ?>', $directive->values[0]);
         }
 
         return '<?php continue; ?>';
@@ -58,7 +51,7 @@ final class LoopDirective extends AbstractDirective
 
     protected function renderWhile(Directive $directive): string
     {
-        return sprintf('<?php while(%s): ?>', $directive->body);
+        return \sprintf('<?php while(%s): ?>', $directive->body);
     }
 
     protected function renderEndwhile(Directive $directive): string

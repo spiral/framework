@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Pagination;
@@ -20,8 +13,7 @@ interface PaginationProviderInterface
     /**
      * Create paginator for a given parameter, scope request must be resolved automatically.
      *
-     * @param int    $limit Pagination limit
-     *
+     * @param int $limit Pagination limit
      */
     public function createPaginator(string $parameter, int $limit = 25): PaginatorInterface;
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler;
@@ -35,27 +28,14 @@ final class Builder
     public const STAGE_FINALIZE  = 2;
     public const STAGE_COMPILE   = 3;
 
-    /** @var LoaderInterface */
-    private $loader;
-
-    /** @var Parser */
-    private $parser;
-
-    /** @var Compiler */
-    private $compiler;
-
     /** @var VisitorInterface[][] */
-    private $visitors = [];
+    private array $visitors = [];
 
-    /**
-     * @param Parser|null     $parser
-     * @param Compiler|null   $compiler
-     */
-    public function __construct(LoaderInterface $loader, Parser $parser = null, Compiler $compiler = null)
-    {
-        $this->loader = $loader;
-        $this->parser = $parser ?? new Parser();
-        $this->compiler = $compiler ?? new Compiler();
+    public function __construct(
+        private readonly LoaderInterface $loader,
+        private readonly Parser $parser = new Parser(),
+        private readonly Compiler $compiler = new Compiler()
+    ) {
     }
 
     public function getLoader(): LoaderInterface
@@ -83,7 +63,6 @@ final class Builder
 
     /**
      * Compile template.
-     *
      *
      * @throws CompilerException
      * @throws \Throwable
@@ -114,7 +93,6 @@ final class Builder
     }
 
     /**
-     *
      * @throws \Throwable
      */
     public function load(string $path): Template
@@ -142,7 +120,6 @@ final class Builder
     }
 
     /**
-     *
      * @throws \Throwable
      */
     private function process(Template $template): Template
@@ -176,7 +153,7 @@ final class Builder
 
         try {
             $source = $this->loader->load($e->getContext()->getPath());
-        } catch (LoaderException $te) {
+        } catch (LoaderException) {
             return $e;
         }
 

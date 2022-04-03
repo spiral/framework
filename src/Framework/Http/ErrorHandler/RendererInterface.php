@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\ErrorHandler;
@@ -19,12 +12,5 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 interface RendererInterface
 {
-    /**
-     * @param Request $request
-     * @param int     $code
-     * @param string  $message
-     *
-     * @return Response
-     */
     public function renderException(Request $request, int $code, string $message): Response;
 }

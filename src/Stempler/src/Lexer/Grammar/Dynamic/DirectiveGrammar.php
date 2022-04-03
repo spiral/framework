@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar\Dynamic;
@@ -26,16 +19,13 @@ final class DirectiveGrammar implements \IteratorAggregate
     public const DIRECTIVE_CHAR = '@';
 
     // whitespace
-    private const REGEXP_WHITESPACE = '/\s/';
+    private const REGEXP_WHITESPACE = '/\\s/';
 
     // Allowed keyword characters.
-    private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
+    private const REGEXP_KEYWORD = '/[a-z0-9_\\-:\\.]/ui';
 
-    /** @var array */
-    private $name = [];
-
-    /** @var array */
-    private $body = [];
+    private array $name = [];
+    private ?array $body = [];
 
     public function parse(Buffer $src, int $offset): bool
     {
@@ -59,7 +49,7 @@ final class DirectiveGrammar implements \IteratorAggregate
 
                     return $this->parseBody($src);
                 default:
-                    if (preg_match(self::REGEXP_WHITESPACE, $n->char)) {
+                    if (\preg_match(self::REGEXP_WHITESPACE, $n->char)) {
                         $hasWhitespace = true;
                         if ($this->name !== []) {
                             $this->flushName();
@@ -78,7 +68,7 @@ final class DirectiveGrammar implements \IteratorAggregate
                         return $this->finalize();
                     }
 
-                    if (!preg_match(self::REGEXP_KEYWORD, $n->char)) {
+                    if (!\preg_match(self::REGEXP_KEYWORD, $n->char)) {
                         $this->flushName();
 
                         return $this->finalize();
@@ -96,9 +86,9 @@ final class DirectiveGrammar implements \IteratorAggregate
     /**
      * Directive tokens.
      *
-     * @return \Generator|\Traversable
+     * @return \Generator<int, Token>
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): \Generator
     {
         if ($this->tokens === []) {
             throw new \LogicException('Directive not parsed');
@@ -112,7 +102,7 @@ final class DirectiveGrammar implements \IteratorAggregate
      */
     public function getLastOffset(): int
     {
-        return $this->getLastToken()->offset + strlen($this->getLastToken()->content) - 1;
+        return $this->getLastToken()->offset + \strlen($this->getLastToken()->content) - 1;
     }
 
     /**
@@ -131,8 +121,6 @@ final class DirectiveGrammar implements \IteratorAggregate
 
     /**
      * Get directive body.
-     *
-     * @return string
      */
     public function getBody(): ?string
     {
@@ -158,10 +146,7 @@ final class DirectiveGrammar implements \IteratorAggregate
         $this->name = [];
     }
 
-    /**
-     * @return bool
-     */
-    private function parseBody(Buffer $src)
+    private function parseBody(Buffer $src): bool
     {
         $this->body = [];
         $level = 1;
@@ -172,7 +157,7 @@ final class DirectiveGrammar implements \IteratorAggregate
                 return $this->finalize();
             }
 
-            if (in_array($nn->char, ['"', '"'])) {
+            if (\in_array($nn->char, ['"', '"'])) {
                 $this->body[] = $nn;
                 while ($nnn = $src->next()) {
                     $this->body[] = $nnn;
@@ -194,15 +179,13 @@ final class DirectiveGrammar implements \IteratorAggregate
                 $level--;
 
                 if ($level === 0) {
-                    $n = array_pop($this->body);
+                    $n = \array_pop($this->body);
 
                     $this->flushBody();
                     $this->tokens[] = new Token(DynamicGrammar::TYPE_BODY_CLOSE, $n->offset, $n->char);
 
                     return $this->finalize();
                 }
-
-                continue;
             }
         }
 
@@ -228,7 +211,7 @@ final class DirectiveGrammar implements \IteratorAggregate
             throw new \LogicException('Directive not parsed');
         }
 
-        return $this->tokens[count($this->tokens) - 1];
+        return $this->tokens[\count($this->tokens) - 1];
     }
 
     /**
@@ -238,7 +221,7 @@ final class DirectiveGrammar implements \IteratorAggregate
     {
         $tokens = $this->tokens;
 
-        foreach (array_reverse($tokens, true) as $i => $t) {
+        foreach (\array_reverse($tokens, true) as $i => $t) {
             if ($t->type !== DynamicGrammar::TYPE_WHITESPACE) {
                 break;
             }
@@ -255,7 +238,6 @@ final class DirectiveGrammar implements \IteratorAggregate
 
             if ($t->type === DynamicGrammar::TYPE_BODY_CLOSE) {
                 $body = null;
-                continue;
             }
         }
 

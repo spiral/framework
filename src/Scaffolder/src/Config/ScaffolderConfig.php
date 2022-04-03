@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Config;
@@ -50,7 +42,7 @@ class ScaffolderConfig extends InjectableConfig
 
     public function classNamespace(string $element, string $name = ''): string
     {
-        $localNamespace = trim($this->getOption($element, 'namespace', ''), '\\');
+        $localNamespace = \trim($this->getOption($element, 'namespace', ''), '\\');
         ['namespace' => $namespace] = $this->parseName($name);
 
         if (!empty($namespace)) {
@@ -61,17 +53,17 @@ class ScaffolderConfig extends InjectableConfig
             return $localNamespace;
         }
 
-        return trim($this->baseNamespace() . '\\' . $localNamespace, '\\');
+        return \trim($this->baseNamespace() . '\\' . $localNamespace, '\\');
     }
 
     public function classFilename(string $element, string $name): string
     {
         $namespace = $this->classNamespace($element, $name);
-        $namespace = substr($namespace, strlen($this->baseNamespace()));
+        $namespace = \substr($namespace, \strlen($this->baseNamespace()));
 
         return $this->joinPathChunks([
             $this->baseDirectory(),
-            str_replace('\\', '/', $namespace),
+            \str_replace('\\', '/', $namespace),
             $this->className($element, $name) . '.php',
         ], '/');
     }
@@ -85,7 +77,7 @@ class ScaffolderConfig extends InjectableConfig
 
         if (empty($class)) {
             throw new ScaffolderException(
-                "Unable to scaffold '{$element}', no declaration class found"
+                \sprintf("Unable to scaffold '%s', no declaration class found", $element)
             );
         }
 
@@ -105,17 +97,13 @@ class ScaffolderConfig extends InjectableConfig
         return $this->getOption($element, 'postfix', '');
     }
 
-    /**
-     * @param mixed  $default
-     * @return mixed
-     */
-    private function getOption(string $element, string $section, $default = null)
+    private function getOption(string $element, string $section, mixed $default = null): mixed
     {
         if (!isset($this->config['declarations'][$element])) {
-            throw new ScaffolderException("Undefined declaration '{$element}'.");
+            throw new ScaffolderException(\sprintf("Undefined declaration '%s'.", $element));
         }
 
-        if (array_key_exists($section, $this->config['declarations'][$element])) {
+        if (\array_key_exists($section, $this->config['declarations'][$element])) {
             return $this->config['declarations'][$element][$section];
         }
 
@@ -129,13 +117,13 @@ class ScaffolderConfig extends InjectableConfig
      */
     private function parseName(string $name): array
     {
-        $name = str_replace('/', '\\', $name);
+        $name = \str_replace('/', '\\', $name);
 
-        if (strpos($name, '\\') !== false) {
-            $names = explode('\\', $name);
-            $class = array_pop($names);
+        if (str_contains($name, '\\')) {
+            $names = \explode('\\', $name);
+            $class = \array_pop($names);
 
-            return ['namespace' => implode('\\', $names), 'name' => $class];
+            return ['namespace' => \implode('\\', $names), 'name' => $class];
         }
 
         //No user namespace
@@ -144,7 +132,7 @@ class ScaffolderConfig extends InjectableConfig
 
     private function baseNamespace(): string
     {
-        return trim($this->config['namespace'], '\\');
+        return \trim($this->config['namespace'], '\\');
     }
 
     private function joinPathChunks(array $chunks, string $joint): string
@@ -156,7 +144,7 @@ class ScaffolderConfig extends InjectableConfig
                 $firstChunkIterated = true;
                 $joinedPath = $chunk;
             } else {
-                $joinedPath = rtrim($joinedPath, $joint) . $joint . ltrim($chunk, $joint);
+                $joinedPath = \rtrim($joinedPath, $joint) . $joint . \ltrim($chunk, $joint);
             }
         }
 

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype;
@@ -18,30 +11,22 @@ use Spiral\Prototype\ClassNode\ConstructorParam;
  */
 final class ClassNode
 {
-    /** @var string */
-    public $namespace;
-
-    /** @var string */
-    public $class;
-
-    /** @var bool */
-    public $hasConstructor = false;
+    public string $namespace;
+    public string $class;
+    public bool $hasConstructor = false;
 
     /** @var ClassNode\ConstructorParam[] */
-    public $constructorParams = [];
+    public array $constructorParams = [];
 
     /** @var string[] */
-    public $constructorVars = [];
+    public array $constructorVars = [];
 
     /** @var Dependency[] */
-    public $dependencies = [];
+    public array $dependencies = [];
 
     /** @var ClassNode\ClassStmt[] */
-    private $stmts = [];
+    private array $stmts = [];
 
-    /**
-     * ClassNode constructor.
-     */
     private function __construct()
     {
     }

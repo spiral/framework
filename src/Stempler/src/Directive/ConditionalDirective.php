@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Directive;
@@ -18,17 +11,16 @@ use Spiral\Stempler\Node\Dynamic\Directive;
  */
 final class ConditionalDirective extends AbstractDirective
 {
-    /** @var bool */
-    private $firstSwitchCase = false;
+    private bool $firstSwitchCase = false;
 
     public function renderIf(Directive $directive): string
     {
-        return sprintf('<?php if(%s): ?>', $directive->body);
+        return \sprintf('<?php if(%s): ?>', $directive->body);
     }
 
     public function renderUnless(Directive $directive): string
     {
-        return sprintf('<?php if(!(%s)): ?>', $directive->body);
+        return \sprintf('<?php if(!(%s)): ?>', $directive->body);
     }
 
     public function renderElse(Directive $directive): string
@@ -38,7 +30,7 @@ final class ConditionalDirective extends AbstractDirective
 
     public function renderElseif(Directive $directive): string
     {
-        return sprintf('<?php elseif(%s): ?>', $directive->body);
+        return \sprintf('<?php elseif(%s): ?>', $directive->body);
     }
 
     public function renderEndif(Directive $directive): string
@@ -53,7 +45,7 @@ final class ConditionalDirective extends AbstractDirective
 
     public function renderIsset(Directive $directive): string
     {
-        return sprintf('<?php if(isset(%s)): ?>', $directive->body);
+        return \sprintf('<?php if(isset(%s)): ?>', $directive->body);
     }
 
     public function renderEndIsset(Directive $directive): string
@@ -63,7 +55,7 @@ final class ConditionalDirective extends AbstractDirective
 
     public function renderEmpty(Directive $directive): string
     {
-        return sprintf('<?php if(empty(%s)): ?>', $directive->body);
+        return \sprintf('<?php if(empty(%s)): ?>', $directive->body);
     }
 
     public function renderEndEmpty(Directive $directive): string
@@ -75,7 +67,7 @@ final class ConditionalDirective extends AbstractDirective
     {
         $this->firstSwitchCase = true;
 
-        return sprintf('<?php switch(%s):', $directive->body);
+        return \sprintf('<?php switch(%s):', $directive->body);
     }
 
     public function renderCase(Directive $directive): string
@@ -83,10 +75,10 @@ final class ConditionalDirective extends AbstractDirective
         if ($this->firstSwitchCase) {
             $this->firstSwitchCase = false;
 
-            return sprintf('case (%s): ?>', $directive->body);
+            return \sprintf('case (%s): ?>', $directive->body);
         }
 
-        return sprintf('<?php case (%s): ?>', $directive->body);
+        return \sprintf('<?php case (%s): ?>', $directive->body);
     }
 
     public function renderDefault(Directive $directive): string
@@ -108,7 +100,7 @@ final class ConditionalDirective extends AbstractDirective
     public function renderBreak(Directive $directive): string
     {
         if (isset($directive->values[0])) {
-            return sprintf('<?php break %s; ?>', $directive->values[0]);
+            return \sprintf('<?php break %s; ?>', $directive->values[0]);
         }
 
         return '<?php break; ?>';

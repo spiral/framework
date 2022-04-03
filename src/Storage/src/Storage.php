@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage;
@@ -17,7 +10,6 @@ use Spiral\Storage\Storage\ReadableTrait;
 use Spiral\Storage\Storage\WritableTrait;
 
 /**
- * @psalm-import-type IdType from StorageInterface
  * @see StorageInterface
  */
 final class Storage implements MutableStorageInterface
@@ -43,21 +35,14 @@ final class Storage implements MutableStorageInterface
     /**
      * @var array<string, BucketInterface>
      */
-    private $buckets = [];
-
-    /**
-     * @var string
-     */
-    private $default;
+    private array $buckets = [];
+    private string $default;
 
     public function __construct(string $name = self::DEFAULT_STORAGE)
     {
         $this->default = $name;
     }
 
-    /**
-     * @return $this
-     */
     public function withDefault(string $name): StorageInterface
     {
         $self = clone $this;
@@ -66,12 +51,9 @@ final class Storage implements MutableStorageInterface
         return $self;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function bucket(string $name = null): BucketInterface
     {
-        $name = $name ?? $this->default;
+        $name ??= $this->default;
 
         if (!isset($this->buckets[$name])) {
             throw new InvalidArgumentException(\sprintf(self::ERROR_NOT_FOUND, $name));
@@ -80,50 +62,37 @@ final class Storage implements MutableStorageInterface
         return $this->buckets[$name];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function file($id): FileInterface
+    public function file(string|\Stringable $id): FileInterface
     {
         [$bucket, $file] = $this->parseUri($id);
 
         return $this->bucket($bucket)->file($file);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function add(string $name, BucketInterface $storage, bool $overwrite = false): void
     {
-        if ($overwrite === false && isset($this->buckets[$name])) {
+        if (!$overwrite && isset($this->buckets[$name])) {
             throw new \InvalidArgumentException(\sprintf(self::ERROR_REDEFINITION, $name));
         }
 
         $this->buckets[$name] = $storage;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->buckets);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function count(): int
     {
         return \count($this->buckets);
     }
 
     /**
-     * @param IdType $uri
      * @return array{0: string|null, 1: string}
      * @throws InvalidArgumentException
      */
-    protected function parseUri($uri, bool $withScheme = true): array
+    protected function parseUri(string|\Stringable $uri, bool $withScheme = true): array
     {
         $uri = $this->uriToString($uri);
         $result = \parse_url($uri);
@@ -147,24 +116,11 @@ final class Storage implements MutableStorageInterface
         ];
     }
 
-    /**
-     * @param IdType $uri
-     * @throws InvalidArgumentException
-     */
-    private function uriToString($uri): string
+    private function uriToString(string|\Stringable $uri): string
     {
-        switch (true) {
-            case $uri instanceof UriInterface:
-            case $uri instanceof \Stringable:
-            case \is_object($uri) && \method_exists($uri, '__toString'):
-                return (string)$uri;
-
-            case \is_string($uri):
-                return $uri;
-
-            default:
-                $message = 'File URI must be a string or instance of Stringable interface, but %s given';
-                throw new InvalidArgumentException(\sprintf($message, \get_debug_type($uri)));
-        }
+        return match (true) {
+            \is_string($uri) => $uri,
+            default => (string) $uri
+        };
     }
 }

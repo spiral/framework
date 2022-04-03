@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage\Bucket;
@@ -24,9 +17,6 @@ use Spiral\Storage\Visibility;
  */
 trait WritableTrait
 {
-    /**
-     * {@inheritDoc}
-     */
     public function create(string $pathname, array $config = []): FileInterface
     {
         if ($this instanceof ReadableInterface && !$this->exists($pathname)) {
@@ -36,12 +26,9 @@ trait WritableTrait
         return $this->file($pathname);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function write(string $pathname, $content, array $config = []): FileInterface
+    public function write(string $pathname, mixed $content, array $config = []): FileInterface
     {
-        assert(\is_resource($content) || $this->isStringable($content));
+        \assert(\is_resource($content) || $this->isStringable($content));
 
         $fs = $this->getOperator();
 
@@ -67,9 +54,6 @@ trait WritableTrait
         return $this->file($pathname);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function setVisibility(
         string $pathname,
         #[ExpectedValues(valuesFromClass: Visibility::class)]
@@ -86,9 +70,6 @@ trait WritableTrait
         return $this->file($pathname);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function copy(
         string $source,
         string $destination,
@@ -110,9 +91,6 @@ trait WritableTrait
         return $storage->write($destination, $this->getStream($source), $config);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function move(
         string $source,
         string $destination,
@@ -138,9 +116,6 @@ trait WritableTrait
         return $result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function delete(string $pathname, bool $clean = false): void
     {
         $fs = $this->getOperator();
@@ -177,8 +152,6 @@ trait WritableTrait
      *
      * @internal This is an internal method, please do not use it in your code.
      * @psalm-internal Spiral\Storage\Storage
-     *
-     * @param string $path
      */
     private function getParentDirectory(string $path): string
     {
@@ -251,23 +224,13 @@ trait WritableTrait
     /**
      * Internal helper method that returns bool {@see true} if passed argument
      * can be converted to string.
-     *
-     * @param string|\Stringable $value
      */
-    private function isStringable($value): bool
+    private function isStringable(mixed $value): bool
     {
-        if (\is_string($value)) {
-            return true;
-        }
-
-        if (!\is_object($value)) {
-            return false;
-        }
-
-        if (\PHP_VERSION_ID >= 80000) {
-            return $value instanceof \Stringable;
-        }
-
-        return \method_exists($value, '__toString');
+        return match (true) {
+            \is_string($value) => true,
+            !\is_object($value) => false,
+            default => $value instanceof \Stringable,
+        };
     }
 }

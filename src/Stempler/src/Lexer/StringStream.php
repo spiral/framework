@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer;
@@ -15,19 +8,13 @@ use Spiral\Stempler\Exception\ScannerException;
 
 final class StringStream implements StreamInterface
 {
-    /** @var string */
-    private $source;
+    private readonly int $length;
+    private int $offset;
 
-    /** @var int */
-    private $length;
-
-    /** @var int */
-    private $offset;
-
-    public function __construct(string $source)
-    {
-        $this->source = $source;
-        $this->length = strlen($source);
+    public function __construct(
+        private readonly string $source
+    ) {
+        $this->length = \strlen($source);
         $this->offset = 0;
     }
 
@@ -41,7 +28,6 @@ final class StringStream implements StreamInterface
 
     /**
      * Peak next character and advance the position.
-     *
      *
      * @throws ScannerException
      */

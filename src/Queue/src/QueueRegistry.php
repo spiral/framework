@@ -9,25 +9,18 @@ use Psr\Container\ContainerInterface;
 final class QueueRegistry implements HandlerRegistryInterface
 {
     /** @var array<string, class-string>  */
-    private $handlers = [];
-    /** @var ContainerInterface */
-    private $container;
-    /** @var HandlerRegistryInterface  */
-    private $fallbackHandlers;
+    private array $handlers = [];
 
     public function __construct(
-        ContainerInterface $container,
-        HandlerRegistryInterface $handlers
+        private readonly ContainerInterface $container,
+        private readonly HandlerRegistryInterface $fallbackHandlers
     ) {
-        $this->container = $container;
-        $this->fallbackHandlers = $handlers;
     }
 
     /**
      * Associate specific job type with handler class or object
-     * @param HandlerInterface|string $handler
      */
-    public function setHandler(string $jobType, $handler): void
+    public function setHandler(string $jobType, HandlerInterface|string $handler): void
     {
         $this->handlers[$jobType] = $handler;
     }

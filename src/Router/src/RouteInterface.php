@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -33,7 +26,6 @@ interface RouteInterface extends RequestHandlerInterface
 
     /**
      * Attach specific list of HTTP verbs to the route.
-     *
      *
      * @throws RouteException
      */

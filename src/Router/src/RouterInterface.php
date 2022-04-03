@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -31,7 +24,6 @@ interface RouterInterface extends RequestHandlerInterface
     /**
      * Get route by it's name.
      *
-     *
      * @throws UndefinedRouteException
      */
     public function getRoute(string $name): RouteInterface;
@@ -54,5 +46,5 @@ interface RouterInterface extends RequestHandlerInterface
      * @throws RouteException
      * @throws UndefinedRouteException
      */
-    public function uri(string $route, $parameters = []): UriInterface;
+    public function uri(string $route, iterable $parameters = []): UriInterface;
 }

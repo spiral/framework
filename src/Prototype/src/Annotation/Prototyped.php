@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\Annotation;
@@ -27,14 +20,11 @@ use Spiral\Attributes\NamedArgumentConstructor;
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 class Prototyped
 {
-    /** @var string */
-    public $property;
-
     /**
      * @psalm-param non-empty-string $property
      */
-    public function __construct(string $property)
-    {
-        $this->property = $property;
+    public function __construct(
+        public readonly string $property
+    ) {
     }
 }
