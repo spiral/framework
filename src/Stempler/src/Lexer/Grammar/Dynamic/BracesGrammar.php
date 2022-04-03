@@ -125,7 +125,7 @@ final class BracesGrammar
                     $this->tokens[] = new Token(
                         $this->endToken,
                         $n->offset,
-                        $n->char . $this->nextBytes($src, strlen((string) $this->endSequence) - 1)
+                        $n->char . $this->nextBytes($src, \strlen((string) $this->endSequence) - 1)
                     );
 
                     break 2;

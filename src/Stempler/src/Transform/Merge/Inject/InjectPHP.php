@@ -140,11 +140,8 @@ final class InjectPHP implements VisitorInterface
                 return \trim($node->body);
 
             case $node instanceof PHP:
-                if ($node->getContext()->getValue(PHP::ORIGINAL_BODY) !== null) {
-                    return $node->getContext()->getValue(PHP::ORIGINAL_BODY);
-                }
-
-                return (new PHPMixin($node->tokens, self::PHP_MACRO_FUNCTION))->trimBody();
+                return $node->getContext()?->getValue(PHP::ORIGINAL_BODY)
+                    ?? (new PHPMixin($node->tokens, self::PHP_MACRO_FUNCTION))->trimBody();
 
             case $node instanceof QuotedValue:
                 return $this->trimPHP($node->trimValue());

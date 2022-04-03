@@ -25,10 +25,10 @@ final class InlineGrammar implements GrammarInterface
     public const TYPE_DEFAULT   = 5;
 
     // whitespace
-    private const REGEXP_WHITESPACE = '/\s/';
+    private const REGEXP_WHITESPACE = '/\\s/';
 
     // Allowed keyword characters.
-    private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
+    private const REGEXP_KEYWORD = '/[a-z0-9_\\-:\\.]/ui';
 
     /** @var Byte[] */
     private array $name = [];

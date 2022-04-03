@@ -33,10 +33,10 @@ final class HTMLGrammar implements GrammarInterface
     private const VERBATIM_TAGS = ['script', 'canvas', 'style'];
 
     // whitespace
-    private const REGEXP_WHITESPACE = '/\s/';
+    private const REGEXP_WHITESPACE = '/\\s/';
 
     // Allowed keyword characters.
-    private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
+    private const REGEXP_KEYWORD = '/[a-z0-9_\\-:\\.]/ui';
 
     private array $whitespace = [];
     private array $attribute = [];

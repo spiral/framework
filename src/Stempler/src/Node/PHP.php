@@ -18,7 +18,7 @@ final class PHP implements NodeInterface
 
     public function __construct(
         public string $content,
-        /** @var array @internal */
+        /** @internal */
         public array $tokens,
         Context $context = null
     ) {

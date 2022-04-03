@@ -54,8 +54,10 @@ final class Lexer
 
     /**
      * Generate character stream and aggregate grammar results.
+     *
+     * @return \Generator<int, Byte>
      */
-    private function generate(StreamInterface $src): array|\Generator
+    private function generate(StreamInterface $src): \Generator
     {
         while (!$src->isEOI()) {
             yield new Byte($src->getOffset(), $src->peak());

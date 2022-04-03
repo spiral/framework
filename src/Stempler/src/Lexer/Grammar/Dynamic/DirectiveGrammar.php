@@ -19,10 +19,10 @@ final class DirectiveGrammar implements \IteratorAggregate
     public const DIRECTIVE_CHAR = '@';
 
     // whitespace
-    private const REGEXP_WHITESPACE = '/\s/';
+    private const REGEXP_WHITESPACE = '/\\s/';
 
     // Allowed keyword characters.
-    private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
+    private const REGEXP_KEYWORD = '/[a-z0-9_\\-:\\.]/ui';
 
     private array $name = [];
     private ?array $body = [];
@@ -86,9 +86,9 @@ final class DirectiveGrammar implements \IteratorAggregate
     /**
      * Directive tokens.
      *
-     * @return \Generator|\Traversable
+     * @return \Generator<int, Token>
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): \Generator
     {
         if ($this->tokens === []) {
             throw new \LogicException('Directive not parsed');
@@ -121,8 +121,6 @@ final class DirectiveGrammar implements \IteratorAggregate
 
     /**
      * Get directive body.
-     *
-     * @return string
      */
     public function getBody(): ?string
     {

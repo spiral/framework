@@ -23,7 +23,7 @@ final class DeclareGrammar implements GrammarInterface
     public const TYPE_QUOTED  = 3;
 
     // whitespace
-    private const REGEXP_WHITESPACE = '/\s/';
+    private const REGEXP_WHITESPACE = '/\\s/';
 
     private array $keyword = [];
 

@@ -51,7 +51,7 @@ final class DefineStacks implements VisitorInterface
     {
         $options = [];
         foreach ($tag->attrs as $attr) {
-            if (is_string($attr->value)) {
+            if (\is_string($attr->value)) {
                 $options[$attr->name] = \trim($attr->value, '\'"');
             }
         }

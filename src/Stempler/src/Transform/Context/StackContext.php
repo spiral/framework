@@ -109,7 +109,7 @@ final class StackContext
             throw new \LogicException(
                 \sprintf(
                     'Unable to create import on node without attribute storage (%s)',
-                    get_debug_type($node)
+                    \get_debug_type($node)
                 )
             );
         }
