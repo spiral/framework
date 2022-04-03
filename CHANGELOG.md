@@ -110,6 +110,8 @@
     in `Spiral\Console\SequenceInterface` interface.
   - [spiral/files] Added return type `bool` to the method `delete`, added return type `bool` to the method `deleteDirectory`,
     added return type `bool` to the method `touch`, added return type `bool` to the method `setPermissions` in `Spiral\Files\FilesInterface`.
+  - [spiral/translator] Added return type `void` to a methods `setLocales`, `saveLocale` in `Spiral\Translator\Catalogue\CacheInterface`.
+  - [spiral/translator] Added return type `void` to the method `save` in `Spiral\Translator\CatalogueManagerInterface`.
   - [spiral/storage] Added `string|\Stringable` parameter type of `$id` to a methods `getContents`, `getStream`,
     `exists`, `getLastModified`, `getSize`, `getMimeType`, `getVisibility` in `Spiral\Storage\Storage\ReadableInterface`.
   - [spiral/storage] Added `string|\Stringable` parameter type of `$id` to a methods `create`, `setVisibility`,
