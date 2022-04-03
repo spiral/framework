@@ -48,7 +48,7 @@ final class ViewContext implements ContextInterface
     public function resolveValue(string $dependency): mixed
     {
         if (!isset($this->dependencies[$dependency])) {
-            throw new ContextException(\sprintf("Undefined context dependency '%s'.", $dependency));
+            throw new ContextException(\sprintf('Undefined context dependency \'%s\'.', $dependency));
         }
 
         return $this->dependencies[$dependency]->getValue();
