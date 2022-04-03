@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler;
@@ -21,10 +14,8 @@ use Spiral\Stempler\Node\NodeInterface;
 final class Traverser
 {
     /** @var VisitorInterface[] */
-    private $visitors = [];
-
-    /** @var bool */
-    private $stopTraversal = false;
+    private array $visitors = [];
+    private bool $stopTraversal = false;
 
     public function __construct(array $visitors = [])
     {
@@ -60,7 +51,7 @@ final class Traverser
      */
     public function traverse(array $nodes, VisitorContext $context = null): array
     {
-        $context = $context ?? new VisitorContext();
+        $context ??= new VisitorContext();
 
         $ctx = clone $context;
         foreach ($nodes as $index => $node) {
@@ -102,7 +93,7 @@ final class Traverser
 
                     default:
                         throw new \LogicException(
-                            'enterNode() returned invalid value of type ' . gettype($result)
+                            'enterNode() returned invalid value of type ' . \gettype($result)
                         );
                 }
             }
@@ -146,7 +137,7 @@ final class Traverser
             }
         }
 
-        return array_values($nodes);
+        return \array_values($nodes);
     }
 
     /**
@@ -200,7 +191,7 @@ final class Traverser
 
                     default:
                         throw new \LogicException(
-                            'enterNode() returned invalid value of type ' . gettype($result)
+                            'enterNode() returned invalid value of type ' . \gettype($result)
                         );
                 }
             }
@@ -229,7 +220,7 @@ final class Traverser
 
                     default:
                         throw new \LogicException(
-                            'leaveNode() returned invalid value of type ' . gettype($result)
+                            'leaveNode() returned invalid value of type ' . \gettype($result)
                         );
                 }
 

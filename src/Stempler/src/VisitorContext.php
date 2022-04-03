@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler;
@@ -19,7 +12,7 @@ use Spiral\Stempler\Node\NodeInterface;
 final class VisitorContext
 {
     /** @var NodeInterface[] */
-    private $scope = [];
+    private array $scope = [];
 
     public function withNode(NodeInterface $node): self
     {
@@ -39,12 +32,12 @@ final class VisitorContext
 
     public function getCurrentNode(): ?NodeInterface
     {
-        return $this->scope[count($this->scope) - 1] ?? null;
+        return $this->scope[\count($this->scope) - 1] ?? null;
     }
 
     public function getParentNode(): ?NodeInterface
     {
-        return $this->scope[count($this->scope) - 2] ?? null;
+        return $this->scope[\count($this->scope) - 2] ?? null;
     }
 
     public function getFirstNode(): ?NodeInterface

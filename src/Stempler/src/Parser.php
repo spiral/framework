@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler;
@@ -28,18 +21,13 @@ use Spiral\Stempler\Parser\SyntaxInterface;
  */
 final class Parser
 {
-    /** @var Lexer */
-    private $lexer;
+    private Lexer $lexer;
 
-    /** @var string */
-    private $path;
+    private ?string $path = null;
 
     /** @var SyntaxInterface[] */
-    private $syntax = [];
+    private array $syntax = [];
 
-    /**
-     * Parser constructor.
-     */
     public function __construct()
     {
         $this->lexer = new Lexer();
@@ -48,8 +36,6 @@ final class Parser
 
     /**
      * Associate template path with Parser (source-map).
-     *
-     * @param string|null $path
      */
     public function withPath(string $path = null): self
     {
@@ -75,11 +61,10 @@ final class Parser
     public function addSyntax(GrammarInterface $grammar, SyntaxInterface $generator): void
     {
         $this->lexer->addGrammar($grammar);
-        $this->syntax[get_class($grammar)] = $generator;
+        $this->syntax[$grammar::class] = $generator;
     }
 
     /**
-     *
      * @throws ParserException
      */
     public function parse(StreamInterface $stream): Template
@@ -103,7 +88,6 @@ final class Parser
     }
 
     /**
-     *
      * @throws SyntaxException
      */
     public function parseTokens(Assembler $asm, iterable $tokens): void

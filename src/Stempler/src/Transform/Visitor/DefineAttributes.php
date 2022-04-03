@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Visitor;
@@ -25,10 +18,7 @@ final class DefineAttributes implements VisitorInterface
 {
     public const AGGREGATE_ATTRIBUTE = 'attr:aggregate';
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx)
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
         if (!$node instanceof Attr || $node->name !== self::AGGREGATE_ATTRIBUTE) {
             return null;
@@ -38,20 +28,18 @@ final class DefineAttributes implements VisitorInterface
             return new Aggregate($node->getContext());
         }
 
-        if (!is_string($node->value)) {
+        if (!\is_string($node->value)) {
             return null;
         }
 
         // expressions like: include:name or prefix:name-
-        $pattern = trim($node->value, '\'"');
+        $pattern = \trim($node->value, '\'"');
 
         return new Aggregate($node->getContext(), $pattern);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx): void
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 }

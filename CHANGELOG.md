@@ -110,6 +110,10 @@
     in `Spiral\Console\SequenceInterface` interface.
   - [spiral/files] Added return type `bool` to the method `delete`, added return type `bool` to the method `deleteDirectory`,
     added return type `bool` to the method `touch`, added return type `bool` to the method `setPermissions` in `Spiral\Files\FilesInterface`.
+  - [spiral/stempler] Added return type `mixed` and `mixed` parameter type of `$default` to the method `getAttribute` in 
+    `Spiral\Stempler\Node\AttributedInterface`.
+  - [spiral/stempler] Added return type `mixed` and `mixed` parameter type of `$node` to the method `enterNode`,
+    added return type `mixed` and `mixed` parameter type of `$node` to the method `leaveNode` in `Spiral\Stempler\VisitorInterface`.
   - [spiral/sendit] Dropped support `pipeline` parameter in `mailer` config. Please, use the parameter `queue` instead.
   - [spiral/security] Added return type `self` to a methods `addRole`, `removeRole` in `Spiral\Security\PermissionsInterface`
   - [spiral/security] Added return type `self` to a methods `set`, `remove` in `Spiral\Security\RulesInterface`

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar;
@@ -21,9 +14,6 @@ final class PHPGrammar implements GrammarInterface
     /** @var int */
     public const TYPE_CODE = 400;
 
-    /**
-     * @inheritDoc
-     */
     public function parse(Buffer $src): \Generator
     {
         while ($n = $src->next()) {
@@ -40,13 +30,12 @@ final class PHPGrammar implements GrammarInterface
             }
 
             yield $php;
-            $src->replay($n->offset + strlen($php->content) - 1);
+            $src->replay($n->offset + \strlen($php->content) - 1);
         }
     }
 
     /**
      * @codeCoverageIgnore
-     * @inheritDoc
      */
     public static function tokenName(int $token): string
     {
@@ -56,12 +45,10 @@ final class PHPGrammar implements GrammarInterface
     private function parseGrammar(string $content, int $offset): ?Token
     {
         $tokens = null;
-        foreach (token_get_all($content) as $token) {
-            if ($tokens === null) {
-                if (!$this->is($token, [T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO])) {
-                    // not php
-                    return null;
-                }
+        foreach (\token_get_all($content) as $token) {
+            if ($tokens === null && !$this->is($token, [T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO])) {
+                // not php
+                return null;
             }
 
             $tokens[] = $token;
@@ -76,7 +63,7 @@ final class PHPGrammar implements GrammarInterface
 
         $buffer = '';
         foreach ($tokens as $token) {
-            if (!is_array($token)) {
+            if (!\is_array($token)) {
                 $buffer .= $token;
                 continue;
             }
@@ -89,15 +76,12 @@ final class PHPGrammar implements GrammarInterface
         return $token;
     }
 
-    /**
-     * @param string|array $token
-     */
-    private function is($token, array $type): bool
+    private function is(array|string $token, array $type): bool
     {
-        if (!is_array($token)) {
+        if (!\is_array($token)) {
             return false;
         }
 
-        return in_array($token[0], $type);
+        return \in_array($token[0], $type);
     }
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer;
@@ -16,30 +9,14 @@ final class Token
     // Does not any type, raw user content.
     public const TYPE_RAW = 0;
 
-    /** @var string */
-    public $grammar;
+    public array $tokens = [];
 
-    /** @var int */
-    public $type;
-
-    /** @var int */
-    public $offset;
-
-    /** @var string */
-    public $content;
-
-    /** @var array */
-    public $tokens = [];
-
-    /**
-     * @param string|null $grammar
-     */
-    public function __construct(int $type, int $offset, string $content, string $grammar = null)
-    {
-        $this->type = $type;
-        $this->offset = $offset;
-        $this->content = $content;
-        $this->grammar = $grammar;
+    public function __construct(
+        public int $type,
+        public ?int $offset,
+        public string $content,
+        public ?string $grammar = null
+    ) {
     }
 
     /**
@@ -56,7 +33,7 @@ final class Token
         ];
 
         if ($this->grammar !== null) {
-            $token['type'] = call_user_func([$this->grammar, 'tokenName'], $this->type);
+            $token['type'] = \call_user_func([$this->grammar, 'tokenName'], $this->type);
         }
 
         if ($this->tokens !== []) {

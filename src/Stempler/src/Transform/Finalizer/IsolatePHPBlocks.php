@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Finalizer;
@@ -24,44 +17,35 @@ final class IsolatePHPBlocks implements VisitorInterface
     // php marcos to inject values into
     private const PHP_MARCO_EXISTS_FUNCTION = 'injected';
 
-    /** @var string */
-    private $path;
-
-    public function __construct(string $path)
-    {
-        $this->path = $path;
+    public function __construct(
+        private readonly string $path
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx): void
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
-        if (
-            !$node instanceof PHP
-            || strpos($node->content, self::PHP_MARCO_EXISTS_FUNCTION) === false
-        ) {
-            return;
+        if (!$node instanceof PHP || !\str_contains($node->content, self::PHP_MARCO_EXISTS_FUNCTION)) {
+            return null;
         }
 
         if ($node->getContext()->getPath() !== $this->path) {
-            return;
+            return null;
         }
 
         $exists = new PHPMixin($node->tokens, self::PHP_MARCO_EXISTS_FUNCTION);
-        foreach ($exists->getBlocks() as $name => $_) {
+        foreach (\array_keys($exists->getBlocks()) as $name) {
             // do not leak to parent template
             $exists->set($name, 'false');
         }
 
         $node->content = $exists->compile();
-        $node->tokens = token_get_all($node->content);
+        $node->tokens = \token_get_all($node->content);
+
+        return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx): void
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 }

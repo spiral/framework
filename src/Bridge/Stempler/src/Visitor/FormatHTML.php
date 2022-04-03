@@ -28,21 +28,21 @@ final class FormatHTML implements VisitorInterface
     private const BEFORE_PHP   = 1;
     private const BEFORE_CLOSE = 2;
 
-    public function enterNode(mixed $node, VisitorContext $ctx): void
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
         if (!$node instanceof Template && !$node instanceof Block && !$node instanceof Tag) {
-            return;
+            return null;
         }
 
         if ($node instanceof Tag && \in_array($node->name, self::EXCLUDE)) {
             // raw nodes
-            return;
+            return null;
         }
 
         $level = $this->getLevel($ctx);
         if ($level === null) {
             // not available in some contexts
-            return;
+            return null;
         }
 
         foreach ($node->nodes as $i => $child) {
@@ -63,10 +63,13 @@ final class FormatHTML implements VisitorInterface
                 $position
             );
         }
+
+        return null;
     }
 
-    public function leaveNode(mixed $node, VisitorContext $ctx): void
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
     private function indentContent(string $content, int $level, int $position = self::BETWEEN_TAGS): string
@@ -149,6 +152,6 @@ final class FormatHTML implements VisitorInterface
             return \str_replace("\r\n", "\n", $string);
         }
 
-        return preg_replace('/[\n\r]+/', "\n", $string);
+        return \preg_replace('/[\n\r]+/', "\n", $string);
     }
 }
