@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Bootloader;
@@ -19,6 +12,7 @@ use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
+use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\InvocationLocator;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\ScopedClassesInterface;
@@ -33,12 +27,9 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
         InvocationsInterface::class => InvocationLocator::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
     public function boot(Container $container, DirectoriesInterface $dirs): void
@@ -47,7 +38,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
         $container->bindInjector(InvocationLocator::class, Tokenizer::class);
 
         $this->config->setDefaults(
-            'tokenizer',
+            TokenizerConfig::CONFIG,
             [
                 'directories' => [$dirs->get('app')],
                 'exclude'     => [
@@ -65,6 +56,6 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
      */
     public function addDirectory(string $directory): void
     {
-        $this->config->modify('tokenizer', new Append('directories', null, $directory));
+        $this->config->modify(TokenizerConfig::CONFIG, new Append('directories', null, $directory));
     }
 }

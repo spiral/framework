@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Reflection;
@@ -20,57 +13,22 @@ use Spiral\Tokenizer\Exception\ReflectionException;
  */
 final class ReflectionInvocation
 {
-    /** @var string */
-    private $filename = '';
-
-    /** @var int */
-    private $line = 0;
-
-    /** @var string */
-    private $class = '';
-
-    /** @var string */
-    private $operator = '';
-
-    /** @var string */
-    private $name = '';
-
-    /** @var string */
-    private $source = '';
-
-    /** @var ReflectionArgument[] */
-    private $arguments = [];
-
-    /**
-     * Was a function used inside another function call?
-     *
-     * @var int
-     */
-    private $level = 0;
-
     /**
      * New call reflection.
      *
      * @param ReflectionArgument[] $arguments
+     * @param int $level Was a function used inside another function call?
      */
     public function __construct(
-        string $filename,
-        int $line,
-        string $class,
-        string $operator,
-        string $name,
-        array $arguments,
-        string $source,
-        int $level
+        private readonly string $filename,
+        private readonly int $line,
+        private readonly string $class,
+        private readonly string $operator,
+        private readonly string $name,
+        private readonly array $arguments,
+        private readonly string $source,
+        private readonly int $level
     ) {
-        $this->filename = $filename;
-        $this->line = $line;
-        $this->class = $class;
-        $this->operator = $operator;
-        $this->name = $name;
-        $this->arguments = $arguments;
-        $this->source = $source;
-        $this->level = $level;
     }
 
     /**
@@ -78,7 +36,7 @@ final class ReflectionInvocation
      */
     public function getFilename(): string
     {
-        return str_replace('\\', '/', $this->filename);
+        return \str_replace('\\', '/', $this->filename);
     }
 
     /**
@@ -134,7 +92,7 @@ final class ReflectionInvocation
      */
     public function countArguments(): int
     {
-        return count($this->arguments);
+        return \count($this->arguments);
     }
 
     /**
@@ -150,13 +108,12 @@ final class ReflectionInvocation
     /**
      * Get call argument by it's position.
      *
-     *
      * @return ReflectionArgument|null
      */
     public function getArgument(int $index): ReflectionArgument
     {
         if (!isset($this->arguments[$index])) {
-            throw new ReflectionException("No such argument with index '{$index}'");
+            throw new ReflectionException(\sprintf("No such argument with index '%d'", $index));
         }
 
         return $this->arguments[$index];
