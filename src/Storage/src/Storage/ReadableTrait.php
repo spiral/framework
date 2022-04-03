@@ -21,42 +21,42 @@ trait ReadableTrait
      */
     abstract public function bucket(string $name = null): BucketInterface;
 
-    public function getContents(string|UriInterface|\Stringable $id): string
+    public function getContents(string|\Stringable $id): string
     {
         [$name, $pathname] = $this->parseUri($id);
 
         return $this->bucket($name)->getContents($pathname);
     }
 
-    public function getStream(string|UriInterface|\Stringable $id)
+    public function getStream(string|\Stringable $id)
     {
         [$name, $pathname] = $this->parseUri($id);
 
         return $this->bucket($name)->getStream($pathname);
     }
 
-    public function exists(string|UriInterface|\Stringable $id): bool
+    public function exists(string|\Stringable $id): bool
     {
         [$name, $pathname] = $this->parseUri($id);
 
         return $this->bucket($name)->exists($pathname);
     }
 
-    public function getLastModified(string|UriInterface|\Stringable $id): int
+    public function getLastModified(string|\Stringable $id): int
     {
         [$name, $pathname] = $this->parseUri($id);
 
         return $this->bucket($name)->getLastModified($pathname);
     }
 
-    public function getSize(string|UriInterface|\Stringable $id): int
+    public function getSize(string|\Stringable $id): int
     {
         [$name, $pathname] = $this->parseUri($id);
 
         return $this->bucket($name)->getSize($pathname);
     }
 
-    public function getMimeType(string|UriInterface|\Stringable $id): string
+    public function getMimeType(string|\Stringable $id): string
     {
         [$name, $pathname] = $this->parseUri($id);
 
@@ -64,7 +64,7 @@ trait ReadableTrait
     }
 
     #[ExpectedValues(valuesFromClass: Visibility::class)]
-    public function getVisibility(string|UriInterface|\Stringable $id): string
+    public function getVisibility(string|\Stringable $id): string
     {
         [$name, $pathname] = $this->parseUri($id);
 
@@ -74,5 +74,5 @@ trait ReadableTrait
     /**
      * {@see Storage::parseUri()}
      */
-    abstract protected function parseUri(string|UriInterface|\Stringable $uri, bool $withScheme = true): array;
+    abstract protected function parseUri(string|\Stringable $uri, bool $withScheme = true): array;
 }

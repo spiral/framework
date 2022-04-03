@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
-use Psr\Http\Message\UriInterface;
 use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\FileInterface;
@@ -26,7 +25,7 @@ interface WritableInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function create(string|UriInterface|\Stringable $id, array $config = []): FileInterface;
+    public function create(string|\Stringable $id, array $config = []): FileInterface;
 
     /**
      * {@see BucketInterface::write()}
@@ -35,7 +34,7 @@ interface WritableInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function write(string|UriInterface|\Stringable $id, mixed $content, array $config = []): FileInterface;
+    public function write(string|\Stringable $id, mixed $content, array $config = []): FileInterface;
 
     /**
      * {@see BucketInterface::setVisibility()}
@@ -45,7 +44,7 @@ interface WritableInterface
      * @throws InvalidArgumentException
      */
     public function setVisibility(
-        string|UriInterface|\Stringable $id,
+        string|\Stringable $id,
         #[ExpectedValues(valuesFromClass: Visibility::class)]
         string $visibility
     ): FileInterface;
@@ -57,8 +56,8 @@ interface WritableInterface
      * @throws InvalidArgumentException
      */
     public function copy(
-        string|UriInterface|\Stringable $source,
-        string|UriInterface|\Stringable $destination,
+        string|\Stringable $source,
+        string|\Stringable $destination,
         array $config = []
     ): FileInterface;
 
@@ -69,8 +68,8 @@ interface WritableInterface
      * @throws InvalidArgumentException
      */
     public function move(
-        string|UriInterface|\Stringable $source,
-        string|UriInterface|\Stringable $destination,
+        string|\Stringable $source,
+        string|\Stringable $destination,
         array $config = []
     ): FileInterface;
 
@@ -80,5 +79,5 @@ interface WritableInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function delete(string|UriInterface|\Stringable $id, bool $clean = false): void;
+    public function delete(string|\Stringable $id, bool $clean = false): void;
 }

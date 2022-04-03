@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
-use Psr\Http\Message\UriInterface;
 use Spiral\Storage\FileInterface;
 use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
@@ -20,14 +19,14 @@ trait WritableTrait
      */
     abstract public function bucket(string $name = null): BucketInterface;
 
-    public function create(string|UriInterface|\Stringable $id, array $config = []): FileInterface
+    public function create(string|\Stringable $id, array $config = []): FileInterface
     {
         [$name, $pathname] = $this->parseUri($id);
 
         return $this->bucket($name)->create($pathname, $config);
     }
 
-    public function write(string|UriInterface|\Stringable $id, mixed $content, array $config = []): FileInterface
+    public function write(string|\Stringable $id, mixed $content, array $config = []): FileInterface
     {
         [$name, $pathname] = $this->parseUri($id);
 
@@ -35,7 +34,7 @@ trait WritableTrait
     }
 
     public function setVisibility(
-        string|UriInterface|\Stringable $id,
+        string|\Stringable $id,
         #[ExpectedValues(valuesFromClass: Visibility::class)]
         string $visibility
     ): FileInterface {
@@ -45,8 +44,8 @@ trait WritableTrait
     }
 
     public function copy(
-        string|UriInterface|\Stringable $source,
-        string|UriInterface|\Stringable $destination,
+        string|\Stringable $source,
+        string|\Stringable $destination,
         array $config = []
     ): FileInterface {
         [$sourceName, $sourcePathname] = $this->parseUri($source);
@@ -59,8 +58,8 @@ trait WritableTrait
     }
 
     public function move(
-        string|UriInterface|\Stringable $source,
-        string|UriInterface|\Stringable $destination,
+        string|\Stringable $source,
+        string|\Stringable $destination,
         array $config = []
     ): FileInterface {
         [$sourceName, $sourcePathname] = $this->parseUri($source);
@@ -72,7 +71,7 @@ trait WritableTrait
         return $sourceStorage->move($sourcePathname, $destPathname, $destStorage, $config);
     }
 
-    public function delete(string|UriInterface|\Stringable $id, bool $clean = false): void
+    public function delete(string|\Stringable $id, bool $clean = false): void
     {
         [$name, $pathname] = $this->parseUri($id);
 
@@ -84,5 +83,5 @@ trait WritableTrait
     /**
      * {@see Storage::parseUri()}
      */
-    abstract protected function parseUri(string|UriInterface|\Stringable $uri, bool $withScheme = true): array;
+    abstract protected function parseUri(string|\Stringable $uri, bool $withScheme = true): array;
 }

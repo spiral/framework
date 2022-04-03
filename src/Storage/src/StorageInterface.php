@@ -28,7 +28,7 @@ interface StorageInterface extends
     /**
      * @throws InvalidArgumentException
      */
-    public function file(string|UriInterface|\Stringable $id): FileInterface;
+    public function file(string|\Stringable $id): FileInterface;
 
     public function withDefault(string $name): self;
 }

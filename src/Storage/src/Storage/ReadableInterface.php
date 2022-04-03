@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
-use Psr\Http\Message\UriInterface;
 use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\StorageInterface;
@@ -24,7 +23,7 @@ interface ReadableInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getContents(string|UriInterface|\Stringable $id): string;
+    public function getContents(string|\Stringable $id): string;
 
     /**
      * {@see BucketInterface::getStream()}
@@ -33,7 +32,7 @@ interface ReadableInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getStream(string|UriInterface|\Stringable $id);
+    public function getStream(string|\Stringable $id);
 
     /**
      * {@see BucketInterface::exists()}
@@ -41,7 +40,7 @@ interface ReadableInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function exists(string|UriInterface|\Stringable $id): bool;
+    public function exists(string|\Stringable $id): bool;
 
     /**
      * {@see BucketInterface::getLastModified()}
@@ -50,7 +49,7 @@ interface ReadableInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getLastModified(string|UriInterface|\Stringable $id): int;
+    public function getLastModified(string|\Stringable $id): int;
 
     /**
      * {@see BucketInterface::getSize()}
@@ -59,7 +58,7 @@ interface ReadableInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getSize(string|UriInterface|\Stringable $id): int;
+    public function getSize(string|\Stringable $id): int;
 
     /**
      *{@see BucketInterface::getMimeType()}
@@ -67,7 +66,7 @@ interface ReadableInterface
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getMimeType(string|UriInterface|\Stringable $id): string;
+    public function getMimeType(string|\Stringable $id): string;
 
     /**
      * {@see BucketInterface::getVisibility()}
@@ -77,5 +76,5 @@ interface ReadableInterface
      * @throws InvalidArgumentException
      */
     #[ExpectedValues(valuesFromClass: Visibility::class)]
-    public function getVisibility(string|UriInterface|\Stringable $id): string;
+    public function getVisibility(string|\Stringable $id): string;
 }

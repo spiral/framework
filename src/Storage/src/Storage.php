@@ -62,7 +62,7 @@ final class Storage implements MutableStorageInterface
         return $this->buckets[$name];
     }
 
-    public function file(string|UriInterface|\Stringable $id): FileInterface
+    public function file(string|\Stringable $id): FileInterface
     {
         [$bucket, $file] = $this->parseUri($id);
 
@@ -92,7 +92,7 @@ final class Storage implements MutableStorageInterface
      * @return array{0: string|null, 1: string}
      * @throws InvalidArgumentException
      */
-    protected function parseUri(string|UriInterface|\Stringable $uri, bool $withScheme = true): array
+    protected function parseUri(string|\Stringable $uri, bool $withScheme = true): array
     {
         $uri = $this->uriToString($uri);
         $result = \parse_url($uri);
@@ -116,7 +116,7 @@ final class Storage implements MutableStorageInterface
         ];
     }
 
-    private function uriToString(string|UriInterface|\Stringable $uri): string
+    private function uriToString(string|\Stringable $uri): string
     {
         return match (true) {
             \is_string($uri) => $uri,
