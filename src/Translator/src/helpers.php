@@ -15,18 +15,13 @@ if (!\function_exists('l')) {
      * l('Some Message');
      * l('Hello {name}!', ['name' => $name]);
      *
-     * @param string $string
-     * @param array  $options
-     * @param string $domain
-     *
-     *
      * @throws TranslatorException
      * @throws ScopeException
      */
     function l(string $string, array $options = [], string $domain = null): string
     {
         $container = ContainerScope::getContainer();
-        if (empty($container) || !$container->has(TranslatorInterface::class)) {
+        if ($container === null || !$container->has(TranslatorInterface::class)) {
             throw new ScopeException(
                 '`TranslatorInterface` binding is missing or container scope is not set'
             );
@@ -47,10 +42,6 @@ if (!\function_exists('p')) {
      * p("{n} user|{n} users", $users);
      *
      * @param string $string Can include {n} as placeholder.
-     * @param int    $number
-     * @param array  $options
-     * @param string $domain
-     *
      *
      * @throws TranslatorException
      * @throws ScopeException

@@ -14,7 +14,7 @@ class LocaleException extends TranslatorException
         int $code = 0,
         \Throwable $previous = null
     ) {
-        parent::__construct(\sprintf("Undefined locale '%s'", $locale), $code, $previous);
+        parent::__construct(\sprintf('Undefined locale \'%s\'', $locale), $code, $previous);
     }
 
     public function getLocale(): string
