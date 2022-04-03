@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage\Bucket;
@@ -37,7 +30,7 @@ interface WritableInterface
      * @param array $config specific config based on used adapter
      * @throws FileOperationException
      */
-    public function write(string $pathname, $content, array $config = []): FileInterface;
+    public function write(string $pathname, mixed $content, array $config = []): FileInterface;
 
     /**
      * Sets file visibility.

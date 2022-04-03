@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage\Storage;
@@ -20,7 +13,6 @@ use Spiral\Storage\Visibility;
 /**
  * @psalm-import-type VisibilityType from Visibility
  *
- * @psalm-import-type IdType from StorageInterface
  * @see StorageInterface
  */
 interface ReadableInterface
@@ -28,68 +20,61 @@ interface ReadableInterface
     /**
      * {@see BucketInterface::getContents()}
      *
-     * @param IdType $id
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getContents($id): string;
+    public function getContents(string|\Stringable $id): string;
 
     /**
      * {@see BucketInterface::getStream()}
      *
-     * @param IdType $id
      * @return resource
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getStream($id);
+    public function getStream(string|\Stringable $id);
 
     /**
      * {@see BucketInterface::exists()}
      *
-     * @param IdType $id
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function exists($id): bool;
+    public function exists(string|\Stringable $id): bool;
 
     /**
      * {@see BucketInterface::getLastModified()}
      *
-     * @param IdType $id
      * @return positive-int|0
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getLastModified($id): int;
+    public function getLastModified(string|\Stringable $id): int;
 
     /**
      * {@see BucketInterface::getSize()}
      *
-     * @param IdType $id
      * @return positive-int|0
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getSize($id): int;
+    public function getSize(string|\Stringable $id): int;
 
     /**
      *{@see BucketInterface::getMimeType()}
      *
-     * @param IdType $id
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
-    public function getMimeType($id): string;
+    public function getMimeType(string|\Stringable $id): string;
 
     /**
      * {@see BucketInterface::getVisibility()}
      *
-     * @param IdType $id
      * @return VisibilityType
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
     #[ExpectedValues(valuesFromClass: Visibility::class)]
-    public function getVisibility($id): string;
+    public function getVisibility(string|\Stringable $id): string;
 }
