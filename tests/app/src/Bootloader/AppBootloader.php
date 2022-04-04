@@ -21,8 +21,6 @@ use Spiral\App\Interceptor;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
 use Spiral\Bootloader\Http\JsonPayloadsBootloader;
-use Spiral\Bootloader\Security\ValidationBootloader;
-use Spiral\Bootloader\Views\ViewsBootloader;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptableCore;
@@ -34,6 +32,8 @@ use Spiral\Router\RouterInterface;
 use Spiral\Router\Target\Action;
 use Spiral\Router\Target\Controller;
 use Spiral\Security\PermissionsInterface;
+use Spiral\Validation\Bootloader\ValidationBootloader;
+use Spiral\Views\Bootloader\ViewsBootloader;
 
 class AppBootloader extends DomainBootloader
 {

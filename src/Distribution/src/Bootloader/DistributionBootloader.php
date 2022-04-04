@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Bootloader\Distribution;
+namespace Spiral\Distribution\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Distribution\Manager;
+use Spiral\Distribution\Config\DistributionConfig;
 use Spiral\Distribution\DistributionInterface;
+use Spiral\Distribution\Manager;
 use Spiral\Distribution\MutableDistributionInterface;
 use Spiral\Distribution\Resolver\UriResolver;
 use Spiral\Distribution\UriResolverInterface;

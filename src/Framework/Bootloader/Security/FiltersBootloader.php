@@ -12,6 +12,7 @@ use Spiral\Filters\FilterInterface;
 use Spiral\Filters\FilterProvider;
 use Spiral\Filters\FilterProviderInterface;
 use Spiral\Filters\InputInterface;
+use Spiral\Validation\Bootloader\ValidationBootloader;
 
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {

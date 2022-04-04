@@ -6,7 +6,6 @@ namespace Spiral\Stempler\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Bootloader\Views\ViewsBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\Autowire;
@@ -20,6 +19,7 @@ use Spiral\Stempler\Transform\Finalizer;
 use Spiral\Stempler\Transform\Visitor;
 use Spiral\Stempler\VisitorInterface;
 use Spiral\Translator\Views\LocaleProcessor;
+use Spiral\Views\Bootloader\ViewsBootloader;
 use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\Processor;
 use Spiral\Views\ProcessorInterface;

@@ -2,21 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Bootloader\Storage;
+namespace Spiral\Storage\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Exception\EnvironmentException;
-use Spiral\Bootloader\Distribution\DistributionBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\NotFoundException;
+use Spiral\Distribution\Bootloader\DistributionBootloader;
+use Spiral\Distribution\DistributionInterface as CdnInterface;
+use Spiral\Storage\Bucket;
 use Spiral\Storage\BucketFactory;
 use Spiral\Storage\BucketFactoryInterface;
+use Spiral\Storage\BucketInterface;
+use Spiral\Storage\Config\StorageConfig;
 use Spiral\Storage\Storage;
 use Spiral\Storage\StorageInterface;
-use Spiral\Storage\Bucket;
-use Spiral\Storage\BucketInterface;
-use Spiral\Distribution\DistributionInterface as CdnInterface;
 
 class StorageBootloader extends Bootloader
 {

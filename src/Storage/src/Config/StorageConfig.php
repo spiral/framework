@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Bootloader\Storage;
+namespace Spiral\Storage\Config;
 
 use AsyncAws\S3\S3Client as S3AsyncClient;
 use Aws\Credentials\Credentials;

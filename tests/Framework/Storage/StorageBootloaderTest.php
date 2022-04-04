@@ -7,10 +7,10 @@ namespace Framework\Storage;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Mockery as m;
-use Spiral\Bootloader\Storage\StorageConfig;
 use Spiral\Distribution\UriResolverInterface;
 use Spiral\Storage\BucketFactoryInterface;
 use Spiral\Storage\BucketInterface;
+use Spiral\Storage\Config\StorageConfig;
 use Spiral\Storage\StorageInterface;
 use Spiral\Tests\Framework\BaseTest;
 

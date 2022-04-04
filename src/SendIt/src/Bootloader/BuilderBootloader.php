@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Spiral\SendIt\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Bootloader\Views\ViewsBootloader;
 use Spiral\SendIt\Renderer\ViewRenderer;
 use Spiral\SendIt\RendererInterface;
 use Spiral\Stempler\Bootloader\StemplerBootloader;
+use Spiral\Views\Bootloader\ViewsBootloader;
 
 /**
  * Enables stempler email building DSL.
