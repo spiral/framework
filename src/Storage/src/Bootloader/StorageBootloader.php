@@ -56,7 +56,7 @@ class StorageBootloader extends Bootloader
                             . 'Please make sure that bootloader %s is added in your application';
                         $message = \sprintf($message, $name, DistributionBootloader::class);
 
-                        throw new EnvironmentException($message, (int)$e->getCode(), $e);
+                        throw new EnvironmentException($message, $e->getCode(), $e);
                     }
 
                     $resolver = $cdn->resolver($distributions[$name]);
