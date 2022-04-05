@@ -32,7 +32,7 @@ final class HtmlRenderer extends AbstractRenderer
     ) {
         $this->dumper = new Dumper();
 
-        if ($style == self::INVERTED) {
+        if ($style === self::INVERTED) {
             $this->renderer = new DebugRenderer(DebugRenderer::INVERTED);
             $this->highlighter = new Highlighter(new HtmlStyle(HtmlStyle::INVERTED));
         } else {

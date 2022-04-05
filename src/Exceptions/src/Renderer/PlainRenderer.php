@@ -29,7 +29,7 @@ final class PlainRenderer extends AbstractRenderer
 
         if ($verbosity->value >= Verbosity::DEBUG->value) {
             $result .= $this->renderTrace($exception, new Highlighter(new PlainStyle()));
-        } elseif ($verbosity >= Verbosity::VERBOSE->value) {
+        } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
             $result .= $this->renderTrace($exception);
         }
 

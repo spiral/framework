@@ -9,5 +9,5 @@ interface ErrorReporterInterface
     public function report(
         \Throwable $exception,
         Verbosity $verbosity = null,
-    ): string;
+    ): void;
 }

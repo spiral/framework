@@ -34,9 +34,9 @@ final class ExceptionHandler
      */
     public static function register(): void
     {
-        \register_shutdown_function([self::class, 'handleShutdown']);
-        \set_error_handler([self::class, 'handleError']);
-        \set_exception_handler([self::class, 'handleException']);
+        \register_shutdown_function(self::handleShutdown(...));
+        \set_error_handler(self::handleError(...));
+        \set_exception_handler(self::handleException(...));
     }
 
     /**
@@ -62,13 +62,13 @@ final class ExceptionHandler
      *
      * @throws \ErrorException
      */
-    public static function handleError(int $code, string $message, string $filename = '', int $line = 0): void
+    public static function handleError(int $errno, string $errstr, string $errfile = '', int $errline = 0): void
     {
-        if (!(\error_reporting() & $code)) {
+        if (!(\error_reporting() & $errno)) {
             return;
         }
 
-        throw new \ErrorException($message, $code, 0, $filename, $line);
+        throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
     }
 
     /**
