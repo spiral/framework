@@ -11,6 +11,7 @@ use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\Renderer\HtmlRenderer;
+use Spiral\Exceptions\Verbosity;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
@@ -24,7 +25,7 @@ final class SapiDispatcher implements DispatcherInterface
 
     public function canServe(): bool
     {
-        return \php_sapi_name() !== 'cli';
+        return PHP_SAPI !== 'cli';
     }
 
     public function serve(EmitterInterface $emitter = null): void
@@ -70,14 +71,13 @@ final class SapiDispatcher implements DispatcherInterface
             // nothing to report
         }
 
-
         /** @var ResponseFactoryInterface $responseFactory */
         $responseFactory = $this->container->get(ResponseFactoryInterface::class);
         $response = $responseFactory->createResponse(500);
 
         // Reporting system (non handled) exception directly to the client
         $response->getBody()->write(
-            $handler->renderException($e, HtmlRenderer::VERBOSITY_VERBOSE)
+            $handler->render($e, verbosity: Verbosity::VERBOSE)
         );
 
         $emitter->emit($response);

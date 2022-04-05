@@ -8,6 +8,7 @@ use Spiral\Boot\Exception\FatalException;
 use Spiral\Exceptions\Renderer\AbstractRenderer;
 use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\HtmlRenderer;
+use Spiral\Exceptions\Verbosity;
 
 /**
  * ExceptionHandler is responsible for global error handling (outside of dispatchers). Handler
@@ -76,16 +77,16 @@ final class ExceptionHandler
     public static function handleException(\Throwable $e): void
     {
         if (self::$output === null) {
-            self::$output = \defined('STDERR') ? STDERR : \fopen('php://stderr', 'w+');
+            self::$output = \defined('STDERR') ? STDERR : \fopen('php://stderr', 'wb+');
         }
 
-        if (\php_sapi_name() === 'cli') {
+        if (\in_array(PHP_SAPI, ['cli', 'cli-server'], true)) {
             $handler = new ConsoleRenderer(self::$output);
         } else {
             $handler = new HtmlRenderer(HtmlRenderer::INVERTED);
         }
 
         // we are safe to handle global exceptions (system level) with maximum verbosity
-        \fwrite(self::$output, $handler->renderException($e, AbstractRenderer::VERBOSITY_VERBOSE));
+        \fwrite(self::$output, $handler->render($e, verbosity: Verbosity::VERBOSE));
     }
 }

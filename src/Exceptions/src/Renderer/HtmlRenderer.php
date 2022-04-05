@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Exceptions\Renderer;
 
 use Spiral\Debug\Dumper;
-use Spiral\Debug\Renderer\HtmlRenderer;
+use Spiral\Debug\Renderer\HtmlRenderer as DebugRenderer;
 use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\Style\HtmlStyle;
 use Spiral\Exceptions\Verbosity;
@@ -22,7 +22,7 @@ final class HtmlRenderer extends AbstractRenderer
     public const INVERTED = 'inverted';
     protected const FORMATS = ['text/html', 'html'];
 
-    protected HtmlRenderer $renderer;
+    protected DebugRenderer $renderer;
     protected Highlighter $highlighter;
     protected Dumper $dumper;
     protected ?StateInterface $state = null;
@@ -33,10 +33,10 @@ final class HtmlRenderer extends AbstractRenderer
         $this->dumper = new Dumper();
 
         if ($style == self::INVERTED) {
-            $this->renderer = new HtmlRenderer(HtmlRenderer::INVERTED);
+            $this->renderer = new DebugRenderer(DebugRenderer::INVERTED);
             $this->highlighter = new Highlighter(new HtmlStyle(HtmlStyle::INVERTED));
         } else {
-            $this->renderer = new HtmlRenderer(HtmlRenderer::DEFAULT);
+            $this->renderer = new DebugRenderer(DebugRenderer::DEFAULT);
             $this->highlighter = new Highlighter(new HtmlStyle(HtmlStyle::DEFAULT));
         }
 
