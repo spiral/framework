@@ -10,7 +10,7 @@ use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\Logger\DebugListener;
-use Spiral\Exceptions\Renderer\ConsoleHandler;
+use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Verbosity;
 use Spiral\Snapshots\SnapshotterInterface;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -71,7 +71,7 @@ final class ConsoleDispatcher implements DispatcherInterface
         }
 
         // Explaining exception to the user
-        $handler = new ConsoleHandler(STDERR);
+        $handler = new ConsoleRenderer(STDERR);
         $output->write($handler->render($e, verbosity: $this->mapVerbosity($output)));
     }
 

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Boot;
 
 use Spiral\Boot\Exception\FatalException;
-use Spiral\Exceptions\Renderer\AbstractHandler;
-use Spiral\Exceptions\Renderer\ConsoleHandler;
-use Spiral\Exceptions\Renderer\HtmlHandler;
+use Spiral\Exceptions\Renderer\AbstractRenderer;
+use Spiral\Exceptions\Renderer\ConsoleRenderer;
+use Spiral\Exceptions\Renderer\HtmlRenderer;
 
 /**
  * ExceptionHandler is responsible for global error handling (outside of dispatchers). Handler
@@ -80,12 +80,12 @@ final class ExceptionHandler
         }
 
         if (\php_sapi_name() === 'cli') {
-            $handler = new ConsoleHandler(self::$output);
+            $handler = new ConsoleRenderer(self::$output);
         } else {
-            $handler = new HtmlHandler(HtmlHandler::INVERTED);
+            $handler = new HtmlRenderer(HtmlRenderer::INVERTED);
         }
 
         // we are safe to handle global exceptions (system level) with maximum verbosity
-        \fwrite(self::$output, $handler->renderException($e, AbstractHandler::VERBOSITY_VERBOSE));
+        \fwrite(self::$output, $handler->renderException($e, AbstractRenderer::VERBOSITY_VERBOSE));
     }
 }

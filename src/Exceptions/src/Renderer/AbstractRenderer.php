@@ -10,7 +10,7 @@ use Spiral\Exceptions\Verbosity;
 /**
  * Provides common functionality for exception rendering.
  */
-abstract class AbstractHandler implements ErrorRendererInterface
+abstract class AbstractRenderer implements ErrorRendererInterface
 {
     /** @var non-empty-string[] Lower case format string */
     protected const FORMATS = [];

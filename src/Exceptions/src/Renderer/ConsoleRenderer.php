@@ -17,7 +17,7 @@ use Spiral\Exceptions\Verbosity;
  * 2) {@see Verbosity::VERBOSE} - stack information
  * 3) {@see Verbosity::DEBUG} - stack and source information.
  */
-class ConsoleHandler extends AbstractHandler
+class ConsoleRenderer extends AbstractRenderer
 {
     // Lines to show around targeted line.
     public const SHOW_LINES = 2;

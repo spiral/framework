@@ -6,7 +6,7 @@ namespace Spiral\Exceptions\Renderer;
 
 use Spiral\Exceptions\Verbosity;
 
-final class JsonHandler extends AbstractHandler
+final class JsonRenderer extends AbstractRenderer
 {
     protected const FORMATS = ['application/json', 'json'];
 

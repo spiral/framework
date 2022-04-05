@@ -13,7 +13,7 @@ use Spiral\Exceptions\Verbosity;
 /**
  * Render exception information into html.
  */
-final class HtmlHandler extends AbstractHandler
+final class HtmlRenderer extends AbstractRenderer
 {
     /**
      * Visual styles.

@@ -7,7 +7,7 @@ namespace Spiral\Exceptions\Renderer;
 use Spiral\Exceptions\Style\PlainStyle;
 use Spiral\Exceptions\Verbosity;
 
-final class PlainHandler extends AbstractHandler
+final class PlainRenderer extends AbstractRenderer
 {
     // Lines to show around targeted line.
     private const SHOW_LINES = 2;

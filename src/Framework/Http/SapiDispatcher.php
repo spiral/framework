@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Debug\StateInterface;
-use Spiral\Exceptions\Renderer\HtmlHandler;
+use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
@@ -55,7 +55,7 @@ final class SapiDispatcher implements DispatcherInterface
 
     protected function handleException(EmitterInterface $emitter, \Throwable $e): void
     {
-        $handler = new HtmlHandler();
+        $handler = new HtmlRenderer();
 
         try {
             /** @var SnapshotInterface $snapshot */
@@ -77,7 +77,7 @@ final class SapiDispatcher implements DispatcherInterface
 
         // Reporting system (non handled) exception directly to the client
         $response->getBody()->write(
-            $handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE)
+            $handler->renderException($e, HtmlRenderer::VERBOSITY_VERBOSE)
         );
 
         $emitter->emit($response);
