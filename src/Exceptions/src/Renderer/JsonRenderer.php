@@ -14,7 +14,7 @@ final class JsonRenderer extends AbstractRenderer
         \Throwable $exception,
         ?Verbosity $verbosity = Verbosity::BASIC,
         string $format = null,
-    ): string{
+    ): string {
         $verbosity ??= $this->defaultVerbosity;
         return \json_encode([
             'error'      => \sprintf(

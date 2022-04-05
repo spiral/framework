@@ -9,9 +9,9 @@ use Spiral\Exceptions\Verbosity;
 
 final class PlainRenderer extends AbstractRenderer
 {
+    protected const FORMATS = ['text/plain', 'text'];
     // Lines to show around targeted line.
     private const SHOW_LINES = 2;
-    protected const FORMATS = ['text/plain', 'text'];
 
     public function render(
         \Throwable $exception,
