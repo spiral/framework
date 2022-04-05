@@ -6,6 +6,7 @@ namespace Spiral\Exceptions\Renderer;
 
 use Spiral\Debug\Dumper;
 use Spiral\Debug\Renderer\HtmlRenderer as DebugRenderer;
+use Spiral\Debug\StateConsumerInterface;
 use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\Style\HtmlStyle;
 use Spiral\Exceptions\Verbosity;
@@ -13,7 +14,7 @@ use Spiral\Exceptions\Verbosity;
 /**
  * Render exception information into html.
  */
-final class HtmlRenderer extends AbstractRenderer
+final class HtmlRenderer extends AbstractRenderer implements StateConsumerInterface
 {
     /**
      * Visual styles.
@@ -43,7 +44,7 @@ final class HtmlRenderer extends AbstractRenderer
         $this->dumper->setRenderer(Dumper::RETURN, $this->renderer);
     }
 
-    public function withState(StateInterface $state): self
+    public function withState(StateInterface $state): static
     {
         $handler = clone $this;
         $handler->state = $state;
