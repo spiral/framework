@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Http;
 
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Debug\StateInterface;
-use Spiral\Exceptions\HtmlHandler;
+use Spiral\Exceptions\Renderer\HtmlHandler;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 

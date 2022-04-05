@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Boot;
 
 use Spiral\Boot\Exception\FatalException;
-use Spiral\Exceptions\AbstractHandler;
-use Spiral\Exceptions\ConsoleHandler;
-use Spiral\Exceptions\HtmlHandler;
+use Spiral\Exceptions\Renderer\AbstractHandler;
+use Spiral\Exceptions\Renderer\ConsoleHandler;
+use Spiral\Exceptions\Renderer\HtmlHandler;
 
 /**
  * ExceptionHandler is responsible for global error handling (outside of dispatchers). Handler
@@ -18,7 +18,7 @@ use Spiral\Exceptions\HtmlHandler;
 final class ExceptionHandler
 {
     /** @var resource */
-    private static mixed $output;
+    private static mixed $output = null;
 
     /**
      * @param resource $output

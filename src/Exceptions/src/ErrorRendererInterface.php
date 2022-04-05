@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
-use JetBrains\PhpStorm\ExpectedValues;
-
 interface ErrorRendererInterface
 {
+    /**
+     * @param string|null $format Preferred format
+     */
     public function render(
         \Throwable $exception,
-
-        #[ExpectedValues(valuesFromClass: HandlerInterface::class)]
-        ?int $verbosity = HandlerInterface::VERBOSITY_BASIC,
-
-        /** Preferred format */
+        ?Verbosity $verbosity = Verbosity::BASIC,
         string $format = null,
     ): string;
 

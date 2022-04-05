@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Exceptions;
+namespace Spiral\Exceptions\Renderer;
+
+use Spiral\Exceptions\StyleInterface;
 
 /**
  * Highlights portion of PHP file using given Style.
