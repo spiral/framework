@@ -17,6 +17,7 @@
     `Spiral\DataGrid\Response\GridResponseInterface`, `Spiral\DataGrid\GridInput`.
 - **Other Features**
   - [spiral/data-grid-bridge] Added method `addWriter` in `Spiral\DataGrid\Bootloader\GridBootloader`.
+  - Extended version of `psr/log` dependency from `^1.0` to `1 - 3`
 ## v2.11.0 - 2022-03-18
 - **High Impact Changes**
   - [spiral/queue] Added queue injector #592
