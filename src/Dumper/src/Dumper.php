@@ -57,7 +57,7 @@ class Dumper implements LoggerAwareInterface
 
     public function __construct(LoggerInterface $logger = null)
     {
-        if (!empty($logger)) {
+        if ($logger !== null) {
             $this->setLogger($logger);
         }
     }
@@ -93,10 +93,10 @@ class Dumper implements LoggerAwareInterface
                 return $dump;
 
             case self::LOGGER:
-                if ($this->logger == null) {
-                    throw new DumperException('Unable to dump value to log, no associated LoggerInterface');
+                if ($this->logger === null) {
+                    throw new DumperException('Unable to dump value to log, no associated LoggerInterface.');
                 }
-                $this->logger->debug($dump);
+                $this->logger->debug((string) $dump);
                 break;
 
             case self::ERROR_LOG:
@@ -179,15 +179,15 @@ class Dumper implements LoggerAwareInterface
 
         $type = strtolower(gettype($value));
 
-        if ($type == 'array') {
+        if ($type === 'array') {
             return $header . $this->renderArray($r, $value, $level, $hideHeader);
         }
 
-        if ($type == 'object') {
+        if ($type === 'object') {
             return $header . $this->renderObject($r, $value, $level, $hideHeader);
         }
 
-        if ($type == 'resource') {
+        if ($type === 'resource') {
             //No need to dump resource value
             $element = get_resource_type($value) . ' resource ';
 
