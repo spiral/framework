@@ -5,6 +5,8 @@ on:
   push:
     tags:
       - '*'
+    branches:
+      - 'master'
 
 jobs:
   split_monorepo:
