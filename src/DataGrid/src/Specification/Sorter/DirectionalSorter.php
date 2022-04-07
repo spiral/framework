@@ -21,7 +21,7 @@ final class DirectionalSorter implements SorterInterface
 
     private SorterInterface $desc;
 
-    private SorterInterface $sorter;
+    private ?SorterInterface $sorter = null;
 
     private ?string $direction = null;
 
