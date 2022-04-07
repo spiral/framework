@@ -2,7 +2,10 @@
 
 ## v3.0.0 - Unreleased
 - **High Impact Changes**
-  - Component `spiral/data-grid-bridge` is removed. Use `spiral/cycle-bridge` instead.
+  - Component `spiral/data-grid-bridge` is removed from `spiral/framework` repository. 
+    Please, use standalone package `spiral/data-grid-bridge` instead.
+  - Component `spiral/data-grid` is removed from `spiral/framework` repository.
+    Please, use standalone package `spiral/data-grid` instead.
   - Console commands `Spiral\Command\Cycle\MigrateCommand`, `Spiral\Command\Cycle\SyncCommand`,
     `Spiral\Command\Cycle\UpdateCommand`, `Spiral\Scaffolder\Command\MigrationCommand`, 
     `Spiral\Scaffolder\Command\Database\EntityCommand`, `Spiral\Scaffolder\Command\Database\RepositoryCommand`,
@@ -74,16 +77,7 @@
   - [spiral/hmvc] Added return type `mixed` to the method `process` in `Spiral\Core\CoreInterceptorInterface` interface.
   - [spiral/hmvc] Added return type `mixed` to the method `callAction` in `Spiral\Core\CoreInterface` interface.
   - [spiral/encrypter] Added return type `mixed` to the method `decrypt` in `Spiral\Encrypter\EncrypterInterface` interface.
-  - [spiral/data-grid] Added return type `mixed` and `mixed` parameter type of `$source` to the method `write` in
-    `Spiral\DataGrid\WriterInterface` interface.
-  - [spiral/data-grid] Added return type `mixed` to the method `getValue` in `Spiral\DataGrid\SpecificationInterface` interface.
-  - [spiral/data-grid] Added return type `mixed`, added `mixed` parameter type of `$default` to the method `getValue` 
     in `Spiral\DataGrid\InputInterface` interface.
-  - [spiral/data-grid] Added return type `mixed` to the method `getOption` in `Spiral\DataGrid\GridInterface` interface.
-  - [spiral/data-grid] Added return type `mixed`, added `mixed` parameter type of `$value` to the method `convert` 
-    in `Spiral\DataGrid\Specification\ValueInterface` interface.
-  - [spiral/data-grid] Added `string` type for parameter `$direction` in the method `withDirection` 
-    in `Spiral\DataGrid\Specification\SorterInterface`
   - [spiral/http] Added return type `array` and `mixed` parameter type of `$filler` to the method `fetch`, 
     added return type `mixed` to the method `offsetGet`, added return type `mixed` and `mixed` parameter type 
     of `$default` to the method `get`  in `Spiral\Http\Request\InputBag` class.
