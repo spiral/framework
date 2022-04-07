@@ -22,7 +22,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /** @var mixed */
     private $context;
 
-    private RulesInterface $provider;
+    private ?RulesInterface $provider = null;
 
     /**
      * @param mixed          $context
