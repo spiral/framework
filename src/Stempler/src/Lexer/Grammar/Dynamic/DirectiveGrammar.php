@@ -37,7 +37,10 @@ final class DirectiveGrammar implements IteratorAggregate
 
     private array $name = [];
 
-    private array $body = [];
+    /**
+     * @var array|null
+     */
+    private $body = [];
 
     public function parse(Buffer $src, int $offset): bool
     {
