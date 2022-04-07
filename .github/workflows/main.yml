@@ -27,6 +27,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Configure environment
+        run: |
+          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
+          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
+
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
@@ -73,6 +78,11 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Configure environment
+        run: |
+          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
+          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}
@@ -124,6 +134,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Configure environment
+        run: |
+          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
+          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
+
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
@@ -174,6 +189,11 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Configure environment
+        run: |
+          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
+          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}
