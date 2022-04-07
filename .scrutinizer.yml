@@ -33,3 +33,4 @@ filter:
   excluded_paths:
     - 'tests/*'
     - 'src/*/tests'
+    - 'src/Bridge/*/tests'

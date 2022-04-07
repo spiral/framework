@@ -13,6 +13,7 @@
     `Spiral\GRPC\ProtoCompiler`, `Spiral\GRPC\ServiceLocator`, `Spiral\Http\LegacyRrDispatcher`, `Spiral\Http\RrDispatcher`
     are deprecated. Will be removed in v3.0.
   - Changed package replacement strategy. "*" is replaced by "self.version".
+  - Sapi emitter now supports streaming emitting.
   - [spiral/data-grid-bridge] Removed deprecation in classes `Spiral\DataGrid\Annotation\DataGrid`, `Spiral\DataGrid\Bootloader\GridBootloader`,
     `Spiral\DataGrid\Config\GridConfig`, `Spiral\DataGrid\Interceptor\GridInterceptor`, `Spiral\DataGrid\Response\GridResponse`,
     `Spiral\DataGrid\Response\GridResponseInterface`, `Spiral\DataGrid\GridInput`.

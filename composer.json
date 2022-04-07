@@ -27,7 +27,7 @@
         "defuse/php-encryption": "^2.2",
         "doctrine/annotations": "^1.12",
         "doctrine/inflector": "^1.4|^2.0",
-        "laminas/laminas-diactoros": "^2.4",
+        "laminas/laminas-diactoros": "^2.8",
         "league/flysystem": "^2.0",
         "monolog/monolog": "^2.2",
         "myclabs/deep-copy": "^1.9",
@@ -136,7 +136,7 @@
         "league/flysystem-async-aws-s3": "^2.0",
         "league/flysystem-aws-s3-v3": "^2.0",
         "mikey179/vfsstream": "^1.6",
-        "mockery/mockery": "^1.3",
+        "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^8.5|^9.5",
         "nyholm/psr7": "^1.5.0",
         "ramsey/uuid": "^4.2",
@@ -150,7 +150,7 @@
         "spiral/roadrunner": "^1.9.2",
         "symfony/var-dumper": "^5.2|^6.0",
         "symplify/monorepo-builder": "^10.0",
-        "vimeo/psalm": "4.21"
+        "vimeo/psalm": "^4.22"
     },
     "autoload-dev": {
         "psr-4": {
