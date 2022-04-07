@@ -26,7 +26,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * Reference to _SESSION segment.
      */
-    private array $name;
+    private ?string $name = null;
 
     /**
      * @param string|null      $name
