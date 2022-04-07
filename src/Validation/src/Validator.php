@@ -33,7 +33,7 @@ final class Validator extends AbstractValidator
      */
     public function __destruct()
     {
-        $this->data = null;
+        $this->data = [];
         parent::__destruct();
     }
 
