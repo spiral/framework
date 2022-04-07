@@ -1,8 +1,3 @@
-filter:
-  excluded_paths:
-    - 'tests/*'
-checks:
-  php: true
 build:
   image: default-bionic
   environment:
@@ -17,7 +12,9 @@ build:
       - 'composer update --prefer-dist --no-interaction --no-progress'
   tests:
     override:
-      - command: vendor/bin/phpunit --coverage-clover=clover.xml
+      -
+        command: vendor/bin/phpunit --coverage-clover=clover.xml
         coverage:
           file: clover.xml
           format: php-clover
+      - php-scrutinizer-run
