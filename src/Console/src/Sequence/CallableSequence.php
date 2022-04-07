@@ -22,7 +22,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CallableSequence extends AbstractSequence
 {
-    private string $function;
+    /**
+     * @var array|string
+     */
+    private $function;
 
     /**
      * @param callable $function
