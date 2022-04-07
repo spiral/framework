@@ -7,6 +7,7 @@ namespace Spiral\Queue;
 use Spiral\Queue\Exception\SerializationException;
 use Throwable;
 
+use function Opis\Closure\serialize;
 use function Opis\Closure\unserialize;
 
 /**
