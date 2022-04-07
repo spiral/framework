@@ -4,9 +4,9 @@ filter:
 checks:
   php: true
 build:
+  image: default-bionic
   environment:
-    php:
-      version: 8.0
+    php: 8.1.2
   dependencies:
     before:
       - export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --arg key "dev-${SCRUTINIZER_BRANCH}" --raw-output '.["extra"]["branch-alias"][$key]' ${PATH_TO_COMPOSER_JSON_FILE})
