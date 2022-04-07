@@ -2,9 +2,10 @@ build:
   image: default-bionic
 
   environment:
-    php: 8.1.2
-    ini:
-      "xdebug.mode": coverage
+    php:
+      version: 8.1.2
+      ini:
+        "xdebug.mode": coverage
 
   dependencies:
     before:
