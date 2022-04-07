@@ -62,7 +62,8 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         $this->logError($request, $code, $e->getMessage());
 
         $response = $this->renderer->renderException($request, $code, $e->getMessage());
-        echo $response->getBody(); die;
+        echo $response->getBody();
+        die;
     }
 
     /**
@@ -87,7 +88,8 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                 format: $format
             )
         );
-        echo $response->getBody(); die;
+        echo $response->getBody();
+        die;
         return $response;
     }
 
