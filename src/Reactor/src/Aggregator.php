@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor;
 
+use ReturnTypeWillChange;
 use ArrayAccess;
 use ArrayIterator;
 use Countable;
@@ -28,15 +29,12 @@ class Aggregator extends AbstractDeclaration implements
     Countable,
     ReplaceableInterface
 {
-    /**
-     * @var array
-     */
-    private $allowed;
+    private array $allowed;
 
     /**
      * @var DeclarationInterface[]
      */
-    private $elements;
+    private array $elements;
 
     public function __construct(array $allowed, array $elements = [])
     {
@@ -151,7 +149,7 @@ class Aggregator extends AbstractDeclaration implements
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);

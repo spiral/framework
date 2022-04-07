@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Request;
 
+use Traversable;
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Streams\StreamWrapper;
 
@@ -20,7 +21,7 @@ use Spiral\Streams\StreamWrapper;
  * @method UploadedFileInterface|null get(string $name, $default = null)
  * @method UploadedFileInterface[] all()
  * @method UploadedFileInterface[] fetch(array $keys, bool $fill = false, $filler = null)
- * @method \Traversable|UploadedFileInterface[] getIterator()
+ * @method Traversable|UploadedFileInterface[] getIterator()
  */
 final class FilesBag extends InputBag
 {

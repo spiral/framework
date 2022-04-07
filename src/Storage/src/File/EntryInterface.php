@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Storage\File;
 
+use Stringable;
 use Spiral\Storage\BucketInterface;
 
-interface EntryInterface extends \Stringable
+interface EntryInterface extends Stringable
 {
     public function getId(): string;
 

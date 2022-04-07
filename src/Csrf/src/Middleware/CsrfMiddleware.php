@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Csrf\Middleware;
 
+use RuntimeException;
+use Throwable;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
@@ -30,8 +32,7 @@ final class CsrfMiddleware implements MiddlewareInterface
 {
     public const ATTRIBUTE = 'csrfToken';
 
-    /** @var CsrfConfig */
-    protected $config;
+    protected CsrfConfig $config;
 
     public function __construct(CsrfConfig $config)
     {
@@ -90,10 +91,10 @@ final class CsrfMiddleware implements MiddlewareInterface
     {
         try {
             if (empty($string = random_bytes($length))) {
-                throw new \RuntimeException('Unable to generate random string');
+                throw new RuntimeException('Unable to generate random string');
             }
-        } catch (\Throwable $e) {
-            throw new \RuntimeException('Unable to generate random string', $e->getCode(), $e);
+        } catch (Throwable $e) {
+            throw new RuntimeException('Unable to generate random string', $e->getCode(), $e);
         }
 
         return substr(base64_encode($string), 0, $length);

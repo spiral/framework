@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Console;
 
+use Exception;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -25,7 +26,7 @@ interface SequenceInterface
      * Execute sequence command or function.
      *
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute(ContainerInterface $container, OutputInterface $output);
 

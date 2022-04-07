@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
+use Throwable;
 use Spiral\Debug\Dumper;
 use Spiral\Debug\Renderer\HtmlRenderer;
 use Spiral\Debug\StateInterface;
@@ -71,7 +72,7 @@ class HtmlHandler extends AbstractHandler
     /**
      * @inheritdoc
      */
-    public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
+    public function renderException(Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
         $options = [
             'message'      => $this->getMessage($e),

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Models\Reflection;
 
+use ReflectionMethod;
+use ReflectionClass;
 use Spiral\Models\AbstractEntity;
 use Spiral\Models\SchematicEntity;
 
@@ -24,8 +26,8 @@ use Spiral\Models\SchematicEntity;
  * @method bool isSubclassOf($class)
  * @method bool hasConstant($name)
  * @method mixed getConstant($name)
- * @method \ReflectionMethod[] getMethods()
- * @method \ReflectionClass|null getParentClass()
+ * @method ReflectionMethod[] getMethods()
+ * @method ReflectionClass|null getParentClass()
  */
 class ReflectionEntity
 {
@@ -42,17 +44,16 @@ class ReflectionEntity
     private const MUTATOR_ACCESSOR = 'accessor';
 
     /** @var array @internal */
-    private $propertyCache = [];
+    private array $propertyCache = [];
 
-    /** @var \ReflectionClass */
-    private $reflection;
+    private ReflectionClass $reflection;
 
     /**
      * Only support SchematicEntity classes!
      */
     public function __construct(string $class)
     {
-        $this->reflection = new \ReflectionClass($class);
+        $this->reflection = new ReflectionClass($class);
     }
 
     /**
@@ -75,7 +76,7 @@ class ReflectionEntity
         $this->propertyCache = [];
     }
 
-    public function getReflection(): \ReflectionClass
+    public function getReflection(): ReflectionClass
     {
         return $this->reflection;
     }
@@ -115,7 +116,7 @@ class ReflectionEntity
     /**
      * Get methods declared in current class and exclude methods declared in parents.
      *
-     * @return \ReflectionMethod[]
+     * @return ReflectionMethod[]
      */
     public function declaredMethods(): array
     {

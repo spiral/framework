@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Storage;
 
+use Exception;
+use DateTimeImmutable;
+use DateInterval;
+use DateTimeInterface;
 use Spiral\Cache\Exception\InvalidArgumentException;
 
 trait InteractsWithTime
@@ -17,14 +21,14 @@ trait InteractsWithTime
      *
      * @codeCoverageIgnore Ignore time-aware-mutable value.
      *                     Must be covered with a stub.
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function now(): \DateTimeImmutable
+    protected function now(): DateTimeImmutable
     {
-        return new \DateTimeImmutable('NOW');
+        return new DateTimeImmutable('NOW');
     }
     /**
-     * @param null|int|\DateInterval|\DateTimeInterface $ttl
+     * @param null|int|DateInterval|DateTimeInterface $ttl
      * @throws InvalidArgumentException
      */
     private function ttlToTimestamp($ttl): int
@@ -33,13 +37,13 @@ trait InteractsWithTime
             return $this->ttl + time();
         }
 
-        if ($ttl instanceof \DateInterval) {
+        if ($ttl instanceof DateInterval) {
             return $this->now()
                 ->add($ttl)
                 ->getTimestamp();
         }
 
-        if ($ttl instanceof \DateTimeInterface) {
+        if ($ttl instanceof DateTimeInterface) {
             return $ttl->getTimestamp();
         }
 

@@ -11,18 +11,17 @@ declare(strict_types=1);
 
 namespace Spiral\Snapshots;
 
+use Throwable;
 /**
  * Carries information about specific error.
  */
 final class Snapshot implements SnapshotInterface
 {
-    /** @var string */
-    private $id;
+    private string $id;
 
-    /** @var \Throwable */
-    private $exception;
+    private Throwable $exception;
 
-    public function __construct(string $id, \Throwable $exception)
+    public function __construct(string $id, Throwable $exception)
     {
         $this->id = $id;
         $this->exception = $exception;
@@ -39,7 +38,7 @@ final class Snapshot implements SnapshotInterface
     /**
      * @inheritdoc
      */
-    public function getException(): \Throwable
+    public function getException(): Throwable
     {
         return $this->exception;
     }

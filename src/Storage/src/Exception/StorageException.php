@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Storage\Exception;
 
+use Exception;
 /**
  * General exception class for storage component.
  */
-class StorageException extends \Exception
+class StorageException extends Exception
 {
 }

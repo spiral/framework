@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Files;
 
+use Exception;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use GlobIterator;
+use SplFileInfo;
 use Spiral\Files\Exception\FileNotFoundException;
 use Spiral\Files\Exception\FilesException;
 use Spiral\Files\Exception\WriteErrorException;
@@ -27,10 +32,8 @@ final class Files implements FilesInterface
 
     /**
      * Files to be removed when component destructed.
-     *
-     * @var array
      */
-    private $destructFiles = [];
+    private array $destructFiles = [];
 
     /**
      * FileManager constructor.
@@ -117,7 +120,7 @@ final class Files implements FilesInterface
         bool $ensureDirectory = false,
         bool $append = false
     ): bool {
-        $mode = $mode ?? self::DEFAULT_FILE_MODE;
+        $mode ??= self::DEFAULT_FILE_MODE;
 
         try {
             if ($ensureDirectory) {
@@ -139,7 +142,7 @@ final class Files implements FilesInterface
                 //Forcing mode after file creation
                 $this->setPermissions($filename, $mode);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new WriteErrorException($e->getMessage(), $e->getCode(), $e);
         }
 
@@ -189,9 +192,9 @@ final class Files implements FilesInterface
             throw new FilesException("Undefined or invalid directory {$directory}");
         }
 
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
         );
 
         foreach ($files as $file) {
@@ -423,13 +426,13 @@ final class Files implements FilesInterface
 
     /**
      * @param string|null $pattern
-     * @return \GlobIterator|\SplFileInfo[]
+     * @return GlobIterator|SplFileInfo[]
      */
-    private function filesIterator(string $location, string $pattern = null): \GlobIterator
+    private function filesIterator(string $location, string $pattern = null): GlobIterator
     {
-        $pattern = $pattern ?? '*';
+        $pattern ??= '*';
         $regexp = rtrim($location, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($pattern, DIRECTORY_SEPARATOR);
 
-        return new \GlobIterator($regexp);
+        return new GlobIterator($regexp);
     }
 }

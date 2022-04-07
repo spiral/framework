@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Validation\Exception;
 
-class ValidationException extends \RuntimeException
+use RuntimeException;
+class ValidationException extends RuntimeException
 {
 }

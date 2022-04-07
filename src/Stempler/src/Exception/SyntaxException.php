@@ -11,16 +11,16 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Exception;
 
+use RuntimeException;
 use Spiral\Stempler\Lexer\Token;
 
 /**
  * Syntax exceptions can be intercepted at Builder level to properly associate
  * filepath.
  */
-class SyntaxException extends \RuntimeException
+class SyntaxException extends RuntimeException
 {
-    /** @var Token */
-    private $token;
+    private Token $token;
 
     public function __construct(string $message, Token $context)
     {

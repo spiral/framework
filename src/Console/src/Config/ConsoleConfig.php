@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Console\Config;
 
+use Generator;
 use Spiral\Console\Exception\ConfigException;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
@@ -58,11 +59,11 @@ final class ConsoleConfig extends InjectableConfig
     /**
      * Get list of configure sequences.
      *
-     * @return \Generator|SequenceInterface[]
+     * @return Generator|SequenceInterface[]
      *
      * @throws ConfigException
      */
-    public function configureSequence(): \Generator
+    public function configureSequence(): Generator
     {
         $sequence = $this->config['configure'] ?? $this->config['configureSequence'] ?? [];
         foreach ($sequence as $item) {
@@ -73,11 +74,11 @@ final class ConsoleConfig extends InjectableConfig
     /**
      * Get list of all update sequences.
      *
-     * @return \Generator|SequenceInterface[]
+     * @return Generator|SequenceInterface[]
      *
      * @throws ConfigException
      */
-    public function updateSequence(): \Generator
+    public function updateSequence(): Generator
     {
         $sequence = $this->config['update'] ?? $this->config['updateSequence'] ?? [];
         foreach ($sequence as $item) {
@@ -120,7 +121,7 @@ final class ConsoleConfig extends InjectableConfig
 
         throw new ConfigException(sprintf(
             'Unable to parse sequence `%s`.',
-            json_encode($item)
+            json_encode($item, JSON_THROW_ON_ERROR)
         ));
     }
 }

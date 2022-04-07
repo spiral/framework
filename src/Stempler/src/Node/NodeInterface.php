@@ -11,12 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Node;
 
+use IteratorAggregate;
 use Spiral\Stempler\Parser\Context;
 
 /**
  * Defines an ability to represent AST node.
  */
-interface NodeInterface extends \IteratorAggregate
+interface NodeInterface extends IteratorAggregate
 {
     public function getContext(): ?Context;
 }

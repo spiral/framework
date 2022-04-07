@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Merge;
 
+use Throwable;
 use Spiral\Stempler\Builder;
 use Spiral\Stempler\Exception\ImportException;
 use Spiral\Stempler\Node\HTML\Tag;
@@ -29,14 +30,11 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class ResolveImports implements VisitorInterface
 {
-    /** @var string */
-    private $useKeyword = 'use:';
+    private string $useKeyword = 'use:';
 
-    /** @var Builder */
-    private $builder;
+    private Builder $builder;
 
-    /** @var Merger */
-    private $merger;
+    private Merger $merger;
 
     public function __construct(Builder $builder, Merger $merger = null)
     {
@@ -77,7 +75,7 @@ final class ResolveImports implements VisitorInterface
         // imported tag
         try {
             $import = $importCtx->resolve($this->builder, $node->name);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new ImportException(
                 "Unable to resolve import `{$node->name}`",
                 $node->getContext(),

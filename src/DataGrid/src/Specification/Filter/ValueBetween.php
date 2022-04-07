@@ -21,13 +21,11 @@ final class ValueBetween implements FilterInterface
     private $expression;
 
     /** @var string[] */
-    private $value;
+    private array $value;
 
-    /** @var bool */
-    private $includeFrom;
+    private bool $includeFrom;
 
-    /** @var bool */
-    private $includeTo;
+    private bool $includeTo;
 
     /**
      * @param ValueInterface|mixed $expression

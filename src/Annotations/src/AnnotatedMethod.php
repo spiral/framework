@@ -11,13 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\Annotations;
 
+use ReflectionMethod;
+use ReflectionClass;
 /**
  * @deprecated since v2.12. Will be removed in v3.0
  */
 final class AnnotatedMethod
 {
-    /** @var \ReflectionMethod */
-    private $method;
+    private ReflectionMethod $method;
 
     /** @var mixed */
     private $annotation;
@@ -25,18 +26,18 @@ final class AnnotatedMethod
     /**
      * @param mixed             $annotation
      */
-    public function __construct(\ReflectionMethod $method, $annotation)
+    public function __construct(ReflectionMethod $method, $annotation)
     {
         $this->method = $method;
         $this->annotation = $annotation;
     }
 
-    public function getClass(): \ReflectionClass
+    public function getClass(): ReflectionClass
     {
         return $this->method->getDeclaringClass();
     }
 
-    public function getMethod(): \ReflectionMethod
+    public function getMethod(): ReflectionMethod
     {
         return $this->method;
     }

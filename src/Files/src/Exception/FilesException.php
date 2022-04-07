@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Files\Exception;
 
+use RuntimeException;
 /**
  * Generic files exception.
  */
-class FilesException extends \RuntimeException
+class FilesException extends RuntimeException
 {
 }

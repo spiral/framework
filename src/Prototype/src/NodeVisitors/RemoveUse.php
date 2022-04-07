@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
 
+use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
@@ -26,7 +27,7 @@ final class RemoveUse extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
-        if (!$node instanceof Node\Stmt\Use_) {
+        if (!$node instanceof Use_) {
             return null;
         }
 

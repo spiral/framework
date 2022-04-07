@@ -18,14 +18,11 @@ final class MailJob implements HandlerInterface, SingletonInterface
 {
     use LoggerTrait;
 
-    /** @var MailerConfig */
-    private $config;
+    private MailerConfig $config;
 
-    /** @var SymfonyMailer */
-    private $mailer;
+    private SymfonyMailer $mailer;
 
-    /**  @var RendererInterface */
-    private $renderer;
+    private RendererInterface $renderer;
 
     public function __construct(MailerConfig $config, SymfonyMailer $mailer, RendererInterface $renderer)
     {
@@ -43,7 +40,7 @@ final class MailJob implements HandlerInterface, SingletonInterface
     public function handle(string $name, string $id, $payload): void
     {
         if (\is_string($payload)) {
-            $payload = json_decode($payload, true);
+            $payload = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
         }
 
         if (!\is_array($payload)) {

@@ -17,20 +17,16 @@ use Spiral\Views\Exception\ViewException;
 
 final class ViewManager implements ViewsInterface
 {
-    /** @var ViewsConfig */
-    private $config;
+    private ViewsConfig $config;
 
-    /** @var ContextInterface */
-    private $context;
+    private ContextInterface $context;
 
-    /** @var LoaderInterface */
-    private $loader;
+    private LoaderInterface $loader;
 
-    /** @var ViewCache|null */
-    private $cache;
+    private ?ViewCache $cache = null;
 
     /** @var EngineInterface[] */
-    private $engines = [];
+    private array $engines = [];
 
     public function __construct(ViewsConfig $config, FactoryInterface $factory, ?ContextInterface $context = null)
     {
@@ -73,9 +69,7 @@ final class ViewManager implements ViewsInterface
     {
         $this->engines[] = $engine->withLoader($this->loader);
 
-        \uasort($this->engines, static function (EngineInterface $a, EngineInterface $b) {
-            return \strcmp($a->getLoader()->getExtension(), $b->getLoader()->getExtension());
-        });
+        \uasort($this->engines, static fn(EngineInterface $a, EngineInterface $b) => \strcmp($a->getLoader()->getExtension(), $b->getLoader()->getExtension()));
 
         $this->engines = \array_values($this->engines);
     }

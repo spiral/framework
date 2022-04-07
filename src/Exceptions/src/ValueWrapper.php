@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
+use ReflectionClass;
 use Spiral\Debug\Dumper;
 use Spiral\Debug\RendererInterface;
 
@@ -21,21 +22,16 @@ use Spiral\Debug\RendererInterface;
  */
 class ValueWrapper
 {
-    /** @var RendererInterface */
-    private $r;
+    private RendererInterface $r;
 
-    /** @var Dumper */
-    private $dumper;
+    private Dumper $dumper;
 
-    /** @var int */
-    private $verbosity;
+    private int $verbosity;
 
     /**
      * Aggregated list of value dumps, only for DEBUG mode.
-     *
-     * @var array
      */
-    private $values = [];
+    private array $values = [];
 
     public function __construct(Dumper $dumper, RendererInterface $renderer, int $verbosity)
     {
@@ -62,7 +58,7 @@ class ValueWrapper
             }
 
             if (is_object($arg)) {
-                $reflection = new \ReflectionClass($arg);
+                $reflection = new ReflectionClass($arg);
                 $display = sprintf('<span title="%s">%s</span>', $reflection->getName(), $reflection->getShortName());
             }
 
@@ -71,7 +67,7 @@ class ValueWrapper
             if ($this->verbosity < HandlerInterface::VERBOSITY_DEBUG) {
                 $result[] = sprintf('<span>%s</span>', $type);
             } else {
-                $hash = is_object($arg) ? spl_object_hash($arg) : md5(json_encode($arg));
+                $hash = is_object($arg) ? spl_object_hash($arg) : md5(json_encode($arg, JSON_THROW_ON_ERROR));
 
                 if (!isset($this->values[$hash])) {
                     $this->values[$hash] = $this->dumper->dump($arg, Dumper::RETURN);

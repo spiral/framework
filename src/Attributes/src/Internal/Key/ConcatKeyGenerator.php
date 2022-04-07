@@ -11,6 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Key;
 
+use ReflectionClass;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionFunctionAbstract;
+use ReflectionParameter;
+use Closure;
 /**
  * An implementation of a key generator that combines multiple generators
  * and returns a composite identifier.
@@ -32,12 +38,9 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
     /**
      * @var array<KeyGeneratorInterface>
      */
-    private $generators;
+    private array $generators;
 
-    /**
-     * @var string
-     */
-    private $join;
+    private string $join;
 
     /**
      * @param array<KeyGeneratorInterface> $generators
@@ -51,57 +54,47 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forClass(\ReflectionClass $class): string
+    public function forClass(ReflectionClass $class): string
     {
-        return $this->joinBy(static function (KeyGeneratorInterface $generator) use ($class): string {
-            return $generator->forClass($class);
-        });
+        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forClass($class));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function forProperty(\ReflectionProperty $prop): string
+    public function forProperty(ReflectionProperty $prop): string
     {
-        return $this->joinBy(static function (KeyGeneratorInterface $generator) use ($prop): string {
-            return $generator->forProperty($prop);
-        });
+        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forProperty($prop));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function forConstant(\ReflectionClassConstant $const): string
+    public function forConstant(ReflectionClassConstant $const): string
     {
-        return $this->joinBy(static function (KeyGeneratorInterface $generator) use ($const): string {
-            return $generator->forConstant($const);
-        });
+        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forConstant($const));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function forFunction(\ReflectionFunctionAbstract $fn): string
+    public function forFunction(ReflectionFunctionAbstract $fn): string
     {
-        return $this->joinBy(static function (KeyGeneratorInterface $generator) use ($fn): string {
-            return $generator->forFunction($fn);
-        });
+        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forFunction($fn));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function forParameter(\ReflectionParameter $param): string
+    public function forParameter(ReflectionParameter $param): string
     {
-        return $this->joinBy(static function (KeyGeneratorInterface $generator) use ($param): string {
-            return $generator->forParameter($param);
-        });
+        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forParameter($param));
     }
 
     /**
-     * @param \Closure(KeyGeneratorInterface): string $each
+     * @param Closure(KeyGeneratorInterface):string $each
      */
-    private function joinBy(\Closure $each): string
+    private function joinBy(Closure $each): string
     {
         $result = [];
 

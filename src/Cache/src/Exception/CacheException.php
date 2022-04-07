@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Exception;
 
-class CacheException extends \Exception
+use Exception;
+class CacheException extends Exception
 {
 }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution;
 
+use DateInterval;
 use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
 
 /**
@@ -19,7 +20,7 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 interface ExpirationAwareResolverInterface
 {
-    public function getExpirationDate(): \DateInterval;
+    public function getExpirationDate(): DateInterval;
 
     /**
      * @param DateIntervalFormat $duration

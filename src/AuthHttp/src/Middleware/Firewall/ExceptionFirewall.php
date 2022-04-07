@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Auth\Middleware\Firewall;
 
+use Throwable;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,10 +21,9 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class ExceptionFirewall extends AbstractFirewall
 {
-    /** @var \Throwable */
-    private $e;
+    private Throwable $e;
 
-    public function __construct(\Throwable $e)
+    public function __construct(Throwable $e)
     {
         $this->e = $e;
     }
@@ -31,7 +31,7 @@ final class ExceptionFirewall extends AbstractFirewall
     /**
      * @inheritDoc
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function denyAccess(Request $request, RequestHandlerInterface $handler): Response
     {

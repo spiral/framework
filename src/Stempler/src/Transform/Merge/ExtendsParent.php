@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Merge;
 
+use Throwable;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Stempler\Builder;
 use Spiral\Stempler\Exception\ExtendsException;
@@ -27,14 +28,11 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class ExtendsParent implements VisitorInterface
 {
-    /** @var string */
-    private $extendsKeyword = 'extends';
+    private string $extendsKeyword = 'extends';
 
-    /** @var Builder */
-    private $builder;
+    private Builder $builder;
 
-    /** @var Merger */
-    private $merger;
+    private Merger $merger;
 
     public function __construct(Builder $builder, Merger $merger = null)
     {
@@ -87,7 +85,7 @@ final class ExtendsParent implements VisitorInterface
                 $path = $this->getPath($extends);
 
                 return $this->merger->merge($this->builder->load($path), $extends);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new ExtendsException(
                     "Unable to extend parent `{$path}`",
                     $extends->getContext(),

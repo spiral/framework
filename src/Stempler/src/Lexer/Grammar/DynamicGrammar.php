@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar;
 
+use Generator;
 use Spiral\Stempler\Directive\DirectiveRendererInterface;
 use Spiral\Stempler\Lexer\Buffer;
 use Spiral\Stempler\Lexer\Byte;
@@ -48,14 +49,11 @@ final class DynamicGrammar implements GrammarInterface
     // grammar control directive
     public const DECLARE_DIRECTIVE = 'declare';
 
-    /** @var DirectiveRendererInterface */
-    private $directiveRenderer;
+    private DirectiveRendererInterface $directiveRenderer;
 
-    /** @var BracesGrammar */
-    private $echo;
+    private BracesGrammar $echo;
 
-    /** @var BracesGrammar */
-    private $raw;
+    private BracesGrammar $raw;
 
     /**
      * @param DirectiveRendererInterface|null $directiveRenderer
@@ -82,7 +80,7 @@ final class DynamicGrammar implements GrammarInterface
     /**
      * @inheritDoc
      */
-    public function parse(Buffer $src): \Generator
+    public function parse(Buffer $src): Generator
     {
         while ($n = $src->next()) {
             if (!$n instanceof Byte) {

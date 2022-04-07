@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Validation;
 
+use Generator;
 use Spiral\Validation\Exception\ParserException;
 
 interface ParserInterface
@@ -25,7 +26,7 @@ interface ParserInterface
      *
      * @throws ParserException
      */
-    public function split($rules): \Generator;
+    public function split($rules): Generator;
 
     /**
      * Return function name, class method pair or short "checker:method" definition

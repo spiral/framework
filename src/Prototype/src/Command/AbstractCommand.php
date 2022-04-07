@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Command;
 
+use Throwable;
+use ReflectionClass;
+use Generator;
 use Spiral\Console\Command;
 use Spiral\Prototype\Dependency;
 use Spiral\Prototype\NodeExtractor;
@@ -30,8 +33,7 @@ abstract class AbstractCommand extends Command
     /** @var PrototypeRegistry */
     protected $registry;
 
-    /** @var array */
-    private $cache = [];
+    private array $cache = [];
 
     public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
     {
@@ -45,14 +47,14 @@ abstract class AbstractCommand extends Command
     /**
      * Fetch class dependencies.
      *
-     * @return null[]|Dependency[]|\Throwable[]
+     * @return null[]|Dependency[]|Throwable[]
      */
-    protected function getPrototypeProperties(\ReflectionClass $class, array $all = []): array
+    protected function getPrototypeProperties(ReflectionClass $class, array $all = []): array
     {
         $results = [$this->readProperties($class)];
 
         $parent = $class->getParentClass();
-        while ($parent instanceof \ReflectionClass && isset($all[$parent->getName()])) {
+        while ($parent instanceof ReflectionClass && isset($all[$parent->getName()])) {
             $results[] = $this->readProperties($parent);
             $parent = $parent->getParentClass();
         }
@@ -81,7 +83,7 @@ abstract class AbstractCommand extends Command
         $result = [];
 
         foreach ($properties as $target) {
-            if ($target instanceof \Throwable) {
+            if ($target instanceof Throwable) {
                 $result[] = sprintf(
                     '<fg=red>%s [f: %s, l: %s]</fg=red>',
                     $target->getMessage(),
@@ -105,7 +107,7 @@ abstract class AbstractCommand extends Command
     /**
      * @return array<string, Dependency|ContainerExceptionInterface|null>
      */
-    private function readProperties(\ReflectionClass $class): array
+    private function readProperties(ReflectionClass $class): array
     {
         if (isset($this->cache[$class->getFileName()])) {
             $proto = $this->cache[$class->getFileName()];
@@ -125,11 +127,11 @@ abstract class AbstractCommand extends Command
     }
 
     /**
-     * @param null[]|Dependency[]|\Throwable[] $results
+     * @param null[]|Dependency[]|Throwable[] $results
      *
-     * @return \Generator<array-key, null|Dependency|\Throwable, mixed, void>
+     * @return Generator<array-key, (null | Dependency | Throwable), mixed, void>
      */
-    private function reverse(array $results): \Generator
+    private function reverse(array $results): Generator
     {
         foreach (\array_reverse($results) as $result) {
             yield from $result;

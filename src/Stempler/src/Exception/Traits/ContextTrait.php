@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Exception\Traits;
 
+use Throwable;
 use Spiral\Stempler\Parser\Context;
 
 /**
@@ -23,9 +24,9 @@ trait ContextTrait
 
     /**
      * @param Context|null    $context
-     * @param \Throwable|null $previous
+     * @param Throwable|null $previous
      */
-    public function __construct(string $message, Context $context, \Throwable $previous = null)
+    public function __construct(string $message, Context $context, Throwable $previous = null)
     {
         parent::__construct($message, 0, $previous);
         $this->context = $context;

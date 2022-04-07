@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Encrypter;
 
+use ReflectionClass;
 use Defuse\Crypto\Exception\CryptoException;
 use Defuse\Crypto\Key;
 use Spiral\Core\Container\InjectorInterface;
@@ -23,8 +24,7 @@ use Spiral\Encrypter\Exception\EncrypterException;
  */
 final class EncrypterFactory implements InjectorInterface, EncryptionInterface, SingletonInterface
 {
-    /** @var EncrypterConfig */
-    protected $config;
+    protected EncrypterConfig $config;
 
     public function __construct(EncrypterConfig $config)
     {
@@ -66,7 +66,7 @@ final class EncrypterFactory implements InjectorInterface, EncryptionInterface, 
     /**
      * {@inheritdoc}
      */
-    public function createInjection(\ReflectionClass $class, string $context = null)
+    public function createInjection(ReflectionClass $class, string $context = null)
     {
         return $this->getEncrypter();
     }

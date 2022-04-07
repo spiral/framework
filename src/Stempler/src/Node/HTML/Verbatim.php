@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Node\HTML;
 
+use Generator;
 use Spiral\Stempler\Node\AttributedInterface;
 use Spiral\Stempler\Node\NodeInterface;
 use Spiral\Stempler\Node\Traits\AttributeTrait;
@@ -39,7 +40,7 @@ final class Verbatim implements NodeInterface, AttributedInterface
     /**
      * @inheritDoc
      */
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         yield 'nodes' => $this->nodes;
     }

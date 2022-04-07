@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Validation\Checker;
 
+use Countable;
 use Spiral\Validation\AbstractChecker;
 use Spiral\Validation\ValidationInterface;
 
@@ -19,8 +20,7 @@ class ArrayChecker extends AbstractChecker
         'range' => '[[Number of elements must be between {1} and {2}.]]',
     ];
 
-    /** @var ValidationInterface */
-    private $validation;
+    private ValidationInterface $validation;
 
     public function __construct(ValidationInterface $validation)
     {
@@ -44,7 +44,7 @@ class ArrayChecker extends AbstractChecker
 
     public function count($value, int $length): bool
     {
-        if (!is_array($value) && !$value instanceof \Countable) {
+        if (!is_array($value) && !$value instanceof Countable) {
             return false;
         }
 
@@ -53,7 +53,7 @@ class ArrayChecker extends AbstractChecker
 
     public function shorter($value, int $length): bool
     {
-        if (!is_array($value) && !$value instanceof \Countable) {
+        if (!is_array($value) && !$value instanceof Countable) {
             return false;
         }
 
@@ -62,7 +62,7 @@ class ArrayChecker extends AbstractChecker
 
     public function longer($value, int $length): bool
     {
-        if (!is_array($value) && !$value instanceof \Countable) {
+        if (!is_array($value) && !$value instanceof Countable) {
             return false;
         }
 
@@ -71,7 +71,7 @@ class ArrayChecker extends AbstractChecker
 
     public function range($value, int $min, int $max): bool
     {
-        if (!is_array($value) && !$value instanceof \Countable) {
+        if (!is_array($value) && !$value instanceof Countable) {
             return false;
         }
 

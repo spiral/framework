@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Session\Handler;
 
+use SessionHandlerInterface;
+use ReturnTypeWillChange;
 /**
  * Blackhole.
  */
-final class NullHandler implements \SessionHandlerInterface
+final class NullHandler implements SessionHandlerInterface
 {
     /**
      * @inheritdoc
@@ -35,7 +37,7 @@ final class NullHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
         return $maxlifetime;

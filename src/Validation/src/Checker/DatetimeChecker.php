@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Validation\Checker;
 
+use DateTimeInterface;
+use Spiral\Validation\Checker\DatetimeChecker\ThresholdChecker;
+use DateTimeImmutable;
+use DateTimeZone;
+use Throwable;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Validation\AbstractChecker;
 
@@ -36,15 +41,14 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
         'c' => 'Y-m-d\TH:i:sT',
     ];
 
-    /** @var callable|\DateTimeInterface|string|numeric|null */
+    /** @var callable|DateTimeInterface|string|numeric|null */
     private $now;
-    /** @var DatetimeChecker\ThresholdChecker */
-    private $threshold;
+    private ThresholdChecker $threshold;
 
     public function __construct($now = null)
     {
         $this->now = $now;
-        $this->threshold = new DatetimeChecker\ThresholdChecker();
+        $this->threshold = new ThresholdChecker();
     }
 
     /**
@@ -78,7 +82,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
             return false;
         }
 
-        $date = \DateTimeImmutable::createFromFormat(self::MAP_FORMAT[$format] ?? $format, (string)$value);
+        $date = DateTimeImmutable::createFromFormat(self::MAP_FORMAT[$format] ?? $format, (string)$value);
 
         return $date !== false;
     }
@@ -104,7 +108,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
             return false;
         }
 
-        return in_array((string)$value, \DateTimeZone::listIdentifiers(), true);
+        return in_array((string)$value, DateTimeZone::listIdentifiers(), true);
     }
 
     /**
@@ -128,13 +132,13 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    private function now(): ?\DateTimeInterface
+    private function now(): ?DateTimeInterface
     {
         try {
             return $this->date($this->now ?: 'now');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             //here's the fail;
         }
 
@@ -144,13 +148,13 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
     /**
      * @param mixed $value
      */
-    private function date($value): ?\DateTimeInterface
+    private function date($value): ?DateTimeInterface
     {
         if (is_callable($value)) {
             $value = $value();
         }
 
-        if ($value instanceof \DateTimeInterface) {
+        if ($value instanceof DateTimeInterface) {
             return $value;
         }
 
@@ -163,8 +167,8 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
                 $value = '0';
             }
 
-            return new \DateTimeImmutable(is_numeric($value) ? sprintf('@%d', $value) : trim($value));
-        } catch (\Throwable $e) {
+            return new DateTimeImmutable(is_numeric($value) ? sprintf('@%d', $value) : trim($value));
+        } catch (Throwable $e) {
             //here's the fail;
         }
 
@@ -179,7 +183,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
         return is_string($value) || is_numeric($value);
     }
 
-    private function fromField(string $field): ?\DateTimeInterface
+    private function fromField(string $field): ?DateTimeInterface
     {
         $before = $this->getValidator()->getValue($field);
         if ($before !== null) {

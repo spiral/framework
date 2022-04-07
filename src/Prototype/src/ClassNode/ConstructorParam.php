@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\ClassNode;
 
+use ReflectionException;
+use ReflectionParameter;
+use ReflectionNamedType;
 final class ConstructorParam
 {
     /** @var string */
@@ -34,8 +37,7 @@ final class ConstructorParam
     /** @var bool */
     public $isVariadic = false;
 
-    /** @var bool */
-    private $builtIn;
+    private ?bool $builtIn = null;
 
     /**
      * ConstructorParam constructor.
@@ -46,15 +48,15 @@ final class ConstructorParam
 
     /**
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public static function createFromReflection(\ReflectionParameter $parameter): ConstructorParam
+    public static function createFromReflection(ReflectionParameter $parameter): ConstructorParam
     {
         $stmt = new self();
         $stmt->name = $parameter->getName();
 
         $type = $parameter->getType();
-        if ($type instanceof \ReflectionNamedType) {
+        if ($type instanceof ReflectionNamedType) {
             $stmt->type = Type::create($type->getName());
             $stmt->builtIn = $type->isBuiltin();
             $stmt->nullable = $type->allowsNull();

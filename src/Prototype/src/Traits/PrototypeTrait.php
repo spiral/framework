@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Traits;
 
+use Throwable;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Prototype\Exception\PrototypeException;
@@ -43,13 +44,13 @@ trait PrototypeTrait
         $target = $registry->resolveProperty($name);
         if (
             $target === null ||
-            $target instanceof \Throwable ||
+            $target instanceof Throwable ||
             $target->type->fullName === null
         ) {
             throw new PrototypeException(
                 "Undefined prototype property `{$name}`",
                 0,
-                $target instanceof \Throwable ? $target : null
+                $target instanceof Throwable ? $target : null
             );
         }
 

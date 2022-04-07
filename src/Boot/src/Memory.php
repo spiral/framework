@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
+use Throwable;
 use Spiral\Files\FilesInterface;
 
 /**
@@ -21,11 +22,9 @@ final class Memory implements MemoryInterface
     // data file extension
     private const EXTENSION = 'php';
 
-    /** @var string */
-    private $directory;
+    private string $directory;
 
-    /** @var FilesInterface */
-    private $files;
+    private FilesInterface $files;
 
     public function __construct(string $directory, FilesInterface $files)
     {
@@ -48,7 +47,7 @@ final class Memory implements MemoryInterface
 
         try {
             return include($filename);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return null;
         }
     }

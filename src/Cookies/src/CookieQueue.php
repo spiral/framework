@@ -16,13 +16,11 @@ final class CookieQueue
     public const ATTRIBUTE = 'cookieQueue';
 
     /** @var Cookie[] */
-    private $scheduled = [];
+    private array $scheduled = [];
 
-    /** @var string|null */
-    private $domain;
+    private ?string $domain;
 
-    /** @var bool */
-    private $secure;
+    private bool $secure;
 
     public function __construct(?string $domain = null, bool $secure = false)
     {

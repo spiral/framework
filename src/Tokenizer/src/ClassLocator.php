@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
 
+use ReflectionClass;
 use Spiral\Tokenizer\Exception\LocatorException;
 
 /**
@@ -24,7 +25,7 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
     public function getClasses($target = null): array
     {
         if (!empty($target) && (is_object($target) || is_string($target))) {
-            $target = new \ReflectionClass($target);
+            $target = new ReflectionClass($target);
         }
 
         $result = [];
@@ -63,9 +64,9 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
     /**
      * Check if given class targeted by locator.
      *
-     * @param \ReflectionClass|null $target
+     * @param ReflectionClass|null $target
      */
-    protected function isTargeted(\ReflectionClass $class, \ReflectionClass $target = null): bool
+    protected function isTargeted(ReflectionClass $class, ReflectionClass $target = null): bool
     {
         if (empty($target)) {
             return true;

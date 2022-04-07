@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Console\Sequence;
 
+use ReflectionMethod;
+use ReflectionFunction;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\ResolverInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,8 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CallableSequence extends AbstractSequence
 {
-    /** @var string */
-    private $function;
+    private string $function;
 
     /**
      * @param callable $function
@@ -55,7 +56,7 @@ final class CallableSequence extends AbstractSequence
         $resolver = $container->get(ResolverInterface::class);
 
         if (is_array($function)) {
-            $reflection = new \ReflectionMethod($function[0], $function[1]);
+            $reflection = new ReflectionMethod($function[0], $function[1]);
             $reflection->invokeArgs($function[0], $resolver->resolveArguments($reflection, [
                 'output' => $output,
             ]));
@@ -63,7 +64,7 @@ final class CallableSequence extends AbstractSequence
             return;
         }
 
-        $reflection = new \ReflectionFunction($function);
+        $reflection = new ReflectionFunction($function);
         $reflection->invokeArgs($resolver->resolveArguments($reflection, [
             'output' => $output,
         ]));

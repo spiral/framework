@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser;
 
+use ReflectionClass;
 use Spiral\Stempler\Node\NodeInterface;
 
 /**
@@ -18,14 +19,12 @@ use Spiral\Stempler\Node\NodeInterface;
  */
 final class Assembler
 {
-    /** @var NodeInterface */
-    private $node;
+    private NodeInterface $node;
 
-    /** @var string */
-    private $path;
+    private string $path;
 
     /** @var NodeInterface[] */
-    private $stack = [];
+    private array $stack = [];
 
     public function __construct(NodeInterface $node, string $path)
     {
@@ -72,7 +71,7 @@ final class Assembler
 
     private function nodeName(NodeInterface $node): string
     {
-        $r = new \ReflectionClass($node);
+        $r = new ReflectionClass($node);
         if (property_exists($node, 'name')) {
             return lcfirst($r->getShortName()) . "[{$node->name}]";
         }

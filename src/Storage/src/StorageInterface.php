@@ -11,22 +11,25 @@ declare(strict_types=1);
 
 namespace Spiral\Storage;
 
+use IteratorAggregate;
+use Stringable;
+use Countable;
 use Psr\Http\Message\UriInterface;
 use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\Storage\ReadableInterface;
 use Spiral\Storage\Storage\WritableInterface;
 
 /**
- * @template-implements \IteratorAggregate<string, StorageInterface>
+ * @template-implements IteratorAggregate<string, StorageInterface>
  *
- * @psalm-type IdType = string | UriInterface | \Stringable
+ * @psalm-type IdType string|UriInterface|Stringable
  * @see UriInterface
  */
 interface StorageInterface extends
     ReadableInterface,
     WritableInterface,
-    \IteratorAggregate,
-    \Countable
+    IteratorAggregate,
+    Countable
 {
     /**
      * @param string|null $name

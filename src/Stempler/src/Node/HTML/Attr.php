@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Node\HTML;
 
+use Generator;
 use Spiral\Stempler\Node\Mixin;
 use Spiral\Stempler\Node\NodeInterface;
 use Spiral\Stempler\Node\Traits\ContextTrait;
@@ -32,7 +33,6 @@ final class Attr implements NodeInterface
     /**
      * @param Mixin|string     $name
      * @param Mixin|Nil|string $value
-     * @param Context          $context
      */
     public function __construct($name, $value, Context $context = null)
     {
@@ -42,11 +42,11 @@ final class Attr implements NodeInterface
     }
 
     /**
-     * @return \Generator<string, Mixin|Nil|string, mixed, void>
+     * @return Generator<string, (Mixin | Nil | string), mixed, void>
      *
-     * @psalm-return \Generator<'name'|'value', Mixin|Nil|string, mixed, void>
+     * @psalm-return Generator<(name | value), (Mixin | Nil | string), mixed, void>
      */
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         yield 'name' => $this->name;
         yield 'value' => $this->value;

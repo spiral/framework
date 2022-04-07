@@ -11,6 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
 
+use ReflectionClass;
+use ReflectionFunctionAbstract;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionParameter;
+use Reflector;
 use PhpParser\Parser;
 use Spiral\Attributes\Internal\FallbackAttributeReader\AttributeParser;
 use Spiral\Attributes\Internal\FallbackAttributeReader\AttributePrototype;
@@ -47,10 +53,7 @@ final class FallbackAttributeReader extends AttributeReader
      */
     private const KEY_PARAMETERS = 0x04;
 
-    /**
-     * @var AttributeParser
-     */
-    private $parser;
+    private AttributeParser $parser;
 
     /**
      * @psalm-type ClassName       = string
@@ -70,7 +73,7 @@ final class FallbackAttributeReader extends AttributeReader
      *  4: array<FunctionEndLine, array<ParameterName, AttributesList>>
      * }
      */
-    private $attributes = [
+    private array $attributes = [
         self::KEY_CLASSES    => [],
         self::KEY_CONSTANTS  => [],
         self::KEY_PROPERTIES => [],
@@ -92,7 +95,7 @@ final class FallbackAttributeReader extends AttributeReader
     /**
      * {@inheritDoc}
      */
-    protected function getClassAttributes(\ReflectionClass $class, ?string $name): iterable
+    protected function getClassAttributes(ReflectionClass $class, ?string $name): iterable
     {
         // 1) Can not parse internal classes
         // 2) Anonymous classes don't support attributes (PHP semantic)
@@ -108,7 +111,7 @@ final class FallbackAttributeReader extends AttributeReader
     /**
      * {@inheritDoc}
      */
-    protected function getFunctionAttributes(\ReflectionFunctionAbstract $function, ?string $name): iterable
+    protected function getFunctionAttributes(ReflectionFunctionAbstract $function, ?string $name): iterable
     {
         // Can not parse internal functions
         if ($function->isInternal()) {
@@ -124,7 +127,7 @@ final class FallbackAttributeReader extends AttributeReader
     /**
      * {@inheritDoc}
      */
-    protected function getPropertyAttributes(\ReflectionProperty $property, ?string $name): iterable
+    protected function getPropertyAttributes(ReflectionProperty $property, ?string $name): iterable
     {
         $class = $property->getDeclaringClass();
 
@@ -141,7 +144,7 @@ final class FallbackAttributeReader extends AttributeReader
     /**
      * {@inheritDoc}
      */
-    protected function getConstantAttributes(\ReflectionClassConstant $const, ?string $name): iterable
+    protected function getConstantAttributes(ReflectionClassConstant $const, ?string $name): iterable
     {
         $class = $const->getDeclaringClass();
 
@@ -158,7 +161,7 @@ final class FallbackAttributeReader extends AttributeReader
     /**
      * {@inheritDoc}
      */
-    protected function getParameterAttributes(\ReflectionParameter $param, ?string $name): iterable
+    protected function getParameterAttributes(ReflectionParameter $param, ?string $name): iterable
     {
         $function = $param->getDeclaringFunction();
 
@@ -198,9 +201,9 @@ final class FallbackAttributeReader extends AttributeReader
     /**
      * @param AttributePrototype[] $attributes
      * @param class-string|null $name
-     * @return iterable<\ReflectionClass, array>
+     * @return iterable<ReflectionClass, array>
      */
-    private function format(iterable $attributes, ?string $name, \Reflector $context): iterable
+    private function format(iterable $attributes, ?string $name, Reflector $context): iterable
     {
         foreach ($attributes as $prototype) {
             if ($prototype->name !== $name && $name !== null && !\is_subclass_of($prototype->name, $name)) {
@@ -209,11 +212,11 @@ final class FallbackAttributeReader extends AttributeReader
 
             $this->assertClassExists($prototype->name, $context);
 
-            yield new \ReflectionClass($prototype->name) => $prototype->params;
+            yield new ReflectionClass($prototype->name) => $prototype->params;
         }
     }
 
-    private function extractFunctionAttributes(array $attributes, \ReflectionFunctionAbstract $function): array
+    private function extractFunctionAttributes(array $attributes, ReflectionFunctionAbstract $function): array
     {
         /**
          * We cannot use the function start line because it is different for

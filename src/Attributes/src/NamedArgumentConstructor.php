@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes;
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor as DoctrineNamedArgumentConstructor;
 
@@ -33,7 +34,7 @@ if (!\class_exists(DoctrineNamedArgumentConstructor::class, false)) {
  * @Annotation
  * @Target({ "CLASS" })
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_CLASS)]
 final class NamedArgumentConstructor extends DoctrineNamedArgumentConstructor
 {
 }

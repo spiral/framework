@@ -11,15 +11,17 @@ declare(strict_types=1);
 
 namespace Spiral\Validation;
 
+use SplObjectStorage;
+use Generator;
 abstract class AbstractRule implements RuleInterface
 {
-    /** @var \SplObjectStorage|ConditionInterface[]|null */
+    /** @var SplObjectStorage|ConditionInterface[]|null */
     private $conditions;
 
     /**
      * @inheritdoc
      */
-    public function withConditions(\SplObjectStorage $conditions = null): RuleInterface
+    public function withConditions(SplObjectStorage $conditions = null): RuleInterface
     {
         $rule = clone $this;
         $rule->conditions = $conditions;
@@ -38,7 +40,7 @@ abstract class AbstractRule implements RuleInterface
     /**
      * @inheritdoc
      */
-    public function getConditions(): \Generator
+    public function getConditions(): Generator
     {
         if (empty($this->conditions)) {
             return;

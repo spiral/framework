@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
+use ReflectionMethod;
+use ReflectionException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\Container\ArgumentException;
@@ -43,8 +45,8 @@ abstract class AbstractCore implements CoreInterface
     public function callAction(string $controller, string $action, array $parameters = [])
     {
         try {
-            $method = new \ReflectionMethod($controller, $action);
-        } catch (\ReflectionException $e) {
+            $method = new ReflectionMethod($controller, $action);
+        } catch (ReflectionException $e) {
             throw new ControllerException(
                 "Invalid action `{$controller}`->`{$action}`",
                 ControllerException::BAD_ACTION,
@@ -75,8 +77,6 @@ abstract class AbstractCore implements CoreInterface
             );
         }
 
-        return ContainerScope::runScope($this->container, function () use ($controller, $method, $args) {
-            return $method->invokeArgs($this->container->get($controller), $args);
-        });
+        return ContainerScope::runScope($this->container, fn() => $method->invokeArgs($this->container->get($controller), $args));
     }
 }

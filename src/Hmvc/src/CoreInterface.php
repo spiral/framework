@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
+use Throwable;
 use Spiral\Core\Exception\ControllerException;
 
 /**
@@ -28,7 +29,7 @@ interface CoreInterface
      * @return mixed
      *
      * @throws ControllerException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function callAction(string $controller, string $action, array $parameters = []);
 }

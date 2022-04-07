@@ -11,6 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
 
+use Throwable;
+use ReflectionClass;
+use ReflectionFunctionAbstract;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionParameter;
+use Reflector;
 use Spiral\Attributes\Exception\SemanticAttributeException;
 use Spiral\Attributes\Internal\Instantiator\Facade;
 use Spiral\Attributes\Internal\Instantiator\InstantiatorInterface;
@@ -26,10 +33,7 @@ abstract class AttributeReader extends Reader
      * @var ContextRenderer
      */
     protected $renderer;
-    /**
-     * @var InstantiatorInterface
-     */
-    private $instantiator;
+    private InstantiatorInterface $instantiator;
 
     /**
      * @param InstantiatorInterface|null $instantiator
@@ -42,9 +46,9 @@ abstract class AttributeReader extends Reader
 
     /**
      * {@inheritDoc}
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
+    public function getClassMetadata(ReflectionClass $class, string $name = null): iterable
     {
         $attributes = $this->getClassAttributes($class, $name);
 
@@ -59,9 +63,9 @@ abstract class AttributeReader extends Reader
 
     /**
      * {@inheritDoc}
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
+    public function getFunctionMetadata(ReflectionFunctionAbstract $function, string $name = null): iterable
     {
         $attributes = $this->getFunctionAttributes($function, $name);
 
@@ -72,9 +76,9 @@ abstract class AttributeReader extends Reader
 
     /**
      * {@inheritDoc}
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
+    public function getPropertyMetadata(ReflectionProperty $property, string $name = null): iterable
     {
         $attributes = $this->getPropertyAttributes($property, $name);
 
@@ -85,9 +89,9 @@ abstract class AttributeReader extends Reader
 
     /**
      * {@inheritDoc}
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
+    public function getConstantMetadata(ReflectionClassConstant $constant, string $name = null): iterable
     {
         $attributes = $this->getConstantAttributes($constant, $name);
 
@@ -98,9 +102,9 @@ abstract class AttributeReader extends Reader
 
     /**
      * {@inheritDoc}
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
+    public function getParameterMetadata(ReflectionParameter $parameter, string $name = null): iterable
     {
         $attributes = $this->getParameterAttributes($parameter, $name);
 
@@ -109,7 +113,7 @@ abstract class AttributeReader extends Reader
         }
     }
 
-    protected function assertClassExists(string $class, \Reflector $context): void
+    protected function assertClassExists(string $class, Reflector $context): void
     {
         if (!\class_exists($class)) {
             $message = \vsprintf('The metadata class "%s" in %s was not found', [
@@ -122,27 +126,27 @@ abstract class AttributeReader extends Reader
     }
 
     /**
-     * @return iterable<\ReflectionClass, array>
+     * @return iterable<ReflectionClass, array>
      */
-    abstract protected function getClassAttributes(\ReflectionClass $class, ?string $name): iterable;
+    abstract protected function getClassAttributes(ReflectionClass $class, ?string $name): iterable;
 
     /**
-     * @return iterable<\ReflectionClass, array>
+     * @return iterable<ReflectionClass, array>
      */
-    abstract protected function getFunctionAttributes(\ReflectionFunctionAbstract $function, ?string $name): iterable;
+    abstract protected function getFunctionAttributes(ReflectionFunctionAbstract $function, ?string $name): iterable;
 
     /**
-     * @return iterable<\ReflectionClass, array>
+     * @return iterable<ReflectionClass, array>
      */
-    abstract protected function getPropertyAttributes(\ReflectionProperty $property, ?string $name): iterable;
+    abstract protected function getPropertyAttributes(ReflectionProperty $property, ?string $name): iterable;
 
     /**
-     * @return iterable<\ReflectionClass, array>
+     * @return iterable<ReflectionClass, array>
      */
-    abstract protected function getConstantAttributes(\ReflectionClassConstant $const, ?string $name): iterable;
+    abstract protected function getConstantAttributes(ReflectionClassConstant $const, ?string $name): iterable;
 
     /**
-     * @return iterable<\ReflectionClass, array>
+     * @return iterable<ReflectionClass, array>
      */
-    abstract protected function getParameterAttributes(\ReflectionParameter $param, ?string $name): iterable;
+    abstract protected function getParameterAttributes(ReflectionParameter $param, ?string $name): iterable;
 }

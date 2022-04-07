@@ -17,8 +17,7 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class Sorter implements SorterInterface
 {
-    /** @var DirectionalSorter */
-    private $sorter;
+    private DirectionalSorter $sorter;
 
     public function __construct(string ...$expressions)
     {

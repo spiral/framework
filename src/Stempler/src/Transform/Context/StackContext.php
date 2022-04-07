@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Context;
 
+use LogicException;
 use Spiral\Stempler\Node\Aggregate;
 use Spiral\Stempler\Node\AttributedInterface;
 use Spiral\Stempler\Node\HTML\Tag;
@@ -18,8 +19,7 @@ use Spiral\Stempler\VisitorContext;
 
 final class StackContext
 {
-    /** @var VisitorContext */
-    private $ctx;
+    private VisitorContext $ctx;
 
     private function __construct(VisitorContext $ctx)
     {
@@ -122,7 +122,7 @@ final class StackContext
         }
 
         if (!$node instanceof AttributedInterface) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf(
                     'Unable to create import on node without attribute storage (%s)',
                     is_object($node) ? get_class($node) : gettype($node)

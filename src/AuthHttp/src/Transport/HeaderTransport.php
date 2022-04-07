@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Auth\Transport;
 
+use DateTimeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Auth\HttpTransportInterface;
@@ -20,11 +21,9 @@ use Spiral\Auth\HttpTransportInterface;
  */
 final class HeaderTransport implements HttpTransportInterface
 {
-    /** @var string */
-    private $header;
+    private string $header;
 
-    /** @var string */
-    private $valueFormat;
+    private string $valueFormat;
 
     public function __construct(string $header = 'X-Auth-Token', string $valueFormat = '%s')
     {
@@ -51,7 +50,7 @@ final class HeaderTransport implements HttpTransportInterface
         Request $request,
         Response $response,
         string $tokenID,
-        \DateTimeInterface $expiresAt = null
+        DateTimeInterface $expiresAt = null
     ): Response {
         if ($request->hasHeader($this->header) && $this->extractToken($request) === $tokenID) {
             return $response;

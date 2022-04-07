@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
+use Throwable;
 use Closure;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
@@ -44,13 +45,13 @@ abstract class AbstractKernel implements KernelInterface
     protected $dispatchers = [];
 
     /** @var array<Closure> */
-    private $startingCallbacks = [];
+    private array $startingCallbacks = [];
 
     /** @var array<Closure> */
-    private $startedCallbacks = [];
+    private array $startedCallbacks = [];
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function __construct(Container $container, array $directories)
     {
@@ -88,7 +89,7 @@ abstract class AbstractKernel implements KernelInterface
      * @param bool $handleErrors Enable global error handling.
      * @return self|static
      *
-     * @throws \Throwable
+     * @throws Throwable
      *
      * @deprecated since 2.12. Will be removed in v3.0. Use Kernel::create(...)->run() instead.
      */
@@ -107,7 +108,7 @@ abstract class AbstractKernel implements KernelInterface
 
     /**
      * Create an application instance.
-     * @throws \Throwable
+     * @throws Throwable
      */
     public static function create(
         array $directories,
@@ -133,7 +134,7 @@ abstract class AbstractKernel implements KernelInterface
      */
     public function run(?EnvironmentInterface $environment = null): ?self
     {
-        $environment = $environment ?? new Environment();
+        $environment ??= new Environment();
         $this->container->bindSingleton(EnvironmentInterface::class, $environment);
 
         try {
@@ -145,7 +146,7 @@ abstract class AbstractKernel implements KernelInterface
                     $this->bootstrap();
                 }
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ExceptionHandler::handleException($e);
 
             return null;
@@ -201,7 +202,7 @@ abstract class AbstractKernel implements KernelInterface
      *
      * @return mixed
      * @throws BootException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function serve()
     {

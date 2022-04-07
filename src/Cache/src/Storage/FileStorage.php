@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Storage;
 
+use Exception;
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Files\Exception\FileNotFoundException;
 use Spiral\Files\FilesInterface;
@@ -12,16 +13,13 @@ final class FileStorage implements CacheInterface
 {
     use InteractsWithTime;
 
-    /** @var string */
-    private $path;
+    private string $path;
 
-    /** @var FilesInterface */
-    private $files;
+    private FilesInterface $files;
 
-    /** @var int */
-    private $ttl;
+    private int $ttl;
 
-    public function __construct(FilesInterface $files, string $path, int $ttl = 2592000)
+    public function __construct(FilesInterface $files, string $path, int $ttl = 2_592_000)
     {
         $this->path = $path;
         $this->files = $files;
@@ -137,7 +135,7 @@ final class FileStorage implements CacheInterface
 
         try {
             $data = unserialize(substr($contents, 10));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->delete($key);
 
             return $this->makeEmptyPayload();

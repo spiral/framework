@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\Exception;
 
+use ErrorException;
 /**
  * Raised on fatal exceptions.
  */
-class FatalException extends \ErrorException
+class FatalException extends ErrorException
 {
 }

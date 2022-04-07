@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
+use Throwable;
 /**
  * Provides common functionality for exception rendering.
  */
@@ -19,7 +20,7 @@ abstract class AbstractHandler implements HandlerInterface
     /**
      * @inheritdoc
      */
-    public function getMessage(\Throwable $e): string
+    public function getMessage(Throwable $e): string
     {
         return sprintf('%s: %s in %s at line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine());
     }
@@ -27,7 +28,7 @@ abstract class AbstractHandler implements HandlerInterface
     /**
      * Normalized exception stacktrace.
      */
-    protected function getStacktrace(\Throwable $e): array
+    protected function getStacktrace(Throwable $e): array
     {
         $stacktrace = $e->getTrace();
         if (empty($stacktrace)) {

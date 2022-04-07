@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
 
+use ReflectionClass;
+use Reflector;
+use Throwable;
 use Doctrine\Common\Annotations\DocParser;
 use Spiral\Attributes\Exception\AttributeException;
 use Spiral\Attributes\Exception\SemanticAttributeException;
@@ -53,7 +56,7 @@ final class DoctrineInstantiator extends Instantiator
     /**
      * {@inheritDoc}
      */
-    public function instantiate(\ReflectionClass $attr, array $arguments, \Reflector $context = null): object
+    public function instantiate(ReflectionClass $attr, array $arguments, Reflector $context = null): object
     {
         $arguments = $this->formatArguments($arguments);
 
@@ -74,7 +77,7 @@ final class DoctrineInstantiator extends Instantiator
                 }
 
                 $instance->$name = $value;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw $this->propertyNotFound($attr, $name, $context);
             }
         }
@@ -114,7 +117,7 @@ final class DoctrineInstantiator extends Instantiator
         throw new SyntaxAttributeException($message);
     }
 
-    private function propertyNotFound(\ReflectionClass $attr, string $name, ?\Reflector $context): AttributeException
+    private function propertyNotFound(ReflectionClass $attr, string $name, ?Reflector $context): AttributeException
     {
         $available = $this->getAvailablePropertiesString($attr);
 
@@ -124,7 +127,7 @@ final class DoctrineInstantiator extends Instantiator
         return new SemanticAttributeException($message);
     }
 
-    private function getAvailablePropertiesString(\ReflectionClass $class): string
+    private function getAvailablePropertiesString(ReflectionClass $class): string
     {
         return \implode(', ', \get_class_vars($class->getName()));
     }

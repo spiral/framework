@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Command;
 
+use ReflectionException;
+use ReflectionClass;
+use Throwable;
+use Spiral\Prototype\Annotation\Parser;
+use Spiral\Prototype\Annotation\Line;
 use Spiral\Prototype\Annotation;
 use Spiral\Prototype\Bootloader\PrototypeBootloader;
 use Spiral\Prototype\Traits\PrototypeTrait;
@@ -24,7 +29,7 @@ final class DumpCommand extends AbstractCommand
     /**
      * Show list of available shortcuts and update trait docComment.
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function perform(PrototypeBootloader $prototypeBootloader): void
     {
@@ -39,7 +44,7 @@ final class DumpCommand extends AbstractCommand
 
         $this->write('Updating <fg=yellow>PrototypeTrait</fg=yellow> DOCComment... ');
 
-        $trait = new \ReflectionClass(PrototypeTrait::class);
+        $trait = new ReflectionClass(PrototypeTrait::class);
         $docComment = $trait->getDocComment();
         if ($docComment === false) {
             $this->write('<fg=reg>DOCComment is missing</fg=red>');
@@ -57,7 +62,7 @@ final class DumpCommand extends AbstractCommand
                     file_get_contents($filename)
                 )
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->write('<fg=red>' . $e->getMessage() . "</fg=red>\n");
             return;
         }
@@ -77,14 +82,14 @@ final class DumpCommand extends AbstractCommand
 
     private function buildAnnotation(array $dependencies): string
     {
-        $an = new Annotation\Parser('');
-        $an->lines[] = new Annotation\Line(
+        $an = new Parser('');
+        $an->lines[] = new Line(
             'This DocComment is auto-generated, do not edit or commit this file to repository.'
         );
-        $an->lines[] = new Annotation\Line('');
+        $an->lines[] = new Line('');
 
         foreach ($dependencies as $dependency) {
-            $an->lines[] = new Annotation\Line(
+            $an->lines[] = new Line(
                 sprintf('\\%s $%s', $dependency->type->fullName, $dependency->var),
                 'property'
             );

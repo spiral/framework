@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar\Dynamic;
 
+use IteratorAggregate;
+use Generator;
+use Traversable;
+use LogicException;
 use Spiral\Stempler\Exception\SyntaxException;
 use Spiral\Stempler\Lexer\Buffer;
 use Spiral\Stempler\Lexer\Byte;
@@ -18,7 +22,7 @@ use Spiral\Stempler\Lexer\Grammar\DynamicGrammar;
 use Spiral\Stempler\Lexer\Grammar\Traits\TokenTrait;
 use Spiral\Stempler\Lexer\Token;
 
-final class DirectiveGrammar implements \IteratorAggregate
+final class DirectiveGrammar implements IteratorAggregate
 {
     use TokenTrait;
 
@@ -31,11 +35,9 @@ final class DirectiveGrammar implements \IteratorAggregate
     // Allowed keyword characters.
     private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
 
-    /** @var array */
-    private $name = [];
+    private array $name = [];
 
-    /** @var array */
-    private $body = [];
+    private array $body = [];
 
     public function parse(Buffer $src, int $offset): bool
     {
@@ -95,13 +97,11 @@ final class DirectiveGrammar implements \IteratorAggregate
 
     /**
      * Directive tokens.
-     *
-     * @return \Generator|\Traversable
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
         if ($this->tokens === []) {
-            throw new \LogicException('Directive not parsed');
+            throw new LogicException('Directive not parsed');
         }
 
         yield from $this->tokens;
@@ -225,7 +225,7 @@ final class DirectiveGrammar implements \IteratorAggregate
     private function getLastToken(): Token
     {
         if ($this->tokens === []) {
-            throw new \LogicException('Directive not parsed');
+            throw new LogicException('Directive not parsed');
         }
 
         return $this->tokens[count($this->tokens) - 1];

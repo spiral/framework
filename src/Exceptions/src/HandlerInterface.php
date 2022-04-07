@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
+use Throwable;
 /**
  * HandlerInterface is responsible for an exception explanation.
  */
@@ -26,10 +27,10 @@ interface HandlerInterface
     /**
      * Method must return prepared exception message.
      */
-    public function getMessage(\Throwable $e): string;
+    public function getMessage(Throwable $e): string;
 
     /**
      * Render exception debug information into stream.
      */
-    public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_VERBOSE): string;
+    public function renderException(Throwable $e, int $verbosity = self::VERBOSITY_VERBOSE): string;
 }

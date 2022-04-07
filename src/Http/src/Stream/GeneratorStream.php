@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Stream;
 
+use Exception;
 use Generator;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
@@ -29,7 +30,7 @@ final class GeneratorStream implements StreamInterface
     {
         try {
             return $this->getContents();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return '';
         }
     }

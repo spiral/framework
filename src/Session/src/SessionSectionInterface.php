@@ -11,12 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\Session;
 
+use IteratorAggregate;
+use ArrayAccess;
 use Spiral\Session\Exception\SessionException;
 
 /**
  * Singular session section (session data isolator).
  */
-interface SessionSectionInterface extends \IteratorAggregate, \ArrayAccess
+interface SessionSectionInterface extends IteratorAggregate, ArrayAccess
 {
     /**
      * Section name.

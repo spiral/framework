@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution\Resolver;
 
+use Exception;
+use DomainException;
 use Aws\CloudFront\UrlSigner;
 use Psr\Http\Message\UriInterface;
 use Spiral\Distribution\Internal\AmazonUriFactory;
@@ -24,25 +26,13 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 class CloudFrontResolver extends ExpirationAwareResolver
 {
-    /**
-     * @var string
-     */
-    private $domain;
+    private string $domain;
 
-    /**
-     * @var UrlSigner
-     */
-    private $signer;
+    private UrlSigner $signer;
 
-    /**
-     * @var AmazonUriFactory
-     */
-    private $factory;
+    private AmazonUriFactory $factory;
 
-    /**
-     * @var string|null
-     */
-    private $prefix;
+    private ?string $prefix;
 
     /**
      * @param string|null $prefix
@@ -61,7 +51,7 @@ class CloudFrontResolver extends ExpirationAwareResolver
 
     /**
      * @param DateIntervalFormat|null $expiration
-     * @throws \Exception
+     * @throws Exception
      */
     public function resolve(string $file, $expiration = null): UriInterface
     {
@@ -77,7 +67,7 @@ class CloudFrontResolver extends ExpirationAwareResolver
             return;
         }
 
-        throw new \DomainException('AWS SDK not available. Please install "aws/aws-sdk-php" package');
+        throw new DomainException('AWS SDK not available. Please install "aws/aws-sdk-php" package');
     }
 
     private function createUrl(string $file): string

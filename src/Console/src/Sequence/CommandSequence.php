@@ -20,11 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CommandSequence extends AbstractSequence
 {
-    /** @var string */
-    private $command;
+    private string $command;
 
-    /** @var array */
-    private $options = [];
+    private array $options = [];
 
     public function __construct(
         string $command,

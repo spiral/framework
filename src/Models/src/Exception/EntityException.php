@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Models\Exception;
 
+use RuntimeException;
 /**
  * Errors raised by Entity logic in runtime.
  */
-class EntityException extends \RuntimeException implements EntityExceptionInterface
+class EntityException extends RuntimeException implements EntityExceptionInterface
 {
 }

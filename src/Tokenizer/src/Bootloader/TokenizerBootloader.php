@@ -33,8 +33,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
         InvocationsInterface::class => InvocationLocator::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
+    private ConfiguratorInterface $config;
 
     public function __construct(ConfiguratorInterface $config)
     {

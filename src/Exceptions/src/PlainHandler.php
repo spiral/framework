@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
+use Throwable;
 use Spiral\Exceptions\Style\PlainStyle;
 
 final class PlainHandler extends AbstractHandler
@@ -21,7 +22,7 @@ final class PlainHandler extends AbstractHandler
     /**
      * @inheritdoc
      */
-    public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
+    public function renderException(Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
         $result = '';
 
@@ -43,7 +44,7 @@ final class PlainHandler extends AbstractHandler
      *
      * @param Highlighter|null $h
      */
-    private function renderTrace(\Throwable $e, Highlighter $h = null): string
+    private function renderTrace(Throwable $e, Highlighter $h = null): string
     {
         $stacktrace = $this->getStacktrace($e);
         if (empty($stacktrace)) {

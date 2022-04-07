@@ -18,11 +18,9 @@ use Spiral\Stempler\Exception\LoaderException;
  */
 final class DirectoryLoader implements LoaderInterface
 {
-    /** @var string */
-    private $directory;
+    private string $directory;
 
-    /** @var string */
-    private $extension;
+    private string $extension;
 
     public function __construct(string $directory, string $extension = '.dark.php')
     {

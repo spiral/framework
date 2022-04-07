@@ -11,6 +11,15 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
+use ReflectionUnionType;
+use ReflectionIntersectionType;
+use ReflectionNamedType;
+use ReflectionClass;
+use ReflectionException;
+use Throwable;
+use ReflectionMethod;
+use ReflectionFunction;
+use ReflectionParameter;
 use Closure;
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
@@ -50,10 +59,7 @@ final class Container implements
     InvokerInterface,
     ScopeInterface
 {
-    /**
-     * @var array
-     */
-    private $bindings = [
+    private array $bindings = [
         ContainerInterface::class => self::class,
         BinderInterface::class    => self::class,
         FactoryInterface::class   => self::class,
@@ -65,10 +71,8 @@ final class Container implements
     /**
      * List of classes responsible for handling specific instance or interface. Provides ability to
      * delegate container functionality.
-     *
-     * @var array
      */
-    private $injectors = [];
+    private array $injectors = [];
 
     /**
      * Container constructor.
@@ -103,7 +107,7 @@ final class Container implements
              * Container do not currently support union types. In the future, we
              * can provide the possibility of autowiring based on priorities (TBD).
              */
-            if ($type instanceof \ReflectionUnionType) {
+            if ($type instanceof ReflectionUnionType) {
                 $error = 'Parameter $%s in %s contains a union type hint that cannot be inferred unambiguously';
                 $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
 
@@ -113,17 +117,17 @@ final class Container implements
             /**
              * Container do not currently support intersection types.
              */
-            if ($type instanceof \ReflectionIntersectionType) {
+            if ($type instanceof ReflectionIntersectionType) {
                 $error = 'Parameter $%s in %s contains a intersection type hint that cannot be inferred unambiguously';
                 $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
 
                 throw new ContainerException($error);
             }
 
-            if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
+            if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                 try {
-                    $class = new \ReflectionClass($type->getName());
-                } catch (\ReflectionException $e) {
+                    $class = new ReflectionClass($type->getName());
+                } catch (ReflectionException $e) {
                     $location = $this->getLocationString($reflection);
 
                     $error = 'Unable to resolve `\$%s` parameter in %s: %s';
@@ -201,7 +205,7 @@ final class Container implements
      * @psalm-return ($id is class-string ? T : mixed)
      *
      * @throws ContainerException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function get($id, string $context = null)
     {
@@ -222,7 +226,7 @@ final class Container implements
      *
      * @return T
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function make(string $alias, array $parameters = [], string $context = null)
     {
@@ -376,8 +380,8 @@ final class Container implements
             }
 
             try {
-                $method = new \ReflectionMethod($resolver, $method);
-            } catch (\ReflectionException $e) {
+                $method = new ReflectionMethod($resolver, $method);
+            } catch (ReflectionException $e) {
                 throw new ContainerException($e->getMessage(), $e->getCode(), $e);
             }
 
@@ -396,8 +400,8 @@ final class Container implements
 
         if ($target instanceof Closure) {
             try {
-                $reflection = new \ReflectionFunction($target);
-            } catch (\ReflectionException $e) {
+                $reflection = new ReflectionFunction($target);
+            } catch (ReflectionException $e) {
                 throw new ContainerException($e->getMessage(), $e->getCode(), $e);
             }
 
@@ -453,7 +457,7 @@ final class Container implements
      * @return object
      *
      * @throws AutowireException
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function autowire(string $class, array $parameters, string $context = null)
     {
@@ -472,7 +476,7 @@ final class Container implements
     {
         $location = $reflection->getName();
 
-        if ($reflection instanceof \ReflectionMethod) {
+        if ($reflection instanceof ReflectionMethod) {
             return "{$reflection->getDeclaringClass()->getName()}::{$location}()";
         }
 
@@ -484,9 +488,9 @@ final class Container implements
      *
      * @param mixed $value
      * @throws ArgumentException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    private function assertType(\ReflectionParameter $parameter, ContextFunction $context, $value): void
+    private function assertType(ReflectionParameter $parameter, ContextFunction $context, $value): void
     {
         if ($value === null) {
             if (!$parameter->allowsNull()) {
@@ -523,13 +527,13 @@ final class Container implements
      * @return object
      *
      * @throws ContainerException
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function createInstance(string $class, array $parameters, string $context = null)
     {
         try {
-            $reflection = new \ReflectionClass($class);
-        } catch (\ReflectionException $e) {
+            $reflection = new ReflectionClass($class);
+        } catch (ReflectionException $e) {
             throw new ContainerException($e->getMessage(), $e->getCode(), $e);
         }
 
@@ -588,7 +592,7 @@ final class Container implements
     /**
      * Checks if given class has associated injector.
      */
-    private function checkInjector(\ReflectionClass $reflection): bool
+    private function checkInjector(ReflectionClass $reflection): bool
     {
         $class = $reflection->getName();
         if (\array_key_exists($class, $this->injectors)) {
@@ -655,7 +659,7 @@ final class Container implements
      * @param string|null $context
      * @return mixed|null|object
      * @throws ContainerException
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function evaluateBinding(string $alias, $target, array $parameters, string $context = null)
     {

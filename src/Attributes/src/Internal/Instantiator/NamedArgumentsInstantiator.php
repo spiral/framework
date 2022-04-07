@@ -11,6 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
 
+use ReflectionClass;
+use Reflector;
+use Throwable;
+use ReflectionMethod;
+use BadMethodCallException;
+use ReflectionParameter;
+use ArgumentCountError;
 use Spiral\Attributes\Internal\Exception;
 
 /**
@@ -32,12 +39,12 @@ final class NamedArgumentsInstantiator extends Instantiator
     /**
      * {@inheritDoc}
      */
-    public function instantiate(\ReflectionClass $attr, array $arguments, \Reflector $context = null): object
+    public function instantiate(ReflectionClass $attr, array $arguments, Reflector $context = null): object
     {
         if ($this->isNamedArgumentsSupported()) {
             try {
                 return $attr->newInstanceArgs($arguments);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw Exception::withLocation($e, $attr->getFileName(), $attr->getStartLine());
             }
         }
@@ -59,9 +66,9 @@ final class NamedArgumentsInstantiator extends Instantiator
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
-    private function resolveParameters(\ReflectionClass $ctx, \ReflectionMethod $constructor, array $arguments): array
+    private function resolveParameters(ReflectionClass $ctx, ReflectionMethod $constructor, array $arguments): array
     {
         $passed = [];
 
@@ -72,9 +79,9 @@ final class NamedArgumentsInstantiator extends Instantiator
 
             if (\count($arguments)) {
                 $message = \sprintf(self::ERROR_UNKNOWN_ARGUMENT, \array_key_first($arguments));
-                throw new \BadMethodCallException($message);
+                throw new BadMethodCallException($message);
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw Exception::withLocation($e, $constructor->getFileName(), $constructor->getStartLine());
         }
 
@@ -83,9 +90,9 @@ final class NamedArgumentsInstantiator extends Instantiator
 
     /**
      * @return mixed
-     * @throws \Throwable
+     * @throws Throwable
      */
-    private function resolveParameter(\ReflectionClass $ctx, \ReflectionParameter $param, array &$arguments)
+    private function resolveParameter(ReflectionClass $ctx, ReflectionParameter $param, array &$arguments)
     {
         switch (true) {
             case \array_key_exists($param->getName(), $arguments):
@@ -114,7 +121,7 @@ final class NamedArgumentsInstantiator extends Instantiator
                     $param->getName(),
                 ]);
 
-                throw new \ArgumentCountError($message);
+                throw new ArgumentCountError($message);
         }
     }
 }

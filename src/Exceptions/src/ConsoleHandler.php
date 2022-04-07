@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
+use Throwable;
+use Error;
 use Codedungeon\PHPCliColors\Color;
 use Spiral\Debug\System;
 use Spiral\Exceptions\Style\ConsoleStyle;
@@ -41,8 +43,7 @@ class ConsoleHandler extends AbstractHandler
         'reset'      => Color::RESET,
     ];
 
-    /** @var StyleInterface */
-    private $colorsSupport;
+    private StyleInterface $colorsSupport;
 
     /**
      * @param bool|resource $stream
@@ -63,11 +64,11 @@ class ConsoleHandler extends AbstractHandler
     /**
      * @inheritdoc
      */
-    public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
+    public function renderException(Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
     {
         $result = '';
 
-        if ($e instanceof \Error) {
+        if ($e instanceof Error) {
             $result .= $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:magenta,white');
         } else {
             $result .= $this->renderHeader('[' . get_class($e) . "]\n" . $e->getMessage(), 'bg:red,white');
@@ -126,7 +127,7 @@ class ConsoleHandler extends AbstractHandler
      *
      * @param Highlighter|null $h
      */
-    private function renderTrace(\Throwable $e, Highlighter $h = null): string
+    private function renderTrace(Throwable $e, Highlighter $h = null): string
     {
         $stacktrace = $this->getStacktrace($e);
         if (empty($stacktrace)) {

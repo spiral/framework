@@ -45,8 +45,7 @@ class MailerBootloader extends Bootloader
         SymfonyMailer::class => [self::class, 'mailer'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
+    private ConfiguratorInterface $config;
 
     public function __construct(ConfiguratorInterface $config)
     {
@@ -89,12 +88,10 @@ class MailerBootloader extends Bootloader
         } else {
             $container->bindSingleton(
                 MailerInterface::class,
-                static function (MailerConfig $config, QueueConnectionProviderInterface $provider) {
-                    return new MailQueue(
-                        $config,
-                        $provider->getConnection($config->getQueueConnection())
-                    );
-                }
+                static fn(MailerConfig $config, QueueConnectionProviderInterface $provider) => new MailQueue(
+                    $config,
+                    $provider->getConnection($config->getQueueConnection())
+                )
             );
         }
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer;
 
+use Generator;
 use Spiral\Stempler\Lexer\Grammar\RawGrammar;
 
 /**
@@ -20,7 +21,7 @@ use Spiral\Stempler\Lexer\Grammar\RawGrammar;
 final class Lexer
 {
     /** @var GrammarInterface[] */
-    private $grammars = [];
+    private array $grammars = [];
 
     /**
      * Attach grammar layer.
@@ -35,7 +36,7 @@ final class Lexer
     /**
      * Generate token stream.
      */
-    public function parse(StreamInterface $src): \Generator
+    public function parse(StreamInterface $src): Generator
     {
         $stream = new Buffer($this->generate($src));
         foreach ($this->grammars as $grammar) {
@@ -48,7 +49,7 @@ final class Lexer
         }
     }
 
-    private function wrap(GrammarInterface $grammar, Buffer $stream): \Generator
+    private function wrap(GrammarInterface $grammar, Buffer $stream): Generator
     {
         foreach ($grammar->parse($stream) as $n) {
             if ($n instanceof Token && $n->grammar === null) {
@@ -62,7 +63,7 @@ final class Lexer
     /**
      * Generate character stream and aggregate grammar results.
      *
-     * @return array|\Generator
+     * @return array|Generator
      */
     private function generate(StreamInterface $src)
     {

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
+use Throwable;
 use Spiral\Boot\Exception\BootException;
 
 interface KernelInterface
@@ -26,7 +27,7 @@ interface KernelInterface
      * an exception.
      *
      * @throws BootException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function serve();
 }

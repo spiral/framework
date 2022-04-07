@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Auth;
 
+use DateTimeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -27,13 +28,13 @@ interface HttpTransportInterface
     /**
      * Commit (write) token to the outgoing response.
      *
-     * @param \DateTimeInterface|null $expiresAt
+     * @param DateTimeInterface|null $expiresAt
      */
     public function commitToken(
         Request $request,
         Response $response,
         string $tokenID,
-        \DateTimeInterface $expiresAt = null
+        DateTimeInterface $expiresAt = null
     ): Response;
 
     /**

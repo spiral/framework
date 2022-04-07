@@ -22,8 +22,7 @@ final class MailQueue implements MailerInterface
 {
     public const JOB_NAME = 'sendit.mail';
 
-    /** @var MailerConfig */
-    private $config;
+    private MailerConfig $config;
 
     /** @var QueueInterface|\Spiral\Queue\QueueInterface */
     private $queue;

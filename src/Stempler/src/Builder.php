@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler;
 
+use Throwable;
 use Spiral\Stempler\Compiler\Result;
 use Spiral\Stempler\Exception\CompilerException;
 use Spiral\Stempler\Exception\ContextExceptionInterface;
@@ -35,17 +36,14 @@ final class Builder
     public const STAGE_FINALIZE  = 2;
     public const STAGE_COMPILE   = 3;
 
-    /** @var LoaderInterface */
-    private $loader;
+    private LoaderInterface $loader;
 
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var Compiler */
-    private $compiler;
+    private Compiler $compiler;
 
     /** @var VisitorInterface[][] */
-    private $visitors = [];
+    private array $visitors = [];
 
     /**
      * @param Parser|null     $parser
@@ -86,7 +84,7 @@ final class Builder
      *
      *
      * @throws CompilerException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function compile(string $path): Result
     {
@@ -97,7 +95,7 @@ final class Builder
 
     /**
      * @throws ContextExceptionInterface
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function compileTemplate(Template $tpl): Result
     {
@@ -115,7 +113,7 @@ final class Builder
 
     /**
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function load(string $path): Template
     {
@@ -136,14 +134,14 @@ final class Builder
             return $this->process($tpl);
         } catch (ContextExceptionInterface $e) {
             throw $this->mapException($e);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw $e;
         }
     }
 
     /**
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function process(Template $template): Template
     {

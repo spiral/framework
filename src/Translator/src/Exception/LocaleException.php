@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Translator\Exception;
 
+use Exception;
 /**
  * Invalid or unknown locale.
  */
@@ -24,7 +25,7 @@ class LocaleException extends TranslatorException
     /**
      * @param string     $locale
      * @param int        $code
-     * @param \Exception $previous
+     * @param Exception $previous
      */
     public function __construct($locale, $code = 0, $previous = null)
     {

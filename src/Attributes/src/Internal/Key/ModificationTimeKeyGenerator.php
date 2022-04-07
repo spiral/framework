@@ -11,6 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Key;
 
+use ReflectionClass;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
+use LogicException;
+use ReflectionParameter;
 /**
  * A generator that returns a key containing information about the
  * time the file was last modified.
@@ -23,7 +30,7 @@ final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forClass(\ReflectionClass $class): string
+    public function forClass(ReflectionClass $class): string
     {
         if ($class->isUserDefined()) {
             return (string)\filemtime(
@@ -39,7 +46,7 @@ final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forProperty(\ReflectionProperty $prop): string
+    public function forProperty(ReflectionProperty $prop): string
     {
         return $this->forClass(
             $prop->getDeclaringClass()
@@ -49,7 +56,7 @@ final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forConstant(\ReflectionClassConstant $const): string
+    public function forConstant(ReflectionClassConstant $const): string
     {
         return $this->forClass(
             $const->getDeclaringClass()
@@ -59,9 +66,9 @@ final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forFunction(\ReflectionFunctionAbstract $fn): string
+    public function forFunction(ReflectionFunctionAbstract $fn): string
     {
-        if ($fn instanceof \ReflectionMethod) {
+        if ($fn instanceof ReflectionMethod) {
             return $this->forClass(
                 $fn->getDeclaringClass()
             );
@@ -77,13 +84,13 @@ final class ModificationTimeKeyGenerator implements KeyGeneratorInterface
             return $extension->getVersion();
         }
 
-        throw new \LogicException('Can not determine modification time of [' . $fn->getName() . ']');
+        throw new LogicException('Can not determine modification time of [' . $fn->getName() . ']');
     }
 
     /**
      * {@inheritDoc}
      */
-    public function forParameter(\ReflectionParameter $param): string
+    public function forParameter(ReflectionParameter $param): string
     {
         return $this->forFunction(
             $param->getDeclaringFunction()

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Node\HTML;
 
+use Generator;
 use Spiral\Stempler\Node\NodeInterface;
 use Spiral\Stempler\Parser\Context;
 
@@ -30,7 +31,7 @@ final class Nil implements NodeInterface
     /**
      * @inheritDoc
      */
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         yield from [];
     }

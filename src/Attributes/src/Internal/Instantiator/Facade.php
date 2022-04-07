@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
 
+use ReflectionClass;
+use Reflector;
 use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation as MarkerInterface;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor as MarkerAnnotation;
 use Spiral\Attributes\AttributeReader;
@@ -19,20 +21,11 @@ use Spiral\Attributes\ReaderInterface;
 
 final class Facade implements InstantiatorInterface
 {
-    /**
-     * @var DoctrineInstantiator
-     */
-    private $doctrine;
+    private DoctrineInstantiator $doctrine;
 
-    /**
-     * @var NamedArgumentsInstantiator
-     */
-    private $named;
+    private NamedArgumentsInstantiator $named;
 
-    /**
-     * @var ReaderInterface
-     */
-    private $reader;
+    private ReaderInterface $reader;
 
     /**
      * @param ReaderInterface|null $reader
@@ -47,7 +40,7 @@ final class Facade implements InstantiatorInterface
     /**
      * {@inheritDoc}
      */
-    public function instantiate(\ReflectionClass $attr, array $arguments, \Reflector $context = null): object
+    public function instantiate(ReflectionClass $attr, array $arguments, Reflector $context = null): object
     {
         if ($this->isNamedArguments($attr)) {
             return $this->named->instantiate($attr, $arguments, $context);
@@ -56,21 +49,21 @@ final class Facade implements InstantiatorInterface
         return $this->doctrine->instantiate($attr, $arguments, $context);
     }
 
-    private function isNamedArguments(\ReflectionClass $class): bool
+    private function isNamedArguments(ReflectionClass $class): bool
     {
         return $this->providesNamedArgumentsInterface($class) ||
             $this->providesNamedArgumentsAttribute($class)
         ;
     }
 
-    private function providesNamedArgumentsAttribute(\ReflectionClass $class): bool
+    private function providesNamedArgumentsAttribute(ReflectionClass $class): bool
     {
         return \class_exists(MarkerAnnotation::class)
             ? $this->reader->firstClassMetadata($class, MarkerAnnotation::class) !== null
             : $this->reader->firstClassMetadata($class, NamedArgumentConstructor::class) !== null;
     }
 
-    private function providesNamedArgumentsInterface(\ReflectionClass $class): bool
+    private function providesNamedArgumentsInterface(ReflectionClass $class): bool
     {
         return \is_subclass_of($class->getName(), MarkerInterface::class);
     }

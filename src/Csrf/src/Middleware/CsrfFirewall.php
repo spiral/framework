@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Csrf\Middleware;
 
+use LogicException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -38,11 +39,9 @@ final class CsrfFirewall implements MiddlewareInterface
      */
     public const ALLOW_METHODS = ['GET', 'HEAD', 'OPTIONS'];
 
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
-    /** @var array */
-    private $allowMethods;
+    private array $allowMethods;
 
     public function __construct(ResponseFactoryInterface $responseFactory, array $allowMethods = self::ALLOW_METHODS)
     {
@@ -58,7 +57,7 @@ final class CsrfFirewall implements MiddlewareInterface
         $token = $request->getAttribute(CsrfMiddleware::ATTRIBUTE);
 
         if (empty($token)) {
-            throw new \LogicException('Unable to apply CSRF firewall, attribute is missing');
+            throw new LogicException('Unable to apply CSRF firewall, attribute is missing');
         }
 
         if ($this->isRequired($request) && !hash_equals($token, $this->fetchToken($request))) {

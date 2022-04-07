@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Bridge;
 
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
+use Traversable;
 use Doctrine\Common\Annotations\Reader;
 use Spiral\Attributes\ReaderInterface;
 
@@ -50,7 +54,7 @@ final class DoctrineReaderBridge implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotations(\ReflectionClass $class): array
+    public function getClassAnnotations(ReflectionClass $class): array
     {
         return $this->iterableToArray(
             $this->reader->getClassMetadata($class)
@@ -60,7 +64,7 @@ final class DoctrineReaderBridge implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotation(\ReflectionClass $class, $annotationName)
+    public function getClassAnnotation(ReflectionClass $class, $annotationName)
     {
         return $this->reader->firstClassMetadata($class, $annotationName);
     }
@@ -68,7 +72,7 @@ final class DoctrineReaderBridge implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotations(\ReflectionMethod $method): array
+    public function getMethodAnnotations(ReflectionMethod $method): array
     {
         return $this->iterableToArray(
             $this->reader->getFunctionMetadata($method)
@@ -78,7 +82,7 @@ final class DoctrineReaderBridge implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
+    public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
     {
         return $this->reader->firstFunctionMetadata($method, $annotationName);
     }
@@ -86,7 +90,7 @@ final class DoctrineReaderBridge implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotations(\ReflectionProperty $property): array
+    public function getPropertyAnnotations(ReflectionProperty $property): array
     {
         return $this->iterableToArray(
             $this->reader->getPropertyMetadata($property)
@@ -96,7 +100,7 @@ final class DoctrineReaderBridge implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
+    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
     {
         return $this->reader->firstPropertyMetadata($property, $annotationName);
     }
@@ -107,7 +111,7 @@ final class DoctrineReaderBridge implements Reader
      */
     private function iterableToArray(iterable $meta): array
     {
-        if ($meta instanceof \Traversable) {
+        if ($meta instanceof Traversable) {
             return \iterator_to_array($meta, false);
         }
 

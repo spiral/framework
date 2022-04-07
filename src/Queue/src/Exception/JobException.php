@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Exception;
 
-class JobException extends \RuntimeException
+use RuntimeException;
+class JobException extends RuntimeException
 {
 }

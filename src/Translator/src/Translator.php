@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Translator;
 
+use InvalidArgumentException;
+use Closure;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Exception\LocaleException;
@@ -23,17 +25,14 @@ use Symfony\Component\Translation\IdentityTranslator;
  */
 final class Translator implements TranslatorInterface, SingletonInterface
 {
-    /** @var TranslatorConfig */
-    private $config;
+    private TranslatorConfig $config;
 
-    /** @var string */
-    private $locale = '';
+    private string $locale = '';
 
     /** @var IdentityTranslator @internal */
-    private $identityTranslator;
+    private IdentityTranslator $identityTranslator;
 
-    /** @var CatalogueManagerInterface */
-    private $catalogueManager;
+    private CatalogueManagerInterface $catalogueManager;
 
     public function __construct(
         TranslatorConfig $config,
@@ -96,8 +95,8 @@ final class Translator implements TranslatorInterface, SingletonInterface
      */
     public function trans(string $id, array $parameters = [], $domain = null, $locale = null): string
     {
-        $domain = $domain ?? $this->config->getDefaultDomain();
-        $locale = $locale ?? $this->locale;
+        $domain ??= $this->config->getDefaultDomain();
+        $locale ??= $this->locale;
 
         $message = $this->get($locale, $domain, $id);
 
@@ -120,8 +119,8 @@ final class Translator implements TranslatorInterface, SingletonInterface
         $domain = null,
         $locale = null
     ) {
-        $domain = $domain ?? $this->config->getDefaultDomain();
-        $locale = $locale ?? $this->locale;
+        $domain ??= $this->config->getDefaultDomain();
+        $locale ??= $this->locale;
 
         try {
             $message = $this->get($locale, $domain, $id);
@@ -132,7 +131,7 @@ final class Translator implements TranslatorInterface, SingletonInterface
                 null,
                 $locale
             );
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             //Wrapping into more explanatory exception
             throw new PluralizationException($e->getMessage(), $e->getCode(), $e);
         }
@@ -163,7 +162,7 @@ final class Translator implements TranslatorInterface, SingletonInterface
     ): string {
         $replaces = [];
         foreach ($values as $key => $value) {
-            $value = (is_array($value) || $value instanceof \Closure) ? '' : $value;
+            $value = (is_array($value) || $value instanceof Closure) ? '' : $value;
 
             if (is_object($value)) {
                 if (method_exists($value, '__toString')) {

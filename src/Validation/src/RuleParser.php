@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Validation;
 
+use Generator;
+use Closure;
 use Spiral\Validation\Exception\ParserException;
 
 /**
@@ -25,12 +27,12 @@ final class RuleParser implements ParserInterface
     /**
      * @inheritdoc
      */
-    public function split($rules): \Generator
+    public function split($rules): Generator
     {
         $rules = is_array($rules) ? $rules : [$rules];
 
         foreach ($rules as $rule) {
-            if ($rule instanceof \Closure) {
+            if ($rule instanceof Closure) {
                 yield null => $rule;
                 continue;
             }
@@ -130,6 +132,6 @@ final class RuleParser implements ParserInterface
      */
     protected function getID($rule): string
     {
-        return json_encode($rule);
+        return json_encode($rule, JSON_THROW_ON_ERROR);
     }
 }

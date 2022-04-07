@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax;
 
+use Spiral\Stempler\Parser\Syntax\Traits\MixinTrait;
+use Spiral\Stempler\Parser\Context;
 use Spiral\Stempler\Lexer\Grammar\InlineGrammar;
 use Spiral\Stempler\Lexer\Token;
 use Spiral\Stempler\Node\Inline;
@@ -20,10 +22,9 @@ use Spiral\Stempler\Parser\SyntaxInterface;
 
 final class InlineSyntax implements SyntaxInterface
 {
-    use Parser\Syntax\Traits\MixinTrait;
+    use MixinTrait;
 
-    /** @var Inline|null */
-    private $inline;
+    private ?Inline $inline = null;
 
     /**
      * @inheritDoc
@@ -32,7 +33,7 @@ final class InlineSyntax implements SyntaxInterface
     {
         switch ($token->type) {
             case InlineGrammar::TYPE_OPEN_TAG:
-                $this->inline = new Inline(new Parser\Context($token, $parser->getPath()));
+                $this->inline = new Inline(new Context($token, $parser->getPath()));
                 $asm->push($this->inline);
                 break;
 

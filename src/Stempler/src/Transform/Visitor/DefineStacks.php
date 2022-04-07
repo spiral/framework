@@ -22,8 +22,7 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class DefineStacks implements VisitorInterface
 {
-    /** @var string */
-    private $stackKeyword = 'stack:collect';
+    private string $stackKeyword = 'stack:collect';
 
     /**
      * @inheritDoc

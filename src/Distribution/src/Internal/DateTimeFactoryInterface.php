@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution\Internal;
 
+use DateTimeImmutable;
 /**
  * @internal DateTimeFactoryInterface is an internal library interface, please do not use it in your code.
  * @psalm-internal Spiral\Distribution
@@ -24,5 +25,5 @@ interface DateTimeFactoryInterface
     /**
      * Returns the current time as a DateTimeImmutable instance.
      */
-    public function now(): \DateTimeImmutable;
+    public function now(): DateTimeImmutable;
 }

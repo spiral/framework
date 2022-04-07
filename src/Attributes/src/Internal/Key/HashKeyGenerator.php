@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Key;
 
+use ReflectionClass;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionFunctionAbstract;
+use ReflectionParameter;
 /**
  * A generator that hashes the key. It can be used when the cache driver
  * cannot accept string keys containing special characters (that is, not
@@ -32,15 +37,9 @@ final class HashKeyGenerator implements KeyGeneratorInterface
      */
     private const DEFAULT_HASH_ALGO = 'md5';
 
-    /**
-     * @var KeyGeneratorInterface
-     */
-    private $generator;
+    private KeyGeneratorInterface $generator;
 
-    /**
-     * @var string
-     */
-    private $algo;
+    private string $algo;
 
     /**
      * @param KeyGeneratorInterface|null $base
@@ -54,7 +53,7 @@ final class HashKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forClass(\ReflectionClass $class): string
+    public function forClass(ReflectionClass $class): string
     {
         return \hash($this->algo, $this->generator->forClass($class));
     }
@@ -62,7 +61,7 @@ final class HashKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forProperty(\ReflectionProperty $prop): string
+    public function forProperty(ReflectionProperty $prop): string
     {
         return \hash($this->algo, $this->generator->forProperty($prop));
     }
@@ -70,7 +69,7 @@ final class HashKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forConstant(\ReflectionClassConstant $const): string
+    public function forConstant(ReflectionClassConstant $const): string
     {
         return \hash($this->algo, $this->generator->forConstant($const));
     }
@@ -78,7 +77,7 @@ final class HashKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forFunction(\ReflectionFunctionAbstract $fn): string
+    public function forFunction(ReflectionFunctionAbstract $fn): string
     {
         return \hash($this->algo, $this->generator->forFunction($fn));
     }
@@ -86,7 +85,7 @@ final class HashKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forParameter(\ReflectionParameter $param): string
+    public function forParameter(ReflectionParameter $param): string
     {
         return \hash($this->algo, $this->generator->forParameter($param));
     }

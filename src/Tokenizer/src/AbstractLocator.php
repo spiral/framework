@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
 
+use Exception;
+use Generator;
+use ReflectionClass;
+use Throwable;
 use Psr\Log\LoggerAwareInterface;
 use Spiral\Core\Container\InjectableInterface;
 use Spiral\Logger\Traits\LoggerTrait;
@@ -38,11 +42,11 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
     /**
      * Available file reflections. Generator.
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return \Generator<int, ReflectionFile, mixed, void>
+     * @return Generator<int, ReflectionFile, mixed, void>
      */
-    protected function availableReflections(): \Generator
+    protected function availableReflections(): Generator
     {
         foreach ($this->finder->getIterator() as $file) {
             $reflection = new ReflectionFile((string)$file);
@@ -67,11 +71,11 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
      *
      * @template T
      * @param class-string<T> $class
-     * @return \ReflectionClass<T>
+     * @return ReflectionClass<T>
      *
      * @throws LocatorException
      */
-    protected function classReflection(string $class): \ReflectionClass
+    protected function classReflection(string $class): ReflectionClass
     {
         $loader = static function ($class) {
             if ($class === LocatorException::class) {
@@ -87,8 +91,8 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
         try {
             //In some cases reflection can thrown an exception if class invalid or can not be loaded,
             //we are going to handle such exception and convert it soft exception
-            return new \ReflectionClass($class);
-        } catch (\Throwable $e) {
+            return new ReflectionClass($class);
+        } catch (Throwable $e) {
             if ($e instanceof LocatorException && $e->getPrevious() != null) {
                 $e = $e->getPrevious();
             }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Session;
 
+use Throwable;
 use Spiral\Session\Exception\SessionException;
 
 /**
@@ -40,27 +41,17 @@ final class Session implements SessionInterface
 
     /**
      * Unique string to identify client. Signature is stored inside the session.
-     *
-     * @var string
      */
-    private $clientSignature;
+    private string $clientSignature;
 
     /**
      * Session lifetime in seconds.
-     *
-     * @var int
      */
-    private $lifetime;
+    private int $lifetime;
 
-    /**
-     * @var string
-     */
-    private $id;
+    private ?string $id;
 
-    /**
-     * @var bool
-     */
-    private $started = false;
+    private bool $started = false;
 
     /**
      * @param string|null $id
@@ -114,7 +105,7 @@ final class Session implements SessionInterface
 
         try {
             session_start(['use_cookies' => false]);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new SessionException('Unable to start session', $e->getCode(), $e);
         }
 

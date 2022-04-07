@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Console;
 
+use ReflectionMethod;
 use Psr\Container\ContainerInterface;
 use Spiral\Console\Traits\HelpersTrait;
 use Spiral\Core\Container;
@@ -60,7 +61,7 @@ abstract class Command extends SymfonyCommand
             throw new ScopeException('Container is not set');
         }
 
-        $reflection = new \ReflectionMethod($this, 'perform');
+        $reflection = new ReflectionMethod($this, 'perform');
         $reflection->setAccessible(true);
 
         $resolver = $this->container->get(ResolverInterface::class);

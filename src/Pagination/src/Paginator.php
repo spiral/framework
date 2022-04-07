@@ -11,25 +11,21 @@ declare(strict_types=1);
 
 namespace Spiral\Pagination;
 
+use Countable;
 /**
  * Simple predictable paginator.
  */
-final class Paginator implements PaginatorInterface, \Countable
+final class Paginator implements PaginatorInterface, Countable
 {
-    /** @var int */
-    private $pageNumber = 1;
+    private int $pageNumber = 1;
 
-    /** @var int */
-    private $countPages = 1;
+    private int $countPages = 1;
 
-    /** @var int */
-    private $limit = 25;
+    private int $limit = 25;
 
-    /** @var int */
-    private $count = 0;
+    private int $count = 0;
 
-    /** @var string|null */
-    private $parameter;
+    private ?string $parameter;
 
     /**
      * @param string|null $parameter
@@ -120,7 +116,7 @@ final class Paginator implements PaginatorInterface, \Countable
     public function paginate(PaginableInterface $target): PaginatorInterface
     {
         $paginator = clone $this;
-        if ($target instanceof \Countable && $paginator->count === 0) {
+        if ($target instanceof Countable && $paginator->count === 0) {
             $paginator->setCount($target->count());
         }
 

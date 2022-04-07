@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution\Resolver;
 
+use DateInterval;
+use DateTimeInterface;
 use Spiral\Distribution\ExpirationAwareResolverInterface;
 use Spiral\Distribution\Internal\DateTimeFactory;
 use Spiral\Distribution\Internal\DateTimeFactoryInterface;
@@ -28,7 +30,7 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
     protected const DEFAULT_EXPIRATION_INTERVAL = 'PT60M';
 
     /**
-     * @var \DateInterval
+     * @var DateInterval
      */
     protected $expiration;
 
@@ -52,7 +54,7 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
         $this->expiration = $this->intervals->create(static::DEFAULT_EXPIRATION_INTERVAL);
     }
 
-    public function getExpirationDate(): \DateInterval
+    public function getExpirationDate(): DateInterval
     {
         return $this->expiration;
     }
@@ -88,7 +90,7 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
     /**
      * @param DateIntervalFormat|null $expiration
      */
-    protected function getExpirationDateTime($expiration): \DateTimeInterface
+    protected function getExpirationDateTime($expiration): DateTimeInterface
     {
         $expiration = $this->resolveExpirationInterval($expiration);
 
@@ -98,7 +100,7 @@ abstract class ExpirationAwareResolver extends UriResolver implements Expiration
     /**
      * @param DateIntervalFormat|null $expiration
      */
-    private function resolveExpirationInterval($expiration): \DateInterval
+    private function resolveExpirationInterval($expiration): DateInterval
     {
         if ($expiration === null) {
             return $this->expiration;

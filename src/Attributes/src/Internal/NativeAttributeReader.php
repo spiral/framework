@@ -11,6 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
 
+use ReflectionClass;
+use ReflectionAttribute;
+use ReflectionFunctionAbstract;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionParameter;
+use ReflectionException;
+use Reflector;
 use Spiral\Attributes\Exception\InitializationException;
 use Spiral\Attributes\Exception\SemanticAttributeException;
 use Spiral\Attributes\Internal\Instantiator\InstantiatorInterface;
@@ -39,41 +47,41 @@ final class NativeAttributeReader extends AttributeReader
     /**
      * {@inheritDoc}
      */
-    protected function getClassAttributes(\ReflectionClass $class, ?string $name): iterable
+    protected function getClassAttributes(ReflectionClass $class, ?string $name): iterable
     {
-        return $this->format($class, $class->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF));
+        return $this->format($class, $class->getAttributes($name, ReflectionAttribute::IS_INSTANCEOF));
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function getFunctionAttributes(\ReflectionFunctionAbstract $function, ?string $name): iterable
+    protected function getFunctionAttributes(ReflectionFunctionAbstract $function, ?string $name): iterable
     {
-        return $this->format($function, $function->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF));
+        return $this->format($function, $function->getAttributes($name, ReflectionAttribute::IS_INSTANCEOF));
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function getPropertyAttributes(\ReflectionProperty $property, ?string $name): iterable
+    protected function getPropertyAttributes(ReflectionProperty $property, ?string $name): iterable
     {
-        return $this->format($property, $property->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF));
+        return $this->format($property, $property->getAttributes($name, ReflectionAttribute::IS_INSTANCEOF));
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function getConstantAttributes(\ReflectionClassConstant $const, ?string $name): iterable
+    protected function getConstantAttributes(ReflectionClassConstant $const, ?string $name): iterable
     {
-        return $this->format($const, $const->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF));
+        return $this->format($const, $const->getAttributes($name, ReflectionAttribute::IS_INSTANCEOF));
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function getParameterAttributes(\ReflectionParameter $param, ?string $name): iterable
+    protected function getParameterAttributes(ReflectionParameter $param, ?string $name): iterable
     {
-        return $this->format($param, $param->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF));
+        return $this->format($param, $param->getAttributes($name, ReflectionAttribute::IS_INSTANCEOF));
     }
 
     private function checkAvailability(): void
@@ -84,16 +92,16 @@ final class NativeAttributeReader extends AttributeReader
     }
 
     /**
-     * @param iterable<\ReflectionAttribute> $attributes
-     * @return iterable<\ReflectionClass, array>
-     * @throws \ReflectionException
+     * @param iterable<ReflectionAttribute> $attributes
+     * @return iterable<ReflectionClass, array>
+     * @throws ReflectionException
      */
-    private function format(\Reflector $context, iterable $attributes): iterable
+    private function format(Reflector $context, iterable $attributes): iterable
     {
         foreach ($attributes as $attribute) {
             $this->assertClassExists($attribute->getName(), $context);
 
-            yield new \ReflectionClass($attribute->getName()) => $attribute->getArguments();
+            yield new ReflectionClass($attribute->getName()) => $attribute->getArguments();
         }
     }
 }

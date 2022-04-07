@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution;
 
+use InvalidArgumentException;
+use Traversable;
+use ArrayIterator;
 final class Manager implements MutableDistributionInterface
 {
     /**
@@ -31,12 +34,9 @@ final class Manager implements MutableDistributionInterface
     /**
      * @var array<string, UriResolverInterface>
      */
-    private $resolvers = [];
+    private array $resolvers = [];
 
-    /**
-     * @var string
-     */
-    private $default;
+    private string $default;
 
     public function __construct(string $name = self::DEFAULT_RESOLVER)
     {
@@ -59,10 +59,10 @@ final class Manager implements MutableDistributionInterface
      */
     public function resolver(string $name = null): UriResolverInterface
     {
-        $name = $name ?? $this->default;
+        $name ??= $this->default;
 
         if (!isset($this->resolvers[$name])) {
-            throw new \InvalidArgumentException(\sprintf(self::ERROR_NOT_FOUND, $name));
+            throw new InvalidArgumentException(\sprintf(self::ERROR_NOT_FOUND, $name));
         }
 
         return $this->resolvers[$name];
@@ -74,7 +74,7 @@ final class Manager implements MutableDistributionInterface
     public function add(string $name, UriResolverInterface $resolver, bool $overwrite = false): void
     {
         if ($overwrite === false && isset($this->resolvers[$name])) {
-            throw new \InvalidArgumentException(\sprintf(self::ERROR_REDEFINITION, $name));
+            throw new InvalidArgumentException(\sprintf(self::ERROR_REDEFINITION, $name));
         }
 
         $this->resolvers[$name] = $resolver;
@@ -83,9 +83,9 @@ final class Manager implements MutableDistributionInterface
     /**
      * {@inheritDoc}
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->resolvers);
+        return new ArrayIterator($this->resolvers);
     }
 
     /**

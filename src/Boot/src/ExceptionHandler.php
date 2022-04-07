@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
+use ErrorException;
+use Throwable;
 use Spiral\Boot\Exception\FatalException;
 use Spiral\Exceptions\AbstractHandler;
 use Spiral\Exceptions\ConsoleHandler;
@@ -71,7 +73,7 @@ final class ExceptionHandler
      * @param string $filename
      * @param int    $line
      *
-     * @throws \ErrorException
+     * @throws ErrorException
      */
     public static function handleError($code, $message, $filename = '', $line = 0): void
     {
@@ -79,13 +81,13 @@ final class ExceptionHandler
             return;
         }
 
-        throw new \ErrorException($message, $code, 0, $filename, $line);
+        throw new ErrorException($message, $code, 0, $filename, $line);
     }
 
     /**
      * Handle exception and output error to the user.
      */
-    public static function handleException(\Throwable $e): void
+    public static function handleException(Throwable $e): void
     {
         if (self::$output === null) {
             self::$output = defined('STDERR') ? STDERR : fopen('php://stderr', 'w+');

@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Rector\Core\Configuration\Option;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPromotedPropertyRector;
-use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\Php71\Rector\FuncCall\CountOnNullRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
@@ -17,6 +16,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/src/*/src',
     ]);
 
+    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
     $parameters->set(Option::PARALLEL, true);
     $parameters->set(Option::SKIP, [
         CountOnNullRector::class,
@@ -27,8 +27,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         RemoveUnusedPrivateMethodRector::class => [
             __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
         ],
+
+        // deprecated classes
+        __DIR__ . '/src/Http/src/Exception/EmitterException.php',
+        __DIR__ . '/src/Dumper/src/Exception/DumperException.php',
     ]);
 
-    $containerConfigurator->import(LevelSetList::UP_TO_PHP_72);
+    $containerConfigurator->import(LevelSetList::UP_TO_PHP_74);
     $containerConfigurator->import(SetList::DEAD_CODE);
 };

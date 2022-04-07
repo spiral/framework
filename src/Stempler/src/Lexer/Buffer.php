@@ -11,24 +11,26 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer;
 
+use IteratorAggregate;
+use Generator;
+use Traversable;
 /**
  * Creates local buffers over byte/token stream. Able to replay some tokens.
  */
-final class Buffer implements \IteratorAggregate
+final class Buffer implements IteratorAggregate
 {
-    /** @var \Generator @internal */
-    private $generator;
+    /** @var Generator @internal */
+    private Generator $generator;
 
     /** @var Byte[]|Token[] */
-    private $buffer = [];
+    private array $buffer = [];
 
     /** @var Byte[]|Token[] */
-    private $replay = [];
+    private array $replay = [];
 
-    /** @var int */
-    private $offset = 0;
+    private int $offset = 0;
 
-    public function __construct(\Generator $generator, int $offset = 0)
+    public function __construct(Generator $generator, int $offset = 0)
     {
         $this->generator = $generator;
         $this->offset = $offset;
@@ -38,9 +40,9 @@ final class Buffer implements \IteratorAggregate
      * Delegate generation to the nested generator and collect
      * generated token/char stream.
      *
-     * @return \Generator
+     * @return Generator
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
         while ($n = $this->next()) {
             yield $n;

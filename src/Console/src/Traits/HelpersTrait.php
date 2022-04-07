@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Console\Traits;
 
+use InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -81,7 +82,7 @@ trait HelpersTrait
      * @param string|array $messages The message as an array of lines or a single string
      * @param bool         $newline  Whether to add a newline
      *
-     * @throws \InvalidArgumentException When unknown output type is given
+     * @throws InvalidArgumentException When unknown output type is given
      */
     protected function write($messages, bool $newline = false): void
     {
@@ -93,7 +94,7 @@ trait HelpersTrait
      *
      * @param string|array $messages The message as an array of lines of a single string
      *
-     * @throws \InvalidArgumentException When unknown output type is given
+     * @throws InvalidArgumentException When unknown output type is given
      */
     protected function writeln($messages): void
     {

@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Security;
 
+use Closure;
+use ReflectionClass;
+use ReflectionException;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Security\Exception\RuleException;
@@ -21,11 +24,9 @@ use Spiral\Security\Rule\CallableRule;
  */
 final class RuleManager implements RulesInterface, SingletonInterface
 {
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
-    /** @var array */
-    private $rules = [];
+    private array $rules = [];
 
     public function __construct(ContainerInterface $container)
     {
@@ -128,7 +129,7 @@ final class RuleManager implements RulesInterface, SingletonInterface
      */
     private function validateRule($rule): bool
     {
-        if ($rule instanceof \Closure || $rule instanceof RuleInterface) {
+        if ($rule instanceof Closure || $rule instanceof RuleInterface) {
             return true;
         }
 
@@ -138,8 +139,8 @@ final class RuleManager implements RulesInterface, SingletonInterface
 
         if (is_string($rule) && class_exists($rule)) {
             try {
-                $reflection = new \ReflectionClass($rule);
-            } catch (\ReflectionException $e) {
+                $reflection = new ReflectionClass($rule);
+            } catch (ReflectionException $e) {
                 return false;
             }
 

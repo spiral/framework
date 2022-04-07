@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Session;
 
+use Traversable;
+use ArrayIterator;
+use ReturnTypeWillChange;
 use Spiral\Core\Container\InjectableInterface;
 
 /**
@@ -18,15 +21,12 @@ use Spiral\Core\Container\InjectableInterface;
  */
 final class SessionSection implements SessionSectionInterface, InjectableInterface
 {
-    /** @var SessionInterface */
-    private $session;
+    private SessionInterface $session;
 
     /**
      * Reference to _SESSION segment.
-     *
-     * @var array
      */
-    private $name;
+    private array $name;
 
     /**
      * @param string|null      $name
@@ -79,9 +79,9 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->getAll());
+        return new ArrayIterator($this->getAll());
     }
 
     /**
@@ -166,7 +166,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     /**
      * @inheritdoc
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);

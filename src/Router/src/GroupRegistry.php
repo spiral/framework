@@ -11,19 +11,21 @@ declare(strict_types=1);
 
 namespace Spiral\Router;
 
+use IteratorAggregate;
+use ArrayIterator;
+use Traversable;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\FactoryInterface;
 
 /**
  * Manages the presets for various route groups.
  */
-final class GroupRegistry implements \IteratorAggregate
+final class GroupRegistry implements IteratorAggregate
 {
-    /** @var ContainerInterface */
-    private $factory;
+    private ContainerInterface $factory;
 
     /** @var RouteGroup[] */
-    private $groups = [];
+    private array $groups = [];
 
     public function __construct(FactoryInterface $factory)
     {
@@ -40,10 +42,10 @@ final class GroupRegistry implements \IteratorAggregate
     }
 
     /**
-     * @return \ArrayIterator<array-key, RouteGroup>
+     * @return ArrayIterator<array-key, RouteGroup>
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->groups);
+        return new ArrayIterator($this->groups);
     }
 }

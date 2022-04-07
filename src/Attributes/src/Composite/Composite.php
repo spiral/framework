@@ -11,6 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Composite;
 
+use ReflectionClass;
+use ReflectionFunctionAbstract;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionParameter;
+use Traversable;
 use Spiral\Attributes\Reader;
 use Spiral\Attributes\ReaderInterface;
 
@@ -32,51 +38,41 @@ abstract class Composite extends Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
+    public function getClassMetadata(ReflectionClass $class, string $name = null): iterable
     {
-        return $this->each(static function (ReaderInterface $reader) use ($class, $name): iterable {
-            return $reader->getClassMetadata($class, $name);
-        });
+        return $this->each(static fn(ReaderInterface $reader): iterable => $reader->getClassMetadata($class, $name));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
+    public function getFunctionMetadata(ReflectionFunctionAbstract $function, string $name = null): iterable
     {
-        return $this->each(static function (ReaderInterface $reader) use ($function, $name): iterable {
-            return $reader->getFunctionMetadata($function, $name);
-        });
+        return $this->each(static fn(ReaderInterface $reader): iterable => $reader->getFunctionMetadata($function, $name));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
+    public function getPropertyMetadata(ReflectionProperty $property, string $name = null): iterable
     {
-        return $this->each(static function (ReaderInterface $reader) use ($property, $name): iterable {
-            return $reader->getPropertyMetadata($property, $name);
-        });
+        return $this->each(static fn(ReaderInterface $reader): iterable => $reader->getPropertyMetadata($property, $name));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
+    public function getConstantMetadata(ReflectionClassConstant $constant, string $name = null): iterable
     {
-        return $this->each(static function (ReaderInterface $reader) use ($constant, $name): iterable {
-            return $reader->getConstantMetadata($constant, $name);
-        });
+        return $this->each(static fn(ReaderInterface $reader): iterable => $reader->getConstantMetadata($constant, $name));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
+    public function getParameterMetadata(ReflectionParameter $parameter, string $name = null): iterable
     {
-        return $this->each(static function (ReaderInterface $reader) use ($parameter, $name): iterable {
-            return $reader->getParameterMetadata($parameter, $name);
-        });
+        return $this->each(static fn(ReaderInterface $reader): iterable => $reader->getParameterMetadata($parameter, $name));
     }
 
 
@@ -86,10 +82,10 @@ abstract class Composite extends Reader
     abstract protected function each(callable $resolver): iterable;
 
     /**
-     * @param \Traversable|array $result
+     * @param Traversable|array $result
      */
     protected function iterableToArray(iterable $result): array
     {
-        return $result instanceof \Traversable ? \iterator_to_array($result, false) : $result;
+        return $result instanceof Traversable ? \iterator_to_array($result, false) : $result;
     }
 }

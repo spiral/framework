@@ -16,11 +16,9 @@ namespace Spiral\Stempler\Loader;
  */
 final class Source
 {
-    /** @var string|null */
-    private $filename;
+    private ?string $filename;
 
-    /** @var string */
-    private $content;
+    private string $content;
 
     /**
      * @param string|null $filename

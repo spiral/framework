@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution;
 
+use IteratorAggregate;
+use Countable;
 /**
- * @template-implements \IteratorAggregate<string, ResolverInterface>
+ * @template-implements IteratorAggregate<string, ResolverInterface>
  */
-interface DistributionInterface extends \IteratorAggregate, \Countable
+interface DistributionInterface extends IteratorAggregate, Countable
 {
     /**
      * @param string|null $name

@@ -44,9 +44,8 @@ final class InputManager implements SingletonInterface
      * Associations between bags and representing class/request method.
      *
      * @invisible
-     * @var array
      */
-    protected $bagAssociations = [
+    protected array $bagAssociations = [
         'headers'    => [
             'class'  => HeadersBag::class,
             'source' => 'getHeaders',
@@ -78,32 +77,28 @@ final class InputManager implements SingletonInterface
     ];
     /**
      * @invisible
-     * @var Request
      */
-    protected $request;
+    protected ?Request $request = null;
 
     /**
      * @invisible
-     * @var ContainerInterface
      */
-    protected $container;
+    protected ContainerInterface $container;
 
     /** @var InputBag[] */
-    private $bags = [];
+    private array $bags = [];
 
     /**
      * Prefix to add for each input request.
      *
      * @see self::withPrefix();
-     * @var string
      */
-    private $prefix = '';
+    private string $prefix = '';
 
     /**
      * List of content types that must be considered as JSON.
-     * @var array
      */
-    private $jsonTypes = [
+    private array $jsonTypes = [
         'application/json',
     ];
 

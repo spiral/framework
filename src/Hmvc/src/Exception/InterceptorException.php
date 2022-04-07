@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Exception;
 
-class InterceptorException extends \RuntimeException
+use RuntimeException;
+class InterceptorException extends RuntimeException
 {
 }

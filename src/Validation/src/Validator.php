@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace Spiral\Validation;
 
+use ArrayAccess;
 final class Validator extends AbstractValidator
 {
-    /** @var array|\ArrayAccess */
+    /** @var array|ArrayAccess */
     private $data;
 
     /**
-     * @param array|\ArrayAccess $data
+     * @param array|ArrayAccess $data
      * @param mixed              $context
-     * @param RulesInterface     $ruleProvider
      */
     public function __construct($data, array $rules, $context, RulesInterface $ruleProvider)
     {
@@ -37,7 +37,7 @@ final class Validator extends AbstractValidator
     }
 
     /**
-     * @param \ArrayAccess|array $data
+     * @param ArrayAccess|array $data
      */
     public function withData(iterable $data): ValidatorInterface
     {

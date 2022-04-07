@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Router;
 
+use Traversable;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Router\Exception\RouteException;
@@ -56,7 +57,7 @@ interface RouterInterface extends RequestHandlerInterface
      * create url using it.
      *
      * @param string             $route Route name.
-     * @param array|\Traversable $parameters Routing parameters.
+     * @param array|Traversable $parameters Routing parameters.
      *
      * @throws RouteException
      * @throws UndefinedRouteException

@@ -11,6 +11,15 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\FallbackAttributeReader;
 
+use Throwable;
+use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Node\FunctionLike;
+use PhpParser\Node\Stmt\ClassConst;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Stmt\Trait_;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\ClassMethod;
+use Traversable;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\NodeTraverser;
@@ -31,10 +40,7 @@ use PhpParser\NodeVisitorAbstract;
  */
 final class AttributeFinderVisitor extends NodeVisitorAbstract
 {
-    /**
-     * @var array
-     */
-    private $context = [
+    private array $context = [
         AttributeParser::CTX_FUNCTION  => '',
         AttributeParser::CTX_NAMESPACE => '',
         AttributeParser::CTX_CLASS     => '',
@@ -44,37 +50,31 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
     /**
      * @var array<ClassName, AttributePrototypeList>
      */
-    private $classes = [];
+    private array $classes = [];
 
     /**
      * @var array<FunctionEndLine, AttributePrototypeList>
      */
-    private $functions = [];
+    private array $functions = [];
 
     /**
      * @var array<ClassName, array<ConstantName, AttributePrototypeList>>
      */
-    private $constants = [];
+    private array $constants = [];
 
     /**
      * @var array<ClassName, array<PropertyName, AttributePrototypeList>>
      */
-    private $properties = [];
+    private array $properties = [];
 
     /**
      * @var array<FunctionEndLine, array<ParameterName, AttributePrototypeList>>
      */
-    private $parameters = [];
+    private array $parameters = [];
 
-    /**
-     * @var string
-     */
-    private $file;
+    private string $file;
 
-    /**
-     * @var AttributeParser
-     */
-    private $parser;
+    private AttributeParser $parser;
 
     public function __construct(string $file, AttributeParser $parser)
     {
@@ -134,13 +134,13 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function enterNode(Node $node): ?int
     {
         $this->updateContext($node);
 
-        if ($node instanceof Node\Stmt\ClassLike) {
+        if ($node instanceof ClassLike) {
             foreach ($this->parse($node->attrGroups) as $prototype) {
                 $this->classes[$node->namespacedName->toString()][] = $prototype;
             }
@@ -148,7 +148,7 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        if ($node instanceof Node\FunctionLike) {
+        if ($node instanceof FunctionLike) {
             $line = $node->getEndLine();
 
             foreach ($this->parse($node->getAttrGroups()) as $prototype) {
@@ -166,7 +166,7 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
             return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
         }
 
-        if ($node instanceof Node\Stmt\ClassConst) {
+        if ($node instanceof ClassConst) {
             $class = $this->fqn();
 
             foreach ($this->parse($node->attrGroups) as $prototype) {
@@ -195,20 +195,20 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
 
     public function leaveNode(Node $node): void
     {
-        if ($node instanceof Node\Stmt\Namespace_) {
+        if ($node instanceof Namespace_) {
             $this->context[AttributeParser::CTX_NAMESPACE] = '';
 
             return;
         }
 
-        if ($node instanceof Node\Stmt\ClassLike) {
+        if ($node instanceof ClassLike) {
             $this->context[AttributeParser::CTX_CLASS] = '';
             $this->context[AttributeParser::CTX_TRAIT] = '';
 
             return;
         }
 
-        if ($node instanceof Node\FunctionLike) {
+        if ($node instanceof FunctionLike) {
             $this->context[AttributeParser::CTX_FUNCTION] = '';
         }
     }
@@ -216,20 +216,20 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
     private function updateContext(Node $node): void
     {
         switch (true) {
-            case $node instanceof Node\Stmt\Namespace_:
+            case $node instanceof Namespace_:
                 $this->context[AttributeParser::CTX_NAMESPACE] = $this->name($node->name);
                 break;
 
-            case $node instanceof Node\Stmt\ClassLike:
+            case $node instanceof ClassLike:
                 $this->context[AttributeParser::CTX_CLASS] = $this->name($node->name);
 
             // no break
-            case $node instanceof Node\Stmt\Trait_:
+            case $node instanceof Trait_:
                 $this->context[AttributeParser::CTX_TRAIT] = $this->name($node->name);
                 break;
 
-            case $node instanceof Node\Stmt\Function_:
-            case $node instanceof Node\Stmt\ClassMethod:
+            case $node instanceof Function_:
+            case $node instanceof ClassMethod:
                 $this->context[AttributeParser::CTX_FUNCTION] = $this->name($node->name);
                 break;
         }
@@ -249,10 +249,10 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
 
     /**
      * @param Node\AttributeGroup[] $groups
-     * @return \Traversable<AttributePrototype>
-     * @throws \Throwable
+     * @return Traversable<AttributePrototype>
+     * @throws Throwable
      */
-    private function parse(array $groups): \Traversable
+    private function parse(array $groups): Traversable
     {
         return $this->parser->parseAttributes($this->file, $groups, $this->context);
     }

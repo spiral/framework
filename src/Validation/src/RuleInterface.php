@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Validation;
 
+use SplObjectStorage;
+use Generator;
 interface RuleInterface
 {
     /**
@@ -25,18 +27,18 @@ interface RuleInterface
     public function ignoreEmpty($value): bool;
 
     /**
-     * @param \SplObjectStorage|null $conditions
+     * @param SplObjectStorage|null $conditions
      */
-    public function withConditions(\SplObjectStorage $conditions = null): RuleInterface;
+    public function withConditions(SplObjectStorage $conditions = null): RuleInterface;
 
     public function hasConditions(): bool;
 
     /**
      * Conditions associated with the rule.
      *
-     * @return \Generator|ConditionInterface[]
+     * @return Generator|ConditionInterface[]
      */
-    public function getConditions(): \Generator;
+    public function getConditions(): Generator;
 
     /**
      * @param mixed              $value

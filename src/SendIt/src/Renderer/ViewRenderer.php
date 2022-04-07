@@ -20,8 +20,7 @@ use Symfony\Component\Mime\Email;
 
 final class ViewRenderer implements RendererInterface
 {
-    /** @var ViewsInterface */
-    private $views;
+    private ViewsInterface $views;
 
     public function __construct(ViewsInterface $views)
     {

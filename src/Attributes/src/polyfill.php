@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Doctrine\Common\Annotations {
 
+    use Attribute;
     use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
     if (!\interface_exists(NamedArgumentConstructorAnnotation::class)) {
@@ -39,7 +40,7 @@ namespace Doctrine\Common\Annotations\Annotation {
          * @Annotation
          * @Target("CLASS")
          */
-        #[\Attribute(\Attribute::TARGET_CLASS)]
+        #[Attribute(Attribute::TARGET_CLASS)]
         class NamedArgumentConstructor
         {
         }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Storage\File;
 
+use Stringable;
 use JetBrains\PhpStorm\ExpectedValues;
 use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\FileInterface;
@@ -32,7 +33,7 @@ interface WritableInterface extends EntryInterface
     /**
      * {@see BucketInterface::write()}
      *
-     * @param resource|string|\Stringable $content
+     * @param resource|string|Stringable $content
      * @throws FileOperationException
      */
     public function write($content, array $config = []): FileInterface;

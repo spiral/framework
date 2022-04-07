@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Job;
 
+use Closure;
 use Spiral\Core\InvokerInterface;
 use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Queue\HandlerInterface;
 
 final class CallableJob implements HandlerInterface
 {
-    /** @var InvokerInterface */
-    private $invoker;
+    private InvokerInterface $invoker;
 
     public function __construct(InvokerInterface $invoker)
     {
@@ -24,7 +24,7 @@ final class CallableJob implements HandlerInterface
             throw new InvalidArgumentException('Payload `callback` key is required.');
         }
 
-        if (!$payload['callback'] instanceof \Closure) {
+        if (!$payload['callback'] instanceof Closure) {
             throw new InvalidArgumentException('Payload `callback` key value type should be a closure.');
         }
 

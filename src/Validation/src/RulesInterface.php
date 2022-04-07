@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Validation;
 
+use Generator;
 use Spiral\Validation\Exception\ValidationException;
 
 /**
@@ -23,9 +24,9 @@ interface RulesInterface
      *
      * @param array|string $rules
      *
-     * @return \Generator|RuleInterface[]
+     * @return Generator|RuleInterface[]
      *
      * @throws ValidationException
      */
-    public function getRules($rules): \Generator;
+    public function getRules($rules): Generator;
 }

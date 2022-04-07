@@ -19,7 +19,7 @@ final class RuntimeLoader implements LoaderInterface
     /**
      * @var CatalogueInterface[]
      */
-    private $catalogues = [];
+    private array $catalogues = [];
 
     /**
      * @inheritdoc

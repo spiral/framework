@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
 
+use PhpParser\Node\Stmt\TraitUse;
+use PhpParser\Node\Name;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
@@ -27,12 +29,12 @@ final class RemoveTrait extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
-        if (!$node instanceof Node\Stmt\TraitUse) {
+        if (!$node instanceof TraitUse) {
             return null;
         }
 
         foreach ($node->traits as $index => $use) {
-            if ($use instanceof Node\Name) {
+            if ($use instanceof Name) {
                 $name = $this->trimSlashes(implode('\\', $use->parts));
                 if (
                     in_array($name, [

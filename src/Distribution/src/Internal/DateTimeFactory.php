@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution\Internal;
 
+use DateTimeZone;
+use DateTimeImmutable;
 /**
  * @internal DateTimeFactory is an internal library class, please do not use it in your code.
  * @psalm-internal Spiral\Distribution
@@ -27,21 +29,18 @@ final class DateTimeFactory implements DateTimeFactoryInterface
      */
     private const DATE_NOW = 'now';
 
-    /**
-     * @var string
-     */
-    private $timezone;
+    private string $timezone;
 
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
     {
-        $this->timezone = new \DateTimeZone($timezone);
+        $this->timezone = new DateTimeZone($timezone);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function now(): \DateTimeImmutable
+    public function now(): DateTimeImmutable
     {
-        return new \DateTimeImmutable(self::DATE_NOW, $this->timezone);
+        return new DateTimeImmutable(self::DATE_NOW, $this->timezone);
     }
 }

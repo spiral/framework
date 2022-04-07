@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
 
+use ReflectionClass;
+use ReflectionMethod;
 use Spiral\Attributes\Internal\ContextRenderer;
 
 abstract class Instantiator implements InstantiatorInterface
@@ -33,7 +35,7 @@ abstract class Instantiator implements InstantiatorInterface
         $this->renderer = $renderer ?? new ContextRenderer();
     }
 
-    protected function getConstructor(\ReflectionClass $class): ?\ReflectionMethod
+    protected function getConstructor(ReflectionClass $class): ?ReflectionMethod
     {
         if ($class->hasMethod(self::CONSTRUCTOR_NAME)) {
             return $class->getMethod(self::CONSTRUCTOR_NAME);
@@ -50,7 +52,7 @@ abstract class Instantiator implements InstantiatorInterface
         return null;
     }
 
-    private function getTraitConstructors(\ReflectionClass $class): ?\ReflectionMethod
+    private function getTraitConstructors(ReflectionClass $class): ?ReflectionMethod
     {
         foreach ($class->getTraits() as $trait) {
             if ($constructor = $this->getConstructor($trait)) {

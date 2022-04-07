@@ -49,8 +49,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     /** @var string|callable|RequestHandlerInterface|TargetInterface */
     private $target;
 
-    /** @var RequestHandlerInterface */
-    private $requestHandler;
+    private ?RequestHandlerInterface $requestHandler = null;
 
     /**
      * @param string                                                  $pattern  Uri pattern.

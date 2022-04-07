@@ -11,31 +11,26 @@ declare(strict_types=1);
 
 namespace Spiral\Mailer;
 
+use DateTimeInterface;
+use DateInterval;
+use DateTimeImmutable;
 class Message implements MessageInterface
 {
-    /** @var string */
-    private $subject;
+    private ?string $subject = null;
 
-    /** @var array */
-    private $data;
+    private ?array $data = null;
 
-    /** @var array */
-    private $to = [];
+    private array $to = [];
 
-    /** @var array */
-    private $cc = [];
+    private array $cc = [];
 
-    /** @var array */
-    private $bcc = [];
+    private array $bcc = [];
 
-    /** @var string|null */
-    private $from;
+    private ?string $from = null;
 
-    /** @var string|null */
-    private $replyTo;
+    private ?string $replyTo = null;
 
-    /** @var array */
-    private $options = [];
+    private array $options = [];
 
     /**
      * @param string|string[] $to
@@ -154,15 +149,15 @@ class Message implements MessageInterface
     }
 
     /**
-     * @param int|\DateTimeInterface|\DateInterval $delay
+     * @param int|DateTimeInterface|DateInterval $delay
      */
     public function setDelay($delay): self
     {
-        if ($delay instanceof \DateInterval) {
-            $delay = (new \DateTimeImmutable('NOW'))->add($delay);
+        if ($delay instanceof DateInterval) {
+            $delay = (new DateTimeImmutable('NOW'))->add($delay);
         }
 
-        if ($delay instanceof \DateTimeInterface) {
+        if ($delay instanceof DateTimeInterface) {
             $delay = max(0, $delay->getTimestamp() - time());
         }
 

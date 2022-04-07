@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
+use Throwable;
 use Spiral\Core\InvokerInterface;
 use Spiral\Queue\Exception\JobException;
 
@@ -37,7 +38,7 @@ abstract class JobHandler implements HandlerInterface
                 [$this, $this->getHandlerMethod()],
                 \array_merge(['payload' => $payload, 'id' => $id], $payload)
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $message = \sprintf('[%s] %s', \get_class($this), $e->getMessage());
             throw new JobException($message, (int)$e->getCode(), $e);
         }

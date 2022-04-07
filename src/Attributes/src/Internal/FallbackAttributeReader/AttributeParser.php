@@ -11,6 +11,17 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\FallbackAttributeReader;
 
+use Traversable;
+use Throwable;
+use InvalidArgumentException;
+use Closure;
+use PhpParser\Node\Scalar\MagicConst\File;
+use PhpParser\Node\Scalar\MagicConst\Dir;
+use PhpParser\Node\Scalar\MagicConst\Line;
+use PhpParser\Node\Scalar\MagicConst\Method;
+use PhpParser\Node\Expr\ClassConstFetch;
+use ParseError;
+use PhpParser\Node\Scalar\MagicConst;
 use PhpParser\ConstExprEvaluationException;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\Node\Attribute;
@@ -59,15 +70,9 @@ final class AttributeParser
      */
     private const ERROR_BAD_CONSTANT = 'Undefined constant %s';
 
-    /**
-     * @var Parser
-     */
-    private $parser;
+    private Parser $parser;
 
-    /**
-     * @var NodeTraverser
-     */
-    private $resolver;
+    private NodeTraverser $resolver;
 
     /**
      * @param Parser|null $parser
@@ -98,10 +103,10 @@ final class AttributeParser
 
     /**
      * @param AttributeGroup[] $groups
-     * @return \Traversable<AttributePrototype>
-     * @throws \Throwable
+     * @return Traversable<AttributePrototype>
+     * @throws Throwable
      */
-    public function parseAttributes(string $file, array $groups, array $context): \Traversable
+    public function parseAttributes(string $file, array $groups, array $context): Traversable
     {
         $eval = new ConstExprEvaluator($this->evaluator($file, $context));
 
@@ -124,32 +129,32 @@ final class AttributeParser
     private function read(string $file): string
     {
         if (!\is_readable($file)) {
-            throw new \InvalidArgumentException('Unable to read file "' . $file . '"');
+            throw new InvalidArgumentException('Unable to read file "' . $file . '"');
         }
 
         return \file_get_contents($file);
     }
 
-    private function evaluator(string $file, array $context): \Closure
+    private function evaluator(string $file, array $context): Closure
     {
         return static function (Expr $expr) use ($file, $context) {
             switch (\get_class($expr)) {
-                case Scalar\MagicConst\File::class:
+                case File::class:
                     return $file;
 
-                case Scalar\MagicConst\Dir::class:
+                case Dir::class:
                     return \dirname($file);
 
-                case Scalar\MagicConst\Line::class:
+                case Line::class:
                     return $expr->getStartLine();
 
-                case Scalar\MagicConst\Method::class:
+                case Method::class:
                     $namespace = $context[self::CTX_NAMESPACE] ?? '';
                     $function = $context[self::CTX_FUNCTION] ?? '';
 
                     return \ltrim($namespace . '\\' . $function, '\\');
 
-                case Expr\ClassConstFetch::class:
+                case ClassConstFetch::class:
                     $constant = $expr->name->toString();
                     $class = $expr->class->toString();
 
@@ -160,25 +165,25 @@ final class AttributeParser
                     $definition = $class . '::' . $constant;
 
                     if (!\defined($definition)) {
-                        $exception = new \ParseError(\sprintf(self::ERROR_BAD_CONSTANT, $definition));
+                        $exception = new ParseError(\sprintf(self::ERROR_BAD_CONSTANT, $definition));
                         throw Exception::withLocation($exception, $file, $expr->getStartLine());
                     }
 
                     return \constant($definition);
             }
 
-            if ($expr instanceof Scalar\MagicConst) {
+            if ($expr instanceof MagicConst) {
                 return $context[$expr->getName()] ?? '';
             }
 
-            $exception = new \ParseError(self::ERROR_BAD_CONSTANT_EXPRESSION);
+            $exception = new ParseError(self::ERROR_BAD_CONSTANT_EXPRESSION);
             throw Exception::withLocation($exception, $file, $expr->getStartLine());
         };
     }
 
     /**
      * @throws ConstExprEvaluationException
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function parseAttributeArguments(Attribute $attr, string $file, ConstExprEvaluator $eval): array
     {
@@ -192,7 +197,7 @@ final class AttributeParser
                 $arguments[] = $value;
 
                 if ($hasNamedArguments) {
-                    $exception = new \ParseError(self::ERROR_NAMED_ARGUMENTS_ORDER);
+                    $exception = new ParseError(self::ERROR_NAMED_ARGUMENTS_ORDER);
                     throw Exception::withLocation($exception, $file, $argument->getStartLine());
                 }
 

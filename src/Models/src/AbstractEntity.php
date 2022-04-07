@@ -11,6 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Models;
 
+use IteratorAggregate;
+use Traversable;
+use ReturnTypeWillChange;
+use Iterator;
+use ArrayIterator;
+use Exception;
 use Spiral\Models\Exception\AccessException;
 use Spiral\Models\Exception\AccessExceptionInterface;
 use Spiral\Models\Exception\EntityException;
@@ -18,10 +24,9 @@ use Spiral\Models\Exception\EntityException;
 /**
  * AbstractEntity with ability to define field mutators and access
  */
-abstract class AbstractEntity implements EntityInterface, ValueInterface, \IteratorAggregate
+abstract class AbstractEntity implements EntityInterface, ValueInterface, IteratorAggregate
 {
-    /** @var array */
-    private $fields;
+    private array $fields;
 
     public function __construct(array $data = [])
     {
@@ -148,7 +153,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
      */
     public function setFields(iterable $fields = [], bool $all = false)
     {
-        if (!\is_array($fields) && !$fields instanceof \Traversable) {
+        if (!\is_array($fields) && !$fields instanceof Traversable) {
             return $this;
         }
 
@@ -195,7 +200,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getField($offset);
@@ -220,9 +225,9 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * {@inheritdoc}
      */
-    public function getIterator(): \Iterator
+    public function getIterator(): Iterator
     {
-        return new \ArrayIterator($this->getFields());
+        return new ArrayIterator($this->getFields());
     }
 
     /**
@@ -350,7 +355,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
         if ($filter && !empty($getter)) {
             try {
                 return call_user_func($getter, $value);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 //Trying to filter null value, every filter must support it
                 return call_user_func($getter, null);
             }
@@ -371,7 +376,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
         if (!empty($setter)) {
             try {
                 $this->fields[$name] = call_user_func($setter, $value);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 //Exceptional situation, we are choosing to keep original field value
             }
         } else {

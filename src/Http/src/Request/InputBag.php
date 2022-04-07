@@ -11,6 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Request;
 
+use Countable;
+use IteratorAggregate;
+use ArrayAccess;
+use Traversable;
+use ArrayIterator;
+use ReturnTypeWillChange;
 use Spiral\Http\Exception\DotNotFoundException;
 use Spiral\Http\Exception\InputException;
 
@@ -18,13 +24,11 @@ use Spiral\Http\Exception\InputException;
  * Generic data accessor, used to read properties of active request. Input bags provide ability to
  * isolate request parts using given prefix.
  */
-class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
+class InputBag implements Countable, IteratorAggregate, ArrayAccess
 {
-    /** @var array */
-    private $data = [];
+    private array $data = [];
 
-    /** @var string */
-    private $prefix = '';
+    private string $prefix = '';
 
     public function __construct(array $data, string $prefix = '')
     {
@@ -60,9 +64,9 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->all());
+        return new ArrayIterator($this->all());
     }
 
     /**
@@ -109,7 +113,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);

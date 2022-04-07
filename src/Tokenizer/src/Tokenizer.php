@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
 
+use ReflectionClass;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\InjectionException;
@@ -29,8 +30,7 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     public const CODE = 1;
     public const LINE = 2;
 
-    /** @var TokenizerConfig */
-    protected $config;
+    protected TokenizerConfig $config;
 
     /**
      * Tokenizer constructor.
@@ -75,7 +75,7 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
      *
      * @throws InjectionException
      */
-    public function createInjection(\ReflectionClass $class, string $context = null)
+    public function createInjection(ReflectionClass $class, string $context = null)
     {
         if ($class->isSubclassOf(ClassesInterface::class)) {
             return $this->classLocator();

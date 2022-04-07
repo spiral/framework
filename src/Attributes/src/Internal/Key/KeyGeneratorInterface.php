@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Key;
 
+use ReflectionClass;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionFunctionAbstract;
+use ReflectionParameter;
 /**
  * An interface for generating keys based on reflection objects.
  *
@@ -31,15 +36,15 @@ interface KeyGeneratorInterface
      * - Extension classes (not user defined {@see \ReflectionClass::isUserDefined()}).
      * - Anonymous classes (i.e. {@see \ReflectionClass::isAnonymous()}).
      *
-     * @param \ReflectionClass $class
+     * @param ReflectionClass $class
      */
-    public function forClass(\ReflectionClass $class): string;
+    public function forClass(ReflectionClass $class): string;
 
     /**
      * A method that returns a string key for the passed reflection
      * object of the PHP class property.
      */
-    public function forProperty(\ReflectionProperty $prop): string;
+    public function forProperty(ReflectionProperty $prop): string;
 
     /**
      * A method that returns a string key for the passed reflection
@@ -49,9 +54,9 @@ interface KeyGeneratorInterface
      * class constants:
      *  - {@see \ReflectionClassConstant}
      *
-     * @param \ReflectionClassConstant $const
+     * @param ReflectionClassConstant $const
      */
-    public function forConstant(\ReflectionClassConstant $const): string;
+    public function forConstant(ReflectionClassConstant $const): string;
 
     /**
      * A method that returns a string key for the passed reflection
@@ -66,9 +71,9 @@ interface KeyGeneratorInterface
      * - Extension functions (not user defined {@see \ReflectionFunctionAbstract::isUserDefined()}).
      * - Anonymous functions (i.e. {@see \ReflectionFunctionAbstract::isClosure()}).
      *
-     * @param \ReflectionFunctionAbstract $fn
+     * @param ReflectionFunctionAbstract $fn
      */
-    public function forFunction(\ReflectionFunctionAbstract $fn): string;
+    public function forFunction(ReflectionFunctionAbstract $fn): string;
 
     /**
      * A method that returns a string key for the passed reflection
@@ -80,7 +85,7 @@ interface KeyGeneratorInterface
      *  - {@see \ReflectionFunction}
      *  - {@see \ReflectionFunctionAbstract}
      *
-     * @param \ReflectionParameter $param
+     * @param ReflectionParameter $param
      */
-    public function forParameter(\ReflectionParameter $param): string;
+    public function forParameter(ReflectionParameter $param): string;
 }

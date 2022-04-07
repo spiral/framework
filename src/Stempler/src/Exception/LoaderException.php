@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Exception;
 
-class LoaderException extends \RuntimeException
+use RuntimeException;
+class LoaderException extends RuntimeException
 {
 }

@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Spiral\Validation\Checker\DatetimeChecker;
 
+use DateTimeInterface;
+use DateTimeImmutable;
+use DateTime;
 class ThresholdChecker
 {
     /**
      * Check if date comes before the given one. Do not compare if the given date is missing or invalid.
      */
     public function before(
-        ?\DateTimeInterface $value,
-        ?\DateTimeInterface $threshold,
+        ?DateTimeInterface $value,
+        ?DateTimeInterface $threshold,
         bool $orEquals = false,
         bool $useMicroSeconds = false
     ): bool {
@@ -27,8 +30,8 @@ class ThresholdChecker
      * Check if date comes after the given one. Do not compare if the given date is missing or invalid.
      */
     public function after(
-        ?\DateTimeInterface $value,
-        ?\DateTimeInterface $threshold,
+        ?DateTimeInterface $value,
+        ?DateTimeInterface $threshold,
         bool $orEquals = false,
         bool $useMicroSeconds = false
     ): bool {
@@ -43,14 +46,14 @@ class ThresholdChecker
     /**
      * @param mixed $value
      */
-    private function date($value): ?\DateTimeImmutable
+    private function date($value): ?DateTimeImmutable
     {
-        if ($value instanceof \DateTimeImmutable) {
+        if ($value instanceof DateTimeImmutable) {
             return $value;
         }
 
-        if ($value instanceof \DateTime) {
-            return \DateTimeImmutable::createFromMutable($value);
+        if ($value instanceof DateTime) {
+            return DateTimeImmutable::createFromMutable($value);
         }
 
         return null;
@@ -59,7 +62,7 @@ class ThresholdChecker
     /**
      * @return bool|int
      */
-    private function compare(?\DateTimeImmutable $date, ?\DateTimeImmutable $threshold, bool $useMicroseconds)
+    private function compare(?DateTimeImmutable $date, ?DateTimeImmutable $threshold, bool $useMicroseconds)
     {
         if ($date === null) {
             return false;
@@ -77,7 +80,7 @@ class ThresholdChecker
         return $date <=> $threshold;
     }
 
-    private function dropMicroSeconds(\DateTimeImmutable $date): \DateTimeImmutable
+    private function dropMicroSeconds(DateTimeImmutable $date): DateTimeImmutable
     {
         return $date->setTime(
             (int)$date->format('H'),

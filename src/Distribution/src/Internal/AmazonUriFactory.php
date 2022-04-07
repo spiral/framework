@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution\Internal;
 
+use DomainException;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
@@ -45,6 +46,6 @@ class AmazonUriFactory implements UriFactoryInterface
             return;
         }
 
-        throw new \DomainException(self::ERROR_NOT_AVAILABLE);
+        throw new DomainException(self::ERROR_NOT_AVAILABLE);
     }
 }

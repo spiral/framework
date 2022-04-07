@@ -11,13 +11,18 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
+use IteratorAggregate;
+use ArrayAccess;
+use ReturnTypeWillChange;
+use Traversable;
+use ArrayIterator;
 use Spiral\Core\Container\InjectableInterface;
 use Spiral\Core\Exception\ConfigException;
 
 /**
  * Generic implementation of array based configuration.
  */
-abstract class InjectableConfig implements InjectableInterface, \IteratorAggregate, \ArrayAccess
+abstract class InjectableConfig implements InjectableInterface, IteratorAggregate, ArrayAccess
 {
     public const INJECTOR = ConfigsInterface::class;
 
@@ -67,7 +72,7 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
@@ -104,8 +109,8 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
     /**
      * {@inheritdoc}
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->config);
+        return new ArrayIterator($this->config);
     }
 }

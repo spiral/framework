@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Job;
 
+use ReflectionClass;
 use Spiral\Core\InvokerInterface;
 use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Queue\HandlerInterface;
 
 final class ObjectJob implements HandlerInterface
 {
-    /** @var InvokerInterface */
-    private $invoker;
+    private InvokerInterface $invoker;
 
     public function __construct(InvokerInterface $invoker)
     {
@@ -29,7 +29,7 @@ final class ObjectJob implements HandlerInterface
         }
 
         $job = $payload['object'];
-        $handler = new \ReflectionClass($job);
+        $handler = new ReflectionClass($job);
         $this->invoker->invoke(
             [$job, $handler->hasMethod('handle') ? 'handle' : '__invoke'],
             [

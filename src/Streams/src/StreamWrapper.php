@@ -26,18 +26,14 @@ final class StreamWrapper
      */
     public $context;
 
-    /** @var bool */
-    private static $registered = false;
+    private static bool $registered = false;
 
     /**
      * Uris associated with StreamInterfaces.
-     *
-     * @var array
      */
-    private static $uris = [];
+    private static array $uris = [];
 
-    /** @var array */
-    private static $modes = [
+    private static array $modes = [
         'r'   => 33060,
         'rb'  => 33060,
         'r+'  => 33206,
@@ -46,11 +42,9 @@ final class StreamWrapper
         'wb'  => 33188,
     ];
 
-    /** @var StreamInterface */
-    private $stream;
+    private ?StreamInterface $stream = null;
 
-    /** @var int */
-    private $mode = 0;
+    private int $mode = 0;
 
     /**
      * Check if StreamInterface ended.

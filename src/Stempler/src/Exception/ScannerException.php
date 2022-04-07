@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Exception;
 
-class ScannerException extends \RuntimeException
+use RuntimeException;
+class ScannerException extends RuntimeException
 {
 }

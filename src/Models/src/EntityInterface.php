@@ -11,12 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Models;
 
+use ArrayAccess;
 use Spiral\Models\Exception\EntityExceptionInterface;
 
 /**
  * Generic data entity instance.
  */
-interface EntityInterface extends \ArrayAccess
+interface EntityInterface extends ArrayAccess
 {
     /**
      * Check if field known to entity, field value can be null!

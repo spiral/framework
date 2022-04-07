@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
 
+use ReflectionException;
+use Throwable;
+use ReflectionProperty;
 /**
  * @internal Exception is an internal library class, please do not use it in your code.
  * @psalm-internal Spiral\Attributes
@@ -18,15 +21,15 @@ namespace Spiral\Attributes\Internal;
 final class Exception
 {
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public static function withLocation(\Throwable $e, string $file, int $line): \Throwable
+    public static function withLocation(Throwable $e, string $file, int $line): Throwable
     {
-        $fileProperty = new \ReflectionProperty($e, 'file');
+        $fileProperty = new ReflectionProperty($e, 'file');
         $fileProperty->setAccessible(true);
         $fileProperty->setValue($e, $file);
 
-        $lineProperty = new \ReflectionProperty($e, 'line');
+        $lineProperty = new ReflectionProperty($e, 'line');
         $lineProperty->setAccessible(true);
         $lineProperty->setValue($e, $line);
 

@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype;
 
+use Spiral\Prototype\ClassNode\ConflictResolver\Names;
+use Spiral\Prototype\ClassNode\ConflictResolver\Namespaces;
+use ReflectionException;
+use ReflectionClass;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
 use PhpParser\Parser;
@@ -26,18 +30,15 @@ use Spiral\Prototype\NodeVisitors\ClassNode\LocateVariables;
  */
 final class NodeExtractor
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var ConflictResolver\Names */
-    private $namesResolver;
+    private Names $namesResolver;
 
-    /** @var ConflictResolver\Namespaces */
-    private $namespacesResolver;
+    private Namespaces $namespacesResolver;
 
     public function __construct(
-        ConflictResolver\Names $namesResolver,
-        ConflictResolver\Namespaces $namespacesResolver,
+        Names $namesResolver,
+        Namespaces $namespacesResolver,
         Parser $parser = null
     ) {
         $this->namesResolver = $namesResolver;
@@ -48,7 +49,7 @@ final class NodeExtractor
     /**
      *
      * @throws ClassNotDeclaredException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function extract(string $filename, array $dependencies): ClassNode
     {
@@ -106,11 +107,11 @@ final class NodeExtractor
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function fillConstructorParams(ClassNode $definition): void
     {
-        $reflection = new \ReflectionClass("{$definition->namespace}\\{$definition->class}");
+        $reflection = new ReflectionClass("{$definition->namespace}\\{$definition->class}");
 
         $constructor = $reflection->getConstructor();
         if ($constructor !== null) {

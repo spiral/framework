@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler;
 
+use Throwable;
+use LogicException;
 use Spiral\Stempler\Node\NodeInterface;
 
 /**
@@ -21,10 +23,9 @@ use Spiral\Stempler\Node\NodeInterface;
 final class Traverser
 {
     /** @var VisitorInterface[] */
-    private $visitors = [];
+    private array $visitors = [];
 
-    /** @var bool */
-    private $stopTraversal = false;
+    private bool $stopTraversal = false;
 
     public function __construct(array $visitors = [])
     {
@@ -56,11 +57,11 @@ final class Traverser
      *
      * @param NodeInterface[] $nodes
      * @return NodeInterface[]
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function traverse(array $nodes, VisitorContext $context = null): array
     {
-        $context = $context ?? new VisitorContext();
+        $context ??= new VisitorContext();
 
         $ctx = clone $context;
         foreach ($nodes as $index => $node) {
@@ -101,7 +102,7 @@ final class Traverser
                         break 3;
 
                     default:
-                        throw new \LogicException(
+                        throw new LogicException(
                             'enterNode() returned invalid value of type ' . gettype($result)
                         );
                 }
@@ -135,7 +136,7 @@ final class Traverser
                         break 3;
 
                     default:
-                        throw new \LogicException(
+                        throw new LogicException(
                             'leaveNode() returned invalid value of type ' . gettype($result)
                         );
                 }
@@ -199,7 +200,7 @@ final class Traverser
                         break 3;
 
                     default:
-                        throw new \LogicException(
+                        throw new LogicException(
                             'enterNode() returned invalid value of type ' . gettype($result)
                         );
                 }
@@ -228,7 +229,7 @@ final class Traverser
                         break 3;
 
                     default:
-                        throw new \LogicException(
+                        throw new LogicException(
                             'leaveNode() returned invalid value of type ' . gettype($result)
                         );
                 }

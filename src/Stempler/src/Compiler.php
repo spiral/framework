@@ -22,7 +22,7 @@ use Spiral\Stempler\Node\NodeInterface;
 final class Compiler
 {
     /** @var RendererInterface[] */
-    private $renders = [];
+    private array $renders = [];
 
     public function addRenderer(RendererInterface $renderer): void
     {
@@ -35,7 +35,7 @@ final class Compiler
      */
     public function compile($node, Result $result = null): Result
     {
-        $result = $result ?? new Result();
+        $result ??= new Result();
 
         if (is_array($node)) {
             foreach ($node as $child) {

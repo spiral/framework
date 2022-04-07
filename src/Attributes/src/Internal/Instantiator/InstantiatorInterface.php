@@ -11,11 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
 
+use ReflectionClass;
+use Throwable;
+use Reflector;
 /**
  * @internal InstantiatorInterface is an internal library interface, please do not use it in your code.
  * @psalm-internal Spiral\Attributes
  *
- * @psalm-type ContextType = \ReflectionClass
+ * @psalm-type ContextType ReflectionClass
  *                         | \ReflectionFunctionAbstract
  *                         | \ReflectionProperty
  *                         | \ReflectionClassConstant
@@ -26,11 +29,11 @@ interface InstantiatorInterface
     /**
      * @template T of object
      *
-     * @param \ReflectionClass<T> $attr
+     * @param ReflectionClass<T> $attr
      * @param array<positive-int|0|string, mixed> $arguments
      * @param ContextType $context
      * @return T
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function instantiate(\ReflectionClass $attr, array $arguments, \Reflector $context = null): object;
+    public function instantiate(ReflectionClass $attr, array $arguments, Reflector $context = null): object;
 }

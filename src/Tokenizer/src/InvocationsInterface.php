@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
 
+use ReflectionFunctionAbstract;
 use Spiral\Tokenizer\Reflection\ReflectionInvocation;
 
 /**
@@ -25,5 +26,5 @@ interface InvocationsInterface
      *
      * @return ReflectionInvocation[]
      */
-    public function getInvocations(\ReflectionFunctionAbstract $function): array;
+    public function getInvocations(ReflectionFunctionAbstract $function): array;
 }

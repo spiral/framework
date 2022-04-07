@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Spiral\Auth\Transport;
 
+use DateTimeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Auth\HttpTransportInterface;
@@ -23,23 +24,17 @@ use Spiral\Cookies\CookieQueue;
  */
 final class CookieTransport implements HttpTransportInterface
 {
-    /** @var string */
-    private $cookie;
+    private string $cookie;
 
-    /** @var string */
-    private $basePath;
+    private string $basePath;
 
-    /** @var string|null */
-    private $domain;
+    private ?string $domain;
 
-    /** @var bool */
-    private $secure;
+    private bool $secure;
 
-    /** @var bool */
-    private $httpOnly;
+    private bool $httpOnly;
 
-    /** @var string|null */
-    private $sameSite;
+    private ?string $sameSite;
 
     public function __construct(
         string $cookie,
@@ -73,7 +68,7 @@ final class CookieTransport implements HttpTransportInterface
         Request $request,
         Response $response,
         string $tokenID = null,
-        \DateTimeInterface $expiresAt = null
+        DateTimeInterface $expiresAt = null
     ): Response {
         /** @var CookieQueue $cookieQueue */
         $cookieQueue = $request->getAttribute(CookieQueue::ATTRIBUTE);
@@ -121,9 +116,9 @@ final class CookieTransport implements HttpTransportInterface
     }
 
     /**
-     * @param \DateTimeInterface|null $expiresAt
+     * @param DateTimeInterface|null $expiresAt
      */
-    private function getLifetime(\DateTimeInterface $expiresAt = null): ?int
+    private function getLifetime(DateTimeInterface $expiresAt = null): ?int
     {
         if ($expiresAt === null) {
             return null;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
 
+use ReflectionClass;
 interface ScopedClassesInterface
 {
     /**
@@ -15,7 +16,7 @@ interface ScopedClassesInterface
      * @param mixed $target  Class, interface or trait parent. By default - null (all classes).
      *                       Parent (class) will also be included to classes list as one of
      *                       results.
-     * @return \ReflectionClass[]
+     * @return ReflectionClass[]
      */
     public function getScopedClasses(string $scope, $target = null): array;
 }

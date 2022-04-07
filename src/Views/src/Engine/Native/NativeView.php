@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Views\Engine\Native;
 
+use Throwable;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\ContainerScope;
 use Spiral\Views\ContextInterface;
@@ -23,11 +24,9 @@ final class NativeView implements ViewInterface
     /*** @var ViewSource */
     protected $view;
 
-    /** @var ContainerInterface */
-    protected $container;
+    protected ContainerInterface $container;
 
-    /** @var ContextInterface */
-    protected $context;
+    protected ContextInterface $context;
 
     public function __construct(ViewSource $view, ContainerInterface $container, ContextInterface $context)
     {
@@ -50,7 +49,7 @@ final class NativeView implements ViewInterface
                 // render view in context and output buffer scope, context can be accessed using $this->context
                 require $this->view->getFilename();
             });
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             while (ob_get_level() >= $__outputLevel__) {
                 ob_end_clean();
             }

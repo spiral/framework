@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Command;
 
+use ReflectionException;
+use Throwable;
+use ReflectionClass;
 use Spiral\Prototype\Exception\ClassNotDeclaredException;
 use Spiral\Prototype\Injector;
 use Spiral\Prototype\NodeExtractor;
@@ -33,8 +36,7 @@ final class InjectCommand extends AbstractCommand
         ],
     ];
 
-    /** @var Injector */
-    private $injector;
+    private Injector $injector;
 
     public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
     {
@@ -45,7 +47,7 @@ final class InjectCommand extends AbstractCommand
     /**
      * Perform command.
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws ClassNotDeclaredException
      */
     public function perform(): void
@@ -70,7 +72,7 @@ final class InjectCommand extends AbstractCommand
             }
 
             foreach ($proto as $target) {
-                if ($target instanceof \Throwable) {
+                if ($target instanceof Throwable) {
                     $targets[] = [
                         $class->getName(),
                         $target->getMessage(),
@@ -102,7 +104,7 @@ final class InjectCommand extends AbstractCommand
         }
     }
 
-    private function modify(\ReflectionClass $class, array $proto): ?array
+    private function modify(ReflectionClass $class, array $proto): ?array
     {
         $classDefinition = $this->extractor->extract($class->getFilename(), $proto);
         try {
@@ -116,7 +118,7 @@ final class InjectCommand extends AbstractCommand
 
             file_put_contents($class->getFileName(), $modified);
             return null;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return [$class->getName(), $e->getMessage(), "{$e->getFile()}:L{$e->getLine()}"];
         }
     }

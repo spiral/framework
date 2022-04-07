@@ -16,11 +16,10 @@ use Spiral\Config\LoaderInterface;
 
 final class DirectoryLoader implements LoaderInterface
 {
-    /** @var string */
-    private $directory;
+    private string $directory;
 
     /** @var FileLoaderInterface[] */
-    private $loaders;
+    private array $loaders;
 
     public function __construct(string $directory, array $loaders = [])
     {

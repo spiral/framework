@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Node;
 
+use Generator;
 use Spiral\Stempler\Node\Traits\AttributeTrait;
 use Spiral\Stempler\Node\Traits\ContextTrait;
 use Spiral\Stempler\Parser\Context;
@@ -41,7 +42,7 @@ final class Block implements NodeInterface, AttributedInterface
     /**
      * @inheritDoc
      */
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         yield 'nodes' => $this->nodes;
     }

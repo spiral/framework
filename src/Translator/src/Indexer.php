@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Translator;
 
+use ReflectionFunction;
+use ReflectionMethod;
+use ReflectionClass;
 use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
@@ -32,15 +35,12 @@ final class Indexer
 {
     use LoggerTrait;
 
-    /** @var TranslatorConfig */
-    private $config;
+    private TranslatorConfig $config;
 
     /**
      * Catalogue to aggregate messages into.
-     *
-     * @var CatalogueInterface
      */
-    private $catalogue;
+    private CatalogueInterface $catalogue;
 
     public function __construct(TranslatorConfig $config, CatalogueInterface $catalogue)
     {
@@ -87,15 +87,15 @@ final class Indexer
     public function indexInvocations(InvocationsInterface $locator): void
     {
         $this->registerInvocations($locator->getInvocations(
-            new \ReflectionFunction('l')
+            new ReflectionFunction('l')
         ));
 
         $this->registerInvocations($locator->getInvocations(
-            new \ReflectionFunction('p')
+            new ReflectionFunction('p')
         ));
 
         $this->registerInvocations($locator->getInvocations(
-            new \ReflectionMethod(TranslatorTrait::class, 'say')
+            new ReflectionMethod(TranslatorTrait::class, 'say')
         ));
     }
 
@@ -124,7 +124,7 @@ final class Indexer
      *
      * @return array
      */
-    private function fetchMessages(\ReflectionClass $reflection, bool $inherit = false)
+    private function fetchMessages(ReflectionClass $reflection, bool $inherit = false)
     {
         $target = $reflection->getDefaultProperties() + $reflection->getConstants();
 

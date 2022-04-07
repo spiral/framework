@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace Spiral\Views\Exception;
 
+use Throwable;
 class CompileException extends EngineException
 {
-    /** @var array */
-    private $userTrace = [];
+    private array $userTrace = [];
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(\Throwable $previous = null)
+    public function __construct(Throwable $previous = null)
     {
         parent::__construct($previous->getMessage(), $previous->getCode(), $previous);
 

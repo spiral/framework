@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Storage;
 
+use Traversable;
+use ArrayIterator;
+use Stringable;
 use Psr\Http\Message\UriInterface;
 use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\Storage\ReadableTrait;
@@ -43,12 +46,9 @@ final class Storage implements MutableStorageInterface
     /**
      * @var array<string, BucketInterface>
      */
-    private $buckets = [];
+    private array $buckets = [];
 
-    /**
-     * @var string
-     */
-    private $default;
+    private string $default;
 
     public function __construct(string $name = self::DEFAULT_STORAGE)
     {
@@ -71,7 +71,7 @@ final class Storage implements MutableStorageInterface
      */
     public function bucket(string $name = null): BucketInterface
     {
-        $name = $name ?? $this->default;
+        $name ??= $this->default;
 
         if (!isset($this->buckets[$name])) {
             throw new InvalidArgumentException(\sprintf(self::ERROR_NOT_FOUND, $name));
@@ -105,9 +105,9 @@ final class Storage implements MutableStorageInterface
     /**
      * {@inheritDoc}
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->buckets);
+        return new ArrayIterator($this->buckets);
     }
 
     /**
@@ -155,7 +155,7 @@ final class Storage implements MutableStorageInterface
     {
         switch (true) {
             case $uri instanceof UriInterface:
-            case $uri instanceof \Stringable:
+            case $uri instanceof Stringable:
             case \is_object($uri) && \method_exists($uri, '__toString'):
                 return (string)$uri;
 

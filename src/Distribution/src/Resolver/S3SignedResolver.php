@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution\Resolver;
 
+use Exception;
 use Aws\CommandInterface;
 use Aws\S3\S3ClientInterface;
 use Psr\Http\Message\UriInterface;
@@ -22,20 +23,11 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 class S3SignedResolver extends ExpirationAwareResolver
 {
-    /**
-     * @var S3ClientInterface
-     */
-    private $client;
+    private S3ClientInterface $client;
 
-    /**
-     * @var string
-     */
-    private $bucket;
+    private string $bucket;
 
-    /**
-     * @var string|null
-     */
-    private $prefix;
+    private ?string $prefix;
 
     /**
      * @param string|null $prefix
@@ -51,7 +43,7 @@ class S3SignedResolver extends ExpirationAwareResolver
 
     /**
      * @param DateIntervalFormat|null $expiration
-     * @throws \Exception
+     * @throws Exception
      */
     public function resolve(string $file, $expiration = null): UriInterface
     {

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar\Dynamic;
 
+use Generator;
 use Spiral\Stempler\Lexer\Buffer;
 use Spiral\Stempler\Lexer\Byte;
 use Spiral\Stempler\Lexer\Grammar\Traits\TokenTrait;
@@ -32,13 +33,12 @@ final class DeclareGrammar implements GrammarInterface
     // whitespace
     private const REGEXP_WHITESPACE = '/\s/';
 
-    /** @var array */
-    private $keyword = [];
+    private array $keyword = [];
 
     /**
      * @inheritDoc
      */
-    public function parse(Buffer $src): \Generator
+    public function parse(Buffer $src): Generator
     {
         $quoted = [];
         while ($n = $src->next()) {

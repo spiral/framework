@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Storage\Bucket;
 
+use Stringable;
 use JetBrains\PhpStorm\ExpectedValues;
 use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\FileInterface;
@@ -33,7 +34,7 @@ interface WritableInterface
      * Write provided content to defined filesystem as file by defined filepath.
      *
      * @param string $pathname relative filepath
-     * @param string|\Stringable|resource $content content string or stream to write
+     * @param string|Stringable|resource $content content string or stream to write
      * @param array $config specific config based on used adapter
      * @throws FileOperationException
      */

@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
 
+use ReflectionClass;
+use ReflectionFunctionAbstract;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionParameter;
 use Spiral\Attributes\Reader;
 use Spiral\Attributes\ReaderInterface;
 
@@ -20,10 +25,7 @@ use Spiral\Attributes\ReaderInterface;
  */
 abstract class Decorator extends Reader
 {
-    /**
-     * @var FallbackAttributeReader|NativeAttributeReader
-     */
-    private $reader;
+    private ReaderInterface $reader;
 
     public function __construct(ReaderInterface $reader)
     {
@@ -33,7 +35,7 @@ abstract class Decorator extends Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
+    public function getClassMetadata(ReflectionClass $class, string $name = null): iterable
     {
         return $this->reader->getClassMetadata($class, $name);
     }
@@ -41,7 +43,7 @@ abstract class Decorator extends Reader
     /**
      * {@inheritDoc}
      */
-    public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
+    public function getFunctionMetadata(ReflectionFunctionAbstract $function, string $name = null): iterable
     {
         return $this->reader->getFunctionMetadata($function, $name);
     }
@@ -49,7 +51,7 @@ abstract class Decorator extends Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
+    public function getPropertyMetadata(ReflectionProperty $property, string $name = null): iterable
     {
         return $this->reader->getPropertyMetadata($property, $name);
     }
@@ -57,7 +59,7 @@ abstract class Decorator extends Reader
     /**
      * {@inheritDoc}
      */
-    public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
+    public function getConstantMetadata(ReflectionClassConstant $constant, string $name = null): iterable
     {
         return $this->reader->getConstantMetadata($constant, $name);
     }
@@ -65,7 +67,7 @@ abstract class Decorator extends Reader
     /**
      * {@inheritDoc}
      */
-    public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
+    public function getParameterMetadata(ReflectionParameter $parameter, string $name = null): iterable
     {
         return $this->reader->getParameterMetadata($parameter, $name);
     }

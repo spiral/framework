@@ -22,7 +22,7 @@ use Spiral\Views\Exception\ContextException;
 final class ViewContext implements ContextInterface
 {
     /** @var DependencyInterface[] */
-    private $dependencies = [];
+    private array $dependencies = [];
 
     /**
      * {@inheritdoc}

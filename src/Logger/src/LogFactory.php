@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Logger;
 
+use DateTime;
 use Psr\Log\LoggerInterface;
 use Spiral\Logger\Event\LogEvent;
 
@@ -19,8 +20,7 @@ use Spiral\Logger\Event\LogEvent;
  */
 final class LogFactory implements LogsInterface
 {
-    /** @var ListenerRegistryInterface */
-    private $listenedRegistry;
+    private ListenerRegistryInterface $listenedRegistry;
 
     public function __construct(ListenerRegistryInterface $listenedRegistry)
     {
@@ -40,7 +40,7 @@ final class LogFactory implements LogsInterface
     public function log($channel, $level, $message, array $context = []): void
     {
         $e = new LogEvent(
-            new \DateTime(),
+            new DateTime(),
             $channel,
             $level,
             $message,

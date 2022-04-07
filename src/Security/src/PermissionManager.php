@@ -32,13 +32,10 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
 {
     /**
      * Roles associated with their permissions.
-     *
-     * @var array
      */
-    private $permissions = [];
+    private array $permissions = [];
 
-    /** @var Matcher */
-    private $matcher;
+    private Matcher $matcher;
 
     /**@var RulesInterface */
     private $rules;

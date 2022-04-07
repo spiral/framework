@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Exception;
 
-class HttpException extends \RuntimeException
+use RuntimeException;
+class HttpException extends RuntimeException
 {
 }

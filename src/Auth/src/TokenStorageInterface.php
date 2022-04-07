@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Auth;
 
+use DateTimeInterface;
 use Spiral\Auth\Exception\TokenStorageException;
 
 /**
@@ -29,11 +30,11 @@ interface TokenStorageInterface
     /**
      * Create token based on the payload provided by actor provider.
      *
-     * @param \DateTimeInterface|null $expiresAt
+     * @param DateTimeInterface|null $expiresAt
      *
      * @throws TokenStorageException
      */
-    public function create(array $payload, \DateTimeInterface $expiresAt = null): TokenInterface;
+    public function create(array $payload, DateTimeInterface $expiresAt = null): TokenInterface;
 
     /**
      * Delete token from the persistent storage.

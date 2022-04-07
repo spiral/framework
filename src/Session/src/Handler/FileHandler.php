@@ -11,22 +11,18 @@ declare(strict_types=1);
 
 namespace Spiral\Session\Handler;
 
+use SessionHandlerInterface;
+use ReturnTypeWillChange;
 use Spiral\Files\FilesInterface;
 
 /**
  * Stores session data in file.
  */
-final class FileHandler implements \SessionHandlerInterface
+final class FileHandler implements SessionHandlerInterface
 {
-    /**
-     * @var FilesInterface
-     */
-    protected $files;
+    protected FilesInterface $files;
 
-    /**
-     * @var string
-     */
-    protected $directory = '';
+    protected string $directory = '';
 
     /**
      * @param int            $lifetime Default session lifetime.
@@ -58,7 +54,7 @@ final class FileHandler implements \SessionHandlerInterface
      * @inheritdoc
      * @codeCoverageIgnore
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
         foreach ($this->files->getFiles($this->directory) as $filename) {

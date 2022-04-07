@@ -11,19 +11,23 @@ declare(strict_types=1);
 
 namespace Spiral\Distribution\Internal;
 
+use DateInterval;
+use DateTimeInterface;
+use InvalidArgumentException;
+use DateTimeImmutable;
 /**
  * @internal DateTimeIntervalFactoryInterface is an internal library interface, please do not use it in your code.
  * @psalm-internal Spiral\Distribution
  *
- * @psalm-type DateIntervalFormat = string|int|\DateInterval|\DateTimeInterface
+ * @psalm-type DateIntervalFormat string|int|DateInterval|DateTimeInterface
  */
 interface DateTimeIntervalFactoryInterface
 {
     /**
      * @param DateIntervalFormat|null $duration
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function create($duration): \DateInterval;
+    public function create($duration): DateInterval;
 
-    public function toDateTime(\DateInterval $interval): \DateTimeImmutable;
+    public function toDateTime(DateInterval $interval): DateTimeImmutable;
 }

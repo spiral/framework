@@ -11,6 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Debug;
 
+use Closure;
+use ReflectionObject;
+use ReflectionProperty;
+use stdClass;
+use ReflectionFunction;
+use ReflectionException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -39,15 +45,14 @@ class Dumper implements LoggerAwareInterface
     public const OUTPUT_CLI_COLORS = 5;
     public const ROADRUNNER        = 6;
 
-    /** @var int */
-    private $maxLevel = 12;
+    private int $maxLevel = 12;
 
     /**
      * Default render associations.
      *
      * @var array|RendererInterface[]
      */
-    private $targets = [
+    private array $targets = [
         self::OUTPUT            => HtmlRenderer::class,
         self::OUTPUT_CLI        => PlainRenderer::class,
         self::OUTPUT_CLI_COLORS => ConsoleRenderer::class,
@@ -276,8 +281,8 @@ class Dumper implements LoggerAwareInterface
         }
 
         //Let's use method specifically created for dumping
-        if (method_exists($value, '__debugInfo') || $value instanceof \Closure) {
-            if ($value instanceof \Closure) {
+        if (method_exists($value, '__debugInfo') || $value instanceof Closure) {
+            if ($value instanceof Closure) {
                 $debugInfo = $this->describeClosure($value);
             } else {
                 $debugInfo = $value->__debugInfo();
@@ -298,7 +303,7 @@ class Dumper implements LoggerAwareInterface
                 . $r->indent($level) . $r->apply(')', 'syntax', ')') . "\n";
         }
 
-        $refection = new \ReflectionObject($value);
+        $refection = new ReflectionObject($value);
 
         $output = '';
         foreach ($refection->getProperties() as $property) {
@@ -313,14 +318,14 @@ class Dumper implements LoggerAwareInterface
      * @param object              $value
      *
      */
-    private function renderProperty(RendererInterface $r, $value, \ReflectionProperty $p, int $level): string
+    private function renderProperty(RendererInterface $r, $value, ReflectionProperty $p, int $level): string
     {
         if ($p->isStatic()) {
             return '';
         }
 
         if (
-            !($value instanceof \stdClass)
+            !($value instanceof stdClass)
             && is_string($p->getDocComment())
             && strpos($p->getDocComment(), '@internal') !== false
         ) {
@@ -335,7 +340,7 @@ class Dumper implements LoggerAwareInterface
         //To read private and protected properties
         $p->setAccessible(true);
 
-        if ($value instanceof \stdClass) {
+        if ($value instanceof stdClass) {
             $name = $r->apply($p->getName(), 'dynamic');
         } else {
             //Property name includes access level
@@ -348,11 +353,11 @@ class Dumper implements LoggerAwareInterface
     /**
      * Fetch information about the closure.
      */
-    private function describeClosure(\Closure $closure): array
+    private function describeClosure(Closure $closure): array
     {
         try {
-            $r = new \ReflectionFunction($closure);
-        } catch (\ReflectionException $e) {
+            $r = new ReflectionFunction($closure);
+        } catch (ReflectionException $e) {
             return ['closure' => 'unable to resolve'];
         }
 
@@ -368,7 +373,7 @@ class Dumper implements LoggerAwareInterface
      *
      *
      */
-    private function getAccess(\ReflectionProperty $p): string
+    private function getAccess(ReflectionProperty $p): string
     {
         if ($p->isPrivate()) {
             return 'private';

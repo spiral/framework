@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar;
 
+use Generator;
 use Spiral\Stempler\Lexer\Buffer;
 use Spiral\Stempler\Lexer\Byte;
 use Spiral\Stempler\Lexer\GrammarInterface;
@@ -24,7 +25,7 @@ final class PHPGrammar implements GrammarInterface
     /**
      * @inheritDoc
      */
-    public function parse(Buffer $src): \Generator
+    public function parse(Buffer $src): Generator
     {
         while ($n = $src->next()) {
             if (!$n instanceof Byte || $n->char !== '<' || $src->lookaheadByte() !== '?') {

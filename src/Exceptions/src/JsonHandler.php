@@ -11,9 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
+use Throwable;
+use Generator;
 final class JsonHandler extends AbstractHandler
 {
-    public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_VERBOSE): string
+    public function renderException(Throwable $e, int $verbosity = self::VERBOSITY_VERBOSE): string
     {
         return json_encode([
             'error'      => sprintf(
@@ -24,10 +26,10 @@ final class JsonHandler extends AbstractHandler
                 $e->getLine()
             ),
             'stacktrace' => iterator_to_array($this->renderTrace($e->getTrace(), $verbosity)),
-        ]);
+        ], JSON_THROW_ON_ERROR);
     }
 
-    private function renderTrace(array $trace, int $verbosity): \Generator
+    private function renderTrace(array $trace, int $verbosity): Generator
     {
         foreach ($trace as $item) {
             $result = [];

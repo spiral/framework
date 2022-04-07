@@ -37,8 +37,7 @@ abstract class AbstractCommand extends Command
      */
     protected $files;
 
-    /** @var FactoryInterface */
-    private $factory;
+    private FactoryInterface $factory;
 
     public function __construct(
         ScaffolderConfig $config,
@@ -88,7 +87,7 @@ abstract class AbstractCommand extends Command
      */
     protected function writeDeclaration(ClassDeclaration $declaration, string $type = null): void
     {
-        $type = $type ?? static::ELEMENT;
+        $type ??= static::ELEMENT;
 
         $filename = $this->config->classFilename($type, (string)$this->argument('name'));
         $filename = $this->files->normalizePath($filename);

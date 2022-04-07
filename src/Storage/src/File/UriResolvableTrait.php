@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Storage\File;
 
+use LogicException;
 use Psr\Http\Message\UriInterface;
 use Spiral\Distribution\UriResolverInterface;
 
@@ -32,7 +33,7 @@ trait UriResolvableTrait
         $resolver = $this->getResolver();
 
         if ($resolver === null) {
-            throw new \LogicException('Can not generate public url: File not accessible by HTTP');
+            throw new LogicException('Can not generate public url: File not accessible by HTTP');
         }
 
         return $this->toUriFrom($resolver, ...$args);

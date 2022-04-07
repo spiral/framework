@@ -17,11 +17,10 @@ namespace Spiral\Stempler\Transform;
  */
 final class BlockClaims
 {
-    /** @var array */
-    private $claimed = [];
+    private array $claimed = [];
 
     /** @var array[] */
-    private $blocks = [];
+    private array $blocks = [];
 
     public function __construct(array $blocks)
     {

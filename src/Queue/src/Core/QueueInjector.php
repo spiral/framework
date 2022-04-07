@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Core;
 
+use Throwable;
+use RuntimeException;
 use ReflectionClass;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Exception\Container\ContainerException;
@@ -39,7 +41,7 @@ final class QueueInjector implements InjectorInterface
             }
 
             $this->matchType($class, $context, $connection);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new ContainerException(sprintf("Can't inject the required queue. %s", $e->getMessage()), 0, $e);
         }
 
@@ -49,13 +51,13 @@ final class QueueInjector implements InjectorInterface
     /**
      * Check the resolved connection implements required type
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     private function matchType(ReflectionClass $class, ?string $context, QueueInterface $connection): void
     {
         $className = $class->getName();
         if ($className !== QueueInterface::class && !$connection instanceof $className) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 \sprintf(
                     "The queue obtained by the context `%s` doesn't match the type `%s`.",
                     $context ?? 'NULL',

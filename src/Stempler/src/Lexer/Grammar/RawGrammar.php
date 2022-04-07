@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar;
 
+use Generator;
 use Spiral\Stempler\Lexer\Buffer;
 use Spiral\Stempler\Lexer\Byte;
 use Spiral\Stempler\Lexer\GrammarInterface;
@@ -21,7 +22,7 @@ final class RawGrammar implements GrammarInterface
     /**
      * @inheritDoc
      */
-    public function parse(Buffer $src): \Generator
+    public function parse(Buffer $src): Generator
     {
         /** @var string|null $buffer */
         $buffer = null;

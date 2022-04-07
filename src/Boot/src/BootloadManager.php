@@ -11,6 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
+use Spiral\Core\Container\SingletonInterface;
+use Throwable;
+use Generator;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
 use Closure;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\Bootloader\DependedInterface;
@@ -20,13 +26,13 @@ use Spiral\Core\Container;
 /**
  * Provides ability to bootload ServiceProviders.
  */
-final class BootloadManager implements Container\SingletonInterface
+final class BootloadManager implements SingletonInterface
 {
     /* @var Container @internal */
     protected $container;
 
     /** @var array<class-string> */
-    private $classes = [];
+    private array $classes = [];
 
     public function __construct(Container $container)
     {
@@ -55,7 +61,7 @@ final class BootloadManager implements Container\SingletonInterface
      * @param array<Closure> $staringCallbacks
      * @param array<Closure> $startedCallbacks
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function bootload(array $classes, array $staringCallbacks = [], array $startedCallbacks = []): void
     {
@@ -72,7 +78,7 @@ final class BootloadManager implements Container\SingletonInterface
      *
      * @param array<class-string>|array<class-string, array<string,mixed>> $classes
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function boot(array $classes, array $startingCallbacks, array $startedCallbacks): void
     {
@@ -109,7 +115,7 @@ final class BootloadManager implements Container\SingletonInterface
      *
      * @param array<class-string>|array<class-string, array<string,mixed>> $classes
      */
-    private function initBootloaders(array $classes): \Generator
+    private function initBootloaders(array $classes): Generator
     {
         foreach ($classes as $class => $options) {
             // default bootload syntax as simple array
@@ -120,8 +126,8 @@ final class BootloadManager implements Container\SingletonInterface
 
             // Replace class aliases with source classes
             try {
-                $class = (new \ReflectionClass($class))->getName();
-            } catch (\ReflectionException $e) {
+                $class = (new ReflectionClass($class))->getName();
+            } catch (ReflectionException $e) {
                 throw new ClassNotFoundException(
                     \sprintf('Bootloader class `%s` is not exist.', $class)
                 );
@@ -161,12 +167,12 @@ final class BootloadManager implements Container\SingletonInterface
 
     private function invokeBootloader(BootloaderInterface $bootloader, string $method, array $options): void
     {
-        $refl = new \ReflectionClass($bootloader);
+        $refl = new ReflectionClass($bootloader);
         if (!$refl->hasMethod($method)) {
             return;
         }
 
-        $boot = new \ReflectionMethod($bootloader, $method);
+        $boot = new ReflectionMethod($bootloader, $method);
 
         $args = $this->container->resolveArguments($boot);
         if (!isset($args['boot'])) {

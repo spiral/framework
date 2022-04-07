@@ -16,8 +16,7 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class ScalarValue implements ValueInterface
 {
-    /** @var bool */
-    private $allowEmpty;
+    private bool $allowEmpty;
 
     public function __construct(bool $allowEmpty = false)
     {

@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Security;
 
+use ReflectionMethod;
+use ReflectionException;
+use Throwable;
 use Spiral\Core\ResolverInterface;
 use Spiral\Security\Exception\RuleException;
 
@@ -65,15 +68,15 @@ abstract class Rule implements RuleInterface
         }
 
         try {
-            $method = new \ReflectionMethod($this, static::CHECK_METHOD);
+            $method = new ReflectionMethod($this, static::CHECK_METHOD);
             $method->setAccessible(true);
-        } catch (\ReflectionException $e) {
+        } catch (ReflectionException $e) {
             throw new RuleException($e->getMessage(), $e->getCode(), $e);
         }
 
         try {
             return $method->invokeArgs($this, $this->resolver->resolveArguments($method, $parameters));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new RuleException(sprintf('[%s] %s', get_class($this), $e->getMessage()), $e->getCode(), $e);
         }
     }

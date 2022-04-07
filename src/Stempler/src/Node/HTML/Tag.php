@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Node\HTML;
 
+use Generator;
 use Spiral\Stempler\Node\AttributedInterface;
 use Spiral\Stempler\Node\Mixin;
 use Spiral\Stempler\Node\NodeInterface;
@@ -46,7 +47,7 @@ final class Tag implements NodeInterface, AttributedInterface
         $this->context = $context;
     }
 
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         yield 'name' => $this->name;
         yield 'attrs' => $this->attrs;

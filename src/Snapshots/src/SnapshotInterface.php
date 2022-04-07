@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Snapshots;
 
+use Throwable;
 interface SnapshotInterface
 {
     /**
@@ -21,7 +22,7 @@ interface SnapshotInterface
     /**
      * Associated exception.
      */
-    public function getException(): \Throwable;
+    public function getException(): Throwable;
 
     /**
      * Formatted exception message.

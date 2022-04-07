@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Storage\Storage;
 
+use Stringable;
 use JetBrains\PhpStorm\ExpectedValues;
 use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\Exception\InvalidArgumentException;
@@ -40,7 +41,7 @@ interface WritableInterface
      * {@see BucketInterface::write()}
      *
      * @param IdType $id
-     * @param string|\Stringable|resource $content
+     * @param string|Stringable|resource $content
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */

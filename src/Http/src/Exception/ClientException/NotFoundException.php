@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Exception\ClientException;
 
+use Throwable;
 use Spiral\Http\Exception\ClientException;
 
 /**
@@ -21,7 +22,7 @@ class NotFoundException extends ClientException
     /** @var int */
     protected $code = ClientException::NOT_FOUND;
 
-    public function __construct(string $message = '', ?\Throwable $previous = null)
+    public function __construct(string $message = '', ?Throwable $previous = null)
     {
         parent::__construct($this->code, $message, $previous);
     }

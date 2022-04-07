@@ -11,6 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Key;
 
+use ReflectionClass;
+use ReflectionClassConstant;
+use ReflectionProperty;
+use ReflectionParameter;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
 /**
  * A generator that returns a unique key associated with the
  * passed reflection object.
@@ -53,7 +59,7 @@ final class NameKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forClass(\ReflectionClass $class): string
+    public function forClass(ReflectionClass $class): string
     {
         if ($class->isAnonymous()) {
             return \vsprintf(self::TPL_ANONYMOUS_CLASS, [
@@ -69,7 +75,7 @@ final class NameKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forConstant(\ReflectionClassConstant $const): string
+    public function forConstant(ReflectionClassConstant $const): string
     {
         return \vsprintf(self::TPL_CONSTANT, [
             $this->forClass($const->getDeclaringClass()),
@@ -80,7 +86,7 @@ final class NameKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forProperty(\ReflectionProperty $prop): string
+    public function forProperty(ReflectionProperty $prop): string
     {
         return \vsprintf(self::TPL_PROPERTY, [
             $this->forClass($prop->getDeclaringClass()),
@@ -91,7 +97,7 @@ final class NameKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forParameter(\ReflectionParameter $param): string
+    public function forParameter(ReflectionParameter $param): string
     {
         return \vsprintf(self::TPL_PARAMETER, [
             $this->forFunction($param->getDeclaringFunction()),
@@ -102,9 +108,9 @@ final class NameKeyGenerator implements KeyGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function forFunction(\ReflectionFunctionAbstract $fn): string
+    public function forFunction(ReflectionFunctionAbstract $fn): string
     {
-        if ($fn instanceof \ReflectionMethod) {
+        if ($fn instanceof ReflectionMethod) {
             return \vsprintf(self::TPL_METHOD, [
                 $this->forClass($fn->getDeclaringClass()),
                 $fn->getName(),

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Debug;
 
+use Throwable;
 /**
  * Describes the env PHP script is running within.
  *
@@ -61,7 +62,7 @@ final class System
             }
 
             return @stream_isatty($stream);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return false;
         }
     }

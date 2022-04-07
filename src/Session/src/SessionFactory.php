@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Session;
 
+use Throwable;
 use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
@@ -23,11 +24,9 @@ use Spiral\Session\Exception\SessionException;
  */
 final class SessionFactory implements SessionFactoryInterface, SingletonInterface
 {
-    /** @var SessionConfig */
-    private $config;
+    private SessionConfig $config;
 
-    /** @var FactoryInterface */
-    private $factory;
+    private FactoryInterface $factory;
 
     public function __construct(SessionConfig $config, FactoryInterface $factory)
     {
@@ -45,7 +44,7 @@ final class SessionFactory implements SessionFactoryInterface, SingletonInterfac
         if ($this->config->getHandler() !== null) {
             try {
                 $handler = $this->config->getHandler()->resolve($this->factory);
-            } catch (\Throwable | ContainerExceptionInterface $e) {
+            } catch (Throwable | ContainerExceptionInterface $e) {
                 throw new SessionException($e->getMessage(), $e->getCode(), $e);
             }
 

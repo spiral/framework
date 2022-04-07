@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Config;
 
+use ReflectionClass;
 use Spiral\Config\Exception\ConfigDeliveredException;
 use Spiral\Config\Exception\PatchException;
 use Spiral\Core\Container\SingletonInterface;
@@ -22,20 +23,15 @@ use Spiral\Core\Exception\ConfiguratorException;
  */
 final class ConfigManager implements ConfiguratorInterface, SingletonInterface
 {
-    /** @var LoaderInterface */
-    private $loader;
+    private LoaderInterface $loader;
 
-    /** @var bool */
-    private $strict;
+    private bool $strict;
 
-    /** @var array */
-    private $data = [];
+    private array $data = [];
 
-    /** @var array */
-    private $defaults = [];
+    private array $defaults = [];
 
-    /** @var array */
-    private $instances = [];
+    private array $instances = [];
 
     public function __construct(LoaderInterface $loader, bool $strict = true)
     {
@@ -127,7 +123,7 @@ final class ConfigManager implements ConfiguratorInterface, SingletonInterface
     /**
      * @inheritdoc
      */
-    public function createInjection(\ReflectionClass $class, string $context = null)
+    public function createInjection(ReflectionClass $class, string $context = null)
     {
         $config = $class->getConstant('CONFIG');
         if (isset($this->instances[$config])) {

@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Pagination\Exception;
 
+use RuntimeException;
 /**
  * Generic pagination error.
  */
-class PaginationException extends \RuntimeException
+class PaginationException extends RuntimeException
 {
 }

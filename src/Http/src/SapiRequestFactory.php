@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Http;
 
+use InvalidArgumentException;
+use RuntimeException;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -56,17 +58,13 @@ use Psr\Http\Message\UriInterface;
  */
 final class SapiRequestFactory
 {
-    /** @var ServerRequestFactoryInterface */
-    private $requestFactory;
+    private ServerRequestFactoryInterface $requestFactory;
 
-    /** @var UriFactoryInterface */
-    private $uriFactory;
+    private UriFactoryInterface $uriFactory;
 
-    /** @var StreamFactoryInterface */
-    private $streamFactory;
+    private StreamFactoryInterface $streamFactory;
 
-    /** @var UploadedFileFactoryInterface */
-    private $uploadedFileFactory;
+    private UploadedFileFactoryInterface $uploadedFileFactory;
 
     public function __construct(
         ServerRequestFactoryInterface $requestFactory,
@@ -135,7 +133,7 @@ final class SapiRequestFactory
         } elseif (\is_string($body)) {
             $body = $this->streamFactory->createStream($body);
         } elseif (!$body instanceof StreamInterface) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Body parameter for ServerRequestFactory::createFromParameters() '
                 . 'must be instance of StreamInterface, resource or null.'
             );
@@ -239,7 +237,7 @@ final class SapiRequestFactory
         } else {
             try {
                 $stream = $this->streamFactory->createStreamFromFile($tempNames);
-            } catch (\RuntimeException $e) {
+            } catch (RuntimeException $e) {
                 $stream = $this->streamFactory->createStream();
             }
 

@@ -20,8 +20,7 @@ final class NativeEngine extends AbstractEngine
 {
     protected const EXTENSION = 'php';
 
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * NativeEngine constructor.

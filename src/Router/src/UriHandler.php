@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Router;
 
+use Traversable;
+use Closure;
 use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\UriFactoryInterface;
@@ -41,35 +43,26 @@ final class UriHandler
         '//'  => '/',
     ];
 
-    /** @var UriFactoryInterface */
-    private $uriFactory;
+    private UriFactoryInterface $uriFactory;
 
-    /** @var string */
-    private $pattern;
+    private ?string $pattern = null;
 
     /** @var SlugifyInterface @internal */
-    private $slugify;
+    private SlugifyInterface $slugify;
 
-    /** @var array */
-    private $constrains = [];
+    private array $constrains = [];
 
-    /** @var array */
-    private $defaults = [];
+    private array $defaults = [];
 
-    /** @var bool */
-    private $matchHost = false;
+    private bool $matchHost = false;
 
-    /** @var string */
-    private $prefix = '';
+    private string $prefix = '';
 
-    /** @var string|null */
-    private $compiled;
+    private ?string $compiled = null;
 
-    /** @var string|null */
-    private $template;
+    private ?string $template = null;
 
-    /** @var array */
-    private $options = [];
+    private array $options = [];
 
     /**
      * @param SlugifyInterface|null $slugify
@@ -157,7 +150,7 @@ final class UriHandler
     /**
      * Generate Uri for a given parameters and default values.
      *
-     * @param array|\Traversable $parameters
+     * @param array|Traversable $parameters
      */
     public function uri($parameters = [], array $defaults = []): UriInterface
     {
@@ -189,7 +182,7 @@ final class UriHandler
     /**
      * Fetch uri segments and query parameters.
      *
-     * @param \Traversable|array $parameters
+     * @param Traversable|array $parameters
      * @param array|null         $query Query parameters.
      */
     private function fetchOptions($parameters, &$query): array
@@ -301,7 +294,7 @@ final class UriHandler
     {
         $replaces = [];
         foreach ($values as $key => $value) {
-            $value = (is_array($value) || $value instanceof \Closure) ? '' : $value;
+            $value = (is_array($value) || $value instanceof Closure) ? '' : $value;
             $replaces["<{$key}>"] = is_object($value) ? (string)$value : $value;
         }
 

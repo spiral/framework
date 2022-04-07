@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Exception;
 
+use Throwable;
 /**
  * Generic client driven http exception.
  */
@@ -30,7 +31,7 @@ class ClientException extends HttpException
      *
      * @param int $code
      */
-    public function __construct(?int $code = null, string $message = '', ?\Throwable $previous = null)
+    public function __construct(?int $code = null, string $message = '', ?Throwable $previous = null)
     {
         if (empty($code) && empty($this->code)) {
             $code = self::BAD_DATA;

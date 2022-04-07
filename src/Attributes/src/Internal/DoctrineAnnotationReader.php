@@ -11,6 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
 
+use ReflectionClass;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
+use ReflectionProperty;
+use ReflectionClassConstant;
+use ReflectionParameter;
+use Closure;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
@@ -23,10 +30,7 @@ use Spiral\Attributes\Reader as BaseReader;
 
 final class DoctrineAnnotationReader extends BaseReader
 {
-    /**
-     * @var Reader|null
-     */
-    private $reader;
+    private ?\Doctrine\Common\Annotations\Reader $reader = null;
 
     /**
      * @param Reader|null $reader
@@ -42,11 +46,9 @@ final class DoctrineAnnotationReader extends BaseReader
     /**
      * {@inheritDoc}
      */
-    public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
+    public function getClassMetadata(ReflectionClass $class, string $name = null): iterable
     {
-        $result = $this->wrapDoctrineExceptions(function () use ($class) {
-            return $this->reader->getClassAnnotations($class);
-        });
+        $result = $this->wrapDoctrineExceptions(fn() => $this->reader->getClassAnnotations($class));
 
         yield from $this->filter($name, $result);
 
@@ -58,12 +60,10 @@ final class DoctrineAnnotationReader extends BaseReader
     /**
      * {@inheritDoc}
      */
-    public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
+    public function getFunctionMetadata(ReflectionFunctionAbstract $function, string $name = null): iterable
     {
-        if ($function instanceof \ReflectionMethod) {
-            $result = $this->wrapDoctrineExceptions(function () use ($function) {
-                return $this->reader->getMethodAnnotations($function);
-            });
+        if ($function instanceof ReflectionMethod) {
+            $result = $this->wrapDoctrineExceptions(fn() => $this->reader->getMethodAnnotations($function));
 
             return $this->filter($name, $result);
         }
@@ -74,11 +74,9 @@ final class DoctrineAnnotationReader extends BaseReader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
+    public function getPropertyMetadata(ReflectionProperty $property, string $name = null): iterable
     {
-        $result = $this->wrapDoctrineExceptions(function () use ($property) {
-            return $this->reader->getPropertyAnnotations($property);
-        });
+        $result = $this->wrapDoctrineExceptions(fn() => $this->reader->getPropertyAnnotations($property));
 
         return $this->filter($name, $result);
     }
@@ -86,7 +84,7 @@ final class DoctrineAnnotationReader extends BaseReader
     /**
      * {@inheritDoc}
      */
-    public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
+    public function getConstantMetadata(ReflectionClassConstant $constant, string $name = null): iterable
     {
         return [];
     }
@@ -94,7 +92,7 @@ final class DoctrineAnnotationReader extends BaseReader
     /**
      * {@inheritDoc}
      */
-    public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
+    public function getParameterMetadata(ReflectionParameter $parameter, string $name = null): iterable
     {
         return [];
     }
@@ -104,7 +102,7 @@ final class DoctrineAnnotationReader extends BaseReader
         return \interface_exists(Reader::class);
     }
 
-    private function wrapDoctrineExceptions(\Closure $then): iterable
+    private function wrapDoctrineExceptions(Closure $then): iterable
     {
         try {
             return $then();

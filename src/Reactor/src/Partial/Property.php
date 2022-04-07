@@ -30,10 +30,7 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
     use SerializerTrait;
     use AccessTrait;
 
-    /**
-     * @var bool
-     */
-    private $hasDefault = false;
+    private bool $hasDefault = false;
 
     /**
      * @var mixed

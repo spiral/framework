@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
 
+use ReflectionFunctionAbstract;
+use Generator;
+use ReflectionFunction;
+use ReflectionMethod;
 use Spiral\Tokenizer\Exception\LocatorException;
 use Spiral\Tokenizer\Reflection\ReflectionInvocation;
 
@@ -25,7 +29,7 @@ final class InvocationLocator extends AbstractLocator implements InvocationsInte
     /**
      * {@inheritdoc}
      */
-    public function getInvocations(\ReflectionFunctionAbstract $function): array
+    public function getInvocations(ReflectionFunctionAbstract $function): array
     {
         $result = [];
         foreach ($this->availableInvocations($function->getName()) as $invocation) {
@@ -41,9 +45,9 @@ final class InvocationLocator extends AbstractLocator implements InvocationsInte
      * Invocations available in finder scope.
      *
      * @param string $signature Method or function signature (name), for pre-filtering.
-     * @return ReflectionInvocation[]|\Generator
+     * @return ReflectionInvocation[]|Generator
      */
-    protected function availableInvocations(string $signature = ''): \Generator
+    protected function availableInvocations(string $signature = ''): Generator
     {
         $signature = strtolower(trim($signature, '\\'));
         foreach ($this->availableReflections() as $reflection) {
@@ -60,9 +64,9 @@ final class InvocationLocator extends AbstractLocator implements InvocationsInte
         }
     }
 
-    protected function isTargeted(ReflectionInvocation $invocation, \ReflectionFunctionAbstract $function): bool
+    protected function isTargeted(ReflectionInvocation $invocation, ReflectionFunctionAbstract $function): bool
     {
-        if ($function instanceof \ReflectionFunction) {
+        if ($function instanceof ReflectionFunction) {
             return !$invocation->isMethod();
         }
 
@@ -73,7 +77,7 @@ final class InvocationLocator extends AbstractLocator implements InvocationsInte
         }
 
         /**
-         * @var \ReflectionMethod $function
+         * @var ReflectionMethod $function
          */
         $target = $function->getDeclaringClass();
 

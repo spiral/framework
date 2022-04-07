@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Http;
 
+use Throwable;
+use JsonSerializable;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -27,8 +29,7 @@ final class CallableHandler implements RequestHandlerInterface
     /** @var callable */
     private $callable;
 
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
     public function __construct(callable $callable, ResponseFactoryInterface $responseFactory)
     {
@@ -50,7 +51,7 @@ final class CallableHandler implements RequestHandlerInterface
         $response = $this->responseFactory->createResponse(200);
         try {
             $result = ($this->callable)($request, $response);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ob_get_clean();
             throw $e;
         } finally {
@@ -83,7 +84,7 @@ final class CallableHandler implements RequestHandlerInterface
             return $result;
         }
 
-        if (is_array($result) || $result instanceof \JsonSerializable) {
+        if (is_array($result) || $result instanceof JsonSerializable) {
             $response = $this->writeJson($response, $result);
         } else {
             $response->getBody()->write((string)$result);

@@ -16,8 +16,7 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class IntersectValue implements ValueInterface
 {
-    /** @var ValueInterface */
-    private $enum;
+    private ValueInterface $enum;
 
     /**
      * @param mixed          ...$values

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar;
 
+use Generator;
 use Spiral\Stempler\Lexer\Buffer;
 use Spiral\Stempler\Lexer\Byte;
 use Spiral\Stempler\Lexer\Grammar\Traits\TokenTrait;
@@ -38,15 +39,15 @@ final class InlineGrammar implements GrammarInterface
     private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
 
     /** @var Byte[] */
-    private $name = [];
+    private array $name = [];
 
     /** @var Byte[]|null */
-    private $default;
+    private ?array $default = null;
 
     /**
      * @inheritDoc
      */
-    public function parse(Buffer $src): \Generator
+    public function parse(Buffer $src): Generator
     {
         while ($n = $src->next()) {
             if (!$n instanceof Byte || $n->char !== '$' || $src->lookaheadByte() !== '{') {

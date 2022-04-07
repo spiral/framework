@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Storage\Bucket;
 
+use InvalidArgumentException;
+use Stringable;
 use JetBrains\PhpStorm\ExpectedValues;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
@@ -58,7 +60,7 @@ trait WritableTrait
 
                 default:
                     $message = 'Content must be a resource stream or stringable type, but %s passed';
-                    throw new \InvalidArgumentException(\sprintf($message, \get_debug_type($content)));
+                    throw new InvalidArgumentException(\sprintf($message, \get_debug_type($content)));
             }
         } catch (FilesystemException $e) {
             throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
@@ -252,7 +254,7 @@ trait WritableTrait
      * Internal helper method that returns bool {@see true} if passed argument
      * can be converted to string.
      *
-     * @param string|\Stringable $value
+     * @param string|Stringable $value
      */
     private function isStringable($value): bool
     {
@@ -265,7 +267,7 @@ trait WritableTrait
         }
 
         if (\PHP_VERSION_ID >= 80000) {
-            return $value instanceof \Stringable;
+            return $value instanceof Stringable;
         }
 
         return \method_exists($value, '__toString');

@@ -11,25 +11,21 @@ declare(strict_types=1);
 
 namespace Spiral\Logger\Event;
 
+use DateTimeInterface;
 final class LogEvent
 {
-    /** @var \DateTimeInterface */
-    private $time;
+    private DateTimeInterface $time;
 
-    /** @var string */
-    private $channel;
+    private string $channel;
 
-    /** @var string */
-    private $level;
+    private string $level;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
-    /** @var array */
-    private $context;
+    private array $context;
 
     public function __construct(
-        \DateTimeInterface $time,
+        DateTimeInterface $time,
         string $channel,
         string $level,
         string $message,
@@ -42,7 +38,7 @@ final class LogEvent
         $this->context = $context;
     }
 
-    public function getTime(): \DateTimeInterface
+    public function getTime(): DateTimeInterface
     {
         return $this->time;
     }

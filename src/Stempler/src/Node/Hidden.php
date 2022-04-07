@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Node;
 
+use Generator;
+use Traversable;
 use Spiral\Stempler\Parser\Context;
 
 /**
@@ -27,9 +29,9 @@ final class Hidden implements NodeInterface
     }
 
     /**
-     * @return \Generator|\Traversable
+     * @return Generator|Traversable
      */
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         yield 'nodes' => $this->nodes;
     }

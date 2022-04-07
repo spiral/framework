@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Router;
 
+use Throwable;
+use Generator;
+use JsonSerializable;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -31,26 +34,19 @@ final class CoreHandler implements RequestHandlerInterface
 {
     use JsonTrait;
 
-    /** @var CoreInterface */
-    private $core;
+    private CoreInterface $core;
 
-    /** @var ScopeInterface */
-    private $scope;
+    private ScopeInterface $scope;
 
-    /** @var string|null */
-    private $controller;
+    private ?string $controller = null;
 
-    /** @var string|null */
-    private $action;
+    private ?string $action = null;
 
-    /** @var bool */
-    private $verbActions;
+    private ?bool $verbActions = null;
 
-    /** @var array|null */
-    private $parameters;
+    private ?array $parameters = null;
 
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
     public function __construct(
         CoreInterface $core,
@@ -90,7 +86,7 @@ final class CoreHandler implements RequestHandlerInterface
      * @inheritdoc
      *
      * @psalm-suppress UnusedVariable
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handle(Request $request): Response
     {
@@ -111,18 +107,16 @@ final class CoreHandler implements RequestHandlerInterface
                     Request::class  => $request,
                     Response::class => $response,
                 ],
-                function () use ($request) {
-                    return $this->core->callAction(
-                        $this->controller,
-                        $this->getAction($request),
-                        $this->parameters
-                    );
-                }
+                fn() => $this->core->callAction(
+                    $this->controller,
+                    $this->getAction($request),
+                    $this->parameters
+                )
             );
         } catch (ControllerException $e) {
             ob_get_clean();
             throw $this->mapException($e);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ob_get_clean();
             throw $e;
         } finally {
@@ -164,11 +158,11 @@ final class CoreHandler implements RequestHandlerInterface
             return $result;
         }
 
-        if ($result instanceof \Generator) {
+        if ($result instanceof Generator) {
             return $response->withBody(new GeneratorStream($result));
         }
 
-        if (\is_array($result) || $result instanceof \JsonSerializable) {
+        if (\is_array($result) || $result instanceof JsonSerializable) {
             $response = $this->writeJson($response, $result);
         } else {
             $response->getBody()->write((string)$result);

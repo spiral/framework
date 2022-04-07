@@ -20,20 +20,17 @@ use Spiral\Translator\CatalogueManagerInterface;
  */
 final class CatalogueManager implements CatalogueManagerInterface
 {
-    /** @var LoaderInterface */
-    private $loader;
+    private LoaderInterface $loader;
 
     /**
      * @internal
-     * @var CacheInterface
      */
-    private $cache;
+    private CacheInterface $cache;
 
-    /** @var array */
-    private $locales = [];
+    private array $locales = [];
 
     /** @var Catalogue[] */
-    private $catalogues = [];
+    private array $catalogues = [];
 
     public function __construct(LoaderInterface $loader, CacheInterface $cache = null)
     {

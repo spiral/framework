@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Exception;
 
+use RuntimeException;
 use Spiral\Stempler\Exception\Traits\ContextTrait;
 
-class CompilerException extends \RuntimeException implements ContextExceptionInterface
+class CompilerException extends RuntimeException implements ContextExceptionInterface
 {
     use ContextTrait;
 }

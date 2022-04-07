@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Node\Dynamic;
 
+use Generator;
 use Spiral\Stempler\Node\NodeInterface;
 use Spiral\Stempler\Node\Traits\ContextTrait;
 use Spiral\Stempler\Parser\Context;
@@ -39,7 +40,7 @@ final class Directive implements NodeInterface
     /**
      * @inheritDoc
      */
-    public function getIterator(): \Generator
+    public function getIterator(): Generator
     {
         yield from [];
     }

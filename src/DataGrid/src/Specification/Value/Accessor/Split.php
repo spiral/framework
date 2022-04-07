@@ -8,8 +8,7 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 class Split extends Accessor
 {
-    /** @var string */
-    private $char;
+    private string $char;
 
     public function __construct(ValueInterface $next, string $char = ',')
     {
