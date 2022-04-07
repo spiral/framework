@@ -9,8 +9,8 @@ build:
     php: 8.1.2
   dependencies:
     before:
-      - echo COMPOSER_ROOT_VERSION=$(/usr/bin/jq --arg key "dev-${SCRUTINIZER_BRANCH}" --raw-output '.["extra"]["branch-alias"][$key]' ${SCRUTINIZER_PROJECT}/composer.json)
-      - export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --arg key "dev-${SCRUTINIZER_BRANCH}" --raw-output '.["extra"]["branch-alias"][$key]' ${SCRUTINIZER_PROJECT}/composer.json)
+#      - export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --arg key "dev-${SCRUTINIZER_BRANCH}" --raw-output '.["extra"]["branch-alias"][$key]' composer.json)
+      - export COMPOSER_ROOT_VERSION=$(grep '"dev-master": ' composer.json | grep -P -o '[0-9]+.[0-9]+').x-dev
   project_setup:
     override:
       - 'composer validate'
