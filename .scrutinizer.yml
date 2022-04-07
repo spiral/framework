@@ -7,7 +7,9 @@ build:
       - >
         export COMPOSER_ROOT_VERSION=$(grep '"dev-master": ' composer.json | grep -P -o '[0-9]+.[0-9]+').x-dev
       - composer validate
-
+  tests:
+    override:
+      - command: 'vendor/bin/phpunit --coverage-clover=clover.xml'
 filter:
   excluded_paths:
     - 'tests/*'
