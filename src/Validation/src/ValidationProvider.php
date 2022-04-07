@@ -29,7 +29,7 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
 
     private ParserInterface $parser;
 
-    private FactoryInterface $factory;
+    private ?FactoryInterface $factory = null;
 
     /** @var RuleInterface[] */
     private array $rules = [];
