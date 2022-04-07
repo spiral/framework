@@ -17,6 +17,7 @@ use ReflectionClassConstant;
 use ReflectionFunctionAbstract;
 use ReflectionParameter;
 use Closure;
+
 /**
  * An implementation of a key generator that combines multiple generators
  * and returns a composite identifier.

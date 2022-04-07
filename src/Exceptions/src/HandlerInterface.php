@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Exceptions;
 
 use Throwable;
+
 /**
  * HandlerInterface is responsible for an exception explanation.
  */

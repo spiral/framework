@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Debug\Exception;
 
 use RuntimeException;
+
 class StateException extends RuntimeException
 {
 }

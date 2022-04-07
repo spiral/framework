@@ -14,6 +14,7 @@ namespace Spiral\Stempler\Lexer;
 use IteratorAggregate;
 use Generator;
 use Traversable;
+
 /**
  * Creates local buffers over byte/token stream. Able to replay some tokens.
  */

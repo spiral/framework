@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
-use Throwable;
-use function Opis\Closure\serialize;
-use function Opis\Closure\unserialize;
 use Spiral\Queue\Exception\SerializationException;
+use Throwable;
+
+use function Opis\Closure\unserialize;
 
 /**
  * @internal

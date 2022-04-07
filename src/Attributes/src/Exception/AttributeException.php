@@ -13,6 +13,7 @@ namespace Spiral\Attributes\Exception;
 
 use RuntimeException;
 use Throwable;
+
 class AttributeException extends RuntimeException
 {
     /**

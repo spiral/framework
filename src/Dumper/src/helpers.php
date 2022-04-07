@@ -8,8 +8,8 @@
  */
 
 declare(strict_types=1);
-use Spiral\Core\ContainerScope;
 
+use Spiral\Core\ContainerScope;
 use Spiral\Debug\Dumper;
 
 if (!function_exists('dump')) {

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Http\Exception;
 
 use Throwable;
+
 /**
  * Generic client driven http exception.
  */

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Storage\Exception;
 
 use Exception;
+
 /**
  * General exception class for storage component.
  */

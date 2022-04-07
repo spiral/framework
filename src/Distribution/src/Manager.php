@@ -14,6 +14,7 @@ namespace Spiral\Distribution;
 use InvalidArgumentException;
 use Traversable;
 use ArrayIterator;
+
 final class Manager implements MutableDistributionInterface
 {
     /**

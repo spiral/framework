@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Exceptions;
 
 use Throwable;
+
 /**
  * Provides common functionality for exception rendering.
  */

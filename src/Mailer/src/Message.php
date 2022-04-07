@@ -14,6 +14,7 @@ namespace Spiral\Mailer;
 use DateTimeInterface;
 use DateInterval;
 use DateTimeImmutable;
+
 class Message implements MessageInterface
 {
     private ?string $subject = null;

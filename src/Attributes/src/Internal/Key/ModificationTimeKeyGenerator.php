@@ -18,6 +18,7 @@ use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use LogicException;
 use ReflectionParameter;
+
 /**
  * A generator that returns a key containing information about the
  * time the file was last modified.

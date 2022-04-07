@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Translator\Exception;
 
 use Exception;
+
 /**
  * Invalid or unknown locale.
  */

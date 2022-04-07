@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Boot\Exception;
 
 use ErrorException;
+
 /**
  * Raised on fatal exceptions.
  */

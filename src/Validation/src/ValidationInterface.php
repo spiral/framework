@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Validation;
 
 use ArrayAccess;
+
 /**
  * Creates validators with given rules and data.
  */

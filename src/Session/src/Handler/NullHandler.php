@@ -13,6 +13,7 @@ namespace Spiral\Session\Handler;
 
 use SessionHandlerInterface;
 use ReturnTypeWillChange;
+
 /**
  * Blackhole.
  */

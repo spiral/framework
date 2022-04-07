@@ -13,6 +13,7 @@ namespace Spiral\Validation;
 
 use SplObjectStorage;
 use Generator;
+
 interface RuleInterface
 {
     /**

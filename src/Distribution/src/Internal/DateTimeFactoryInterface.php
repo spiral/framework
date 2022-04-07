@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Distribution\Internal;
 
 use DateTimeImmutable;
+
 /**
  * @internal DateTimeFactoryInterface is an internal library interface, please do not use it in your code.
  * @psalm-internal Spiral\Distribution

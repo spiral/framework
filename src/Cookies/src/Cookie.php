@@ -13,6 +13,7 @@ namespace Spiral\Cookies;
 
 use Spiral\Cookies\Cookie\SameSite;
 use DateTime;
+
 /**
  * Represent singular cookie header value with packing abilities.
  */

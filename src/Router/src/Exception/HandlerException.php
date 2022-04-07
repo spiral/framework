@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Router\Exception;
 
 use RuntimeException;
+
 class HandlerException extends RuntimeException
 {
 }

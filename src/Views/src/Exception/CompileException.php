@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Views\Exception;
 
 use Throwable;
+
 class CompileException extends EngineException
 {
     private array $userTrace = [];

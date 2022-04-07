@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Boot\Exception;
 
 use RuntimeException;
+
 class BootException extends RuntimeException
 {
 }

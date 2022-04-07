@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Debug;
 
 use Throwable;
+
 /**
  * Describes the env PHP script is running within.
  *

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Views\Exception;
 
 use Throwable;
+
 class RenderException extends ViewException
 {
     private array $userTrace = [];

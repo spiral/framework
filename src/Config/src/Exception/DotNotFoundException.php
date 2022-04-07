@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Config\Exception;
 
 use RuntimeException;
+
 class DotNotFoundException extends RuntimeException
 {
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Pagination;
 
 use Countable;
+
 /**
  * Simple predictable paginator.
  */

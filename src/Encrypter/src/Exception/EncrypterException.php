@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Encrypter\Exception;
 
 use RuntimeException;
+
 class EncrypterException extends RuntimeException
 {
 }

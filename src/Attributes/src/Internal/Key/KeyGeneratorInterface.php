@@ -16,6 +16,7 @@ use ReflectionProperty;
 use ReflectionClassConstant;
 use ReflectionFunctionAbstract;
 use ReflectionParameter;
+
 /**
  * An interface for generating keys based on reflection objects.
  *

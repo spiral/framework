@@ -16,6 +16,7 @@ use ReflectionProperty;
 use ReflectionClassConstant;
 use ReflectionFunctionAbstract;
 use ReflectionParameter;
+
 /**
  * A generator that hashes the key. It can be used when the cache driver
  * cannot accept string keys containing special characters (that is, not

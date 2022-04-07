@@ -14,6 +14,7 @@ namespace Spiral\Attributes\Internal;
 use ReflectionException;
 use Throwable;
 use ReflectionProperty;
+
 /**
  * @internal Exception is an internal library class, please do not use it in your code.
  * @psalm-internal Spiral\Attributes

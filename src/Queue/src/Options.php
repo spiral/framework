@@ -6,6 +6,7 @@ namespace Spiral\Queue;
 
 use JsonSerializable;
 use ReturnTypeWillChange;
+
 final class Options implements OptionsInterface, JsonSerializable
 {
     private ?int $delay = null;

@@ -17,6 +17,7 @@ use Throwable;
 use DateTimeImmutable;
 use Exception;
 use DateTimeInterface;
+
 /**
  * @internal DateTimeIntervalFactory is an internal library class, please do not use it in your code.
  * @psalm-internal Spiral\Distribution

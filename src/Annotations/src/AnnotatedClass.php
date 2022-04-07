@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Annotations;
 
 use ReflectionClass;
+
 /**
  * @deprecated since v2.12. Will be removed in v3.0
  */

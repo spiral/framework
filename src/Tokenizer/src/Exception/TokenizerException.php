@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Tokenizer\Exception;
 
 use RuntimeException;
+
 /**
  * Generic tokenizer exception.
  */

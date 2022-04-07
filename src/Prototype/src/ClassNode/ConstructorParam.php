@@ -14,6 +14,7 @@ namespace Spiral\Prototype\ClassNode;
 use ReflectionException;
 use ReflectionParameter;
 use ReflectionNamedType;
+
 final class ConstructorParam
 {
     /** @var string */

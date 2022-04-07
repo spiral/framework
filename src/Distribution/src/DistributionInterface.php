@@ -13,6 +13,7 @@ namespace Spiral\Distribution;
 
 use IteratorAggregate;
 use Countable;
+
 /**
  * @template-implements IteratorAggregate<string, ResolverInterface>
  */

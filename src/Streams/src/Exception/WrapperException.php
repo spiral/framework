@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Streams\Exception;
 
 use RuntimeException;
+
 /**
  * StreamWrapper specific exception.
  */

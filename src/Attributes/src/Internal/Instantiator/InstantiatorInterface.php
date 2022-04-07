@@ -14,6 +14,7 @@ namespace Spiral\Attributes\Internal\Instantiator;
 use ReflectionClass;
 use Throwable;
 use Reflector;
+
 /**
  * @internal InstantiatorInterface is an internal library interface, please do not use it in your code.
  * @psalm-internal Spiral\Attributes

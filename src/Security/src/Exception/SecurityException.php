@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Security\Exception;
 
 use RuntimeException;
+
 class SecurityException extends RuntimeException
 {
 }

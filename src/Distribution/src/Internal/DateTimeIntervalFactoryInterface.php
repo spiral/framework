@@ -15,6 +15,7 @@ use DateInterval;
 use DateTimeInterface;
 use InvalidArgumentException;
 use DateTimeImmutable;
+
 /**
  * @internal DateTimeIntervalFactoryInterface is an internal library interface, please do not use it in your code.
  * @psalm-internal Spiral\Distribution

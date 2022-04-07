@@ -13,6 +13,7 @@ namespace Spiral\Exceptions;
 
 use Throwable;
 use Generator;
+
 final class JsonHandler extends AbstractHandler
 {
     public function renderException(Throwable $e, int $verbosity = self::VERBOSITY_VERBOSE): string

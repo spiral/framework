@@ -13,6 +13,7 @@ namespace Spiral\Validation;
 
 use SplObjectStorage;
 use Generator;
+
 abstract class AbstractRule implements RuleInterface
 {
     /** @var SplObjectStorage|ConditionInterface[]|null */

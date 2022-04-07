@@ -17,6 +17,7 @@ use ReflectionProperty;
 use ReflectionParameter;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
+
 /**
  * A generator that returns a unique key associated with the
  * passed reflection object.

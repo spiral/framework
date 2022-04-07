@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Prototype\Exception;
 
 use Exception;
+
 class ClassNotDeclaredException extends Exception
 {
     public function __construct(string $filename)

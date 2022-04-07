@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Validation;
 
 use ArrayAccess;
+
 final class Validator extends AbstractValidator
 {
     /** @var array|ArrayAccess */

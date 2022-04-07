@@ -17,6 +17,7 @@ use ReflectionProperty;
 use ReflectionClassConstant;
 use ReflectionParameter;
 use Generator;
+
 abstract class Reader implements ReaderInterface
 {
     /**
