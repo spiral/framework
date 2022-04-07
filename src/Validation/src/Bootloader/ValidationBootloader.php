@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Bootloader\Security;
+namespace Spiral\Validation\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;

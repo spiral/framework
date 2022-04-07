@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Bootloader\Distribution;
+namespace Spiral\Distribution\Config;
 
 use Aws\Credentials\Credentials;
 use Aws\S3\S3Client;

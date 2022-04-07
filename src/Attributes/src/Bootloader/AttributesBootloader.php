@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Bootloader;
+namespace Spiral\Attributes\Bootloader;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
@@ -13,9 +13,6 @@ use Spiral\Core\Container;
 
 class AttributesBootloader extends Bootloader
 {
-    /**
-     * @param Container $container
-     */
     public function boot(Container $container): void
     {
         $container->bindSingleton(ReaderInterface::class, function () use ($container) {
