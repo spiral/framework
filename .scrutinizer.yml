@@ -11,7 +11,7 @@ build:
     before:
       - export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --arg key "dev-${SCRUTINIZER_BRANCH}" --raw-output '.["extra"]["branch-alias"][$key]' ${PATH_TO_COMPOSER_JSON_FILE})
   project_setup:
-	override:
+    override:
       - 'composer validate'
       - 'composer update --prefer-dist --no-interaction --no-progress'
   tests:
