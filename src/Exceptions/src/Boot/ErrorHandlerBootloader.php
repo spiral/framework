@@ -6,6 +6,8 @@ namespace Spiral\Exceptions\Boot;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Container;
+use Spiral\Core\FactoryInterface;
+use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\ErrorHandler;
 use Spiral\Exceptions\ErrorHandlerInterface;
 use Spiral\Exceptions\ErrorRendererInterface;
@@ -24,22 +26,39 @@ final class ErrorHandlerBootloader extends Bootloader
     protected const SINGLETONS = [
         ErrorRendererInterface::class => ErrorHandlerInterface::class,
         ErrorReporterInterface::class => ErrorHandlerInterface::class,
-        ErrorHandlerInterface::class => [self::class, 'createHandler'],
+        ErrorHandlerInterface::class => ErrorHandler::class,
     ];
+    private ErrorHandler $handler;
+
+    public function __construct(
+        private readonly FactoryInterface $factory
+    ) {
+        $this->handler = new ErrorHandler();
+    }
 
     public function boot(Container $container): void
     {
-        $handler = new ErrorHandler();
+        $container->bindSingleton($this->handler::class, $this->handler);
 
-
-        $handler->addRenderers(
+        $this->addRenderers(
             // $cli = $container->get(ConsoleRenderer::class),
-            $plain = $container->get(PlainRenderer::class),
-            $json = $container->get(JsonRenderer::class),
             $html = $container->get(HtmlRenderer::class),
+            $json = $container->get(JsonRenderer::class),
+            $plain = $container->get(PlainRenderer::class),
         );
+        $plain->defaultVerbosity = Verbosity::BASIC;
+    }
 
-        $container->bindSingleton(ErrorHandlerInterface::class, $handler);
-        $container->bindSingleton($handler::class, $handler);
+    /**
+     * @param ErrorRendererInterface|class-string<ErrorRendererInterface> ...$renderers
+     */
+    public function addRenderers(ErrorRendererInterface|string ...$renderers)
+    {
+        foreach ($renderers as $renderer) {
+            if (\is_string($renderer)) {
+                $renderer = $this->factory->make($renderer);
+            }
+            $this->handler->addRenderers($renderer);
+        }
     }
 }

@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Console;
 
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\Logger\DebugListener;
-use Spiral\Exceptions\Renderer\ConsoleRenderer;
+use Spiral\Exceptions\ErrorHandlerInterface;
 use Spiral\Exceptions\Verbosity;
-use Spiral\Snapshots\SnapshotterInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -27,7 +25,8 @@ final class ConsoleDispatcher implements DispatcherInterface
     public function __construct(
         private readonly EnvironmentInterface $env,
         private readonly FinalizerInterface $finalizer,
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
+        private readonly ErrorHandlerInterface $errorHandler,
     ) {
     }
 
@@ -62,17 +61,18 @@ final class ConsoleDispatcher implements DispatcherInterface
         }
     }
 
-    protected function handleException(Throwable $e, OutputInterface $output): void
+    protected function handleException(Throwable $exception, OutputInterface $output): void
     {
-        try {
-            $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (Throwable | ContainerExceptionInterface) {
-            // no need to notify when unable to register an exception
+        if ($this->errorHandler->shouldReport($exception)) {
+            $this->errorHandler->report($exception);
         }
-
-        // Explaining exception to the user
-        $handler = new ConsoleRenderer(STDERR);
-        $output->write($handler->render($e, verbosity: $this->mapVerbosity($output)));
+        $output->write(
+            $this->errorHandler->render(
+                $exception,
+                verbosity: $this->mapVerbosity($output),
+                format: 'cli',
+            )
+        );
     }
 
     private function mapVerbosity(OutputInterface $output): Verbosity

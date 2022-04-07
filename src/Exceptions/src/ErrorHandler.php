@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
-use Psr\Container\ContainerInterface;
-
 class ErrorHandler implements ErrorHandlerInterface
 {
     /** @var array<int, ErrorRendererInterface> */
@@ -18,21 +16,14 @@ class ErrorHandler implements ErrorHandlerInterface
 
     public function getRenderer(?string $format = null): ?ErrorRendererInterface
     {
-        if ($format === null) {
-            return \current($this->renderers);
-        }
-        foreach ($this->renderers as $renderer) {
-            if ($renderer->canRender($format)) {
-                return $renderer;
+        if ($format !== null) {
+            foreach ($this->renderers as $renderer) {
+                if ($renderer->canRender($format)) {
+                    return $renderer;
+                }
             }
         }
-        return null;
-    }
-
-    public function shouldReport(\Throwable $exception): bool
-    {
-        // todo
-        return false;
+        return $renderer ?? null;
     }
 
     public function render(
@@ -48,8 +39,16 @@ class ErrorHandler implements ErrorHandlerInterface
         return $this->getRenderer($format) !== null;
     }
 
+    public function shouldReport(\Throwable $exception): bool
+    {
+        // todo
+        return true;
+    }
+
     public function report(\Throwable $exception, Verbosity $verbosity = null): void
     {
+        // echo ' >>"' . $exception->getMessage() . '"<< ';
+        echo $this->render($exception, verbosity: Verbosity::VERBOSE);
         // TODO: Implement report() method.
     }
 }

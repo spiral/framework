@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Middleware;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
+use Spiral\Debug\StateConsumerInterface;
 use Spiral\Debug\StateInterface;
-use Spiral\Exceptions\HtmlHandler;
-use Spiral\Exceptions\JsonHandler;
+use Spiral\Exceptions\ErrorHandlerInterface;
+use Spiral\Exceptions\ErrorRendererInterface;
+use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\Exception\ClientException;
+use Spiral\Http\Header\AcceptHeader;
 use Spiral\Http\Middleware\ErrorHandlerMiddleware\SuppressErrorsInterface;
 use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Router\Exception\RouterException;
-use Spiral\Snapshots\SnapshotterInterface;
 
 /**
  * Wraps Client and Routing exceptions into proper response.
@@ -27,13 +27,13 @@ use Spiral\Snapshots\SnapshotterInterface;
 final class ErrorHandlerMiddleware implements MiddlewareInterface
 {
     use LoggerTrait;
+    private ?string $fallbackFormat = 'text/html';
 
     public function __construct(
         private readonly SuppressErrorsInterface $suppressErrors,
         private readonly RendererInterface $renderer,
         private readonly ResponseFactoryInterface $responseFactory,
-        /** @internal */
-        private readonly ContainerInterface $container
+        private readonly ErrorHandlerInterface $errorHandler,
     ) {
     }
 
@@ -46,28 +46,23 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (ClientException | RouterException $e) {
-            if ($e instanceof ClientException) {
-                $code = $e->getCode();
-            } else {
-                $code = 404;
-            }
+            $code = $e instanceof ClientException ? $e->getCode() : 404;
         } catch (\Throwable $e) {
-            $snapshotter = $this->getOptional(SnapshotterInterface::class);
-            if ($snapshotter !== null) {
-                /** @var SnapshotterInterface $snapshotter */
-                $snapshotter->register($e);
+            if ($this->errorHandler->shouldReport($e)) {
+                $this->errorHandler->report($e);
             }
 
             if (!$this->suppressErrors->suppressed()) {
                 return $this->renderError($request, $e);
             }
-
             $code = 500;
         }
 
+
         $this->logError($request, $code, $e->getMessage());
 
-        return $this->renderer->renderException($request, $code, $e->getMessage());
+        $response = $this->renderer->renderException($request, $code, $e->getMessage());
+        echo $response->getBody(); die;
     }
 
     /**
@@ -75,31 +70,43 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
      */
     private function renderError(Request $request, \Throwable $e): Response
     {
+        echo "\n<br> RENDER IN " . self::class;
         $response = $this->responseFactory->createResponse(500);
 
-        if ($request->getHeaderLine('Accept') === 'application/json') {
-            $response = $response->withHeader('Content-Type', 'application/json');
-            $handler = new JsonHandler();
-            $response->getBody()->write(
-                \json_encode(
-                    ['status' => 500]
-                    + \json_decode(
-                        $handler->renderException($e, JsonHandler::VERBOSITY_VERBOSE),
-                        true
-                    )
-                )
-            );
-        } else {
-            $handler = new HtmlHandler();
-            $state = $this->getOptional(StateInterface::class);
-            if ($state !== null) {
-                $handler = $handler->withState($state);
-            }
+        [$format, $renderer] = $this->getRenderer($this->errorHandler, $request);
 
-            $response->getBody()->write($handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE));
+        if ($format !== null) {
+            $response = $response->withHeader('Content-Type', $format . '; charset=UTF-8');
         }
 
+        $response->getBody()->write(
+            (string) $renderer?->render(
+                exception: $e,
+                // verbosity: \Spiral\Exceptions\Verbosity::VERBOSE,
+                verbosity: null,
+                format: $format
+            )
+        );
+        echo $response->getBody(); die;
         return $response;
+    }
+
+    /**
+     * @return array{string|null, ErrorRendererInterface|null}
+     */
+    private function getRenderer(ErrorHandlerInterface $handler, Request $request): array
+    {
+        if ($request->hasHeader('Accept')) {
+            $acceptItems = AcceptHeader::fromString($request->getHeaderLine('Accept'))->getAll();
+            foreach ($acceptItems as $item) {
+                $format = $item->getValue();
+                $renderer = $handler->getRenderer($format);
+                if ($renderer !== null) {
+                    return [$format, $renderer];
+                }
+            }
+        }
+        return [null, $handler->getRenderer()];
     }
 
     private function logError(Request $request, int $code, string $message): void
@@ -115,14 +122,5 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                 $request->getServerParams()['REMOTE_ADDR'] ?? '127.0.0.1'
             )
         );
-    }
-
-    private function getOptional(string $class): mixed
-    {
-        try {
-            return $this->container->get($class);
-        } catch (\Throwable) {
-            return null;
-        }
     }
 }

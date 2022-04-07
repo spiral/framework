@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions\Renderer;
 
+use Spiral\Core\ContainerScope;
 use Spiral\Debug\Dumper;
 use Spiral\Debug\Renderer\HtmlRenderer as DebugRenderer;
 use Spiral\Debug\StateConsumerInterface;
@@ -57,55 +58,69 @@ final class HtmlRenderer extends AbstractRenderer implements StateConsumerInterf
         ?Verbosity $verbosity = null,
         string $format = null
     ): string {
-        $verbosity ??= $this->defaultVerbosity;
+        $renderer = $this;
+        // getting state if possible
+        if ($this->state === null) {
+            $container = ContainerScope::getContainer();
+            try {
+                $state = $container?->get(StateInterface::class);
+            } catch (\Throwable) {
+                $state = null;
+            }
+            if ($state !== null) {
+                $renderer = $this->withState($state);
+            }
+        }
+
+        $verbosity ??= $renderer->defaultVerbosity;
         $options = [
-            'message'      => $this->getMessage($exception),
+            'message'      => $renderer->getMessage($exception),
             'exception'    => $exception,
-            'valueWrapper' => new ValueWrapper($this->dumper, $this->renderer, $verbosity),
-            'style'        => $this->renderTemplate('styles/' . $this->style),
-            'footer'       => $this->renderTemplate('partials/footer'),
+            'valueWrapper' => new ValueWrapper($renderer->dumper, $renderer->renderer, $verbosity),
+            'style'        => $renderer->renderTemplate('styles/' . $renderer->style),
+            'footer'       => $renderer->renderTemplate('partials/footer'),
             'variables'    => '',
             'logs'         => '',
             'tags'         => '',
         ];
 
-        $options['stacktrace'] = $this->renderTemplate('partials/stacktrace', [
+        $options['stacktrace'] = $renderer->renderTemplate('partials/stacktrace', [
             'exception'    => $exception,
-            'stacktrace'   => $this->getStacktrace($exception),
-            'dumper'       => $this->dumper,
-            'renderer'     => $this->renderer,
-            'highlighter'  => $this->highlighter,
+            'stacktrace'   => $renderer->getStacktrace($exception),
+            'dumper'       => $renderer->dumper,
+            'renderer'     => $renderer->renderer,
+            'highlighter'  => $renderer->highlighter,
             'valueWrapper' => $options['valueWrapper'],
             'showSource'   => $verbosity->value >= Verbosity::VERBOSE->value,
         ]);
 
-        $options['chain'] = $this->renderTemplate('partials/chain', [
+        $options['chain'] = $renderer->renderTemplate('partials/chain', [
             'exception'    => $exception,
-            'stacktrace'   => $this->getStacktrace($exception),
+            'stacktrace'   => $renderer->getStacktrace($exception),
             'valueWrapper' => $options['valueWrapper'],
         ]);
 
-        if ($this->state !== null) {
-            if ($this->state->getTags() !== []) {
-                $options['tags'] = $this->renderTemplate('partials/tags', [
-                    'tags' => $this->state->getTags(),
+        if ($renderer->state !== null) {
+            if ($renderer->state->getTags() !== []) {
+                $options['tags'] = $renderer->renderTemplate('partials/tags', [
+                    'tags' => $renderer->state->getTags(),
                 ]);
             }
 
-            if ($this->state->getLogEvents() !== []) {
-                $options['logs'] = $this->renderTemplate('partials/logs', [
-                    'logEvents' => $this->state->getLogEvents(),
+            if ($renderer->state->getLogEvents() !== []) {
+                $options['logs'] = $renderer->renderTemplate('partials/logs', [
+                    'logEvents' => $renderer->state->getLogEvents(),
                 ]);
             }
 
-            if ($this->state->getVariables() !== []) {
-                $options['variables'] = $this->renderTemplate('partials/variables', [
-                    'variables' => $this->state->getVariables(),
+            if ($renderer->state->getVariables() !== []) {
+                $options['variables'] = $renderer->renderTemplate('partials/variables', [
+                    'variables' => $renderer->state->getVariables(),
                 ]);
             }
         }
 
-        return $this->renderTemplate('exception', $options);
+        return $renderer->renderTemplate('exception', $options);
     }
 
     /**

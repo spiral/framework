@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Failed;
 
-use Spiral\Snapshots\SnapshotterInterface;
+use Spiral\Exceptions\ErrorHandlerInterface;
 
 final class LogFailedJobHandler implements FailedJobHandlerInterface
 {
     public function __construct(
-        private readonly SnapshotterInterface $snapshotter
+        private readonly ErrorHandlerInterface $errorhandler
     ) {
     }
 
     public function handle(string $driver, string $queue, string $job, array $payload, \Throwable $e): void
     {
-        $this->snapshotter->register($e);
+        $this->errorhandler->shouldReport($e) && $this->errorhandler->report($e);
     }
 }

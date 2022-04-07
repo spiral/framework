@@ -9,17 +9,16 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\FinalizerInterface;
-use Spiral\Debug\StateInterface;
+use Spiral\Exceptions\ErrorHandlerInterface;
 use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Exceptions\Verbosity;
-use Spiral\Snapshots\SnapshotInterface;
-use Spiral\Snapshots\SnapshotterInterface;
 
 final class SapiDispatcher implements DispatcherInterface
 {
     public function __construct(
         private readonly FinalizerInterface $finalizer,
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
+        private readonly ErrorHandlerInterface $errorHandler,
     ) {
     }
 
@@ -31,15 +30,15 @@ final class SapiDispatcher implements DispatcherInterface
     public function serve(EmitterInterface $emitter = null): void
     {
         // On demand to save some memory.
-
-        /**
-         * @var Http             $http
-         * @var EmitterInterface $emitter
-         */
         $http = $this->container->get(Http::class);
         $emitter = $emitter ?? $this->container->get(EmitterInterface::class);
 
         try {
+            echo \count($http->getPipeline()->middleware) . ":<br>\n";
+            foreach ($http->getPipeline()->middleware as $mw) {
+                echo $mw::class . "<br>\n";
+            }
+            echo 'Handler: ' . $http->handler::class . "<br>\n";
             $response = $http->handle($this->initRequest());
             $emitter->emit($response);
         } catch (\Throwable $e) {
@@ -56,20 +55,8 @@ final class SapiDispatcher implements DispatcherInterface
 
     protected function handleException(EmitterInterface $emitter, \Throwable $e): void
     {
-        $handler = new HtmlRenderer();
-
-        try {
-            /** @var SnapshotInterface $snapshot */
-            $this->container->get(SnapshotterInterface::class)->register($e);
-
-            // on demand
-            $state = $this->container->get(StateInterface::class);
-            if ($state !== null) {
-                $handler = $handler->withState($state);
-            }
-        } catch (\Throwable) {
-            // nothing to report
-        }
+        $handler = $this->errorHandler->getRenderer('html') ?? new HtmlRenderer();
+        $this->errorHandler->shouldReport($e) && $this->errorHandler->report($e);
 
         /** @var ResponseFactoryInterface $responseFactory */
         $responseFactory = $this->container->get(ResponseFactoryInterface::class);
