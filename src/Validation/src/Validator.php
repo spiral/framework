@@ -19,7 +19,7 @@ final class Validator extends AbstractValidator
     private $data;
 
     /**
-     * @param null|array|ArrayAccess $data
+     * @param array|ArrayAccess $data
      * @param mixed              $context
      */
     public function __construct($data, array $rules, $context, RulesInterface $ruleProvider)
