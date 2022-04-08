@@ -15,11 +15,11 @@ use ArrayAccess;
 
 final class Validator extends AbstractValidator
 {
-    /** @var array|ArrayAccess */
+    /** @var null|array|ArrayAccess */
     private $data;
 
     /**
-     * @param array|ArrayAccess $data
+     * @param null|array|ArrayAccess $data
      * @param mixed              $context
      */
     public function __construct($data, array $rules, $context, RulesInterface $ruleProvider)
@@ -33,7 +33,7 @@ final class Validator extends AbstractValidator
      */
     public function __destruct()
     {
-        $this->data = [];
+        $this->data = null;
         parent::__destruct();
     }
 
