@@ -24,8 +24,8 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionClass $class The reflection instance of the class from
-    which the class annotations should be read.
+    * @param ReflectionClass $class The reflection instance of the class from
+    *      which the class annotations should be read.
     * @param class-string<T>|null $name The class name of the annotation
     *      and/or attribute.
     *
@@ -38,8 +38,8 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionClass $class The reflection instance of the class from
-    which the class annotations should be read.
+    * @param ReflectionClass $class The reflection instance of the class from
+    *       which the class annotations should be read.
     * @param class-string<T> $name The class name of the annotation
     *      and/or attribute.
     *
@@ -54,9 +54,9 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionFunctionAbstract $function The reflection instance of
-    the function or method from which the function annotations should
-    be read.
+    * @param ReflectionFunctionAbstract $function The reflection instance of
+    *       the function or method from which the function annotations should
+    *       be read.
     * @param class-string<T>|null $name The class name of the annotation
     *      and/or attribute.
     *
@@ -69,9 +69,9 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionFunctionAbstract $function The reflection instance of
-    the function or method from which the function annotations should
-    be read.
+    * @param ReflectionFunctionAbstract $function The reflection instance of
+    *       the function or method from which the function annotations should
+    *       be read.
     * @param class-string<T> $name The class name of the annotation and/or
     *      attribute.
     *
@@ -85,8 +85,8 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionProperty $property The reflection instance of the
-    property from which the property annotations should be read.
+    * @param ReflectionProperty $property The reflection instance of the
+    *       property from which the property annotations should be read.
     * @param class-string<T>|null $name The class name of the annotation
     *      and/or attribute.
     *
@@ -99,8 +99,8 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionProperty $property The reflection instance of the
-    property from which the property annotations should be read.
+    * @param ReflectionProperty $property The reflection instance of the
+    *       property from which the property annotations should be read.
     * @param class-string<T> $name The class name of the annotation and/or
     *      attribute.
     *
@@ -114,8 +114,8 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionClassConstant $constant The reflection instance of the
-    class constant from which the constant annotations should be read.
+    * @param ReflectionClassConstant $constant The reflection instance of the
+    *       class constant from which the constant annotations should be read.
     * @param class-string<T>|null $name The class name of the annotation
     *      and/or attribute.
     *
@@ -128,8 +128,8 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionClassConstant $constant The reflection instance of the
-    class constant from which the constant annotations should be read.
+    * @param ReflectionClassConstant $constant The reflection instance of the
+    *       class constant from which the constant annotations should be read.
     * @param class-string<T> $name The class name of the annotation and/or
     *      attribute.
     *
@@ -144,8 +144,8 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionParameter $parameter The reflection instance of the
-    parameter from which the parameter annotations should be read.
+    * @param ReflectionParameter $parameter The reflection instance of the
+    *       parameter from which the parameter annotations should be read.
     * @param class-string<T>|null $name The class name of the annotation
     *      and/or attribute.
     *
@@ -158,8 +158,8 @@ interface ReaderInterface
     *
     * @template T
     *
-     * @param ReflectionParameter $parameter The reflection instance of the
-    parameter from which the parameter annotations should be read.
+    * @param ReflectionParameter $parameter The reflection instance of the
+    *       parameter from which the parameter annotations should be read.
     * @param class-string<T> $name The class name of the annotation and/or
     *      attribute.
     *
