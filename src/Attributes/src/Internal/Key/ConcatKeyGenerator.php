@@ -57,7 +57,7 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
      */
     public function forClass(ReflectionClass $class): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forClass($class));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forClass($class));
     }
 
     /**
@@ -65,7 +65,7 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
      */
     public function forProperty(ReflectionProperty $prop): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forProperty($prop));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forProperty($prop));
     }
 
     /**
@@ -73,7 +73,7 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
      */
     public function forConstant(ReflectionClassConstant $const): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forConstant($const));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forConstant($const));
     }
 
     /**
@@ -81,7 +81,7 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
      */
     public function forFunction(ReflectionFunctionAbstract $fn): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forFunction($fn));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forFunction($fn));
     }
 
     /**
@@ -89,7 +89,7 @@ final class ConcatKeyGenerator implements KeyGeneratorInterface
      */
     public function forParameter(ReflectionParameter $param): string
     {
-        return $this->joinBy(static fn(KeyGeneratorInterface $generator): string => $generator->forParameter($param));
+        return $this->joinBy(static fn (KeyGeneratorInterface $generator): string => $generator->forParameter($param));
     }
 
     /**

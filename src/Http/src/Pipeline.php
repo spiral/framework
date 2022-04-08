@@ -74,6 +74,6 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             return $this->middleware[$position]->process($request, $this);
         }
 
-        return $this->scope->runScope([Request::class => $request], fn() => $this->handler->handle($request));
+        return $this->scope->runScope([Request::class => $request], fn () => $this->handler->handle($request));
     }
 }

@@ -63,7 +63,7 @@ final class Console
         $input ??= new ArgvInput();
         $output ??= new ConsoleOutput();
 
-        return ContainerScope::runScope($this->container, fn() => $this->run(
+        return ContainerScope::runScope($this->container, fn () => $this->run(
             $input->getFirstArgument() ?? 'list',
             $input,
             $output
@@ -94,7 +94,7 @@ final class Console
             $input = new InputProxy($input, ['firstArgument' => $command]);
         }
 
-        $code = ContainerScope::runScope($this->container, fn() => $this->getApplication()->doRun($input, $output));
+        $code = ContainerScope::runScope($this->container, fn () => $this->getApplication()->doRun($input, $output));
 
         return new CommandOutput($code ?? self::CODE_NONE, $output);
     }

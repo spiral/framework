@@ -37,7 +37,7 @@ final class ContextProcessor implements ProcessorInterface
     {
         return $source->withCode(preg_replace_callback(
             $this->pattern,
-            static fn($matches) =>
+            static fn ($matches) =>
             $context->resolveValue($matches[1]),
             $source->getCode()
         ));

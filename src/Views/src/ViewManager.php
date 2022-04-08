@@ -71,7 +71,7 @@ final class ViewManager implements ViewsInterface
 
         \uasort(
             $this->engines,
-            static fn(EngineInterface $a, EngineInterface $b) =>
+            static fn (EngineInterface $a, EngineInterface $b) =>
             \strcmp($a->getLoader()->getExtension(), $b->getLoader()->getExtension())
         );
 
