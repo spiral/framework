@@ -8,10 +8,17 @@ class ErrorHandler implements ErrorHandlerInterface
 {
     /** @var array<int, ErrorRendererInterface> */
     private array $renderers = [];
+    /** @var array<int, ErrorReporterInterface> */
+    private array $reporters = [];
 
     public function addRenderers(ErrorRendererInterface ...$renderers): void
     {
         $this->renderers = \array_merge($this->renderers, $renderers);
+    }
+
+    public function addReporters(ErrorReporterInterface ...$reporters): void
+    {
+        $this->reporters = \array_merge($this->reporters, $reporters);
     }
 
     public function getRenderer(?string $format = null): ?ErrorRendererInterface

@@ -7,15 +7,14 @@ namespace Spiral\Exceptions\Boot;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
-use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\ErrorHandler;
 use Spiral\Exceptions\ErrorHandlerInterface;
 use Spiral\Exceptions\ErrorRendererInterface;
 use Spiral\Exceptions\ErrorReporterInterface;
-use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Exceptions\Renderer\JsonRenderer;
 use Spiral\Exceptions\Renderer\PlainRenderer;
+use Spiral\Exceptions\Reporter\SnapshotterReporter;
 use Spiral\Exceptions\Verbosity;
 
 /**
@@ -47,6 +46,9 @@ final class ErrorHandlerBootloader extends Bootloader
             $plain = $container->get(PlainRenderer::class),
         );
         $plain->defaultVerbosity = Verbosity::BASIC;
+        $this->addReporters(
+            SnapshotterReporter::class,
+        );
     }
 
     /**
@@ -59,6 +61,19 @@ final class ErrorHandlerBootloader extends Bootloader
                 $renderer = $this->factory->make($renderer);
             }
             $this->handler->addRenderers($renderer);
+        }
+    }
+
+    /**
+     * @param ErrorReporterInterface|class-string<ErrorReporterInterface> ...$reporters
+     */
+    public function addReporters(ErrorReporterInterface|string ...$reporters)
+    {
+        foreach ($reporters as $reporter) {
+            if (\is_string($reporter)) {
+                $reporter = $this->factory->make($reporter);
+            }
+            $this->handler->addRenderers($reporter);
         }
     }
 }

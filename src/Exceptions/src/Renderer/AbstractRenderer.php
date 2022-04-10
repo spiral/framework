@@ -14,7 +14,7 @@ abstract class AbstractRenderer implements ErrorRendererInterface
 {
     /** @var non-empty-string[] Lower case format string */
     protected const FORMATS = [];
-    protected Verbosity $defaultVerbosity = Verbosity::BASIC;
+    public Verbosity $defaultVerbosity = Verbosity::BASIC;
 
     public function canRender(string $format): bool
     {
