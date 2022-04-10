@@ -15,7 +15,7 @@ class SnapshotterReporter implements ErrorReporterInterface
     ) {
     }
 
-    public function report(\Throwable $exception, Verbosity $verbosity = null,): void
+    public function report(\Throwable $exception, Verbosity $verbosity = null): void
     {
         $this->snapshotter->register($exception);
     }
