@@ -32,6 +32,10 @@ final class SapiDispatcher implements DispatcherInterface
     {
         // On demand to save some memory.
 
+        // Disable buffering
+        while (\ob_get_level() > 0) {
+            \ob_end_flush();
+        }
         /**
          * @var Http             $http
          * @var EmitterInterface $emitter

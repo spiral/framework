@@ -74,7 +74,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ],
         'require'      => [
-            'laminas/laminas-diactoros' => '^2.4',
+            'laminas/laminas-diactoros' => '^2.8',
             'spiral/composer-publish-plugin' => '^1.0',
         ],
         'autoload-dev' => [
@@ -85,11 +85,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         'require-dev'  => [
             'phpunit/phpunit'           => '^8.5|^9.5',
-            'mockery/mockery'           => '^1.3',
+            'mockery/mockery'           => '^1.5',
             'spiral/code-style'         => '^1.0',
             'laminas/laminas-hydrator'  => '^3.0|^4.0',
             'symplify/monorepo-builder' => '^10.0',
-            'vimeo/psalm'               => '^4.3',
+            'vimeo/psalm'               => '^4.22',
         ],
     ]);
 

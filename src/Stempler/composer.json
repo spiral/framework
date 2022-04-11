@@ -21,8 +21,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5.5",
-        "mockery/mockery": "^1.3.5",
-        "spiral/dumper": "^2.12"
+        "mockery/mockery": "^1.5",
+        "spiral/dumper": "^2.13"
     },
     "autoload": {
         "files": [
@@ -39,7 +39,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.12.x-dev"
+            "dev-master": "2.13.x-dev"
         }
     },
     "config": {
