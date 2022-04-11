@@ -35,7 +35,7 @@ class ErrorHandler implements ErrorHandlerInterface
                 }
             }
         }
-        return $renderer ?? null;
+        return $this->renderers[\array_key_last($this->renderers)];
     }
 
     public function render(

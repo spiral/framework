@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Boot;
 
 use Spiral\Boot\Exception\FatalException;
-use Spiral\Exceptions\Renderer\AbstractRenderer;
 use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Exceptions\Verbosity;
