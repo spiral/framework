@@ -75,7 +75,7 @@ final class SapiEmitter implements EmitterInterface
      */
     private function assertNoPreviousOutput(): void
     {
-        if (\headers_sent()) {
+        if (headers_sent()) {
             throw new EmitterException('Unable to emit response, headers already send.');
         }
 
@@ -123,7 +123,7 @@ final class SapiEmitter implements EmitterInterface
             $name = $this->filterHeader($header);
             $first = $name === 'Set-Cookie' ? false : true;
             foreach ($values as $value) {
-                \header(\sprintf(
+                header(\sprintf(
                     '%s: %s',
                     $name,
                     $value
