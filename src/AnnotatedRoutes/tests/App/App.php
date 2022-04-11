@@ -13,6 +13,7 @@ namespace Spiral\Tests\Router\App;
 
 use Spiral\Bootloader\Http\DiactorosBootloader;
 use Spiral\Console\Console;
+use Spiral\Exceptions\Boot\ErrorHandlerBootloader;
 use Spiral\Framework\Kernel;
 use Spiral\Http\Http;
 use Spiral\Router\Bootloader\AnnotatedRoutesBootloader;
@@ -21,7 +22,8 @@ class App extends Kernel
 {
     protected const LOAD = [
         DiactorosBootloader::class,
-        AnnotatedRoutesBootloader::class
+        AnnotatedRoutesBootloader::class,
+        ErrorHandlerBootloader::class,
     ];
 
     public function getHttp(): Http

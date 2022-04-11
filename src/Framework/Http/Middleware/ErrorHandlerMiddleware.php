@@ -48,9 +48,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         } catch (ClientException | RouterException $e) {
             $code = $e instanceof ClientException ? $e->getCode() : 404;
         } catch (\Throwable $e) {
-            if ($this->errorHandler->shouldReport($e)) {
-                $this->errorHandler->report($e);
-            }
+            $this->errorHandler->report($e);
 
             if (!$this->suppressErrors->suppressed()) {
                 return $this->renderError($request, $e);

@@ -20,6 +20,7 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
+use Spiral\Exceptions\Boot\ErrorHandlerBootloader;
 use Spiral\Framework\Kernel;
 use Spiral\Stempler\Bootloader\StemplerBootloader;
 
@@ -70,6 +71,7 @@ class TestApp extends Kernel
         Bootloader\CommandBootloader::class,
 
         // Debug and debug extensions
+        ErrorHandlerBootloader::class,
         Bootloader\DebugBootloader::class,
         Bootloader\Debug\LogCollectorBootloader::class,
         Bootloader\Debug\HttpCollectorBootloader::class

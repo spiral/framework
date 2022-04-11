@@ -63,9 +63,7 @@ final class ConsoleDispatcher implements DispatcherInterface
 
     protected function handleException(Throwable $exception, OutputInterface $output): void
     {
-        if ($this->errorHandler->shouldReport($exception)) {
-            $this->errorHandler->report($exception);
-        }
+        $this->errorHandler->report($exception);
         $output->write(
             $this->errorHandler->render(
                 $exception,

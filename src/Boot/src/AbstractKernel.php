@@ -74,7 +74,7 @@ abstract class AbstractKernel implements KernelInterface
     public static function create(
         array $directories,
         bool $handleErrors = true
-    ): self {
+    ): static {
         if ($handleErrors) {
             ExceptionHandler::register();
         }

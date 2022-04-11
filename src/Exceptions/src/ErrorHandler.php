@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
+use Closure;
+
 class ErrorHandler implements ErrorHandlerInterface
 {
     /** @var array<int, ErrorRendererInterface> */
     private array $renderers = [];
-    /** @var array<int, ErrorReporterInterface> */
+    /** @var array<int, ErrorReporterInterface|Closure> */
     private array $reporters = [];
 
     public function addRenderers(ErrorRendererInterface ...$renderers): void
@@ -16,7 +18,10 @@ class ErrorHandler implements ErrorHandlerInterface
         $this->renderers = \array_merge($this->renderers, $renderers);
     }
 
-    public function addReporters(ErrorReporterInterface ...$reporters): void
+    /**
+     * @param ErrorReporterInterface|Closure(\Throwable):void ...$reporters
+     */
+    public function addReporters(ErrorReporterInterface|Closure ...$reporters): void
     {
         $this->reporters = \array_merge($this->reporters, $reporters);
     }
@@ -46,16 +51,14 @@ class ErrorHandler implements ErrorHandlerInterface
         return $this->getRenderer($format) !== null;
     }
 
-    public function shouldReport(\Throwable $exception): bool
+    public function report(\Throwable $exception): void
     {
-        // todo
-        return true;
-    }
-
-    public function report(\Throwable $exception, Verbosity $verbosity = null): void
-    {
-        // echo ' >>"' . $exception->getMessage() . '"<< ';
-        echo $this->render($exception, verbosity: Verbosity::VERBOSE);
-        // TODO: Implement report() method.
+        foreach ($this->reporters as $reporter) {
+            if ($reporter instanceof ErrorReporterInterface) {
+                $reporter->report($exception);
+            } else {
+                $reporter($exception);
+            }
+        }
     }
 }

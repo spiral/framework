@@ -56,7 +56,7 @@ final class SapiDispatcher implements DispatcherInterface
     protected function handleException(EmitterInterface $emitter, \Throwable $e): void
     {
         $handler = $this->errorHandler->getRenderer('html') ?? new HtmlRenderer();
-        $this->errorHandler->shouldReport($e) && $this->errorHandler->report($e);
+        $this->errorHandler->report($e);
 
         /** @var ResponseFactoryInterface $responseFactory */
         $responseFactory = $this->container->get(ResponseFactoryInterface::class);

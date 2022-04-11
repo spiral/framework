@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions\Boot;
 
+use Closure;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
@@ -47,7 +48,9 @@ final class ErrorHandlerBootloader extends Bootloader
         );
         $plain->defaultVerbosity = Verbosity::BASIC;
         $this->addReporters(
-            SnapshotterReporter::class,
+            function (\Throwable $exception) {
+                $this->factory->make(SnapshotterReporter::class)->report($exception);
+            }
         );
     }
 
@@ -65,15 +68,15 @@ final class ErrorHandlerBootloader extends Bootloader
     }
 
     /**
-     * @param ErrorReporterInterface|class-string<ErrorReporterInterface> ...$reporters
+     * @param ErrorReporterInterface|Closure(\Throwable):void|class-string<ErrorReporterInterface> ...$reporters
      */
-    public function addReporters(ErrorReporterInterface|string ...$reporters)
+    public function addReporters(ErrorReporterInterface|\Closure|string ...$reporters)
     {
         foreach ($reporters as $reporter) {
             if (\is_string($reporter)) {
                 $reporter = $this->factory->make($reporter);
             }
-            $this->handler->addRenderers($reporter);
+            $this->handler->addReporters($reporter);
         }
     }
 }
