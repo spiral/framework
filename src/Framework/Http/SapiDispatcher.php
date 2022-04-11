@@ -34,11 +34,6 @@ final class SapiDispatcher implements DispatcherInterface
         $emitter = $emitter ?? $this->container->get(EmitterInterface::class);
 
         try {
-            echo \count($http->getPipeline()->middleware) . ":<br>\n";
-            foreach ($http->getPipeline()->middleware as $mw) {
-                echo $mw::class . "<br>\n";
-            }
-            echo 'Handler: ' . $http->handler::class . "<br>\n";
             $response = $http->handle($this->initRequest());
             $emitter->emit($response);
         } catch (\Throwable $e) {
