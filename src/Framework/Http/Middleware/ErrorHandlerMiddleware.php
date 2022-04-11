@@ -9,11 +9,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
-use Spiral\Debug\StateConsumerInterface;
-use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\ErrorHandlerInterface;
 use Spiral\Exceptions\ErrorRendererInterface;
-use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Header\AcceptHeader;
@@ -27,6 +24,7 @@ use Spiral\Router\Exception\RouterException;
 final class ErrorHandlerMiddleware implements MiddlewareInterface
 {
     use LoggerTrait;
+
     private ?string $fallbackFormat = 'text/html';
 
     public function __construct(
@@ -45,7 +43,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     {
         try {
             return $handler->handle($request);
-        } catch (ClientException | RouterException $e) {
+        } catch (ClientException|RouterException $e) {
             $code = $e instanceof ClientException ? $e->getCode() : 404;
         } catch (\Throwable $e) {
             $this->errorHandler->report($e);
@@ -56,12 +54,9 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
             $code = 500;
         }
 
-
         $this->logError($request, $code, $e->getMessage());
 
-        $response = $this->renderer->renderException($request, $code, $e->getMessage());
-        echo $response->getBody();
-        die;
+        return $this->renderer->renderException($request, $code, $e->getMessage());
     }
 
     /**
@@ -69,7 +64,6 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
      */
     private function renderError(Request $request, \Throwable $e): Response
     {
-        echo "\n<br> RENDER IN " . self::class;
         $response = $this->responseFactory->createResponse(500);
 
         [$format, $renderer] = $this->getRenderer($this->errorHandler, $request);
@@ -79,15 +73,12 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         }
 
         $response->getBody()->write(
-            (string) $renderer?->render(
+            (string)$renderer?->render(
                 exception: $e,
-                // verbosity: \Spiral\Exceptions\Verbosity::VERBOSE,
                 verbosity: null,
                 format: $format
             )
         );
-        echo $response->getBody();
-        die;
         return $response;
     }
 
