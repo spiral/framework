@@ -7,6 +7,8 @@ on:
       - '*'
     branches:
       - 'master'
+      - '2.12'
+      - '3.*'
 
 jobs:
   split_monorepo:
@@ -125,7 +127,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
-          branch: "master"
+          branch: ${GITHUB_REF##*/}
           package_directory: 'src/${{ matrix.package.local_path }}'
           repository_organization: 'spiral'
           repository_name: '${{ matrix.package.split_repository }}'
@@ -140,7 +142,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
           tag: ${GITHUB_REF#refs/tags/}
-          branch: "master"
+          branch: ${GITHUB_REF##*/}
           package_directory: 'src/${{ matrix.package.local_path }}'
           repository_organization: 'spiral'
           repository_name: '${{ matrix.package.split_repository }}'
