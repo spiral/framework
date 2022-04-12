@@ -44,9 +44,9 @@ final class ErrorHandlerBootloader extends Bootloader
             // $cli = $container->get(ConsoleRenderer::class),
             $html = $container->get(HtmlRenderer::class),
             $json = $container->get(JsonRenderer::class),
-            $plain = $container->get(PlainRenderer::class),
+            // $plain = $container->get(PlainRenderer::class),
         );
-        $plain->defaultVerbosity = Verbosity::BASIC;
+        // $plain->defaultVerbosity = Verbosity::BASIC;
         $this->addReporters(
             function (\Throwable $exception) {
                 $this->factory->make(SnapshotterReporter::class)->report($exception);
