@@ -18,9 +18,9 @@ use Spiral\Boot\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader;
+use Spiral\Bootloader\ErrorHandlerBootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
-use Spiral\Exceptions\Boot\ErrorHandlerBootloader;
 use Spiral\Framework\Kernel;
 use Spiral\Stempler\Bootloader\StemplerBootloader;
 

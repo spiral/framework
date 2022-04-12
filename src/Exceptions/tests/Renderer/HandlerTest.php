@@ -13,38 +13,38 @@ use Spiral\Exceptions\Renderer\PlainRenderer;
 
 class HandlerTest extends TestCase
 {
-    // public function testGetMessage(): void
-    // {
-    //     $handler = new ConsoleHandler();
-    //
-    //     $this->assertStringContainsString('Error', $handler->getMessage(new Error(
-    //         'message',
-    //         100,
-    //         __FILE__,
-    //         __LINE__
-    //     )));
-    //
-    //     $this->assertStringContainsString('message', $handler->getMessage(new Error(
-    //         'message',
-    //         100,
-    //         __FILE__,
-    //         __LINE__
-    //     )));
-    //
-    //     $this->assertStringContainsString(__FILE__, $handler->getMessage(new Error(
-    //         'message',
-    //         100,
-    //         __FILE__,
-    //         __LINE__
-    //     )));
-    //
-    //     $this->assertStringContainsString('100', $handler->getMessage(new Error(
-    //         'message',
-    //         100,
-    //         __FILE__,
-    //         100
-    //     )));
-    // }
+    public function testGetMessage(): void
+    {
+        $handler = new ConsoleRenderer();
+
+        $this->assertStringContainsString('Error', $handler->render(new Error(
+            'message',
+            100,
+            __FILE__,
+            __LINE__
+        )));
+
+        $this->assertStringContainsString('message', $handler->render(new Error(
+            'message',
+            100,
+            __FILE__,
+            __LINE__
+        )));
+
+        $this->assertStringContainsString(__FILE__, $handler->render(new Error(
+            'message',
+            100,
+            __FILE__,
+            __LINE__
+        )));
+
+        $this->assertStringContainsString('100', $handler->render(new Error(
+            'message',
+            100,
+            __FILE__,
+            100
+        )));
+    }
 
     public function testConsoleHandlerWithoutColorsBasic(): void
     {

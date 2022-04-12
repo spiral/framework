@@ -13,17 +13,20 @@ class ErrorHandler implements ErrorHandlerInterface
     /** @var array<int, ErrorReporterInterface|Closure> */
     private array $reporters = [];
 
-    public function addRenderers(ErrorRendererInterface ...$renderers): void
+    /**
+     * Add renderer to the beginning of the renderers list
+     */
+    public function addRenderer(ErrorRendererInterface $renderer): void
     {
-        $this->renderers = \array_merge($this->renderers, $renderers);
+        \array_unshift($this->renderers, $renderer);
     }
 
     /**
-     * @param ErrorReporterInterface|Closure(\Throwable):void ...$reporters
+     * @param ErrorReporterInterface|Closure(\Throwable):void $reporter
      */
-    public function addReporters(ErrorReporterInterface|Closure ...$reporters): void
+    public function addReporters(ErrorReporterInterface|Closure $reporter): void
     {
-        $this->reporters = \array_merge($this->reporters, $reporters);
+        $this->reporters[] = $reporter;
     }
 
     public function getRenderer(?string $format = null): ?ErrorRendererInterface

@@ -41,8 +41,9 @@ class ConsoleRenderer extends AbstractRenderer
     /**
      * @param bool|resource $stream
      */
-    public function __construct(mixed $stream = \STDOUT)
+    public function __construct(mixed $stream = null)
     {
+        $stream ??= \defined('\STDOUT') ? '\STDOUT' : \fopen('php://stdout', 'wb');
         $this->colorsSupport = System::isColorsSupported($stream);
     }
 

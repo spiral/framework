@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Exceptions\Boot;
+namespace Spiral\Bootloader;
 
 use Closure;
 use Spiral\Boot\Bootloader\Bootloader;
@@ -12,11 +12,11 @@ use Spiral\Exceptions\ErrorHandler;
 use Spiral\Exceptions\ErrorHandlerInterface;
 use Spiral\Exceptions\ErrorRendererInterface;
 use Spiral\Exceptions\ErrorReporterInterface;
+use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Exceptions\Renderer\JsonRenderer;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 use Spiral\Exceptions\Reporter\SnapshotterReporter;
-use Spiral\Exceptions\Verbosity;
 
 /**
  * Declare error handler that contains error renderers and error reporters.
@@ -40,14 +40,13 @@ final class ErrorHandlerBootloader extends Bootloader
     {
         $container->bindSingleton($this->handler::class, $this->handler);
 
-        $this->addRenderers(
-            // $cli = $container->get(ConsoleRenderer::class),
-            $html = $container->get(HtmlRenderer::class),
-            $json = $container->get(JsonRenderer::class),
-            // $plain = $container->get(PlainRenderer::class),
-        );
-        // $plain->defaultVerbosity = Verbosity::BASIC;
-        $this->addReporters(
+        $this->addRenderer($container->get(PlainRenderer::class));
+        $this->addRenderer($container->get(ConsoleRenderer::class));
+
+        $this->addRenderer($container->get(HtmlRenderer::class));
+        $this->addRenderer($container->get(JsonRenderer::class));
+
+        $this->addReporter(
             function (\Throwable $exception) {
                 $this->factory->make(SnapshotterReporter::class)->report($exception);
             }
@@ -55,28 +54,25 @@ final class ErrorHandlerBootloader extends Bootloader
     }
 
     /**
-     * @param ErrorRendererInterface|class-string<ErrorRendererInterface> ...$renderers
+     * @param ErrorRendererInterface|class-string<ErrorRendererInterface> $renderer
      */
-    public function addRenderers(ErrorRendererInterface|string ...$renderers)
+    public function addRenderer(ErrorRendererInterface|string $renderer): void
     {
-        foreach ($renderers as $renderer) {
-            if (\is_string($renderer)) {
-                $renderer = $this->factory->make($renderer);
-            }
-            $this->handler->addRenderers($renderer);
+        if (\is_string($renderer)) {
+            $renderer = $this->factory->make($renderer);
         }
+        \assert($renderer instanceof ErrorRendererInterface);
+        $this->handler->addRenderer($renderer);
     }
 
     /**
-     * @param ErrorReporterInterface|Closure(\Throwable):void|class-string<ErrorReporterInterface> ...$reporters
+     * @param ErrorReporterInterface|Closure(\Throwable):void|class-string<ErrorReporterInterface> $reporter
      */
-    public function addReporters(ErrorReporterInterface|\Closure|string ...$reporters)
+    public function addReporter(ErrorReporterInterface|Closure|string $reporter): void
     {
-        foreach ($reporters as $reporter) {
-            if (\is_string($reporter)) {
-                $reporter = $this->factory->make($reporter);
-            }
-            $this->handler->addReporters($reporter);
+        if (\is_string($reporter)) {
+            $reporter = $this->factory->make($reporter);
         }
+        $this->handler->addReporters($reporter);
     }
 }
