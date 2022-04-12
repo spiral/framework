@@ -40,11 +40,11 @@ final class ErrorHandlerBootloader extends Bootloader
     {
         $container->bindSingleton($this->handler::class, $this->handler);
 
-        $this->addRenderer($container->get(PlainRenderer::class));
-        $this->addRenderer($container->get(ConsoleRenderer::class));
+        $this->addRenderer(PlainRenderer::class);
+        $this->addRenderer(ConsoleRenderer::class);
 
-        $this->addRenderer($container->get(HtmlRenderer::class));
-        $this->addRenderer($container->get(JsonRenderer::class));
+        $this->addRenderer(JsonRenderer::class);
+        $this->addRenderer(HtmlRenderer::class);
 
         $this->addReporter(
             function (\Throwable $exception) {

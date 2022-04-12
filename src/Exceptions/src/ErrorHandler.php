@@ -8,6 +8,8 @@ use Closure;
 
 class ErrorHandler implements ErrorHandlerInterface
 {
+    public ?Verbosity $verbosity = Verbosity::BASIC;
+
     /** @var array<int, ErrorRendererInterface> */
     private array $renderers = [];
     /** @var array<int, ErrorReporterInterface|Closure> */
@@ -43,10 +45,10 @@ class ErrorHandler implements ErrorHandlerInterface
 
     public function render(
         \Throwable $exception,
-        ?Verbosity $verbosity = Verbosity::BASIC,
+        ?Verbosity $verbosity = null,
         string $format = null,
     ): string {
-        return (string) $this->getRenderer($format)?->render($exception, $verbosity, $format);
+        return (string) $this->getRenderer($format)?->render($exception, $verbosity ?? $this->verbosity, $format);
     }
 
     public function canRender(string $format): bool
