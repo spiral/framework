@@ -8,7 +8,7 @@ use Spiral\Tests\Framework\BaseTest;
 use Spiral\Validation\Config\ValidatorConfig;
 
 /**
- * @coversDefaultClass \Spiral\Bootloader\Security\ValidationBootloader
+ * @coversDefaultClass \Spiral\Validation\Bootloader\ValidationBootloader
  */
 class ValidationBootloaderTest extends BaseTest
 {

@@ -30,6 +30,15 @@ final class SapiDispatcher implements DispatcherInterface
     public function serve(EmitterInterface $emitter = null): void
     {
         // On demand to save some memory.
+
+        // Disable buffering
+        while (\ob_get_level() > 0) {
+            \ob_end_flush();
+        }
+        /**
+         * @var Http             $http
+         * @var EmitterInterface $emitter
+         */
         $http = $this->container->get(Http::class);
         $emitter = $emitter ?? $this->container->get(EmitterInterface::class);
 
@@ -52,6 +61,7 @@ final class SapiDispatcher implements DispatcherInterface
     {
         $handler = $this->errorHandler->getRenderer('html') ?? new HtmlRenderer();
         $this->errorHandler->report($e);
+
 
         /** @var ResponseFactoryInterface $responseFactory */
         $responseFactory = $this->container->get(ResponseFactoryInterface::class);

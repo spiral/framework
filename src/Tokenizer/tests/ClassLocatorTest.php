@@ -123,7 +123,7 @@ class ClassLocatorTest extends TestCase
         {
             private $messages = [];
 
-            public function log($level, $message, array $context = [])
+            public function log($level, $message, array $context = []): void
             {
                 $this->messages[] = compact('level', 'message');
             }

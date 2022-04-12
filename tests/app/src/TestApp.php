@@ -33,7 +33,7 @@ class TestApp extends Kernel
 
         // Validation, filtration, security
         Bootloader\Security\EncrypterBootloader::class,
-        Bootloader\Security\ValidationBootloader::class,
+        \Spiral\Validation\Bootloader\ValidationBootloader::class,
         Bootloader\Security\FiltersBootloader::class,
         Bootloader\Security\GuardBootloader::class,
 
@@ -61,11 +61,11 @@ class TestApp extends Kernel
 
         // Template engines and rendering
         StemplerBootloader::class,
-        Bootloader\Views\ViewsBootloader::class,
+        \Spiral\Views\Bootloader\ViewsBootloader::class,
         Bootloader\Views\TranslatedCacheBootloader::class,
 
         // Storage
-        Bootloader\Storage\StorageBootloader::class,
+        \Spiral\Storage\Bootloader\StorageBootloader::class,
 
         // Framework commands
         Bootloader\CommandBootloader::class,

@@ -8,6 +8,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Bootloader\I18nBootloader;
 use Spiral\Translator\Views\LocaleDependency;
 use Spiral\Translator\Views\LocaleProcessor;
+use Spiral\Views\Bootloader\ViewsBootloader;
 
 /**
  * Generates unique cache path based on active translator locale.

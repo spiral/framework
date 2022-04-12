@@ -5,6 +5,8 @@ on:
   push:
     tags:
       - '*'
+    branches:
+      - 'master'
 
 jobs:
   split_monorepo:
@@ -18,8 +20,6 @@ jobs:
         # define package to repository map
         package:
           # Bridge
-          - local_path: 'Bridge/DataGrid'
-            split_repository: 'data-grid-bridge'
           - local_path: 'Bridge/Stempler'
             split_repository: 'stempler-bridge'
           - local_path: 'Bridge/Monolog'
@@ -30,8 +30,6 @@ jobs:
           # Components
           - local_path: 'AnnotatedRoutes'
             split_repository: 'annotated-routes'
-          - local_path: 'Annotations'
-            split_repository: 'annotations'
           - local_path: 'Attributes'
             split_repository: 'attributes'
           - local_path: 'Auth'
@@ -52,8 +50,6 @@ jobs:
             split_repository: 'core'
           - local_path: 'Csrf'
             split_repository: 'csrf'
-          - local_path: 'DataGrid'
-            split_repository: 'data-grid'
           - local_path: 'Debug'
             split_repository: 'debug'
           - local_path: 'Distribution'

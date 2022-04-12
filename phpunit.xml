@@ -10,6 +10,7 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
+         failOnRisky="false"
          stopOnFailure="false"
          stopOnError="false"
          stderr="true">
