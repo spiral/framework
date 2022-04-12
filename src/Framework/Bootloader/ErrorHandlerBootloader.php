@@ -73,6 +73,6 @@ final class ErrorHandlerBootloader extends Bootloader
         if (\is_string($reporter)) {
             $reporter = $this->factory->make($reporter);
         }
-        $this->handler->addReporters($reporter);
+        $this->handler->addReporter($reporter);
     }
 }

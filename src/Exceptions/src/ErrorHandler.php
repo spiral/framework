@@ -26,7 +26,7 @@ class ErrorHandler implements ErrorHandlerInterface
     /**
      * @param ErrorReporterInterface|Closure(\Throwable):void $reporter
      */
-    public function addReporters(ErrorReporterInterface|Closure $reporter): void
+    public function addReporter(ErrorReporterInterface|Closure $reporter): void
     {
         $this->reporters[] = $reporter;
     }
@@ -59,10 +59,14 @@ class ErrorHandler implements ErrorHandlerInterface
     public function report(\Throwable $exception): void
     {
         foreach ($this->reporters as $reporter) {
-            if ($reporter instanceof ErrorReporterInterface) {
-                $reporter->report($exception);
-            } else {
-                $reporter($exception);
+            try {
+                if ($reporter instanceof ErrorReporterInterface) {
+                    $reporter->report($exception);
+                } else {
+                    $reporter($exception);
+                }
+            } catch (\Throwable) {
+                // Do nothing
             }
         }
     }
