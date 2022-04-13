@@ -44,6 +44,13 @@ class ExceptionHandlerTest extends TestCase
         $this->assertSame($r1, $handler->getRenderer());
     }
 
+    public function testDefaultErrorRendererFromEmptyExceptionHandler(): void
+    {
+        $handler = $this->makeEmptyErrorHandler();
+
+        $this->assertNull($handler->getRenderer());
+    }
+
     public function testErrorHandlerByFormat(): void
     {
         $r0 = m::mock(ExceptionRendererInterface::class);
