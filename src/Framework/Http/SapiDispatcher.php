@@ -10,8 +10,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Exceptions\ErrorHandlerInterface;
-use Spiral\Exceptions\Renderer\HtmlRenderer;
-use Spiral\Exceptions\Verbosity;
 
 final class SapiDispatcher implements DispatcherInterface
 {
@@ -59,9 +57,7 @@ final class SapiDispatcher implements DispatcherInterface
 
     protected function handleException(EmitterInterface $emitter, \Throwable $e): void
     {
-        $handler = $this->errorHandler->getRenderer('html') ?? new HtmlRenderer();
         $this->errorHandler->report($e);
-
 
         /** @var ResponseFactoryInterface $responseFactory */
         $responseFactory = $this->container->get(ResponseFactoryInterface::class);
@@ -69,7 +65,7 @@ final class SapiDispatcher implements DispatcherInterface
 
         // Reporting system (non handled) exception directly to the client
         $response->getBody()->write(
-            $handler->render($e, verbosity: Verbosity::VERBOSE)
+            $this->errorHandler->render($e, format: 'html')
         );
 
         $emitter->emit($response);

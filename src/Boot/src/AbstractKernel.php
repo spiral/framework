@@ -10,6 +10,8 @@ use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
 use Spiral\Exceptions\ErrorHandler;
 use Spiral\Exceptions\ErrorHandlerInterface;
+use Spiral\Exceptions\ErrorRendererInterface;
+use Spiral\Exceptions\ErrorReporterInterface;
 
 /**
  * Core responsible for application initialization, bootloading of all required services,
@@ -47,6 +49,9 @@ abstract class AbstractKernel implements KernelInterface
         array $directories,
     ) {
         $container->bindSingleton(ErrorHandlerInterface::class, $exceptionHandler);
+        $container->bindSingleton(ErrorRendererInterface::class, $exceptionHandler);
+        $container->bindSingleton(ErrorReporterInterface::class, $exceptionHandler);
+        $container->bindSingleton(ErrorHandler::class, $exceptionHandler);
         $container->bindSingleton(KernelInterface::class, $this);
         $container->bindSingleton(self::class, $this);
         $container->bindSingleton(static::class, $this);
@@ -80,15 +85,15 @@ abstract class AbstractKernel implements KernelInterface
      */
     public static function create(
         array $directories,
-        ErrorHandlerInterface|string|null $exceptionHandler
+        ErrorHandlerInterface|string|null $exceptionHandler = null
     ): static {
         $container = new Container();
         $exceptionHandler ??= ErrorHandler::class;
 
         if (\is_string($exceptionHandler)) {
             $exceptionHandler = $container->make($exceptionHandler);
-            $exceptionHandler->register();
         }
+        $exceptionHandler->register();
 
         return new static(new Container(), $exceptionHandler, $directories);
     }
@@ -119,7 +124,7 @@ abstract class AbstractKernel implements KernelInterface
                 }
             );
         } catch (\Throwable $e) {
-            $this->exceptionHandler->handleException($e);
+            $this->exceptionHandler->handleGlobalException($e);
 
             return null;
         }

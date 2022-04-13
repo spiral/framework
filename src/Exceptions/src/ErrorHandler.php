@@ -29,7 +29,7 @@ class ErrorHandler implements ErrorHandlerInterface
 
     public function __construct()
     {
-        $this->createBasicHandlers();
+        $this->bootBasicHandlers();
     }
 
     public function register(): void
@@ -150,7 +150,7 @@ class ErrorHandler implements ErrorHandlerInterface
         throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
     }
 
-    protected function createBasicHandlers(): void
+    protected function bootBasicHandlers(): void
     {
         $this->addRenderer(new PlainRenderer());
         $this->addRenderer(new ConsoleRenderer());

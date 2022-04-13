@@ -87,7 +87,7 @@ class ErrorHandlerTest extends TestCase
     private function makeEmptyErrorHandler(): ErrorHandler
     {
         return new class extends ErrorHandler {
-            protected function createBasicHandlers(): void
+            protected function bootBasicHandlers(): void
             {
             }
         };

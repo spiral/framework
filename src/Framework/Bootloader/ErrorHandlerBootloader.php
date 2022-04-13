@@ -17,57 +17,20 @@ use Spiral\Exceptions\Renderer\JsonRenderer;
 use Spiral\Exceptions\Reporter\SnapshotterReporter;
 
 /**
- * Declare error handler that contains error renderers and error reporters.
+ * Adds JSON and HTML renderers, adds SnapshotterReporter.
  */
 final class ErrorHandlerBootloader extends Bootloader
 {
-    protected const SINGLETONS = [
-        ErrorRendererInterface::class => ErrorHandlerInterface::class,
-        ErrorReporterInterface::class => ErrorHandlerInterface::class,
-        ErrorHandlerInterface::class => ErrorHandler::class,
-    ];
-    private ErrorHandler $handler;
 
-    public function __construct(
-        private readonly FactoryInterface $factory
-    ) {
-        $this->handler = new ErrorHandler();
-    }
-
-    public function boot(Container $container): void
+    public function boot(FactoryInterface $factory, ErrorHandler $errorHandler): void
     {
-        $container->bindSingleton($this->handler::class, $this->handler);
+        $errorHandler->addRenderer($factory->make(JsonRenderer::class));
+        $errorHandler->addRenderer($factory->make(HtmlRenderer::class));
 
-        $this->addRenderer(JsonRenderer::class);
-        $this->addRenderer(HtmlRenderer::class);
-
-        $this->addReporter(
-            function (\Throwable $exception) {
-                $this->factory->make(SnapshotterReporter::class)->report($exception);
+        $errorHandler->addReporter(
+            static function (\Throwable $exception) use ($factory) {
+                $factory->make(SnapshotterReporter::class)->report($exception);
             }
         );
-    }
-
-    /**
-     * @param ErrorRendererInterface|class-string<ErrorRendererInterface> $renderer
-     */
-    public function addRenderer(ErrorRendererInterface|string $renderer): void
-    {
-        if (\is_string($renderer)) {
-            $renderer = $this->factory->make($renderer);
-        }
-        \assert($renderer instanceof ErrorRendererInterface);
-        $this->handler->addRenderer($renderer);
-    }
-
-    /**
-     * @param ErrorReporterInterface|Closure(\Throwable):void|class-string<ErrorReporterInterface> $reporter
-     */
-    public function addReporter(ErrorReporterInterface|Closure|string $reporter): void
-    {
-        if (\is_string($reporter)) {
-            $reporter = $this->factory->make($reporter);
-        }
-        $this->handler->addReporter($reporter);
     }
 }
