@@ -85,7 +85,8 @@ abstract class AbstractKernel implements KernelInterface
      */
     public static function create(
         array $directories,
-        ExceptionHandlerInterface|string|null $exceptionHandler = null
+        bool $handleErrors = true,
+        ExceptionHandlerInterface|string|null $exceptionHandler = null,
     ): static {
         $container = new Container();
         $exceptionHandler ??= ExceptionHandler::class;
@@ -93,7 +94,9 @@ abstract class AbstractKernel implements KernelInterface
         if (\is_string($exceptionHandler)) {
             $exceptionHandler = $container->make($exceptionHandler);
         }
-        $exceptionHandler->register();
+        if ($handleErrors) {
+            $exceptionHandler->register();
+        }
 
         return new static(new Container(), $exceptionHandler, $directories);
     }
