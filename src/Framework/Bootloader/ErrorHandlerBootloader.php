@@ -12,10 +12,8 @@ use Spiral\Exceptions\ErrorHandler;
 use Spiral\Exceptions\ErrorHandlerInterface;
 use Spiral\Exceptions\ErrorRendererInterface;
 use Spiral\Exceptions\ErrorReporterInterface;
-use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Exceptions\Renderer\JsonRenderer;
-use Spiral\Exceptions\Renderer\PlainRenderer;
 use Spiral\Exceptions\Reporter\SnapshotterReporter;
 
 /**
@@ -39,9 +37,6 @@ final class ErrorHandlerBootloader extends Bootloader
     public function boot(Container $container): void
     {
         $container->bindSingleton($this->handler::class, $this->handler);
-
-        $this->addRenderer(PlainRenderer::class);
-        $this->addRenderer(ConsoleRenderer::class);
 
         $this->addRenderer(JsonRenderer::class);
         $this->addRenderer(HtmlRenderer::class);

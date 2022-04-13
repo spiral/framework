@@ -8,6 +8,8 @@ use Closure;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
+use Spiral\Exceptions\ErrorHandler;
+use Spiral\Exceptions\ErrorHandlerInterface;
 
 /**
  * Core responsible for application initialization, bootloading of all required services,
@@ -39,23 +41,25 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * @throws \Throwable
      */
-    public function __construct(
+    protected function __construct(
         protected Container $container,
-        array $directories
+        protected ErrorHandlerInterface $exceptionHandler,
+        array $directories,
     ) {
-        $this->container->bindSingleton(KernelInterface::class, $this);
-        $this->container->bindSingleton(self::class, $this);
-        $this->container->bindSingleton(static::class, $this);
+        $container->bindSingleton(ErrorHandlerInterface::class, $exceptionHandler);
+        $container->bindSingleton(KernelInterface::class, $this);
+        $container->bindSingleton(self::class, $this);
+        $container->bindSingleton(static::class, $this);
 
-        $this->container->bindSingleton(
+        $container->bindSingleton(
             DirectoriesInterface::class,
             new Directories($this->mapDirectories($directories))
         );
 
         $this->finalizer = new Finalizer();
-        $this->container->bindSingleton(FinalizerInterface::class, $this->finalizer);
+        $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
 
-        $this->bootloader = new BootloadManager($this->container);
+        $this->bootloader = new BootloadManager($container);
         $this->bootloader->bootload(static::SYSTEM);
     }
 
@@ -69,17 +73,24 @@ abstract class AbstractKernel implements KernelInterface
 
     /**
      * Create an application instance.
+     *
+     * @param class-string<ErrorHandlerInterface>|ErrorHandlerInterface $exceptionHandler
+     *
      * @throws \Throwable
      */
     public static function create(
         array $directories,
-        bool $handleErrors = true
+        ErrorHandlerInterface|string|null $exceptionHandler
     ): static {
-        if ($handleErrors) {
-            ExceptionHandler::register();
+        $container = new Container();
+        $exceptionHandler ??= ErrorHandler::class;
+
+        if (\is_string($exceptionHandler)) {
+            $exceptionHandler = $container->make($exceptionHandler);
+            $exceptionHandler->register();
         }
 
-        return new static(new Container(), $directories);
+        return new static(new Container(), $exceptionHandler, $directories);
     }
 
     /**
@@ -108,7 +119,7 @@ abstract class AbstractKernel implements KernelInterface
                 }
             );
         } catch (\Throwable $e) {
-            ExceptionHandler::handleException($e);
+            $this->exceptionHandler->handleException($e);
 
             return null;
         }

@@ -18,12 +18,25 @@ class ErrorHandlerTest extends TestCase
         m::close();
     }
 
+    public function testKernelException(): void
+    {
+        $handler = $this->makeErrorHandler();
+        $output = \fopen('php://memory', 'rwb');
+        $handler->setOutput($output);
+        $handler->handleGlobalException(new \Exception('Test message'));
+
+        $handler->setOutput(STDERR);
+
+        \fseek($output, 0);
+        $this->assertStringContainsString('Test message', \fread($output, 10000));
+    }
+
     public function testDefaultErrorRenderer(): void
     {
         $r1 = m::mock(ErrorRendererInterface::class);
         $r2 = m::mock(ErrorRendererInterface::class);
         $r3 = m::mock(ErrorRendererInterface::class);
-        $handler = $this->makeErrorHandler();
+        $handler = $this->makeEmptyErrorHandler();
         $handler->addRenderer($r1);
         $handler->addRenderer($r2);
         $handler->addRenderer($r3);
@@ -40,7 +53,7 @@ class ErrorHandlerTest extends TestCase
         $r2->shouldReceive('canRender')->withArgs(['test'])->andReturnFalse();
         $r3 = m::mock(ErrorRendererInterface::class);
         $r3->shouldReceive('canRender')->withArgs(['test'])->andReturnFalse();
-        $handler = $this->makeErrorHandler();
+        $handler = $this->makeEmptyErrorHandler();
         $handler->addRenderer($r0);
         $handler->addRenderer($r1);
         $handler->addRenderer($r2);
@@ -61,7 +74,7 @@ class ErrorHandlerTest extends TestCase
         $r3->shouldReceive('report')->withArgs([$exception])->once()->andThrows(new RuntimeException());
         $r4 = m::mock(ErrorReporterInterface::class);
         $r4->shouldReceive('report')->withArgs([$exception])->once();
-        $handler = $this->makeErrorHandler();
+        $handler = $this->makeEmptyErrorHandler();
         $handler->addReporter($r1);
         $handler->addReporter($r2);
         $handler->addReporter($r3);
@@ -69,6 +82,15 @@ class ErrorHandlerTest extends TestCase
 
         $handler->report($exception);
         $this->assertTrue(true);
+    }
+
+    private function makeEmptyErrorHandler(): ErrorHandler
+    {
+        return new class extends ErrorHandler {
+            protected function createBasicHandlers(): void
+            {
+            }
+        };
     }
 
     private function makeErrorHandler(): ErrorHandler
