@@ -153,6 +153,5 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected function bootBasicHandlers(): void
     {
         $this->addRenderer(new PlainRenderer());
-        $this->addRenderer(new ConsoleRenderer());
     }
 }

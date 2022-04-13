@@ -9,7 +9,7 @@ use Spiral\Exceptions\Verbosity;
 
 final class PlainRenderer extends AbstractRenderer
 {
-    protected const FORMATS = ['text/plain', 'text'];
+    protected const FORMATS = ['text/plain', 'text', 'plain', 'cli', 'console'];
     // Lines to show around targeted line.
     private const SHOW_LINES = 2;
 
