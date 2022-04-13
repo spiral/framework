@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Failed;
 
-use Spiral\Exceptions\ErrorReporterInterface;
+use Spiral\Exceptions\ExceptionReporterInterface;
 
 final class LogFailedJobHandler implements FailedJobHandlerInterface
 {
     public function __construct(
-        private readonly ErrorReporterInterface $reporter
+        private readonly ExceptionReporterInterface $reporter
     ) {
     }
 

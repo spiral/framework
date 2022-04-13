@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Exceptions\Reporter;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Exceptions\ErrorReporterInterface;
+use Spiral\Exceptions\ExceptionReporterInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
-class SnapshotterReporter implements ErrorReporterInterface
+class SnapshotterReporter implements ExceptionReporterInterface
 {
     private ?SnapshotterInterface $snapshotter = null;
     public function __construct(

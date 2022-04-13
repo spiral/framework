@@ -9,8 +9,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
-use Spiral\Exceptions\ErrorHandlerInterface;
-use Spiral\Exceptions\ErrorRendererInterface;
+use Spiral\Exceptions\ExceptionHandlerInterface;
+use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Header\AcceptHeader;
@@ -31,7 +31,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         private readonly SuppressErrorsInterface $suppressErrors,
         private readonly RendererInterface $renderer,
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly ErrorHandlerInterface $errorHandler,
+        private readonly ExceptionHandlerInterface $errorHandler,
     ) {
     }
 
@@ -83,9 +83,9 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @return array{string|null, ErrorRendererInterface|null}
+     * @return array{string|null, ExceptionRendererInterface|null}
      */
-    private function getRenderer(ErrorHandlerInterface $handler, Request $request): array
+    private function getRenderer(ExceptionHandlerInterface $handler, Request $request): array
     {
         if ($request->hasHeader('Accept')) {
             $acceptItems = AcceptHeader::fromString($request->getHeaderLine('Accept'))->getAll();

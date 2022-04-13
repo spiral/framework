@@ -9,14 +9,14 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\FinalizerInterface;
-use Spiral\Exceptions\ErrorHandlerInterface;
+use Spiral\Exceptions\ExceptionHandlerInterface;
 
 final class SapiDispatcher implements DispatcherInterface
 {
     public function __construct(
         private readonly FinalizerInterface $finalizer,
         private readonly ContainerInterface $container,
-        private readonly ErrorHandlerInterface $errorHandler,
+        private readonly ExceptionHandlerInterface $errorHandler,
     ) {
     }
 

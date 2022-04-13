@@ -11,7 +11,7 @@ use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Exceptions\Renderer\JsonRenderer;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 
-class HandlerTest extends TestCase
+class RendererTest extends TestCase
 {
     public function testGetMessage(): void
     {
@@ -46,7 +46,7 @@ class HandlerTest extends TestCase
         )));
     }
 
-    public function testConsoleHandlerWithoutColorsBasic(): void
+    public function testConsoleRendererWithoutColorsBasic(): void
     {
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(false);
@@ -63,7 +63,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testConsoleHandlerErrorBasic(): void
+    public function testConsoleRendererErrorBasic(): void
     {
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
@@ -74,7 +74,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testConsoleHandlerErrorVerbose(): void
+    public function testConsoleRendererErrorVerbose(): void
     {
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
@@ -86,7 +86,7 @@ class HandlerTest extends TestCase
     }
 
 
-    public function testConsoleHandlerWithColorsBasic(): void
+    public function testConsoleRendererWithColorsBasic(): void
     {
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
@@ -103,7 +103,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testHtmlHandlerDefaultBasic(): void
+    public function testHtmlRendererDefaultBasic(): void
     {
         $handler = new HtmlRenderer(HtmlRenderer::DEFAULT);
 
@@ -119,7 +119,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testHtmlHandlerInvertedBasic(): void
+    public function testHtmlRendererInvertedBasic(): void
     {
         $handler = new HtmlRenderer(HtmlRenderer::INVERTED);
 
@@ -135,7 +135,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testConsoleHandlerWithColorsDebug(): void
+    public function testConsoleRendererWithColorsDebug(): void
     {
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
@@ -152,7 +152,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testHtmlHandlerDefaultDebug(): void
+    public function testHtmlRendererDefaultDebug(): void
     {
         $this->markTestSkipped('FIXME: Very long execution time');
 
@@ -170,7 +170,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testHtmlHandlerInvertedDebug(): void
+    public function testHtmlRendererInvertedDebug(): void
     {
         $this->markTestSkipped('FIXME: Very long execution time');
 
@@ -188,7 +188,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testConsoleHandlerStacktrace(): void
+    public function testConsoleRendererStacktrace(): void
     {
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
@@ -205,7 +205,7 @@ class HandlerTest extends TestCase
     }
 
 
-    public function testPlainHandlerStacktrace(): void
+    public function testPlainRendererStacktrace(): void
     {
         $handler = new PlainRenderer();
 
@@ -220,7 +220,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString('makeException', $result);
     }
 
-    public function testJsonHandler(): void
+    public function testJsonRenderer(): void
     {
         $handler = new JsonRenderer();
 
@@ -235,7 +235,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString('makeException', $result);
     }
 
-    public function testHtmlHandlerStacktrace(): void
+    public function testHtmlRendererStacktrace(): void
     {
         $this->markTestSkipped('FIXME: Very long execution time');
 
@@ -253,7 +253,7 @@ class HandlerTest extends TestCase
         $this->assertStringContainsString('makeException', $result);
     }
 
-    public function testHtmlHandlerInvertedStacktrace(): void
+    public function testHtmlRendererInvertedStacktrace(): void
     {
         $this->markTestSkipped('FIXME: Very long execution time');
 

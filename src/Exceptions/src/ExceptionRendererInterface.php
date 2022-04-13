@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
-interface ErrorRendererInterface
+interface ExceptionRendererInterface
 {
     /**
      * @param string|null $format Preferred format

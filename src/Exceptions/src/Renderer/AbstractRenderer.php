@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions\Renderer;
 
-use Spiral\Exceptions\ErrorRendererInterface;
+use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Exceptions\Verbosity;
 
 /**
  * Provides common functionality for exception rendering.
  */
-abstract class AbstractRenderer implements ErrorRendererInterface
+abstract class AbstractRenderer implements ExceptionRendererInterface
 {
     /** @var non-empty-string[] Lower case format string */
     protected const FORMATS = [];

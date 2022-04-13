@@ -8,10 +8,10 @@ use Closure;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
-use Spiral\Exceptions\ErrorHandler;
-use Spiral\Exceptions\ErrorHandlerInterface;
-use Spiral\Exceptions\ErrorRendererInterface;
-use Spiral\Exceptions\ErrorReporterInterface;
+use Spiral\Exceptions\ExceptionHandler;
+use Spiral\Exceptions\ExceptionHandlerInterface;
+use Spiral\Exceptions\ExceptionRendererInterface;
+use Spiral\Exceptions\ExceptionReporterInterface;
 
 /**
  * Core responsible for application initialization, bootloading of all required services,
@@ -45,13 +45,13 @@ abstract class AbstractKernel implements KernelInterface
      */
     protected function __construct(
         protected Container $container,
-        protected ErrorHandlerInterface $exceptionHandler,
+        protected ExceptionHandlerInterface $exceptionHandler,
         array $directories,
     ) {
-        $container->bindSingleton(ErrorHandlerInterface::class, $exceptionHandler);
-        $container->bindSingleton(ErrorRendererInterface::class, $exceptionHandler);
-        $container->bindSingleton(ErrorReporterInterface::class, $exceptionHandler);
-        $container->bindSingleton(ErrorHandler::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionHandlerInterface::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionRendererInterface::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionReporterInterface::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionHandler::class, $exceptionHandler);
         $container->bindSingleton(KernelInterface::class, $this);
         $container->bindSingleton(self::class, $this);
         $container->bindSingleton(static::class, $this);
@@ -79,16 +79,16 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Create an application instance.
      *
-     * @param class-string<ErrorHandlerInterface>|ErrorHandlerInterface $exceptionHandler
+     * @param class-string<ExceptionHandlerInterface>|ExceptionHandlerInterface $exceptionHandler
      *
      * @throws \Throwable
      */
     public static function create(
         array $directories,
-        ErrorHandlerInterface|string|null $exceptionHandler = null
+        ExceptionHandlerInterface|string|null $exceptionHandler = null
     ): static {
         $container = new Container();
-        $exceptionHandler ??= ErrorHandler::class;
+        $exceptionHandler ??= ExceptionHandler::class;
 
         if (\is_string($exceptionHandler)) {
             $exceptionHandler = $container->make($exceptionHandler);

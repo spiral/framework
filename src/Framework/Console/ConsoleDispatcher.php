@@ -9,7 +9,7 @@ use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\Logger\DebugListener;
-use Spiral\Exceptions\ErrorHandlerInterface;
+use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\Verbosity;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +26,7 @@ final class ConsoleDispatcher implements DispatcherInterface
         private readonly EnvironmentInterface $env,
         private readonly FinalizerInterface $finalizer,
         private readonly ContainerInterface $container,
-        private readonly ErrorHandlerInterface $errorHandler,
+        private readonly ExceptionHandlerInterface $errorHandler,
     ) {
     }
 

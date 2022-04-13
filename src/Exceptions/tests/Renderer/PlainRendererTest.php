@@ -15,7 +15,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 
-class PlainHandlerTest extends TestCase
+class PlainRendererTest extends TestCase
 {
     public function testRenderException(): void
     {

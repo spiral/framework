@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\Fixtures;
 
-use Spiral\Bootloader\ErrorHandlerBootloader;
+use Spiral\Bootloader\ExceptionHandlerBootloader;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Framework\Kernel;
@@ -25,7 +25,7 @@ class TestApp extends Kernel
 {
     public const LOAD = [
         PrototypeBootloader::class,
-        ErrorHandlerBootloader::class,
+        ExceptionHandlerBootloader::class,
     ];
 
     public function bindApp(): void

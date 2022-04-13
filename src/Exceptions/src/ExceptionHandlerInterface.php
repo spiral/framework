@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
-interface ErrorHandlerInterface extends ErrorReporterInterface, ErrorRendererInterface
+interface ExceptionHandlerInterface extends ExceptionReporterInterface, ExceptionRendererInterface
 {
     /**
      * Enable global exception handling.
@@ -18,5 +18,5 @@ interface ErrorHandlerInterface extends ErrorReporterInterface, ErrorRendererInt
      */
     public function handleGlobalException(\Throwable $e): void;
 
-    public function getRenderer(?string $format = null): ?ErrorRendererInterface;
+    public function getRenderer(?string $format = null): ?ExceptionRendererInterface;
 }

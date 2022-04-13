@@ -17,13 +17,13 @@ use Spiral\Exceptions\Renderer\PlainRenderer;
  *     Use the {@see render()} method to prepare a formatted exception output.
  *     Use the {@see report()} method to send a debug information to configured channels.
  */
-class ErrorHandler implements ErrorHandlerInterface
+class ExceptionHandler implements ExceptionHandlerInterface
 {
     public ?Verbosity $verbosity = Verbosity::BASIC;
 
-    /** @var array<int, ErrorRendererInterface> */
+    /** @var array<int, ExceptionRendererInterface> */
     protected array $renderers = [];
-    /** @var array<int, ErrorReporterInterface|Closure> */
+    /** @var array<int, ExceptionReporterInterface|Closure> */
     protected array $reporters = [];
     protected mixed $output = null;
 
@@ -39,7 +39,7 @@ class ErrorHandler implements ErrorHandlerInterface
         \set_exception_handler($this->handleGlobalException(...));
     }
 
-    public function getRenderer(?string $format = null): ?ErrorRendererInterface
+    public function getRenderer(?string $format = null): ?ExceptionRendererInterface
     {
         if ($format !== null) {
             foreach ($this->renderers as $renderer) {
@@ -68,7 +68,7 @@ class ErrorHandler implements ErrorHandlerInterface
     {
         foreach ($this->reporters as $reporter) {
             try {
-                if ($reporter instanceof ErrorReporterInterface) {
+                if ($reporter instanceof ExceptionReporterInterface) {
                     $reporter->report($exception);
                 } else {
                     $reporter($exception);
@@ -97,15 +97,15 @@ class ErrorHandler implements ErrorHandlerInterface
     /**
      * Add renderer to the beginning of the renderers list
      */
-    public function addRenderer(ErrorRendererInterface $renderer): void
+    public function addRenderer(ExceptionRendererInterface $renderer): void
     {
         \array_unshift($this->renderers, $renderer);
     }
 
     /**
-     * @param ErrorReporterInterface|Closure(\Throwable):void $reporter
+     * @param ExceptionReporterInterface|Closure(\Throwable):void $reporter
      */
-    public function addReporter(ErrorReporterInterface|Closure $reporter): void
+    public function addReporter(ExceptionReporterInterface|Closure $reporter): void
     {
         $this->reporters[] = $reporter;
     }

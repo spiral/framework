@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Snapshots;
 
 use Psr\Log\LoggerInterface;
-use Spiral\Exceptions\ErrorRendererInterface;
+use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Exceptions\Verbosity;
 use Spiral\Files\Exception\FilesException;
 use Spiral\Files\FilesInterface;
@@ -18,7 +18,7 @@ final class FileSnapshooter implements SnapshotterInterface
         private readonly string $directory,
         private readonly int $maxFiles,
         private readonly Verbosity $verbosity,
-        private readonly ErrorRendererInterface $renderer,
+        private readonly ExceptionRendererInterface $renderer,
         private readonly FilesInterface $files,
         private readonly ?LoggerInterface $logger = null
     ) {

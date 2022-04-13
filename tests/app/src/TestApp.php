@@ -18,7 +18,7 @@ use Spiral\Boot\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader;
-use Spiral\Bootloader\ErrorHandlerBootloader;
+use Spiral\Bootloader\ExceptionHandlerBootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
@@ -71,7 +71,7 @@ class TestApp extends Kernel
         Bootloader\CommandBootloader::class,
 
         // Debug and debug extensions
-        ErrorHandlerBootloader::class,
+        ExceptionHandlerBootloader::class,
         Bootloader\DebugBootloader::class,
         Bootloader\Debug\LogCollectorBootloader::class,
         Bootloader\Debug\HttpCollectorBootloader::class
