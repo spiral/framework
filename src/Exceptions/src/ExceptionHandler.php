@@ -6,7 +6,6 @@ namespace Spiral\Exceptions;
 
 use Closure;
 use Spiral\Exceptions\Exception\FatalException;
-use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 
 /**

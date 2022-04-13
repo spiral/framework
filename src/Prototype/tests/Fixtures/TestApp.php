@@ -25,7 +25,6 @@ class TestApp extends Kernel
 {
     public const LOAD = [
         PrototypeBootloader::class,
-        ExceptionHandlerBootloader::class,
     ];
 
     public function bindApp(): void

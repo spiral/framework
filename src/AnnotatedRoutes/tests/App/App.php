@@ -1,17 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Router\App;
 
-use Spiral\Bootloader\ExceptionHandlerBootloader;
 use Spiral\Bootloader\Http\DiactorosBootloader;
 use Spiral\Console\Console;
 use Spiral\Framework\Kernel;
@@ -23,7 +15,6 @@ class App extends Kernel
     protected const LOAD = [
         DiactorosBootloader::class,
         AnnotatedRoutesBootloader::class,
-        ExceptionHandlerBootloader::class,
     ];
 
     public function getHttp(): Http

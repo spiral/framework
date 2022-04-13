@@ -71,7 +71,6 @@ class TestApp extends Kernel
         Bootloader\CommandBootloader::class,
 
         // Debug and debug extensions
-        ExceptionHandlerBootloader::class,
         Bootloader\DebugBootloader::class,
         Bootloader\Debug\LogCollectorBootloader::class,
         Bootloader\Debug\HttpCollectorBootloader::class
