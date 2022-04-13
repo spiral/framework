@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions\Reporter;
 
+use Psr\Container\ContainerInterface;
 use Spiral\Exceptions\ErrorReporterInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
 class SnapshotterReporter implements ErrorReporterInterface
 {
+    private ?SnapshotterInterface $snapshotter = null;
     public function __construct(
-        private SnapshotterInterface $snapshotter
+        ContainerInterface $container
     ) {
+        if ($container->has(SnapshotterInterface::class)) {
+            $this->snapshotter = $container->get(SnapshotterInterface::class);
+        }
     }
 
     public function report(\Throwable $exception): void
     {
-        $this->snapshotter->register($exception);
+        $this->snapshotter?->register($exception);
     }
 }
