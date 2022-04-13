@@ -24,9 +24,10 @@ final class ExceptionHandlerBootloader extends Bootloader
         $errorHandler->addRenderer(new HtmlRenderer());
 
         $errorHandler->addReporter(
-            static function (\Throwable $exception) use ($factory) {
-                $factory->make(SnapshotterReporter::class)->report($exception);
-            }
+            // static function (\Throwable $exception) use ($factory) {
+            //     $factory->make(SnapshotterReporter::class)->report($exception);
+            // }
+            $factory->make(SnapshotterReporter::class)
         );
     }
 }

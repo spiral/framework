@@ -10,17 +10,17 @@ use Spiral\Snapshots\SnapshotterInterface;
 
 class SnapshotterReporter implements ExceptionReporterInterface
 {
-    private ?SnapshotterInterface $snapshotter = null;
+    // private ?SnapshotterInterface $snapshotter = null;
     public function __construct(
-        ContainerInterface $container
+        private ContainerInterface $container,
     ) {
-        if ($container->has(SnapshotterInterface::class)) {
-            $this->snapshotter = $container->get(SnapshotterInterface::class);
-        }
+        // if ($container->has(SnapshotterInterface::class)) {
+        //     $this->snapshotter = $container->get(SnapshotterInterface::class);
+        // }
     }
 
     public function report(\Throwable $exception): void
     {
-        $this->snapshotter?->register($exception);
+        $this->container->get(SnapshotterInterface::class)?->register($exception);
     }
 }
