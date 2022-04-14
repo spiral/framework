@@ -10,7 +10,6 @@ use Spiral\Core\InjectableConfig;
 final class BroadcastConfig extends InjectableConfig
 {
     public const CONFIG = 'broadcasting';
-    private array $patterns = [];
 
     protected $config = [
         'authorize' => [
@@ -22,6 +21,7 @@ final class BroadcastConfig extends InjectableConfig
         'connections' => [],
         'driverAliases' => [],
     ];
+    private array $patterns = [];
 
     public function __construct(array $config = [])
     {
