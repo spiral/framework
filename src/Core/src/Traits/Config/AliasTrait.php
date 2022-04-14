@@ -16,7 +16,7 @@ trait AliasTrait
     public function resolveAlias(string $alias): string
     {
         $antiCircleReference = [];
-        while (\is_string($alias) && isset($this->config) && isset($this->config['aliases'][$alias])) {
+        while (isset($this->config, $this->config['aliases'][$alias]) && \is_string($alias)) {
             if (\in_array($alias, $antiCircleReference, true)) {
                 throw new ContainerException(\sprintf('Circle reference detected for alias `%s`.', $alias));
             }
