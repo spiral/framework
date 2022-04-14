@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace Spiral\Http\Emitter;
 
 use Psr\Http\Message\ResponseInterface;
-use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\EmitterInterface;
 use Spiral\Http\Exception\EmitterException;
 
