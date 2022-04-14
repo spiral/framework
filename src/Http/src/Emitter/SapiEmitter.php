@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Spiral\Http\Emitter;
 
 use Psr\Http\Message\ResponseInterface;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\EmitterInterface;
 use Spiral\Http\Exception\EmitterException;
 
@@ -28,6 +29,13 @@ final class SapiEmitter implements EmitterInterface
      * @var positive-int Preferred chunk size to be read from the stream before emitting.
      */
     public int $bufferSize = 2_097_152; // 2MB
+
+    public function __construct(HttpConfig $config)
+    {
+        if (($chunkSize = $config->getChunkSize()) !== null) {
+            $this->bufferSize = $chunkSize;
+        }
+    }
 
     /**
      * Emits a response for a PHP SAPI environment.

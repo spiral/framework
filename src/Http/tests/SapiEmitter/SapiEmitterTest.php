@@ -10,6 +10,7 @@ use Nyholm\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Exception\EmitterException;
 use Spiral\Http\Emitter\SapiEmitter;
 use Spiral\Tests\Http\SapiEmitter\Support\HTTPFunctions;
@@ -139,7 +140,7 @@ final class SapiEmitterTest extends TestCase
                          ->withAddedHeader('cookie-Set', '2')
                          ->withAddedHeader('Cookie-set', '3');
 
-        (new SapiEmitter())->emit($response);
+        (new SapiEmitter(new HttpConfig(['chunkSize' => null])))->emit($response);
         $this->assertEquals(200, $this->getResponseCode());
         $this->assertContains('X-Test: 1', $this->getHeaders());
         $this->assertContains('X-Test: 2', $this->getHeaders());
@@ -151,9 +152,28 @@ final class SapiEmitterTest extends TestCase
         $this->expectOutputString($body);
     }
 
+    public function testDefaultChunkSize(): void
+    {
+        $emitter = (new SapiEmitter(new HttpConfig(['chunkSize' => null])));
+
+        $this->assertSame($emitter->bufferSize, 2_097_152);
+    }
+
+    public function testChunkSize(): void
+    {
+        $emitter = (new SapiEmitter(new HttpConfig(['chunkSize' => 100])));
+        $this->assertSame($emitter->bufferSize, 100);
+
+        $emitter = (new SapiEmitter(new HttpConfig(['chunkSize' => 0])));
+        $this->assertSame($emitter->bufferSize, 0);
+
+        $emitter = (new SapiEmitter(new HttpConfig(['chunkSize' => '100'])));
+        $this->assertSame($emitter->bufferSize, 100);
+    }
+
     private function createEmitter(?int $bufferSize = null): SapiEmitter
     {
-        $emitter = new SapiEmitter();
+        $emitter = new SapiEmitter(new HttpConfig(['chunkSize' => null]));
         if ($bufferSize !== null) {
             $emitter->bufferSize = $bufferSize;
         }

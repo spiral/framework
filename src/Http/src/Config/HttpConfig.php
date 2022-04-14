@@ -27,6 +27,7 @@ final class HttpConfig extends InjectableConfig
             'Content-Type' => 'text/html; charset=UTF-8',
         ],
         'middleware' => [],
+        'chunkSize' => null
     ];
 
     public function getBasePath(): string
@@ -50,5 +51,13 @@ final class HttpConfig extends InjectableConfig
     public function getMiddleware(): array
     {
         return $this->config['middleware'] ?? $this->config['middlewares'];
+    }
+
+    /**
+     * If chunkSize isn't provided - using default values
+     */
+    public function getChunkSize(): ?int
+    {
+        return !\is_null($this->config['chunkSize']) ? (int) $this->config['chunkSize'] : null;
     }
 }
