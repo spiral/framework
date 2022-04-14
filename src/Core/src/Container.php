@@ -52,7 +52,7 @@ final class Container implements
     public function __construct(Internal\Config $config = new Internal\Config())
     {
         $constructor = new Internal\Constructor($config, [
-            'state' => new Internal\State()
+            'state' => new Internal\State(),
         ]);
         foreach ($config as $property => $class) {
             $this->$property = $constructor->get($property, $class);

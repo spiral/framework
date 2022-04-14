@@ -18,7 +18,8 @@ class Binder implements BinderInterface
     private State $state;
     private ContainerInterface $container;
 
-    public function __construct(Constructor $constructor) {
+    public function __construct(Constructor $constructor)
+    {
         $constructor->set('binder', $this);
 
         $this->state = $constructor->get('state', State::class);

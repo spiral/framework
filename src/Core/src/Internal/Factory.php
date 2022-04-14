@@ -28,7 +28,8 @@ final class Factory implements FactoryInterface
     private ContainerInterface $container;
     private ResolverInterface $resolver;
 
-    public function __construct(Constructor $constructor) {
+    public function __construct(Constructor $constructor)
+    {
         $constructor->set('factory', $this);
 
         $this->state = $constructor->get('state', State::class);

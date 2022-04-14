@@ -20,7 +20,8 @@ final class Invoker implements InvokerInterface
     private ContainerInterface $container;
     private ResolverInterface $resolver;
 
-    public function __construct(Constructor $constructor) {
+    public function __construct(Constructor $constructor)
+    {
         $constructor->set('invoker', $this);
 
         $this->container = $constructor->get('container', ContainerInterface::class);
