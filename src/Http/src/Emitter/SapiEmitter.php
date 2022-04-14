@@ -30,13 +30,6 @@ final class SapiEmitter implements EmitterInterface
      */
     public int $bufferSize = 2_097_152; // 2MB
 
-    public function __construct(HttpConfig $config)
-    {
-        if (($chunkSize = $config->getChunkSize()) !== null) {
-            $this->bufferSize = $chunkSize;
-        }
-    }
-
     /**
      * Emits a response for a PHP SAPI environment.
      *

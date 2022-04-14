@@ -45,7 +45,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
 
     protected const SINGLETONS = [
         Http::class             => [self::class, 'httpCore'],
-        EmitterInterface::class => SapiEmitter::class,
+        EmitterInterface::class => [self::class, 'createEmitter'],
     ];
 
     /** @var ConfiguratorInterface */
@@ -122,5 +122,19 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         $core->setHandler($handler);
 
         return $core;
+    }
+
+    /**
+     * @noRector RemoveUnusedPrivateMethodRector
+     */
+    private function createEmitter(HttpConfig $config): EmitterInterface
+    {
+        $emitter = new SapiEmitter();
+
+        if (($chunkSize = $config->getChunkSize()) !== null) {
+            $emitter->bufferSize = $chunkSize;
+        }
+
+        return $emitter;
     }
 }
