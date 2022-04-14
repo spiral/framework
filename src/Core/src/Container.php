@@ -71,17 +71,17 @@ final class Container implements
         ];
     }
 
+    public function __destruct()
+    {
+        $this->destruct();
+    }
+
     /**
      * Container can not be cloned.
      */
     public function __clone()
     {
         throw new LogicException('Container is not clonable');
-    }
-
-    public function __destruct()
-    {
-        $this->destruct();
     }
 
     public function resolveArguments(ContextFunction $reflection, array $parameters = []): array
