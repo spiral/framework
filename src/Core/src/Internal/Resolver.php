@@ -18,6 +18,8 @@ use Spiral\Core\ResolverInterface;
  */
 final class Resolver implements ResolverInterface
 {
+    use DestructorTrait;
+
     private FactoryInterface $factory;
     private ContainerInterface $container;
 

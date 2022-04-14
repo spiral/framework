@@ -15,6 +15,8 @@ use Spiral\Core\Container\Autowire;
  */
 class Binder implements BinderInterface
 {
+    use DestructorTrait;
+
     private State $state;
     private ContainerInterface $container;
 

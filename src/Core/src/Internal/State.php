@@ -2,6 +2,11 @@
 
 namespace Spiral\Core\Internal;
 
+/**
+ * @psalm-type TResolver = class-string|non-empty-string|callable|array{class-string, non-empty-string}
+ *
+ * @internal
+ */
 final class State
 {
     /**

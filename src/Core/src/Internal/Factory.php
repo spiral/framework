@@ -23,6 +23,8 @@ use Spiral\Core\ResolverInterface;
  */
 final class Factory implements FactoryInterface
 {
+    use DestructorTrait;
+
     private State $state;
     private InvokerInterface $invoker;
     private ContainerInterface $container;

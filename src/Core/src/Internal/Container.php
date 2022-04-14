@@ -14,6 +14,8 @@ use Spiral\Core\FactoryInterface;
  */
 final class Container implements ContainerInterface
 {
+    use DestructorTrait;
+
     private State $state;
     private FactoryInterface $factory;
 

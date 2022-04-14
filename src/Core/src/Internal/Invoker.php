@@ -17,6 +17,8 @@ use Spiral\Core\ResolverInterface;
  */
 final class Invoker implements InvokerInterface
 {
+    use DestructorTrait;
+
     private ContainerInterface $container;
     private ResolverInterface $resolver;
 

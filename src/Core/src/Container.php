@@ -12,6 +12,7 @@ use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
+use Spiral\Core\Internal\DestructorTrait;
 
 /**
  * Auto-wiring container: declarative singletons, contextual injections, parent container
@@ -39,6 +40,8 @@ final class Container implements
     InvokerInterface,
     ScopeInterface
 {
+    use DestructorTrait;
+
     private Internal\State $state;
     private Internal\Resolver $resolver;
     private Internal\Factory $factory;
@@ -74,6 +77,11 @@ final class Container implements
     public function __clone()
     {
         throw new LogicException('Container is not clonable');
+    }
+
+    public function __destruct()
+    {
+        $this->destruct();
     }
 
     public function resolveArguments(ContextFunction $reflection, array $parameters = []): array
