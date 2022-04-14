@@ -161,6 +161,7 @@ final class SapiEmitterTest extends TestCase
 
         $ref = new \ReflectionClass(HttpBootloader::class);
         $method = $ref->getMethod('createEmitter');
+        $method->setAccessible(true);
         $emitter = $method->invoke($bootloader, new HttpConfig(['chunkSize' => null]));
 
         $this->assertSame($emitter->bufferSize, 2_097_152);
@@ -172,6 +173,7 @@ final class SapiEmitterTest extends TestCase
 
         $ref = new \ReflectionClass(HttpBootloader::class);
         $method = $ref->getMethod('createEmitter');
+        $method->setAccessible(true);
 
         $emitter = $method->invoke($bootloader, new HttpConfig(['chunkSize' => 100]));
         $this->assertSame($emitter->bufferSize, 100);
