@@ -27,7 +27,7 @@ final class HttpConfig extends InjectableConfig
             'Content-Type' => 'text/html; charset=UTF-8',
         ],
         'middleware' => [],
-        'chunkSize' => null
+        'chunkSize' => null,
     ];
 
     public function getBasePath(): string
