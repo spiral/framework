@@ -55,6 +55,10 @@ class TestApp extends Kernel
         // Cache
         \Spiral\Cache\Bootloader\CacheBootloader::class,
 
+        // Broadcasting
+        \Spiral\Broadcasting\Bootloader\BroadcastingBootloader::class,
+        \Spiral\Broadcasting\Bootloader\WebsocketsBootloader::class,
+
         // Auth
         Bootloader\Auth\HttpAuthBootloader::class,
 

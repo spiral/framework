@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Broadcasting\Driver;
+namespace Spiral\Broadcasting\Middleware;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

@@ -16,19 +16,19 @@ final class LogBroadcast extends AbstractBroadcast
         $this->logger = $logger;
     }
 
+    public function authorize(ServerRequestInterface $request): bool
+    {
+        return true;
+    }
+
     public function publish($topics, $messages): void
     {
-        $topics = implode(', ', $this->formatTopics($topics));
+        $topics = implode(', ', $this->formatTopics($this->toArray($topics)));
 
         /** @var string $message */
         foreach ($this->toArray($messages) as $message) {
             assert(\is_string($message), 'Message argument must be a type of string');
-            $this->logger->info('Broadcasting on channels [' . $topics . '] with payload:' . PHP_EOL . $message);
+            $this->logger->info('Broadcasting on channels [' . $topics . '] with payload: ' . $message);
         }
-    }
-
-    public function authorize(ServerRequestInterface $request): bool
-    {
-        return true;
     }
 }

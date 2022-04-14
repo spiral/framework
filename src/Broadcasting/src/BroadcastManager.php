@@ -23,9 +23,9 @@ final class BroadcastManager implements BroadcastManagerInterface, SingletonInte
         $this->config = $config;
     }
 
-    public function driver(?string $name = null): BroadcastInterface
+    public function connection(?string $name = null): BroadcastInterface
     {
-        $name = $name ?: $this->config->getDefaultDriver();
+        $name = $name ?: $this->config->getDefaultConnection();
 
         // Replaces alias with real storage name
         $name = $this->config->getAliases()[$name] ?? $name;
@@ -39,7 +39,7 @@ final class BroadcastManager implements BroadcastManagerInterface, SingletonInte
 
     private function resolve(string $name): BroadcastInterface
     {
-        $config = $this->config->getDriverConfig($name);
+        $config = $this->config->getConnectionConfig($name);
 
         return $this->factory->make($config['driver'], $config);
     }

@@ -46,7 +46,7 @@ final class BroadcastingBootloader extends Bootloader
 
     private function initDefaultBroadcast(BroadcastManagerInterface $manager): BroadcastInterface
     {
-        return $manager->driver();
+        return $manager->connection();
     }
 
     private function initConfig(EnvironmentInterface $env): void

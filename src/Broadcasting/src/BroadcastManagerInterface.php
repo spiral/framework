@@ -6,5 +6,5 @@ namespace Spiral\Broadcasting;
 
 interface BroadcastManagerInterface
 {
-    public function driver(?string $name = null): BroadcastInterface;
+    public function connection(?string $name = null): BroadcastInterface;
 }

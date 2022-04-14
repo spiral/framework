@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Broadcasting\Config;
 
-use Spiral\Cache\Exception\InvalidArgumentException;
+use Spiral\Broadcasting\Exception\InvalidArgumentException;
 use Spiral\Core\InjectableConfig;
 
 final class BroadcastConfig extends InjectableConfig
@@ -27,7 +27,8 @@ final class BroadcastConfig extends InjectableConfig
     {
         parent::__construct($config);
 
-        foreach ($config['authorize']['topics'] as $topic => $callback) {
+        $topics = (array)($config['authorize']['topics'] ?? []);
+        foreach ($topics as $topic => $callback) {
             $this->patterns[$this->compilePattern($topic)] = $callback;
         }
     }
@@ -51,7 +52,7 @@ final class BroadcastConfig extends InjectableConfig
     /**
      * Get default broadcast connection
      */
-    public function getDefaultDriver(): string
+    public function getDefaultConnection(): string
     {
         if (!isset($this->config['default']) || empty($this->config['default'])) {
             throw new InvalidArgumentException('Default broadcast connection is not defined.');
@@ -64,7 +65,7 @@ final class BroadcastConfig extends InjectableConfig
         return $this->config['default'];
     }
 
-    public function getDriverConfig(string $name): array
+    public function getConnectionConfig(string $name): array
     {
         if (!isset($this->config['connections'][$name])) {
             throw new InvalidArgumentException(
