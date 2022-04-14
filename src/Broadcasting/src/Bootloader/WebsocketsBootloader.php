@@ -7,7 +7,7 @@ namespace Spiral\Broadcasting\Bootloader;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Broadcasting\Config\BroadcastConfig;
-use Spiral\Broadcasting\Driver\AuthorizationMiddleware;
+use Spiral\Broadcasting\Middleware\AuthorizationMiddleware;
 use Spiral\Core\Container\SingletonInterface;
 
 final class WebsocketsBootloader extends Bootloader implements SingletonInterface

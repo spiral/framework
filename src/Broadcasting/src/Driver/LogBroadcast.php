@@ -6,14 +6,17 @@ namespace Spiral\Broadcasting\Driver;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 final class LogBroadcast extends AbstractBroadcast
 {
     private LoggerInterface $logger;
+    private string $level;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, string $level = LogLevel::INFO)
     {
         $this->logger = $logger;
+        $this->level = $level;
     }
 
     public function authorize(ServerRequestInterface $request): bool
@@ -28,7 +31,7 @@ final class LogBroadcast extends AbstractBroadcast
         /** @var string $message */
         foreach ($this->toArray($messages) as $message) {
             assert(\is_string($message), 'Message argument must be a type of string');
-            $this->logger->info('Broadcasting on channels [' . $topics . '] with payload: ' . $message);
+            $this->logger->log($this->level, 'Broadcasting on channels [' . $topics . '] with payload: ' . $message);
         }
     }
 }
