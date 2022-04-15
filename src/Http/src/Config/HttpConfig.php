@@ -55,12 +55,10 @@ final class HttpConfig extends InjectableConfig
 
     /**
      * If chunkSize isn't provided - using default values
-     *
-     * @psalm-return positive-int
      */
     public function getChunkSize(): ?int
     {
-        if (\is_null($this->config['chunkSize']) || (int) $this->config['chunkSize'] <= 0) {
+        if (\is_null($this->config['chunkSize']) || (int) $this->config['chunkSize'] < 0) {
             return null;
         }
 

@@ -47,6 +47,18 @@ final class SapiEmitterTest extends TestCase
         $this->expectOutputString($body);
     }
 
+    public function testEmitWithoutStream(): void
+    {
+        $body = 'Example body';
+        $response = $this->createResponse(200, ['X-Test' => 1], $body);
+
+        $this->createEmitter(0)->emit($response);
+
+        $this->assertEquals(200, $this->getResponseCode());
+        $this->assertContains('X-Test: 1', $this->getHeaders());
+        $this->expectOutputString($body);
+    }
+
     public function testEmitterWithNotReadableStream(): void
     {
         $body = new NotReadableStream();
@@ -174,10 +186,10 @@ final class SapiEmitterTest extends TestCase
         $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => '100']));
         $this->assertSame($emitter->bufferSize, 100);
 
-        // value 0 or less than 0. Should be a default value
         $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => 0]));
-        $this->assertSame($emitter->bufferSize, 2_097_152);
+        $this->assertSame($emitter->bufferSize, 0);
 
+        // value less than 0. Should be a default value
         $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => -1]));
         $this->assertSame($emitter->bufferSize, 2_097_152);
     }

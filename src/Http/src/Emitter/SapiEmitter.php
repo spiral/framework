@@ -25,7 +25,7 @@ use Spiral\Http\Exception\EmitterException;
 final class SapiEmitter implements EmitterInterface
 {
     /**
-     * @var positive-int Preferred chunk size to be read from the stream before emitting.
+     * Preferred chunk size to be read from the stream before emitting. A value of 0 disables stream response.
      */
     public int $bufferSize = 2_097_152; // 2MB
 
@@ -59,6 +59,9 @@ final class SapiEmitter implements EmitterInterface
         }
         if (!$body->isReadable()) {
             return;
+        }
+        if ($this->bufferSize === 0) {
+            echo $body;
         }
         while (!$body->eof()) {
             echo $body->read($this->bufferSize);
