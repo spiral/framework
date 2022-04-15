@@ -103,6 +103,17 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         $this->config->modify('http', new Append('middleware', null, $middleware));
     }
 
+    public function createEmitter(HttpConfig $config): EmitterInterface
+    {
+        $emitter = new SapiEmitter();
+
+        if (($chunkSize = $config->getChunkSize()) !== null) {
+            $emitter->bufferSize = $chunkSize;
+        }
+
+        return $emitter;
+    }
+
     /**
      * @param HttpConfig               $config
      * @param Pipeline                 $pipeline
@@ -122,19 +133,5 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         $core->setHandler($handler);
 
         return $core;
-    }
-
-    /**
-     * @noRector RemoveUnusedPrivateMethodRector
-     */
-    private function createEmitter(HttpConfig $config): EmitterInterface
-    {
-        $emitter = new SapiEmitter();
-
-        if (($chunkSize = $config->getChunkSize()) !== null) {
-            $emitter->bufferSize = $chunkSize;
-        }
-
-        return $emitter;
     }
 }

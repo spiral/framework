@@ -159,10 +159,7 @@ final class SapiEmitterTest extends TestCase
     {
         $bootloader = new HttpBootloader(new ConfigManager($this->createMock(LoaderInterface::class)));
 
-        $ref = new \ReflectionClass(HttpBootloader::class);
-        $method = $ref->getMethod('createEmitter');
-        $method->setAccessible(true);
-        $emitter = $method->invoke($bootloader, new HttpConfig(['chunkSize' => null]));
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => null]));
 
         $this->assertSame($emitter->bufferSize, 2_097_152);
     }
@@ -171,18 +168,18 @@ final class SapiEmitterTest extends TestCase
     {
         $bootloader = new HttpBootloader(new ConfigManager($this->createMock(LoaderInterface::class)));
 
-        $ref = new \ReflectionClass(HttpBootloader::class);
-        $method = $ref->getMethod('createEmitter');
-        $method->setAccessible(true);
-
-        $emitter = $method->invoke($bootloader, new HttpConfig(['chunkSize' => 100]));
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => 100]));
         $this->assertSame($emitter->bufferSize, 100);
 
-        $emitter = $method->invoke($bootloader, new HttpConfig(['chunkSize' => 0]));
-        $this->assertSame($emitter->bufferSize, 0);
-
-        $emitter = $method->invoke($bootloader, new HttpConfig(['chunkSize' => '100']));
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => '100']));
         $this->assertSame($emitter->bufferSize, 100);
+
+        // value 0 or less than 0. Should be a default value
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => 0]));
+        $this->assertSame($emitter->bufferSize, 2_097_152);
+
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => -1]));
+        $this->assertSame($emitter->bufferSize, 2_097_152);
     }
 
     private function createEmitter(?int $bufferSize = null): SapiEmitter
