@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Exceptions;
+namespace Spiral\Tests\Exceptions\Renderer;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Exceptions\Highlighter;
+use Spiral\Exceptions\Renderer\Highlighter;
 use Spiral\Exceptions\Style\ConsoleStyle;
 use Spiral\Exceptions\Style\HtmlStyle;
 use Spiral\Exceptions\Style\PlainStyle;

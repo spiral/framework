@@ -2,29 +2,35 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Exceptions;
+namespace Spiral\Exceptions\Renderer;
 
 use Spiral\Exceptions\Style\PlainStyle;
+use Spiral\Exceptions\Verbosity;
 
-final class PlainHandler extends AbstractHandler
+final class PlainRenderer extends AbstractRenderer
 {
+    protected const FORMATS = ['text/plain', 'text', 'plain', 'cli', 'console'];
     // Lines to show around targeted line.
     private const SHOW_LINES = 2;
 
-    public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
-    {
+    public function render(
+        \Throwable $exception,
+        ?Verbosity $verbosity = null,
+        string $format = null
+    ): string {
+        $verbosity ??= $this->defaultVerbosity;
         $result = \sprintf(
             "[%s]\n%s in %s:%s\n",
-            $e::class,
-            $e->getMessage(),
-            $e->getFile(),
-            $e->getLine()
+            $exception::class,
+            $exception->getMessage(),
+            $exception->getFile(),
+            $exception->getLine()
         );
 
-        if ($verbosity >= self::VERBOSITY_DEBUG) {
-            $result .= $this->renderTrace($e, new Highlighter(new PlainStyle()));
-        } elseif ($verbosity >= self::VERBOSITY_VERBOSE) {
-            $result .= $this->renderTrace($e);
+        if ($verbosity->value >= Verbosity::DEBUG->value) {
+            $result .= $this->renderTrace($exception, new Highlighter(new PlainStyle()));
+        } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
+            $result .= $this->renderTrace($exception);
         }
 
         return $result;
@@ -43,7 +49,7 @@ final class PlainHandler extends AbstractHandler
         $result = "\nException Trace:\n";
 
         foreach ($stacktrace as $trace) {
-            if (isset($trace['type']) && isset($trace['class'])) {
+            if (isset($trace['type'], $trace['class'])) {
                 $line = \sprintf(
                     ' %s%s%s()',
                     $trace['class'],
@@ -62,11 +68,11 @@ final class PlainHandler extends AbstractHandler
 
             $result .= $line . "\n";
 
-            if (!empty($h) && !empty($trace['file'])) {
+            if ($h !== null && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
                     \file_get_contents($trace['file']),
                     $trace['line'],
-                    static::SHOW_LINES
+                    self::SHOW_LINES
                 ) . "\n";
             }
         }

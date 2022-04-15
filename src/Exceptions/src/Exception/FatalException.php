@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Boot\Exception;
+namespace Spiral\Exceptions\Exception;
 
 /**
  * Raised on fatal exceptions.

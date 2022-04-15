@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Snapshots;
 
 use Psr\Log\LoggerInterface;
-use Spiral\Exceptions\HandlerInterface;
+use Spiral\Exceptions\ExceptionRendererInterface;
+use Spiral\Exceptions\Verbosity;
 use Spiral\Files\Exception\FilesException;
 use Spiral\Files\FilesInterface;
 use Symfony\Component\Finder\Finder;
@@ -16,8 +17,8 @@ final class FileSnapshooter implements SnapshotterInterface
     public function __construct(
         private readonly string $directory,
         private readonly int $maxFiles,
-        private readonly int $verbosity,
-        private readonly HandlerInterface $handler,
+        private readonly Verbosity $verbosity,
+        private readonly ExceptionRendererInterface $renderer,
         private readonly FilesInterface $files,
         private readonly ?LoggerInterface $logger = null
     ) {
@@ -43,7 +44,7 @@ final class FileSnapshooter implements SnapshotterInterface
 
         $this->files->write(
             $filename,
-            $this->handler->renderException($snapshot->getException(), $this->verbosity),
+            $this->renderer->render($snapshot->getException(), $this->verbosity),
             FilesInterface::RUNTIME,
             true
         );

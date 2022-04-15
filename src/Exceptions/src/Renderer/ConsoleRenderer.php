@@ -2,24 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Exceptions;
+namespace Spiral\Exceptions\Renderer;
 
 use Codedungeon\PHPCliColors\Color;
 use Spiral\Debug\System;
 use Spiral\Exceptions\Style\ConsoleStyle;
 use Spiral\Exceptions\Style\PlainStyle;
+use Spiral\Exceptions\Verbosity;
 
 /**
  * Verbosity levels:
  *
- * 1) BASIC   - only message header and line number
- * 2) VERBOSE - stack information
- * 3) DEBUG   - stack and source information.
+ * 1) {@see Verbosity::BASIC} - only message header and line number
+ * 2) {@see Verbosity::VERBOSE} - stack information
+ * 3) {@see Verbosity::DEBUG} - stack and source information.
  */
-class ConsoleHandler extends AbstractHandler
+class ConsoleRenderer extends AbstractRenderer
 {
     // Lines to show around targeted line.
     public const SHOW_LINES = 2;
+    protected const FORMATS = ['console', 'cli'];
 
     protected const COLORS = [
         'bg:red'     => Color::BG_RED,
@@ -39,8 +41,9 @@ class ConsoleHandler extends AbstractHandler
     /**
      * @param bool|resource $stream
      */
-    public function __construct(mixed $stream = STDOUT)
+    public function __construct(mixed $stream = null)
     {
+        $stream ??= \defined('\STDOUT') ? '\STDOUT' : \fopen('php://stdout', 'wb');
         $this->colorsSupport = System::isColorsSupported($stream);
     }
 
@@ -52,25 +55,30 @@ class ConsoleHandler extends AbstractHandler
         $this->colorsSupport = $enabled;
     }
 
-    public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_BASIC): string
-    {
+    public function render(
+        \Throwable $exception,
+        ?Verbosity $verbosity = null,
+        string $format = null
+    ): string {
+        $verbosity ??= $this->defaultVerbosity;
+
         $result = $this->renderHeader(
-            \sprintf("[%s]\n%s", $e::class, $e->getMessage()),
-            $e instanceof \Error ? 'bg:magenta,white' : 'bg:red,white'
+            \sprintf("[%s]\n%s", $exception::class, $exception->getMessage()),
+            $exception instanceof \Error ? 'bg:magenta,white' : 'bg:red,white'
         );
 
         $result .= $this->format(
             "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>\n",
-            $e->getFile(),
-            $e->getLine()
+            $exception->getFile(),
+            $exception->getLine()
         );
 
-        if ($verbosity >= self::VERBOSITY_DEBUG) {
-            $result .= $this->renderTrace($e, new Highlighter(
+        if ($verbosity->value >= Verbosity::DEBUG->value) {
+            $result .= $this->renderTrace($exception, new Highlighter(
                 $this->colorsSupport ? new ConsoleStyle() : new PlainStyle()
             ));
-        } elseif ($verbosity >= self::VERBOSITY_VERBOSE) {
-            $result .= $this->renderTrace($e);
+        } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
+            $result .= $this->renderTrace($exception);
         }
 
         return $result;
@@ -170,7 +178,7 @@ class ConsoleHandler extends AbstractHandler
         if (!$this->colorsSupport) {
             $format = \preg_replace('/<[^>]+>/', '', $format);
         } else {
-            $format = \preg_replace_callback('/(<([^>]+)>)/', function ($partial) {
+            $format = \preg_replace_callback('/(<([^>]+)>)/', static function ($partial) {
                 $style = '';
                 foreach (\explode(',', \trim($partial[2], '/')) as $color) {
                     if (isset(self::COLORS[$color])) {
