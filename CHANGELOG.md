@@ -1,6 +1,11 @@
 # CHANGELOG
 
-## v2.12.0 - Unreleased
+## v2.13.0 - Unreleased
+- **Other Features**
+  - [spiral/queue] Added attribute `Queueable` to mark classes that can be queued. 
+    Added `QueueableTrait` for easy Queueable attribute lookup in the class.
+
+## v2.12.0 - 2022-04-07
 - **Medium Impact Changes**
   - Bootloaders `Spiral\Bootloader\Broadcast\BroadcastBootloader`, `Spiral\Bootloader\Http\WebsocketsBootloader`
     are deprecated. Will be removed in v3.0.
