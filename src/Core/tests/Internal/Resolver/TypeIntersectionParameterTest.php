@@ -8,6 +8,6 @@ namespace Spiral\Tests\Core\Internal\Resolver;
  * Others type intersection tests:
  * @see VariadicParameterTest::testVariadicTypeIntersectionParameterAndUnnamedArguments()
  */
-class TypeIntersectionParameterTest extends BaseTest
+final class TypeIntersectionParameterTest extends BaseTest
 {
 }

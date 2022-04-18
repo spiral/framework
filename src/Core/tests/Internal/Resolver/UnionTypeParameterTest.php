@@ -9,6 +9,6 @@ namespace Spiral\Tests\Core\Internal\Resolver;
  * @see NullableParameterTest::testNullableUnionDefaultScalar()
  * @see VariadicParameterTest::testVariadicUnionParameterAndUnnamedArguments()
  */
-class UnionTypeParameterTest extends BaseTest
+final class UnionTypeParameterTest extends BaseTest
 {
 }

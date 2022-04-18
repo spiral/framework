@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Resolver;
 
-use Spiral\Core\BinderInterface;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 use Spiral\Tests\Core\Stub\EngineVAZ2101;
@@ -17,8 +16,9 @@ use stdClass;
  *
  * @see ReferenceParameterTest::testReferencedVariadicParameterAndUnnamedArguments()
  * @see ReferenceParameterTest::testReferencedVariadicParameterWithNamedArgument()
+ * @see ReferenceParameterTest::testInvokeReferencedArguments()
  */
-class VariadicParameterTest extends BaseTest
+final class VariadicParameterTest extends BaseTest
 {
     /**
      * A values collection for a variadic argument can be passed as an array in a named parameter.
@@ -146,8 +146,7 @@ class VariadicParameterTest extends BaseTest
      */
     public function testVariadicParamWithoutArgumentsButWithContainer(): void
     {
-        $binder = $this->constructor->get('binder', BinderInterface::class);
-        $binder->bindSingleton(EngineInterface::class, new EngineMarkTwo());
+        $this->bindSingleton(EngineInterface::class, new EngineMarkTwo());
 
         $result = $this->resolveClosure(
             static fn (EngineInterface ...$engines) => $engines,

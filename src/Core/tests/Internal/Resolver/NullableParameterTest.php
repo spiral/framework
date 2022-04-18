@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Resolver;
 
-use Spiral\Core\BinderInterface;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 
 /**
  * Others nullable tests:
+ *
  * @see VariadicParameterTest::testNullableVariadicArgument()
+ * @see ReferenceParameterTest::testInvokeReferencedArguments()
  */
-class NullableParameterTest extends BaseTest
+final class NullableParameterTest extends BaseTest
 {
     public function testEmptySignature(): void
     {
@@ -23,8 +24,7 @@ class NullableParameterTest extends BaseTest
 
     public function testResolveFromContainer(): void
     {
-        $binder = $this->constructor->get('binder', BinderInterface::class);
-        $binder->bindSingleton(EngineInterface::class, new EngineMarkTwo());
+        $this->bindSingleton(EngineInterface::class, new EngineMarkTwo());
 
         var_dump($this->createResolver()->container->state->bindings);
 
@@ -41,13 +41,45 @@ class NullableParameterTest extends BaseTest
         $this->assertSame([null], $result);
     }
 
-    public function testNullableWithoutDefaultValue(): void
+    /**
+     * Nullable arguments should be searched in container.
+     */
+    public function testNullableWithoutDefaultValueShouldBeSearchedInContainer(): void
+    {
+        $this->bindSingleton(EngineInterface::class, $engine = new EngineMarkTwo());
+
+        $result = $this->resolveClosure(static fn(?EngineInterface $engine) => null);
+
+        $this->assertSame([$engine], $result);
+    }
+
+    /**
+     * If argument for a nullable parameter is not found in container then it should be resolved as `null`.
+     */
+    public function testNullableClassWithoutDefaultValue(): void
+    {
+        $result = $this->resolveClosure(static fn(?EngineInterface $param) => $param);
+
+        $this->assertSame([null], $result);
+    }
+
+    public function testNullableObjectWithoutDefaultValue(): void
     {
         $result = $this->resolveClosure(static fn(?object $param) => $param);
 
         $this->assertSame([null], $result);
     }
 
+    public function testNullableScalarWithoutDefaultValue(): void
+    {
+        $result = $this->resolveClosure(static fn(?int $param) => $param);
+
+        $this->assertSame([null], $result);
+    }
+
+    /**
+     * Nullable scalars should be set with `null` if not specified by name explicitly.
+     */
     public function testNullableDefaultScalar(): void
     {
         $result = $this->resolveClosure(static fn(?string $param = 'scalar') => $param);
@@ -57,8 +89,7 @@ class NullableParameterTest extends BaseTest
 
     public function testNullableAndValueInContainer(): void
     {
-        $binder = $this->constructor->get('binder', BinderInterface::class);
-        $binder->bindSingleton(EngineInterface::class, new EngineMarkTwo());
+        $this->bindSingleton(EngineInterface::class, new EngineMarkTwo());
 
         $result = $this->resolveClosure(static fn(?EngineInterface $engine) => $engine);
 

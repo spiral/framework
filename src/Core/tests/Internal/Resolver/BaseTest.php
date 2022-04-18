@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core\Internal\Resolver;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Internal\Config;
 use Spiral\Core\Internal\Constructor;
 use Spiral\Core\Internal\Resolver;
@@ -23,6 +24,13 @@ abstract class BaseTest extends TestCase
             'state' => new State(),
         ]);
         parent::setUp();
+    }
+
+    protected function bindSingleton(string $alias, string|array|callable|object $resolver): void
+    {
+        $binder = $this->constructor->get('binder', BinderInterface::class);
+        \assert($binder instanceof BinderInterface);
+        $binder->bindSingleton($alias, $resolver);
     }
 
     protected function resolveClosure(\Closure $closure, array $args = []): mixed
