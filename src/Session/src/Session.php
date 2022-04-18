@@ -49,7 +49,7 @@ final class Session implements SessionInterface
      */
     private int $lifetime;
 
-    private ?string $id;
+    private ?string $id = null;
 
     private bool $started = false;
 
