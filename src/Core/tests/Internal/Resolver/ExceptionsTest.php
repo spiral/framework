@@ -10,6 +10,10 @@ use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Stub\ColorInterface;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
+use Spiral\Tests\Core\Stub\EngineVAZ2101;
+use Spiral\Tests\Core\Stub\EngineZIL130;
+use Spiral\Tests\Core\Stub\MadeInUssrInterface;
+use stdClass;
 
 final class ExceptionsTest extends BaseTest
 {
@@ -20,7 +24,7 @@ final class ExceptionsTest extends BaseTest
         $this->expectException(ArgumentException::class);
 
         $this->resolveClosure(
-            static fn (EngineInterface $engine, string $two) => null
+            static fn(EngineInterface $engine, string $two) => null
         );
     }
 
@@ -31,7 +35,7 @@ final class ExceptionsTest extends BaseTest
         $this->expectException(ArgumentException::class);
 
         $this->resolveClosure(
-            static fn (EngineInterface $engine, $two) => null
+            static fn(EngineInterface $engine, $two) => null
         );
     }
 
@@ -42,15 +46,8 @@ final class ExceptionsTest extends BaseTest
         $this->expectException(NotFoundException::class);
 
         $this->resolveClosure(
-            static fn (EngineInterface $engine, ColorInterface $color) => null
+            static fn(EngineInterface $engine, ColorInterface $color) => null
         );
-    }
-
-    public function testWrongNamedParam(): void
-    {
-        $this->expectException(\Throwable::class);
-
-        $this->resolveClosure(fn (EngineInterface $engine) => null, ['engine' => new DateTimeImmutable()]);
     }
 
     /**
@@ -61,72 +58,55 @@ final class ExceptionsTest extends BaseTest
         $this->expectException(ArgumentException::class);
 
         $this->resolveClosure(
-            static fn (object $engine) => null
+            static fn(object $engine) => null
         );
     }
 
-    // TODO
+    /**
+     * Argument will be checked before result returning
+     */
+    public function testWrongNamedParam(): void
+    {
+        $this->expectException(\Throwable::class);
 
+        $this->resolveClosure(fn(EngineInterface $engine) => null, ['engine' => new DateTimeImmutable()]);
+    }
+
+    /**
+     * Failed argument will not be pulled from container?
+     */
     public function testWrongNamedParamWithValueInContainer(): void
     {
         $this->bindSingleton(EngineInterface::class, $engine = new EngineMarkTwo());
 
-        $result = $this->resolveClosure(
-            static fn (EngineInterface $engine) => null,
+        $this->expectException(\Throwable::class); # todo: determinate an exception
+
+        $this->resolveClosure(
+            static fn(EngineInterface $engine) => null,
             ['engine' => new DateTimeImmutable()]
         );
-
-        $this->expectException(\Throwable::class);
-        // todo OR
-        $this->assertSame([$engine], $result);
     }
 
-    public function testArrayArgumentWithUnnamedType(): void
+    /**
+     * Variadic arguments should be passed in a one array
+     */
+    public function testVariadicParameterAndUnpackedArguments(): void
     {
-        $this->bindSingleton(EngineInterface::class, $engine = new EngineMarkTwo());
+        $this->expectException(\Throwable::class); # todo: determinate an exception
 
-        // todo OR
+        $this->resolveClosure(
+            fn(EngineInterface ...$engines) => $engines,
+            [new EngineZIL130(), new EngineVAZ2101(), new EngineMarkTwo()]
+        );
+    }
+
+    public function testVariadicTypeIntersectionParameterAndUnnamedArguments(): void
+    {
         $this->expectException(ArgumentException::class);
 
         $this->resolveClosure(
-            static fn (array $arg) => null,
-            [['test']]
+            fn(EngineInterface&MadeInUssrInterface ...$engines) => $engines,
+            [[new EngineZIL130(), new EngineVAZ2101(), new stdClass(), new EngineMarkTwo(), new stdClass()]]
         );
-    }
-
-    public function testCallableParameterWithClosureArg(): void
-    {
-        $result = $this->resolveClosure(
-            static fn (callable $arg) => null,
-            [$callable = fn () => true]
-        );
-
-        // $this->expectException(MissingRequiredArgumentException::class);
-        // TODO
-        $this->assertSame([$callable], $result);
-    }
-
-    public function testIterableArgumentWithUnnamedType(): void
-    {
-        $result = $this->resolveClosure(
-            static fn (iterable $arg) => null,
-            [$iterable = new \SplStack()]
-        );
-
-        // $this->expectException(MissingRequiredArgumentException::class);
-        // TODO
-        $this->assertSame([$iterable], $result); // todo arg as array
-    }
-
-    public function testUnnamedScalarParam(): void
-    {
-        $result = $this->resolveClosure(
-            static fn () => null,
-            ['scalar']
-        );
-
-        // $this->expectException(InvalidArgumentException::class);
-        // TODO?
-        $this->assertSame([], $result);
     }
 }

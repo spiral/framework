@@ -94,9 +94,11 @@ final class ReferenceParameterTest extends BaseTest
                 DateTimeInterface &...$dates // collect all unnamed DateTimeInterface objects
             ) => null,
             [
-                $date1,
-                $date2,
-                &$date3,
+                'dates' => [
+                    $date1,
+                    $date2,
+                    &$date3,
+                ],
                 'foo' => &$foo,
                 'bar' => $bar,
                 'baz' => &$baz,

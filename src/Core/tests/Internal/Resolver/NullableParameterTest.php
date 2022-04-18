@@ -15,25 +15,6 @@ use Spiral\Tests\Core\Stub\EngineMarkTwo;
  */
 final class NullableParameterTest extends BaseTest
 {
-    public function testEmptySignature(): void
-    {
-        $result = $this->resolveClosure(static fn() => null);
-
-        $this->assertSame([], $result);
-    }
-
-    public function testResolveFromContainer(): void
-    {
-        $this->bindSingleton(EngineInterface::class, new EngineMarkTwo());
-
-        var_dump($this->createResolver()->container->state->bindings);
-
-        $result = $this->resolveClosure(static fn(EngineInterface $engine) => $engine);
-
-        $this->assertCount(1, $result);
-        $this->assertInstanceOf(EngineMarkTwo::class, $result[0]);
-    }
-
     public function testNullableDefaultNull(): void
     {
         $result = $this->resolveClosure(static fn(?string $param = null) => $param);
@@ -85,16 +66,6 @@ final class NullableParameterTest extends BaseTest
         $result = $this->resolveClosure(static fn(?string $param = 'scalar') => $param);
 
         $this->assertSame(['scalar'], $result);
-    }
-
-    public function testNullableAndValueInContainer(): void
-    {
-        $this->bindSingleton(EngineInterface::class, new EngineMarkTwo());
-
-        $result = $this->resolveClosure(static fn(?EngineInterface $engine) => $engine);
-
-        $this->assertCount(1, $result);
-        $this->assertInstanceOf(EngineMarkTwo::class, $result[0]);
     }
 
     public function testNullableDefaultScalarAndNamedArgumentNull(): void
