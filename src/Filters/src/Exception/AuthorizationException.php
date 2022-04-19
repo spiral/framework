@@ -6,5 +6,4 @@ namespace Spiral\Filters\Exception;
 
 class AuthorizationException extends FilterException
 {
-
 }
