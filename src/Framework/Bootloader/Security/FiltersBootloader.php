@@ -6,12 +6,16 @@ namespace Spiral\Bootloader\Security;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Container;
+use Spiral\Core\InterceptableCore;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Filter;
 use Spiral\Filters\FilterInterface;
 use Spiral\Filters\FilterProvider;
 use Spiral\Filters\FilterProviderInterface;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Interceptors\AuthorizeFilterInterceptor;
+use Spiral\Filters\Interceptors\Core;
+use Spiral\Filters\Interceptors\ValidateFilterInterceptor;
 use Spiral\Validation\Bootloader\ValidationBootloader;
 
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
@@ -22,7 +26,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
 
     protected const SINGLETONS = [
         FilterProviderInterface::class => FilterProvider::class,
-        InputInterface::class          => InputScope::class,
+        InputInterface::class => InputScope::class,
     ];
 
     public function __construct(
@@ -43,9 +47,14 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
      */
     public function createInjection(\ReflectionClass $class, string $context = null): FilterInterface
     {
-        return $this->container->get(FilterProviderInterface::class)->createFilter(
-            $class->getName(),
+        $core = new InterceptableCore(new Core(
+            $this->container->get(FilterProviderInterface::class),
             $this->container->get(InputInterface::class)
-        );
+        ));
+
+        $core->addInterceptor(new ValidateFilterInterceptor($this->container));
+        $core->addInterceptor(new AuthorizeFilterInterceptor($this->container));
+
+        return $core->callAction($class->getName(), 'handle', ['context' => $context]);
     }
 }
