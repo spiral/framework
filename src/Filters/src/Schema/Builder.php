@@ -2,54 +2,42 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Filters;
+namespace Spiral\Filters\Schema;
 
 use Spiral\Filters\Exception\SchemaException;
-use Spiral\Models\ModelSchema;
-use Spiral\Models\Reflection\ReflectionEntity;
 
-final class SchemaBuilder
+final class Builder
 {
     // Used to define multiple nested models.
-    protected const NESTED   = 0;
-    protected const ORIGIN   = 1;
-    protected const ITERATE  = 2;
+    protected const NESTED = 0;
+    protected const ORIGIN = 1;
+    protected const ITERATE = 2;
     protected const OPTIONAL = 'optional';
 
-    public function __construct(
-        private readonly ReflectionEntity $entity
-    ) {
-    }
+    // Packed schema definitions
+    public const SCHEMA_SOURCE = 'source';
+    public const SCHEMA_ORIGIN = 'origin';
+    public const SCHEMA_FILTER = 'filter';
+    public const SCHEMA_ARRAY = 'array';
+    public const SCHEMA_OPTIONAL = 'optional';
+    public const SCHEMA_ITERATE_SOURCE = 'iterate_source';
+    public const SCHEMA_ITERATE_ORIGIN = 'iterate_origin';
 
-    public function getName(): string
-    {
-        return $this->entity->getName();
-    }
 
     /**
      * Generate entity schema based on schema definitions.
      *
+     * @return array{
+     *     string: array<string, array{
+     *         string: string,
+     *     }
+     * }
      * @throws SchemaException
      */
-    public function makeSchema(): array
+    public function makeSchema(string $name, array $schema): array
     {
-        return [
-            // mapping and validation schema
-            FilterProvider::MAPPING   => $this->buildMap($this->entity),
-            FilterProvider::VALIDATES => $this->entity->getProperty('validates', true) ?? [],
-
-            // entity schema
-            ModelSchema::SECURED      => $this->entity->getSecured(),
-            ModelSchema::FILLABLE     => $this->entity->getFillable(),
-            ModelSchema::MUTATORS     => $this->entity->getMutators(),
-        ];
-    }
-
-    protected function buildMap(ReflectionEntity $filter): array
-    {
-        $schema = $filter->getProperty('schema', true);
         if (empty($schema)) {
-            throw new SchemaException(\sprintf('Filter `%s` does not define any schema', $filter->getName()));
+            throw new SchemaException(\sprintf('Filter `%s` does not define any schema', $name));
         }
 
         $result = [];
@@ -62,19 +50,19 @@ final class SchemaBuilder
                 if (!\class_exists($definition)) {
                     [$source, $origin] = $this->parseDefinition($field, $definition);
                     $result[$field] = [
-                        FilterProvider::SOURCE => $source,
-                        FilterProvider::ORIGIN => $origin,
+                        self::SCHEMA_SOURCE => $source,
+                        self::SCHEMA_ORIGIN => $origin,
                     ];
                     continue;
                 }
 
                 // singular nested model
                 $result[$field] = [
-                    FilterProvider::SOURCE   => null,
-                    FilterProvider::ORIGIN   => $field,
-                    FilterProvider::FILTER   => $definition,
-                    FilterProvider::ARRAY    => false,
-                    FilterProvider::OPTIONAL => $optional,
+                    self::SCHEMA_SOURCE => null,
+                    self::SCHEMA_ORIGIN => $field,
+                    self::SCHEMA_FILTER => $definition,
+                    self::SCHEMA_ARRAY => false,
+                    self::SCHEMA_OPTIONAL => $optional,
                 ];
 
                 continue;
@@ -82,7 +70,7 @@ final class SchemaBuilder
 
             if (!\is_array($definition) || $definition === []) {
                 throw new SchemaException(
-                    \sprintf('Invalid schema definition at `%s`->`%s`', $filter->getName(), $field)
+                    \sprintf('Invalid schema definition at `%s`->`%s`', $name, $field)
                 );
             }
 
@@ -91,7 +79,7 @@ final class SchemaBuilder
                 $origin = $definition[self::ORIGIN];
 
                 // [class, 'data:something.*'] vs [class, 'data:something']
-                $iterate = \str_contains((string) $origin, '.*') || !empty($definition[self::ITERATE]);
+                $iterate = \str_contains((string)$origin, '.*') || !empty($definition[self::ITERATE]);
                 $origin = \rtrim($origin, '.*');
             } else {
                 $origin = $field;
@@ -104,18 +92,18 @@ final class SchemaBuilder
 
             // array of models (default isolation prefix)
             $map = [
-                FilterProvider::FILTER   => $definition[self::NESTED],
-                FilterProvider::SOURCE   => null,
-                FilterProvider::ORIGIN   => $origin,
-                FilterProvider::ARRAY    => $iterate,
-                FilterProvider::OPTIONAL => $optional,
+                self::SCHEMA_FILTER => $definition[self::NESTED],
+                self::SCHEMA_SOURCE => null,
+                self::SCHEMA_ORIGIN => $origin,
+                self::SCHEMA_ARRAY => $iterate,
+                self::SCHEMA_OPTIONAL => $optional,
             ];
 
             if ($iterate) {
                 [$source, $origin] = $this->parseDefinition($field, $definition[self::ITERATE] ?? $origin);
 
-                $map[FilterProvider::ITERATE_SOURCE] = $source;
-                $map[FilterProvider::ITERATE_ORIGIN] = $origin;
+                $map[self::SCHEMA_ITERATE_SOURCE] = $source;
+                $map[self::SCHEMA_ITERATE_ORIGIN] = $origin;
             }
 
             $result[$field] = $map;
@@ -129,9 +117,6 @@ final class SchemaBuilder
      *
      * field => source        => source:field
      * field => source:origin => source:origin
-     *
-     * @param string           $field
-     * @param string           $definition
      *
      * @return array [$source, $origin]
      */
