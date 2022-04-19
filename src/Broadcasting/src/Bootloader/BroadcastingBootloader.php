@@ -20,7 +20,6 @@ final class BroadcastingBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         BroadcastManagerInterface::class => BroadcastManager::class,
-        GuardInterface::class => BroadcastInterface::class,
         BroadcastInterface::class => [self::class, 'initDefaultBroadcast'],
     ];
 
