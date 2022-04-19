@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Broadcasting\Driver;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -17,11 +16,6 @@ final class LogBroadcast extends AbstractBroadcast
     {
         $this->logger = $logger;
         $this->level = $level;
-    }
-
-    public function authorize(ServerRequestInterface $request): bool
-    {
-        return true;
     }
 
     public function publish($topics, $messages): void

@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Broadcasting\BroadcastInterface;
-use Spiral\Broadcasting\Config\BroadcastConfig;
+use Spiral\Broadcasting\GuardInterface;
 use Spiral\Broadcasting\Middleware\AuthorizationMiddleware;
 
 final class AuthorizationMiddlewareTest extends TestCase
@@ -23,13 +23,8 @@ final class AuthorizationMiddlewareTest extends TestCase
     {
         $middleware = new AuthorizationMiddleware(
             m::mock(BroadcastInterface::class),
-            new BroadcastConfig([
-                'authorize' => [
-                    'path' => null,
-                    'topics' => [],
-                ],
-            ]),
             m::mock(ResponseFactoryInterface::class),
+            null
         );
 
         $request = m::mock(ServerRequestInterface::class);
@@ -43,17 +38,31 @@ final class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testAuthorizedRequestShouldReturnOkResponse(): void
+    public function testNotGuardedBroadcastShouldReturnOkResponse(): void
     {
         $middleware = new AuthorizationMiddleware(
             $broadcast = m::mock(BroadcastInterface::class),
-            new BroadcastConfig([
-                'authorize' => [
-                    'path' => '/auth',
-                    'topics' => [],
-                ],
-            ]),
             $responseFactory = m::mock(ResponseFactoryInterface::class),
+            '/auth',
+        );
+
+        $request = m::mock(ServerRequestInterface::class);
+        $handler = m::mock(RequestHandlerInterface::class);
+
+        $request->shouldReceive('getUri')->once()->andReturn($uri = m::mock(UriInterface::class));
+        $uri->shouldReceive('getPath')->once()->andReturn('/auth');
+
+        $responseFactory->shouldReceive('createResponse')->once()->with(200)->andReturn(m::mock(ResponseInterface::class));
+
+        $middleware->process($request, $handler);
+    }
+
+    public function testGuardedBroadcastWithAuthorizedRequestShouldReturnOkResponse(): void
+    {
+        $middleware = new AuthorizationMiddleware(
+            $broadcast = m::mock(BroadcastInterface::class, GuardInterface::class),
+            $responseFactory = m::mock(ResponseFactoryInterface::class),
+            '/auth',
         );
 
         $request = m::mock(ServerRequestInterface::class);
@@ -68,17 +77,12 @@ final class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testNotAuthorizedRequestShouldReturn403Response(): void
+    public function testGuardedBroadcastWithNotAuthorizedRequestShouldReturn403Response(): void
     {
         $middleware = new AuthorizationMiddleware(
-            $broadcast = m::mock(BroadcastInterface::class),
-            new BroadcastConfig([
-                'authorize' => [
-                    'path' => '/auth',
-                    'topics' => [],
-                ],
-            ]),
+            $broadcast = m::mock(BroadcastInterface::class, GuardInterface::class),
             $responseFactory = m::mock(ResponseFactoryInterface::class),
+            '/auth',
         );
 
         $request = m::mock(ServerRequestInterface::class);

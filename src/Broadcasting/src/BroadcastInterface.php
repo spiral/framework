@@ -11,7 +11,7 @@ use Stringable;
  * @psalm-type TopicsList = non-empty-list<string> | non-empty-list<Stringable> | string | Stringable
  * @psalm-type MessagesList = non-empty-list<string> | non-empty-list<Stringable> | string | Stringable
  */
-interface BroadcastInterface extends GuardInterface
+interface BroadcastInterface
 {
     /**
      * Method to send messages to the required topic (channel).

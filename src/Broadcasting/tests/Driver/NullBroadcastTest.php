@@ -6,7 +6,6 @@ namespace Spiral\Tests\Broadcasting\Driver;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Broadcasting\Driver\NullBroadcast;
 
 final class NullBroadcastTest extends TestCase
@@ -20,13 +19,6 @@ final class NullBroadcastTest extends TestCase
         parent::setUp();
 
         $this->driver = new NullBroadcast();
-    }
-
-    public function testAuthorize(): void
-    {
-        $this->assertTrue(
-            $this->driver->authorize(m::mock(ServerRequestInterface::class))
-        );
     }
 
     public function testPublishMessageToTopic(): void

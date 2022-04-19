@@ -11,32 +11,36 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Broadcasting\BroadcastInterface;
 use Spiral\Broadcasting\Config\BroadcastConfig;
+use Spiral\Broadcasting\GuardInterface;
 
 final class AuthorizationMiddleware implements MiddlewareInterface
 {
-    private BroadcastConfig $config;
     private ResponseFactoryInterface $responseFactory;
     private BroadcastInterface $broadcast;
+    private ?string $authorizationPath;
 
     public function __construct(
         BroadcastInterface $broadcast,
-        BroadcastConfig $config,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
+        ?string $authorizationPath = null
     ) {
-        $this->config = $config;
         $this->responseFactory = $responseFactory;
         $this->broadcast = $broadcast;
+        $this->authorizationPath = $authorizationPath;
     }
 
     public function process(
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        if ($request->getUri()->getPath() !== $this->config->getAuthorizationPath()) {
+        if ($request->getUri()->getPath() !== $this->authorizationPath) {
             return $handler->handle($request);
         }
 
-        if ($this->broadcast->authorize($request)) {
+        if (
+            !$this->broadcast instanceof GuardInterface
+            || $this->broadcast->authorize($request)
+        ) {
             return $this->responseFactory->createResponse(200);
         }
 
