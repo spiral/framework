@@ -8,12 +8,6 @@ use Spiral\Filters\Exception\SchemaException;
 
 final class Builder
 {
-    // Used to define multiple nested models.
-    protected const NESTED = 0;
-    protected const ORIGIN = 1;
-    protected const ITERATE = 2;
-    protected const OPTIONAL = 'optional';
-
     // Packed schema definitions
     public const SCHEMA_SOURCE = 'source';
     public const SCHEMA_ORIGIN = 'origin';
@@ -22,6 +16,11 @@ final class Builder
     public const SCHEMA_OPTIONAL = 'optional';
     public const SCHEMA_ITERATE_SOURCE = 'iterate_source';
     public const SCHEMA_ITERATE_ORIGIN = 'iterate_origin';
+    // Used to define multiple nested models.
+    protected const NESTED = 0;
+    protected const ORIGIN = 1;
+    protected const ITERATE = 2;
+    protected const OPTIONAL = 'optional';
 
 
     /**
