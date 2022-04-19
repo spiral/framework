@@ -4,49 +4,27 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
-use Generator;
 use ReflectionFunctionAbstract;
 use ReflectionParameter;
+use Spiral\Core\Exception\InvalidArgumentException;
 
 /**
- * Intermediate arguments resolving data to pass around until resolving is finished.
- *
  * @internal
  */
 final class ResolvingState
 {
-    public readonly ReflectionFunctionAbstract $reflection;
-
     public readonly bool $modeNamed;
-
-    /**
-     * @psalm-var array<int, object>
-     */
-    private array $positionArguments = [];
-
-    /**
-     * @psalm-var array<string, mixed>
-     */
-    private array $namedArguments = [];
 
     /**
      * @psalm-var list<mixed>
      */
     private array $resolvedValues = [];
 
-    /**
-     * @param ReflectionFunctionAbstract $reflection Function reflection.
-     * @param array $arguments User arguments.
-     */
-    public function __construct(ReflectionFunctionAbstract $reflection, array $arguments)
-    {
-        $this->reflection = $reflection;
-        $this->shouldPushTrailingArguments = !$reflection->isInternal();
-        $this->sortArguments($arguments);
-        $this->modeNamed = \count($this->positionArguments) === 0;
-        if (!$this->modeNamed && \count($this->namedArguments) !== 0) {
-            throw new \Exception();
-        }
+    public function __construct(
+        public readonly ReflectionFunctionAbstract $reflection,
+        private array $arguments,
+    ) {
+        $this->modeNamed = $this->isNamedMode();
     }
 
     public function addResolvedValue(mixed &$value): void
@@ -56,19 +34,14 @@ final class ResolvingState
 
     public function resolveParameterByNameOrPosition(ReflectionParameter $parameter, bool $variadic): bool
     {
-        if ($this->modeNamed) {
-            $name = $parameter->getName();
-            if (!\array_key_exists($name, $this->namedArguments)) {
-                return false;
-            }
-            $value = &$this->namedArguments[$name];
-        } else {
-            $pos = $parameter->getPosition();
-            if (!\array_key_exists($pos, $this->positionArguments)) {
-                return false;
-            }
-            $value = &$this->positionArguments[$pos];
+        $key = $this->modeNamed
+            ? $parameter->getName()
+            : $parameter->getPosition();
+
+        if (!\array_key_exists($key, $this->arguments)) {
+            return false;
         }
+        $value = &$this->arguments[$key];
 
         if ($variadic && \is_array($value)) {
             \array_walk($value, [$this, 'addResolvedValue']);
@@ -83,14 +56,24 @@ final class ResolvingState
         return $this->resolvedValues;
     }
 
-    private function sortArguments(array $arguments): void
+    private function isNamedMode(): bool
     {
-        foreach ($arguments as $key => &$value) {
+        $nums = 0;
+        $strings = 0;
+        foreach ($this->arguments as $key => $_) {
             if (\is_int($key)) {
-                $this->positionArguments[$key] = &$value;
+                ++$nums;
             } else {
-                $this->namedArguments[$key] = &$value;
+                ++$strings;
             }
         }
+
+        return match (true) {
+            $nums === 0 => true,
+            $strings === 0 => false,
+            default => throw new InvalidArgumentException(
+                'You can not use both numeric and string keys for predefined arguments.'
+            )
+        };
     }
 }
