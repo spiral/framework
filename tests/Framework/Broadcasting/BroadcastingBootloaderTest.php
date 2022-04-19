@@ -36,7 +36,6 @@ final class BroadcastingBootloaderTest extends BaseTest
         $this->assertInstanceOf(BroadcastManager::class, $this->app->get(BroadcastManagerInterface::class));
 
         $this->assertInstanceOf(LogBroadcast::class, $this->app->get(GuardInterface::class));
-        $this->assertInstanceOf(GuardInterface::class, $this->app->get(GuardInterface::class));
     }
 
     public function testGetsConnectionByAlias()
