@@ -5,32 +5,39 @@ declare(strict_types=1);
 namespace Spiral\Queue\Attribute;
 
 use Spiral\Attributes\Factory;
-use Spiral\Attributes\ReaderInterface;
+use Spiral\Queue\QueueableInterface;
 
 trait QueueableTrait
 {
-    private ReaderInterface $reader;
-
-    public function setReader(ReaderInterface $reader): self
-    {
-        $this->reader = $reader;
-
-        return $this;
-    }
-
     /**
-     * @psalm-param class-string $class
+     * @psalm-param class-string|object $class
      */
-    public function findQueueable(string $class): ?Queueable
+    public function findQueueable($object): ?Queueable
     {
-        $this->reader ??= (new Factory())->create();
-
-        $reflection = new \ReflectionClass($class);
+        $reflection = new \ReflectionClass($object);
 
         if ($reflection->isInterface()) {
             return null;
         }
 
-        return $this->reader->firstClassMetadata($reflection, Queueable::class);
+        if ($reflection->implementsInterface(QueueableInterface::class)) {
+            return $this->createQueueable($reflection, $object);
+        }
+
+        return (new Factory())->create()->firstClassMetadata($reflection, Queueable::class);
+    }
+
+    /**
+     * @psalm-param class-string|object $object
+     */
+    private function createQueueable(\ReflectionClass $reflection, $object): Queueable
+    {
+        $queueable = new Queueable();
+
+        if (\is_object($object) && $reflection->hasMethod('getQueue')) {
+            $queueable->queue = $reflection->getMethod('getQueue')->invoke($object);
+        }
+
+        return $queueable;
     }
 }
