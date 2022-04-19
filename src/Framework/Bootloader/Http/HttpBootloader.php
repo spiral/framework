@@ -45,7 +45,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
 
     protected const SINGLETONS = [
         Http::class             => [self::class, 'httpCore'],
-        EmitterInterface::class => SapiEmitter::class,
+        EmitterInterface::class => [self::class, 'createEmitter'],
     ];
 
     /** @var ConfiguratorInterface */
@@ -73,6 +73,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
                     'Content-Type' => 'text/html; charset=UTF-8',
                 ],
                 'middleware' => [],
+                'chunkSize' => null,
             ]
         );
 
@@ -100,6 +101,17 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
     public function addMiddleware($middleware): void
     {
         $this->config->modify('http', new Append('middleware', null, $middleware));
+    }
+
+    public function createEmitter(HttpConfig $config): EmitterInterface
+    {
+        $emitter = new SapiEmitter();
+
+        if (($chunkSize = $config->getChunkSize()) !== null) {
+            $emitter->bufferSize = $chunkSize;
+        }
+
+        return $emitter;
     }
 
     /**

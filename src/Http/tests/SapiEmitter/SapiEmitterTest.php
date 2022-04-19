@@ -10,6 +10,10 @@ use Nyholm\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Spiral\Bootloader\Http\HttpBootloader;
+use Spiral\Config\ConfigManager;
+use Spiral\Config\LoaderInterface;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Exception\EmitterException;
 use Spiral\Http\Emitter\SapiEmitter;
 use Spiral\Tests\Http\SapiEmitter\Support\HTTPFunctions;
@@ -40,6 +44,18 @@ final class SapiEmitterTest extends TestCase
         $this->assertEquals(200, $this->getResponseCode());
         $this->assertContains('X-Test: 1', $this->getHeaders());
         // $this->assertContains('Content-Length: ' . strlen($body), $this->getHeaders());
+        $this->expectOutputString($body);
+    }
+
+    public function testEmitWithoutStream(): void
+    {
+        $body = 'Example body';
+        $response = $this->createResponse(200, ['X-Test' => 1], $body);
+
+        $this->createEmitter(0)->emit($response);
+
+        $this->assertEquals(200, $this->getResponseCode());
+        $this->assertContains('X-Test: 1', $this->getHeaders());
         $this->expectOutputString($body);
     }
 
@@ -149,6 +165,33 @@ final class SapiEmitterTest extends TestCase
         $this->assertContains('Cookie-Set: 3', $this->getHeaders());
         // $this->assertContains('Content-Length: ' . strlen($body), $this->getHeaders());
         $this->expectOutputString($body);
+    }
+
+    public function testDefaultChunkSize(): void
+    {
+        $bootloader = new HttpBootloader(new ConfigManager($this->createMock(LoaderInterface::class)));
+
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => null]));
+
+        $this->assertSame($emitter->bufferSize, 2_097_152);
+    }
+
+    public function testChunkSize(): void
+    {
+        $bootloader = new HttpBootloader(new ConfigManager($this->createMock(LoaderInterface::class)));
+
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => 100]));
+        $this->assertSame($emitter->bufferSize, 100);
+
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => '100']));
+        $this->assertSame($emitter->bufferSize, 100);
+
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => 0]));
+        $this->assertSame($emitter->bufferSize, 0);
+
+        // value less than 0. Should be a default value
+        $emitter = $bootloader->createEmitter(new HttpConfig(['chunkSize' => -1]));
+        $this->assertSame($emitter->bufferSize, 2_097_152);
     }
 
     private function createEmitter(?int $bufferSize = null): SapiEmitter

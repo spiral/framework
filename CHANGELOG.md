@@ -2,6 +2,7 @@
 
 ## v2.13.0 - Unreleased
 - **Other Features**
+  - [spiral/http] Added parameter `chunkSize` in the `http` configuration file.
   - [spiral/queue] Added attribute `Queueable` to mark classes that can be queued. 
     Added `QueueableTrait` for easy Queueable attribute lookup in the class.
 
