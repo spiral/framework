@@ -23,7 +23,8 @@ use Spiral\Validation\ValidatorInterface;
  * Please do not request instance without using container, constructor signature might change over
  * time (or another request filter class can be created with inheritance and composition support).
  */
-abstract class Filter extends AbstractEntity implements FilterInterface,
+abstract class Filter extends AbstractEntity implements
+    FilterInterface,
                                                         ShouldBeValidated,
                                                         ShouldBeAuthorized
 {
@@ -66,6 +67,59 @@ abstract class Filter extends AbstractEntity implements FilterInterface,
      * Plus named sources (bags): header, data, post, query, cookie, file, server, attribute.
      */
     abstract public function mappingSchema(): array;
+
+    public function isAuthorized(?AuthContextInterface $auth): bool
+    {
+        return true;
+    }
+
+    /**
+     * Handle a failed authorization attempt.
+     *
+     * @throws AuthorizationException
+     */
+    public function failedAuthorization(): void
+    {
+        throw new AuthorizationException();
+    }
+
+    public function filteredData(): array
+    {
+        return $this->toArray();
+    }
+
+    public function withErrorMapper(ErrorMapper $errorMapper): void
+    {
+        $this->errorMapper = $errorMapper;
+    }
+
+    public function withValidation(
+        ValidationInterface $validation
+    ): static {
+        $this->validation = $validation;
+    }
+
+    public function validate(): ValidatorInterface
+    {
+        if (!$this->validation) {
+            throw new FilterException('Validation is not set.');
+        }
+
+        return $this->createValidator();
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     */
+    public function failedValidation(ValidatorInterface $validator): void
+    {
+        throw new ValidationException(
+            $this->errorMapper
+                ? $this->errorMapper->mapErrors($validator->getErrors())
+                : $validator->getErrors(),
+            $validator->getContext()
+        );
+    }
 
     /**
      * The fields that are mass assignable.
@@ -114,65 +168,12 @@ abstract class Filter extends AbstractEntity implements FilterInterface,
         return [];
     }
 
-    public function isAuthorized(?AuthContextInterface $auth): bool
-    {
-        return true;
-    }
-
-    /**
-     * Handle a failed authorization attempt.
-     *
-     * @throws AuthorizationException
-     */
-    public function failedAuthorization(): void
-    {
-        throw new AuthorizationException();
-    }
-
-    public function filteredData(): array
-    {
-        return $this->toArray();
-    }
-
-    public function withErrorMapper(ErrorMapper $errorMapper): void
-    {
-        $this->errorMapper = $errorMapper;
-    }
-
-    public function withValidation(
-        ValidationInterface $validation
-    ): static {
-        $this->validation = $validation;
-    }
-
-    public function validate(): ValidatorInterface
-    {
-        if (!$this->validation) {
-            throw new FilterException('Validation is not set.');
-        }
-
-        return $this->createValidator();
-    }
-
     /**
      * Create the default validator instance.
      */
     protected function createValidator(): ValidatorInterface
     {
         return $this->validation->validate($this, $this->validationRules());
-    }
-
-    /**
-     * Handle a failed validation attempt.
-     */
-    public function failedValidation(ValidatorInterface $validator): void
-    {
-        throw new ValidationException(
-            $this->errorMapper
-                ? $this->errorMapper->mapErrors($validator->getErrors())
-                : $validator->getErrors(),
-            $validator->getContext()
-        );
     }
 
     protected function isFillable(string $field): bool
