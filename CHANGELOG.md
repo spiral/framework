@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## v2.12.0 - Unreleased
+## v2.13.0 - Unreleased
+- **Other Features**
+  - [spiral/http] Added parameter `chunkSize` in the `http` configuration file.
+
+## v2.12.0 - 2022-04-07
 - **Medium Impact Changes**
   - Bootloaders `Spiral\Bootloader\Broadcast\BroadcastBootloader`, `Spiral\Bootloader\Http\WebsocketsBootloader`
     are deprecated. Will be removed in v3.0.
