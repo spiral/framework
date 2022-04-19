@@ -67,8 +67,7 @@ final class PositionArgumentTest extends BaseTest
             ['scalar']
         );
 
-        // TODO or empty?
-        $this->assertSame(['scalar'], $result);
+        $this->assertSame([], $result);
     }
 
     /**
@@ -85,12 +84,12 @@ final class PositionArgumentTest extends BaseTest
     }
 
     /**
-     * All position arguments will be passed as is (with trailed arguments)
+     * Arguments count can't be greater than parameters count.
      */
     public function testTrailedArguments(): void
     {
         $result = $this->resolveClosure(
-            static fn(?EngineInterface $engine, $id = 'test') => null,
+            static fn(?EngineInterface $engine1, EngineInterface $engine2) => null,
             [
                 new EngineMarkTwo(),
                 new DateTimeImmutable(),
@@ -99,14 +98,17 @@ final class PositionArgumentTest extends BaseTest
             ]
         );
 
-        $this->assertCount(4, $result);
+        $this->assertCount(2, $result);
     }
 
+    /**
+     * Arguments count can't be greater than parameters count.
+     */
     public function testTrailedArgumentsOnEmptySignature(): void
     {
         $result = $this->resolveClosure(
             static fn() => null,
-            $args = [
+            [
                 new EngineMarkTwo(),
                 new DateTimeImmutable(),
                 new DateTimeImmutable(),
@@ -114,7 +116,6 @@ final class PositionArgumentTest extends BaseTest
             ]
         );
 
-        $this->assertCount(4, $result);
-        $this->assertSame($args, $result);
+        $this->assertCount(0, $result);
     }
 }

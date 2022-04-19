@@ -23,7 +23,7 @@ final class ReferenceParameterTest extends BaseTest
 
         $result = $this->resolveClosure(
             static fn(DateTimeInterface &...$dates) => $dates,
-            [$foo, &$bar, &$baz, $fiz]
+            [[$foo, &$bar, &$baz, $fiz]]
         );
         $this->assertCount(4, $result);
         $this->assertSame([$foo, $bar, $baz, $fiz], $result);
@@ -105,7 +105,7 @@ final class ReferenceParameterTest extends BaseTest
             ]
         );
 
-        $this->assertCount(9, $result);
+        $this->assertCount(8, $result);
 
         $this->assertSame(1, $result[0]);
         $this->assertInstanceOf(stdClass::class, $result[1]);
@@ -125,7 +125,7 @@ final class ReferenceParameterTest extends BaseTest
         $result[6] = 6; // no side effect
         $result[7] = 7;
         $this->assertSame(0, $foo);
-        $this->assertSame(1, $bar);
+        $this->assertInstanceOf(stdClass::class, $bar);
         $this->assertSame(2, $baz);
         $this->assertInstanceOf(EngineMarkTwo::class, $engine);
         $this->assertInstanceOf(DateTimeInterface::class, $date1);
@@ -134,7 +134,7 @@ final class ReferenceParameterTest extends BaseTest
     }
 
     /**
-     * Argument has been passed by reference when it is not supported by function
+     * Argument that passed by reference will be reference in a resolving result.
      */
     public function testInvokeReferencedArgument(): void
     {
@@ -149,6 +149,6 @@ final class ReferenceParameterTest extends BaseTest
         $this->assertSame([$foo], $result);
         $result[0] = 42;
         // $foo has been not changed
-        $this->assertNotSame($result[0], $foo);
+        $this->assertSame($result[0], $foo);
     }
 }

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Core\Internal;
 
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionFunctionAbstract as ContextFunction;
+use ReflectionParameter;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Exception\Container\ArgumentException;
-use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\ResolverInterface;
@@ -35,94 +35,103 @@ final class Resolver implements ResolverInterface
         ContextFunction $reflection,
         array $parameters = []
     ): array {
-        $arguments = [];
+        $state = new ResolvingState($reflection, $parameters);
+
+        # todo Check args type (position or named)
 
         foreach ($reflection->getParameters() as $parameter) {
-            $type = $parameter->getType();
-            $name = $parameter->getName();
-            $class = null;
+            $this->resolveParameter($parameter, $state)
+            OR
+            // throw new MissingRequiredArgumentException($reflection, $parameter->getName());
+            throw new \Exception('???');
+        }
 
-            /**
-             * Container do not currently support union types. In the future, we
-             * can provide the possibility of autowiring based on priorities (TBD).
-             */
-            if ($type instanceof \ReflectionUnionType) {
-                $error = 'Parameter $%s in %s contains a union type hint that cannot be inferred unambiguously';
-                $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
 
-                throw new ContainerException($error);
+        // Resolve Autowire objects
+        foreach ($state->getResolvedValues() as &$v) {
+            if ($v instanceof Autowire) {
+                $v = $v->resolve($this->factory);
             }
+        }
+        return $state->getResolvedValues();
+    }
 
-            /**
-             * Container do not currently support intersection types.
-             */
-            if ($type instanceof \ReflectionIntersectionType) {
+    private function resolveParameter(ReflectionParameter $parameter, ResolvingState $state): ?bool
+    {
+        $isVariadic = $parameter->isVariadic();
+        $hasType = $parameter->hasType();
+
+        // Try to resolve parameter by name
+        if ($state->resolveParameterByNameOrPosition($parameter, $isVariadic) || $isVariadic) {
+            return true;
+        }
+
+        $error = null;
+        if ($hasType) {
+            $reflectionType = $parameter->getType();
+
+            if ($reflectionType instanceof \ReflectionIntersectionType) {
+                // todo redesign exception
                 $error = 'Parameter $%s in %s contains a intersection type hint that cannot be inferred unambiguously';
-                $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
+                $error = \sprintf($error, $parameter->getName(), $this->getLocationString($state->reflection));
 
                 throw new ContainerException($error);
             }
 
-            if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
+            $types = $reflectionType instanceof \ReflectionNamedType ? [$reflectionType] : $reflectionType->getTypes();
+            foreach ($types as $namedType) {
                 try {
-                    $class = new \ReflectionClass($type->getName());
-                } catch (\ReflectionException $e) {
-                    $location = $this->getLocationString($reflection);
-
-                    $error = 'Unable to resolve `\$%s` parameter in %s: %s';
-                    $error = \sprintf($error, $parameter->getName(), $location, $e->getMessage());
-
-                    throw new ContainerException($error, $e->getCode(), $e);
+                    if ($this->resolveNamedType($state, $namedType)) {
+                        return true;
+                    }
+                } catch (NotFoundExceptionInterface $e) {
+                    $error = $e;
                 }
-            }
-
-            if (isset($parameters[$name]) && \is_object($parameters[$name])) {
-                if ($parameters[$name] instanceof Autowire) {
-                    // Supplied by user as late dependency
-                    $arguments[] = $parameters[$name]->resolve($this->factory);
-                } else {
-                    // Supplied by user as object
-                    $arguments[] = $parameters[$name];
-                }
-                continue;
-            }
-
-            // no declared type or scalar type or array
-            if (!isset($class)) {
-                // Provided from outside
-                if (\array_key_exists($name, $parameters)) {
-                    // Make sure it's properly typed
-                    $this->assertType($parameter, $reflection, $parameters[$name]);
-                    $arguments[] = $parameters[$name];
-                    continue;
-                }
-
-                if ($parameter->isDefaultValueAvailable()) {
-                    //Default value
-                    $arguments[] = $parameter->getDefaultValue();
-                    continue;
-                }
-
-                //Unable to resolve scalar argument value
-                throw new ArgumentException($parameter, $reflection);
-            }
-
-            try {
-                //Requesting for contextual dependency
-                $arguments[] = $this->container->get($class->getName(), $name);
-                continue;
-            } catch (AutowireException $e) {
-                if ($parameter->isOptional()) {
-                    //This is optional dependency, skip
-                    $arguments[] = null;
-                    continue;
-                }
-
-                throw $e;
             }
         }
 
-        return $arguments;
+        if ($parameter->isDefaultValueAvailable()) {
+            $argument = $parameter->getDefaultValue();
+            $state->addResolvedValue($argument);
+            return true;
+        }
+
+        if (!$parameter->isOptional()) {
+            if ($hasType && $parameter->allowsNull()) {
+                $argument = null;
+                $state->addResolvedValue($argument);
+                return true;
+            }
+
+            if ($error === null) {
+                return false;
+            }
+
+            // Throw NotFoundExceptionInterface
+            throw $error;
+        }
+
+        return null;
+    }
+
+    private function resolveNamedType(ResolvingState $state, \ReflectionNamedType $parameter)
+    {
+        $type = $parameter->getName();
+        /** @psalm-var class-string|null $class */
+        $class = $parameter->isBuiltin() ? null : $type;
+        $isClass = $class !== null || $type === 'object';
+        return $isClass && $this->resolveObjectParameter($state, $class);
+    }
+
+    private function resolveObjectParameter(ResolvingState $state, ?string $class): bool
+    {
+        if ($class !== null) {
+            /** @var mixed $argument */
+            $argument = $this->container->get($class);
+            $state->addResolvedValue($argument);
+            return true;
+        }
+        return false;
     }
 
     private function getLocationString(ContextFunction $reflection): string
@@ -134,40 +143,5 @@ final class Resolver implements ResolverInterface
         }
 
         return $location;
-    }
-
-    /**
-     * Assert that given value are matched parameter type.
-     *
-     * @throws ArgumentException
-     * @throws \ReflectionException
-     */
-    private function assertType(\ReflectionParameter $parameter, ContextFunction $context, mixed $value): void
-    {
-        if ($value === null) {
-            if (!$parameter->allowsNull()) {
-                throw new ArgumentException($parameter, $context);
-            }
-
-            return;
-        }
-
-        $type = $parameter->getType();
-        if ($type === null) {
-            return;
-        }
-
-        $typeName = $type->getName();
-        if ($typeName === 'array' && !\is_array($value)) {
-            throw new ArgumentException($parameter, $context);
-        }
-
-        if (($typeName === 'int' || $typeName === 'float') && !\is_numeric($value)) {
-            throw new ArgumentException($parameter, $context);
-        }
-
-        if ($typeName === 'bool' && !\is_bool($value) && !\is_numeric($value)) {
-            throw new ArgumentException($parameter, $context);
-        }
     }
 }

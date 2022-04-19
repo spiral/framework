@@ -21,13 +21,13 @@ use stdClass;
 final class VariadicParameterTest extends BaseTest
 {
     /**
-     * A values collection for a variadic argument can be passed as an array in a named parameter.
+     * A values collection for a variadic parameter can be passed as an array in a named argument.
      */
     public function testAloneScalarVariadicParameterAndNamedArrayArgument(): void
     {
         $result = $this->resolveClosure(
             fn(int ...$var) => $var,
-            ['var' => [1, 2, 3], new stdClass()]
+            ['var' => [1, 2, 3]]
         );
 
         $this->assertSame([1, 2, 3], $result);
@@ -57,7 +57,7 @@ final class VariadicParameterTest extends BaseTest
     {
         $result = $this->resolveClosure(
             fn(object ...$engines) => $engines,
-            $data = [[new EngineZIL130(), new EngineVAZ2101(), new stdClass(), new EngineMarkTwo(), new stdClass()]]
+            [$data = [new EngineZIL130(), new EngineVAZ2101(), new stdClass(), new EngineMarkTwo(), new stdClass()]]
         );
 
         $this->assertCount(5, $result);
@@ -75,9 +75,12 @@ final class VariadicParameterTest extends BaseTest
         );
 
         $this->assertCount(4, $result);
-        \array_walk($result, function (mixed $value): void {
-            $this->assertInstanceOf(EngineInterface::class, $value);
+        $checked = true;
+        \array_walk($result, function (mixed $value) use (&$checked): void {
+            $checked = $checked && ($value instanceof EngineInterface);
         });
+        // The Resolver doesn't check arguments type
+        $this->assertFalse($checked);
     }
 
     /**
