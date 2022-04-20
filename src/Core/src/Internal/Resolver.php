@@ -41,7 +41,7 @@ final class Resolver implements ResolverInterface
 
         foreach ($reflection->getParameters() as $parameter) {
             $this->resolveParameter($parameter, $state)
-            OR
+            or
             // throw new MissingRequiredArgumentException($reflection, $parameter->getName());
             throw new \Exception('???');
         }
