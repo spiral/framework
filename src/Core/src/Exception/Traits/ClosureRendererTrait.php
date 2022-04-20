@@ -31,15 +31,15 @@ trait ClosureRendererTrait
             } elseif ($type instanceof ReflectionUnionType) {
                 $types = $type->getTypes();
                 $parameterString .= \implode('|', \array_map(
-                        static fn (ReflectionNamedType $r) => $r->getName(),
-                        $types
-                    )) . ' ';
+                    static fn (ReflectionNamedType $r) => $r->getName(),
+                    $types
+                )) . ' ';
             } elseif ($type instanceof ReflectionIntersectionType) {
                 $types = $type->getTypes();
                 $parameterString .= \implode('&', \array_map(
-                        static fn (ReflectionNamedType $r) => $r->getName(),
-                        $types
-                    )) . ' ';
+                    static fn (ReflectionNamedType $r) => $r->getName(),
+                    $types
+                )) . ' ';
             }
             $append($parameterString, $parameter->isPassedByReference(), '&');
             $append($parameterString, $parameter->isVariadic(), '...');
@@ -47,9 +47,9 @@ trait ClosureRendererTrait
             if ($parameter->isDefaultValueAvailable()) {
                 $default = $parameter->getDefaultValue();
                 $parameterString .= ' = ' . match (true) {
-                        \is_object($default) => 'new ' . $default::class . '(...)',
+                    \is_object($default) => 'new ' . $default::class . '(...)',
                         default => \var_export($default, true)
-                    };
+                };
             }
             $closureParameters[] = $parameterString;
         }
