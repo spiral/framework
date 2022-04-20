@@ -42,6 +42,8 @@ jobs:
             split_repository: 'auth-http'
           - local_path: 'Boot'
             split_repository: 'boot'
+          - local_path: 'Broadcasting'
+            split_repository: 'broadcasting'
           - local_path: 'Cache'
             split_repository: 'cache'
           - local_path: 'Config'
