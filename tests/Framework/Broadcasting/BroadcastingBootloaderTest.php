@@ -13,6 +13,8 @@ use Spiral\Broadcasting\BroadcastManagerInterface;
 use Spiral\Broadcasting\Driver\LogBroadcast;
 use Spiral\Broadcasting\Driver\NullBroadcast;
 use Spiral\Broadcasting\GuardInterface;
+use Spiral\Broadcasting\TopicRegistry;
+use Spiral\Broadcasting\TopicRegistryInterface;
 use Spiral\Tests\Framework\BaseTest;
 
 final class BroadcastingBootloaderTest extends BaseTest
@@ -34,6 +36,7 @@ final class BroadcastingBootloaderTest extends BaseTest
     {
         $this->assertInstanceOf(LogBroadcast::class, $this->app->get(BroadcastInterface::class));
         $this->assertInstanceOf(BroadcastManager::class, $this->app->get(BroadcastManagerInterface::class));
+        $this->assertInstanceOf(TopicRegistry::class, $this->app->get(TopicRegistryInterface::class));
     }
 
     public function testGetsConnectionByAlias()

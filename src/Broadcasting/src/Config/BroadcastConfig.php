@@ -21,16 +21,15 @@ final class BroadcastConfig extends InjectableConfig
         'connections' => [],
         'driverAliases' => [],
     ];
-    private array $patterns = [];
 
-    public function __construct(array $config = [])
+    /**
+     * Get registerer broadcast topics.
+     *
+     * @return array<string, callable>
+     */
+    public function getTopics(): array
     {
-        parent::__construct($config);
-
-        $topics = (array)($config['authorize']['topics'] ?? []);
-        foreach ($topics as $topic => $callback) {
-            $this->patterns[$this->compilePattern($topic)] = $callback;
-        }
+        return (array)($this->config['authorize']['topics'] ?? []);
     }
 
     /**
@@ -92,29 +91,5 @@ final class BroadcastConfig extends InjectableConfig
         }
 
         return $config;
-    }
-
-    public function findTopicCallback(string $topic, array &$matches): ?callable
-    {
-        foreach ($this->patterns as $pattern => $callback) {
-            if (preg_match($pattern, $topic, $matches)) {
-                return $callback;
-            }
-        }
-
-        return null;
-    }
-
-    private function compilePattern(string $topic): string
-    {
-        $replaces = [];
-        if (preg_match_all('/\{(\w+):?(.*?)?\}/', $topic, $matches)) {
-            $variables = array_combine($matches[1], $matches[2]);
-            foreach ($variables as $key => $_) {
-                $replaces['{' . $key . '}'] = '(?P<' . $key . '>[^\/\.]+)';
-            }
-        }
-
-        return '/^' . strtr($topic, $replaces + ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.']) . '$/iu';
     }
 }
