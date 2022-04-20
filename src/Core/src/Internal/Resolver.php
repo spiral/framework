@@ -9,7 +9,9 @@ use Psr\Container\NotFoundExceptionInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use ReflectionParameter;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Exception\Container\ContainerException;
+use Spiral\Core\Exception\Container\ArgumentException;
+use Spiral\Core\Exception\Resolver\ArgumentNotFoundException;
+use Spiral\Core\Exception\Resolver\UnsupportedTypeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\ResolverInterface;
 
@@ -37,15 +39,11 @@ final class Resolver implements ResolverInterface
     ): array {
         $state = new ResolvingState($reflection, $parameters);
 
-        # todo Check args type (position or named)
-
         foreach ($reflection->getParameters() as $parameter) {
             $this->resolveParameter($parameter, $state)
             or
-            // throw new MissingRequiredArgumentException($reflection, $parameter->getName());
-            throw new \Exception('???');
+            throw new ArgumentNotFoundException($reflection, $parameter->getName());
         }
-
 
         // Resolve Autowire objects
         foreach ($state->getResolvedValues() as &$v) {
@@ -71,11 +69,7 @@ final class Resolver implements ResolverInterface
             $reflectionType = $parameter->getType();
 
             if ($reflectionType instanceof \ReflectionIntersectionType) {
-                // todo redesign exception
-                $error = 'Parameter $%s in %s contains a intersection type hint that cannot be inferred unambiguously';
-                $error = \sprintf($error, $parameter->getName(), $this->getLocationString($state->reflection));
-
-                throw new ContainerException($error);
+                throw new UnsupportedTypeException($parameter->getDeclaringFunction(), $parameter->getName());
             }
 
             $types = $reflectionType instanceof \ReflectionNamedType ? [$reflectionType] : $reflectionType->getTypes();
@@ -132,16 +126,5 @@ final class Resolver implements ResolverInterface
             return true;
         }
         return false;
-    }
-
-    private function getLocationString(ContextFunction $reflection): string
-    {
-        $location = $reflection->getName();
-
-        if ($reflection instanceof \ReflectionMethod) {
-            return "{$reflection->getDeclaringClass()->getName()}::{$location}()";
-        }
-
-        return $location;
     }
 }

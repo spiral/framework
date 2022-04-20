@@ -7,6 +7,8 @@ namespace Spiral\Tests\Core\Internal\Resolver;
 use Spiral\Core\Container\Autowire;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
+use Spiral\Tests\Core\Stub\NewObjectInParam;
+use stdClass;
 
 final class CommonCasesTest extends BaseTest
 {
@@ -29,7 +31,6 @@ final class CommonCasesTest extends BaseTest
 
     public function testAutowreArgumentByPosition(): void
     {
-        // todo
         $result = $this->resolveClosure(
             static fn(string $foo = 'foo', ?EngineInterface $engine = null) => null,
             [1 => new Autowire(EngineMarkTwo::class)],
@@ -38,5 +39,15 @@ final class CommonCasesTest extends BaseTest
         $this->assertCount(2, $result);
         $this->assertSame('foo', $result[0]);
         $this->assertInstanceOf(EngineMarkTwo::class, $result[1]);
+    }
+
+    public function testResolveClassWithDefaultObjectValue(): void
+    {
+        $result = $this->resolveClassConstructor(
+            NewObjectInParam::class,
+        );
+
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(stdClass::class, $result[0]);
     }
 }

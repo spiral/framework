@@ -33,6 +33,13 @@ abstract class BaseTest extends TestCase
         $binder->bindSingleton($alias, $resolver);
     }
 
+    protected function resolveClassConstructor(string $class, array $args = []): mixed
+    {
+        $classReflection = new \ReflectionClass($class);
+        $reflection = $classReflection->getConstructor();
+        return $this->createResolver()->resolveArguments($reflection, $args);
+    }
+
     protected function resolveClosure(\Closure $closure, array $args = []): mixed
     {
         return $this->createResolver()->resolveArguments(new \ReflectionFunction($closure), $args);

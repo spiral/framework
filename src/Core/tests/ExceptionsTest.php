@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
@@ -17,7 +10,6 @@ use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\ContainerException;
-use Spiral\Core\Exception\DependencyException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Tests\Core\Fixtures\IntersectionTypes;
 use Spiral\Tests\Core\Fixtures\UnionTypes;
@@ -91,7 +83,6 @@ class ExceptionsTest extends TestCase
 
         $this->assertInstanceOf(AutowireException::class, $e);
         $this->assertInstanceOf(ContainerException::class, $e);
-        $this->assertInstanceOf(DependencyException::class, $e);
         $this->assertInstanceOf(ContainerExceptionInterface::class, $e);
 
         $this->assertSame($method, $e->getContext());

@@ -16,7 +16,7 @@ use stdClass;
  * @see ReferenceParameterTest::testReferencedVariadicParameterAndUnnamedArguments()
  * @see ReferenceParameterTest::testReferencedVariadicParameterWithNamedArgument()
  * @see ReferenceParameterTest::testInvokeReferencedArguments()
- * @see ExceptionsTest::testVariadicParameterAndUnpackedArguments()
+ * @see TypeIntersectionParameterTest::testVariadicTypeIntersectionParameterAndUnnamedArguments()
  */
 final class VariadicParameterTest extends BaseTest
 {
@@ -110,5 +110,18 @@ final class VariadicParameterTest extends BaseTest
         );
 
         $this->assertCount(0, $result);
+    }
+
+    /**
+     * Variadic arguments should be passed in a one array
+     */
+    public function testVariadicParameterAndUnpackedArguments(): void
+    {
+        $result = $this->resolveClosure(
+            fn(EngineInterface ...$engines) => $engines,
+            [new EngineZIL130(), new EngineVAZ2101(), new EngineMarkTwo()]
+        );
+
+        $this->assertCount(1, $result);
     }
 }
