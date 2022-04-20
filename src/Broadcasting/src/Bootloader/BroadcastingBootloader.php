@@ -12,7 +12,8 @@ use Spiral\Broadcasting\BroadcastManagerInterface;
 use Spiral\Broadcasting\Config\BroadcastConfig;
 use Spiral\Broadcasting\Driver\LogBroadcast;
 use Spiral\Broadcasting\Driver\NullBroadcast;
-use Spiral\Broadcasting\GuardInterface;
+use Spiral\Broadcasting\TopicRegistry;
+use Spiral\Broadcasting\TopicRegistryInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 
@@ -21,6 +22,7 @@ final class BroadcastingBootloader extends Bootloader
     protected const SINGLETONS = [
         BroadcastManagerInterface::class => BroadcastManager::class,
         BroadcastInterface::class => [self::class, 'initDefaultBroadcast'],
+        TopicRegistryInterface::class => [self::class, 'initTopicRegistry'],
     ];
 
     private ConfiguratorInterface $config;
@@ -41,11 +43,6 @@ final class BroadcastingBootloader extends Bootloader
     public function boot(EnvironmentInterface $env): void
     {
         $this->initConfig($env);
-    }
-
-    private function initDefaultBroadcast(BroadcastManagerInterface $manager): BroadcastInterface
-    {
-        return $manager->connection();
     }
 
     private function initConfig(EnvironmentInterface $env): void
@@ -70,5 +67,15 @@ final class BroadcastingBootloader extends Bootloader
                 ],
             ]
         );
+    }
+
+    private function initDefaultBroadcast(BroadcastManagerInterface $manager): BroadcastInterface
+    {
+        return $manager->connection();
+    }
+
+    private function initTopicRegistry(BroadcastConfig $config): TopicRegistryInterface
+    {
+        return new TopicRegistry($config->getTopics());
     }
 }

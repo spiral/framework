@@ -112,28 +112,11 @@ final class BroadcastConfigTest extends TestCase
         $this->assertNull($config->getAuthorizationPath());
     }
 
-    public function testFindsTopicCallback(): void
+    public function testGetsTopics(): void
     {
-        $params = [];
         $this->assertSame(
-            'foo',
-            call_user_func($this->config->findTopicCallback('foo-topic', $params))
+            $this->config['authorize']['topics'],
+            $this->config->getTopics()
         );
-
-        $this->assertSame([0 => 'foo-topic'], $params);
-
-        $params = [];
-        $this->assertSame(
-            5,
-            call_user_func($this->config->findTopicCallback('bar-topic.5', $params), 5)
-        );
-        $this->assertSame([0 => 'bar-topic.5', 'id' =>'5', 1 => '5'], $params);
-
-
-        $params = [];
-        $this->assertNull(
-            $this->config->findTopicCallback('baz-topic', $params)
-        );
-        $this->assertSame([], $params);
     }
 }
