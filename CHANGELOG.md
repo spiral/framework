@@ -36,6 +36,7 @@
   - Bootloader `Spiral\Bootloader\Http\WebsocketsBootloader` is removed.
   - Component `spiral/annotations` is removed. Use `spiral/attributes` instead.
   - Added return type `void` to a methods `publish`, `publishDirectory`, `ensureDirectory` in `Spiral\Module\PublisherInterface` interface.
+  - Removed `Spiral\Http\SapiDispatcher` and `Spiral\Http\Emitter\SapiEmitter`. Please, use package `spiral/sapi-bridge` instead.
   - [spiral/exceptions] All handlers have been renamed into renderers. `HandlerInterface` has been deleted.
   - [spiral/exceptions] Added `Spiral\Exceptions\Verbosity` enum.
   - [spiral/router] Removed deprecated method `addRoute` in the `Spiral\Router\RouterInterface` and `Spiral\Router\Router`.
