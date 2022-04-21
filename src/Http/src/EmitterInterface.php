@@ -13,6 +13,9 @@ namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @deprecated since v2.13. Will be removed in v3.0
+ */
 interface EmitterInterface
 {
     /**

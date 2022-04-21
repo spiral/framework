@@ -21,6 +21,8 @@ use Spiral\Http\Exception\EmitterException;
 
 /**
  * Source code has been extracted from Zend/Diactoros.
+ *
+ * @deprecated since v2.13. Will be moved to spiral/sapi-bridge and removed in v3.0
  */
 final class SapiEmitter implements EmitterInterface
 {
