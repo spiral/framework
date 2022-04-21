@@ -67,33 +67,14 @@ final class AuthorizationMiddlewareTest extends TestCase
 
         $request = m::mock(ServerRequestInterface::class);
         $handler = m::mock(RequestHandlerInterface::class);
+        $response = m::mock(ResponseInterface::class);
 
         $request->shouldReceive('getUri')->once()->andReturn($uri = m::mock(UriInterface::class));
         $uri->shouldReceive('getPath')->once()->andReturn('/auth');
 
-        $broadcast->shouldReceive('authorize')->once()->with($request)->andReturn(true);
-        $responseFactory->shouldReceive('createResponse')->once()->with(200)->andReturn(m::mock(ResponseInterface::class));
+        $broadcast->shouldReceive('authorize')->once()->with($request)
+            ->andReturn($response);
 
-        $middleware->process($request, $handler);
-    }
-
-    public function testGuardedBroadcastWithNotAuthorizedRequestShouldReturn403Response(): void
-    {
-        $middleware = new AuthorizationMiddleware(
-            $broadcast = m::mock(BroadcastInterface::class, GuardInterface::class),
-            $responseFactory = m::mock(ResponseFactoryInterface::class),
-            '/auth',
-        );
-
-        $request = m::mock(ServerRequestInterface::class);
-        $handler = m::mock(RequestHandlerInterface::class);
-
-        $request->shouldReceive('getUri')->once()->andReturn($uri = m::mock(UriInterface::class));
-        $uri->shouldReceive('getPath')->once()->andReturn('/auth');
-
-        $broadcast->shouldReceive('authorize')->once()->with($request)->andReturn(false);
-        $responseFactory->shouldReceive('createResponse')->once()->with(403)->andReturn(m::mock(ResponseInterface::class));
-
-        $middleware->process($request, $handler);
+        $this->assertSame($response, $middleware->process($request, $handler));
     }
 }
