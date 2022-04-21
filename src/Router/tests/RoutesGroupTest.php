@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Spiral\Core\Container;
-use Spiral\Http\Diactoros\UriFactory;
 use Spiral\Http\Pipeline;
 use Spiral\Router\RouteGroup;
 use Spiral\Router\Router;
@@ -26,7 +26,7 @@ class RoutesGroupTest extends TestCase
 {
     public function testCoreString(): void
     {
-        $router = new Router('/', new UriHandler(new UriFactory()), new Container());
+        $router = new Router('/', new UriHandler(new Psr17Factory()), new Container());
         $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()));
 
         $group->setCore(RoutesTestCore::class);
@@ -44,7 +44,7 @@ class RoutesGroupTest extends TestCase
 
     public function testCoreObject(): void
     {
-        $router = new Router('/', new UriHandler(new UriFactory()), new Container());
+        $router = new Router('/', new UriHandler(new Psr17Factory()), new Container());
         $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()));
 
         $group->setCore(new RoutesTestCore(new Container()));
@@ -62,7 +62,7 @@ class RoutesGroupTest extends TestCase
 
     public function testMiddleware(): void
     {
-        $router = new Router('/', new UriHandler(new UriFactory()), new Container());
+        $router = new Router('/', new UriHandler(new Psr17Factory()), new Container());
         $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()));
         $group->addMiddleware(TestMiddleware::class);
 

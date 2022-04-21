@@ -41,7 +41,7 @@ class TestApp extends Kernel
         \Spiral\Console\Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
-        Bootloader\Http\DiactorosBootloader::class,
+        \Spiral\Http\Bootloader\DiactorosBootloader::class,
         Bootloader\Http\RouterBootloader::class,
         Bootloader\Http\ErrorHandlerBootloader::class,
         Bootloader\Http\JsonPayloadsBootloader::class,
