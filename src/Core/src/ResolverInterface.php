@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Core;
 
 use ReflectionFunctionAbstract as ContextFunction;
-use Spiral\Core\Exception\Container\ArgumentException;
+use Spiral\Core\Exception\Resolver\ResolvingException;
 
 /**
  * Has to resolve arguments (somehow) or die for specified method, function or class constructor.
@@ -16,9 +16,9 @@ interface ResolverInterface
      * Get list of arguments with resolved dependencies for specified function or method.
      *
      * @param ContextFunction $reflection Target function or method.
-     * @param array           $parameters User specified parameters.
+     * @param array $parameters User specified parameters.
      *
-     * @throws ArgumentException
+     * @throws ResolvingException
      */
     public function resolveArguments(ContextFunction $reflection, array $parameters = []): array;
 }

@@ -13,8 +13,9 @@ namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
-use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\NotFoundException;
+use Spiral\Core\Exception\Resolver\ArgumentException;
+use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\DependedClass;
 use Spiral\Tests\Core\Fixtures\ExtendedSample;
@@ -54,7 +55,7 @@ class AutowireTest extends TestCase
 
     public function testArgumentException(): void
     {
-        $expected = "Unable to resolve 'name' argument in 'Spiral\Tests\Core\Fixtures\Bucket::__construct'";
+        $expected = 'Unable to resolve required argument `name` when resolving';
         $this->expectExceptionMessage($expected);
         $this->expectException(ArgumentException::class);
 
@@ -129,7 +130,7 @@ class AutowireTest extends TestCase
 
     public function testAutowireException(): void
     {
-        $this->expectExceptionMessage("Undefined class or binding 'WrongClass'");
+        $this->expectExceptionMessage('Undefined class or binding `WrongClass`');
         $this->expectException(NotFoundException::class);
         $container = new Container();
 
@@ -164,56 +165,10 @@ class AutowireTest extends TestCase
         $this->assertNull($object->getSample());
     }
 
-    public function testAutowireTypecastingAndValidating(): void
-    {
-        $container = new Container();
-
-        $object = $container->make(
-            TypedClass::class,
-            [
-                'string' => 'string',
-                'int'    => 123,
-                'float'  => 123.00,
-                'bool'   => true,
-            ]
-        );
-
-        $this->assertInstanceOf(TypedClass::class, $object);
-
-        $container = new Container();
-
-        $object = $container->make(
-            TypedClass::class,
-            [
-                'string' => 'string',
-                'int'    => '123',
-                'float'  => '123.00',
-                'bool'   => 1,
-            ]
-        );
-
-        $this->assertInstanceOf(TypedClass::class, $object);
-
-        $container = new Container();
-
-        $object = $container->make(
-            TypedClass::class,
-            [
-                'string' => 'string',
-                'int'    => 123,
-                'float'  => 123.00,
-                'bool'   => 0,
-            ]
-        );
-
-        $this->assertInstanceOf(TypedClass::class, $object);
-    }
-
     public function testAutowireTypecastingAndValidatingWrongString(): void
     {
-        $expected = "Unable to resolve 'string' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
-        $this->expectExceptionMessage($expected);
-        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('An argument resolved with wrong type');
+        $this->expectException(WrongTypeException::class);
 
         $container = new Container();
 
@@ -263,9 +218,8 @@ class AutowireTest extends TestCase
 
     public function testAutowireTypecastingAndValidatingWrongInt(): void
     {
-        $expected = "Unable to resolve 'int' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
-        $this->expectExceptionMessage($expected);
-        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('Argument #2 ($int) must be of type int, string given');
+        $this->expectException(WrongTypeException::class);
 
         $container = new Container();
 
@@ -284,9 +238,8 @@ class AutowireTest extends TestCase
 
     public function testAutowireTypecastingAndValidatingWrongFloat(): void
     {
-        $expected = "Unable to resolve 'float' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
-        $this->expectExceptionMessage($expected);
-        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('Argument #3 ($float) must be of type float, string given');
+        $this->expectException(WrongTypeException::class);
 
         $container = new Container();
 
@@ -305,9 +258,8 @@ class AutowireTest extends TestCase
 
     public function testAutowireTypecastingAndValidatingWrongBool(): void
     {
-        $expected = "Unable to resolve 'bool' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
-        $this->expectExceptionMessage($expected);
-        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('An argument resolved with wrong type');
+        $this->expectException(WrongTypeException::class);
 
         $container = new Container();
 
@@ -326,9 +278,8 @@ class AutowireTest extends TestCase
 
     public function testAutowireTypecastingAndValidatingWrongArray(): void
     {
-        $expected = "Unable to resolve 'array' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
-        $this->expectExceptionMessage($expected);
-        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('An argument resolved with wrong type');
+        $this->expectException(WrongTypeException::class);
 
         $container = new Container();
 

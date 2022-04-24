@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Exception\Resolver;
 
-final class UnsupportedTypeException extends ResolvingException
+final class ArgumentException extends ResolvingException
 {
     public function __construct(\ReflectionFunctionAbstract $reflection, string $parameter)
     {
-        $pattern = "Can not resolve unsupported type of the `{$parameter}` parameter in `%s` %s.";
+        $pattern = "Unable to resolve required argument `{$parameter}` when resolving `%s` %s.";
         parent::__construct($this->RenderFunctionAndParameter($reflection, $pattern));
     }
 }

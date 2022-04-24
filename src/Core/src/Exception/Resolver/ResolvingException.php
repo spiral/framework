@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Exception\Resolver;
 
+use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Traits\ClosureRendererTrait;
 
-abstract class ResolvingException extends \InvalidArgumentException
+abstract class ResolvingException extends ContainerException
 {
     use ClosureRendererTrait;
 
-    protected const EXCEPTION_MESSAGE = 'Something is wrong with argument `%s` when calling `%s` %s.';
-
-    public function __construct(\ReflectionFunctionAbstract $reflection, string $parameter)
-    {
+    protected function RenderFunctionAndParameter(
+        \ReflectionFunctionAbstract $reflection,
+        string $pattern
+    ): string {
         $function = $reflection->getName();
         /** @var class-string|null $class */
         $class = $reflection->class ?? null;
@@ -32,6 +33,6 @@ abstract class ResolvingException extends \InvalidArgumentException
             $fileAndLine = "in \"$fileName\" at line $line";
         }
 
-        parent::__construct(\sprintf((string)static::EXCEPTION_MESSAGE, $parameter, $method, $fileAndLine));
+        return \sprintf($pattern, $method, $fileAndLine);
     }
 }

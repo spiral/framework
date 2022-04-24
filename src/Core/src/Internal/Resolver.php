@@ -9,8 +9,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use ReflectionParameter;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Exception\Container\ArgumentException;
-use Spiral\Core\Exception\Resolver\ArgumentNotFoundException;
+use Spiral\Core\Exception\Resolver\ArgumentException;
 use Spiral\Core\Exception\Resolver\UnsupportedTypeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\ResolverInterface;
@@ -42,7 +41,7 @@ final class Resolver implements ResolverInterface
         foreach ($reflection->getParameters() as $parameter) {
             $this->resolveParameter($parameter, $state)
             or
-            throw new ArgumentNotFoundException($reflection, $parameter->getName());
+            throw new ArgumentException($reflection, $parameter->getName());
         }
 
         // Resolve Autowire objects

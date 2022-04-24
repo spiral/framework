@@ -14,6 +14,9 @@ use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\InjectionException;
 use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Exception\Container\NotFoundException;
+use Spiral\Core\Exception\Resolver\ArgumentException;
+use Spiral\Core\Exception\Resolver\ResolvingException;
+use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
@@ -94,7 +97,7 @@ final class Factory implements FactoryInterface
     private function autowire(string $class, array $parameters, string $context = null): object
     {
         if (!\class_exists($class) && !isset($this->state->injectors[$class])) {
-            throw new NotFoundException(\sprintf("Undefined class or binding '%s'", $class));
+            throw new NotFoundException(\sprintf('Undefined class or binding `%s`', $class));
         }
 
         // automatically create instance
@@ -128,7 +131,7 @@ final class Factory implements FactoryInterface
         try {
             return $this->invoker->invoke($target, $parameters);
         } catch (NotCallableException $e) {
-            throw new ContainerException(\sprintf("Invalid binding for '%s'.", $alias), $e->getCode(), $e);
+            throw new ContainerException(\sprintf('Invalid binding for `%s`.', $alias), $e->getCode(), $e);
         }
     }
 
@@ -227,14 +230,18 @@ final class Factory implements FactoryInterface
         }
 
         if (!$reflection->isInstantiable()) {
-            throw new ContainerException(\sprintf("Class '%s' can not be constructed", $class));
+            throw new ContainerException(\sprintf('Class `%s` can not be constructed', $class));
         }
 
         $constructor = $reflection->getConstructor();
 
         if ($constructor !== null) {
-            // Using constructor with resolved arguments
-            $instance = $reflection->newInstanceArgs($this->resolver->resolveArguments($constructor, $parameters));
+            try {
+                // Using constructor with resolved arguments
+                $instance = new $class(...$this->resolver->resolveArguments($constructor, $parameters));
+            } catch (\TypeError $e) {
+                throw new WrongTypeException($constructor, $e);
+            }
         } else {
             // No constructor specified
             $instance = $reflection->newInstance();
