@@ -125,10 +125,10 @@ final class Resolver implements ResolverInterface
         \ReflectionNamedType $typeRef
     ) {
         return !$typeRef->isBuiltin() && $this->resolveObjectParameter(
-                $state,
-                $typeRef->getName(),
-                $parameter->getName()
-            );
+            $state,
+            $typeRef->getName(),
+            $parameter->getName()
+        );
     }
 
     /**
