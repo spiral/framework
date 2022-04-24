@@ -14,8 +14,6 @@ use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\InjectionException;
 use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Exception\Container\NotFoundException;
-use Spiral\Core\Exception\Resolver\ArgumentException;
-use Spiral\Core\Exception\Resolver\ResolvingException;
 use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\InvokerInterface;

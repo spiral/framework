@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use ReflectionParameter;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\Resolver\ArgumentException;
+use Spiral\Core\Exception\Resolver\ResolvingException;
 use Spiral\Core\Exception\Resolver\UnsupportedTypeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\ResolverInterface;
@@ -53,7 +55,13 @@ final class Resolver implements ResolverInterface
         return $state->getResolvedValues();
     }
 
-    private function resolveParameter(ReflectionParameter $parameter, ResolvingState $state): ?bool
+    /**
+     * @return bool {@see true} if argument was resolved.
+     *
+     * @throws ResolvingException
+     * @throws NotFoundExceptionInterface|ContainerExceptionInterface
+     */
+    private function resolveParameter(ReflectionParameter $parameter, ResolvingState $state): bool
     {
         $isVariadic = $parameter->isVariadic();
         $hasType = $parameter->hasType();
@@ -89,44 +97,55 @@ final class Resolver implements ResolverInterface
             return true;
         }
 
-        if (!$parameter->isOptional()) {
-            if ($hasType && $parameter->allowsNull()) {
-                $argument = null;
-                $state->addResolvedValue($argument);
-                return true;
-            }
-
-            if ($error === null) {
-                return false;
-            }
-
-            // Throw NotFoundExceptionInterface
-            throw $error;
+        if ($hasType && $parameter->allowsNull()) {
+            $argument = null;
+            $state->addResolvedValue($argument);
+            return true;
         }
 
-        return null;
+        if ($error === null) {
+            return false;
+        }
+
+        // Throw NotFoundExceptionInterface
+        throw $error;
     }
 
+    /**
+     * Resolve single named type.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     *
+     * @return bool {@see true} if argument was resolved.
+     */
     private function resolveNamedType(
         ResolvingState $state,
         ReflectionParameter $parameter,
         \ReflectionNamedType $typeRef
     ) {
-        $type = $typeRef->getName();
-        /** @psalm-var class-string|null $class */
-        $class = $typeRef->isBuiltin() ? null : $type;
-        $isClass = $class !== null || $type === 'object';
-        return $isClass && $this->resolveObjectParameter($state, $class, $parameter->getName());
+        return !$typeRef->isBuiltin() && $this->resolveObjectParameter(
+                $state,
+                $typeRef->getName(),
+                $parameter->getName()
+            );
     }
 
-    private function resolveObjectParameter(ResolvingState $state, ?string $class, string $context): bool
+    /**
+     * Resolve argument by class name and context.
+     *
+     * @psalm-param class-string $class
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     *
+     * @return bool {@see true} if argument resolved.
+     */
+    private function resolveObjectParameter(ResolvingState $state, string $class, string $context): bool
     {
-        if ($class !== null) {
-            /** @var mixed $argument */
-            $argument = $this->container->get($class, $context);
-            $state->addResolvedValue($argument);
-            return true;
-        }
-        return false;
+        /** @var mixed $argument */
+        $argument = $this->container->get($class, $context);
+        $state->addResolvedValue($argument);
+        return true;
     }
 }
