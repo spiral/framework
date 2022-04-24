@@ -74,7 +74,7 @@ final class Resolver implements ResolverInterface
             $types = $reflectionType instanceof \ReflectionNamedType ? [$reflectionType] : $reflectionType->getTypes();
             foreach ($types as $namedType) {
                 try {
-                    if ($this->resolveNamedType($state, $namedType)) {
+                    if ($this->resolveNamedType($state, $parameter, $namedType)) {
                         return true;
                     }
                 } catch (NotFoundExceptionInterface $e) {
@@ -107,20 +107,23 @@ final class Resolver implements ResolverInterface
         return null;
     }
 
-    private function resolveNamedType(ResolvingState $state, \ReflectionNamedType $parameter)
-    {
-        $type = $parameter->getName();
+    private function resolveNamedType(
+        ResolvingState $state,
+        ReflectionParameter $parameter,
+        \ReflectionNamedType $typeRef
+    ) {
+        $type = $typeRef->getName();
         /** @psalm-var class-string|null $class */
-        $class = $parameter->isBuiltin() ? null : $type;
+        $class = $typeRef->isBuiltin() ? null : $type;
         $isClass = $class !== null || $type === 'object';
-        return $isClass && $this->resolveObjectParameter($state, $class);
+        return $isClass && $this->resolveObjectParameter($state, $class, $parameter->getName());
     }
 
-    private function resolveObjectParameter(ResolvingState $state, ?string $class): bool
+    private function resolveObjectParameter(ResolvingState $state, ?string $class, string $context): bool
     {
         if ($class !== null) {
             /** @var mixed $argument */
-            $argument = $this->container->get($class);
+            $argument = $this->container->get($class, $context);
             $state->addResolvedValue($argument);
             return true;
         }
