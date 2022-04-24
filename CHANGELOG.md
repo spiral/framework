@@ -83,13 +83,12 @@
     of `$default` to the method `get`  in `Spiral\Http\Request\InputBag` class.
   - [spiral/http] Added return type `bool` to the method `emit`  in `Spiral\Http\EmitterInterface` interface.
   - [spiral/config] Added return type `void` to the method `setDefaults` in `Spiral\Config\ConfiguratorInterface` interface.
-  - [spiral/core] Added return type `mixed` to the method `runScope` in `Spiral\Core\ScopeInterface` interface.
-  - [spiral/core] Added return type `mixed` and `array|callable|string` parameter type of `$target`
-    to the method `invoke` in `Spiral\Core\InvokerInterface` interface.
-  - [spiral/core] Added return type `mixed` to the method `make` in `Spiral\Core\FactoryInterface` interface.
-  - [spiral/core] Added `string|array|callable|object` parameter type of `$resolver` in the method `bind`,
-    added `string|array|callable|object` parameter type of `$resolver` in the method `bindSingleton` in `Spiral\Core\BinderInterface` interface.
-  - [spiral/core] Added return type `object` to the method `createInjection` in `Spiral\Core\Container\InjectorInterface` interface.
+  - [spiral/core] Comprehensive code refactoring. A lot of signatures from `Spiral\Core` namespace has been changed.
+    New features:
+    - Variadic arguments support
+    - Union types support
+    - Support for passing arguments by reference
+    - Support for default object value
   - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
   - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
     added in `Spiral\Boot\EnvironmentInterface` interface.
