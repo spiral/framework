@@ -68,7 +68,7 @@ abstract class AbstractCore implements CoreInterface
         $container = $this->container;
         return ContainerScope::runScope(
             $container,
-            static fn() => $method->invokeArgs($container->get($controller), $args)
+            static fn () => $method->invokeArgs($container->get($controller), $args)
         );
     }
 }
