@@ -51,6 +51,8 @@ use Psr\Http\Message\UriInterface;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @codeCoverageIgnore
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 final class SapiRequestFactory
 {
