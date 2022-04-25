@@ -6,7 +6,7 @@ namespace Spiral\Core\Internal;
 
 use ReflectionFunctionAbstract;
 use ReflectionParameter;
-use Spiral\Core\Exception\InvalidArgumentException;
+use Spiral\Core\Exception\Resolver\ResolvingException;
 
 /**
  * @internal
@@ -71,7 +71,7 @@ final class ResolvingState
         return match (true) {
             $nums === 0 => true,
             $strings === 0 => false,
-            default => throw new InvalidArgumentException(
+            default => throw new ResolvingException(
                 'You can not use both numeric and string keys for predefined arguments.'
             )
         };

@@ -7,7 +7,7 @@ namespace Spiral\Core\Internal;
 /**
  * @internal
  */
-class Constructor
+final class Constructor
 {
     /**
      * @param array<string, object> $objects

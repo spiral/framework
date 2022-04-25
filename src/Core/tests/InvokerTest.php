@@ -7,7 +7,7 @@ namespace Spiral\Tests\Core;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\NotCallableException;
-use Spiral\Core\Exception\Resolver\ArgumentException;
+use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\Storage;
@@ -64,7 +64,7 @@ class InvokerTest extends TestCase
 
     public function testCallValidCallableArrayWithNotResolvableDependencies(): void
     {
-        $this->expectException(ArgumentException::class);
+        $this->expectException(ArgumentResolvingException::class);
         $this->expectErrorMessage('Unable to resolve required argument `name` when resolving');
 
         $this->container->invoke([new Storage(), 'makeBucket'], ['name' => 'bar']);
@@ -84,7 +84,7 @@ class InvokerTest extends TestCase
 
     public function testCallValidCallableStringWithNotResolvableDependencies(): void
     {
-        $this->expectException(ArgumentException::class);
+        $this->expectException(ArgumentResolvingException::class);
         $this->expectErrorMessage('Unable to resolve required argument `name` when resolving');
 
         $this->container->invoke(Storage::class.'::createBucket', ['name' => 'bar']);
@@ -109,7 +109,7 @@ class InvokerTest extends TestCase
 
     public function testCallValidClosureWithNotResolvableDependencies(): void
     {
-        $this->expectException(ArgumentException::class);
+        $this->expectException(ArgumentResolvingException::class);
         $this->expectErrorMessage('Unable to resolve required argument `name` when resolving');
 
         $this->container->invoke(

@@ -11,6 +11,34 @@ use ReflectionUnionType;
 
 trait ClosureRendererTrait
 {
+    /**
+     * @param string $pattern String that contains method and fileAndLine markers
+     */
+    protected function renderFunctionAndParameter(
+        \ReflectionFunctionAbstract $reflection,
+        string $pattern
+    ): string {
+        $function = $reflection->getName();
+        /** @var class-string|null $class */
+        $class = $reflection->class ?? null;
+
+        $method = match (true) {
+            $class !== null => "{$class}::{$function}",
+            $reflection->isClosure() => $this->renderClosureSignature($reflection),
+            default => $function,
+        };
+
+        $fileName = $reflection->getFileName();
+        $line = $reflection->getStartLine();
+
+        $fileAndLine = '';
+        if (!empty($fileName)) {
+            $fileAndLine = "in \"$fileName\" at line $line";
+        }
+
+        return \sprintf($pattern, $method, $fileAndLine);
+    }
+
     private function renderClosureSignature(ReflectionFunction $reflection): string
     {
         // return $reflection->__toString();

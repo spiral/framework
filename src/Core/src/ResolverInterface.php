@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Core;
 
 use ReflectionFunctionAbstract as ContextFunction;
+use Spiral\Core\Exception\Resolver\InvalidArgumentException;
 use Spiral\Core\Exception\Resolver\ResolvingException;
 
 /**
@@ -21,4 +22,9 @@ interface ResolverInterface
      * @throws ResolvingException
      */
     public function resolveArguments(ContextFunction $reflection, array $parameters = []): array;
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function validateArguments(ContextFunction $reflection, array $arguments = []): void;
 }

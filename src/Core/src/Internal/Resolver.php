@@ -10,7 +10,8 @@ use Psr\Container\NotFoundExceptionInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use ReflectionParameter;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Exception\Resolver\ArgumentException;
+use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
+use Spiral\Core\Exception\Resolver\InvalidArgumentException;
 use Spiral\Core\Exception\Resolver\ResolvingException;
 use Spiral\Core\Exception\Resolver\UnsupportedTypeException;
 use Spiral\Core\FactoryInterface;
@@ -43,7 +44,7 @@ final class Resolver implements ResolverInterface
         foreach ($reflection->getParameters() as $parameter) {
             $this->resolveParameter($parameter, $state)
             or
-            throw new ArgumentException($reflection, $parameter->getName());
+            throw new ArgumentResolvingException($reflection, $parameter->getName());
         }
 
         // Resolve Autowire objects
@@ -53,6 +54,32 @@ final class Resolver implements ResolverInterface
             }
         }
         return $state->getResolvedValues();
+    }
+
+    public function validateArguments(ContextFunction $reflection, array $arguments = []): void
+    {
+        foreach ($reflection->getParameters() as $parameter) {
+            $name = $parameter->name;
+            if (!\array_key_exists($name, $arguments)) {
+                if ($parameter->isOptional()) {
+                    continue;
+                }
+                throw new InvalidArgumentException($reflection, $name);
+            }
+
+            $value = &$arguments[$name];
+            unset($arguments[$name]);
+
+            if (!$parameter->hasType() || ($parameter->allowsNull() && $parameter === $value)) {
+                continue;
+            }
+
+            // todo: union types
+            // todo: type intersection
+            // todo: single types
+
+            throw new InvalidArgumentException($reflection, $name);
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Core\Internal\DestructorTrait;
+use WeakReference;
 
 /**
  * Auto-wiring container: declarative singletons, contextual injections, parent container
@@ -62,6 +63,7 @@ final class Container implements
         }
 
         $this->state->bindings = [
+            self::class               => WeakReference::create($this),
             ContainerInterface::class => self::class,
             BinderInterface::class    => self::class,
             FactoryInterface::class   => self::class,
@@ -81,12 +83,17 @@ final class Container implements
      */
     public function __clone()
     {
-        throw new LogicException('Container is not clonable');
+        throw new LogicException('Container is not clonable.');
     }
 
     public function resolveArguments(ContextFunction $reflection, array $parameters = []): array
     {
         return $this->resolver->resolveArguments($reflection, $parameters);
+    }
+
+    public function validateArguments(ContextFunction $reflection, array $arguments = []): void
+    {
+        $this->resolver->validateArguments($reflection, $arguments);
     }
 
     /**
@@ -144,17 +151,15 @@ final class Container implements
                 $cleanup[] = $alias;
             }
 
-            $this->bind($alias, $resolver);
+            $this->binder->bind($alias, $resolver);
         }
 
         try {
-            if (ContainerScope::getContainer() !== $this) {
-                return ContainerScope::runScope($this, $scope);
-            }
-
-            return $scope();
+            return ContainerScope::getContainer() !== $this
+                ? ContainerScope::runScope($this, $scope)
+                : $scope();
         } finally {
-            foreach (\array_reverse($previous) as $alias => $resolver) {
+            foreach ($previous as $alias => $resolver) {
                 $binds[$alias] = $resolver;
             }
 

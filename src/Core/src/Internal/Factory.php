@@ -18,6 +18,7 @@ use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
+use WeakReference;
 
 /**
  * @internal
@@ -61,7 +62,9 @@ final class Factory implements FactoryInterface
         $binding = $this->state->bindings[$alias];
         if (\is_object($binding)) {
             //When binding is instance, assuming singleton
-            return $binding;
+            return $binding::class === WeakReference::class
+                ? $binding->get()
+                : $binding;
         }
 
         if (\is_string($binding)) {

@@ -14,7 +14,7 @@ namespace Spiral\Tests\Core;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\NotFoundException;
-use Spiral\Core\Exception\Resolver\ArgumentException;
+use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\DependedClass;
@@ -57,7 +57,7 @@ class AutowireTest extends TestCase
     {
         $expected = 'Unable to resolve required argument `name` when resolving';
         $this->expectExceptionMessage($expected);
-        $this->expectException(ArgumentException::class);
+        $this->expectException(ArgumentResolvingException::class);
 
         $container = new Container();
         $container->get(Bucket::class);
