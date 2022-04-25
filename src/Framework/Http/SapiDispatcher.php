@@ -4,28 +4,25 @@ declare(strict_types=1);
 
 namespace Spiral\Http;
 
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\FinalizerInterface;
-use Spiral\Debug\StateInterface;
-use Spiral\Exceptions\HtmlHandler;
-use Spiral\Snapshots\SnapshotInterface;
-use Spiral\Snapshots\SnapshotterInterface;
+use Spiral\Exceptions\ExceptionHandlerInterface;
 
 final class SapiDispatcher implements DispatcherInterface
 {
     public function __construct(
         private readonly FinalizerInterface $finalizer,
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
+        private readonly ExceptionHandlerInterface $errorHandler,
     ) {
     }
 
     public function canServe(): bool
     {
-        return \php_sapi_name() !== 'cli';
+        return PHP_SAPI !== 'cli';
     }
 
     public function serve(EmitterInterface $emitter = null): void
@@ -60,21 +57,7 @@ final class SapiDispatcher implements DispatcherInterface
 
     protected function handleException(EmitterInterface $emitter, \Throwable $e): void
     {
-        $handler = new HtmlHandler();
-
-        try {
-            /** @var SnapshotInterface $snapshot */
-            $this->container->get(SnapshotterInterface::class)->register($e);
-
-            // on demand
-            $state = $this->container->get(StateInterface::class);
-            if ($state !== null) {
-                $handler = $handler->withState($state);
-            }
-        } catch (\Throwable) {
-            // nothing to report
-        }
-
+        $this->errorHandler->report($e);
 
         /** @var ResponseFactoryInterface $responseFactory */
         $responseFactory = $this->container->get(ResponseFactoryInterface::class);
@@ -82,7 +65,7 @@ final class SapiDispatcher implements DispatcherInterface
 
         // Reporting system (non handled) exception directly to the client
         $response->getBody()->write(
-            $handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE)
+            $this->errorHandler->render($e, format: 'html')
         );
 
         $emitter->emit($response);

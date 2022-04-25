@@ -1,52 +1,44 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
-namespace Spiral\Tests\Exceptions;
+namespace Spiral\Tests\Exceptions\Renderer;
 
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\TestCase;
-use Spiral\Exceptions\ConsoleHandler;
-use Spiral\Exceptions\HandlerInterface;
-use Spiral\Exceptions\HtmlHandler;
-use Spiral\Exceptions\JsonHandler;
-use Spiral\Exceptions\PlainHandler;
+use Spiral\Exceptions\Renderer\ConsoleRenderer;
+use Spiral\Exceptions\Renderer\HtmlRenderer;
+use Spiral\Exceptions\Renderer\JsonRenderer;
+use Spiral\Exceptions\Renderer\PlainRenderer;
 
-class HandlerTest extends TestCase
+class RendererTest extends TestCase
 {
     public function testGetMessage(): void
     {
-        $handler = new ConsoleHandler();
+        $handler = new ConsoleRenderer();
 
-        $this->assertStringContainsString('Error', $handler->getMessage(new Error(
+        $this->assertStringContainsString('Error', $handler->render(new Error(
             'message',
             100,
             __FILE__,
             __LINE__
         )));
 
-        $this->assertStringContainsString('message', $handler->getMessage(new Error(
+        $this->assertStringContainsString('message', $handler->render(new Error(
             'message',
             100,
             __FILE__,
             __LINE__
         )));
 
-        $this->assertStringContainsString(__FILE__, $handler->getMessage(new Error(
+        $this->assertStringContainsString(__FILE__, $handler->render(new Error(
             'message',
             100,
             __FILE__,
             __LINE__
         )));
 
-        $this->assertStringContainsString('100', $handler->getMessage(new Error(
+        $this->assertStringContainsString('100', $handler->render(new Error(
             'message',
             100,
             __FILE__,
@@ -54,39 +46,39 @@ class HandlerTest extends TestCase
         )));
     }
 
-    public function testConsoleHandlerWithoutColorsBasic(): void
+    public function testConsoleRendererWithoutColorsBasic(): void
     {
-        $handler = new ConsoleHandler();
+        $handler = new ConsoleRenderer();
         $handler->setColorsSupport(false);
 
-        $result = $handler->renderException(new Error(
+        $result = $handler->render(new Error(
             'message',
             100,
             __FILE__,
             __LINE__
-        ), HandlerInterface::VERBOSITY_BASIC);
+        ), \Spiral\Exceptions\Verbosity::BASIC);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testConsoleHandlerErrorBasic(): void
+    public function testConsoleRendererErrorBasic(): void
     {
-        $handler = new ConsoleHandler();
+        $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
-        $result = $handler->renderException(new \Error('message', 100), HandlerInterface::VERBOSITY_BASIC);
+        $result = $handler->render(new \Error('message', 100), \Spiral\Exceptions\Verbosity::BASIC);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testConsoleHandlerErrorVerbose(): void
+    public function testConsoleRendererErrorVerbose(): void
     {
-        $handler = new ConsoleHandler();
+        $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
-        $result = $handler->renderException(new \Error('message', 100), HandlerInterface::VERBOSITY_VERBOSE);
+        $result = $handler->render(new \Error('message', 100), \Spiral\Exceptions\Verbosity::VERBOSE);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
@@ -94,111 +86,111 @@ class HandlerTest extends TestCase
     }
 
 
-    public function testConsoleHandlerWithColorsBasic(): void
+    public function testConsoleRendererWithColorsBasic(): void
     {
-        $handler = new ConsoleHandler();
-        $handler->setColorsSupport(true);
-
-        $result = $handler->renderException(new Error(
-            'message',
-            100,
-            __FILE__,
-            __LINE__
-        ), HandlerInterface::VERBOSITY_BASIC);
-
-        $this->assertStringContainsString('Error', $result);
-        $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
-    }
-
-    public function testHtmlHandlerDefaultBasic(): void
-    {
-        $handler = new HtmlHandler(HtmlHandler::DEFAULT);
-
-        $result = $handler->renderException(new Error(
-            'message',
-            100,
-            __FILE__,
-            __LINE__
-        ), HandlerInterface::VERBOSITY_BASIC);
-
-        $this->assertStringContainsString('Error', $result);
-        $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
-    }
-
-    public function testHtmlHandlerInvertedBasic(): void
-    {
-        $handler = new HtmlHandler(HtmlHandler::INVERTED);
-
-        $result = $handler->renderException(new Error(
-            'message',
-            100,
-            __FILE__,
-            __LINE__
-        ), HandlerInterface::VERBOSITY_BASIC);
-
-        $this->assertStringContainsString('Error', $result);
-        $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
-    }
-
-    public function testConsoleHandlerWithColorsDebug(): void
-    {
-        $handler = new ConsoleHandler();
+        $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
 
-        $result = $handler->renderException(new Error(
+        $result = $handler->render(new Error(
             'message',
             100,
             __FILE__,
             __LINE__
-        ), HandlerInterface::VERBOSITY_DEBUG);
+        ), \Spiral\Exceptions\Verbosity::BASIC);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testHtmlHandlerDefaultDebug(): void
+    public function testHtmlRendererDefaultBasic(): void
+    {
+        $handler = new HtmlRenderer(HtmlRenderer::DEFAULT);
+
+        $result = $handler->render(new Error(
+            'message',
+            100,
+            __FILE__,
+            __LINE__
+        ), \Spiral\Exceptions\Verbosity::BASIC);
+
+        $this->assertStringContainsString('Error', $result);
+        $this->assertStringContainsString('message', $result);
+        $this->assertStringContainsString(__FILE__, $result);
+    }
+
+    public function testHtmlRendererInvertedBasic(): void
+    {
+        $handler = new HtmlRenderer(HtmlRenderer::INVERTED);
+
+        $result = $handler->render(new Error(
+            'message',
+            100,
+            __FILE__,
+            __LINE__
+        ), \Spiral\Exceptions\Verbosity::BASIC);
+
+        $this->assertStringContainsString('Error', $result);
+        $this->assertStringContainsString('message', $result);
+        $this->assertStringContainsString(__FILE__, $result);
+    }
+
+    public function testConsoleRendererWithColorsDebug(): void
+    {
+        $handler = new ConsoleRenderer();
+        $handler->setColorsSupport(true);
+
+        $result = $handler->render(new Error(
+            'message',
+            100,
+            __FILE__,
+            __LINE__
+        ), \Spiral\Exceptions\Verbosity::DEBUG);
+
+        $this->assertStringContainsString('Error', $result);
+        $this->assertStringContainsString('message', $result);
+        $this->assertStringContainsString(__FILE__, $result);
+    }
+
+    public function testHtmlRendererDefaultDebug(): void
     {
         $this->markTestSkipped('FIXME: Very long execution time');
 
-        $handler = new HtmlHandler(HtmlHandler::DEFAULT);
+        $handler = new HtmlRenderer(HtmlRenderer::DEFAULT);
 
-        $result = $handler->renderException(new Error(
+        $result = $handler->render(new Error(
             'message',
             100,
             __FILE__,
             __LINE__
-        ), HandlerInterface::VERBOSITY_DEBUG);
+        ), \Spiral\Exceptions\Verbosity::DEBUG);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testHtmlHandlerInvertedDebug(): void
+    public function testHtmlRendererInvertedDebug(): void
     {
         $this->markTestSkipped('FIXME: Very long execution time');
 
-        $handler = new HtmlHandler(HtmlHandler::INVERTED);
+        $handler = new HtmlRenderer(HtmlRenderer::INVERTED);
 
-        $result = $handler->renderException(new Error(
+        $result = $handler->render(new Error(
             'message',
             100,
             __FILE__,
             __LINE__
-        ), HandlerInterface::VERBOSITY_DEBUG);
+        ), \Spiral\Exceptions\Verbosity::DEBUG);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testConsoleHandlerStacktrace(): void
+    public function testConsoleRendererStacktrace(): void
     {
-        $handler = new ConsoleHandler();
+        $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
 
         try {
@@ -206,73 +198,73 @@ class HandlerTest extends TestCase
         } catch (\Throwable $e) {
         }
 
-        $result = $handler->renderException($e, HandlerInterface::VERBOSITY_DEBUG);
+        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
 
         $this->assertStringContainsString('LogicException', $result);
         $this->assertStringContainsString('makeException', $result);
     }
 
 
-    public function testPlainHandlerStacktrace(): void
+    public function testPlainRendererStacktrace(): void
     {
-        $handler = new PlainHandler();
+        $handler = new PlainRenderer();
 
         try {
             $this->makeException();
         } catch (\Throwable $e) {
         }
 
-        $result = $handler->renderException($e, HandlerInterface::VERBOSITY_DEBUG);
+        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
 
         $this->assertStringContainsString('LogicException', $result);
         $this->assertStringContainsString('makeException', $result);
     }
 
-    public function testJsonHandler(): void
+    public function testJsonRenderer(): void
     {
-        $handler = new JsonHandler();
+        $handler = new JsonRenderer();
 
         try {
             $this->makeException();
         } catch (\Throwable $e) {
         }
 
-        $result = $handler->renderException($e, HandlerInterface::VERBOSITY_DEBUG);
+        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
 
         $this->assertStringContainsString('LogicException', $result);
         $this->assertStringContainsString('makeException', $result);
     }
 
-    public function testHtmlHandlerStacktrace(): void
+    public function testHtmlRendererStacktrace(): void
     {
         $this->markTestSkipped('FIXME: Very long execution time');
 
-        $handler = new HtmlHandler(HtmlHandler::DEFAULT);
+        $handler = new HtmlRenderer(HtmlRenderer::DEFAULT);
 
         try {
             $this->makeException();
         } catch (\Throwable $e) {
         }
 
-        $result = $handler->renderException($e, HandlerInterface::VERBOSITY_DEBUG);
+        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
 
         $this->assertStringContainsString('RuntimeException', $result);
         $this->assertStringContainsString('LogicException', $result);
         $this->assertStringContainsString('makeException', $result);
     }
 
-    public function testHtmlHandlerInvertedStacktrace(): void
+    public function testHtmlRendererInvertedStacktrace(): void
     {
         $this->markTestSkipped('FIXME: Very long execution time');
 
-        $handler = new HtmlHandler(HtmlHandler::INVERTED);
+        $handler = new HtmlRenderer(HtmlRenderer::INVERTED);
 
         try {
             $this->makeException();
         } catch (\Throwable $e) {
         }
 
-        $result = $handler->renderException($e, HandlerInterface::VERBOSITY_DEBUG);
+        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
 
         $this->assertStringContainsString('RuntimeException', $result);
         $this->assertStringContainsString('LogicException', $result);

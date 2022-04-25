@@ -2,25 +2,33 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Exceptions;
+namespace Spiral\Exceptions\Renderer;
 
-final class JsonHandler extends AbstractHandler
+use Spiral\Exceptions\Verbosity;
+
+final class JsonRenderer extends AbstractRenderer
 {
-    public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_VERBOSE): string
-    {
+    protected const FORMATS = ['application/json', 'json'];
+
+    public function render(
+        \Throwable $exception,
+        ?Verbosity $verbosity = Verbosity::BASIC,
+        string $format = null,
+    ): string {
+        $verbosity ??= $this->defaultVerbosity;
         return \json_encode([
             'error'      => \sprintf(
                 '[%s] %s as %s:%s',
-                $e::class,
-                $e->getMessage(),
-                $e->getFile(),
-                $e->getLine()
+                $exception::class,
+                $exception->getMessage(),
+                $exception->getFile(),
+                $exception->getLine()
             ),
-            'stacktrace' => \iterator_to_array($this->renderTrace($e->getTrace(), $verbosity)),
+            'stacktrace' => \iterator_to_array($this->renderTrace($exception->getTrace(), $verbosity)),
         ]);
     }
 
-    private function renderTrace(array $trace, int $verbosity): \Generator
+    private function renderTrace(array $trace, Verbosity $verbosity): \Generator
     {
         foreach ($trace as $item) {
             $result = [];
@@ -39,7 +47,7 @@ final class JsonHandler extends AbstractHandler
                 );
             }
 
-            if ($verbosity >= self::VERBOSITY_VERBOSE && isset($item['file'])) {
+            if ($verbosity->value >= Verbosity::VERBOSE->value && isset($item['file'])) {
                 $result['at'] = [
                     'file' => $item['file'] ?? null,
                     'line' => $item['line'] ?? null,

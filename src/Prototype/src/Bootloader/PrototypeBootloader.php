@@ -66,6 +66,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'authTokens'   => \Spiral\Auth\TokenStorageInterface::class,
         'cache'        => \Psr\SimpleCache\CacheInterface::class,
         'cacheManager' => \Spiral\Cache\CacheStorageProviderInterface::class,
+        'exceptionHandler' => \Spiral\Exceptions\ExceptionHandlerInterface::class,
     ];
 
     public function __construct(

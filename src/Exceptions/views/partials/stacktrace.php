@@ -1,13 +1,13 @@
 <?php
 /**
- * @var array                           $stacktrace
- * @var Throwable                       $exception
- * @var \Spiral\Exceptions\ValueWrapper $valueWrapper
- * @var \Spiral\Exceptions\Highlighter  $highlighter
- * @var bool                            $showSource
+ * @var array $stacktrace
+ * @var Throwable $exception
+ * @var \Spiral\Exceptions\Renderer\ValueWrapper $valueWrapper
+ * @var \Spiral\Exceptions\Renderer\Highlighter $highlighter
+ * @var bool $showSource
  */
 $vendorDir = (new ReflectionClass(\Composer\Autoload\ClassLoader::class))->getFileName();
-$vendorDir = dirname(dirname($vendorDir));
+$vendorDir = dirname($vendorDir, 2);
 $vendorID = null;
 $vendorCount = 0;
 foreach ($stacktrace as $index => $trace) {

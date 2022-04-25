@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Exceptions;
+namespace Spiral\Exceptions\Renderer;
 
 use Spiral\Debug\Dumper;
 use Spiral\Debug\RendererInterface;
+use Spiral\Exceptions\Verbosity;
 
 /**
  * Nicely colorize argument and argument values in stack trace.
@@ -22,7 +23,7 @@ class ValueWrapper
     public function __construct(
         private Dumper $dumper,
         private RendererInterface $renderer,
-        private int $verbosity
+        private Verbosity $verbosity
     ) {
     }
 
@@ -55,7 +56,7 @@ class ValueWrapper
 
             $type = $this->renderer->apply($display, 'value', $type);
 
-            if ($this->verbosity < HandlerInterface::VERBOSITY_DEBUG) {
+            if ($this->verbosity->value < Verbosity::DEBUG->value) {
                 $result[] = \sprintf('<span>%s</span>', $type);
             } else {
                 $hash = \is_object($arg) ? \spl_object_hash($arg) : \md5(\json_encode($arg));

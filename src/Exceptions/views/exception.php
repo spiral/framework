@@ -1,15 +1,15 @@
 <?php
 /**
- * @var Throwable                         $exception
- * @var string                            $message
- * @var string                            $style
- * @var string                            $variables
- * @var string                            $footer
- * @var string                            $stacktrace
- * @var string                            $chain
- * @var string                            $logs
- * @var string                            $tags
- * @var \Spiral\Exceptions\ValueWrapper   $valueWrapper
+ * @var Throwable $exception
+ * @var string $message
+ * @var string $style
+ * @var string $variables
+ * @var string $footer
+ * @var string $stacktrace
+ * @var string $chain
+ * @var string $logs
+ * @var string $tags
+ * @var \Spiral\Exceptions\Renderer\ValueWrapper $valueWrapper
  * @var \Spiral\Debug\StateInterface|null $state
  */
 ?>

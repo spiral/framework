@@ -6,6 +6,10 @@
     Please, use standalone package `spiral/data-grid-bridge` instead.
   - Component `spiral/data-grid` is removed from `spiral/framework` repository.
     Please, use standalone package `spiral/data-grid` instead.
+  - `Spiral\Boot\ExceptionHandler` has been eliminated. New `Spiral\Exceptions\ExceptionHandler` with interfaces 
+    `Spiral\Exceptions\ExceptionHandlerInterface`, `Spiral\Exceptions\ExceptionRendererInterface` and
+    `Spiral\Exceptions\ExceptionReporterInterface` have been added.
+  - Added `ExceptionHandlerBootloader` that adds renderers and reporters in the `ExceptionHandler`.
   - Console commands `Spiral\Command\Cycle\MigrateCommand`, `Spiral\Command\Cycle\SyncCommand`,
     `Spiral\Command\Cycle\UpdateCommand`, `Spiral\Scaffolder\Command\MigrationCommand`,
     `Spiral\Scaffolder\Command\Database\EntityCommand`, `Spiral\Scaffolder\Command\Database\RepositoryCommand`,
@@ -32,6 +36,8 @@
   - Bootloader `Spiral\Bootloader\Http\WebsocketsBootloader` is removed.
   - Component `spiral/annotations` is removed. Use `spiral/attributes` instead.
   - Added return type `void` to a methods `publish`, `publishDirectory`, `ensureDirectory` in `Spiral\Module\PublisherInterface` interface.
+  - [spiral/exceptions] All handlers have been renamed into renderers. `HandlerInterface` has been deleted.
+  - [spiral/exceptions] Added `Spiral\Exceptions\Verbosity` enum.
   - [spiral/router] Removed deprecated method `addRoute` in the `Spiral\Router\RouterInterface` and `Spiral\Router\Router`.
     Use method `setRoute` instead.
   - [spiral/validation] `Spiral\Validation\Checker\EntityChecker` is removed.
@@ -96,6 +102,8 @@
     added return type `void` to the method `finalize` in `Spiral\Boot\FinalizerInterface` interface.
   - [spiral/boot] Added return type `self` to the method `addDispatcher`,
     added return type `mixed` to the method `serve` in `Spiral\Boot\KernelInterface` interface.
+  - [spiral/boot] Added `exceptionHandler` parameter in the `Spiral\Boot\AbstractKernel::create` method.
+  - [spiral/boot] `Spiral\Boot\AbstractKernel` constructor is protected now.
   - [spiral/boot] Added return type `mixed` to the method `loadData`,
     added return type `void` and `mixed` parameter type of `$data` to the method `saveData` in `Spiral\Boot\MemoryInterface` interface.
   - [spiral/console] Added return type `void` to the method `writeHeader`, added return type `void` to the method `execute`,
@@ -127,12 +135,18 @@
     config `Spiral\Bootloader\Storage\StorageConfig` moved to the `Spiral\Storage\Config\StorageConfig`.
   - [spiral/validation] Bootloader `Spiral\Bootloader\Security\ValidationBootloader` moved to the `Spiral\Validation\Bootloader\ValidationBootloader`.
   - [spiral/views] Bootloader `Spiral\Bootloader\Views\ViewsBootloader` moved to the `Spiral\Views\Bootloader\ViewsBootloader`.
+  - [spiral/boot] By default, overwriting of environment variable values is disabled, the default value for `$overwrite` 
+    changed from `true` to `false` in the `Spiral\Boot\Environment`.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`
   - A minimal version of `league/flysystem` increased to `^2.3`
   - A minimal version of `symfony/console` increased to `^6.0`
+  - `Spiral\Snapshots\FileSnapshooter` uses `Verbosity` enum instead of int flag.
+  - `Spiral\Snapshots\FileSnapshooter` uses `ExceptionRendererInterface $renderer` instead of `HandlerInterface $handler`.
+  - `Spiral\Snapshots\SnapshotterInterface` usage replaced with `Spiral\Exceptions\ExceptionReporterInterface` in all classes.
 - **Other Features**
+  - [spiral/debug] Added `Spiral\Debug\StateConsumerInterface`.
 
 ## v2.12.0 - 2022-04-07
 - **Medium Impact Changes**

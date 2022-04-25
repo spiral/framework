@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Console;
 
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\Logger\DebugListener;
-use Spiral\Exceptions\ConsoleHandler;
-use Spiral\Snapshots\SnapshotterInterface;
+use Spiral\Exceptions\ExceptionHandlerInterface;
+use Spiral\Exceptions\Verbosity;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -26,7 +25,8 @@ final class ConsoleDispatcher implements DispatcherInterface
     public function __construct(
         private readonly EnvironmentInterface $env,
         private readonly FinalizerInterface $finalizer,
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
+        private readonly ExceptionHandlerInterface $errorHandler,
     ) {
     }
 
@@ -61,25 +61,24 @@ final class ConsoleDispatcher implements DispatcherInterface
         }
     }
 
-    protected function handleException(Throwable $e, OutputInterface $output): void
+    protected function handleException(Throwable $exception, OutputInterface $output): void
     {
-        try {
-            $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (Throwable | ContainerExceptionInterface) {
-            // no need to notify when unable to register an exception
-        }
-
-        // Explaining exception to the user
-        $handler = new ConsoleHandler(STDERR);
-        $output->write($handler->renderException($e, $this->mapVerbosity($output)));
+        $this->errorHandler->report($exception);
+        $output->write(
+            $this->errorHandler->render(
+                $exception,
+                verbosity: $this->mapVerbosity($output),
+                format: 'cli',
+            )
+        );
     }
 
-    private function mapVerbosity(OutputInterface $output): int
+    private function mapVerbosity(OutputInterface $output): Verbosity
     {
         return match (true) {
-            $output->isDebug() => ConsoleHandler::VERBOSITY_DEBUG,
-            $output->isVeryVerbose() => ConsoleHandler::VERBOSITY_VERBOSE,
-            default => ConsoleHandler::VERBOSITY_BASIC
+            $output->isDebug() => Verbosity::DEBUG,
+            $output->isVeryVerbose() => Verbosity::VERBOSE,
+            default => Verbosity::BASIC
         };
     }
 }
