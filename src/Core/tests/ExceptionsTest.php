@@ -41,9 +41,6 @@ class ExceptionsTest extends TestCase
         $container->resolveArguments(new \ReflectionMethod($this, 'invalidInjection'));
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
     public function testInjectionUsingIntersectionTypes(): void
     {
         $this->expectException(ContainerException::class);
