@@ -13,7 +13,7 @@ use Spiral\Core\Container\Autowire;
  *
  * @internal
  */
-class Binder implements BinderInterface
+final class Binder implements BinderInterface
 {
     use DestructorTrait;
 

@@ -6,7 +6,7 @@ namespace Spiral\Tests\Core\Internal\Resolver;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\BinderInterface;
-use Spiral\Core\Internal\Config;
+use Spiral\Core\Config;
 use Spiral\Core\Internal\Constructor;
 use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\State;

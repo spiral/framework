@@ -53,7 +53,7 @@ final class Container implements
     /**
      * Container constructor.
      */
-    public function __construct(Internal\Config $config = new Internal\Config())
+    public function __construct(Config $config = new Config())
     {
         $constructor = new Internal\Constructor($config, [
             'state' => new Internal\State(),
