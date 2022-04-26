@@ -24,7 +24,10 @@ final class AuthorizeFilterInterceptor implements CoreInterceptorInterface
         $filter = $core->callAction($name, $action, $parameters);
 
         if ($filter instanceof ShouldBeAuthorized) {
-            $auth = $this->container->get(AuthContextInterface::class);
+            $auth = $this->container->has(AuthContextInterface::class)
+                ? $this->container->get(AuthContextInterface::class)
+                : null;
+
             if (!$filter->isAuthorized($auth)) {
                 $filter->failedAuthorization();
             }
