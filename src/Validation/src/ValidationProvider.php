@@ -34,7 +34,7 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
         $this->resetCache();
     }
 
-    public function validate(array|\ArrayAccess $data, array $rules, mixed $context = null): ValidatorInterface
+    public function validate(array|object $data, array $rules, mixed $context = null): ValidatorInterface
     {
         return new Validator($data, $rules, $context, $this);
     }

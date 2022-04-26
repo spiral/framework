@@ -14,7 +14,7 @@ interface ValidatorInterface
     /**
      * Create validator copy with new data set.
      */
-    public function withData(array|\ArrayAccess $data): ValidatorInterface;
+    public function withData(array|object $data): ValidatorInterface;
 
     /**
      * Receive field from context data or return default value.

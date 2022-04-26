@@ -16,14 +16,9 @@ use Spiral\Filters\InputInterface;
 use Spiral\Filters\Interceptors\AuthorizeFilterInterceptor;
 use Spiral\Filters\Interceptors\Core;
 use Spiral\Filters\Interceptors\ValidateFilterInterceptor;
-use Spiral\Validation\Bootloader\ValidationBootloader;
 
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {
-    protected const DEPENDENCIES = [
-        ValidationBootloader::class,
-    ];
-
     protected const SINGLETONS = [
         FilterProviderInterface::class => FilterProvider::class,
         InputInterface::class => InputScope::class,

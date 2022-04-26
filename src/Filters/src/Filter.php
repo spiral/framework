@@ -28,7 +28,7 @@ abstract class Filter extends AbstractEntity implements
                                                         ShouldBeValidated,
                                                         ShouldBeAuthorized
 {
-    private ?ValidationInterface $validation = null;
+    protected ?ValidationInterface $validation = null;
     private ?ErrorMapper $errorMapper = null;
 
     /**
@@ -97,6 +97,8 @@ abstract class Filter extends AbstractEntity implements
         ValidationInterface $validation
     ): static {
         $this->validation = $validation;
+
+        return $this;
     }
 
     public function validate(): ValidatorInterface
@@ -173,7 +175,11 @@ abstract class Filter extends AbstractEntity implements
      */
     protected function createValidator(): ValidatorInterface
     {
-        return $this->validation->validate($this, $this->validationRules());
+        $context = method_exists($this, 'getValidationContext')
+            ? $this->getValidationContext()
+            : null;
+
+        return $this->validation->validate($this, $this->validationRules(), $context);
     }
 
     protected function isFillable(string $field): bool
@@ -192,9 +198,9 @@ abstract class Filter extends AbstractEntity implements
     protected function getMutator(string $field, string $type): mixed
     {
         return match ($type) {
-            ModelSchema::MUTATOR_GETTER => $this->getters()[$field],
-            ModelSchema::MUTATOR_SETTER => $this->setters()[$field],
-            ModelSchema::MUTATOR_ACCESSOR => $this->accessors()[$field],
+            ModelSchema::MUTATOR_GETTER => $this->getters()[$field] ?? null,
+            ModelSchema::MUTATOR_SETTER => $this->setters()[$field] ?? null,
+            ModelSchema::MUTATOR_ACCESSOR => $this->accessors()[$field] ?? null,
             default => null
         };
     }

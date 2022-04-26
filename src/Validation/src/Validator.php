@@ -7,7 +7,7 @@ namespace Spiral\Validation;
 final class Validator extends AbstractValidator
 {
     public function __construct(
-        private array|\ArrayAccess $data,
+        private array $data,
         array $rules,
         mixed $context,
         RulesInterface $ruleProvider
@@ -24,7 +24,7 @@ final class Validator extends AbstractValidator
         parent::__destruct();
     }
 
-    public function withData(array|\ArrayAccess $data): ValidatorInterface
+    public function withData(array|object $data): ValidatorInterface
     {
         $validator = clone $this;
         $validator->data = $data;
