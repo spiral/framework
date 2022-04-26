@@ -26,7 +26,6 @@ final class FilterProvider implements FilterProviderInterface
             // Clear old input data
             $filter->__destruct();
         } else {
-
             $class = new \ReflectionClass($name);
             $args = $this->container->resolveArguments($class->getConstructor());
             $filter = $class->newInstanceArgs($args);
