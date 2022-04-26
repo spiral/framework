@@ -31,7 +31,8 @@ final class TypeIntersectionParameterTest extends BaseTest
     {
         $result = $this->resolveClosure(
             fn(EngineInterface&MadeInUssrInterface ...$engines) => $engines,
-            [[new EngineZIL130(), new EngineVAZ2101(), new stdClass(), new EngineMarkTwo(), new stdClass()]]
+            [[new EngineZIL130(), new EngineVAZ2101(), new stdClass(), new EngineMarkTwo(), new stdClass()]],
+            validate: false
         );
 
         $this->assertCount(5, $result);

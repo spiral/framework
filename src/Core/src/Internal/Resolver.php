@@ -8,7 +8,11 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionFunctionAbstract as ContextFunction;
+use ReflectionIntersectionType;
+use ReflectionNamedType;
 use ReflectionParameter;
+use ReflectionType;
+use ReflectionUnionType;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
@@ -37,7 +41,9 @@ final class Resolver implements ResolverInterface
 
     public function resolveArguments(
         ContextFunction $reflection,
-        array $parameters = []
+        array $parameters = [],
+        bool $validate = true,
+        bool $strict = true
     ): array {
         $state = new ResolvingState($reflection, $parameters);
 
@@ -47,39 +53,115 @@ final class Resolver implements ResolverInterface
             throw new ArgumentResolvingException($reflection, $parameter->getName());
         }
 
+        $result = $state->getResolvedValues();
+
         // Resolve Autowire objects
-        foreach ($state->getResolvedValues() as &$v) {
+        foreach ($result as &$v) {
             if ($v instanceof Autowire) {
                 $v = $v->resolve($this->factory);
             }
         }
-        return $state->getResolvedValues();
+
+        if ($validate) {
+            $this->validateArguments($reflection, $result, $strict);
+        }
+
+        return $result;
     }
 
-    public function validateArguments(ContextFunction $reflection, array $arguments = []): void
+    public function validateArguments(ContextFunction $reflection, array $arguments = [], bool $strict = true): void
     {
-        foreach ($reflection->getParameters() as $parameter) {
-            $name = $parameter->name;
-            if (!\array_key_exists($name, $arguments)) {
+        $positional = true;
+        $inVariadic = false;
+        $parameters = $reflection->getParameters();
+        if (\count($parameters) === 0) {
+            return;
+        }
+
+        while (\count($parameters) > 0 || \count($arguments) > 0) {
+            // get related argument value
+            $key = \key($arguments);
+            $positional = $positional && \is_int($key);
+
+            if (!$inVariadic) {
+                $parameter = \array_shift($parameters);
+                $inVariadic = $parameter->isVariadic();
+            } elseif (!$positional) {
+                // todo Exception?
+                return;
+            }
+            $name = $parameter->getName();
+
+            if ($positional) {
+                $value = \array_shift($arguments);
+            } elseif ($key === null || !\array_key_exists($name, $arguments)) {
                 if ($parameter->isOptional()) {
                     continue;
                 }
                 throw new InvalidArgumentException($reflection, $name);
+            } else {
+                $value = &$arguments[$name];
+                unset($arguments[$name]);
             }
 
-            $value = &$arguments[$name];
-            unset($arguments[$name]);
-
-            if (!$parameter->hasType() || ($parameter->allowsNull() && $parameter === $value)) {
+            if (!$parameter->hasType() || ($parameter->allowsNull() && $value === null)) {
                 continue;
             }
+            $type = $parameter->getType();
+            \assert($type !== null);
 
-            // todo: union types
-            // todo: type intersection
-            // todo: single types
+            /**
+             * @var bool $or
+             * @var array<int, ReflectionNamedType> $types
+             */
+            [$or, $types] = match (true) {
+                $type instanceof ReflectionNamedType => [true, [$type]],
+                $type instanceof ReflectionUnionType => [true, $type->getTypes()],
+                $type instanceof ReflectionIntersectionType => [false, $type->getTypes()],
+            };
 
-            throw new InvalidArgumentException($reflection, $name);
+            foreach ($types as $t) {
+                if (!$this->validateValueType($t, $value)) {
+                    // If it is TypeIntersection
+                    $or or throw new InvalidArgumentException($reflection, $name);
+                    continue;
+                }
+                // If it is not type intersection then we can skip that value after first successful check
+                if ($or) {
+                    continue 2;
+                }
+            }
+            // Type intersection is OK here
+            $or and throw new InvalidArgumentException($reflection, $name);
         }
+    }
+
+    /**
+     * Validate the value have the same type that in the $type.
+     * This method doesn't resolve cases with nullable type and {@see null} value.
+     */
+    private function validateValueType(ReflectionNamedType $type, mixed $value): bool
+    {
+        $name = $type->getName();
+
+        if ($type->isBuiltin()) {
+            return match ($name) {
+                'mixed' => true,
+                'string' => \is_string($value),
+                'int' => \is_int($value),
+                'bool' => \is_bool($value),
+                'array' => \is_array($value),
+                'callable' => \is_callable($value),
+                'iterable' => \is_iterable($value),
+                'float' => \is_float($value),
+                'object' => \is_object($value),
+                'true' => $value === true,
+                'false' => $value === false,
+                default => false,
+            };
+        }
+
+        return $value instanceof $name;
     }
 
     /**

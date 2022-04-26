@@ -21,10 +21,15 @@ interface ResolverInterface
      *
      * @throws ResolvingException
      */
-    public function resolveArguments(ContextFunction $reflection, array $parameters = []): array;
+    public function resolveArguments(
+        ContextFunction $reflection,
+        array $parameters = [],
+        bool $validate = true,
+        bool $strict = true
+    ): array;
 
     /**
      * @throws InvalidArgumentException
      */
-    public function validateArguments(ContextFunction $reflection, array $arguments = []): void;
+    public function validateArguments(ContextFunction $reflection, array $arguments = [], bool $strict = true): void;
 }

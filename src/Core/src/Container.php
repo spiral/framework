@@ -86,14 +86,18 @@ final class Container implements
         throw new LogicException('Container is not clonable.');
     }
 
-    public function resolveArguments(ContextFunction $reflection, array $parameters = []): array
-    {
-        return $this->resolver->resolveArguments($reflection, $parameters);
+    public function resolveArguments(
+        ContextFunction $reflection,
+        array $parameters = [],
+        bool $validate = true,
+        bool $strict = true
+    ): array {
+        return $this->resolver->resolveArguments($reflection, $parameters, $validate, $strict);
     }
 
-    public function validateArguments(ContextFunction $reflection, array $arguments = []): void
+    public function validateArguments(ContextFunction $reflection, array $arguments = [], bool $strict = true): void
     {
-        $this->resolver->validateArguments($reflection, $arguments);
+        $this->resolver->validateArguments($reflection, $arguments, $strict);
     }
 
     /**
@@ -214,15 +218,6 @@ final class Container implements
     }
 
     /**
-     * Every declared Container binding. Must not be used in production code due container format is
-     * vary.
-     */
-    public function getBindings(): array
-    {
-        return $this->state->bindings;
-    }
-
-    /**
      * Bind class or class interface to the injector source (InjectorInterface).
      *
      * @template TClass
@@ -230,16 +225,23 @@ final class Container implements
      * @param class-string<TClass> $class
      * @param class-string<InjectorInterface<TClass>> $injector
      */
-    public function bindInjector(string $class, string $injector): Container
+    public function bindInjector(string $class, string $injector): void
     {
-        $this->state->injectors[$class] = $injector;
-
-        return $this;
+        $this->binder->bindInjector($class, $injector);
     }
 
     public function removeInjector(string $class): void
     {
-        unset($this->state->injectors[$class]);
+        $this->binder->removeInjector($class);
+    }
+
+    /**
+     * Every declared Container binding. Must not be used in production code due container format is
+     * vary.
+     */
+    public function getBindings(): array
+    {
+        return $this->state->bindings;
     }
 
     /**

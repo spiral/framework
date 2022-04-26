@@ -6,7 +6,9 @@ namespace Spiral\Core\Internal;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\Container\InjectorInterface;
 
 /**
  * @psalm-type TResolver = class-string|non-empty-string|callable|array{class-string, non-empty-string}
@@ -86,5 +88,23 @@ final class Binder implements BinderInterface
     public function removeBinding(string $alias): void
     {
         unset($this->state->bindings[$alias]);
+    }
+
+    /**
+     * Bind class or class interface to the injector source (InjectorInterface).
+     *
+     * @template TClass
+     *
+     * @param class-string<TClass> $class
+     * @param class-string<InjectorInterface<TClass>> $injector
+     */
+    public function bindInjector(string $class, string $injector): void
+    {
+        $this->state->injectors[$class] = $injector;
+    }
+
+    public function removeInjector(string $class): void
+    {
+        unset($this->state->injectors[$class]);
     }
 }

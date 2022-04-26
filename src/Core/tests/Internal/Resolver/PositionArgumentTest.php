@@ -95,7 +95,8 @@ final class PositionArgumentTest extends BaseTest
                 new DateTimeImmutable(),
                 new DateTimeImmutable(),
                 new EngineVAZ2101(),
-            ]
+            ],
+            validate: false
         );
 
         $this->assertCount(2, $result);
@@ -113,7 +114,8 @@ final class PositionArgumentTest extends BaseTest
                 new DateTimeImmutable(),
                 new DateTimeImmutable(),
                 new EngineVAZ2101(),
-            ]
+            ],
+            validate: false
         );
 
         $this->assertCount(0, $result);
