@@ -59,8 +59,8 @@ trait ClosureRendererTrait
                 $default = $parameter->getDefaultValue();
                 $parameterString .= ' = ' . match (true) {
                     \is_object($default) => 'new ' . $default::class . '(...)',
-                        $parameter->isDefaultValueConstant() => $parameter->getDefaultValueConstantName(),
-                        default => \var_export($default, true),
+                    $parameter->isDefaultValueConstant() => $parameter->getDefaultValueConstantName(),
+                    default => \var_export($default, true),
                 };
             }
             $closureParameters[] = \ltrim($parameterString);

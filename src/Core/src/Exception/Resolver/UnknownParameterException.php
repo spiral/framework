@@ -6,7 +6,7 @@ namespace Spiral\Core\Exception\Resolver;
 
 use Spiral\Core\Exception\Traits\ClosureRendererTrait;
 
-final class InvalidArgumentException extends ValidationException
+final class UnknownParameterException extends ValidationException
 {
     use ClosureRendererTrait;
 
@@ -14,7 +14,7 @@ final class InvalidArgumentException extends ValidationException
         \ReflectionFunctionAbstract $reflection,
         private readonly string $parameter
     ) {
-        $pattern = "Invalid value of the `{$parameter}` argument when validating arguments for `%s` %s.";
+        $pattern = "Unknown named parameter `{$parameter}` `%s` %s.";
         parent::__construct($this->renderFunctionAndParameter($reflection, $pattern));
     }
 

@@ -12,6 +12,10 @@ use PHPUnit\Framework\TestCase;
 use ReflectionFunction;
 use Spiral\Core\Config;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
+use Spiral\Core\Exception\Resolver\MissingRequiredArgumentException;
+use Spiral\Core\Exception\Resolver\PositionalArgumentException;
+use Spiral\Core\Exception\Resolver\UnknownParameterException;
+use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Internal\Constructor;
 use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\State;
@@ -134,6 +138,15 @@ final class TypeValidationTest extends TestCase
         );
     }
 
+    public function testMissingOptionalArguments(): void
+    {
+        $this->validateClosureArguments(
+            $fn = fn (int $b, int $a = 0, $c = null) => \func_get_args(),
+            $args = [1],
+        );
+        $this->assertSame($args, $fn(...$args));
+    }
+
     // Exceptions
 
     public function testWrongIntStrict(): void
@@ -181,6 +194,100 @@ final class TypeValidationTest extends TestCase
         );
     }
 
+    // positioning and named arguments
+
+    public function testOneNamedArgument(): void
+    {
+        $this->validateClosureArguments(
+            fn (EngineInterface&MadeInUssrInterface $a) => null,
+            ['a' => new EngineZIL130()]
+        );
+    }
+
+    public function testOnePositionalOneNamedArguments(): void
+    {
+        $this->validateClosureArguments(
+            fn (int $a, string $b) => null,
+            [42, 'b' => 'bar']
+        );
+    }
+
+    public function testOnePositionalOneNamedArgumentsSkipOptional(): void
+    {
+        $this->validateClosureArguments(
+            $fn = fn (int $a, ?stdClass $b = null, string $c = 'bar') => [$a, $b, $c],
+            $args = [42, 'c' => 'bar']
+        );
+        $this->assertSame([42, null, 'bar'], $fn(...$args));
+    }
+
+    public function testShuffledPositionalArgs(): void
+    {
+        $this->validateClosureArguments(
+            $fn = fn (int $a, int $b, int $c) => [$a, $b, $c],
+            $args = [1 => 1, 2 => 2, 0 => 0]
+        );
+        $this->assertSame([1, 2, 0], $fn(...$args));
+    }
+
+    public function testVariadicParameterWithPositionalArgs(): void
+    {
+        $this->validateClosureArguments(
+            $fn = fn (int ...$c) => $c,
+            $args = [1 => 1, 2 => 2, 0 => 0]
+        );
+        $this->assertSame([1, 2, 0], $fn(...$args));
+    }
+
+    public function testVariadicParameterWithWrongPositionalArgs(): void
+    {
+        $this->validateClosureArguments(
+            fn (int $i, int ...$c) => $c,
+            [0, 1, 2, 'foo'],
+            'c'
+        );
+    }
+
+    public function testUnusedNamedArgs(): void
+    {
+        $this->validateClosureArguments(
+            fn (int $b, int $a) => \func_get_args(),
+            [1, 'a'=>0, 'c' => 2],
+            invalidParameter: 'c',
+            exceptionClass: UnknownParameterException::class
+        );
+    }
+
+    public function testMissingRequiredArgument(): void
+    {
+        $this->validateClosureArguments(
+            fn (int $b, int $a) => \func_get_args(),
+            [1],
+            invalidParameter: 'a',
+            exceptionClass: MissingRequiredArgumentException::class
+        );
+    }
+
+    public function testPositionalArgsAfterNamedVariadic(): void
+    {
+        $this->validateClosureArguments(
+            fn (string $a, ...$b) => \func_get_args(),
+            ['a' => 'foo', 'bar'],
+            invalidParameter: '#0',
+            exceptionClass: PositionalArgumentException::class
+        );
+    }
+
+    public function testPositionalArgsAfterNamed(): void
+    {
+        $this->validateClosureArguments(
+            fn (string $a, $b = null, $c = null) => \func_get_args(),
+            ['a' => 'foo', 'bar'],
+            invalidParameter: '#0',
+            exceptionClass: PositionalArgumentException::class
+        );
+    }
+
     protected function setUp(): void
     {
         $this->config = new Config();
@@ -193,11 +300,13 @@ final class TypeValidationTest extends TestCase
     private function validateClosureArguments(
         Closure $closure,
         array $arguments = [],
-        ?string $invalidParameter = null
+        ?string $invalidParameter = null,
+        string $exceptionClass = InvalidArgumentException::class,
     ): void {
         try {
             $this->createResolver()->validateArguments(new ReflectionFunction($closure), $arguments);
-        } catch (InvalidArgumentException $e) {
+        } catch (ValidationException $e) {
+            $this->assertInstanceOf($exceptionClass, $e, 'Expected other exception.');
             if ($invalidParameter === null) {
                 throw $e;
             }

@@ -6,20 +6,20 @@ namespace Spiral\Core\Exception\Resolver;
 
 use Spiral\Core\Exception\Traits\ClosureRendererTrait;
 
-final class InvalidArgumentException extends ValidationException
+final class PositionalArgumentException extends ValidationException
 {
     use ClosureRendererTrait;
 
     public function __construct(
         \ReflectionFunctionAbstract $reflection,
-        private readonly string $parameter
+        private readonly int $position
     ) {
-        $pattern = "Invalid value of the `{$parameter}` argument when validating arguments for `%s` %s.";
+        $pattern = 'Cannot use positional argument after named argument `%s` %s.';
         parent::__construct($this->renderFunctionAndParameter($reflection, $pattern));
     }
 
     public function getParameter(): string
     {
-        return $this->parameter;
+        return '#' . $this->position;
     }
 }

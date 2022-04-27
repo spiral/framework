@@ -90,14 +90,13 @@ final class Container implements
         ContextFunction $reflection,
         array $parameters = [],
         bool $validate = true,
-        bool $strict = true
     ): array {
-        return $this->resolver->resolveArguments($reflection, $parameters, $validate, $strict);
+        return $this->resolver->resolveArguments($reflection, $parameters, $validate);
     }
 
-    public function validateArguments(ContextFunction $reflection, array $arguments = [], bool $strict = true): void
+    public function validateArguments(ContextFunction $reflection, array $arguments = []): void
     {
-        $this->resolver->validateArguments($reflection, $arguments, $strict);
+        $this->resolver->validateArguments($reflection, $arguments);
     }
 
     /**

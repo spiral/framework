@@ -15,6 +15,10 @@ use ReflectionType;
 use ReflectionUnionType;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
+use Spiral\Core\Exception\Resolver\MissingRequiredArgumentException;
+use Spiral\Core\Exception\Resolver\PositionalArgumentException;
+use Spiral\Core\Exception\Resolver\UnknownParameterException;
+use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
 use Spiral\Core\Exception\Resolver\ResolvingException;
 use Spiral\Core\Exception\Resolver\UnsupportedTypeException;
@@ -43,7 +47,6 @@ final class Resolver implements ResolverInterface
         ContextFunction $reflection,
         array $parameters = [],
         bool $validate = true,
-        bool $strict = true
     ): array {
         $state = new ResolvingState($reflection, $parameters);
 
@@ -63,42 +66,51 @@ final class Resolver implements ResolverInterface
         }
 
         if ($validate) {
-            $this->validateArguments($reflection, $result, $strict);
+            $this->validateArguments($reflection, $result);
         }
 
         return $result;
     }
 
-    public function validateArguments(ContextFunction $reflection, array $arguments = [], bool $strict = true): void
+    public function validateArguments(ContextFunction $reflection, array $arguments = []): void
     {
         $positional = true;
-        $inVariadic = false;
+        $variadic = false;
         $parameters = $reflection->getParameters();
         if (\count($parameters) === 0) {
             return;
         }
 
+        $parameter = null;
         while (\count($parameters) > 0 || \count($arguments) > 0) {
             // get related argument value
             $key = \key($arguments);
+
+            // For a variadic parameter it's no sense - named or positional argument will be sent
+            // But you can't send positional argument after named in any case
+            if (\is_int($key) && !$positional) {
+                throw new PositionalArgumentException($reflection, $key);
+            }
+
             $positional = $positional && \is_int($key);
 
-            if (!$inVariadic) {
+            if (!$variadic) {
                 $parameter = \array_shift($parameters);
-                $inVariadic = $parameter->isVariadic();
-            } elseif (!$positional) {
-                // todo Exception?
-                return;
+                $variadic = $parameter?->isVariadic() ?? false;
             }
-            $name = $parameter->getName();
 
-            if ($positional) {
+            if ($parameter === null && !$positional) {
+                throw new UnknownParameterException($reflection, $key);
+            }
+            $name = $parameter?->getName();
+
+            if ($positional || $variadic) {
                 $value = \array_shift($arguments);
             } elseif ($key === null || !\array_key_exists($name, $arguments)) {
                 if ($parameter->isOptional()) {
                     continue;
                 }
-                throw new InvalidArgumentException($reflection, $name);
+                throw new MissingRequiredArgumentException($reflection, $name);
             } else {
                 $value = &$arguments[$name];
                 unset($arguments[$name]);
