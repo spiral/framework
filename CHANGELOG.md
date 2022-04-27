@@ -88,7 +88,6 @@
   - [spiral/http] Added return type `array` and `mixed` parameter type of `$filler` to the method `fetch`,
     added return type `mixed` to the method `offsetGet`, added return type `mixed` and `mixed` parameter type
     of `$default` to the method `get`  in `Spiral\Http\Request\InputBag` class.
-  - [spiral/http] Added return type `bool` to the method `emit`  in `Spiral\Http\EmitterInterface` interface.
   - [spiral/config] Added return type `void` to the method `setDefaults` in `Spiral\Config\ConfiguratorInterface` interface.
   - [spiral/core] Added return type `mixed` to the method `runScope` in `Spiral\Core\ScopeInterface` interface.
   - [spiral/core] Added return type `mixed` and `array|callable|string` parameter type of `$target`
