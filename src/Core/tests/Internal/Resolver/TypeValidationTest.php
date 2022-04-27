@@ -106,6 +106,14 @@ final class TypeValidationTest extends TestCase
         );
     }
 
+    public function testCallable(): void
+    {
+        $this->validateClosureArguments(
+            fn (callable $a, callable $b) => null,
+            [fn () => true, [$this, 'testCallable']]
+        );
+    }
+
     public function testInterfaceAndClass(): void
     {
         $this->validateClosureArguments(
@@ -143,6 +151,15 @@ final class TypeValidationTest extends TestCase
         $this->validateClosureArguments(
             $fn = fn (int $b, int $a = 0, $c = null) => \func_get_args(),
             $args = [1],
+        );
+        $this->assertSame($args, $fn(...$args));
+    }
+
+    public function testVariadicParamWithoutArguments(): void
+    {
+        $this->validateClosureArguments(
+            $fn = fn (EngineInterface ...$engines) => $engines,
+            $args = [],
         );
         $this->assertSame($args, $fn(...$args));
     }
@@ -239,6 +256,15 @@ final class TypeValidationTest extends TestCase
         $this->assertSame([1, 2, 0], $fn(...$args));
     }
 
+    public function testVariadicParameterWithPositionalAnNamedArgs(): void
+    {
+        $this->validateClosureArguments(
+            $fn = fn (int ...$c) => $c,
+            $args = [1 => 1, 2 => 2, 0 => 0, 'foo' => 42, 'bar' => 0]
+        );
+        $this->assertSame([1, 2, 0, 'foo' => 42, 'bar' => 0], $fn(...$args));
+    }
+
     public function testVariadicParameterWithWrongPositionalArgs(): void
     {
         $this->validateClosureArguments(
@@ -272,7 +298,7 @@ final class TypeValidationTest extends TestCase
     {
         $this->validateClosureArguments(
             fn (string $a, ...$b) => \func_get_args(),
-            ['a' => 'foo', 'bar'],
+            ['a' => 'foo', 's' => 'ff', 'bar'],
             invalidParameter: '#0',
             exceptionClass: PositionalArgumentException::class
         );

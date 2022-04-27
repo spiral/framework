@@ -11,14 +11,12 @@ use ReflectionFunctionAbstract as ContextFunction;
 use ReflectionIntersectionType;
 use ReflectionNamedType;
 use ReflectionParameter;
-use ReflectionType;
 use ReflectionUnionType;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\MissingRequiredArgumentException;
 use Spiral\Core\Exception\Resolver\PositionalArgumentException;
 use Spiral\Core\Exception\Resolver\UnknownParameterException;
-use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
 use Spiral\Core\Exception\Resolver\ResolvingException;
 use Spiral\Core\Exception\Resolver\UnsupportedTypeException;
@@ -51,7 +49,7 @@ final class Resolver implements ResolverInterface
         $state = new ResolvingState($reflection, $parameters);
 
         foreach ($reflection->getParameters() as $parameter) {
-            $this->resolveParameter($parameter, $state)
+            $this->resolveParameter($parameter, $state, $validate)
             or
             throw new ArgumentResolvingException($reflection, $parameter->getName());
         }
@@ -104,7 +102,7 @@ final class Resolver implements ResolverInterface
             }
             $name = $parameter?->getName();
 
-            if ($positional || $variadic) {
+            if (($positional || $variadic) && $key !== null) {
                 $value = \array_shift($arguments);
             } elseif ($key === null || !\array_key_exists($name, $arguments)) {
                 if ($parameter->isOptional()) {
@@ -182,7 +180,7 @@ final class Resolver implements ResolverInterface
      * @throws ResolvingException
      * @throws NotFoundExceptionInterface|ContainerExceptionInterface
      */
-    private function resolveParameter(ReflectionParameter $parameter, ResolvingState $state): bool
+    private function resolveParameter(ReflectionParameter $parameter, ResolvingState $state, bool $validate): bool
     {
         $isVariadic = $parameter->isVariadic();
         $hasType = $parameter->hasType();

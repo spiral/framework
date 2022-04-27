@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Resolver;
 
+use Spiral\Core\Exception\Resolver\ResolvingException;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 use Spiral\Tests\Core\Stub\EngineVAZ2101;
@@ -27,20 +28,44 @@ final class VariadicParameterTest extends BaseTest
     {
         $result = $this->resolveClosure(
             fn(int ...$var) => $var,
-            ['var' => [1, 2, 3]]
+            ['var' => [1, 2, 3]],
         );
 
         $this->assertSame([1, 2, 3], $result);
     }
 
-    public function testAloneScalarVariadicParameterAndNamedAssocArrayArgument(): void
+    public function testScalarVariadicParameterAndNamedAssocArrayArgument(): void
     {
         $result = $this->resolveClosure(
             fn(string $foo, string ...$bar) => null,
-            ['foo' => 'foo', 'bar' => ['foo' => 'baz', '0' => 'fiz']]
+            ['foo' => 'foo', 'bar' => ['foo' => 'baz', 'bar' => 'fiz']],
         );
 
-        $this->assertSame(['foo', 'baz', 'fiz'], $result);
+        $this->assertSame(['foo', 'foo' => 'baz', 'bar' => 'fiz'], $result);
+    }
+
+    public function testScalarVariadicParameterAndMixedArgumentsArray(): void
+    {
+        $result = $this->resolveClosure(
+            $fn = fn(string ...$bar) => $bar,
+            ['bar' => ($args = ['foo1', 'foo' => 'baz', 'bar' => 'fiz'])],
+        );
+
+        $this->assertSame(['foo1', 'foo' => 'baz', 'bar' => 'fiz'], $result);
+        $this->assertSame(['foo1', 'foo' => 'baz', 'bar' => 'fiz'], $fn(...$args));
+    }
+
+    public function testScalarVariadicParameterAndWrongMixedArgumentsArray(): void
+    {
+        $this->expectException(ResolvingException::class);
+        $this->expectExceptionMessage(
+            'Cannot use positional argument after named argument during unpacking named variadic argument'
+        );
+
+        $this->resolveClosure(
+            fn(string ...$bar) => $bar,
+            ['bar' => ['foo1', 'foo' => 'baz', 'bar' => 'fiz', 'baz2']],
+        );
     }
 
     public function testScalarVariadicParameterAndNamedScalarArgumentNotInArray(): void

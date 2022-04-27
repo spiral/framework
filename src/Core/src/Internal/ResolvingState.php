@@ -44,7 +44,21 @@ final class ResolvingState
         $value = &$this->arguments[$key];
 
         if ($variadic && \is_array($value)) {
-            \array_walk($value, [$this, 'addResolvedValue']);
+            // Save keys is possible
+            $positional = true;
+            foreach ($value as $key => &$item) {
+                if (!$positional && \is_int($key)) {
+                    throw new ResolvingException(
+                        'Cannot use positional argument after named argument during unpacking named variadic argument.'
+                    );
+                }
+                $positional = $positional && \is_int($key);
+                if ($positional) {
+                    $this->resolvedValues[] = &$item;
+                } else {
+                    $this->resolvedValues[$key] = &$item;
+                }
+            }
         } else {
             $this->addResolvedValue($value);
         }
