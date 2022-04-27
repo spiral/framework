@@ -17,7 +17,7 @@ final class StreamWrapper
      *
      * @var resource
      */
-    public mixed $context;
+    public mixed $context = null;
 
     private static bool $registered = false;
 
