@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router\App;
 
-use Spiral\Bootloader\Http\DiactorosBootloader;
 use Spiral\Console\Console;
 use Spiral\Framework\Kernel;
+use Spiral\Http\Bootloader\DiactorosBootloader;
 use Spiral\Http\Http;
 use Spiral\Router\Bootloader\AnnotatedRoutesBootloader;
 
