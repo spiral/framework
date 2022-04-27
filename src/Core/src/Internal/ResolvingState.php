@@ -41,13 +41,12 @@ final class ResolvingState
         if (!\array_key_exists($key, $this->arguments)) {
             return false;
         }
-        /** @psalm-suppress UnusedVariable */
-        $value = &$this->arguments[$key];
+        $_val = &$this->arguments[$key];
 
-        if ($variadic && \is_array($value)) {
+        if ($variadic && \is_array($_val)) {
             // Save keys is possible
             $positional = true;
-            foreach ($value as $key => &$item) {
+            foreach ($_val as $key => &$item) {
                 if (!$positional && \is_int($key)) {
                     throw new ResolvingException(
                         'Cannot use positional argument after named argument during unpacking named variadic argument.'
@@ -61,7 +60,7 @@ final class ResolvingState
                 }
             }
         } else {
-            $this->addResolvedValue($value);
+            $this->addResolvedValue($_val);
         }
         return true;
     }
