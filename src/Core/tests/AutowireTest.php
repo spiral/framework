@@ -438,6 +438,8 @@ class AutowireTest extends TestCase
     private function expectValidationException(string $parameter): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid value of the `$parameter` argument when validating arguments");
+        $this->expectExceptionMessage(
+            "Invalid argument value type for the `$parameter` parameter when validating arguments"
+        );
     }
 }
