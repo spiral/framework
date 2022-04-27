@@ -95,10 +95,17 @@
   - [spiral/config] Added return type `void` to the method `setDefaults` in `Spiral\Config\ConfiguratorInterface` interface.
   - [spiral/core] Comprehensive code refactoring. A lot of signatures from `Spiral\Core` namespace has been changed.
     New features:
-    - Variadic arguments support
-    - Union types support
-    - Support for passing arguments by reference
+    - Added supporting for PHP 8.0 Union types.
+    - Added supporting for variadic arguments:
+      - array passed by parameter name
+        - with named arguments inside
+        - with positional arguments inside
+      - value passed by parameter name
+      - positional trailed values
     - Support for default object value
+    - Added supporting for referenced parameters in Resolver.
+    - The Factory now more strict: no more arguments type conversion.
+    - Added the `Spiral\Core\ResolverInterface::validateArguments` method for arguments validation
   - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
   - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
     added in `Spiral\Boot\EnvironmentInterface` interface.
