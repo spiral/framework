@@ -49,7 +49,7 @@ final class Resolver implements ResolverInterface
         $state = new ResolvingState($reflection, $parameters);
 
         foreach ($reflection->getParameters() as $parameter) {
-            $this->resolveParameter($parameter, $state, $validate)
+            $this->resolveParameter($parameter, $state)
             or
             throw new ArgumentResolvingException($reflection, $parameter->getName());
         }
@@ -120,10 +120,6 @@ final class Resolver implements ResolverInterface
             $type = $parameter->getType();
             \assert($type !== null);
 
-            /**
-             * @var bool $or
-             * @var array<int, ReflectionNamedType> $types
-             */
             [$or, $types] = match (true) {
                 $type instanceof ReflectionNamedType => [true, [$type]],
                 $type instanceof ReflectionUnionType => [true, $type->getTypes()],
@@ -180,7 +176,7 @@ final class Resolver implements ResolverInterface
      * @throws ResolvingException
      * @throws NotFoundExceptionInterface|ContainerExceptionInterface
      */
-    private function resolveParameter(ReflectionParameter $parameter, ResolvingState $state, bool $validate): bool
+    private function resolveParameter(ReflectionParameter $parameter, ResolvingState $state): bool
     {
         $isVariadic = $parameter->isVariadic();
         $hasType = $parameter->hasType();

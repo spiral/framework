@@ -41,6 +41,7 @@ final class ResolvingState
         if (!\array_key_exists($key, $this->arguments)) {
             return false;
         }
+        /** @psalm-suppress UnusedVariable */
         $value = &$this->arguments[$key];
 
         if ($variadic && \is_array($value)) {
