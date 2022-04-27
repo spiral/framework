@@ -9,7 +9,6 @@ use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Debug\StateCollectorInterface;
 use Spiral\Debug\StateInterface;
-use Spiral\Http\SapiDispatcher;
 
 final class EnvironmentCollector implements StateCollectorInterface
 {
@@ -23,11 +22,8 @@ final class EnvironmentCollector implements StateCollectorInterface
     {
         $state->setTag('php', \phpversion());
 
-        if (
-            $this->container->has(DispatcherInterface::class) &&
-            $this->container->get(DispatcherInterface::class) instanceof SapiDispatcher
-        ) {
-            $state->setTag('dispatcher', 'sapi');
+        if ($this->container->has(DispatcherInterface::class)) {
+            $state->setTag('dispatcher', $this->container->get(DispatcherInterface::class)::class);
         }
 
         $state->setVariable('environment', $this->env->getAll());

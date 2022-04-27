@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
-use Spiral\Http\Diactoros\StreamFactory;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Spiral\Tests\Framework\HttpTest;
 
 class ControllerTest extends HttpTest
@@ -34,7 +34,7 @@ class ControllerTest extends HttpTest
 
     public function testPayloadAction(): void
     {
-        $factory = new StreamFactory();
+        $factory = new Psr17Factory();
 
         $response = $this->http->handle($this->request('/payload', 'POST', [], [
             'Content-Type' => 'application/json;charset=UTF-8;'
@@ -45,7 +45,7 @@ class ControllerTest extends HttpTest
 
     public function testPayloadWithCustomJsonHeader(): void
     {
-        $factory = new StreamFactory();
+        $factory = new Psr17Factory();
 
         $response = $this->http->handle($this->request('/payload', 'POST', [], [
             'Content-Type' => 'application/vnd.api+json;charset=UTF-8;'
@@ -56,7 +56,7 @@ class ControllerTest extends HttpTest
 
     public function testPayloadActionBad(): void
     {
-        $factory = new StreamFactory();
+        $factory = new Psr17Factory();
 
         $response = $this->http->handle($this->request('/payload', 'POST', [], [
             'Content-Type' => 'application/json;charset=UTF-8;'

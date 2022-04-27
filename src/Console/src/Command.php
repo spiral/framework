@@ -25,11 +25,11 @@ abstract class Command extends SymfonyCommand
     //  Short command description.
     protected const DESCRIPTION = '';
 
-    // Command options specified in Symphony format. For more complex definitions redefine
+    // Command options specified in Symfony format. For more complex definitions redefine
     // getOptions() method.
     protected const OPTIONS = [];
 
-    // Command arguments specified in Symphony format. For more complex definitions redefine
+    // Command arguments specified in Symfony format. For more complex definitions redefine
     // getArguments() method.
     protected const ARGUMENTS = [];
 

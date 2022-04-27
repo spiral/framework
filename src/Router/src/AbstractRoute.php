@@ -15,7 +15,7 @@ abstract class AbstractRoute implements RouteInterface
     use DefaultsTrait;
 
     protected UriHandler $uriHandler;
-    protected ?array $matches;
+    protected ?array $matches = null;
 
     public function __construct(
         protected string $pattern,
