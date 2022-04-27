@@ -31,7 +31,7 @@ final class Session implements SessionInterface
      */
     private const DEFAULT_SECTION = '_DEFAULT';
 
-    private ?string $id;
+    private ?string $id = null;
     private bool $started = false;
 
     /**
