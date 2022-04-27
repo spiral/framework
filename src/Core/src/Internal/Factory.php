@@ -61,10 +61,15 @@ final class Factory implements FactoryInterface
 
         $binding = $this->state->bindings[$alias];
         if (\is_object($binding)) {
+            if ($binding::class === WeakReference::class) {
+                if ($binding->get() === null && \class_exists($alias)) {
+                    $object = $this->createInstance($alias, $parameters, $context);
+                    $binding = $this->state->bindings[$alias] = WeakReference::create($object);
+                }
+                return $binding->get();
+            }
             //When binding is instance, assuming singleton
-            return $binding::class === WeakReference::class
-                ? $binding->get()
-                : $binding;
+            return $binding;
         }
 
         if (\is_string($binding)) {
