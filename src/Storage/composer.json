@@ -32,7 +32,7 @@
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",
         "symfony/var-dumper": "^5.2|^6.0",
-        "vimeo/psalm": "^4.22",
+        "vimeo/psalm": "^4.21",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "autoload-dev": {

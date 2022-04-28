@@ -153,9 +153,6 @@
         "symplify/monorepo-builder": "^10.0",
         "vimeo/psalm": "^4.21"
     },
-    "conflict": {
-        "vimeo/psalm": "4.22"
-    },
     "autoload-dev": {
         "psr-4": {
             "Spiral\\App\\": "tests/app/src",
