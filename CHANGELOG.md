@@ -3,6 +3,7 @@
 ## v2.13.0 - Unreleased
 - **Other Features**
   - [spiral/http] Added parameter `chunkSize` in the `http` configuration file.
+  - [spiral/broadcasting] New component with common interfaces (RR2.0 support)
 
 ## v2.12.0 - 2022-04-07
 - **Medium Impact Changes**
