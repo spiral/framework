@@ -125,9 +125,8 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
         }
 
         $result .= $this->elements->render($indentLevel);
-        $result .= "\n";
 
-        return $result;
+        return $result . "\n";
     }
 
     /**
