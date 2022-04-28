@@ -26,7 +26,6 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
         AuthBootloader::class,
-        HttpBootloader::class,
     ];
 
     protected const SINGLETONS = [
@@ -38,7 +37,7 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function boot(HttpBootloader $http): void
+    public function init(HttpBootloader $http): void
     {
         $http->addMiddleware(AuthMiddleware::class);
 

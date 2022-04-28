@@ -26,7 +26,7 @@ class StorageBootloader extends Bootloader
         BucketFactoryInterface::class => BucketFactory::class,
     ];
 
-    public function boot(Container $app, ConfiguratorInterface $config): void
+    public function init(Container $app, ConfiguratorInterface $config): void
     {
         $config->setDefaults(StorageConfig::CONFIG, [
             'default' => Storage::DEFAULT_STORAGE,

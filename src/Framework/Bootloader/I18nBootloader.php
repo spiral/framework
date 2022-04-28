@@ -42,7 +42,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs): void
+    public function init(EnvironmentInterface $env, DirectoriesInterface $dirs): void
     {
         if (!$dirs->has('locale')) {
             $dirs->set('locale', $dirs->get('app') . 'locale/');

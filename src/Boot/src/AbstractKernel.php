@@ -6,6 +6,8 @@ namespace Spiral\Boot;
 
 use Closure;
 use Spiral\Boot\Bootloader\CoreBootloader;
+use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
 use Spiral\Exceptions\ExceptionHandler;
@@ -64,7 +66,7 @@ abstract class AbstractKernel implements KernelInterface
         $this->finalizer = new Finalizer();
         $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
 
-        $this->bootloader = new BootloadManager($container);
+        $this->bootloader = new BootloadManager($container, new Initializer($this->container));
         $this->bootloader->bootload(static::SYSTEM);
     }
 

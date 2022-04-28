@@ -23,7 +23,7 @@ final class EncrypterBootloader extends Bootloader
         EncrypterInterface::class => Encrypter::class,
     ];
 
-    public function boot(ConfiguratorInterface $config, EnvironmentInterface $env): void
+    public function init(ConfiguratorInterface $config, EnvironmentInterface $env): void
     {
         $config->setDefaults(EncrypterConfig::CONFIG, ['key' => $env->get('ENCRYPTER_KEY')]);
     }

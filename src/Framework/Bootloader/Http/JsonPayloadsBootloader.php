@@ -11,17 +11,12 @@ use Spiral\Http\Middleware\JsonPayloadMiddleware;
 
 final class JsonPayloadsBootloader extends Bootloader
 {
-    /** @var array */
-    protected const DEPENDENCIES = [
-        HttpBootloader::class,
-    ];
-
     public function __construct(
         private readonly ConfiguratorInterface $config
     ) {
     }
 
-    public function boot(HttpBootloader $http): void
+    public function init(HttpBootloader $http): void
     {
         $this->config->setDefaults(
             JsonPayloadConfig::CONFIG,

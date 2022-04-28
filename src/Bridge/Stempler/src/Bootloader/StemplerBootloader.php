@@ -29,10 +29,6 @@ use Spiral\Views\ProcessorInterface;
  */
 final class StemplerBootloader extends Bootloader implements SingletonInterface
 {
-    protected const DEPENDENCIES = [
-        ViewsBootloader::class,
-    ];
-
     protected const SINGLETONS = [
         StemplerEngine::class => [self::class, 'stemplerEngine'],
     ];
@@ -42,7 +38,7 @@ final class StemplerBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function boot(ContainerInterface $container, ViewsBootloader $views): void
+    public function init(ContainerInterface $container, ViewsBootloader $views): void
     {
         $this->config->setDefaults(
             StemplerConfig::CONFIG,

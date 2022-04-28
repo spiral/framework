@@ -17,7 +17,6 @@ final class TranslatedCacheBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         I18nBootloader::class,
-        ViewsBootloader::class,
     ];
 
     protected const SINGLETONS = [
@@ -28,7 +27,7 @@ final class TranslatedCacheBootloader extends Bootloader
     /**
      * @param ViewsBootloader $views
      */
-    public function boot(ViewsBootloader $views): void
+    public function init(ViewsBootloader $views): void
     {
         $views->addCacheDependency(LocaleDependency::class);
     }

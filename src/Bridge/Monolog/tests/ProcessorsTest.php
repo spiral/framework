@@ -6,7 +6,7 @@ namespace Spiral\Tests\Monolog;
 
 use Monolog\Processor\PsrLogMessageProcessor;
 use PHPUnit\Framework\TestCase;
-use Spiral\Boot\BootloadManager;
+use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;

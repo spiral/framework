@@ -16,7 +16,7 @@ class ConfigBootloader extends Bootloader
         CoreBootloader::class,
     ];
 
-    public function boot(Container $container, AbstractKernel $kernel): void
+    public function init(Container $container, AbstractKernel $kernel): void
     {
         $kernel->starting(static function (AbstractKernel $kernel) use ($container) {
             $container->bind('hij', 'foo');
@@ -41,7 +41,7 @@ class ConfigBootloader extends Bootloader
         $container->bind('efg', 'foo');
     }
 
-    public function start(ConfigurationBootloader $configuration, AbstractKernel $kernel, Container $container): void
+    public function boot(ConfigurationBootloader $configuration, AbstractKernel $kernel, Container $container): void
     {
         // won't be executed
         $kernel->starting(function (AbstractKernel $kernel) use ($container) {

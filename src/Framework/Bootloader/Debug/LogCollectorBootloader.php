@@ -15,15 +15,11 @@ use Spiral\Logger\ListenerRegistryInterface;
  */
 final class LogCollectorBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        DebugBootloader::class,
-    ];
-
     protected const SINGLETONS = [
         LogCollector::class => LogCollector::class,
     ];
 
-    public function boot(
+    public function init(
         LogCollector $logCollector,
         DebugBootloader $debug,
         ListenerRegistryInterface $listenerRegistry,
