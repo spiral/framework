@@ -10,7 +10,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Broadcasting\BroadcastInterface;
-use Spiral\Broadcasting\Config\BroadcastConfig;
 use Spiral\Broadcasting\GuardInterface;
 
 final class AuthorizationMiddleware implements MiddlewareInterface
@@ -37,13 +36,18 @@ final class AuthorizationMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        if (
-            !$this->broadcast instanceof GuardInterface
-            || $this->broadcast->authorize($request)
-        ) {
-            return $this->responseFactory->createResponse(200);
+        if ($this->broadcast instanceof GuardInterface) {
+            $status = $this->broadcast->authorize($request);
+
+            if ($status->hasResponse()) {
+                return $status->getResponse();
+            }
+
+            if (!$status->isSuccessful()) {
+                return $this->responseFactory->createResponse(403);
+            }
         }
 
-        return $this->responseFactory->createResponse(403);
+        return $this->responseFactory->createResponse(200);
     }
 }

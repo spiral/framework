@@ -8,6 +8,7 @@
     After the release of v3.0, must use the package `spiral/sapi-bridge` for SAPI functionality.
 - **Other Features**
   - [spiral/http] Added parameter `chunkSize` in the `http` configuration file.
+  - [spiral/broadcasting] New component with common interfaces (RR2.0 support)
 
 ## v2.12.0 - 2022-04-07
 - **Medium Impact Changes**
