@@ -7,9 +7,13 @@ namespace Spiral\Filters\Interceptors;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Filters\Filter;
+use Spiral\Filters\ErrorMapper;
+use Spiral\Filters\Exception\ValidationException;
+use Spiral\Filters\FilterBag;
+use Spiral\Filters\FilterInterface;
+use Spiral\Filters\HasFilterDefinition;
 use Spiral\Filters\ShouldBeValidated;
-use Spiral\Validation\ValidationInterface;
+use Spiral\Validation\ValidationManager;
 
 class ValidateFilterInterceptor implements CoreInterceptorInterface
 {
@@ -18,21 +22,39 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
     ) {
     }
 
-    public function process(string $name, string $action, array $parameters, CoreInterface $core): mixed
+    public function process(string $name, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
-        /** @var Filter $filter */
-        $filter = $core->callAction($name, $action, $parameters);
+        /** @var FilterBag $bag */
+        $bag = $parameters['filterBag'];
 
-        if ($filter instanceof ShouldBeValidated) {
-            $validation = $this->container->get(ValidationInterface::class);
-            $filter->withValidation($validation);
-            $validator = $filter->validate();
-
-            if (!$validator->isValid()) {
-                $filter->failedValidation($validator);
-            }
+        if ($bag->filter instanceof HasFilterDefinition) {
+            $this->validateFilter(
+                $bag,
+                $parameters['errors'] ?? [],
+                $parameters['context'] ?? null
+            );
         }
 
-        return $filter;
+        return $core->callAction($name, $action, $parameters);
+    }
+
+    private function validateFilter(FilterBag $bag, array $errors, mixed $context): void
+    {
+        $definition = $bag->filter->filterDefinition();
+
+        if ($definition instanceof ShouldBeValidated) {
+            $errorMapper = new ErrorMapper($bag->schema);
+            $manager = $this->container->get(ValidationManager::class);
+
+            $validator = $manager->getValidation($definition::class)
+                ->validate($bag, $definition->validationRules(), $context);
+
+            if (!$validator->isValid()) {
+                throw new ValidationException(
+                    $errorMapper->mapErrors(\array_merge($errors, $validator->getErrors())),
+                    $context
+                );
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Filters;
 
-interface FilterInterface
+interface HasFilterDefinition
 {
     public function filterDefinition(): FilterDefinitionInterface;
 }

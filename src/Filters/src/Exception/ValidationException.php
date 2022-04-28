@@ -8,7 +8,7 @@ class ValidationException extends FilterException
 {
     public function __construct(
         private readonly array $errors,
-        private readonly mixed $context
+        private readonly mixed $context = null
     ) {
         parent::__construct('The given data was invalid.', 422);
     }

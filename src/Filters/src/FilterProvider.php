@@ -5,47 +5,68 @@ declare(strict_types=1);
 namespace Spiral\Filters;
 
 use Spiral\Core\Container;
-use Spiral\Filters\Exception\SchemaException;
+use Spiral\Core\CoreInterface;
+use Spiral\Filters\Exception\ValidationException;
+use Spiral\Models\SchematicEntity;
 
 final class FilterProvider implements FilterProviderInterface
 {
-    /** @var <class-string, array{0: Filter, 1: array}> */
-    private array $cache = [];
-
-
     public function __construct(
-        private readonly Container $container = new Container()
+        private readonly Container $container,
+        private readonly CoreInterface $core,
     ) {
     }
 
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
-        if (isset($this->cache[$name])) {
-            [$filter, $schema] = $this->cache[$name];
-
-            // Clear old input data
-            $filter->__destruct();
-        } else {
-
-            $class = new \ReflectionClass($name);
-            $args = $this->container->resolveArguments($class->getConstructor());
-            $filter = $class->newInstanceArgs($args);
-
-            if (!$filter instanceof Filter) {
-                throw new SchemaException('Invalid filter class, must be subclass of Filter');
-            }
-
-            $builder = new Schema\Builder();
-            $schema = $builder->makeSchema($name, $filter->mappingSchema());
-            $filter->withErrorMapper(new ErrorMapper($schema));
-
-            $this->cache[$name] = [$filter, $schema];
-        }
-
         $inputMapper = $this->container->get(Schema\InputMapper::class);
 
-        return $filter->setValue(
-            $inputMapper->map($schema, $input)
+        $filter = $this->createFilterInstance($name);
+
+        $attributeMapper = $this->container->get(Schema\AttributeMapper::class);
+        $mappingSchema = $attributeMapper->map($filter, $input);
+
+        $errors = $attributeMapper->getErrors();
+
+        if ($filter instanceof HasFilterDefinition) {
+            $mappingSchema = \array_merge(
+                $mappingSchema,
+                $filter->filterDefinition()->mappingSchema()
+            );
+        }
+
+        $builder = $this->container->get(Schema\Builder::class);
+        $schema = $builder->makeSchema($name, $mappingSchema);
+
+        $data = [];
+
+        try {
+            $data = $inputMapper->map($schema, $input);
+        } catch (ValidationException $e) {
+            $errors = \array_merge($errors, $e->getErrors());
+        }
+
+        $bag = new FilterBag(
+            $filter,
+            new SchematicEntity($data, $schema),
+            $schema
         );
+
+        return $this->core->callAction($name, 'handle', [
+            'filterBag' => $bag,
+            'errors' => $errors
+        ]);
+    }
+
+    private function createFilterInstance(string $name): FilterInterface
+    {
+        $class = new \ReflectionClass($name);
+
+        $args = [];
+        if ($constructor = $class->getConstructor()) {
+            $args = $this->container->resolveArguments($constructor);
+        }
+
+        return $class->newInstanceArgs($args);
     }
 }

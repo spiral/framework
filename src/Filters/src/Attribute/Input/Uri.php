@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Spiral\Filters\Attribute\Input;
+
+use Psr\Http\Message\UriInterface;
+use Spiral\Attributes\NamedArgumentConstructor;
+use Spiral\Filters\InputInterface;
+
+/**
+ * Current page Uri in a form of Psr\Http\Message\UriInterface
+ */
+#[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
+final class Uri extends Input
+{
+    public function getValue(InputInterface $input, \ReflectionProperty $property): UriInterface
+    {
+        return $input->getValue('uri');
+    }
+
+    public function getSchema(\ReflectionProperty $property): string
+    {
+        return 'uri';
+    }
+}

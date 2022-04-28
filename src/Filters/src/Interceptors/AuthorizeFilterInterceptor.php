@@ -8,7 +8,9 @@ use Spiral\Auth\AuthContextInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Filters\Filter;
+use Spiral\Filters\Exception\AuthorizationException;
+use Spiral\Filters\FilterBag;
+use Spiral\Filters\FilterInterface;
 use Spiral\Filters\ShouldBeAuthorized;
 
 final class AuthorizeFilterInterceptor implements CoreInterceptorInterface
@@ -18,21 +20,21 @@ final class AuthorizeFilterInterceptor implements CoreInterceptorInterface
     ) {
     }
 
-    public function process(string $name, string $action, array $parameters, CoreInterface $core): mixed
+    public function process(string $name, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
-        /** @var Filter $filter */
-        $filter = $core->callAction($name, $action, $parameters);
+        /** @var FilterBag $bag */
+        $bag = $parameters['filterBag'];
 
-        if ($filter instanceof ShouldBeAuthorized) {
+        if ($bag->filter instanceof ShouldBeAuthorized) {
             $auth = $this->container->has(AuthContextInterface::class)
                 ? $this->container->get(AuthContextInterface::class)
                 : null;
 
-            if (!$filter->isAuthorized($auth)) {
-                $filter->failedAuthorization();
+            if (!$bag->filter->isAuthorized($auth)) {
+                throw new AuthorizationException();
             }
         }
 
-        return $filter;
+        return $core->callAction($name, $action, $parameters);
     }
 }

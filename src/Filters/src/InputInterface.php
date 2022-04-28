@@ -29,5 +29,5 @@ interface InputInterface
      *
      * @throws InputException
      */
-    public function getValue(string $source, string $name = null): mixed;
+    public function getValue(string $source, mixed $name = null): mixed;
 }

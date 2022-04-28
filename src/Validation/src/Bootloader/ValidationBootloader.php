@@ -17,7 +17,7 @@ use Spiral\Validation\ConditionInterface;
 use Spiral\Validation\Config\ValidatorConfig;
 use Spiral\Validation\ParserInterface;
 use Spiral\Validation\RuleParser;
-use Spiral\Validation\ValidationInterface;
+use Spiral\Validation\ValidationManager;
 use Spiral\Validation\ValidationProvider;
 use Spiral\Validation\ValidatorInterface;
 
@@ -28,9 +28,11 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
     ];
 
     protected const SINGLETONS = [
-        ValidationInterface::class => ValidationProvider::class,
+        ValidationManager::class   => ValidationManager::class,
+        //ValidationInterface::class => ValidationProvider::class,
         RulesInterface::class      => ValidationProvider::class,
         ParserInterface::class     => RuleParser::class,
+
     ];
 
     public function __construct(

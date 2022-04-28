@@ -9,6 +9,7 @@ use Spiral\Core\Container;
 use Spiral\Core\InterceptableCore;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Filter;
+use Spiral\Filters\FilterBag;
 use Spiral\Filters\FilterInterface;
 use Spiral\Filters\FilterProvider;
 use Spiral\Filters\FilterProviderInterface;
@@ -20,7 +21,7 @@ use Spiral\Filters\Interceptors\ValidateFilterInterceptor;
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {
     protected const SINGLETONS = [
-        FilterProviderInterface::class => FilterProvider::class,
+        FilterProviderInterface::class => [self::class, 'initFilterProvider'],
         InputInterface::class => InputScope::class,
     ];
 
@@ -34,7 +35,17 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
      */
     public function boot(): void
     {
-        $this->container->bindInjector(Filter::class, self::class);
+        $this->container->bindInjector(FilterInterface::class, self::class);
+    }
+
+    private function initFilterProvider(Container $container)
+    {
+        $core = new InterceptableCore(new Core());
+
+        $core->addInterceptor(new ValidateFilterInterceptor($this->container));
+        $core->addInterceptor(new AuthorizeFilterInterceptor($this->container));
+
+        return new FilterProvider($container, $core);
     }
 
     /**
@@ -42,14 +53,12 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
      */
     public function createInjection(\ReflectionClass $class, string $context = null): FilterInterface
     {
-        $core = new InterceptableCore(new Core(
-            $this->container->get(FilterProviderInterface::class),
+
+
+        /** @var FilterBag $filter */
+        return $this->container->get(FilterProviderInterface::class)->createFilter(
+            $class->getName(),
             $this->container->get(InputInterface::class)
-        ));
-
-        $core->addInterceptor(new ValidateFilterInterceptor($this->container));
-        $core->addInterceptor(new AuthorizeFilterInterceptor($this->container));
-
-        return $core->callAction($class->getName(), 'handle', ['context' => $context]);
+        );
     }
 }
