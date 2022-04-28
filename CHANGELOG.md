@@ -1,11 +1,17 @@
 # CHANGELOG
 
 ## v2.13.0 - Unreleased
+- **Medium Impact Changes**
+  - Dispatcher `Spiral\Http\SapiDispatcher` is deprecated. Will be moved to `spiral/sapi-bridge` and removed in v3.0
+  - Classes `Spiral\Http\Emitter\SapiEmitter`, `Spiral\Http\Exception\EmitterException`, `Spiral\Http\EmitterInterface`,
+    `Spiral\Http\SapiRequestFactory` is deprecated. Will be removed in version v3.0.
+    After the release of v3.0, must use the package `spiral/sapi-bridge` for SAPI functionality.
 - **Other Features**
   - [spiral/http] Added parameter `chunkSize` in the `http` configuration file.
   - [spiral/queue] Added attribute `Queueable` to mark classes that can be queued.
     Added `Spiral\Queue\QueueableDetector` class to easily check if an object should be queued or not and get the queue 
     from an attribute or getQueue method on the object.
+  - [spiral/broadcasting] New component with common interfaces (RR2.0 support)
 
 ## v2.12.0 - 2022-04-07
 - **Medium Impact Changes**
