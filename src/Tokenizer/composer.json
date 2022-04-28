@@ -16,8 +16,8 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/core": "^2.13",
-        "spiral/logger": "^2.13",
+        "spiral/core": "^2.14",
+        "spiral/logger": "^2.14",
         "symfony/finder": "^5.1|^6.0"
     },
     "require-dev": {
@@ -35,7 +35,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.13.x-dev"
+            "dev-master": "2.14.x-dev"
         }
     },
     "config": {

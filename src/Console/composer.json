@@ -16,11 +16,11 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/core": "^2.13",
+        "spiral/core": "^2.14",
         "symfony/console": "^5.3|^6.0"
     },
     "require-dev": {
-        "spiral/boot": "^2.13",
+        "spiral/boot": "^2.14",
         "symfony/tokenizer": "^2.10",
         "phpunit/phpunit": "^8.5|^9.5",
         "mockery/mockery": "^1.5"
@@ -37,7 +37,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.13.x-dev"
+            "dev-master": "2.14.x-dev"
         }
     },
     "config": {
