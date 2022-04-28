@@ -18,6 +18,8 @@ use Spiral\Exceptions\Style\HtmlStyle;
 
 /**
  * Render exception information into html.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 class HtmlHandler extends AbstractHandler
 {

@@ -21,6 +21,8 @@ use Spiral\Debug\Renderer\PlainRenderer;
 
 /**
  * Renderer exports the content of the given variable, array or object into human friendly form.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 class Dumper implements LoggerAwareInterface
 {

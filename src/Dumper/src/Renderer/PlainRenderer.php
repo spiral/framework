@@ -13,6 +13,8 @@ namespace Spiral\Debug\Renderer;
 
 /**
  * No styles.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 final class PlainRenderer extends AbstractRenderer
 {
