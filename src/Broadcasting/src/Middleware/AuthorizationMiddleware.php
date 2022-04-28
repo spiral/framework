@@ -37,7 +37,15 @@ final class AuthorizationMiddleware implements MiddlewareInterface
         }
 
         if ($this->broadcast instanceof GuardInterface) {
-            return $this->broadcast->authorize($request);
+            $status = $this->broadcast->authorize($request);
+
+            if ($status->hasResponse()) {
+                return $status->getResponse();
+            }
+
+            if (!$status->isSuccessful()) {
+                return $this->responseFactory->createResponse(403);
+            }
         }
 
         return $this->responseFactory->createResponse(200);

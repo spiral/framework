@@ -14,5 +14,5 @@ interface GuardInterface
      */
     public function authorize(
         ServerRequestInterface $request
-    ): ResponseInterface;
+    ): AuthorizationStatus;
 }
