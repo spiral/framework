@@ -1,6 +1,13 @@
 # CHANGELOG
 
-## v2.13.0 - Unreleased
+## v2.14.0 - Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Low Impact Changes**
+- **Other Features**
+- **Bug Fixes**
+
+## v2.13.0 - 2022-04-28
 - **Medium Impact Changes**
   - Dispatcher `Spiral\Http\SapiDispatcher` is deprecated. Will be moved to `spiral/sapi-bridge` and removed in v3.0
   - Classes `Spiral\Http\Emitter\SapiEmitter`, `Spiral\Http\Exception\EmitterException`, `Spiral\Http\EmitterInterface`,
