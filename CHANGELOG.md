@@ -6,6 +6,7 @@
   - Classes `Spiral\Http\Emitter\SapiEmitter`, `Spiral\Http\Exception\EmitterException`, `Spiral\Http\EmitterInterface`,
     `Spiral\Http\SapiRequestFactory` is deprecated. Will be removed in version v3.0.
     After the release of v3.0, must use the package `spiral/sapi-bridge` for SAPI functionality.
+  - The `dumper` component is deprecated and will be removed in v3.0
 - **Other Features**
   - [spiral/http] Added parameter `chunkSize` in the `http` configuration file.
   - [spiral/queue] Added attribute `Queueable` to mark classes that can be queued.

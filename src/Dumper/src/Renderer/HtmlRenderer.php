@@ -15,6 +15,8 @@ use Spiral\Debug\RendererInterface;
 
 /**
  * HTML renderer with switchable color schemas.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 final class HtmlRenderer implements RendererInterface
 {

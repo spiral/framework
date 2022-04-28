@@ -13,6 +13,8 @@ namespace Spiral\Debug;
 
 /**
  * Describes the env PHP script is running within.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 final class System
 {
