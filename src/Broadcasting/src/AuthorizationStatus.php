@@ -25,11 +25,17 @@ final class AuthorizationStatus
         $this->response = $response;
     }
 
+    /**
+     * Check if authorization status is successful.
+     */
     public function isSuccessful(): bool
     {
         return $this->success;
     }
 
+    /**
+     * Get list of authorized topics.
+     */
     public function getTopics(): array
     {
         return $this->topics;
@@ -40,11 +46,17 @@ final class AuthorizationStatus
         return $this->attributes;
     }
 
+    /**
+     * Check if response is set.
+     */
     public function hasResponse(): bool
     {
         return $this->response !== null;
     }
 
+    /**
+     * Get response object.
+     */
     public function getResponse(): ?ResponseInterface
     {
         return $this->response;
