@@ -54,7 +54,7 @@ final class FilterProvider implements FilterProviderInterface
 
         return $this->core->callAction($name, 'handle', [
             'filterBag' => $bag,
-            'errors' => $errors
+            'errors' => $errors,
         ]);
     }
 

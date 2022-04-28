@@ -90,6 +90,11 @@ final class AttributeMapper
         return $schema;
     }
 
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
     private function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
     {
         /** @var Setter|null $setter */
@@ -104,10 +109,5 @@ final class AttributeMapper
         }
 
         $property->setValue($filter, $value);
-    }
-
-    public function getErrors(): array
-    {
-        return $this->errors;
     }
 }

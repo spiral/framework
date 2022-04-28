@@ -38,16 +38,6 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         $this->container->bindInjector(FilterInterface::class, self::class);
     }
 
-    private function initFilterProvider(Container $container)
-    {
-        $core = new InterceptableCore(new Core());
-
-        $core->addInterceptor(new ValidateFilterInterceptor($this->container));
-        $core->addInterceptor(new AuthorizeFilterInterceptor($this->container));
-
-        return new FilterProvider($container, $core);
-    }
-
     /**
      * @throws \Throwable
      */
@@ -60,5 +50,15 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
             $class->getName(),
             $this->container->get(InputInterface::class)
         );
+    }
+
+    private function initFilterProvider(Container $container)
+    {
+        $core = new InterceptableCore(new Core());
+
+        $core->addInterceptor(new ValidateFilterInterceptor($this->container));
+        $core->addInterceptor(new AuthorizeFilterInterceptor($this->container));
+
+        return new FilterProvider($container, $core);
     }
 }

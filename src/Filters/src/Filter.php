@@ -16,5 +16,4 @@ namespace Spiral\Filters;
  */
 abstract class Filter implements FilterInterface
 {
-
 }

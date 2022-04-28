@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Spiral\Filters\Attribute\Input;
+
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
