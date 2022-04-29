@@ -17,7 +17,7 @@ use Monolog\Logger;
 use Monolog\Processor\ProcessorInterface;
 use Monolog\ResettableInterface;
 use Psr\Log\LoggerInterface;
-use Spiral\Boot\BootloadManager;
+use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\Finalizer;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;

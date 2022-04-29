@@ -41,7 +41,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function boot(AbstractKernel $kernel, FactoryInterface $factory): void
+    public function init(AbstractKernel $kernel, FactoryInterface $factory): void
     {
         // Lowest priority
         $kernel->started(static function (AbstractKernel $kernel) use ($factory): void {

@@ -35,7 +35,7 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
     /**
      * Boot default state collector.
      */
-    public function boot(): void
+    public function init(): void
     {
         $this->addStateCollector(EnvironmentCollector::class);
     }

@@ -11,7 +11,7 @@ use Spiral\Boot\EnvironmentInterface;
 
 final class DotenvBootloader extends Bootloader
 {
-    public function boot(DirectoriesInterface $dirs, EnvironmentInterface $env): void
+    public function init(DirectoriesInterface $dirs, EnvironmentInterface $env): void
     {
         $dotenvPath = $env->get('DOTENV_PATH', $dirs->get('root') . '.env');
 

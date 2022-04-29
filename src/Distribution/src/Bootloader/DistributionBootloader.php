@@ -16,7 +16,7 @@ use Spiral\Distribution\UriResolverInterface;
 
 class DistributionBootloader extends Bootloader
 {
-    public function boot(ConfiguratorInterface $config, Container $app): void
+    public function init(ConfiguratorInterface $config, Container $app): void
     {
         $config->setDefaults(DistributionConfig::CONFIG, [
             'default' => Manager::DEFAULT_RESOLVER,

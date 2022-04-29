@@ -13,7 +13,7 @@ namespace Spiral\Tests\Monolog;
 
 use Monolog\Logger;
 use Psr\Log\NullLogger;
-use Spiral\Boot\BootloadManager;
+use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;

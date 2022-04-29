@@ -111,6 +111,8 @@
   - [spiral/boot] `Spiral\Boot\AbstractKernel` constructor is protected now.
   - [spiral/boot] Added return type `mixed` to the method `loadData`,
     added return type `void` and `mixed` parameter type of `$data` to the method `saveData` in `Spiral\Boot\MemoryInterface` interface.
+  - [spiral/boot] In `Bootloaders`, the name of the method has been changed from `boot` to `init`. 
+    In the code of custom Bootloaders, need to change the name of the method.
   - [spiral/console] Added return type `void` to the method `writeHeader`, added return type `void` to the method `execute`,
     method `whiteFooter` renamed to `writeFooter`, added return type `void` to the method `writeFooter`
     in `Spiral\Console\SequenceInterface` interface.
@@ -152,6 +154,10 @@
   - `Spiral\Snapshots\SnapshotterInterface` usage replaced with `Spiral\Exceptions\ExceptionReporterInterface` in all classes.
 - **Other Features**
   - [spiral/debug] Added `Spiral\Debug\StateConsumerInterface`.
+  - [spiral/boot] Added new `boot` method in `Bootloaders`. It will be executed after the `init` method is executed in all `Bootloaders`.
+    The old `boot` method has been renamed to `init`. See **High Impact Changes** section.
+  - [spiral/boot] Added automatic booting of `Bootloaders` requested in the `init` and `boot` methods. 
+    They no longer need to be specified explicitly in `DEPENDENCIES` property or in `defineDependencies` method.
   - [spiral/monolog-bridge] Added the ability to configure the default channel using the configuration file or 
     environment variable `MONOLOG_DEFAULT_CHANNEL`.
   

@@ -17,7 +17,7 @@ use Spiral\Exceptions\Reporter\SnapshotterReporter;
  */
 final class ExceptionHandlerBootloader extends Bootloader
 {
-    public function boot(FactoryInterface $factory, ExceptionHandler $errorHandler): void
+    public function init(FactoryInterface $factory, ExceptionHandler $errorHandler): void
     {
         $errorHandler->addRenderer(new ConsoleRenderer());
         $errorHandler->addRenderer(new JsonRenderer());

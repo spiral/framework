@@ -11,11 +11,7 @@ use Spiral\Csrf\Middleware\CsrfMiddleware;
 
 final class CsrfBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        HttpBootloader::class,
-    ];
-
-    public function boot(ConfiguratorInterface $config, HttpBootloader $http): void
+    public function init(ConfiguratorInterface $config, HttpBootloader $http): void
     {
         $config->setDefaults(
             CsrfConfig::CONFIG,

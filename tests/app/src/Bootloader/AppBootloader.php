@@ -57,7 +57,7 @@ class AppBootloader extends DomainBootloader
         $this->core = $core;
     }
 
-    public function boot(
+    public function init(
         RouterInterface $router,
         PermissionsInterface $rbac,
         ViewsBootloader $views,

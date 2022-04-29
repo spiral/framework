@@ -26,11 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CommandBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        ConsoleBootloader::class,
-    ];
-
-    public function boot(ConsoleBootloader $console, Container $container): void
+    public function init(ConsoleBootloader $console, Container $container): void
     {
         $console->addCommand(Console\Command\ConfigureCommand::class);
         $console->addCommand(Console\Command\UpdateCommand::class);
@@ -41,13 +37,6 @@ final class CommandBootloader extends Bootloader
         );
 
         $this->configureExtensions($console, $container);
-    }
-
-    public function defineDependencies(): array
-    {
-        return [
-            ConsoleBootloader::class,
-        ];
     }
 
     private function configureExtensions(ConsoleBootloader $console, Container $container): void

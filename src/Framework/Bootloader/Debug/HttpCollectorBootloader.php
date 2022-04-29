@@ -15,16 +15,11 @@ use Spiral\Debug\StateCollector\HttpCollector;
  */
 final class HttpCollectorBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        HttpBootloader::class,
-        DebugBootloader::class,
-    ];
-
     protected const SINGLETONS = [
         HttpCollector::class => HttpCollector::class,
     ];
 
-    public function boot(
+    public function init(
         HttpCollector $httpCollector,
         HttpBootloader $http,
         DebugBootloader $debug,

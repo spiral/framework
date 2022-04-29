@@ -30,7 +30,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function boot(): void
+    public function init(): void
     {
         $this->config->setDefaults(
             HttpConfig::CONFIG,

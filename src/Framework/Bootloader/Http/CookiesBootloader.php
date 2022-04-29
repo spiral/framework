@@ -16,10 +16,6 @@ use Spiral\Core\Exception\ScopeException;
 
 final class CookiesBootloader extends Bootloader implements SingletonInterface
 {
-    protected const DEPENDENCIES = [
-        HttpBootloader::class,
-    ];
-
     protected const BINDINGS = [
         CookieQueue::class => [self::class, 'cookieQueue'],
     ];
@@ -29,7 +25,7 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function boot(HttpBootloader $http): void
+    public function init(HttpBootloader $http): void
     {
         $this->config->setDefaults(
             CookiesConfig::CONFIG,

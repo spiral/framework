@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Monolog;
 
 use Monolog\Processor\PsrLogMessageProcessor;
-use Spiral\Boot\BootloadManager;
+use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
