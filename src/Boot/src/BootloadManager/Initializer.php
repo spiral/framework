@@ -98,9 +98,9 @@ final class Initializer implements Container\SingletonInterface
         $deps = $bootloader->defineDependencies();
 
         $reflectionClass = new \ReflectionClass($bootloader);
-        
+
         $methodsDeps = [];
-        
+
         foreach (Methods::cases() as $method) {
             if ($reflectionClass->hasMethod($method->value)) {
                 $methodsDeps[] = $this->findBootloaderClassesInMethod(
