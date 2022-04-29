@@ -36,10 +36,7 @@ final class InputScope implements InputInterface
         return \call_user_func([$this->input, $source], $name);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function hasValue(string $source, string $name)
+    public function hasValue(string $source, string $name): bool
     {
         if (!method_exists($this->input, $source)) {
             return false;
