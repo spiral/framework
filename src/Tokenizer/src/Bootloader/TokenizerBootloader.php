@@ -32,7 +32,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function boot(Container $container, DirectoriesInterface $dirs): void
+    public function init(Container $container, DirectoriesInterface $dirs): void
     {
         $container->bindInjector(ClassLocator::class, Tokenizer::class);
         $container->bindInjector(InvocationLocator::class, Tokenizer::class);

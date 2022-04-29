@@ -31,7 +31,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs): void
+    public function init(EnvironmentInterface $env, DirectoriesInterface $dirs): void
     {
         if (!$dirs->has('views')) {
             $dirs->set('views', $dirs->get('app') . 'views');

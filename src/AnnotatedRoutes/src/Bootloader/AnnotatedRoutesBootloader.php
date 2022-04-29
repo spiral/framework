@@ -24,7 +24,6 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
 
     protected const DEPENDENCIES = [
         RouterBootloader::class,
-        ConsoleBootloader::class,
         AttributesBootloader::class,
     ];
 
@@ -38,7 +37,7 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
     ) {
     }
 
-    public function boot(ConsoleBootloader $console, EnvironmentInterface $env, RouteLocator $locator): void
+    public function init(ConsoleBootloader $console, EnvironmentInterface $env, RouteLocator $locator): void
     {
         $console->addCommand(ResetCommand::class);
 

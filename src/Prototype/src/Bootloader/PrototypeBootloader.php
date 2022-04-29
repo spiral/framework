@@ -24,7 +24,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
 {
     protected const DEPENDENCIES = [
         Bootloader\CoreBootloader::class,
-        ConsoleBootloader::class,
         AttributesBootloader::class,
     ];
 
@@ -66,6 +65,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'authTokens'   => \Spiral\Auth\TokenStorageInterface::class,
         'cache'        => \Psr\SimpleCache\CacheInterface::class,
         'cacheManager' => \Spiral\Cache\CacheStorageProviderInterface::class,
+        'exceptionHandler' => \Spiral\Exceptions\ExceptionHandlerInterface::class,
     ];
 
     public function __construct(
@@ -74,7 +74,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     ) {
     }
 
-    public function boot(ConsoleBootloader $console, ContainerInterface $container): void
+    public function init(ConsoleBootloader $console): void
     {
         $console->addCommand(Command\DumpCommand::class);
         $console->addCommand(Command\ListCommand::class);
@@ -89,7 +89,10 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
             'prototype:dump',
             '<fg=magenta>[prototype]</fg=magenta> <fg=cyan>actualizing prototype injections...</fg=cyan>'
         );
+    }
 
+    public function boot(ContainerInterface $container): void
+    {
         $this->initDefaults($container);
         $this->initAnnotations($container, false);
     }

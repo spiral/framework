@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Spiral\Tests\Monolog;
 
 use Monolog\Processor\PsrLogMessageProcessor;
-use PHPUnit\Framework\TestCase;
-use Spiral\Boot\BootloadManager;
+use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\LoaderInterface;
-use Spiral\Core\Container;
 use Spiral\Logger\ListenerRegistry;
 use Spiral\Logger\ListenerRegistryInterface;
 use Spiral\Logger\LogsInterface;
@@ -19,14 +17,11 @@ use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
-class ProcessorsTest extends TestCase
+class ProcessorsTest extends BaseTest
 {
-    /** @var Container */
-    private $container;
-
     public function setUp(): void
     {
-        $this->container = new Container();
+        parent::setUp();
 
         $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
         $finalizer->shouldReceive('addFinalizer')->once();
@@ -147,7 +142,6 @@ class ProcessorsTest extends TestCase
         $this->assertInstanceOf(PsrLogMessageProcessor::class, $processor);
 
         $property = new \ReflectionProperty(PsrLogMessageProcessor::class, 'dateFormat');
-        $property->setAccessible(true);
 
         $this->assertSame('c', $property->getValue($processor));
     }

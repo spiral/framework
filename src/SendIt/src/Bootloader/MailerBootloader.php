@@ -38,7 +38,7 @@ final class MailerBootloader extends Bootloader
     ) {
     }
 
-    public function boot(EnvironmentInterface $env): void
+    public function init(EnvironmentInterface $env): void
     {
         $queue = $env->get('MAILER_QUEUE', 'local');
 
@@ -50,7 +50,7 @@ final class MailerBootloader extends Bootloader
         ]);
     }
 
-    public function start(Container $container): void
+    public function boot(Container $container): void
     {
         $container->bindSingleton(
             MailerInterface::class,

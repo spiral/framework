@@ -23,10 +23,6 @@ use Spiral\Validation\ValidatorInterface;
 
 final class ValidationBootloader extends Bootloader implements SingletonInterface
 {
-    protected const DEPENDENCIES = [
-        TokenizerBootloader::class,
-    ];
-
     protected const SINGLETONS = [
         ValidationManager::class   => ValidationManager::class,
         //ValidationInterface::class => ValidationProvider::class,
@@ -40,7 +36,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
     ) {
     }
 
-    public function boot(TokenizerBootloader $tokenizer): void
+    public function init(TokenizerBootloader $tokenizer): void
     {
         $this->config->setDefaults(
             ValidatorConfig::CONFIG,

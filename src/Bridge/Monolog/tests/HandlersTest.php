@@ -13,8 +13,7 @@ namespace Spiral\Tests\Monolog;
 
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
-use PHPUnit\Framework\TestCase;
-use Spiral\Boot\BootloadManager;
+use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
@@ -27,14 +26,11 @@ use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
-class HandlersTest extends TestCase
+class HandlersTest extends BaseTest
 {
-    /** @var Container */
-    private $container;
-
     public function setUp(): void
     {
-        $this->container = new Container();
+        parent::setUp();
 
         $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
         $finalizer->shouldReceive('addFinalizer')->once();

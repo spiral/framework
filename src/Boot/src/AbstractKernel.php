@@ -6,8 +6,14 @@ namespace Spiral\Boot;
 
 use Closure;
 use Spiral\Boot\Bootloader\CoreBootloader;
+use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
+use Spiral\Exceptions\ExceptionHandler;
+use Spiral\Exceptions\ExceptionHandlerInterface;
+use Spiral\Exceptions\ExceptionRendererInterface;
+use Spiral\Exceptions\ExceptionReporterInterface;
 
 /**
  * Core responsible for application initialization, bootloading of all required services,
@@ -39,23 +45,28 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * @throws \Throwable
      */
-    public function __construct(
+    protected function __construct(
         protected Container $container,
-        array $directories
+        protected ExceptionHandlerInterface $exceptionHandler,
+        array $directories,
     ) {
-        $this->container->bindSingleton(KernelInterface::class, $this);
-        $this->container->bindSingleton(self::class, $this);
-        $this->container->bindSingleton(static::class, $this);
+        $container->bindSingleton(ExceptionHandlerInterface::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionRendererInterface::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionReporterInterface::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionHandler::class, $exceptionHandler);
+        $container->bindSingleton(KernelInterface::class, $this);
+        $container->bindSingleton(self::class, $this);
+        $container->bindSingleton(static::class, $this);
 
-        $this->container->bindSingleton(
+        $container->bindSingleton(
             DirectoriesInterface::class,
             new Directories($this->mapDirectories($directories))
         );
 
         $this->finalizer = new Finalizer();
-        $this->container->bindSingleton(FinalizerInterface::class, $this->finalizer);
+        $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
 
-        $this->bootloader = new BootloadManager($this->container);
+        $this->bootloader = new BootloadManager($container, new Initializer($this->container));
         $this->bootloader->bootload(static::SYSTEM);
     }
 
@@ -69,17 +80,27 @@ abstract class AbstractKernel implements KernelInterface
 
     /**
      * Create an application instance.
+     *
+     * @param class-string<ExceptionHandlerInterface>|ExceptionHandlerInterface $exceptionHandler
+     *
      * @throws \Throwable
      */
     public static function create(
         array $directories,
-        bool $handleErrors = true
-    ): self {
+        bool $handleErrors = true,
+        ExceptionHandlerInterface|string|null $exceptionHandler = null,
+    ): static {
+        $container = new Container();
+        $exceptionHandler ??= ExceptionHandler::class;
+
+        if (\is_string($exceptionHandler)) {
+            $exceptionHandler = $container->make($exceptionHandler);
+        }
         if ($handleErrors) {
-            ExceptionHandler::register();
+            $exceptionHandler->register();
         }
 
-        return new static(new Container(), $directories);
+        return new static(new Container(), $exceptionHandler, $directories);
     }
 
     /**
@@ -108,7 +129,7 @@ abstract class AbstractKernel implements KernelInterface
                 }
             );
         } catch (\Throwable $e) {
-            ExceptionHandler::handleException($e);
+            $this->exceptionHandler->handleGlobalException($e);
 
             return null;
         }

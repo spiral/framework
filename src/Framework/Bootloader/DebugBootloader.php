@@ -35,7 +35,7 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
     /**
      * Boot default state collector.
      */
-    public function boot(): void
+    public function init(): void
     {
         $this->addStateCollector(EnvironmentCollector::class);
     }
@@ -58,7 +58,8 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
         foreach ($this->collectors as $collector) {
             $collector = match (true) {
                 \is_string($collector) => $this->factory->make($collector),
-                $collector instanceof Autowire => $collector->resolve($this->factory)
+                $collector instanceof Autowire => $collector->resolve($this->factory),
+                default => $collector,
             };
 
             if (!$collector instanceof StateCollectorInterface) {

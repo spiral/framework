@@ -13,16 +13,12 @@ use Spiral\Http\Middleware\ErrorHandlerMiddleware;
  */
 final class ErrorHandlerBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        HttpBootloader::class,
-    ];
-
     protected const BINDINGS = [
         ErrorHandlerMiddleware\SuppressErrorsInterface::class => ErrorHandlerMiddleware\EnvSuppressErrors::class,
         ErrorHandler\RendererInterface::class                 => ErrorHandler\PlainRenderer::class,
     ];
 
-    public function boot(HttpBootloader $http): void
+    public function init(HttpBootloader $http): void
     {
         $http->addMiddleware(ErrorHandlerMiddleware::class);
     }

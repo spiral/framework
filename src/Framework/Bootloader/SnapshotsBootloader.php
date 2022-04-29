@@ -8,8 +8,8 @@ use Psr\Log\LoggerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Exceptions\HandlerInterface;
-use Spiral\Exceptions\PlainHandler;
+use Spiral\Exceptions\Renderer\PlainRenderer;
+use Spiral\Exceptions\Verbosity;
 use Spiral\Files\FilesInterface;
 use Spiral\Snapshots\FileSnapshooter;
 use Spiral\Snapshots\SnapshotterInterface;
@@ -17,7 +17,7 @@ use Spiral\Snapshots\SnapshotterInterface;
 /**
  * Depends on environment variables:
  * SNAPSHOT_MAX_FILES: defaults to 25
- * SNAPSHOT_VERBOSITY: defaults to HandlerInterface::VERBOSITY_VERBOSE (1)
+ * SNAPSHOT_VERBOSITY: defaults to {@see \Spiral\Exceptions\Verbosity::VERBOSE} (1)
  */
 final class SnapshotsBootloader extends Bootloader
 {
@@ -39,8 +39,8 @@ final class SnapshotsBootloader extends Bootloader
         return new FileSnapshooter(
             $dirs->get('runtime') . '/snapshots/',
             (int) $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),
-            (int) $env->get('SNAPSHOT_VERBOSITY', HandlerInterface::VERBOSITY_VERBOSE),
-            new PlainHandler(),
+            Verbosity::tryFrom((int) $env->get('SNAPSHOT_VERBOSITY')) ?? Verbosity::VERBOSE->value,
+            new PlainRenderer(),
             $files,
             $logger
         );

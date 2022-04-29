@@ -1,8 +1,8 @@
 <?php
 /**
- * @var array                           $stacktrace
- * @var Throwable                       $exception
- * @var \Spiral\Exceptions\ValueWrapper $valueWrapper
+ * @var array $stacktrace
+ * @var Throwable $exception
+ * @var \Spiral\Exceptions\Renderer\ValueWrapper $valueWrapper
  */
 foreach ($stacktrace as $index => $trace) {
     if (empty($trace['file']) && isset($stacktrace[$index - 1]['file'])) {

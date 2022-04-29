@@ -38,7 +38,7 @@ final class CacheBootloader extends Bootloader
         );
     }
 
-    public function boot(Container $container, EnvironmentInterface $env, DirectoriesInterface $dirs): void
+    public function init(Container $container, EnvironmentInterface $env, DirectoriesInterface $dirs): void
     {
         $this->initConfig($env, $dirs);
 

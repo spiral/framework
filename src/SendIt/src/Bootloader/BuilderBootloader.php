@@ -23,7 +23,7 @@ final class BuilderBootloader extends Bootloader
         RendererInterface::class => ViewRenderer::class,
     ];
 
-    public function boot(ViewsBootloader $views): void
+    public function init(ViewsBootloader $views): void
     {
         $views->addDirectory('sendit', __DIR__ . '/../../views');
     }

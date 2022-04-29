@@ -14,10 +14,11 @@ namespace Spiral\App;
 use Psr\Container\ContainerInterface;
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\App\Bootloader\AuthBootloader;
-use Spiral\Boot\BootloadManager;
+use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader;
+use Spiral\Bootloader\ExceptionHandlerBootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
@@ -40,7 +41,7 @@ class TestApp extends Kernel
         \Spiral\Console\Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
-        Bootloader\Http\DiactorosBootloader::class,
+        \Spiral\Http\Bootloader\DiactorosBootloader::class,
         Bootloader\Http\RouterBootloader::class,
         Bootloader\Http\ErrorHandlerBootloader::class,
         Bootloader\Http\JsonPayloadsBootloader::class,
@@ -70,6 +71,7 @@ class TestApp extends Kernel
         Bootloader\CommandBootloader::class,
 
         // Debug and debug extensions
+        ExceptionHandlerBootloader::class,
         Bootloader\DebugBootloader::class,
         Bootloader\Debug\LogCollectorBootloader::class,
         Bootloader\Debug\HttpCollectorBootloader::class

@@ -42,7 +42,7 @@ final class QueueBootloader extends Bootloader
     ) {
     }
 
-    public function boot(Container $container, EnvironmentInterface $env, AbstractKernel $kernel): void
+    public function init(Container $container, EnvironmentInterface $env, AbstractKernel $kernel): void
     {
         $this->initQueueConfig($env);
         $this->registerJobsSerializer($container);
