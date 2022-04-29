@@ -16,7 +16,7 @@ final class Initializer implements Container\SingletonInterface
 {
     public function __construct(
         private readonly Container $container,
-        private ClassesRegistry $classes = new ClassesRegistry()
+        private ClassesRegistry $bootloaders = new ClassesRegistry()
     ) {
     }
 
@@ -43,11 +43,11 @@ final class Initializer implements Container\SingletonInterface
                 );
             }
 
-            if ($this->classes->isBooted($class)) {
+            if ($this->bootloaders->isBooted($class)) {
                 continue;
             }
 
-            $this->classes->register($class);
+            $this->bootloaders->register($class);
             $bootloader = $this->container->get($class);
 
             if (!$this->isBootloader($bootloader)) {
@@ -61,7 +61,7 @@ final class Initializer implements Container\SingletonInterface
 
     public function getRegistry(): ClassesRegistry
     {
-        return $this->classes;
+        return $this->bootloaders;
     }
 
     /**
@@ -97,11 +97,14 @@ final class Initializer implements Container\SingletonInterface
     {
         $deps = $bootloader->defineDependencies();
 
+        $reflectionClass = new \ReflectionClass($bootloader);
+        
         $methodsDeps = [];
+        
         foreach (Methods::cases() as $method) {
-            if ((new \ReflectionClass($bootloader))->hasMethod($method->value)) {
+            if ($reflectionClass->hasMethod($method->value)) {
                 $methodsDeps[] = $this->findBootloaderClassesInMethod(
-                    new \ReflectionMethod($bootloader, $method->value)
+                    $reflectionClass->getMethod($method->value)
                 );
             }
         }
@@ -119,7 +122,7 @@ final class Initializer implements Container\SingletonInterface
             }
         }
 
-        return \array_values(\array_unique($args));
+        return $args;
     }
 
     private function shouldBeBooted(?\ReflectionType $type): bool
@@ -128,7 +131,7 @@ final class Initializer implements Container\SingletonInterface
             return false;
         }
 
-        return $this->isBootloader($type->getName()) && !$this->classes->isBooted($type->getName());
+        return $this->isBootloader($type->getName()) && !$this->bootloaders->isBooted($type->getName());
     }
 
     /**
