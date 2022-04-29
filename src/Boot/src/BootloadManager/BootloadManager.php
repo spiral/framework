@@ -60,7 +60,7 @@ final class BootloadManager implements Container\SingletonInterface
      *
      * @throws \Throwable
      */
-    protected function boot(array $classes, array $startingCallbacks, array $startedCallbacks): void
+    protected function boot(array $classes, array $bootingCallbacks, array $bootedCallbacks): void
     {
         $bootloaders = \iterator_to_array($this->initializer->init($classes));
 
@@ -68,15 +68,13 @@ final class BootloadManager implements Container\SingletonInterface
             $this->invokeBootloader($data['bootloader'], Methods::INIT, $data['options']);
         }
 
-        $this->fireCallbacks($startingCallbacks);
+        $this->fireCallbacks($bootingCallbacks);
 
         foreach ($bootloaders as $data) {
-            $bootloader = $data['bootloader'];
-            $options = $data['options'];
-            $this->invokeBootloader($bootloader, Methods::BOOT, $options);
+            $this->invokeBootloader($data['bootloader'], Methods::BOOT, $data['options']);
         }
 
-        $this->fireCallbacks($startedCallbacks);
+        $this->fireCallbacks($bootedCallbacks);
     }
 
     private function invokeBootloader(BootloaderInterface $bootloader, Methods $method, array $options): void
@@ -86,9 +84,9 @@ final class BootloadManager implements Container\SingletonInterface
             return;
         }
 
-        $boot = new \ReflectionMethod($bootloader, $method->value);
+        $method = $refl->getMethod($method->value);
 
-        $args = $this->container->resolveArguments($boot);
+        $args = $this->container->resolveArguments($method);
         if (!isset($args['boot'])) {
             $args['boot'] = $options;
         }
