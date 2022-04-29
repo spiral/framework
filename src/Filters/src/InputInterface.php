@@ -33,10 +33,6 @@ interface InputInterface
     
     /**
      * Returns true if the parameter name exists in the source, otherwise returns false.
-     *
-     * @param string $source
-     * @param string $name
-     * @return bool
      */
     public function hasValue(string $source, string $name): bool;
 }
