@@ -30,13 +30,9 @@ interface InputInterface
      * @throws InputException
      */
     public function getValue(string $source, string $name = null): mixed;
-    
+
     /**
      * Returns true if the parameter name exists in the source, otherwise returns false.
-     *
-     * @param string $source
-     * @param string $name
-     * @return bool
      */
     public function hasValue(string $source, string $name): bool;
 }
