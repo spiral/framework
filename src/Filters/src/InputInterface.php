@@ -50,5 +50,5 @@ interface InputInterface
      * @param string $name
      * @return bool
      */
-    public function hasValue(string $source, string $name);
+    public function hasValue(string $source, string $name): bool;
 }
