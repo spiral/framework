@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Filter;
 
 use Spiral\Filters\Exception\InputException;
+use Spiral\Http\Exception\InputException as HttpInputException;
 use Spiral\Filters\InputInterface;
 use Spiral\Http\Request\InputManager;
 
@@ -33,5 +34,14 @@ final class InputScope implements InputInterface
         }
 
         return \call_user_func([$this->input, $source], $name);
+    }
+
+    public function hasValue(string $source, string $name): bool
+    {
+        if (!method_exists($this->input, $source)) {
+            return false;
+        }
+
+        return $this->input->bag($source)->has($name);
     }
 }
