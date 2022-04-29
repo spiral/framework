@@ -13,7 +13,6 @@ namespace Spiral\Tests\Monolog;
 
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
-use PHPUnit\Framework\TestCase;
 use Spiral\Boot\BootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
@@ -22,16 +21,14 @@ use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container;
 use Spiral\Monolog\Bootloader\MonologBootloader;
 
-class RotateHandlerTest extends TestCase
+class RotateHandlerTest extends BaseTest
 {
     public function testRotateHandler(): void
     {
-        $container = new Container();
-
-        $container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
+        $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
         $finalizer->shouldReceive('addFinalizer')->once();
 
-        $container->bind(ConfiguratorInterface::class, new ConfigManager(
+        $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
             new class() implements LoaderInterface {
                 public function has(string $section): bool
                 {
@@ -44,14 +41,14 @@ class RotateHandlerTest extends TestCase
                 }
             }
         ));
-        $container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
 
         $autowire = new Container\Autowire('log.rotate', [
             'filename' => 'monolog.log'
         ]);
 
         /** @var RotatingFileHandler $handler */
-        $handler = $autowire->resolve($container);
+        $handler = $autowire->resolve($this->container);
         $this->assertInstanceOf(RotatingFileHandler::class, $handler);
 
         $this->assertSame(Logger::DEBUG, $handler->getLevel());

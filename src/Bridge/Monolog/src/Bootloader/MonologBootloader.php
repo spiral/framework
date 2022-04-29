@@ -11,6 +11,7 @@ use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
@@ -35,7 +36,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
     ) {
     }
 
-    public function boot(Container $container, FinalizerInterface $finalizer): void
+    public function boot(Container $container, FinalizerInterface $finalizer, EnvironmentInterface $env): void
     {
         $finalizer->addFinalizer(static function () use ($container): void {
             if ($container->hasInstance(LoggerInterface::class)) {
@@ -56,6 +57,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
         });
 
         $this->config->setDefaults(MonologConfig::CONFIG, [
+            'default' => $env->get('MONOLOG_DEFAULT_CHANNEL', MonologConfig::DEFAULT_CHANNEL),
             'globalLevel' => Logger::DEBUG,
             'handlers' => [],
         ]);

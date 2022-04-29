@@ -12,14 +12,12 @@ declare(strict_types=1);
 namespace Spiral\Tests\Monolog;
 
 use Monolog\Logger;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Spiral\Boot\BootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\LoaderInterface;
-use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 use Spiral\Logger\ListenerRegistry;
 use Spiral\Logger\ListenerRegistryInterface;
@@ -27,12 +25,14 @@ use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 
-class TraitTest extends TestCase
+class TraitTest extends BaseTest
 {
     use LoggerTrait;
 
     public function setUp(): void
     {
+        parent::setUp();
+
         $this->logger = null;
     }
 
@@ -52,12 +52,10 @@ class TraitTest extends TestCase
 
     public function testScope(): void
     {
-        $container = new Container();
-
-        $container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
+        $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
         $finalizer->shouldReceive('addFinalizer')->once();
 
-        $container->bind(ConfiguratorInterface::class, new ConfigManager(
+        $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
             new class() implements LoaderInterface {
                 public function has(string $section): bool
                 {
@@ -70,11 +68,11 @@ class TraitTest extends TestCase
                 }
             }
         ));
-        $container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
-        $container->bind(MonologConfig::class, new MonologConfig());
-        $container->bind(ListenerRegistryInterface::class, new ListenerRegistry());
+        $this->container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->bind(MonologConfig::class, new MonologConfig());
+        $this->container->bind(ListenerRegistryInterface::class, new ListenerRegistry());
 
-        ContainerScope::runScope($container, function (): void {
+        ContainerScope::runScope($this->container, function (): void {
             $this->assertInstanceOf(Logger::class, $this->getLogger());
             $this->assertSame(self::class, $this->getLogger()->getName());
         });
