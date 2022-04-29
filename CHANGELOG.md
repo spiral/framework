@@ -158,7 +158,9 @@
     The old `boot` method has been renamed to `init`. See **High Impact Changes** section.
   - [spiral/boot] Added automatic booting of `Bootloaders` requested in the `init` and `boot` methods. 
     They no longer need to be specified explicitly in `DEPENDENCIES` property or in `defineDependencies` method.
-
+  - [spiral/monolog-bridge] Added the ability to configure the default channel using the configuration file or 
+    environment variable `MONOLOG_DEFAULT_CHANNEL`.
+  
 ## v2.12.0 - 2022-04-07
 - **Medium Impact Changes**
   - Bootloaders `Spiral\Bootloader\Broadcast\BroadcastBootloader`, `Spiral\Bootloader\Http\WebsocketsBootloader`

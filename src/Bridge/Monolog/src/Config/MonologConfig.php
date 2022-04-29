@@ -12,12 +12,19 @@ use Spiral\Monolog\Exception\ConfigException;
 final class MonologConfig extends InjectableConfig
 {
     public const CONFIG = 'monolog';
+    public const DEFAULT_CHANNEL = 'default';
 
     /** @var array */
     protected $config = [
+        'default'     => self::DEFAULT_CHANNEL,
         'globalLevel' => Logger::DEBUG,
         'handlers'    => [],
     ];
+
+    public function getDefault(): string
+    {
+        return $this->config['default'] ?? self::DEFAULT_CHANNEL;
+    }
 
     public function getEventLevel(): int
     {
