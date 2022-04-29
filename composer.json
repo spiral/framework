@@ -134,7 +134,7 @@
         "spiral/code-style": "^1.0",
         "symfony/var-dumper": "^5.2|^6.0",
         "symplify/monorepo-builder": "^10.0",
-        "vimeo/psalm": "^4.21"
+        "vimeo/psalm": "4.21"
     },
     "autoload-dev": {
         "psr-4": {
