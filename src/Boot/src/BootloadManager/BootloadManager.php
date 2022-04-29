@@ -91,7 +91,7 @@ final class BootloadManager implements Container\SingletonInterface
             $args['boot'] = $options;
         }
 
-        $boot->invokeArgs($bootloader, \array_values($args));
+        $method->invokeArgs($bootloader, \array_values($args));
     }
 
     /**
