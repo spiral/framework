@@ -62,7 +62,7 @@ final class ArrayInput implements InputInterface
     /**
      * @inheritdoc
      */
-    public function hasValue(string $source, string $name)
+    public function hasValue(string $source, string $name): bool
     {
         try {
             $this->dotGet($name);
