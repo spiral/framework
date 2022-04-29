@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform;
@@ -17,70 +10,42 @@ namespace Spiral\Stempler\Transform;
  */
 final class BlockClaims
 {
-    /** @var array */
-    private $claimed = [];
+    private array $claimed = [];
 
-    /** @var array[] */
-    private $blocks = [];
-
-    /**
-     * @param array $blocks
-     */
-    public function __construct(array $blocks)
-    {
-        $this->blocks = $blocks;
+    public function __construct(
+        private readonly array $blocks
+    ) {
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function has(string $name): bool
     {
-        return array_key_exists($name, $this->blocks);
+        return \array_key_exists($name, $this->blocks);
     }
 
-    /**
-     * @param string $name
-     * @return mixed|null
-     */
-    public function get(string $name)
+    public function get(string $name): mixed
     {
         return $this->blocks[$name] ?? null;
     }
 
-    /**
-     * @param string $name
-     * @return mixed|null
-     */
-    public function claim(string $name)
+    public function claim(string $name): mixed
     {
         $this->claimed[] = $name;
 
         return $this->get($name);
     }
 
-    /**
-     * @return array
-     */
     public function getNames(): array
     {
-        return array_keys($this->blocks);
+        return \array_keys($this->blocks);
     }
 
-    /**
-     * @return array
-     */
     public function getClaimed(): array
     {
         return $this->claimed;
     }
 
-    /**
-     * @return array
-     */
     public function getUnclaimed(): array
     {
-        return array_diff(array_keys($this->blocks), $this->claimed);
+        return \array_diff(\array_keys($this->blocks), $this->claimed);
     }
 }

@@ -1,21 +1,9 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
 
-use ReflectionClass;
-use ReflectionException;
-use ReflectionProperty;
-use ReflectionType;
 use Spiral\Scaffolder\Declaration\FilterDeclaration;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -57,7 +45,7 @@ class FilterCommand extends AbstractCommand
     /**
      * Create filter declaration.
      */
-    public function perform(): void
+    public function perform(): int
     {
         /** @var FilterDeclaration $declaration */
         $declaration = $this->createDeclaration();
@@ -67,13 +55,13 @@ class FilterCommand extends AbstractCommand
             $name = $this->option('entity');
             try {
                 $fields = $this->parseSourceEntity($name);
-            } catch (ReflectionException $e) {
+            } catch (\ReflectionException $e) {
                 $this->writeln(
                     "<fg=red>Unable to create '<comment>{$declaration->getName()} from $name</comment>' declaration: "
                     . "'<comment>{$e->getMessage()}' at {$e->getFile()}:{$e->getLine()}.</comment></fg=red>"
                 );
 
-                return;
+                return self::FAILURE;
             }
         } else {
             foreach ($this->option('field') as $field) {
@@ -88,13 +76,12 @@ class FilterCommand extends AbstractCommand
         }
 
         $this->writeDeclaration($declaration);
+
+        return self::SUCCESS;
     }
 
     /**
      * Parse field to fetch source, origin and type.
-     *
-     * @param string $field
-     * @return array
      */
     private function parseField(string $field): array
     {
@@ -102,31 +89,29 @@ class FilterCommand extends AbstractCommand
         $source = null;
         $origin = null;
 
-        if (strpos($field, '(') !== false) {
-            $source = substr($field, strpos($field, '(') + 1, -1);
-            $field = substr($field, 0, strpos($field, '('));
+        if (\str_contains($field, '(')) {
+            $source = \substr($field, \strpos($field, '(') + 1, -1);
+            $field = \substr($field, 0, \strpos($field, '('));
 
-            if (strpos($source, ':') !== false) {
-                [$source, $origin] = explode(':', $source);
+            if (\str_contains($source, ':')) {
+                [$source, $origin] = \explode(':', $source);
             }
         }
 
-        if (strpos($field, ':') !== false) {
-            [$field, $type] = explode(':', $field);
+        if (\str_contains($field, ':')) {
+            [$field, $type] = \explode(':', $field);
         }
 
         return [$field, $type, $source, $origin];
     }
 
     /**
-     * @param string $name
-     * @return array
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     private function parseSourceEntity(string $name): array
     {
         $fields = [];
-        $reflection = new ReflectionClass($name);
+        $reflection = new \ReflectionClass($name);
         foreach ($reflection->getProperties() as $property) {
             $type = $this->getTypedPropertyType($property)
                 ?? $this->getPropertyTypeFromDefaults($property, $reflection)
@@ -138,16 +123,11 @@ class FilterCommand extends AbstractCommand
         return $fields;
     }
 
-    /**
-     * @param ReflectionProperty $property
-     * @return string|null
-     */
-    private function getTypedPropertyType(ReflectionProperty $property): ?string
+    private function getTypedPropertyType(\ReflectionProperty $property): ?string
     {
-        if (method_exists($property, 'hasType') && method_exists($property, 'getType') && $property->hasType()) {
-            /** @var ReflectionType $type */
+        if (\method_exists($property, 'hasType') && \method_exists($property, 'getType') && $property->hasType()) {
             $type = $property->getType();
-            if (method_exists($type, 'getName') && $this->isKnownType($type->getName())) {
+            if (\method_exists($type, 'getName') && $this->isKnownType($type->getName())) {
                 return $type->getName();
             }
         }
@@ -155,12 +135,7 @@ class FilterCommand extends AbstractCommand
         return null;
     }
 
-    /**
-     * @param ReflectionProperty $property
-     * @param ReflectionClass    $reflection
-     * @return string|null
-     */
-    private function getPropertyTypeFromDefaults(ReflectionProperty $property, ReflectionClass $reflection): ?string
+    private function getPropertyTypeFromDefaults(\ReflectionProperty $property, \ReflectionClass $reflection): ?string
     {
         if (!isset($reflection->getDefaultProperties()[$property->name])) {
             return null;
@@ -168,18 +143,14 @@ class FilterCommand extends AbstractCommand
 
         $default = $reflection->getDefaultProperties()[$property->name];
 
-        return $default !== null ? gettype($default) : null;
+        return $default !== null ? \gettype($default) : null;
     }
 
-    /**
-     * @param ReflectionProperty $property
-     * @return string|null
-     */
-    private function getPropertyTypeFromDocBlock(ReflectionProperty $property): ?string
+    private function getPropertyTypeFromDocBlock(\ReflectionProperty $property): ?string
     {
         $doc = $property->getDocComment();
-        if (is_string($doc)) {
-            preg_match('/@var\s*([\S]+)/i', $doc, $match);
+        if (\is_string($doc)) {
+            \preg_match('/@var\s*([\S]+)/i', $doc, $match);
             if (!empty($match[1]) && $this->isKnownType($match[1])) {
                 return $match[1];
             }
@@ -188,12 +159,8 @@ class FilterCommand extends AbstractCommand
         return null;
     }
 
-    /**
-     * @param string $type
-     * @return bool
-     */
     private function isKnownType(string $type): bool
     {
-        return in_array($type, self::NATIVE_TYPES, true);
+        return \in_array($type, self::NATIVE_TYPES, true);
     }
 }

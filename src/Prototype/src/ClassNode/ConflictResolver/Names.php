@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\ClassNode\ConflictResolver;
@@ -16,20 +9,11 @@ use Spiral\Prototype\Utils;
 
 final class Names
 {
-    /** @var Sequences */
-    private $sequences;
-
-    /**
-     * @param Sequences $sequences
-     */
-    public function __construct(Sequences $sequences)
-    {
-        $this->sequences = $sequences;
+    public function __construct(
+        private readonly Sequences $sequences
+    ) {
     }
 
-    /**
-     * @param ClassNode $definition
-     */
     public function resolve(ClassNode $definition): void
     {
         $reservedNames = $this->getConstructorReservedNames($definition);
@@ -38,17 +22,9 @@ final class Names
         $this->addPostfixes($definition, $counters);
     }
 
-    /**
-     * @param ClassNode $definition
-     * @return array
-     */
     private function getConstructorReservedNames(ClassNode $definition): array
     {
-        $names = [];
-        foreach ($definition->constructorVars as $name) {
-            $names[] = $name;
-        }
-
+        $names = \array_values($definition->constructorVars);
         foreach ($definition->constructorParams as $param) {
             $names[] = $param->name;
         }
@@ -56,10 +32,6 @@ final class Names
         return $names;
     }
 
-    /**
-     * @param array $names
-     * @return array
-     */
     private function initiateCounters(array $names): array
     {
         $counters = [];
@@ -76,16 +48,12 @@ final class Names
         return $counters;
     }
 
-    /**
-     * @param ClassNode $definition
-     * @param array     $counters
-     */
     private function addPostfixes(ClassNode $definition, array $counters): void
     {
         foreach ($definition->dependencies as $dependency) {
             $name = $this->parseName($dependency->var);
             if (isset($counters[$name->name])) {
-                $sequence = $this->sequences->find(array_keys($counters[$name->name]), $name->sequence);
+                $sequence = $this->sequences->find(\array_keys($counters[$name->name]), $name->sequence);
                 if ($sequence !== $name->sequence) {
                     $name->sequence = $sequence;
 
@@ -99,13 +67,9 @@ final class Names
         }
     }
 
-    /**
-     * @param string $name
-     * @return NameEntity
-     */
     private function parseName(string $name): NameEntity
     {
-        if (preg_match("/\d+$/", $name, $match)) {
+        if (\preg_match("/\d+$/", $name, $match)) {
             $sequence = (int)$match[0];
             if ($sequence > 0) {
                 return NameEntity::createWithSequence(Utils::trimTrailingDigits($name, $sequence), $sequence);

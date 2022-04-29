@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Translator\Traits;
@@ -35,15 +28,14 @@ trait TranslatorTrait
      * @param string $string
      * @param array  $options Interpolation options.
      * @param string $bundle  Translation bundle, by default current class name.
-     * @return string
      *
      * @throws ScopeException
      */
-    protected function say(string $string, array $options = [], $bundle = null): string
+    protected function say(string $string, array $options = [], string $bundle = null): string
     {
         if (Translator::isMessage($string)) {
             //Cut [[ and ]]
-            $string = substr($string, 2, -2);
+            $string = \substr($string, 2, -2);
         }
 
         $container = ContainerScope::getContainer();
@@ -56,7 +48,7 @@ trait TranslatorTrait
          */
         $translator = $container->get(TranslatorInterface::class);
 
-        if (is_null($bundle)) {
+        if (\is_null($bundle)) {
             $bundle = $translator->getDomain(static::class);
         }
 

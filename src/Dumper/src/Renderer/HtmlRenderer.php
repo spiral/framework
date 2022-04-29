@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Debug\Renderer;
@@ -21,7 +14,7 @@ final class HtmlRenderer implements RendererInterface
     /**
      * Default coloring schema.
      */
-    public const DEFAULT = [
+    final public const DEFAULT = [
         'body'     => '<pre style="background-color: white; font-family: monospace;">%s</pre>',
         'element'  => '<span style="%s;">%s</span>',
         'indent'   => '&middot;    ',
@@ -60,7 +53,7 @@ final class HtmlRenderer implements RendererInterface
     /**
      * Inverted coloring schema.
      */
-    public const INVERTED = [
+    final public const INVERTED = [
         'body'     => '<pre style="background-color: #232323; font-family: Monospace;">%s</pre>',
         'element'  => '<span style="%s;">%s</span>',
         'indent'   => '&middot;    ',
@@ -97,55 +90,36 @@ final class HtmlRenderer implements RendererInterface
     ];
 
     /**
-     * Set of styles associated with different dumping properties.
-     *
-     * @var array
+     * @param array $style Set of styles associated with different dumping properties.
      */
-    protected $style = self::DEFAULT;
-
-    /**
-     * @param array $style
-     */
-    public function __construct(array $style = self::DEFAULT)
-    {
-        $this->style = $style;
+    public function __construct(
+        protected array $style = self::DEFAULT
+    ) {
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function apply($element, string $type, string $context = ''): string
+    public function apply(mixed $element, string $type, string $context = ''): string
     {
         if (!empty($style = $this->getStyle($type, $context))) {
-            return sprintf($this->style['element'], $style, $element);
+            return \sprintf($this->style['element'], $style, $element);
         }
 
         return $element;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function wrapContent(string $body): string
     {
-        return sprintf($this->style['body'], $body);
+        return \sprintf($this->style['body'], $body);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function indent(int $level): string
     {
-        if ($level == 0) {
+        if ($level === 0) {
             return '';
         }
 
-        return $this->apply(str_repeat($this->style['indent'], $level), 'indent');
+        return $this->apply(\str_repeat($this->style['indent'], $level), 'indent');
     }
 
-    /**
-     * @inheritdoc
-     */
     public function escapeStrings(): bool
     {
         return true;
@@ -153,26 +127,14 @@ final class HtmlRenderer implements RendererInterface
 
     /**
      * Get valid stype based on type and context/.
-     *
-     * @param string $type
-     * @param string $context
-     *
-     * @return string
      */
     private function getStyle(string $type, string $context): string
     {
-        if (isset($this->style[$type][$context])) {
-            return $this->style[$type][$context];
-        }
-
-        if (isset($this->style[$type]['common'])) {
-            return $this->style[$type]['common'];
-        }
-
-        if (isset($this->style[$type]) && is_string($this->style[$type])) {
-            return $this->style[$type];
-        }
-
-        return $this->style['common'];
+        return match (true) {
+            isset($this->style[$type][$context]) => $this->style[$type][$context],
+            isset($this->style[$type]['common']) => $this->style[$type]['common'],
+            isset($this->style[$type]) && \is_string($this->style[$type]) => $this->style[$type],
+            default => $this->style['common']
+        };
     }
 }

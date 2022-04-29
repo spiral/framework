@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core\Container;
@@ -20,83 +13,61 @@ use Spiral\Core\FactoryInterface;
  */
 final class Autowire
 {
-    /** @var object|null */
-    private $target;
-
-    /** @var mixed */
-    private $alias;
-
-    /** @var array */
-    private $parameters;
+    private ?object $target = null;
 
     /**
      * Autowire constructor.
-     *
-     * @param string $alias
-     * @param array  $parameters
      */
-    public function __construct(string $alias, array $parameters = [])
-    {
-        $this->alias = $alias;
-        $this->parameters = $parameters;
+    public function __construct(
+        private readonly string $alias,
+        private readonly array $parameters = []
+    ) {
     }
 
-    /**
-     * @param $an_array
-     * @return static
-     */
-    public static function __set_state($an_array)
+    public static function __set_state(array $anArray): static
     {
-        return new static($an_array['alias'], $an_array['parameters']);
+        return new self($anArray['alias'], $anArray['parameters']);
     }
 
     /**
      * Init the autowire based on string or array definition.
      *
-     * @param mixed $definition
-     * @return Autowire
+     * @throws AutowireException
      */
-    public static function wire($definition): Autowire
+    public static function wire(mixed $definition): Autowire
     {
         if ($definition instanceof self) {
             return $definition;
         }
 
-        if (is_string($definition)) {
-            return new Autowire($definition);
+        if (\is_string($definition)) {
+            return new self($definition);
         }
 
-        if (is_array($definition) && isset($definition['class'])) {
-            return new Autowire(
+        if (\is_array($definition) && isset($definition['class'])) {
+            return new self(
                 $definition['class'],
                 $definition['options'] ?? $definition['params'] ?? []
             );
         }
 
-        if (is_object($definition)) {
-            $autowire = new self(get_class($definition), []);
+        if (\is_object($definition)) {
+            $autowire = new self($definition::class, []);
             $autowire->target = $definition;
             return $autowire;
         }
 
-        throw new AutowireException('Invalid autowire definition');
+        throw new AutowireException('Invalid autowire definition.');
     }
 
     /**
-     * @param FactoryInterface $factory
-     * @param array            $parameters Context specific parameters (always prior to declared ones).
-     * @return mixed
+     * @param array $parameters Context specific parameters (always prior to declared ones).
      *
      * @throws AutowireException  No entry was found for this identifier.
      * @throws ContainerException Error while retrieving the entry.
      */
-    public function resolve(FactoryInterface $factory, array $parameters = [])
+    public function resolve(FactoryInterface $factory, array $parameters = []): object
     {
-        if ($this->target !== null) {
-            // pre-wired
-            return $this->target;
-        }
-
-        return $factory->make($this->alias, array_merge($this->parameters, $parameters));
+        return $this->target ?? $factory->make($this->alias, \array_merge($this->parameters, $parameters));
     }
 }

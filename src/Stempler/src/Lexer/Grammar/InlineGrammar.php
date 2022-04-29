@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar;
@@ -32,20 +25,17 @@ final class InlineGrammar implements GrammarInterface
     public const TYPE_DEFAULT   = 5;
 
     // whitespace
-    private const REGEXP_WHITESPACE = '/\s/';
+    private const REGEXP_WHITESPACE = '/\\s/';
 
     // Allowed keyword characters.
-    private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
+    private const REGEXP_KEYWORD = '/[a-z0-9_\\-:\\.]/ui';
 
     /** @var Byte[] */
-    private $name = [];
+    private array $name = [];
 
     /** @var Byte[]|null */
-    private $default = null;
+    private ?array $default = null;
 
-    /**
-     * @inheritDoc
-     */
     public function parse(Buffer $src): \Generator
     {
         while ($n = $src->next()) {
@@ -67,29 +57,20 @@ final class InlineGrammar implements GrammarInterface
 
     /**
      * @codeCoverageIgnore
-     * @inheritDoc
      */
     public static function tokenName(int $token): string
     {
-        switch ($token) {
-            case self::TYPE_OPEN_TAG:
-                return 'INLINE:OPEN_TAG';
-            case self::TYPE_CLOSE_TAG:
-                return 'INLINE:CLOSE_TAG';
-            case self::TYPE_NAME:
-                return 'INLINE:NAME';
-            case self::TYPE_SEPARATOR:
-                return 'INLINE:SEPARATOR';
-            case self::TYPE_DEFAULT:
-                return 'INLINE:DEFAULT';
-            default:
-                return 'INLINE:UNDEFINED';
-        }
+        return match ($token) {
+            self::TYPE_OPEN_TAG => 'INLINE:OPEN_TAG',
+            self::TYPE_CLOSE_TAG => 'INLINE:CLOSE_TAG',
+            self::TYPE_NAME => 'INLINE:NAME',
+            self::TYPE_SEPARATOR => 'INLINE:SEPARATOR',
+            self::TYPE_DEFAULT => 'INLINE:DEFAULT',
+            default => 'INLINE:UNDEFINED',
+        };
     }
 
     /**
-     * @param Buffer $src
-     * @param int    $offset
      * @return Token[]|null
      */
     private function parseGrammar(Buffer $src, int $offset): ?array
@@ -154,11 +135,11 @@ final class InlineGrammar implements GrammarInterface
                         break;
                     }
 
-                    if (preg_match(self::REGEXP_WHITESPACE, $n->char)) {
+                    if (\preg_match(self::REGEXP_WHITESPACE, $n->char)) {
                         break;
                     }
 
-                    if (preg_match(self::REGEXP_KEYWORD, $n->char)) {
+                    if (\preg_match(self::REGEXP_KEYWORD, $n->char)) {
                         $this->name[] = $n;
                         break;
                     }
@@ -174,12 +155,9 @@ final class InlineGrammar implements GrammarInterface
         return $this->tokens;
     }
 
-    /**
-     * @return bool
-     */
     private function isValid(): bool
     {
-        if (count($this->tokens) < 3) {
+        if (\count($this->tokens) < 3) {
             return false;
         }
 
@@ -206,7 +184,7 @@ final class InlineGrammar implements GrammarInterface
             }
         }
 
-        return $hasName && ($hasDefault === null || $hasDefault === true);
+        return $hasName && ($hasDefault === null || $hasDefault);
     }
 
     /**

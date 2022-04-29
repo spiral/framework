@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation;
@@ -19,22 +12,11 @@ interface RuleInterface
      * Example:
      * ["notEmpty", "email"] // fails on empty
      * ["email"]             // passed empty values
-     *
-     * @param mixed $value
-     *
-     * @return bool
      */
-    public function ignoreEmpty($value): bool;
+    public function ignoreEmpty(mixed $value): bool;
 
-    /**
-     * @param \SplObjectStorage|null $conditions
-     * @return RuleInterface
-     */
     public function withConditions(\SplObjectStorage $conditions = null): RuleInterface;
 
-    /**
-     * @return bool
-     */
     public function hasConditions(): bool;
 
     /**
@@ -44,22 +26,10 @@ interface RuleInterface
      */
     public function getConditions(): \Generator;
 
-    /**
-     * @param ValidatorInterface $v
-     * @param string             $field
-     * @param mixed              $value
-     *
-     * @return bool
-     */
-    public function validate(ValidatorInterface $v, string $field, $value): bool;
+    public function validate(ValidatorInterface $v, string $field, mixed $value): bool;
 
     /**
      * Get validation error message.
-     *
-     * @param string $field
-     * @param mixed  $value
-     *
-     * @return string
      */
-    public function getMessage(string $field, $value): string;
+    public function getMessage(string $field, mixed $value): string;
 }

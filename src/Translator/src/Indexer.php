@@ -1,18 +1,11 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Translator;
 
 use Spiral\Logger\Traits\LoggerTrait;
-use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\Reflection\ReflectionArgument;
 use Spiral\Tokenizer\Reflection\ReflectionInvocation;
@@ -32,32 +25,17 @@ final class Indexer
 {
     use LoggerTrait;
 
-    /** @var TranslatorConfig */
-    private $config;
-
     /**
-     * Catalogue to aggregate messages into.
-     *
-     * @var CatalogueInterface
+     * @param CatalogueInterface $catalogue Catalogue to aggregate messages into.
      */
-    private $catalogue;
-
-    /**
-     * @param TranslatorConfig   $config
-     * @param CatalogueInterface $catalogue
-     */
-    public function __construct(TranslatorConfig $config, CatalogueInterface $catalogue)
-    {
-        $this->config = $config;
-        $this->catalogue = $catalogue;
+    public function __construct(
+        private readonly TranslatorConfig $config,
+        private readonly CatalogueInterface $catalogue
+    ) {
     }
 
     /**
      * Register string in active translator.
-     *
-     * @param string $domain
-     * @param string $string
-     * @param bool   $resolveDomain
      */
     public function registerMessage(string $domain, string $string, bool $resolveDomain = true): void
     {
@@ -69,20 +47,18 @@ final class Indexer
         $this->catalogue->set($domain, $string, $string);
 
         $this->getLogger()->debug(
-            sprintf('[%s]: `%s`', $domain, $string),
-            compact('domain', 'string')
+            \sprintf('[%s]: `%s`', $domain, $string),
+            ['domain' => $domain, 'string' => $string]
         );
     }
 
     /**
      * Index and register i18n string located in default properties which belongs to TranslatorTrait
      * classes.
-     *
-     * @param ClassesInterface $locator
      */
-    public function indexClasses(ClassesInterface $locator): void
+    public function indexClasses(ScopedClassesInterface $locator): void
     {
-        foreach ($locator->getClasses(TranslatorTrait::class) as $class) {
+        foreach ($locator->getScopedClasses('translations', TranslatorTrait::class) as $class) {
             $strings = $this->fetchMessages($class, true);
             foreach ($strings as $string) {
                 $this->registerMessage($class->getName(), $string);
@@ -93,8 +69,6 @@ final class Indexer
     /**
      * Index available methods and function invocations, target: l, p, $this->translate()
      * functions.
-     *
-     * @param InvocationsInterface $locator
      */
     public function indexInvocations(InvocationsInterface $locator): void
     {
@@ -133,24 +107,20 @@ final class Indexer
 
     /**
      * Fetch default string values from class and merge it with parent strings if requested.
-     *
-     * @param \ReflectionClass $reflection
-     * @param bool             $inherit
-     * @return array
      */
-    private function fetchMessages(\ReflectionClass $reflection, bool $inherit = false)
+    private function fetchMessages(\ReflectionClass $reflection, bool $inherit = false): array
     {
         $target = $reflection->getDefaultProperties() + $reflection->getConstants();
 
         foreach ($reflection->getProperties() as $property) {
-            if (is_string($property->getDocComment()) && strpos($property->getDocComment(), '@do-not-index')) {
+            if (\is_string($property->getDocComment()) && \strpos($property->getDocComment(), '@do-not-index')) {
                 unset($target[$property->getName()]);
             }
         }
 
         $strings = [];
-        array_walk_recursive($target, function ($value) use (&$strings): void {
-            if (is_string($value) && Translator::isMessage($value)) {
+        \array_walk_recursive($target, function ($value) use (&$strings): void {
+            if (\is_string($value) && Translator::isMessage($value)) {
                 $strings[] = $this->prepareMessage($value);
             }
         });
@@ -158,7 +128,7 @@ final class Indexer
         if ($inherit && $reflection->getParentClass()) {
             //Joining strings data with parent class values (inheritance ON) - resolved into same
             //domain on export
-            $strings = array_merge(
+            $strings = \array_merge(
                 $strings,
                 $this->fetchMessages($reflection->getParentClass(), true)
             );
@@ -169,9 +139,6 @@ final class Indexer
 
     /**
      * Get associated domain.
-     *
-     * @param ReflectionInvocation $invocation
-     * @return string
      */
     private function invocationDomain(ReflectionInvocation $invocation): string
     {
@@ -184,19 +151,11 @@ final class Indexer
         }
 
         //`l` and `p`, `say` functions
-        $argument = null;
-        switch (strtolower($invocation->getName())) {
-            case 'say':
-            case 'l':
-                if ($invocation->countArguments() >= 3) {
-                    $argument = $invocation->getArgument(2);
-                }
-                break;
-            case 'p':
-                if ($invocation->countArguments() >= 4) {
-                    $argument = $invocation->getArgument(3);
-                }
-        }
+        $argument = match (\strtolower($invocation->getName())) {
+            'say', 'l' => $invocation->countArguments() >= 3 ? $invocation->getArgument(2) : null,
+            'p' => $invocation->countArguments() >= 4 ? $invocation->getArgument(3) : null,
+            default => null
+        };
 
         if (!empty($argument) && $argument->getType() === ReflectionArgument::STRING) {
             //Domain specified in arguments
@@ -208,14 +167,11 @@ final class Indexer
 
     /**
      * Remove [[ and ]] braces from translated string.
-     *
-     * @param string $string
-     * @return string
      */
     private function prepareMessage(string $string): string
     {
         if (Translator::isMessage($string)) {
-            $string = substr($string, 2, -2);
+            $string = \substr($string, 2, -2);
         }
 
         return $string;

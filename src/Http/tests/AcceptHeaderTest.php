@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Http;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Http\Exception\AcceptHeaderException;
 use Spiral\Http\Header\AcceptHeader;
 use Spiral\Http\Header\AcceptHeaderItem;
 
@@ -38,13 +37,6 @@ class AcceptHeaderTest extends TestCase
         $this->assertSame('text/html', $headers[0]->getValue());
         $this->assertSame('text/*', $headers[1]->getValue());
         $this->assertSame('*/*', $headers[2]->getValue());
-    }
-
-    public function testHeaderConstructingTypeError(): void
-    {
-        $this->expectException(AcceptHeaderException::class);
-
-        new AcceptHeader(['*', 'UTF-8', ['text/html;level=1']]);
     }
 
     public function testImmutability(): void

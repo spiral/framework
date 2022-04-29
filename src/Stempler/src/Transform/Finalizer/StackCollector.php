@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Finalizer;
@@ -22,41 +15,28 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class StackCollector implements VisitorInterface
 {
-    /** @var string */
-    private $pushKeyword = 'stack:push';
+    private string $pushKeyword = 'stack:push';
+    private string $prependKeyword = 'stack:prepend';
 
-    /** @var string */
-    private $prependKeyword = 'stack:prepend';
-
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx): void
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx)
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
-        if ($node instanceof Tag && strpos($node->name, $this->pushKeyword) === 0) {
+        if ($node instanceof Tag && \str_starts_with($node->name, $this->pushKeyword)) {
             return $this->registerPush(StackContext::on($ctx), $node);
         }
 
-        if ($node instanceof Tag && strpos($node->name, $this->prependKeyword) === 0) {
+        if ($node instanceof Tag && \str_starts_with($node->name, $this->prependKeyword)) {
             return $this->registerPrepend(StackContext::on($ctx), $node);
         }
 
         return null;
     }
 
-    /**
-     * @param StackContext $ctx
-     * @param Tag          $node
-     * @return int|Tag
-     */
-    private function registerPush(StackContext $ctx, Tag $node)
+    private function registerPush(StackContext $ctx, Tag $node): int|Tag|null
     {
         $name = $this->stackName($node);
 
@@ -67,12 +47,7 @@ final class StackCollector implements VisitorInterface
         return self::REMOVE_NODE;
     }
 
-    /**
-     * @param StackContext $ctx
-     * @param Tag          $node
-     * @return int|Tag
-     */
-    private function registerPrepend(StackContext $ctx, Tag $node)
+    private function registerPrepend(StackContext $ctx, Tag $node): int|Tag|null
     {
         $name = $this->stackName($node);
 
@@ -83,30 +58,22 @@ final class StackCollector implements VisitorInterface
         return self::REMOVE_NODE;
     }
 
-    /**
-     * @param Tag $tag
-     * @return string|null
-     */
     private function stackName(Tag $tag): ?string
     {
         foreach ($tag->attrs as $attr) {
-            if (is_string($attr->value) && $attr->name === 'name') {
-                return trim($attr->value, '\'"');
+            if (\is_string($attr->value) && $attr->name === 'name') {
+                return \trim($attr->value, '\'"');
             }
         }
 
         return null;
     }
 
-    /**
-     * @param Tag $tag
-     * @return string|null
-     */
     private function uniqueID(Tag $tag): ?string
     {
         foreach ($tag->attrs as $attr) {
-            if (is_string($attr->value) && $attr->name === 'unique-id') {
-                return trim($attr->value, '\'"');
+            if (\is_string($attr->value) && $attr->name === 'unique-id') {
+                return \trim($attr->value, '\'"');
             }
         }
 

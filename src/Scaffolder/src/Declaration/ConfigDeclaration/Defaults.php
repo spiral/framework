@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Declaration\ConfigDeclaration;
@@ -30,15 +23,11 @@ class Defaults
         'null'     => null,
     ];
 
-    /**
-     * @param array $values
-     * @return array
-     */
     public function get(array $values): array
     {
         $output = [];
         foreach ($values as $key => $value) {
-            $output[$key] = self::TYPE_DEFAULTS[gettype($value)] ?? null;
+            $output[$key] = self::TYPE_DEFAULTS[\gettype($value)] ?? null;
         }
 
         return $output;

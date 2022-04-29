@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -18,33 +11,16 @@ use Spiral\Security\Exception\GuardException;
  */
 final class Guard implements GuardInterface
 {
-    /** @var PermissionsInterface */
-    private $permissions = null;
-
-    /** @var ActorInterface|null */
-    private $actor = null;
-
-    /** @var array */
-    private $roles = [];
-
     /**
-     * @param PermissionsInterface $permissions
-     * @param ActorInterface       $actor
-     * @param array                $roles Session specific roles.
+     * @param array $roles Session specific roles.
      */
     public function __construct(
-        PermissionsInterface $permissions,
-        ActorInterface $actor = null,
-        array $roles = []
+        private readonly PermissionsInterface $permissions,
+        private ?ActorInterface $actor = null,
+        private array $roles = []
     ) {
-        $this->roles = $roles;
-        $this->actor = $actor;
-        $this->permissions = $permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function allows(string $permission, array $context = []): bool
     {
         $allows = false;
@@ -65,20 +41,15 @@ final class Guard implements GuardInterface
     /**
      * Currently active actor/session roles.
      *
-     * @return array
-     *
      * @throws GuardException
      */
     public function getRoles(): array
     {
-        return array_merge($this->roles, $this->getActor()->getRoles());
+        return \array_merge($this->roles, $this->getActor()->getRoles());
     }
 
     /**
      * Create instance of guard with session specific roles (existed roles will be droppped).
-     *
-     * @param array $roles
-     * @return self
      */
     public function withRoles(array $roles): Guard
     {
@@ -89,8 +60,6 @@ final class Guard implements GuardInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws GuardException
      */
     public function getActor(): ActorInterface
@@ -102,9 +71,6 @@ final class Guard implements GuardInterface
         return $this->actor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withActor(ActorInterface $actor): GuardInterface
     {
         $guard = clone $this;

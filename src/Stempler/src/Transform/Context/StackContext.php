@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Context;
@@ -18,21 +11,11 @@ use Spiral\Stempler\VisitorContext;
 
 final class StackContext
 {
-    /** @var VisitorContext */
-    private $ctx;
-
-    /**
-     * @param VisitorContext $ctx
-     */
-    private function __construct(VisitorContext $ctx)
-    {
-        $this->ctx = $ctx;
+    private function __construct(
+        private readonly VisitorContext $ctx
+    ) {
     }
 
-    /**
-     * @param Aggregate $aggregate
-     * @param int       $level
-     */
     public function register(Aggregate $aggregate, int $level = 0): void
     {
         // collect all stack withing specific scope
@@ -43,12 +26,6 @@ final class StackContext
         $node->setAttribute(self::class, $stacks);
     }
 
-    /**
-     * @param string      $name
-     * @param Tag         $child
-     * @param string|null $uniqueID
-     * @return bool
-     */
     public function push(string $name, Tag $child, string $uniqueID = null): bool
     {
         foreach ($this->getStacks() as $stack) {
@@ -71,12 +48,6 @@ final class StackContext
         return false;
     }
 
-    /**
-     * @param string      $name
-     * @param Tag         $child
-     * @param string|null $uniqueID
-     * @return bool
-     */
     public function prepend(string $name, Tag $child, string $uniqueID = null): bool
     {
         foreach ($this->getStacks() as $stack) {
@@ -90,7 +61,7 @@ final class StackContext
             $stack->uniqueIDs[$uniqueID] = true;
 
             foreach ($child->nodes as $child) {
-                array_unshift($stack->nodes, $child);
+                \array_unshift($stack->nodes, $child);
             }
 
             return true;
@@ -107,7 +78,7 @@ final class StackContext
     public function getStacks(): array
     {
         $stacks = [];
-        foreach (array_reverse($this->ctx->getScope()) as $node) {
+        foreach (\array_reverse($this->ctx->getScope()) as $node) {
             if ($node instanceof AttributedInterface) {
                 foreach ($node->getAttribute(self::class, []) as $stack) {
                     $stacks[] = $stack;
@@ -118,19 +89,11 @@ final class StackContext
         return $stacks;
     }
 
-    /**
-     * @param VisitorContext $ctx
-     * @return StackContext
-     */
     public static function on(VisitorContext $ctx): self
     {
         return new self($ctx);
     }
 
-    /**
-     * @param int $level
-     * @return AttributedInterface
-     */
     private function getStackRootNode(int $level): AttributedInterface
     {
         if ($level === 0) {
@@ -139,14 +102,14 @@ final class StackContext
             $scope = $this->ctx->getScope();
 
             // looking for the parent node via given nesting level
-            $node = $scope[count($scope) - 2 - $level] ?? $this->ctx->getFirstNode();
+            $node = $scope[\count($scope) - 2 - $level] ?? $this->ctx->getFirstNode();
         }
 
         if (!$node instanceof AttributedInterface) {
             throw new \LogicException(
-                sprintf(
+                \sprintf(
                     'Unable to create import on node without attribute storage (%s)',
-                    is_object($node) ? get_class($node) : gettype($node)
+                    \get_debug_type($node)
                 )
             );
         }

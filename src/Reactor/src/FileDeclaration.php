@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor;
@@ -20,34 +13,21 @@ use Spiral\Reactor\Traits\UsesTrait;
 /**
  * Provides ability to render file content.
  */
-class FileDeclaration extends AbstractDeclaration implements ReplaceableInterface
+class FileDeclaration extends AbstractDeclaration implements ReplaceableInterface, \Stringable
 {
     use UsesTrait;
     use CommentTrait;
 
-    /**
-     * File namespace.
-     *
-     * @var string
-     */
-    private $namespace;
-
-    /** @var Directives|null */
-    private $directives;
+    private ?Directives $directives = null;
+    private Aggregator $elements;
 
     /**
-     * @var Aggregator
+     * @param string $namespace File namespace.
      */
-    private $elements;
-
-    /**
-     * @param string $namespace
-     * @param string $comment
-     */
-    public function __construct(string $namespace = '', string $comment = '')
-    {
-        $this->namespace = $namespace;
-
+    public function __construct(
+        private string $namespace = '',
+        string $comment = ''
+    ) {
         $this->elements = new Aggregator([
             ClassDeclaration::class,
             NamespaceDeclaration::class,
@@ -58,18 +38,11 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
         $this->initComment($comment);
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->render(0);
     }
 
-    /**
-     * @param string $namespace
-     * @return self
-     */
     public function setNamespace(string $namespace): FileDeclaration
     {
         $this->namespace = $namespace;
@@ -77,18 +50,11 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNamespace(): string
     {
         return $this->namespace;
     }
 
-    /**
-     * @param string ...$directives
-     * @return FileDeclaration
-     */
     public function setDirectives(string ...$directives): FileDeclaration
     {
         $this->directives = new Directives(...$directives);
@@ -99,8 +65,6 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
     /**
      * Method will automatically mount requested uses is any.
      *
-     * @param DeclarationInterface $element
-     * @return self
      * @throws Exception\ReactorException
      */
     public function addElement(DeclarationInterface $element): FileDeclaration
@@ -113,11 +77,7 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     * @return self
-     */
-    public function replace($search, $replace): FileDeclaration
+    public function replace(array|string $search, array|string $replace): FileDeclaration
     {
         $this->docComment->replace($search, $replace);
         $this->elements->replace($search, $replace);
@@ -125,9 +85,6 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render(int $indentLevel = 0): string
     {
         $result = "<?php\n";

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype;
@@ -26,30 +19,17 @@ use Spiral\Prototype\NodeVisitors\ClassNode\LocateVariables;
  */
 final class NodeExtractor
 {
-    /** @var Parser */
-    private $parser;
-
-    /** @var ConflictResolver\Names */
-    private $namesResolver;
-
-    /** @var ConflictResolver\Namespaces */
-    private $namespacesResolver;
+    private readonly Parser $parser;
 
     public function __construct(
-        ConflictResolver\Names $namesResolver,
-        ConflictResolver\Namespaces $namespacesResolver,
+        private readonly ConflictResolver\Names $namesResolver,
+        private readonly ConflictResolver\Namespaces $namespacesResolver,
         Parser $parser = null
     ) {
-        $this->namesResolver = $namesResolver;
-        $this->namespacesResolver = $namespacesResolver;
         $this->parser = $parser ?? (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
     }
 
     /**
-     * @param string $filename
-     * @param array  $dependencies
-     * @return ClassNode
-     *
      * @throws ClassNotDeclaredException
      * @throws \ReflectionException
      */
@@ -71,9 +51,6 @@ final class NodeExtractor
     }
 
     /**
-     * @param string $filename
-     * @return ClassNode
-     *
      * @throws ClassNotDeclaredException
      */
     private function makeDefinition(string $filename): ClassNode
@@ -92,10 +69,6 @@ final class NodeExtractor
         return ClassNode::create($declarator->getClass());
     }
 
-    /**
-     * @param string      $filename
-     * @param NodeVisitor ...$visitors
-     */
     private function traverse(string $filename, NodeVisitor ...$visitors): void
     {
         $tr = new NodeTraverser();
@@ -104,13 +77,9 @@ final class NodeExtractor
             $tr->addVisitor($visitor);
         }
 
-        $tr->traverse($this->parser->parse(file_get_contents($filename)));
+        $tr->traverse($this->parser->parse(\file_get_contents($filename)));
     }
 
-    /**
-     * @param ClassNode $definition
-     * @param array     $imports
-     */
     private function fillStmts(ClassNode $definition, array $imports): void
     {
         foreach ($imports as $import) {
@@ -119,13 +88,11 @@ final class NodeExtractor
     }
 
     /**
-     * @param ClassNode $definition
-     *
      * @throws \ReflectionException
      */
     private function fillConstructorParams(ClassNode $definition): void
     {
-        $reflection = new \ReflectionClass("{$definition->namespace}\\{$definition->class}");
+        $reflection = new \ReflectionClass(\sprintf('%s\%s', $definition->namespace, $definition->class));
 
         $constructor = $reflection->getConstructor();
         if ($constructor !== null) {
@@ -140,9 +107,6 @@ final class NodeExtractor
     /**
      * Collect all variable definitions from constructor method body.
      * Vars which are however also inserted via method are ignored (and still used as constructor params).
-     *
-     * @param array     $vars
-     * @param ClassNode $definition
      */
     private function fillConstructorVars(array $vars, ClassNode $definition): void
     {
@@ -155,9 +119,6 @@ final class NodeExtractor
         $definition->constructorVars = $vars;
     }
 
-    /**
-     * @param ClassNode $definition
-     */
     private function resolveConflicts(ClassNode $definition): void
     {
         $this->namesResolver->resolve($definition);

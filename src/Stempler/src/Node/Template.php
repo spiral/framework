@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Node;
@@ -23,36 +16,24 @@ final class Template implements NodeInterface, AttributedInterface
     use AttributeTrait;
     use ContextTrait;
 
-    /** @var NodeInterface[] */
-    public $nodes = [];
-
     /**
-     * @param array $nodes
+     * @param NodeInterface[] $nodes
      */
-    public function __construct(array $nodes = [])
-    {
-        $this->nodes = $nodes;
+    public function __construct(
+        public array $nodes = []
+    ) {
     }
 
-    /**
-     * @param Context|null $context
-     */
     public function setContext(Context $context = null): void
     {
         $this->context = $context;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getContext(): ?Context
     {
         return $this->context;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getIterator(): \Generator
     {
         yield 'nodes' => $this->nodes;

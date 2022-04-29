@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
@@ -21,11 +14,7 @@ use Spiral\Prototype\Traits\PrototypeTrait;
  */
 final class RemoveUse extends NodeVisitorAbstract
 {
-    /**
-     * @param Node $node
-     * @return int|null|Node|Node[]
-     */
-    public function leaveNode(Node $node)
+    public function leaveNode(Node $node): int|Node|null
     {
         if (!$node instanceof Node\Stmt\Use_) {
             return null;

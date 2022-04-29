@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax;
@@ -55,18 +48,10 @@ final class HTMLSyntax implements SyntaxInterface
         'on*',
     ];
 
-    /** @var Tag|null */
-    private $node;
+    private ?Tag $node = null;
+    private ?Token $token = null;
+    private ?Attr $attr = null;
 
-    /** @var Token|null */
-    private $token;
-
-    /** @var Attr|null */
-    private $attr;
-
-    /**
-     * @inheritDoc
-     */
     public function handle(Parser $parser, Assembler $asm, Token $token): void
     {
         switch ($token->type) {
@@ -113,10 +98,10 @@ final class HTMLSyntax implements SyntaxInterface
                 }
 
                 if (
-                    is_string($this->attr->name)
+                    \is_string($this->attr->name)
                     && (
-                        strpos($this->attr->name, 'on') === 0
-                        || in_array($this->attr->name, self::VERBATIM_ATTRIBUTES, true)
+                        \str_starts_with($this->attr->name, 'on')
+                        || \in_array($this->attr->name, self::VERBATIM_ATTRIBUTES, true)
                     )
                 ) {
                     $this->attr->value = $this->parseVerbatim($parser, $token);
@@ -143,13 +128,11 @@ final class HTMLSyntax implements SyntaxInterface
                     }
 
                     $asm->close();
+                } elseif (\in_array($this->node->name, self::VOID_TAGS)) {
+                    $this->node->void = true;
+                    $asm->push($this->node);
                 } else {
-                    if (in_array($this->node->name, self::VOID_TAGS)) {
-                        $this->node->void = true;
-                        $asm->push($this->node);
-                    } else {
-                        $asm->open($this->node, 'nodes');
-                    }
+                    $asm->open($this->node, 'nodes');
                 }
                 $this->flush();
 
@@ -162,7 +145,7 @@ final class HTMLSyntax implements SyntaxInterface
             default:
                 if ($asm->getNode() instanceof Mixin || $asm->getNode() instanceof Verbatim) {
                     $node = $this->parseToken($parser, $token);
-                    if (is_string($node)) {
+                    if (\is_string($node)) {
                         $node = new Raw($node, new Parser\Context($token, $parser->getPath()));
                     }
 
@@ -181,11 +164,6 @@ final class HTMLSyntax implements SyntaxInterface
         $this->attr = null;
     }
 
-    /**
-     * @param Parser $parser
-     * @param Token  $token
-     * @return Verbatim
-     */
     private function parseVerbatim(Parser $parser, Token $token): Verbatim
     {
         $verbatim = new Verbatim(new Parser\Context($token, $parser->getPath()));

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype;
@@ -21,12 +14,8 @@ use Spiral\Prototype\NodeVisitors\LocateProperties;
  */
 final class PropertyExtractor
 {
-    /** @var Parser */
-    private $parser;
+    private readonly Parser $parser;
 
-    /**
-     * @param Parser|null $parser
-     */
     public function __construct(Parser $parser = null)
     {
         $this->parser = $parser ?? (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
@@ -34,9 +23,6 @@ final class PropertyExtractor
 
     /**
      * Get list of all virtual property names.
-     *
-     * @param string $code
-     * @return string[]
      */
     public function getPrototypeProperties(string $code): array
     {

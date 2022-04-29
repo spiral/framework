@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [8.0] # Note: This workflow requires only the LATEST version of PHP
+        php: ['8.1'] # Note: This workflow requires only the LATEST version of PHP
         os: [ubuntu-latest]
 
     steps:
@@ -26,6 +26,11 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Configure environment
+        run: |
+          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
+          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}
@@ -39,7 +44,7 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: Restore Composer Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
@@ -56,13 +61,13 @@ jobs:
         run: composer require --dev roave/security-advisories:dev-latest
 
   static-analysis:
-    name: Psalm
+    name: Psalm and Rector
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        php: [8.0] # Note: This workflow requires only the LATEST version of PHP
+        php: ['8.1'] # Note: This workflow requires only the LATEST version of PHP
         os: [ubuntu-latest]
 
     steps:
@@ -73,6 +78,11 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Configure environment
+        run: |
+          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
+          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}
@@ -86,7 +96,7 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: Restore Composer Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
@@ -100,7 +110,9 @@ jobs:
 
       # Execution
       - name: Static Analysis
-        run: vendor/bin/psalm --no-cache
+        run: |
+          vendor/bin/psalm --no-cache
+          vendor/bin/rector --dry-run
 
 
   coding-standards:
@@ -110,7 +122,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [8.0] # Note: This workflow requires only the LATEST version of PHP
+        php: ['8.1'] # Note: This workflow requires only the LATEST version of PHP
         os: [ubuntu-latest]
 
     steps:
@@ -121,6 +133,11 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Configure environment
+        run: |
+          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
+          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}
@@ -134,7 +151,7 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: Restore Composer Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
@@ -160,7 +177,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0']
+        php: ['8.1']
         os: [ubuntu-latest]
         stability: [prefer-lowest, prefer-stable]
 
@@ -172,6 +189,11 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Configure environment
+        run: |
+          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
+          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}
@@ -190,7 +212,7 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: Restore Composer Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
@@ -201,21 +223,18 @@ jobs:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
-      # Upgrade mockery on PHP 8
-      - name: Install Dependencies
-        if: ${{ matrix.php == '8.0' }}
-        uses: nick-invision/retry@v1
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer update mockery/mockery --prefer-dist --no-interaction --no-progress
 
       # Execution
       - name: Execute Tests
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        run: vendor/bin/phpunit --coverage-clover=coverage.clover
       - name: Upload Coverage To Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
+          file: ./coverage.clover
           fail_ci_if_error: false
+      - name: Upload coverage to Scrutinizer
+        continue-on-error: true # if is fork
+        uses: sudo-bot/action-scrutinizer@latest
+        with:
+          cli-args: "--format=php-clover coverage.clover"

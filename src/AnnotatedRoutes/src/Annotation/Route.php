@@ -1,65 +1,48 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router\Annotation;
 
+use Doctrine\Common\Annotations\Annotation\Attribute;
+use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Spiral\Attributes\NamedArgumentConstructor;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target({"METHOD"})
+ * @Attributes({
+ *     @Attribute("route", required=true, type="string"),
+ *     @Attribute("name", type="string"),
+ *     @Attribute("verbs", required=true, type="mixed"),
+ *     @Attribute("defaults", type="array"),
+ *     @Attribute("group", type="string"),
+ *     @Attribute("middleware", type="array"),
+ *     @Attribute("priority", type="int")
+ * })
  */
+#[\Attribute(\Attribute::TARGET_METHOD), NamedArgumentConstructor]
 final class Route
 {
     public const DEFAULT_GROUP = 'default';
 
     /**
-     * @Attribute(name="route", type="string", required=true)
-     * @var string
+     * @psalm-param non-empty-string $route
+     * @psalm-param non-empty-string|null $name
+     * @psalm-param non-empty-string|array<string> $methods
+     * @psalm-param non-empty-string $group Route group, groups can be configured using MiddlewareRegistry
+     * @param array $middleware Route specific middleware set, if any
      */
-    public $route;
-
-    /**
-     * @Attribute(name="name", type="string", required=true)
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @Attribute(name="verbs", type="mixed", required=true)
-     * @var mixed
-     */
-    public $methods = \Spiral\Router\Route::VERBS;
-
-    /**
-     * Default match options.
-     *
-     * @Attribute(name="defaults", type="array")
-     * @var array
-     */
-    public $defaults = [];
-
-    /**
-     * Route group (set of middlewere), groups can be configured using MiddlewareRegistry.
-     *
-     * @Attribute(name="group", type="string")
-     * @var string
-     */
-    public $group = self::DEFAULT_GROUP;
-
-    /**
-     * Route specific middleware set, if any.
-     *
-     * @Attribute(name="middleware", type="array")
-     * @var array
-     */
-    public $middleware = [];
+    public function __construct(
+        public readonly string $route,
+        public readonly ?string $name = null,
+        public readonly array|string $methods = \Spiral\Router\Route::VERBS,
+        public readonly array $defaults = [],
+        public readonly string $group = self::DEFAULT_GROUP,
+        public readonly array $middleware = [],
+        public readonly int $priority = 0
+    ) {
+    }
 }

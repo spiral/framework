@@ -1,0 +1,49 @@
+{
+    "name": "spiral/cache",
+    "type": "library",
+    "description": "Common Cache Interfaces",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/core"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "spiral/core": "^2.13",
+        "spiral/config": "^2.13",
+        "spiral/files": "^2.13",
+        "psr/simple-cache": "2 - 3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Cache\\": "src"
+        }
+    },
+    "require-dev": {
+        "spiral/boot": "^2.13",
+        "mockery/mockery": "^1.5",
+        "phpunit/phpunit": "^9.5.5"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Cache\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.13.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

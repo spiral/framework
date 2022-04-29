@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth;
@@ -18,9 +11,6 @@ interface ActorProviderInterface
 {
     /**
      * Return actor associated with token payload (if any). Must return null if actor not found.
-     *
-     * @param TokenInterface $token
-     * @return object|null
      */
     public function getActor(TokenInterface $token): ?object;
 }

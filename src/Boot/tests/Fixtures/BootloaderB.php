@@ -17,7 +17,7 @@ use Spiral\Boot\Bootloader\DependedInterface;
 class BootloaderB extends Bootloader implements DependedInterface
 {
     public const BINDINGS = [
-        'b' => true
+        'b' => 'b'
     ];
 
     public function defineDependencies(): array

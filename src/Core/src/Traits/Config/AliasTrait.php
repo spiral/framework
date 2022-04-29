@@ -1,15 +1,10 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core\Traits\Config;
+
+use Spiral\Core\Exception\Container\ContainerException;
 
 /**
  * Provides aliasing ability for config entities.
@@ -18,13 +13,15 @@ namespace Spiral\Core\Traits\Config;
  */
 trait AliasTrait
 {
-    /**
-     * @param string $alias
-     * @return string
-     */
     public function resolveAlias(string $alias): string
     {
-        while (is_string($alias) && isset($this->config) && isset($this->config['aliases'][$alias])) {
+        $antiCircleReference = [];
+        while (\is_string($alias) && isset($this->config) && isset($this->config['aliases'][$alias])) {
+            if (\in_array($alias, $antiCircleReference, true)) {
+                throw new ContainerException(\sprintf('Circle reference detected for alias `%s`.', $alias));
+            }
+            $antiCircleReference[] = $alias;
+
             $alias = $this->config['aliases'][$alias];
         }
 

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Domain;
@@ -25,29 +18,17 @@ class FilterInterceptor implements CoreInterceptorInterface
     public const STRATEGY_JSON_RESPONSE = 1;
     public const STRATEGY_EXCEPTION     = 2;
 
-    /** @var ContainerInterface @internal */
-    private $container;
+    /** @internal */
+    private array $cache = [];
 
-    /** @var int */
-    private $strategy;
-
-    /** @var array @internal */
-    private $cache = [];
-
-    /**
-     * @param ContainerInterface $container
-     * @param int                $strategy
-     */
-    public function __construct(ContainerInterface $container, int $strategy = self::STRATEGY_JSON_RESPONSE)
-    {
-        $this->container = $container;
-        $this->strategy = $strategy;
+    public function __construct(
+        /** @internal */
+        private ContainerInterface $container,
+        private int $strategy = self::STRATEGY_JSON_RESPONSE
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function process(string $controller, string $action, array $parameters, CoreInterface $core)
+    public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed
     {
         foreach ($this->getDeclaredFilters($controller, $action) as $parameter => $filterClass) {
             if (isset($parameters[$parameter])) {
@@ -73,12 +54,9 @@ class FilterInterceptor implements CoreInterceptorInterface
     }
 
     /**
-     * @param FilterInterface $filter
-     * @return mixed
-     *
      * @throws InvalidFilterException
      */
-    protected function renderInvalid(FilterInterface $filter)
+    protected function renderInvalid(FilterInterface $filter): array
     {
         switch ($this->strategy) {
             case self::STRATEGY_JSON_RESPONSE:
@@ -91,22 +69,17 @@ class FilterInterceptor implements CoreInterceptorInterface
         }
     }
 
-    /**
-     * @param string $controller
-     * @param string $action
-     * @return array
-     */
     private function getDeclaredFilters(string $controller, string $action): array
     {
-        $key = sprintf('%s:%s', $controller, $action);
-        if (array_key_exists($key, $this->cache)) {
+        $key = \sprintf('%s:%s', $controller, $action);
+        if (\array_key_exists($key, $this->cache)) {
             return $this->cache[$key];
         }
 
         $this->cache[$key] = [];
         try {
             $method = new \ReflectionMethod($controller, $action);
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             return [];
         }
 
@@ -125,23 +98,14 @@ class FilterInterceptor implements CoreInterceptorInterface
         return $this->cache[$key];
     }
 
-
-    /**
-     * @param \ReflectionParameter $parameter
-     * @return \ReflectionClass|null
-     */
     private function getParameterClass(\ReflectionParameter $parameter): ?\ReflectionClass
     {
         $type = $parameter->getType();
 
-        if (!$type instanceof \ReflectionNamedType) {
-            return null;
-        }
-
-        if ($type->isBuiltin()) {
-            return null;
-        }
-
-        return new \ReflectionClass($type->getName());
+        return match (true) {
+            !$type instanceof \ReflectionNamedType => null,
+            $type->isBuiltin() => null,
+            default => new \ReflectionClass($type->getName())
+        };
     }
 }

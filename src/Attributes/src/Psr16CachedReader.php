@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes;
@@ -18,25 +11,15 @@ use Spiral\Attributes\Internal\Key\KeyGeneratorInterface;
 
 final class Psr16CachedReader extends CachedReader
 {
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
-
-    /**
-     * @param ReaderInterface $reader
-     * @param CacheInterface $cache
-     * @param KeyGeneratorInterface|null $generator
-     */
-    public function __construct(ReaderInterface $reader, CacheInterface $cache, KeyGeneratorInterface $generator = null)
-    {
-        $this->cache = $cache;
-
+    public function __construct(
+        ReaderInterface $reader,
+        private readonly CacheInterface $cache,
+        KeyGeneratorInterface $generator = null
+    ) {
         parent::__construct($reader, $generator);
     }
 
     /**
-     * {@inheritDoc}
      * @psalm-suppress InvalidThrow
      * @throws InvalidArgumentException
      */

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views\Config;
@@ -14,7 +7,6 @@ namespace Spiral\Views\Config;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\InjectableConfig;
 use Spiral\Views\Engine\Native\NativeEngine;
-use Spiral\Views\Exception\ConfigException;
 
 final class ViewsConfig extends InjectableConfig
 {
@@ -33,26 +25,18 @@ final class ViewsConfig extends InjectableConfig
         ],
     ];
 
-    /**
-     * @return bool
-     */
     public function isCacheEnabled(): bool
     {
         return !empty($this->config['cache']['enable']) || !empty($this->config['cache']['enabled']);
     }
 
-    /**
-     * @return string
-     */
     public function getCacheDirectory(): string
     {
-        return rtrim($this->config['cache']['directory'], '/') . '/';
+        return \rtrim($this->config['cache']['directory'], '/') . '/';
     }
 
     /**
      * Return all namespaces and their associated directories.
-     *
-     * @return array
      */
     public function getNamespaces(): array
     {
@@ -62,9 +46,7 @@ final class ViewsConfig extends InjectableConfig
     /**
      * Class names of all view dependencies.
      *
-     * @return Autowire[]
-     *
-     * @throws ConfigException
+     * @return array<int, Autowire>
      */
     public function getDependencies(): array
     {
@@ -79,9 +61,7 @@ final class ViewsConfig extends InjectableConfig
     /**
      * Get all the engines associated with view component.
      *
-     * @return Autowire[]
-     *
-     * @throws ConfigException
+     * @return array<int, Autowire>
      */
     public function getEngines(): array
     {
@@ -94,21 +74,14 @@ final class ViewsConfig extends InjectableConfig
     }
 
     /**
-     * @param mixed $item
-     * @return Autowire
-     *
-     * @throws ConfigException
+     * @param Autowire|class-string $item
      */
-    private function wire($item): Autowire
+    private function wire(Autowire|string $item): Autowire
     {
         if ($item instanceof Autowire) {
             return $item;
         }
 
-        if (is_string($item)) {
-            return new Autowire($item);
-        }
-
-        throw new ConfigException('Invalid class reference in view config.');
+        return new Autowire($item);
     }
 }

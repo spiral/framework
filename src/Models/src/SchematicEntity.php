@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Models;
@@ -16,46 +9,28 @@ namespace Spiral\Models;
  */
 class SchematicEntity extends AbstractEntity
 {
-    /** @var array */
-    private $schema = [];
-
-    /**
-     * @param array $data
-     * @param array $schema
-     */
-    public function __construct(array $data, array $schema)
-    {
-        $this->schema = $schema;
+    public function __construct(
+        array $data,
+        private array $schema
+    ) {
         parent::__construct($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function isFillable(string $field): bool
     {
-        if (!empty($this->schema[ModelSchema::FILLABLE]) && $this->schema[ModelSchema::FILLABLE] === '*') {
-            return true;
-        }
-
-        if (!empty($this->schema[ModelSchema::FILLABLE])) {
-            return in_array($field, $this->schema[ModelSchema::FILLABLE]);
-        }
-
-        if (!empty($this->schema[ModelSchema::SECURED]) && $this->schema[ModelSchema::SECURED] === '*') {
-            return false;
-        }
-
-        return !in_array($field, $this->schema[ModelSchema::SECURED]);
+        return match (true) {
+            !empty($this->schema[ModelSchema::FILLABLE]) && $this->schema[ModelSchema::FILLABLE] === '*' => true,
+            !empty($this->schema[ModelSchema::FILLABLE]) =>
+                \in_array($field, $this->schema[ModelSchema::FILLABLE], true),
+            !empty($this->schema[ModelSchema::SECURED]) && $this->schema[ModelSchema::SECURED] === '*' => false,
+            default => !\in_array($field, $this->schema[ModelSchema::SECURED], true)
+        };
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getMutator(string $field, string $mutator)
+    protected function getMutator(string $field, string $type): mixed
     {
-        if (isset($this->schema[ModelSchema::MUTATORS][$mutator][$field])) {
-            return $this->schema[ModelSchema::MUTATORS][$mutator][$field];
+        if (isset($this->schema[ModelSchema::MUTATORS][$type][$field])) {
+            return $this->schema[ModelSchema::MUTATORS][$type][$field];
         }
 
         return null;

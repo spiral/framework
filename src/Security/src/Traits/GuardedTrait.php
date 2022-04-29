@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security\Traits;
@@ -22,7 +15,6 @@ use Spiral\Security\GuardInterface;
 trait GuardedTrait
 {
     /**
-     * @return GuardInterface
      * @throws ScopeException
      */
     public function getGuard(): GuardInterface
@@ -37,21 +29,11 @@ trait GuardedTrait
         return $container->get(GuardInterface::class);
     }
 
-    /**
-     * @param string $permission
-     * @param array  $context
-     * @return bool
-     */
     protected function allows(string $permission, array $context = []): bool
     {
         return $this->getGuard()->allows($this->resolvePermission($permission), $context);
     }
 
-    /**
-     * @param string $permission
-     * @param array  $context
-     * @return bool
-     */
     protected function denies(string $permission, array $context = []): bool
     {
         return !$this->allows($permission, $context);
@@ -59,15 +41,12 @@ trait GuardedTrait
 
     /**
      * Automatically prepend permission name with local RBAC namespace.
-     *
-     * @param string $permission
-     * @return string
      */
     protected function resolvePermission(string $permission): string
     {
-        if (defined('static::GUARD_NAMESPACE')) {
+        if (\defined('static::GUARD_NAMESPACE')) {
             // Yay! Isolation
-            $permission = constant(get_called_class() . '::' . 'GUARD_NAMESPACE') . '.' . $permission;
+            $permission = \constant(static::class . '::' . 'GUARD_NAMESPACE') . '.' . $permission;
         }
 
         return $permission;

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console;
@@ -19,139 +12,87 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 final class InputProxy implements InputInterface
 {
-    /** @var InputInterface */
-    private $input;
-
-    /** @var array */
-    private $overwrite;
-
-    /**
-     * @param InputInterface $input
-     * @param array          $overwrite
-     */
-    public function __construct(InputInterface $input, array $overwrite)
-    {
-        $this->input = $input;
-        $this->overwrite = $overwrite;
+    public function __construct(
+        private readonly InputInterface $input,
+        private readonly array $overwrite
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getFirstArgument()
+    public function getFirstArgument(): ?string
     {
         return $this->overwrite['firstArgument'] ?? $this->input->getFirstArgument();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function hasParameterOption($values, $onlyParams = false)
+    public function hasParameterOption(string|array $values, bool $onlyParams = false): bool
     {
-        return $this->input->hasParameterOption($values, $onlyParams = false);
+        return $this->input->hasParameterOption($values, $onlyParams);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getParameterOption($values, $default = false, $onlyParams = false)
-    {
-        return $this->input->getParameterOption($values, $default = false, $onlyParams = false);
+    public function getParameterOption(
+        string|array $values,
+        string|bool|int|float|array|null $default = false,
+        bool $onlyParams = false
+    ): mixed {
+        return $this->input->getParameterOption($values, $default, $onlyParams);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function bind(InputDefinition $definition)
+    public function bind(InputDefinition $definition): mixed
     {
         return $this->input->bind($definition);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function validate()
+    public function validate(): ?bool
     {
         return $this->input->validate();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->input->getArguments();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getArgument($name)
+    public function getArgument(string $name): mixed
     {
         return $this->input->getArgument($name);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function setArgument($name, $value)
+    public function setArgument(string $name, mixed $value): void
     {
-        return $this->input->setArgument($name, $value);
+        $this->input->setArgument($name, $value);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function hasArgument($name)
+    public function hasArgument(string $name): bool
     {
         return $this->input->hasArgument($name);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->input->getOptions();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getOption($name)
+    public function getOption(string $name): mixed
     {
         return $this->input->getOption($name);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function setOption($name, $value)
+    public function setOption(string $name, mixed $value): void
     {
-        return $this->input->setOption($name, $value);
+        $this->input->setOption($name, $value);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function hasOption($name)
+    public function hasOption(string $name): bool
     {
         return $this->input->hasOption($name);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function isInteractive()
+    public function isInteractive(): bool
     {
         return $this->input->isInteractive();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function setInteractive($interactive)
+    public function setInteractive(bool $interactive): void
     {
-        return $this->input->setInteractive($interactive);
+        $this->input->setInteractive($interactive);
     }
 }

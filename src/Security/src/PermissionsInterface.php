@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -19,42 +12,29 @@ use Spiral\Security\Exception\RoleException;
  */
 interface PermissionsInterface
 {
-    /**
-     * @param string $role
-     * @return bool
-     */
     public function hasRole(string $role): bool;
 
     /**
      * Register new role.
      *
-     * @param string $role
-     *
      * @throws RoleException
      */
-    public function addRole(string $role);
+    public function addRole(string $role): self;
 
     /**
      * Remove existed guard role and every association it has.
      *
-     * @param string $role
-     *
      * @throws RoleException
      */
-    public function removeRole(string $role);
+    public function removeRole(string $role): self;
 
     /**
      * List of every known role.
-     *
-     * @return array
      */
     public function getRoles(): array;
 
     /**
      * Get list of all permissions and their rules associated with given role.
-     *
-     * @param string $role
-     * @return array
      *
      * @throws RoleException
      */
@@ -62,10 +42,6 @@ interface PermissionsInterface
 
     /**
      * Get role/permission behaviour.
-     *
-     * @param string $role
-     * @param string $permission
-     * @return RuleInterface
      *
      * @throws RoleException
      * @throws PermissionException

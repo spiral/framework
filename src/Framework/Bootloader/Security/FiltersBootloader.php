@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Security;
@@ -19,6 +12,7 @@ use Spiral\Filters\FilterInterface;
 use Spiral\Filters\FilterProvider;
 use Spiral\Filters\FilterProviderInterface;
 use Spiral\Filters\InputInterface;
+use Spiral\Validation\Bootloader\ValidationBootloader;
 
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {
@@ -31,30 +25,20 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         InputInterface::class          => InputScope::class,
     ];
 
-    /** @var Container */
-    private $container;
-
-    /**
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly Container $container
+    ) {
     }
 
     /**
      * Declare Filter injection.
      */
-    public function boot(): void
+    public function init(): void
     {
         $this->container->bindInjector(Filter::class, self::class);
     }
 
     /**
-     * @param \ReflectionClass $class
-     * @param string|null      $context
-     * @return FilterInterface
-     *
      * @throws \Throwable
      */
     public function createInjection(\ReflectionClass $class, string $context = null): FilterInterface

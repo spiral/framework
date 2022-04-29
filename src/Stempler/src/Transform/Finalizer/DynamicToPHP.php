@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Finalizer;
@@ -34,49 +27,33 @@ final class DynamicToPHP implements VisitorInterface
     // default output filter
     public const DEFAULT_FILTER = DynamicRenderer::DEFAULT_FILTER;
 
-    /** @var string */
-    private $defaultFilter;
-
-    /** @var DirectiveRendererInterface[] */
-    private $directives;
-
-    /** @var Traverser */
-    private $traverser;
+    private readonly Traverser $traverser;
 
     /**
-     * @param string $defaultFilter
-     * @param array  $directives
+     * @param DirectiveRendererInterface[] $directives
      */
-    public function __construct(string $defaultFilter = self::DEFAULT_FILTER, array $directives = [])
-    {
-        $this->defaultFilter = $defaultFilter;
-        $this->directives = $directives;
-
+    public function __construct(
+        private readonly string $defaultFilter = self::DEFAULT_FILTER,
+        private array $directives = []
+    ) {
         $this->traverser = new Traverser();
         $this->traverser->addVisitor($this);
     }
 
     /**
      * Add new directive(s) compiler.
-     *
-     * @param DirectiveRendererInterface $directiveCompiler
      */
     public function addDirective(DirectiveRendererInterface $directiveCompiler): void
     {
         $this->directives[] = $directiveCompiler;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx): void
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx)
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
         if ($node instanceof Output) {
             return $this->output($node, $ctx);
@@ -96,30 +73,21 @@ final class DynamicToPHP implements VisitorInterface
         return null;
     }
 
-    /**
-     * @param Directive      $node
-     * @return PHP
-     */
     private function directive(Directive $node): PHP
     {
         foreach ($this->directives as $renderer) {
             $result = $renderer->render($node);
             if ($result !== null) {
-                return new PHP($result, token_get_all($result), $node->getContext());
+                return new PHP($result, \token_get_all($result), $node->getContext());
             }
         }
 
         throw new DirectiveException(
-            "Undefined directive `{$node->name}`",
+            \sprintf('Undefined directive `%s`', $node->name),
             $node->getContext()
         );
     }
 
-    /**
-     * @param Output         $node
-     * @param VisitorContext $ctx
-     * @return PHP
-     */
     private function output(Output $node, VisitorContext $ctx): PHP
     {
         /*
@@ -127,46 +95,42 @@ final class DynamicToPHP implements VisitorInterface
          */
 
         if ($node->rawOutput) {
-            $result = sprintf('<?php echo %s; ?>', trim($node->body));
+            $result = \sprintf('<?php echo %s; ?>', \trim($node->body));
         } else {
             $filter = $node->filter ?? $this->getFilterContext($ctx);
 
-            $result = sprintf("<?php echo {$filter}; ?>", trim($node->body));
+            $result = \sprintf(\sprintf('<?php echo %s; ?>', $filter), \trim($node->body));
         }
 
         return new PHP(
             $result,
-            token_get_all($result),
-            $node->getContext()->withValue(PHP::ORIGINAL_BODY, trim($node->body))
+            \token_get_all($result),
+            $node->getContext()->withValue(PHP::ORIGINAL_BODY, \trim($node->body))
         );
     }
 
-    /**
-     * @param VisitorContext $ctx
-     * @return string
-     */
     private function getFilterContext(VisitorContext $ctx): string
     {
         // only "interesting" nodes
         $context = [];
 
-        foreach (array_reverse($ctx->getScope()) as $node) {
+        foreach (\array_reverse($ctx->getScope()) as $node) {
             if ($node instanceof Attr || $node instanceof Tag || $node instanceof Verbatim) {
                 $context[] = $node;
             }
 
-            if (count($context) === 2) {
+            if (\count($context) === 2) {
                 break;
             }
         }
 
-        if (count($context) !== 2) {
+        if (\count($context) !== 2) {
             return $this->defaultFilter;
         }
 
         // php {{ }} in javascript code (variable passing), use {! !} to bypass the filter
         if ($context[0] instanceof Verbatim && $context[1] instanceof Tag && $context[1]->name === 'script') {
-            return sprintf(
+            return \sprintf(
                 'json_encode(%s, %s, %s)',
                 '%s',
                 'JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT',
@@ -176,7 +140,7 @@ final class DynamicToPHP implements VisitorInterface
 
         // in on* and other attributes
         if ($context[0] instanceof Verbatim && $context[1] instanceof Attr && $context[1]->name !== 'style') {
-            return sprintf("'%s', %s, '%s'", '&quot;', $this->defaultFilter, '&quot;');
+            return \sprintf("'%s', %s, '%s'", '&quot;', $this->defaultFilter, '&quot;');
         }
 
         return $this->defaultFilter;

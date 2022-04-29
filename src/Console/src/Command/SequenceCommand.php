@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console\Command;
@@ -19,15 +12,13 @@ use Throwable;
 
 abstract class SequenceCommand extends Command
 {
-    public const    OPTIONS = [
+    public const OPTIONS = [
         ['ignore', 'i', InputOption::VALUE_NONE, 'Ignore any errors'],
         ['break', 'b', InputOption::VALUE_NONE, 'Break on first error, works if ignore is disabled'],
     ];
 
     /**
-     * @param iterable|SequenceInterface[] $commands
-     * @param ContainerInterface           $container
-     * @return int
+     * @param iterable<array-key, SequenceInterface> $commands
      */
     protected function runSequence(iterable $commands, ContainerInterface $container): int
     {
@@ -37,14 +28,14 @@ abstract class SequenceCommand extends Command
 
             try {
                 $sequence->execute($container, $this->output);
-                $sequence->whiteFooter($this->output);
+                $sequence->writeFooter($this->output);
             } catch (Throwable $e) {
                 $errors++;
                 $this->sprintf("<error>%s</error>\n", $e);
                 if (!$this->option('ignore') && $this->option('break')) {
                     $this->writeln('<fg=red>Aborting.</fg=red>');
 
-                    return 1;
+                    return self::FAILURE;
                 }
             }
 
@@ -53,6 +44,6 @@ abstract class SequenceCommand extends Command
 
         $this->writeln('<info>All done!</info>');
 
-        return ($errors && !$this->option('ignore')) ? 1 : 0;
+        return ($errors && !$this->option('ignore')) ? self::FAILURE : self::SUCCESS;
     }
 }

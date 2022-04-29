@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Visitor;
@@ -35,16 +28,13 @@ final class FormatHTML implements VisitorInterface
     private const BEFORE_PHP   = 1;
     private const BEFORE_CLOSE = 2;
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx)
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
         if (!$node instanceof Template && !$node instanceof Block && !$node instanceof Tag) {
             return null;
         }
 
-        if ($node instanceof Tag && in_array($node->name, self::EXCLUDE)) {
+        if ($node instanceof Tag && \in_array($node->name, self::EXCLUDE)) {
             // raw nodes
             return null;
         }
@@ -73,54 +63,44 @@ final class FormatHTML implements VisitorInterface
                 $position
             );
         }
+
+        return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx): void
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
-    /**
-     * @param string $content
-     * @param int    $level
-     * @param int    $position
-     * @return string
-     */
-    private function indentContent(string $content, int $level, int $position = self::BETWEEN_TAGS)
+    private function indentContent(string $content, int $level, int $position = self::BETWEEN_TAGS): string
     {
-        if (strpos($content, "\n") === false) {
+        if (!\str_contains($content, "\n")) {
             // no need to do anything
             return $content;
         }
 
         // we have to apply special rules to the first and the last lines
-        $lines = explode("\n", $content);
+        $lines = \explode("\n", $content);
 
         foreach ($lines as $i => $line) {
-            if (trim($line) === '' && $i !== 0) {
+            if (\trim($line) === '' && $i !== 0) {
                 unset($lines[$i]);
             }
         }
 
-        $lines = array_values($lines);
-        if (count($lines) === 0) {
+        $lines = \array_values($lines);
+        if ($lines === []) {
             $lines[] = '';
         }
 
         $result = '';
         foreach ($lines as $i => $line) {
-            if (trim($line) !== '') {
-                if ($i === 0) {
-                    $line = rtrim($line);
-                } else {
-                    $line = trim($line);
-                }
+            if (\trim($line) !== '') {
+                $line = $i === 0 ? \rtrim($line) : \trim($line);
             }
 
-            if ($i !== (count($lines) - 1)) {
-                $result .= $line . "\n" . str_repeat(self::INDENT, $level);
+            if ($i !== (\count($lines) - 1)) {
+                $result .= $line . "\n" . \str_repeat(self::INDENT, $level);
                 continue;
             }
 
@@ -131,20 +111,16 @@ final class FormatHTML implements VisitorInterface
             }
 
             if ($position === self::BEFORE_CLOSE) {
-                $result .= $line . "\n" . str_repeat(self::INDENT, max($level - 1, 0));
+                $result .= $line . "\n" . \str_repeat(self::INDENT, max($level - 1, 0));
                 break;
             }
 
-            $result .= $line . "\n" . str_repeat(self::INDENT, $level);
+            $result .= $line . "\n" . \str_repeat(self::INDENT, $level);
         }
 
         return $result;
     }
 
-    /**
-     * @param VisitorContext $ctx
-     * @return int|null
-     */
     private function getLevel(VisitorContext $ctx): ?int
     {
         $level = 0;
@@ -169,14 +145,13 @@ final class FormatHTML implements VisitorInterface
      *
      * @param string $string       String to be normalized.
      * @param bool   $joinMultiple Join multiple new lines into one.
-     * @return string
      */
     private function normalizeEndings(string $string, bool $joinMultiple = true): string
     {
         if (!$joinMultiple) {
-            return str_replace("\r\n", "\n", $string);
+            return \str_replace("\r\n", "\n", $string);
         }
 
-        return preg_replace('/[\n\r]+/', "\n", $string);
+        return \preg_replace('/[\n\r]+/', "\n", $string);
     }
 }

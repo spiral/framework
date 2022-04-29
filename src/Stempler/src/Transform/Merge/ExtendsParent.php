@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Merge;
@@ -27,48 +20,31 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class ExtendsParent implements VisitorInterface
 {
-    /** @var string */
-    private $extendsKeyword = 'extends';
+    private string $extendsKeyword = 'extends';
 
-    /** @var Builder */
-    private $builder;
-
-    /** @var Merger */
-    private $merger;
-
-    /**
-     * @param Builder $builder
-     * @param Merger  $merger
-     */
-    public function __construct(Builder $builder, Merger $merger = null)
-    {
-        $this->builder = $builder;
-        $this->merger = $merger ?? new Merger();
+    public function __construct(
+        private readonly Builder $builder,
+        private readonly Merger $merger = new Merger()
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx)
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
-        if ($node instanceof Tag && strpos($node->name, $this->extendsKeyword) === 0) {
+        if ($node instanceof Tag && \str_starts_with($node->name, $this->extendsKeyword)) {
             return self::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
         }
 
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx)
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
-        if ($node instanceof Tag && strpos($node->name, $this->extendsKeyword) === 0) {
+        if ($node instanceof Tag && \str_starts_with($node->name, $this->extendsKeyword)) {
             $parent = $ctx->getParentNode();
             if (!$parent instanceof AttributedInterface) {
-                throw new LogicException(sprintf(
+                throw new LogicException(\sprintf(
                     'Unable to extend non attributable node (%s)',
-                    is_object($node) ? get_class($node) : gettype($node)
+                    \get_debug_type($node)
                 ));
             }
 
@@ -93,7 +69,7 @@ final class ExtendsParent implements VisitorInterface
                 return $this->merger->merge($this->builder->load($path), $extends);
             } catch (\Throwable $e) {
                 throw new ExtendsException(
-                    "Unable to extend parent `{$path}`",
+                    \sprintf('Unable to extend parent `%s`', $path),
                     $extends->getContext(),
                     $e
                 );
@@ -103,21 +79,17 @@ final class ExtendsParent implements VisitorInterface
         return null;
     }
 
-    /**
-     * @param Tag $tag
-     * @return string
-     */
     private function getPath(Tag $tag): string
     {
-        if (strpos($tag->name, $this->extendsKeyword . ':') === 0) {
-            $name = substr($tag->name, strlen($this->extendsKeyword) + 1);
+        if (\str_starts_with($tag->name, $this->extendsKeyword . ':')) {
+            $name = \substr($tag->name, \strlen($this->extendsKeyword) + 1);
 
-            return str_replace(['.'], DIRECTORY_SEPARATOR, $name);
+            return \str_replace(['.'], DIRECTORY_SEPARATOR, $name);
         }
 
         foreach ($tag->attrs as $attr) {
-            if ($attr->name === 'path' && is_string($attr->value)) {
-                return trim($attr->value, '\'"');
+            if ($attr->name === 'path' && \is_string($attr->value)) {
+                return \trim($attr->value, '\'"');
             }
         }
 

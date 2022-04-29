@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors\ClassNode;
@@ -19,29 +12,20 @@ use PhpParser\NodeVisitorAbstract;
  */
 final class LocateStatements extends NodeVisitorAbstract
 {
-    /** @var array */
-    private $imports = [];
+    private array $imports = [];
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode(Node $node)
+    public function enterNode(Node $node): void
     {
         if ($node instanceof Node\Stmt\Use_) {
             foreach ($node->uses as $use) {
                 $this->imports[] = [
-                    'name'  => implode('\\', $use->name->parts),
+                    'name'  => \implode('\\', $use->name->parts),
                     'alias' => $use->alias->name ?? null,
                 ];
             }
         }
-
-        return null;
     }
 
-    /**
-     * @return array
-     */
     public function getImports(): array
     {
         return $this->imports;

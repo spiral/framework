@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Reflection;
@@ -26,35 +19,23 @@ final class ReflectionArgument
     public const EXPRESSION = 'expression'; //PHP code (expression).
     public const STRING     = 'string';     //Simple scalar string, can be fetched using stringValue().
 
-    /** @var string */
-    private $type;
-
-    /** @var string */
-    private $value;
-
     /**
      * New instance of ReflectionArgument.
      *
      * @param string $type  Argument type (see top constants).
      * @param string $value Value in a form of php code.
      */
-    public function __construct($type, string $value)
-    {
-        $this->type = $type;
-        $this->value = $value;
+    public function __construct(
+        private string $type,
+        private readonly string $value
+    ) {
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @return string
-     */
     public function getValue(): string
     {
         return $this->value;
@@ -63,15 +44,13 @@ final class ReflectionArgument
     /**
      * Convert argument value into valid string. Can be applied only for STRING type arguments.
      *
-     * @return string
-     *
      * @throws ReflectionException When value can not be converted into string.
      */
     public function stringValue(): string
     {
-        if ($this->type != self::STRING) {
+        if ($this->type !== self::STRING) {
             throw new ReflectionException(
-                "Unable to represent value as string, value type is '{$this->type}'"
+                \sprintf("Unable to represent value as string, value type is '%s'", $this->type)
             );
         }
 
@@ -82,7 +61,6 @@ final class ReflectionArgument
     /**
      * Create Argument reflections based on provided set of tokens (fetched from invoke).
      *
-     * @param array $tokens
      * @return self[]
      */
     public static function locateArguments(array $tokens): array
@@ -92,7 +70,7 @@ final class ReflectionArgument
 
         $result = [];
         foreach ($tokens as $token) {
-            if ($token[ReflectionFile::TOKEN_TYPE] == T_WHITESPACE) {
+            if ($token[ReflectionFile::TOKEN_TYPE] === T_WHITESPACE) {
                 continue;
             }
 
@@ -100,19 +78,13 @@ final class ReflectionArgument
                 $definition = ['type' => self::EXPRESSION, 'value' => '', 'tokens' => []];
             }
 
-            if (
-                $token[ReflectionFile::TOKEN_TYPE] == '('
-                || $token[ReflectionFile::TOKEN_TYPE] == '['
-            ) {
+            if ($token[ReflectionFile::TOKEN_TYPE] === '(' || $token[ReflectionFile::TOKEN_TYPE] === '[') {
                 ++$level;
                 $definition['value'] .= $token[ReflectionFile::TOKEN_CODE];
                 continue;
             }
 
-            if (
-                $token[ReflectionFile::TOKEN_TYPE] == ')'
-                || $token[ReflectionFile::TOKEN_TYPE] == ']'
-            ) {
+            if ($token[ReflectionFile::TOKEN_TYPE] === ')' || $token[ReflectionFile::TOKEN_TYPE] === ']') {
                 --$level;
                 $definition['value'] .= $token[ReflectionFile::TOKEN_CODE];
                 continue;
@@ -123,7 +95,7 @@ final class ReflectionArgument
                 continue;
             }
 
-            if ($token[ReflectionFile::TOKEN_TYPE] == ',') {
+            if ($token[ReflectionFile::TOKEN_TYPE] === ',') {
                 $result[] = self::createArgument($definition);
                 $definition = null;
                 continue;
@@ -134,7 +106,7 @@ final class ReflectionArgument
         }
 
         //Last argument
-        if (is_array($definition)) {
+        if (\is_array($definition)) {
             $definition = self::createArgument($definition);
             if (!empty($definition->getType())) {
                 $result[] = $definition;
@@ -148,27 +120,18 @@ final class ReflectionArgument
      * Create Argument reflection using token definition. Internal method.
      *
      * @see locateArguments
-     * @param array $definition
-     * @return self
      */
     private static function createArgument(array $definition): ReflectionArgument
     {
         $result = new static(self::EXPRESSION, $definition['value']);
 
-        if (count($definition['tokens']) == 1) {
-            //If argument represent by one token we can try to resolve it's type more precisely
-            switch ($definition['tokens'][0][0]) {
-                case T_VARIABLE:
-                    $result->type = self::VARIABLE;
-                    break;
-                case T_LNUMBER:
-                case T_DNUMBER:
-                    $result->type = self::CONSTANT;
-                    break;
-                case T_CONSTANT_ENCAPSED_STRING:
-                    $result->type = self::STRING;
-                    break;
-            }
+        if (\count($definition['tokens']) == 1) {
+            $result->type = match ($definition['tokens'][0][0]) {
+                T_VARIABLE => self::VARIABLE,
+                T_LNUMBER, T_DNUMBER => self::CONSTANT,
+                T_CONSTANT_ENCAPSED_STRING => self::STRING,
+                default => $result->type
+            };
         }
 
         return $result;

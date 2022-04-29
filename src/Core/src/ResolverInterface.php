@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core;
@@ -24,7 +17,6 @@ interface ResolverInterface
      *
      * @param ContextFunction $reflection Target function or method.
      * @param array           $parameters User specified parameters.
-     * @return array
      *
      * @throws ArgumentException
      */

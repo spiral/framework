@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Node;
@@ -21,22 +14,16 @@ final class Mixin implements NodeInterface
 {
     use ContextTrait;
 
-    /** @var NodeInterface[] */
-    public $nodes = [];
-
     /**
-     * @param array        $nodes
-     * @param Context|null $context
+     * @param NodeInterface[] $nodes
      */
-    public function __construct(array $nodes = [], Context $context = null)
-    {
-        $this->nodes = $nodes;
+    public function __construct(
+        public array $nodes = [],
+        Context $context = null
+    ) {
         $this->context = $context;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getIterator(): \Generator
     {
         yield 'nodes' => $this->nodes;

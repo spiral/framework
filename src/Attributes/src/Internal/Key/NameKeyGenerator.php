@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Key;
@@ -50,9 +43,6 @@ final class NameKeyGenerator implements KeyGeneratorInterface
      */
     private const TPL_PARAMETER = '%s($%s)';
 
-    /**
-     * {@inheritDoc}
-     */
     public function forClass(\ReflectionClass $class): string
     {
         if ($class->isAnonymous()) {
@@ -66,9 +56,6 @@ final class NameKeyGenerator implements KeyGeneratorInterface
         return $class->getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forConstant(\ReflectionClassConstant $const): string
     {
         return \vsprintf(self::TPL_CONSTANT, [
@@ -77,9 +64,6 @@ final class NameKeyGenerator implements KeyGeneratorInterface
         ]);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forProperty(\ReflectionProperty $prop): string
     {
         return \vsprintf(self::TPL_PROPERTY, [
@@ -88,9 +72,6 @@ final class NameKeyGenerator implements KeyGeneratorInterface
         ]);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forParameter(\ReflectionParameter $param): string
     {
         return \vsprintf(self::TPL_PARAMETER, [
@@ -99,9 +80,6 @@ final class NameKeyGenerator implements KeyGeneratorInterface
         ]);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forFunction(\ReflectionFunctionAbstract $fn): string
     {
         if ($fn instanceof \ReflectionMethod) {

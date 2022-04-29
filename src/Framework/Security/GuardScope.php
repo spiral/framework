@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -21,36 +14,16 @@ use Spiral\Security\Exception\GuardException;
  */
 final class GuardScope implements GuardInterface
 {
-    /** @var ActorInterface|null */
-    private $actor = null;
+    private ?ActorInterface $actor = null;
 
-    /** @var ContainerInterface */
-    private $container;
-
-    /** @var PermissionsInterface */
-    private $permissions = null;
-
-    /**@var array */
-    private $roles = [];
-
-    /**
-     * @param PermissionsInterface $permissions
-     * @param ContainerInterface   $actorScope
-     * @param array                $roles Session specific roles.
-     */
     public function __construct(
-        PermissionsInterface $permissions,
-        ContainerInterface $actorScope,
-        array $roles = []
+        private readonly PermissionsInterface $permissions,
+        private readonly ContainerInterface $container,
+        private array $roles = []
     ) {
-        $this->roles = $roles;
-        $this->container = $actorScope;
-        $this->permissions = $permissions;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws ScopeException
      */
     public function allows(string $permission, array $context = []): bool
@@ -73,21 +46,16 @@ final class GuardScope implements GuardInterface
     /**
      * Currently active actor/session roles.
      *
-     * @return array
-     *
      * @throws GuardException
      * @throws ScopeException
      */
     public function getRoles(): array
     {
-        return array_merge($this->roles, $this->getActor()->getRoles());
+        return \array_merge($this->roles, $this->getActor()->getRoles());
     }
 
     /**
      * Create instance of guard with session specific roles (existed roles will be droppped).
-     *
-     * @param array $roles
-     * @return GuardScope
      */
     public function withRoles(array $roles): GuardScope
     {
@@ -98,13 +66,11 @@ final class GuardScope implements GuardInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws ScopeException
      */
     public function getActor(): ActorInterface
     {
-        if (!is_null($this->actor)) {
+        if (!\is_null($this->actor)) {
             return $this->actor;
         }
 
@@ -115,9 +81,6 @@ final class GuardScope implements GuardInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withActor(ActorInterface $actor): GuardInterface
     {
         $guard = clone $this;

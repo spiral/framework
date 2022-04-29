@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -47,34 +40,31 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     public const ROUTE_ATTRIBUTE = 'route';
 
     /** @var string|callable|RequestHandlerInterface|TargetInterface */
-    private $target;
-
-    /** @var RequestHandlerInterface */
-    private $requestHandler;
+    private mixed $target;
+    private ?RequestHandlerInterface $requestHandler = null;
 
     /**
-     * @param string                                                  $pattern  Uri pattern.
-     * @param string|callable|RequestHandlerInterface|TargetInterface $target   Callable route target.
-     * @param array                                                   $defaults Default value set.
+     * @param string $pattern Uri pattern.
+     * @param string|callable|RequestHandlerInterface|TargetInterface $target Callable route target.
+     * @param array $defaults Default value set.
      */
-    public function __construct(string $pattern, $target, array $defaults = [])
-    {
-        if ($target instanceof TargetInterface) {
-            parent::__construct($pattern, array_merge($target->getDefaults(), $defaults));
-        } else {
-            parent::__construct($pattern, $defaults);
-        }
+    public function __construct(
+        string $pattern,
+        string|callable|RequestHandlerInterface|TargetInterface $target,
+        array $defaults = []
+    ) {
+        parent::__construct(
+            $pattern,
+            $target instanceof TargetInterface
+                ? \array_merge($target->getDefaults(), $defaults)
+                : $defaults
+        );
 
         $this->target = $target;
     }
 
-    /**
-     * @param UriHandler $uriHandler
-     * @return RouteInterface
-     */
     public function withUriHandler(UriHandler $uriHandler): RouteInterface
     {
-        /** @var self $route */
         $route = parent::withUriHandler($uriHandler);
         if ($this->target instanceof TargetInterface) {
             $route->uriHandler = $route->uriHandler->withConstrains(
@@ -88,9 +78,6 @@ final class Route extends AbstractRoute implements ContainerizedInterface
 
     /**
      * Associated route with given container.
-     *
-     * @param ContainerInterface $container
-     * @return ContainerizedInterface|$this
      */
     public function withContainer(ContainerInterface $container): ContainerizedInterface
     {
@@ -107,9 +94,6 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     *
      * @throws RouteException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -125,8 +109,6 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     }
 
     /**
-     * @return RequestHandlerInterface
-     *
      * @throws RouteException
      */
     protected function requestHandler(): RequestHandlerInterface
@@ -148,11 +130,9 @@ final class Route extends AbstractRoute implements ContainerizedInterface
         }
 
         try {
-            if (is_object($this->target) || is_array($this->target)) {
-                $target = $this->target;
-            } else {
-                $target = $this->container->get($this->target);
-            }
+            $target = \is_string($this->target)
+                ? $this->container->get($this->target)
+                : $this->target;
 
             if ($target instanceof RequestHandlerInterface) {
                 return $target;

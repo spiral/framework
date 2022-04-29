@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router\Traits;
@@ -16,24 +9,20 @@ use Spiral\Router\RouteInterface;
 
 trait VerbsTrait
 {
-    /** @var array */
-    protected $verbs = RouteInterface::VERBS;
+    protected array $verbs = RouteInterface::VERBS;
 
     /**
      * Attach specific list of HTTP verbs to the route.
      *
-     * @param string ...$verbs
-     *
      * @return RouteInterface|$this
-     *
      * @throws RouteException
      */
     public function withVerbs(string ...$verbs): RouteInterface
     {
         foreach ($verbs as &$verb) {
-            $verb = strtoupper($verb);
-            if (!in_array($verb, RouteInterface::VERBS, true)) {
-                throw new RouteException("Invalid HTTP verb `{$verb}`");
+            $verb = \strtoupper($verb);
+            if (!\in_array($verb, RouteInterface::VERBS, true)) {
+                throw new RouteException(\sprintf('Invalid HTTP verb `%s`', $verb));
             }
 
             unset($verb);
@@ -48,8 +37,6 @@ trait VerbsTrait
 
     /**
      * Return list of HTTP verbs route must handle.
-     *
-     * @return array
      */
     public function getVerbs(): array
     {

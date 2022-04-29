@@ -1,18 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Filters;
 
-use Generator;
-use ReflectionException;
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Filters\Exception\SchemaException;
@@ -38,45 +29,30 @@ final class FilterProvider implements FilterProviderInterface
     public const ITERATE_SOURCE = 'iterate_source';
     public const ITERATE_ORIGIN = 'iterate_origin';
 
-    /** @var array */
-    private $cache;
+    private array $cache = [];
 
     /** @var ErrorMapper[] */
-    private $errorMappers = [];
+    private array $errorMappers = [];
 
     /** @var ValidatorInterface[] */
-    private $validators = [];
+    private array $validators = [];
 
-    /** @var ValidationInterface */
-    private $validation;
-
-    /** @var FactoryInterface */
-    private $factory;
-
-    /**
-     * @param ValidationInterface   $validation
-     * @param FactoryInterface|null $factory
-     */
-    public function __construct(ValidationInterface $validation, FactoryInterface $factory = null)
-    {
-        $this->validation = $validation;
-        $this->factory = $factory ?? new Container();
-        $this->cache = [];
+    public function __construct(
+        private readonly ValidationInterface $validation,
+        private readonly FactoryInterface $factory = new Container()
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function createFilter(string $filter, InputInterface $input): FilterInterface
+    public function createFilter(string $name, InputInterface $input): FilterInterface
     {
-        $schema = $this->getSchema($filter);
+        $schema = $this->getSchema($name);
 
         /** @var Filter $instance */
-        $instance = $this->factory->make($filter, [
+        $instance = $this->factory->make($name, [
             'data'        => [],
             'schema'      => $schema,
-            'validator'   => $this->getValidator($filter),
-            'errorMapper' => $this->getErrorMapper($filter),
+            'validator'   => $this->getValidator($name),
+            'errorMapper' => $this->getErrorMapper($name),
         ]);
 
         $instance->setValue($this->initValues($schema[self::MAPPING], $input));
@@ -84,11 +60,6 @@ final class FilterProvider implements FilterProviderInterface
         return $instance;
     }
 
-    /**
-     * @param array          $mappingSchema
-     * @param InputInterface $input
-     * @return array
-     */
     public function initValues(array $mappingSchema, InputInterface $input): array
     {
         $result = [];
@@ -124,27 +95,19 @@ final class FilterProvider implements FilterProviderInterface
 
     /**
      * Create set of origins and prefixed for a nested array of models.
-     *
-     * @param array          $schema
-     * @param InputInterface $input
-     * @return Generator
      */
-    private function iterate(array $schema, InputInterface $input): Generator
+    private function iterate(array $schema, InputInterface $input): \Generator
     {
         $values = $input->getValue($schema[self::ITERATE_SOURCE], $schema[self::ITERATE_ORIGIN]);
-        if (empty($values) || !is_array($values)) {
+        if (empty($values) || !\is_array($values)) {
             return [];
         }
 
-        foreach (array_keys($values) as $key) {
+        foreach (\array_keys($values) as $key) {
             yield $key => $schema[self::ORIGIN] . '.' . $key;
         }
     }
 
-    /**
-     * @param string $filter
-     * @return ErrorMapper
-     */
     private function getErrorMapper(string $filter): ErrorMapper
     {
         if (isset($this->errorMappers[$filter])) {
@@ -157,10 +120,6 @@ final class FilterProvider implements FilterProviderInterface
         return $errorMapper;
     }
 
-    /**
-     * @param string $filter
-     * @return ValidatorInterface
-     */
     private function getValidator(string $filter): ValidatorInterface
     {
         if (isset($this->validators[$filter])) {
@@ -174,8 +133,6 @@ final class FilterProvider implements FilterProviderInterface
     }
 
     /**
-     * @param string $filter
-     * @return array
      *
      * @throws SchemaException
      */
@@ -192,7 +149,7 @@ final class FilterProvider implements FilterProviderInterface
             }
 
             $builder = new SchemaBuilder(new ReflectionEntity($filter));
-        } catch (ReflectionException $e) {
+        } catch (\ReflectionException $e) {
             throw new SchemaException('Invalid filter schema', $e->getCode(), $e);
         }
 

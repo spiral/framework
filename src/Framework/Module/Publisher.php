@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Module;
@@ -14,27 +7,17 @@ namespace Spiral\Module;
 use Spiral\Files\FilesInterface;
 use Spiral\Module\Exception\PublishException;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Published files and directories.
  */
 final class Publisher implements PublisherInterface
 {
-    /** @var FilesInterface */
-    private $files;
-
-    /**
-     * @param FilesInterface       $files
-     */
-    public function __construct(FilesInterface $files)
-    {
-        $this->files = $files;
+    public function __construct(
+        private readonly FilesInterface $files
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function publish(
         string $filename,
         string $destination,
@@ -42,7 +25,7 @@ final class Publisher implements PublisherInterface
         int $mode = FilesInterface::READONLY
     ): void {
         if (!$this->files->isFile($filename)) {
-            throw new PublishException("Given '{$filename}' is not valid file");
+            throw new PublishException(\sprintf("Given '%s' is not valid file", $filename));
         }
 
         if ($this->files->exists($destination)) {
@@ -56,17 +39,14 @@ final class Publisher implements PublisherInterface
             }
         }
 
-        $this->ensureDirectory(dirname($destination), $mode);
+        $this->ensureDirectory(\dirname($destination), $mode);
 
         $this->files->copy($filename, $destination);
         $this->files->setPermissions($destination, $mode);
 
-        clearstatcache();
+        \clearstatcache();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function publishDirectory(
         string $directory,
         string $destination,
@@ -74,7 +54,7 @@ final class Publisher implements PublisherInterface
         int $mode = FilesInterface::READONLY
     ): void {
         if (!$this->files->isDirectory($directory)) {
-            throw new PublishException("Given '{$directory}' is not valid directory");
+            throw new PublishException(\sprintf("Given '%s' is not valid directory", $directory));
         }
 
         $finder = new Finder();
@@ -90,9 +70,6 @@ final class Publisher implements PublisherInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function ensureDirectory(string $directory, int $mode = FilesInterface::READONLY): void
     {
         $this->files->ensureDirectory($directory, $mode);

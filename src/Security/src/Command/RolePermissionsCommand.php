@@ -22,11 +22,9 @@ class RolePermissionsCommand extends Command
     private const TABLE_HEADERS = ['role', 'permission', 'rule', 'allowed'];
 
     /**
-     * @param PermissionsInterface $rbac
-     *
      * @throws CommandException
      */
-    protected function perform(PermissionsInterface $rbac): void
+    protected function perform(PermissionsInterface $rbac): int
     {
         $role = $this->argument('role');
 
@@ -41,7 +39,7 @@ class RolePermissionsCommand extends Command
 
             foreach ($rbac->getRoles() as $role) {
                 /** @noinspection SlowArrayOperationsInLoopInspection */
-                $rows = array_merge(
+                $rows = \array_merge(
                     $this->getRolePermissions($role, $rbac),
                     $rows
                 );
@@ -49,14 +47,12 @@ class RolePermissionsCommand extends Command
         }
 
         $this->table(self::TABLE_HEADERS, $rows)->render();
+
+        return self::SUCCESS;
     }
 
     /**
      * Can be used in your command to prepare more complex output
-     *
-     * @param string $rule
-     *
-     * @return string|null
      */
     protected function markPermissionAllowed(string $rule): ?string
     {

@@ -19,9 +19,6 @@ use Spiral\Filters\Exception\FilterException;
 interface FilterProviderInterface
 {
     /**
-     * @param string         $name
-     * @param InputInterface $input
-     * @return FilterInterface
      *
      * @throws FilterException
      */

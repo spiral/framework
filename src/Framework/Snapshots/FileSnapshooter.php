@@ -1,18 +1,12 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Snapshots;
 
 use Psr\Log\LoggerInterface;
-use Spiral\Exceptions\HandlerInterface;
+use Spiral\Exceptions\ExceptionRendererInterface;
+use Spiral\Exceptions\Verbosity;
 use Spiral\Files\Exception\FilesException;
 use Spiral\Files\FilesInterface;
 use Symfony\Component\Finder\Finder;
@@ -20,51 +14,16 @@ use Symfony\Component\Finder\SplFileInfo;
 
 final class FileSnapshooter implements SnapshotterInterface
 {
-    /** @var string */
-    private $directory;
-
-    /** @var int */
-    private $maxFiles;
-
-    /** @var int */
-    private $verbosity;
-
-    /** @var HandlerInterface */
-    private $handler;
-
-    /** @var FilesInterface */
-    private $files;
-
-    /** @var LoggerInterface|null */
-    private $logger;
-
-    /**
-     * @param string               $directory
-     * @param int                  $maxFiles
-     * @param int                  $verbosity
-     * @param HandlerInterface     $handler
-     * @param FilesInterface       $files
-     * @param LoggerInterface|null $logger
-     */
     public function __construct(
-        string $directory,
-        int $maxFiles,
-        int $verbosity,
-        HandlerInterface $handler,
-        FilesInterface $files,
-        LoggerInterface $logger = null
+        private readonly string $directory,
+        private readonly int $maxFiles,
+        private readonly Verbosity $verbosity,
+        private readonly ExceptionRendererInterface $renderer,
+        private readonly FilesInterface $files,
+        private readonly ?LoggerInterface $logger = null
     ) {
-        $this->directory = $directory;
-        $this->maxFiles = $maxFiles;
-        $this->verbosity = $verbosity;
-        $this->handler = $handler;
-        $this->files = $files;
-        $this->logger = $logger;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function register(\Throwable $e): SnapshotInterface
     {
         $snapshot = new Snapshot($this->getID($e), $e);
@@ -79,17 +38,13 @@ final class FileSnapshooter implements SnapshotterInterface
         return $snapshot;
     }
 
-    /**
-     * @param SnapshotInterface $snapshot
-     * @throws \Exception
-     */
     protected function saveSnapshot(SnapshotInterface $snapshot): void
     {
         $filename = $this->getFilename($snapshot, new \DateTime());
 
         $this->files->write(
             $filename,
-            $this->handler->renderException($snapshot->getException(), $this->verbosity),
+            $this->renderer->render($snapshot->getException(), $this->verbosity),
             FilesInterface::RUNTIME,
             true
         );
@@ -102,9 +57,7 @@ final class FileSnapshooter implements SnapshotterInterface
     {
         $finder = new Finder();
         $finder->in($this->directory)->sort(
-            static function (SplFileInfo $a, SplFileInfo $b) {
-                return $b->getMTime() - $a->getMTime();
-            }
+            static fn (SplFileInfo $a, SplFileInfo $b) => $b->getMTime() - $a->getMTime()
         );
 
         $count = 0;
@@ -113,7 +66,7 @@ final class FileSnapshooter implements SnapshotterInterface
             if ($count > $this->maxFiles) {
                 try {
                     $this->files->delete($file->getRealPath());
-                } catch (FilesException $e) {
+                } catch (FilesException) {
                     // ignore
                 }
             }
@@ -121,15 +74,11 @@ final class FileSnapshooter implements SnapshotterInterface
     }
 
     /**
-     * @param SnapshotInterface  $snapshot
-     * @param \DateTimeInterface $time
-     * @return string
-     *
      * @throws \Exception
      */
     protected function getFilename(SnapshotInterface $snapshot, \DateTimeInterface $time): string
     {
-        return sprintf(
+        return \sprintf(
             '%s/%s-%s.txt',
             $this->directory,
             $time->format('d.m.Y-Hi.s'),
@@ -137,12 +86,8 @@ final class FileSnapshooter implements SnapshotterInterface
         );
     }
 
-    /**
-     * @param \Throwable $e
-     * @return string
-     */
     protected function getID(\Throwable $e): string
     {
-        return md5(implode('|', [$e->getMessage(), $e->getFile(), $e->getLine()]));
+        return \md5(\implode('|', [$e->getMessage(), $e->getFile(), $e->getLine()]));
     }
 }

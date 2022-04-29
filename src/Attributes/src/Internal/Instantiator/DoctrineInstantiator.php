@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Instantiator;
@@ -50,15 +43,12 @@ final class DoctrineInstantiator extends Instantiator
      */
     private const DEFAULT_PROPERTY_NAME = 'value';
 
-    /**
-     * {@inheritDoc}
-     */
     public function instantiate(\ReflectionClass $attr, array $arguments, \Reflector $context = null): object
     {
         $arguments = $this->formatArguments($arguments);
 
         // Using constructor
-        if ($this->getConstructor($attr)) {
+        if ($this->getConstructor($attr) !== null) {
             return $attr->newInstance($arguments);
         }
 
@@ -74,7 +64,7 @@ final class DoctrineInstantiator extends Instantiator
                 }
 
                 $instance->$name = $value;
-            } catch (\Throwable $e) {
+            } catch (\Throwable) {
                 throw $this->propertyNotFound($attr, $name, $context);
             }
         }
@@ -82,10 +72,6 @@ final class DoctrineInstantiator extends Instantiator
         return $instance;
     }
 
-    /**
-     * @param iterable $arguments
-     * @return array
-     */
     private function formatArguments(iterable $arguments): array
     {
         $result = [];
@@ -103,11 +89,7 @@ final class DoctrineInstantiator extends Instantiator
         return $result;
     }
 
-    /**
-     * @param int $index
-     * @param mixed $value
-     */
-    private function validateArgumentPosition(int $index, $value): void
+    private function validateArgumentPosition(int $index, mixed $value): void
     {
         if ($index === 0) {
             return;
@@ -119,12 +101,6 @@ final class DoctrineInstantiator extends Instantiator
         throw new SyntaxAttributeException($message);
     }
 
-    /**
-     * @param \ReflectionClass $attr
-     * @param string $name
-     * @param \Reflector|null $context
-     * @return AttributeException
-     */
     private function propertyNotFound(\ReflectionClass $attr, string $name, ?\Reflector $context): AttributeException
     {
         $available = $this->getAvailablePropertiesString($attr);
@@ -135,10 +111,6 @@ final class DoctrineInstantiator extends Instantiator
         return new SemanticAttributeException($message);
     }
 
-    /**
-     * @param \ReflectionClass $class
-     * @return string
-     */
     private function getAvailablePropertiesString(\ReflectionClass $class): string
     {
         return \implode(', ', \get_class_vars($class->getName()));

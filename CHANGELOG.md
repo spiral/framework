@@ -1,11 +1,252 @@
 # CHANGELOG
 
-## v2.9.0 - Unreleased
+## v3.0.0 - Unreleased
+- **High Impact Changes**
+  - Component `spiral/data-grid-bridge` is removed from `spiral/framework` repository.
+    Please, use standalone package `spiral/data-grid-bridge` instead.
+  - Component `spiral/data-grid` is removed from `spiral/framework` repository.
+    Please, use standalone package `spiral/data-grid` instead.
+  - `Spiral\Boot\ExceptionHandler` has been eliminated. New `Spiral\Exceptions\ExceptionHandler` with interfaces 
+    `Spiral\Exceptions\ExceptionHandlerInterface`, `Spiral\Exceptions\ExceptionRendererInterface` and
+    `Spiral\Exceptions\ExceptionReporterInterface` have been added.
+  - Added `ExceptionHandlerBootloader` that adds renderers and reporters in the `ExceptionHandler`.
+  - Console commands `Spiral\Command\Cycle\MigrateCommand`, `Spiral\Command\Cycle\SyncCommand`,
+    `Spiral\Command\Cycle\UpdateCommand`, `Spiral\Scaffolder\Command\MigrationCommand`,
+    `Spiral\Scaffolder\Command\Database\EntityCommand`, `Spiral\Scaffolder\Command\Database\RepositoryCommand`,
+    `Spiral\Command\Database\ListCommand`, `Spiral\Command\Database\TableCommand`,
+    `Spiral\Command\Migrate\InitCommand`, `Spiral\Command\Migrate\MigrateCommand`,
+    `Spiral\Command\Migrate\ReplayCommand`, `Spiral\Command\Migrate\RollbackCommand`,
+    `Spiral\Command\Migrate\StatusCommand` is removed.
+    Use same console commands from `spiral/cycle-bridge` package.
+  - Console commands `Spiral\Command\GRPC\ListCommand`, `Spiral\Command\GRPC\GenerateCommand` is removed.
+    Use same console commands from `spiral/roadrunner-bridge` package.
+  - Classes `Spiral\Auth\Cycle\Token`, `Spiral\Auth\Cycle\TokenStorage`, `Spiral\Cycle\RepositoryInjector`,
+    `Spiral\Cycle\SchemaCompiler`, `Spiral\Domain\CycleInterceptor` is removed.
+    Use same classes from `spiral/cycle-bridge` instead.
+  - Bootloaders `Spiral\Bootloader\Jobs\JobsBootloader`, `Spiral\Bootloader\Server\LegacyRoadRunnerBootloader`,
+    `Spiral\Bootloader\Server\RoadRunnerBootloader`, `Spiral\Bootloader\ServerBootloader`,
+    `Spiral\Bootloader\GRPC\GRPCBootloader` is removed.
+    Use `spiral/roadrunner-bridge` package.
+  - Bootloaders `Spiral\Bootloader\Cycle\AnnotatedBootloader`, `Spiral\Bootloader\Cycle\CycleBootloader`,
+    `Spiral\Bootloader\Cycle\ProxiesBootloader`, `Spiral\Bootloader\Cycle\SchemaBootloader`,
+    `Spiral\Bootloader\Database\DatabaseBootloader`, `Spiral\Bootloader\Database\DisconnectsBootloader`,
+    `Spiral\Bootloader\Database\MigrationsBootloader` is removed.
+    Use `spiral/cycle-bridge` package.
+  - Bootloader `Spiral\Bootloader\Broadcast\BroadcastBootloader` is removed. Use `spiral/roadrunner-broadcast` package instead.
+  - Bootloader `Spiral\Bootloader\Http\WebsocketsBootloader` is removed.
+  - Component `spiral/annotations` is removed. Use `spiral/attributes` instead.
+  - Added return type `void` to a methods `publish`, `publishDirectory`, `ensureDirectory` in `Spiral\Module\PublisherInterface` interface.
+  - Removed `Spiral\Http\SapiDispatcher` and `Spiral\Http\Emitter\SapiEmitter`. Please, use package `spiral/sapi-bridge` instead.
+  - Bootloader `Spiral\Bootloader\Http\DiactorosBootloader` moved to the `Spiral\Http\Bootloader\DiactorosBootloader`.
+  - Classes `Spiral\Http\Diactoros\ResponseFactory`, `Spiral\Http\Diactoros\ServerRequestFactory`, `Spiral\Http\Diactoros\StreamFactory`,
+    `Spiral\Http\Diactoros\UploadedFileFactory`, `Spiral\Http\Diactoros\UriFactory` 
+    is removed and replaced to a `Nyholm\Psr7\Factory\Psr17Factory` class from `nyholm/psr7` package in `DiactorosBootloader`.
+  - [spiral/exceptions] All handlers have been renamed into renderers. `HandlerInterface` has been deleted.
+  - [spiral/exceptions] Added `Spiral\Exceptions\Verbosity` enum.
+  - [spiral/router] Removed deprecated method `addRoute` in the `Spiral\Router\RouterInterface` and `Spiral\Router\Router`.
+    Use method `setRoute` instead.
+  - [spiral/validation] `Spiral\Validation\Checker\EntityChecker` is removed.
+    Use `Spiral\Cycle\Bootloader\ValidationBootloader` with `Spiral\Cycle\Validation\EntityChecker` from package `spiral/cycle-bridge`
+  - [spiral/validation] Removed deprecated methods `datetime` and `timezone` in the
+    `Spiral\Validation\Checker\TypeChecker` class. Use `Spiral\Validation\Checker\DatetimeChecker::valid()` and
+    `Spiral\Validation\Checker\DatetimeChecker::timezone()` instead.
+  - [spiral/validation] Added return type `array|callable|string` to the method `parseCheck`
+    in `Spiral\Validation\ParserInterface` interface.
+  - [spiral/validation] Added `array|string|\Closure` parameter type of `$rules` to the method `getRules`
+    in `Spiral\Validation\RulesInterface` interface.
+  - [spiral/validation] Added `array|\ArrayAccess` parameter type of `$data` to the method `validate`
+    in `Spiral\Validation\ValidationInterface` interface.
+  - [spiral/validation] Added return type `mixed` to the method `getValue`,
+    added `mixed` parameter type of `$default` to the method `getValue`,
+    added `mixed` parameter type of `$context` to the method `withContext`,
+    added return type `mixed` to the method `getContext` in `Spiral\Validation\ValidatorInterface` interface.
+  - [spiral/filters] Added return type `void` and `mixed` parameter type of `$context` to the method `setContext`,
+    added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface.
+    Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
+  - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
+  - [spiral/reactor] Added return type `mixed` and `array|string` parameter type of `$search`,
+    `array|string` parameter type of `$replace` to the method `replace` in `Spiral\Reactor\ReplaceableInterface`.
+  - [spiral/session] Added return type `void` to the method `resume` in `Spiral\Session\SessionInterface`.
+  - [spiral/session] Added return type `self` and `mixed` parameter type of `$value` to the method `set`
+    in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `bool` to the method `has` in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`
+    in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `mixed` and `mixed` parameter type of `$default` to the method `pull`
+    in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `void` to the method `delete` in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/session] Added return type `void` to the method `clear` in `Spiral\Session\SessionSectionInterface`.
+  - [spiral/pagination] Added return type `self` to the method `limit`, added return type `self` to the method `offset`
+    in `Spiral\Pagination\PaginableInterface`
+  - [spiral/prototype] Parameter `$printer` now is not nullable in `Spiral\Prototype\Injector` constructor.
+  - [spiral/models] Added return type `self`, added `mixed` parameter type of `$value` to the method `setField`,
+    added return type `mixed`, added `mixed` parameter type of `$default` to the method `getField`,
+    added return type `self` to the method `setFields` in `Spiral\Models\EntityInterface`.
+  - [spiral/models] Added return type `mixed` to the method `getValue` in `Spiral\Models\ValueInterface`.
+  - [spiral/logger] Added return type `self` to the method `addListener`, added return type `void` to the method `removeListener`
+    in `Spiral\Logger\ListenerRegistryInterface` interface.
+  - [spiral/hmvc] Added return type `mixed` to the method `process` in `Spiral\Core\CoreInterceptorInterface` interface.
+  - [spiral/hmvc] Added return type `mixed` to the method `callAction` in `Spiral\Core\CoreInterface` interface.
+  - [spiral/encrypter] Added return type `mixed` to the method `decrypt` in `Spiral\Encrypter\EncrypterInterface` interface.
+    in `Spiral\DataGrid\InputInterface` interface.
+  - [spiral/http] Added return type `array` and `mixed` parameter type of `$filler` to the method `fetch`,
+    added return type `mixed` to the method `offsetGet`, added return type `mixed` and `mixed` parameter type
+    of `$default` to the method `get`  in `Spiral\Http\Request\InputBag` class.
+  - [spiral/config] Added return type `void` to the method `setDefaults` in `Spiral\Config\ConfiguratorInterface` interface.
+  - [spiral/core] Added return type `mixed` to the method `runScope` in `Spiral\Core\ScopeInterface` interface.
+  - [spiral/core] Added return type `mixed` and `array|callable|string` parameter type of `$target`
+    to the method `invoke` in `Spiral\Core\InvokerInterface` interface.
+  - [spiral/core] Added return type `mixed` to the method `make` in `Spiral\Core\FactoryInterface` interface.
+  - [spiral/core] Added `string|array|callable|object` parameter type of `$resolver` in the method `bind`,
+    added `string|array|callable|object` parameter type of `$resolver` in the method `bindSingleton` in `Spiral\Core\BinderInterface` interface.
+  - [spiral/core] Added return type `object` to the method `createInjection` in `Spiral\Core\Container\InjectorInterface` interface.
+  - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
+  - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
+    added in `Spiral\Boot\EnvironmentInterface` interface.
+  - [spiral/boot] Added return type `static` to the method `addFinalizer`,
+    added return type `void` to the method `finalize` in `Spiral\Boot\FinalizerInterface` interface.
+  - [spiral/boot] Added return type `self` to the method `addDispatcher`,
+    added return type `mixed` to the method `serve` in `Spiral\Boot\KernelInterface` interface.
+  - [spiral/boot] Added `exceptionHandler` parameter in the `Spiral\Boot\AbstractKernel::create` method.
+  - [spiral/boot] `Spiral\Boot\AbstractKernel` constructor is protected now.
+  - [spiral/boot] Added return type `mixed` to the method `loadData`,
+    added return type `void` and `mixed` parameter type of `$data` to the method `saveData` in `Spiral\Boot\MemoryInterface` interface.
+  - [spiral/boot] In `Bootloaders`, the name of the method has been changed from `boot` to `init`. 
+    In the code of custom Bootloaders, need to change the name of the method.
+  - [spiral/console] Added return type `void` to the method `writeHeader`, added return type `void` to the method `execute`,
+    method `whiteFooter` renamed to `writeFooter`, added return type `void` to the method `writeFooter`
+    in `Spiral\Console\SequenceInterface` interface.
+  - [spiral/files] Added return type `bool` to the method `delete`, added return type `bool` to the method `deleteDirectory`,
+    added return type `bool` to the method `touch`, added return type `bool` to the method `setPermissions` in `Spiral\Files\FilesInterface`.
+  - [spiral/views] Added return type `mixed` to the method `resolveValue` in `Spiral\Views\ContextInterface`.
+  - [spiral/views] Added return type `mixed` to the method `getValue` in `Spiral\Views\DependencyInterface`.
+  - [spiral/translator] Added return type `void` to a methods `setLocales`, `saveLocale` in `Spiral\Translator\Catalogue\CacheInterface`.
+  - [spiral/translator] Added return type `void` to the method `save` in `Spiral\Translator\CatalogueManagerInterface`.
+  - [spiral/storage] Added `string|\Stringable` parameter type of `$id` to a methods `getContents`, `getStream`,
+    `exists`, `getLastModified`, `getSize`, `getMimeType`, `getVisibility` in `Spiral\Storage\Storage\ReadableInterface`.
+  - [spiral/storage] Added `string|\Stringable` parameter type of `$id` to a methods `create`, `setVisibility`,
+    `delete`. Added `string|\Stringable` parameter type of `$id` and `mixed` parameter type of `$content`
+    to the method `write`, added `string|\Stringable` parameter type of `$source` and `$destination` to a methods
+    `copy`, `move` in `Spiral\Storage\Storage\WritableInterface`.
+  - [spiral/stempler] Added return type `mixed` and `mixed` parameter type of `$default` to the method `getAttribute` in
+    `Spiral\Stempler\Node\AttributedInterface`.
+  - [spiral/stempler] Added return type `mixed` and `mixed` parameter type of `$node` to the method `enterNode`,
+    added return type `mixed` and `mixed` parameter type of `$node` to the method `leaveNode` in `Spiral\Stempler\VisitorInterface`.
+  - [spiral/sendit] Dropped support `pipeline` parameter in `mailer` config. Please, use the parameter `queue` instead.
+  - [spiral/security] Added return type `self` to a methods `addRole`, `removeRole` in `Spiral\Security\PermissionsInterface`
+  - [spiral/security] Added return type `self` to a methods `set`, `remove` in `Spiral\Security\RulesInterface`
+  - [spiral/attributes] Bootloader `Spiral\Bootloader\AttributesBootloader` moved to the `Spiral\Attributes\Bootloader\AttributesBootloader`.
+  - [spiral/distribution] Bootloader `Spiral\Bootloader\Distribution\DistributionBootloader` moved to the `Spiral\Distribution\Bootloader\DistributionBootloader`,
+    config `Spiral\Bootloader\Distribution\DistributionConfig` moved to the `Spiral\Distribution\Config\DistributionConfig`.
+  - [spiral/storage] Bootloader `Spiral\Bootloader\Storage\StorageBootloader` moved to the `Spiral\Storage\Bootloader\StorageBootloader`,
+    config `Spiral\Bootloader\Storage\StorageConfig` moved to the `Spiral\Storage\Config\StorageConfig`.
+  - [spiral/validation] Bootloader `Spiral\Bootloader\Security\ValidationBootloader` moved to the `Spiral\Validation\Bootloader\ValidationBootloader`.
+  - [spiral/views] Bootloader `Spiral\Bootloader\Views\ViewsBootloader` moved to the `Spiral\Views\Bootloader\ViewsBootloader`.
+  - [spiral/boot] By default, overwriting of environment variable values is disabled, the default value for `$overwrite` 
+    changed from `true` to `false` in the `Spiral\Boot\Environment`.
+- **Medium Impact Changes**
+  - A minimal version of `PHP` increased to `^8.1`
+  - A minimal version of `symfony/finder` increased to `^5.3`
+  - A minimal version of `league/flysystem` increased to `^2.3`
+  - A minimal version of `symfony/console` increased to `^6.0`
+  - `Spiral\Snapshots\FileSnapshooter` uses `Verbosity` enum instead of int flag.
+  - `Spiral\Snapshots\FileSnapshooter` uses `ExceptionRendererInterface $renderer` instead of `HandlerInterface $handler`.
+  - `Spiral\Snapshots\SnapshotterInterface` usage replaced with `Spiral\Exceptions\ExceptionReporterInterface` in all classes.
+- **Other Features**
+  - [spiral/debug] Added `Spiral\Debug\StateConsumerInterface`.
+  - [spiral/boot] Added new `boot` method in `Bootloaders`. It will be executed after the `init` method is executed in all `Bootloaders`.
+    The old `boot` method has been renamed to `init`. See **High Impact Changes** section.
+  - [spiral/boot] Added automatic booting of `Bootloaders` requested in the `init` and `boot` methods. 
+    They no longer need to be specified explicitly in `DEPENDENCIES` property or in `defineDependencies` method.
+  - [spiral/monolog-bridge] Added the ability to configure the default channel using the configuration file or 
+    environment variable `MONOLOG_DEFAULT_CHANNEL`.
+  
+## v2.12.0 - 2022-04-07
+- **Medium Impact Changes**
+  - Bootloaders `Spiral\Bootloader\Broadcast\BroadcastBootloader`, `Spiral\Bootloader\Http\WebsocketsBootloader`
+    are deprecated. Will be removed in v3.0.
+  - Console commands `Spiral\Command\Database\ListCommand`, `Spiral\Command\Database\TableCommand`,
+    `Spiral\Command\GRPC\GenerateCommand`, `Spiral\Command\GRPC\ListCommand`, `Spiral\Command\Migrate\AbstractCommand`,
+    `Spiral\Command\Migrate\InitCommand`, `Spiral\Command\Migrate\MigrateCommand`, `Spiral\Command\Migrate\ReplayCommand`,
+    `Spiral\Command\Migrate\RollbackCommand`, `Spiral\Command\Migrate\StatusCommand` are deprecated. Will be removed in v3.0.
+  - Classes `Spiral\Broadcast\Config\WebsocketsConfig`, `Spiral\Broadcast\Middleware\WebsocketsMiddleware`, 
+    `Spiral\GRPC\Exception\CompileException`, `Spiral\GRPC\GRPCDispatcher`, `Spiral\GRPC\LocatorInterface`, 
+    `Spiral\GRPC\ProtoCompiler`, `Spiral\GRPC\ServiceLocator`, `Spiral\Http\LegacyRrDispatcher`, `Spiral\Http\RrDispatcher`
+    are deprecated. Will be removed in v3.0.
+  - Changed package replacement strategy. "*" is replaced by "self.version".
+  - Sapi emitter now supports streaming emitting.
+  - [spiral/data-grid-bridge] Removed deprecation in classes `Spiral\DataGrid\Annotation\DataGrid`, `Spiral\DataGrid\Bootloader\GridBootloader`,
+    `Spiral\DataGrid\Config\GridConfig`, `Spiral\DataGrid\Interceptor\GridInterceptor`, `Spiral\DataGrid\Response\GridResponse`,
+    `Spiral\DataGrid\Response\GridResponseInterface`, `Spiral\DataGrid\GridInput`.
+- **Other Features**
+  - [spiral/data-grid-bridge] Added method `addWriter` in `Spiral\DataGrid\Bootloader\GridBootloader`.
+  - Extended version of `psr/log` dependency from `^1.0` to `1 - 3`
 
+## v2.11.0 - 2022-03-18
+- **High Impact Changes**
+  - [spiral/queue] Added queue injector #592
+  - [spiral/cache] Added cache injector #600
+- **Medium Impact Changes**
+  - [spiral/tokenizer] Added ability to use scopes for indexing files with specific scopes #593
+- **Other Features**
+  - [spiral/boot] Added ability to disable overwriting env variables for `Spiral\Boot\Environment` #599
+  - [spiral/storage] Added storage bucket factory #601
+  - [spiral/console] Added return types for interface compatibility #591
+
+## v2.10.0 - 2022-03-04
 - **High Impact Changes**
 - **Medium Impact Changes**
+  - [spiral/session] Added `Spiral\Session\SessionFactoryInterface`. Now you can use custom implementation of sessions.
+  - [spiral/scaffolder] Console commands `Spiral\Scaffolder\Command\MigrationCommand`, `Spiral\Scaffolder\Command\Database\RepositoryCommand`, 
+    `Spiral\Scaffolder\Command\Database\EntityCommand` is deprecated. Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - [spiral/scaffolder] Scaffolder `Spiral\Scaffolder\Declaration\MigrationDeclaration` is deprecated. Will be moved to `spiral/cycle-bridge`
+    and removed in v3.0
+  - [spiral/attributes] Class annotations will be discovered from class traits.
+  - A minimal version of `PHP` increased to `^7.4`
 - **Other Features**
-- **Bug Fixes**
+  - [spiral/prototype] Added `queue` and `cache` properties
+  - [spiral/mailer] Added ability to set delay for messages
+  - [spiral/queue] Added NullDriver
+  - [spiral/mailer] Class `Spiral\Mailer\Message` is no longer final and is available for extension
+
+## v2.9.1 - 2022-02-11
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - [spiral/sendit] Method `getQueuePipeline` of `Spiral\SendIt\Config\MailerConfig` class is deprecated.
+    Use method `getQueue` instead. Added environment variables `MAILER_QUEUE` and `MAILER_QUEUE_CONNECTION`
+- **Other Features**
+  - Added Symfony 6 support
+
+## v2.9.0 - 2022-02-03
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - Classes `Spiral\Validation\Checker\EntityChecker`, `Spiral\Auth\Cycle\Token`, `Spiral\Auth\Cycle\TokenStorage`, 
+    `Spiral\Cycle\RepositoryInjector`, `Spiral\Cycle\SchemaCompiler`, is deprecated. 
+    Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - Console commands `Spiral\Command\Cycle\MigrateCommand`, `Spiral\Command\Cycle\SyncCommand`, 
+    `Spiral\Command\Cycle\UpdateCommand` is deprecated. Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - Bootloaders `Spiral\Bootloader\Cycle\AnnotatedBootloader`, `Spiral\Bootloader\Cycle\CycleBootloader`,
+    `Spiral\Bootloader\Cycle\ProxiesBootloader`, `Spiral\Bootloader\Cycle\SchemaBootloader` is deprecated.
+    Use `spiral/cycle-bridge` instead
+  - Interceptor `Spiral\Domain\CycleInterceptor` is deprecated. 
+    Will be moved to `spiral/cycle-bridge` and removed in v3.0 
+  - Scaffolders `Spiral\Scaffolder\Declaration\Database\Entity\AnnotatedDeclaration`, 
+    `Spiral\Scaffolder\Declaration\Database\RepositoryDeclaration` is deprecated. Will be moved to `spiral/cycle-bridge` 
+    and removed in v3.0 
+  - Component `spiral/data-grid-bridge` is deprecated. Will be moved to spiral/cycle-bridge and removed in v3.0
+  - Component `spiral/annotations` is deprecated. Use `spiral/attributes` instead
+  - A minimal version of `doctrine/annotations` increased to `^1.12`
+  - [spiral/validation] Error messages for 'number::lower' and
+    'number::higher' rules were changed to reflect that these checks are in
+    fact 'lower or equal' and 'higher or equal'. You may need to adjust
+    translations file accordingly.
+  - [spiral/sendit] Added ability to use `sync` driver for mail queue (#398)
+- **Other Features**
+  - [spiral/validation] Add array::count, array::range, array::shorter and array::longer
+  - [spiral/queue] New component with common interfaces (RR2.0 support) rules (#435)
+  - [spiral/cache] New component with common interfaces (RR2.0 support)
+  - [spiral/views] [Allow custom loader in ViewManager](https://github.com/spiral/framework/issues/488)
+  - [spiral/monolog-bridge] [Added ability to configure Monolog processors](https://github.com/spiral/framework/issues/474)
 
 ## v2.8.0 - 2021-06-03
 

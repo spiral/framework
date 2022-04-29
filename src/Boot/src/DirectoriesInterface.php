@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -18,10 +11,6 @@ use Spiral\Boot\Exception\DirectoryException;
  */
 interface DirectoriesInterface
 {
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function has(string $name): bool;
 
     /**
@@ -30,13 +19,11 @@ interface DirectoriesInterface
      *
      * @throws DirectoryException
      */
-    public function set(string $name, string $path);
+    public function set(string $name, string $path): self;
 
     /**
      * Get directory value.
      *
-     * @param string $name
-     * @return string
      *
      * @throws DirectoryException When no directory found.
      */
@@ -44,8 +31,6 @@ interface DirectoriesInterface
 
     /**
      * List all registered directories.
-     *
-     * @return array
      */
     public function getAll(): array;
 }

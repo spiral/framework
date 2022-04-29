@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console\Traits;
@@ -23,23 +16,17 @@ trait HelpersTrait
     /**
      * OutputInterface is the interface implemented by all Output classes. Only exists when command
      * are being executed.
-     *
-     * @var OutputInterface
      */
-    protected $output;
+    protected ?OutputInterface $output = null;
 
     /**
      * InputInterface is the interface implemented by all input classes. Only exists when command
      * are being executed.
-     *
-     * @var InputInterface
      */
-    protected $input;
+    protected ?InputInterface $input = null;
 
     /**
      * Check if verbosity level of output is higher or equal to VERBOSITY_VERBOSE.
-     *
-     * @return bool
      */
     protected function isVerbose(): bool
     {
@@ -48,34 +35,24 @@ trait HelpersTrait
 
     /**
      * Input option.
-     *
-     * @param string $name
-     * @return mixed
      */
-    protected function option(string $name)
+    protected function option(string $name): mixed
     {
         return $this->input->getOption($name);
     }
 
     /**
      * Input argument.
-     *
-     * @param string $name
-     * @return mixed
      */
-    protected function argument(string $name)
+    protected function argument(string $name): mixed
     {
         return $this->input->getArgument($name);
     }
 
     /**
      * Identical to write function but provides ability to format message. Does not add new line.
-     *
-     * @param string|int|float $format
-     * @param mixed ...$args
-     * @return void
      */
-    protected function sprintf(string $format, ...$args): void
+    protected function sprintf(string $format, mixed ...$args): void
     {
         $this->output->write(\sprintf($format, ...$args), false);
     }
@@ -85,11 +62,10 @@ trait HelpersTrait
      *
      * @param string|array $messages The message as an array of lines or a single string
      * @param bool         $newline  Whether to add a newline
-     * @return void
      *
      * @throws \InvalidArgumentException When unknown output type is given
      */
-    protected function write($messages, bool $newline = false): void
+    protected function write(string|iterable $messages, bool $newline = false): void
     {
         $this->output->write($messages, $newline);
     }
@@ -97,23 +73,17 @@ trait HelpersTrait
     /**
      * Writes a message to the output and adds a newline at the end.
      *
-     * @param string|array $messages The message as an array of lines of a single string
-     * @return void
+     * @param string|iterable<mixed, string> $messages The message as an array of lines of a single string
      *
      * @throws \InvalidArgumentException When unknown output type is given
      */
-    protected function writeln($messages): void
+    protected function writeln(string|iterable $messages): void
     {
         $this->output->writeln($messages);
     }
 
     /**
      * Table helper instance with configured header and pre-defined set of rows.
-     *
-     * @param array  $headers
-     * @param array  $rows
-     * @param string $style
-     * @return Table
      */
     protected function table(array $headers, array $rows = [], string $style = 'default'): Table
     {

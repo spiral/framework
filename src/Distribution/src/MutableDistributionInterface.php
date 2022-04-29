@@ -13,9 +13,5 @@ namespace Spiral\Distribution;
 
 interface MutableDistributionInterface extends DistributionInterface
 {
-    /**
-     * @param string $name
-     * @param UriResolverInterface $resolver
-     */
     public function add(string $name, UriResolverInterface $resolver): void;
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Csrf\Middleware;
@@ -22,22 +15,13 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class StrictCsrfFirewall implements MiddlewareInterface
 {
-    /** @var CsrfFirewall */
-    private $csrfFirewall;
+    private readonly CsrfFirewall $csrfFirewall;
 
-    /**
-     * @param ResponseFactoryInterface $responseFactory
-     */
     public function __construct(ResponseFactoryInterface $responseFactory)
     {
         $this->csrfFirewall = new CsrfFirewall($responseFactory, []);
     }
 
-    /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return $this->csrfFirewall->process($request, $handler);

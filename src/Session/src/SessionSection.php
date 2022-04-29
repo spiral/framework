@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Session;
@@ -18,83 +11,45 @@ use Spiral\Core\Container\InjectableInterface;
  */
 final class SessionSection implements SessionSectionInterface, InjectableInterface
 {
-    /** @var SessionInterface */
-    private $session;
-
-    /**
-     * Reference to _SESSION segment.
-     *
-     * @var array
-     */
-    private $name;
-
-    /**
-     * @param SessionInterface $session
-     * @param string|null      $name
-     */
-    public function __construct(SessionInterface $session, string $name = null)
-    {
-        $this->session = $session;
-        $this->name = $name;
+    public function __construct(
+        private readonly SessionInterface $session,
+        private ?string $name = null
+    ) {
     }
 
     /**
      * Shortcut for get.
-     *
-     * @param string $name
-     * @return mixed|null
      */
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         return $this->get($name);
     }
 
-    /**
-     * @param string $name
-     * @param mixed  $value
-     */
-    public function __set(string $name, $value): void
+    public function __set(string $name, mixed $value): void
     {
         $this->set($name, $value);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function __isset(string $name)
+    public function __isset(string $name): bool
     {
         return $this->has($name);
     }
 
-    /**
-     * @param string $name
-     */
     public function __unset(string $name): void
     {
         $this->delete($name);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->getAll());
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getAll(): array
     {
         $this->resumeSection();
@@ -102,30 +57,23 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
         return $_SESSION[$this->name];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function set(string $name, $value): void
+    public function set(string $name, mixed $value): self
     {
         $this->resumeSection();
 
         $_SESSION[$this->name][$name] = $value;
+
+        return $this;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function has(string $name): bool
     {
         $this->resumeSection();
 
-        return array_key_exists($name, $_SESSION[$this->name]);
+        return \array_key_exists($name, $_SESSION[$this->name]);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function get(string $name, $default = null)
+    public function get(string $name, mixed $default = null): mixed
     {
         if (!$this->has($name)) {
             return $default;
@@ -134,10 +82,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
         return $_SESSION[$this->name][$name];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function pull(string $name, $default = null)
+    public function pull(string $name, mixed $default = null): mixed
     {
         $value = $this->get($name, $default);
         $this->delete($name);
@@ -145,52 +90,34 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
         return $value;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function delete(string $name): void
     {
         $this->resumeSection();
         unset($_SESSION[$this->name][$name]);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function clear(): void
     {
         $this->resumeSection();
         $_SESSION[$this->name] = [];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return $this->has($offset);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->get($offset);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->set($offset, $value);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         $this->delete($offset);
     }

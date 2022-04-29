@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -22,9 +15,7 @@ interface GuardInterface
      * Check if given operation are allowed. Has to check associations between operation and
      * actor/session roles based on given rules (binary vs context specific).
      *
-     * @param string $permission
-     * @param array  $context Permissions specific context.
-     * @return bool
+     * @param array $context Permissions specific context.
      *
      * @throws GuardException
      */
@@ -33,8 +24,6 @@ interface GuardInterface
     /**
      * Get associated actor instance.
      *
-     * @return ActorInterface
-     *
      * @throws GuardException
      */
     public function getActor(): ActorInterface;
@@ -42,9 +31,6 @@ interface GuardInterface
     /**
      * Create an instance or GuardInterface associated with different actor. Method must not
      * alter existed guard which has to be counted as immutable.
-     *
-     * @param ActorInterface $actor
-     * @return self
      */
     public function withActor(ActorInterface $actor): GuardInterface;
 }

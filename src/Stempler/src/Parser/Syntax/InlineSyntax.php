@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax;
@@ -22,12 +15,8 @@ final class InlineSyntax implements SyntaxInterface
 {
     use Parser\Syntax\Traits\MixinTrait;
 
-    /** @var Inline|null */
-    private $inline;
+    private ?Inline $inline = null;
 
-    /**
-     * @inheritDoc
-     */
     public function handle(Parser $parser, Assembler $asm, Token $token): void
     {
         switch ($token->type) {

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -21,26 +14,14 @@ use Spiral\Security\Rule\CallableRule;
  */
 final class RuleManager implements RulesInterface, SingletonInterface
 {
-    /** @var ContainerInterface */
-    private $container = null;
+    private array $rules = [];
 
-    /** @var array */
-    private $rules = [];
-
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return $this
-     */
-    public function set(string $name, $rule = null): RuleManager
+    public function set(string $name, mixed $rule = null): RuleManager
     {
         if (empty($rule)) {
             $rule = $name;
@@ -55,11 +36,6 @@ final class RuleManager implements RulesInterface, SingletonInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return $this
-     */
     public function remove(string $name): RuleManager
     {
         if (!$this->has($name)) {
@@ -71,31 +47,21 @@ final class RuleManager implements RulesInterface, SingletonInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function has(string $name): bool
     {
-        if (isset($this->rules[$name])) {
-            return true;
-        }
-
-        if (class_exists($name)) {
-            //We are allowing to use class names without direct registration
-            return true;
-        }
-
-        //Relying on container binding
-        return $this->container->has($name);
+        return match (true) {
+            isset($this->rules[$name]) => true,
+            // We are allowing to use class names without direct registration
+            \class_exists($name) => true,
+            // Relying on container binding
+            default => $this->container->has($name)
+        };
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get(string $name): RuleInterface
     {
         if (!$this->has($name)) {
-            throw new RuleException("Undefined rule '{$name}'");
+            throw new RuleException(\sprintf("Undefined rule '%s'", $name));
         }
 
         if (!isset($this->rules[$name])) {
@@ -109,15 +75,15 @@ final class RuleManager implements RulesInterface, SingletonInterface
             return $rule;
         }
 
-        if (is_string($rule)) {
+        if (\is_string($rule)) {
             //We are expecting that rule points to
             $rule = $this->container->get($rule);
 
             if (!$rule instanceof RuleInterface) {
-                throw new RuleException(sprintf(
+                throw new RuleException(\sprintf(
                     "Rule '%s' must point to RuleInterface, '%s' given",
                     $name,
-                    !empty($rule) ? get_class($rule) : 'null'
+                    !empty($rule) ? $rule::class : 'null'
                 ));
             }
 
@@ -130,24 +96,21 @@ final class RuleManager implements RulesInterface, SingletonInterface
 
     /**
      * Must return true if rule is valid.
-     *
-     * @param mixed $rule
-     * @return bool
      */
-    private function validateRule($rule): bool
+    private function validateRule(mixed $rule): bool
     {
         if ($rule instanceof \Closure || $rule instanceof RuleInterface) {
             return true;
         }
 
-        if (is_array($rule)) {
-            return is_callable($rule, true);
+        if (\is_array($rule)) {
+            return \is_callable($rule, true);
         }
 
-        if (is_string($rule) && class_exists($rule)) {
+        if (\is_string($rule) && \class_exists($rule)) {
             try {
                 $reflection = new \ReflectionClass($rule);
-            } catch (\ReflectionException $e) {
+            } catch (\ReflectionException) {
                 return false;
             }
 

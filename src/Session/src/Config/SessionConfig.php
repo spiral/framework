@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Session\Config;
@@ -33,25 +26,16 @@ final class SessionConfig extends InjectableConfig
         'handlers' => [],
     ];
 
-    /**
-     * @return int
-     */
     public function getLifetime(): int
     {
         return $this->config['lifetime'];
     }
 
-    /**
-     * @return string
-     */
     public function getCookie(): string
     {
         return $this->config['cookie'];
     }
 
-    /**
-     * @return bool
-     */
     public function isSecure(): bool
     {
         return $this->config['secure'] ?? false;
@@ -59,8 +43,6 @@ final class SessionConfig extends InjectableConfig
 
     /**
      * Get handler autowire options.
-     *
-     * @return Autowire|null
      */
     public function getHandler(): ?Autowire
     {
@@ -72,7 +54,7 @@ final class SessionConfig extends InjectableConfig
             return $this->config['handler'];
         }
 
-        if (class_exists($this->config['handler'])) {
+        if (\class_exists($this->config['handler'])) {
             return new Autowire($this->config['handler']);
         }
 
@@ -81,9 +63,6 @@ final class SessionConfig extends InjectableConfig
         return new Autowire($handler['class'], $handler['options']);
     }
 
-    /**
-     * @return string|null
-     */
     public function getSameSite(): ?string
     {
         return $this->config['sameSite'] ?? null;

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -21,29 +14,16 @@ abstract class AbstractRoute implements RouteInterface
     use VerbsTrait;
     use DefaultsTrait;
 
-    /** @var UriHandler */
-    protected $uriHandler;
+    protected UriHandler $uriHandler;
+    protected ?array $matches = null;
 
-    /** @var string */
-    protected $pattern;
-
-    /** @var array|null */
-    protected $matches;
-
-    /**
-     * @param string $pattern
-     * @param array  $defaults
-     */
-    public function __construct(string $pattern, array $defaults = [])
-    {
-        $this->pattern = $pattern;
+    public function __construct(
+        protected string $pattern,
+        array $defaults = []
+    ) {
         $this->defaults = $defaults;
     }
 
-    /**
-     * @param UriHandler $uriHandler
-     * @return RouteInterface
-     */
     public function withUriHandler(UriHandler $uriHandler): RouteInterface
     {
         $route = clone $this;
@@ -52,20 +32,14 @@ abstract class AbstractRoute implements RouteInterface
         return $route;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getUriHandler(): UriHandler
     {
         return $this->uriHandler;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function match(Request $request): ?RouteInterface
     {
-        if (!in_array(strtoupper($request->getMethod()), $this->getVerbs(), true)) {
+        if (!\in_array(\strtoupper($request->getMethod()), $this->getVerbs(), true)) {
             return null;
         }
 
@@ -80,22 +54,16 @@ abstract class AbstractRoute implements RouteInterface
         return $route;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getMatches(): ?array
     {
         return $this->matches;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function uri($parameters = []): UriInterface
+    public function uri(iterable $parameters = []): UriInterface
     {
         return $this->uriHandler->uri(
             $parameters,
-            array_merge($this->defaults, $this->matches ?? [])
+            \array_merge($this->defaults, $this->matches ?? [])
         );
     }
 }

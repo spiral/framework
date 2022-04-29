@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Models;
@@ -63,53 +56,34 @@ class DataEntity extends AbstractEntity
     /**
      * Check if field can be set using setFields() method.
      *
-     * @param string $field
-     * @return bool
-     *
      * @see  $secured
      * @see  setField()
      * @see  $fillable
      */
     protected function isFillable(string $field): bool
     {
-        if (static::FILLABLE === '*') {
-            return true;
-        }
-
-        if (!empty(static::FILLABLE)) {
-            return in_array($field, static::FILLABLE);
-        }
-
-        if (static::SECURED === '*') {
-            return false;
-        }
-
-        return !in_array($field, static::SECURED);
+        return match (true) {
+            static::FILLABLE === '*' => true,
+            !empty(static::FILLABLE) => \in_array($field, static::FILLABLE, true),
+            static::SECURED === '*' => false,
+            default => !\in_array($field, static::SECURED, true)
+        };
     }
 
     /**
      * Check and return name of mutator (getter, setter, accessor) associated with specific field.
      *
-     * @param string $field
-     * @param string $mutator Mutator type (setter, getter, accessor).
-     * @return mixed|null
+     * @param string $type Mutator type (setter, getter, accessor).
      *
      * @throws EntityException
      */
-    protected function getMutator(string $field, string $mutator)
+    protected function getMutator(string $field, string $type): mixed
     {
-        $target = [];
-        switch ($mutator) {
-            case ModelSchema::MUTATOR_ACCESSOR:
-                $target = static::ACCESSORS;
-                break;
-            case ModelSchema::MUTATOR_GETTER:
-                $target = static::GETTERS;
-                break;
-            case ModelSchema::MUTATOR_SETTER:
-                $target = static::SETTERS;
-                break;
-        }
+        $target = match ($type) {
+            ModelSchema::MUTATOR_ACCESSOR => static::ACCESSORS,
+            ModelSchema::MUTATOR_GETTER => static::GETTERS,
+            ModelSchema::MUTATOR_SETTER => static::SETTERS
+        };
 
         if (isset($target[$field])) {
             return $target[$field];

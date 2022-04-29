@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Config\Loader;
@@ -20,26 +13,15 @@ use Spiral\Core\ContainerScope;
  */
 final class PhpLoader implements FileLoaderInterface
 {
-    /** @var ContainerInterface */
-    private $container;
-
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container
+    ) {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function loadFile(string $section, string $filename): array
     {
         try {
-            return ContainerScope::runScope($this->container, function () use ($filename) {
-                return (require $filename);
-            });
+            return ContainerScope::runScope($this->container, static fn () => require $filename);
         } catch (\Throwable $e) {
             throw new LoaderException($e->getMessage(), $e->getCode(), $e);
         }

@@ -12,10 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Http;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\Container;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
@@ -60,14 +57,6 @@ class HttpTest extends TestCase
 
         $response = $core->handle(new ServerRequest());
         $this->assertSame('hello world', (string)$response->getBody());
-    }
-
-    public function testBadHandler(): void
-    {
-        $this->expectException(HttpException::class);
-
-        $core = $this->getCore();
-        $core->setHandler('hi');
     }
 
     public function testHandlerInterface(): void

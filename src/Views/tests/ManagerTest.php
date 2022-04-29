@@ -17,7 +17,9 @@ use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\Context\ValueDependency;
 use Spiral\Views\Engine\Native\NativeEngine;
 use Spiral\Views\Exception\ViewException;
+use Spiral\Views\LoaderInterface;
 use Spiral\Views\ViewCache;
+use Spiral\Views\ViewLoader;
 use Spiral\Views\ViewManager;
 
 class ManagerTest extends TestCase
@@ -27,6 +29,7 @@ class ManagerTest extends TestCase
     public function setUp(): void
     {
         $this->container = new Container();
+        $this->container->bindSingleton(LoaderInterface::class, ViewLoader::class);
     }
 
     public function testMultipleEngines(): void

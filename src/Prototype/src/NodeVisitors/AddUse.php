@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
@@ -22,25 +15,15 @@ use Spiral\Prototype\Utils;
  */
 final class AddUse extends NodeVisitorAbstract
 {
-    /** @var ClassNode */
-    private $node;
-
     /** @var Node\Stmt\Use_[] */
-    private $nodes = [];
+    private array $nodes = [];
 
-    /**
-     * @param ClassNode $node
-     */
-    public function __construct(ClassNode $node)
-    {
-        $this->node = $node;
+    public function __construct(
+        private readonly ClassNode $node
+    ) {
     }
 
-    /**
-     * @param Node $node
-     * @return int|null|Node|Node[]
-     */
-    public function leaveNode(Node $node)
+    public function leaveNode(Node $node): ?Node
     {
         if (!$node instanceof Node\Stmt\Namespace_) {
             return null;
@@ -51,7 +34,7 @@ final class AddUse extends NodeVisitorAbstract
             foreach ($this->node->constructorParams as $param) {
                 if (!empty($param->type) && $param->type->fullName) {
                     $import = [$param->type->fullName, $param->type->alias];
-                    if (in_array($import, $imported, true)) {
+                    if (\in_array($import, $imported, true)) {
                         continue;
                     }
 
@@ -63,7 +46,7 @@ final class AddUse extends NodeVisitorAbstract
 
         foreach ($this->node->dependencies as $dependency) {
             $import = [$dependency->type->fullName, $dependency->type->alias];
-            if (in_array($import, $imported, true)) {
+            if (\in_array($import, $imported, true)) {
                 continue;
             }
 
@@ -84,10 +67,6 @@ final class AddUse extends NodeVisitorAbstract
         return $node;
     }
 
-    /**
-     * @param Node\Stmt\Namespace_ $node
-     * @return int
-     */
     private function definePlacementID(Node\Stmt\Namespace_ $node): int
     {
         foreach ($node->stmts as $index => $child) {
@@ -114,7 +93,7 @@ final class AddUse extends NodeVisitorAbstract
             }
 
             foreach ($node->uses as $use) {
-                if (in_array($use->name->parts, $uses, true)) {
+                if (\in_array($use->name->parts, $uses, true)) {
                     unset($nodes[$i]);
                 }
             }
@@ -125,7 +104,10 @@ final class AddUse extends NodeVisitorAbstract
 
     /**
      * @param Node\Stmt[] $stmts
-     * @return array
+     *
+     * @return string[][]
+     *
+     * @psalm-return list<non-empty-list<string>>
      */
     private function getExistingUseParts(array $stmts): array
     {
@@ -143,11 +125,6 @@ final class AddUse extends NodeVisitorAbstract
         return $uses;
     }
 
-    /**
-     * @param string      $type
-     * @param string|null $alias
-     * @return Node\Stmt\Use_
-     */
     private function buildUse(string $type, ?string $alias = null): Node\Stmt\Use_
     {
         $b = new Use_(new Node\Name($type), Node\Stmt\Use_::TYPE_NORMAL);

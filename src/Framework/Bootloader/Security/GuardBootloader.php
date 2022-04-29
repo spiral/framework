@@ -1,16 +1,10 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Security;
 
+use Spiral\Attributes\Bootloader\AttributesBootloader;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Domain\GuardPermissionsProvider;
 use Spiral\Domain\PermissionsProviderInterface;
@@ -25,6 +19,10 @@ use Spiral\Security\RulesInterface;
 
 final class GuardBootloader extends Bootloader
 {
+    protected const DEPENDENCIES = [
+        AttributesBootloader::class,
+    ];
+
     protected const SINGLETONS = [
         PermissionsInterface::class         => PermissionManager::class,
         RulesInterface::class               => RuleManager::class,

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Distribution\Internal;
@@ -17,28 +10,14 @@ namespace Spiral\Distribution\Internal;
  */
 final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
 {
-    /**
-     * @var string
-     */
-    private const ERROR_INVALID_INTERVAL_TYPE = 'The value of type `%s` is not a valid date interval type';
+    private const ERROR_INVALID_INTERVAL_TYPE = 'The value of type `%s` is not a valid date interval type.';
 
-    /**
-     * @var DateTimeFactoryInterface|null
-     */
-    private $factory;
-
-    /**
-     * @param DateTimeFactoryInterface|null $factory
-     */
-    public function __construct(DateTimeFactoryInterface $factory = null)
-    {
-        $this->factory = $factory ?? new DateTimeFactory();
+    public function __construct(
+        private DateTimeFactoryInterface $factory = new DateTimeFactory()
+    ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function create($duration): \DateInterval
+    public function create(mixed $duration): \DateInterval
     {
         try {
             return $this->createOrFail($duration);
@@ -49,42 +28,25 @@ final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function toDateTime(\DateInterval $interval): \DateTimeImmutable
     {
-        $now = $this->factory->now();
-
-        return $now->add($interval);
+        return $this->factory->now()->add($interval);
     }
 
     /**
-     * @param mixed $duration
-     * @return \DateInterval
      * @throws \Exception
      */
-    private function createOrFail($duration): \DateInterval
+    private function createOrFail(mixed $duration): \DateInterval
     {
-        switch (true) {
-            case $duration instanceof \DateInterval:
-                return $duration;
-
-            case $duration instanceof \DateTimeInterface:
-                return $this->factory->now()->diff($duration);
-
-            case \is_string($duration):
-                return new \DateInterval($duration);
-
-            case \is_int($duration):
-                return new \DateInterval('PT' . $duration . 'S');
-
-            case $duration === null:
-                return new \DateInterval('PT0S');
-
-            default:
-                $type = \get_debug_type($duration);
-                throw new \InvalidArgumentException(\sprintf(self::ERROR_INVALID_INTERVAL_TYPE, $type));
-        }
+        return match (true) {
+            $duration instanceof \DateInterval => $duration,
+            $duration instanceof \DateTimeInterface => $this->factory->now()->diff($duration),
+            \is_string($duration) => new \DateInterval($duration),
+            \is_int($duration) => new \DateInterval('PT' . $duration . 'S'),
+            $duration === null => new \DateInterval('PT0S'),
+            default => throw new \InvalidArgumentException(
+                \sprintf(self::ERROR_INVALID_INTERVAL_TYPE, \get_debug_type($duration))
+            )
+        };
     }
 }

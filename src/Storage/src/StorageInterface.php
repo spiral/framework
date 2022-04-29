@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage;
@@ -19,7 +12,6 @@ use Spiral\Storage\Storage\WritableInterface;
 /**
  * @template-implements \IteratorAggregate<string, StorageInterface>
  *
- * @psalm-type IdType = string | UriInterface | \Stringable
  * @see UriInterface
  */
 interface StorageInterface extends
@@ -29,22 +21,14 @@ interface StorageInterface extends
     \Countable
 {
     /**
-     * @param string|null $name
-     * @return BucketInterface
      * @throws InvalidArgumentException
      */
     public function bucket(string $name = null): BucketInterface;
 
     /**
-     * @param IdType $id
-     * @return FileInterface
      * @throws InvalidArgumentException
      */
-    public function file($id): FileInterface;
+    public function file(string|\Stringable $id): FileInterface;
 
-    /**
-     * @param string $name
-     * @return $this
-     */
     public function withDefault(string $name): self;
 }

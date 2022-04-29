@@ -1,39 +1,27 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Visitor;
 
 use Spiral\Stempler\Node\Hidden;
 use Spiral\Stempler\Node\HTML\Tag;
+use Spiral\Stempler\Node\NodeInterface;
 use Spiral\Stempler\VisitorContext;
 use Spiral\Stempler\VisitorInterface;
 
 final class DefineHidden implements VisitorInterface
 {
-    /** @var string */
-    private $hiddenKeyword = 'hidden';
+    private string $hiddenKeyword = 'hidden';
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx): void
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx)
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
-        if ($node instanceof Tag && strpos($node->name, $this->hiddenKeyword) === 0) {
+        if ($node instanceof Tag && \str_starts_with($node->name, $this->hiddenKeyword)) {
             return new Hidden([$node]);
         }
 

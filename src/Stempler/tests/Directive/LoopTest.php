@@ -25,7 +25,7 @@ class LoopTest extends BaseTest
 
         $this->assertSame(
             '<?php foreach($users as $u): ?> <?php echo htmlspecialchars'
-            . "(\$u->name, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8'); ?> <?php endforeach; ?>",
+            . "((string) (\$u->name), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8'); ?> <?php endforeach; ?>",
             $this->compile($doc)
         );
     }

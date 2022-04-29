@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security\Rule;
@@ -20,9 +13,6 @@ use Spiral\Security\RuleInterface;
  */
 final class ForbidRule implements RuleInterface, SingletonInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function allows(ActorInterface $actor, string $permission, array $context): bool
     {
         return false;

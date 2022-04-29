@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar;
@@ -40,23 +33,15 @@ final class HTMLGrammar implements GrammarInterface
     private const VERBATIM_TAGS = ['script', 'canvas', 'style'];
 
     // whitespace
-    private const REGEXP_WHITESPACE = '/\s/';
+    private const REGEXP_WHITESPACE = '/\\s/';
 
     // Allowed keyword characters.
-    private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
+    private const REGEXP_KEYWORD = '/[a-z0-9_\\-:\\.]/ui';
 
-    /** @var array */
-    private $whitespace = [];
+    private array $whitespace = [];
+    private array $attribute = [];
+    private array $keyword = [];
 
-    /** @var array */
-    private $attribute = [];
-
-    /** @var array */
-    private $keyword = [];
-
-    /**
-     * @inheritDoc
-     */
     public function parse(Buffer $src): \Generator
     {
         while ($n = $src->next()) {
@@ -76,7 +61,7 @@ final class HTMLGrammar implements GrammarInterface
             $tagName = $this->tagName($tag);
 
             // todo: add support for custom tag list
-            if (in_array($tagName, self::VERBATIM_TAGS)) {
+            if (\in_array($tagName, self::VERBATIM_TAGS)) {
                 yield from $tag;
                 yield from $this->parseVerbatim($src, $tagName);
                 continue;
@@ -88,42 +73,25 @@ final class HTMLGrammar implements GrammarInterface
 
     /**
      * @codeCoverageIgnore
-     * @inheritDoc
      */
     public static function tokenName(int $token): string
     {
-        switch ($token) {
-            case self::TYPE_RAW:
-                return 'HTML:RAW';
-            case self::TYPE_KEYWORD:
-                return 'HTML:KEYWORD';
-            case self::TYPE_OPEN:
-                return 'HTML:OPEN_TAG';
-            case self::TYPE_OPEN_SHORT:
-                return 'HTML:OPEN_SHORT_TAG';
-            case self::TYPE_CLOSE:
-                return 'HTML:CLOSE_TAG';
-            case self::TYPE_CLOSE_SHORT:
-                return 'HTML:CLOSE_SHORT_TAG';
-            case self::TYPE_EQUAL:
-                return 'HTML:EQUAL';
-            case self::TYPE_ATTRIBUTE:
-                return 'HTML:ATTRIBUTE';
-            case self::TYPE_WHITESPACE:
-                return 'HTML:WHITESPACE';
-            case self::TYPE_VERBATIM:
-                return 'HTML:VERBATIM';
-            default:
-                return 'HTML:UNDEFINED';
-        }
+        return match ($token) {
+            self::TYPE_RAW => 'HTML:RAW',
+            self::TYPE_KEYWORD => 'HTML:KEYWORD',
+            self::TYPE_OPEN => 'HTML:OPEN_TAG',
+            self::TYPE_OPEN_SHORT => 'HTML:OPEN_SHORT_TAG',
+            self::TYPE_CLOSE => 'HTML:CLOSE_TAG',
+            self::TYPE_CLOSE_SHORT => 'HTML:CLOSE_SHORT_TAG',
+            self::TYPE_EQUAL => 'HTML:EQUAL',
+            self::TYPE_ATTRIBUTE => 'HTML:ATTRIBUTE',
+            self::TYPE_WHITESPACE => 'HTML:WHITESPACE',
+            self::TYPE_VERBATIM => 'HTML:VERBATIM',
+            default => 'HTML:UNDEFINED',
+        };
     }
 
-    /**
-     * @param Buffer $src
-     * @param string $verbatim
-     * @return \Generator
-     */
-    private function parseVerbatim(Buffer $src, string $verbatim)
+    private function parseVerbatim(Buffer $src, string $verbatim): \Generator
     {
         $chunks = [];
 
@@ -217,25 +185,17 @@ final class HTMLGrammar implements GrammarInterface
         }
     }
 
-    /**
-     * @param array $tag
-     * @return string
-     */
     private function tagName(array $tag): string
     {
         foreach ($tag as $token) {
             if ($token->type === self::TYPE_KEYWORD) {
-                return strtolower($token->content);
+                return \strtolower($token->content);
             }
         }
 
         return '';
     }
 
-    /**
-     * @param Buffer $src
-     * @return array|null
-     */
     private function parseGrammar(Buffer $src): ?array
     {
         $this->tokens = [
@@ -305,7 +265,7 @@ final class HTMLGrammar implements GrammarInterface
                     break 2;
 
                 default:
-                    if (preg_match(self::REGEXP_WHITESPACE, $n->char)) {
+                    if (\preg_match(self::REGEXP_WHITESPACE, $n->char)) {
                         $this->flushKeyword();
                         $this->whitespace[] = $n;
                         break;
@@ -313,7 +273,7 @@ final class HTMLGrammar implements GrammarInterface
                     $this->flushWhitespace();
 
 
-                    if (!preg_match(self::REGEXP_KEYWORD, $n->char)) {
+                    if (!\preg_match(self::REGEXP_KEYWORD, $n->char)) {
                         // unexpected char
                         return null;
                     }
@@ -329,17 +289,14 @@ final class HTMLGrammar implements GrammarInterface
         return $this->tokens;
     }
 
-    /**
-     * @return bool
-     */
     private function isValid(): bool
     {
         // tag is too short or does not have name keyword
-        if (count($this->tokens) < 3) {
+        if (\count($this->tokens) < 3) {
             return false;
         }
 
-        $last = $this->tokens[count($this->tokens) - 1];
+        $last = $this->tokens[\count($this->tokens) - 1];
         if ($last->type !== self::TYPE_CLOSE && $last->type !== self::TYPE_CLOSE_SHORT) {
             return false;
         }

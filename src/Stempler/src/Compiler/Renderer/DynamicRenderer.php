@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Compiler\Renderer;
@@ -21,29 +14,14 @@ use Spiral\Stempler\Node\NodeInterface;
 final class DynamicRenderer implements Compiler\RendererInterface
 {
     // default output filter
-    public const DEFAULT_FILTER = "htmlspecialchars(%s, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8')";
+    public const DEFAULT_FILTER = "htmlspecialchars((string) (%s), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8')";
 
-    /** @var string */
-    private $defaultFilter = '';
-
-    /** @var DirectiveRendererInterface|null */
-    private $directiveRenderer;
-
-    /**
-     * @param DirectiveRendererInterface $directiveRenderer
-     * @param string                     $defaultFilter
-     */
     public function __construct(
-        DirectiveRendererInterface $directiveRenderer = null,
-        string $defaultFilter = self::DEFAULT_FILTER
+        private readonly ?DirectiveRendererInterface $directiveRenderer = null,
+        private readonly string $defaultFilter = self::DEFAULT_FILTER
     ) {
-        $this->directiveRenderer = $directiveRenderer;
-        $this->defaultFilter = $defaultFilter;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function render(Compiler $compiler, Compiler\Result $result, NodeInterface $node): bool
     {
         switch (true) {
@@ -59,9 +37,6 @@ final class DynamicRenderer implements Compiler\RendererInterface
     }
 
     /**
-     * @param Compiler\Result $source
-     * @param Directive       $directive
-     *
      * @throws DirectiveException
      */
     private function directive(Compiler\Result $source, Directive $directive): void
@@ -75,26 +50,22 @@ final class DynamicRenderer implements Compiler\RendererInterface
         }
 
         throw new DirectiveException(
-            "Undefined directive `{$directive->name}`",
+            \sprintf('Undefined directive `%s`', $directive->name),
             $directive->getContext()
         );
     }
 
-    /**
-     * @param Compiler\Result $source
-     * @param Output          $output
-     */
     private function output(Compiler\Result $source, Output $output): void
     {
         if ($output->rawOutput) {
-            $source->push(sprintf('<?php echo %s; ?>', trim($output->body)), $output->getContext());
+            $source->push(\sprintf('<?php echo %s; ?>', \trim($output->body)), $output->getContext());
             return;
         }
 
         $filter = $output->filter ?? $this->defaultFilter;
 
         $source->push(
-            sprintf("<?php echo {$filter}; ?>", trim($output->body)),
+            \sprintf(\sprintf('<?php echo %s; ?>', $filter), \trim($output->body)),
             $output->getContext()
         );
     }

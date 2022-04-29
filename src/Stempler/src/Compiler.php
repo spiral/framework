@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler;
@@ -22,26 +15,18 @@ use Spiral\Stempler\Node\NodeInterface;
 final class Compiler
 {
     /** @var RendererInterface[] */
-    private $renders = [];
+    private array $renders = [];
 
-    /**
-     * @param RendererInterface $renderer
-     */
     public function addRenderer(RendererInterface $renderer): void
     {
         $this->renders[] = $renderer;
     }
 
-    /**
-     * @param NodeInterface|array $node
-     * @param Result|null         $result
-     * @return Result
-     */
-    public function compile($node, Result $result = null): Result
+    public function compile(array|NodeInterface $node, Result $result = null): Result
     {
-        $result = $result ?? new Result();
+        $result ??= new Result();
 
-        if (is_array($node)) {
+        if (\is_array($node)) {
             foreach ($node as $child) {
                 $this->compile($child, $result);
             }
@@ -56,7 +41,7 @@ final class Compiler
         }
 
         throw new CompilerException(
-            sprintf('Unable to compile %s, no renderer found', get_class($node)),
+            \sprintf('Unable to compile %s, no renderer found', $node::class),
             $node->getContext()
         );
     }

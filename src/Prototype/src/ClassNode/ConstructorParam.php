@@ -1,52 +1,25 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\ClassNode;
 
 final class ConstructorParam
 {
-    /** @var string */
-    public $name;
+    public string $name;
+    public bool $nullable = false;
+    public bool $hasDefault = false;
+    public mixed $default = null;
+    public ?Type $type = null;
+    public bool $byRef = false;
+    public bool $isVariadic = false;
+    private ?bool $builtIn = null;
 
-    /** @var bool */
-    public $nullable;
-
-    /** @var bool */
-    public $hasDefault;
-
-    /** @var mixed|null */
-    public $default;
-
-    /** @var Type|null */
-    public $type;
-
-    /** @var bool */
-    public $byRef = false;
-
-    /** @var bool */
-    public $isVariadic = false;
-
-    /** @var bool */
-    private $builtIn;
-
-    /**
-     * ConstructorParam constructor.
-     */
     private function __construct()
     {
     }
 
     /**
-     * @param \ReflectionParameter $parameter
-     * @return ConstructorParam
      *
      * @throws \ReflectionException
      */
@@ -73,9 +46,6 @@ final class ConstructorParam
         return $stmt;
     }
 
-    /**
-     * @return bool
-     */
     public function isBuiltIn(): bool
     {
         return $this->builtIn;

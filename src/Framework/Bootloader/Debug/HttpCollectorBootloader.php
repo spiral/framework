@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Debug;
@@ -22,22 +15,11 @@ use Spiral\Debug\StateCollector\HttpCollector;
  */
 final class HttpCollectorBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        HttpBootloader::class,
-        DebugBootloader::class,
-    ];
-
     protected const SINGLETONS = [
         HttpCollector::class => HttpCollector::class,
     ];
 
-    /**
-     * @param HttpCollector      $httpCollector
-     * @param HttpBootloader     $http
-     * @param DebugBootloader    $debug
-     * @param FinalizerInterface $finalizer
-     */
-    public function boot(
+    public function init(
         HttpCollector $httpCollector,
         HttpBootloader $http,
         DebugBootloader $debug,

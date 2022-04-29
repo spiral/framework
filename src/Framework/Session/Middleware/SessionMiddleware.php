@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Session\Middleware;
@@ -21,7 +14,7 @@ use Spiral\Cookies\Cookie;
 use Spiral\Core\ScopeInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Session\Config\SessionConfig;
-use Spiral\Session\SessionFactory;
+use Spiral\Session\SessionFactoryInterface;
 use Spiral\Session\SessionInterface;
 
 final class SessionMiddleware implements MiddlewareInterface
@@ -32,44 +25,17 @@ final class SessionMiddleware implements MiddlewareInterface
     // Header set used to sign session
     private const SIGNATURE_HEADERS = ['User-Agent', 'Accept-Language', 'Accept-Encoding'];
 
-    /** @var SessionConfig */
-    private $config;
-
-    /** @var HttpConfig */
-    private $httpConfig;
-
-    /** @var CookiesConfig */
-    private $cookiesConfig;
-
-    /** @var SessionFactory */
-    private $factory;
-
-    /** @var ScopeInterface */
-    private $scope;
-
-    /**
-     * @param SessionConfig  $config
-     * @param HttpConfig     $httpConfig
-     * @param CookiesConfig  $cookiesConfig
-     * @param SessionFactory $factory
-     * @param ScopeInterface $scope
-     */
     public function __construct(
-        SessionConfig $config,
-        HttpConfig $httpConfig,
-        CookiesConfig $cookiesConfig,
-        SessionFactory $factory,
-        ScopeInterface $scope
+        private readonly SessionConfig $config,
+        private readonly HttpConfig $httpConfig,
+        private readonly CookiesConfig $cookiesConfig,
+        private readonly SessionFactoryInterface $factory,
+        private readonly ScopeInterface $scope
     ) {
-        $this->config = $config;
-        $this->httpConfig = $httpConfig;
-        $this->cookiesConfig = $cookiesConfig;
-        $this->factory = $factory;
-        $this->scope = $scope;
     }
 
     /**
-     * @inheritdoc
+     * @throws \Throwable
      */
     public function process(Request $request, Handler $handler): Response
     {
@@ -82,9 +48,7 @@ final class SessionMiddleware implements MiddlewareInterface
         try {
             $response = $this->scope->runScope(
                 [SessionInterface::class => $session],
-                function () use ($handler, $request, $session) {
-                    return $handler->handle($request->withAttribute(static::ATTRIBUTE, $session));
-                }
+                static fn () => $handler->handle($request->withAttribute(self::ATTRIBUTE, $session))
             );
         } catch (\Throwable $e) {
             $session->abort();
@@ -94,12 +58,6 @@ final class SessionMiddleware implements MiddlewareInterface
         return $this->commitSession($session, $request, $response);
     }
 
-    /**
-     * @param SessionInterface $session
-     * @param Request          $request
-     * @param Response         $response
-     * @return Response
-     */
     protected function commitSession(
         SessionInterface $session,
         Request $request,
@@ -112,7 +70,7 @@ final class SessionMiddleware implements MiddlewareInterface
         $session->commit();
 
         //SID changed
-        if ($this->fetchID($request) != $session->getID()) {
+        if ($this->fetchID($request) !== $session->getID()) {
             return $this->withCookie($request, $response, $session->getID());
         }
 
@@ -122,9 +80,6 @@ final class SessionMiddleware implements MiddlewareInterface
 
     /**
      * Attempt to locate session ID in request.
-     *
-     * @param Request $request
-     * @return string|null
      */
     protected function fetchID(Request $request): ?string
     {
@@ -136,45 +91,32 @@ final class SessionMiddleware implements MiddlewareInterface
         return $cookies[$this->config->getCookie()];
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     * @param string   $id
-     * @return Response
-     */
     protected function withCookie(Request $request, Response $response, string $id = null): Response
     {
-        $response = $response->withAddedHeader(
+        return $response->withAddedHeader(
             'Set-Cookie',
             $this->sessionCookie($request->getUri(), $id)->createHeader()
         );
-
-        return $response;
     }
 
     /**
      * Must return string which identifies client on other end. Not for security check but for
      * session fixation.
-     *
-     * @param Request $request
-     * @return string
      */
     protected function clientSignature(Request $request): string
     {
         $signature = '';
-        foreach (static::SIGNATURE_HEADERS as $header) {
+        foreach (self::SIGNATURE_HEADERS as $header) {
             $signature .= $request->getHeaderLine($header) . ';';
         }
 
-        return hash('sha256', $signature);
+        return \hash('sha256', $signature);
     }
 
     /**
      * Generate session cookie.
      *
      * @param UriInterface $uri Incoming uri.
-     * @param string|null  $id
-     * @return Cookie
      */
     private function sessionCookie(UriInterface $uri, string $id = null): Cookie
     {

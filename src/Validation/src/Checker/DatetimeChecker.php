@@ -1,27 +1,18 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license MIT
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation\Checker;
 
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Validation\AbstractChecker;
+use Spiral\Validation\Checker\DatetimeChecker\ThresholdChecker;
 
 /**
  * @inherit-messages
  */
 final class DatetimeChecker extends AbstractChecker implements SingletonInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public const MESSAGES = [
         'future'   => '[[Should be a date in the future.]]',
         'past'     => '[[Should be a date in the past.]]',
@@ -36,51 +27,34 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
         'c' => 'Y-m-d\TH:i:sT',
     ];
 
-    /** @var callable|\DateTimeInterface|string|numeric|null */
-    private $now;
-    /** @var DatetimeChecker\ThresholdChecker */
-    private $threshold;
+    private readonly ThresholdChecker $threshold;
 
-    public function __construct($now = null)
-    {
-        $this->now = $now;
+    public function __construct(
+        private \Closure|\DateTimeInterface|string|int|null $now = null
+    ) {
         $this->threshold = new DatetimeChecker\ThresholdChecker();
     }
 
     /**
      * Check if date is in the future. Do not compare if the current date is invalid.
-     *
-     * @param mixed $value
-     * @param bool  $orNow
-     * @param bool  $useMicroSeconds
-     * @return bool
      */
-    public function future($value, bool $orNow = false, bool $useMicroSeconds = false): bool
+    public function future(mixed $value, bool $orNow = false, bool $useMicroSeconds = false): bool
     {
         return $this->threshold->after($this->date($value), $this->now(), $orNow, $useMicroSeconds);
     }
 
     /**
      * Check if date is in the past. Do not compare if the current date is invalid.
-     *
-     * @param mixed $value
-     * @param bool  $orNow
-     * @param bool  $useMicroSeconds
-     * @return bool
      */
-    public function past($value, bool $orNow = false, bool $useMicroSeconds = false): bool
+    public function past(mixed $value, bool $orNow = false, bool $useMicroSeconds = false): bool
     {
         return $this->threshold->before($this->date($value), $this->now(), $orNow, $useMicroSeconds);
     }
 
     /**
      * Check if date format matches the provided one.
-     *
-     * @param mixed  $value
-     * @param string $format
-     * @return bool
      */
-    public function format($value, string $format): bool
+    public function format(mixed $value, string $format): bool
     {
         if (!$this->isApplicableValue($value)) {
             return false;
@@ -93,54 +67,36 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
 
     /**
      * Check if date is valid. Empty values are acceptable.
-     *
-     * @param mixed $value
-     * @return bool
      */
-    public function valid($value): bool
+    public function valid(mixed $value): bool
     {
         return $this->date($value) !== null;
     }
 
     /**
      * Value has to be a valid timezone.
-     *
-     * @param mixed $value
-     * @return bool
      */
-    public function timezone($value): bool
+    public function timezone(mixed $value): bool
     {
-        if (!is_scalar($value)) {
+        if (!\is_scalar($value)) {
             return false;
         }
 
-        return in_array((string)$value, \DateTimeZone::listIdentifiers(), true);
+        return \in_array((string)$value, \DateTimeZone::listIdentifiers(), true);
     }
 
     /**
      * Check if date comes before the given one. Do not compare if the given date is missing or invalid.
-     *
-     * @param mixed  $value
-     * @param string $field
-     * @param bool   $orEquals
-     * @param bool   $useMicroSeconds
-     * @return bool
      */
-    public function before($value, string $field, bool $orEquals = false, bool $useMicroSeconds = false): bool
+    public function before(mixed $value, string $field, bool $orEquals = false, bool $useMicroSeconds = false): bool
     {
         return $this->threshold->before($this->date($value), $this->fromField($field), $orEquals, $useMicroSeconds);
     }
 
     /**
      * Check if date comes after the given one. Do not compare if the given date is missing or invalid.
-     *
-     * @param mixed  $value
-     * @param string $field
-     * @param bool   $orEquals
-     * @param bool   $useMicroSeconds
-     * @return bool
      */
-    public function after($value, string $field, bool $orEquals = false, bool $useMicroSeconds = false): bool
+    public function after(mixed $value, string $field, bool $orEquals = false, bool $useMicroSeconds = false): bool
     {
         return $this->threshold->after($this->date($value), $this->fromField($field), $orEquals, $useMicroSeconds);
     }
@@ -152,20 +108,16 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
     {
         try {
             return $this->date($this->now ?: 'now');
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             //here's the fail;
         }
 
         return null;
     }
 
-    /**
-     * @param mixed $value
-     * @return \DateTimeInterface|null
-     */
-    private function date($value): ?\DateTimeInterface
+    private function date(mixed $value): ?\DateTimeInterface
     {
-        if (is_callable($value)) {
+        if (\is_callable($value)) {
             $value = $value();
         }
 
@@ -182,27 +134,19 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
                 $value = '0';
             }
 
-            return new \DateTimeImmutable(is_numeric($value) ? sprintf('@%d', $value) : trim($value));
-        } catch (\Throwable $e) {
+            return new \DateTimeImmutable(\is_numeric($value) ? \sprintf('@%d', $value) : \trim($value));
+        } catch (\Throwable) {
             //here's the fail;
         }
 
         return null;
     }
 
-    /**
-     * @param mixed $value
-     * @return bool
-     */
-    private function isApplicableValue($value): bool
+    private function isApplicableValue(mixed $value): bool
     {
-        return is_string($value) || is_numeric($value);
+        return \is_string($value) || \is_numeric($value);
     }
 
-    /**
-     * @param string $field
-     * @return \DateTimeInterface|null
-     */
     private function fromField(string $field): ?\DateTimeInterface
     {
         $before = $this->getValidator()->getValue($field);

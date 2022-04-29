@@ -73,30 +73,4 @@ class TypesTest extends TestCase
         $this->assertFalse($checker->boolean('0'));
         $this->assertFalse($checker->boolean('1'));
     }
-
-    public function testDatetime(): void
-    {
-        $checker = new TypeChecker();
-
-        $this->assertTrue($checker->datetime('now'));
-        $this->assertTrue($checker->datetime('tomorrow 10am'));
-        $this->assertTrue($checker->datetime(date('u')));
-        $this->assertTrue($checker->datetime(time()));
-
-        $this->assertFalse($checker->datetime('date'));
-        $this->assertFalse($checker->datetime(''));
-
-        $this->assertFalse($checker->datetime([]));
-        $this->assertFalse($checker->datetime(null));
-    }
-
-    public function testTimezone(): void
-    {
-        $checker = new TypeChecker();
-
-        foreach (\DateTimeZone::listIdentifiers() as $identifier) {
-            $this->assertTrue($checker->timezone($identifier));
-            $this->assertFalse($checker->timezone(str_rot13($identifier)));
-        }
-    }
 }

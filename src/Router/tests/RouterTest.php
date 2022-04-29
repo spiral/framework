@@ -28,7 +28,7 @@ class RouterTest extends BaseTest
     {
         $router = $this->makeRouter();
 
-        $router->addRoute('name', new Route('/', Call::class));
+        $router->setRoute('name', new Route('/', Call::class));
         $router->setDefault(new Route('/', Call::class));
 
         $this->assertCount(2, $router->getRoutes());

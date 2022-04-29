@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Request;
@@ -26,9 +19,6 @@ final class FilesBag extends InputBag
 {
     /**
      * Locale local filename (virtual filename) associated with UploadedFile resource.
-     *
-     * @param string $name
-     * @return null|string
      */
     public function getFilename(string $name): ?string
     {

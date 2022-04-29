@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\Command;
@@ -19,13 +12,13 @@ final class ListCommand extends AbstractCommand
     /**
      * List all prototype classes.
      */
-    public function perform(): void
+    public function perform(): int
     {
         $prototyped = $this->locator->getTargetClasses();
         if ($prototyped === []) {
             $this->writeln('<comment>No prototyped classes found.</comment>');
 
-            return;
+            return self::SUCCESS;
         }
 
         $grid = $this->table(['Class:', 'Property:', 'Target:']);
@@ -37,5 +30,7 @@ final class ListCommand extends AbstractCommand
         }
 
         $grid->render();
+
+        return self::SUCCESS;
     }
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Auth;
@@ -24,6 +17,7 @@ use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
+use Spiral\Http\Config\HttpConfig;
 
 /**
  * Enables Auth middleware and http transports to read and write tokens in PSR-7 request/response.
@@ -32,33 +26,23 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
         AuthBootloader::class,
-        HttpBootloader::class,
     ];
 
     protected const SINGLETONS = [
         TransportRegistry::class => [self::class, 'transportRegistry'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /**
-     * @param ConfiguratorInterface $config
-     */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
-    /**
-     * @param HttpBootloader $http
-     */
-    public function boot(HttpBootloader $http): void
+    public function init(HttpBootloader $http): void
     {
         $http->addMiddleware(AuthMiddleware::class);
 
         $this->config->setDefaults(
-            'auth',
+            AuthConfig::CONFIG,
             [
                 'defaultTransport' => 'cookie',
                 'transports'       => [
@@ -71,31 +55,24 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
 
     /**
      * Add new Http token transport.
-     *
-     * @param string                                 $name
-     * @param HttpTransportInterface|Autowire|string $transport
      */
-    public function addTransport(string $name, $transport): void
+    public function addTransport(string $name, Autowire|HttpTransportInterface|string $transport): void
     {
-        $this->config->modify('auth', new Append('transports', $name, $transport));
+        $this->config->modify(AuthConfig::CONFIG, new Append('transports', $name, $transport));
     }
 
     /**
      * Creates default cookie transport when "transports" section is empty.
-     *
-     * @return CookieTransport
      */
     private function createDefaultCookieTransport(): CookieTransport
     {
-        $config = $this->config->getConfig('http');
+        $config = $this->config->getConfig(HttpConfig::CONFIG);
 
         return new CookieTransport('token', $config['basePath'] ?? '/');
     }
 
     /**
-     * @param AuthConfig       $config
-     * @param FactoryInterface $factory
-     * @return TransportRegistry
+     * @noRector RemoveUnusedPrivateMethodRector
      */
     private function transportRegistry(AuthConfig $config, FactoryInterface $factory): TransportRegistry
     {

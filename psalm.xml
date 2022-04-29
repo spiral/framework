@@ -4,10 +4,9 @@
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 
-    errorLevel="8"
+    errorLevel="7"
     hoistConstants="true"
     resolveFromConfigFile="true"
-    allowPhpStormGenerics="true"
     findUnusedPsalmSuppress="true"
     findUnusedVariablesAndParams="true"
     ensureArrayStringOffsetsExist="true"
@@ -21,22 +20,14 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <file name="src/Framework/Bootloader/Server/RoadRunnerBootloader.php" />
-                <file name="src/Framework/Bootloader/Server/LegacyRoadRunnerBootloader.php" />
-                <file name="src/Framework/Bootloader/Jobs/JobsBootloader.php" />
-                <file name="src/Framework/Http/RrDispatcher.php" />
-                <file name="src/Framework/Http/LegacyRrDispatcher.php" />
-            </errorLevel>
-        </UndefinedClass>
-        <UndefinedDocblockClass>
-            <errorLevel type="suppress">
-                <file name="src/Framework/Jobs/JobQueue.php" />
-            </errorLevel>
-        </UndefinedDocblockClass>
         <UnusedClosureParam errorLevel="suppress" />
         <UnusedPsalmSuppress errorLevel="suppress" />
+        <InvalidThrow>
+            <errorLevel type="suppress">
+                <file name="src/Attributes/src/Psr16CachedReader.php"/>
+                <file name="src/Attributes/src/Psr6CachedReader.php"/>
+            </errorLevel>
+        </InvalidThrow>
     </issueHandlers>
     <stubs>
         <file name="resources/stubs/php/reflection/Attribute.phpstub" />

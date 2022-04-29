@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Bootloader;
@@ -17,9 +10,11 @@ use ReflectionClass;
 use ReflectionException;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\KernelInterface;
-use Spiral\Bootloader\ConsoleBootloader;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Config\Patch\Append;
+use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Scaffolder\Command;
+use Spiral\Scaffolder\Config\ScaffolderConfig;
 use Spiral\Scaffolder\Declaration;
 
 class ScaffolderBootloader extends Bootloader
@@ -28,31 +23,14 @@ class ScaffolderBootloader extends Bootloader
         SlugifyInterface::class => Slugify::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /** @var KernelInterface */
-    private $kernel;
-
-    /**
-     * ScaffolderBootloader constructor.
-     *
-     * @param ConfiguratorInterface $config
-     * @param KernelInterface       $kernel
-     */
-    public function __construct(ConfiguratorInterface $config, KernelInterface $kernel)
-    {
-        $this->config = $config;
-        $this->kernel = $kernel;
+    public function __construct(
+        private readonly ConfiguratorInterface $config,
+        private readonly KernelInterface $kernel
+    ) {
     }
 
-    /**
-     * @param ConsoleBootloader $console
-     */
-    public function boot(ConsoleBootloader $console): void
+    public function init(ConsoleBootloader $console): void
     {
-        $console->addCommand(Command\Database\EntityCommand::class);
-        $console->addCommand(Command\Database\RepositoryCommand::class);
         $console->addCommand(Command\BootloaderCommand::class);
         $console->addCommand(Command\CommandCommand::class);
         $console->addCommand(Command\ConfigCommand::class);
@@ -60,15 +38,14 @@ class ScaffolderBootloader extends Bootloader
         $console->addCommand(Command\FilterCommand::class);
         $console->addCommand(Command\JobHandlerCommand::class);
         $console->addCommand(Command\MiddlewareCommand::class);
-        $console->addCommand(Command\MigrationCommand::class);
 
         try {
             $defaultNamespace = (new ReflectionClass($this->kernel))->getNamespaceName();
-        } catch (ReflectionException $e) {
+        } catch (ReflectionException) {
             $defaultNamespace = '';
         }
 
-        $this->config->setDefaults('scaffolder', [
+        $this->config->setDefaults(ScaffolderConfig::CONFIG, [
             /*
              * This is set of comment lines to be applied to every scaffolded file, you can use env() function
              * to make it developer specific or set one universal pattern per project.
@@ -129,11 +106,6 @@ class ScaffolderBootloader extends Bootloader
                     'namespace' => 'Job',
                     'postfix'   => 'Job',
                     'class'     => Declaration\JobHandlerDeclaration::class,
-                ],
-                'migration'  => [
-                    'namespace' => '',
-                    'postfix'   => 'Migration',
-                    'class'     => Declaration\MigrationDeclaration::class,
                 ],
                 'filter'     => [
                     'namespace' => 'Request',
@@ -198,19 +170,15 @@ class ScaffolderBootloader extends Bootloader
                         ],
                     ],
                 ],
-                'entity'     => [
-                    'namespace' => 'Database',
-                    'postfix'   => '',
-                    'options'   => [
-                        'annotated' => Declaration\Database\Entity\AnnotatedDeclaration::class,
-                    ],
-                ],
-                'repository' => [
-                    'namespace' => 'Repository',
-                    'postfix'   => 'Repository',
-                    'class'     => Declaration\Database\RepositoryDeclaration::class,
-                ],
             ],
         ]);
+    }
+
+    /**
+     * Register new Scaffolder declaration.
+     */
+    public function addDeclaration(string $name, array $declaration): void
+    {
+        $this->config->modify(ScaffolderConfig::CONFIG, new Append('declarations', $name, $declaration));
     }
 }

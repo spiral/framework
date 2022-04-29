@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation;
@@ -22,12 +15,9 @@ final class RuleParser implements ParserInterface
     public const MESSAGES   = ['message', 'msg', 'error', 'err'];
     public const CONDITIONS = ['if', 'condition', 'conditions', 'where', 'when'];
 
-    /**
-     * @inheritdoc
-     */
-    public function split($rules): \Generator
+    public function split(mixed $rules): \Generator
     {
-        $rules = is_array($rules) ? $rules : [$rules];
+        $rules = \is_array($rules) ? $rules : [$rules];
 
         foreach ($rules as $rule) {
             if ($rule instanceof \Closure) {
@@ -39,34 +29,28 @@ final class RuleParser implements ParserInterface
         }
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function parseCheck($chunk)
+    public function parseCheck(mixed $chunk): array|callable|string
     {
-        if (is_string($chunk)) {
-            $function = str_replace('::', ':', $chunk);
+        if (\is_string($chunk)) {
+            $function = \str_replace('::', ':', $chunk);
         } else {
-            if (!is_array($chunk) || !isset($chunk[0])) {
+            if (!\is_array($chunk) || !isset($chunk[0])) {
                 throw new ParserException('Validation rule does not define any check.');
             }
 
             $function = $chunk[0];
         }
 
-        if (is_string($function)) {
-            return str_replace('::', ':', $function);
+        if (\is_string($function)) {
+            return \str_replace('::', ':', $function);
         }
 
         return $function;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function parseArgs($chunk): array
+    public function parseArgs(mixed $chunk): array
     {
-        if (!is_array($chunk)) {
+        if (!\is_array($chunk)) {
             return [];
         }
 
@@ -77,19 +61,16 @@ final class RuleParser implements ParserInterface
         }
 
         unset($chunk[0]);
-        foreach (array_merge(self::MESSAGES, self::CONDITIONS) as $index) {
+        foreach (\array_merge(self::MESSAGES, self::CONDITIONS) as $index) {
             unset($chunk[$index]);
         }
 
         return $chunk;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function parseMessage($chunk): ?string
+    public function parseMessage(mixed $chunk): ?string
     {
-        if (!is_array($chunk)) {
+        if (!\is_array($chunk)) {
             return null;
         }
 
@@ -102,16 +83,13 @@ final class RuleParser implements ParserInterface
         return null;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function parseConditions($chunk): array
+    public function parseConditions(mixed $chunk): array
     {
         foreach (self::CONDITIONS as $index) {
             if (isset($chunk[$index])) {
                 $conditions = [];
                 foreach ((array)$chunk[$index] as $key => $value) {
-                    if (is_numeric($key)) {
+                    if (\is_numeric($key)) {
                         $conditions[$value] = [];
                     } else {
                         $conditions[$key] = (array)$value;
@@ -125,11 +103,7 @@ final class RuleParser implements ParserInterface
         return [];
     }
 
-    /**
-     * @param $rule
-     * @return string
-     */
-    protected function getID($rule): string
+    protected function getID(mixed $rule): string
     {
         return json_encode($rule);
     }

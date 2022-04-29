@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Compiler;
@@ -22,19 +15,13 @@ use Spiral\Stempler\Parser\Context;
  */
 final class Result
 {
-    /** @var string */
-    private $content = '';
+    private string $content = '';
 
     /** @var Location[] */
-    private $locations = [];
+    private array $locations = [];
 
-    /** @var Location|null */
-    private $parent = null;
+    private ?Location $parent = null;
 
-    /**
-     * @param Context|null $ctx
-     * @param callable     $body
-     */
     public function withinContext(?Context $ctx, callable $body): void
     {
         if ($ctx === null || $ctx->getPath() === null) {
@@ -50,22 +37,15 @@ final class Result
         }
     }
 
-    /**
-     * @param string       $content
-     * @param Context|null $ctx
-     */
     public function push(string $content, Context $ctx = null): void
     {
         if ($ctx !== null && $ctx->getPath() !== null) {
-            $this->locations[strlen($this->content)] = Location::fromContext($ctx, $this->parent);
+            $this->locations[\strlen($this->content)] = Location::fromContext($ctx, $this->parent);
         }
 
         $this->content .= $content;
     }
 
-    /**
-     * @return string
-     */
     public function getContent(): string
     {
         return $this->content;
@@ -73,8 +53,6 @@ final class Result
 
     /**
      * Get all template paths involved in final template.
-     *
-     * @return array
      */
     public function getPaths(): array
     {
@@ -82,7 +60,7 @@ final class Result
 
         // We can scan top level only
         foreach ($this->locations as $loc) {
-            if (!in_array($loc->path, $paths, true)) {
+            if (!\in_array($loc->path, $paths, true)) {
                 $paths[] = $loc->path;
             }
         }
@@ -92,9 +70,6 @@ final class Result
 
     /**
      * Generates sourcemap for exception handling and cache invalidation.
-     *
-     * @param LoaderInterface $loader
-     * @return SourceMap
      */
     public function getSourceMap(LoaderInterface $loader): SourceMap
     {

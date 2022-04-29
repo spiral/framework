@@ -1,26 +1,15 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Declaration;
 
-use Spiral\Jobs\JobHandler;
+use Spiral\Queue\JobHandler;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\DependedInterface;
 
 class JobHandlerDeclaration extends ClassDeclaration implements DependedInterface
 {
-    /**
-     * @param string $name
-     * @param string $comment
-     */
     public function __construct(string $name, string $comment = '')
     {
         parent::__construct($name, 'JobHandler', [], $comment);
@@ -28,9 +17,6 @@ class JobHandlerDeclaration extends ClassDeclaration implements DependedInterfac
         $this->declareStructure();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies(): array
     {
         return [JobHandler::class => null];

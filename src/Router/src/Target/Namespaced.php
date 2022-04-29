@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router\Target;
 
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Router\Exception\TargetException;
 
 /**
@@ -20,29 +15,17 @@ use Spiral\Router\Exception\TargetException;
  */
 final class Namespaced extends AbstractTarget
 {
-    /** @var string */
-    private $namespace;
+    private readonly string $namespace;
+    private readonly string $postfix;
+    private readonly Inflector $inflector;
 
-    /** @var string */
-    private $postfix;
-
-    /** @var \Doctrine\Inflector\Inflector */
-    private $inflector;
-
-    /**
-     * @param string $namespace
-     * @param string $postfix
-     * @param int    $options
-     * @param string $defaultAction
-     */
     public function __construct(
         string $namespace,
         string $postfix = 'Controller',
-        int $options = 0,
-        string $defaultAction = 'index'
+        int $options = 0
     ) {
-        $this->namespace = rtrim($namespace, '\\');
-        $this->postfix = ucfirst($postfix);
+        $this->namespace = \rtrim($namespace, '\\');
+        $this->postfix = \ucfirst($postfix);
 
         parent::__construct(
             ['controller' => null, 'action' => null],
@@ -50,19 +33,16 @@ final class Namespaced extends AbstractTarget
             $options
         );
 
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
+        $this->inflector = (new InflectorFactory())->build();
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function resolveController(array $matches): string
     {
-        if (preg_match('/[^a-z_0-9\-]/i', $matches['controller'])) {
+        if (\preg_match('/[^a-z_0-9\-]/i', $matches['controller'])) {
             throw new TargetException('Invalid namespace target, controller name not allowed.');
         }
 
-        return sprintf(
+        return \sprintf(
             '%s\\%s%s',
             $this->namespace,
             $this->inflector->classify($matches['controller']),
@@ -70,9 +50,6 @@ final class Namespaced extends AbstractTarget
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function resolveAction(array $matches): ?string
     {
         return $matches['action'];

@@ -21,10 +21,10 @@ class ConfigsTest extends TestCase
 {
     public function testDirectories(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root'   => __DIR__,
             'config' => __DIR__ . '/config'
-        ]);
+        ])->run();
 
         /** @var TestConfig $config */
         $config = $core->getContainer()->get(TestConfig::class);
@@ -34,10 +34,10 @@ class ConfigsTest extends TestCase
 
     public function testCustomConfigLoader(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
-        ]);
+        ])->run();
 
         /** @var ConfiguratorInterface $config */
         $configurator = $core->getContainer()->get(ConfiguratorInterface::class);

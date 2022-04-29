@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Translator;
@@ -26,23 +19,16 @@ interface TranslatorInterface extends \Symfony\Contracts\Translation\TranslatorI
 
     /**
      * Currently active locale.
-     *
-     * @return string
      */
     public function getLocale(): string;
 
     /**
      * Resolve domain name for given bundle.
-     *
-     * @param string $bundle
-     * @return string
      */
     public function getDomain(string $bundle): string;
 
     /**
      * Get associated catalogue manager.
-     *
-     * @return CatalogueManagerInterface
      */
     public function getCatalogueManager(): CatalogueManagerInterface;
 }

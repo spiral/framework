@@ -119,4 +119,44 @@ class MessageTest extends TestCase
         $m->setReplyTo(null);
         $this->assertNull($m->getReplyTo());
     }
+
+    public function testSetDelayInSeconds()
+    {
+        $m = new Message('test', 'email@domain.com');
+        $m->setDelay(100);
+
+        $this->assertSame([
+            'delay' => 100
+        ], $m->getOptions());
+    }
+
+    public function testSetDelayInDateInterval()
+    {
+        $m = new Message('test', 'email@domain.com');
+        $m->setDelay(new \DateInterval('PT56S'));
+
+        $this->assertSame([
+            'delay' => 56
+        ], $m->getOptions());
+    }
+
+    public function testSetDelayInDateTime()
+    {
+        $m = new Message('test', 'email@domain.com');
+        $m->setDelay(new \DateTimeImmutable('+ 123 second'));
+
+        $this->assertSame([
+            'delay' => 123
+        ], $m->getOptions());
+    }
+
+    public function testSetDelayInDateTimeWithPastTime()
+    {
+        $m = new Message('test', 'email@domain.com');
+        $m->setDelay(new \DateTimeImmutable('- 123 second'));
+
+        $this->assertSame([
+            'delay' => 0
+        ], $m->getOptions());
+    }
 }

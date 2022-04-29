@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Session;
@@ -38,49 +31,24 @@ final class Session implements SessionInterface
      */
     private const DEFAULT_SECTION = '_DEFAULT';
 
-    /**
-     * Unique string to identify client. Signature is stored inside the session.
-     *
-     * @var string
-     */
-    private $clientSignature;
+    private ?string $id = null;
+    private bool $started = false;
 
     /**
-     * Session lifetime in seconds.
-     *
-     * @var int
+     * @param string $clientSignature Unique string to identify client. Signature is stored inside the session.
+     * @param int $lifetime Session lifetime in seconds.
      */
-    private $lifetime;
-
-    /**
-     * @var string
-     */
-    private $id = null;
-
-    /**
-     * @var bool
-     */
-    private $started = false;
-
-    /**
-     * @param string      $clientSignature
-     * @param int         $lifetime
-     * @param string|null $id
-     */
-    public function __construct(string $clientSignature, int $lifetime, string $id = null)
-    {
-        $this->clientSignature = $clientSignature;
-        $this->lifetime = $lifetime;
-
+    public function __construct(
+        private readonly string $clientSignature,
+        private readonly int $lifetime,
+        string $id = null
+    ) {
         if (!empty($id) && $this->validID($id)) {
             $this->id = $id;
         }
     }
 
-    /**
-     * @return array
-     */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'id'        => $this->id,
@@ -90,17 +58,11 @@ final class Session implements SessionInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isStarted(): bool
     {
         return $this->started;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function resume(): void
     {
         if ($this->isStarted()) {
@@ -108,14 +70,14 @@ final class Session implements SessionInterface
         }
 
         if (!empty($this->id)) {
-            session_id($this->id);
+            \session_id($this->id);
         } else {
             // always new id
-            session_id(session_create_id());
+            \session_id(\session_create_id());
         }
 
         try {
-            session_start(['use_cookies' => false]);
+            \session_start(['use_cookies' => false]);
         } catch (\Throwable $e) {
             throw new SessionException('Unable to start session', $e->getCode(), $e);
         }
@@ -123,11 +85,11 @@ final class Session implements SessionInterface
         if (empty($this->id)) {
             //Sign newly created session
             $_SESSION[self::CLIENT_SIGNATURE] = $this->clientSignature;
-            $_SESSION[self::SESSION_CREATED] = time();
+            $_SESSION[self::SESSION_CREATED] = \time();
         }
 
         //We got new session
-        $this->id = session_id();
+        $this->id = \session_id();
         $this->started = true;
 
         //Ensure that session is valid
@@ -136,28 +98,22 @@ final class Session implements SessionInterface
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getID(): ?string
     {
         return $this->id;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function regenerateID(): SessionInterface
     {
         $this->resume();
 
         //Gaining new ID
-        session_regenerate_id();
-        $this->id = session_id();
+        \session_regenerate_id();
+        $this->id = \session_id();
 
         //Updating session duration
-        $_SESSION[self::SESSION_CREATED] = time();
-        session_write_close();
+        $_SESSION[self::SESSION_CREATED] = \time();
+        \session_write_close();
 
         //Restarting session under new ID
         $this->resume();
@@ -165,54 +121,41 @@ final class Session implements SessionInterface
         return $this;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function commit(): bool
     {
         if (!$this->isStarted()) {
             return false;
         }
 
-        session_write_close();
+        \session_write_close();
         $this->started = false;
 
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function abort(): bool
     {
         if (!$this->isStarted()) {
             return false;
         }
 
-        session_abort();
+        \session_abort();
         $this->started = false;
 
         return true;
     }
 
-
-    /**
-     * @inheritdoc
-     */
     public function destroy(): bool
     {
         $this->resume();
         $_SESSION = [
             self::CLIENT_SIGNATURE => $this->clientSignature,
-            self::SESSION_CREATED  => time(),
+            self::SESSION_CREATED  => \time(),
         ];
 
         return $this->commit();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getSection(string $name = null): SessionSectionInterface
     {
         return new SessionSection($this, $name ?? static::DEFAULT_SECTION);
@@ -220,30 +163,24 @@ final class Session implements SessionInterface
 
     /**
      * Check if session is valid for
-     *
-     * @return bool
      */
     protected function validSession(): bool
     {
         if (
-            !array_key_exists(self::CLIENT_SIGNATURE, $_SESSION)
-            || !array_key_exists(self::SESSION_CREATED, $_SESSION)
+            !\array_key_exists(self::CLIENT_SIGNATURE, $_SESSION)
+            || !\array_key_exists(self::SESSION_CREATED, $_SESSION)
         ) {
             //Missing session signature or timestamp!
             return false;
         }
 
-        if ($_SESSION[self::SESSION_CREATED] < time() - $this->lifetime) {
+        if ($_SESSION[self::SESSION_CREATED] < \time() - $this->lifetime) {
             //Session expired
             return false;
         }
 
-        if (!hash_equals($_SESSION[self::CLIENT_SIGNATURE], $this->clientSignature)) {
-            //Signatures do not match
-            return false;
-        }
-
-        return true;
+        //Signatures do not match
+        return \hash_equals($_SESSION[self::CLIENT_SIGNATURE], $this->clientSignature);
     }
 
     /**
@@ -260,12 +197,9 @@ final class Session implements SessionInterface
 
     /**
      * Check if given session ID valid.
-     *
-     * @param string $id
-     * @return bool
      */
     private function validID(string $id): bool
     {
-        return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id) !== false;
+        return \preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id) !== false;
     }
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Translator;
@@ -20,16 +13,11 @@ interface CatalogueManagerInterface
 {
     /**
      * Get list of all existed locales.
-     *
-     * @return array
      */
     public function getLocales(): array;
 
     /**
      * Load catalogue.
-     *
-     * @param string $locale
-     * @return CatalogueInterface
      *
      * @throws LocaleException
      */
@@ -37,24 +25,16 @@ interface CatalogueManagerInterface
 
     /**
      * Save catalogue changes.
-     *
-     * @param string $locale
      */
-    public function save(string $locale);
+    public function save(string $locale): void;
 
     /**
      * Check if locale exists.
-     *
-     * @param string $locale
-     * @return bool
      */
     public function has(string $locale): bool;
 
     /**
      * Get catalogue associated with the locale.
-     *
-     * @param string $locale
-     * @return CatalogueInterface
      *
      * @throws LocaleException
      */

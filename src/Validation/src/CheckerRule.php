@@ -1,75 +1,39 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation;
 
-use Spiral\Translator\Translator;
+use Spiral\Translator\Traits\TranslatorTrait;
 
 final class CheckerRule extends AbstractRule
 {
-    /** @var CheckerInterface */
-    private $checker;
+    use TranslatorTrait;
 
-    /** @var string */
-    private $method;
-
-    /** @var array */
-    private $args;
-
-    /** @var string|null */
-    private $message;
-
-    /**
-     * @param CheckerInterface $checker
-     * @param string           $method
-     * @param array            $args
-     * @param null|string      $message
-     */
     public function __construct(
-        CheckerInterface $checker,
-        string $method,
-        array $args = [],
-        ?string $message = null
+        private readonly CheckerInterface $checker,
+        private readonly string $method,
+        private readonly array $args = [],
+        private readonly ?string $message = null
     ) {
-        $this->checker = $checker;
-        $this->method = $method;
-        $this->args = $args;
-        $this->message = $message;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function ignoreEmpty($value): bool
+    public function ignoreEmpty(mixed $value): bool
     {
         return $this->checker->ignoreEmpty($this->method, $value, $this->args);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function validate(ValidatorInterface $v, string $field, $value): bool
+    public function validate(ValidatorInterface $v, string $field, mixed $value): bool
     {
         return $this->checker->check($v, $this->method, $field, $value, $this->args);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getMessage(string $field, $value): string
+    public function getMessage(string $field, mixed $value): string
     {
         if (!empty($this->message)) {
-            return Translator::interpolate(
+            return $this->say(
                 $this->message,
-                array_merge([$value, $field], $this->args)
+                \array_merge([$value, $field], $this->args)
             );
         }
 

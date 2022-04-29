@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Merge;
@@ -29,41 +22,24 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class ResolveImports implements VisitorInterface
 {
-    /** @var string */
-    private $useKeyword = 'use:';
+    private string $useKeyword = 'use:';
 
-    /** @var Builder */
-    private $builder;
-
-    /** @var Merger */
-    private $merger;
-
-    /**
-     * @param Builder $builder
-     * @param Merger  $merger
-     */
-    public function __construct(Builder $builder, Merger $merger = null)
-    {
-        $this->builder = $builder;
-        $this->merger = $merger ?? new Merger();
+    public function __construct(
+        private readonly Builder $builder,
+        private readonly Merger $merger = new Merger()
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx)
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
-        if ($node instanceof Tag && strpos($node->name, $this->useKeyword) === 0) {
+        if ($node instanceof Tag && \str_starts_with($node->name, $this->useKeyword)) {
             return self::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
         }
 
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx)
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
         if (!$node instanceof Tag) {
             return null;
@@ -72,7 +48,7 @@ final class ResolveImports implements VisitorInterface
         $importCtx = ImportContext::on($ctx);
 
         // import definition
-        if (strpos($node->name, $this->useKeyword) === 0) {
+        if (\str_starts_with($node->name, $this->useKeyword)) {
             $importCtx->add($this->makeImport($node));
 
             return self::REMOVE_NODE;
@@ -83,7 +59,7 @@ final class ResolveImports implements VisitorInterface
             $import = $importCtx->resolve($this->builder, $node->name);
         } catch (\Throwable $e) {
             throw new ImportException(
-                "Unable to resolve import `{$node->name}`",
+                \sprintf('Unable to resolve import `%s`', $node->name),
                 $node->getContext(),
                 $e
             );
@@ -101,19 +77,19 @@ final class ResolveImports implements VisitorInterface
     /**
      * Create import definition (aka "use").
      *
-     * @param Tag $tag
      * @return ImportInterface|null
      */
     private function makeImport(Tag $tag): ImportInterface
     {
         $options = [];
         foreach ($tag->attrs as $attr) {
-            if (is_string($attr->value)) {
-                $options[$attr->name] = trim($attr->value, '\'"');
+            if (!\is_string($attr->value) || !\is_string($attr->name)) {
+                continue;
             }
+            $options[$attr->name] = \trim($attr->value, '\'"');
         }
 
-        switch (strtolower($tag->name)) {
+        switch (\strtolower($tag->name)) {
             case 'use':
             case 'use:element':
                 $this->assertHasOption('path', $options, $tag);
@@ -153,19 +129,14 @@ final class ResolveImports implements VisitorInterface
                 );
 
             default:
-                return null;
+                throw new ImportException(\sprintf('Can not import tag `%s`.', $tag->name), $tag->getContext());
         }
     }
 
-    /**
-     * @param string $option
-     * @param array  $options
-     * @param Tag    $tag
-     */
     private function assertHasOption(string $option, array $options, Tag $tag): void
     {
         if (!isset($options[$option])) {
-            throw new ImportException("Missing `{$option}` option", $tag->getContext());
+            throw new ImportException(\sprintf('Missing `%s` option', $option), $tag->getContext());
         }
     }
 }

@@ -55,21 +55,21 @@ class ConfigureTest extends BaseTest
         $actual = $core->run('configure')->getOutput()->fetch();
 
         $expected = <<<'text'
-Configuring project:
+            Configuring project:
 
-Test Command
-Hello World - 0
-hello
-Good!
+            Test Command
+            Hello World - 0
+            hello
+            Good!
 
-OK
-OK
-OK2
-exception
+            OK
+            OK
+            OK2
+            exception
 
-All done!
+            All done!
 
-text;
+            text;
 
         $this->assertSame(
             \str_replace("\r", '', $expected),

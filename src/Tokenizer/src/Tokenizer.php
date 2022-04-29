@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
@@ -29,25 +22,23 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     public const CODE = 1;
     public const LINE = 2;
 
-    /** @var TokenizerConfig */
-    protected $config;
+    public function __construct(
+        private readonly TokenizerConfig $config
+    ) {
+    }
 
     /**
-     * Tokenizer constructor.
-     *
-     * @param TokenizerConfig $config
+     * Get pre-configured class locator for specific scope.
      */
-    public function __construct(TokenizerConfig $config)
+    public function scopedClassLocator(string $scope): ClassesInterface
     {
-        $this->config = $config;
+        $dirs = $this->config->getScope($scope);
+
+        return $this->classLocator($dirs['directories'], $dirs['exclude']);
     }
 
     /**
      * Get pre-configured class locator.
-     *
-     * @param array $directories
-     * @param array $exclude
-     * @return ClassesInterface
      */
     public function classLocator(
         array $directories = [],
@@ -58,10 +49,6 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
 
     /**
      * Get pre-configured invocation locator.
-     *
-     * @param array $directories
-     * @param array $exclude
-     * @return InvocationsInterface
      */
     public function invocationLocator(
         array $directories = [],
@@ -71,30 +58,29 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws InjectionException
      */
-    public function createInjection(\ReflectionClass $class, string $context = null)
-    {
+    public function createInjection(
+        \ReflectionClass $class,
+        string $context = null
+    ): ClassesInterface|InvocationsInterface {
         if ($class->isSubclassOf(ClassesInterface::class)) {
             return $this->classLocator();
-        } elseif ($class->isSubclassOf(InvocationsInterface::class)) {
+        }
+
+        if ($class->isSubclassOf(InvocationsInterface::class)) {
             return $this->invocationLocator();
         }
 
-        throw new InjectionException("Unable to create injection for {$class}");
+        throw new InjectionException(\sprintf('Unable to create injection for %s', $class));
     }
 
     /**
      * Get all tokes for specific file.
-     *
-     * @param string $filename
-     * @return array
      */
     public static function getTokens(string $filename): array
     {
-        $tokens = token_get_all(file_get_contents($filename));
+        $tokens = \token_get_all(\file_get_contents($filename));
 
         $line = 0;
         foreach ($tokens as &$token) {
@@ -102,7 +88,7 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
                 $line = $token[self::LINE];
             }
 
-            if (!is_array($token)) {
+            if (!\is_array($token)) {
                 $token = [$token, $token, $line];
             }
 
@@ -115,8 +101,6 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     /**
      * @param array $directories Overwrites default config values.
      * @param array $exclude     Overwrites default config values.
-     *
-     * @return Finder
      */
     private function makeFinder(array $directories = [], array $exclude = []): Finder
     {

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core;
@@ -24,13 +17,10 @@ interface FactoryInterface
      * by user, rest of constructor parameters must be filled by container. Method might return
      * pre-constructed singleton when no parameters are specified.
      *
-     * @param string $alias
-     * @param array  $parameters Parameters to construct new class.
-     *
-     * @return mixed|null|object
+     * @param array $parameters Parameters to construct new class.
      *
      * @throws AutowireException
      * @throws ArgumentException
      */
-    public function make(string $alias, array $parameters = []);
+    public function make(string $alias, array $parameters = []): mixed;
 }

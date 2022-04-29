@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
@@ -22,9 +15,6 @@ use Spiral\Reactor\Partial\Property;
  */
 final class Properties extends Aggregator
 {
-    /**
-     * @param array $constants
-     */
     public function __construct(array $constants)
     {
         parent::__construct([Property::class], $constants);
@@ -33,7 +23,6 @@ final class Properties extends Aggregator
     /**
      * Get named element by it's name.
      *
-     * @param string $name
      * @return Property|DeclarationInterface
      */
     public function get(string $name): Property

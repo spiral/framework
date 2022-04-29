@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Bridge;
@@ -37,22 +30,11 @@ use Spiral\Attributes\ReaderInterface;
  */
 final class DoctrineReaderBridge implements Reader
 {
-    /**
-     * @var ReaderInterface
-     */
-    private ReaderInterface $reader;
-
-    /**
-     * @param ReaderInterface $reader
-     */
-    public function __construct(ReaderInterface $reader)
-    {
-        $this->reader = $reader;
+    public function __construct(
+        private readonly ReaderInterface $reader
+    ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getClassAnnotations(\ReflectionClass $class): array
     {
         return $this->iterableToArray(
@@ -60,17 +42,11 @@ final class DoctrineReaderBridge implements Reader
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getClassAnnotation(\ReflectionClass $class, $annotationName)
+    public function getClassAnnotation(\ReflectionClass $class, $annotationName): ?object
     {
         return $this->reader->firstClassMetadata($class, $annotationName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getMethodAnnotations(\ReflectionMethod $method): array
     {
         return $this->iterableToArray(
@@ -78,17 +54,11 @@ final class DoctrineReaderBridge implements Reader
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
+    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName): ?object
     {
         return $this->reader->firstFunctionMetadata($method, $annotationName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getPropertyAnnotations(\ReflectionProperty $property): array
     {
         return $this->iterableToArray(
@@ -96,10 +66,7 @@ final class DoctrineReaderBridge implements Reader
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
+    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName): ?object
     {
         return $this->reader->firstPropertyMetadata($property, $annotationName);
     }

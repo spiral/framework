@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -21,8 +14,6 @@ interface TargetInterface
 {
     /**
      * Set of default values provided by the target.
-     *
-     * @return array
      */
     public function getDefaults(): array;
 
@@ -32,17 +23,12 @@ interface TargetInterface
      * Examples:
      * ["controller" => null, "action" => "login"]
      * ["action" => ["login", "logout"]]
-     *
-     * @return array
      */
     public function getConstrains(): array;
 
     /**
      * Generates target handler.
      *
-     * @param ContainerInterface $container
-     * @param array              $matches
-     * @return Handler
      *
      * @throws \Spiral\Router\Exception\TargetException
      */

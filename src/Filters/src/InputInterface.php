@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Filters;
@@ -28,21 +21,16 @@ interface InputInterface
      *
      * @param string $prefix
      * @param bool   $add When set to false current prefix path will be overwritten.
-     * @return InputInterface
      */
     public function withPrefix(string $prefix, bool $add = true): InputInterface;
 
     /**
      * Get input value based on it's source and name.
      *
-     * @param string $source
-     * @param string $name
-     * @return mixed
-     *
      * @throws InputException
      */
-    public function getValue(string $source, string $name = null);
-
+    public function getValue(string $source, string $name = null): mixed;
+    
     /**
      * Returns true if the parameter name exists in the source, otherwise returns false.
      *

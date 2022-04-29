@@ -8,12 +8,6 @@ class ThresholdChecker
 {
     /**
      * Check if date comes before the given one. Do not compare if the given date is missing or invalid.
-     *
-     * @param \DateTimeInterface|null $value
-     * @param \DateTimeInterface|null $threshold
-     * @param bool                    $orEquals
-     * @param bool                    $useMicroSeconds
-     * @return bool
      */
     public function before(
         ?\DateTimeInterface $value,
@@ -22,7 +16,7 @@ class ThresholdChecker
         bool $useMicroSeconds = false
     ): bool {
         $compare = $this->compare($this->date($value), $this->date($threshold), $useMicroSeconds);
-        if (is_bool($compare)) {
+        if (\is_bool($compare)) {
             return $compare;
         }
 
@@ -31,12 +25,6 @@ class ThresholdChecker
 
     /**
      * Check if date comes after the given one. Do not compare if the given date is missing or invalid.
-     *
-     * @param \DateTimeInterface|null $value
-     * @param \DateTimeInterface|null $threshold
-     * @param bool                    $orEquals
-     * @param bool                    $useMicroSeconds
-     * @return bool
      */
     public function after(
         ?\DateTimeInterface $value,
@@ -45,37 +33,23 @@ class ThresholdChecker
         bool $useMicroSeconds = false
     ): bool {
         $compare = $this->compare($this->date($value), $this->date($threshold), $useMicroSeconds);
-        if (is_bool($compare)) {
+        if (\is_bool($compare)) {
             return $compare;
         }
 
         return $orEquals ? $compare >= 0 : $compare > 0;
     }
 
-    /**
-     * @param mixed $value
-     * @return \DateTimeImmutable|null
-     */
-    private function date($value): ?\DateTimeImmutable
+    private function date(mixed $value = null): ?\DateTimeImmutable
     {
-        if ($value instanceof \DateTimeImmutable) {
-            return $value;
-        }
-
-        if ($value instanceof \DateTime) {
-            return \DateTimeImmutable::createFromMutable($value);
-        }
-
-        return null;
+        return match (true) {
+            $value instanceof \DateTimeImmutable => $value,
+            $value instanceof \DateTime => \DateTimeImmutable::createFromMutable($value),
+            default => null
+        };
     }
 
-    /**
-     * @param \DateTimeImmutable|null $date
-     * @param \DateTimeImmutable|null $threshold
-     * @param bool                    $useMicroseconds
-     * @return bool|int
-     */
-    private function compare(?\DateTimeImmutable $date, ?\DateTimeImmutable $threshold, bool $useMicroseconds)
+    private function compare(?\DateTimeImmutable $date, ?\DateTimeImmutable $threshold, bool $useMicroseconds): bool|int
     {
         if ($date === null) {
             return false;
@@ -93,10 +67,6 @@ class ThresholdChecker
         return $date <=> $threshold;
     }
 
-    /**
-     * @param \DateTimeImmutable $date
-     * @return \DateTimeImmutable
-     */
     private function dropMicroSeconds(\DateTimeImmutable $date): \DateTimeImmutable
     {
         return $date->setTime(

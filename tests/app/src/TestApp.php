@@ -12,16 +12,17 @@ declare(strict_types=1);
 namespace Spiral\App;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Boot\BootloadManager;
+use Spiral\App\Bootloader\AppBootloader;
+use Spiral\App\Bootloader\AuthBootloader;
+use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader;
+use Spiral\Bootloader\ExceptionHandlerBootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
-use Spiral\App\Bootloader\AppBootloader;
-use Spiral\App\Bootloader\AuthBootloader;
-use Spiral\App\Bootloader\WSBootloader;
+use Spiral\Stempler\Bootloader\StemplerBootloader;
 
 class TestApp extends Kernel
 {
@@ -32,17 +33,15 @@ class TestApp extends Kernel
 
         // Validation, filtration, security
         Bootloader\Security\EncrypterBootloader::class,
-        Bootloader\Security\ValidationBootloader::class,
+        \Spiral\Validation\Bootloader\ValidationBootloader::class,
         Bootloader\Security\FiltersBootloader::class,
         Bootloader\Security\GuardBootloader::class,
 
         // Dispatchers
-        Bootloader\Jobs\JobsBootloader::class,
-        Bootloader\GRPC\GRPCBootloader::class,
-        Bootloader\ConsoleBootloader::class,
+        \Spiral\Console\Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
-        Bootloader\Http\DiactorosBootloader::class,
+        \Spiral\Http\Bootloader\DiactorosBootloader::class,
         Bootloader\Http\RouterBootloader::class,
         Bootloader\Http\ErrorHandlerBootloader::class,
         Bootloader\Http\JsonPayloadsBootloader::class,
@@ -51,31 +50,28 @@ class TestApp extends Kernel
         Bootloader\Http\CsrfBootloader::class,
         Bootloader\Http\PaginationBootloader::class,
 
+        // Cache
+        \Spiral\Cache\Bootloader\CacheBootloader::class,
+
         // Auth
         Bootloader\Auth\HttpAuthBootloader::class,
-
-        // Websocket authentication
-        Bootloader\Http\WebsocketsBootloader::class,
 
         // selects between session and cycle based on env configuration
         AuthBootloader::class,
 
-        // Data and Storage
-        Bootloader\Database\DatabaseBootloader::class,
-        Bootloader\Database\MigrationsBootloader::class,
-
-        Bootloader\Cycle\CycleBootloader::class,
-        Bootloader\Cycle\AnnotatedBootloader::class,
-        Bootloader\Cycle\ProxiesBootloader::class,
-
         // Template engines and rendering
-        Bootloader\Views\ViewsBootloader::class,
+        StemplerBootloader::class,
+        \Spiral\Views\Bootloader\ViewsBootloader::class,
         Bootloader\Views\TranslatedCacheBootloader::class,
+
+        // Storage
+        \Spiral\Storage\Bootloader\StorageBootloader::class,
 
         // Framework commands
         Bootloader\CommandBootloader::class,
 
         // Debug and debug extensions
+        ExceptionHandlerBootloader::class,
         Bootloader\DebugBootloader::class,
         Bootloader\Debug\LogCollectorBootloader::class,
         Bootloader\Debug\HttpCollectorBootloader::class
@@ -83,7 +79,6 @@ class TestApp extends Kernel
 
     public const APP = [
         AppBootloader::class,
-        WSBootloader::class
     ];
 
     /**

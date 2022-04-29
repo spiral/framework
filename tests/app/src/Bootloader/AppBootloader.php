@@ -18,16 +18,12 @@ use Spiral\App\Controller\AuthController;
 use Spiral\App\Controller\InterceptedController;
 use Spiral\App\Controller\TestController;
 use Spiral\App\Interceptor;
-use Spiral\App\User\UserRepository;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
 use Spiral\Bootloader\Http\JsonPayloadsBootloader;
-use Spiral\Bootloader\Security\ValidationBootloader;
-use Spiral\Bootloader\Views\ViewsBootloader;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptableCore;
-use Spiral\Domain\CycleInterceptor;
 use Spiral\Domain\FilterInterceptor;
 use Spiral\Domain\GuardInterceptor;
 use Spiral\Domain\PipelineInterceptor;
@@ -36,6 +32,8 @@ use Spiral\Router\RouterInterface;
 use Spiral\Router\Target\Action;
 use Spiral\Router\Target\Controller;
 use Spiral\Security\PermissionsInterface;
+use Spiral\Validation\Bootloader\ValidationBootloader;
+use Spiral\Views\Bootloader\ViewsBootloader;
 
 class AppBootloader extends DomainBootloader
 {
@@ -44,7 +42,6 @@ class AppBootloader extends DomainBootloader
     ];
 
     protected const INTERCEPTORS = [
-        CycleInterceptor::class,
         GuardInterceptor::class,
         FilterInterceptor::class
     ];
@@ -60,8 +57,7 @@ class AppBootloader extends DomainBootloader
         $this->core = $core;
     }
 
-    public function boot(
-        \Spiral\Bootloader\Auth\AuthBootloader $authBootloader,
+    public function init(
         RouterInterface $router,
         PermissionsInterface $rbac,
         ViewsBootloader $views,
@@ -69,8 +65,6 @@ class AppBootloader extends DomainBootloader
         JsonPayloadsBootloader $json,
         PipelineInterceptor $pipelineInterceptor
     ): void {
-        $authBootloader->addActorProvider(UserRepository::class);
-
         $rbac->addRole('user');
         $rbac->associate('user', '*');
 
@@ -90,6 +84,7 @@ class AppBootloader extends DomainBootloader
         );
 
         $views->addDirectory('custom', __DIR__ . '/../../views/custom/');
+        $views->addDirectory('stempler', __DIR__ . '/../../views/stempler/');
         $views->addEngine(TestEngine::class);
 
         $validation->addAlias('aliased', 'notEmpty');
@@ -148,6 +143,64 @@ class AppBootloader extends DomainBootloader
         $this->registerInterceptedRoute(
             $router,
             'first',
+            [
+                $pipelineInterceptor,
+                new Interceptor\Append('four'),
+                new Interceptor\Append('five'),
+                new Interceptor\Append('six'),
+            ]
+        );
+
+        $this->registerInterceptedRoute(
+            $router,
+            'withoutAttribute',
+            [
+                new Interceptor\Append('one'),
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+
+        $this->registerInterceptedRoute(
+            $router,
+            'withAttribute',
+            [
+                $pipelineInterceptor,
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'mixAttribute',
+            [
+                new Interceptor\Append('four'),
+                new Interceptor\Append('five'),
+                $pipelineInterceptor,
+                new Interceptor\Append('six'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'dupAttribute',
+            [
+                $pipelineInterceptor,
+                new Interceptor\Append('one'),
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'skipAttribute',
+            [
+                new Interceptor\Append('one'),
+                $pipelineInterceptor,
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'firstAttribute',
             [
                 $pipelineInterceptor,
                 new Interceptor\Append('four'),

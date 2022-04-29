@@ -1,70 +1,39 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\KernelInterface;
-use Spiral\Bootloader\ServerBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Core\FactoryInterface;
 use Spiral\Http\Config\HttpConfig;
-use Spiral\Http\Emitter\SapiEmitter;
-use Spiral\Http\EmitterInterface;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
-use Spiral\Http\LegacyRrDispatcher;
-use Spiral\Http\RrDispatcher;
-use Spiral\Http\SapiDispatcher;
-use Spiral\RoadRunner\Http\PSR7Worker;
-use Spiral\RoadRunner\PSR7Client;
 
 /**
- * Configures Http dispatcher in SAPI and RoadRunner modes (if available).
+ * Configures Http dispatcher.
  */
 final class HttpBootloader extends Bootloader implements SingletonInterface
 {
-    protected const DEPENDENCIES = [
-        ServerBootloader::class,
-    ];
-
     protected const SINGLETONS = [
-        Http::class             => [self::class, 'httpCore'],
-        EmitterInterface::class => SapiEmitter::class,
+        Http::class => [self::class, 'httpCore'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /**
-     * @param ConfiguratorInterface $config
-     */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
-    /**
-     * @param KernelInterface  $kernel
-     * @param FactoryInterface $factory
-     */
-    public function boot(KernelInterface $kernel, FactoryInterface $factory): void
+    public function init(): void
     {
         $this->config->setDefaults(
-            'http',
+            HttpConfig::CONFIG,
             [
                 'basePath'   => '/',
                 'headers'    => [
@@ -73,36 +42,18 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
                 'middleware' => [],
             ]
         );
-
-        $kernel->addDispatcher($factory->make(SapiDispatcher::class));
-
-        if (class_exists(PSR7Client::class)) {
-            $kernel->addDispatcher($factory->make(LegacyRrDispatcher::class));
-        }
-
-        if (class_exists(PSR7Worker::class)) {
-            $kernel->addDispatcher($factory->make(RrDispatcher::class));
-        }
     }
 
     /**
      * Register new http middleware.
      *
-     * @param mixed $middleware
+     * @psalm-param MiddlewareInterface|class-string<MiddlewareInterface>
      */
-    public function addMiddleware($middleware): void
+    public function addMiddleware(string|MiddlewareInterface $middleware): void
     {
         $this->config->modify('http', new Append('middleware', null, $middleware));
     }
 
-    /**
-     * @param HttpConfig               $config
-     * @param Pipeline                 $pipeline
-     * @param RequestHandlerInterface  $handler
-     * @param ResponseFactoryInterface $responseFactory
-     * @param ContainerInterface       $container
-     * @return Http
-     */
     protected function httpCore(
         HttpConfig $config,
         Pipeline $pipeline,

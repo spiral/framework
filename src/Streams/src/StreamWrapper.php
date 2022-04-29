@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Streams;
@@ -24,19 +17,16 @@ final class StreamWrapper
      *
      * @var resource
      */
-    public $context = null;
-    /** @var bool */
-    private static $registered = false;
+    public mixed $context = null;
+
+    private static bool $registered = false;
 
     /**
      * Uris associated with StreamInterfaces.
-     *
-     * @var array
      */
-    private static $uris = [];
+    private static array $uris = [];
 
-    /** @var array */
-    private static $modes = [
+    private static array $modes = [
         'r'   => 33060,
         'rb'  => 33060,
         'r+'  => 33206,
@@ -45,32 +35,21 @@ final class StreamWrapper
         'wb'  => 33188,
     ];
 
-    /** @var StreamInterface */
-    private $stream = null;
-
-    /** @var int */
-    private $mode = 0;
+    private ?StreamInterface $stream = null;
+    private string $mode = '';
 
     /**
      * Check if StreamInterface ended.
-     *
-     * @return bool
      */
-    public function stream_eof()
+    public function stream_eof(): bool
     {
         return $this->stream->eof();
     }
 
     /**
      * Open pre-mocked StreamInterface by it's unique uri.
-     *
-     * @param string  $path
-     * @param int     $mode
-     * @param int     $options
-     * @param string &$opened_path
-     * @return bool
      */
-    public function stream_open($path, $mode, $options, &$opened_path)
+    public function stream_open(string $path, string $mode, int $options, ?string &$opened_path): bool
     {
         if (!isset(self::$uris[$path])) {
             return false;
@@ -86,23 +65,16 @@ final class StreamWrapper
 
     /**
      * Read data from StreamInterface.
-     *
-     * @param int $count
-     * @return string
      */
-    public function stream_read($count)
+    public function stream_read(int $length): string|false
     {
-        return $this->stream->read($count);
+        return $this->stream->isReadable() ? $this->stream->read($length) : false;
     }
 
     /**
      * Seek into StreamInterface.
-     *
-     * @param int $offset
-     * @param int $whence = SEEK_SET
-     * @return bool
      */
-    public function stream_seek($offset, $whence = SEEK_SET)
+    public function stream_seek(int $offset, int $whence = SEEK_SET): bool
     {
         //Note, MongoDB native streams DO NOT support seeking at the moment
         //@see https://jira.mongodb.org/browse/PHPLIB-213
@@ -115,19 +87,16 @@ final class StreamWrapper
      * Get StreamInterface stats.
      *
      * @see stat()
-     * @return array|null
      */
-    public function stream_stat()
+    public function stream_stat(): array
     {
         return $this->getStreamStats($this->stream);
     }
 
     /**
      * Get StreamInterface position.
-     *
-     * @return int
      */
-    public function stream_tell()
+    public function stream_tell(): int
     {
         //Note, MongoDB native streams DO NOT support seeking at the moment
         //@see https://jira.mongodb.org/browse/PHPLIB-213
@@ -136,12 +105,8 @@ final class StreamWrapper
 
     /**
      * Write content into StreamInterface.
-     *
-     * @param string $data
-     *
-     * @return int
      */
-    public function stream_write($data)
+    public function stream_write(string $data): int
     {
         return $this->stream->write($data);
     }
@@ -150,44 +115,44 @@ final class StreamWrapper
      * Get stats based on wrapped StreamInterface by it's mocked uri.
      *
      * @see stat()
-     * @param string $path
-     * @param int    $flags
-     * @return array|null
      */
-    public function url_stat($path, $flags)
+    public function url_stat(string $path, int $flag): array|false
     {
-        if (!isset(self::$uris[$path])) {
-            return null;
+        try {
+            if (isset(self::$uris[$path])) {
+                return $this->getStreamStats(self::$uris[$path]);
+            }
+        } catch (\Throwable $e) {
+            if (($flag & \STREAM_URL_STAT_QUIET) === \STREAM_URL_STAT_QUIET) {
+                return false;
+            }
+            \trigger_error($e->getMessage(), \E_USER_ERROR);
         }
 
-        return $this->getStreamStats(self::$uris[$path]);
+        return false;
     }
 
     /**
      * Register stream wrapper.
-     * @psalm-suppress UnusedFunctionCall
      */
-    public static function register()
+    public static function register(): void
     {
         if (self::$registered) {
             return;
         }
 
-        stream_wrapper_register('spiral', __CLASS__);
+        \stream_wrapper_register('spiral', self::class);
 
         self::$registered = true;
     }
 
     /**
      * Check if given uri or stream has been allocated.
-     *
-     * @param string|StreamInterface $file
-     * @return bool
      */
-    public static function has($file)
+    public static function has(StreamInterface|string $file): bool
     {
         if ($file instanceof StreamInterface) {
-            $file = 'spiral://' . spl_object_hash($file);
+            $file = 'spiral://' . \spl_object_hash($file);
         }
 
         return isset(self::$uris[$file]);
@@ -196,9 +161,7 @@ final class StreamWrapper
     /**
      * Create StreamInterface associated resource.
      *
-     * @param StreamInterface $stream
      * @return resource
-     *
      * @throws WrapperException
      */
     public static function getResource(StreamInterface $stream)
@@ -216,20 +179,17 @@ final class StreamWrapper
             throw new WrapperException('Stream is not available in read or write modes');
         }
 
-        return fopen(self::getFilename($stream), $mode);
+        return \fopen(self::getFilename($stream), $mode);
     }
 
     /**
      * Register StreamInterface and get unique url for it.
-     *
-     * @param StreamInterface $stream
-     * @return string
      */
-    public static function getFilename(StreamInterface $stream)
+    public static function getFilename(StreamInterface $stream): string
     {
         self::register();
 
-        $uri = 'spiral://' . spl_object_hash($stream);
+        $uri = 'spiral://' . \spl_object_hash($stream);
         self::$uris[$uri] = $stream;
 
         return $uri;
@@ -241,10 +201,10 @@ final class StreamWrapper
      *
      * @param string|StreamInterface $file String uri or StreamInterface.
      */
-    public static function release($file)
+    public static function release(StreamInterface|string $file): void
     {
         if ($file instanceof StreamInterface) {
-            $file = 'spiral://' . spl_object_hash($file);
+            $file = 'spiral://' . \spl_object_hash($file);
         }
 
         unset(self::$uris[$file]);
@@ -252,11 +212,8 @@ final class StreamWrapper
 
     /**
      * Helper method used to correctly resolve StreamInterface stats.
-     *
-     * @param StreamInterface $stream
-     * @return array
      */
-    private function getStreamStats(StreamInterface $stream)
+    private function getStreamStats(StreamInterface $stream): array
     {
         $mode = $this->mode;
         if (empty($mode)) {

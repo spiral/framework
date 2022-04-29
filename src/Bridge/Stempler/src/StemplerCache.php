@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler;
@@ -16,28 +9,14 @@ use Spiral\Files\FilesInterface;
 
 final class StemplerCache
 {
-    /** @var string */
-    private $directory;
-
-    /** @var FilesInterface */
-    private $files;
-
-    /**
-     * @param string         $directory
-     * @param FilesInterface $files
-     */
-    public function __construct(string $directory, FilesInterface $files = null)
-    {
-        $this->directory = $directory;
-        $this->files = $files ?? new Files();
+    public function __construct(
+        private readonly string $directory,
+        private readonly FilesInterface $files = new Files()
+    ) {
     }
 
     /**
      * Store template into cache and write invalidation map file.
-     *
-     * @param string $key
-     * @param string $content
-     * @param array  $paths
      */
     public function write(string $key, string $content, array $paths = []): void
     {
@@ -52,7 +31,7 @@ final class StemplerCache
         // map file
         $this->files->write(
             $this->mapFilename($key),
-            sprintf('<?php return %s;', var_export($paths, true)),
+            \sprintf('<?php return %s;', \var_export($paths, true)),
             FilesInterface::RUNTIME,
             true
         );
@@ -60,9 +39,6 @@ final class StemplerCache
 
     /**
      * Check if template still fresh (no files used for generation has changed).
-     *
-     * @param string $key
-     * @return bool
      */
     public function isFresh(string $key): bool
     {
@@ -86,8 +62,6 @@ final class StemplerCache
 
     /**
      * Delete file from the cache.
-     *
-     * @param string $key
      */
     public function delete(string $key): void
     {
@@ -104,8 +78,6 @@ final class StemplerCache
 
     /**
      * Load template content.
-     *
-     * @param string $key
      */
     public function load(string $key): void
     {
@@ -115,21 +87,13 @@ final class StemplerCache
         }
     }
 
-    /**
-     * @param string $key
-     * @return string
-     */
     private function filename(string $key): string
     {
-        return sprintf('%s/%s.php', $this->directory, $key);
+        return \sprintf('%s/%s.php', $this->directory, $key);
     }
 
-    /**
-     * @param string $key
-     * @return string
-     */
     private function mapFilename(string $key): string
     {
-        return sprintf('%s/%s-map.php', $this->directory, $key);
+        return \sprintf('%s/%s-map.php', $this->directory, $key);
     }
 }

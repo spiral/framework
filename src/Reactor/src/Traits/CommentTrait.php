@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Traits;
@@ -18,15 +11,10 @@ use Spiral\Reactor\Partial\Comment;
  */
 trait CommentTrait
 {
-    /**
-     * @var Comment
-     */
-    private $docComment;
+    private Comment $docComment;
 
     /**
      * Get associated file comment.
-     *
-     * @return Comment
      */
     public function getComment(): Comment
     {
@@ -35,17 +23,13 @@ trait CommentTrait
 
     /**
      * Set comment value.
-     *
-     * @param string|array $comment
-     *
-     * @return $this
      */
-    public function setComment($comment): self
+    public function setComment(array|string $comment): self
     {
         if (!empty($comment)) {
-            if (is_array($comment)) {
+            if (\is_array($comment)) {
                 $this->docComment->setLines($comment);
-            } elseif (is_string($comment)) {
+            } elseif (\is_string($comment)) {
                 $this->docComment->setString($comment);
             }
         }
@@ -55,10 +39,8 @@ trait CommentTrait
 
     /**
      * Init comment value.
-     *
-     * @param string|array $comment
      */
-    private function initComment($comment): void
+    private function initComment(array|string $comment): void
     {
         if (empty($this->docComment)) {
             $this->docComment = new Comment();

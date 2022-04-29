@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Filters;
@@ -23,20 +16,11 @@ final class SchemaBuilder
     protected const ITERATE  = 2;
     protected const OPTIONAL = 'optional';
 
-    /** @var ReflectionEntity */
-    private $entity;
-
-    /**
-     * @param ReflectionEntity $entity
-     */
-    public function __construct(ReflectionEntity $entity)
-    {
-        $this->entity = $entity;
+    public function __construct(
+        private readonly ReflectionEntity $entity
+    ) {
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->entity->getName();
@@ -44,8 +28,6 @@ final class SchemaBuilder
 
     /**
      * Generate entity schema based on schema definitions.
-     *
-     * @return array
      *
      * @throws SchemaException
      */
@@ -63,15 +45,11 @@ final class SchemaBuilder
         ];
     }
 
-    /**
-     * @param ReflectionEntity $filter
-     * @return array
-     */
     protected function buildMap(ReflectionEntity $filter): array
     {
         $schema = $filter->getProperty('schema', true);
         if (empty($schema)) {
-            throw new SchemaException("Filter `{$filter->getName()}` does not define any schema");
+            throw new SchemaException(\sprintf('Filter `%s` does not define any schema', $filter->getName()));
         }
 
         $result = [];
@@ -79,9 +57,9 @@ final class SchemaBuilder
             $optional = false;
 
             // short definition
-            if (is_string($definition)) {
+            if (\is_string($definition)) {
                 // simple scalar field definition
-                if (!class_exists($definition)) {
+                if (!\class_exists($definition)) {
                     [$source, $origin] = $this->parseDefinition($field, $definition);
                     $result[$field] = [
                         FilterProvider::SOURCE => $source,
@@ -102,9 +80,9 @@ final class SchemaBuilder
                 continue;
             }
 
-            if (!is_array($definition) || count($definition) === 0) {
+            if (!\is_array($definition) || $definition === []) {
                 throw new SchemaException(
-                    "Invalid schema definition at `{$filter->getName()}`->`{$field}`"
+                    \sprintf('Invalid schema definition at `%s`->`%s`', $filter->getName(), $field)
                 );
             }
 
@@ -113,8 +91,8 @@ final class SchemaBuilder
                 $origin = $definition[self::ORIGIN];
 
                 // [class, 'data:something.*'] vs [class, 'data:something']
-                $iterate = strpos($origin, '.*') !== false || !empty($definition[self::ITERATE]);
-                $origin = rtrim($origin, '.*');
+                $iterate = \str_contains((string) $origin, '.*') || !empty($definition[self::ITERATE]);
+                $origin = \rtrim($origin, '.*');
             } else {
                 $origin = $field;
                 $iterate = true;
@@ -159,10 +137,10 @@ final class SchemaBuilder
      */
     private function parseDefinition(string $field, string $definition): array
     {
-        if (strpos($definition, ':') === false) {
+        if (!\str_contains($definition, ':')) {
             return ['data', $definition ?? $field];
         }
 
-        return explode(':', $definition);
+        return \explode(':', $definition);
     }
 }

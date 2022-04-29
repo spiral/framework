@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors\ClassNode;
@@ -17,13 +10,9 @@ use PhpParser\NodeVisitorAbstract;
 
 final class LocateVariables extends NodeVisitorAbstract
 {
-    /** @var array */
-    private $vars = [];
+    private array $vars = [];
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode(Node $node)
+    public function enterNode(Node $node): int|Node\Stmt\ClassMethod|null
     {
         if ($node instanceof Node\Stmt\Class_) {
             foreach ($node->stmts as $stmt) {
@@ -41,9 +30,6 @@ final class LocateVariables extends NodeVisitorAbstract
         return null;
     }
 
-    /**
-     * @return array
-     */
     public function getVars(): array
     {
         return $this->vars;

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license MIT
- * @author  Valentin Vintsukevich (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation\Condition;
@@ -19,21 +12,13 @@ use Spiral\Validation\RulesInterface;
  */
 final class Compositor
 {
-    /** @var RulesInterface $provider */
-    private $provider;
-
-    /**
-     * @param RulesInterface $provider
-     */
-    public function __construct(RulesInterface $provider)
-    {
-        $this->provider = $provider;
+    public function __construct(
+        private readonly RulesInterface $provider
+    ) {
     }
 
     /**
-     * @param string $field
-     * @param array  $options
-     * @return ConditionInterface[]
+     * @return iterable<ConditionInterface>
      */
     public function makeConditions(string $field, array $options): iterable
     {

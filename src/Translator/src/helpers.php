@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 use Spiral\Core\ContainerScope;
@@ -14,7 +7,7 @@ use Spiral\Core\Exception\ScopeException;
 use Spiral\Translator\Exception\TranslatorException;
 use Spiral\Translator\TranslatorInterface;
 
-if (!function_exists('l')) {
+if (!\function_exists('l')) {
     /**
      * Translate message using default or specific bundle name.
      *
@@ -22,19 +15,13 @@ if (!function_exists('l')) {
      * l('Some Message');
      * l('Hello {name}!', ['name' => $name]);
      *
-     * @param string $string
-     * @param array  $options
-     * @param string $domain
-     *
-     * @return string
-     *
      * @throws TranslatorException
      * @throws ScopeException
      */
     function l(string $string, array $options = [], string $domain = null): string
     {
         $container = ContainerScope::getContainer();
-        if (empty($container) || !$container->has(TranslatorInterface::class)) {
+        if ($container === null || !$container->has(TranslatorInterface::class)) {
             throw new ScopeException(
                 '`TranslatorInterface` binding is missing or container scope is not set'
             );
@@ -47,7 +34,7 @@ if (!function_exists('l')) {
     }
 }
 
-if (!function_exists('p')) {
+if (!\function_exists('p')) {
     /**
      * Pluralize string using language pluralization options and specified numeric value.
      *
@@ -55,11 +42,6 @@ if (!function_exists('p')) {
      * p("{n} user|{n} users", $users);
      *
      * @param string $string Can include {n} as placeholder.
-     * @param int    $number
-     * @param array  $options
-     * @param string $domain
-     *
-     * @return string
      *
      * @throws TranslatorException
      * @throws ScopeException

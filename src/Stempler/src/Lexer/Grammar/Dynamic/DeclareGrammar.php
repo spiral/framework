@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar\Dynamic;
@@ -30,16 +23,13 @@ final class DeclareGrammar implements GrammarInterface
     public const TYPE_QUOTED  = 3;
 
     // whitespace
-    private const REGEXP_WHITESPACE = '/\s/';
+    private const REGEXP_WHITESPACE = '/\\s/';
 
-    /** @var array */
-    private $keyword = [];
+    private array $keyword = [];
 
-    /**
-     * @inheritDoc
-     */
     public function parse(Buffer $src): \Generator
     {
+        $quoted = [];
         while ($n = $src->next()) {
             switch ($n->char) {
                 case '"':
@@ -78,7 +68,7 @@ final class DeclareGrammar implements GrammarInterface
                     yield new Token(self::TYPE_COMMA, $n->offset, ',');
                     break;
                 default:
-                    if (preg_match(self::REGEXP_WHITESPACE, $n->char)) {
+                    if (\preg_match(self::REGEXP_WHITESPACE, $n->char)) {
                         if ($this->keyword !== []) {
                             yield $this->packToken($this->keyword, self::TYPE_KEYWORD);
                             $this->keyword = [];
@@ -96,22 +86,14 @@ final class DeclareGrammar implements GrammarInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public static function tokenName(int $token): string
     {
-        switch ($token) {
-            case self::TYPE_KEYWORD:
-                return 'DECLARE:KEYWORD';
-            case self::TYPE_EQUAL:
-                return 'DECLARE:EQUAL';
-            case self::TYPE_COMMA:
-                return 'DECLARE:COMMA';
-            case self::TYPE_QUOTED:
-                return 'DECLARE:QUOTED';
-            default:
-                return 'DECLARE:UNDEFINED';
-        }
+        return match ($token) {
+            self::TYPE_KEYWORD => 'DECLARE:KEYWORD',
+            self::TYPE_EQUAL => 'DECLARE:EQUAL',
+            self::TYPE_COMMA => 'DECLARE:COMMA',
+            self::TYPE_QUOTED => 'DECLARE:QUOTED',
+            default => 'DECLARE:UNDEFINED',
+        };
     }
 }

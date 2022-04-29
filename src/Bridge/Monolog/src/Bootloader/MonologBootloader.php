@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Monolog\Bootloader;
@@ -15,18 +8,22 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
+use Monolog\ResettableInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\EnvironmentInterface;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container;
 use Spiral\Logger\LogsInterface;
+use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\LogFactory;
 
 final class MonologBootloader extends Bootloader implements Container\SingletonInterface
 {
     protected const SINGLETONS = [
-        LogsInterface::class   => LogFactory::class,
+        LogsInterface::class => LogFactory::class,
         LoggerInterface::class => Logger::class,
     ];
 
@@ -34,54 +31,56 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
         'log.rotate' => [self::class, 'logRotate'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
-
-    /**
-     * @param ConfiguratorInterface $config
-     */
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
-    /**
-     * @param Container $container
-     */
-    public function boot(Container $container): void
+    public function init(Container $container, FinalizerInterface $finalizer, EnvironmentInterface $env): void
     {
-        $this->config->setDefaults('monolog', [
+        $finalizer->addFinalizer(static function () use ($container): void {
+            if ($container->hasInstance(LoggerInterface::class)) {
+                $logger = $container->get(LoggerInterface::class);
+
+                if ($logger instanceof ResettableInterface) {
+                    $logger->reset();
+                }
+            }
+
+            if ($container->hasInstance(LogsInterface::class)) {
+                $factory = $container->get(LogsInterface::class);
+
+                if ($factory instanceof ResettableInterface) {
+                    $factory->reset();
+                }
+            }
+        });
+
+        $this->config->setDefaults(MonologConfig::CONFIG, [
+            'default' => $env->get('MONOLOG_DEFAULT_CHANNEL', MonologConfig::DEFAULT_CHANNEL),
             'globalLevel' => Logger::DEBUG,
-            'handlers'    => [],
+            'handlers' => [],
         ]);
 
         $container->bindInjector(Logger::class, LogFactory::class);
     }
 
-    /**
-     * @param string           $channel
-     * @param HandlerInterface $handler
-     */
     public function addHandler(string $channel, HandlerInterface $handler): void
     {
-        if (!isset($this->config->getConfig('monolog')['handlers'][$channel])) {
-            $this->config->modify('monolog', new Append('handlers', $channel, []));
+        if (!isset($this->config->getConfig(MonologConfig::CONFIG)['handlers'][$channel])) {
+            $this->config->modify(MonologConfig::CONFIG, new Append('handlers', $channel, []));
         }
 
-        $this->config->modify('monolog', new Append(
-            'handlers.' . $channel,
-            null,
-            $handler
-        ));
+        $this->config->modify(
+            MonologConfig::CONFIG,
+            new Append(
+                'handlers.' . $channel,
+                null,
+                $handler
+            )
+        );
     }
 
-    /**
-     * @param string $filename
-     * @param int    $level
-     * @param int    $maxFiles
-     * @param bool   $bubble
-     * @return HandlerInterface
-     */
     public function logRotate(
         string $filename,
         int $level = Logger::DEBUG,

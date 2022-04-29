@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform;
@@ -27,24 +20,15 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class Merger
 {
-    /** @var DeepCopy */
-    private $deepCopy;
+    private readonly DeepCopy $deepCopy;
+    private readonly BlockFetcher $fetcher;
 
-    /** @var BlockFetcher */
-    private $fetcher;
-
-    /**
-     * Merger constructor.
-     */
     public function __construct()
     {
         $this->deepCopy = new DeepCopy();
         $this->fetcher = new BlockFetcher();
     }
 
-    /**
-     * @return BlockFetcher
-     */
     public function getFetcher(): BlockFetcher
     {
         return $this->fetcher;
@@ -52,10 +36,6 @@ final class Merger
 
     /**
      * Merge given template with array of blocks.
-     *
-     * @param Template $target
-     * @param Tag      $source
-     * @return Template
      */
     public function merge(Template $target, Tag $source): Template
     {
@@ -72,11 +52,6 @@ final class Merger
         return $target;
     }
 
-    /**
-     * @param Template $node
-     * @param string   $path
-     * @return Template
-     */
     public function isolateNodes(Template $node, string $path): Template
     {
         $node->nodes = $this->traverse(
@@ -89,11 +64,9 @@ final class Merger
     }
 
     /**
-     * @param array               $nodes
-     * @param VisitorInterface... $visitors
-     * @return array|NodeInterface[]
+     * @return NodeInterface[]
      */
-    protected function traverse(array $nodes, VisitorInterface ...$visitors)
+    protected function traverse(array $nodes, VisitorInterface ...$visitors): array
     {
         $traverser = new Traverser();
         foreach ($visitors as $visitor) {

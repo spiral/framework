@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Directive;
@@ -21,34 +14,25 @@ use Spiral\Stempler\Node\Dynamic\Directive;
 
 final class RouteDirective extends AbstractDirective implements SingletonInterface
 {
-    /** @var ContainerInterface */
-    private $container;
-
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        private readonly ContainerInterface $container
+    ) {
         parent::__construct();
-        $this->container = $container;
     }
 
     /**
      * Injects service into template.
-     *
-     * @param Directive $directive
-     * @return string
      */
     public function renderRoute(Directive $directive): string
     {
-        if (count($directive->values) < 1) {
+        if (\count($directive->values) < 1) {
             throw new DirectiveException(
                 'Unable to call @route directive, at least 1 value is required',
                 $directive->getContext()
             );
         }
 
-        return sprintf(
+        return \sprintf(
             '<?php echo $this->container->get(\Spiral\Stempler\Directive\RouteDirective::class)->uri(%s); ?>',
             $directive->body
         );
@@ -56,26 +40,22 @@ final class RouteDirective extends AbstractDirective implements SingletonInterfa
 
     /**
      * Provides the ability to inject templated args in a form or {id} or {{id}}.
-     *
-     * @param string $route
-     * @param array  $params
-     * @return string
      */
     public function uri(string $route, array $params = []): string
     {
         $vars = [];
         $restore = [];
         foreach ($params as $key => $value) {
-            if (is_string($value) && preg_match('/\{.*\}/', $value)) {
-                $restore[sprintf('__%s__', $key)] = $value;
-                $value = sprintf('__%s__', $key);
+            if (\is_string($value) && \preg_match('#\{.*\}#', $value)) {
+                $restore[\sprintf('__%s__', $key)] = $value;
+                $value = \sprintf('__%s__', $key);
             }
 
             $vars[$key] = $value;
         }
 
         try {
-            return strtr(
+            return \strtr(
                 $this->container->get(RouterInterface::class)->uri($route, $vars)->__toString(),
                 $restore
             );

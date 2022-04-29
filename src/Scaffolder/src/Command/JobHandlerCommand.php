@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
@@ -36,11 +29,13 @@ class JobHandlerCommand extends AbstractCommand
     /**
      * Create jobHandler declaration.
      */
-    public function perform(): void
+    public function perform(): int
     {
         /** @var JobHandlerDeclaration $declaration */
         $declaration = $this->createDeclaration();
 
         $this->writeDeclaration($declaration);
+
+        return self::SUCCESS;
     }
 }

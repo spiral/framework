@@ -1,50 +1,36 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Console\Traits\LazyTrait;
+use Spiral\Tokenizer\ScopedClassesInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 final class CommandLocator implements LocatorInterface
 {
-    /** @var ClassesInterface */
-    private $classes;
+    use LazyTrait;
 
-    /** @var ContainerInterface */
-    private $container;
-
-    /**
-     * @param ClassesInterface   $classes
-     * @param ContainerInterface $container
-     */
-    public function __construct(ClassesInterface $classes, ContainerInterface $container)
-    {
-        $this->classes = $classes;
+    public function __construct(
+        private readonly ScopedClassesInterface $classes,
+        ContainerInterface $container
+    ) {
         $this->container = $container;
     }
 
-    /**
-     * @return array
-     */
     public function locateCommands(): array
     {
         $commands = [];
-        foreach ($this->classes->getClasses(SymfonyCommand::class) as $class) {
+        foreach ($this->classes->getScopedClasses('consoleCommands', SymfonyCommand::class) as $class) {
             if ($class->isAbstract()) {
                 continue;
             }
 
-            $commands[] = $this->container->get($class->getName());
+            $commands[] = $this->supportsLazyLoading($class->getName())
+                ? $this->createLazyCommand($class->getName())
+                : $this->container->get($class->getName());
         }
 
         return $commands;

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Key;
@@ -32,16 +25,12 @@ interface KeyGeneratorInterface
      * - Anonymous classes (i.e. {@see \ReflectionClass::isAnonymous()}).
      *
      * @param \ReflectionClass $class
-     * @return string
      */
     public function forClass(\ReflectionClass $class): string;
 
     /**
      * A method that returns a string key for the passed reflection
      * object of the PHP class property.
-     *
-     * @param \ReflectionProperty $prop
-     * @return string
      */
     public function forProperty(\ReflectionProperty $prop): string;
 
@@ -54,7 +43,6 @@ interface KeyGeneratorInterface
      *  - {@see \ReflectionClassConstant}
      *
      * @param \ReflectionClassConstant $const
-     * @return string
      */
     public function forConstant(\ReflectionClassConstant $const): string;
 
@@ -72,7 +60,6 @@ interface KeyGeneratorInterface
      * - Anonymous functions (i.e. {@see \ReflectionFunctionAbstract::isClosure()}).
      *
      * @param \ReflectionFunctionAbstract $fn
-     * @return string
      */
     public function forFunction(\ReflectionFunctionAbstract $fn): string;
 
@@ -87,7 +74,6 @@ interface KeyGeneratorInterface
      *  - {@see \ReflectionFunctionAbstract}
      *
      * @param \ReflectionParameter $param
-     * @return string
      */
     public function forParameter(\ReflectionParameter $param): string;
 }

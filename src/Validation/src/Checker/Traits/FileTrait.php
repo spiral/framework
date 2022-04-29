@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation\Checker\Traits;
@@ -21,67 +14,44 @@ use Spiral\Streams\StreamWrapper;
  */
 trait FileTrait
 {
-    /** @var FilesInterface */
-    protected $files;
+    protected FilesInterface $files;
 
     /**
      * Internal method to fetch filename using multiple input formats.
-     *
-     * @param mixed|UploadedFileInterface|StreamableInterface $file
-     * @return string|null
      */
-    private function resolveFilename($file): ?string
+    private function resolveFilename(mixed $file): ?string
     {
-        if (empty($file)) {
-            return null;
-        }
+        return match (true) {
+            empty($file) => null,
+            $this->isStreamableFile($file) => StreamWrapper::getFilename($file->getStream()),
+            \is_array($file) => !isset($file['tmp_name']) ? null : $file['tmp_name'],
+            !\is_string($file) || !$this->files->exists($file) => null,
+            default => $file
+        };
+    }
 
-        if (
+    private function isStreamableFile(mixed $file): bool
+    {
+        return
             $file instanceof StreamableInterface ||
-            ($file instanceof UploadedFileInterface && $file->getError() === 0)
-        ) {
-            return StreamWrapper::getFilename($file->getStream());
-        }
-
-        if (is_array($file)) {
-            if (!isset($file['tmp_name'])) {
-                return null;
-            }
-
-            $file = $file['tmp_name'];
-        }
-
-        if (!is_string($file) || !$this->files->exists($file)) {
-            return null;
-        }
-
-        return $file;
+            ($file instanceof UploadedFileInterface && $file->getError() === 0);
     }
 
     /**
      * Check if file being uploaded.
-     *
-     * @param mixed|UploadedFileInterface $file Filename or file array.
-     * @return bool
      */
-    private function isUploaded($file): bool
+    private function isUploaded(mixed $file): bool
     {
-        if (is_string($file)) {
-            //We can use native method
-            return is_uploaded_file($file);
-        }
+        $isUploadedArray = static fn (array $file) =>
+            isset($file['tmp_name']) &&
+            (\is_uploaded_file($file['tmp_name']) || isset($file['uploaded']));
 
-        if (is_array($file)) {
-            return isset($file['tmp_name']) && (
-                is_uploaded_file($file['tmp_name']) || isset($file['uploaded'])
-            );
-        }
-
-        if ($file instanceof UploadedFileInterface) {
-            return empty($file->getError());
-        }
-
-        //Not uploaded
-        return false;
+        return match (true) {
+            \is_string($file) => \is_uploaded_file($file),
+            $file instanceof UploadedFileInterface => empty($file->getError()),
+            \is_array($file) => $isUploadedArray($file),
+            // Not uploaded
+            default => false
+        };
     }
 }

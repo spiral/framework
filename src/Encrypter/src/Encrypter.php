@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Encrypter;
@@ -29,8 +22,7 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
 {
     public const INJECTOR = EncrypterFactory::class;
 
-    /** @var Key */
-    private $key = null;
+    private Key $key;
 
     /**
      * @param string $key Loads a Key from its encoded form (ANSI).
@@ -44,9 +36,6 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withKey(string $key): EncrypterInterface
     {
         $encrypter = clone $this;
@@ -59,9 +48,6 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
         return $encrypter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getKey(): string
     {
         try {
@@ -72,35 +58,31 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * Data encoded using json_encode method, only supported formats are allowed!
      */
-    public function encrypt($data): string
+    public function encrypt(mixed $data): string
     {
-        $packed = json_encode($data);
+        $packed = \json_encode($data);
 
         try {
-            return base64_encode(Crypto::Encrypt($packed, $this->key));
+            return \base64_encode(Crypto::Encrypt($packed, $this->key));
         } catch (\Throwable $e) {
             throw new EncryptException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
     /**
-     * {@inheritdoc}
-     *
      * json_decode with assoc flag set to true
      */
-    public function decrypt(string $payload)
+    public function decrypt(string $payload): mixed
     {
         try {
             $result = Crypto::Decrypt(
-                base64_decode($payload),
+                \base64_decode($payload),
                 $this->key
             );
 
-            return json_decode($result, true);
+            return \json_decode($result, true);
         } catch (\Throwable $e) {
             throw new DecryptException($e->getMessage(), $e->getCode(), $e);
         }

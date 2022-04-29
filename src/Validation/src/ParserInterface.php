@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation;
@@ -21,52 +14,37 @@ interface ParserInterface
      *
      * Method must return unique rule id as key.
      *
-     * @param mixed $rules
-     * @return \Generator
-     *
      * @throws ParserException
      */
-    public function split($rules): \Generator;
+    public function split(mixed $rules): \Generator;
 
     /**
      * Return function name, class method pair or short "checker:method" definition
      * associated with the rule.
      *
-     * @param mixed $chunk
-     * @return string|array|callable
-     *
      * @throws ParserException
      */
-    public function parseCheck($chunk);
+    public function parseCheck(mixed $chunk): array|callable|string;
 
     /**
      * Fetch validation rule arguments from rule definition.
      *
-     * @param mixed $chunk
-     * @return array
-     *
      * @throws ParserException
      */
-    public function parseArgs($chunk): array;
+    public function parseArgs(mixed $chunk): array;
 
     /**
      * Fetch error message from rule definition or use default message. Method will check "message"
      * and "error" properties of definition.
      *
-     * @param mixed $chunk
-     * @return string
-     *
      * @throws ParserException
      */
-    public function parseMessage($chunk): ?string;
+    public function parseMessage(mixed $chunk): ?string;
 
     /**
      * Parse validation conditions in a form of array [conditionClass => options].
      *
-     * @param mixed $chunk
-     * @return array
-     *
      * @throws ParserException
      */
-    public function parseConditions($chunk): array;
+    public function parseConditions(mixed $chunk): array;
 }

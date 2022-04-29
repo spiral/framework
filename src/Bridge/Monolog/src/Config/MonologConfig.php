@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Monolog\Config;
@@ -19,26 +12,27 @@ use Spiral\Monolog\Exception\ConfigException;
 final class MonologConfig extends InjectableConfig
 {
     public const CONFIG = 'monolog';
+    public const DEFAULT_CHANNEL = 'default';
 
     /** @var array */
     protected $config = [
+        'default'     => self::DEFAULT_CHANNEL,
         'globalLevel' => Logger::DEBUG,
         'handlers'    => [],
     ];
 
-    /**
-     * @return int
-     */
+    public function getDefault(): string
+    {
+        return $this->config['default'] ?? self::DEFAULT_CHANNEL;
+    }
+
     public function getEventLevel(): int
     {
         return $this->config['globalLevel'] ?? Logger::DEBUG;
     }
 
     /**
-     * @param string $channel
-     * @return \Generator|Autowire[]
-     *
-     * @throws ConfigException
+     * @return \Generator<int, Autowire>
      */
     public function getHandlers(string $channel): \Generator
     {
@@ -47,39 +41,55 @@ final class MonologConfig extends InjectableConfig
         }
 
         foreach ($this->config['handlers'][$channel] as $handler) {
-            if (is_object($handler) && !$handler instanceof Autowire) {
+            if (\is_object($handler) && !$handler instanceof Autowire) {
                 yield $handler;
                 continue;
             }
 
-            $wire = $this->wire($channel, $handler);
-            if (!empty($wire)) {
-                yield $wire;
+            $wire = $this->wire($handler);
+            if (\is_null($wire)) {
+                throw new ConfigException(\sprintf('Invalid handler definition for channel `%s`.', $channel));
             }
+
+            yield $wire;
         }
     }
 
-    /**
-     * @param string $channel
-     * @param mixed  $handler
-     * @return null|Autowire
-     *
-     * @throws ConfigException
-     */
-    private function wire(string $channel, $handler): ?Autowire
+    public function getProcessors(string $channel): \Generator
     {
-        if ($handler instanceof Autowire) {
-            return $handler;
+        if (empty($this->config['processors'][$channel])) {
+            return;
         }
 
-        if (is_string($handler)) {
-            return new Autowire($handler);
+        foreach ($this->config['processors'][$channel] as $processor) {
+            if (\is_object($processor) && !$processor instanceof Autowire) {
+                yield $processor;
+                continue;
+            }
+
+            $wire = $this->wire($processor);
+            if (\is_null($wire)) {
+                throw new ConfigException(\sprintf('Invalid processor definition for channel `%s`.', $channel));
+            }
+
+            yield $wire;
+        }
+    }
+
+    private function wire(Autowire|string|array $definition): ?Autowire
+    {
+        if ($definition instanceof Autowire) {
+            return $definition;
         }
 
-        if (isset($handler['class'])) {
-            return new Autowire($handler['class'], $handler['options'] ?? []);
+        if (\is_string($definition)) {
+            return new Autowire($definition);
         }
 
-        throw new ConfigException("Invalid handler definition for channel `{$channel}`.");
+        if (isset($definition['class'])) {
+            return new Autowire($definition['class'], $definition['options'] ?? []);
+        }
+
+        return null;
     }
 }

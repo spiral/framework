@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Declaration;
@@ -17,10 +10,6 @@ use Spiral\Reactor\DependedInterface;
 
 class BootloaderDeclaration extends ClassDeclaration implements DependedInterface
 {
-    /**
-     * @param string $name
-     * @param string $comment
-     */
     public function __construct(string $name, string $comment = '')
     {
         parent::__construct($name, 'Bootloader', [], $comment);
@@ -28,9 +17,6 @@ class BootloaderDeclaration extends ClassDeclaration implements DependedInterfac
         $this->declareStructure();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies(): array
     {
         return [Bootloader::class => null];

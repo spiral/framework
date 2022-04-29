@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage\File;
@@ -25,8 +18,6 @@ interface WritableInterface extends EntryInterface
     /**
      * {@see BucketInterface::create()}
      *
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function create(array $config = []): FileInterface;
@@ -35,17 +26,14 @@ interface WritableInterface extends EntryInterface
      * {@see BucketInterface::write()}
      *
      * @param resource|string|\Stringable $content
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      */
-    public function write($content, array $config = []): FileInterface;
+    public function write(mixed $content, array $config = []): FileInterface;
 
     /**
      * {@see BucketInterface::setVisibility()}
      *
      * @param VisibilityType $visibility
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function setVisibility(
@@ -56,10 +44,7 @@ interface WritableInterface extends EntryInterface
     /**
      * {@see BucketInterface::copy()}
      *
-     * @param string $pathname
      * @param BucketInterface|null $storage
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function copy(
@@ -71,10 +56,7 @@ interface WritableInterface extends EntryInterface
     /**
      * {@see BucketInterface::move()}
      *
-     * @param string $pathname
      * @param BucketInterface|null $storage
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function move(
@@ -86,7 +68,6 @@ interface WritableInterface extends EntryInterface
     /**
      * {@see BucketInterface::delete()}
      *
-     * @param bool $clean
      * @throws FileOperationException
      */
     public function delete(bool $clean = false): void;

@@ -1,18 +1,10 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Partial;
 
 use Doctrine\Inflector\Rules\English\InflectorFactory;
-use ReflectionException;
 use Spiral\Reactor\AbstractDeclaration;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\Traits\NamedTrait;
@@ -26,29 +18,16 @@ class Parameter extends AbstractDeclaration implements NamedInterface
     use NamedTrait;
     use SerializerTrait;
 
-    /** @var string */
-    private $type = '';
+    private string $type = '';
+    private bool $isOptional = false;
+    private mixed $defaultValue = null;
+    private bool $pdb = false;
 
-    /** @var bool */
-    private $isOptional = false;
-
-    /** @var mixed */
-    private $defaultValue;
-
-    /** @var bool */
-    private $pdb = false;
-
-    /**
-     * @param string $name
-     */
     public function __construct(string $name)
     {
         $this->setName($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setName(string $name): Parameter
     {
         $this->name = (new InflectorFactory())->build()->camelize($name);
@@ -56,10 +35,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
         return $this;
     }
 
-    /**
-     * @param string $type
-     * @return self
-     */
     public function setType(string $type): Parameter
     {
         $this->type = $type;
@@ -67,9 +42,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
@@ -77,9 +49,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
 
     /**
      * Flag that parameter should pass by reference.
-     *
-     * @param bool $passedByReference
-     * @return self
      */
     public function setPBR(bool $passedByReference = false): Parameter
     {
@@ -88,9 +57,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isPBR(): bool
     {
         return $this->pdb;
@@ -98,8 +64,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
 
     /**
      * Check if parameter is optional.
-     *
-     * @return bool
      */
     public function isOptional(): bool
     {
@@ -108,11 +72,8 @@ class Parameter extends AbstractDeclaration implements NamedInterface
 
     /**
      * Set parameter default value.
-     *
-     * @param mixed $defaultValue
-     * @return self
      */
-    public function setDefaultValue($defaultValue): Parameter
+    public function setDefaultValue(mixed $defaultValue): Parameter
     {
         $this->isOptional = true;
         $this->defaultValue = $defaultValue;
@@ -120,18 +81,13 @@ class Parameter extends AbstractDeclaration implements NamedInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->defaultValue;
     }
 
     /**
      * Remove default value.
-     *
-     * @return self
      */
     public function removeDefaultValue(): Parameter
     {
@@ -142,8 +98,7 @@ class Parameter extends AbstractDeclaration implements NamedInterface
     }
 
     /**
-     * {@inheritdoc}
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function render(int $indentLevel = 0): string
     {

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console\Command;
@@ -19,11 +12,6 @@ final class ConfigureCommand extends SequenceCommand
     protected const NAME        = 'configure';
     protected const DESCRIPTION = 'Configure project';
 
-    /**
-     * @param ConsoleConfig      $config
-     * @param ContainerInterface $container
-     * @return int
-     */
     public function perform(ConsoleConfig $config, ContainerInterface $container): int
     {
         $this->writeln("<info>Configuring project:</info>\n");

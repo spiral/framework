@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security\Rule;
@@ -37,20 +30,11 @@ abstract class CompositeRule implements RuleInterface
     /** List of rules to be composited. */
     protected const RULES = [];
 
-    /** @var RulesInterface */
-    private $repository = null;
-
-    /**
-     * @param RulesInterface $repository
-     */
-    public function __construct(RulesInterface $repository)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        private readonly RulesInterface $repository
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function allows(ActorInterface $actor, string $permission, array $context): bool
     {
         $allowed = 0;
@@ -58,16 +42,16 @@ abstract class CompositeRule implements RuleInterface
             $rule = $this->repository->get($rule);
 
             if ($rule->allows($actor, $permission, $context)) {
-                if (static::BEHAVIOUR == self::AT_LEAST_ONE) {
+                if (static::BEHAVIOUR === self::AT_LEAST_ONE) {
                     return true;
                 }
 
                 $allowed++;
-            } elseif (static::BEHAVIOUR == self::ALL) {
+            } elseif (static::BEHAVIOUR === self::ALL) {
                 return false;
             }
         }
 
-        return $allowed === count(static::RULES);
+        return $allowed === \count(static::RULES);
     }
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Context;
@@ -23,27 +16,18 @@ use Spiral\Stempler\VisitorContext;
  */
 final class ImportContext
 {
-    /** @var VisitorContext */
-    private $ctx;
-
-    /**
-     * @param VisitorContext $ctx
-     */
-    private function __construct(VisitorContext $ctx)
-    {
-        $this->ctx = $ctx;
+    private function __construct(
+        private readonly VisitorContext $ctx
+    ) {
     }
 
-    /**
-     * @param ImportInterface $import
-     */
     public function add(ImportInterface $import): void
     {
         $node = $this->ctx->getParentNode();
         if (!$node instanceof AttributedInterface) {
-            throw new LogicException(sprintf(
+            throw new LogicException(\sprintf(
                 'Unable to create import on node without attribute storage (%s)',
-                is_object($node) ? get_class($node) : gettype($node)
+                \get_debug_type($node)
             ));
         }
 
@@ -54,10 +38,6 @@ final class ImportContext
 
     /**
      * Resolve imported element template.
-     *
-     * @param Builder $builder
-     * @param string  $name
-     * @return Template|null
      */
     public function resolve(Builder $builder, string $name): ?Template
     {
@@ -79,7 +59,7 @@ final class ImportContext
     public function getImports(): array
     {
         $imports = [];
-        foreach (array_reverse($this->ctx->getScope()) as $node) {
+        foreach (\array_reverse($this->ctx->getScope()) as $node) {
             if ($node instanceof AttributedInterface) {
                 foreach ($node->getAttribute(self::class, []) as $import) {
                     $imports[] = $import;
@@ -90,10 +70,6 @@ final class ImportContext
         return $imports;
     }
 
-    /**
-     * @param VisitorContext $ctx
-     * @return ImportContext
-     */
     public static function on(VisitorContext $ctx): self
     {
         return new self($ctx);

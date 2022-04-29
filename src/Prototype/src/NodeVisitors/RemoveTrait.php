@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
@@ -22,11 +15,7 @@ use Spiral\Prototype\Utils;
  */
 final class RemoveTrait extends NodeVisitorAbstract
 {
-    /**
-     * @param Node $node
-     * @return int|null|Node|Node[]
-     */
-    public function leaveNode(Node $node)
+    public function leaveNode(Node $node): int|Node|null
     {
         if (!$node instanceof Node\Stmt\TraitUse) {
             return null;
@@ -34,9 +23,9 @@ final class RemoveTrait extends NodeVisitorAbstract
 
         foreach ($node->traits as $index => $use) {
             if ($use instanceof Node\Name) {
-                $name = $this->trimSlashes(implode('\\', $use->parts));
+                $name = $this->trimSlashes(\implode('\\', $use->parts));
                 if (
-                    in_array($name, [
+                    \in_array($name, [
                         $this->trimSlashes(PrototypeTrait::class),
                         Utils::shortName(PrototypeTrait::class),
                     ], true)
@@ -46,7 +35,7 @@ final class RemoveTrait extends NodeVisitorAbstract
             }
         }
 
-        $node->traits = array_values($node->traits);
+        $node->traits = \array_values($node->traits);
         if (empty($node->traits)) {
             return NodeTraverser::REMOVE_NODE;
         }
@@ -56,6 +45,6 @@ final class RemoveTrait extends NodeVisitorAbstract
 
     private function trimSlashes(string $str): string
     {
-        return trim($str, '\\');
+        return \trim($str, '\\');
     }
 }

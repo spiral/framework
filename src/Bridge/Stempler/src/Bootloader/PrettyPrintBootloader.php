@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Bootloader;
@@ -21,10 +14,7 @@ use Spiral\Stempler\Visitor\FormatHTML;
  */
 final class PrettyPrintBootloader extends Bootloader
 {
-    /**
-     * @param StemplerBootloader $stempler
-     */
-    public function boot(StemplerBootloader $stempler): void
+    public function init(StemplerBootloader $stempler): void
     {
         $stempler->addVisitor(FlattenNodes::class, Builder::STAGE_COMPILE);
         $stempler->addVisitor(FormatHTML::class, Builder::STAGE_COMPILE);

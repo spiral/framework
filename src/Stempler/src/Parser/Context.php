@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser;
@@ -18,60 +11,34 @@ use Spiral\Stempler\Lexer\Token;
  */
 final class Context
 {
-    public $parent;
-    /** @var Token */
-    private $token;
+    public ?Context $parent = null;
+    private array $values = [];
 
-    /** @var string|null */
-    private $path;
-
-    /** @var array */
-    private $values = [];
-
-    /**
-     * @param Token       $token
-     * @param string|null $path
-     */
-    public function __construct(Token $token, string $path = null)
-    {
-        $this->token = $token;
-        $this->path = $path;
+    public function __construct(
+        private Token $token,
+        private ?string $path = null
+    ) {
     }
 
-    /**
-     * @return Token
-     */
     public function getToken(): Token
     {
         return $this->token;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPath(): ?string
     {
         return $this->path;
     }
 
-    /**
-     * @param string $name
-     * @param mixed  $value
-     * @return $this
-     */
-    public function withValue(string $name, $value): self
+    public function withValue(string $name, mixed $value): self
     {
         $ctx = clone $this;
         $ctx->values[$name] = $value;
+
         return $ctx;
     }
 
-    /**
-     * @param string $name
-     * @param null   $default
-     * @return mixed|null
-     */
-    public function getValue(string $name, $default = null)
+    public function getValue(string $name, mixed $default = null): mixed
     {
         return $this->values[$name] ?? $default;
     }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader;
@@ -26,19 +19,14 @@ abstract class DomainBootloader extends Bootloader
     // the set of interceptors for the domain code
     protected const INTERCEPTORS = [];
 
-    /**
-     * @param Core               $core
-     * @param ContainerInterface $container
-     * @return InterceptableCore
-     */
-    protected static function domainCore(Core $core, ContainerInterface $container)
+    protected static function domainCore(Core $core, ContainerInterface $container): InterceptableCore
     {
-        $core = new InterceptableCore($core);
+        $interceptableCore = new InterceptableCore($core);
 
         foreach (static::INTERCEPTORS as $interceptor) {
-            $core->addInterceptor($container->get($interceptor));
+            $interceptableCore->addInterceptor($container->get($interceptor));
         }
 
-        return $core;
+        return $interceptableCore;
     }
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Partial;
@@ -18,24 +11,17 @@ use Spiral\Reactor\ReplaceableInterface;
  */
 class Comment extends Source implements ReplaceableInterface
 {
-    /**
-     * {@inheritdoc}
-     * @return self
-     */
-    public function replace($search, $replace): Comment
+    public function replace(array|string $search, array|string $replace): Comment
     {
         $lines = $this->getLines();
 
-        array_walk($lines, static function (&$line) use ($search, $replace): void {
-            $line = str_replace($search, $replace, $line);
+        \array_walk($lines, static function (&$line) use ($search, $replace): void {
+            $line = \str_replace($search, $replace, $line);
         });
 
         return $this->setLines($lines);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render(int $indentLevel = 0): string
     {
         if ($this->isEmpty()) {
@@ -47,21 +33,16 @@ class Comment extends Source implements ReplaceableInterface
             $result .= $this->addIndent(" * {$line}\n", $indentLevel);
         }
 
-        $result .= $this->addIndent(' */', $indentLevel);
-
-        return $result;
+        return $result . $this->addIndent(' */', $indentLevel);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function prepareLine(string $line): ?string
     {
-        $line = trim($line);
-        if (in_array($line, ['/*', '/**', '*/'], true)) {
+        $line = \trim($line);
+        if (\in_array($line, ['/*', '/**', '*/'], true)) {
             return null;
         }
 
-        return parent::prepareLine(preg_replace('/^(\s)*(\*)+\s?/', '', $line));
+        return parent::prepareLine(\preg_replace('/^(\s)*(\*)+\s?/', '', $line));
     }
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar\Traits;
@@ -17,13 +10,8 @@ use Spiral\Stempler\Lexer\Token;
 trait TokenTrait
 {
     /** @var Token[] */
-    private $tokens = [];
+    private array $tokens = [];
 
-    /**
-     * @param array $inner
-     * @param int   $type
-     * @return Token
-     */
     private function packToken(array $inner, int $type): Token
     {
         $token = new Token($type, 0, '');
@@ -33,7 +21,7 @@ trait TokenTrait
         $bufferOffset = 0;
 
         foreach ($inner as $n) {
-            $token->offset = $token->offset ?? $n->offset;
+            $token->offset ??= $n->offset;
 
             if ($n instanceof Byte) {
                 if ($buffer === null) {
@@ -70,7 +58,7 @@ trait TokenTrait
             );
         }
 
-        if (count($token->tokens) === 1 && $token->tokens[0]->type === Token::TYPE_RAW) {
+        if (\count($token->tokens) === 1 && $token->tokens[0]->type === Token::TYPE_RAW) {
             $token->tokens = [];
         }
 

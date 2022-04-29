@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Cookies;
@@ -22,44 +15,29 @@ use Spiral\Core\Exception\ScopeException;
  */
 final class CookieManager implements SingletonInterface
 {
-    /** @var ContainerInterface */
-    private $container;
-
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container
+    ) {
     }
 
     /**
-     * @param string $name
-     * @return bool
-     *
      * @throws ScopeException
      */
     public function has(string $name): bool
     {
-        return array_key_exists($name, $this->getRequest()->getCookieParams());
+        return \array_key_exists($name, $this->getRequest()->getCookieParams());
     }
 
     /**
-     * @param string $name
-     * @param null   $default
-     * @return mixed
-     *
      * @throws ScopeException
      */
-    public function get(string $name, $default = null)
+    public function get(string $name, mixed $default = null): mixed
     {
         return $this->getRequest()->getCookieParams()[$name] ?? $default;
     }
 
     /**
      * Get all cookies.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -132,8 +110,6 @@ final class CookieManager implements SingletonInterface
     /**
      * Schedule new cookie instance to be send while dispatching request.
      *
-     * @param Cookie $cookie
-     *
      * @return $this
      */
     public function schedule(Cookie $cookie): self
@@ -145,8 +121,6 @@ final class CookieManager implements SingletonInterface
 
     /**
      * Schedule cookie removal.
-     *
-     * @param string $name
      *
      * @throws ScopeException
      */
@@ -168,8 +142,6 @@ final class CookieManager implements SingletonInterface
     }
 
     /**
-     * @return ServerRequestInterface
-     *
      * @throws ScopeException
      */
     private function getRequest(): ServerRequestInterface
@@ -182,8 +154,6 @@ final class CookieManager implements SingletonInterface
     }
 
     /**
-     * @return CookieQueue
-     *
      * @throws ScopeException
      */
     private function getCookieQueue(): CookieQueue

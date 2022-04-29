@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype;
@@ -29,55 +22,33 @@ use Spiral\Prototype\NodeVisitors\UpdateConstructor;
  */
 final class Injector
 {
-    /** @var Parser */
-    private $parser;
+    private readonly Parser $parser;
+    private readonly Lexer $lexer;
+    private readonly NodeTraverser $cloner;
 
-    /** @var Lexer */
-    private $lexer;
+    public function __construct(
+        Lexer $lexer = null,
+        private readonly PrettyPrinterAbstract $printer = new Standard()
+    ) {
+        $this->lexer = $lexer ?? new Lexer\Emulative([
+            'usedAttributes' => [
+                'comments',
+                'startLine',
+                'endLine',
+                'startTokenPos',
+                'endTokenPos',
+            ],
+        ]);
 
-    /** @var null|Standard|PrettyPrinterAbstract */
-    private $printer;
-
-    /** @var NodeTraverser */
-    private $cloner;
-
-    /**
-     * @param Lexer|null                 $lexer
-     * @param PrettyPrinterAbstract|null $printer
-     */
-    public function __construct(Lexer $lexer = null, PrettyPrinterAbstract $printer = null)
-    {
-        if ($lexer === null) {
-            $lexer = new Lexer\Emulative([
-                'usedAttributes' => [
-                    'comments',
-                    'startLine',
-                    'endLine',
-                    'startTokenPos',
-                    'endTokenPos',
-                ],
-            ]);
-        }
-
-        $this->lexer = $lexer;
         $this->parser = new Parser\Php7($this->lexer);
 
         $this->cloner = new NodeTraverser();
         $this->cloner->addVisitor(new CloningVisitor());
-
-        $this->printer = $printer ?? new Standard();
     }
 
     /**
      * Inject dependencies into PHP Class source code. Attention, resulted code will attempt to
      * preserve formatting but will affect it. Do not forget to add formatting fixer.
-     *
-     * @param string    $code
-     * @param ClassNode $node
-     * @param bool      $removeTrait
-     * @param bool      $useTypedProperties
-     * @param bool      $noPhpDoc
-     * @return string
      */
     public function injectDependencies(
         string $code,

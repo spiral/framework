@@ -1,0 +1,12 @@
+.idea/
+.env
+composer.lock
+vendor/
+vendor_php
+*.db
+clover.xml
+.DS_Store
+tests/.rr-test.yml
+go.sum
+psr-worker.php
+.rr-sample.yaml

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth\Transport;
@@ -20,50 +13,49 @@ use Spiral\Auth\HttpTransportInterface;
  */
 final class HeaderTransport implements HttpTransportInterface
 {
-    /** @var string */
-    private $header;
-
-    /**
-     * @param string $header
-     */
-    public function __construct(string $header = 'X-Auth-Token')
-    {
-        $this->header = $header;
+    public function __construct(
+        private readonly string $header = 'X-Auth-Token',
+        private readonly string $valueFormat = '%s'
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function fetchToken(Request $request): ?string
     {
         if ($request->hasHeader($this->header)) {
-            return $request->getHeaderLine($this->header);
+            return $this->extractToken($request);
         }
 
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function commitToken(
         Request $request,
         Response $response,
         string $tokenID,
         \DateTimeInterface $expiresAt = null
     ): Response {
-        if ($request->hasHeader($this->header) && $request->getHeaderLine($this->header) === $tokenID) {
+        if ($request->hasHeader($this->header) && $this->extractToken($request) === $tokenID) {
             return $response;
         }
 
-        return $response->withAddedHeader($this->header, $tokenID);
+        return $response->withAddedHeader($this->header, sprintf($this->valueFormat, $tokenID));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function removeToken(Request $request, Response $response, string $tokenID): Response
     {
         return $response;
+    }
+
+    private function extractToken(Request $request): ?string
+    {
+        $headerLine = $request->getHeaderLine($this->header);
+
+        if ($this->valueFormat !== '%s') {
+            [$token] = sscanf($headerLine, $this->valueFormat);
+
+            return $token !== null ? (string) $token : null;
+        }
+
+        return $headerLine;
     }
 }

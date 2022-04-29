@@ -1,22 +1,15 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router\Bootloader;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
+use Spiral\Attributes\Bootloader\AttributesBootloader;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\MemoryInterface;
-use Spiral\Bootloader\ConsoleBootloader;
 use Spiral\Bootloader\Http\RouterBootloader;
+use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Router\Command\ResetCommand;
 use Spiral\Router\GroupRegistry;
@@ -31,40 +24,24 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
 
     protected const DEPENDENCIES = [
         RouterBootloader::class,
-        ConsoleBootloader::class,
+        AttributesBootloader::class,
     ];
 
     protected const SINGLETONS = [
         GroupRegistry::class => [self::class, 'getGroups'],
     ];
 
-    /** @var MemoryInterface */
-    private $memory;
-
-    /** @var GroupRegistry */
-    private $groups;
-
-    /**
-     * @param MemoryInterface $memory
-     * @param GroupRegistry   $groupRegistry
-     */
-    public function __construct(MemoryInterface $memory, GroupRegistry $groupRegistry)
-    {
-        $this->memory = $memory;
-        $this->groups = $groupRegistry;
+    public function __construct(
+        private readonly MemoryInterface $memory,
+        private readonly GroupRegistry $groups
+    ) {
     }
 
-    /**
-     * @param EnvironmentInterface $env
-     * @param ConsoleBootloader    $console
-     * @param RouteLocator         $locator
-     */
-    public function boot(ConsoleBootloader $console, EnvironmentInterface $env, RouteLocator $locator): void
+    public function init(ConsoleBootloader $console, EnvironmentInterface $env, RouteLocator $locator): void
     {
         $console->addCommand(ResetCommand::class);
 
         $cached = $env->get('ROUTE_CACHE', !$env->get('DEBUG'));
-        AnnotationRegistry::registerLoader('class_exists');
 
         $schema = $this->memory->loadData(self::MEMORY_SECTION);
         if (empty($schema) || !$cached) {
@@ -79,17 +56,11 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
         }
     }
 
-    /**
-     * @return GroupRegistry
-     */
     public function getGroups(): GroupRegistry
     {
         return $this->groups;
     }
 
-    /**
-     * @param array $routes
-     */
     private function configureRoutes(array $routes): void
     {
         foreach ($routes as $name => $schema) {

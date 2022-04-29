@@ -14,8 +14,6 @@ use Spiral\Scaffolder\Command;
 
 return [
     'commands' => [
-        Command\Database\EntityCommand::class,
-        Command\Database\RepositoryCommand::class,
         Command\BootloaderCommand::class,
         Command\CommandCommand::class,
         Command\ConfigCommand::class,
@@ -23,6 +21,5 @@ return [
         Command\ControllerCommand::class,
         Command\FilterCommand::class,
         Command\MiddlewareCommand::class,
-        Command\MigrationCommand::class,
     ]
 ];

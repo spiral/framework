@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router\Target;
@@ -18,17 +11,11 @@ namespace Spiral\Router\Target;
  */
 final class Controller extends AbstractTarget
 {
-    /** @var string */
-    private $controller;
-
-    /**
-     * @param string $controller
-     * @param int    $options
-     * @param string $defaultAction
-     */
-    public function __construct(string $controller, int $options = 0, string $defaultAction = 'index')
-    {
-        $this->controller = $controller;
+    public function __construct(
+        private readonly string $controller,
+        int $options = 0,
+        string $defaultAction = 'index'
+    ) {
         parent::__construct(
             ['action' => null],
             ['action' => null],
@@ -37,17 +24,11 @@ final class Controller extends AbstractTarget
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function resolveController(array $matches): string
     {
         return $this->controller;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function resolveAction(array $matches): ?string
     {
         return $matches['action'];

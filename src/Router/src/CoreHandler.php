@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -23,6 +16,7 @@ use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Http\Exception\ClientException\UnauthorizedException;
+use Spiral\Http\Stream\GeneratorStream;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Router\Exception\HandlerException;
 
@@ -30,48 +24,18 @@ final class CoreHandler implements RequestHandlerInterface
 {
     use JsonTrait;
 
-    /** @var CoreInterface */
-    private $core;
+    private ?string $controller = null;
+    private ?string $action = null;
+    private ?bool $verbActions = null;
+    private ?array $parameters = null;
 
-    /** @var ScopeInterface */
-    private $scope;
-
-    /** @var string|null */
-    private $controller;
-
-    /** @var string|null */
-    private $action;
-
-    /** @var bool */
-    private $verbActions;
-
-    /** @var array|null */
-    private $parameters;
-
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
-
-    /**
-     * @param CoreInterface            $core
-     * @param ScopeInterface           $scope
-     * @param ResponseFactoryInterface $responseFactory
-     */
     public function __construct(
-        CoreInterface $core,
-        ScopeInterface $scope,
-        ResponseFactoryInterface $responseFactory
+        private readonly CoreInterface $core,
+        private readonly ScopeInterface $scope,
+        private readonly ResponseFactoryInterface $responseFactory
     ) {
-        $this->core = $core;
-        $this->scope = $scope;
-        $this->responseFactory = $responseFactory;
     }
 
-    /**
-     * @param string      $controller
-     * @param string|null $action
-     * @param array       $parameters
-     * @return CoreHandler
-     */
     public function withContext(string $controller, string $action, array $parameters): CoreHandler
     {
         $handler = clone $this;
@@ -84,9 +48,6 @@ final class CoreHandler implements RequestHandlerInterface
 
     /**
      * Disable or enable HTTP prefix for actions.
-     *
-     * @param bool $verbActions
-     * @return CoreHandler
      */
     public function withVerbActions(bool $verbActions): CoreHandler
     {
@@ -97,8 +58,6 @@ final class CoreHandler implements RequestHandlerInterface
     }
 
     /**
-     * @inheritdoc
-     *
      * @psalm-suppress UnusedVariable
      * @throws \Throwable
      */
@@ -108,8 +67,8 @@ final class CoreHandler implements RequestHandlerInterface
             throw new HandlerException('Controller and action pair is not set');
         }
 
-        $outputLevel = ob_get_level();
-        ob_start();
+        $outputLevel = \ob_get_level();
+        \ob_start();
 
         $output = $result = null;
 
@@ -121,41 +80,35 @@ final class CoreHandler implements RequestHandlerInterface
                     Request::class  => $request,
                     Response::class => $response,
                 ],
-                function () use ($request) {
-                    return $this->core->callAction(
-                        $this->controller,
-                        $this->getAction($request),
-                        $this->parameters
-                    );
-                }
+                fn () => $this->core->callAction(
+                    $this->controller,
+                    $this->getAction($request),
+                    $this->parameters
+                )
             );
         } catch (ControllerException $e) {
-            ob_get_clean();
+            \ob_get_clean();
             throw $this->mapException($e);
         } catch (\Throwable $e) {
-            ob_get_clean();
+            \ob_get_clean();
             throw $e;
         } finally {
-            while (ob_get_level() > $outputLevel + 1) {
-                $output = ob_get_clean() . $output;
+            while (\ob_get_level() > $outputLevel + 1) {
+                $output = \ob_get_clean() . $output;
             }
         }
 
         return $this->wrapResponse(
             $response,
             $result,
-            ob_get_clean() . $output
+            \ob_get_clean() . $output
         );
     }
 
-    /**
-     * @param Request $request
-     * @return string
-     */
     private function getAction(Request $request): string
     {
         if ($this->verbActions) {
-            return strtolower($request->getMethod()) . ucfirst($this->action);
+            return \strtolower($request->getMethod()) . \ucfirst($this->action);
         }
 
         return $this->action;
@@ -167,7 +120,6 @@ final class CoreHandler implements RequestHandlerInterface
      * @param Response $response Initial pipeline response.
      * @param mixed    $result   Generated endpoint output.
      * @param string   $output   Buffer output.
-     * @return Response
      */
     private function wrapResponse(Response $response, $result = null, string $output = ''): Response
     {
@@ -179,7 +131,11 @@ final class CoreHandler implements RequestHandlerInterface
             return $result;
         }
 
-        if (is_array($result) || $result instanceof \JsonSerializable) {
+        if ($result instanceof \Generator) {
+            return $response->withBody(new GeneratorStream($result));
+        }
+
+        if (\is_array($result) || $result instanceof \JsonSerializable) {
             $response = $this->writeJson($response, $result);
         } else {
             $response->getBody()->write((string)$result);
@@ -193,22 +149,15 @@ final class CoreHandler implements RequestHandlerInterface
 
     /**
      * Converts core specific ControllerException into HTTP ClientException.
-     *
-     * @param ControllerException $exception
-     * @return ClientException
      */
     private function mapException(ControllerException $exception): ClientException
     {
-        switch ($exception->getCode()) {
-            case ControllerException::BAD_ACTION:
-            case ControllerException::NOT_FOUND:
-                return new NotFoundException($exception->getMessage());
-            case ControllerException::FORBIDDEN:
-                return new ForbiddenException($exception->getMessage());
-            case ControllerException::UNAUTHORIZED:
-                return new UnauthorizedException($exception->getMessage());
-            default:
-                return new BadRequestException($exception->getMessage());
-        }
+        return match ($exception->getCode()) {
+            ControllerException::BAD_ACTION => new NotFoundException($exception->getMessage()),
+            ControllerException::NOT_FOUND => new NotFoundException($exception->getMessage()),
+            ControllerException::FORBIDDEN => new ForbiddenException($exception->getMessage()),
+            ControllerException::UNAUTHORIZED => new UnauthorizedException($exception->getMessage()),
+            default => new BadRequestException($exception->getMessage()),
+        };
     }
 }

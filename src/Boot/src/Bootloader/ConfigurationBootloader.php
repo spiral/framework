@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
@@ -33,39 +26,32 @@ final class ConfigurationBootloader extends Bootloader
         ConfigManager::class         => [self::class, 'configManager'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $configurator;
+    private ConfiguratorInterface $configurator;
 
     /** @var FileLoaderInterface[] */
-    private $loaders;
+    private array $loaders;
 
-    /** @var DirectoriesInterface */
-    private $directories;
-
-    /** @var Container */
-    private $container;
-
-    public function __construct(DirectoriesInterface $directories, Container $container)
-    {
+    public function __construct(
+        private readonly DirectoriesInterface $directories,
+        private readonly Container $container
+    ) {
         $this->loaders = [
             'php' => $container->get(PhpLoader::class),
             'json' => $container->get(JsonLoader::class),
         ];
 
-        $this->directories = $directories;
-        $this->container = $container;
         $this->configurator = $this->createConfigManager();
     }
 
     public function addLoader(string $ext, FileLoaderInterface $loader): void
     {
-        if (!isset($this->loaders[$ext]) || get_class($this->loaders[$ext]) !== get_class($loader)) {
+        if (!isset($this->loaders[$ext]) || $this->loaders[$ext]::class !== $loader::class) {
             $this->loaders[$ext] = $loader;
             $this->container->bindSingleton(ConfigManager::class, $this->createConfigManager());
         }
     }
 
-    private function createConfigManager(): ConfiguratorInterface
+    private function createConfigManager(): ConfigManager
     {
         return new ConfigManager(
             new DirectoryLoader($this->directories->get('config'), $this->loaders),
@@ -73,9 +59,6 @@ final class ConfigurationBootloader extends Bootloader
         );
     }
 
-    /**
-     * @return ConfiguratorInterface
-     */
     private function configManager(): ConfiguratorInterface
     {
         return $this->configurator;

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler;
@@ -16,29 +9,12 @@ use Spiral\Views\Exception\RenderException;
 
 final class ExceptionMapper
 {
-    /** @var SourceMap */
-    private $sourcemap;
-
-    /** @var int */
-    private $lineOffset;
-
-    /**
-     * @param SourceMap $sourcemap
-     * @param int       $lineOffset
-     */
-    public function __construct(SourceMap $sourcemap, int $lineOffset)
-    {
-        $this->sourcemap = $sourcemap;
-        $this->lineOffset = $lineOffset;
+    public function __construct(
+        private readonly SourceMap $sourcemap,
+        private readonly int $lineOffset
+    ) {
     }
 
-    /**
-     * @param \Throwable $e
-     * @param string     $class
-     * @param string     $filename
-     * @param array      $data
-     * @return \Throwable
-     */
     public function mapException(\Throwable $e, string $class, string $filename, array $data): \Throwable
     {
         $line = $e->getLine();

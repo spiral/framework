@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax;
@@ -22,9 +15,6 @@ use Spiral\Stempler\Parser\SyntaxInterface;
  */
 final class PHPSyntax implements SyntaxInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function handle(Parser $parser, Assembler $asm, Token $token): void
     {
         $asm->push(new PHP(

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor;
@@ -30,30 +23,14 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
     use NamedTrait;
     use CommentTrait;
 
-    /** @var string */
-    private $extends = '';
-
-    /** @var array */
-    private $interfaces = [];
-
-    /** @var array */
-    private $traits = [];
-
-    /** @var Constants */
-    private $constants;
-
-    /** @var Properties */
-    private $properties;
-
-    /** @var Methods */
-    private $methods;
+    private string $extends = '';
+    private array $interfaces = [];
+    private array $traits = [];
+    private Constants $constants;
+    private Properties $properties;
+    private Methods $methods;
 
     /**
-     * @param string $name
-     * @param string $extends
-     * @param array $interfaces
-     * @param string $comment
-     *
      * @throws ReactorException When name is invalid.
      */
     public function __construct(
@@ -76,9 +53,6 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         $this->methods = new Methods([]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setName(string $name): ClassDeclaration
     {
         $this->name = (new InflectorFactory())->build()->classify($name);
@@ -86,9 +60,6 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getExtends(): string
     {
         return $this->extends;
@@ -96,63 +67,45 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
 
     /**
      * @param string $class Class name.
-     * @return self
      */
-    public function setExtends($class): ClassDeclaration
+    public function setExtends(string $class): ClassDeclaration
     {
-        $this->extends = ltrim($class, '\\');
+        $this->extends = \ltrim($class, '\\');
 
         return $this;
     }
 
-    /**
-     * @param string $interface
-     * @return bool
-     */
     public function hasInterface(string $interface): bool
     {
-        $interface = ltrim($interface, '\\');
+        $interface = \ltrim($interface, '\\');
 
         return isset($this->interfaces[$interface]);
     }
 
-    /**
-     * @param string $interface
-     * @return self
-     */
     public function addInterface(string $interface): ClassDeclaration
     {
-        $this->interfaces[ltrim($interface, '\\')] = true;
+        $this->interfaces[\ltrim($interface, '\\')] = true;
 
         return $this;
     }
 
-    /**
-     * @param string $interface
-     * @return self
-     */
     public function removeInterface(string $interface): ClassDeclaration
     {
-        unset($this->interfaces[ltrim($interface, '\\')]);
+        unset($this->interfaces[\ltrim($interface, '\\')]);
 
         return $this;
     }
 
     /**
      * Declared interfaces.
-     *
-     * @return array
      */
     public function getInterfaces(): array
     {
-        return array_keys($this->interfaces);
+        return \array_keys($this->interfaces);
     }
 
     /**
      * Declare class interfaces.
-     *
-     * @param array $interfaces
-     * @return self
      */
     public function setInterfaces(array $interfaces): ClassDeclaration
     {
@@ -164,41 +117,27 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         return $this;
     }
 
-    /**
-     * @param string $class
-     * @return bool
-     */
     public function hasTrait(string $class): bool
     {
-        $class = ltrim($class, '\\');
+        $class = \ltrim($class, '\\');
 
         return isset($this->traits[$class]);
     }
 
-    /**
-     * @param string $class
-     * @return self
-     */
     public function removeTrait(string $class): ClassDeclaration
     {
-        unset($this->traits[ltrim($class, '\\')]);
+        unset($this->traits[\ltrim($class, '\\')]);
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getTraits(): array
     {
-        return array_keys($this->traits);
+        return \array_keys($this->traits);
     }
 
     /**
      * Declare class traits.
-     *
-     * @param array $traits
-     * @return self
      */
     public function setTraits(array $traits): ClassDeclaration
     {
@@ -210,13 +149,9 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         return $this;
     }
 
-    /**
-     * @param string $class
-     * @return self
-     */
     public function addTrait(string $class): ClassDeclaration
     {
-        $this->traits[ltrim($class, '\\')] = true;
+        $this->traits[\ltrim($class, '\\')] = true;
 
         return $this;
     }
@@ -229,10 +164,6 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         return $this->constants;
     }
 
-    /**
-     * @param string $name
-     * @return Constant
-     */
     public function constant(string $name): Constant
     {
         return $this->constants->get($name);
@@ -246,10 +177,6 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         return $this->properties;
     }
 
-    /**
-     * @param string $name
-     * @return Property
-     */
     public function property(string $name): Property
     {
         return $this->properties->get($name);
@@ -263,20 +190,12 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         return $this->methods;
     }
 
-    /**
-     * @param string $name
-     * @return Method
-     */
     public function method(string $name): Method
     {
         return $this->methods->get($name);
     }
 
-    /**
-     * {@inheritdoc}
-     * @return self
-     */
-    public function replace($search, $replace): ClassDeclaration
+    public function replace(array|string $search, array|string $replace): ClassDeclaration
     {
         $this->constants->replace($search, $replace);
         $this->properties->replace($search, $replace);
@@ -285,10 +204,6 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         return $this;
     }
 
-    /**
-     * @param int $indentLevel
-     * @return string
-     */
     public function render(int $indentLevel = 0): string
     {
         $result = '';
@@ -306,7 +221,7 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         }
 
         if (!empty($this->interfaces)) {
-            $interfaces = implode(', ', array_keys($this->interfaces));
+            $interfaces = \implode(', ', \array_keys($this->interfaces));
             $header .= " implements {$interfaces}";
         }
 
@@ -316,16 +231,11 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         //Rendering class body
         $result .= $this->renderBody($indentLevel);
 
-        $result = rtrim($result, "\n") . "\n";
-        $result .= $this->addIndent('}', $indentLevel);
+        $result = \rtrim($result, "\n") . "\n";
 
-        return $result;
+        return $result . $this->addIndent('}', $indentLevel);
     }
 
-    /**
-     * @param int $indentLevel
-     * @return string
-     */
     protected function renderBody(int $indentLevel): string
     {
         $result = '';
@@ -348,17 +258,13 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         return $result;
     }
 
-    /**
-     * @param int $indentLevel
-     * @return string
-     */
     private function renderTraits(int $indentLevel = 0): string
     {
         $lines = [];
         foreach ($this->traits as $class => $_) {
-            $lines[] = $this->addIndent("use {$class};", $indentLevel);
+            $lines[] = $this->addIndent(\sprintf('use %s;', $class), $indentLevel);
         }
 
-        return implode("\n", $lines);
+        return \implode("\n", $lines);
     }
 }

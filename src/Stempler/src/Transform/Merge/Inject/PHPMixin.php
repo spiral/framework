@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Merge\Inject;
@@ -16,25 +9,15 @@ namespace Spiral\Stempler\Transform\Merge\Inject;
  */
 final class PHPMixin
 {
-    /** @var array */
-    private $tokens = [];
+    private array $blocks = [];
 
-    /** @var array */
-    private $blocks = [];
-
-    /**
-     * @param array  $tokens
-     * @param string $func
-     */
-    public function __construct(array $tokens, string $func)
-    {
-        $this->tokens = $tokens;
+    public function __construct(
+        private readonly array $tokens,
+        string $func
+    ) {
         $this->parse($func);
     }
 
-    /**
-     * @return string
-     */
     public function compile(): string
     {
         $replace = [];
@@ -49,12 +32,12 @@ final class PHPMixin
 
         $result = '';
         foreach ($this->tokens as $position => $token) {
-            if (array_key_exists($position, $replace)) {
+            if (\array_key_exists($position, $replace)) {
                 $result .= $replace[$position];
                 continue;
             }
 
-            if (is_string($token)) {
+            if (\is_string($token)) {
                 $result .= $token;
                 continue;
             }
@@ -67,15 +50,13 @@ final class PHPMixin
 
     /**
      * Compiles the PHP blocks (with replacements) but excludes the php open, close tag and echo function.
-     *
-     * @return string
      */
     public function trimBody(): string
     {
         $replace = [];
 
         foreach ($this->blocks as $block) {
-            for ($i = $block['start']; $i <= $block['end']; $i++) {
+            for ($i = $block['start']; $i <= $block['end']; ++$i) {
                 $replace[$i] = '';
             }
 
@@ -84,30 +65,28 @@ final class PHPMixin
 
         $result = '';
         foreach ($this->tokens as $position => $token) {
-            if (array_key_exists($position, $replace)) {
+            if (\array_key_exists($position, $replace)) {
                 $result .= $replace[$position];
                 continue;
             }
 
-            if (is_string($token)) {
+            if (\is_string($token)) {
                 $result .= $token;
                 continue;
             }
 
-            if (in_array($token[0], [T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO, T_CLOSE_TAG, T_ECHO])) {
+            if (\in_array($token[0], [T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO, T_CLOSE_TAG, T_ECHO])) {
                 continue;
             }
 
             $result .= $token[1];
         }
 
-        return rtrim(trim($result), ';');
+        return \rtrim(\trim($result), ';');
     }
 
     /**
      * Get macros detected in PHP code and their default values (if any).
-     *
-     * @return array
      */
     public function getBlocks(): array
     {
@@ -119,19 +98,11 @@ final class PHPMixin
         return $result;
     }
 
-    /**
-     * @param string $block
-     * @return bool
-     */
     public function has(string $block): bool
     {
         return isset($this->blocks[$block]);
     }
 
-    /**
-     * @param string $block
-     * @param string $value
-     */
     public function set(string $block, string $value): void
     {
         if (!isset($this->blocks[$block])) {
@@ -141,15 +112,12 @@ final class PHPMixin
         $this->blocks[$block]['value'] = $value;
     }
 
-    /**
-     * @param string $func
-     */
     private function parse(string $func): void
     {
         $level = 0;
         $start = $name = $value = null;
         foreach ($this->tokens as $position => $token) {
-            if (!is_array($token)) {
+            if (!\is_array($token)) {
                 $token = [$token, $token, 0];
             }
 
@@ -195,7 +163,7 @@ final class PHPMixin
                     }
 
                     if ($name === null) {
-                        $name = stripcslashes(substr($token[1], 1, -1));
+                        $name = \stripcslashes(\substr($token[1], 1, -1));
                     }
                     $value .= $token[1];
                     break;

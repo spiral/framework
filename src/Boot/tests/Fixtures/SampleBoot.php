@@ -20,8 +20,12 @@ class SampleBoot extends Bootloader
 
     public const BINDINGS   = ['abc' => self::class];
     public const SINGLETONS = ['single' => self::class];
+    public const DEPENDENCIES = [
+        BootloaderA::class,
+        BootloaderB::class,
+    ];
 
-    public function boot(BinderInterface $binder): void
+    public function init(BinderInterface $binder): void
     {
         $binder->bind('cde', new SampleClass());
     }

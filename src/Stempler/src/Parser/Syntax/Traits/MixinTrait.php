@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax\Traits;
@@ -19,12 +12,7 @@ use Spiral\Stempler\Parser\Assembler;
 
 trait MixinTrait
 {
-    /**
-     * @param Parser $parser
-     * @param Token  $token
-     * @return Mixin|string
-     */
-    private function parseToken(Parser $parser, Token $token)
+    private function parseToken(Parser $parser, Token $token): Mixin|Raw|string
     {
         if ($token->tokens === []) {
             if ($token->type === Token::TYPE_RAW) {

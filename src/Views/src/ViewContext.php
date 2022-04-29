@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Views;
@@ -22,32 +15,28 @@ use Spiral\Views\Exception\ContextException;
 final class ViewContext implements ContextInterface
 {
     /** @var DependencyInterface[] */
-    private $dependencies = [];
+    private array $dependencies = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function getID(): string
     {
         $calculated = '';
         foreach ($this->dependencies as $dependency) {
-            $calculated .= "[{$dependency->getName()}={$dependency->getValue()}]";
+            $calculated .= \sprintf('[%s=%s]', $dependency->getName(), $dependency->getValue());
         }
 
-        return md5($calculated);
+        return \md5($calculated);
     }
 
     /**
-     * @return array
+     * @return DependencyInterface[]
+     *
+     * @psalm-return list<DependencyInterface>
      */
     public function getDependencies(): array
     {
-        return array_values($this->dependencies);
+        return \array_values($this->dependencies);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withDependency(DependencyInterface $dependency): ContextInterface
     {
         $environment = clone $this;
@@ -56,13 +45,10 @@ final class ViewContext implements ContextInterface
         return $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function resolveValue(string $dependency)
+    public function resolveValue(string $dependency): mixed
     {
         if (!isset($this->dependencies[$dependency])) {
-            throw new ContextException("Undefined context dependency '{$dependency}'.");
+            throw new ContextException(\sprintf('Undefined context dependency \'%s\'.', $dependency));
         }
 
         return $this->dependencies[$dependency]->getValue();

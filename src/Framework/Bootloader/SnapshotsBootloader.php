@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader;
@@ -15,8 +8,8 @@ use Psr\Log\LoggerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Exceptions\HandlerInterface;
-use Spiral\Exceptions\PlainHandler;
+use Spiral\Exceptions\Renderer\PlainRenderer;
+use Spiral\Exceptions\Verbosity;
 use Spiral\Files\FilesInterface;
 use Spiral\Snapshots\FileSnapshooter;
 use Spiral\Snapshots\SnapshotterInterface;
@@ -24,7 +17,7 @@ use Spiral\Snapshots\SnapshotterInterface;
 /**
  * Depends on environment variables:
  * SNAPSHOT_MAX_FILES: defaults to 25
- * SNAPSHOT_VERBOSITY: defaults to HandlerInterface::VERBOSITY_VERBOSE (1)
+ * SNAPSHOT_VERBOSITY: defaults to {@see \Spiral\Exceptions\Verbosity::VERBOSE} (1)
  */
 final class SnapshotsBootloader extends Bootloader
 {
@@ -35,23 +28,19 @@ final class SnapshotsBootloader extends Bootloader
     private const MAX_SNAPSHOTS = 25;
 
     /**
-     * @param EnvironmentInterface $env
-     * @param DirectoriesInterface $dirs
-     * @param FilesInterface       $files
-     * @param LoggerInterface|null $logger
-     * @return FileSnapshooter
+     * @noRector RemoveUnusedPrivateMethodRector
      */
     private function fileSnapshooter(
         EnvironmentInterface $env,
         DirectoriesInterface $dirs,
         FilesInterface $files,
         LoggerInterface $logger = null
-    ) {
+    ): SnapshotterInterface {
         return new FileSnapshooter(
             $dirs->get('runtime') . '/snapshots/',
-            $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),
-            $env->get('SNAPSHOT_VERBOSITY', HandlerInterface::VERBOSITY_VERBOSE),
-            new PlainHandler(),
+            (int) $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),
+            Verbosity::tryFrom((int) $env->get('SNAPSHOT_VERBOSITY')) ?? Verbosity::VERBOSE->value,
+            new PlainRenderer(),
             $files,
             $logger
         );

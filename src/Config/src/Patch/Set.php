@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Config\Patch;
@@ -23,26 +16,12 @@ final class Set implements PatchInterface
 {
     use DotTrait;
 
-    /** @var string */
-    private $key;
-
-    /** @var mixed */
-    private $value;
-
-    /**
-     * @param string $key
-     * @param mixed  $value
-     */
-    public function __construct(string $key, $value)
-    {
-        $this->key = $key;
-        $this->value = $value;
+    public function __construct(
+        private string $key,
+        private mixed $value
+    ) {
     }
 
-    /**
-     * @param array $config
-     * @return array
-     */
     public function patch(array $config): array
     {
         try {

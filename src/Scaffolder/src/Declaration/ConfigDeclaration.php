@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Declaration;
@@ -28,83 +21,32 @@ use function Spiral\Scaffolder\isAssociativeArray;
 
 class ConfigDeclaration extends ClassDeclaration implements DependedInterface
 {
-    /** @var ScaffolderConfig */
-    private $config;
-
-    /** @var FilesInterface */
-    private $files;
-
-    /** @var SlugifyInterface */
-    private $slugify;
-
-    /** @var ConfigDeclaration\TypeAnnotations */
-    private $typeAnnotations;
-
-    /** @var ConfigDeclaration\TypeHints */
-    private $typeHints;
-
-    /** @var ConfigDeclaration\Defaults */
-    private $defaultValues;
-
-    /** @var string */
-    private $configName;
-
-    /** @var string */
-    private $directory;
-
-    /**
-     * @param ScaffolderConfig                  $config
-     * @param FilesInterface                    $files
-     * @param SlugifyInterface                  $slugify
-     * @param ConfigDeclaration\TypeAnnotations $typeAnnotations
-     * @param ConfigDeclaration\TypeHints       $typeHints
-     * @param ConfigDeclaration\Defaults        $defaultValues
-     * @param string                            $configName
-     * @param string                            $name
-     * @param string                            $comment
-     * @param string                            $directory
-     */
     public function __construct(
-        ScaffolderConfig $config,
-        FilesInterface $files,
-        SlugifyInterface $slugify,
-        ConfigDeclaration\TypeAnnotations $typeAnnotations,
-        ConfigDeclaration\TypeHints $typeHints,
-        ConfigDeclaration\Defaults $defaultValues,
-        string $configName,
+        private readonly ScaffolderConfig $config,
+        private readonly FilesInterface $files,
+        private readonly SlugifyInterface $slugify,
+        private readonly ConfigDeclaration\TypeAnnotations $typeAnnotations,
+        private readonly ConfigDeclaration\TypeHints $typeHints,
+        private readonly ConfigDeclaration\Defaults $defaultValues,
+        private readonly string $configName,
         string $name,
         string $comment = '',
-        string $directory = ''
+        private readonly string $directory = ''
     ) {
         parent::__construct($name, 'InjectableConfig', [], $comment);
-
-        $this->config = $config;
-        $this->files = $files;
-        $this->slugify = $slugify;
-        $this->typeAnnotations = $typeAnnotations;
-        $this->typeHints = $typeHints;
-        $this->defaultValues = $defaultValues;
-        $this->directory = $directory;
-        $this->configName = $configName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies(): array
     {
         return [InjectableConfig::class => null];
     }
 
-    /**
-     * @param bool $reverse
-     */
     public function create(bool $reverse): void
     {
         $filename = $this->makeConfigFilename($this->configName);
         if ($reverse) {
             if (!$this->files->exists($filename)) {
-                throw new ScaffolderException("Config filename $filename doesn't exist");
+                throw new ScaffolderException(\sprintf("Config filename %s doesn't exist", $filename));
             }
 
             $defaultsFromFile = require $filename;
@@ -119,18 +61,11 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         }
     }
 
-    /**
-     * @param string $filename
-     * @return string
-     */
     private function makeConfigFilename(string $filename): string
     {
-        return "{$this->directory}{$filename}.php";
+        return \sprintf('%s%s.php', $this->directory, $filename);
     }
 
-    /**
-     * @param string $filename
-     */
     private function touchConfigFile(string $filename): void
     {
         $this->files->touch($filename);
@@ -149,18 +84,14 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         );
     }
 
-    /**
-     * @return string
-     */
     private function phpDocSeeReference(): string
     {
-        $namespace = trim($this->config->classNamespace('config', $this->getName()), '\\');
+        $namespace = \trim($this->config->classNamespace('config', $this->getName()), '\\');
 
-        return "@see \\$namespace\\{$this->getName()}";
+        return \sprintf('@see \%s\%s', $namespace, $this->getName());
     }
 
     /**
-     * @param array $defaults
      * @return double[]|float[]
      */
     private function declareGetters(array $defaults): array
@@ -175,14 +106,14 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
             $getters[] = $getter;
 
             $method = $this->method($getter)->setPublic();
-            $method->setSource("return \$this->config['$key'];");
-            $method->setComment("@return {$this->typeAnnotations->getAnnotation($value)}");
+            $method->setSource(\sprintf('return $this->config[\'%s\'];', $key));
+            $method->setComment(\sprintf('@return %s', $this->typeAnnotations->getAnnotation($value)));
 
-            if (is_array($value)) {
-                $gettersByKey[] = compact('key', 'value');
+            if (\is_array($value)) {
+                $gettersByKey[] = ['key' => $key, 'value' => $value];
             }
 
-            $returnTypeHint = $this->typeHints->getHint(gettype($value));
+            $returnTypeHint = $this->typeHints->getHint(\gettype($value));
             if ($returnTypeHint !== null) {
                 $method->setReturn($returnTypeHint);
             }
@@ -198,32 +129,26 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         return $output;
     }
 
-    /**
-     * @param array  $methodNames
-     * @param string $key
-     * @param array  $value
-     * @return Method|null
-     */
     private function declareGettersByKey(array $methodNames, string $key, array $value): ?Method
     {
         //Won't create if there's less than 2 sub-items
-        if (count($value) < 2) {
+        if (\count($value) < 2) {
             return null;
         }
 
         $singularKey = $this->singularize($key);
         $name = $this->makeGetterName($singularKey);
-        if (in_array($name, $methodNames, true)) {
+        if (\in_array($name, $methodNames, true)) {
             $name = $this->makeGetterName($singularKey, 'get', 'by');
         }
 
         //Name conflict, won't merge
-        if (in_array($name, $methodNames, true)) {
+        if (\in_array($name, $methodNames, true)) {
             return null;
         }
 
-        $keyType = defineArrayType(array_keys($value), '-mixed-');
-        $valueType = defineArrayType(array_values($value), '-mixed-');
+        $keyType = defineArrayType(\array_keys($value), '-mixed-');
+        $valueType = defineArrayType(\array_values($value), '-mixed-');
         //We need a fixed structure here
         if ($keyType === '-mixed-' || $valueType === '-mixed-') {
             return null;
@@ -235,11 +160,11 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         }
 
         $method = $this->method($name)->setPublic();
-        $method->setSource("return \$this->config['$key'][\$$singularKey];");
+        $method->setSource(\sprintf('return $this->config[\'%s\'][$%s];', $key, $singularKey));
         $method->setReturn($valueType);
         $method->setComment([
-            "@param {$this->typeAnnotations->mapType($keyType)} $singularKey",
-            "@return {$this->typeAnnotations->getAnnotation(array_values($value)[0])}",
+            \sprintf('@param %s %s', $this->typeAnnotations->mapType($keyType), $singularKey),
+            \sprintf('@return %s', $this->typeAnnotations->getAnnotation(array_values($value)[0])),
         ]);
 
         $param = $method->parameter($singularKey);
@@ -251,12 +176,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         return $method;
     }
 
-    /**
-     * @param string $name
-     * @param string $prefix
-     * @param string $postfix
-     * @return string
-     */
     private function makeGetterName(string $name, string $prefix = 'get', string $postfix = ''): string
     {
         $chunks = [];
@@ -265,19 +184,16 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         }
 
         $name = $this->slugify->slugify($name, ['lowercase' => false]);
-        $chunks[] = count($chunks) !== 0 ? $this->classify($name) : $name;
+        $chunks[] = \count($chunks) !== 0 ? $this->classify($name) : $name;
         if (!empty($postfix)) {
-            $chunks[] = ucfirst($postfix);
+            $chunks[] = \ucfirst($postfix);
         }
 
-        return implode('', $chunks);
+        return \implode('', $chunks);
     }
 
     /**
      * Declare constant and property.
-     *
-     * @param string $configName
-     * @param array  $defaults
      */
     private function declareStructure(string $configName, array $defaults): void
     {
@@ -286,10 +202,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
             ->setComment('@internal For internal usage. Will be hydrated in the constructor.');
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     private function classify(string $name): string
     {
         return ( new InflectorFactory() )
@@ -297,10 +209,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
             ->classify($name);
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     private function singularize(string $name): string
     {
         return ( new InflectorFactory() )

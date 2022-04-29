@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
@@ -22,9 +15,6 @@ use Spiral\Reactor\Partial\Constant;
  */
 final class Constants extends Aggregator
 {
-    /**
-     * @param array $constants
-     */
     public function __construct(array $constants)
     {
         parent::__construct([Constant::class], $constants);
@@ -33,7 +23,6 @@ final class Constants extends Aggregator
     /**
      * Get named element by it's name.
      *
-     * @param string $name
      * @return Constant|DeclarationInterface
      */
     public function get(string $name): Constant

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Security;
@@ -32,48 +25,26 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
 {
     /**
      * Roles associated with their permissions.
-     *
-     * @var array
      */
-    private $permissions = [];
+    private array $permissions = [];
+    private readonly Matcher $matcher;
 
-    /** @var Matcher */
-    private $matcher;
-
-    /**@var RulesInterface */
-    private $rules;
-
-    /** @var string */
-    private $defaultRule = ForbidRule::class;
-
-    /**
-     * @param RulesInterface $rules
-     * @param string         $defaultRule
-     */
-    public function __construct(RulesInterface $rules, string $defaultRule = ForbidRule::class)
-    {
+    public function __construct(
+        private readonly RulesInterface $rules,
+        private readonly string $defaultRule = ForbidRule::class
+    ) {
         $this->matcher = new Matcher();
-        $this->rules = $rules;
-        $this->defaultRule = $defaultRule;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasRole(string $role): bool
     {
-        return array_key_exists($role, $this->permissions);
+        return \array_key_exists($role, $this->permissions);
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return $this
-     */
     public function addRole(string $role): PermissionManager
     {
         if ($this->hasRole($role)) {
-            throw new RoleException("Role '{$role}' already exists");
+            throw new RoleException(\sprintf("Role '%s' already exists", $role));
         }
 
         $this->permissions[$role] = [
@@ -83,15 +54,10 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return $this
-     */
     public function removeRole(string $role): PermissionManager
     {
         if (!$this->hasRole($role)) {
-            throw new RoleException("Undefined role '{$role}'");
+            throw new RoleException(\sprintf("Undefined role '%s'", $role));
         }
 
         unset($this->permissions[$role]);
@@ -99,52 +65,38 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoles(): array
     {
-        return array_keys($this->permissions);
+        return \array_keys($this->permissions);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPermissions(string $role): array
     {
         if (!$this->hasRole($role)) {
-            throw new RoleException("Undefined role '{$role}'");
+            throw new RoleException(\sprintf("Undefined role '%s'", $role));
         }
 
         return $this->permissions[$role];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRule(string $role, string $permission): RuleInterface
     {
         if (!$this->hasRole($role)) {
-            throw new RoleException("Undefined role '{$role}'");
+            throw new RoleException(\sprintf("Undefined role '%s'", $role));
         }
 
         //Behaviour points to rule
         return $this->rules->get($this->findRule($role, $permission));
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return $this|self
-     */
     public function associate(string $role, string $permission, string $rule = AllowRule::class): PermissionManager
     {
         if (!$this->hasRole($role)) {
-            throw new RoleException("Undefined role '{$role}'");
+            throw new RoleException(\sprintf("Undefined role '%s'", $role));
         }
 
         if (!$this->rules->has($rule)) {
-            throw new PermissionException("Undefined rule '{$rule}'");
+            throw new PermissionException(\sprintf("Undefined rule '%s'", $rule));
         }
 
         $this->permissions[$role][$permission] = $rule;
@@ -155,10 +107,6 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
     /**
      * Associate role/permission with Forbid rule.
      *
-     * @param string $role
-     * @param string $permission
-     * @return $this|self
-     *
      * @throws RoleException
      * @throws PermissionException
      */
@@ -168,9 +116,6 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
     }
 
     /**
-     * @param string $role
-     * @param string $permission
-     * @return string
      *
      * @throws PermissionException
      */

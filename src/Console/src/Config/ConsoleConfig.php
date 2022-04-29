@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Console\Config;
@@ -32,17 +25,11 @@ final class ConsoleConfig extends InjectableConfig
         'update'    => [],
     ];
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->config['name'] ?? 'Spiral Framework';
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->config['version'] ?? 'UNKNOWN';
@@ -50,12 +37,10 @@ final class ConsoleConfig extends InjectableConfig
 
     /**
      * User defined set of commands (to be used when auto-location is off).
-     *
-     * @return array
      */
     public function getCommands(): array
     {
-        if (!array_key_exists('commands', $this->config)) {
+        if (!\array_key_exists('commands', $this->config)) {
             //Legacy config support
             return [];
         }
@@ -94,22 +79,19 @@ final class ConsoleConfig extends InjectableConfig
     }
 
     /**
-     * @param mixed $item
-     * @return SequenceInterface
-     *
      * @throws ConfigException
      */
-    protected function parseSequence($item): SequenceInterface
+    protected function parseSequence(SequenceInterface|string|array $item): SequenceInterface
     {
         if ($item instanceof SequenceInterface) {
             return $item;
         }
 
-        if (is_string($item)) {
+        if (\is_callable($item)) {
             return new CallableSequence($item);
         }
 
-        if (is_array($item) && isset($item['command'])) {
+        if (\is_array($item) && isset($item['command'])) {
             return new CommandSequence(
                 $item['command'],
                 $item['options'] ?? [],
@@ -118,18 +100,17 @@ final class ConsoleConfig extends InjectableConfig
             );
         }
 
-        if (is_array($item) && isset($item['invoke'])) {
+        if (\is_array($item) && isset($item['invoke'])) {
             return new CallableSequence(
                 $item['invoke'],
-                $item['parameters'] ?? [],
                 $item['header'] ?? '',
                 $item['footer'] ?? ''
             );
         }
 
-        throw new ConfigException(sprintf(
+        throw new ConfigException(\sprintf(
             'Unable to parse sequence `%s`.',
-            json_encode($item)
+            \json_encode($item, JSON_THROW_ON_ERROR)
         ));
     }
 }

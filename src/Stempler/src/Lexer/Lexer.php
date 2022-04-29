@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer;
@@ -20,26 +13,20 @@ use Spiral\Stempler\Lexer\Grammar\RawGrammar;
 final class Lexer
 {
     /** @var GrammarInterface[] */
-    private $grammars = [];
+    private array $grammars = [];
 
     /**
      * Attach grammar layer.
-     *
-     * @param GrammarInterface $grammar
-     * @return int
      */
     public function addGrammar(GrammarInterface $grammar): int
     {
         $this->grammars[] = $grammar;
 
-        return count($this->grammars) - 1;
+        return \count($this->grammars) - 1;
     }
 
     /**
      * Generate token stream.
-     *
-     * @param StreamInterface $src
-     * @return \Generator
      */
     public function parse(StreamInterface $src): \Generator
     {
@@ -54,16 +41,11 @@ final class Lexer
         }
     }
 
-    /**
-     * @param GrammarInterface $grammar
-     * @param Buffer           $stream
-     * @return \Generator
-     */
     private function wrap(GrammarInterface $grammar, Buffer $stream): \Generator
     {
         foreach ($grammar->parse($stream) as $n) {
             if ($n instanceof Token && $n->grammar === null) {
-                $n->grammar = get_class($grammar);
+                $n->grammar = $grammar::class;
             }
 
             yield $n;
@@ -73,10 +55,9 @@ final class Lexer
     /**
      * Generate character stream and aggregate grammar results.
      *
-     * @param StreamInterface $src
-     * @return array|\Generator
+     * @return \Generator<int, Byte>
      */
-    private function generate(StreamInterface $src)
+    private function generate(StreamInterface $src): \Generator
     {
         while (!$src->isEOI()) {
             yield new Byte($src->getOffset(), $src->peak());

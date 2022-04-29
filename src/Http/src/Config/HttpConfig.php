@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Config;
@@ -29,9 +22,6 @@ final class HttpConfig extends InjectableConfig
         'middleware' => [],
     ];
 
-    /**
-     * @return string
-     */
     public function getBasePath(): string
     {
         return $this->config['basePath'];
@@ -39,8 +29,6 @@ final class HttpConfig extends InjectableConfig
 
     /**
      * Initial set of headers.
-     *
-     * @return array
      */
     public function getBaseHeaders(): array
     {

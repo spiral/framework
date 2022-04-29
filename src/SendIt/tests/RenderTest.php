@@ -25,10 +25,10 @@ class RenderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->app = App::init([
+        $this->app = App::create([
             'root' => __DIR__ . '/App',
             'app'  => __DIR__ . '/App'
-        ]);
+        ])->run();
     }
 
     public function tearDown(): void

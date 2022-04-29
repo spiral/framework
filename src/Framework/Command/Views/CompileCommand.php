@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Command\Views;
@@ -27,10 +20,7 @@ final class CompileCommand extends Command
     protected const NAME        = 'views:compile';
     protected const DESCRIPTION = 'Warm-up view cache';
 
-    /**
-     * @param ViewManager $views
-     */
-    public function perform(ViewManager $views): void
+    public function perform(ViewManager $views): int
     {
         $generator = new ContextGenerator($views->getContext());
 
@@ -51,12 +41,10 @@ final class CompileCommand extends Command
         }
 
         $this->writeln('View cache has been generated.');
+
+        return self::SUCCESS;
     }
 
-    /**
-     * @param EngineInterface  $engine
-     * @param ContextInterface $context
-     */
     protected function compile(EngineInterface $engine, ContextInterface $context): void
     {
         $this->sprintf(
@@ -66,7 +54,7 @@ final class CompileCommand extends Command
         );
 
         foreach ($engine->getLoader()->list() as $path) {
-            $start = microtime(true);
+            $start = \microtime(true);
             try {
                 $engine->reset($path, $context);
                 $engine->compile($path, $context);
@@ -85,10 +73,6 @@ final class CompileCommand extends Command
         $this->renderSuccess($path ?? null);
     }
 
-    /**
-     * @param string     $path
-     * @param \Throwable $e
-     */
     protected function renderError(string $path, \Throwable $e): void
     {
         if (!$this->isVerbose()) {
@@ -103,16 +87,12 @@ final class CompileCommand extends Command
         );
     }
 
-    /**
-     * @param ContextInterface $context
-     * @return string
-     */
     private function describeContext(ContextInterface $context): string
     {
         $values = [];
 
         foreach ($context->getDependencies() as $dependency) {
-            $values[] = sprintf(
+            $values[] = \sprintf(
                 '%s%s%s:%s%s%s',
                 Color::LIGHT_WHITE,
                 $dependency->getName(),
@@ -123,23 +103,14 @@ final class CompileCommand extends Command
             );
         }
 
-        return implode(', ', $values);
+        return \implode(', ', $values);
     }
 
-    /**
-     * @param EngineInterface $engine
-     * @return string
-     */
     private function describeEngine(EngineInterface $engine): string
     {
-        $refection = new \ReflectionObject($engine);
-
-        return $refection->getShortName();
+        return (new \ReflectionObject($engine))->getShortName();
     }
 
-    /**
-     * @param string $lastPath
-     */
     private function renderSuccess(string $lastPath = null): void
     {
         if (!$this->isVerbose()) {
@@ -153,9 +124,6 @@ final class CompileCommand extends Command
         $this->write("\n");
     }
 
-    /**
-     * @param float $start
-     */
     private function renderElapsed(float $start): void
     {
         if (!$this->isVerbose()) {
@@ -165,7 +133,7 @@ final class CompileCommand extends Command
         $this->sprintf(
             " %s[%s ms]%s\n",
             Color::GRAY,
-            number_format((microtime(true) - $start) * 1000),
+            \number_format((\microtime(true) - $start) * 1000),
             Color::RESET
         );
     }

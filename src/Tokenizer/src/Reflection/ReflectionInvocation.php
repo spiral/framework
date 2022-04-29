@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Reflection;
@@ -20,80 +13,34 @@ use Spiral\Tokenizer\Exception\ReflectionException;
  */
 final class ReflectionInvocation
 {
-    /** @var string */
-    private $filename = '';
-
-    /** @var int */
-    private $line = 0;
-
-    /** @var string */
-    private $class = '';
-
-    /** @var string */
-    private $operator = '';
-
-    /** @var string */
-    private $name = '';
-
-    /** @var string */
-    private $source = '';
-
-    /** @var ReflectionArgument[] */
-    private $arguments = [];
-
-    /**
-     * Was a function used inside another function call?
-     *
-     * @var int
-     */
-    private $level = 0;
-
     /**
      * New call reflection.
      *
-     * @param string               $filename
-     * @param int                  $line
-     * @param string               $class
-     * @param string               $operator
-     * @param string               $name
      * @param ReflectionArgument[] $arguments
-     * @param string               $source
-     * @param int                  $level
+     * @param int $level Was a function used inside another function call?
      */
     public function __construct(
-        string $filename,
-        int $line,
-        string $class,
-        string $operator,
-        string $name,
-        array $arguments,
-        string $source,
-        int $level
+        private readonly string $filename,
+        private readonly int $line,
+        private readonly string $class,
+        private readonly string $operator,
+        private readonly string $name,
+        private readonly array $arguments,
+        private readonly string $source,
+        private readonly int $level
     ) {
-        $this->filename = $filename;
-        $this->line = $line;
-        $this->class = $class;
-        $this->operator = $operator;
-        $this->name = $name;
-        $this->arguments = $arguments;
-        $this->source = $source;
-        $this->level = $level;
     }
 
     /**
      * Function usage filename.
-     *
-     * @return string
      */
     public function getFilename(): string
     {
-        return str_replace('\\', '/', $this->filename);
+        return \str_replace('\\', '/', $this->filename);
     }
 
     /**
      * Function usage line.
-     *
-     * @return int
      */
     public function getLine(): int
     {
@@ -102,8 +49,6 @@ final class ReflectionInvocation
 
     /**
      * Parent class.
-     *
-     * @return string
      */
     public function getClass(): string
     {
@@ -112,8 +57,6 @@ final class ReflectionInvocation
 
     /**
      * Method operator (:: or ->).
-     *
-     * @return string
      */
     public function getOperator(): string
     {
@@ -122,8 +65,6 @@ final class ReflectionInvocation
 
     /**
      * Function or method name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -132,8 +73,6 @@ final class ReflectionInvocation
 
     /**
      * Call made by class method.
-     *
-     * @return bool
      */
     public function isMethod(): bool
     {
@@ -142,8 +81,6 @@ final class ReflectionInvocation
 
     /**
      * Function usage src.
-     *
-     * @return string
      */
     public function getSource(): string
     {
@@ -152,12 +89,10 @@ final class ReflectionInvocation
 
     /**
      * Count of arguments in call.
-     *
-     * @return int
      */
     public function countArguments(): int
     {
-        return count($this->arguments);
+        return \count($this->arguments);
     }
 
     /**
@@ -173,14 +108,12 @@ final class ReflectionInvocation
     /**
      * Get call argument by it's position.
      *
-     * @param int $index
-     *
      * @return ReflectionArgument|null
      */
     public function getArgument(int $index): ReflectionArgument
     {
         if (!isset($this->arguments[$index])) {
-            throw new ReflectionException("No such argument with index '{$index}'");
+            throw new ReflectionException(\sprintf("No such argument with index '%d'", $index));
         }
 
         return $this->arguments[$index];
@@ -188,8 +121,6 @@ final class ReflectionInvocation
 
     /**
      * Invoking level.
-     *
-     * @return int
      */
     public function getLevel(): int
     {

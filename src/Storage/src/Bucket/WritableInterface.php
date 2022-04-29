@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Storage\Bucket;
@@ -25,9 +18,6 @@ interface WritableInterface
     /**
      * Creates new empty file.
      *
-     * @param string $pathname
-     * @param array $config
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function create(string $pathname, array $config = []): FileInterface;
@@ -38,17 +28,14 @@ interface WritableInterface
      * @param string $pathname relative filepath
      * @param string|\Stringable|resource $content content string or stream to write
      * @param array $config specific config based on used adapter
-     * @return FileInterface
      * @throws FileOperationException
      */
-    public function write(string $pathname, $content, array $config = []): FileInterface;
+    public function write(string $pathname, mixed $content, array $config = []): FileInterface;
 
     /**
      * Sets file visibility.
      *
-     * @param string $pathname
      * @param VisibilityType $visibility
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function setVisibility(
@@ -64,7 +51,6 @@ interface WritableInterface
      * @param string $destination destination pathname
      * @param BucketInterface|null $storage destination storage
      * @param array $config specific config based on used adapter
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function copy(
@@ -81,7 +67,6 @@ interface WritableInterface
      * @param string $destination destination pathname
      * @param BucketInterface|null $storage destination storage
      * @param array $config specific config based on used adapter
-     * @return FileInterface
      * @throws FileOperationException
      */
     public function move(

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype;
@@ -18,38 +11,26 @@ use Spiral\Prototype\ClassNode\ConstructorParam;
  */
 final class ClassNode
 {
-    /** @var string */
-    public $namespace;
-
-    /** @var string */
-    public $class;
-
-    /** @var bool */
-    public $hasConstructor = false;
+    public string $namespace;
+    public string $class;
+    public bool $hasConstructor = false;
 
     /** @var ClassNode\ConstructorParam[] */
-    public $constructorParams = [];
+    public array $constructorParams = [];
 
     /** @var string[] */
-    public $constructorVars = [];
+    public array $constructorVars = [];
 
     /** @var Dependency[] */
-    public $dependencies = [];
+    public array $dependencies = [];
 
     /** @var ClassNode\ClassStmt[] */
-    private $stmts = [];
+    private array $stmts = [];
 
-    /**
-     * ClassNode constructor.
-     */
     private function __construct()
     {
     }
 
-    /**
-     * @param string $class
-     * @return ClassNode
-     */
     public static function create(string $class): ClassNode
     {
         $self = new self();
@@ -58,11 +39,6 @@ final class ClassNode
         return $self;
     }
 
-    /**
-     * @param string $class
-     * @param string $namespace
-     * @return ClassNode
-     */
     public static function createWithNamespace(string $class, string $namespace): ClassNode
     {
         $self = new self();
@@ -72,10 +48,6 @@ final class ClassNode
         return $self;
     }
 
-    /**
-     * @param string      $name
-     * @param string|null $alias
-     */
     public function addImportUsage(string $name, ?string $alias): void
     {
         $this->addStmt(ClassNode\ClassStmt::create($name, $alias));
@@ -90,8 +62,6 @@ final class ClassNode
     }
 
     /**
-     * @param \ReflectionParameter $parameter
-     *
      * @throws \ReflectionException
      */
     public function addParam(\ReflectionParameter $parameter): void
@@ -99,9 +69,6 @@ final class ClassNode
         $this->constructorParams[$parameter->name] = ConstructorParam::createFromReflection($parameter);
     }
 
-    /**
-     * @param ClassNode\ClassStmt $stmt
-     */
     private function addStmt(ClassNode\ClassStmt $stmt): void
     {
         $this->stmts[(string)$stmt] = $stmt;

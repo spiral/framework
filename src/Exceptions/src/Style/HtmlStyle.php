@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Exceptions\Style;
@@ -155,76 +148,57 @@ class HtmlStyle implements StyleInterface
 
     /**
      * Style templates.
-     *
-     * @var array
      */
-    protected $templates = [
+    protected array $templates = [
         'token'  => '<span style="%s">%s</span>',
         'line'   => "<div><span class=\"number\">%d</span>%s</div>\n",
         'active' => "<div class=\"active\"><span class=\"number\">%d</span>%s</div>\n",
     ];
 
     /**
-     * Style associated with token types.
-     *
-     * @var array
+     * @param array $style Style associated with token types.
      */
-    protected $style = self::DEFAULT;
-
-    /**
-     * @param array $style
-     */
-    public function __construct(array $style = self::DEFAULT)
-    {
-        $this->style = $style;
+    public function __construct(
+        protected array $style = self::DEFAULT
+    ) {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function token(array $token, array $previous): string
     {
         $style = $this->getStyle($token, $previous);
 
-        if (strpos($token[1], "\n") === false) {
-            return sprintf($this->templates['token'], $style, htmlspecialchars($token[1]));
+        if (!\str_contains((string) $token[1], "\n")) {
+            return \sprintf($this->templates['token'], $style, \htmlspecialchars($token[1]));
         }
 
         $lines = [];
-        foreach (explode("\n", $token[1]) as $line) {
-            $lines[] = sprintf($this->templates['token'], $style, htmlspecialchars($line));
+        foreach (\explode("\n", (string) $token[1]) as $line) {
+            $lines[] = \sprintf($this->templates['token'], $style, \htmlspecialchars($line));
         }
 
-        return implode("\n", $lines);
+        return \implode("\n", $lines);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function line(int $number, string $code, bool $target = false): string
     {
-        return sprintf($this->templates[$target ? 'active' : 'line'], $number, $code);
+        return \sprintf($this->templates[$target ? 'active' : 'line'], $number, $code);
     }
 
     /**
      * Get styles for a given token.
-     *
-     * @param array $token
-     * @param array $previous
-     * @return string
      */
     private function getStyle(array $token, array $previous): string
     {
         if (!empty($previous)) {
             foreach ($this->style as $style => $tokens) {
-                if (in_array($previous[1] . $token[0], $tokens)) {
+                if (\in_array($previous[1] . $token[0], $tokens)) {
                     return $style;
                 }
             }
         }
 
         foreach ($this->style as $style => $tokens) {
-            if (in_array($token[0], $tokens)) {
+            if (\in_array($token[0], $tokens)) {
                 return $style;
             }
         }

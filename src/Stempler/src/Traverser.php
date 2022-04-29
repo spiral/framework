@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler;
@@ -21,14 +14,9 @@ use Spiral\Stempler\Node\NodeInterface;
 final class Traverser
 {
     /** @var VisitorInterface[] */
-    private $visitors = [];
+    private array $visitors = [];
+    private bool $stopTraversal = false;
 
-    /** @var bool */
-    private $stopTraversal = false;
-
-    /**
-     * @param array $visitors
-     */
     public function __construct(array $visitors = [])
     {
         foreach ($visitors as $visitor) {
@@ -38,17 +26,12 @@ final class Traverser
 
     /**
      * Adds visitor.
-     *
-     * @param VisitorInterface $visitor
      */
     public function addVisitor(VisitorInterface $visitor): void
     {
         $this->visitors[] = $visitor;
     }
 
-    /**
-     * @param VisitorInterface $visitor
-     */
     public function removeVisitor(VisitorInterface $visitor): void
     {
         foreach ($this->visitors as $index => $added) {
@@ -63,14 +46,12 @@ final class Traverser
      * Traverses an array of nodes using added visitors.
      *
      * @param NodeInterface[] $nodes
-     * @param VisitorContext  $context
      * @return NodeInterface[]
-     *
      * @throws \Throwable
      */
     public function traverse(array $nodes, VisitorContext $context = null): array
     {
-        $context = $context ?? new VisitorContext();
+        $context ??= new VisitorContext();
 
         $ctx = clone $context;
         foreach ($nodes as $index => $node) {
@@ -112,7 +93,7 @@ final class Traverser
 
                     default:
                         throw new \LogicException(
-                            'enterNode() returned invalid value of type ' . gettype($result)
+                            'enterNode() returned invalid value of type ' . \gettype($result)
                         );
                 }
             }
@@ -156,15 +137,11 @@ final class Traverser
             }
         }
 
-        return array_values($nodes);
+        return \array_values($nodes);
     }
 
     /**
      * Recursively traverse a node.
-     *
-     * @param NodeInterface  $node
-     * @param VisitorContext $context
-     * @return NodeInterface
      */
     private function traverseNode(NodeInterface $node, VisitorContext $context): NodeInterface
     {
@@ -214,7 +191,7 @@ final class Traverser
 
                     default:
                         throw new \LogicException(
-                            'enterNode() returned invalid value of type ' . gettype($result)
+                            'enterNode() returned invalid value of type ' . \gettype($result)
                         );
                 }
             }
@@ -243,7 +220,7 @@ final class Traverser
 
                     default:
                         throw new \LogicException(
-                            'leaveNode() returned invalid value of type ' . gettype($result)
+                            'leaveNode() returned invalid value of type ' . \gettype($result)
                         );
                 }
 

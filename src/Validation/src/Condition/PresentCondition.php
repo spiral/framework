@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation\Condition;
@@ -19,13 +12,7 @@ use Spiral\Validation\ValidatorInterface;
  */
 final class PresentCondition extends AbstractCondition
 {
-    /**
-     * @param ValidatorInterface $validator
-     * @param string             $field
-     * @param mixed              $value
-     * @return bool
-     */
-    public function isMet(ValidatorInterface $validator, string $field, $value): bool
+    public function isMet(ValidatorInterface $validator, string $field, mixed $value): bool
     {
         foreach ($this->options as $option) {
             if (!$validator->hasValue($option)) {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Domain;
 
-use Doctrine\Common\Annotations\AnnotationReader;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\InterceptorException;
@@ -20,32 +20,21 @@ final class GuardPermissionsProvider implements PermissionsProviderInterface, Si
         'error'        => ControllerException::ERROR,
     ];
 
-    /** @var array */
-    private $cache = [];
+    private array $cache = [];
 
-    /** @var string|null */
-    private $namespace;
-
-    /** @var AnnotationReader */
-    private $reader;
-
-    public function __construct(AnnotationReader $reader, string $namespace = null)
-    {
-        $this->reader = $reader;
-        $this->namespace = $namespace;
+    public function __construct(
+        private readonly ReaderInterface $reader,
+        private readonly ?string $namespace = null
+    ) {
     }
 
     /**
      * Get method RBAC permission if any. Automatically merges with controller namespace.
-     *
-     * @param string $controller
-     * @param string $action
-     * @return Permission
      */
     public function getPermission(string $controller, string $action): Permission
     {
-        $key = sprintf('%s:%s', $controller, $action);
-        if (!array_key_exists($key, $this->cache)) {
+        $key = \sprintf('%s:%s', $controller, $action);
+        if (!\array_key_exists($key, $this->cache)) {
             $this->cache[$key] = $this->generatePermission($controller, $action);
         }
 
@@ -56,22 +45,22 @@ final class GuardPermissionsProvider implements PermissionsProviderInterface, Si
     {
         try {
             $method = new \ReflectionMethod($controller, $action);
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             return Permission::failed();
         }
 
-        $guarded = $this->reader->getMethodAnnotation($method, Guarded::class);
+        $guarded = $this->reader->firstFunctionMetadata($method, Guarded::class);
         if (!$guarded instanceof Guarded) {
             return Permission::failed();
         }
 
-        $namespace = $this->reader->getClassAnnotation($method->getDeclaringClass(), GuardNamespace::class);
+        $namespace = $this->reader->firstClassMetadata($method->getDeclaringClass(), GuardNamespace::class);
 
         if ($guarded->permission || ($namespace instanceof GuardNamespace && $namespace->namespace)) {
             return Permission::ok(
                 $this->makePermission($guarded, $method, $namespace),
                 $this->mapFailureException($guarded),
-                $guarded->errorMessage ?: sprintf(
+                $guarded->errorMessage ?: \sprintf(
                     'Unauthorized access `%s`',
                     $guarded->permission ?: $method->getName()
                 )
@@ -79,7 +68,7 @@ final class GuardPermissionsProvider implements PermissionsProviderInterface, Si
         }
 
         throw new InterceptorException(
-            sprintf(
+            \sprintf(
                 'Unable to apply @Guarded without name or @GuardNamespace on `%s`->`%s`',
                 $method->getDeclaringClass()->getName(),
                 $method->getName()
@@ -100,7 +89,7 @@ final class GuardPermissionsProvider implements PermissionsProviderInterface, Si
 
         $permission[] = $guarded->permission ?: $method->getName();
 
-        return implode('.', $permission);
+        return \implode('.', $permission);
     }
 
     private function mapFailureException(Guarded $guarded): int

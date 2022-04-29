@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\Traits;
@@ -25,17 +18,14 @@ trait PrototypeTrait
      * Automatic resolution of scoped dependency to it's value. Relies
      * on global container scope.
      *
-     * @param string $name
-     * @return mixed
-     *
      * @throws ScopeException
      */
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         $container = ContainerScope::getContainer();
         if ($container === null || !$container->has(PrototypeRegistry::class)) {
             throw new ScopeException(
-                "Unable to resolve prototyped dependency `{$name}`, invalid container scope"
+                \sprintf('Unable to resolve prototyped dependency `%s`, invalid container scope', $name)
             );
         }
 
@@ -49,7 +39,7 @@ trait PrototypeTrait
             $target->type->fullName === null
         ) {
             throw new PrototypeException(
-                "Undefined prototype property `{$name}`",
+                \sprintf('Undefined prototype property `%s`', $name),
                 0,
                 $target instanceof \Throwable ? $target : null
             );

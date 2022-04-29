@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation\Config;
@@ -31,9 +24,6 @@ final class ValidatorConfig extends InjectableConfig
         'aliases'    => [],
     ];
 
-    /**
-     * @param array $config
-     */
     public function __construct(array $config = [])
     {
         parent::__construct($config);
@@ -42,25 +32,19 @@ final class ValidatorConfig extends InjectableConfig
         }
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function hasChecker(string $name): bool
     {
         return isset($this->config['checkers'][$name]);
     }
 
     /**
-     * @param string $name
-     * @return Autowire
      *
      * @throws ValidationException
      */
     public function getChecker(string $name): Autowire
     {
         if (!$this->hasChecker($name)) {
-            throw new ValidationException("Undefined checker `{$name}``.");
+            throw new ValidationException(\sprintf('Undefined checker `%s``.', $name));
         }
 
         $instance = $this->wire('checkers', $name);
@@ -68,26 +52,18 @@ final class ValidatorConfig extends InjectableConfig
             return $instance;
         }
 
-        throw new ValidationException("Invalid checker definition for `{$name}`.");
+        throw new ValidationException(\sprintf('Invalid checker definition for `%s`.', $name));
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function hasCondition(string $name): bool
     {
         return isset($this->config['conditions'][$name]);
     }
 
-    /**
-     * @param string $name
-     * @return Autowire
-     */
     public function getCondition(string $name): Autowire
     {
         if (!$this->hasCondition($name)) {
-            throw new ValidationException("Undefined condition `{$name}`.");
+            throw new ValidationException(\sprintf('Undefined condition `%s`.', $name));
         }
 
         $instance = $this->wire('conditions', $name);
@@ -95,36 +71,27 @@ final class ValidatorConfig extends InjectableConfig
             return $instance;
         }
 
-        throw new ValidationException("Invalid condition definition for `{$name}`.");
+        throw new ValidationException(\sprintf('Invalid condition definition for `%s`.', $name));
     }
 
     /**
      * Return validation function or checker after applying all alias redirects.
-     *
-     * @param string|array $function
-     *
-     * @return array|string
      */
-    public function mapFunction($function)
+    public function mapFunction(array|string|\Closure $function): array|string|\Closure
     {
-        if (is_string($function)) {
+        if (\is_string($function)) {
             $function = $this->resolveAlias($function);
-            if (strpos($function, ':') !== false) {
-                $function = explode(':', $function);
+            if (\str_contains($function, ':')) {
+                $function = \explode(':', $function);
             }
         }
 
         return $function;
     }
 
-    /**
-     * @param string $section
-     * @param string $name
-     * @return null|Autowire
-     */
     private function wire(string $section, string $name): ?Autowire
     {
-        if (is_string($this->config[$section][$name])) {
+        if (\is_string($this->config[$section][$name])) {
             return new Autowire($this->config[$section][$name]);
         }
 
@@ -141,13 +108,10 @@ final class ValidatorConfig extends InjectableConfig
     /**
      * Normalize all defined aliases.
      *
-     * @param array $aliases
-     * @return array
+     * @return array<string>
      */
     private function normalizeAliases(array $aliases): array
     {
-        return array_map(static function ($value) {
-            return str_replace('::', ':', $value);
-        }, $aliases);
+        return \array_map(static fn ($value) => \str_replace('::', ':', $value), $aliases);
     }
 }

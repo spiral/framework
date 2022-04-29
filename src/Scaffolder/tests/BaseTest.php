@@ -28,8 +28,8 @@ abstract class BaseTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->app = TestApp::init([
+        $this->app = TestApp::create([
             'root' => __DIR__ . '/App',
-        ], null, false);
+        ], false)->run();
     }
 }

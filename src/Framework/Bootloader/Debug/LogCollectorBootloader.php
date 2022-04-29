@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Debug;
@@ -22,21 +15,11 @@ use Spiral\Logger\ListenerRegistryInterface;
  */
 final class LogCollectorBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        DebugBootloader::class,
-    ];
-
     protected const SINGLETONS = [
         LogCollector::class => LogCollector::class,
     ];
 
-    /**
-     * @param LogCollector              $logCollector
-     * @param DebugBootloader           $debug
-     * @param ListenerRegistryInterface $listenerRegistry
-     * @param FinalizerInterface        $finalizer
-     */
-    public function boot(
+    public function init(
         LogCollector $logCollector,
         DebugBootloader $debug,
         ListenerRegistryInterface $listenerRegistry,

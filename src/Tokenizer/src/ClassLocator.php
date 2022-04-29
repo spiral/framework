@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
@@ -18,12 +11,9 @@ use Spiral\Tokenizer\Exception\LocatorException;
  */
 final class ClassLocator extends AbstractLocator implements ClassesInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getClasses($target = null): array
+    public function getClasses(object|string|null $target = null): array
     {
-        if (!empty($target) && (is_object($target) || is_string($target))) {
+        if (!empty($target) && (\is_object($target) || \is_string($target))) {
             $target = new \ReflectionClass($target);
         }
 
@@ -31,7 +21,7 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
         foreach ($this->availableClasses() as $class) {
             try {
                 $reflection = $this->classReflection($class);
-            } catch (LocatorException $e) {
+            } catch (LocatorException) {
                 //Ignoring
                 continue;
             }
@@ -48,15 +38,13 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
 
     /**
      * Classes available in finder scope.
-     *
-     * @return array
      */
     protected function availableClasses(): array
     {
         $classes = [];
 
         foreach ($this->availableReflections() as $reflection) {
-            $classes = array_merge($classes, $reflection->getClasses());
+            $classes = \array_merge($classes, $reflection->getClasses());
         }
 
         return $classes;
@@ -65,9 +53,7 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
     /**
      * Check if given class targeted by locator.
      *
-     * @param \ReflectionClass      $class
      * @param \ReflectionClass|null $target
-     * @return bool
      */
     protected function isTargeted(\ReflectionClass $class, \ReflectionClass $target = null): bool
     {
@@ -77,10 +63,10 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
 
         if (!$target->isTrait()) {
             //Target is interface or class
-            return $class->isSubclassOf($target) || $class->getName() == $target->getName();
+            return $class->isSubclassOf($target) || $class->getName() === $target->getName();
         }
 
         //Checking using traits
-        return in_array($target->getName(), $this->fetchTraits($class->getName()));
+        return \in_array($target->getName(), $this->fetchTraits($class->getName()));
     }
 }

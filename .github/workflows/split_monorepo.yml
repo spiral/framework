@@ -1,0 +1,142 @@
+
+name: Split Monorepo
+
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - 'master'
+
+jobs:
+  split_monorepo:
+    name: Split Monorepo
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        # define package to repository map
+        package:
+          # Bridge
+          - local_path: 'Bridge/Stempler'
+            split_repository: 'stempler-bridge'
+          - local_path: 'Bridge/Monolog'
+            split_repository: 'monolog-bridge'
+          - local_path: 'Bridge/Dotenv'
+            split_repository: 'dotenv-bridge'
+
+          # Components
+          - local_path: 'AnnotatedRoutes'
+            split_repository: 'annotated-routes'
+          - local_path: 'Attributes'
+            split_repository: 'attributes'
+          - local_path: 'Auth'
+            split_repository: 'auth'
+          - local_path: 'AuthHttp'
+            split_repository: 'auth-http'
+          - local_path: 'Boot'
+            split_repository: 'boot'
+          - local_path: 'Cache'
+            split_repository: 'cache'
+          - local_path: 'Config'
+            split_repository: 'config'
+          - local_path: 'Console'
+            split_repository: 'console'
+          - local_path: 'Cookies'
+            split_repository: 'cookies'
+          - local_path: 'Core'
+            split_repository: 'core'
+          - local_path: 'Csrf'
+            split_repository: 'csrf'
+          - local_path: 'Debug'
+            split_repository: 'debug'
+          - local_path: 'Distribution'
+            split_repository: 'distribution'
+          - local_path: 'Dumper'
+            split_repository: 'dumper'
+          - local_path: 'Encrypter'
+            split_repository: 'encrypter'
+          - local_path: 'Exceptions'
+            split_repository: 'exceptions'
+          - local_path: 'Files'
+            split_repository: 'files'
+          - local_path: 'Filters'
+            split_repository: 'filters'
+          - local_path: 'Hmvc'
+            split_repository: 'hmvc'
+          - local_path: 'Http'
+            split_repository: 'http'
+          - local_path: 'Logger'
+            split_repository: 'logger'
+          - local_path: 'Mailer'
+            split_repository: 'mailer'
+          - local_path: 'Models'
+            split_repository: 'models'
+          - local_path: 'Pagination'
+            split_repository: 'pagination'
+          - local_path: 'Prototype'
+            split_repository: 'prototype'
+          - local_path: 'Reactor'
+            split_repository: 'reactor'
+          - local_path: 'Router'
+            split_repository: 'router'
+          - local_path: 'Scaffolder'
+            split_repository: 'scaffolder'
+          - local_path: 'Security'
+            split_repository: 'security'
+          - local_path: 'SendIt'
+            split_repository: 'sendit'
+          - local_path: 'Session'
+            split_repository: 'session'
+          - local_path: 'Snapshots'
+            split_repository: 'snapshots'
+          - local_path: 'Stempler'
+            split_repository: 'stempler'
+          - local_path: 'Storage'
+            split_repository: 'storage'
+          - local_path: 'Streams'
+            split_repository: 'streams'
+          - local_path: 'Tokenizer'
+            split_repository: 'tokenizer'
+          - local_path: 'Translator'
+            split_repository: 'translator'
+          - local_path: 'Validation'
+            split_repository: 'validation'
+          - local_path: 'Queue'
+            split_repository: 'queue'
+          - local_path: 'Views'
+            split_repository: 'views'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # no tag
+      - if: "!startsWith(github.ref, 'refs/tags/')"
+        name: Monorepo Split of ${{ matrix.package }}
+        uses: "symplify/monorepo-split-github-action@2.1"
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          branch: "master"
+          package_directory: 'src/${{ matrix.package.local_path }}'
+          repository_organization: 'spiral'
+          repository_name: '${{ matrix.package.split_repository }}'
+          user_name: "spiralbot"
+          user_email: "ci-bot@spiralscout.com"
+
+      # with tag
+      - if: "startsWith(github.ref, 'refs/tags/')"
+        name: Monorepo Tagged Split of ${{ matrix.package }}
+        uses: "symplify/monorepo-split-github-action@2.1"
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          tag: ${GITHUB_REF#refs/tags/}
+          branch: "master"
+          package_directory: 'src/${{ matrix.package.local_path }}'
+          repository_organization: 'spiral'
+          repository_name: '${{ matrix.package.split_repository }}'
+          user_name: "spiralbot"
+          user_email: "ci-bot@spiralscout.com"

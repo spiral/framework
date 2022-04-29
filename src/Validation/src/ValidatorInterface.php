@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation;
@@ -20,49 +13,31 @@ interface ValidatorInterface
 {
     /**
      * Create validator copy with new data set.
-     *
-     * @param iterable $data
-     * @return ValidatorInterface
      */
-    public function withData($data): ValidatorInterface;
+    public function withData(array|\ArrayAccess $data): ValidatorInterface;
 
     /**
      * Receive field from context data or return default value.
-     *
-     * @param string $field
-     * @param mixed  $default
-     *
-     * @return mixed
      */
-    public function getValue(string $field, $default = null);
+    public function getValue(string $field, mixed $default = null): mixed;
 
     /**
      * Check if field is provided in the given data.
-     *
-     * @param string $field
-     * @return bool
      */
     public function hasValue(string $field): bool;
 
     /**
      * Create new validator instance with new context.
-     *
-     * @param mixed $context
-     * @return ValidatorInterface
      */
-    public function withContext($context): ValidatorInterface;
+    public function withContext(mixed $context): ValidatorInterface;
 
     /**
      * Get context data (not validated).
-     *
-     * @return mixed
      */
-    public function getContext();
+    public function getContext(): mixed;
 
     /**
      * Check if context data valid accordingly to provided rules.
-     *
-     * @return bool
      *
      * @throws ValidationException
      */
@@ -71,7 +46,7 @@ interface ValidatorInterface
     /**
      * List of errors associated with parent field, every field should have only one error assigned.
      *
-     * @return array
+     * @return array<string, string> Keys are fields, values are messages
      *
      * @throws ValidationException
      */

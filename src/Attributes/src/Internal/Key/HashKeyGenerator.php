@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\Key;
@@ -32,61 +25,32 @@ final class HashKeyGenerator implements KeyGeneratorInterface
      */
     private const DEFAULT_HASH_ALGO = 'md5';
 
-    /**
-     * @var KeyGeneratorInterface
-     */
-    private $generator;
-
-    /**
-     * @var string
-     */
-    private $algo;
-
-    /**
-     * @param KeyGeneratorInterface|null $base
-     * @param string $algo
-     */
-    public function __construct(KeyGeneratorInterface $base, string $algo = self::DEFAULT_HASH_ALGO)
-    {
-        $this->algo = $algo;
-        $this->generator = $base;
+    public function __construct(
+        private readonly KeyGeneratorInterface $generator,
+        private readonly string $algo = self::DEFAULT_HASH_ALGO
+    ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forClass(\ReflectionClass $class): string
     {
         return \hash($this->algo, $this->generator->forClass($class));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forProperty(\ReflectionProperty $prop): string
     {
         return \hash($this->algo, $this->generator->forProperty($prop));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forConstant(\ReflectionClassConstant $const): string
     {
         return \hash($this->algo, $this->generator->forConstant($const));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forFunction(\ReflectionFunctionAbstract $fn): string
     {
         return \hash($this->algo, $this->generator->forFunction($fn));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function forParameter(\ReflectionParameter $param): string
     {
         return \hash($this->algo, $this->generator->forParameter($param));

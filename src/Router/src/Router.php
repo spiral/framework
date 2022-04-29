@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -34,36 +27,22 @@ final class Router implements RouterInterface
     // attribute to store active route in request
     public const ROUTE_MATCHES = 'matches';
 
-    /** @var string */
-    private $basePath = '/';
+    private string $basePath = '/';
 
     /** @var RouteInterface[] */
-    private $routes = [];
+    private array $routes = [];
 
-    /** @var RouteInterface */
-    private $default = null;
+    private ?RouteInterface $default = null;
 
-    /** @var UriHandler */
-    private $uriHandler;
-
-    /** @var ContainerInterface */
-    private $container;
-
-    /**
-     * @param string             $basePath
-     * @param UriHandler         $uriHandler
-     * @param ContainerInterface $container
-     */
-    public function __construct(string $basePath, UriHandler $uriHandler, ContainerInterface $container)
-    {
-        $this->basePath = '/' . ltrim($basePath, '/');
-        $this->uriHandler = $uriHandler;
-        $this->container = $container;
+    public function __construct(
+        string $basePath,
+        private readonly UriHandler $uriHandler,
+        private readonly ContainerInterface $container
+    ) {
+        $this->basePath = '/' . \ltrim($basePath, '/');
     }
 
     /**
-     * @inheritdoc
-     *
      * @throws RouteNotFoundException
      * @throws RouterException
      */
@@ -87,49 +66,26 @@ final class Router implements RouterInterface
         );
     }
 
-    /**
-     * @inheritdoc
-     *
-     * @deprecated see setRoute()
-     */
-    public function addRoute(string $name, RouteInterface $route): void
-    {
-        //Each added route must inherit basePath prefix
-        $this->setRoute($name, $route);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function setRoute(string $name, RouteInterface $route): void
     {
         // each route must inherit basePath prefix
         $this->routes[$name] = $this->configure($route);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function setDefault(RouteInterface $route): void
     {
         $this->default = $this->configure($route);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getRoute(string $name): RouteInterface
     {
         if (isset($this->routes[$name])) {
             return $this->routes[$name];
         }
 
-        throw new UndefinedRouteException("Undefined route `{$name}`");
+        throw new UndefinedRouteException(\sprintf('Undefined route `%s`', $name));
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getRoutes(): array
     {
         if (!empty($this->default)) {
@@ -139,14 +95,11 @@ final class Router implements RouterInterface
         return $this->routes;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function uri(string $route, $parameters = []): UriInterface
+    public function uri(string $route, iterable $parameters = []): UriInterface
     {
         try {
             return $this->getRoute($route)->uri($parameters);
-        } catch (UndefinedRouteException $e) {
+        } catch (UndefinedRouteException) {
             //In some cases route name can be provided as controller:action pair, we can try to
             //generate such route automatically based on our default/fallback route
             return $this->castRoute($route)->uri($parameters);
@@ -155,9 +108,6 @@ final class Router implements RouterInterface
 
     /**
      * Find route matched for given request.
-     *
-     * @param ServerRequestInterface $request
-     * @return null|RouteInterface
      */
     protected function matchRoute(ServerRequestInterface $request, string &$routeName = null): ?RouteInterface
     {
@@ -181,9 +131,6 @@ final class Router implements RouterInterface
 
     /**
      * Configure route with needed dependencies.
-     *
-     * @param RouteInterface $route
-     * @return RouteInterface
      */
     protected function configure(RouteInterface $route): RouteInterface
     {
@@ -201,15 +148,12 @@ final class Router implements RouterInterface
      * Default route: `controller:action`
      * Only action:   `name/action`
      *
-     * @param string $route
-     * @return RouteInterface
-     *
      * @throws UndefinedRouteException
      */
     protected function castRoute(string $route): RouteInterface
     {
         if (
-            !preg_match(
+            !\preg_match(
                 '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
                 $route,
                 $matches
@@ -225,7 +169,7 @@ final class Router implements RouterInterface
         } elseif ($this->default !== null) {
             $routeObject = $this->default;
         } else {
-            throw new UndefinedRouteException("Unable to locate route candidate for `{$route}`");
+            throw new UndefinedRouteException(\sprintf('Unable to locate route candidate for `%s`', $route));
         }
 
         return $routeObject->withDefaults(

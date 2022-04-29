@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Http\Traits;
@@ -23,18 +16,15 @@ trait MiddlewareTrait
      *
      * @var MiddlewareInterface[]
      */
-    protected $middleware = [];
+    protected array $middleware = [];
 
     /**
      * Add new middleware at the end of chain.
      *
      * Example (in bootstrap):
      * $this->http->pushMiddleware(new ProxyMiddleware());
-     *
-     * @param MiddlewareInterface $middleware
-     * @return $this
      */
-    public function pushMiddleware(MiddlewareInterface $middleware)
+    public function pushMiddleware(MiddlewareInterface $middleware): self
     {
         $this->middleware[] = $middleware;
 
@@ -46,13 +36,10 @@ trait MiddlewareTrait
      *
      * Example (in bootstrap):
      * $this->http->riseMiddleware(new ProxyMiddleware());
-     *
-     * @param MiddlewareInterface $middleware
-     * @return $this
      */
-    public function riseMiddleware(MiddlewareInterface $middleware)
+    public function riseMiddleware(MiddlewareInterface $middleware): self
     {
-        array_unshift($this->middleware, $middleware);
+        \array_unshift($this->middleware, $middleware);
 
         return $this;
     }

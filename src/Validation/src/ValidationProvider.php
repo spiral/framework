@@ -1,17 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Validation;
 
-use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\SingletonInterface;
@@ -21,31 +13,14 @@ use Spiral\Validation\Config\ValidatorConfig;
 
 final class ValidationProvider implements ValidationInterface, RulesInterface, SingletonInterface
 {
-    /** @var ValidatorConfig */
-    private $config;
-
-    /** @var ParserInterface */
-    private $parser;
-
-    /** @var FactoryInterface */
-    private $factory;
-
     /** @var RuleInterface[] */
-    private $rules = [];
+    private array $rules = [];
 
-    /**
-     * @param ValidatorConfig       $config
-     * @param ParserInterface|null  $parser
-     * @param FactoryInterface|null $factory
-     */
     public function __construct(
-        ValidatorConfig $config,
-        ParserInterface $parser = null,
-        FactoryInterface $factory = null
+        private ValidatorConfig $config,
+        private readonly ParserInterface $parser = new RuleParser(),
+        private FactoryInterface $factory = new Container()
     ) {
-        $this->config = $config;
-        $this->parser = $parser ?? new RuleParser();
-        $this->factory = $factory ?? new Container();
     }
 
     /**
@@ -55,29 +30,19 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
      */
     public function __destruct()
     {
-        $this->config = null;
-        $this->factory = null;
+        unset($this->config, $this->factory);
         $this->resetCache();
     }
 
-    /**
-     * @param array|\ArrayAccess $data
-     * @param array              $rules
-     * @param null               $context
-     *
-     * @return ValidatorInterface
-     */
-    public function validate($data, array $rules, $context = null): ValidatorInterface
+    public function validate(array|\ArrayAccess $data, array $rules, mixed $context = null): ValidatorInterface
     {
         return new Validator($data, $rules, $context, $this);
     }
 
     /**
-     * @inheritdoc
-     *
      * Attention, for performance reasons method would cache all defined rules.
      */
-    public function getRules($rules): \Generator
+    public function getRules(array|string|\Closure $rules): \Generator
     {
         foreach ($this->parser->split($rules) as $id => $rule) {
             if (empty($id) || $rule instanceof \Closure) {
@@ -116,28 +81,24 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
     /**
      * Construct rule object.
      *
-     * @param mixed $check
-     * @param mixed $rule
-     * @return RuleInterface
-     *
      * @throws ContainerException
      */
-    protected function makeRule($check, $rule): RuleInterface
+    protected function makeRule(mixed $check, mixed $rule): RuleInterface
     {
         $args = $this->parser->parseArgs($rule);
         $message = $this->parser->parseMessage($rule);
 
-        if (!is_array($check)) {
+        if (!\is_array($check)) {
             return new CallableRule($check, $args, $message);
         }
 
-        if (is_string($check[0]) && $this->config->hasChecker($check[0])) {
+        if (\is_string($check[0]) && $this->config->hasChecker($check[0])) {
             $check[0] = $this->config->getChecker($check[0])->resolve($this->factory);
 
             return new CheckerRule($check[0], $check[1], $args, $message);
         }
 
-        if (!is_object($check[0])) {
+        if (!\is_object($check[0])) {
             $check[0] = (new Autowire($check[0]))->resolve($this->factory);
         }
 
@@ -145,9 +106,6 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
     }
 
     /**
-     * @param array $conditions
-     * @return \SplObjectStorage
-     *
      * @throws ContainerException
      */
     protected function makeConditions(array $conditions): ?\SplObjectStorage

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Core;
@@ -19,71 +12,51 @@ use Spiral\Core\Exception\ConfigException;
  */
 abstract class InjectableConfig implements InjectableInterface, \IteratorAggregate, \ArrayAccess
 {
+    /**
+     * @var class-string<\Spiral\Core\ConfigsInterface>
+     */
     public const INJECTOR = ConfigsInterface::class;
 
     /**
-     * Configuration data.
-     *
-     * @var array
-     */
-    protected $config = [];
-
-    /**
      * At this moment on array based configs can be supported.
-     *
-     * @param array $config
+     * @param array $config Configuration data
      */
-    public function __construct(array $config = [])
-    {
-        $this->config = $config;
+    public function __construct(
+        protected $config = []
+    ) {
     }
 
     /**
      * Restoring state.
-     *
-     * @param array $an_array
-     *
-     * @return static
      */
-    public static function __set_state($an_array)
+    public static function __set_state(array $anArray): static
     {
-        return new static($an_array['config']);
+        return new static($anArray['config']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray(): array
     {
         return $this->config;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
-        return array_key_exists($offset, $this->config);
+        return \array_key_exists($offset, $this->config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         if (!$this->offsetExists($offset)) {
-            throw new ConfigException("Undefined configuration key '{$offset}'");
+            throw new ConfigException(\sprintf("Undefined configuration key '%s'", $offset));
         }
 
         return $this->config[$offset];
     }
 
     /**
-     *{@inheritdoc}
-     *
      * @throws ConfigException
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): never
     {
         throw new ConfigException(
             'Unable to change configuration data, configs are treated as immutable by default'
@@ -91,21 +64,16 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
     }
 
     /**
-     *{@inheritdoc}
-     *
      * @throws ConfigException
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): never
     {
         throw new ConfigException(
             'Unable to change configuration data, configs are treated as immutable by default'
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->config);
     }

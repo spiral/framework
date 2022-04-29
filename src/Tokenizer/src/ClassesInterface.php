@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
@@ -26,5 +19,5 @@ interface ClassesInterface
      *                       results.
      * @return \ReflectionClass[]
      */
-    public function getClasses($target = null): array;
+    public function getClasses(object|string|null $target = null): array;
 }

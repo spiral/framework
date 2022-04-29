@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
@@ -27,22 +20,17 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
 
     public const INJECTOR = Tokenizer::class;
 
-    /** @var Finder */
-    protected $finder = null;
-
-    /**
-     * @param Finder $finder
-     */
-    public function __construct(Finder $finder)
-    {
-        $this->finder = $finder;
+    public function __construct(
+        protected Finder $finder
+    ) {
     }
 
     /**
      * Available file reflections. Generator.
      *
-     * @return ReflectionFile[]|\Generator
      * @throws \Exception
+     *
+     * @return \Generator<int, ReflectionFile, mixed, void>
      */
     protected function availableReflections(): \Generator
     {
@@ -52,8 +40,8 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
             if ($reflection->hasIncludes()) {
                 // We are not analyzing files which has includes, it's not safe to require such reflections
                 $this->getLogger()->warning(
-                    sprintf('File `%s` has includes and excluded from analysis', $file),
-                    compact('file')
+                    \sprintf('File `%s` has includes and excluded from analysis', $file),
+                    ['file' => $file]
                 );
 
                 continue;
@@ -67,9 +55,11 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
      * Safely get class reflection, class loading errors will be blocked and reflection will be
      * excluded from analysis.
      *
-     * @param string $class
+     * @template T
+     * @param class-string<T> $class
+     * @return \ReflectionClass<T>
      *
-     * @return \ReflectionClass
+     * @throws LocatorException
      */
     protected function classReflection(string $class): \ReflectionClass
     {
@@ -78,11 +68,11 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
                 return;
             }
 
-            throw new LocatorException("Class '{$class}' can not be loaded");
+            throw new LocatorException(\sprintf("Class '%s' can not be loaded", $class));
         };
 
         //To suspend class dependency exception
-        spl_autoload_register($loader);
+        \spl_autoload_register($loader);
 
         try {
             //In some cases reflection can thrown an exception if class invalid or can not be loaded,
@@ -94,7 +84,7 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
             }
 
             $this->getLogger()->error(
-                sprintf(
+                \sprintf(
                     '%s: %s in %s:%s',
                     $class,
                     $e->getMessage(),
@@ -106,31 +96,31 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
 
             throw new LocatorException($e->getMessage(), $e->getCode(), $e);
         } finally {
-            spl_autoload_unregister($loader);
+            \spl_autoload_unregister($loader);
         }
     }
 
     /**
      * Get every class trait (including traits used in parents).
      *
-     * @param string $class
+     * @return string[]
      *
-     * @return array
+     * @psalm-return array<string, string>
      */
     protected function fetchTraits(string $class): array
     {
         $traits = [];
 
-        while ($class) {
-            $traits = array_merge(class_uses($class), $traits);
-            $class = get_parent_class($class);
-        }
+        do {
+            $traits = \array_merge(\class_uses($class), $traits);
+            $class = \get_parent_class($class);
+        } while ($class !== false);
 
         //Traits from traits
-        foreach (array_flip($traits) as $trait) {
-            $traits = array_merge(class_uses($trait), $traits);
+        foreach (\array_flip($traits) as $trait) {
+            $traits = \array_merge(\class_uses($trait), $traits);
         }
 
-        return array_unique($traits);
+        return \array_unique($traits);
     }
 }

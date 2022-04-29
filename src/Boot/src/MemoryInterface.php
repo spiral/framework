@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -22,16 +15,14 @@ interface MemoryInterface
      * convention allows to store serializable (var_export-able) data.
      *
      * @param string $section Non case sensitive.
-     * @return string|array|null
      */
-    public function loadData(string $section);
+    public function loadData(string $section): mixed;
 
     /**
      * Put data to long memory cache. No inner references or closures are allowed. Current
      * convention allows to store serializable (var_export-able) data.
      *
      * @param string       $section Non case sensitive.
-     * @param string|array $data
      */
-    public function saveData(string $section, $data);
+    public function saveData(string $section, mixed $data): void;
 }

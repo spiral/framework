@@ -12,7 +12,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\Stempler;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Boot\BootloadManager;
+use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Directories;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Environment;
@@ -71,7 +72,7 @@ abstract class BaseTest extends TestCase
 
         $this->container->bind(ViewsInterface::class, ViewManager::class);
 
-        $this->app = new BootloadManager($this->container);
+        $this->app = new BootloadManager($this->container, new Initializer($this->container));
         $this->app->bootload(static::BOOTLOADERS);
     }
 

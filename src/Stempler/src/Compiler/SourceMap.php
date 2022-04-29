@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Compiler;
@@ -17,31 +10,36 @@ use Spiral\Stempler\Loader\Source;
 /**
  * Stores and resolves offsets and line numbers between templates.
  */
-final class SourceMap implements \Serializable
+final class SourceMap
 {
-    /** @var array */
-    private $paths = [];
+    /** @var Source[]|null */
+    private ?array $sourceCache = null;
+    private array $paths = [];
+    private array $lines = [];
 
-    /** @var array */
-    private $lines = [];
+    public function __serialize(): array
+    {
+        return [
+            'paths' => $this->paths,
+            'lines' => $this->lines,
+        ];
+    }
 
-    /** @var Source[] */
-    private $sourceCache = null;
+    public function __unserialize(array $data): void
+    {
+        $this->paths = $data['paths'];
+        $this->lines = $data['lines'];
+    }
 
     /**
      * Get all template paths involved in final template.
-     *
-     * @return array
      */
     public function getPaths(): array
     {
         $paths = [];
 
-        // We can scan top level only
-
-        /** @var Location $loc */
         foreach ($this->lines as $line) {
-            if (!in_array($this->paths[$line[0]], $paths, true)) {
+            if (!\in_array($this->paths[$line[0]], $paths, true)) {
                 $paths[] = $this->paths[$line[0]];
             }
         }
@@ -52,9 +50,6 @@ final class SourceMap implements \Serializable
     /**
      * Calculate the location of all closest nodes based on a line number in generated source. Recursive until top root
      * template.
-     *
-     * @param int $line
-     * @return array
      */
     public function getStack(int $line): array
     {
@@ -77,34 +72,17 @@ final class SourceMap implements \Serializable
 
     /**
      * Compress.
-     *
-     * @return false|string
      */
-    public function serialize()
+    public function serialize(): string|false
     {
-        return json_encode([
-            'paths' => $this->paths,
-            'lines' => $this->lines,
-        ]);
+        return \json_encode($this->__serialize());
     }
 
-    /**
-     * @param string $serialized
-     */
-    public function unserialize($serialized): void
+    public function unserialize(string $serialized): void
     {
-        $data = json_decode($serialized, true);
-
-        $this->paths = $data['paths'];
-        $this->lines = $data['lines'];
+        $this->__unserialize(\json_decode($serialized, true));
     }
 
-    /**
-     * @param string          $content
-     * @param array           $locations
-     * @param LoaderInterface $loader
-     * @return SourceMap
-     */
     public static function calculate(string $content, array $locations, LoaderInterface $loader): SourceMap
     {
         $map = new self();
@@ -121,10 +99,6 @@ final class SourceMap implements \Serializable
         return $map;
     }
 
-    /**
-     * @param array $result
-     * @param array $line
-     */
     private function unpack(array &$result, array $line): void
     {
         $result[] = [
@@ -137,11 +111,6 @@ final class SourceMap implements \Serializable
         }
     }
 
-    /**
-     * @param Location        $location
-     * @param LoaderInterface $loader
-     * @return array
-     */
     private function calculateLine(Location $location, LoaderInterface $loader): array
     {
         if (!isset($this->sourceCache[$location->path])) {
@@ -149,12 +118,12 @@ final class SourceMap implements \Serializable
         }
         $path = $this->sourceCache[$location->path]->getFilename();
 
-        if (!in_array($path, $this->paths, true)) {
+        if (!\in_array($path, $this->paths, true)) {
             $this->paths[] = $path;
         }
 
         return [
-            array_search($path, $this->paths),
+            \array_search($path, $this->paths),
             Source::resolveLine($this->sourceCache[$location->path]->getContent(), $location->offset),
             $location->parent === null ? null : $this->calculateLine($location->parent, $loader),
         ];

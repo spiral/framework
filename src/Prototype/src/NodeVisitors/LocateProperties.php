@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
@@ -19,32 +12,24 @@ use PhpParser\NodeVisitorAbstract;
  */
 final class LocateProperties extends NodeVisitorAbstract
 {
-    /** @var array */
-    private $properties = [];
-
-    /** @var array */
-    private $requested = [];
+    private array $properties = [];
+    private array $requested = [];
 
     /**
      * Get names of all virtual properties.
-     *
-     * @return array
      */
     public function getProperties(): array
     {
-        return array_values(array_diff(
-            array_values($this->requested),
-            array_values($this->properties)
+        return \array_values(\array_diff(
+            \array_values($this->requested),
+            \array_values($this->properties)
         ));
     }
 
     /**
      * Detected declared and requested nodes.
-     *
-     * @param Node $node
-     * @return int|null|Node
      */
-    public function enterNode(Node $node)
+    public function enterNode(Node $node): void
     {
         if (
             $node instanceof Node\Expr\PropertyFetch &&
@@ -61,7 +46,5 @@ final class LocateProperties extends NodeVisitorAbstract
                 }
             }
         }
-
-        return null;
     }
 }

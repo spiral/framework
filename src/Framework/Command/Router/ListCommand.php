@@ -1,21 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Alexander Novikov
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Command\Router;
 
-use Closure;
-use ReflectionException;
-use ReflectionFunction;
-use ReflectionObject;
 use Spiral\Boot\KernelInterface;
 use Spiral\Console\Command;
 use Spiral\Core\Container\SingletonInterface;
@@ -25,7 +13,6 @@ use Spiral\Router\Target\Action;
 use Spiral\Router\Target\Controller;
 use Spiral\Router\Target\Group;
 use Spiral\Router\Target\Namespaced;
-use Throwable;
 
 final class ListCommand extends Command implements SingletonInterface
 {
@@ -33,12 +20,9 @@ final class ListCommand extends Command implements SingletonInterface
     protected const DESCRIPTION = 'List application routes';
 
     /**
-     * @param RouterInterface $router
-     * @param KernelInterface $kernel
-     *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
-    public function perform(RouterInterface $router, KernelInterface $kernel): void
+    public function perform(RouterInterface $router, KernelInterface $kernel): int
     {
         $grid = $this->table(['Name:', 'Verbs:', 'Pattern:', 'Target:']);
 
@@ -56,12 +40,10 @@ final class ListCommand extends Command implements SingletonInterface
         }
 
         $grid->render();
+
+        return self::SUCCESS;
     }
 
-    /**
-     * @param Route $route
-     * @return string
-     */
     private function getVerbs(Route $route): string
     {
         if ($route->getVerbs() === Route::VERBS) {
@@ -69,79 +51,59 @@ final class ListCommand extends Command implements SingletonInterface
         }
 
         $result = [];
-
         foreach ($route->getVerbs() as $verb) {
-            switch (strtolower($verb)) {
-                case 'get':
-                    $verb = '<fg=green>GET</>';
-                    break;
-                case 'post':
-                    $verb = '<fg=blue>POST</>';
-                    break;
-                case 'put':
-                    $verb = '<fg=yellow>PUT</>';
-                    break;
-                case 'delete':
-                    $verb = '<fg=red>DELETE</>';
-                    break;
-            }
-
-            $result[] = $verb;
+            $result[] = match (\strtolower($verb)) {
+                'get' => '<fg=green>GET</>',
+                'post' => '<fg=blue>POST</>',
+                'put' => '<fg=yellow>PUT</>',
+                'delete' => '<fg=red>DELETE</>'
+            };
         }
 
-        return implode(', ', $result);
+        return \implode(', ', $result);
     }
 
-    /**
-     * @param Route $route
-     * @return string
-     */
     private function getPattern(Route $route): string
     {
         $pattern = $this->getValue($route->getUriHandler(), 'pattern');
-        $pattern = str_replace(
+        $pattern = \str_replace(
             '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}',
             'uuid',
             $pattern
         );
 
-        return preg_replace_callback(
+        return \preg_replace_callback(
             '/<([^>]*)>/',
-            static function ($m) {
-                return sprintf('<fg=magenta>%s</>', $m[0]);
-            },
+            static fn ($m) => \sprintf('<fg=magenta>%s</>', $m[0]),
             $pattern
         );
     }
 
     /**
-     * @param Route           $route
-     * @param KernelInterface $kernel
-     * @return string
      *
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     private function getTarget(Route $route, KernelInterface $kernel): string
     {
         $target = $this->getValue($route, 'target');
         switch (true) {
-            case $target instanceof Closure:
-                $reflection = new ReflectionFunction($target);
-                return sprintf(
+            case $target instanceof \Closure:
+                $reflection = new \ReflectionFunction($target);
+                return \sprintf(
                     'Closure(%s:%s)',
-                    basename($reflection->getFileName()),
+                    \basename($reflection->getFileName()),
                     $reflection->getStartLine()
                 );
 
             case $target instanceof Action:
-                return sprintf(
+                return \sprintf(
                     '%s->%s',
                     $this->relativeClass($this->getValue($target, 'controller'), $kernel),
-                    implode('|', (array) $this->getValue($target, 'action'))
+                    \implode('|', (array) $this->getValue($target, 'action'))
                 );
 
             case $target instanceof Controller:
-                return sprintf(
+                return \sprintf(
                     '%s->*',
                     $this->relativeClass($this->getValue($target, 'controller'), $kernel)
                 );
@@ -149,52 +111,40 @@ final class ListCommand extends Command implements SingletonInterface
             case $target instanceof Group:
                 $result = [];
                 foreach ($this->getValue($target, 'controllers') as $alias => $class) {
-                    $result[] = sprintf('%s => %s', $alias, $this->relativeClass($class, $kernel));
+                    $result[] = \sprintf('%s => %s', $alias, $this->relativeClass($class, $kernel));
                 }
 
-                return implode("\n", $result);
+                return \implode("\n", $result);
 
             case $target instanceof Namespaced:
-                return sprintf(
+                return \sprintf(
                     '%s\*%s->*',
                     $this->relativeClass($this->getValue($target, 'namespace'), $kernel),
                     $this->getValue($target, 'postfix')
                 );
             default:
-                return get_class($target);
+                return $target::class;
         }
     }
 
-    /**
-     * @param object $object
-     * @param string $property
-     * @return mixed
-     */
-    private function getValue(object $object, string $property)
+    private function getValue(object $object, string $property): mixed
     {
         try {
-            $r = new ReflectionObject($object);
+            $r = new \ReflectionObject($object);
             $prop = $r->getProperty($property);
-            $prop->setAccessible(true);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return $e->getMessage();
         }
 
         return $prop->getValue($object);
     }
 
-    /**
-     * @param string          $class
-     * @param KernelInterface $kernel
-     * @return string
-     */
     private function relativeClass(string $class, KernelInterface $kernel): string
     {
-        $r = new ReflectionObject($kernel);
-        $r->getNamespaceName();
+        $r = new \ReflectionObject($kernel);
 
-        if (strpos($class, $r->getNamespaceName()) === 0) {
-            return substr($class, strlen($r->getNamespaceName()) + 1);
+        if (\str_starts_with($class, $r->getNamespaceName())) {
+            return \substr($class, \strlen($r->getNamespaceName()) + 1);
         }
 
         return $class;

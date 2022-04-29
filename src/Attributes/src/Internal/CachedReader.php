@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Spiral Framework package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal;
@@ -20,15 +13,8 @@ use Spiral\Attributes\ReaderInterface;
 
 abstract class CachedReader extends Decorator
 {
-    /**
-     * @var KeyGeneratorInterface
-     */
-    protected $key;
+    protected KeyGeneratorInterface $key;
 
-    /**
-     * @param ReaderInterface $reader
-     * @param KeyGeneratorInterface|null $generator
-     */
     public function __construct(ReaderInterface $reader, KeyGeneratorInterface $generator = null)
     {
         $this->key = $generator ?? $this->createDefaultKeyGenerator();
@@ -36,69 +22,56 @@ abstract class CachedReader extends Decorator
         parent::__construct($reader);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forClass($class), function () use ($class) {
-            return $this->iterableToArray(parent::getClassMetadata($class));
-        });
+        $result = $this->cached(
+            $this->key->forClass($class),
+            fn () => $this->iterableToArray(parent::getClassMetadata($class))
+        );
 
         return $this->filter($name, $result);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forFunction($function), function () use ($function) {
-            return $this->iterableToArray(parent::getFunctionMetadata($function));
-        });
+        $result = $this->cached(
+            $this->key->forFunction($function),
+            fn () => $this->iterableToArray(parent::getFunctionMetadata($function))
+        );
 
         return $this->filter($name, $result);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forProperty($property), function () use ($property) {
-            return $this->iterableToArray(parent::getPropertyMetadata($property));
-        });
+        $result = $this->cached(
+            $this->key->forProperty($property),
+            fn () => $this->iterableToArray(parent::getPropertyMetadata($property))
+        );
 
         return $this->filter($name, $result);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forConstant($constant), function () use ($constant) {
-            return $this->iterableToArray(parent::getConstantMetadata($constant));
-        });
+        $result = $this->cached(
+            $this->key->forConstant($constant),
+            fn () => $this->iterableToArray(parent::getConstantMetadata($constant))
+        );
 
         return $this->filter($name, $result);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forParameter($parameter), function () use ($parameter) {
-            return $this->iterableToArray(parent::getParameterMetadata($parameter));
-        });
+        $result = $this->cached(
+            $this->key->forParameter($parameter),
+            fn () => $this->iterableToArray(parent::getParameterMetadata($parameter))
+        );
 
         return $this->filter($name, $result);
     }
 
-    /**
-     * @return KeyGeneratorInterface
-     */
     protected function createDefaultKeyGenerator(): KeyGeneratorInterface
     {
         return new HashKeyGenerator(
@@ -111,7 +84,6 @@ abstract class CachedReader extends Decorator
 
     /**
      * @template T of object
-     * @param string $key
      * @param callable(): array<T> $then
      * @return iterable<T>
      */

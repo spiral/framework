@@ -1,58 +1,27 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Mailer;
 
-final class Message implements MessageInterface
+class Message implements MessageInterface
 {
-    /** @var string */
-    private $subject;
+    private ?string $subject = null;
+    private array $data = [];
+    private array $to = [];
+    private array $cc = [];
+    private array $bcc = [];
+    private ?string $from = null;
+    private ?string $replyTo = null;
+    private array $options = [];
 
-    /** @var array */
-    private $data;
-
-    /** @var array */
-    private $to = [];
-
-    /** @var array */
-    private $cc = [];
-
-    /** @var array */
-    private $bcc = [];
-
-    /** @var string|null */
-    private $from;
-
-    /** @var string|null */
-    private $replyTo;
-
-    /** @var array */
-    private $options = [];
-
-    /**
-     * @param string          $subject
-     * @param string|string[] $to
-     * @param array           $data
-     */
-    public function __construct(string $subject, $to, array $data = [])
+    public function __construct(string $subject, string|array $to, array $data = [])
     {
         $this->setSubject($subject);
-        $this->setTo(...(array) $to);
+        $this->setTo(...(array)$to);
         $this->setData($data);
     }
 
-    /**
-     * @param string $subject
-     * @return $this
-     */
     public function setSubject(string $subject): self
     {
         $this->subject = $subject;
@@ -60,18 +29,11 @@ final class Message implements MessageInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSubject(): string
     {
         return $this->subject;
     }
 
-    /**
-     * @param array $data
-     * @return $this
-     */
     public function setData(array $data): self
     {
         $this->data = $data;
@@ -79,18 +41,11 @@ final class Message implements MessageInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
         return $this->data;
     }
 
-    /**
-     * @param string ...$to
-     * @return $this
-     */
     public function setTo(string ...$to): self
     {
         $this->to = $to;
@@ -98,18 +53,11 @@ final class Message implements MessageInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getTo(): array
     {
         return $this->to;
     }
 
-    /**
-     * @param string ...$cc
-     * @return $this
-     */
     public function setCC(string ...$cc): self
     {
         $this->cc = $cc;
@@ -117,18 +65,11 @@ final class Message implements MessageInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getCC(): array
     {
         return $this->cc;
     }
 
-    /**
-     * @param string ...$bcc
-     * @return $this
-     */
     public function setBCC(string ...$bcc): self
     {
         $this->bcc = $bcc;
@@ -136,18 +77,11 @@ final class Message implements MessageInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getBCC(): array
     {
         return $this->bcc;
     }
 
-    /**
-     * @param string|null $from
-     * @return $this
-     */
     public function setFrom(?string $from): self
     {
         $this->from = $from;
@@ -155,18 +89,11 @@ final class Message implements MessageInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFrom(): ?string
     {
         return $this->from;
     }
 
-    /**
-     * @param string|null $replyTo
-     * @return $this
-     */
     public function setReplyTo(?string $replyTo): self
     {
         $this->replyTo = $replyTo;
@@ -174,18 +101,11 @@ final class Message implements MessageInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getReplyTo(): ?string
     {
         return $this->replyTo;
     }
 
-    /**
-     * @param array $options
-     * @return $this
-     */
     public function setOptions(array $options): self
     {
         $this->options = $options;
@@ -193,23 +113,28 @@ final class Message implements MessageInterface
         return $this;
     }
 
-    /**
-     * @param string $name
-     * @param mixed  $value
-     * @return $this
-     */
-    public function setOption(string $name, $value): self
+    public function setOption(string $name, mixed $value): self
     {
         $this->options[$name] = $value;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function setDelay(\DateInterval|\DateTimeInterface|int $delay): self
+    {
+        if ($delay instanceof \DateInterval) {
+            $delay = (new \DateTimeImmutable('NOW'))->add($delay);
+        }
+
+        if ($delay instanceof \DateTimeInterface) {
+            $delay = \max(0, $delay->getTimestamp() - \time());
+        }
+
+        return $this->setOption('delay', $delay);
     }
 }

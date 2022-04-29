@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Command;
@@ -33,25 +26,17 @@ final class PublishCommand extends Command
         ['mode', InputArgument::OPTIONAL, 'runtime', 'File mode [readonly|runtime]'],
     ];
 
-    /**
-     * @param null|string $name
-     */
     public function __construct(?string $name = null)
     {
         parent::__construct($name);
         $this->setHidden(true);
     }
 
-    /**
-     * @param Publisher            $publisher
-     * @param FilesInterface       $files
-     * @param DirectoriesInterface $directories
-     */
     public function perform(
         Publisher $publisher,
         FilesInterface $files,
         DirectoriesInterface $directories
-    ): void {
+    ): int {
         switch ($this->argument('type')) {
             case 'replace':
             case 'follow':
@@ -97,81 +82,55 @@ final class PublishCommand extends Command
 
                 break;
             default:
-                throw new PublishException("Invalid public operation `{$this->argument('type')}`.");
+                throw new PublishException(\sprintf('Invalid public operation `%s`.', $this->argument('type')));
         }
+
+        return self::SUCCESS;
     }
 
-    /**
-     * @param FilesInterface       $files
-     * @return null|string
-     */
     private function getSource(FilesInterface $files): ?string
     {
         if (!$this->isDirectory()) {
             return $files->normalizePath($this->argument('source'));
         }
 
-        return $files->normalizePath(rtrim($this->argument('source'), '/*'), true);
+        return $files->normalizePath(\rtrim($this->argument('source'), '/*'), true);
     }
 
-    /**
-     * @param FilesInterface       $files
-     * @param DirectoriesInterface $directories
-     * @return null|string
-     */
     private function getTarget(FilesInterface $files, DirectoriesInterface $directories): ?string
     {
         $target = $this->argument('target');
         foreach ($directories->getAll() as $alias => $value) {
-            $target = str_replace("@{$alias}", $value, $target);
+            $target = \str_replace(\sprintf('@%s', $alias), $value, $target);
         }
 
         return $files->normalizePath($target);
     }
 
-    /**
-     * @return bool
-     */
     private function isDirectory(): bool
     {
-        if ($this->argument('type') == 'ensure') {
-            return true;
-        }
-
-        if (strpos($this->argument('source'), '*') !== false) {
-            return true;
-        }
-
-        return is_dir($this->argument('source'));
+        return match (true) {
+            $this->argument('type') === 'ensure' => true,
+            \str_contains((string) $this->argument('source'), '*') => true,
+            default => \is_dir($this->argument('source'))
+        };
     }
 
-    /**
-     * @return string
-     */
     private function getMergeMode(): string
     {
-        switch ($this->argument('type')) {
-            case 'follow':
-                return PublisherInterface::FOLLOW;
-            case 'replace':
-                return PublisherInterface::REPLACE;
-        }
-
-        throw new PublishException("Undefined merge mode `{$this->argument('type')}`");
+        return match ($this->argument('type')) {
+            'follow' => PublisherInterface::FOLLOW,
+            'replace' => PublisherInterface::REPLACE,
+            default => throw new PublishException(\sprintf('Undefined merge mode `%s`', $this->argument('type'))),
+        };
     }
 
-    /**
-     * @return int
-     */
     private function getFileMode(): int
     {
-        switch ($this->argument('mode')) {
-            case 'readonly':
-                return FilesInterface::READONLY;
-            case 'runtime':
-                return FilesInterface::RUNTIME;
-            default:
-                return FilesInterface::RUNTIME;
-        }
+        return match ($this->argument('mode')) {
+            'readonly' => FilesInterface::READONLY,
+            'runtime' => FilesInterface::RUNTIME,
+            default => FilesInterface::RUNTIME,
+        };
     }
 }

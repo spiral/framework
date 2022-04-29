@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Monolog;
@@ -14,6 +7,7 @@ namespace Spiral\Monolog;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use Monolog\ResettableInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Core\Container\Autowire;
@@ -24,53 +18,33 @@ use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
-final class LogFactory implements LogsInterface, InjectorInterface
+final class LogFactory implements LogsInterface, InjectorInterface, ResettableInterface
 {
-    // Default logger channel (supplied via injection)
-    public const DEFAULT = 'default';
+    private ?LoggerInterface $default = null;
+    private readonly HandlerInterface $eventHandler;
 
-    /** @var MonologConfig */
-    private $config;
-
-    /** @var LoggerInterface */
-    private $default;
-
-    /** @var FactoryInterface */
-    private $factory;
-
-    /** @var HandlerInterface|null */
-    private $eventHandler;
-
-    /**
-     * @param MonologConfig             $config
-     * @param ListenerRegistryInterface $listenerRegistry
-     * @param FactoryInterface          $factory
-     */
     public function __construct(
-        MonologConfig $config,
+        private readonly MonologConfig $config,
         ListenerRegistryInterface $listenerRegistry,
-        FactoryInterface $factory
+        private readonly FactoryInterface $factory
     ) {
-        $this->config = $config;
-        $this->factory = $factory;
         $this->eventHandler = new EventHandler($listenerRegistry, $config->getEventLevel());
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getLogger(string $channel = null): LoggerInterface
     {
-        if ($channel === null || $channel == self::DEFAULT) {
+        $default = $this->config->getDefault();
+
+        if ($channel === null || $channel === $default) {
             if ($this->default !== null) {
                 // we should use only one default logger per system
                 return $this->default;
             }
 
             return $this->default = new Logger(
-                self::DEFAULT,
-                $this->getHandlers(self::DEFAULT),
-                $this->getProcessors(self::DEFAULT)
+                $default,
+                $this->getHandlers($default),
+                $this->getProcessors($default)
             );
         }
 
@@ -81,20 +55,22 @@ final class LogFactory implements LogsInterface, InjectorInterface
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function createInjection(\ReflectionClass $class, string $context = null)
+    public function createInjection(\ReflectionClass $class, string $context = null): LoggerInterface
     {
         // always return default logger as injection
         return $this->getLogger();
     }
 
+    public function reset(): void
+    {
+        if ($this->default instanceof ResettableInterface) {
+            $this->default->reset();
+        }
+    }
+
     /**
      * Get list of channel specific handlers.
      *
-     * @param string $channel
-     * @return array
      *
      * @throws ConfigException
      */
@@ -122,13 +98,30 @@ final class LogFactory implements LogsInterface, InjectorInterface
     }
 
     /**
-     * Get list of channel specific log processors. Falls back to PsrLogMessageProcessor for now.
+     * Get list of channel specific log processors.
      *
-     * @param string $channel
      * @return callable[]
      */
     protected function getProcessors(string $channel): array
     {
-        return [new PsrLogMessageProcessor()];
+        $processors = [];
+        foreach ($this->config->getProcessors($channel) as $processor) {
+            if (!$processor instanceof Autowire) {
+                $processors[] = $processor;
+                continue;
+            }
+
+            try {
+                $processors[] = $processor->resolve($this->factory);
+            } catch (ContainerExceptionInterface $e) {
+                throw new ConfigException($e->getMessage(), $e->getCode(), $e);
+            }
+        }
+
+        if ($processors === []) {
+            $processors[] = new PsrLogMessageProcessor();
+        }
+
+        return $processors;
     }
 }

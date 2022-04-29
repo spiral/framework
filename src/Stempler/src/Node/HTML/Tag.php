@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Node\HTML;
@@ -26,29 +19,21 @@ final class Tag implements NodeInterface, AttributedInterface
     use ContextTrait;
     use AttributeTrait;
 
-    /** @var bool */
-    public $void = false;
+    public bool $void = false;
 
-    /** @var Mixin|string */
-    public $name;
+    public Mixin|string|null $name = null;
 
     /** @var Attr[] */
-    public $attrs = [];
+    public array $attrs = [];
 
     /** @var NodeInterface[] */
-    public $nodes = [];
+    public array $nodes = [];
 
-    /**
-     * @param Context|null $context
-     */
     public function __construct(Context $context = null)
     {
         $this->context = $context;
     }
 
-    /**
-     * @return \Generator
-     */
     public function getIterator(): \Generator
     {
         yield 'name' => $this->name;

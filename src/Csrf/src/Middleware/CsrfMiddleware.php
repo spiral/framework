@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Csrf\Middleware;
@@ -30,22 +23,14 @@ final class CsrfMiddleware implements MiddlewareInterface
 {
     public const ATTRIBUTE = 'csrfToken';
 
-    /** @var CsrfConfig */
-    protected $config;
-
-    /**
-     * @param CsrfConfig $config
-     */
-    public function __construct(CsrfConfig $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly CsrfConfig $config
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
+        $cookie = null;
         if (isset($request->getCookieParams()[$this->config->getCookie()])) {
             $token = $request->getCookieParams()[$this->config->getCookie()];
         } else {
@@ -68,9 +53,6 @@ final class CsrfMiddleware implements MiddlewareInterface
 
     /**
      * Generate CSRF cookie.
-     *
-     * @param string $token
-     * @return string
      */
     protected function tokenCookie(string $token): string
     {
@@ -90,7 +72,6 @@ final class CsrfMiddleware implements MiddlewareInterface
      * Create a random string with desired length.
      *
      * @param int $length String length. 32 symbols by default.
-     * @return string
      */
     private function random(int $length = 32): string
     {
@@ -102,6 +83,6 @@ final class CsrfMiddleware implements MiddlewareInterface
             throw new \RuntimeException('Unable to generate random string', $e->getCode(), $e);
         }
 
-        return substr(base64_encode($string), 0, $length);
+        return \substr(\base64_encode($string), 0, $length);
     }
 }

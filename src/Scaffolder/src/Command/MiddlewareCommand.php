@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Spiral Framework. Scaffolder
- *
- * @license MIT
- * @author  Anton Titov (Wolfy-J)
- * @author  Valentin V (vvval)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
@@ -37,11 +29,13 @@ class MiddlewareCommand extends AbstractCommand
     /**
      * Create middleware declaration.
      */
-    public function perform(): void
+    public function perform(): int
     {
         /** @var MiddlewareDeclaration $declaration */
         $declaration = $this->createDeclaration();
 
         $this->writeDeclaration($declaration);
+
+        return self::SUCCESS;
     }
 }

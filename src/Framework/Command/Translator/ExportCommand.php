@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Command\Translator;
@@ -33,16 +26,12 @@ final class ExportCommand extends Command implements SingletonInterface
         ['fallback', 'f', InputOption::VALUE_NONE, 'Merge messages from fallback catalogue'],
     ];
 
-    /**
-     * @param TranslatorConfig $config
-     * @param CatalogueManager $manager
-     */
-    public function perform(TranslatorConfig $config, CatalogueManager $manager): void
+    public function perform(TranslatorConfig $config, CatalogueManager $manager): int
     {
         if (!$config->hasDumper($this->option('dumper'))) {
             $this->writeln("<fg=red>Undefined dumper '{$this->option('dumper')}'.</fg=red>");
 
-            return;
+            return self::FAILURE;
         }
 
         $mc = $this->getMessageCatalogue(
@@ -54,7 +43,7 @@ final class ExportCommand extends Command implements SingletonInterface
         if ($this->isVerbose() && !empty($mc->getDomains())) {
             $this->sprintf(
                 "<info>Exporting domain(s):</info> %s\n",
-                implode(',', $mc->getDomains())
+                \implode(',', $mc->getDomains())
             );
         }
 
@@ -69,16 +58,12 @@ final class ExportCommand extends Command implements SingletonInterface
             ]
         );
 
-        $this->writeln('Export successfully completed using <info>' . get_class($dumper) . '</info>');
-        $this->writeln('Output: <comment>' . realpath($this->argument('path')) . '</comment>');
+        $this->writeln('Export successfully completed using <info>' . $dumper::class . '</info>');
+        $this->writeln('Output: <comment>' . \realpath($this->argument('path')) . '</comment>');
+
+        return self::SUCCESS;
     }
 
-    /**
-     * @param TranslatorConfig   $config
-     * @param CatalogueManager   $manager
-     * @param CatalogueInterface $catalogue
-     * @return MessageCatalogue
-     */
     protected function getMessageCatalogue(
         TranslatorConfig $config,
         CatalogueManager $manager,

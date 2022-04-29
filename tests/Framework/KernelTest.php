@@ -14,8 +14,6 @@ namespace Spiral\Tests\Framework;
 use Spiral\Boot\Environment;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Goridge\RPC;
-use Spiral\RoadRunner\Worker;
 use Spiral\App\TestApp;
 
 class KernelTest extends BaseTest
@@ -45,39 +43,6 @@ class KernelTest extends BaseTest
     {
         $this->expectException(BootException::class);
 
-        TestApp::init([
-        ], new Environment(), false);
-    }
-
-    public function testWorker(): void
-    {
-        /** @var Worker $worker */
-        $worker = $this->makeApp([])->get(Worker::class);
-        $this->assertInstanceOf(Worker::class, $worker);
-    }
-
-    public function testDefaultRPC(): void
-    {
-        /** @var RPC $rpc */
-        $rpc = $this->makeApp([])->get(RPC::class);
-        $this->assertInstanceOf(RPC::class, $rpc);
-    }
-
-    public function testInvalidRPC(): void
-    {
-        $this->expectException(BootException::class);
-
-        $this->makeApp([
-            'RR_RPC' => 'invalid'
-        ])->get(RPC::class);
-    }
-
-    public function testInvalidRPC2(): void
-    {
-        $this->expectException(BootException::class);
-
-        $this->makeApp([
-            'RR_RPC' => 'ftp://magic'
-        ])->get(RPC::class);
+        TestApp::create([], false)->run();
     }
 }

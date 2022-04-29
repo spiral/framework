@@ -1,4 +1,5 @@
 risky: false
+version: 8.1
 preset: psr12
 enabled:
   # Risky Fixers

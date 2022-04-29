@@ -3,7 +3,7 @@ cd $(dirname "${BASH_SOURCE[0]}")
 OD="$(pwd)"
 
 # Pushes application version into the build information.
-SPIRAL_VERSION=2.7.0
+SPIRAL_VERSION=2.9.0
 
 # Hardcode some values to the core package
 LDFLAGS="$LDFLAGS -X github.com/spiral/roadrunner/cmd/rr/cmd.Version=${SPIRAL_VERSION}"
@@ -62,7 +62,9 @@ if [ "$1" == "all" ]; then
   rm -rf builds/
   build "Windows" "windows" "amd64"
   build "Mac" "darwin" "amd64"
+  build "Mac_m1" "darwin" "arm64"
   build "Linux" "linux" "amd64"
+  build "Linux_m1" "linux" "arm64"
   build "FreeBSD" "freebsd" "amd64"
   build_musl "unknown" "musl" "amd64"
   exit

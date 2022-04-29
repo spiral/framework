@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Partial;
@@ -30,60 +23,39 @@ class Constant extends AbstractDeclaration implements NamedInterface
     use SerializerTrait;
     use AccessTrait;
 
-    /**
-     * @var mixed
-     */
-    private $value;
-
-    /**
-     * @param string       $name
-     * @param string       $value
-     * @param string|array $comment
-     */
-    public function __construct(string $name, $value, $comment = '')
-    {
+    public function __construct(
+        string $name,
+        private mixed $value,
+        array|string $comment = ''
+    ) {
         $this->setName($name);
-        $this->value = $value;
         $this->initComment($comment);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setName(string $name): Constant
     {
-        $this->name = strtoupper(
+        $this->name = \strtoupper(
             (new InflectorFactory())
                 ->build()
-                ->tableize(strtolower($name))
+                ->tableize(\strtolower($name))
         );
 
         return $this;
     }
 
-    /**
-     * Array values allowed (but works in PHP7 only).
-     *
-     * @param mixed $value
-     * @return self
-     */
-    public function setValue($value): Constant
+    public function setValue(mixed $value): self
     {
         $this->value = $value;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
     /**
-     * {@inheritdoc}
      * @throws ReflectionException
      */
     public function render(int $indentLevel = 0): string
@@ -96,28 +68,24 @@ class Constant extends AbstractDeclaration implements NamedInterface
         $result .= $this->addIndent("{$this->access} const {$this->getName()} = ", $indentLevel);
 
         $value = $this->getSerializer()->serialize($this->value);
-        if (is_array($this->value)) {
+        if (\is_array($this->value)) {
             $value = $this->mountIndents($value, $indentLevel);
         }
 
-        return $result . "{$value};";
+        return $result . $value . ';';
     }
 
     /**
      * Mount indentation to value. Attention, to be applied to arrays only!
-     *
-     * @param string $serialized
-     * @param int    $indentLevel
-     * @return string
      */
     private function mountIndents(string $serialized, int $indentLevel): string
     {
-        $lines = explode("\n", $serialized);
+        $lines = \explode("\n", $serialized);
         foreach ($lines as &$line) {
             $line = $this->addIndent($line, $indentLevel);
             unset($line);
         }
 
-        return ltrim(implode("\n", $lines));
+        return \ltrim(\implode("\n", $lines));
     }
 }

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Filter;
@@ -21,20 +14,11 @@ use Spiral\Http\Request\InputManager;
  */
 final class InputScope implements InputInterface
 {
-    /** @var InputManager */
-    private $input;
-
-    /**
-     * @param InputManager $input
-     */
-    public function __construct(InputManager $input)
-    {
-        $this->input = $input;
+    public function __construct(
+        private InputManager $input
+    ) {
     }
 
-    /**
-     * @inheritdoc
-     */
     public function withPrefix(string $prefix, bool $add = true): InputInterface
     {
         $input = clone $this;
@@ -43,16 +27,13 @@ final class InputScope implements InputInterface
         return $input;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getValue(string $source, string $name = null)
+    public function getValue(string $source, string $name = null): mixed
     {
-        if (!method_exists($this->input, $source)) {
-            throw new InputException("Undefined input source '{$source}'");
+        if (!\method_exists($this->input, $source)) {
+            throw new InputException(\sprintf('Undefined input source %s', $source));
         }
 
-        return call_user_func([$this->input, $source], $name);
+        return \call_user_func([$this->input, $source], $name);
     }
 
     /**

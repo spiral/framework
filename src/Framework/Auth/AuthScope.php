@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth;
@@ -20,20 +13,12 @@ use Spiral\Core\Exception\ScopeException;
  */
 final class AuthScope implements AuthContextInterface
 {
-    /** @var ContainerInterface */
-    private $container;
-
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container
+    ) {
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function start(TokenInterface $token, string $transport = null): void
@@ -42,8 +27,6 @@ final class AuthScope implements AuthContextInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function getToken(): ?TokenInterface
@@ -52,8 +35,6 @@ final class AuthScope implements AuthContextInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function getTransport(): ?string
@@ -62,8 +43,6 @@ final class AuthScope implements AuthContextInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function getActor(): ?object
@@ -72,8 +51,6 @@ final class AuthScope implements AuthContextInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function close(): void
@@ -82,8 +59,6 @@ final class AuthScope implements AuthContextInterface
     }
 
     /**
-     * @inheritDoc
-     *
      * @throws ScopeException
      */
     public function isClosed(): bool
@@ -91,9 +66,6 @@ final class AuthScope implements AuthContextInterface
         return $this->getAuthContext()->isClosed();
     }
 
-    /**
-     * @return AuthContextInterface
-     */
     private function getAuthContext(): AuthContextInterface
     {
         try {

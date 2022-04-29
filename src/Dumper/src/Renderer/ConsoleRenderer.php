@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Debug\Renderer;
@@ -20,17 +13,13 @@ final class ConsoleRenderer extends AbstractRenderer
 {
     /**
      * Every dumped element is wrapped using this pattern.
-     *
-     * @var string
      */
-    protected $element = '%s%s' . Color::RESET;
+    protected string $element = '%s%s' . Color::RESET;
 
     /**
      * Set of styles associated with different dumping properties.
-     *
-     * @var array
      */
-    protected $styles = [
+    protected array $styles = [
         'common'   => Color::BOLD_WHITE,
         'name'     => Color::LIGHT_WHITE,
         'dynamic'  => Color::PURPLE,
@@ -57,21 +46,15 @@ final class ConsoleRenderer extends AbstractRenderer
         'access'   => Color::GRAY,
     ];
 
-    /**
-     * @inheritdoc
-     */
-    public function apply($element, string $type, string $context = ''): string
+    public function apply(mixed $element, string $type, string $context = ''): string
     {
         if (!empty($style = $this->getStyle($type, $context))) {
-            return sprintf($this->element, $style, $element);
+            return \sprintf($this->element, $style, $element);
         }
 
         return $element;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function escapeStrings(): bool
     {
         return false;
@@ -79,26 +62,14 @@ final class ConsoleRenderer extends AbstractRenderer
 
     /**
      * Get valid style based on type and context/.
-     *
-     * @param string $type
-     * @param string $context
-     *
-     * @return string
      */
     private function getStyle(string $type, string $context): string
     {
-        if (isset($this->styles[$type][$context])) {
-            return $this->styles[$type][$context];
-        }
-
-        if (isset($this->styles[$type]['common'])) {
-            return $this->styles[$type]['common'];
-        }
-
-        if (isset($this->styles[$type]) && is_string($this->styles[$type])) {
-            return $this->styles[$type];
-        }
-
-        return $this->styles['common'];
+        return match (true) {
+            isset($this->styles[$type][$context]) => $this->styles[$type][$context],
+            isset($this->styles[$type]['common']) => $this->styles[$type]['common'],
+            isset($this->styles[$type]) && \is_string($this->styles[$type]) => $this->styles[$type],
+            default => $this->styles['common']
+        };
     }
 }

@@ -19,10 +19,10 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
-        "spiral/distribution": "^2.8",
+        "php": ">=8.1",
+        "spiral/distribution": "^2.13",
         "symfony/polyfill-php80": "^1.22",
-        "league/flysystem": "^2.0"
+        "league/flysystem": "^2.3.1"
     },
     "autoload": {
         "psr-4": {
@@ -30,9 +30,9 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.0",
-        "symfony/var-dumper": "^5.2",
-        "vimeo/psalm": "^4.3",
+        "phpunit/phpunit": "^9.5.5",
+        "symfony/var-dumper": "^5.2|^6.0",
+        "vimeo/psalm": "^4.22",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "autoload-dev": {
@@ -52,7 +52,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.13.x-dev"
         }
     },
     "config": {

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Auth;
@@ -32,16 +25,12 @@ final class SecurityActorBootloader extends Bootloader
     ];
 
     /**
-     * @param AuthContextInterface $context
-     * @return ActorInterface
+     * @noRector RemoveUnusedPrivateMethodRector
      */
     private function actor(AuthContextInterface $context): ActorInterface
     {
         $actor = $context->getActor();
-        if ($actor instanceof ActorInterface) {
-            return $actor;
-        }
 
-        return new Guest();
+        return $actor instanceof ActorInterface ? $actor : new Guest();
     }
 }

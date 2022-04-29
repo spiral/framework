@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Filters;
@@ -65,52 +58,36 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     protected const SETTERS   = [];
     protected const GETTERS   = [];
 
-    /** @var ErrorMapper */
-    private $errorMapper;
-
-    /** @var array|null */
-    private $errors;
-
-    /** @var array */
-    private $mappings;
-
-    /** @var ValidatorInterface @internal */
-    private $validator;
+    private ?array $errors = null;
+    private array $mappings = [];
 
     /**
      * Filter constructor.
-     *
-     * @param array $data
-     * @param array $schema
-     * @param ValidatorInterface $validator
-     * @param ErrorMapper $errorMapper
      */
     public function __construct(
         array $data,
         array $schema,
-        ValidatorInterface $validator,
-        ErrorMapper $errorMapper
+        /** @internal */
+        private ValidatorInterface $validator,
+        private ErrorMapper $errorMapper
     ) {
         parent::__construct($data, $schema);
 
         $this->mappings = $schema[FilterProvider::MAPPING] ?? [];
-        $this->validator = $validator;
-        $this->errorMapper = $errorMapper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __unset($offset): void
+    public function __unset(string $offset): void
     {
         parent::__unset($offset);
         $this->reset();
     }
 
     /**
-     * @return array
+     * @return array<string, bool|array>
+     *
+     * @psalm-return array{valid: bool, fields: array, errors: array}
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'valid'  => $this->isValid(),
@@ -127,18 +104,14 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         $this->errors = null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setField(string $name, $value, bool $filter = true): void
+    public function setField(string $name, mixed $value, bool $filter = true): self
     {
         parent::setField($name, $value, $filter);
         $this->reset();
+
+        return $this;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isValid(): bool
     {
         return $this->getErrors() === [];
@@ -146,15 +119,13 @@ abstract class Filter extends SchematicEntity implements FilterInterface
 
     /**
      * Get all validation messages (including nested models).
-     *
-     * @return array
      */
     public function getErrors(): array
     {
         if ($this->errors === null) {
             $this->errors = [];
             foreach ($this->validator->withData($this)->getErrors() as $field => $error) {
-                if (is_string($error) && Translator::isMessage($error)) {
+                if (\is_string($error) && Translator::isMessage($error)) {
                     // translate error message
                     $error = $this->say($error);
                 }
@@ -169,29 +140,19 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         return $this->errorMapper->mapErrors($this->errors);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function setContext($context): void
+    public function setContext(mixed $context): void
     {
         $this->validator = $this->validator->withContext($context);
         $this->reset();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getContext()
+    public function getContext(): mixed
     {
         return $this->validator->getContext();
     }
 
     /**
      * Validate inner entities.
-     *
-     * @param array $errors
-     *
-     * @return array
      */
     protected function validateNested(array $errors): array
     {
@@ -213,7 +174,7 @@ abstract class Filter extends SchematicEntity implements FilterInterface
             }
 
             //Array of nested entities for validation
-            if (is_iterable($value)) {
+            if (\is_iterable($value)) {
                 foreach ($value as $nIndex => $nValue) {
                     if ($nValue instanceof FilterInterface) {
                         if ($this->isOptional($nIndex) && !$this->hasBeenPassed($nIndex)) {
@@ -234,11 +195,8 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     /**
      * Returns {@see true} in case that children filter is optional
      * or {@see false} instead.
-     *
-     * @param string|int $field
-     * @return bool
      */
-    private function isOptional($field): bool
+    private function isOptional(int|string $field): bool
     {
         return $this->mappings[$field][FilterProvider::OPTIONAL] ?? false;
     }
@@ -246,22 +204,16 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     /**
      * Returns {@see true} in case that value has been passed.
      *
-     * @param string|int $field
-     * @return bool
      * @throws EntityExceptionInterface
      */
-    private function hasBeenPassed($field): bool
+    private function hasBeenPassed(int|string $field): bool
     {
         $value = $this->getField((string)$field);
 
-        if ($value === null) {
-            return false;
-        }
-
-        if ($value instanceof FilterInterface) {
-            return $value->getValue() !== [];
-        }
-
-        return true;
+        return match (true) {
+            $value === null => false,
+            $value instanceof FilterInterface => $value->getValue() !== [],
+            default => true
+        };
     }
 }

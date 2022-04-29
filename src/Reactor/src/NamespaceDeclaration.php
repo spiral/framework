@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor;
@@ -26,15 +19,8 @@ class NamespaceDeclaration extends AbstractDeclaration implements ReplaceableInt
     use UsesTrait;
     use CommentTrait;
 
-    /**
-     * @var Aggregator
-     */
-    private $elements;
+    private Aggregator $elements;
 
-    /**
-     * @param string $name
-     * @param string $comment
-     */
     public function __construct(string $name = '', string $comment = '')
     {
         $this->setName($name);
@@ -51,8 +37,6 @@ class NamespaceDeclaration extends AbstractDeclaration implements ReplaceableInt
     /**
      * Method will automatically mount requested uses is any.
      *
-     * @param DeclarationInterface $element
-     * @return self
      * @throws Exception\ReactorException
      */
     public function addElement(DeclarationInterface $element): NamespaceDeclaration
@@ -65,11 +49,7 @@ class NamespaceDeclaration extends AbstractDeclaration implements ReplaceableInt
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     * @return self
-     */
-    public function replace($search, $replace): NamespaceDeclaration
+    public function replace(array|string $search, array|string $replace): NamespaceDeclaration
     {
         $this->docComment->replace($search, $replace);
         $this->elements->replace($search, $replace);
@@ -77,9 +57,6 @@ class NamespaceDeclaration extends AbstractDeclaration implements ReplaceableInt
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render(int $indentLevel = 0): string
     {
         $result = '';

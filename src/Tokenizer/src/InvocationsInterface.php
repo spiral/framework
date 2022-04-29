@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
@@ -23,7 +16,6 @@ interface InvocationsInterface
      * Find all possible invocations of given function or method. Make sure you know about location
      * limitations.
      *
-     * @param \ReflectionFunctionAbstract $function
      * @return ReflectionInvocation[]
      */
     public function getInvocations(\ReflectionFunctionAbstract $function): array;

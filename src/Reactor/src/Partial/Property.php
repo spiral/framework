@@ -1,17 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Reactor\Partial;
 
-use ReflectionException;
 use Spiral\Reactor\AbstractDeclaration;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\ReplaceableInterface;
@@ -30,22 +22,10 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
     use SerializerTrait;
     use AccessTrait;
 
-    /**
-     * @var bool
-     */
-    private $hasDefault = false;
+    private bool $hasDefault = false;
+    private mixed $defaultValue = null;
 
-    /**
-     * @var mixed
-     */
-    private $defaultValue;
-
-    /**
-     * @param string       $name
-     * @param mixed        $defaultValue
-     * @param string|array $comment
-     */
-    public function __construct(string $name, $defaultValue = null, $comment = '')
+    public function __construct(string $name, mixed $defaultValue = null, array|string $comment = '')
     {
         $this->setName($name);
         if ($defaultValue !== null) {
@@ -57,8 +37,6 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
 
     /**
      * Has default value.
-     *
-     * @return bool
      */
     public function hasDefaultValue(): bool
     {
@@ -67,11 +45,8 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
 
     /**
      * Set default value.
-     *
-     * @param mixed $value
-     * @return self
      */
-    public function setDefaultValue($value): Property
+    public function setDefaultValue(mixed $value): Property
     {
         $this->hasDefault = true;
         $this->defaultValue = $value;
@@ -81,8 +56,6 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
 
     /**
      * Remove default value.
-     *
-     * @return self
      */
     public function removeDefaultValue(): Property
     {
@@ -92,28 +65,23 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->defaultValue;
     }
 
     /**
      * Replace comments.
-     *
-     * @param array|string $search
-     * @param array|string $replace
      */
-    public function replace($search, $replace): void
+    public function replace(array|string $search, array|string $replace): Property
     {
         $this->docComment->replace($search, $replace);
+
+        return $this;
     }
 
     /**
-     * {@inheritdoc}
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function render(int $indentLevel = 0): string
     {
@@ -127,7 +95,7 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
         if ($this->hasDefault) {
             $value = $this->getSerializer()->serialize($this->defaultValue);
 
-            if (is_array($this->defaultValue)) {
+            if (\is_array($this->defaultValue)) {
                 $value = $this->mountIndents($value, $indentLevel);
             }
 
@@ -141,19 +109,15 @@ class Property extends AbstractDeclaration implements ReplaceableInterface, Name
 
     /**
      * Mount indentation to value. Attention, to be applied to arrays only!
-     *
-     * @param string $serialized
-     * @param int    $indentLevel
-     * @return string
      */
     private function mountIndents(string $serialized, int $indentLevel): string
     {
-        $lines = explode("\n", $serialized);
+        $lines = \explode("\n", $serialized);
         foreach ($lines as &$line) {
             $line = $this->addIndent($line, $indentLevel);
             unset($line);
         }
 
-        return ltrim(implode("\n", $lines));
+        return \ltrim(\implode("\n", $lines));
     }
 }

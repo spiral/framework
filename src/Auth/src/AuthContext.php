@@ -1,44 +1,21 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Auth;
 
 final class AuthContext implements AuthContextInterface
 {
-    /** @var ActorProviderInterface */
-    private $actorProvider;
+    private ?TokenInterface $token = null;
+    private ?object $actor = null;
+    private ?string $transport = null;
+    private bool $closed = false;
 
-    /** @var TokenInterface|null */
-    private $token;
-
-    /** @var object|null */
-    private $actor;
-
-    /** @var string|null */
-    private $transport;
-
-    /** @var bool */
-    private $closed = false;
-
-    /**
-     * @param ActorProviderInterface $actorProvider
-     */
-    public function __construct(ActorProviderInterface $actorProvider)
-    {
-        $this->actorProvider = $actorProvider;
+    public function __construct(
+        private readonly ActorProviderInterface $actorProvider
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function start(TokenInterface $token, string $transport = null): void
     {
         $this->closed = false;
@@ -47,25 +24,16 @@ final class AuthContext implements AuthContextInterface
         $this->transport = $transport;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getToken(): ?TokenInterface
     {
         return $this->token;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTransport(): ?string
     {
         return $this->transport;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getActor(): ?object
     {
         if ($this->closed) {
@@ -79,18 +47,12 @@ final class AuthContext implements AuthContextInterface
         return $this->actor;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function close(): void
     {
         $this->closed = true;
         $this->actor = null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isClosed(): bool
     {
         return $this->closed;

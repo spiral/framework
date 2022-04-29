@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform\Merge\Inject;
@@ -27,21 +20,12 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class InjectAttributes implements VisitorInterface
 {
-    /** @var BlockClaims */
-    private $blocks;
-
-    /**
-     * @param BlockClaims $blocks
-     */
-    public function __construct(BlockClaims $blocks)
-    {
-        $this->blocks = $blocks;
+    public function __construct(
+        private readonly BlockClaims $blocks
+    ) {
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function enterNode($node, VisitorContext $ctx)
+    public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
         if (!$node instanceof Aggregate) {
             return null;
@@ -68,34 +52,25 @@ final class InjectAttributes implements VisitorInterface
 
             $node->nodes[] = new Attr($alias, $this->wrapValue($value));
         }
+
+        return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function leaveNode($node, VisitorContext $ctx): void
+    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
     {
+        return null;
     }
 
-    /**
-     * @param array $value
-     * @return array|Nil|Mixin
-     */
-    private function wrapValue($value)
+    private function wrapValue(mixed $value): array|Mixin|Nil
     {
-        if ($value === [] || $value === null || $value instanceof Nil) {
-            return new Nil();
-        }
-
-        if ($value instanceof Verbatim || is_scalar($value)) {
-            return $value;
-        }
-
-        // auto-quote
-        return new Mixin(array_merge(
-            [new Raw('"')],
-            is_array($value) ? $value : [$value],
-            [new Raw('"')]
-        ));
+        return match (true) {
+            $value === [] || $value === null || $value instanceof Nil => new Nil(),
+            $value instanceof Verbatim || \is_scalar($value) => $value,
+            default => new Mixin(\array_merge(
+                [new Raw('"')],
+                \is_array($value) ? $value : [$value],
+                [new Raw('"')]
+            ))
+        };
     }
 }

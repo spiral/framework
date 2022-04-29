@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Loader;
@@ -16,43 +9,22 @@ namespace Spiral\Stempler\Loader;
  */
 final class Source
 {
-    /** @var string|null */
-    private $filename;
-
-    /** @var string */
-    private $content;
-
-    /**
-     * @param string      $code
-     * @param string|null $filename
-     */
-    public function __construct(string $code, string $filename = null)
-    {
-        $this->content = $code;
-        $this->filename = $filename;
+    public function __construct(
+        private readonly string $content,
+        private readonly ?string $filename = null
+    ) {
     }
 
-    /**
-     * @return string
-     */
     public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFilename(): ?string
     {
         return $this->filename;
     }
 
-    /**
-     * @param string $content
-     * @param int    $offset
-     * @return int
-     */
     public static function resolveLine(string $content, int $offset): int
     {
         $line = 0;

@@ -19,11 +19,11 @@ abstract class BaseTest extends TestCase
 {
     public function makeApp(array $env = []): TestApp
     {
-        return TestApp::init([
+        return TestApp::create([
             'root'    => __DIR__ . '/../..',
             'app'     => __DIR__ . '/../app',
             'runtime' => sys_get_temp_dir() . '/spiral',
             'cache'   => sys_get_temp_dir() . '/spiral',
-        ], new Environment($env), false);
+        ], false)->run(new Environment($env));
     }
 }

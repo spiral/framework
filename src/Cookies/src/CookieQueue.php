@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Cookies;
@@ -16,22 +9,12 @@ final class CookieQueue
     public const ATTRIBUTE = 'cookieQueue';
 
     /** @var Cookie[] */
-    private $scheduled = [];
+    private array $scheduled = [];
 
-    /** @var string|null */
-    private $domain;
-
-    /** @var bool */
-    private $secure;
-
-    /**
-     * @param string|null $domain
-     * @param bool        $secure
-     */
-    public function __construct(?string $domain = null, bool $secure = false)
-    {
-        $this->domain = $domain;
-        $this->secure = $secure;
+    public function __construct(
+        private readonly ?string $domain = null,
+        private readonly bool $secure = false
+    ) {
     }
 
     /**
@@ -79,8 +62,6 @@ final class CookieQueue
      *                              values of the explicit parameters. If the samesite element is omitted, no SameSite
      *                              cookie attribute is set. When Same-Site attribute is set to "None" it is required
      *                              to have "Secure" attribute enable. Otherwise it will be converted to "Lax".
-     *
-     * @return $this
      */
     public function set(
         string $name,
@@ -92,12 +73,12 @@ final class CookieQueue
         bool $httpOnly = true,
         ?string $sameSite = null
     ): self {
-        if (is_null($domain)) {
+        if (\is_null($domain)) {
             //Let's resolve domain via config
             $domain = $this->domain;
         }
 
-        if (is_null($secure)) {
+        if (\is_null($secure)) {
             $secure = $this->secure;
         }
 
@@ -108,10 +89,6 @@ final class CookieQueue
 
     /**
      * Schedule new cookie instance to be send while dispatching request.
-     *
-     * @param Cookie $cookie
-     *
-     * @return CookieQueue
      */
     public function schedule(Cookie $cookie): CookieQueue
     {
@@ -122,8 +99,6 @@ final class CookieQueue
 
     /**
      * Schedule cookie removal.
-     *
-     * @param string $name
      */
     public function delete(string $name): void
     {

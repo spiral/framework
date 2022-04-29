@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Stempler\Lexer\Grammar;
@@ -48,22 +41,12 @@ final class DynamicGrammar implements GrammarInterface
     // grammar control directive
     public const DECLARE_DIRECTIVE = 'declare';
 
-    /** @var DirectiveRendererInterface */
-    private $directiveRenderer;
+    private readonly BracesGrammar $echo;
+    private readonly BracesGrammar $raw;
 
-    /** @var BracesGrammar */
-    private $echo;
-
-    /** @var BracesGrammar */
-    private $raw;
-
-    /**
-     * @param DirectiveRendererInterface|null $directiveRenderer
-     */
-    public function __construct(DirectiveRendererInterface $directiveRenderer = null)
-    {
-        $this->directiveRenderer = $directiveRenderer;
-
+    public function __construct(
+        private readonly ?DirectiveRendererInterface $directiveRenderer = null
+    ) {
         $this->echo = new BracesGrammar(
             '{{',
             '}}',
@@ -79,9 +62,6 @@ final class DynamicGrammar implements GrammarInterface
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function parse(Buffer $src): \Generator
     {
         while ($n = $src->next()) {
@@ -103,7 +83,7 @@ final class DynamicGrammar implements GrammarInterface
 
                 $directive = new DirectiveGrammar();
                 if ($directive->parse($src, $n->offset)) {
-                    if (strtolower($directive->getKeyword()) === self::DECLARE_DIRECTIVE) {
+                    if (\strtolower($directive->getKeyword()) === self::DECLARE_DIRECTIVE) {
                         // configure braces syntax
                         $this->declare($directive->getBody());
                     } else {
@@ -155,35 +135,22 @@ final class DynamicGrammar implements GrammarInterface
 
     /**
      * @codeCoverageIgnore
-     * @inheritDoc
      */
     public static function tokenName(int $token): string
     {
-        switch ($token) {
-            case self::TYPE_OPEN_TAG:
-                return 'DYNAMIC:OPEN_TAG';
-            case self::TYPE_CLOSE_TAG:
-                return 'DYNAMIC:CLOSE_TAG';
-            case self::TYPE_OPEN_RAW_TAG:
-                return 'DYNAMIC:OPEN_RAW_TAG';
-            case self::TYPE_CLOSE_RAW_TAG:
-                return 'DYNAMIC:CLOSE_RAW_TAG';
-            case self::TYPE_BODY:
-                return 'DYNAMIC:BODY';
-            case self::TYPE_DIRECTIVE:
-                return 'DYNAMIC:DIRECTIVE';
-            case self::TYPE_KEYWORD:
-                return 'DYNAMIC:KEYWORD';
-            case self::TYPE_WHITESPACE:
-                return 'DYNAMIC:WHITESPACE';
-            default:
-                return 'DYNAMIC:UNDEFINED';
-        }
+        return match ($token) {
+            self::TYPE_OPEN_TAG => 'DYNAMIC:OPEN_TAG',
+            self::TYPE_CLOSE_TAG => 'DYNAMIC:CLOSE_TAG',
+            self::TYPE_OPEN_RAW_TAG => 'DYNAMIC:OPEN_RAW_TAG',
+            self::TYPE_CLOSE_RAW_TAG => 'DYNAMIC:CLOSE_RAW_TAG',
+            self::TYPE_BODY => 'DYNAMIC:BODY',
+            self::TYPE_DIRECTIVE => 'DYNAMIC:DIRECTIVE',
+            self::TYPE_KEYWORD => 'DYNAMIC:KEYWORD',
+            self::TYPE_WHITESPACE => 'DYNAMIC:WHITESPACE',
+            default => 'DYNAMIC:UNDEFINED',
+        };
     }
 
-    /**
-     * @param string $body
-     */
     private function declare(?string $body): void
     {
         if ($body === null) {
@@ -191,7 +158,7 @@ final class DynamicGrammar implements GrammarInterface
         }
 
         foreach ($this->fetchOptions($body) as $option => $value) {
-            $value = trim($value, '\'" ');
+            $value = \trim($value, '\'" ');
             switch ($option) {
                 case 'syntax':
                     $this->echo->setActive($value !== 'off');
@@ -224,10 +191,6 @@ final class DynamicGrammar implements GrammarInterface
         }
     }
 
-    /**
-     * @param string $body
-     * @return array
-     */
     private function fetchOptions(string $body): array
     {
         $lexer = new Lexer();
@@ -250,12 +213,12 @@ final class DynamicGrammar implements GrammarInterface
                     break;
                 case DeclareGrammar::TYPE_QUOTED:
                     if ($keyword !== null) {
-                        $options[$keyword] = trim($token->content, $token->content[0]);
+                        $options[$keyword] = \trim($token->content, $token->content[0]);
                         $keyword = null;
                         break;
                     }
 
-                    $keyword = trim($token->content, $token->content[0]);
+                    $keyword = \trim($token->content, $token->content[0]);
                     break;
                 case DeclareGrammar::TYPE_COMMA:
                     if ($keyword !== null) {
