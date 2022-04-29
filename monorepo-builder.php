@@ -89,7 +89,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'spiral/code-style'         => '^1.0',
             'laminas/laminas-hydrator'  => '^3.0|^4.0',
             'symplify/monorepo-builder' => '^10.0',
-            'vimeo/psalm'               => '^4.22',
+            'vimeo/psalm'               => '^4.21',
         ],
     ]);
 

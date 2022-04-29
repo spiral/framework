@@ -1,0 +1,54 @@
+{
+    "name": "spiral/broadcasting",
+    "type": "library",
+    "description": "Common Broadcasting Interfaces",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/core"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
+        },
+        {
+            "name": "Pavel Buchnev",
+            "email": "pavel.buchnev@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "psr/http-message": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "psr/log": "1 - 3",
+        "spiral/core": "^2.14",
+        "spiral/config": "^2.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Broadcasting\\": "src"
+        }
+    },
+    "require-dev": {
+        "spiral/boot": "^2.14",
+        "mockery/mockery": "^1.5",
+        "phpunit/phpunit": "^8.5|^9.5"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Broadcasting\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.14.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

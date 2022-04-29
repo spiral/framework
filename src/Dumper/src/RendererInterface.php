@@ -6,6 +6,8 @@ namespace Spiral\Debug;
 
 /**
  * Applies set of styles to value dump.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 interface RendererInterface
 {

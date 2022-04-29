@@ -68,6 +68,7 @@
                 "src/AuthHttp/src"
             ],
             "Spiral\\Boot\\": "src/Boot/src",
+            "Spiral\\Broadcasting\\": "src/Broadcasting/src",
             "Spiral\\Cache\\": "src/Cache/src",
             "Spiral\\Config\\": "src/Config/src",
             "Spiral\\Console\\": "src/Console/src",
@@ -133,7 +134,7 @@
         "spiral/code-style": "^1.0",
         "symfony/var-dumper": "^5.2|^6.0",
         "symplify/monorepo-builder": "^10.0",
-        "vimeo/psalm": "^4.22"
+        "vimeo/psalm": "^4.21"
     },
     "autoload-dev": {
         "psr-4": {
@@ -143,6 +144,7 @@
                 "src/Auth/tests",
                 "src/AuthHttp/tests"
             ],
+            "Spiral\\Tests\\Broadcasting\\": "src/Broadcasting/tests",
             "Spiral\\Tests\\Boot\\": "src/Boot/tests",
             "Spiral\\Tests\\Cache\\": "src/Cache/tests",
             "Spiral\\Tests\\Config\\": "src/Config/tests",
@@ -200,6 +202,7 @@
         "spiral/auth": "self.version",
         "spiral/auth-http": "self.version",
         "spiral/boot": "self.version",
+        "spiral/broadcasting": "self.version",
         "spiral/cache": "self.version",
         "spiral/config": "self.version",
         "spiral/console": "self.version",
