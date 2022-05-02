@@ -40,6 +40,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
                     'Content-Type' => 'text/html; charset=UTF-8',
                 ],
                 'middleware' => [],
+                'chunkSize' => null,
             ]
         );
     }
