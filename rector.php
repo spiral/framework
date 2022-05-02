@@ -20,6 +20,7 @@ return static function (RectorConfig $rectorConfig): void {
 
         RemoveUnusedPrivateMethodRector::class => [
             __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
+            __DIR__ . '/src/Broadcasting/src/Bootloader/BroadcastingBootloader.php',
         ],
 
         // deprecated classes

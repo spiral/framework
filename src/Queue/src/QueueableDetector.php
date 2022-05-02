@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
+use ReflectionClass;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Queue\Attribute\Queueable;
 
@@ -21,7 +22,7 @@ class QueueableDetector
      */
     public function isQueueable($object): bool
     {
-        $reflection = new \ReflectionClass($object);
+        $reflection = new ReflectionClass($object);
 
         if ($reflection->implementsInterface(QueueableInterface::class)) {
             return true;
@@ -35,7 +36,7 @@ class QueueableDetector
      */
     public function getQueue($object): ?string
     {
-        $reflection = new \ReflectionClass($object);
+        $reflection = new ReflectionClass($object);
 
         $attribute = $this->reader->firstClassMetadata($reflection, Queueable::class);
         if ($attribute !== null) {
