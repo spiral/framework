@@ -18,7 +18,7 @@ abstract class AbstractBroadcast implements BroadcastInterface
      */
     protected function formatTopics(array $topics): array
     {
-        return array_map(fn($topic) => (string)$topic, $topics);
+        return array_map(fn ($topic) => (string)$topic, $topics);
     }
 
     /**
