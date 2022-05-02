@@ -7,7 +7,6 @@ namespace Spiral\Boot\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Memory;
 use Spiral\Boot\MemoryInterface;
-use Spiral\Debug\Dumper;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Logger;
@@ -27,7 +26,6 @@ final class CoreBootloader extends Bootloader
         MemoryInterface::class                  => [self::class, 'memory'],
 
         // debug and logging services
-        Dumper::class                           => Dumper::class,
         Logger\ListenerRegistryInterface::class => Logger\ListenerRegistry::class,
         Logger\LogsInterface::class             => Logger\LogFactory::class,
     ];

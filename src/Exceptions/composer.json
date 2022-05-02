@@ -18,7 +18,6 @@
         "php": ">=8.1",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "spiral/dumper": "^2.14",
         "spiral/debug": "^2.14"
     },
     "require-dev": {

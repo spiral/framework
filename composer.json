@@ -22,7 +22,6 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "cocur/slugify": "^3.2",
-        "codedungeon/php-cli-colors": "^1.11",
         "defuse/php-encryption": "^2.2",
         "doctrine/annotations": "^1.12",
         "doctrine/inflector": "^1.4|^2.0",
@@ -53,7 +52,6 @@
         "files": [
             "src/Attributes/src/polyfill.php",
             "src/Boot/src/helpers.php",
-            "src/Dumper/src/helpers.php",
             "src/Framework/helpers.php",
             "src/Framework/polyfill.php",
             "src/Scaffolder/src/helpers.php",
@@ -78,10 +76,7 @@
                 "src/Hmvc/src"
             ],
             "Spiral\\Csrf\\": "src/Csrf/src",
-            "Spiral\\Debug\\": [
-                "src/Debug/src",
-                "src/Dumper/src"
-            ],
+            "Spiral\\Debug\\": "src/Debug/src",
             "Spiral\\Distribution\\": "src/Distribution/src",
             "Spiral\\DotEnv\\": "src/Bridge/Dotenv/src",
             "Spiral\\Encrypter\\": "src/Encrypter/src",
@@ -155,10 +150,7 @@
                 "src/Hmvc/tests"
             ],
             "Spiral\\Tests\\Csrf\\": "src/Csrf/tests",
-            "Spiral\\Tests\\Debug\\": [
-                "src/Debug/tests",
-                "src/Dumper/tests"
-            ],
+            "Spiral\\Tests\\Debug\\": "src/Debug/tests",
             "Spiral\\Tests\\Distribution\\": "src/Distribution/tests",
             "Spiral\\Tests\\DotEnv\\": "src/Bridge/Dotenv/tests",
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
@@ -212,7 +204,6 @@
         "spiral/debug": "self.version",
         "spiral/distribution": "self.version",
         "spiral/dotenv-bridge": "self.version",
-        "spiral/dumper": "self.version",
         "spiral/encrypter": "self.version",
         "spiral/exceptions": "self.version",
         "spiral/files": "self.version",

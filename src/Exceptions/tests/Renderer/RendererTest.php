@@ -7,7 +7,6 @@ namespace Spiral\Tests\Exceptions\Renderer;
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\TestCase;
 use Spiral\Exceptions\Renderer\ConsoleRenderer;
-use Spiral\Exceptions\Renderer\HtmlRenderer;
 use Spiral\Exceptions\Renderer\JsonRenderer;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 
@@ -85,43 +84,10 @@ class RendererTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-
     public function testConsoleRendererWithColorsBasic(): void
     {
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
-
-        $result = $handler->render(new Error(
-            'message',
-            100,
-            __FILE__,
-            __LINE__
-        ), \Spiral\Exceptions\Verbosity::BASIC);
-
-        $this->assertStringContainsString('Error', $result);
-        $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
-    }
-
-    public function testHtmlRendererDefaultBasic(): void
-    {
-        $handler = new HtmlRenderer(HtmlRenderer::DEFAULT);
-
-        $result = $handler->render(new Error(
-            'message',
-            100,
-            __FILE__,
-            __LINE__
-        ), \Spiral\Exceptions\Verbosity::BASIC);
-
-        $this->assertStringContainsString('Error', $result);
-        $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
-    }
-
-    public function testHtmlRendererInvertedBasic(): void
-    {
-        $handler = new HtmlRenderer(HtmlRenderer::INVERTED);
 
         $result = $handler->render(new Error(
             'message',
@@ -152,42 +118,6 @@ class RendererTest extends TestCase
         $this->assertStringContainsString(__FILE__, $result);
     }
 
-    public function testHtmlRendererDefaultDebug(): void
-    {
-        $this->markTestSkipped('FIXME: Very long execution time');
-
-        $handler = new HtmlRenderer(HtmlRenderer::DEFAULT);
-
-        $result = $handler->render(new Error(
-            'message',
-            100,
-            __FILE__,
-            __LINE__
-        ), \Spiral\Exceptions\Verbosity::DEBUG);
-
-        $this->assertStringContainsString('Error', $result);
-        $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
-    }
-
-    public function testHtmlRendererInvertedDebug(): void
-    {
-        $this->markTestSkipped('FIXME: Very long execution time');
-
-        $handler = new HtmlRenderer(HtmlRenderer::INVERTED);
-
-        $result = $handler->render(new Error(
-            'message',
-            100,
-            __FILE__,
-            __LINE__
-        ), \Spiral\Exceptions\Verbosity::DEBUG);
-
-        $this->assertStringContainsString('Error', $result);
-        $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
-    }
-
     public function testConsoleRendererStacktrace(): void
     {
         $handler = new ConsoleRenderer();
@@ -203,7 +133,6 @@ class RendererTest extends TestCase
         $this->assertStringContainsString('LogicException', $result);
         $this->assertStringContainsString('makeException', $result);
     }
-
 
     public function testPlainRendererStacktrace(): void
     {
@@ -231,42 +160,6 @@ class RendererTest extends TestCase
 
         $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
 
-        $this->assertStringContainsString('LogicException', $result);
-        $this->assertStringContainsString('makeException', $result);
-    }
-
-    public function testHtmlRendererStacktrace(): void
-    {
-        $this->markTestSkipped('FIXME: Very long execution time');
-
-        $handler = new HtmlRenderer(HtmlRenderer::DEFAULT);
-
-        try {
-            $this->makeException();
-        } catch (\Throwable $e) {
-        }
-
-        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
-
-        $this->assertStringContainsString('RuntimeException', $result);
-        $this->assertStringContainsString('LogicException', $result);
-        $this->assertStringContainsString('makeException', $result);
-    }
-
-    public function testHtmlRendererInvertedStacktrace(): void
-    {
-        $this->markTestSkipped('FIXME: Very long execution time');
-
-        $handler = new HtmlRenderer(HtmlRenderer::INVERTED);
-
-        try {
-            $this->makeException();
-        } catch (\Throwable $e) {
-        }
-
-        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
-
-        $this->assertStringContainsString('RuntimeException', $result);
         $this->assertStringContainsString('LogicException', $result);
         $this->assertStringContainsString('makeException', $result);
     }
