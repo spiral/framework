@@ -18,6 +18,7 @@
         "php": ">=8.1",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "codedungeon/php-cli-colors": "^1.11",
         "spiral/debug": "^2.14"
     },
     "require-dev": {
