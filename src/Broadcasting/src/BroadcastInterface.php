@@ -7,8 +7,8 @@ namespace Spiral\Broadcasting;
 use Spiral\Broadcasting\Exception\BroadcastException;
 
 /**
- * @psalm-type TopicsList = non-empty-list<string> | non-empty-list<Stringable> | string | Stringable
- * @psalm-type MessagesList = non-empty-list<string> | non-empty-list<Stringable> | string | Stringable
+ * @psalm-type TopicsList = non-empty-list<string> | non-empty-list<\Stringable> | string | Stringable
+ * @psalm-type MessagesList = non-empty-list<string> | non-empty-list<\Stringable> | string | Stringable
  */
 interface BroadcastInterface
 {
