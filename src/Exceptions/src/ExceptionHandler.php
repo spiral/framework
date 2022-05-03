@@ -33,7 +33,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     public function register(): void
     {
-        \register_shutdown_function($this->handleShutdown(...));
+        \register_shutdown_function([$this, 'handleShutdown']);
         \set_error_handler($this->handleError(...));
         \set_exception_handler($this->handleGlobalException(...));
     }

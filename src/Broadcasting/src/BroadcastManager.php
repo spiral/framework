@@ -10,22 +10,18 @@ use Spiral\Core\FactoryInterface;
 
 final class BroadcastManager implements BroadcastManagerInterface, SingletonInterface
 {
-    private FactoryInterface $factory;
-    private BroadcastConfig $config;
     /** @var BroadcastInterface[] */
     private array $connections = [];
 
     public function __construct(
-        FactoryInterface $factory,
-        BroadcastConfig $config
+        private readonly FactoryInterface $factory,
+        private readonly BroadcastConfig $config
     ) {
-        $this->factory = $factory;
-        $this->config = $config;
     }
 
     public function connection(?string $name = null): BroadcastInterface
     {
-        $name = $name ?: $this->config->getDefaultConnection();
+        $name ??= $this->config->getDefaultConnection();
 
         // Replaces alias with real storage name
         $name = $this->config->getAliases()[$name] ?? $name;

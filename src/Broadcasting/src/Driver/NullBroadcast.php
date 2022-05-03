@@ -8,7 +8,7 @@ use Spiral\Broadcasting\BroadcastInterface;
 
 final class NullBroadcast implements BroadcastInterface
 {
-    public function publish($topics, $messages): void
+    public function publish(iterable|string|\Stringable $topics, iterable|string $messages): void
     {
         // Do nothing
     }

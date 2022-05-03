@@ -68,7 +68,7 @@ final class BroadcastConfig extends InjectableConfig
     {
         if (!isset($this->config['connections'][$name])) {
             throw new InvalidArgumentException(
-                sprintf('Config for connection `%s` is not defined.', $name)
+                \sprintf('Config for connection `%s` is not defined.', $name)
             );
         }
 
@@ -76,7 +76,7 @@ final class BroadcastConfig extends InjectableConfig
 
         if (!isset($config['driver'])) {
             throw new InvalidArgumentException(
-                sprintf('Driver for `%s` connection is not defined.', $name)
+                \sprintf('Driver for `%s` connection is not defined.', $name)
             );
         }
 

@@ -14,18 +14,11 @@ use Spiral\Broadcasting\GuardInterface;
 
 final class AuthorizationMiddleware implements MiddlewareInterface
 {
-    private ResponseFactoryInterface $responseFactory;
-    private BroadcastInterface $broadcast;
-    private ?string $authorizationPath;
-
     public function __construct(
-        BroadcastInterface $broadcast,
-        ResponseFactoryInterface $responseFactory,
-        ?string $authorizationPath = null
+        private readonly BroadcastInterface $broadcast,
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly ?string $authorizationPath = null
     ) {
-        $this->responseFactory = $responseFactory;
-        $this->broadcast = $broadcast;
-        $this->authorizationPath = $authorizationPath;
     }
 
     public function process(

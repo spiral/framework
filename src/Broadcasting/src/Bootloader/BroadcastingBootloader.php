@@ -25,11 +25,9 @@ final class BroadcastingBootloader extends Bootloader
         TopicRegistryInterface::class => [self::class, 'initTopicRegistry'],
     ];
 
-    private ConfiguratorInterface $config;
-
-    public function __construct(ConfiguratorInterface $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
     }
 
     public function registerDriverAlias(string $driverClass, string $alias): void
@@ -40,7 +38,7 @@ final class BroadcastingBootloader extends Bootloader
         );
     }
 
-    public function boot(EnvironmentInterface $env): void
+    public function init(EnvironmentInterface $env): void
     {
         $this->initConfig($env);
     }
@@ -69,11 +67,17 @@ final class BroadcastingBootloader extends Bootloader
         );
     }
 
+    /**
+     * @noRector RemoveUnusedPrivateMethodRector
+     */
     private function initDefaultBroadcast(BroadcastManagerInterface $manager): BroadcastInterface
     {
         return $manager->connection();
     }
 
+    /**
+     * @noRector RemoveUnusedPrivateMethodRector
+     */
     private function initTopicRegistry(BroadcastConfig $config): TopicRegistryInterface
     {
         return new TopicRegistry($config->getTopics());
