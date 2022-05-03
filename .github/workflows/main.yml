@@ -165,7 +165,7 @@ jobs:
 
       # Execution
       - name: Check Coding Standards
-        run: vendor/bin/phpcs --standard=phpcs.xml
+        run: vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -vvv --dry-run --using-cache=no
 
   #
   # Execute unit tests on all valid PHP versions.
