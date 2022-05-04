@@ -26,7 +26,7 @@ final class ValidationProvider implements SingletonInterface
     public function getValidation(string $name, array $params = []): ValidationInterface
     {
         if (!isset($this->validations[$name])) {
-            throw new ValidationException(\sprintf("Validation with name `%s` is not registered.", $name));
+            throw new ValidationException(\sprintf('Validation with name `%s` is not registered.', $name));
         }
 
         return $this->invoker->invoke(
