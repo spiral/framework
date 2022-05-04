@@ -43,8 +43,6 @@
         "symfony/console": "^6.0",
         "symfony/finder": "^5.3.7|^6.0",
         "symfony/mailer": "^5.1|^6.0",
-        "symfony/polyfill-php73": "^1.22",
-        "symfony/polyfill-php80": "^1.22",
         "symfony/translation": "^5.1|^6.0",
         "vlucas/phpdotenv": "^5.4",
         "nyholm/psr7": "^1.5.0"
@@ -54,7 +52,6 @@
             "src/Attributes/src/polyfill.php",
             "src/Boot/src/helpers.php",
             "src/Framework/helpers.php",
-            "src/Framework/polyfill.php",
             "src/Scaffolder/src/helpers.php",
             "src/Stempler/src/helpers.php",
             "src/Translator/src/helpers.php"
