@@ -25,8 +25,6 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
 {
     use LoggerTrait;
 
-    private ?string $fallbackFormat = 'text/html';
-
     public function __construct(
         private readonly SuppressErrorsInterface $suppressErrors,
         private readonly RendererInterface $renderer,

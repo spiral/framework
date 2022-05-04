@@ -16,9 +16,7 @@ abstract class AbstractBroadcast implements BroadcastInterface
      */
     protected function formatTopics(array $topics): array
     {
-        return array_map(function ($topic) {
-            return (string)$topic;
-        }, $topics);
+        return \array_map(fn (string|\Stringable $topic) => (string) $topic, $topics);
     }
 
     /**
@@ -26,17 +24,12 @@ abstract class AbstractBroadcast implements BroadcastInterface
      * @param iterable<T>|T $entries
      * @return array<T>
      */
-    protected function toArray($entries): array
+    protected function toArray(iterable|string|\Stringable $entries): array
     {
-        switch (true) {
-            case \is_array($entries):
-                return $entries;
-
-            case $entries instanceof \Traversable:
-                return \iterator_to_array($entries, false);
-
-            default:
-                return [$entries];
-        }
+        return match (true) {
+            \is_array($entries) => $entries,
+            $entries instanceof \Traversable => \iterator_to_array($entries, false),
+            default => [$entries],
+        };
     }
 }

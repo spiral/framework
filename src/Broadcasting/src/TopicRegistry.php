@@ -23,7 +23,7 @@ class TopicRegistry implements TopicRegistryInterface
     public function findCallback(string $topic, array &$matches): ?callable
     {
         foreach ($this->patterns as $pattern => $callback) {
-            if (preg_match($pattern, $topic, $matches)) {
+            if (\preg_match($pattern, $topic, $matches)) {
                 return $callback;
             }
         }
@@ -34,13 +34,13 @@ class TopicRegistry implements TopicRegistryInterface
     private function compilePattern(string $topic): string
     {
         $replaces = [];
-        if (preg_match_all('/\{(\w+):?(.*?)?\}/', $topic, $matches)) {
-            $variables = array_combine($matches[1], $matches[2]);
+        if (\preg_match_all('/\{(\w+):?(.*?)?\}/', $topic, $matches)) {
+            $variables = \array_combine($matches[1], $matches[2]);
             foreach ($variables as $key => $_) {
                 $replaces['{' . $key . '}'] = '(?P<' . $key . '>[^\/\.]+)';
             }
         }
 
-        return '/^' . strtr($topic, $replaces + ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.']) . '$/iu';
+        return '/^' . \strtr($topic, $replaces + ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.']) . '$/iu';
     }
 }

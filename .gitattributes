@@ -6,3 +6,4 @@
 .travis.yml export-ignore
 phpunit.xml export-ignore
 monorepo-builder.php export-ignore
+.php-cs-fixer.dist.php export-ignore

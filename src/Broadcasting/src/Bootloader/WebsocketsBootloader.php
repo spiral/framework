@@ -20,7 +20,7 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
         BroadcastingBootloader::class,
     ];
 
-    public function start(Container $container, HttpBootloader $http, BroadcastConfig $config): void
+    public function boot(Container $container, HttpBootloader $http, BroadcastConfig $config): void
     {
         $container->bindSingleton(AuthorizationMiddleware::class, static function (
             BroadcastInterface $broadcast,
