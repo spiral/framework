@@ -15,7 +15,7 @@ final class IsSecure extends Input
 {
     public function getValue(InputInterface $input, \ReflectionProperty $property): bool
     {
-        return $input->getValue('isSecure');
+        return $input->getValue($this->getSchema($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string

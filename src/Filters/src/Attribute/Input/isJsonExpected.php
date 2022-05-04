@@ -20,7 +20,7 @@ final class IsJsonExpected extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): bool
     {
-        return $input->getValue('isJsonExpected', $this->softMatch);
+        return $input->getValue($this->getSchema($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string

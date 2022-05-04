@@ -20,11 +20,11 @@ final class Header extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
-        return $input->getValue('header', $this->key ?? $property->getName());
+        return $input->getValue('header', $this->getKey($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'header:' . ($this->key ?? $property->getName());
+        return 'header:' . $this->getKey($property);
     }
 }

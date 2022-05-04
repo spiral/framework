@@ -16,7 +16,7 @@ final class Uri extends Input
 {
     public function getValue(InputInterface $input, \ReflectionProperty $property): UriInterface
     {
-        return $input->getValue('uri');
+        return $input->getValue($this->getSchema($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string

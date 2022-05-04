@@ -15,7 +15,7 @@ final class RemoteAddress extends Input
 {
     public function getValue(InputInterface $input, \ReflectionProperty $property): ?string
     {
-        return $input->getValue('remoteAddress');
+        return $input->getValue($this->getSchema($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string

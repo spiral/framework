@@ -20,11 +20,11 @@ final class Route extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
-        return $input->getValue('attribute', 'matches.' . ($this->key ?? $property->getName()));
+        return $input->getValue('attribute', 'matches.' . $this->getKey($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'attribute:matches.' . ($this->key ?? $property->getName());
+        return 'attribute:matches.' . $this->getKey($property);
     }
 }

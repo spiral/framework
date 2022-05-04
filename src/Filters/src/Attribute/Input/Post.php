@@ -20,11 +20,11 @@ final class Post extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
-        return $input->getValue('post', $this->key ?? $property->getName());
+        return $input->getValue('post', $this->getKey($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'post:' . ($this->key ?? $property->getName());
+        return 'post:' . $this->getKey($property);
     }
 }

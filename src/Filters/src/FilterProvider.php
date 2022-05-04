@@ -41,7 +41,7 @@ final class FilterProvider implements FilterProviderInterface
         try {
             $data = $inputMapper->map($schema, $input);
         } catch (ValidationException $e) {
-            $errors = \array_merge($errors, $e->getErrors());
+            $errors = \array_merge($errors, $e->errors);
         }
 
         $bag = new FilterBag(

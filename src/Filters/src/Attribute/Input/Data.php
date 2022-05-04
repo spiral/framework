@@ -20,11 +20,11 @@ final class Data extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
-        return $input->getValue('data', $this->key ?? $property->getName());
+        return $input->getValue('data', $this->getKey($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'data:' . ($this->key ?? $property->getName());
+        return 'data:' . $this->getKey($property);
     }
 }

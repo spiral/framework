@@ -53,9 +53,9 @@ final class AttributeMapper
                         $this->setValue($filter, $property, $value);
                     } catch (ValidationException $e) {
                         if ($attribute->prefix) {
-                            $this->errors[$attribute->prefix] = $e->getErrors();
+                            $this->errors[$attribute->prefix] = $e->errors;
                         } else {
-                            $this->errors = \array_merge($this->errors, $e->getErrors());
+                            $this->errors = \array_merge($this->errors, $e->errors);
                         }
                     }
 
@@ -74,7 +74,7 @@ final class AttributeMapper
                                     $input->withPrefix($prefix . '.' . $key)
                                 );
                             } catch (ValidationException $e) {
-                                $this->errors[$property->getName()][$key] = $e->getErrors();
+                                $this->errors[$property->getName()][$key] = $e->errors;
                             }
                         }
                     }

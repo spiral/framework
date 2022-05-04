@@ -20,11 +20,11 @@ final class Cookie extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
-        return $input->getValue('cookie', $this->key ?? $property->getName());
+        return $input->getValue('cookie', $this->getKey($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'cookie:' . ($this->key ?? $property->getName());
+        return 'cookie:' . $this->getKey($property);
     }
 }

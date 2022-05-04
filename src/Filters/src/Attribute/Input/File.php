@@ -21,11 +21,11 @@ class File extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): ?UploadedFileInterface
     {
-        return $input->getValue('file', $this->key ?? $property->getName());
+        return $input->getValue('file', $this->getKey($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'file:' . ($this->key ?? $property->getName());
+        return 'file:' . $this->getKey($property);
     }
 }

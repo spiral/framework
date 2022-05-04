@@ -21,11 +21,11 @@ final class Server extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
-        return $input->getValue('server', $this->key ?? $property->getName());
+        return $input->getValue('server', $this->getKey($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'server:' . ($this->key ?? $property->getName());
+        return 'server:' . $this->getKey($property);
     }
 }

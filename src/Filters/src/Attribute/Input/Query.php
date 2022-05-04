@@ -20,11 +20,11 @@ final class Query extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
-        return $input->getValue('query', $this->key ?? $property->getName());
+        return $input->getValue('query', $this->getKey($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'query:' . ($this->key ?? $property->getName());
+        return 'query:' . $this->getKey($property);
     }
 }

@@ -20,11 +20,11 @@ final class Attribute extends Input
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
-        return $input->getValue('attribute', $this->key ?? $property->getName());
+        return $input->getValue('attribute', $this->getKey($property));
     }
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'attribute:' . ($this->key ?? $property->getName());
+        return 'attribute:'.$this->getKey($property);
     }
 }
