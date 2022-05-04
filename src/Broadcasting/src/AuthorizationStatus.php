@@ -9,32 +9,11 @@ use Psr\Http\Message\ResponseInterface;
 final class AuthorizationStatus
 {
     public function __construct(
-        private readonly bool $success,
-        private readonly array $topics,
-        private readonly array $attributes = [],
-        private readonly ?ResponseInterface $response = null
+        public readonly bool $success,
+        public readonly array $topics,
+        public readonly array $attributes = [],
+        public readonly ?ResponseInterface $response = null
     ) {
-    }
-
-    /**
-     * Check if authorization status is successful.
-     */
-    public function isSuccessful(): bool
-    {
-        return $this->success;
-    }
-
-    /**
-     * Get list of authorized topics.
-     */
-    public function getTopics(): array
-    {
-        return $this->topics;
-    }
-
-    public function getAttributes(): array
-    {
-        return $this->attributes;
     }
 
     /**
@@ -43,13 +22,5 @@ final class AuthorizationStatus
     public function hasResponse(): bool
     {
         return $this->response !== null;
-    }
-
-    /**
-     * Get response object.
-     */
-    public function getResponse(): ?ResponseInterface
-    {
-        return $this->response;
     }
 }

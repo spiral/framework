@@ -33,10 +33,10 @@ final class AuthorizationMiddleware implements MiddlewareInterface
             $status = $this->broadcast->authorize($request);
 
             if ($status->hasResponse()) {
-                return $status->getResponse();
+                return $status->response;
             }
 
-            if (!$status->isSuccessful()) {
+            if (!$status->success) {
                 return $this->responseFactory->createResponse(403);
             }
         }

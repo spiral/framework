@@ -14,28 +14,28 @@ final class AuthorizationStatusTest extends TestCase
     public function testIsSuccessful(): void
     {
         $false = new AuthorizationStatus(false, []);
-        $this->assertFalse($false->isSuccessful());
+        $this->assertFalse($false->success);
 
         $true = new AuthorizationStatus(true, []);
-        $this->assertTrue($true->isSuccessful());
+        $this->assertTrue($true->success);
     }
 
     public function testGetsTopics(): void
     {
         $status = new AuthorizationStatus(false, $topics = ['topic1', 'topic2']);
-        $this->assertSame($topics, $status->getTopics());
+        $this->assertSame($topics, $status->topics);
     }
 
     public function testGetsAttributes(): void
     {
         $status = new AuthorizationStatus(false, ['topic1'], $attributes = ['foo' => 'bar']);
-        $this->assertSame($attributes, $status->getAttributes());
+        $this->assertSame($attributes, $status->attributes);
     }
 
     public function testGetsNullResponse(): void
     {
         $status = new AuthorizationStatus(false, ['topic1'], ['foo' => 'bar']);
-        $this->assertNull($status->getResponse());
+        $this->assertNull($status->response);
         $this->assertFalse($status->hasResponse());
     }
 
@@ -48,7 +48,7 @@ final class AuthorizationStatusTest extends TestCase
             $response = m::mock(ResponseInterface::class)
         );
 
-        $this->assertSame($response, $status->getResponse());
+        $this->assertSame($response, $status->response);
         $this->assertTrue($status->hasResponse());
     }
 }
