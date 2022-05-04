@@ -35,7 +35,7 @@ use Symfony\Component\Mailer\Transport;
 /**
  * Enables email sending pipeline.
  */
-final class MailerBootloader extends Bootloader
+class MailerBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         JobsBootloader::class,
