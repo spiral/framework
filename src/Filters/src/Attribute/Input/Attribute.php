@@ -25,6 +25,6 @@ final class Attribute extends Input
 
     public function getSchema(\ReflectionProperty $property): string
     {
-        return 'attribute:'.$this->getKey($property);
+        return 'attribute:' . $this->getKey($property);
     }
 }
