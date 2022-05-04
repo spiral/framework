@@ -13,7 +13,7 @@ use Spiral\Filters\InputInterface;
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class Method extends Input
 {
-    public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
+    public function getValue(InputInterface $input, \ReflectionProperty $property): string
     {
         return $input->getValue('method');
     }

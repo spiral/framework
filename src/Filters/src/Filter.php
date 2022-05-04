@@ -16,4 +16,17 @@ namespace Spiral\Filters;
  */
 abstract class Filter implements FilterInterface
 {
+    private array $data = [];
+
+    public function withData(array $data): FilterInterface
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
+    }
 }

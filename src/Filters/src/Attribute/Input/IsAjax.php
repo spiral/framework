@@ -13,7 +13,7 @@ use Spiral\Filters\InputInterface;
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class IsAjax extends Input
 {
-    public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
+    public function getValue(InputInterface $input, \ReflectionProperty $property): bool
     {
         return $input->getValue('isAjax');
     }

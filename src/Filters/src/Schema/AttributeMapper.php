@@ -24,6 +24,9 @@ final class AttributeMapper
     ) {
     }
 
+    /**
+     * @return array{0: array, 1: array}
+     */
     public function map(FilterInterface $filter, InputInterface $input): array
     {
         $schema = [];
@@ -87,12 +90,7 @@ final class AttributeMapper
             }
         }
 
-        return $schema;
-    }
-
-    public function getErrors(): array
-    {
-        return $this->errors;
+        return [$schema, $this->errors];
     }
 
     private function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void

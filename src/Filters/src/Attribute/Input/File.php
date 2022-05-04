@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Attribute\Input;
 
+use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class File extends Input
+class File extends Input
 {
     /**
      * @param non-empty-string|null $key
@@ -18,7 +19,7 @@ final class File extends Input
     ) {
     }
 
-    public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
+    public function getValue(InputInterface $input, \ReflectionProperty $property): ?UploadedFileInterface
     {
         return $input->getValue('file', $this->key ?? $property->getName());
     }

@@ -19,9 +19,6 @@ final class Server extends Input
     ) {
     }
 
-    /**
-     * @return UriInterface
-     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $input->getValue('server', $this->key ?? $property->getName());

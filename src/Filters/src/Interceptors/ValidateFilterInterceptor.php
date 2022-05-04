@@ -13,7 +13,7 @@ use Spiral\Filters\FilterBag;
 use Spiral\Filters\FilterInterface;
 use Spiral\Filters\HasFilterDefinition;
 use Spiral\Filters\ShouldBeValidated;
-use Spiral\Validation\ValidationManager;
+use Spiral\Validation\ValidationProvider;
 
 class ValidateFilterInterceptor implements CoreInterceptorInterface
 {
@@ -44,7 +44,7 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
 
         if ($definition instanceof ShouldBeValidated) {
             $errorMapper = new ErrorMapper($bag->schema);
-            $manager = $this->container->get(ValidationManager::class);
+            $manager = $this->container->get(ValidationProvider::class);
 
             $validator = $manager->getValidation($definition::class)
                 ->validate($bag, $definition->validationRules(), $context);

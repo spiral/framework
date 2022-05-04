@@ -24,9 +24,7 @@ final class FilterProvider implements FilterProviderInterface
         $filter = $this->createFilterInstance($name);
 
         $attributeMapper = $this->container->get(Schema\AttributeMapper::class);
-        $mappingSchema = $attributeMapper->map($filter, $input);
-
-        $errors = $attributeMapper->getErrors();
+        [$mappingSchema, $errors] = $attributeMapper->map($filter, $input);
 
         if ($filter instanceof HasFilterDefinition) {
             $mappingSchema = \array_merge(
