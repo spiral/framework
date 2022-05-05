@@ -25,9 +25,9 @@ use Spiral\Queue\Bootloader\QueueBootloader;
 use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\SendIt\Config\MailerConfig;
+use Spiral\SendIt\JsonJobSerializer;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
-use Spiral\SendIt\MessageSerializer;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mailer\Transport;
@@ -74,7 +74,7 @@ class MailerBootloader extends Bootloader
             // Will be removed since v3.0
             $registry = $container->get(JobRegistry::class);
             $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
-            $registry->setSerializer(MailQueue::JOB_NAME, MessageSerializer::class);
+            $registry->setSerializer(MailQueue::JOB_NAME, JsonJobSerializer::class);
             $container->bindSingleton(
                 MailerInterface::class,
                 static function (MailerConfig $config) use ($container) {
