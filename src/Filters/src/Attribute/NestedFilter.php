@@ -8,7 +8,7 @@ use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
 
 #[Attribute(Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-class NestedFilter
+final class NestedFilter
 {
     /**
      * @param class-string $class

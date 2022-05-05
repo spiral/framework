@@ -10,7 +10,7 @@ use Spiral\Filters\Attribute\Input\Input;
 use Spiral\Filters\InputInterface;
 
 #[Attribute(Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-class NestedArray
+final class NestedArray
 {
     /**
      * @param class-string $class
@@ -23,9 +23,6 @@ class NestedArray
     ) {
     }
 
-    /**
-     * @return array
-     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $this->input->getValue($input, $property);
