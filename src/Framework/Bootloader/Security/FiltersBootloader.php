@@ -33,7 +33,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
     /**
      * Declare Filter injection.
      */
-    public function boot(): void
+    public function init(): void
     {
         $this->container->bindInjector(Filter::class, self::class);
     }

@@ -13,7 +13,7 @@ use Spiral\Core\Container;
 
 class AttributesBootloader extends Bootloader
 {
-    public function boot(Container $container): void
+    public function init(Container $container): void
     {
         $container->bindSingleton(ReaderInterface::class, function () use ($container) {
             $factory = new Factory();

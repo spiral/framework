@@ -18,13 +18,12 @@
         "php": ">=8.1",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "spiral/core": "^2.13",
-        "spiral/files": "^2.13",
-        "spiral/streams": "^2.13",
+        "spiral/core": "^2.14",
+        "spiral/files": "^2.14",
+        "spiral/streams": "^2.14",
         "psr/http-message": "^1.0",
         "psr/http-factory": "^1.0",
-        "psr/http-server-middleware": "^1.0",
-        "symfony/polyfill-php80": "^1.22"
+        "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5.5",
@@ -44,7 +43,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.13.x-dev"
+            "dev-master": "2.14.x-dev"
         }
     },
     "config": {

@@ -70,7 +70,8 @@ class TestApp extends Boot\AbstractKernel
         return array_merge([
             'vendor'  => $directories['root'] . '/vendor/',
             'runtime' => $directories['root'] . '/runtime/',
-            'config'  => $directories['app'] . '/config/'
+            'config'  => $directories['app'] . '/config/',
+            'resources' => $directories['root'] . '/resources/',
         ], $directories);
     }
 }

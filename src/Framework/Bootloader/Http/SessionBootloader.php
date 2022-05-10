@@ -16,11 +16,6 @@ use Spiral\Session\SessionFactoryInterface;
 
 final class SessionBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        HttpBootloader::class,
-        CookiesBootloader::class,
-    ];
-
     protected const SINGLETONS = [
         SessionFactoryInterface::class => SessionFactory::class,
     ];
@@ -29,7 +24,7 @@ final class SessionBootloader extends Bootloader
      * Automatically registers session starter middleware and excludes session cookie from
      * cookie protection.
      */
-    public function boot(
+    public function init(
         ConfiguratorInterface $config,
         CookiesBootloader $cookies,
         HttpBootloader $http,

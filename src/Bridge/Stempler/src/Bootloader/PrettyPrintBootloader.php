@@ -14,7 +14,7 @@ use Spiral\Stempler\Visitor\FormatHTML;
  */
 final class PrettyPrintBootloader extends Bootloader
 {
-    public function boot(StemplerBootloader $stempler): void
+    public function init(StemplerBootloader $stempler): void
     {
         $stempler->addVisitor(FlattenNodes::class, Builder::STAGE_COMPILE);
         $stempler->addVisitor(FormatHTML::class, Builder::STAGE_COMPILE);

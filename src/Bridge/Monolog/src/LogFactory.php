@@ -20,9 +20,6 @@ use Spiral\Monolog\Exception\ConfigException;
 
 final class LogFactory implements LogsInterface, InjectorInterface, ResettableInterface
 {
-    // Default logger channel (supplied via injection)
-    public const DEFAULT = 'default';
-
     private ?LoggerInterface $default = null;
     private readonly HandlerInterface $eventHandler;
 
@@ -36,16 +33,18 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
 
     public function getLogger(string $channel = null): LoggerInterface
     {
-        if ($channel === null || $channel === self::DEFAULT) {
+        $default = $this->config->getDefault();
+
+        if ($channel === null || $channel === $default) {
             if ($this->default !== null) {
                 // we should use only one default logger per system
                 return $this->default;
             }
 
             return $this->default = new Logger(
-                self::DEFAULT,
-                $this->getHandlers(self::DEFAULT),
-                $this->getProcessors(self::DEFAULT)
+                $default,
+                $this->getHandlers($default),
+                $this->getProcessors($default)
             );
         }
 

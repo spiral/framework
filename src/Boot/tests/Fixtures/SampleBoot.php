@@ -25,7 +25,7 @@ class SampleBoot extends Bootloader
         BootloaderB::class,
     ];
 
-    public function boot(BinderInterface $binder): void
+    public function init(BinderInterface $binder): void
     {
         $binder->bind('cde', new SampleClass());
     }

@@ -29,7 +29,7 @@ class ScaffolderBootloader extends Bootloader
     ) {
     }
 
-    public function boot(ConsoleBootloader $console): void
+    public function init(ConsoleBootloader $console): void
     {
         $console->addCommand(Command\BootloaderCommand::class);
         $console->addCommand(Command\CommandCommand::class);
