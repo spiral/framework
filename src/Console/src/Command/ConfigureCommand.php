@@ -14,7 +14,7 @@ final class ConfigureCommand extends SequenceCommand
 
     public function perform(ConsoleConfig $config, ContainerInterface $container): int
     {
-        $this->info("Configuring project:");
+        $this->info('Configuring project:');
         $this->newLine();
 
         return $this->runSequence($config->configureSequence(), $container);

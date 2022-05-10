@@ -39,7 +39,7 @@ final class Parser
      */
     private function parseName(string $signature): string
     {
-        if (! \preg_match('/\S+/', $signature, $matches)) {
+        if (!\preg_match('/\S+/', $signature, $matches)) {
             throw new InvalidArgumentException('Unable to determine command name from signature.');
         }
 

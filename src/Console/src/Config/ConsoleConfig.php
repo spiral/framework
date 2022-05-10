@@ -39,7 +39,7 @@ final class ConsoleConfig extends InjectableConfig
      */
     public function getCommands(): array
     {
-        if (! \array_key_exists('commands', $this->config)) {
+        if (!\array_key_exists('commands', $this->config)) {
             //Legacy config support
             return [];
         }

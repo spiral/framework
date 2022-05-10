@@ -54,7 +54,7 @@ abstract class Command extends SymfonyCommand
         try {
             [$this->input, $this->output] = [$input, $output];
 
-            if (! $this->confirmToPerform()) {
+            if (!$this->confirmToPerform()) {
                 return Command::FAILURE;
             }
 
@@ -63,30 +63,6 @@ abstract class Command extends SymfonyCommand
         } finally {
             [$this->input, $this->output] = [null, null];
         }
-    }
-
-    private function confirmToPerform(): bool
-    {
-        $definition = $this->getConfirmationDefinition();
-        if ($definition === null || !$definition->shouldBeConfirmed()) {
-            return true;
-        }
-
-        if ($this->hasOption('force') && $this->option('force')) {
-            return true;
-        }
-
-        $this->alert($definition->getWarningMessage());
-
-        $confirmed = $this->confirm(\sprintf('Do you really wish to run command [%s]?', $this->getName()));
-
-        if (! $confirmed) {
-            $this->comment('Command Canceled!');
-
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -145,5 +121,29 @@ abstract class Command extends SymfonyCommand
     protected function getConfirmationDefinition(): ?ConfirmationDefinitionInterface
     {
         return null;
+    }
+
+    private function confirmToPerform(): bool
+    {
+        $definition = $this->getConfirmationDefinition();
+        if ($definition === null || !$definition->shouldBeConfirmed()) {
+            return true;
+        }
+
+        if ($this->hasOption('force') && $this->option('force')) {
+            return true;
+        }
+
+        $this->alert($definition->getWarningMessage());
+
+        $confirmed = $this->confirm(\sprintf('Do you really wish to run command [%s]?', $this->getName()));
+
+        if (!$confirmed) {
+            $this->comment('Command Canceled!');
+
+            return false;
+        }
+
+        return true;
     }
 }

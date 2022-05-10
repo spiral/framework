@@ -102,7 +102,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     ): void {
         $this->config->modify(
             ConsoleConfig::CONFIG,
-            $this->sequence('sequences.'.$name, $sequence, $header, $footer, $options)
+            $this->sequence('sequences.' . $name, $sequence, $header, $footer, $options)
         );
     }
 
