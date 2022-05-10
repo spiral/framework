@@ -33,7 +33,7 @@ final class Resolver implements ResolverInterface
     private FactoryInterface $factory;
     private ContainerInterface $container;
 
-    public function __construct(Constructor $constructor)
+    public function __construct(Registry $constructor)
     {
         $constructor->set('resolver', $this);
 

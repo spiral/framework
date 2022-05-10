@@ -22,7 +22,7 @@ final class Invoker implements InvokerInterface
     private ContainerInterface $container;
     private ResolverInterface $resolver;
 
-    public function __construct(Constructor $constructor)
+    public function __construct(Registry $constructor)
     {
         $constructor->set('invoker', $this);
 

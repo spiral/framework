@@ -55,7 +55,7 @@ final class Container implements
      */
     public function __construct(Config $config = new Config())
     {
-        $constructor = new Internal\Constructor($config, [
+        $constructor = new Internal\Registry($config, [
             'state' => new Internal\State(),
         ]);
         foreach ($config as $property => $class) {

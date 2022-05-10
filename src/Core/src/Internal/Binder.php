@@ -22,7 +22,7 @@ final class Binder implements BinderInterface
     private State $state;
     private ContainerInterface $container;
 
-    public function __construct(Constructor $constructor)
+    public function __construct(Registry $constructor)
     {
         $constructor->set('binder', $this);
 

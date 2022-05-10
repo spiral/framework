@@ -9,7 +9,7 @@ use Spiral\Core\Config;
 /**
  * @internal
  */
-final class Constructor
+final class Registry
 {
     /**
      * @param array<string, object> $objects

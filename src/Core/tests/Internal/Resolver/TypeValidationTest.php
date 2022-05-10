@@ -16,7 +16,7 @@ use Spiral\Core\Exception\Resolver\MissingRequiredArgumentException;
 use Spiral\Core\Exception\Resolver\PositionalArgumentException;
 use Spiral\Core\Exception\Resolver\UnknownParameterException;
 use Spiral\Core\Exception\Resolver\ValidationException;
-use Spiral\Core\Internal\Constructor;
+use Spiral\Core\Internal\Registry;
 use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\State;
 use Spiral\Core\ResolverInterface;
@@ -29,7 +29,7 @@ use Traversable;
 
 final class TypeValidationTest extends TestCase
 {
-    protected Constructor $constructor;
+    protected Registry $constructor;
     protected Config $config;
 
     // Successful cases
@@ -317,7 +317,7 @@ final class TypeValidationTest extends TestCase
     protected function setUp(): void
     {
         $this->config = new Config();
-        $this->constructor = new Constructor($this->config, [
+        $this->constructor = new Registry($this->config, [
             'state' => new State(),
         ]);
         parent::setUp();

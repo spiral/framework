@@ -19,7 +19,7 @@ final class Container implements ContainerInterface
     private State $state;
     private FactoryInterface $factory;
 
-    public function __construct(Constructor $constructor)
+    public function __construct(Registry $constructor)
     {
         $constructor->set('container', $this);
 
