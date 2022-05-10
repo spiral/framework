@@ -52,8 +52,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
             ConsoleConfig::CONFIG,
             [
                 'commands' => [],
-                'configure' => [],
-                'update' => [],
+                'sequences' => [],
             ]
         );
 
@@ -82,10 +81,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string $footer = '',
         array $options = []
     ): void {
-        $this->config->modify(
-            ConsoleConfig::CONFIG,
-            $this->sequence('configure', $sequence, $header, $footer, $options)
-        );
+        $this->addSequence('configure', $sequence, $header, $footer, $options);
     }
 
     public function addUpdateSequence(
@@ -94,9 +90,19 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string $footer = '',
         array $options = []
     ): void {
+        $this->addSequence('update', $sequence, $header, $footer, $options);
+    }
+
+    public function addSequence(
+        string $name,
+        string|array|\Closure $sequence,
+        string $header,
+        string $footer = '',
+        array $options = []
+    ): void {
         $this->config->modify(
             ConsoleConfig::CONFIG,
-            $this->sequence('update', $sequence, $header, $footer, $options)
+            $this->sequence('sequences.'.$name, $sequence, $header, $footer, $options)
         );
     }
 

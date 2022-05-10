@@ -18,11 +18,10 @@ final class ConsoleConfig extends InjectableConfig
      * @var array
      */
     protected $config = [
-        'name'      => null,
-        'version'   => null,
-        'commands'  => [],
-        'configure' => [],
-        'update'    => [],
+        'name' => null,
+        'version' => null,
+        'commands' => [],
+        'sequences' => [],
     ];
 
     public function getName(): string
@@ -40,13 +39,30 @@ final class ConsoleConfig extends InjectableConfig
      */
     public function getCommands(): array
     {
-        if (!\array_key_exists('commands', $this->config)) {
+        if (! \array_key_exists('commands', $this->config)) {
             //Legacy config support
             return [];
         }
 
         return $this->config['commands'];
     }
+
+    /**
+     * Get list of sequences with given name.
+     *
+     * @return \Generator|SequenceInterface[]
+     *
+     * @throws ConfigException
+     */
+    public function getSequence(string $name): \Generator
+    {
+        $sequence = (array)($this->config['sequences'][$name] ?? []);
+
+        foreach ($sequence as $item) {
+            yield $this->parseSequence($item);
+        }
+    }
+
 
     /**
      * Get list of configure sequences.
@@ -57,10 +73,7 @@ final class ConsoleConfig extends InjectableConfig
      */
     public function configureSequence(): \Generator
     {
-        $sequence = $this->config['configure'] ?? $this->config['configureSequence'] ?? [];
-        foreach ($sequence as $item) {
-            yield $this->parseSequence($item);
-        }
+        return $this->getSequence('configure');
     }
 
     /**
@@ -72,10 +85,7 @@ final class ConsoleConfig extends InjectableConfig
      */
     public function updateSequence(): \Generator
     {
-        $sequence = $this->config['update'] ?? $this->config['updateSequence'] ?? [];
-        foreach ($sequence as $item) {
-            yield $this->parseSequence($item);
-        }
+        return $this->getSequence('update');
     }
 
     /**
@@ -108,9 +118,11 @@ final class ConsoleConfig extends InjectableConfig
             );
         }
 
-        throw new ConfigException(\sprintf(
-            'Unable to parse sequence `%s`.',
-            \json_encode($item, JSON_THROW_ON_ERROR)
-        ));
+        throw new ConfigException(
+            \sprintf(
+                'Unable to parse sequence `%s`.',
+                \json_encode($item, JSON_THROW_ON_ERROR)
+            )
+        );
     }
 }

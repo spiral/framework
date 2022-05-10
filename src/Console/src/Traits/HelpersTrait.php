@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Console\Traits;
 
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Trait expect command to set $output and $input scopes.
@@ -34,11 +36,27 @@ trait HelpersTrait
     }
 
     /**
+     * Determine if the input option is present.
+     */
+    protected function hasOption(string $name): bool
+    {
+        return $this->input->hasOption($name);
+    }
+
+    /**
      * Input option.
      */
     protected function option(string $name): mixed
     {
         return $this->input->getOption($name);
+    }
+
+    /**
+     * Determine if the input argument is present.
+     */
+    protected function hasArgument(string $name): bool
+    {
+        return $this->input->hasArgument($name);
     }
 
     /**
@@ -50,24 +68,137 @@ trait HelpersTrait
     }
 
     /**
+     * Asks for confirmation.
+     */
+    protected function confirm(string $question, bool $default = false): bool
+    {
+        return $this->output->confirm($question, $default);
+    }
+
+    /**
+     * Asks a question.
+     */
+    protected function ask(string $question, string $default = null): mixed
+    {
+        return $this->output->ask($question, $default);
+    }
+
+    /**
+     * Prompt the user for input but hide the answer from the console.
+     */
+    protected function secret(string $question, bool $fallback = true): mixed
+    {
+        $question = new Question($question);
+
+        $question->setHidden(true)->setHiddenFallback($fallback);
+
+        return $this->output->askQuestion($question);
+    }
+
+    /**
+     * Write a string as information output.
+     */
+    protected function info(string $string): void
+    {
+        $this->line($string, 'info');
+    }
+
+    /**
+     * Write a string as comment output.
+     */
+    protected function comment(string $string): void
+    {
+        $this->line($string, 'comment');
+    }
+
+    /**
+     * Write a string as question output.
+     */
+    protected function question(string $string): void
+    {
+        $this->line($string, 'question');
+    }
+
+    /**
+     * Write a string as error output.
+     */
+    protected function error(string $string): void
+    {
+        $this->line($string, 'error');
+    }
+
+    /**
+     * Write a string as warning output.
+     */
+    protected function warning(string $string): void
+    {
+        if (! $this->output->getFormatter()->hasStyle('warning')) {
+            $style = new OutputFormatterStyle('yellow');
+            $this->output->getFormatter()->setStyle('warning', $style);
+        }
+
+        $this->line($string, 'warning');
+    }
+
+    /**
+     * Write a string in an alert box.
+     */
+    protected function alert(string $string): void
+    {
+        $length = \mb_strlen(\strip_tags($string)) + 12;
+        $stringLines = explode("\n", wordwrap($string, 300));
+
+        $this->comment(\str_repeat('*', $length));
+        foreach ($stringLines as $line) {
+            $this->comment('*     '.$line.'     *');
+        }
+        $this->comment(\str_repeat('*', $length));
+
+        $this->newLine();
+    }
+
+    /**
+     * Write a string as standard output.
+     */
+    protected function line(string $string, string $style = null): void
+    {
+        $styled = $style ? "<$style>$string</$style>" : $string;
+
+        $this->writeln(
+            messages: $styled
+        );
+    }
+
+    /**
+     * Write a blank line.
+     */
+    protected function newLine(int $count = 1): void
+    {
+        $this->output->write(\str_repeat(\PHP_EOL, $count));
+    }
+
+    /**
      * Identical to write function but provides ability to format message. Does not add new line.
      */
     protected function sprintf(string $format, mixed ...$args): void
     {
-        $this->output->write(\sprintf($format, ...$args), false);
+        $this->write(
+            messages: \sprintf($format, ...$args),
+            newline: false
+        );
     }
 
     /**
      * Writes a message to the output.
      *
-     * @param string|array $messages The message as an array of lines or a single string
-     * @param bool         $newline  Whether to add a newline
+     * @param string|iterable $messages The message as an array of lines or a single string
+     * @param bool $newline Whether to add a newline
      *
      * @throws \InvalidArgumentException When unknown output type is given
      */
     protected function write(string|iterable $messages, bool $newline = false): void
     {
-        $this->output->write($messages, $newline);
+        $this->output->write(messages: $messages, newline: $newline);
     }
 
     /**
@@ -79,7 +210,7 @@ trait HelpersTrait
      */
     protected function writeln(string|iterable $messages): void
     {
-        $this->output->writeln($messages);
+        $this->output->writeln(messages: $messages);
     }
 
     /**

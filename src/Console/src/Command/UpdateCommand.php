@@ -9,12 +9,13 @@ use Spiral\Console\Config\ConsoleConfig;
 
 final class UpdateCommand extends SequenceCommand
 {
-    protected const NAME        = 'update';
+    protected const NAME = 'update';
     protected const DESCRIPTION = 'Update project state';
 
     public function perform(ConsoleConfig $config, ContainerInterface $container): int
     {
-        $this->writeln("<info>Updating project state:</info>\n");
+        $this->info('Updating project state:');
+        $this->newLine();
 
         return $this->runSequence($config->updateSequence(), $container);
     }

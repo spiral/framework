@@ -17,15 +17,23 @@ final class StaticLocator implements LocatorInterface
      * @param array<array-key, class-string<SymfonyCommand>> $commands
      */
     public function __construct(
-        private array $commands,
+        private readonly array $commands,
         private ContainerInterface $container = new Container()
     ) {
     }
 
+    /**
+     * @return SymfonyCommand[]
+     */
     public function locateCommands(): array
     {
         $commands = [];
         foreach ($this->commands as $command) {
+            if ($command instanceof SymfonyCommand) {
+                $commands[] = $command;
+                continue;
+            }
+
             $commands[] = $this->supportsLazyLoading($command)
                 ? $this->createLazyCommand($command)
                 : $this->container->get($command);
