@@ -6,12 +6,13 @@ namespace Spiral\Filters\Attribute;
 
 use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
+use Spiral\Filters\FilterInterface;
 
 #[Attribute(Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class NestedFilter
 {
     /**
-     * @param class-string $class
+     * @param class-string<FilterInterface> $class
      */
     public function __construct(
         public readonly string $class,

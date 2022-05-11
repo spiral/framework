@@ -18,11 +18,9 @@ abstract class Filter implements FilterInterface
 {
     private array $data = [];
 
-    public function withData(array $data): FilterInterface
+    public function setData(array $data): void
     {
         $this->data = $data;
-
-        return $this;
     }
 
     public function getData(): array

@@ -14,17 +14,16 @@ final class FilterProvider implements FilterProviderInterface
     public function __construct(
         private readonly Container $container,
         private readonly CoreInterface $core,
+        private readonly Schema\InputMapper $inputMapper,
+        private readonly Schema\Builder $schemaBuilder,
+        private readonly Schema\AttributeMapper $attributeMapper
     ) {
     }
 
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
-        $inputMapper = $this->container->get(Schema\InputMapper::class);
-
         $filter = $this->createFilterInstance($name);
-
-        $attributeMapper = $this->container->get(Schema\AttributeMapper::class);
-        [$mappingSchema, $errors] = $attributeMapper->map($filter, $input);
+        [$mappingSchema, $errors] = $this->attributeMapper->map($filter, $input);
 
         if ($filter instanceof HasFilterDefinition) {
             $mappingSchema = \array_merge(
@@ -33,26 +32,19 @@ final class FilterProvider implements FilterProviderInterface
             );
         }
 
-        $builder = $this->container->get(Schema\Builder::class);
-        $schema = $builder->makeSchema($name, $mappingSchema);
+        $schema = $this->schemaBuilder->makeSchema($name, $mappingSchema);
 
         $data = [];
 
         try {
-            $data = $inputMapper->map($schema, $input);
+            $data = $this->inputMapper->map($schema, $input);
         } catch (ValidationException $e) {
             $errors = \array_merge($errors, $e->errors);
         }
 
-        $bag = new FilterBag(
-            $filter,
-            new SchematicEntity($data, $schema),
-            $schema
-        );
-
+        $entity = new SchematicEntity($data, $schema);
         return $this->core->callAction($name, 'handle', [
-            'filterBag' => $bag,
-            'errors' => $errors,
+            'filterBag' => new FilterBag($filter, $entity, $schema, $errors),
         ]);
     }
 

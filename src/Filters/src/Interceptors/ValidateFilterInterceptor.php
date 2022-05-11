@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Interceptors;
 
+use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
@@ -13,12 +14,13 @@ use Spiral\Filters\FilterBag;
 use Spiral\Filters\FilterInterface;
 use Spiral\Filters\HasFilterDefinition;
 use Spiral\Filters\ShouldBeValidated;
-use Spiral\Validation\ValidationProvider;
+use Spiral\Validation\ValidationProviderInterface;
 
 class ValidateFilterInterceptor implements CoreInterceptorInterface
 {
+    /** @param Container $container */
     public function __construct(
-        private readonly Container $container = new Container()
+        private readonly ContainerInterface $container
     ) {
     }
 
@@ -26,16 +28,17 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
     {
         /** @var FilterBag $bag */
         $bag = $parameters['filterBag'];
+        $filter = $core->callAction($name, $action, $parameters);
 
-        if ($bag->filter instanceof HasFilterDefinition) {
+        if ($filter instanceof HasFilterDefinition) {
             $this->validateFilter(
                 $bag,
-                $parameters['errors'] ?? [],
+                $bag->errors ?? [],
                 $parameters['context'] ?? null
             );
         }
 
-        return $core->callAction($name, $action, $parameters);
+        return $filter;
     }
 
     private function validateFilter(FilterBag $bag, array $errors, mixed $context): void
@@ -44,12 +47,13 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
 
         if ($definition instanceof ShouldBeValidated) {
             $errorMapper = new ErrorMapper($bag->schema);
-            $manager = $this->container->get(ValidationProvider::class);
+            $validationProvider = $this->container->get(ValidationProviderInterface::class);
 
-            $validator = $manager->getValidation($definition::class)
+            $validator = $validationProvider
+                ->getValidation($definition::class)
                 ->validate($bag, $definition->validationRules(), $context);
 
-            if (!$validator->isValid()) {
+            if (! $validator->isValid()) {
                 throw new ValidationException(
                     $errorMapper->mapErrors(\array_merge($errors, $validator->getErrors())),
                     $context

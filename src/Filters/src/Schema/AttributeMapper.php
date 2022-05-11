@@ -16,8 +16,6 @@ use Spiral\Filters\InputInterface;
 
 final class AttributeMapper
 {
-    private array $errors = [];
-
     public function __construct(
         private readonly FilterProviderInterface $provider,
         private readonly ReaderInterface $reader
@@ -25,10 +23,13 @@ final class AttributeMapper
     }
 
     /**
+     * Map input data into filter properties with attributes
+     *
      * @return array{0: array, 1: array}
      */
     public function map(FilterInterface $filter, InputInterface $input): array
     {
+        $errors = [];
         $schema = [];
         $class = new \ReflectionClass($filter);
 
@@ -36,14 +37,14 @@ final class AttributeMapper
             $property->setAccessible(true);
 
             foreach ($this->reader->getPropertyMetadata($property) as $attribute) {
+
                 if ($attribute instanceof Input) {
-                    $this->setValue(
-                        $filter,
-                        $property,
-                        $attribute->getValue($input, $property)
-                    );
+
+                    $this->setValue($filter, $property, $attribute->getValue($input, $property));
                     $schema[$property->getName()] = $attribute->getSchema($property);
+
                 } elseif ($attribute instanceof NestedFilter) {
+
                     try {
                         $value = $this->provider->createFilter(
                             $attribute->class,
@@ -53,14 +54,15 @@ final class AttributeMapper
                         $this->setValue($filter, $property, $value);
                     } catch (ValidationException $e) {
                         if ($attribute->prefix) {
-                            $this->errors[$attribute->prefix] = $e->errors;
+                            $errors[$attribute->prefix] = $e->errors;
                         } else {
-                            $this->errors = \array_merge($this->errors, $e->errors);
+                            $errors = \array_merge($errors, $e->errors);
                         }
                     }
 
                     $schema[$property->getName()] = $attribute->getSchema($property);
                 } elseif ($attribute instanceof NestedArray) {
+
                     $values = $attribute->getValue($input, $property);
                     $propertyValues = [];
 
@@ -71,26 +73,21 @@ final class AttributeMapper
                             try {
                                 $propertyValues[$key] = $this->provider->createFilter(
                                     $attribute->class,
-                                    $input->withPrefix($prefix . '.' . $key)
+                                    $input->withPrefix($prefix.'.'.$key)
                                 );
                             } catch (ValidationException $e) {
-                                $this->errors[$property->getName()][$key] = $e->errors;
+                                $errors[$property->getName()][$key] = $e->errors;
                             }
                         }
                     }
 
-                    $this->setValue(
-                        $filter,
-                        $property,
-                        $propertyValues
-                    );
-
-                    $schema[$property->getName()] = [$attribute->class, $prefix . '.*'];
+                    $this->setValue($filter, $property, $propertyValues);
+                    $schema[$property->getName()] = [$attribute->class, $prefix.'.*'];
                 }
             }
         }
 
-        return [$schema, $this->errors];
+        return [$schema, $errors];
     }
 
     private function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void

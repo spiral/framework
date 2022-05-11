@@ -11,7 +11,8 @@ final class FilterBag
     public function __construct(
         public readonly FilterInterface $filter,
         public readonly AbstractEntity $entity,
-        public readonly array $schema,
+        public readonly array $schema = [],
+        public readonly array $errors = [],
     ) {
     }
 }

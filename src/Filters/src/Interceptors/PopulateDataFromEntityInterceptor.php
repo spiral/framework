@@ -18,7 +18,7 @@ final class PopulateDataFromEntityInterceptor implements CoreInterceptorInterfac
         $bag = $parameters['filterBag'];
 
         if ($bag->filter instanceof Filter) {
-            $bag->filter->withData($bag->entity->toArray());
+            $bag->filter->setData($bag->entity->toArray());
         }
 
         return $core->callAction($name, $action, $parameters);

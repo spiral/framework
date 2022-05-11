@@ -7,13 +7,14 @@ namespace Spiral\Filters\Attribute;
 use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\Attribute\Input\Input;
+use Spiral\Filters\FilterInterface;
 use Spiral\Filters\InputInterface;
 
 #[Attribute(Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class NestedArray
 {
     /**
-     * @param class-string $class
+     * @param class-string<FilterInterface> $class
      * @param non-empty-string|null $prefix
      */
     public function __construct(

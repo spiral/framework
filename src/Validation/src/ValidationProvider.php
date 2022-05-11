@@ -8,7 +8,7 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Validation\Exception\ValidationException;
 
-final class ValidationProvider implements SingletonInterface
+final class ValidationProvider implements ValidationProviderInterface, SingletonInterface
 {
     /** @var array<class-string, Closure> */
     private array $validations = [];
