@@ -33,7 +33,7 @@ abstract class SequenceCommand extends Command
                 $errors++;
                 $this->error((string)$e);
 
-                if (! $this->option('ignore') && $this->option('break')) {
+                if (!$this->option('ignore') && $this->option('break')) {
                     $this->error('Aborting.');
 
                     return self::FAILURE;
@@ -45,6 +45,6 @@ abstract class SequenceCommand extends Command
 
         $this->info('All done!');
 
-        return ($errors && ! $this->option('ignore')) ? self::FAILURE : self::SUCCESS;
+        return ($errors && !$this->option('ignore')) ? self::FAILURE : self::SUCCESS;
     }
 }

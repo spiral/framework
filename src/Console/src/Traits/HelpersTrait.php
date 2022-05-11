@@ -132,7 +132,7 @@ trait HelpersTrait
      */
     protected function warning(string $string): void
     {
-        if (! $this->output->getFormatter()->hasStyle('warning')) {
+        if (!$this->output->getFormatter()->hasStyle('warning')) {
             $style = new OutputFormatterStyle('yellow');
             $this->output->getFormatter()->setStyle('warning', $style);
         }
@@ -150,7 +150,7 @@ trait HelpersTrait
 
         $this->comment(\str_repeat('*', $length));
         foreach ($stringLines as $line) {
-            $this->comment('*     '.$line.'     *');
+            $this->comment('*     ' . $line . '     *');
         }
         $this->comment(\str_repeat('*', $length));
 

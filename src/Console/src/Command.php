@@ -54,7 +54,7 @@ abstract class Command extends SymfonyCommand
         try {
             [$this->input, $this->output] = [$input, $output];
 
-            if (! $this->confirmToPerform()) {
+            if (!$this->confirmToPerform()) {
                 return Command::FAILURE;
             }
 
@@ -65,9 +65,6 @@ abstract class Command extends SymfonyCommand
         }
     }
 
-    /**
-     * @deprecated
-     */
     private function confirmToPerform(): bool
     {
         $definition = $this->getConfirmationDefinition();
@@ -145,9 +142,6 @@ abstract class Command extends SymfonyCommand
         return static::ARGUMENTS;
     }
 
-    /**
-     * @deprecated
-     */
     protected function getConfirmationDefinition(): ?ConfirmationDefinitionInterface
     {
         return null;
