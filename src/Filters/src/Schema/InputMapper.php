@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Schema;
 
+use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\FilterProviderInterface;
 use Spiral\Filters\InputInterface;
 
@@ -16,7 +17,9 @@ final class InputMapper
 
     public function map(array $mappingSchema, InputInterface $input): array
     {
+        $errors = [];
         $result = [];
+
         foreach ($mappingSchema as $field => $map) {
             if (empty($map[Builder::SCHEMA_FILTER])) {
                 $value = $input->getValue($map[Builder::SCHEMA_SOURCE], $map[Builder::SCHEMA_ORIGIN]);
@@ -30,7 +33,12 @@ final class InputMapper
             $nested = $map[Builder::SCHEMA_FILTER];
             if (empty($map[Builder::SCHEMA_ARRAY])) {
                 // slicing down
-                $result[$field] = $this->provider->createFilter($nested, $input->withPrefix($map[Builder::SCHEMA_ORIGIN]));
+                try {
+                    $result[$field] = $this->provider->createFilter($nested, $input->withPrefix($map[Builder::SCHEMA_ORIGIN]));
+                } catch (ValidationException $e) {
+                    $errors[$field] = $e->errors;
+                }
+
                 continue;
             }
 
@@ -38,13 +46,17 @@ final class InputMapper
 
             // List of "key" => "location in request"
             foreach ($this->iterate($map, $input) as $index => $origin) {
-                $values[$index] = $this->provider->createFilter($nested, $input->withPrefix($origin));
+                try {
+                    $values[$index] = $this->provider->createFilter($nested, $input->withPrefix($origin));
+                } catch (ValidationException $e) {
+                    $errors[$field][$index] = $e->errors;
+                }
             }
 
             $result[$field] = $values;
         }
 
-        return $result;
+        return [$result, $errors];
     }
 
     /**

@@ -24,9 +24,11 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
     ) {
     }
 
+    /**
+     * @param array{filterBag: FilterBag} $parameters
+     */
     public function process(string $name, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
-        /** @var FilterBag $bag */
         $bag = $parameters['filterBag'];
         $filter = $core->callAction($name, $action, $parameters);
 

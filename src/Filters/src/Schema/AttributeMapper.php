@@ -14,6 +14,9 @@ use Spiral\Filters\FilterInterface;
 use Spiral\Filters\FilterProviderInterface;
 use Spiral\Filters\InputInterface;
 
+/**
+ * @internal
+ */
 final class AttributeMapper
 {
     public function __construct(
@@ -66,7 +69,7 @@ final class AttributeMapper
                     $values = $attribute->getValue($input, $property);
                     $propertyValues = [];
 
-                    $prefix = $attribute->input->key ?? $property->getName();
+                    $prefix = $attribute->input->key ?? $attribute->prefix ?? $property->getName();
 
                     if (\is_array($values)) {
                         foreach (\array_keys($values) as $key) {

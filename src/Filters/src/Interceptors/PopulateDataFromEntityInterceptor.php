@@ -12,9 +12,11 @@ use Spiral\Filters\FilterInterface;
 
 final class PopulateDataFromEntityInterceptor implements CoreInterceptorInterface
 {
+    /**
+     * @param array{filterBag: FilterBag} $parameters
+     */
     public function process(string $name, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
-        /** @var FilterBag $bag */
         $bag = $parameters['filterBag'];
 
         if ($bag->filter instanceof Filter) {

@@ -6,9 +6,11 @@ namespace Spiral\Filters;
 
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
-use Spiral\Filters\Exception\ValidationException;
 use Spiral\Models\SchematicEntity;
 
+/**
+ * @internal
+ */
 final class FilterProvider implements FilterProviderInterface
 {
     public function __construct(
@@ -34,13 +36,8 @@ final class FilterProvider implements FilterProviderInterface
 
         $schema = $this->schemaBuilder->makeSchema($name, $mappingSchema);
 
-        $data = [];
-
-        try {
-            $data = $this->inputMapper->map($schema, $input);
-        } catch (ValidationException $e) {
-            $errors = \array_merge($errors, $e->errors);
-        }
+        [$data, $inputErrors] = $this->inputMapper->map($schema, $input);
+        $errors = \array_merge($errors, $inputErrors);
 
         $entity = new SchematicEntity($data, $schema);
         return $this->core->callAction($name, 'handle', [

@@ -6,6 +6,9 @@ namespace Spiral\Filters\Schema;
 
 use Spiral\Filters\Exception\SchemaException;
 
+/**
+ * @internal
+ */
 final class Builder
 {
     // Packed schema definitions

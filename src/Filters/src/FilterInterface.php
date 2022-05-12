@@ -6,5 +6,5 @@ namespace Spiral\Filters;
 
 interface FilterInterface
 {
-    public function filterDefinition(): FilterDefinitionInterface;
+
 }

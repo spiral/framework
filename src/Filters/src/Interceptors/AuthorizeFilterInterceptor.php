@@ -10,6 +10,7 @@ use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Exception\AuthorizationException;
+use Spiral\Filters\FilterBag;
 use Spiral\Filters\FilterInterface;
 use Spiral\Filters\ShouldBeAuthorized;
 
@@ -21,6 +22,9 @@ final class AuthorizeFilterInterceptor implements CoreInterceptorInterface
     ) {
     }
 
+    /**
+     * @param array{filterBag: FilterBag} $parameters
+     */
     public function process(string $name, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
         $filter = $core->callAction($name, $action, $parameters);

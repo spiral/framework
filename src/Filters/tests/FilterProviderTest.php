@@ -6,5 +6,4 @@ namespace Spiral\Tests\Filters;
 
 final class FilterProviderTest extends BaseTest
 {
-
 }
