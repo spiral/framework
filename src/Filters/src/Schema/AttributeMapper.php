@@ -40,14 +40,10 @@ final class AttributeMapper
             $property->setAccessible(true);
 
             foreach ($this->reader->getPropertyMetadata($property) as $attribute) {
-
                 if ($attribute instanceof Input) {
-
                     $this->setValue($filter, $property, $attribute->getValue($input, $property));
                     $schema[$property->getName()] = $attribute->getSchema($property);
-
                 } elseif ($attribute instanceof NestedFilter) {
-
                     try {
                         $value = $this->provider->createFilter(
                             $attribute->class,
@@ -65,7 +61,6 @@ final class AttributeMapper
 
                     $schema[$property->getName()] = $attribute->getSchema($property);
                 } elseif ($attribute instanceof NestedArray) {
-
                     $values = $attribute->getValue($input, $property);
                     $propertyValues = [];
 
@@ -76,7 +71,7 @@ final class AttributeMapper
                             try {
                                 $propertyValues[$key] = $this->provider->createFilter(
                                     $attribute->class,
-                                    $input->withPrefix($prefix.'.'.$key)
+                                    $input->withPrefix($prefix . '.' . $key)
                                 );
                             } catch (ValidationException $e) {
                                 $errors[$property->getName()][$key] = $e->errors;
@@ -85,7 +80,7 @@ final class AttributeMapper
                     }
 
                     $this->setValue($filter, $property, $propertyValues);
-                    $schema[$property->getName()] = [$attribute->class, $prefix.'.*'];
+                    $schema[$property->getName()] = [$attribute->class, $prefix . '.*'];
                 }
             }
         }
