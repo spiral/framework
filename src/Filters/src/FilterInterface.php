@@ -6,5 +6,4 @@ namespace Spiral\Filters;
 
 interface FilterInterface
 {
-
 }
