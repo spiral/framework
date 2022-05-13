@@ -26,7 +26,6 @@ use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\JsonJobSerializer;
-use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
@@ -43,7 +42,6 @@ class MailerBootloader extends Bootloader
     ];
 
     protected const SINGLETONS = [
-        MailJob::class => MailJob::class,
         SymfonyMailer::class => [self::class, 'mailer'],
     ];
 
@@ -73,8 +71,9 @@ class MailerBootloader extends Bootloader
         if ($container->has(JobRegistry::class)) {
             // Will be removed since v3.0
             $registry = $container->get(JobRegistry::class);
-            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
+            $registry->setHandler(MailQueue::JOB_NAME, \Spiral\SendIt\Jobs\MailJobAdapter::class);
             $registry->setSerializer(MailQueue::JOB_NAME, JsonJobSerializer::class);
+
             $container->bindSingleton(
                 MailerInterface::class,
                 static function (MailerConfig $config) use ($container) {
@@ -101,7 +100,7 @@ class MailerBootloader extends Bootloader
 
         if ($container->has(HandlerRegistryInterface::class)) {
             $registry = $container->get(HandlerRegistryInterface::class);
-            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
+            $registry->setHandler(MailQueue::JOB_NAME, \Spiral\SendIt\MailJob::class);
         }
     }
 
