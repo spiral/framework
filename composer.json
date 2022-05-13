@@ -30,7 +30,7 @@
         "league/flysystem": "^2.3.1",
         "monolog/monolog": "^2.2",
         "myclabs/deep-copy": "^1.9",
-        "nette/php-generator": "^4.0",
+        "nette/php-generator": "^4.0.1",
         "nikic/php-parser": "^4.1",
         "opis/closure": "^3.6",
         "psr/cache": ">=1.0",
