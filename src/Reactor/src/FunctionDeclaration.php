@@ -7,7 +7,7 @@ namespace Spiral\Reactor;
 use Nette\PhpGenerator\Factory;
 use Nette\PhpGenerator\GlobalFunction;
 
-class FunctionDeclaration implements AggregableInterface, DeclarationInterface, \Stringable
+class FunctionDeclaration implements AggregableInterface, DeclarationInterface, NamedInterface, \Stringable
 {
     use Traits\FunctionLike;
     use Traits\NameAware;

@@ -9,32 +9,15 @@ use Spiral\Reactor\Aggregator;
 use Spiral\Reactor\Partial\Property;
 
 /**
- * Property aggregation. Can automatically create constant on demand.
+ * Property aggregation
  *
  * @method $this add(Property $element)
+ * @method Property|AggregableInterface get(string $name)
  */
 final class Properties extends Aggregator
 {
     public function __construct(array $constants)
     {
         parent::__construct([Property::class], $constants);
-    }
-
-    /**
-     * Get named element by it's name.
-     *
-     * @return Property|AggregableInterface
-     */
-    public function get(string $name): Property
-    {
-        if (!$this->has($name)) {
-            //Automatically creating constant
-            $property = new Property($name);
-            $this->add($property);
-
-            return $property;
-        }
-
-        return parent::get($name);
     }
 }

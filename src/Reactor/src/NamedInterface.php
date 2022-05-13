@@ -9,5 +9,5 @@ namespace Spiral\Reactor;
  */
 interface NamedInterface
 {
-    public function getName(): string;
+    public function getName(): ?string;
 }

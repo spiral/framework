@@ -9,7 +9,7 @@ namespace Spiral\Reactor\Traits;
  */
 trait NameAware
 {
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->element->getName();
     }
