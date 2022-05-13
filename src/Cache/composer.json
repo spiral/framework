@@ -29,7 +29,7 @@
     "require-dev": {
         "spiral/boot": "^2.14",
         "mockery/mockery": "^1.5",
-        "phpunit/phpunit": "^9.5.5"
+        "phpunit/phpunit": "^9.5.20"
     },
     "autoload-dev": {
         "psr-4": {

@@ -55,7 +55,13 @@ trait FunctionLike
      */
     public function addParameter(string $name, mixed $defaultValue = null): Parameter
     {
-        return Parameter::fromElement($this->element->addParameter($name, $defaultValue));
+        $param = Parameter::fromElement($this->element->addParameter($name));
+
+        if (\func_num_args() > 1) {
+            $param->setDefaultValue($defaultValue);
+        }
+
+        return $param;
     }
 
     /**

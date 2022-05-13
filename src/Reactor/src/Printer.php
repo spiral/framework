@@ -14,13 +14,16 @@ class Printer
     ) {
     }
 
-    public function print(string $filename, FileDeclaration $file): bool
+    public function print(FileDeclaration $file): string
     {
-        $printer = new PsrPrinter();
+        return (new PsrPrinter())->printFile($file->getElement());
+    }
 
+    public function write(string $filename, FileDeclaration $file): bool
+    {
         return $this->files->write(
             filename: $filename,
-            data: $printer->printFile($file->getElement()),
+            data: $this->print($file),
             ensureDirectory: true
         );
     }

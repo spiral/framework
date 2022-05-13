@@ -55,7 +55,7 @@ abstract class AbstractCommand extends Command
         }
 
         //File declaration
-        (new Printer($this->files))->print($filename, $declaration->getFile());
+        (new Printer($this->files))->write($filename, $declaration->getFile());
 
         $this->writeln(
             \sprintf("Declaration of '<info>%s</info>' ", $className)
