@@ -14,7 +14,7 @@ final class TokenizerConfig extends InjectableConfig
     public const CONFIG = 'tokenizer';
 
     /** @var array<non-empty-string, array<int, non-empty-string>> */
-    protected $config = [
+    protected array $config = [
         'directories' => [],
         'exclude' => [],
         'scopes' => [],

@@ -5,34 +5,26 @@ declare(strict_types=1);
 namespace Spiral\Scaffolder\Declaration;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Reactor\ClassDeclaration;
-use Spiral\Reactor\DependedInterface;
+use Spiral\Boot\BootloadManager\Methods;
 
-class BootloaderDeclaration extends ClassDeclaration implements DependedInterface
+class BootloaderDeclaration extends AbstractDeclaration
 {
-    public function __construct(string $name, string $comment = '')
-    {
-        parent::__construct($name, 'Bootloader', [], $comment);
-
-        $this->declareStructure();
-    }
-
-    public function getDependencies(): array
-    {
-        return [Bootloader::class => null];
-    }
+    public const TYPE = 'bootloader';
 
     /**
      * Declare constants and boot method.
      */
-    private function declareStructure(): void
+    public function declare(): void
     {
-        $this->constant('BINDINGS')->setProtected()->setValue([]);
-        $this->constant('SINGLETONS')->setProtected()->setValue([]);
-        $this->constant('DEPENDENCIES')->setProtected()->setValue([]);
+        $this->namespace->addUse(Bootloader::class);
 
-        $method = $this->method('boot');
-        $method->setPublic();
-        $method->setReturn('void');
+        $this->class->setExtends(Bootloader::class);
+
+        $this->class->addConstant('BINDINGS', [])->setProtected();
+        $this->class->addConstant('SINGLETONS', [])->setProtected();
+        $this->class->addConstant('DEPENDENCIES', [])->setProtected();
+
+        $this->class->addMethod(Methods::INIT->value)->setReturnType('void');
+        $this->class->addMethod(Methods::BOOT->value)->setReturnType('void');
     }
 }

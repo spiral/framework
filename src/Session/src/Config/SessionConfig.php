@@ -14,10 +14,7 @@ final class SessionConfig extends InjectableConfig
 {
     public const CONFIG = 'session';
 
-    /**
-     * @var array
-     */
-    protected $config = [
+    protected array $config = [
         'lifetime' => 86400,
         'cookie'   => 'SID',
         'secure'   => false,

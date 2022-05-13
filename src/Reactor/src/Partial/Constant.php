@@ -5,87 +5,68 @@ declare(strict_types=1);
 namespace Spiral\Reactor\Partial;
 
 use Doctrine\Inflector\Rules\English\InflectorFactory;
-use ReflectionException;
-use Spiral\Reactor\AbstractDeclaration;
+use Nette\PhpGenerator\Constant as NetteConstant;
+use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
-use Spiral\Reactor\Traits\AccessTrait;
-use Spiral\Reactor\Traits\CommentTrait;
-use Spiral\Reactor\Traits\NamedTrait;
-use Spiral\Reactor\Traits\SerializerTrait;
+use Spiral\Reactor\Traits;
 
-/**
- * Class constant declaration.
- */
-class Constant extends AbstractDeclaration implements NamedInterface
+final class Constant implements NamedInterface, AggregableInterface
 {
-    use NamedTrait;
-    use CommentTrait;
-    use SerializerTrait;
-    use AccessTrait;
+    use Traits\AttributeAware;
+    use Traits\CommentAware;
+    use Traits\NameAware;
+    use Traits\VisibilityAware;
 
-    public function __construct(
-        string $name,
-        private mixed $value,
-        array|string $comment = ''
-    ) {
-        $this->setName($name);
-        $this->initComment($comment);
-    }
+    private NetteConstant $element;
 
-    public function setName(string $name): Constant
+    public function __construct(string $name)
     {
-        $this->name = \strtoupper(
-            (new InflectorFactory())
-                ->build()
-                ->tableize(\strtolower($name))
+        $this->element = new NetteConstant(
+            \strtoupper((new InflectorFactory())->build()->tableize(\strtolower($name)))
         );
-
-        return $this;
     }
 
     public function setValue(mixed $value): self
     {
-        $this->value = $value;
+        $this->element->setValue($value);
 
         return $this;
     }
 
     public function getValue(): mixed
     {
-        return $this->value;
+        return $this->element->getValue();
+    }
+
+    public function setFinal(bool $state = true): self
+    {
+        $this->element->setFinal($state);
+
+        return $this;
+    }
+
+    public function isFinal(): bool
+    {
+        return $this->element->isFinal();
     }
 
     /**
-     * @throws ReflectionException
+     * @internal
      */
-    public function render(int $indentLevel = 0): string
+    public static function fromElement(NetteConstant $element): self
     {
-        $result = '';
-        if (!$this->docComment->isEmpty()) {
-            $result .= $this->docComment->render($indentLevel) . "\n";
-        }
+        $constant = new self($element->getName());
 
-        $result .= $this->addIndent("{$this->access} const {$this->getName()} = ", $indentLevel);
+        $constant->element = $element;
 
-        $value = $this->getSerializer()->serialize($this->value);
-        if (\is_array($this->value)) {
-            $value = $this->mountIndents($value, $indentLevel);
-        }
-
-        return $result . $value . ';';
+        return $constant;
     }
 
     /**
-     * Mount indentation to value. Attention, to be applied to arrays only!
+     * @internal
      */
-    private function mountIndents(string $serialized, int $indentLevel): string
+    public function getElement(): NetteConstant
     {
-        $lines = \explode("\n", $serialized);
-        foreach ($lines as &$line) {
-            $line = $this->addIndent($line, $indentLevel);
-            unset($line);
-        }
-
-        return \ltrim(\implode("\n", $lines));
+        return $this->element;
     }
 }

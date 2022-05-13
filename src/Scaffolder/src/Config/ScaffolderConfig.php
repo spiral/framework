@@ -15,8 +15,7 @@ class ScaffolderConfig extends InjectableConfig
 {
     public const CONFIG = 'scaffolder';
 
-    /** @var array */
-    protected $config = [
+    protected array $config = [
         'header'       => [],
         'directory'    => '',
         'namespace'    => '',

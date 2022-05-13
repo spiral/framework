@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
 
+use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator;
-use Spiral\Reactor\DeclarationInterface;
 use Spiral\Reactor\Partial\Parameter;
 
 /**
@@ -23,7 +23,7 @@ final class Parameters extends Aggregator
     /**
      * Get named element by it's name.
      *
-     * @return Parameter|DeclarationInterface
+     * @return Parameter|AggregableInterface
      */
     public function get(string $name): Parameter
     {
@@ -36,18 +36,5 @@ final class Parameters extends Aggregator
         }
 
         return parent::get($name);
-    }
-
-    public function render(int $indentLevel = 0): string
-    {
-        /**
-         * Overwriting parent call.
-         */
-        $parameters = [];
-        foreach ($this->getIterator() as $element) {
-            $parameters[] = $element->render(0);
-        }
-
-        return \implode(', ', $parameters);
     }
 }

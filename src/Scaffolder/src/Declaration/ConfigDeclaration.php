@@ -6,44 +6,41 @@ namespace Spiral\Scaffolder\Declaration;
 
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
+use Nette\PhpGenerator\Literal;
+use Nette\PhpGenerator\Dumper;
 use Spiral\Core\InjectableConfig;
 use Spiral\Files\FilesInterface;
-use Spiral\Reactor\ClassDeclaration;
-use Spiral\Reactor\DependedInterface;
 use Spiral\Reactor\FileDeclaration;
 use Spiral\Reactor\Partial\Method;
-use Spiral\Reactor\Partial\Source;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
 use Spiral\Scaffolder\Exception\ScaffolderException;
 
 use function Spiral\Scaffolder\defineArrayType;
 use function Spiral\Scaffolder\isAssociativeArray;
 
-class ConfigDeclaration extends ClassDeclaration implements DependedInterface
+class ConfigDeclaration extends AbstractDeclaration
 {
+    public const TYPE = 'config';
+
     public function __construct(
-        private readonly ScaffolderConfig $config,
+        ScaffolderConfig $config,
         private readonly FilesInterface $files,
         private readonly SlugifyInterface $slugify,
         private readonly ConfigDeclaration\TypeAnnotations $typeAnnotations,
         private readonly ConfigDeclaration\TypeHints $typeHints,
         private readonly ConfigDeclaration\Defaults $defaultValues,
-        private readonly string $configName,
         string $name,
-        string $comment = '',
+        ?string $comment = null,
         private readonly string $directory = ''
     ) {
-        parent::__construct($name, 'InjectableConfig', [], $comment);
+        parent::__construct($config, $name, $comment);
     }
 
-    public function getDependencies(): array
+    public function create(bool $reverse, string $configName): void
     {
-        return [InjectableConfig::class => null];
-    }
+        $this->class->addConstant('CONFIG', $configName)->setPublic();
 
-    public function create(bool $reverse): void
-    {
-        $filename = $this->makeConfigFilename($this->configName);
+        $filename = $this->makeConfigFilename($configName);
         if ($reverse) {
             if (!$this->files->exists($filename)) {
                 throw new ScaffolderException(\sprintf("Config filename %s doesn't exist", $filename));
@@ -51,13 +48,12 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
 
             $defaultsFromFile = require $filename;
             $this->declareGetters($defaultsFromFile);
-            $this->declareStructure($this->configName, $this->defaultValues->get($defaultsFromFile));
+
+            $this->class->getProperty('config')->setValue($this->defaultValues->get($defaultsFromFile));
         } else {
             if (!$this->files->exists($filename)) {
                 $this->touchConfigFile($filename);
             }
-
-            $this->declareStructure($this->configName, []);
         }
     }
 
@@ -71,14 +67,11 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         $this->files->touch($filename);
 
         $file = new FileDeclaration();
-        $file->setDirectives('strict_types=1');
         $file->setComment($this->phpDocSeeReference());
-        $file->addElement(new Source(['', 'return [];']));
-        $file->render();
 
         $this->files->write(
             $filename,
-            $file->render(),
+            $file->render() . PHP_EOL . (new Dumper())->dump(new Literal('return [];')),
             FilesInterface::READONLY,
             true
         );
@@ -86,9 +79,9 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
 
     private function phpDocSeeReference(): string
     {
-        $namespace = \trim($this->config->classNamespace('config', $this->getName()), '\\');
+        $namespace = \trim($this->config->classNamespace('config', $this->class->getName()), '\\');
 
-        return \sprintf('@see \%s\%s', $namespace, $this->getName());
+        return \sprintf('@see \%s\%s', $namespace, $this->class->getName());
     }
 
     /**
@@ -105,8 +98,8 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
             $getter = $this->makeGetterName($key);
             $getters[] = $getter;
 
-            $method = $this->method($getter)->setPublic();
-            $method->setSource(\sprintf('return $this->config[\'%s\'];', $key));
+            $method = $this->class->addMethod($getter)->setPublic();
+            $method->setBody(\sprintf('return $this->config[\'%s\'];', $key));
             $method->setComment(\sprintf('@return %s', $this->typeAnnotations->getAnnotation($value)));
 
             if (\is_array($value)) {
@@ -115,7 +108,7 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
 
             $returnTypeHint = $this->typeHints->getHint(\gettype($value));
             if ($returnTypeHint !== null) {
-                $method->setReturn($returnTypeHint);
+                $method->setReturnType($returnTypeHint);
             }
         }
 
@@ -159,15 +152,15 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
             return null;
         }
 
-        $method = $this->method($name)->setPublic();
-        $method->setSource(\sprintf('return $this->config[\'%s\'][$%s];', $key, $singularKey));
-        $method->setReturn($valueType);
+        $method = $this->class->addMethod($name)->setPublic();
+        $method->setBody(\sprintf('return $this->config[\'%s\'][$%s];', $key, $singularKey));
+        $method->setReturnType($valueType);
         $method->setComment([
             \sprintf('@param %s %s', $this->typeAnnotations->mapType($keyType), $singularKey),
             \sprintf('@return %s', $this->typeAnnotations->getAnnotation(array_values($value)[0])),
         ]);
 
-        $param = $method->parameter($singularKey);
+        $param = $method->addParameter($singularKey);
         $paramTypeHint = $this->typeHints->getHint($keyType);
         if ($paramTypeHint !== null) {
             $param->setType($paramTypeHint);
@@ -195,10 +188,17 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
     /**
      * Declare constant and property.
      */
-    private function declareStructure(string $configName, array $defaults): void
+    public function declare(): void
     {
-        $this->constant('CONFIG')->setPublic()->setValue($configName);
-        $this->property('config')->setProtected()->setDefaultValue($defaults)
+        $this->namespace->addUse(InjectableConfig::class);
+
+        $this->class->setExtends(InjectableConfig::class);
+
+        $this->class
+            ->addProperty('config')
+            ->setProtected()
+            ->setType('array')
+            ->setValue([])
             ->setComment('@internal For internal usage. Will be hydrated in the constructor.');
     }
 

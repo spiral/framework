@@ -4,20 +4,59 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor;
 
+use Doctrine\Inflector\Rules\English\InflectorFactory;
+use Nette\PhpGenerator\ClassLike;
+use Spiral\Reactor\Traits;
+
 /**
  * Generic element declaration.
  */
-abstract class AbstractDeclaration implements DeclarationInterface
+abstract class AbstractDeclaration implements DeclarationInterface, NamedInterface, \Stringable
 {
-    /**
-     * Access level constants.
-     */
-    public const ACCESS_PUBLIC    = 'public';
-    public const ACCESS_PROTECTED = 'protected';
-    public const ACCESS_PRIVATE   = 'private';
+    use Traits\CommentAware;
+    use Traits\NameAware;
+    use Traits\AttributeAware;
 
-    protected function addIndent(string $string, int $indent = 0): string
+    protected ClassLike $element;
+
+    public function setName(?string $name): self
     {
-        return \str_repeat(self::INDENT, \max($indent, 0)) . $string;
+        if ($name !== null) {
+            $name = (new InflectorFactory())->build()->classify($name);
+        }
+
+        $this->element->setName($name);
+
+        return $this;
+    }
+
+    public function isClass(): bool
+    {
+        return $this instanceof ClassDeclaration;
+    }
+
+    public function isInterface(): bool
+    {
+        return $this instanceof InterfaceDeclaration;
+    }
+
+    public function isTrait(): bool
+    {
+        return $this instanceof TraitDeclaration;
+    }
+
+    public function isEnum(): bool
+    {
+        return $this instanceof EnumDeclaration;
+    }
+
+    public function render(): string
+    {
+        return $this->__toString();
+    }
+
+    public function __toString(): string
+    {
+        return $this->element->__toString();
     }
 }

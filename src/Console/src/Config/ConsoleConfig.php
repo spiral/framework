@@ -14,10 +14,7 @@ final class ConsoleConfig extends InjectableConfig
 {
     public const CONFIG = 'console';
 
-    /**
-     * @var array
-     */
-    protected $config = [
+    protected array $config = [
         'name'      => null,
         'version'   => null,
         'commands'  => [],

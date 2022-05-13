@@ -11,7 +11,7 @@ final class QueueConfig extends InjectableConfig
 {
     public const CONFIG = 'queue';
 
-    protected $config = [
+    protected array $config = [
         'default' => 'sync',
         'aliases' => [],
         'driverAliases' => [],

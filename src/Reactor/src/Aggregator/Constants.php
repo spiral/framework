@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
 
+use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator;
-use Spiral\Reactor\DeclarationInterface;
 use Spiral\Reactor\Partial\Constant;
 
 /**
@@ -23,12 +23,12 @@ final class Constants extends Aggregator
     /**
      * Get named element by it's name.
      *
-     * @return Constant|DeclarationInterface
+     * @return Constant|AggregableInterface
      */
     public function get(string $name): Constant
     {
         if (!$this->has($name)) {
-            $constant = new Constant($name, null);
+            $constant = new Constant($name);
             $this->add($constant);
 
             return $constant;

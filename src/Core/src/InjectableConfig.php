@@ -22,7 +22,7 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
      * @param array $config Configuration data
      */
     public function __construct(
-        protected $config = []
+        protected array $config = []
     ) {
     }
 

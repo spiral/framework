@@ -10,8 +10,7 @@ final class MailerConfig extends InjectableConfig
 {
     public const CONFIG = 'mailer';
 
-    /** @var array */
-    protected $config = [
+    protected array $config = [
         'dsn' => '',
         'from' => '',
         'queue' => null,

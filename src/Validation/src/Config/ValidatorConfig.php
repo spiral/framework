@@ -15,10 +15,7 @@ final class ValidatorConfig extends InjectableConfig
 
     public const CONFIG = 'validation';
 
-    /**
-     * @var array
-     */
-    protected $config = [
+    protected array $config = [
         'conditions' => [],
         'checkers'   => [],
         'aliases'    => [],

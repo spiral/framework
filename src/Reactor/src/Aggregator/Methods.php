@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
 
+use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator;
-use Spiral\Reactor\DeclarationInterface;
 use Spiral\Reactor\Partial\Method;
 
 /**
@@ -23,7 +23,7 @@ final class Methods extends Aggregator
     /**
      * Get named element by it's name.
      *
-     * @return Method|DeclarationInterface
+     * @return Method|AggregableInterface
      */
     public function get(string $name): Method
     {

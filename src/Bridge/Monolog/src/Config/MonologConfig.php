@@ -14,8 +14,7 @@ final class MonologConfig extends InjectableConfig
     public const CONFIG = 'monolog';
     public const DEFAULT_CHANNEL = 'default';
 
-    /** @var array */
-    protected $config = [
+    protected array $config = [
         'default'     => self::DEFAULT_CHANNEL,
         'globalLevel' => Logger::DEBUG,
         'handlers'    => [],

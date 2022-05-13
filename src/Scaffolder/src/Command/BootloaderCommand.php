@@ -10,8 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class BootloaderCommand extends AbstractCommand
 {
-    protected const ELEMENT = 'bootloader';
-
     protected const NAME        = 'create:bootloader';
     protected const DESCRIPTION = 'Create bootloader declaration';
     protected const ARGUMENTS   = [
@@ -31,8 +29,7 @@ class BootloaderCommand extends AbstractCommand
      */
     public function perform(): int
     {
-        /** @var BootloaderDeclaration $declaration */
-        $declaration = $this->createDeclaration();
+        $declaration = $this->createDeclaration(BootloaderDeclaration::class);
 
         $this->writeDeclaration($declaration);
 

@@ -23,10 +23,7 @@ final class EncrypterConfig extends InjectableConfig
      */
     public const CONFIG = 'encrypter';
 
-    /**
-     * @var array
-     */
-    protected $config = [
+    protected array $config = [
         'key' => '',
     ];
 

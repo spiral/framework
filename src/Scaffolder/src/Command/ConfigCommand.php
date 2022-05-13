@@ -10,8 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ConfigCommand extends AbstractCommand
 {
-    protected const ELEMENT = 'config';
-
     protected const NAME        = 'create:config';
     protected const DESCRIPTION = 'Create config declaration';
     protected const ARGUMENTS   = [
@@ -42,9 +40,13 @@ class ConfigCommand extends AbstractCommand
      */
     public function perform(): int
     {
+        $declaration = $this->createDeclaration(ConfigDeclaration::class);
+
         /** @var ConfigDeclaration $declaration */
-        $declaration = $this->createDeclaration(['configName' => $this->argument('name')]);
-        $declaration->create((bool)$this->option('reverse'));
+        $declaration->create(
+            (bool) $this->option('reverse'),
+            (string) $this->argument('name')
+        );
 
         $this->writeDeclaration($declaration);
 

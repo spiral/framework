@@ -19,7 +19,7 @@ final class TranslatorConfig extends InjectableConfig
     /**
      * @var array
      */
-    protected $config = [
+    protected array $config = [
         'locale'         => '',
         'fallbackLocale' => '',
         'directory'      => '',

@@ -10,8 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class CommandCommand extends AbstractCommand
 {
-    protected const ELEMENT = 'command';
-
     protected const NAME        = 'create:command';
     protected const DESCRIPTION = 'Create command declaration';
     protected const ARGUMENTS   = [
@@ -38,11 +36,10 @@ class CommandCommand extends AbstractCommand
      */
     public function perform(): int
     {
-        /** @var CommandDeclaration $declaration */
-        $declaration = $this->createDeclaration();
+        $declaration = $this->createDeclaration(CommandDeclaration::class);
 
-        $declaration->setAlias((string)($this->argument('alias') ?? $this->argument('name')));
-        $declaration->setDescription((string)$this->option('description'));
+        $declaration->setAlias((string) ($this->argument('alias') ?? $this->argument('name')));
+        $declaration->setDescription($this->option('description'));
 
         $this->writeDeclaration($declaration);
 

@@ -8,44 +8,34 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Reactor\ClassDeclaration;
-use Spiral\Reactor\DependedInterface;
 
 /**
  * Middleware declaration.
  */
-class MiddlewareDeclaration extends ClassDeclaration implements DependedInterface
+class MiddlewareDeclaration extends AbstractDeclaration
 {
-    public function __construct(string $name, string $comment = '')
-    {
-        parent::__construct($name, '', ['MiddlewareInterface'], $comment);
-
-        $this->declareStructure();
-    }
-
-    public function getDependencies(): array
-    {
-        return [
-            MiddlewareInterface::class     => null,
-            RequestHandlerInterface::class => null,
-            ResponseInterface::class       => 'Response',
-            ServerRequestInterface::class  => 'Request',
-        ];
-    }
+    public const TYPE = 'middleware';
 
     /**
      * Declare default process method body.
      */
-    private function declareStructure(): void
+    public function declare(): void
     {
-        $method = $this->method('process')->setPublic();
+        $this->class->addImplement(MiddlewareInterface::class);
 
-        $method->setComment('{@inheritdoc}');
-        $method->parameter('request')->setType('Request');
-        $method->parameter('handler')->setType('RequestHandlerInterface');
+        $this->class
+            ->addMethod('process')
+            ->setPublic()
+            ->setReturnType(ResponseInterface::class)
+            ->addComment('{@inheritdoc}')
+            ->addBody('return $handler->handle($request);');
 
-        $method->setReturn('Response');
+        $this->class->getMethod('process')
+            ->addParameter('request')
+            ->setType(ServerRequestInterface::class);
 
-        $method->setSource('return $handler->handle($request);');
+        $this->class->getMethod('process')
+            ->addParameter('handler')
+            ->setType(RequestHandlerInterface::class);
     }
 }

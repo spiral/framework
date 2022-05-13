@@ -28,10 +28,7 @@ final class CookiesConfig extends InjectableConfig
      */
     public const MAC_LENGTH = 64;
 
-    /**
-     * @var array
-     */
-    protected $config = [
+    protected array $config = [
         'domain'   => '.%s',
         'method'   => self::COOKIE_ENCRYPT,
         'excluded' => ['PHPSESSID', 'csrf-token'],

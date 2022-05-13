@@ -10,8 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class JobHandlerCommand extends AbstractCommand
 {
-    protected const ELEMENT = 'jobHandler';
-
     protected const NAME        = 'create:jobHandler';
     protected const DESCRIPTION = 'Create job handler declaration';
     protected const ARGUMENTS   = [
@@ -31,8 +29,7 @@ class JobHandlerCommand extends AbstractCommand
      */
     public function perform(): int
     {
-        /** @var JobHandlerDeclaration $declaration */
-        $declaration = $this->createDeclaration();
+        $declaration = $this->createDeclaration(JobHandlerDeclaration::class);
 
         $this->writeDeclaration($declaration);
 

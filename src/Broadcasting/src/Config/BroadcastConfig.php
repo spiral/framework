@@ -11,7 +11,7 @@ final class BroadcastConfig extends InjectableConfig
 {
     public const CONFIG = 'broadcasting';
 
-    protected $config = [
+    protected array $config = [
         'authorize' => [
             'path' => null,
             'topics' => [],
