@@ -51,7 +51,7 @@ final class QueueBootloader extends Bootloader
         $this->registerDriverAlias(SyncDriver::class, 'sync');
         $container->bindInjector(QueueInterface::class, QueueInjector::class);
 
-        $kernel->started(static function () use ($container): void {
+        $kernel->booted(static function () use ($container): void {
             $registry = $container->get(HandlerRegistryInterface::class);
             $config = $container->get(QueueConfig::class);
 
