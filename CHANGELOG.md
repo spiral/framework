@@ -101,6 +101,7 @@
   - [spiral/core] Added `string|array|callable|object` parameter type of `$resolver` in the method `bind`,
     added `string|array|callable|object` parameter type of `$resolver` in the method `bindSingleton` in `Spiral\Core\BinderInterface` interface.
   - [spiral/core] Added return type `object` to the method `createInjection` in `Spiral\Core\Container\InjectorInterface` interface.
+  - [spiral/boot] Method `starting` renamed to `booting`, method `started` renamed to `booted` in the class `Spiral\Boot\AbstractKernel`.
   - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
   - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
     added in `Spiral\Boot\EnvironmentInterface` interface.
