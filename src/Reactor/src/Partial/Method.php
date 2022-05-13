@@ -9,7 +9,7 @@ use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\Traits;
 
-final class Method implements NamedInterface, AggregableInterface
+final class Method implements NamedInterface, AggregableInterface, \Stringable
 {
     use Traits\AttributeAware;
     use Traits\CommentAware;
@@ -22,6 +22,11 @@ final class Method implements NamedInterface, AggregableInterface
     public function __construct(string $name)
     {
         $this->element = new NetteMethod($name);
+    }
+
+    public function __toString(): string
+    {
+        return $this->element->__toString();
     }
 
     public function setStatic(bool $state = true): self
@@ -66,11 +71,6 @@ final class Method implements NamedInterface, AggregableInterface
     public function addPromotedParameter(string $name, mixed $defaultValue = null): PromotedParameter
     {
         return PromotedParameter::fromElement($this->element->addPromotedParameter($name, $defaultValue));
-    }
-
-    public function __toString(): string
-    {
-        return $this->element->__toString();
     }
 
     /**

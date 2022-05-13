@@ -31,6 +31,11 @@ class FileDeclaration implements \Stringable, DeclarationInterface
         $this->element->setStrictTypes(true);
     }
 
+    public function __toString(): string
+    {
+        return $this->element->__toString();
+    }
+
     public static function fromCode(string $code): static
     {
         return self::fromElement((new Factory())->fromCode($code));
@@ -121,11 +126,6 @@ class FileDeclaration implements \Stringable, DeclarationInterface
     public function hasStrictTypes(): bool
     {
         return $this->element->hasStrictTypes();
-    }
-
-    public function __toString(): string
-    {
-        return $this->element->__toString();
     }
 
     /**

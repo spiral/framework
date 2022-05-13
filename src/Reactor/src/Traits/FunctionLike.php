@@ -13,7 +13,6 @@ use Spiral\Reactor\Partial\Parameter;
  */
 trait FunctionLike
 {
-    /** @param ?mixed[] $args */
     public function setBody(string $code, ?array $args = null): static
     {
         $this->element->setBody($code, $args);
@@ -26,7 +25,6 @@ trait FunctionLike
         return $this->element->getBody();
     }
 
-    /** @param ?mixed[] $args */
     public function addBody(string $code, ?array $args = null): static
     {
         $this->element->addBody($code, $args);

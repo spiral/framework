@@ -57,6 +57,23 @@ class ConfigDeclaration extends AbstractDeclaration
         }
     }
 
+    /**
+     * Declare constant and property.
+     */
+    public function declare(): void
+    {
+        $this->namespace->addUse(InjectableConfig::class);
+
+        $this->class->setExtends(InjectableConfig::class);
+
+        $this->class
+            ->addProperty('config')
+            ->setProtected()
+            ->setType('array')
+            ->setValue([])
+            ->setComment('@internal For internal usage. Will be hydrated in the constructor.');
+    }
+
     private function makeConfigFilename(string $filename): string
     {
         return \sprintf('%s%s.php', $this->directory, $filename);
@@ -183,23 +200,6 @@ class ConfigDeclaration extends AbstractDeclaration
         }
 
         return \implode('', $chunks);
-    }
-
-    /**
-     * Declare constant and property.
-     */
-    public function declare(): void
-    {
-        $this->namespace->addUse(InjectableConfig::class);
-
-        $this->class->setExtends(InjectableConfig::class);
-
-        $this->class
-            ->addProperty('config')
-            ->setProtected()
-            ->setType('array')
-            ->setValue([])
-            ->setComment('@internal For internal usage. Will be hydrated in the constructor.');
     }
 
     private function classify(string $name): string

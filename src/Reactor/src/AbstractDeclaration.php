@@ -19,6 +19,11 @@ abstract class AbstractDeclaration implements DeclarationInterface, NamedInterfa
 
     protected ClassLike $element;
 
+    public function __toString(): string
+    {
+        return $this->element->__toString();
+    }
+
     public function setName(?string $name): self
     {
         if ($name !== null) {
@@ -53,10 +58,5 @@ abstract class AbstractDeclaration implements DeclarationInterface, NamedInterfa
     public function render(): string
     {
         return $this->__toString();
-    }
-
-    public function __toString(): string
-    {
-        return $this->element->__toString();
     }
 }

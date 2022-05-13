@@ -16,7 +16,8 @@ final class TraitUse implements NamedInterface, AggregableInterface
 
     private NetteTraitUse $element;
 
-    public function __construct(string $name) {
+    public function __construct(string $name)
+    {
         $this->element = new NetteTraitUse($name);
     }
 

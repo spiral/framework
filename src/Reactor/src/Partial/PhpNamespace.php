@@ -13,7 +13,7 @@ use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\TraitDeclaration;
 use Spiral\Reactor\Traits\NameAware;
 
-final class PhpNamespace implements NamedInterface, AggregableInterface
+final class PhpNamespace implements NamedInterface, AggregableInterface, \Stringable
 {
     use NameAware;
 
@@ -22,6 +22,11 @@ final class PhpNamespace implements NamedInterface, AggregableInterface
     public function __construct(string $name)
     {
         $this->element = new NettePhpNamespace($name);
+    }
+
+    public function __toString(): string
+    {
+        return $this->element->__toString();
     }
 
     public function hasBracketedSyntax(): bool
@@ -101,11 +106,6 @@ final class PhpNamespace implements NamedInterface, AggregableInterface
         $this->element->removeClass($name);
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->element->__toString();
     }
 
     /**
