@@ -16,8 +16,8 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/core": "^2.13.1",
-        "spiral/files": "^2.13.1"
+        "spiral/core": "^2.14",
+        "spiral/files": "^2.14"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",

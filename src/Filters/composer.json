@@ -16,10 +16,10 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/core": "^2.13.1",
-        "spiral/models": "^2.13.1",
-        "spiral/translator": "^2.13.1",
-        "spiral/validation": "^2.13.1"
+        "spiral/core": "^2.14",
+        "spiral/models": "^2.14",
+        "spiral/translator": "^2.14",
+        "spiral/validation": "^2.14"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",

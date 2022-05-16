@@ -16,9 +16,9 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/annotations": "^2.13.1",
-        "spiral/attributes": "^2.13.1",
-        "spiral/router": "^2.13.1"
+        "spiral/annotations": "^2.14",
+        "spiral/attributes": "^2.14",
+        "spiral/router": "^2.14"
     },
     "autoload": {
         "psr-4": {
@@ -29,8 +29,8 @@
         "phpunit/phpunit": "^8.5|^9.5",
         "mockery/mockery": "^1.5",
         "laminas/laminas-diactoros": "^2.8",
-        "spiral/boot": "^2.13.1",
-        "spiral/console": "^2.13.1"
+        "spiral/boot": "^2.14",
+        "spiral/console": "^2.14"
     },
     "autoload-dev": {
         "psr-4": {

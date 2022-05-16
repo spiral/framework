@@ -17,16 +17,16 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "spiral/attributes": "^2.13.1",
-        "spiral/boot": "^2.13.1",
-        "spiral/data-grid": "^2.13.1",
-        "spiral/http": "^2.13.1"
+        "spiral/attributes": "^2.14",
+        "spiral/boot": "^2.14",
+        "spiral/data-grid": "^2.14",
+        "spiral/http": "^2.14"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",
         "cycle/orm": "^1.8.1",
         "cycle/database": "^1.0.3",
-        "spiral/hmvc": "^2.13.1"
+        "spiral/hmvc": "^2.14"
     },
     "autoload": {
         "psr-4": {
