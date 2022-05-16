@@ -9,7 +9,6 @@
     <projectFiles>
         <directory name="src" />
         <ignoreFiles>
-            <file name="src/polyfill.php" />
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>

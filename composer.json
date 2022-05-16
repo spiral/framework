@@ -43,8 +43,6 @@
         "symfony/console": "^6.0",
         "symfony/finder": "^5.3.7|^6.0",
         "symfony/mailer": "^5.1|^6.0",
-        "symfony/polyfill-php73": "^1.22",
-        "symfony/polyfill-php80": "^1.22",
         "symfony/translation": "^5.1|^6.0",
         "vlucas/phpdotenv": "^5.4",
         "nyholm/psr7": "^1.5.0"
@@ -53,9 +51,7 @@
         "files": [
             "src/Attributes/src/polyfill.php",
             "src/Boot/src/helpers.php",
-            "src/Dumper/src/helpers.php",
             "src/Framework/helpers.php",
-            "src/Framework/polyfill.php",
             "src/Scaffolder/src/helpers.php",
             "src/Stempler/src/helpers.php",
             "src/Translator/src/helpers.php"
@@ -68,6 +64,7 @@
                 "src/AuthHttp/src"
             ],
             "Spiral\\Boot\\": "src/Boot/src",
+            "Spiral\\Broadcasting\\": "src/Broadcasting/src",
             "Spiral\\Cache\\": "src/Cache/src",
             "Spiral\\Config\\": "src/Config/src",
             "Spiral\\Console\\": "src/Console/src",
@@ -77,10 +74,7 @@
                 "src/Hmvc/src"
             ],
             "Spiral\\Csrf\\": "src/Csrf/src",
-            "Spiral\\Debug\\": [
-                "src/Debug/src",
-                "src/Dumper/src"
-            ],
+            "Spiral\\Debug\\": "src/Debug/src",
             "Spiral\\Distribution\\": "src/Distribution/src",
             "Spiral\\DotEnv\\": "src/Bridge/Dotenv/src",
             "Spiral\\Encrypter\\": "src/Encrypter/src",
@@ -130,10 +124,13 @@
         "ramsey/uuid": "^4.2.3",
         "ramsey/collection": "^1.2",
         "rector/rector": "0.12.15",
-        "spiral/code-style": "^1.0",
+        "spiral/code-style": "^1.1",
         "symfony/var-dumper": "^5.2|^6.0",
         "symplify/monorepo-builder": "^10.0",
-        "vimeo/psalm": "^4.22"
+        "vimeo/psalm": "^4.21"
+    },
+    "conflict": {
+        "vimeo/psalm": "4.22.0"
     },
     "autoload-dev": {
         "psr-4": {
@@ -143,6 +140,7 @@
                 "src/Auth/tests",
                 "src/AuthHttp/tests"
             ],
+            "Spiral\\Tests\\Broadcasting\\": "src/Broadcasting/tests",
             "Spiral\\Tests\\Boot\\": "src/Boot/tests",
             "Spiral\\Tests\\Cache\\": "src/Cache/tests",
             "Spiral\\Tests\\Config\\": "src/Config/tests",
@@ -153,10 +151,7 @@
                 "src/Hmvc/tests"
             ],
             "Spiral\\Tests\\Csrf\\": "src/Csrf/tests",
-            "Spiral\\Tests\\Debug\\": [
-                "src/Debug/tests",
-                "src/Dumper/tests"
-            ],
+            "Spiral\\Tests\\Debug\\": "src/Debug/tests",
             "Spiral\\Tests\\Distribution\\": "src/Distribution/tests",
             "Spiral\\Tests\\DotEnv\\": "src/Bridge/Dotenv/tests",
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
@@ -200,6 +195,7 @@
         "spiral/auth": "self.version",
         "spiral/auth-http": "self.version",
         "spiral/boot": "self.version",
+        "spiral/broadcasting": "self.version",
         "spiral/cache": "self.version",
         "spiral/config": "self.version",
         "spiral/console": "self.version",
@@ -209,7 +205,6 @@
         "spiral/debug": "self.version",
         "spiral/distribution": "self.version",
         "spiral/dotenv-bridge": "self.version",
-        "spiral/dumper": "self.version",
         "spiral/encrypter": "self.version",
         "spiral/exceptions": "self.version",
         "spiral/files": "self.version",

@@ -6,7 +6,7 @@
     Please, use standalone package `spiral/data-grid-bridge` instead.
   - Component `spiral/data-grid` is removed from `spiral/framework` repository.
     Please, use standalone package `spiral/data-grid` instead.
-  - `Spiral\Boot\ExceptionHandler` has been eliminated. New `Spiral\Exceptions\ExceptionHandler` with interfaces 
+  - `Spiral\Boot\ExceptionHandler` has been eliminated. New `Spiral\Exceptions\ExceptionHandler` with interfaces
     `Spiral\Exceptions\ExceptionHandlerInterface`, `Spiral\Exceptions\ExceptionRendererInterface` and
     `Spiral\Exceptions\ExceptionReporterInterface` have been added.
   - Added `ExceptionHandlerBootloader` that adds renderers and reporters in the `ExceptionHandler`.
@@ -39,7 +39,7 @@
   - Removed `Spiral\Http\SapiDispatcher` and `Spiral\Http\Emitter\SapiEmitter`. Please, use package `spiral/sapi-bridge` instead.
   - Bootloader `Spiral\Bootloader\Http\DiactorosBootloader` moved to the `Spiral\Http\Bootloader\DiactorosBootloader`.
   - Classes `Spiral\Http\Diactoros\ResponseFactory`, `Spiral\Http\Diactoros\ServerRequestFactory`, `Spiral\Http\Diactoros\StreamFactory`,
-    `Spiral\Http\Diactoros\UploadedFileFactory`, `Spiral\Http\Diactoros\UriFactory` 
+    `Spiral\Http\Diactoros\UploadedFileFactory`, `Spiral\Http\Diactoros\UriFactory`
     is removed and replaced to a `Nyholm\Psr7\Factory\Psr17Factory` class from `nyholm/psr7` package in `DiactorosBootloader`.
   - [spiral/exceptions] All handlers have been renamed into renderers. `HandlerInterface` has been deleted.
   - [spiral/exceptions] Added `Spiral\Exceptions\Verbosity` enum.
@@ -63,6 +63,7 @@
   - [spiral/filters] Added return type `void` and `mixed` parameter type of `$context` to the method `setContext`,
     added return type `mixed` to the method `getContext` in `Spiral\Filters\FilterInterface` interface.
     Added return type `mixed` to the method `getValue` in `Spiral\Filters\InputInterface`.
+  - [spiral/dumper] The `Dumper` Component has been removed from the Framework.
   - [spiral/http] Config `Spiral\Config\JsonPayloadConfig` moved to the `Spiral\Bootloader\Http\JsonPayloadConfig`.
   - [spiral/reactor] Added return type `mixed` and `array|string` parameter type of `$search`,
     `array|string` parameter type of `$replace` to the method `replace` in `Spiral\Reactor\ReplaceableInterface`.
@@ -93,13 +94,21 @@
     added return type `mixed` to the method `offsetGet`, added return type `mixed` and `mixed` parameter type
     of `$default` to the method `get`  in `Spiral\Http\Request\InputBag` class.
   - [spiral/config] Added return type `void` to the method `setDefaults` in `Spiral\Config\ConfiguratorInterface` interface.
-  - [spiral/core] Added return type `mixed` to the method `runScope` in `Spiral\Core\ScopeInterface` interface.
-  - [spiral/core] Added return type `mixed` and `array|callable|string` parameter type of `$target`
-    to the method `invoke` in `Spiral\Core\InvokerInterface` interface.
-  - [spiral/core] Added return type `mixed` to the method `make` in `Spiral\Core\FactoryInterface` interface.
-  - [spiral/core] Added `string|array|callable|object` parameter type of `$resolver` in the method `bind`,
-    added `string|array|callable|object` parameter type of `$resolver` in the method `bindSingleton` in `Spiral\Core\BinderInterface` interface.
-  - [spiral/core] Added return type `object` to the method `createInjection` in `Spiral\Core\Container\InjectorInterface` interface.
+  - [spiral/core] Comprehensive code refactoring. A lot of signatures from `Spiral\Core` namespace has been changed.
+    New features:
+    - Added supporting for PHP 8.0 Union types.
+    - Added supporting for variadic arguments:
+      - array passed by parameter name.
+        - with named arguments inside.
+        - with positional arguments inside.
+      - value passed by parameter name.
+      - positional trailed values.
+    - Support for default object value.
+    - Added supporting for referenced parameters in Resolver.
+    - The Factory now more strict: no more arguments type conversion.
+    - Added the `Spiral\Core\ResolverInterface::validateArguments` method for arguments validation.
+    - Support for `WeakReference` bindings.
+  - [spiral/boot] Method `starting` renamed to `booting`, method `started` renamed to `booted` in the class `Spiral\Boot\AbstractKernel`.
   - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
   - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
     added in `Spiral\Boot\EnvironmentInterface` interface.
@@ -111,7 +120,7 @@
   - [spiral/boot] `Spiral\Boot\AbstractKernel` constructor is protected now.
   - [spiral/boot] Added return type `mixed` to the method `loadData`,
     added return type `void` and `mixed` parameter type of `$data` to the method `saveData` in `Spiral\Boot\MemoryInterface` interface.
-  - [spiral/boot] In `Bootloaders`, the name of the method has been changed from `boot` to `init`. 
+  - [spiral/boot] In `Bootloaders`, the name of the method has been changed from `boot` to `init`.
     In the code of custom Bootloaders, need to change the name of the method.
   - [spiral/console] Added return type `void` to the method `writeHeader`, added return type `void` to the method `execute`,
     method `whiteFooter` renamed to `writeFooter`, added return type `void` to the method `writeFooter`
@@ -142,7 +151,7 @@
     config `Spiral\Bootloader\Storage\StorageConfig` moved to the `Spiral\Storage\Config\StorageConfig`.
   - [spiral/validation] Bootloader `Spiral\Bootloader\Security\ValidationBootloader` moved to the `Spiral\Validation\Bootloader\ValidationBootloader`.
   - [spiral/views] Bootloader `Spiral\Bootloader\Views\ViewsBootloader` moved to the `Spiral\Views\Bootloader\ViewsBootloader`.
-  - [spiral/boot] By default, overwriting of environment variable values is disabled, the default value for `$overwrite` 
+  - [spiral/boot] By default, overwriting of environment variable values is disabled, the default value for `$overwrite`
     changed from `true` to `false` in the `Spiral\Boot\Environment`.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
@@ -156,11 +165,32 @@
   - [spiral/debug] Added `Spiral\Debug\StateConsumerInterface`.
   - [spiral/boot] Added new `boot` method in `Bootloaders`. It will be executed after the `init` method is executed in all `Bootloaders`.
     The old `boot` method has been renamed to `init`. See **High Impact Changes** section.
-  - [spiral/boot] Added automatic booting of `Bootloaders` requested in the `init` and `boot` methods. 
+  - [spiral/boot] Added automatic booting of `Bootloaders` requested in the `init` and `boot` methods.
     They no longer need to be specified explicitly in `DEPENDENCIES` property or in `defineDependencies` method.
-  - [spiral/monolog-bridge] Added the ability to configure the default channel using the configuration file or 
+  - [spiral/monolog-bridge] Added the ability to configure the default channel using the configuration file or
     environment variable `MONOLOG_DEFAULT_CHANNEL`.
-  
+
+## v2.14.0 - Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Low Impact Changes**
+- **Other Features**
+- **Bug Fixes**
+
+## v2.13.0 - 2022-04-28
+- **Medium Impact Changes**
+  - Dispatcher `Spiral\Http\SapiDispatcher` is deprecated. Will be moved to `spiral/sapi-bridge` and removed in v3.0
+  - Classes `Spiral\Http\Emitter\SapiEmitter`, `Spiral\Http\Exception\EmitterException`, `Spiral\Http\EmitterInterface`,
+    `Spiral\Http\SapiRequestFactory` is deprecated. Will be removed in version v3.0.
+    After the release of v3.0, must use the package `spiral/sapi-bridge` for SAPI functionality.
+  - The `dumper` component is deprecated and will be removed in v3.0
+- **Other Features**
+  - [spiral/http] Added parameter `chunkSize` in the `http` configuration file.
+  - [spiral/queue] Added attribute `Queueable` to mark classes that can be queued.
+    Added `Spiral\Queue\QueueableDetector` class to easily check if an object should be queued or not and get the queue 
+    from an attribute or getQueue method on the object.
+  - [spiral/broadcasting] New component with common interfaces (RR2.0 support)
+
 ## v2.12.0 - 2022-04-07
 - **Medium Impact Changes**
   - Bootloaders `Spiral\Bootloader\Broadcast\BroadcastBootloader`, `Spiral\Bootloader\Http\WebsocketsBootloader`

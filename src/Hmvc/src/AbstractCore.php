@@ -6,8 +6,10 @@ namespace Spiral\Core;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\ControllerException;
+use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
+use Spiral\Core\Exception\Resolver\InvalidArgumentException;
+use TypeError;
 
 /**
  * Provides ability to call controllers in IoC scope.
@@ -48,11 +50,12 @@ abstract class AbstractCore implements CoreInterface
 
         try {
             // getting the set of arguments should be sent to requested method
-            $args = $this->resolver->resolveArguments($method, $parameters);
-        } catch (ArgumentException $e) {
+            $args = $this->resolver->resolveArguments($method, $parameters, validate: true);
+        } catch (ArgumentResolvingException|InvalidArgumentException $e) {
             throw new ControllerException(
-                \sprintf('Missing/invalid parameter %s of `%s`->`%s`', $e->getParameter()->name, $controller, $action),
-                ControllerException::BAD_ARGUMENT
+                \sprintf('Missing/invalid parameter %s of `%s`->`%s`', $e->getParameter(), $controller, $action),
+                ControllerException::BAD_ARGUMENT,
+                $e
             );
         } catch (ContainerExceptionInterface $e) {
             throw new ControllerException(
