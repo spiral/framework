@@ -18,8 +18,8 @@
         "php": ">=7.4",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "spiral/dumper": "^2.14",
-        "spiral/debug": "^2.14"
+        "spiral/dumper": "^2.13.1",
+        "spiral/debug": "^2.13.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5"

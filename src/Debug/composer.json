@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/logger": "^2.14"
+        "spiral/logger": "^2.13.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5"

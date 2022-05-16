@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/boot": "^2.14",
+        "spiral/boot": "^2.13.1",
         "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
