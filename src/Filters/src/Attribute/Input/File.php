@@ -19,6 +19,9 @@ class File extends Input
     ) {
     }
 
+    /**
+     * @see \Spiral\Http\Request\InputManager::file() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): ?UploadedFileInterface
     {
         return $input->getValue('file', $this->getKey($property));

@@ -7,6 +7,15 @@ namespace Spiral\Filters\Attribute\Input;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
+/**
+ * Every route writes matched parameters into ServerRequestInterface attribute matches, is it possible to access route
+ * values inside your filter using attribute:matches.{name} notation.
+ *
+ * $router->setRoute(
+ *      'sample',
+ *      new Route('/action/<id>.html', new Controller(HomeController::class))
+ * );
+ */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class Route extends Input
 {
@@ -18,6 +27,9 @@ final class Route extends Input
     ) {
     }
 
+    /**
+     * @see \Spiral\Http\Request\InputManager::attribute() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $input->getValue('attribute', 'matches.' . $this->getKey($property));

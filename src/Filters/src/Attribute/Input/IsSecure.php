@@ -13,6 +13,9 @@ use Spiral\Filters\InputInterface;
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class IsSecure extends Input
 {
+    /**
+     * @see \Spiral\Http\Request\InputManager::isSecure() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): bool
     {
         return $input->getValue($this->getSchema($property));

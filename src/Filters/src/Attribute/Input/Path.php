@@ -14,7 +14,7 @@ use Spiral\Filters\InputInterface;
 final class Path extends Input
 {
     /**
-     * @return string
+     * @see \Spiral\Http\Request\InputManager::path() from {@link https://github.com/spiral/http}
      */
     public function getValue(InputInterface $input, \ReflectionProperty $property): string
     {

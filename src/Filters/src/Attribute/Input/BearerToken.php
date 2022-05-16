@@ -10,6 +10,9 @@ use Spiral\Filters\InputInterface;
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class BearerToken extends Input
 {
+    /**
+     * @see \Spiral\Http\Request\InputManager::bearerToken() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $input->getValue($this->getSchema($property));

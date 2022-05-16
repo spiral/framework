@@ -18,6 +18,9 @@ final class Query extends Input
     ) {
     }
 
+    /**
+     * @see \Spiral\Http\Request\InputManager::query() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $input->getValue('query', $this->getKey($property));

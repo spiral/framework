@@ -13,6 +13,9 @@ use Spiral\Filters\InputInterface;
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class Method extends Input
 {
+    /**
+     * @see \Spiral\Http\Request\InputManager::method() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): string
     {
         return $input->getValue($this->getSchema($property));

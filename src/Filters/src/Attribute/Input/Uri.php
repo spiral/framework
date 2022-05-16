@@ -14,6 +14,9 @@ use Spiral\Filters\InputInterface;
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class Uri extends Input
 {
+    /**
+     * @see \Spiral\Http\Request\InputManager::uri() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): UriInterface
     {
         return $input->getValue($this->getSchema($property));

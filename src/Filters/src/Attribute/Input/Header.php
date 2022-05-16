@@ -18,6 +18,9 @@ final class Header extends Input
     ) {
     }
 
+    /**
+     * @see \Spiral\Http\Request\InputManager::header() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $input->getValue('header', $this->getKey($property));

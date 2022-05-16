@@ -13,6 +13,9 @@ use Spiral\Filters\InputInterface;
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class IsAjax extends Input
 {
+    /**
+     * @see \Spiral\Http\Request\InputManager::isAjax() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): bool
     {
         return $input->getValue($this->getSchema($property));

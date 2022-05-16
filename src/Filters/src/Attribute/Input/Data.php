@@ -18,6 +18,9 @@ final class Data extends Input
     ) {
     }
 
+    /**
+     * @see \Spiral\Http\Request\InputManager::data() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $input->getValue('data', $this->getKey($property));

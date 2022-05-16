@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Attribute\Input;
 
-use Psr\Http\Message\UriInterface;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
+/**
+ *
+ */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class Server extends Input
 {
@@ -19,6 +21,9 @@ final class Server extends Input
     ) {
     }
 
+    /**
+     * @see \Spiral\Http\Request\InputManager::server() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $input->getValue('server', $this->getKey($property));

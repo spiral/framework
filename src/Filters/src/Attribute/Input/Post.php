@@ -18,6 +18,9 @@ final class Post extends Input
     ) {
     }
 
+    /**
+     * @see \Spiral\Http\Request\InputManager::post() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $input->getValue('post', $this->getKey($property));

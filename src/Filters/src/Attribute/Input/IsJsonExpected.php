@@ -18,6 +18,9 @@ final class IsJsonExpected extends Input
     ) {
     }
 
+    /**
+     * @see \Spiral\Http\Request\InputManager::isJsonExpected() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): bool
     {
         return $input->getValue($this->getSchema($property));
