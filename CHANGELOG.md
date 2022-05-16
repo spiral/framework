@@ -108,6 +108,7 @@
     - The Factory now more strict: no more arguments type conversion.
     - Added the `Spiral\Core\ResolverInterface::validateArguments` method for arguments validation.
     - Support for `WeakReference` bindings.
+  - [spiral/boot] Method `starting` renamed to `booting`, method `started` renamed to `booted` in the class `Spiral\Boot\AbstractKernel`.
   - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
   - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
     added in `Spiral\Boot\EnvironmentInterface` interface.
