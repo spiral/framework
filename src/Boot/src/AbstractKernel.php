@@ -89,8 +89,8 @@ abstract class AbstractKernel implements KernelInterface
         array $directories,
         bool $handleErrors = true,
         ExceptionHandlerInterface|string|null $exceptionHandler = null,
+        Container $container = new Container(),
     ): static {
-        $container = new Container();
         $exceptionHandler ??= ExceptionHandler::class;
 
         if (\is_string($exceptionHandler)) {
@@ -100,7 +100,7 @@ abstract class AbstractKernel implements KernelInterface
             $exceptionHandler->register();
         }
 
-        return new static(new Container(), $exceptionHandler, $directories);
+        return new static($container, $exceptionHandler, $directories);
     }
 
     /**
