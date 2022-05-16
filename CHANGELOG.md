@@ -7,6 +7,10 @@
 - **Other Features**
 - **Bug Fixes**
 
+## v2.13.1 - 2022-05-16
+- **Bug Fixes**
+  - [spiral/sendit] Fixed problem with MailJob compatibility with `spiral\jobs` and `spiral\roadrunner-jobs`
+
 ## v2.13.0 - 2022-04-28
 - **Medium Impact Changes**
   - Dispatcher `Spiral\Http\SapiDispatcher` is deprecated. Will be moved to `spiral/sapi-bridge` and removed in v3.0
