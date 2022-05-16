@@ -8,8 +8,6 @@ interface ValidationProviderInterface
 {
     /**
      * Get validation object by name.
-     *
-     * @return ValidationInterface
      */
     public function getValidation(string $name, array $params = []): ValidationInterface;
 }

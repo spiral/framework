@@ -18,6 +18,9 @@ final class Attribute extends Input
     ) {
     }
 
+    /**
+     * @see \Spiral\Http\Request\InputManager::attribute() from {@link https://github.com/spiral/http}
+     */
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {
         return $input->getValue('attribute', $this->getKey($property));

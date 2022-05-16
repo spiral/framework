@@ -176,8 +176,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Get the bearer token from the request headers.
-     *
-     * @return string|null
      */
     public function bearerToken(): ?string
     {

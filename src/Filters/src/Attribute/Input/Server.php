@@ -7,9 +7,6 @@ namespace Spiral\Filters\Attribute\Input;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
-/**
- *
- */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class Server extends Input
 {
