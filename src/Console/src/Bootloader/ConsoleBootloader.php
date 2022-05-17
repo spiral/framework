@@ -44,7 +44,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     public function init(AbstractKernel $kernel, FactoryInterface $factory): void
     {
         // Lowest priority
-        $kernel->started(static function (AbstractKernel $kernel) use ($factory): void {
+        $kernel->booted(static function (AbstractKernel $kernel) use ($factory): void {
             $kernel->addDispatcher($factory->make(ConsoleDispatcher::class));
         });
 
@@ -52,8 +52,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
             ConsoleConfig::CONFIG,
             [
                 'commands' => [],
-                'configure' => [],
-                'update' => [],
+                'sequences' => [],
             ]
         );
 
@@ -82,10 +81,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string $footer = '',
         array $options = []
     ): void {
-        $this->config->modify(
-            ConsoleConfig::CONFIG,
-            $this->sequence('configure', $sequence, $header, $footer, $options)
-        );
+        $this->addSequence('configure', $sequence, $header, $footer, $options);
     }
 
     public function addUpdateSequence(
@@ -94,9 +90,19 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string $footer = '',
         array $options = []
     ): void {
+        $this->addSequence('update', $sequence, $header, $footer, $options);
+    }
+
+    public function addSequence(
+        string $name,
+        string|array|\Closure $sequence,
+        string $header,
+        string $footer = '',
+        array $options = []
+    ): void {
         $this->config->modify(
             ConsoleConfig::CONFIG,
-            $this->sequence('update', $sequence, $header, $footer, $options)
+            $this->sequence('sequences.' . $name, $sequence, $header, $footer, $options)
         );
     }
 

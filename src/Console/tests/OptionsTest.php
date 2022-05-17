@@ -23,17 +23,17 @@ class OptionsTest extends BaseTest
 
         $this->assertSame(
             'no option',
-            $core->run('optional')->getOutput()->fetch()
+            $core->run(command: 'optional')->getOutput()->fetch()
         );
 
         $this->assertSame(
             'hello',
-            $core->run('optional', ['-o' => true, 'arg' => 'hello'])->getOutput()->fetch()
+            $core->run(command: 'optional', input: ['-o' => true, 'arg' => 'hello'])->getOutput()->fetch()
         );
 
         $this->assertSame(
             0,
-            $core->run('optional', ['-o' => true, 'arg' => 'hello'])->getCode()
+            $core->run(command: 'optional', input: ['-o' => true, 'arg' => 'hello'])->getCode()
         );
     }
 }

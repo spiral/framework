@@ -37,10 +37,10 @@ abstract class AbstractKernel implements KernelInterface
     protected array $dispatchers = [];
 
     /** @var array<Closure> */
-    private array $startingCallbacks = [];
+    private array $bootingCallbacks = [];
 
     /** @var array<Closure> */
-    private array $startedCallbacks = [];
+    private array $bootedCallbacks = [];
 
     /**
      * @throws \Throwable
@@ -89,8 +89,8 @@ abstract class AbstractKernel implements KernelInterface
         array $directories,
         bool $handleErrors = true,
         ExceptionHandlerInterface|string|null $exceptionHandler = null,
+        Container $container = new Container(),
     ): static {
-        $container = new Container();
         $exceptionHandler ??= ExceptionHandler::class;
 
         if (\is_string($exceptionHandler)) {
@@ -100,15 +100,15 @@ abstract class AbstractKernel implements KernelInterface
             $exceptionHandler->register();
         }
 
-        return new static(new Container(), $exceptionHandler, $directories);
+        return new static($container, $exceptionHandler, $directories);
     }
 
     /**
      * Run the application with given Environment
      *
      * $app = App::create([...]);
-     * $app->starting(...);
-     * $app->started(...);
+     * $app->booting(...);
+     * $app->booted(...);
      * $app->run(new Environment([
      *     'APP_ENV' => 'production'
      * ]));
@@ -138,34 +138,34 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Register a new callback, that will be fired before application start. (Before all bootloaders will be started)
+     * Register a new callback, that will be fired before application boot. (Before all bootloaders will be booted)
      *
-     * $kernel->starting(static function(KernelInterface $kernel) {
+     * $kernel->booting(static function(KernelInterface $kernel) {
      *     $kernel->getContainer()->...
      * });
      *
      * @internal
      */
-    public function starting(Closure ...$callbacks): void
+    public function booting(Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
-            $this->startingCallbacks[] = $callback;
+            $this->bootingCallbacks[] = $callback;
         }
     }
 
     /**
-     * Register a new callback, that will be fired after application started. (After starting all bootloaders)
+     * Register a new callback, that will be fired after application booted. (After booting all bootloaders)
      *
-     * $kernel->started(static function(KernelInterface $kernel) {
+     * $kernel->booted(static function(KernelInterface $kernel) {
      *     $kernel->getContainer()->...
      * });
      *
      * @internal
      */
-    public function started(Closure ...$callbacks): void
+    public function booted(Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
-            $this->startedCallbacks[] = $callback;
+            $this->bootedCallbacks[] = $callback;
         }
     }
 
@@ -231,16 +231,16 @@ abstract class AbstractKernel implements KernelInterface
             $this->defineBootloaders(),
             [
                 static function () use ($self): void {
-                    $self->fireCallbacks($self->startingCallbacks);
+                    $self->fireCallbacks($self->bootingCallbacks);
                 },
             ]
         );
 
-        $this->fireCallbacks($this->startedCallbacks);
+        $this->fireCallbacks($this->bootedCallbacks);
     }
 
     /**
-     * Call the registered starting callbacks.
+     * Call the registered booting callbacks.
      */
     private function fireCallbacks(array &$callbacks): void
     {

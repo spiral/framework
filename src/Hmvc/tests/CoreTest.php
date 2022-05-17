@@ -133,7 +133,7 @@ class CoreTest extends TestCase
         $this->assertSame('900', $core->callAction(
             CleanController::class,
             'test',
-            ['id' => 900]
+            ['id' => '900']
         ));
     }
 

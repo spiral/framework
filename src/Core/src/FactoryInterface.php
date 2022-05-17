@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
-use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\AutowireException;
 
 /**
@@ -20,7 +19,6 @@ interface FactoryInterface
      * @param array $parameters Parameters to construct new class.
      *
      * @throws AutowireException
-     * @throws ArgumentException
      */
     public function make(string $alias, array $parameters = []): mixed;
 }

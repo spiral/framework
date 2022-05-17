@@ -5,156 +5,57 @@ declare(strict_types=1);
 namespace Spiral\Filters;
 
 use Spiral\Core\Container;
-use Spiral\Core\FactoryInterface;
-use Spiral\Filters\Exception\SchemaException;
-use Spiral\Models\Reflection\ReflectionEntity;
-use Spiral\Validation\ValidationInterface;
-use Spiral\Validation\ValidatorInterface;
+use Spiral\Core\CoreInterface;
+use Spiral\Models\SchematicEntity;
 
 /**
- * Create filters based on their schema definition.
+ * @internal
  */
 final class FilterProvider implements FilterProviderInterface
 {
-    // Filter specific schema segments
-    public const MAPPING   = 'mapping';
-    public const VALIDATES = 'validates';
-
-    // Packed schema definitions
-    public const SOURCE         = 'source';
-    public const ORIGIN         = 'origin';
-    public const FILTER         = 'filter';
-    public const ARRAY          = 'array';
-    public const OPTIONAL       = 'optional';
-    public const ITERATE_SOURCE = 'iterate_source';
-    public const ITERATE_ORIGIN = 'iterate_origin';
-
-    private array $cache = [];
-
-    /** @var ErrorMapper[] */
-    private array $errorMappers = [];
-
-    /** @var ValidatorInterface[] */
-    private array $validators = [];
-
     public function __construct(
-        private readonly ValidationInterface $validation,
-        private readonly FactoryInterface $factory = new Container()
+        private readonly Container $container,
+        private readonly CoreInterface $core
     ) {
     }
 
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
-        $schema = $this->getSchema($name);
+        $attributeMapper = $this->container->get(Schema\AttributeMapper::class);
 
-        /** @var Filter $instance */
-        $instance = $this->factory->make($name, [
-            'data'        => [],
-            'schema'      => $schema,
-            'validator'   => $this->getValidator($name),
-            'errorMapper' => $this->getErrorMapper($name),
+        $filter = $this->createFilterInstance($name);
+        [$mappingSchema, $errors] = $attributeMapper->map($filter, $input);
+
+        if ($filter instanceof HasFilterDefinition) {
+            $mappingSchema = \array_merge(
+                $mappingSchema,
+                $filter->filterDefinition()->mappingSchema()
+            );
+        }
+
+        $inputMapper = $this->container->get(Schema\InputMapper::class);
+        $schemaBuilder = $this->container->get(Schema\Builder::class);
+
+        $schema = $schemaBuilder->makeSchema($name, $mappingSchema);
+
+        [$data, $inputErrors] = $inputMapper->map($schema, $input);
+        $errors = \array_merge($errors, $inputErrors);
+
+        $entity = new SchematicEntity($data, $schema);
+        return $this->core->callAction($name, 'handle', [
+            'filterBag' => new FilterBag($filter, $entity, $schema, $errors),
         ]);
-
-        $instance->setValue($this->initValues($schema[self::MAPPING], $input));
-
-        return $instance;
     }
 
-    public function initValues(array $mappingSchema, InputInterface $input): array
+    private function createFilterInstance(string $name): FilterInterface
     {
-        $result = [];
-        foreach ($mappingSchema as $field => $map) {
-            if (empty($map[self::FILTER])) {
-                $value = $input->getValue($map[self::SOURCE], $map[self::ORIGIN]);
+        $class = new \ReflectionClass($name);
 
-                if ($value !== null) {
-                    $result[$field] = $value;
-                }
-                continue;
-            }
-
-            $nested = $map[self::FILTER];
-            if (empty($map[self::ARRAY])) {
-                // slicing down
-                $result[$field] = $this->createFilter($nested, $input->withPrefix($map[self::ORIGIN]));
-                continue;
-            }
-
-            $values = [];
-
-            // List of "key" => "location in request"
-            foreach ($this->iterate($map, $input) as $index => $origin) {
-                $values[$index] = $this->createFilter($nested, $input->withPrefix($origin));
-            }
-
-            $result[$field] = $values;
+        $args = [];
+        if ($constructor = $class->getConstructor()) {
+            $args = $this->container->resolveArguments($constructor);
         }
 
-        return $result;
-    }
-
-    /**
-     * Create set of origins and prefixed for a nested array of models.
-     */
-    private function iterate(array $schema, InputInterface $input): \Generator
-    {
-        $values = $input->getValue($schema[self::ITERATE_SOURCE], $schema[self::ITERATE_ORIGIN]);
-        if (empty($values) || !\is_array($values)) {
-            return [];
-        }
-
-        foreach (\array_keys($values) as $key) {
-            yield $key => $schema[self::ORIGIN] . '.' . $key;
-        }
-    }
-
-    private function getErrorMapper(string $filter): ErrorMapper
-    {
-        if (isset($this->errorMappers[$filter])) {
-            return $this->errorMappers[$filter];
-        }
-
-        $errorMapper = new ErrorMapper($this->getSchema($filter)[self::MAPPING]);
-        $this->errorMappers[$filter] = $errorMapper;
-
-        return $errorMapper;
-    }
-
-    private function getValidator(string $filter): ValidatorInterface
-    {
-        if (isset($this->validators[$filter])) {
-            return $this->validators[$filter];
-        }
-
-        $validator = $this->validation->validate([], $this->getSchema($filter)[self::VALIDATES]);
-        $this->validators[$filter] = $validator;
-
-        return $validator;
-    }
-
-    /**
-     *
-     * @throws SchemaException
-     */
-    private function getSchema(string $filter): array
-    {
-        if (isset($this->cache[$filter])) {
-            return $this->cache[$filter];
-        }
-
-        try {
-            $reflection = new ReflectionEntity($filter);
-            if (!$reflection->getReflection()->isSubclassOf(Filter::class)) {
-                throw new SchemaException('Invalid filter class, must be subclass of Filter');
-            }
-
-            $builder = new SchemaBuilder(new ReflectionEntity($filter));
-        } catch (\ReflectionException $e) {
-            throw new SchemaException('Invalid filter schema', $e->getCode(), $e);
-        }
-
-        $this->cache[$filter] = $builder->makeSchema();
-
-        return $this->cache[$filter];
+        return $class->newInstanceArgs($args);
     }
 }

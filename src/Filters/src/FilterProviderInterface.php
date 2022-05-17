@@ -19,7 +19,6 @@ use Spiral\Filters\Exception\FilterException;
 interface FilterProviderInterface
 {
     /**
-     *
      * @throws FilterException
      */
     public function createFilter(string $name, InputInterface $input): FilterInterface;

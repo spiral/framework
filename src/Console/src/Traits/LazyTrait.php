@@ -21,7 +21,7 @@ trait LazyTrait
     private function supportsLazyLoading(string $class): bool
     {
         return \is_subclass_of($class, SpiralCommand::class)
-            && \defined(sprintf('%s::%s', $class, 'NAME'));
+            && \defined(\sprintf('%s::%s', $class, 'NAME'));
     }
 
     /**

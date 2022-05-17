@@ -31,4 +31,8 @@ interface BinderInterface
     public function hasInstance(string $alias): bool;
 
     public function removeBinding(string $alias): void;
+
+    public function bindInjector(string $class, string $injector): void;
+
+    public function removeInjector(string $class): void;
 }
