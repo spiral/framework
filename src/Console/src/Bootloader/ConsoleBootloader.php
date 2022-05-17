@@ -44,7 +44,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     public function init(AbstractKernel $kernel, FactoryInterface $factory): void
     {
         // Lowest priority
-        $kernel->started(static function (AbstractKernel $kernel) use ($factory): void {
+        $kernel->booted(static function (AbstractKernel $kernel) use ($factory): void {
             $kernel->addDispatcher($factory->make(ConsoleDispatcher::class));
         });
 

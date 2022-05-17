@@ -39,7 +39,7 @@ class TestController
 
     public function filter(TestRequest $r)
     {
-        return $r->isValid() ? ($r->value ?? 'ok') : json_encode($r->getErrors());
+        return ['name' => $r->name, 'sectionValue' => $r->sectionValue];
     }
 
     public function filter2(BadRequest $r): void

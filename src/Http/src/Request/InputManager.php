@@ -175,6 +175,24 @@ final class InputManager implements SingletonInterface
     }
 
     /**
+     * Get the bearer token from the request headers.
+     */
+    public function bearerToken(): ?string
+    {
+        $header = $this->header('Authorization', '');
+
+        $position = \strrpos($header, 'Bearer ');
+
+        if ($position !== false) {
+            $header = \substr($header, $position + 7);
+
+            return \strpos($header, ',') !== false
+                ? \strstr(',', $header, true)
+                : $header;
+        }
+    }
+
+    /**
      * Http method. Always uppercase.
      */
     public function method(): string

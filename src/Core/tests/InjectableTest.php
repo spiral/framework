@@ -27,7 +27,7 @@ class InjectableTest extends TestCase
 {
     public function testMissingInjector(): void
     {
-        $this->expectExceptionMessage("Undefined class or binding 'Spiral\Core\ConfigsInterface'");
+        $this->expectExceptionMessage("Undefined class or binding `Spiral\Core\ConfigsInterface`");
         $this->expectException(AutowireException::class);
 
         $container = new Container();
@@ -50,7 +50,7 @@ class InjectableTest extends TestCase
     public function testInvalidInjectorBinding(): void
     {
         $this->expectException(AutowireException::class);
-        $this->expectExceptionMessage("Undefined class or binding 'invalid-injector'");
+        $this->expectExceptionMessage("Undefined class or binding `invalid-injector`");
 
         $container = new Container();
 
@@ -94,7 +94,7 @@ class InjectableTest extends TestCase
     public function testInjectorOuterBinding(): void
     {
         $this->expectException(AutowireException::class);
-        $this->expectExceptionMessage("Undefined class or binding 'invalid-configurator'");
+        $this->expectExceptionMessage("Undefined class or binding `invalid-configurator`");
         $container = new Container();
         $container->bind(ConfigsInterface::class, 'invalid-configurator');
 
@@ -161,14 +161,13 @@ class InjectableTest extends TestCase
         $container->bind(ConfigsInterface::class, $configurator);
 
         $configurator->shouldReceive('createInjection')
-            ->with(m::on(static function (ReflectionClass $r) {
-                return $r->getName() === TestConfig::class;
-            }), 'contextArgument')
-            ->andReturn($expected)
-        ;
+            ->with(
+                m::on(static fn(ReflectionClass $r) => $r->getName() === TestConfig::class),
+                'contextArgument'
+            )
+            ->andReturn($expected);
 
-        $arguments = $container->resolveArguments(new ReflectionMethod($this, 'methodInjection'));
-
+        $arguments = $container->resolveArguments(new ReflectionMethod(...[$this, 'methodInjection']));
         $this->assertCount(1, $arguments);
         $this->assertSame($expected, $arguments[0]);
     }

@@ -6,8 +6,8 @@ namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
-use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\NotCallableException;
+use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\Storage;
@@ -64,13 +64,10 @@ class InvokerTest extends TestCase
 
     public function testCallValidCallableArrayWithNotResolvableDependencies(): void
     {
-        $this->expectException(ArgumentException::class);
-        $this->expectErrorMessage(
-            "Unable to resolve 'name' argument in 'Spiral\Tests\Core\Fixtures\Bucket::__construct'"
-        );
-        $object = new Storage();
+        $this->expectException(ArgumentResolvingException::class);
+        $this->expectErrorMessage('Unable to resolve required argument `name` when resolving');
 
-        $this->container->invoke([$object, 'makeBucket'], ['name' => 'bar']);
+        $this->container->invoke([new Storage(), 'makeBucket'], ['name' => 'bar']);
     }
 
     public function testCallValidCallableString(): void
@@ -87,10 +84,9 @@ class InvokerTest extends TestCase
 
     public function testCallValidCallableStringWithNotResolvableDependencies(): void
     {
-        $this->expectException(ArgumentException::class);
-        $this->expectErrorMessage(
-            "Unable to resolve 'name' argument in 'Spiral\Tests\Core\Fixtures\Bucket::__construct'"
-        );
+        $this->expectException(ArgumentResolvingException::class);
+        $this->expectErrorMessage('Unable to resolve required argument `name` when resolving');
+
         $this->container->invoke(Storage::class.'::createBucket', ['name' => 'bar']);
     }
 
@@ -113,8 +109,8 @@ class InvokerTest extends TestCase
 
     public function testCallValidClosureWithNotResolvableDependencies(): void
     {
-        $this->expectException(ArgumentException::class);
-        $this->expectErrorMessage("Unable to resolve 'name' argument in 'Spiral\Tests\Core\Fixtures\Bucket::__construct'");
+        $this->expectException(ArgumentResolvingException::class);
+        $this->expectErrorMessage('Unable to resolve required argument `name` when resolving');
 
         $this->container->invoke(
             static function (Bucket $bucket, SampleClass $class, string $name, string $path = 'baz') {

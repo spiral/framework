@@ -94,13 +94,21 @@
     added return type `mixed` to the method `offsetGet`, added return type `mixed` and `mixed` parameter type
     of `$default` to the method `get`  in `Spiral\Http\Request\InputBag` class.
   - [spiral/config] Added return type `void` to the method `setDefaults` in `Spiral\Config\ConfiguratorInterface` interface.
-  - [spiral/core] Added return type `mixed` to the method `runScope` in `Spiral\Core\ScopeInterface` interface.
-  - [spiral/core] Added return type `mixed` and `array|callable|string` parameter type of `$target`
-    to the method `invoke` in `Spiral\Core\InvokerInterface` interface.
-  - [spiral/core] Added return type `mixed` to the method `make` in `Spiral\Core\FactoryInterface` interface.
-  - [spiral/core] Added `string|array|callable|object` parameter type of `$resolver` in the method `bind`,
-    added `string|array|callable|object` parameter type of `$resolver` in the method `bindSingleton` in `Spiral\Core\BinderInterface` interface.
-  - [spiral/core] Added return type `object` to the method `createInjection` in `Spiral\Core\Container\InjectorInterface` interface.
+  - [spiral/core] Comprehensive code refactoring. A lot of signatures from `Spiral\Core` namespace has been changed.
+    New features:
+    - Added supporting for PHP 8.0 Union types.
+    - Added supporting for variadic arguments:
+      - array passed by parameter name.
+        - with named arguments inside.
+        - with positional arguments inside.
+      - value passed by parameter name.
+      - positional trailed values.
+    - Support for default object value.
+    - Added supporting for referenced parameters in Resolver.
+    - The Factory now more strict: no more arguments type conversion.
+    - Added the `Spiral\Core\ResolverInterface::validateArguments` method for arguments validation.
+    - Support for `WeakReference` bindings.
+  - [spiral/boot] Method `starting` renamed to `booting`, method `started` renamed to `booted` in the class `Spiral\Boot\AbstractKernel`.
   - [spiral/boot] Added return type `self` to the method `set` in `Spiral\Boot\DirectoriesInterface` interface.
   - [spiral/boot] Added return type `mixed` and `mixed` parameter type of `$default` to the method `get`,
     added in `Spiral\Boot\EnvironmentInterface` interface.

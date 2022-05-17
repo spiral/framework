@@ -1,20 +1,14 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework;
 
-use Spiral\Boot\Environment;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\App\TestApp;
+use Spiral\Core\Container;
+use stdClass;
 
 class KernelTest extends BaseTest
 {
@@ -44,5 +38,18 @@ class KernelTest extends BaseTest
         $this->expectException(BootException::class);
 
         TestApp::create([], false)->run();
+    }
+
+    public function testCustomContainer(): void
+    {
+        $container = new Container();
+        $container->bind('foofoo', new stdClass());
+
+        $app = TestApp::create([
+            'root'    => __DIR__ . '/../..',
+        ], container: $container);
+
+        $this->assertSame($container, $app->getContainer());
+        $this->assertInstanceOf(stdClass::class, $app->get('foofoo'));
     }
 }

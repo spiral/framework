@@ -6,9 +6,6 @@ namespace Spiral\Filters;
 
 use Spiral\Filters\Exception\SchemaException;
 
-/**
- * Map errors based on their original location.
- */
 final class ErrorMapper
 {
     public function __construct(
@@ -18,7 +15,7 @@ final class ErrorMapper
 
     public function mapErrors(array $errors): array
     {
-        //De-mapping
+        // De-mapping
         $mapped = [];
         foreach ($errors as $field => $message) {
             if (!isset($this->schema[$field])) {
@@ -26,7 +23,7 @@ final class ErrorMapper
                 continue;
             }
 
-            $this->mount($mapped, $this->schema[$field][FilterProvider::ORIGIN], $message);
+            $this->mount($mapped, $this->schema[$field][Schema\Builder::SCHEMA_ORIGIN], $message);
         }
 
         return $mapped;

@@ -20,8 +20,7 @@ class SchematicEntity extends AbstractEntity
     {
         return match (true) {
             !empty($this->schema[ModelSchema::FILLABLE]) && $this->schema[ModelSchema::FILLABLE] === '*' => true,
-            !empty($this->schema[ModelSchema::FILLABLE]) =>
-                \in_array($field, $this->schema[ModelSchema::FILLABLE], true),
+            !empty($this->schema[ModelSchema::FILLABLE]) => \in_array($field, $this->schema[ModelSchema::FILLABLE], true),
             !empty($this->schema[ModelSchema::SECURED]) && $this->schema[ModelSchema::SECURED] === '*' => false,
             default => !\in_array($field, $this->schema[ModelSchema::SECURED], true)
         };
