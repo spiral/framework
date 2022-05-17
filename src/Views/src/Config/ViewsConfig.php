@@ -12,8 +12,7 @@ final class ViewsConfig extends InjectableConfig
 {
     public const CONFIG = 'views';
 
-    /** @var array */
-    protected $config = [
+    protected array $config = [
         'cache'        => [
             'enable'    => false,
             'directory' => '/tmp',

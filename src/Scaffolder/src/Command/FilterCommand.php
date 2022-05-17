@@ -10,8 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class FilterCommand extends AbstractCommand
 {
-    protected const ELEMENT = 'filter';
-
     protected const NAME        = 'create:filter';
     protected const DESCRIPTION = 'Create filter declaration';
     protected const ARGUMENTS   = [
@@ -47,8 +45,8 @@ class FilterCommand extends AbstractCommand
      */
     public function perform(): int
     {
-        /** @var FilterDeclaration $declaration */
-        $declaration = $this->createDeclaration();
+        $declaration = $this->createDeclaration(FilterDeclaration::class);
+        $className = $declaration->getClass()->getName();
 
         $fields = [];
         if ($this->option('entity')) {
@@ -57,7 +55,7 @@ class FilterCommand extends AbstractCommand
                 $fields = $this->parseSourceEntity($name);
             } catch (\ReflectionException $e) {
                 $this->writeln(
-                    "<fg=red>Unable to create '<comment>{$declaration->getName()} from $name</comment>' declaration: "
+                    "<fg=red>Unable to create '<comment>{$className} from $name</comment>' declaration: "
                     . "'<comment>{$e->getMessage()}' at {$e->getFile()}:{$e->getLine()}.</comment></fg=red>"
                 );
 

@@ -4,267 +4,115 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor;
 
-use Doctrine\Inflector\Rules\English\InflectorFactory;
-use Spiral\Reactor\Aggregator\Constants;
-use Spiral\Reactor\Aggregator\Methods;
-use Spiral\Reactor\Aggregator\Properties;
-use Spiral\Reactor\Exception\ReactorException;
+use Nette\PhpGenerator\ClassType;
 use Spiral\Reactor\Partial\Constant;
 use Spiral\Reactor\Partial\Method;
 use Spiral\Reactor\Partial\Property;
-use Spiral\Reactor\Traits\CommentTrait;
-use Spiral\Reactor\Traits\NamedTrait;
+use Spiral\Reactor\Partial\TraitUse;
+use Spiral\Reactor\Traits;
 
-/**
- * Class declaration.
- */
-class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterface, NamedInterface
+class ClassDeclaration extends AbstractDeclaration implements AggregableInterface
 {
-    use NamedTrait;
-    use CommentTrait;
+    use Traits\ConstantsAware;
+    use Traits\MethodsAware;
+    use Traits\PropertiesAware;
+    use Traits\TraitsAware;
 
-    private string $extends = '';
-    private array $interfaces = [];
-    private array $traits = [];
-    private Constants $constants;
-    private Properties $properties;
-    private Methods $methods;
-
-    /**
-     * @throws ReactorException When name is invalid.
-     */
-    public function __construct(
-        string $name,
-        string $extends = '',
-        array $interfaces = [],
-        string $comment = ''
-    ) {
-        $this->setName($name);
-
-        if (!empty($extends)) {
-            $this->setExtends($extends);
-        }
-
-        $this->setInterfaces($interfaces);
-        $this->initComment($comment);
-
-        $this->constants = new Constants([]);
-        $this->properties = new Properties([]);
-        $this->methods = new Methods([]);
+    public function __construct(?string $name = null)
+    {
+        $this->element = new ClassType($name);
     }
 
-    public function setName(string $name): ClassDeclaration
+    public function setFinal(bool $state = true): static
     {
-        $this->name = (new InflectorFactory())->build()->classify($name);
+        $this->element->setFinal($state);
 
         return $this;
     }
 
-    public function getExtends(): string
+    public function isFinal(): bool
     {
-        return $this->extends;
+        return $this->element->isFinal();
     }
 
-    /**
-     * @param string $class Class name.
-     */
-    public function setExtends(string $class): ClassDeclaration
+    public function setAbstract(bool $state = true): static
     {
-        $this->extends = \ltrim($class, '\\');
+        $this->element->setAbstract($state);
 
         return $this;
     }
 
-    public function hasInterface(string $interface): bool
+    public function isAbstract(): bool
     {
-        $interface = \ltrim($interface, '\\');
-
-        return isset($this->interfaces[$interface]);
+        return $this->element->isAbstract();
     }
 
-    public function addInterface(string $interface): ClassDeclaration
+    public function setExtends(?string $name): static
     {
-        $this->interfaces[\ltrim($interface, '\\')] = true;
+        $this->element->setExtends($name);
 
         return $this;
     }
 
-    public function removeInterface(string $interface): ClassDeclaration
+    public function getExtends(): ?string
     {
-        unset($this->interfaces[\ltrim($interface, '\\')]);
-
-        return $this;
+        return $this->element->getExtends();
     }
 
     /**
-     * Declared interfaces.
+     * @param string[] $names
      */
-    public function getInterfaces(): array
+    public function setImplements(array $names): static
     {
-        return \array_keys($this->interfaces);
-    }
-
-    /**
-     * Declare class interfaces.
-     */
-    public function setInterfaces(array $interfaces): ClassDeclaration
-    {
-        $this->interfaces = [];
-        foreach ($interfaces as $interface) {
-            $this->addInterface($interface);
-        }
+        $this->element->setImplements($names);
 
         return $this;
     }
 
-    public function hasTrait(string $class): bool
+    /** @return string[] */
+    public function getImplements(): array
     {
-        $class = \ltrim($class, '\\');
-
-        return isset($this->traits[$class]);
+        return $this->element->getImplements();
     }
 
-    public function removeTrait(string $class): ClassDeclaration
+    public function addImplement(string $name): static
     {
-        unset($this->traits[\ltrim($class, '\\')]);
+        $this->element->addImplement($name);
 
         return $this;
     }
 
-    public function getTraits(): array
+    public function removeImplement(string $name): static
     {
-        return \array_keys($this->traits);
-    }
-
-    /**
-     * Declare class traits.
-     */
-    public function setTraits(array $traits): ClassDeclaration
-    {
-        $this->traits = [];
-        foreach ($traits as $trait) {
-            $this->addTrait($trait);
-        }
+        $this->element->removeImplement($name);
 
         return $this;
     }
 
-    public function addTrait(string $class): ClassDeclaration
+    public function addMember(Method|Property|Constant|TraitUse $member): static
     {
-        $this->traits[\ltrim($class, '\\')] = true;
+        $this->element->addMember($member->getElement());
 
         return $this;
     }
 
     /**
-     * @return Constants|Constant[]
+     * @internal
      */
-    public function getConstants(): Constants
+    public static function fromElement(ClassType $element): static
     {
-        return $this->constants;
-    }
+        $class = new static();
 
-    public function constant(string $name): Constant
-    {
-        return $this->constants->get($name);
+        $class->element = $element;
+
+        return $class;
     }
 
     /**
-     * @return Properties|Property[]
+     * @internal
      */
-    public function getProperties(): Properties
+    public function getElement(): ClassType
     {
-        return $this->properties;
-    }
-
-    public function property(string $name): Property
-    {
-        return $this->properties->get($name);
-    }
-
-    /**
-     * @return Methods|Method[]
-     */
-    public function getMethods(): Methods
-    {
-        return $this->methods;
-    }
-
-    public function method(string $name): Method
-    {
-        return $this->methods->get($name);
-    }
-
-    public function replace(array|string $search, array|string $replace): ClassDeclaration
-    {
-        $this->constants->replace($search, $replace);
-        $this->properties->replace($search, $replace);
-        $this->methods->replace($search, $replace);
-
-        return $this;
-    }
-
-    public function render(int $indentLevel = 0): string
-    {
-        $result = '';
-
-        if (!$this->docComment->isEmpty()) {
-            $result .= $this->docComment->render($indentLevel) . "\n";
-        }
-
-        //Class header
-        $header = "class {$this->getName()}";
-
-        //Rendering extends
-        if (!empty($this->extends)) {
-            $header .= " extends {$this->extends}";
-        }
-
-        if (!empty($this->interfaces)) {
-            $interfaces = \implode(', ', \array_keys($this->interfaces));
-            $header .= " implements {$interfaces}";
-        }
-
-        $result .= $this->addIndent($header, $indentLevel) . "\n";
-        $result .= $this->addIndent('{', $indentLevel) . "\n";
-
-        //Rendering class body
-        $result .= $this->renderBody($indentLevel);
-
-        $result = \rtrim($result, "\n") . "\n";
-
-        return $result . $this->addIndent('}', $indentLevel);
-    }
-
-    protected function renderBody(int $indentLevel): string
-    {
-        $result = '';
-        if (!empty($this->traits)) {
-            $result .= $this->renderTraits($indentLevel + 1) . "\n\n";
-        }
-
-        if (!$this->constants->isEmpty()) {
-            $result .= $this->constants->render($indentLevel + 1) . "\n\n";
-        }
-
-        if (!$this->properties->isEmpty()) {
-            $result .= $this->properties->render($indentLevel + 1) . "\n\n";
-        }
-
-        if (!$this->methods->isEmpty()) {
-            $result .= $this->methods->render($indentLevel + 1) . "\n\n";
-        }
-
-        return $result;
-    }
-
-    private function renderTraits(int $indentLevel = 0): string
-    {
-        $lines = [];
-        foreach ($this->traits as $class => $_) {
-            $lines[] = $this->addIndent(\sprintf('use %s;', $class), $indentLevel);
-        }
-
-        return \implode("\n", $lines);
+        return $this->element;
     }
 }

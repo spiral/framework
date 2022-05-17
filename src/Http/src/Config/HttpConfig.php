@@ -11,10 +11,7 @@ final class HttpConfig extends InjectableConfig
 {
     public const CONFIG = 'http';
 
-    /**
-     * @var array
-     */
-    protected $config = [
+    protected array $config = [
         'basePath'   => '/',
         'headers'    => [
             'Content-Type' => 'text/html; charset=UTF-8',

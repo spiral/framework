@@ -10,8 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class MiddlewareCommand extends AbstractCommand
 {
-    protected const ELEMENT = 'middleware';
-
     protected const NAME        = 'create:middleware';
     protected const DESCRIPTION = 'Create middleware declaration';
     protected const ARGUMENTS   = [
@@ -31,8 +29,7 @@ class MiddlewareCommand extends AbstractCommand
      */
     public function perform(): int
     {
-        /** @var MiddlewareDeclaration $declaration */
-        $declaration = $this->createDeclaration();
+        $declaration = $this->createDeclaration(MiddlewareDeclaration::class);
 
         $this->writeDeclaration($declaration);
 

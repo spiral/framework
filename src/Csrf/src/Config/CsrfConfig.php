@@ -10,10 +10,7 @@ final class CsrfConfig extends InjectableConfig
 {
     public const CONFIG = 'csrf';
 
-    /**
-     * @var array
-     */
-    protected $config = [
+    protected array $config = [
         'cookie'   => 'csrf-token',
         'length'   => 16,
         'lifetime' => 86400,

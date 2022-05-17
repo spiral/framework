@@ -5,29 +5,24 @@ declare(strict_types=1);
 namespace Spiral\Scaffolder\Declaration;
 
 use Spiral\Filters\Filter;
-use Spiral\Reactor\ClassDeclaration;
-use Spiral\Reactor\DependedInterface;
+use Spiral\Scaffolder\Config\ScaffolderConfig;
 
-class FilterDeclaration extends ClassDeclaration implements DependedInterface
+class FilterDeclaration extends AbstractDeclaration
 {
+    public const TYPE = 'filter';
+
     /**
      * Default input source.
      */
     private const DEFAULT_SOURCE = 'data';
 
     public function __construct(
+        ScaffolderConfig $config,
         string $name,
-        string $comment = '',
-        private readonly array $mapping = []
+        ?string $comment = null,
+        private readonly array $mapping = [],
     ) {
-        parent::__construct($name, 'Filter', [], $comment);
-
-        $this->declareStructure();
-    }
-
-    public function getDependencies(): array
-    {
-        return [Filter::class => null];
+        parent::__construct($config, $name, $comment);
     }
 
     /**
@@ -35,13 +30,13 @@ class FilterDeclaration extends ClassDeclaration implements DependedInterface
      */
     public function declareField(string $field, ?string $type, ?string $source, ?string $origin = null): void
     {
-        $schema = $this->constant('SCHEMA')->getValue();
-        $validates = $this->constant('VALIDATES')->getValue();
+        $schema = $this->class->getConstant('SCHEMA')->getValue();
+        $validates = $this->class->getConstant('VALIDATES')->getValue();
 
         if (!isset($this->mapping[$type])) {
             $schema[$field] = ($source ?? self::DEFAULT_SOURCE) . ':' . ($origin ?: $field);
 
-            $this->constant('SCHEMA')->setValue($schema);
+            $this->class->getConstant('SCHEMA')->setValue($schema);
 
             return;
         }
@@ -57,17 +52,16 @@ class FilterDeclaration extends ClassDeclaration implements DependedInterface
             $validates[$field] = $definition['validates'];
         }
 
-        $this->constant('SCHEMA')->setValue($schema);
-        $this->constant('VALIDATES')->setValue($validates);
+        $this->class->getConstant('SCHEMA')->setValue($schema);
+        $this->class->getConstant('VALIDATES')->setValue($validates);
     }
 
-    /**
-     * Declare filter structure.
-     */
-    protected function declareStructure(): void
+    public function declare(): void
     {
-        $this->constant('SCHEMA')->setProtected()->setValue([]);
-        $this->constant('VALIDATES')->setProtected()->setValue([]);
-        $this->constant('SETTERS')->setProtected()->setValue([]);
+        $this->class->setExtends(Filter::class);
+
+        $this->class->addConstant('SCHEMA', [])->setProtected();
+        $this->class->addConstant('VALIDATES', [])->setProtected();
+        $this->class->addConstant('SETTERS', [])->setProtected();
     }
 }

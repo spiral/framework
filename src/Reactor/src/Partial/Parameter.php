@@ -5,114 +5,94 @@ declare(strict_types=1);
 namespace Spiral\Reactor\Partial;
 
 use Doctrine\Inflector\Rules\English\InflectorFactory;
-use Spiral\Reactor\AbstractDeclaration;
+use Nette\PhpGenerator\Parameter as NetteParameter;
+use Nette\PhpGenerator\PromotedParameter as NettePromotedParameter;
+use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
-use Spiral\Reactor\Traits\NamedTrait;
-use Spiral\Reactor\Traits\SerializerTrait;
+use Spiral\Reactor\Traits;
 
-/**
- * Single method parameter.
- */
-class Parameter extends AbstractDeclaration implements NamedInterface
+class Parameter implements NamedInterface, AggregableInterface
 {
-    use NamedTrait;
-    use SerializerTrait;
+    use Traits\AttributeAware;
+    use Traits\NameAware;
 
-    private string $type = '';
-    private bool $isOptional = false;
-    private mixed $defaultValue = null;
-    private bool $pdb = false;
+    private NetteParameter $element;
 
     public function __construct(string $name)
     {
-        $this->setName($name);
+        $this->element = new NetteParameter((new InflectorFactory())->build()->camelize($name));
     }
 
-    public function setName(string $name): Parameter
+    public function setReference(bool $state = true): self
     {
-        $this->name = (new InflectorFactory())->build()->camelize($name);
+        $this->element->setReference($state);
 
         return $this;
     }
 
-    public function setType(string $type): Parameter
+    public function isReference(): bool
     {
-        $this->type = $type;
+        return $this->element->isReference();
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->element->setType($type);
 
         return $this;
     }
 
-    public function getType(): string
+    public function getType(): ?string
     {
-        return $this->type;
+        return $this->element->getType(false);
     }
 
-    /**
-     * Flag that parameter should pass by reference.
-     */
-    public function setPBR(bool $passedByReference = false): Parameter
+    public function setNullable(bool $state = true): self
     {
-        $this->pdb = $passedByReference;
+        $this->element->setNullable($state);
 
         return $this;
     }
 
-    public function isPBR(): bool
+    public function isNullable(): bool
     {
-        return $this->pdb;
+        return $this->element->isNullable();
     }
 
-    /**
-     * Check if parameter is optional.
-     */
-    public function isOptional(): bool
+    public function setDefaultValue(mixed $value): self
     {
-        return $this->isOptional;
-    }
-
-    /**
-     * Set parameter default value.
-     */
-    public function setDefaultValue(mixed $defaultValue): Parameter
-    {
-        $this->isOptional = true;
-        $this->defaultValue = $defaultValue;
+        $this->element->setDefaultValue($value);
 
         return $this;
     }
 
     public function getDefaultValue(): mixed
     {
-        return $this->defaultValue;
+        return $this->element->getDefaultValue();
+    }
+
+    public function hasDefaultValue(): bool
+    {
+        return $this->element->hasDefaultValue();
     }
 
     /**
-     * Remove default value.
+     * @internal
      */
-    public function removeDefaultValue(): Parameter
+    public static function fromElement(NetteParameter|NettePromotedParameter $element): static
     {
-        $this->isOptional = false;
-        $this->defaultValue = null;
+        $parameter = new static($element->getName());
 
-        return $this;
+        $parameter->element = $element;
+
+        return $parameter;
     }
 
     /**
-     * @throws \ReflectionException
+     * @internal
      */
-    public function render(int $indentLevel = 0): string
+    public function getElement(): NetteParameter
     {
-        $type = '';
-        if (!empty($this->type)) {
-            $type = $this->type . ' ';
-        }
-
-        $result = $type . ($this->pdb ? '&' : '') . '$' . $this->getName();
-
-        if (!$this->isOptional) {
-            return $result;
-        }
-
-        return $result . ' = ' . $this->getSerializer()->serialize($this->defaultValue);
+        return $this->element;
     }
 }

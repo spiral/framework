@@ -4,120 +4,114 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Partial;
 
-use Spiral\Reactor\AbstractDeclaration;
+use Nette\PhpGenerator\Property as NetteProperty;
+use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
-use Spiral\Reactor\ReplaceableInterface;
-use Spiral\Reactor\Traits\AccessTrait;
-use Spiral\Reactor\Traits\CommentTrait;
-use Spiral\Reactor\Traits\NamedTrait;
-use Spiral\Reactor\Traits\SerializerTrait;
+use Spiral\Reactor\Traits;
 
-/**
- * Declares property element.
- */
-class Property extends AbstractDeclaration implements ReplaceableInterface, NamedInterface
+final class Property implements NamedInterface, AggregableInterface
 {
-    use NamedTrait;
-    use CommentTrait;
-    use SerializerTrait;
-    use AccessTrait;
+    use Traits\AttributeAware;
+    use Traits\CommentAware;
+    use Traits\NameAware;
+    use Traits\VisibilityAware;
 
-    private bool $hasDefault = false;
-    private mixed $defaultValue = null;
+    private NetteProperty $element;
 
-    public function __construct(string $name, mixed $defaultValue = null, array|string $comment = '')
+    public function __construct(string $name)
     {
-        $this->setName($name);
-        if ($defaultValue !== null) {
-            $this->setDefaultValue($defaultValue);
-        }
-
-        $this->initComment($comment);
+        $this->element = new NetteProperty($name);
     }
 
-    /**
-     * Has default value.
-     */
-    public function hasDefaultValue(): bool
+    public function setValue(mixed $value): self
     {
-        return $this->hasDefault;
-    }
-
-    /**
-     * Set default value.
-     */
-    public function setDefaultValue(mixed $value): Property
-    {
-        $this->hasDefault = true;
-        $this->defaultValue = $value;
+        $this->element->setValue($value);
 
         return $this;
     }
 
-    /**
-     * Remove default value.
-     */
-    public function removeDefaultValue(): Property
+    public function getValue(): mixed
     {
-        $this->hasDefault = false;
-        $this->defaultValue = null;
+        return $this->element->getValue();
+    }
+
+    public function setStatic(bool $state = true): self
+    {
+        $this->element->setStatic($state);
 
         return $this;
     }
 
-    public function getDefaultValue(): mixed
+    public function isStatic(): bool
     {
-        return $this->defaultValue;
+        return $this->element->isStatic();
     }
 
-    /**
-     * Replace comments.
-     */
-    public function replace(array|string $search, array|string $replace): Property
+    public function setType(?string $type): self
     {
-        $this->docComment->replace($search, $replace);
+        $this->element->setType($type);
 
         return $this;
     }
 
-    /**
-     * @throws \ReflectionException
-     */
-    public function render(int $indentLevel = 0): string
+    public function getType(): ?string
     {
-        $result = '';
-        if (!$this->docComment->isEmpty()) {
-            $result .= $this->docComment->render($indentLevel) . "\n";
-        }
+        return $this->element->getType();
+    }
 
-        $result .= $this->addIndent("{$this->access} \${$this->getName()}", $indentLevel);
+    public function setNullable(bool $state = true): self
+    {
+        $this->element->setNullable($state);
 
-        if ($this->hasDefault) {
-            $value = $this->getSerializer()->serialize($this->defaultValue);
+        return $this;
+    }
 
-            if (\is_array($this->defaultValue)) {
-                $value = $this->mountIndents($value, $indentLevel);
-            }
+    public function isNullable(): bool
+    {
+        return $this->element->isNullable();
+    }
 
-            $result .= " = {$value};";
-        } else {
-            $result .= ';';
-        }
+    public function setInitialized(bool $state = true): self
+    {
+        $this->element->setInitialized($state);
 
-        return $result;
+        return $this;
+    }
+
+    public function isInitialized(): bool
+    {
+        return $this->element->isInitialized();
+    }
+
+    public function setReadOnly(bool $state = true): self
+    {
+        $this->element->setReadOnly($state);
+
+        return $this;
+    }
+
+    public function isReadOnly(): bool
+    {
+        return $this->element->isReadOnly();
     }
 
     /**
-     * Mount indentation to value. Attention, to be applied to arrays only!
+     * @internal
      */
-    private function mountIndents(string $serialized, int $indentLevel): string
+    public static function fromElement(NetteProperty $element): self
     {
-        $lines = \explode("\n", $serialized);
-        foreach ($lines as &$line) {
-            $line = $this->addIndent($line, $indentLevel);
-            unset($line);
-        }
+        $property = new self($element->getName());
 
-        return \ltrim(\implode("\n", $lines));
+        $property->element = $element;
+
+        return $property;
+    }
+
+    /**
+     * @internal
+     */
+    public function getElement(): NetteProperty
+    {
+        return $this->element;
     }
 }

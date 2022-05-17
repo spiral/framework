@@ -11,7 +11,7 @@ final class CacheConfig extends InjectableConfig
 {
     public const CONFIG = 'cache';
 
-    protected $config = [
+    protected array $config = [
         'default' => 'array',
         'aliases' => [],
         'typeAliases' => [],

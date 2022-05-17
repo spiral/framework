@@ -5,48 +5,39 @@ declare(strict_types=1);
 namespace Spiral\Scaffolder\Declaration;
 
 use Spiral\Console\Command;
-use Spiral\Reactor\ClassDeclaration;
-use Spiral\Reactor\DependedInterface;
 
-class CommandDeclaration extends ClassDeclaration implements DependedInterface
+class CommandDeclaration extends AbstractDeclaration
 {
-    public function __construct(string $name, string $comment = '')
-    {
-        parent::__construct($name, 'Command', [], $comment);
+    public const TYPE = 'command';
 
-        $this->declareStructure();
-    }
-
-    public function getDependencies(): array
-    {
-        return [Command::class => null];
-    }
-
-    /**
-     * Set command alias.
-     */
     public function setAlias(string $name): void
     {
-        $this->constant('NAME')->setValue($name);
+        $this->class->getConstant('NAME')->setValue($name);
     }
 
     public function setDescription(string $description): void
     {
-        $this->constant('DESCRIPTION')->setValue($description);
+        $this->class->getConstant('DESCRIPTION')->setValue($description);
     }
 
     /**
      * Declare default command body.
      */
-    private function declareStructure(): void
+    public function declare(): void
     {
-        $perform = $this->method('perform')->setProtected();
-        $perform->setReturn('void');
-        $perform->setComment('Perform command');
+        $this->namespace->addUse(Command::class);
 
-        $this->constant('NAME')->setProtected()->setValue('');
-        $this->constant('DESCRIPTION')->setProtected()->setValue('');
-        $this->constant('ARGUMENTS')->setProtected()->setValue([]);
-        $this->constant('OPTIONS')->setProtected()->setValue([]);
+        $this->class->setExtends(Command::class);
+
+        $this->class->addConstant('NAME', $this->class->getName())->setProtected();
+        $this->class->addConstant('DESCRIPTION', $this->class->getName())->setProtected();
+        $this->class->addConstant('ARGUMENTS', [])->setProtected();
+        $this->class->addConstant('OPTIONS', [])->setProtected();
+
+        $this->class
+            ->addMethod('perform')
+            ->setProtected()
+            ->setReturnType('void')
+            ->addComment('Perform command');
     }
 }

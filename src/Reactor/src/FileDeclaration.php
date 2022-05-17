@@ -4,121 +4,152 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor;
 
-use Spiral\Reactor\Partial\Comment;
-use Spiral\Reactor\Partial\Directives;
-use Spiral\Reactor\Partial\Source;
-use Spiral\Reactor\Traits\CommentTrait;
-use Spiral\Reactor\Traits\UsesTrait;
+use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\GlobalFunction;
+use Nette\PhpGenerator\Helpers;
+use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
+use Nette\PhpGenerator\Factory;
+use Nette\PhpGenerator\PhpFile;
+use Spiral\Reactor\Aggregator\Classes;
+use Spiral\Reactor\Aggregator\Functions;
+use Spiral\Reactor\Aggregator\Namespaces;
+use Spiral\Reactor\Partial\PhpNamespace;
+use Spiral\Reactor\Traits\CommentAware;
 
 /**
  * Provides ability to render file content.
  */
-class FileDeclaration extends AbstractDeclaration implements ReplaceableInterface, \Stringable
+class FileDeclaration implements \Stringable, DeclarationInterface
 {
-    use UsesTrait;
-    use CommentTrait;
+    use CommentAware;
 
-    private ?Directives $directives = null;
-    private Aggregator $elements;
+    private PhpFile $element;
 
-    /**
-     * @param string $namespace File namespace.
-     */
-    public function __construct(
-        private string $namespace = '',
-        string $comment = ''
-    ) {
-        $this->elements = new Aggregator([
-            ClassDeclaration::class,
-            NamespaceDeclaration::class,
-            Comment::class,
-            Source::class,
-        ]);
-
-        $this->initComment($comment);
+    public function __construct()
+    {
+        $this->element = new PhpFile();
+        $this->element->setStrictTypes(true);
     }
 
     public function __toString(): string
     {
-        return $this->render(0);
+        return $this->element->__toString();
     }
 
-    public function setNamespace(string $namespace): FileDeclaration
+    public static function fromCode(string $code): static
     {
-        $this->namespace = $namespace;
-
-        return $this;
+        return self::fromElement((new Factory())->fromCode($code));
     }
 
-    public function getNamespace(): string
+    public function addClass(string $name): ClassDeclaration
     {
-        return $this->namespace;
+        return ClassDeclaration::fromElement($this->element->addClass($name));
     }
 
-    public function setDirectives(string ...$directives): FileDeclaration
+    public function addInterface(string $name): InterfaceDeclaration
     {
-        $this->directives = new Directives(...$directives);
+        return InterfaceDeclaration::fromElement($this->element->addInterface($name));
+    }
+
+    public function addTrait(string $name): TraitDeclaration
+    {
+        return TraitDeclaration::fromElement($this->element->addTrait($name));
+    }
+
+    public function addEnum(string $name): EnumDeclaration
+    {
+        return EnumDeclaration::fromElement($this->element->addEnum($name));
+    }
+
+    public function addNamespace(string|PhpNamespace $namespace): PhpNamespace
+    {
+        if ($namespace instanceof PhpNamespace) {
+            $this->element->addNamespace($namespace->getElement());
+
+            return $namespace;
+        }
+
+        return PhpNamespace::fromElement($this->element->addNamespace($namespace));
+    }
+
+    public function addFunction(string $name): FunctionDeclaration
+    {
+        return FunctionDeclaration::fromElement($this->element->addFunction($name));
+    }
+
+    public function getNamespaces(): Namespaces
+    {
+        return new Namespaces(\array_map(
+            static fn (NettePhpNamespace $namespace) => PhpNamespace::fromElement($namespace),
+            $this->element->getNamespaces()
+        ));
+    }
+
+    public function getClasses(): Classes
+    {
+        return new Classes(\array_map(
+            static fn (ClassType $class) => ClassDeclaration::fromElement($class),
+            $this->element->getClasses()
+        ));
+    }
+
+    public function getClass(string $name): ClassDeclaration
+    {
+        return $this->getClasses()->get(Helpers::extractShortName($name));
+    }
+
+    public function getFunctions(): Functions
+    {
+        return new Functions(\array_map(
+            static fn (GlobalFunction $function) => FunctionDeclaration::fromElement($function),
+            $this->element->getFunctions()
+        ));
+    }
+
+    public function addUse(string $name, ?string $alias = null, string $of = NettePhpNamespace::NameNormal): static
+    {
+        $this->element->addUse($name, $alias, $of);
 
         return $this;
     }
 
     /**
-     * Method will automatically mount requested uses is any.
-     *
-     * @throws Exception\ReactorException
+     * Adds declare(strict_types=1) to output.
      */
-    public function addElement(DeclarationInterface $element): FileDeclaration
+    public function setStrictTypes(bool $on = true): static
     {
-        $this->elements->add($element);
-        if ($element instanceof DependedInterface) {
-            $this->addUses($element->getDependencies());
-        }
+        $this->element->setStrictTypes($on);
 
         return $this;
     }
 
-    public function replace(array|string $search, array|string $replace): FileDeclaration
+    public function hasStrictTypes(): bool
     {
-        $this->docComment->replace($search, $replace);
-        $this->elements->replace($search, $replace);
-
-        return $this;
-    }
-
-    public function render(int $indentLevel = 0): string
-    {
-        $result = "<?php\n";
-
-        if (!$this->docComment->isEmpty()) {
-            $result .= $this->docComment->render($indentLevel) . "\n";
-        }
-
-        if ($this->directives !== null && !empty($this->directives->render())) {
-            $result .= $this->directives->render() . "\n\n";
-        }
-
-        if (!empty($this->namespace)) {
-            if ($this->docComment->isEmpty()) {
-                $result .= "\n";
-            }
-            $result .= "namespace {$this->namespace};\n\n";
-        }
-
-        if (!empty($this->uses)) {
-            $result .= $this->renderUses($indentLevel) . "\n\n";
-        }
-
-        $result .= $this->elements->render($indentLevel);
-        $result .= "\n";
-
-        return $result;
+        return $this->element->hasStrictTypes();
     }
 
     /**
-     * @return Aggregator|ClassDeclaration[]|NamespaceDeclaration[]|Source[]|Comment[]
+     * @internal
      */
-    public function getElements(): Aggregator
+    public static function fromElement(PhpFile $element): static
     {
-        return $this->elements;
+        $file = new static();
+
+        $file->element = $element;
+
+        return $file;
+    }
+
+    /**
+     * @internal
+     */
+    public function getElement(): PhpFile
+    {
+        return $this->element;
+    }
+
+    public function render(): string
+    {
+        return $this->__toString();
     }
 }

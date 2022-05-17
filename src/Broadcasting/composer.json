@@ -34,7 +34,7 @@
     },
     "require-dev": {
         "mockery/mockery": "^1.5",
-        "phpunit/phpunit": "^9.5.5",
+        "phpunit/phpunit": "^9.5.20",
         "spiral/boot": "^2.14"
     },
     "autoload-dev": {

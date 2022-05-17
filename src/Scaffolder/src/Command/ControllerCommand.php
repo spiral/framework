@@ -10,8 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ControllerCommand extends AbstractCommand
 {
-    protected const ELEMENT = 'controller';
-
     protected const NAME        = 'create:controller';
     protected const DESCRIPTION = 'Create controller declaration';
     protected const ARGUMENTS   = [
@@ -43,8 +41,7 @@ class ControllerCommand extends AbstractCommand
      */
     public function perform(): int
     {
-        /** @var ControllerDeclaration $declaration */
-        $declaration = $this->createDeclaration();
+        $declaration = $this->createDeclaration(ControllerDeclaration::class);
 
         foreach ($this->option('action') as $action) {
             $declaration->addAction($action);

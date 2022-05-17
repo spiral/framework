@@ -74,12 +74,12 @@ class ScaffolderBootloader extends Bootloader
              * This is set of default settings to be used for your scaffolding commands.
              */
             'declarations' => [
-                'bootloader' => [
+                Declaration\BootloaderDeclaration::TYPE => [
                     'namespace' => 'Bootloader',
                     'postfix'   => 'Bootloader',
                     'class'     => Declaration\BootloaderDeclaration::class,
                 ],
-                'config'     => [
+                Declaration\ConfigDeclaration::TYPE => [
                     'namespace' => 'Config',
                     'postfix'   => 'Config',
                     'class'     => Declaration\ConfigDeclaration::class,
@@ -87,27 +87,27 @@ class ScaffolderBootloader extends Bootloader
                         'directory' => directory('config'),
                     ],
                 ],
-                'controller' => [
+                Declaration\ControllerDeclaration::TYPE => [
                     'namespace' => 'Controller',
                     'postfix'   => 'Controller',
                     'class'     => Declaration\ControllerDeclaration::class,
                 ],
-                'middleware' => [
+                Declaration\MiddlewareDeclaration::TYPE => [
                     'namespace' => 'Middleware',
                     'postfix'   => '',
                     'class'     => Declaration\MiddlewareDeclaration::class,
                 ],
-                'command'    => [
+                Declaration\CommandDeclaration::TYPE => [
                     'namespace' => 'Command',
                     'postfix'   => 'Command',
                     'class'     => Declaration\CommandDeclaration::class,
                 ],
-                'jobHandler' => [
+                Declaration\JobHandlerDeclaration::TYPE => [
                     'namespace' => 'Job',
                     'postfix'   => 'Job',
                     'class'     => Declaration\JobHandlerDeclaration::class,
                 ],
-                'filter'     => [
+                Declaration\FilterDeclaration::TYPE => [
                     'namespace' => 'Request',
                     'postfix'   => 'Request',
                     'class'     => Declaration\FilterDeclaration::class,

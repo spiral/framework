@@ -24,7 +24,7 @@
         "doctrine/inflector": "^1.4|^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.5",
+        "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "laminas/laminas-diactoros": "^2.8"
     },

@@ -10,14 +10,10 @@ use Spiral\Reactor\Exception\ReactorException;
  * Provides ability to aggregate specific set of elements (type constrained), render them or
  * apply set of operations.
  */
-class Aggregator extends AbstractDeclaration implements
-    \ArrayAccess,
-    \IteratorAggregate,
-    \Countable,
-    ReplaceableInterface
+class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
 {
     /**
-     * @param DeclarationInterface[] $elements
+     * @param AggregableInterface[] $elements
      */
     public function __construct(
         private array $allowed,
@@ -30,7 +26,7 @@ class Aggregator extends AbstractDeclaration implements
      *
      * @throws ReactorException
      */
-    public function __get($name): DeclarationInterface
+    public function __get($name): AggregableInterface
     {
         return $this->get($name);
     }
@@ -64,7 +60,7 @@ class Aggregator extends AbstractDeclaration implements
      *
      * @throws ReactorException
      */
-    public function add(DeclarationInterface $element): self
+    public function add(AggregableInterface $element): self
     {
         $reflector = new \ReflectionObject($element);
 
@@ -91,7 +87,7 @@ class Aggregator extends AbstractDeclaration implements
      *
      * @throws ReactorException
      */
-    public function get(string $name): DeclarationInterface
+    public function get(string $name): AggregableInterface
     {
         return $this->find($name);
     }
@@ -111,7 +107,7 @@ class Aggregator extends AbstractDeclaration implements
     }
 
     /**
-     * @return \ArrayIterator<array-key, DeclarationInterface>
+     * @return \ArrayIterator<array-key, AggregableInterface>
      */
     public function getIterator(): \ArrayIterator
     {
@@ -138,34 +134,12 @@ class Aggregator extends AbstractDeclaration implements
         $this->remove($offset);
     }
 
-    public function replace(array|string $search, array|string $replace): Aggregator
-    {
-        foreach ($this->elements as $element) {
-            if ($element instanceof ReplaceableInterface) {
-                $element->replace($search, $replace);
-            }
-        }
-
-        return $this;
-    }
-
-    public function render(int $indentLevel = 0): string
-    {
-        $result = '';
-
-        foreach ($this->elements as $element) {
-            $result .= $element->render($indentLevel) . "\n\n";
-        }
-
-        return \rtrim($result, "\n");
-    }
-
     /**
      * Find element by it's name (NamedDeclarations only).
      *
      * @throws ReactorException When unable to find.
      */
-    protected function find(string $name): DeclarationInterface
+    protected function find(string $name): AggregableInterface
     {
         foreach ($this->elements as $element) {
             if ($element instanceof NamedInterface && $element->getName() === $name) {

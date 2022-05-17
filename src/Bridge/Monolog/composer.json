@@ -20,7 +20,7 @@
         "monolog/monolog": "^2.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.5",
+        "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5"
     },
     "autoload": {

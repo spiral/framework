@@ -12,8 +12,7 @@ final class StemplerConfig extends InjectableConfig
 {
     public const CONFIG = 'views/stempler';
 
-    /** @var array */
-    protected $config = [
+    protected array $config = [
         'directives' => [],
         'processors' => [],
         'visitors'   => [],
