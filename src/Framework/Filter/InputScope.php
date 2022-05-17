@@ -27,7 +27,7 @@ final class InputScope implements InputInterface
         return $input;
     }
 
-    public function getValue(string $source, string $name = null): mixed
+    public function getValue(string $source, mixed $name = null): mixed
     {
         if (!\method_exists($this->input, $source)) {
             throw new InputException(\sprintf('Undefined input source %s', $source));

@@ -11,16 +11,19 @@ declare(strict_types=1);
 
 namespace Spiral\App\Request;
 
+use Spiral\Filters\Attribute\Input\Data;
 use Spiral\Filters\Filter;
 
 class TestRequest extends Filter
 {
-    public const SCHEMA = [
-        'name'  => 'data:name',
-        'value' => 'data:section.value'
-    ];
+    #[Data(key: 'name')]
+    public ?string $name = null;
 
-    public const VALIDATES = [
-        'name' => ['notEmpty', 'string']
-    ];
+    #[Data(key: 'section.value')]
+    public ?string $sectionValue = null;
+
+    // TODO: add tests for validation
+//    public const VALIDATES = [
+//        'name' => ['notEmpty', 'string']
+//    ];
 }
