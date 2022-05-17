@@ -89,6 +89,11 @@ class EnumDeclaration extends AbstractDeclaration
         return EnumCase::fromElement($this->element->addCase($name, $value));
     }
 
+    public function getCase(string $name): EnumCase
+    {
+        return $this->getCases()->get($name);
+    }
+
     public function removeCase(string $name): static
     {
         $this->element->removeCase($name);
