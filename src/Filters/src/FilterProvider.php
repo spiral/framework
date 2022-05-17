@@ -15,17 +15,16 @@ final class FilterProvider implements FilterProviderInterface
 {
     public function __construct(
         private readonly Container $container,
-        private readonly CoreInterface $core,
-        private readonly Schema\InputMapper $inputMapper,
-        private readonly Schema\Builder $schemaBuilder,
-        private readonly Schema\AttributeMapper $attributeMapper
+        private readonly CoreInterface $core
     ) {
     }
 
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
+        $attributeMapper = $this->container->get(Schema\AttributeMapper::class);
+
         $filter = $this->createFilterInstance($name);
-        [$mappingSchema, $errors] = $this->attributeMapper->map($filter, $input);
+        [$mappingSchema, $errors] = $attributeMapper->map($filter, $input);
 
         if ($filter instanceof HasFilterDefinition) {
             $mappingSchema = \array_merge(
@@ -34,9 +33,12 @@ final class FilterProvider implements FilterProviderInterface
             );
         }
 
-        $schema = $this->schemaBuilder->makeSchema($name, $mappingSchema);
+        $inputMapper = $this->container->get(Schema\InputMapper::class);
+        $schemaBuilder = $this->container->get(Schema\Builder::class);
 
-        [$data, $inputErrors] = $this->inputMapper->map($schema, $input);
+        $schema = $schemaBuilder->makeSchema($name, $mappingSchema);
+
+        [$data, $inputErrors] = $inputMapper->map($schema, $input);
         $errors = \array_merge($errors, $inputErrors);
 
         $entity = new SchematicEntity($data, $schema);

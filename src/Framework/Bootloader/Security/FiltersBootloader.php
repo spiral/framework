@@ -8,6 +8,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\InterceptableCore;
+use Spiral\Filters\Schema;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Config\FiltersConfig;
 use Spiral\Filters\FilterBag;

@@ -12,8 +12,6 @@ declare(strict_types=1);
 namespace Spiral\App\Bootloader;
 
 use Psr\Container\ContainerInterface;
-use Spiral\App\Checker\MyChecker;
-use Spiral\App\Condition\MyCondition;
 use Spiral\App\Controller\AuthController;
 use Spiral\App\Controller\InterceptedController;
 use Spiral\App\Controller\TestController;
@@ -24,7 +22,6 @@ use Spiral\Bootloader\Http\JsonPayloadsBootloader;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptableCore;
-use Spiral\Domain\FilterInterceptor;
 use Spiral\Domain\GuardInterceptor;
 use Spiral\Domain\PipelineInterceptor;
 use Spiral\Router\Route;
@@ -43,8 +40,8 @@ class AppBootloader extends DomainBootloader
 
     protected const INTERCEPTORS = [
         GuardInterceptor::class,
-        FilterInterceptor::class
     ];
+
     /** @var ContainerInterface */
     private $container;
 
@@ -86,10 +83,6 @@ class AppBootloader extends DomainBootloader
         $views->addDirectory('custom', __DIR__ . '/../../views/custom/');
         $views->addDirectory('stempler', __DIR__ . '/../../views/stempler/');
         $views->addEngine(TestEngine::class);
-
-        $validation->addAlias('aliased', 'notEmpty');
-        $validation->addChecker('my', MyChecker::class);
-        $validation->addCondition('cond', MyCondition::class);
 
         $json->addContentType('application/vnd.api+json');
 
