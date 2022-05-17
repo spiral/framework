@@ -19,11 +19,12 @@ final class Constant implements NamedInterface, AggregableInterface
 
     private NetteConstant $element;
 
-    public function __construct(string $name)
+    public function __construct(string $name, mixed $value = null)
     {
         $this->element = new NetteConstant(
             \strtoupper((new InflectorFactory())->build()->tableize(\strtolower($name)))
         );
+        $this->element->setValue($value);
     }
 
     public function setValue(mixed $value): self

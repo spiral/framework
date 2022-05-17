@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Partial;
 
+use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
 use Spiral\Reactor\AggregableInterface;
+use Spiral\Reactor\Aggregator\Classes;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\EnumDeclaration;
 use Spiral\Reactor\InterfaceDeclaration;
@@ -61,9 +63,9 @@ final class PhpNamespace implements NamedInterface, AggregableInterface, \String
     }
 
     /** @return string[] */
-    public function getUses(): array
+    public function getUses(string $of = NettePhpNamespace::NameNormal): array
     {
-        return $this->element->getUses();
+        return $this->element->getUses($of);
     }
 
     public function resolveName(string $name, string $of = NettePhpNamespace::NameNormal): string
@@ -86,6 +88,21 @@ final class PhpNamespace implements NamedInterface, AggregableInterface, \String
         return ClassDeclaration::fromElement($this->element->addClass($name));
     }
 
+    public function removeClass(string $name): self
+    {
+        $this->element->removeClass($name);
+
+        return $this;
+    }
+
+    public function getClasses(): Classes
+    {
+        return new Classes(\array_map(
+            static fn (ClassType $class) => ClassDeclaration::fromElement($class),
+            $this->element->getClasses()
+        ));
+    }
+
     public function addInterface(string $name): InterfaceDeclaration
     {
         return InterfaceDeclaration::fromElement($this->element->addInterface($name));
@@ -99,13 +116,6 @@ final class PhpNamespace implements NamedInterface, AggregableInterface, \String
     public function addEnum(string $name): EnumDeclaration
     {
         return EnumDeclaration::fromElement($this->element->addEnum($name));
-    }
-
-    public function removeClass(string $name): self
-    {
-        $this->element->removeClass($name);
-
-        return $this;
     }
 
     /**

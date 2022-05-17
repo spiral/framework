@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Partial;
 
+use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Nette\PhpGenerator\PromotedParameter as NettePromotedParameter;
 use Spiral\Reactor\Traits;
 
@@ -13,6 +14,11 @@ final class PromotedParameter extends Parameter
     use Traits\VisibilityAware;
 
     private NettePromotedParameter $element;
+
+    public function __construct(string $name)
+    {
+        $this->element = new NettePromotedParameter((new InflectorFactory())->build()->camelize($name));
+    }
 
     public function setReadOnly(bool $state = true): self
     {

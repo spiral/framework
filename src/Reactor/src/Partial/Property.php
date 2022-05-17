@@ -18,10 +18,9 @@ final class Property implements NamedInterface, AggregableInterface
 
     private NetteProperty $element;
 
-    public function __construct(string $name, mixed $value = null)
+    public function __construct(string $name)
     {
         $this->element = new NetteProperty($name);
-        $this->element->setValue($value);
     }
 
     public function setValue(mixed $value): self

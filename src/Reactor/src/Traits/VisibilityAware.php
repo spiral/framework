@@ -18,9 +18,13 @@ trait VisibilityAware
         return $this;
     }
 
-    public function getVisibility(): Visibility
+    public function getVisibility(): ?Visibility
     {
-        return Visibility::from($this->element->getVisibility());
+        if ($this->element->getVisibility()) {
+            return Visibility::from($this->element->getVisibility());
+        }
+
+        return null;
     }
 
     public function setPublic(): static

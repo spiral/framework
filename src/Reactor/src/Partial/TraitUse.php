@@ -33,15 +33,6 @@ final class TraitUse implements NamedInterface, AggregableInterface
         return $this;
     }
 
-    public function setResolutions(array $resolutions): self
-    {
-        foreach ($resolutions as $resolution) {
-            $this->addResolution($resolution);
-        }
-
-        return $this;
-    }
-
     /**
      * @internal
      */
