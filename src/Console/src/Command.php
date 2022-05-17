@@ -118,11 +118,17 @@ abstract class Command extends SymfonyCommand
         return static::ARGUMENTS;
     }
 
+    /**
+     * @deprecated will be replaced with attributes
+     */
     protected function getConfirmationDefinition(): ?ConfirmationDefinitionInterface
     {
         return null;
     }
 
+    /**
+     * Will be redesigned in the future for using attributes with different types of confirmation.
+     */
     private function confirmToPerform(): bool
     {
         $definition = $this->getConfirmationDefinition();
