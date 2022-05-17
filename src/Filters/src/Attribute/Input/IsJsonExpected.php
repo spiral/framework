@@ -8,10 +8,10 @@ use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
 /**
- * When client expects application/json
+ * Sets property value true/false if client expects application/json
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class IsJsonExpected extends Input
+final class IsJsonExpected extends AbstractInput
 {
     public function __construct(
         public readonly bool $softMatch = false

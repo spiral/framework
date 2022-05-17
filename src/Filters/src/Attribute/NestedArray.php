@@ -6,10 +6,25 @@ namespace Spiral\Filters\Attribute;
 
 use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
-use Spiral\Filters\Attribute\Input\Input;
+use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\FilterInterface;
 use Spiral\Filters\InputInterface;
 
+/**
+ * The attribute provides the ability to create nested array of filters. To demonstrate the composition, we will use
+ * a sample filter:
+ *
+ *      class ProfileFilter extends Filter
+ *      {
+ *          #[\Spiral\Filters\Attribute\NestedArray(
+ *              class: AddressFilter::class,
+ *              input: new \Spiral\Filters\Attribute\Input\Post(key: 'addresses')
+ *          )]
+ *          public array $addresses = [];
+ *      }
+ *
+ * After creating nested filters they will be validated.
+ */
 #[Attribute(Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class NestedArray
 {
@@ -19,7 +34,7 @@ final class NestedArray
      */
     public function __construct(
         public readonly string $class,
-        public readonly Input $input,
+        public readonly AbstractInput $input,
         public readonly ?string $prefix = null
     ) {
     }

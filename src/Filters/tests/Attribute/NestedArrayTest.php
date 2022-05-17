@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Filters\Attribute;
 
 use Mockery as m;
-use Spiral\Filters\Attribute\Input\Input;
+use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 
 final class NestedArrayTest extends \Spiral\Tests\Filters\AttributeTest
@@ -14,7 +14,7 @@ final class NestedArrayTest extends \Spiral\Tests\Filters\AttributeTest
     {
         $attribute = new NestedArray(
             'foo',
-            $input = m::mock(Input::class),
+            $input = m::mock(AbstractInput::class),
             'baz'
         );
 
@@ -36,7 +36,7 @@ final class NestedArrayTest extends \Spiral\Tests\Filters\AttributeTest
     {
         $attribute = new NestedArray(
             'foo',
-            m::mock(Input::class),
+            m::mock(AbstractInput::class),
             'baz'
         );
 
@@ -50,7 +50,7 @@ final class NestedArrayTest extends \Spiral\Tests\Filters\AttributeTest
     {
         $attribute = new NestedArray(
             'foo',
-            m::mock(Input::class)
+            m::mock(AbstractInput::class)
         );
 
         $this->assertSame(

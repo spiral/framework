@@ -8,6 +8,18 @@ use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\FilterInterface;
 
+/**
+ * The attribute provides the ability to create nested filters. To demonstrate the composition, we will use a sample
+ * filter:
+ *
+ *      class ProfileFilter extends Filter
+ *      {
+ *          #[\Spiral\Filters\Attribute\NestedFilter(class: AddressFilter::class)]
+ *          public AddressFilter $address;
+ *      }
+ *
+ * After creating nested filter it will be validated.
+ */
 #[Attribute(Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class NestedFilter
 {

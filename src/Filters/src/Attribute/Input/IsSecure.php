@@ -8,10 +8,10 @@ use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
 /**
- * If https used.
+ * Sets property value true/false if https used.
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class IsSecure extends Input
+final class IsSecure extends AbstractInput
 {
     /**
      * @see \Spiral\Http\Request\InputManager::isSecure() from {@link https://github.com/spiral/http}

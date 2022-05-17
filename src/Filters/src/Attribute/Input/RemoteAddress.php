@@ -8,10 +8,10 @@ use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
 /**
- * User ip address.
+ * Sets property value with client ip address.
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class RemoteAddress extends Input
+final class RemoteAddress extends AbstractInput
 {
     /**
      * @see \Spiral\Http\Request\InputManager::remoteAddress() from {@link https://github.com/spiral/http}

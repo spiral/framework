@@ -7,8 +7,11 @@ namespace Spiral\Filters\Attribute\Input;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
+/**
+ * Sets property value from the request [headers] bag.
+ */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class Header extends Input
+final class Header extends AbstractInput
 {
     /**
      * @param non-empty-string|null $key

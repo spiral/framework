@@ -8,8 +8,11 @@ use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
+/**
+ * Sets property value from the request [files] bag.
+ */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-class File extends Input
+class File extends AbstractInput
 {
     /**
      * @param non-empty-string|null $key

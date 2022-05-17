@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Filters\Schema;
 
 use Spiral\Attributes\ReaderInterface;
-use Spiral\Filters\Attribute\Input\Input;
+use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
 use Spiral\Filters\Attribute\Setter;
@@ -40,7 +40,7 @@ final class AttributeMapper
             $property->setAccessible(true);
 
             foreach ($this->reader->getPropertyMetadata($property) as $attribute) {
-                if ($attribute instanceof Input) {
+                if ($attribute instanceof AbstractInput) {
                     $this->setValue($filter, $property, $attribute->getValue($input, $property));
                     $schema[$property->getName()] = $attribute->getSchema($property);
                 } elseif ($attribute instanceof NestedFilter) {

@@ -8,6 +8,8 @@ use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
 /**
+ * Sets property value with route attribute with given key.
+ *
  * Every route writes matched parameters into ServerRequestInterface attribute matches, is it possible to access route
  * values inside your filter using attribute:matches.{name} notation.
  *
@@ -17,7 +19,7 @@ use Spiral\Filters\InputInterface;
  * );
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class Route extends Input
+final class Route extends AbstractInput
 {
     /**
      * @param non-empty-string|null $key

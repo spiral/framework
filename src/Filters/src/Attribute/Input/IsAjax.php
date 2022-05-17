@@ -8,10 +8,10 @@ use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
 /**
- * If X-Requested-With set as xmlhttprequest
+ * Sets property value true/false if X-Requested-With set as xmlhttprequest
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class IsAjax extends Input
+final class IsAjax extends AbstractInput
 {
     /**
      * @see \Spiral\Http\Request\InputManager::isAjax() from {@link https://github.com/spiral/http}

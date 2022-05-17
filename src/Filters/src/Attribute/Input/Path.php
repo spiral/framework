@@ -8,10 +8,10 @@ use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
 /**
- * Current page path
+ * Sets property value with the current page path.
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class Path extends Input
+final class Path extends AbstractInput
 {
     /**
      * @see \Spiral\Http\Request\InputManager::path() from {@link https://github.com/spiral/http}

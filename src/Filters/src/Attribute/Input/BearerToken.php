@@ -7,8 +7,11 @@ namespace Spiral\Filters\Attribute\Input;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
+/**
+ * Sets property value from the request [headers] bag with key [Authorization].
+ */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class BearerToken extends Input
+final class BearerToken extends AbstractInput
 {
     /**
      * @see \Spiral\Http\Request\InputManager::bearerToken() from {@link https://github.com/spiral/http}

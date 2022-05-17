@@ -8,10 +8,10 @@ use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\InputInterface;
 
 /**
- * Http method (GET, POST, ...)
+ * Sets property value from the request http method (GET, POST, ...)
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
-final class Method extends Input
+final class Method extends AbstractInput
 {
     /**
      * @see \Spiral\Http\Request\InputManager::method() from {@link https://github.com/spiral/http}
