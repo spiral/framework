@@ -36,7 +36,7 @@ final class InputTest extends \Spiral\Tests\Filters\AttributeTest
 
     public function testGetsValueForNotDefinedKey(): void
     {
-        $attribute = new Data();
+        $attribute = new Input();
 
         $this->input
             ->shouldReceive('getValue')
@@ -52,7 +52,7 @@ final class InputTest extends \Spiral\Tests\Filters\AttributeTest
 
     public function testGetsSchemaForNotDefinedKey(): void
     {
-        $attribute = new Data();
+        $attribute = new Input();
 
         $this->assertSame(
             'input:baz',

@@ -99,12 +99,4 @@ final class BuilderTest extends BaseTest
 
         $this->builder->makeSchema('foo', ['id' => []]);
     }
-
-    public function testBrokenFilter(): void
-    {
-        $this->expectException(SchemaException::class);
-        $this->expectErrorMessage('Invalid schema definition at `foo`->`id`');
-
-        $this->builder->makeSchema('foo', ['id' => 'data:.']);
-    }
 }
