@@ -24,30 +24,34 @@ use Throwable;
 class UpdateTest extends BaseTest
 {
     public const TOKENIZER_CONFIG = [
-        'directories' => [__DIR__ . '/../src/Command', __DIR__ . '/Fixtures/'],
-        'exclude'     => []
+        'directories' => [__DIR__.'/../src/Command', __DIR__.'/Fixtures/'],
+        'exclude' => [],
     ];
 
     public const CONFIG = [
         'locateCommands' => false,
-        'commands'       => [],
-        'update'         => [
-            ['command' => 'test', 'header' => 'Test Command'],
-            ['command' => 'helper', 'options' => ['helper' => 'writeln'], 'footer' => 'Good!'],
-            ['invoke' => [self::class, 'do']],
-            ['invoke' => self::class . '::do'],
-            'Spiral\Tests\Console\ok',
-            ['invoke' => self::class . '::err'],
-        ]
+        'commands' => [],
+        'sequences' => [
+            'update' => [
+                ['command' => 'test', 'header' => 'Test Command'],
+                ['command' => 'helper', 'options' => ['helper' => 'writeln'], 'footer' => 'Good!'],
+                ['invoke' => [self::class, 'do']],
+                ['invoke' => self::class.'::do'],
+                'Spiral\Tests\Console\ok',
+                ['invoke' => self::class.'::err'],
+            ],
+        ],
     ];
 
     public function testConfigure(): void
     {
-        $core = $this->getCore(new StaticLocator([
-            HelperCommand::class,
-            TestCommand::class,
-            UpdateCommand::class
-        ]));
+        $core = $this->getCore(
+            new StaticLocator([
+                HelperCommand::class,
+                TestCommand::class,
+                UpdateCommand::class,
+            ])
+        );
 
         $this->container->bind(Console::class, $core);
 
@@ -140,21 +144,28 @@ text;
      */
     private function bindFailure(): Console
     {
-        $core = $this->getCore(new StaticLocator([
-            HelperCommand::class,
-            TestCommand::class,
-            UpdateCommand::class,
-            FailedCommand::class,
-            AnotherFailedCommand::class,
-        ]));
-        $this->container->bind(ConsoleConfig::class, new ConsoleConfig([
-            'locateCommands' => false,
-            'commands'       => [],
-            'update'         => [
-                ['command' => 'failed', 'header' => 'Failed Command'],
-                ['command' => 'failed:another', 'header' => 'Another failed Command'],
-            ]
-        ]));
+        $core = $this->getCore(
+            new StaticLocator([
+                HelperCommand::class,
+                TestCommand::class,
+                UpdateCommand::class,
+                FailedCommand::class,
+                AnotherFailedCommand::class,
+            ])
+        );
+        $this->container->bind(
+            ConsoleConfig::class,
+            new ConsoleConfig([
+                'locateCommands' => false,
+                'commands' => [],
+                'sequences' => [
+                    'update' => [
+                        ['command' => 'failed', 'header' => 'Failed Command'],
+                        ['command' => 'failed:another', 'header' => 'Another failed Command'],
+                    ],
+                ],
+            ])
+        );
         $this->container->bind(Console::class, $core);
 
         return $core;

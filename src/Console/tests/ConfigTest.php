@@ -22,8 +22,10 @@ class ConfigTest extends TestCase
         $this->expectException(ConfigException::class);
 
         $config = new ConsoleConfig([
-            'updateSequence' => [
-                [],
+            'sequences' => [
+                'update' => [
+                    []
+                ],
             ],
         ]);
 
@@ -33,8 +35,10 @@ class ConfigTest extends TestCase
     public function testForcedSequence(): void
     {
         $config = new ConsoleConfig([
-            'updateSequence' => [
-                new CallableSequence('test'),
+            'sequences' => [
+                'update' => [
+                    new CallableSequence('test'),
+                ],
             ],
         ]);
 
