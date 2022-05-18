@@ -19,4 +19,10 @@ final class State
      * delegate container functionality.
      */
     public array $injectors = [];
+
+    public function destruct(): void
+    {
+        $this->injectors = [];
+        $this->bindings = [];
+    }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Core;
+namespace Spiral\Tests\Core\Internal\Destructor;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
