@@ -23,7 +23,7 @@ final class EnumInjector implements InjectorInterface
     public function createInjection(\ReflectionClass $class, string $context = null): object
     {
         $attribute = $this->reader->firstClassMetadata($class, ProvideFrom::class);
-        if (! $attribute) {
+        if (!$attribute) {
             throw new ContainerException(
                 \sprintf(
                     'Class `%s` should contain %s attribute with defined detector method.',
@@ -33,7 +33,7 @@ final class EnumInjector implements InjectorInterface
             );
         }
 
-        if (! $class->isEnum()) {
+        if (!$class->isEnum()) {
             throw new ContainerException(
                 \sprintf(
                     'Class `%s` should be an enum class.',

@@ -9,7 +9,7 @@ use Spiral\Boot\Injector\ProvideFrom;
 use Spiral\Boot\Injector\InjectableEnumInterface;
 
 #[ProvideFrom(method: 'detect')]
-enum AppEnvironment: string implements InjectableEnumInterface
+enum AppEnvironment : string implements InjectableEnumInterface
 {
     case Production = 'prod';
     case Stage = 'stage';
