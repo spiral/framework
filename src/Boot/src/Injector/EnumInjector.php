@@ -26,7 +26,7 @@ final class EnumInjector implements InjectorInterface
         if (!$attribute) {
             throw new ContainerException(
                 \sprintf(
-                    'Class `%s` should contain %s attribute with defined detector method.',
+                    'Class `%s` should contain `%s` attribute with defined detector method.',
                     $class->getName(),
                     ProvideFrom::class
                 )
@@ -36,7 +36,7 @@ final class EnumInjector implements InjectorInterface
         if (!$class->isEnum()) {
             throw new ContainerException(
                 \sprintf(
-                    'Class `%s` should be an enum class.',
+                    'Class `%s` should be an enum.',
                     $class->getName()
                 )
             );
