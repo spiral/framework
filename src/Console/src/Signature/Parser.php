@@ -70,7 +70,7 @@ final class Parser
     /**
      * Parse an argument expression.
      *
-     * @psalm-suppress PossiblyUndefinedVariable
+     * @noRector \Rector\Php56\Rector\FunctionLike\AddDefaultValueForUndefinedVariableRector
      */
     private function parseArgument(string $token): InputArgument
     {
