@@ -15,7 +15,7 @@ final class PopulateDataFromEntityInterceptor implements CoreInterceptorInterfac
     /**
      * @param array{filterBag: FilterBag} $parameters
      */
-    public function process(string $name, string $action, array $parameters, CoreInterface $core): FilterInterface
+    public function process(string $controller, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
         $bag = $parameters['filterBag'];
 
@@ -23,6 +23,6 @@ final class PopulateDataFromEntityInterceptor implements CoreInterceptorInterfac
             $bag->filter->setData($bag->entity->toArray());
         }
 
-        return $core->callAction($name, $action, $parameters);
+        return $core->callAction($controller, $action, $parameters);
     }
 }

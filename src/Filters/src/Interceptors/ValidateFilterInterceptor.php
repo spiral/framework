@@ -27,10 +27,10 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
     /**
      * @param array{filterBag: FilterBag} $parameters
      */
-    public function process(string $name, string $action, array $parameters, CoreInterface $core): FilterInterface
+    public function process(string $controller, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
         $bag = $parameters['filterBag'];
-        $filter = $core->callAction($name, $action, $parameters);
+        $filter = $core->callAction($controller, $action, $parameters);
 
         if ($filter instanceof HasFilterDefinition) {
             $this->validateFilter(
