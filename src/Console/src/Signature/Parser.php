@@ -69,6 +69,8 @@ final class Parser
 
     /**
      * Parse an argument expression.
+     *
+     * @psalm-suppress PossiblyUndefinedVariable
      */
     private function parseArgument(string $token): InputArgument
     {
