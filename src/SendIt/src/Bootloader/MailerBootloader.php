@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt\Bootloader;
 
+use Spiral\SendIt\Jobs\MailJobAdapter;
+use Spiral\SendIt\MailJob;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
@@ -70,7 +72,7 @@ class MailerBootloader extends Bootloader
         if ($container->has(JobRegistry::class)) {
             // Will be removed since v3.0
             $registry = $container->get(JobRegistry::class);
-            $registry->setHandler(MailQueue::JOB_NAME, \Spiral\SendIt\Jobs\MailJobAdapter::class);
+            $registry->setHandler(MailQueue::JOB_NAME, MailJobAdapter::class);
             $registry->setSerializer(MailQueue::JOB_NAME, JsonJobSerializer::class);
 
             $container->bindSingleton(
@@ -97,7 +99,7 @@ class MailerBootloader extends Bootloader
 
         if ($container->has(HandlerRegistryInterface::class)) {
             $registry = $container->get(HandlerRegistryInterface::class);
-            $registry->setHandler(MailQueue::JOB_NAME, \Spiral\SendIt\MailJob::class);
+            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
         }
     }
 
