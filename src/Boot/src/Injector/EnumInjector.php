@@ -33,14 +33,7 @@ final class EnumInjector implements InjectorInterface
             );
         }
 
-        if (!$class->isEnum()) {
-            throw new InjectionException(
-                \sprintf(
-                    'Class `%s` should be an enum.',
-                    $class->getName()
-                )
-            );
-        }
+        $this->validateClass($class, $attribute);
 
         $object = $this->container->invoke(
             $class->getMethod($attribute->method)->getClosure()
@@ -49,5 +42,40 @@ final class EnumInjector implements InjectorInterface
         $this->container->bind($class->getName(), $object);
 
         return $object;
+    }
+
+    /**
+     * @throws InjectionException
+     */
+    private function validateClass(\ReflectionClass $class, ProvideFrom $attribute): void
+    {
+        if (! $class->isEnum()) {
+            throw new InjectionException(
+                \sprintf(
+                    'Class `%s` should be an enum.',
+                    $class->getName()
+                )
+            );
+        }
+
+        if (! $class->hasMethod($attribute->method)) {
+            throw new InjectionException(
+                \sprintf(
+                    'Class `%s` does not contain `%s` method.',
+                    $class->getName(),
+                    $attribute->method
+                )
+            );
+        }
+
+        if (! $class->getMethod($attribute->method)->isStatic()) {
+            throw new InjectionException(
+                \sprintf(
+                    'Class method `%s::%s` should be static.',
+                    $class->getName(),
+                    $attribute->method
+                )
+            );
+        }
     }
 }
