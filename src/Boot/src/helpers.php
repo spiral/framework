@@ -20,12 +20,14 @@ if (!function_exists('spiral')) {
     /**
      * Resolve given alias in current IoC scope.
      *
-     * @param string $alias Class name or alias.
-     * @return object|null
+     * @template T
+     * @param class-string<T>|string $alias Class name or alias.
+     * @return T
+     * @psalm-return ($id is class-string ? T : mixed)
      *
      * @throws ScopeException
      */
-    function spiral(string $alias)
+    function spiral(string $alias): mixed
     {
         if (ContainerScope::getContainer() === null) {
             throw new ScopeException('Container scope was not set.');
