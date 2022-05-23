@@ -6,7 +6,7 @@ use Psr\Http\Message\UriInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Router\RouterInterface;
 
-if (! \function_exists('bind')) {
+if (!\function_exists('bind')) {
     /**
      * Shortcut to container Autowire definition.
      *
@@ -21,7 +21,7 @@ if (! \function_exists('bind')) {
     }
 }
 
-if (! \function_exists('route')) {
+if (!\function_exists('route')) {
     /**
      * Generate the URL to a named route.
      *
