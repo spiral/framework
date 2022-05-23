@@ -21,6 +21,6 @@ enum DebugMode implements InjectableEnumInterface
 
     public static function detect(EnvironmentInterface $environment): self
     {
-        return filter_var($environment->get('DEBUG'), FILTER_VALIDATE_BOOL) ? self::Enabled : self::Disabled;
+        return \filter_var($environment->get('DEBUG'), \FILTER_VALIDATE_BOOL) ? self::Enabled : self::Disabled;
     }
 }

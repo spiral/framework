@@ -7,7 +7,7 @@ namespace Spiral\Boot\Injector;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Core\Container;
 use Spiral\Core\Container\InjectorInterface;
-use Spiral\Core\Exception\Container\ContainerException;
+use Spiral\Core\Exception\Container\InjectionException;
 
 /**
  * @internal
@@ -23,8 +23,8 @@ final class EnumInjector implements InjectorInterface
     public function createInjection(\ReflectionClass $class, string $context = null): object
     {
         $attribute = $this->reader->firstClassMetadata($class, ProvideFrom::class);
-        if (!$attribute) {
-            throw new ContainerException(
+        if ($attribute === null) {
+            throw new InjectionException(
                 \sprintf(
                     'Class `%s` should contain `%s` attribute with defined detector method.',
                     $class->getName(),
@@ -34,7 +34,7 @@ final class EnumInjector implements InjectorInterface
         }
 
         if (!$class->isEnum()) {
-            throw new ContainerException(
+            throw new InjectionException(
                 \sprintf(
                     'Class `%s` should be an enum.',
                     $class->getName()
