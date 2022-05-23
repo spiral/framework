@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core\Internal\Resolver;
 
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
+use Spiral\Tests\Core\Stub\EnumObject;
 use Spiral\Tests\Core\Stub\NewObjectInParam;
+use Spiral\Tests\Core\Stub\TestTrait;
 use stdClass;
 
 final class CommonCasesTest extends BaseTest
@@ -49,5 +52,28 @@ final class CommonCasesTest extends BaseTest
 
         $this->assertCount(1, $result);
         $this->assertInstanceOf(stdClass::class, $result[0]);
+    }
+
+    /**
+     * @see \Spiral\Tests\Core\Internal\Factory\CommonCasesTest::testNotInstantiableEnum()
+     */
+    public function testNotInstantiableEnum(): void
+    {
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage('Enum `Spiral\Tests\Core\Stub\EnumObject` can not be constructed.');
+
+        $this->resolveClosure(
+            static function (EnumObject $enum) {},
+        );
+    }
+
+    public function testNotInstantiableTrait(): void
+    {
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage('Undefined class or binding `Spiral\Tests\Core\Stub\TestTrait`.');
+
+        $this->resolveClosure(
+            static function (TestTrait $enum) {},
+        );
     }
 }

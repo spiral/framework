@@ -236,7 +236,12 @@ final class Factory implements FactoryInterface
         }
 
         if (!$reflection->isInstantiable()) {
-            throw new ContainerException(\sprintf('Class `%s` can not be constructed', $class));
+            $itIs = match (true) {
+                $reflection->isEnum() => 'Enum',
+                $reflection->isAbstract() => 'Abstract class',
+                default => 'Class',
+            };
+            throw new ContainerException(\sprintf('%s `%s` can not be constructed.', $itIs, $class));
         }
 
         $constructor = $reflection->getConstructor();

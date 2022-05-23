@@ -1,17 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
-namespace Spiral\Tests\Core;
+namespace Spiral\Tests\Core\Internal\Factory;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
@@ -19,15 +11,37 @@ use Spiral\Tests\Core\Fixtures\BadClass;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\CorruptedClass;
 use Spiral\Tests\Core\Fixtures\SampleClass;
+use Spiral\Tests\Core\Stub\EnumService;
+use Spiral\Tests\Core\Stub\LightEngineDecorator;
 
-class FactoryTest extends TestCase
+final class CommonCasesTest extends BaseTest
 {
+    public function testNotInstantiableEnum(): void
+    {
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage('Enum `Spiral\Tests\Core\Stub\EnumObject` can not be constructed.');
+
+        $this->make(EnumService::class);
+    }
+
+    public function testNotInstantiableAbstract(): void
+    {
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage('Abstract class `Spiral\Tests\Core\Stub\LightEngine` can not be constructed.');
+
+        $this->make(LightEngineDecorator::class);
+    }
+
+    public function testConstructCorrupted(): void
+    {
+        $this->expectException(\ParseError::class);
+
+        $this->make(CorruptedClass::class);
+    }
+
     public function testAutoFactory(): void
     {
-        $container = new Container();
-        $this->assertInstanceOf(FactoryInterface::class, $container);
-
-        $bucket = $container->make(Bucket::class, [
+        $bucket = $this->make(Bucket::class, [
             'name' => 'abc',
             'data' => 'some data',
         ]);
@@ -39,14 +53,11 @@ class FactoryTest extends TestCase
 
     public function testClosureFactory(): void
     {
-        $container = new Container();
-        $this->assertInstanceOf(FactoryInterface::class, $container);
-
-        $container->bind(Bucket::class, function ($data) {
+        $this->bind(Bucket::class, function ($data) {
             return new Bucket('via-closure', $data);
         });
 
-        $bucket = $container->make(Bucket::class, [
+        $bucket = $this->make(Bucket::class, [
             'data' => 'some data',
         ]);
 
@@ -55,14 +66,11 @@ class FactoryTest extends TestCase
         $this->assertSame('some data', $bucket->getData());
     }
 
-    public function testMethodFactory(): void
+    public function testPrivateMethodFactory(): void
     {
-        $container = new Container();
-        $this->assertInstanceOf(FactoryInterface::class, $container);
+        $this->bind(Bucket::class, [self::class, 'makeBucket']);
 
-        $container->bind(Bucket::class, [self::class, 'makeBucket']);
-
-        $bucket = $container->make(Bucket::class, [
+        $bucket = $this->make(Bucket::class, [
             'data' => 'some data',
         ]);
 
@@ -73,35 +81,18 @@ class FactoryTest extends TestCase
 
     public function testCascadeFactory(): void
     {
-        $container = new Container();
-        $this->assertInstanceOf(FactoryInterface::class, $container);
-
         $sample = new SampleClass();
 
-        $container->bind(Bucket::class, [self::class, 'makeBucketWithSample']);
-        $container->bind(SampleClass::class, function () use ($sample) {
+        $this->bind(Bucket::class, [self::class, 'makeBucketWithSample']);
+        $this->bind(SampleClass::class, function () use ($sample) {
             return $sample;
         });
 
-        $bucket = $container->make(Bucket::class);
+        $bucket = $this->make(Bucket::class);
 
         $this->assertInstanceOf(Bucket::class, $bucket);
         $this->assertSame('via-method-with-sample', $bucket->getName());
         $this->assertSame($sample, $bucket->getData());
-    }
-
-    public function testConstructAbstract(): void
-    {
-        $this->expectException(ContainerException::class);
-        $container = new Container();
-        $container->make(BadClass::class);
-    }
-
-    public function testConstructCorrupted(): void
-    {
-        $this->expectException(\ParseError::class);
-        $container = new Container();
-        $container->make(CorruptedClass::class);
     }
 
     /**

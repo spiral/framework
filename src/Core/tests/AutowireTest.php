@@ -92,8 +92,6 @@ class AutowireTest extends TestCase
         $this->assertTrue($container->has('alias'));
         $this->assertTrue($container->hasInstance('alias'));
 
-        $this->assertNotEmpty($container->getBindings());
-
         $container->removeBinding('alias');
 
         $this->assertFalse($container->has('alias'));
@@ -209,7 +207,7 @@ class AutowireTest extends TestCase
 
         $container = new Container();
 
-        $object = $container->make(
+        $container->make(
             TypedClass::class,
             [
                 'string' => '',
