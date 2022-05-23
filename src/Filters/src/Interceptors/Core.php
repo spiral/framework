@@ -11,9 +11,9 @@ use Spiral\Filters\FilterInterface;
 final class Core implements CoreInterface
 {
     /**
-     * @param array{filterBag: FilterBag} $parameters
+     * @param array{filterBag: FilterBag}|array<string, mixed> $parameters
      */
-    public function callAction(string $name, string $action, array $parameters = []): FilterInterface
+    public function callAction(string $controller, string $action, array $parameters = []): FilterInterface
     {
         return $parameters['filterBag']->filter;
     }
