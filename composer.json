@@ -135,6 +135,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "MonorepoBuilder\\": "builder",
             "Spiral\\App\\": "tests/app/src",
             "Spiral\\Tests\\Attributes\\": "src/Attributes/tests",
             "Spiral\\Tests\\Auth\\": [
