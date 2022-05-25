@@ -51,30 +51,28 @@ final class ValidateVersionReleaseWorker implements ReleaseWorkerInterface
 
     private function findMostRecentVersion(Version $version): ?string
     {
-        $tags = \array_map(
-            static fn (string $tag) => new Version(\strtolower($tag)),
-            $this->parser->parse($this->gitDirectory)
-        );
+        $tags = [];
+        foreach ($this->parser->parse($this->gitDirectory) as $tag) {
+            $tag = new Version(\strtolower($tag));
 
-        $tags = \array_filter($tags, static function (Version $tag) use ($version){
             // all previous major versions
             if ($version->getMajor()->getValue() > $tag->getMajor()->getValue()) {
-                return true;
+                $tags[] = $tag;
             }
 
             // all minor versions up to the requested in the requested major version
             if ($version->getMajor()->getValue() === $tag->getMajor()->getValue()) {
-                return $version->getMinor()->getValue() >= $tag->getMinor()->getValue();
+                if ($version->getMinor()->getValue() >= $tag->getMinor()->getValue()) {
+                    $tags[] = $tag;
+                }
             }
-
-            return false;
-        });
+        }
 
         if ($tags === []) {
             return null;
         }
 
-        usort($tags, static fn (Version $a, Version $b) => $a->isGreaterThan($b) ? -1 : 1);
+        \usort($tags, static fn (Version $a, Version $b) => $a->isGreaterThan($b) ? -1 : 1);
 
         return $tags[0]->getVersionString();
     }
