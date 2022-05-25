@@ -44,9 +44,8 @@ abstract class BaseTest extends TestCase
         \Closure $closure,
         array $args = [],
         bool $validate = true,
-        bool $strict = true
-    ): mixed {
-        return $this->createResolver()->resolveArguments(new \ReflectionFunction($closure), $args, $validate, $strict);
+    ): array {
+        return $this->createResolver()->resolveArguments(new \ReflectionFunction($closure), $args, $validate);
     }
 
     protected function createResolver(): ResolverInterface

@@ -27,25 +27,30 @@ final class ResolvingState
         $this->modeNamed = $this->isNamedMode();
     }
 
-    public function addResolvedValue(mixed &$value): void
+    public function addResolvedValue(mixed &$value, string $key = null): void
     {
-        $this->resolvedValues[] = &$value;
+        if ($key === null) {
+            $this->resolvedValues[] = &$value;
+        } else {
+            $this->resolvedValues[$key] = &$value;
+        }
     }
 
-    public function resolveParameterByNameOrPosition(ReflectionParameter $parameter, bool $variadic): bool
+    public function resolveParameterByNameOrPosition(ReflectionParameter $parameter, bool $variadic): array
     {
         $key = $this->modeNamed
             ? $parameter->getName()
             : $parameter->getPosition();
 
         if (!\array_key_exists($key, $this->arguments)) {
-            return false;
+            return [];
         }
         $_val = &$this->arguments[$key];
 
         if ($variadic && \is_array($_val)) {
             // Save keys is possible
             $positional = true;
+            $result = [];
             foreach ($_val as $key => &$item) {
                 if (!$positional && \is_int($key)) {
                     throw new ResolvingException(
@@ -54,15 +59,15 @@ final class ResolvingState
                 }
                 $positional = $positional && \is_int($key);
                 if ($positional) {
-                    $this->resolvedValues[] = &$item;
+                    $result[] = &$item;
                 } else {
-                    $this->resolvedValues[$key] = &$item;
+                    $result[$key] = &$item;
                 }
             }
+            return $result;
         } else {
-            $this->addResolvedValue($_val);
+            return [&$_val];
         }
-        return true;
     }
 
     public function getResolvedValues(): array
