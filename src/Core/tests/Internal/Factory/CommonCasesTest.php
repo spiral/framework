@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Factory;
 
-use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\ContainerException;
-use Spiral\Core\FactoryInterface;
-use Spiral\Tests\Core\Fixtures\BadClass;
+use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\CorruptedClass;
 use Spiral\Tests\Core\Fixtures\SampleClass;
@@ -37,6 +35,38 @@ final class CommonCasesTest extends BaseTest
         $this->expectException(\ParseError::class);
 
         $this->make(CorruptedClass::class);
+    }
+
+    public function testNotExistingClass(): void
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('Undefined class or binding `\Foo\Bar\Class\Not\Exists`.');
+
+        $this->make('\\Foo\\Bar\\Class\\Not\\Exists');
+    }
+
+    public function testMakeInternalClass(): void
+    {
+        $object = $this->make(\SplFileObject::class, [
+            'filename' => __FILE__,
+            // second parameter skipped
+            // third parameter skipped
+            'context' => null,
+            'other-parameter' => true,
+        ]);
+
+        $this->assertSame(basename(__FILE__), $object->getFilename());
+    }
+
+    public function testMakeInternalClassWithOptional(): void
+    {
+        $this->markTestSkipped(
+            'Incorrect behavior in a test environment: second parameter defined as non-optional.'
+        );
+
+        $object = $this->make(\DateTimeImmutable::class);
+
+        $this->assertInstanceOf(\DateTimeImmutable::class, $object);
     }
 
     public function testAutoFactory(): void
