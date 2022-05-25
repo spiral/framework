@@ -10,7 +10,7 @@ use Spiral\Validation\Exception\ValidationException;
 
 final class ValidationProvider implements ValidationProviderInterface, SingletonInterface
 {
-    /** @var array<class-string, Closure> */
+    /** @var array<class-string, \Closure> */
     private array $validations = [];
 
     public function __construct(

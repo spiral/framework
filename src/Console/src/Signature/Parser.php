@@ -69,6 +69,8 @@ final class Parser
 
     /**
      * Parse an argument expression.
+     *
+     * @noRector \Rector\Php56\Rector\FunctionLike\AddDefaultValueForUndefinedVariableRector
      */
     private function parseArgument(string $token): InputArgument
     {
