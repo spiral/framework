@@ -199,10 +199,10 @@ final class Resolver implements ResolverInterface
                 throw new UnsupportedTypeException($parameter->getDeclaringFunction(), $parameter->getName());
             }
 
-            $types = $reflectionType instanceof \ReflectionNamedType ? [$reflectionType] : $reflectionType->getTypes();
+            $types = $reflectionType instanceof ReflectionNamedType ? [$reflectionType] : $reflectionType->getTypes();
             foreach ($types as $namedType) {
                 try {
-                    if ($this->resolveNamedType($state, $parameter, $namedType)) {
+                    if ($this->resolveNamedType($state, $parameter, $namedType, $validate)) {
                         return true;
                     }
                 } catch (NotFoundExceptionInterface $e) {
@@ -242,12 +242,14 @@ final class Resolver implements ResolverInterface
     private function resolveNamedType(
         ResolvingState $state,
         ReflectionParameter $parameter,
-        \ReflectionNamedType $typeRef
+        ReflectionNamedType $typeRef,
+        bool $validate
     ) {
         return !$typeRef->isBuiltin() && $this->resolveObjectParameter(
             $state,
             $typeRef->getName(),
-            $parameter->getName()
+            $parameter->getName(),
+            $validate ? $parameter : null,
         );
     }
 
@@ -261,11 +263,15 @@ final class Resolver implements ResolverInterface
      *
      * @return bool {@see true} if argument resolved.
      */
-    private function resolveObjectParameter(ResolvingState $state, string $class, string $context): bool
-    {
+    private function resolveObjectParameter(
+        ResolvingState $state,
+        string $class,
+        string $context,
+        ReflectionParameter $validateWith = null,
+    ): bool {
         /** @var mixed $argument */
         $argument = $this->container->get($class, $context);
-        $this->processArgument($state, $argument);
+        $this->processArgument($state, $argument, $validateWith);
         return true;
     }
 
