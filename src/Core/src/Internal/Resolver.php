@@ -295,7 +295,7 @@ final class Resolver implements ResolverInterface
         }
 
         // Validation
-        if ($validateWith !== null && !$this->validateValueToParameter($validateWith,  $value)) {
+        if ($validateWith !== null && !$this->validateValueToParameter($validateWith, $value)) {
             throw new InvalidArgumentException(
                 $validateWith->getDeclaringFunction(),
                 $validateWith->getName()

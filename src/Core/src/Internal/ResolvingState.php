@@ -65,9 +65,8 @@ final class ResolvingState
                 }
             }
             return $result;
-        } else {
-            return [&$_val];
         }
+        return [&$_val];
     }
 
     public function getResolvedValues(): array
