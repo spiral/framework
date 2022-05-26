@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Filter;
 
 use Spiral\Filters\Exception\InputException;
-use Spiral\Http\Exception\InputException as HttpInputException;
 use Spiral\Filters\InputInterface;
 use Spiral\Http\Request\InputManager;
 
@@ -29,7 +28,7 @@ final class InputScope implements InputInterface
 
     public function getValue(string $source, mixed $name = null): mixed
     {
-        if (!\method_exists($this->input, $source)) {
+        if (!$this->input->hasBag($source)) {
             throw new InputException(\sprintf('Undefined input source %s', $source));
         }
 
@@ -38,7 +37,7 @@ final class InputScope implements InputInterface
 
     public function hasValue(string $source, string $name): bool
     {
-        if (!method_exists($this->input, $source)) {
+        if (!$this->input->hasBag($source)) {
             return false;
         }
 

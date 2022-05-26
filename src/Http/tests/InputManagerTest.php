@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\ScopeException;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Exception\InputException;
 use Spiral\Http\Request\FilesBag;
 use Spiral\Http\Request\HeadersBag;
@@ -320,5 +321,24 @@ class InputManagerTest extends TestCase
         $this->assertSame('value', $this->input->attribute('attr'));
 
         $this->assertSame('cookie-value', $this->input->cookie('cookie'));
+    }
+
+    public function testAddCustomInputBag(): void
+    {
+        $input = new InputManager($this->container, new HttpConfig(
+            ['inputBags' => ['test' => ['class'  => InputBag::class, 'source' => 'getQueryParams']]]
+        ));
+
+        $request = new ServerRequest(
+            [],
+            [],
+            'http://domain.com/hello-world',
+            'GET',
+            'php://input',
+            []
+        );
+        $this->container->bind(ServerRequestInterface::class, $request);
+
+        $this->assertInstanceOf(InputBag::class, $input->test);
     }
 }

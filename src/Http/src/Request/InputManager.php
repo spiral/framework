@@ -11,6 +11,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\ScopeException;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Exception\InputException;
 use Spiral\Http\Header\AcceptHeader;
 
@@ -30,6 +31,15 @@ use Spiral\Http\Header\AcceptHeader;
  * @property-read FilesBag   $files
  * @property-read ServerBag  $server
  * @property-read InputBag   $attributes
+ *
+ * @method mixed header(string $name, mixed $default = null, bool|string $implode = ',')
+ * @method mixed data(string $name, mixed $default = null)
+ * @method mixed post(string $name, mixed $default = null)
+ * @method mixed query(string $name, mixed $default = null)
+ * @method mixed cookie(string $name, mixed $default = null)
+ * @method UploadedFileInterface|null file(string $name, mixed $default = null)
+ * @method mixed server(string $name, mixed $default = null)
+ * @method mixed attribute(string $name, mixed $default = null)
  */
 final class InputManager implements SingletonInterface
 {
@@ -42,10 +52,12 @@ final class InputManager implements SingletonInterface
         'headers'    => [
             'class'  => HeadersBag::class,
             'source' => 'getHeaders',
+            'alias'  => 'header'
         ],
         'data'       => [
             'class'  => InputBag::class,
             'source' => 'getParsedBody',
+            'alias'  => 'post'
         ],
         'query'      => [
             'class'  => InputBag::class,
@@ -54,10 +66,12 @@ final class InputManager implements SingletonInterface
         'cookies'    => [
             'class'  => InputBag::class,
             'source' => 'getCookieParams',
+            'alias'  => 'cookie'
         ],
         'files'      => [
             'class'  => FilesBag::class,
             'source' => 'getUploadedFiles',
+            'alias'  => 'file'
         ],
         'server'     => [
             'class'  => ServerBag::class,
@@ -66,6 +80,7 @@ final class InputManager implements SingletonInterface
         'attributes' => [
             'class'  => InputBag::class,
             'source' => 'getAttributes',
+            'alias'  => 'attribute'
         ],
     ];
     /**
@@ -92,8 +107,11 @@ final class InputManager implements SingletonInterface
 
     public function __construct(
         /** @invisible */
-        private ContainerInterface $container
+        private readonly ContainerInterface $container,
+        /** @invisible */
+        HttpConfig $config = new HttpConfig()
     ) {
+        $this->bagAssociations = \array_merge($this->bagAssociations, $config->getInputBags());
     }
 
     public function __get(string $name): InputBag
@@ -287,12 +305,13 @@ final class InputManager implements SingletonInterface
             return $this->bags[$name];
         }
 
-        if (!isset($this->bagAssociations[$name])) {
+        $definition = $this->findBagDefinition($name);
+        if (!$definition) {
             throw new InputException(\sprintf("Undefined input bag '%s'", $name));
         }
 
-        $class = $this->bagAssociations[$name]['class'];
-        $data = \call_user_func([$this->request(), $this->bagAssociations[$name]['source']]);
+        $class = $definition['class'];
+        $data = \call_user_func([$this->request(), $definition['source']]);
 
         if (!\is_array($data)) {
             $data = (array)$data;
@@ -301,25 +320,13 @@ final class InputManager implements SingletonInterface
         return $this->bags[$name] = new $class($data, $this->prefix);
     }
 
-    /**
-     * @param bool|string $implode Implode header lines, false to return header as array.
-     */
-    public function header(string $name, mixed $default = null, bool|string $implode = ','): mixed
+    public function hasBag(string $name): bool
     {
-        return $this->headers->get($name, $default, $implode);
-    }
+        if (isset($this->bags[$name])) {
+            return true;
+        }
 
-    /**
-     * @see data()
-     */
-    public function post(string $name, mixed $default = null): mixed
-    {
-        return $this->data($name, $default);
-    }
-
-    public function data(string $name, mixed $default = null): mixed
-    {
-        return $this->data->get($name, $default);
+        return \is_array($this->findBagDefinition($name));
     }
 
     /**
@@ -327,31 +334,26 @@ final class InputManager implements SingletonInterface
      */
     public function input(string $name, mixed $default = null): mixed
     {
-        return $this->data($name, $this->query($name, $default));
+        return $this->data($name, $this->query->get($name, $default));
     }
 
-    public function query(string $name, mixed $default = null): mixed
+    public function __call(string $name, array $arguments): mixed
     {
-        return $this->query->get($name, $default);
+        return $this->bag($name)->get(...$arguments);
     }
 
-    public function cookie(string $name, mixed $default = null): mixed
+    private function findBagDefinition(string $name): ?array
     {
-        return $this->cookies->get($name, $default);
-    }
+        if (isset($this->bagAssociations[$name])) {
+            return $this->bagAssociations[$name];
+        }
 
-    public function file(string $name, mixed $default = null): ?UploadedFileInterface
-    {
-        return $this->files->get($name, $default);
-    }
+        foreach ($this->bagAssociations as $bag) {
+            if (isset($bag['alias']) && $bag['alias'] === $name) {
+                return $bag;
+            }
+        }
 
-    public function server(string $name, mixed $default = null): mixed
-    {
-        return $this->server->get($name, $default);
-    }
-
-    public function attribute(string $name, mixed $default = null): mixed
-    {
-        return $this->attributes->get($name, $default);
+        return null;
     }
 }
