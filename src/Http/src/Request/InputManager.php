@@ -52,12 +52,12 @@ final class InputManager implements SingletonInterface
         'headers'    => [
             'class'  => HeadersBag::class,
             'source' => 'getHeaders',
-            'alias'  => 'header'
+            'alias'  => 'header',
         ],
         'data'       => [
             'class'  => InputBag::class,
             'source' => 'getParsedBody',
-            'alias'  => 'post'
+            'alias'  => 'post',
         ],
         'query'      => [
             'class'  => InputBag::class,
@@ -66,12 +66,12 @@ final class InputManager implements SingletonInterface
         'cookies'    => [
             'class'  => InputBag::class,
             'source' => 'getCookieParams',
-            'alias'  => 'cookie'
+            'alias'  => 'cookie',
         ],
         'files'      => [
             'class'  => FilesBag::class,
             'source' => 'getUploadedFiles',
-            'alias'  => 'file'
+            'alias'  => 'file',
         ],
         'server'     => [
             'class'  => ServerBag::class,
@@ -80,7 +80,7 @@ final class InputManager implements SingletonInterface
         'attributes' => [
             'class'  => InputBag::class,
             'source' => 'getAttributes',
-            'alias'  => 'attribute'
+            'alias'  => 'attribute',
         ],
     ];
     /**
@@ -125,6 +125,11 @@ final class InputManager implements SingletonInterface
     public function __clone()
     {
         $this->bags = [];
+    }
+
+    public function __call(string $name, array $arguments): mixed
+    {
+        return $this->bag($name)->get(...$arguments);
     }
 
     /**
@@ -335,11 +340,6 @@ final class InputManager implements SingletonInterface
     public function input(string $name, mixed $default = null): mixed
     {
         return $this->data($name, $this->query->get($name, $default));
-    }
-
-    public function __call(string $name, array $arguments): mixed
-    {
-        return $this->bag($name)->get(...$arguments);
     }
 
     private function findBagDefinition(string $name): ?array
