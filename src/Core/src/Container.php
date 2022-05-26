@@ -235,21 +235,4 @@ final class Container implements
     {
         $this->binder->removeInjector($class);
     }
-
-    /**
-     * Every declared Container binding. Must not be used in production code due container format is
-     * vary.
-     */
-    public function getBindings(): array
-    {
-        return $this->state->bindings;
-    }
-
-    /**
-     * Every binded injector.
-     */
-    public function getInjectors(): array
-    {
-        return $this->state->injectors;
-    }
 }

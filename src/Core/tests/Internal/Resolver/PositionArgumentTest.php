@@ -30,6 +30,16 @@ final class PositionArgumentTest extends BaseTest
         $this->assertSame([$engineA, $engineB], $result);
     }
 
+    public function testFirstIsOptionalSecondPassedAsArgument(): void
+    {
+        $result = $this->resolveClosure(
+            static fn(int $foo = 42, EngineInterface $engine2 = null) => null,
+            [1 => ($engineB = new EngineZIL130())]
+        );
+
+        $this->assertSame([42, $engineB], $result);
+    }
+
     public function testArrayParamAndNumericArgument(): void
     {
         $result = $this->resolveClosure(

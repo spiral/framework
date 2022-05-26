@@ -28,6 +28,8 @@ interface ResolverInterface
     ): array;
 
     /**
+     * Validate arguments list to possibility to call reflected function.
+     *
      * @throws InvalidArgumentException
      */
     public function validateArguments(ContextFunction $reflection, array $arguments = []): void;

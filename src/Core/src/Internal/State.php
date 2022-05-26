@@ -10,7 +10,7 @@ namespace Spiral\Core\Internal;
 final class State
 {
     /**
-     * @psalm-var array<non-empty-string, string|object|array{TResolver, bool}>
+     * @psalm-var string|object|array<non-empty-string, string|object|array{TResolver, bool}>
      */
     public array $bindings = [];
 

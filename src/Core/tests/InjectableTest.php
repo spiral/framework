@@ -73,24 +73,6 @@ class InjectableTest extends TestCase
         $container->get(TestConfig::class);
     }
 
-    public function testGetInjectors(): void
-    {
-        $container = new Container();
-
-        $container->bindInjector(TestConfig::class, 'invalid-injector');
-
-        $injectors = $container->getInjectors();
-
-        $this->assertNotEmpty($injectors);
-        $this->assertArrayHasKey(TestConfig::class, $injectors);
-        $this->assertSame('invalid-injector', $injectors[TestConfig::class]);
-
-        $container->removeInjector(TestConfig::class);
-        $injectors = $container->getInjectors();
-
-        $this->assertEmpty($injectors);
-    }
-
     public function testInjectorOuterBinding(): void
     {
         $this->expectException(AutowireException::class);
