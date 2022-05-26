@@ -144,7 +144,6 @@
   - [spiral/sendit] Dropped support `pipeline` parameter in `mailer` config. Please, use the parameter `queue` instead.
   - [spiral/security] Added return type `self` to a methods `addRole`, `removeRole` in `Spiral\Security\PermissionsInterface`
   - [spiral/security] Added return type `self` to a methods `set`, `remove` in `Spiral\Security\RulesInterface`
-  - [spiral/attributes] Bootloader `Spiral\Bootloader\AttributesBootloader` moved to the `Spiral\Attributes\Bootloader\AttributesBootloader`.
   - [spiral/distribution] Bootloader `Spiral\Bootloader\Distribution\DistributionBootloader` moved to the `Spiral\Distribution\Bootloader\DistributionBootloader`,
     config `Spiral\Bootloader\Distribution\DistributionConfig` moved to the `Spiral\Distribution\Config\DistributionConfig`.
   - [spiral/storage] Bootloader `Spiral\Bootloader\Storage\StorageBootloader` moved to the `Spiral\Storage\Bootloader\StorageBootloader`,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Attributes\Bootloader;
+namespace Spiral\Bootloader\Attributes;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;

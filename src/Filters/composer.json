@@ -17,7 +17,7 @@
     "require": {
         "php": ">=8.1",
         "spiral/auth": "^2.13",
-        "spiral/attributes": "^2.13",
+        "spiral/attributes": "^3.0",
         "spiral/core": "^2.13",
         "spiral/models": "^2.13",
         "spiral/validation": "^2.13"

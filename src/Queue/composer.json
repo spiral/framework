@@ -17,7 +17,7 @@
         "php": ">=8.1",
         "ext-json": "*",
         "spiral/snapshots": "^2.14",
-        "spiral/attributes": "^2.14",
+        "spiral/attributes": "^3.0",
         "doctrine/inflector": "^1.4|^2.0",
         "opis/closure": "^3.6",
         "ramsey/uuid": "^4.2.3"

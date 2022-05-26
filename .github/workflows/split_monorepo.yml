@@ -30,8 +30,6 @@ jobs:
           # Components
           - local_path: 'AnnotatedRoutes'
             split_repository: 'annotated-routes'
-          - local_path: 'Attributes'
-            split_repository: 'attributes'
           - local_path: 'Auth'
             split_repository: 'auth'
           - local_path: 'AuthHttp'

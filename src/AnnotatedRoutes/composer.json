@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/attributes": "^2.14",
+        "spiral/attributes": "^3.0",
         "spiral/router": "^2.14"
     },
     "autoload": {
