@@ -41,6 +41,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
                 ],
                 'middleware' => [],
                 'chunkSize' => null,
+                'inputBags' => [],
             ]
         );
     }
@@ -52,7 +53,16 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
      */
     public function addMiddleware(string|MiddlewareInterface $middleware): void
     {
-        $this->config->modify('http', new Append('middleware', null, $middleware));
+        $this->config->modify(HttpConfig::CONFIG, new Append('middleware', null, $middleware));
+    }
+
+    /**
+     * @psalm-param non-empty-string $bag
+     * @psalm-param array{class: class-string, source: string, alias: string}
+     */
+    public function addInputBag(string $bag, array $config): void
+    {
+        $this->config->modify(HttpConfig::CONFIG, new Append('inputBags', $bag, $config));
     }
 
     protected function httpCore(

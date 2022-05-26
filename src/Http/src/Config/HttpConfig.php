@@ -18,6 +18,7 @@ final class HttpConfig extends InjectableConfig
         ],
         'middleware' => [],
         'chunkSize' => null,
+        'inputBags' => [],
     ];
 
     public function getBasePath(): string
@@ -41,6 +42,11 @@ final class HttpConfig extends InjectableConfig
     public function getMiddleware(): array
     {
         return $this->config['middleware'] ?? $this->config['middlewares'];
+    }
+
+    public function getInputBags(): array
+    {
+        return $this->config['inputBags'] ?? [];
     }
 
     /**
