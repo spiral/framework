@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Console\Command;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\Reactor\Printer;
+use Spiral\Reactor\Writer;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
 use Spiral\Scaffolder\Declaration\DeclarationInterface;
 
@@ -55,7 +55,7 @@ abstract class AbstractCommand extends Command
         }
 
         //File declaration
-        (new Printer($this->files))->write($filename, $declaration->getFile());
+        (new Writer($this->files))->write($filename, $declaration->getFile());
 
         $this->writeln(
             \sprintf("Declaration of '<info>%s</info>' ", $className)
