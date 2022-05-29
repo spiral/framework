@@ -99,4 +99,16 @@ final class NullableParameterTest extends BaseTest
 
         $this->assertSame([null], $result);
     }
+
+    public function testNotNullableClassThatCreatedWithFail(): void
+    {
+        $this->bind(DateTimeInterface::class, fn () => throw new RuntimeException('fail!'));
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('fail!');
+
+        $this->resolveClosure(
+            static fn(DateTimeInterface $param) => $param
+        );
+    }
 }
