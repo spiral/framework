@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Resolver;
 
-use DateTimeImmutable;
 use DateTimeInterface;
 use RuntimeException;
 use Spiral\Tests\Core\Stub\EngineInterface;
