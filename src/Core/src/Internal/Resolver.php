@@ -22,6 +22,7 @@ use Spiral\Core\Exception\Resolver\UnknownParameterException;
 use Spiral\Core\Exception\Resolver\UnsupportedTypeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\ResolverInterface;
+use Throwable;
 
 /**
  * @internal
@@ -205,7 +206,7 @@ final class Resolver implements ResolverInterface
                     if ($this->resolveNamedType($state, $parameter, $namedType, $validate)) {
                         return true;
                     }
-                } catch (NotFoundExceptionInterface $e) {
+                } catch (Throwable $e) {
                     $error = $e;
                 }
             }
