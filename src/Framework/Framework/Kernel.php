@@ -25,7 +25,15 @@ abstract class Kernel extends AbstractKernel
      */
     protected function bootstrap(): void
     {
-        $this->bootloader->bootload(static::APP);
+        $self = $this;
+        $this->bootloader->bootload(static::APP,
+            [
+                static function () use ($self): void {
+                    $self->fireCallbacks($self->appBootingCallbacks);
+                },
+            ]);
+
+        $this->fireCallbacks($this->appBootedCallbacks);
     }
 
     /**
