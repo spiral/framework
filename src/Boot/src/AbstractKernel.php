@@ -37,12 +37,6 @@ abstract class AbstractKernel implements KernelInterface
     protected array $dispatchers = [];
 
     /** @var array<Closure> */
-    protected array $appBootingCallbacks = [];
-
-    /** @var array<Closure> */
-    protected array $appBootedCallbacks = [];
-
-    /** @var array<Closure> */
     private array $bootingCallbacks = [];
 
     /** @var array<Closure> */
@@ -174,40 +168,6 @@ abstract class AbstractKernel implements KernelInterface
     {
         foreach ($callbacks as $callback) {
             $this->bootedCallbacks[] = $callback;
-        }
-    }
-
-    /**
-     * Register a new callback, that will be fired before application bootloaders are booted.
-     * (Before all application bootloaders will be booted)
-     *
-     * $kernel->appBooting(static function(KernelInterface $kernel) {
-     *     $kernel->getContainer()->...
-     * });
-     *
-     * @internal
-     */
-    public function appBooting(\Closure ...$callbacks): void
-    {
-        foreach ($callbacks as $callback) {
-            $this->appBootingCallbacks[] = $callback;
-        }
-    }
-
-    /**
-     * Register a new callback, that will be fired after application bootloaders are booted.
-     * (After booting all application bootloaders)
-     *
-     * $kernel->booted(static function(KernelInterface $kernel) {
-     *     $kernel->getContainer()->...
-     * });
-     *
-     * @internal
-     */
-    public function appBooted(\Closure ...$callbacks): void
-    {
-        foreach ($callbacks as $callback) {
-            $this->appBootedCallbacks[] = $callback;
         }
     }
 
