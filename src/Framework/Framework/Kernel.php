@@ -20,10 +20,10 @@ abstract class Kernel extends AbstractKernel
     // application specific bootloaders
     protected const APP = [];
 
-    /** @var array<Closure> */
+    /** @var array<\Closure> */
     private array $appBootingCallbacks = [];
 
-    /** @var array<Closure> */
+    /** @var array<\Closure> */
     private array $appBootedCallbacks = [];
 
     /**
