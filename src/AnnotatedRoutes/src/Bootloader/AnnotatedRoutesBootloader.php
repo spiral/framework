@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Router\Bootloader;
 
-use Spiral\Attributes\Bootloader\AttributesBootloader;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\MemoryInterface;
+use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Bootloader\Http\RouterBootloader;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Core\Container\SingletonInterface;

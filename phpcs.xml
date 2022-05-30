@@ -51,6 +51,4 @@
 
     <!-- spiral/streams -->
     <exclude-pattern type="relative">Streams/src/StreamWrapper.php</exclude-pattern>
-    <exclude-pattern type="relative">Attributes/src/polyfill.php</exclude-pattern>
-    <exclude-pattern type="relative">Attributes/src/NamedArgumentConstructor.php</exclude-pattern>
 </ruleset>

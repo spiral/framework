@@ -6,10 +6,10 @@ namespace Spiral\Prototype\Bootloader;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Spiral\Attributes\Bootloader\AttributesBootloader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\Bootloader;
 use Spiral\Boot\MemoryInterface;
+use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Core\Container;
 use Spiral\Prototype\Annotation\Prototyped;

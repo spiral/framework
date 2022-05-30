@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Security;
 
-use Spiral\Attributes\Bootloader\AttributesBootloader;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Domain\GuardPermissionsProvider;
 use Spiral\Domain\PermissionsProviderInterface;
 use Spiral\Security\Actor\Guest;

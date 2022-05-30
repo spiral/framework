@@ -24,8 +24,6 @@
         <UnusedPsalmSuppress errorLevel="suppress" />
         <InvalidThrow>
             <errorLevel type="suppress">
-                <file name="src/Attributes/src/Psr16CachedReader.php"/>
-                <file name="src/Attributes/src/Psr6CachedReader.php"/>
                 <referencedClass name="Psr\Container\NotFoundExceptionInterface"/>
                 <referencedClass name="Psr\Container\ContainerExceptionInterface"/>
             </errorLevel>
