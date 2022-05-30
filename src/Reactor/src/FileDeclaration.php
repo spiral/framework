@@ -33,7 +33,7 @@ class FileDeclaration implements \Stringable, DeclarationInterface
 
     public function __toString(): string
     {
-        return $this->element->__toString();
+        return (new Printer())->print($this);
     }
 
     public static function fromCode(string $code): static
