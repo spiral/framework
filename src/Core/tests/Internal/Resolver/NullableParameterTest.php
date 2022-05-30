@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Resolver;
 
+use DateTimeInterface;
+use RuntimeException;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 
@@ -85,5 +87,28 @@ final class NullableParameterTest extends BaseTest
         );
 
         $this->assertSame([42], $result);
+    }
+
+    public function testNullableClassThatCreatedWithFail(): void
+    {
+        $this->bind(DateTimeInterface::class, fn () => throw new RuntimeException('fail!'));
+
+        $result = $this->resolveClosure(
+            static fn(?DateTimeInterface $param) => $param
+        );
+
+        $this->assertSame([null], $result);
+    }
+
+    public function testNotNullableClassThatCreatedWithFail(): void
+    {
+        $this->bind(DateTimeInterface::class, fn () => throw new RuntimeException('fail!'));
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('fail!');
+
+        $this->resolveClosure(
+            static fn(DateTimeInterface $param) => $param
+        );
     }
 }
