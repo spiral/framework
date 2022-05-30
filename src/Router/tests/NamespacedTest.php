@@ -15,8 +15,8 @@ use Spiral\Router\Exception\TargetException;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Namespaced;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Uri;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 
 class NamespacedTest extends BaseTest
 {
@@ -33,7 +33,7 @@ class NamespacedTest extends BaseTest
             )
         );
 
-        $router->handle(new ServerRequest());
+        $router->handle(new ServerRequest('GET', ''));
     }
 
     public function testRoute(): void
@@ -47,15 +47,15 @@ class NamespacedTest extends BaseTest
             )
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('hello world', (string)$response->getBody());
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test/id/900')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test/id/900')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('900', (string)$response->getBody());
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/other/action')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/other/action')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('action!', (string)$response->getBody());
     }

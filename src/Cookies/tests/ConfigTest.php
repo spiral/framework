@@ -13,7 +13,7 @@ namespace Spiral\Tests\Cookies;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Cookies\Config\CookiesConfig;
-use Laminas\Diactoros\Uri;
+use Nyholm\Psr7\Uri;
 
 class ConfigTest extends TestCase
 {

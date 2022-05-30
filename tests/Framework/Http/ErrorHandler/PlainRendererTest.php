@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Http\ErrorHandler;
 
 use GuzzleHttp\Psr7\Response;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Spiral\Http\ErrorHandler\PlainRenderer;
@@ -18,7 +18,7 @@ class PlainRendererTest extends TestCase
     public function testContentTypeApplicationJson(): void
     {
         $renderer = new PlainRenderer($this->mockResponseFactory());
-        $request = new ServerRequest([], [], null, null, 'php://input', [
+        $request = new ServerRequest('GET', '', body: 'php://input', headers: [
             'Accept' => 'application/json',
         ]);
 
@@ -34,7 +34,7 @@ class PlainRendererTest extends TestCase
     public function testNoAcceptHeader(): void
     {
         $renderer = new PlainRenderer($this->mockResponseFactory());
-        $request = new ServerRequest([], [], null, null, 'php://input');
+        $request = new ServerRequest('GET', '', body: 'php://input');
 
         $response = $renderer->renderException($request, 400, 'message');
         $stream = $response->getBody();
@@ -48,12 +48,12 @@ class PlainRendererTest extends TestCase
     public function testResponseIsJson(): void
     {
         $renderer = new PlainRenderer($this->mockResponseFactory());
-        $request = new ServerRequest([], [], null, null, 'php://input', [
+        $request = new ServerRequest('GET', '', [
             'Accept' => [
                 'application/json',
                 'application/json',
             ],
-        ]);
+        ], 'php://input');
 
         $response = $renderer->renderException($request, 400, 'message');
         self::assertTrue($response->hasHeader('Content-Type'));
@@ -93,9 +93,7 @@ class PlainRendererTest extends TestCase
     public function testResponseIsPlain($acceptHeader): void
     {
         $renderer = new PlainRenderer($this->mockResponseFactory());
-        $request = new ServerRequest([], [], null, null, 'php://input', [
-            'Accept' => $acceptHeader,
-        ]);
+        $request = new ServerRequest('GET', '', ['Accept' => $acceptHeader], 'php://input');
 
         $response = $renderer->renderException($request, 400, 'message');
         $stream = $response->getBody();

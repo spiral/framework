@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container;
 use Spiral\Http\Request\InputManager;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 
 class HeadersTest extends TestCase
 {
@@ -37,7 +37,7 @@ class HeadersTest extends TestCase
 
     public function testShortcut(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest('GET', '');
 
         $request = $request->withAddedHeader('Path', 'value');
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -47,7 +47,7 @@ class HeadersTest extends TestCase
 
     public function testHas(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest('GET', '');
 
         $request = $request->withAddedHeader('Path', 'value');
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -58,7 +58,7 @@ class HeadersTest extends TestCase
 
     public function testFetch(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest('GET', '');
 
         $request = $request->withAddedHeader('Path', 'value');
         $request = $request->withAddedHeader('Path', 'value2');
@@ -71,7 +71,7 @@ class HeadersTest extends TestCase
 
     public function testFetchNoImplode(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest('GET', '');
 
         $request = $request->withAddedHeader('Path', 'value');
         $request = $request->withAddedHeader('Path', 'value2');

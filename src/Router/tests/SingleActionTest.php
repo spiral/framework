@@ -16,8 +16,8 @@ use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Uri;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 
 class SingleActionTest extends BaseTest
 {
@@ -31,7 +31,7 @@ class SingleActionTest extends BaseTest
             new Route('/test', new Action(TestController::class, 'test'))
         );
 
-        $router->handle(new ServerRequest());
+        $router->handle(new ServerRequest('GET', ''));
     }
 
     public function testRoute(): void
@@ -42,11 +42,11 @@ class SingleActionTest extends BaseTest
             new Route('/test', new Action(TestController::class, 'test'))
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('hello world', (string)$response->getBody());
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('hello world', (string)$response->getBody());
     }
@@ -61,7 +61,7 @@ class SingleActionTest extends BaseTest
             (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST')
         );
 
-        $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $router->handle(new ServerRequest('GET', new Uri('/test')));
     }
 
     public function testVerbRouteValid(): void
@@ -72,7 +72,7 @@ class SingleActionTest extends BaseTest
             (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST')
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test'), 'POST'));
+        $response = $router->handle(new ServerRequest('POST', new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('hello world', (string)$response->getBody());
     }
@@ -85,7 +85,7 @@ class SingleActionTest extends BaseTest
             new Route('/test', new Action(TestController::class, 'echo'))
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('echoed', (string)$response->getBody());
     }
@@ -98,13 +98,13 @@ class SingleActionTest extends BaseTest
             new Route('/<action>', new Action(TestController::class, 'echo'))
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/echo')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/echo')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('echoed', (string)$response->getBody());
 
         $e = null;
         try {
-            $router->handle(new ServerRequest([], [], new Uri('/test')));
+            $router->handle(new ServerRequest('GET', new Uri('/test')));
         } catch (UndefinedRouteException $e) {
         }
 
@@ -130,7 +130,7 @@ class SingleActionTest extends BaseTest
             new Route('/test/<id:\d+>', new Action(TestController::class, 'id'))
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test/100')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test/100')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('100', (string)$response->getBody());
     }
@@ -145,7 +145,7 @@ class SingleActionTest extends BaseTest
             new Route('/test/<id:\d+>', new Action(TestController::class, 'id'))
         );
 
-        $router->handle(new ServerRequest([], [], new Uri('/test/abc')));
+        $router->handle(new ServerRequest('GET', new Uri('/test/abc')));
     }
 
     public function testUriGeneration(): void
@@ -173,6 +173,6 @@ class SingleActionTest extends BaseTest
             new Route('/test', new Action(TestController::class, 'test'))
         );
 
-        $router->handle(new ServerRequest([], [], new Uri('/other')));
+        $router->handle(new ServerRequest('GET', new Uri('/other')));
     }
 }

@@ -14,7 +14,7 @@ namespace Spiral\Tests\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response;
+use Nyholm\Psr7\Response;
 
 class Handler implements RequestHandlerInterface
 {

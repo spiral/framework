@@ -17,8 +17,8 @@ use Spiral\Router\Exception\UriHandlerException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Group;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Uri;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 
 class GroupTest extends BaseTest
 {
@@ -34,7 +34,7 @@ class GroupTest extends BaseTest
             ]))
         );
 
-        $router->handle(new ServerRequest());
+        $router->handle(new ServerRequest('GET', ''));
     }
 
     public function testRoute(): void
@@ -47,11 +47,11 @@ class GroupTest extends BaseTest
             ]))
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('hello world', (string)$response->getBody());
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test/id/900')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test/id/900')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('900', (string)$response->getBody());
     }
@@ -68,7 +68,7 @@ class GroupTest extends BaseTest
             ]))
         );
 
-        $router->handle(new ServerRequest([], [], new Uri('/other')));
+        $router->handle(new ServerRequest('GET', new Uri('/other')));
     }
 
     public function testUriInvalid(): void
@@ -113,6 +113,6 @@ class GroupTest extends BaseTest
             ]))
         );
 
-        $router->handle(new ServerRequest([], [], new Uri('/test/other')));
+        $router->handle(new ServerRequest('GET', new Uri('/test/other')));
     }
 }

@@ -18,7 +18,7 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Exception\PipelineException;
 use Spiral\Http\Pipeline;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 
 class PipelineTest extends TestCase
 {
@@ -30,7 +30,7 @@ class PipelineTest extends TestCase
             return 'response';
         }, new ResponseFactory(new HttpConfig(['headers' => []])));
 
-        $response = $pipeline->withHandler($handler)->handle(new ServerRequest());
+        $response = $pipeline->withHandler($handler)->handle(new ServerRequest('GET', ''));
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('OK', $response->getReasonPhrase());
@@ -45,7 +45,7 @@ class PipelineTest extends TestCase
             return 'response';
         }, new ResponseFactory(new HttpConfig(['headers' => []])));
 
-        $response = $pipeline->process(new ServerRequest(), $handler);
+        $response = $pipeline->process(new ServerRequest('GET', ''), $handler);
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('OK', $response->getReasonPhrase());
@@ -57,6 +57,6 @@ class PipelineTest extends TestCase
         $this->expectException(PipelineException::class);
 
         $pipeline = new Pipeline(new Container());
-        $pipeline->handle(new ServerRequest());
+        $pipeline->handle(new ServerRequest('GET', ''));
     }
 }
