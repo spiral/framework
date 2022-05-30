@@ -37,16 +37,16 @@ abstract class AbstractKernel implements KernelInterface
     protected array $dispatchers = [];
 
     /** @var array<Closure> */
-    private array $bootingCallbacks = [];
-
-    /** @var array<Closure> */
-    private array $bootedCallbacks = [];
-
-    /** @var array<Closure> */
     protected array $appBootingCallbacks = [];
 
     /** @var array<Closure> */
     protected array $appBootedCallbacks = [];
+
+    /** @var array<Closure> */
+    private array $bootingCallbacks = [];
+
+    /** @var array<Closure> */
+    private array $bootedCallbacks = [];
 
     /**
      * @throws \Throwable
@@ -264,6 +264,22 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
+     * Call the registered booting callbacks.
+     */
+    protected function fireCallbacks(array &$callbacks): void
+    {
+        if ($callbacks === []) {
+            return;
+        }
+
+        do {
+            $this->container->invoke(\current($callbacks));
+        } while (\next($callbacks));
+
+        $callbacks = [];
+    }
+
+    /**
      * Bootload all registered classes using BootloadManager.
      */
     private function bootload(): void
@@ -279,21 +295,5 @@ abstract class AbstractKernel implements KernelInterface
         );
 
         $this->fireCallbacks($this->bootedCallbacks);
-    }
-
-    /**
-     * Call the registered booting callbacks.
-     */
-    protected function fireCallbacks(array &$callbacks): void
-    {
-        if ($callbacks === []) {
-            return;
-        }
-
-        do {
-            $this->container->invoke(\current($callbacks));
-        } while (\next($callbacks));
-
-        $callbacks = [];
     }
 }
