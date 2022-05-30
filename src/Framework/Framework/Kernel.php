@@ -32,7 +32,8 @@ abstract class Kernel extends AbstractKernel
                 static function () use ($self): void {
                     $self->fireCallbacks($self->appBootingCallbacks);
                 },
-            ]);
+            ]
+        );
 
         $this->fireCallbacks($this->appBootedCallbacks);
     }
