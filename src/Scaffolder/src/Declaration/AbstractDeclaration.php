@@ -28,6 +28,7 @@ abstract class AbstractDeclaration implements DeclarationInterface
 
         $this->file = new FileDeclaration();
         $this->file->addNamespace($this->namespace);
+        $this->file->setComment($this->config->headerLines());
 
         $this->declare();
     }

@@ -39,7 +39,11 @@ trait PropertiesAware
     /** @param string $name without $ */
     public function addProperty(string $name, mixed $value = null): Property
     {
-        return Property::fromElement($this->element->addProperty($name, $value));
+        if (\func_num_args() > 1) {
+            return Property::fromElement($this->element->addProperty($name, $value));
+        }
+
+        return Property::fromElement($this->element->addProperty($name));
     }
 
     /** @param string $name without $ */
