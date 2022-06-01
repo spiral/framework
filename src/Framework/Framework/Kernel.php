@@ -21,10 +21,10 @@ abstract class Kernel extends AbstractKernel
     protected const APP = [];
 
     /** @var array<\Closure> */
-    private array $appBootingCallbacks = [];
+    private array $bootingCallbacks = [];
 
     /** @var array<\Closure> */
-    private array $appBootedCallbacks = [];
+    private array $bootedCallbacks = [];
 
     /**
      * Register a new callback, that will be fired before application bootloaders are booted.
@@ -39,7 +39,7 @@ abstract class Kernel extends AbstractKernel
     public function appBooting(\Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
-            $this->appBootingCallbacks[] = $callback;
+            $this->bootingCallbacks[] = $callback;
         }
     }
 
@@ -56,8 +56,18 @@ abstract class Kernel extends AbstractKernel
     public function appBooted(\Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
-            $this->appBootedCallbacks[] = $callback;
+            $this->bootedCallbacks[] = $callback;
         }
+    }
+
+    /**
+     * Get list of defined application bootloaders
+     *
+     * @return array<int, class-string>|array<class-string, array<non-empty-string, mixed>>
+     */
+    protected function defineAppBootloaders(): array
+    {
+        return static::APP;
     }
 
     /**
@@ -67,15 +77,15 @@ abstract class Kernel extends AbstractKernel
     {
         $self = $this;
         $this->bootloader->bootload(
-            static::APP,
+            $this->defineAppBootloaders(),
             [
                 static function () use ($self): void {
-                    $self->fireCallbacks($self->appBootingCallbacks);
+                    $self->fireCallbacks($self->bootingCallbacks);
                 },
             ]
         );
 
-        $this->fireCallbacks($this->appBootedCallbacks);
+        $this->fireCallbacks($this->bootedCallbacks);
     }
 
     /**
