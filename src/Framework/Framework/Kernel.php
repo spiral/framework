@@ -20,12 +20,72 @@ abstract class Kernel extends AbstractKernel
     // application specific bootloaders
     protected const APP = [];
 
+    /** @var array<\Closure> */
+    private array $bootingCallbacks = [];
+
+    /** @var array<\Closure> */
+    private array $bootedCallbacks = [];
+
+    /**
+     * Register a new callback, that will be fired before application bootloaders are booted.
+     * (Before all application bootloaders will be booted)
+     *
+     * $kernel->appBooting(static function(KernelInterface $kernel) {
+     *     $kernel->getContainer()->...
+     * });
+     *
+     * @internal
+     */
+    public function appBooting(\Closure ...$callbacks): void
+    {
+        foreach ($callbacks as $callback) {
+            $this->bootingCallbacks[] = $callback;
+        }
+    }
+
+    /**
+     * Register a new callback, that will be fired after application bootloaders are booted.
+     * (After booting all application bootloaders)
+     *
+     * $kernel->booted(static function(KernelInterface $kernel) {
+     *     $kernel->getContainer()->...
+     * });
+     *
+     * @internal
+     */
+    public function appBooted(\Closure ...$callbacks): void
+    {
+        foreach ($callbacks as $callback) {
+            $this->bootedCallbacks[] = $callback;
+        }
+    }
+
+    /**
+     * Get list of defined application bootloaders
+     *
+     * @return array<int, class-string>|array<class-string, array<non-empty-string, mixed>>
+     */
+    protected function defineAppBootloaders(): array
+    {
+        return static::APP;
+    }
+
     /**
      * Each application can define it's own boot sequence.
      */
     protected function bootstrap(): void
     {
-        $this->bootloader->bootload(static::APP);
+        $self = $this;
+        $this->bootloader->bootload(
+            $this->defineAppBootloaders(),
+            [
+                static function () use ($self): void {
+                    $self->fireCallbacks($self->bootingCallbacks);
+                },
+            ]
+        );
+
+        $this->fireCallbacks($this->bootedCallbacks);
     }
 
     /**
