@@ -48,17 +48,17 @@ class ScaffolderConfig extends InjectableConfig
             $localNamespace .= '\\' . $this->classify($namespace);
         }
 
-        if (empty($this->baseNamespace())) {
+        if (empty($this->baseNamespace($element))) {
             return $localNamespace;
         }
 
-        return \trim($this->baseNamespace() . '\\' . $localNamespace, '\\');
+        return \trim($this->baseNamespace($element) . '\\' . $localNamespace, '\\');
     }
 
     public function classFilename(string $element, string $name): string
     {
         $namespace = $this->classNamespace($element, $name);
-        $namespace = \substr($namespace, \strlen($this->baseNamespace()));
+        $namespace = \substr($namespace, \strlen($this->baseNamespace($element)));
 
         return $this->joinPathChunks([
             $this->baseDirectory(),
@@ -129,8 +129,12 @@ class ScaffolderConfig extends InjectableConfig
         return ['namespace' => '', 'name' => $name];
     }
 
-    private function baseNamespace(): string
+    private function baseNamespace(string $element): string
     {
+        if (\array_key_exists('baseNamespace', $this->config['declarations'][$element])) {
+            return \trim((string) $this->getOption($element, 'baseNamespace', ''), '\\');
+        }
+
         return \trim($this->config['namespace'], '\\');
     }
 

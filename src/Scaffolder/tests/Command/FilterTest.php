@@ -49,8 +49,11 @@ class FilterTest extends AbstractCommandTest
         $this->assertTrue(class_exists(self::CLASS_NAME));
 
         $reflection = new ReflectionClass(self::CLASS_NAME);
+        $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('strict_types=1', $this->files()->read($reflection->getFileName()));
+        $this->assertStringContainsString('strict_types=1', $content);
+        $this->assertStringContainsString('{project-name}', $content);
+        $this->assertStringContainsString('@author {author-name}', $content);
         $this->assertSame([
             'name'     => 'data:name',
             'email'    => 'data:email',

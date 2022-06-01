@@ -43,8 +43,11 @@ class CommandTest extends AbstractCommandTest
         $this->assertTrue(class_exists($className));
 
         $reflection = new ReflectionClass($className);
+        $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('strict_types=1', $this->files()->read($reflection->getFileName()));
+        $this->assertStringContainsString('strict_types=1', $content);
+        $this->assertStringContainsString('{project-name}', $content);
+        $this->assertStringContainsString('@author {author-name}', $content);
         $this->assertTrue($reflection->hasMethod('perform'));
         $this->assertTrue($reflection->hasConstant('NAME'));
         $this->assertTrue($reflection->hasConstant('DESCRIPTION'));

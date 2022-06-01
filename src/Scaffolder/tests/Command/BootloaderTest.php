@@ -40,9 +40,12 @@ class BootloaderTest extends AbstractCommandTest
         $this->assertTrue(class_exists(self::CLASS_NAME));
 
         $reflection = new ReflectionClass(self::CLASS_NAME);
+        $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('strict_types=1', $this->files()->read($reflection->getFileName()));
+        $this->assertStringContainsString('strict_types=1', $content);
         $this->assertStringContainsString('Sample Bootloader', $reflection->getDocComment());
+        $this->assertStringContainsString('{project-name}', $content);
+        $this->assertStringContainsString('@author {author-name}', $content);
         $this->assertTrue($reflection->hasMethod('boot'));
 
         $this->assertTrue($reflection->hasConstant('BINDINGS'));

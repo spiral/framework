@@ -36,8 +36,11 @@ class ControllerTest extends AbstractCommandTest
         $this->assertTrue(class_exists($class));
 
         $reflection = new ReflectionClass($class);
+        $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('strict_types=1', $this->files()->read($reflection->getFileName()));
+        $this->assertStringContainsString('strict_types=1', $content);
+        $this->assertStringContainsString('{project-name}', $content);
+        $this->assertStringContainsString('@author {author-name}', $content);
         $this->assertStringContainsString('Sample Controller', $reflection->getDocComment());
         $this->assertTrue($reflection->hasMethod('index'));
         $this->assertTrue($reflection->hasMethod('save'));
