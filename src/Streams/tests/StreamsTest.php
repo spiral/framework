@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Streams\StreamWrapper;
-use Laminas\Diactoros\Stream;
+use Nyholm\Psr7\Stream;
 
 class StreamsTest extends TestCase
 {
@@ -33,7 +33,7 @@ class StreamsTest extends TestCase
 
     public function testGetUri()
     {
-        $stream = new Stream('php://memory', 'rw');
+        $stream = Stream::create();
         $stream->write('sample text');
 
         $filename = StreamWrapper::getFilename($stream);
@@ -60,7 +60,7 @@ class StreamsTest extends TestCase
 
     public function testGetResource()
     {
-        $stream = new Stream('php://memory', 'rw');
+        $stream = Stream::create();
         $stream->write('sample text');
 
         $this->assertFalse(StreamWrapper::has($stream));
@@ -116,7 +116,7 @@ class StreamsTest extends TestCase
 
     public function testWriteIntoStream()
     {
-        $stream = new Stream(fopen('php://temp', 'wrb+'), 'wrb+');
+        $stream = Stream::create(fopen('php://temp', 'wrb+'));
         $file = StreamWrapper::getFilename($stream);
 
         file_put_contents($file, 'test');

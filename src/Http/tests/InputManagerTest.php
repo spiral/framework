@@ -22,7 +22,7 @@ use Spiral\Http\Request\HeadersBag;
 use Spiral\Http\Request\InputBag;
 use Spiral\Http\Request\InputManager;
 use Spiral\Http\Request\ServerBag;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 
 class InputManagerTest extends TestCase
 {
@@ -50,7 +50,7 @@ class InputManagerTest extends TestCase
 
     public function testGetRequest(): void
     {
-        $this->container->bind(ServerRequestInterface::class, new ServerRequest());
+        $this->container->bind(ServerRequestInterface::class, new ServerRequest('GET', ''));
 
         $this->assertNotNull($this->input->request());
         $this->assertSame($this->input->request(), $this->input->request());
@@ -58,32 +58,32 @@ class InputManagerTest extends TestCase
 
     public function testChangeRequest(): void
     {
-        $this->container->bind(ServerRequestInterface::class, new ServerRequest([], [], '/hello'));
+        $this->container->bind(ServerRequestInterface::class, new ServerRequest('GET', '/hello'));
         $this->assertSame('/hello', $this->input->path());
 
-        $this->container->bind(ServerRequestInterface::class, new ServerRequest([], [], '/other'));
+        $this->container->bind(ServerRequestInterface::class, new ServerRequest('GET', '/other'));
         $this->assertSame('/other', $this->input->path());
     }
 
     public function testUri(): void
     {
-        $request = new ServerRequest([], [], 'http://domain.com/hello-world');
+        $request = new ServerRequest('GET', 'http://domain.com/hello-world');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('/hello-world', $this->input->path());
 
-        $request = new ServerRequest([], [], 'http://domain.com/new-one');
+        $request = new ServerRequest('GET', 'http://domain.com/new-one');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('/new-one', $this->input->path());
 
-        $request = new ServerRequest([], [], '');
+        $request = new ServerRequest('GET', '');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('/', $this->input->path());
 
 
-        $request = new ServerRequest([], [], 'hello');
+        $request = new ServerRequest('GET', 'hello');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('/hello', $this->input->path());
@@ -91,18 +91,18 @@ class InputManagerTest extends TestCase
 
     public function testMethod(): void
     {
-        $request = new ServerRequest([], [], 'http://domain.com/hello-world', 'GET');
+        $request = new ServerRequest('GET', 'http://domain.com/hello-world');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('GET', $this->input->method());
 
-        $request = new ServerRequest([], [], 'http://domain.com/hello-world', 'POST');
+        $request = new ServerRequest('POST', 'http://domain.com/hello-world');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('POST', $this->input->method());
 
         //case fixing
-        $request = new ServerRequest([], [], 'http://domain.com/hello-world', 'put');
+        $request = new ServerRequest('put', 'http://domain.com/hello-world');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('PUT', $this->input->method());
@@ -110,12 +110,12 @@ class InputManagerTest extends TestCase
 
     public function testIsSecure(): void
     {
-        $request = new ServerRequest([], [], 'http://domain.com/hello-world', 'GET');
+        $request = new ServerRequest('GET', 'http://domain.com/hello-world');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertFalse($this->input->isSecure());
 
-        $request = new ServerRequest([], [], 'https://domain.com/hello-world', 'POST');
+        $request = new ServerRequest('POST', 'https://domain.com/hello-world');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertTrue($this->input->isSecure());
@@ -123,25 +123,16 @@ class InputManagerTest extends TestCase
 
     public function testIsAjax(): void
     {
-        $request = new ServerRequest(
-            [],
-            [],
-            'http://domain.com/hello-world',
-            'GET',
-            'php://input',
-            []
-        );
+        $request = new ServerRequest('GET', 'http://domain.com/hello-world', body: 'php://input');
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertFalse($this->input->isAjax());
 
         $request = new ServerRequest(
-            [],
-            [],
-            'http://domain.com/hello-world',
             'GET',
-            'php://input',
-            ['X-Requested-With' => 'xmlhttprequest']
+            'http://domain.com/hello-world',
+            ['X-Requested-With' => 'xmlhttprequest'],
+            'php://input'
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -158,12 +149,10 @@ class InputManagerTest extends TestCase
         $input = $this->input->withJsonType('application/vnd.api+json');
 
         $request = new ServerRequest(
-            [],
-            [],
-            'http://domain.com/hello-world',
             'GET',
-            'php://input',
-            $acceptHeader !== null ? ['Accept' => $acceptHeader] : []
+            'http://domain.com/hello-world',
+            $acceptHeader !== null ? ['Accept' => $acceptHeader] : [],
+            'php://input'
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -191,12 +180,10 @@ class InputManagerTest extends TestCase
     public function testIsJsonExpectedOnSoftMatch(bool $expected, ?string $acceptHeader): void
     {
         $request = new ServerRequest(
-            [],
-            [],
-            'http://domain.com/hello-world',
             'GET',
-            'php://input',
-            $acceptHeader !== null ? ['Accept' => $acceptHeader] : []
+            'http://domain.com/hello-world',
+            $acceptHeader !== null ? ['Accept' => $acceptHeader] : [],
+            'php://input'
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -220,24 +207,21 @@ class InputManagerTest extends TestCase
     public function testRemoteIP(): void
     {
         $request = new ServerRequest(
-            ['REMOTE_ADDR' => '127.0.0.1'],
-            [],
-            'http://domain.com/hello-world',
             'GET',
-            'php://input',
-            []
+            'http://domain.com/hello-world',
+            body: 'php://input',
+            serverParams: ['REMOTE_ADDR' => '127.0.0.1']
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('127.0.0.1', $this->input->remoteAddress());
 
         $request = new ServerRequest(
-            ['REMOTE_ADDR' => null],
-            [],
-            'http://domain.com/hello-world',
             'GET',
+            'http://domain.com/hello-world',
+            ['Accept' => 'application/json'],
             'php://input',
-            ['Accept' => 'application/json']
+            serverParams: ['REMOTE_ADDR' => null]
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -249,12 +233,9 @@ class InputManagerTest extends TestCase
     public function testGetBag(): void
     {
         $request = new ServerRequest(
-            [],
-            [],
-            'http://domain.com/hello-world',
             'GET',
-            'php://input',
-            []
+            'http://domain.com/hello-world',
+            body: 'php://input'
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -282,12 +263,9 @@ class InputManagerTest extends TestCase
     {
         $this->expectException(InputException::class);
         $request = new ServerRequest(
-            [],
-            [],
-            'http://domain.com/hello-world',
             'GET',
-            'php://input',
-            []
+            'http://domain.com/hello-world',
+            body: 'php://input'
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -296,7 +274,7 @@ class InputManagerTest extends TestCase
 
     public function testShortcuts(): void
     {
-        $this->container->bind(ServerRequestInterface::class, (new ServerRequest())->withParsedBody([
+        $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
             'array' => [
                 'key' => [
                     'name' => 'value'
@@ -330,12 +308,9 @@ class InputManagerTest extends TestCase
         ));
 
         $request = new ServerRequest(
-            [],
-            [],
-            'http://domain.com/hello-world',
             'GET',
-            'php://input',
-            []
+            'http://domain.com/hello-world',
+            body: 'php://input'
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 

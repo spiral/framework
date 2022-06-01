@@ -16,8 +16,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Core\Container;
 use Spiral\Http\Request\InputManager;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\UploadedFile;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\UploadedFile;
 
 class FilesTest extends TestCase
 {
@@ -39,7 +39,7 @@ class FilesTest extends TestCase
 
     public function testShortcut(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest('GET', '');
         $request = $request->withUploadedFiles([
             'file' => new UploadedFile(
                 fopen(__FILE__, 'r'),
@@ -57,7 +57,7 @@ class FilesTest extends TestCase
 
     public function testGetFilename(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest('GET', '');
         $request = $request->withUploadedFiles([
             'file' => new UploadedFile(
                 fopen(__FILE__, 'r'),
@@ -79,7 +79,7 @@ class FilesTest extends TestCase
 
     public function testGetFilenameMissing(): void
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest('GET', '');
         $request = $request->withUploadedFiles([
             'file' => new UploadedFile(
                 fopen(__FILE__, 'r'),

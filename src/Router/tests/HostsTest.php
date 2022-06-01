@@ -15,7 +15,7 @@ use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 
 class HostsTest extends BaseTest
 {
@@ -29,7 +29,7 @@ class HostsTest extends BaseTest
             new Action(TestController::class, 'test')
         ));
 
-        $match = $router->handle(new ServerRequest());
+        $match = $router->handle(new ServerRequest('GET', ''));
     }
 
     public function testRoute(): void
@@ -41,14 +41,14 @@ class HostsTest extends BaseTest
         ));
 
         $this->assertNotNull(
-            $r = $router->handle(new ServerRequest([], [], 'http://domain.com/'))
+            $r = $router->handle(new ServerRequest('GET', 'http://domain.com/'))
         );
 
         $this->assertSame(200, $r->getStatusCode());
         $this->assertSame('hello world', (string)$r->getBody());
 
         $this->assertNotNull(
-            $r = $router->handle(new ServerRequest([], [], 'https://domain.com/'))
+            $r = $router->handle(new ServerRequest('GET', 'https://domain.com/'))
         );
 
         $this->assertSame(200, $r->getStatusCode());

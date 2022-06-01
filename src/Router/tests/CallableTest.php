@@ -11,14 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Route;
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Uri;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 
 class CallableTest extends BaseTest
 {
@@ -32,7 +28,7 @@ class CallableTest extends BaseTest
             })
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('hello world', (string)$response->getBody());
     }
@@ -45,7 +41,7 @@ class CallableTest extends BaseTest
             new Route('/something', new Call())
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('invoked', (string)$response->getBody());
     }
@@ -58,7 +54,7 @@ class CallableTest extends BaseTest
             new Route('/something', Call::class)
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('invoked', (string)$response->getBody());
     }
@@ -71,7 +67,7 @@ class CallableTest extends BaseTest
             new Route('/something', new Handler())
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('handler', (string)$response->getBody());
     }
@@ -84,7 +80,7 @@ class CallableTest extends BaseTest
             new Route('/something', Handler::class)
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('handler', (string)$response->getBody());
     }
@@ -99,7 +95,7 @@ class CallableTest extends BaseTest
             new Route('/something', 'something')
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('handler', (string)$response->getBody());
     }

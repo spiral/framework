@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 
 class IntegrationTest extends TestCase
@@ -112,16 +112,11 @@ class IntegrationTest extends TestCase
             'accept-language' => 'en'
         ], $headers);
 
-        return new ServerRequest(
-            [],
-            [],
-            $uri,
-            $method,
-            'php://input',
-            $headers,
-            $cookies,
-            $query
-        );
+        $request = new ServerRequest($method, $uri, $headers, 'php://input');
+
+        return $request
+            ->withCookieParams($cookies)
+            ->withQueryParams($query);
     }
 
     public function fetchCookies(array $header)

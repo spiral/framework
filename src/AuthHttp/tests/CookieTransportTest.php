@@ -24,7 +24,7 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 use Spiral\Tests\Auth\Stub\TestAuthHttpToken;
@@ -55,15 +55,7 @@ class CookieTransportTest extends TestCase
         );
 
         $response = $http->handle(
-            new ServerRequest(
-                [],
-                [],
-                null,
-                'GET',
-                'php://input',
-                [],
-                ['auth-token' => 'good-token']
-            )
+            (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'good-token'])
         );
 
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
@@ -87,15 +79,7 @@ class CookieTransportTest extends TestCase
         );
 
         $response = $http->handle(
-            new ServerRequest(
-                [],
-                [],
-                null,
-                'GET',
-                'php://input',
-                [],
-                ['auth-token' => 'bad']
-            )
+            (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'bad'])
         );
 
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
@@ -115,15 +99,7 @@ class CookieTransportTest extends TestCase
         );
 
         $response = $http->handle(
-            new ServerRequest(
-                [],
-                [],
-                null,
-                'GET',
-                'php://input',
-                [],
-                ['auth-token' => 'good-token']
-            )
+            (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'good-token'])
         );
 
         self::assertSame(['auth-token=; Path=/; HttpOnly'], $response->getHeader('Set-Cookie'));
@@ -142,7 +118,7 @@ class CookieTransportTest extends TestCase
             }
         );
 
-        $response = $http->handle(new ServerRequest([], [], null, 'GET', 'php://input', []));
+        $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
 
         self::assertSame(['auth-token=new-token; Path=/; HttpOnly'], $response->getHeader('Set-Cookie'));
     }
@@ -161,7 +137,7 @@ class CookieTransportTest extends TestCase
             }
         );
 
-        $response = $http->handle(new ServerRequest([], [], null, 'GET', 'php://input', []));
+        $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
 
         self::assertSame(
             ['auth-token=new-token; Path=/; Domain=localhost; Secure; SameSite=None'],
@@ -181,7 +157,7 @@ class CookieTransportTest extends TestCase
             }
         );
 
-        $response = $http->handle(new ServerRequest([], [], null, 'GET', 'php://input', []));
+        $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
 
         $cookie = explode('; ', $response->getHeader('Set-Cookie')[0]);
 

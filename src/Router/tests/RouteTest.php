@@ -16,7 +16,7 @@ use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Route;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Router\UriHandler;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 
 class RouteTest extends TestCase
 {
@@ -36,6 +36,6 @@ class RouteTest extends TestCase
         $this->expectException(RouteException::class);
 
         $route = new Route('/action', Call::class);
-        $route->handle(new ServerRequest());
+        $route->handle(new ServerRequest('GET', ''));
     }
 }

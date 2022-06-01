@@ -7,7 +7,7 @@ namespace Spiral\Distribution\Config;
 use Aws\Credentials\Credentials;
 use Aws\S3\S3Client;
 use GuzzleHttp\Psr7\Uri as GuzzleUri;
-use Laminas\Diactoros\Uri as LaminasUri;
+use Nyholm\Psr7\Uri as NyholmUri;
 use Psr\Http\Message\UriInterface;
 use Spiral\Distribution\Manager;
 use Spiral\Distribution\Resolver\CloudFrontResolver;
@@ -218,7 +218,7 @@ class DistributionConfig
 
         return match (true) {
             isset($config['factory']) => (new $config['factory']())->createUri($uri),
-            \class_exists(LaminasUri::class) => new LaminasUri($uri),
+            \class_exists(NyholmUri::class) => new NyholmUri($uri),
             \class_exists(GuzzleUri::class) => new GuzzleUri($uri),
             default => throw new InvalidArgumentException(
                 \sprintf('Can not resolve available PSR-7 UriFactory implementation; 

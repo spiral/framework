@@ -16,8 +16,8 @@ use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Controller;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Uri;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 
 class ControllerTest extends BaseTest
 {
@@ -31,7 +31,7 @@ class ControllerTest extends BaseTest
             new Route('/<action>/<id>', new Controller(TestController::class))
         );
 
-        $router->handle(new ServerRequest());
+        $router->handle(new ServerRequest('GET', ''));
     }
 
     public function testRoute(): void
@@ -42,15 +42,15 @@ class ControllerTest extends BaseTest
             new Route('/<action>[/<id>]', new Controller(TestController::class))
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('hello world', (string)$response->getBody());
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/echo')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/echo')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('echoed', (string)$response->getBody());
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/id/888')));
+        $response = $router->handle(new ServerRequest('GET', new Uri('/id/888')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('888', (string)$response->getBody());
     }
@@ -80,6 +80,6 @@ class ControllerTest extends BaseTest
             new Route('/<action>[/<id>]', new Controller(TestController::class))
         );
 
-        $router->handle(new ServerRequest([], [], new Uri('/other')));
+        $router->handle(new ServerRequest('GET', new Uri('/other')));
     }
 }

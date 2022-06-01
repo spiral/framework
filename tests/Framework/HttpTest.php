@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework;
 
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Http\Http;
 use Spiral\App\TestApp;
@@ -71,16 +71,16 @@ abstract class HttpTest extends BaseTest
         array $headers = [],
         array $cookies = []
     ): ServerRequest {
-        return new ServerRequest(
-            [],
-            [],
-            $uri,
+        $request = new ServerRequest(
             $method,
-            'php://input',
+            $uri,
             $headers,
-            $cookies,
-            $query
+            'php://input'
         );
+
+        return $request
+            ->withQueryParams($query)
+            ->withCookieParams($cookies);
     }
 
     protected function fetchCookies(array $header)

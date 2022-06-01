@@ -13,7 +13,7 @@ use Psr\Http\Message\UriFactoryInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 
 /**
- * PSR-17 factories using Laminas/Diactoros (default package).
+ * PSR-17 factories using Nyholm/Psr7 (default package).
  */
 final class DiactorosBootloader extends Bootloader
 {

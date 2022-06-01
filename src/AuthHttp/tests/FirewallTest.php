@@ -27,8 +27,8 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Uri;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
@@ -55,9 +55,7 @@ class FirewallTest extends TestCase
             }
         );
 
-        $response = $http->handle(new ServerRequest([], [], null, 'GET', 'php://input', [
-            'X-Auth-Token' => 'ok'
-        ]));
+        $response = $http->handle(new ServerRequest('GET', '', ['X-Auth-Token' => 'ok'], 'php://input'));
 
         self::assertSame('OK', (string)$response->getBody());
     }
@@ -76,9 +74,7 @@ class FirewallTest extends TestCase
         );
 
         $this->expectException(AuthException::class);
-        $response = $http->handle(new ServerRequest([], [], null, 'GET', 'php://input', [
-            'X-Auth-Token' => 'no-actor'
-        ]));
+        $response = $http->handle(new ServerRequest('GET', '', ['X-Auth-Token' => 'no-actor'], 'php://input'));
 
         self::assertSame('OK', (string)$response->getBody());
     }
@@ -97,9 +93,7 @@ class FirewallTest extends TestCase
         );
 
         $this->expectException(AuthException::class);
-        $response = $http->handle(new ServerRequest([], [], null, 'GET', 'php://input', [
-            'X-Auth-Token' => 'bad'
-        ]));
+        $response = $http->handle(new ServerRequest('GET', '', ['X-Auth-Token' => 'bad'], 'php://input'));
 
         self::assertSame('OK', (string)$response->getBody());
     }
@@ -117,9 +111,9 @@ class FirewallTest extends TestCase
             }
         );
 
-        $response = $http->handle(new ServerRequest([], [], new Uri('/admin'), 'GET', 'php://input', [
-            'X-Auth-Token' => 'ok'
-        ]));
+        $response = $http->handle(
+            new ServerRequest('GET', new Uri('/admin'), ['X-Auth-Token' => 'ok'], 'php://input')
+        );
 
         self::assertSame('/admin', (string)$response->getBody());
     }
@@ -137,9 +131,9 @@ class FirewallTest extends TestCase
             }
         );
 
-        $response = $http->handle(new ServerRequest([], [], new Uri('/admin'), 'GET', 'php://input', [
-            'X-Auth-Token' => 'no-actor'
-        ]));
+        $response = $http->handle(
+            new ServerRequest('GET', new Uri('/admin'), ['X-Auth-Token' => 'no-actor'], 'php://input')
+        );
 
         self::assertSame('/login', (string)$response->getBody());
     }
@@ -157,9 +151,9 @@ class FirewallTest extends TestCase
             }
         );
 
-        $response = $http->handle(new ServerRequest([], [], new Uri('/admin'), 'GET', 'php://input', [
-            'X-Auth-Token' => 'bad'
-        ]));
+        $response = $http->handle(
+            new ServerRequest('GET', new Uri('/admin'), ['X-Auth-Token' => 'bad'], 'php://input')
+        );
 
         self::assertSame('/login', (string)$response->getBody());
     }

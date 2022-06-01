@@ -17,8 +17,8 @@ use Spiral\Router\Target\Controller;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Spiral\Router\UriHandler;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Uri;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 
 class ControllerTargetTest extends TestCase
 {
@@ -38,33 +38,33 @@ class ControllerTargetTest extends TestCase
         );
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        $this->assertNull($route->match(new ServerRequest()));
-        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test/something'))));
-        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test/tester'))));
+        $this->assertNull($route->match(new ServerRequest('GET', '')));
+        $this->assertNotNull($route->match(new ServerRequest('GET', new Uri('/test/something'))));
+        $this->assertNotNull($route->match(new ServerRequest('GET', new Uri('/test/tester'))));
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test')))
         );
 
         $this->assertSame(['action' => null], $match->getMatches());
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test/')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/')))
         );
         $this->assertSame(['action' => null], $match->getMatches());
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test/test')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/test')))
         );
         $this->assertSame(['action' => 'test'], $match->getMatches());
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test/test/')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/test/')))
         );
         $this->assertSame(['action' => 'test'], $match->getMatches());
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test/other')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/other')))
         );
 
         $this->assertSame(['action' => 'other'], $match->getMatches());

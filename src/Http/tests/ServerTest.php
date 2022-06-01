@@ -16,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container;
 use Spiral\Http\Exception\InputException;
 use Spiral\Http\Request\InputManager;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 
 class ServerTest extends TestCase
 {
@@ -39,7 +39,9 @@ class ServerTest extends TestCase
     public function testShortcut(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -50,7 +52,9 @@ class ServerTest extends TestCase
     public function testHas(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -63,7 +67,9 @@ class ServerTest extends TestCase
     public function testGet(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -75,7 +81,9 @@ class ServerTest extends TestCase
     public function testGetDot(): void
     {
         $request = new ServerRequest(
-            ['PATH' => ['SAMPLE' => 1]]
+            'GET',
+            '',
+            serverParams: ['PATH' => ['SAMPLE' => 1]]
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -87,7 +95,9 @@ class ServerTest extends TestCase
     public function testAll(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -100,7 +110,9 @@ class ServerTest extends TestCase
     public function testServerBagFetchNoFill(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -117,7 +129,9 @@ class ServerTest extends TestCase
     public function testServerBagFetchAndFill(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -135,7 +149,9 @@ class ServerTest extends TestCase
     public function testServerBagCount(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -146,7 +162,9 @@ class ServerTest extends TestCase
     public function testServerBagArrayAccess(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -158,7 +176,9 @@ class ServerTest extends TestCase
     public function testDebugInfo(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -172,7 +192,9 @@ class ServerTest extends TestCase
     public function testIterator(): void
     {
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -188,7 +210,9 @@ class ServerTest extends TestCase
         $this->expectException(InputException::class);
 
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -200,7 +224,9 @@ class ServerTest extends TestCase
         $this->expectException(InputException::class);
 
         $request = new ServerRequest(
-            ['PATH' => 'sample']
+            'GET',
+            '',
+            serverParams: ['PATH' => 'sample']
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);

@@ -20,7 +20,7 @@ use Spiral\Http\Exception\HttpException;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 
 class HttpTest extends TestCase
 {
@@ -45,7 +45,7 @@ class HttpTest extends TestCase
             return 'hello world';
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame('hello world', (string)$response->getBody());
     }
 
@@ -55,7 +55,7 @@ class HttpTest extends TestCase
 
         $core = $this->getCore();
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame('hello world', (string)$response->getBody());
     }
 
@@ -66,7 +66,7 @@ class HttpTest extends TestCase
             return 'hello world';
         }, new ResponseFactory(new HttpConfig(['headers' => []]))));
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame('hello world', (string)$response->getBody());
     }
 
@@ -78,7 +78,7 @@ class HttpTest extends TestCase
             return $resp->withAddedHeader('hello', 'value');
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         $this->assertSame(['value'], $response->getHeader('hello'));
     }
@@ -93,7 +93,7 @@ class HttpTest extends TestCase
             return $resp->withAddedHeader('hello', 'value');
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         $this->assertSame(['value'], $response->getHeader('hello'));
         $this->assertSame('hello!', (string)$response->getBody());
@@ -110,7 +110,7 @@ class HttpTest extends TestCase
             return $resp->withAddedHeader('hello', 'value');
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         $this->assertSame(['value'], $response->getHeader('hello'));
         $this->assertSame('world hello!', (string)$response->getBody());
@@ -131,7 +131,7 @@ class HttpTest extends TestCase
         });
 
         $this->assertSame(1, ob_get_level());
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         $this->assertSame('world hello!', (string)$response->getBody());
         $this->assertSame(1, ob_get_level());
@@ -148,7 +148,7 @@ class HttpTest extends TestCase
             ];
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(404, $response->getStatusCode());
         $this->assertSame(['application/json'], $response->getHeader('Content-Type'));
     }
@@ -164,7 +164,7 @@ class HttpTest extends TestCase
             ]);
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(404, $response->getStatusCode());
         $this->assertSame(['application/json'], $response->getHeader('Content-Type'));
     }
@@ -177,7 +177,7 @@ class HttpTest extends TestCase
             return 'hello?';
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         $this->assertSame(['Value*'], $response->getHeader('header'));
         $this->assertSame('hello?', (string)$response->getBody());
@@ -194,7 +194,7 @@ class HttpTest extends TestCase
             return 'hello?';
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         $this->assertSame(['Value+', 'Value*'], $response->getHeader('header'));
         $this->assertSame('hello?', (string)$response->getBody());
@@ -211,7 +211,7 @@ class HttpTest extends TestCase
             return 'hello?';
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         $this->assertSame(['Value*', 'Value+'], $response->getHeader('header'));
         $this->assertSame('hello?', (string)$response->getBody());
@@ -227,7 +227,7 @@ class HttpTest extends TestCase
             return 'OK';
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame('OK', (string)$response->getBody());
     }
 
@@ -241,7 +241,7 @@ class HttpTest extends TestCase
             throw new \RuntimeException('error');
         });
 
-        $response = $core->handle(new ServerRequest());
+        $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html;charset=UTF-8'], $response->getHeader('Content-Type'));
         $this->assertSame(['value'], $response->getHeader('hello'));
     }

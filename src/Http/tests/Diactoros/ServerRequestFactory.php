@@ -14,7 +14,7 @@ namespace Spiral\Tests\Http\Diactoros;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 
 final class ServerRequestFactory implements ServerRequestFactoryInterface
 {
@@ -26,6 +26,6 @@ final class ServerRequestFactory implements ServerRequestFactoryInterface
      */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
-        return new ServerRequest($serverParams, [], $uri, $method);
+        return new ServerRequest($method, $uri, serverParams: $serverParams);
     }
 }

@@ -21,7 +21,7 @@ use Spiral\Router\Exception\HandlerException;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Laminas\Diactoros\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 
 class CoreTest extends BaseTest
 {
@@ -52,7 +52,7 @@ class CoreTest extends BaseTest
         $handler = $action->getHandler($this->container, []);
         $this->assertInstanceOf(CoreHandler::class, $handler);
 
-        $result = $handler->handle(new ServerRequest());
+        $result = $handler->handle(new ServerRequest('GET', ''));
 
         $this->assertSame('@wrapped.hello world', (string)$result->getBody());
     }
@@ -69,7 +69,7 @@ class CoreTest extends BaseTest
         $handler = $action->getHandler($this->container, []);
         $this->assertInstanceOf(CoreHandler::class, $handler);
 
-        $handler->handle(new ServerRequest());
+        $handler->handle(new ServerRequest('GET', ''));
     }
 
     public function testRSP(): void
@@ -79,7 +79,7 @@ class CoreTest extends BaseTest
         $handler = $action->getHandler($this->container, []);
         $this->assertInstanceOf(CoreHandler::class, $handler);
 
-        $result = $handler->handle(new ServerRequest());
+        $result = $handler->handle(new ServerRequest('GET', ''));
 
         $this->assertSame('rspbuf', (string)$result->getBody());
     }
@@ -91,7 +91,7 @@ class CoreTest extends BaseTest
         $handler = $action->getHandler($this->container, []);
         $this->assertInstanceOf(CoreHandler::class, $handler);
 
-        $result = $handler->handle(new ServerRequest());
+        $result = $handler->handle(new ServerRequest('GET', ''));
 
         $this->assertSame(301, $result->getStatusCode());
         $this->assertSame('{"status":301,"msg":"redirect"}', (string)$result->getBody());
@@ -102,7 +102,7 @@ class CoreTest extends BaseTest
         $this->expectException(ForbiddenException::class);
 
         $action = new Action(TestController::class, 'forbidden');
-        $r = $action->getHandler($this->container, [])->handle(new ServerRequest());
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
     }
 
     public function testNotFound(): void
@@ -110,7 +110,7 @@ class CoreTest extends BaseTest
         $this->expectException(NotFoundException::class);
 
         $action = new Action(TestController::class, 'not-found');
-        $r = $action->getHandler($this->container, [])->handle(new ServerRequest());
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
     }
 
     public function testBadRequest(): void
@@ -118,7 +118,7 @@ class CoreTest extends BaseTest
         $this->expectException(BadRequestException::class);
 
         $action = new Action(TestController::class, 'weird');
-        $r = $action->getHandler($this->container, [])->handle(new ServerRequest());
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
     }
 
     public function testCoreException(): void
@@ -127,29 +127,17 @@ class CoreTest extends BaseTest
 
         /** @var CoreHandler $core */
         $core = $this->container->get(CoreHandler::class);
-        $core->handle(new ServerRequest());
+        $core->handle(new ServerRequest('GET', ''));
     }
 
     public function testRESTFul(): void
     {
         $action = new Action(TestController::class, 'Target', Action::RESTFUL);
-        $r = $action->getHandler($this->container, [])->handle(new ServerRequest(
-            [],
-            [],
-            '',
-            'POST'
-        ))
-        ;
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('POST', ''));
 
         $this->assertSame('POST', (string)$r->getBody());
 
-        $r = $action->getHandler($this->container, [])->handle(new ServerRequest(
-            [],
-            [],
-            '',
-            'DELETE'
-        ))
-        ;
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('DELETE', ''));
 
         $this->assertSame('DELETE', (string)$r->getBody());
     }
