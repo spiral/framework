@@ -13,7 +13,9 @@ use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Router\Command\ResetCommand;
 use Spiral\Router\GroupRegistry;
+use Spiral\Router\Route;
 use Spiral\Router\RouteLocator;
+use Spiral\Router\Target\Action;
 
 /**
  * Configures application routes using annotations and pre-defined configuration groups.
@@ -27,20 +29,18 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
         AttributesBootloader::class,
     ];
 
-    protected const SINGLETONS = [
-        GroupRegistry::class => [self::class, 'getGroups'],
-    ];
-
     public function __construct(
         private readonly MemoryInterface $memory,
-        private readonly GroupRegistry $groups
     ) {
     }
 
-    public function init(ConsoleBootloader $console, EnvironmentInterface $env, RouteLocator $locator): void
+    public function init(ConsoleBootloader $console): void
     {
         $console->addCommand(ResetCommand::class);
+    }
 
+    public function boot(EnvironmentInterface $env, RouteLocator $locator, GroupRegistry $groups): void
+    {
         $cached = $env->get('ROUTE_CACHE', !$env->get('DEBUG'));
 
         $schema = $this->memory->loadData(self::MEMORY_SECTION);
@@ -49,32 +49,21 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
             $this->memory->saveData(self::MEMORY_SECTION, $schema);
         }
 
-        $this->configureRoutes($schema);
-
-        foreach ($this->groups as $group) {
-            $group->flushRoutes();
-        }
+        $this->configureRoutes($schema, $groups);
     }
 
-    public function getGroups(): GroupRegistry
-    {
-        return $this->groups;
-    }
-
-    private function configureRoutes(array $routes): void
+    private function configureRoutes(array $routes, GroupRegistry $groups): void
     {
         foreach ($routes as $name => $schema) {
-            $this->groups
+            $route = new Route(
+                $schema['pattern'],
+                new Action($schema['controller'], $schema['action']),
+                $schema['defaults']
+            );
+
+            $groups
                 ->getGroup($schema['group'])
-                ->registerRoute(
-                    $name,
-                    $schema['pattern'],
-                    $schema['controller'],
-                    $schema['action'],
-                    $schema['verbs'],
-                    $schema['defaults'],
-                    $schema['middleware']
-                );
+                ->addRoute($name, $route->withVerbs(...$schema['verbs'])->withMiddleware(...$schema['middleware']));
         }
     }
 }

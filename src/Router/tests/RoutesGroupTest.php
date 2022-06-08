@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
@@ -14,6 +7,7 @@ namespace Spiral\Tests\Router;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Spiral\Core\Container;
 use Spiral\Http\Pipeline;
+use Spiral\Router\Route;
 use Spiral\Router\RouteGroup;
 use Spiral\Router\Router;
 use Spiral\Router\Target\AbstractTarget;
@@ -26,13 +20,14 @@ class RoutesGroupTest extends TestCase
 {
     public function testCoreString(): void
     {
-        $router = new Router('/', new UriHandler(new Psr17Factory()), new Container());
-        $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()));
+        $handler = new UriHandler(new Psr17Factory());
+        $router = new Router('/', $handler, new Container());
+        $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()), $handler);
 
         $group->setCore(RoutesTestCore::class);
 
-        $r = $group->createRoute('/', 'controller', 'method');
-        $t = $this->getProperty($r, 'target');
+        $group->addRoute('name', new Route('/', new Action('controller', 'method')));
+        $t = $this->getProperty($router->getRoute('name'), 'target');
 
         $this->assertInstanceOf(Action::class, $t);
 
@@ -44,13 +39,14 @@ class RoutesGroupTest extends TestCase
 
     public function testCoreObject(): void
     {
-        $router = new Router('/', new UriHandler(new Psr17Factory()), new Container());
-        $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()));
+        $handler = new UriHandler(new Psr17Factory());
+        $router = new Router('/', $handler, new Container());
+        $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()), $handler);
 
         $group->setCore(new RoutesTestCore(new Container()));
 
-        $r = $group->createRoute('/', 'controller', 'method');
-        $t = $this->getProperty($r, 'target');
+        $group->addRoute('name', new Route('/', new Action('controller', 'method')));
+        $t = $this->getProperty($router->getRoute('name'), 'target');
 
         $this->assertInstanceOf(Action::class, $t);
 
@@ -62,15 +58,16 @@ class RoutesGroupTest extends TestCase
 
     public function testMiddleware(): void
     {
-        $router = new Router('/', new UriHandler(new Psr17Factory()), new Container());
-        $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()));
+        $handler = new UriHandler(new Psr17Factory());
+        $router = new Router('/', $handler, new Container());
+        $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()), $handler);
         $group->addMiddleware(TestMiddleware::class);
 
-        $r = $group->createRoute('/', 'controller', 'method');
+        $group->addRoute('name', new Route('/', new Action('controller', 'method')));
+        $r = $router->getRoute('name');
 
         $rl = new \ReflectionObject($r);
         $m = $rl->getMethod('makePipeline');
-        $m->setAccessible(true);
 
         $p = $m->invoke($r);
         $m = $this->getProperty($p, 'middleware');
@@ -80,32 +77,22 @@ class RoutesGroupTest extends TestCase
     }
 
     /**
-     * @param object $object
-     * @param string $property
-     * @return mixed
      * @throws \ReflectionException
      */
-    private function getProperty(object $object, string $property)
+    private function getProperty(object $object, string $property): mixed
     {
         $r = new \ReflectionObject($object);
-        $p = $r->getProperty($property);
-        $p->setAccessible(true);
 
-        return $p->getValue($object);
+        return $r->getProperty($property)->getValue($object);
     }
 
     /**
-     * @param object $object
-     * @param string $property
-     * @return mixed
      * @throws \ReflectionException
      */
-    private function getActionProperty(object $object, string $property)
+    private function getActionProperty(object $object, string $property): mixed
     {
         $r = new \ReflectionClass(AbstractTarget::class);
-        $p = $r->getProperty($property);
-        $p->setAccessible(true);
 
-        return $p->getValue($object);
+        return $r->getProperty($property)->getValue($object);
     }
 }
