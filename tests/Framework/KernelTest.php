@@ -15,7 +15,7 @@ class KernelTest extends BaseTest
 
     public function testBypassEnvironmentToConfig(): void
     {
-        $this->makeApp([
+        $this->initApp([
             'TEST_VALUE' => 'HELLO WORLD',
         ]);
 
@@ -26,7 +26,7 @@ class KernelTest extends BaseTest
 
     public function testGetEnv(): void
     {
-        $this->makeApp([
+        $this->initApp([
             'DEBUG' => true,
             'ENV' => 123,
         ]);
@@ -38,11 +38,14 @@ class KernelTest extends BaseTest
     {
         $this->expectException(BootException::class);
 
+        $this->initApp();
+
         TestApp::create([], false)->run();
     }
 
     public function testCustomContainer(): void
     {
+        $this->initApp();
         $container = new Container();
         $container->bind('foofoo', new stdClass());
 
