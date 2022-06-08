@@ -95,10 +95,10 @@ final class Route extends AbstractRoute implements ContainerizedInterface
 
     public function withTarget(mixed $target): RouteInterface
     {
-       $route = clone $this;
-       $route->target = $target;
+        $route = clone $this;
+        $route->target = $target;
 
-       return $route;
+        return $route;
     }
 
     public function getTarget(): mixed
