@@ -7,19 +7,20 @@ namespace Spiral\Tests\Framework;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
-class SnapshotTest extends BaseTest
+final class SnapshotTest extends BaseTest
 {
-    protected function refreshApp(): void {}
-
     public function testStringConfigParams()
     {
         // string important. Emulating string from .env
-        $this->app = $this->initApp([
+        $app = $this->makeApp([
             'SNAPSHOT_MAX_FILES' => '1',
             'SNAPSHOT_VERBOSITY' => '1'
         ]);
 
-        $this->assertInstanceOf(SnapshotterInterface::class, $app->get(SnapshotterInterface::class));
+        $this->assertInstanceOf(
+            SnapshotterInterface::class,
+            $app->getContainer()->get(SnapshotterInterface::class)
+        );
     }
 
     public function testSnapshot(): void
@@ -30,7 +31,7 @@ class SnapshotTest extends BaseTest
             throw new \Error('test error');
         } catch (\Error $e) {
             /** @var SnapshotInterface $s */
-            $s = $app->get(SnapshotterInterface::class)->register($e);
+            $s = $app->getContainer()->get(SnapshotterInterface::class)->register($e);
         }
 
         $this->assertInstanceOf(\Error::class, $s->getException());
