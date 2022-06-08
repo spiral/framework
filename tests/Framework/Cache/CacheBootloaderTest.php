@@ -13,25 +13,15 @@ use Spiral\Tests\Framework\BaseTest;
 
 final class CacheBootloaderTest extends BaseTest
 {
-    /** @var \Spiral\App\TestApp */
-    private $app;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->app = $this->makeApp();
-    }
-
     public function testBindings()
     {
-        $this->assertInstanceOf(ArrayStorage::class, $this->app->get(CacheInterface::class));
-        $this->assertInstanceOf(CacheManager::class, $this->app->get(CacheStorageProviderInterface::class));
+        $this->assertContainerBoundAsSingleton(CacheInterface::class, ArrayStorage::class);
+        $this->assertContainerBoundAsSingleton(CacheStorageProviderInterface::class, CacheManager::class);
     }
 
     public function testGetsStorageByAlias()
     {
-        $manager = $this->app->get(CacheStorageProviderInterface::class);
+        $manager = $this->getContainer()->get(CacheStorageProviderInterface::class);
         $this->assertInstanceOf(FileStorage::class, $manager->storage('user-data'));
     }
 }

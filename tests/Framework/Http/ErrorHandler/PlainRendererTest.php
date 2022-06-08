@@ -13,7 +13,7 @@ use Spiral\Http\ErrorHandler\PlainRenderer;
 /**
  * @coversDefaultClass \Spiral\Http\ErrorHandler\PlainRenderer
  */
-class PlainRendererTest extends TestCase
+final class PlainRendererTest extends TestCase
 {
     public function testContentTypeApplicationJson(): void
     {

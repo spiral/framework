@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework;
@@ -16,10 +9,12 @@ use Spiral\Snapshots\SnapshotterInterface;
 
 class SnapshotTest extends BaseTest
 {
+    protected function refreshApp(): void {}
+
     public function testStringConfigParams()
     {
         // string important. Emulating string from .env
-        $app = $this->makeApp([
+        $this->app = $this->initApp([
             'SNAPSHOT_MAX_FILES' => '1',
             'SNAPSHOT_VERBOSITY' => '1'
         ]);

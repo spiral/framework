@@ -1,20 +1,16 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Framework;
 
 use Spiral\Tests\Framework\ConsoleTest;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class ExtensionsCommand extends ConsoleTest
+final class ExtensionsCommand extends ConsoleTest
 {
+    public int $defaultVerbosityLevel = OutputInterface::VERBOSITY_DEBUG;
+
     public function testExtensions(): void
     {
         $output = $this->runCommand('php:extensions');

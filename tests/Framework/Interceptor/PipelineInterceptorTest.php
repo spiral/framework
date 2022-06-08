@@ -6,91 +6,75 @@ namespace Spiral\Tests\Framework\Interceptor;
 
 use Spiral\Tests\Framework\HttpTest;
 
-class PipelineInterceptorTest extends HttpTest
+final class PipelineInterceptorTest extends HttpTest
 {
     public function testWithoutPipeline(): void
     {
-        $response = $this->get('/intercepted/without')->getBody();
-        $output = json_decode((string)$response, true);
-        //appends are executed after the sub-core action called: one->two->three->action[without]->[three]->[two]->[one]
-        $this->assertSame(['without', 'three', 'two', 'one'], $output);
+        $this->getHttp()->get('/intercepted/without')
+            ->assertBodySame('["without","three","two","one"]');
     }
 
     public function testWith(): void
     {
-        $response = $this->get('/intercepted/with')->getBody();
-        $output = json_decode((string)$response, true);
-        $this->assertSame(['with', 'three', 'two', 'one'], $output);
+        $this->getHttp()->get('/intercepted/with')
+            ->assertBodySame('["with","three","two","one"]');
     }
 
     public function testMix(): void
     {
-        $response = $this->get('/intercepted/mix')->getBody();
-        $output = json_decode((string)$response, true);
         //pipeline interceptors are injected into the middle
-        $this->assertSame(['mix', 'six', 'three', 'two', 'one', 'five', 'four'], $output);
+        $this->getHttp()->get('/intercepted/mix')
+            ->assertBodySame('["mix","six","three","two","one","five","four"]');
     }
 
     public function testDup(): void
     {
-        $response = $this->get('/intercepted/dup')->getBody();
-        $output = json_decode((string)$response, true);
         //pipeline interceptors are added to the end
-        $this->assertSame(['dup', 'three', 'two', 'one', 'three', 'two', 'one'], $output);
+        $this->getHttp()->get('/intercepted/dup')
+            ->assertBodySame('["dup","three","two","one","three","two","one"]');
     }
 
     public function testSkipNext(): void
     {
-        $response = $this->get('/intercepted/skip')->getBody();
-        $output = json_decode((string)$response, true);
         //interceptors after current pipeline are ignored
-        $this->assertSame(['skip', 'three', 'two', 'one', 'one'], $output);
+        $this->getHttp()->get('/intercepted/skip')
+            ->assertBodySame('["skip","three","two","one","one"]');
     }
 
     public function testSkipIfFirst(): void
     {
-        $response = $this->get('/intercepted/first')->getBody();
-        $output = json_decode((string)$response, true);
         //interceptors after current pipeline are ignored
-        $this->assertSame(['first', 'three', 'two', 'one'], $output);
+        $this->getHttp()->get('/intercepted/first')
+            ->assertBodySame('["first","three","two","one"]');
     }
 
     public function testWithAttribute(): void
     {
-        $response = $this->get('/intercepted/withAttribute')->getBody();
-        $output = json_decode((string)$response, true);
-        $this->assertSame(['withAttribute', 'three', 'two', 'one'], $output);
+        $this->getHttp()->get('/intercepted/withAttribute')
+            ->assertBodySame('["withAttribute","three","two","one"]');
     }
 
     public function testMixAttribute(): void
     {
-        $response = $this->get('/intercepted/mixAttribute')->getBody();
-        $output = json_decode((string)$response, true);
-        //pipeline interceptors are injected into the middle
-        $this->assertSame(['mixAttribute', 'six', 'three', 'two', 'one', 'five', 'four'], $output);
+        $this->getHttp()->get('/intercepted/mixAttribute')
+            ->assertBodySame('["mixAttribute","six","three","two","one","five","four"]');
     }
 
     public function testDupAttribute(): void
     {
-        $response = $this->get('/intercepted/dupAttribute')->getBody();
-        $output = json_decode((string)$response, true);
-        //pipeline interceptors are added to the end
-        $this->assertSame(['dupAttribute', 'three', 'two', 'one', 'three', 'two', 'one'], $output);
+        $this->getHttp()->get('/intercepted/dupAttribute')
+            ->assertBodySame('["dupAttribute","three","two","one","three","two","one"]');
     }
 
     public function testSkipNextAttribute(): void
     {
-        $response = $this->get('/intercepted/skipAttribute')->getBody();
-        $output = json_decode((string)$response, true);
-        //interceptors after current pipeline are ignored
-        $this->assertSame(['skipAttribute', 'three', 'two', 'one', 'one'], $output);
+        $this->getHttp()->get('/intercepted/skipAttribute')
+            ->assertBodySame('["skipAttribute","three","two","one","one"]');
     }
 
     public function testSkipIfFirstAttribute(): void
     {
-        $response = $this->get('/intercepted/firstAttribute')->getBody();
-        $output = json_decode((string)$response, true);
-        //interceptors after current pipeline are ignored
-        $this->assertSame(['firstAttribute', 'three', 'two', 'one'], $output);
+        $this->getHttp()->get('/intercepted/firstAttribute')
+            ->assertBodySame('["firstAttribute","three","two","one"]');
     }
 }

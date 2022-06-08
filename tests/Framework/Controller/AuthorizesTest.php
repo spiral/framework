@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Controller;
@@ -23,25 +16,29 @@ use Spiral\Security\GuardScope;
 use Spiral\App\Controller\AuthController;
 use Spiral\Tests\Framework\BaseTest;
 
-class AuthorizesTest extends BaseTest
+final class AuthorizesTest extends BaseTest
 {
     public function testAuthException(): void
     {
         $this->expectException(ControllerException::class);
         $this->expectDeprecationMessage("Unauthorized permission 'do'");
 
-        $app = $this->makeApp();
-        $app->get(Container::class)->bind(ActorInterface::class, new Guest());
+        $this->getContainer()
+            ->bind(ActorInterface::class, new Guest());
 
-        $r = $app->get(CoreInterface::class)->callAction(AuthController::class, 'do');
+        $this->getContainer()
+            ->get(CoreInterface::class)
+            ->callAction(AuthController::class, 'do');
     }
 
     public function testAuth(): void
     {
-        $app = $this->makeApp();
-        $app->get(Container::class)->bind(ActorInterface::class, new Actor(['user']));
+        $this->getContainer()->bind(ActorInterface::class, new Actor(['user']));
 
-        $r = $app->get(CoreInterface::class)->callAction(AuthController::class, 'do');
+        $r = $this->getContainer()
+            ->get(CoreInterface::class)
+            ->callAction(AuthController::class, 'do');
+
         $this->assertSame('ok', $r);
     }
 
@@ -49,16 +46,14 @@ class AuthorizesTest extends BaseTest
     {
         $this->expectException(ScopeException::class);
 
-        $app = $this->makeApp();
-        $app->getContainer()->removeBinding(ActorInterface::class);
+        $this->getContainer()->removeBinding(ActorInterface::class);
 
-        $app->get(CoreInterface::class)->callAction(AuthController::class, 'do');
+        $this->getContainer()->get(CoreInterface::class)->callAction(AuthController::class, 'do');
     }
 
     public function testWithRoles(): void
     {
-        $app = $this->makeApp();
-        $g = $app->get(GuardInterface::class);
+        $g = $this->getContainer()->get(GuardInterface::class);
         $this->assertInstanceOf(GuardScope::class, $g);
 
         $this->assertSame(['guest'], $g->getRoles());
@@ -71,8 +66,7 @@ class AuthorizesTest extends BaseTest
 
     public function testWithActor(): void
     {
-        $app = $this->makeApp();
-        $g = $app->get(GuardInterface::class);
+        $g = $this->getContainer()->get(GuardInterface::class);
         $this->assertInstanceOf(GuardScope::class, $g);
 
         $this->assertSame(['guest'], $g->getRoles());
