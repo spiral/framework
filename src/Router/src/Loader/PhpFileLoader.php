@@ -23,7 +23,6 @@ final class PhpFileLoader implements LoaderInterface
             throw new LoaderLoadException('File [%s] does not exist.');
         }
 
-        // the closure forbids access to the private scope in the included file
         $load = static function (string $path) {
             return include $path;
         };
