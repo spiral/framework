@@ -103,19 +103,19 @@ final class RouteGroup
 
     private function applyGroupParams(Route $route): Route
     {
-        $route = $route
-            ->withUriHandler($this->handler->withPrefix($this->prefix))
-            ->withMiddleware($this->pipeline)
-            ->withContainer($this->container);
-
         if ($this->core !== null) {
             $target = $route->getTarget();
 
             if ($target instanceof AbstractTarget) {
-                return $route->withTarget($target->withCore($this->core));
+                return $route
+                    ->withTarget($target->withCore($this->core))
+                    ->withUriHandler($this->handler->withPrefix($this->prefix))
+                    ->withPipeline($this->pipeline);
             }
         }
 
-        return $route;
+        return $route
+            ->withUriHandler($this->handler->withPrefix($this->prefix))
+            ->withPipeline($this->pipeline);
     }
 }

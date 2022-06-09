@@ -66,10 +66,7 @@ class RoutesGroupTest extends TestCase
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
         $r = $router->getRoute('name');
 
-        $rl = new \ReflectionObject($r);
-        $m = $rl->getMethod('makePipeline');
-
-        $p = $m->invoke($r);
+        $p = $this->getProperty($r, 'pipeline');
         $m = $this->getProperty($p, 'middleware');
 
         $this->assertCount(1, $m);

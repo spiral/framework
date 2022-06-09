@@ -59,6 +59,16 @@ trait PipelineTrait
         return $route;
     }
 
+    public function withPipeline(Pipeline $pipeline): static
+    {
+        $route = clone $this;
+
+        $route->middleware = [$pipeline];
+        $route->pipeline = $pipeline;
+
+        return $route;
+    }
+
     /**
      * Get associated route pipeline.
      *
