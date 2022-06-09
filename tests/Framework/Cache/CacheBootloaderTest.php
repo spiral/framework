@@ -15,7 +15,7 @@ final class CacheBootloaderTest extends BaseTest
 {
     public function testBindings()
     {
-        $this->assertContainerBoundAsSingleton(CacheInterface::class, ArrayStorage::class);
+        $this->assertContainerInstantiable(CacheInterface::class, ArrayStorage::class);
         $this->assertContainerBoundAsSingleton(CacheStorageProviderInterface::class, CacheManager::class);
     }
 
