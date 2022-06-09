@@ -35,7 +35,7 @@ final class RouterBootloader extends Bootloader
         RouteInterface::class          => [self::class, 'route'],
         RequestHandlerInterface::class => RouterInterface::class,
         LoaderInterface::class         => DelegatingLoader::class,
-        LoaderRegistryInterface::class => [self::class, 'initRegistry']
+        LoaderRegistryInterface::class => [self::class, 'initRegistry'],
     ];
 
     public function __construct(
@@ -72,7 +72,7 @@ final class RouterBootloader extends Bootloader
     private function initRegistry(ContainerInterface $container): LoaderRegistryInterface
     {
         return new LoaderRegistry([
-            $container->get(PhpFileLoader::class)
+            $container->get(PhpFileLoader::class),
         ]);
     }
 }
