@@ -15,7 +15,7 @@ final class DelegatingLoader implements LoaderInterface
 
     public function load(mixed $resource, string $type = null): mixed
     {
-        if ($loader = $this->registry->resolve($resource, $type) === false) {
+        if (false === $loader = $this->registry->resolve($resource, $type)) {
             throw new LoaderLoadException(\sprintf('Loader for type [%s] not found.', $type));
         }
 
@@ -24,6 +24,6 @@ final class DelegatingLoader implements LoaderInterface
 
     public function supports(mixed $resource, string $type = null): bool
     {
-        return false !== $this->registry->resolve($resource, $type);
+        return $this->registry->resolve($resource, $type) !== false;
     }
 }

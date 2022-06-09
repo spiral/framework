@@ -17,9 +17,9 @@ final class PhpFileLoader implements LoaderInterface
     /**
      * Loads a PHP file.
      */
-    public function load(mixed $file, string $type = null): mixed
+    public function load(mixed $resource, string $type = null): mixed
     {
-        if (!\file_exists($file)) {
+        if (!\file_exists($resource)) {
             throw new LoaderLoadException('File [%s] does not exist.');
         }
 
@@ -28,7 +28,7 @@ final class PhpFileLoader implements LoaderInterface
             return include $path;
         };
 
-        $callback = $load($file);
+        $callback = $load($resource);
 
         $args = $this->resolver->resolveArguments(new \ReflectionFunction($callback), validate: true);
 
