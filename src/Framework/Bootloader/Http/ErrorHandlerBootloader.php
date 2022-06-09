@@ -20,6 +20,6 @@ final class ErrorHandlerBootloader extends Bootloader
 
     public function init(HttpBootloader $http): void
     {
-        $http->addMiddleware(ErrorHandlerMiddleware::class);
+        // $http->addMiddleware(ErrorHandlerMiddleware::class);
     }
 }

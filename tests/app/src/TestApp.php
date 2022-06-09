@@ -14,6 +14,7 @@ namespace Spiral\App;
 use Psr\Container\ContainerInterface;
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\App\Bootloader\AuthBootloader;
+use Spiral\App\Bootloader\RoutesBootloader;
 use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -83,6 +84,7 @@ class TestApp extends Kernel
 
     public const APP = [
         AppBootloader::class,
+        RoutesBootloader::class,
     ];
 
     /**

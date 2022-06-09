@@ -24,6 +24,6 @@ final class CsrfBootloader extends Bootloader
             ]
         );
 
-        $http->addMiddleware(CsrfMiddleware::class);
+     //   $http->addMiddleware(CsrfMiddleware::class);
     }
 }

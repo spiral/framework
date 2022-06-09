@@ -27,7 +27,7 @@ final class JsonPayloadsBootloader extends Bootloader
             ]
         );
 
-        $http->addMiddleware(JsonPayloadMiddleware::class);
+      //  $http->addMiddleware(JsonPayloadMiddleware::class);
     }
 
     /**

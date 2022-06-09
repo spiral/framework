@@ -105,7 +105,8 @@ final class RouteGroup
     {
         $route = $route
             ->withUriHandler($this->handler->withPrefix($this->prefix))
-            ->withMiddleware($this->pipeline);
+            ->withMiddleware($this->pipeline)
+            ->withContainer($this->container);
 
         if ($this->core !== null) {
             $target = $route->getTarget();

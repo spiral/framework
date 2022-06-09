@@ -36,7 +36,7 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
             ]
         );
 
-        $http->addMiddleware(CookiesMiddleware::class);
+     //   $http->addMiddleware(CookiesMiddleware::class);
     }
 
     /**

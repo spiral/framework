@@ -39,7 +39,7 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
 
     public function init(HttpBootloader $http): void
     {
-        $http->addMiddleware(AuthMiddleware::class);
+      //  $http->addMiddleware(AuthMiddleware::class);
 
         $this->config->setDefaults(
             AuthConfig::CONFIG,

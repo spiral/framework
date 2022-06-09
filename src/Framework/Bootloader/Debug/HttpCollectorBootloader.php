@@ -25,7 +25,7 @@ final class HttpCollectorBootloader extends Bootloader
         DebugBootloader $debug,
         FinalizerInterface $finalizer
     ): void {
-        $http->addMiddleware(HttpCollector::class);
+      //  $http->addMiddleware(HttpCollector::class);
 
         $debug->addStateCollector($httpCollector);
         $finalizer->addFinalizer([$httpCollector, 'reset']);
