@@ -13,14 +13,21 @@ namespace Spiral\Tests\Framework\Http;
 
 use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
+use Spiral\Cookies\Middleware\CookiesMiddleware;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Encrypter\EncrypterFactory;
 use Spiral\Encrypter\EncrypterInterface;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Tests\Framework\HttpTest;
 
 class CookiesTest extends HttpTest
 {
+    public function setUp(): void
+    {
+        $this->refreshApp();
+    }
+
     public function testOutsideOfScopeOK(): void
     {
         $cookies = $this->cookies();
@@ -47,12 +54,7 @@ class CookiesTest extends HttpTest
 
     public function testHasCookie2(): void
     {
-        $key = $this->app->get(EncrypterFactory::class)->generateKey();
-
-        $this->app = $this->makeApp([
-            'ENCRYPTER_KEY' => $key
-        ]);
-        $this->http = $this->app->get(Http::class);
+        $this->refreshApp(true);
 
         $this->http->setHandler(function () {
             return (int) $this->cookies()->has('a');
@@ -67,9 +69,7 @@ class CookiesTest extends HttpTest
 
     public function testGetCookie2(): void
     {
-        $key = $this->app->get(EncrypterFactory::class)->generateKey();
-        $this->app = $this->makeApp(['ENCRYPTER_KEY' => $key]);
-        $this->http = $this->app->get(Http::class);
+        $this->refreshApp(true);
 
         $this->http->setHandler(function () {
             return $this->cookies()->get('a');
@@ -84,9 +84,7 @@ class CookiesTest extends HttpTest
 
     public function testSetCookie(): void
     {
-        $key = $this->app->get(EncrypterFactory::class)->generateKey();
-        $this->app = $this->makeApp(['ENCRYPTER_KEY' => $key]);
-        $this->http = $this->app->get(Http::class);
+        $this->refreshApp(true);
 
         $this->http->setHandler(function () {
             $this->cookies()->set('a', 'value');
@@ -108,9 +106,7 @@ class CookiesTest extends HttpTest
 
     public function testSetCookie2(): void
     {
-        $key = $this->app->get(EncrypterFactory::class)->generateKey();
-        $this->app = $this->makeApp(['ENCRYPTER_KEY' => $key]);
-        $this->http = $this->app->get(Http::class);
+        $this->refreshApp(true);
 
         $this->http->setHandler(function () {
             $this->cookies()->schedule(Cookie::create('a', 'value'));
@@ -134,9 +130,7 @@ class CookiesTest extends HttpTest
 
     public function testDeleteCookie(): void
     {
-        $key = $this->app->get(EncrypterFactory::class)->generateKey();
-        $this->app = $this->makeApp(['ENCRYPTER_KEY' => $key]);
-        $this->http = $this->app->get(Http::class);
+        $this->refreshApp(true);
 
         $this->http->setHandler(function () {
             $this->cookies()->delete('cookie');
@@ -156,5 +150,22 @@ class CookiesTest extends HttpTest
     private function cookies(): CookieManager
     {
         return $this->app->get(CookieManager::class);
+    }
+
+    private function refreshApp(bool $generateKey = false): void
+    {
+        if ($generateKey) {
+            $key = $this->app->get(EncrypterFactory::class)->generateKey();
+        }
+
+        $this->app = $this->makeApp($generateKey ? ['ENCRYPTER_KEY' => $key] : []);
+
+        $this->app->getContainer()
+            ->bind(HttpConfig::class, new HttpConfig([
+                'middleware' => [CookiesMiddleware::class],
+                'basePath' => '/'
+            ]));
+
+        $this->http = $this->app->get(Http::class);
     }
 }

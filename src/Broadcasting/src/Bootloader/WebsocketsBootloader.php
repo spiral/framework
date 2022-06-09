@@ -33,10 +33,5 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
                 $config->getAuthorizationPath()
             );
         });
-
-
-        if ($config->getAuthorizationPath() !== null) {
-            $http->addMiddleware(AuthorizationMiddleware::class);
-        }
     }
 }

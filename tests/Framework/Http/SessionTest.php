@@ -11,11 +11,27 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
+use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\Http;
+use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SessionInterface;
 use Spiral\Tests\Framework\HttpTest;
 
 class SessionTest extends HttpTest
 {
+    public function setUp(): void
+    {
+        $this->app = $this->makeApp();
+
+        $this->app->getContainer()
+            ->bind(HttpConfig::class, new HttpConfig([
+                'middleware' => [SessionMiddleware::class],
+                'basePath' => '/'
+            ]));
+
+        $this->http = $this->app->get(Http::class);
+    }
+
     public function testSetSid(): void
     {
         $this->http->setHandler(function () {

@@ -23,12 +23,8 @@ class AppBootloader extends DomainBootloader
         GuardInterceptor::class,
     ];
 
-    public function init(
-        PermissionsInterface $rbac,
-        ViewsBootloader $views,
-        JsonPayloadsBootloader $json,
-        HttpBootloader $http
-    ): void {
+    public function init(PermissionsInterface $rbac, ViewsBootloader $views, JsonPayloadsBootloader $json): void
+    {
         $rbac->addRole('user');
         $rbac->associate('user', '*');
 
@@ -40,7 +36,5 @@ class AppBootloader extends DomainBootloader
         $views->addEngine(TestEngine::class);
 
         $json->addContentType('application/vnd.api+json');
-
-        $http->addInputBag('test', ['class' => 'foo', 'source' => 'bar']);
     }
 }

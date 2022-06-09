@@ -128,7 +128,11 @@ final class RoutesBootloader extends BaseRoutesBootloader
 
         $default = new Route('/<action>[/<name>]', new Controller(TestController::class));
 
-        $router->setDefault($default->withDefaults(['name' => 'Dave']));
+        $router->setDefault(
+            $default
+                ->withDefaults(['name' => 'Dave'])
+                ->withMiddleware($this->middlewareGroups()['web'])
+        );
     }
 
     private function createInterceptedRoute(string $action, array $interceptors): Route
