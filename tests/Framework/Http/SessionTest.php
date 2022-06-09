@@ -26,7 +26,8 @@ class SessionTest extends HttpTest
         $this->app->getContainer()
             ->bind(HttpConfig::class, new HttpConfig([
                 'middleware' => [SessionMiddleware::class],
-                'basePath' => '/'
+                'basePath' => '/',
+                'headers' => []
             ]));
 
         $this->http = $this->app->get(Http::class);
