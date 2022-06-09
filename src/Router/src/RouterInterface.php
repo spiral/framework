@@ -47,4 +47,6 @@ interface RouterInterface extends RequestHandlerInterface
      * @throws UndefinedRouteException
      */
     public function uri(string $route, iterable $parameters = []): UriInterface;
+
+    public function import(string $path): void;
 }

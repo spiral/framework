@@ -41,4 +41,11 @@ class RouterTest extends BaseTest
         $router = $this->makeRouter();
         $router->uri('name/?broken');
     }
+
+    public function testImportRoutes(): void
+    {
+        $this->router->import(\dirname(__DIR__) . '/tests/routes/web.php');
+
+        $this->assertCount(2, $this->router->getRoutes());
+    }
 }

@@ -12,6 +12,7 @@ use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\RouterException;
 use Spiral\Router\Exception\UndefinedRouteException;
+use Spiral\Router\Loader\LoaderInterface;
 
 /**
  * Manages set of routes.
@@ -104,6 +105,14 @@ final class Router implements RouterInterface
             //generate such route automatically based on our default/fallback route
             return $this->castRoute($route)->uri($parameters);
         }
+    }
+
+    public function import(string $path): void
+    {
+        /** @var LoaderInterface $loader */
+        $loader = $this->container->get(LoaderInterface::class);
+
+        $loader->load($path);
     }
 
     /**

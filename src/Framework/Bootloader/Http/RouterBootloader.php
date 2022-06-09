@@ -13,6 +13,11 @@ use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Router\Loader\DelegatingLoader;
+use Spiral\Router\Loader\LoaderInterface;
+use Spiral\Router\Loader\LoaderRegistry;
+use Spiral\Router\Loader\LoaderRegistryInterface;
+use Spiral\Router\Loader\PhpFileLoader;
 use Spiral\Router\RouteInterface;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
@@ -29,6 +34,8 @@ final class RouterBootloader extends Bootloader
         RouterInterface::class         => [self::class, 'router'],
         RouteInterface::class          => [self::class, 'route'],
         RequestHandlerInterface::class => RouterInterface::class,
+        LoaderInterface::class         => DelegatingLoader::class,
+        LoaderRegistryInterface::class => [self::class, 'initRegistry']
     ];
 
     public function __construct(
@@ -57,5 +64,15 @@ final class RouterBootloader extends Bootloader
         }
 
         return $route;
+    }
+
+    /**
+     * @noRector RemoveUnusedPrivateMethodRector
+     */
+    private function initRegistry(ContainerInterface $container): LoaderRegistryInterface
+    {
+        return new LoaderRegistry([
+            $container->get(PhpFileLoader::class)
+        ]);
     }
 }
