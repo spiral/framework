@@ -37,10 +37,11 @@
   - Component `spiral/annotations` is removed. Use `spiral/attributes` instead.
   - Added return type `void` to a methods `publish`, `publishDirectory`, `ensureDirectory` in `Spiral\Module\PublisherInterface` interface.
   - Removed `Spiral\Http\SapiDispatcher` and `Spiral\Http\Emitter\SapiEmitter`. Please, use package `spiral/sapi-bridge` instead.
-  - Bootloader `Spiral\Bootloader\Http\DiactorosBootloader` moved to the `Spiral\Http\Bootloader\DiactorosBootloader`.
+  - Bootloader `Spiral\Bootloader\Http\DiactorosBootloader` is removed. You can use the bootloader 
+    `Spiral\Nyholm\Bootloader\NyholmBootloader` from the package `spiral/nyholm-bridge` to register PSR-7/PSR-17 factories.
   - Classes `Spiral\Http\Diactoros\ResponseFactory`, `Spiral\Http\Diactoros\ServerRequestFactory`, `Spiral\Http\Diactoros\StreamFactory`,
     `Spiral\Http\Diactoros\UploadedFileFactory`, `Spiral\Http\Diactoros\UriFactory`
-    is removed and replaced to a `Nyholm\Psr7\Factory\Psr17Factory` class from `nyholm/psr7` package in `DiactorosBootloader`.
+    are removed. You can use `spiral/nyholm-bridge` to define PSR-17 factories.
   - [spiral/exceptions] All handlers have been renamed into renderers. `HandlerInterface` has been deleted.
   - [spiral/exceptions] Added `Spiral\Exceptions\Verbosity` enum.
   - [spiral/router] Removed deprecated method `addRoute` in the `Spiral\Router\RouterInterface` and `Spiral\Router\Router`.

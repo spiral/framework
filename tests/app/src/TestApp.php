@@ -18,6 +18,7 @@ use Spiral\Bootloader;
 use Spiral\Bootloader\ExceptionHandlerBootloader;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
+use Spiral\Nyholm\Bootloader\NyholmBootloader;
 use Spiral\Stempler\Bootloader\StemplerBootloader;
 
 class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
@@ -37,7 +38,7 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         \Spiral\Console\Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
-        \Spiral\Http\Bootloader\DiactorosBootloader::class,
+        NyholmBootloader::class,
         Bootloader\Http\RouterBootloader::class,
         Bootloader\Http\ErrorHandlerBootloader::class,
         Bootloader\Http\JsonPayloadsBootloader::class,

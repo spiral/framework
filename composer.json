@@ -46,7 +46,7 @@
         "symfony/mailer": "^5.1|^6.0",
         "symfony/translation": "^5.1|^6.0",
         "vlucas/phpdotenv": "^5.4",
-        "nyholm/psr7": "^1.5.0"
+        "psr/http-factory-implementation": "^1.0"
     },
     "autoload": {
         "files": [
@@ -123,6 +123,8 @@
         "ramsey/uuid": "^4.2.3",
         "ramsey/collection": "^1.2",
         "rector/rector": "0.12.15",
+        "spiral/code-style": "^1.1",
+        "spiral/nyholm-bridge": "^1.2",
         "symfony/var-dumper": "^5.2|^6.0",
         "symplify/monorepo-builder": "^10.2.7",
         "vimeo/psalm": "^4.21"
