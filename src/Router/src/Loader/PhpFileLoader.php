@@ -31,9 +31,7 @@ final class PhpFileLoader implements LoaderInterface
 
         $args = $this->resolver->resolveArguments(new \ReflectionFunction($callback), validate: true);
 
-        $callback(...$args);
-
-        return null;
+        return $callback(...$args);
     }
 
     public function supports(mixed $resource, string $type = null): bool
