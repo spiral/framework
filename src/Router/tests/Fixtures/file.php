@@ -1,3 +1,5 @@
 <?php
 
-return 'php file';
+return function () {
+    return 'php file';
+};
