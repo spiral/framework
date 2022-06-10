@@ -86,6 +86,8 @@ jobs:
             split_repository: 'security'
           - local_path: 'SendIt'
             split_repository: 'sendit'
+          - local_path: 'Serializer'
+            split_repository: 'serializer'
           - local_path: 'Session'
             split_repository: 'session'
           - local_path: 'Snapshots'

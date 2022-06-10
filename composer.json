@@ -96,6 +96,7 @@
             "Spiral\\Scaffolder\\": "src/Scaffolder/src",
             "Spiral\\Security\\": "src/Security/src",
             "Spiral\\SendIt\\": "src/SendIt/src",
+            "Spiral\\Serializer\\": "src/Serializer/src",
             "Spiral\\Session\\": "src/Session/src",
             "Spiral\\Snapshots\\": "src/Snapshots/src",
             "Spiral\\Stempler\\": [
@@ -175,6 +176,7 @@
             "Spiral\\Tests\\Scaffolder\\": "src/Scaffolder/tests",
             "Spiral\\Tests\\Security\\": "src/Security/tests",
             "Spiral\\Tests\\SendIt\\": "src/SendIt/tests",
+            "Spiral\\Tests\\Serializer\\": "src/Serializer/tests",
             "Spiral\\Tests\\Session\\": "src/Session/tests",
             "Spiral\\Tests\\Snapshots\\": "src/Snapshots/tests",
             "Spiral\\Tests\\Stempler\\": [
@@ -222,6 +224,7 @@
         "spiral/scaffolder": "self.version",
         "spiral/security": "self.version",
         "spiral/sendit": "self.version",
+        "spiral/serializer": "self.version",
         "spiral/session": "self.version",
         "spiral/snapshots": "self.version",
         "spiral/stempler": "self.version",
