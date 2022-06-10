@@ -1,104 +1,70 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
-use Spiral\Encrypter\EncrypterFactory;
-use Spiral\Http\Http;
 use Spiral\Tests\Framework\HttpTest;
 
-class AuthSessionTest extends HttpTest
+final class AuthSessionTest extends HttpTest
 {
-    public function setUp(): void
-    {
-        $this->app = $this->makeApp();
-        $key = $this->app->get(EncrypterFactory::class)->generateKey();
-
-        $this->app = $this->makeApp([
-            'ENCRYPTER_KEY' => $key
-        ]);
-
-        $this->http = $this->app->get(Http::class);
-    }
+    public const ENV = [
+        'ENCRYPTER_KEY' => self::ENCRYPTER_KEY,
+    ];
 
     public function testNoToken(): void
     {
-        $this->assertSame(
-            'none',
-            (string)$this->get('/auth/token')->getBody()
-        );
+        $this->getHttp()->get(uri: '/auth/token')
+            ->assertBodySame('none');
     }
 
     public function testLogin(): void
     {
-        $result = $this->get('/auth/login');
+        $result = $this->getHttp()->get(uri: '/auth/login')
+            ->assertBodySame('OK')
+            ->assertCookieExists('token')
+            ->assertCookieExists('sid');
 
-        $this->assertSame('OK', (string)$result->getBody());
-
-        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertTrue(isset($cookies['token']));
-        $this->assertTrue(isset($cookies['sid']));
-
-        $result = $this->get('/auth/token', [], [], $cookies);
-
-        $this->assertNotSame('none', (string)$result->getBody());
+        $this->getHttp()->get(uri: '/auth/token', cookies: $result->getCookies())
+            ->assertBodyNotSame('none');
     }
 
     public function testLogout(): void
     {
-        $result = $this->get('/auth/login');
+        $result = $this->getHttp()->get(uri: '/auth/login')
+            ->assertBodySame('OK')
+            ->assertCookieExists('token')
+            ->assertCookieExists('sid');
 
-        $this->assertSame('OK', (string)$result->getBody());
+        $this->getHttp()->get(uri: '/auth/token', cookies: $result->getCookies())
+            ->assertBodyNotSame('none');
 
-        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertTrue(isset($cookies['token']));
-        $this->assertTrue(isset($cookies['sid']));
+        $this->getHttp()->get(uri: '/auth/logout', cookies: $result->getCookies())
+            ->assertBodySame('closed');
 
-        $result = $this->get('/auth/token', [], [], $cookies);
-        $this->assertNotSame('none', (string)$result->getBody());
-
-        $result = $this->get('/auth/logout', [], [], $cookies);
-        $this->assertSame('closed', (string)$result->getBody());
-
-        $result = $this->get('/auth/token', [], [], $cookies);
-        $this->assertSame('none', (string)$result->getBody());
+        $this->getHttp()->get(uri: '/auth/token', cookies: $result->getCookies())
+            ->assertBodySame('none');
     }
 
     public function testLoginScope(): void
     {
-        $result = $this->get('/auth/login2');
+        $result = $this->getHttp()->get('/auth/login2')
+            ->assertBodySame('OK')
+            ->assertCookieExists('token')
+            ->assertCookieExists('sid');
 
-        $this->assertSame('OK', (string)$result->getBody());
-
-        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertTrue(isset($cookies['token']));
-        $this->assertTrue(isset($cookies['sid']));
-
-        $result = $this->get('/auth/token2', [], [], $cookies);
-
-        $this->assertNotSame('none', (string)$result->getBody());
+        $this->getHttp()->get('/auth/token2', cookies: $result->getCookies())
+            ->assertBodyNotSame('none');
     }
 
     public function testLoginPayload(): void
     {
-        $result = $this->get('/auth/login2');
+        $result = $this->getHttp()->get('/auth/login2')
+            ->assertBodySame('OK')
+            ->assertCookieExists('token')
+            ->assertCookieExists('sid');
 
-        $this->assertSame('OK', (string)$result->getBody());
-
-        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertTrue(isset($cookies['token']));
-        $this->assertTrue(isset($cookies['sid']));
-
-        $result = $this->get('/auth/token3', [], [], $cookies);
-
-        $this->assertSame('{"userID":1}', (string)$result->getBody());
+        $this->getHttp()->get('/auth/token3', cookies: $result->getCookies())
+            ->assertBodySame('{"userID":1}');
     }
 }

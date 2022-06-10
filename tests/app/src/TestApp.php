@@ -14,18 +14,14 @@ namespace Spiral\App;
 use Psr\Container\ContainerInterface;
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\App\Bootloader\AuthBootloader;
-use Spiral\Boot\BootloadManager\BootloadManager;
-use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader;
 use Spiral\Bootloader\ExceptionHandlerBootloader;
-use Spiral\Console\Console;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
 use Spiral\Nyholm\Bootloader\NyholmBootloader;
 use Spiral\Stempler\Bootloader\StemplerBootloader;
 
-class TestApp extends Kernel
+class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
 {
     public const LOAD = [
         // Core Services
@@ -86,50 +82,18 @@ class TestApp extends Kernel
         AppBootloader::class,
     ];
 
-    /**
-     * @param string $alias
-     * @return mixed|null|object
-     */
-    public function get(string $alias)
-    {
-        return $this->container->get($alias);
-    }
-
-    /**
-     * @param string $alias
-     * @return string
-     */
-    public function dir(string $alias): string
-    {
-        return $this->container->get(DirectoriesInterface::class)->get($alias);
-    }
-
-    /**
-     * @return Console
-     */
-    public function console(): Console
-    {
-        return $this->get(Console::class);
-    }
-
-    /**
-     * @return Container
-     */
-    public function getContainer(): ContainerInterface
+    public function getContainer(): Container
     {
         return $this->container;
     }
 
-    /**
-     * @return EnvironmentInterface
-     */
-    public function getEnvironment(): EnvironmentInterface
+    public function getRegisteredDispatchers(): array
     {
-        return $this->container->get(EnvironmentInterface::class);
+        return $this->dispatchers;
     }
 
-    public function getBootloadManager(): BootloadManager
+    public function getRegisteredBootloaders(): array
     {
-        return $this->bootloader;
+        return $this->bootloader->getClasses();
     }
 }

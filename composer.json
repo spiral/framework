@@ -117,6 +117,7 @@
         "league/flysystem-async-aws-s3": "^2.0",
         "league/flysystem-aws-s3-v3": "^2.0",
         "mikey179/vfsstream": "^1.6",
+        "spiral/testing": "^2.0",
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^9.5.20",
         "ramsey/uuid": "^4.2.3",

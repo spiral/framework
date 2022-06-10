@@ -63,7 +63,7 @@ class TestController
 
     public function payload(ServerRequestInterface $request)
     {
-        return $request->getParsedBody();
+        return $request->getBody();
     }
 
     public function required(int $id)

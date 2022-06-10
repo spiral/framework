@@ -1,45 +1,28 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Views;
 
 use Spiral\Tests\Framework\BaseTest;
-use Spiral\Translator\TranslatorInterface;
 use Spiral\Translator\Views\LocaleDependency;
-use Spiral\Views\ViewsInterface;
 
-class LocaleTest extends BaseTest
+final class LocaleTest extends BaseTest
 {
     public function testRenderEn(): void
     {
-        $app = $this->makeApp();
-
-        $out = $app->get(ViewsInterface::class)->render('custom:locale');
-        $this->assertSame('Hello English!', $out);
+        $this->assertViewSame('custom:locale', expected: 'Hello English!');
     }
 
     public function testRenderRu(): void
     {
-        $app = $this->makeApp();
-
-        $app->get(TranslatorInterface::class)->setLocale('ru');
-
-        $out = $app->get(ViewsInterface::class)->render('custom:locale');
-        $this->assertSame('Hello Мир!', $out);
+        $this->withLocale('ru')
+            ->assertViewSame('custom:locale', expected: 'Hello Мир!');
     }
 
     public function testLocaleDependency(): void
     {
-        $app = $this->makeApp();
-        $d = $app->get(LocaleDependency::class);
+        $d = $this->getContainer()->get(LocaleDependency::class);
 
         $d = $d->__debugInfo();
 

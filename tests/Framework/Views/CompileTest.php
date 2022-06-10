@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Views;
@@ -14,47 +7,49 @@ namespace Spiral\Tests\Framework\Views;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Tests\Framework\ConsoleTest;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @covers \Spiral\Command\Views\ResetCommand
  * @covers \Spiral\Command\Views\CompileCommand
  */
-class CompileTest extends ConsoleTest
+final class CompileTest extends ConsoleTest
 {
+    public int $defaultVerbosityLevel = OutputInterface::VERBOSITY_DEBUG;
+
     public function testCompile(): void
     {
-        $out = $this->runCommandDebug('views:compile');
-        $this->assertStringContainsString('default:custom/file', $out);
-
-        $this->assertStringContainsString('custom:error', $out);
-        $this->assertStringContainsString('Unable to compile custom:error', $out);
+        $this->assertConsoleCommandOutputContainsStrings('views:compile', strings: [
+            'default:custom/file', 'custom:error', 'Unable to compile custom:error'
+        ]);
     }
 
     public function testReset(): void
     {
-        /**
-         * @var DirectoriesInterface $dirs
-         * @var FilesInterface       $fs
-         */
-        $dirs = $this->app->get(DirectoriesInterface::class);
-        $fs = $this->app->get(FilesInterface::class);
-        $fs->write($dirs->get('cache') . '/views/test.php', 'test', null, true);
+        $this->getContainer()->get(FilesInterface::class)
+            ->write($this->getDirectoryByAlias('cache', 'views/test.php'), 'test', null, true);
 
-        $out = $this->runCommandDebug('views:reset');
-        $this->assertStringContainsString('test.php', $out);
+        $this->assertConsoleCommandOutputContainsStrings(
+            'views:reset',
+            strings: 'test.php'
+        );
     }
 
     public function testResetClean(): void
     {
-        $out = $this->runCommandDebug('views:reset');
-        $this->assertStringContainsString('no cache', $out);
+        $this->assertConsoleCommandOutputContainsStrings(
+            'views:reset',
+            strings: 'no cache'
+        );
     }
 
     public function testClean(): void
     {
-        $this->runCommandDebug('i18n:index');
+        $this->runCommand('i18n:index');
 
-        $out = $this->runCommandDebug('cache:clean');
-        $this->assertStringContainsString('i18n.en', $out);
+        $this->assertConsoleCommandOutputContainsStrings(
+            'cache:clean',
+            strings: 'i18n.en'
+        );
     }
 }

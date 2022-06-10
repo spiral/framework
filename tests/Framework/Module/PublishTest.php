@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Module;
@@ -15,7 +8,7 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Module\Exception\PublishException;
 use Spiral\Tests\Framework\ConsoleTest;
 
-class PublishTest extends ConsoleTest
+final class PublishTest extends ConsoleTest
 {
     protected const TEST_FILE   = __DIR__ . '/test.txt';
     protected const TEST_FILE_2 = __DIR__ . '/PublishTest.php';
@@ -27,16 +20,18 @@ class PublishTest extends ConsoleTest
         }
 
         $this->runCommand('cache:clean');
+
+        parent::tearDown();
     }
 
     public function testPublish(): void
     {
-        $file = $this->file('runtime', 'test.txt');
+        $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents(self::TEST_FILE, 'test');
 
         $this->assertFalse(is_file($file));
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
@@ -49,13 +44,13 @@ class PublishTest extends ConsoleTest
 
     public function testReplace(): void
     {
-        $this->runCommandDebug('conf');
+        $this->runCommand('conf');
 
-        $file = $this->file('runtime', 'test.txt');
+        $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
@@ -67,12 +62,12 @@ class PublishTest extends ConsoleTest
 
     public function testFollow(): void
     {
-        $this->runCommandDebug('conf');
-        $file = $this->file('runtime', 'test.txt');
+        $this->runCommand('conf');
+        $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
@@ -86,12 +81,12 @@ class PublishTest extends ConsoleTest
     {
         $this->expectException(PublishException::class);
 
-        $this->runCommandDebug('conf');
-        $file = $this->file('runtime', 'test.txt');
+        $this->runCommand('conf');
+        $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'invalid',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
@@ -101,12 +96,12 @@ class PublishTest extends ConsoleTest
 
     public function testReadonly(): void
     {
-        $this->runCommandDebug('conf');
-        $file = $this->file('runtime', 'test.txt');
+        $this->runCommand('conf');
+        $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
@@ -118,10 +113,10 @@ class PublishTest extends ConsoleTest
 
     public function testEnsure(): void
     {
-        $dir = $this->file('runtime', 'dir', false);
+        $dir = $this->getDirectoryByAlias('runtime', 'dir', false);
         $this->assertFalse(is_dir($dir));
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'ensure',
             'target' => '@runtime/dir',
         ]);
@@ -133,12 +128,12 @@ class PublishTest extends ConsoleTest
 
     public function testPublishDirectoryReplace(): void
     {
-        $this->runCommandDebug('conf');
-        $file = $this->file('runtime', 'test.txt');
+        $this->runCommand('conf');
+        $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime',
             'source' => __DIR__,
@@ -151,12 +146,12 @@ class PublishTest extends ConsoleTest
 
     public function testPublishDirectoryFollow(): void
     {
-        $this->runCommandDebug('conf');
-        $file = $this->file('runtime', 'test.txt');
+        $this->runCommand('conf');
+        $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'follow',
             'target' => '@runtime',
             'source' => __DIR__,
@@ -169,12 +164,12 @@ class PublishTest extends ConsoleTest
 
     public function testPublishDirectoryReplaceStar(): void
     {
-        $this->runCommandDebug('conf');
-        $file = $this->file('runtime', 'test.txt');
+        $this->runCommand('conf');
+        $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime',
             'source' => __DIR__ . '/*',
@@ -187,12 +182,12 @@ class PublishTest extends ConsoleTest
 
     public function testPublishDirectoryFollowStar(): void
     {
-        $this->runCommandDebug('conf');
-        $file = $this->file('runtime', 'test.txt');
+        $this->runCommand('conf');
+        $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'follow',
             'target' => '@runtime',
             'source' => __DIR__ . '/*',
@@ -207,9 +202,9 @@ class PublishTest extends ConsoleTest
     {
         $this->expectException(PublishException::class);
 
-        $this->runCommandDebug('conf');
+        $this->runCommand('conf');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE . 'invalid',
@@ -221,18 +216,13 @@ class PublishTest extends ConsoleTest
     {
         $this->expectException(PublishException::class);
 
-        $this->runCommandDebug('conf');
+        $this->runCommand('conf');
 
-        $this->runCommandDebug('publish', [
+        $this->runCommand('publish', [
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE . 'invalid/*',
             'mode'   => 'runtime'
         ]);
-    }
-
-    protected function file(string $dir, string $name)
-    {
-        return $this->app->get(DirectoriesInterface::class)->get($dir) . $name;
     }
 }
