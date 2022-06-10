@@ -35,7 +35,7 @@ final class SerializerBootloaderTest extends TestCase
 
     public function testConfigureSerializer(): void
     {
-        $collection = new SerializerCollection(['callback', new CallbackSerializer(fn () => null, fn () => null)]);
+        $collection = new SerializerCollection(['callback' => new CallbackSerializer(fn () => null, fn () => null)]);
 
         $bootloader = new SerializerBootloader();
         $container = new Container();
