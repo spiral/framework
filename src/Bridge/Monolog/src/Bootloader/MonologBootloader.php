@@ -38,7 +38,11 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
 
     public function init(Container $container, FinalizerInterface $finalizer, EnvironmentInterface $env): void
     {
-        $finalizer->addFinalizer(static function () use ($container): void {
+        $finalizer->addFinalizer(static function (bool $terminate) use ($container): void {
+            if ($terminate) {
+                return;
+            }
+
             if ($container->hasInstance(LoggerInterface::class)) {
                 $logger = $container->get(LoggerInterface::class);
 
