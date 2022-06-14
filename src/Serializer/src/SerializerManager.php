@@ -7,18 +7,19 @@ namespace Spiral\Serializer;
 class SerializerManager implements SerializerInterface
 {
     public function __construct(
-        protected readonly SerializerCollection $serializers
+        protected readonly SerializerRegistry $serializers,
+        protected readonly string $defaultFormat
     ) {
     }
 
     public function getSerializer(string $format = null): SerializerInterface
     {
-        return $this->serializers->get($format);
+        return $this->serializers->get($format ?? $this->defaultFormat);
     }
 
     public function serialize(mixed $payload, ?string $format = null): string|\Stringable
     {
-        return $this->getSerializer($format)->serialize($payload, $format);
+        return $this->getSerializer($format ?? $this->defaultFormat)->serialize($payload, $format);
     }
 
     public function unserialize(
@@ -26,6 +27,6 @@ class SerializerManager implements SerializerInterface
         string|object|null $type = null,
         ?string $format = null
     ): mixed {
-        return $this->getSerializer($format)->unserialize($payload, $type, $format);
+        return $this->getSerializer($format ?? $this->defaultFormat)->unserialize($payload, $type, $format);
     }
 }
