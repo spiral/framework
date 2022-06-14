@@ -60,7 +60,7 @@ final class SerializerBootloader extends Bootloader
             'serializers' => [
                 'json' => new JsonSerializer(),
                 'serialize' => new PhpSerializer(),
-            ]
+            ],
         ]);
     }
 

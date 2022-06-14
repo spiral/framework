@@ -13,7 +13,7 @@ final class SerializerConfig extends InjectableConfig
 
     protected array $config = [
         'default' => self::DEFAULT_SERIALIZER,
-        'serializers' => []
+        'serializers' => [],
     ];
 
     /**
