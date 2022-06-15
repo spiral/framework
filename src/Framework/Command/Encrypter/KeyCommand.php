@@ -44,11 +44,11 @@ final class KeyCommand extends Command
             return self::SUCCESS;
         }
 
-        if (! $confirmation->confirmToProceed()) {
+        if (!$confirmation->confirmToProceed()) {
             return self::FAILURE;
         }
 
-        if (! $files->exists($file)) {
+        if (!$files->exists($file)) {
             $this->error(\sprintf('Unable to find `%s`', $file));
 
             return self::FAILURE;
