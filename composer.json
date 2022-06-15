@@ -14,9 +14,6 @@
             "email": "wolfy.jd@gmail.com"
         }
     ],
-    "bin": [
-        "bin/spiral"
-    ],
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
