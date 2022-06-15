@@ -24,7 +24,7 @@ final class ApplicationInProduction
 
     public function confirmToProceed(string $message = 'Application in production.'): bool
     {
-        if (! $this->appEnv->isProduction()) {
+        if (!$this->appEnv->isProduction()) {
             return true;
         }
 
@@ -36,7 +36,7 @@ final class ApplicationInProduction
 
         $confirmed = $this->confirm('Do you really wish to run command?');
 
-        if (! $confirmed) {
+        if (!$confirmed) {
             $this->comment('Command Canceled!');
 
             return false;
