@@ -41,9 +41,6 @@ use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorke
                 'email' => 'wolfy.jd@gmail.com',
             ],
         ],
-        'bin'               => [
-            'bin/spiral',
-        ],
         'require'           => $dest['require'] ?? [],
         'autoload'          => $dest['autoload'] ?? [],
         'require-dev'       => $dest['require-dev'] ?? [],

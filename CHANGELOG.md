@@ -161,6 +161,7 @@
   - `Spiral\Snapshots\FileSnapshooter` uses `Verbosity` enum instead of int flag.
   - `Spiral\Snapshots\FileSnapshooter` uses `ExceptionRendererInterface $renderer` instead of `HandlerInterface $handler`.
   - `Spiral\Snapshots\SnapshotterInterface` usage replaced with `Spiral\Exceptions\ExceptionReporterInterface` in all classes.
+  - Removed `bin/spiral`. Uses the `spiral/roadrunner-cli` package instead.
 - **Other Features**
   - [spiral/debug] Added `Spiral\Debug\StateConsumerInterface`.
   - [spiral/boot] Added new `boot` method in `Bootloaders`. It will be executed after the `init` method is executed in all `Bootloaders`.
