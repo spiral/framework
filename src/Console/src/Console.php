@@ -70,7 +70,7 @@ final class Console
 
         $code = $this->container->runScope([
             InputInterface::class => $input,
-            OutputInterface::class => $output
+            OutputInterface::class => $output,
         ], fn () => $this->getApplication()->doRun($input, $output));
 
         return new CommandOutput($code ?? self::CODE_NONE, $output);
