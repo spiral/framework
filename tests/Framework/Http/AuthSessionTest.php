@@ -12,6 +12,13 @@ final class AuthSessionTest extends HttpTest
         'ENCRYPTER_KEY' => self::ENCRYPTER_KEY,
     ];
 
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->enableMiddlewares();
+    }
+
     public function testNoToken(): void
     {
         $this->getHttp()->get(uri: '/auth/token')

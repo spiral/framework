@@ -8,6 +8,7 @@ use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\UndefinedRouteException;
+use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 
 interface RouterInterface extends RequestHandlerInterface
 {
@@ -48,5 +49,5 @@ interface RouterInterface extends RequestHandlerInterface
      */
     public function uri(string $route, iterable $parameters = []): UriInterface;
 
-    public function import(string $path): void;
+    public function import(RoutingConfigurator $routes): void;
 }

@@ -4,23 +4,25 @@ declare(strict_types=1);
 
 namespace Spiral\Router\Loader;
 
-use Spiral\Core\ResolverInterface;
+use Spiral\Core\Container;
 use Spiral\Router\Exception\LoaderLoadException;
+use Spiral\Router\Loader\Configurator\RoutingConfigurator;
+use Spiral\Router\RouteCollection;
 
 final class PhpFileLoader implements LoaderInterface
 {
     public function __construct(
-        private readonly ResolverInterface $resolver
+        private readonly Container $container
     ) {
     }
 
     /**
      * Loads a PHP file.
      */
-    public function load(mixed $resource, string $type = null): mixed
+    public function load(mixed $resource, string $type = null): RouteCollection
     {
         if (!\file_exists($resource)) {
-            throw new LoaderLoadException('File [%s] does not exist.');
+            throw new LoaderLoadException(\sprintf('File [%s] does not exist.', $resource));
         }
 
         $load = static function (string $path) {
@@ -29,9 +31,16 @@ final class PhpFileLoader implements LoaderInterface
 
         $callback = $load($resource);
 
-        $args = $this->resolver->resolveArguments(new \ReflectionFunction($callback), validate: true);
+        $collection = new RouteCollection();
 
-        return $callback(...$args);
+        $configurator = new RoutingConfigurator($collection, $this->container->make(LoaderInterface::class));
+
+        $args = $this->container->resolveArguments(new \ReflectionFunction($callback), [$configurator]);
+
+        // Compiling routes from callback
+        $callback(...$args);
+
+        return $collection;
     }
 
     public function supports(mixed $resource, string $type = null): bool

@@ -19,11 +19,7 @@ use Spiral\Debug\StateCollector\HttpCollector;
 use Spiral\Domain\PipelineInterceptor;
 use Spiral\Http\Middleware\ErrorHandlerMiddleware;
 use Spiral\Http\Middleware\JsonPayloadMiddleware;
-use Spiral\Router\GroupRegistry;
-use Spiral\Router\Route;
-use Spiral\Router\RouterInterface;
-use Spiral\Router\Target\Action;
-use Spiral\Router\Target\Controller;
+use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 use Spiral\Session\Middleware\SessionMiddleware;
 
 final class RoutesBootloader extends BaseRoutesBootloader
@@ -56,90 +52,116 @@ final class RoutesBootloader extends BaseRoutesBootloader
         ];
     }
 
-    protected function defineRoutes(RouterInterface $router, GroupRegistry $groups): void
+    protected function defineRoutes(RoutingConfigurator $routes): void
     {
-        $web = $groups->getGroup('web');
-
-        $web
-            ->addRoute('auth', new Route('/auth/<action>', new Controller(AuthController::class)))
-            ->addRoute('intercepted:without', $this->createInterceptedRoute('without', [
+        $routes->add('auth', '/auth/<action>')->controller(AuthController::class);
+        $routes
+            ->add('intercepted:without', '/intercepted/without')
+            ->action(InterceptedController::class, 'without')
+            ->core($this->getInterceptedCore([
                 new Interceptor\Append('one'),
                 new Interceptor\Append('two'),
                 new Interceptor\Append('three'),
-            ]))
-            ->addRoute('intercepted:with', $this->createInterceptedRoute('with', [$this->pipelineInterceptor]))
-            ->addRoute('intercepted:mix', $this->createInterceptedRoute('mix', [
+            ]));
+        $routes
+            ->add('intercepted:with', '/intercepted/with')
+            ->action(InterceptedController::class, 'with')
+            ->core($this->getInterceptedCore([$this->pipelineInterceptor]));
+        $routes
+            ->add('intercepted:mix', '/intercepted/mix')
+            ->action(InterceptedController::class, 'mix')
+            ->core($this->getInterceptedCore([
                 new Interceptor\Append('four'),
                 new Interceptor\Append('five'),
                 $this->pipelineInterceptor,
                 new Interceptor\Append('six'),
-            ]))
-            ->addRoute('intercepted:dup', $this->createInterceptedRoute('dup', [
+            ]));
+        $routes
+            ->add('intercepted:dup', '/intercepted/dup')
+            ->action(InterceptedController::class, 'dup')
+            ->core($this->getInterceptedCore([
                 $this->pipelineInterceptor,
                 new Interceptor\Append('one'),
                 new Interceptor\Append('two'),
                 new Interceptor\Append('three'),
-            ]))
-            ->addRoute('intercepted:skip', $this->createInterceptedRoute('skip', [
+            ]));
+        $routes
+            ->add('intercepted:skip', '/intercepted/skip')
+            ->action(InterceptedController::class, 'skip')
+            ->core($this->getInterceptedCore([
                 new Interceptor\Append('one'),
                 $this->pipelineInterceptor,
                 new Interceptor\Append('two'),
                 new Interceptor\Append('three'),
-            ]))
-            ->addRoute('intercepted:first', $this->createInterceptedRoute('first', [
+            ]));
+        $routes
+            ->add('intercepted:first', '/intercepted/first')
+            ->action(InterceptedController::class, 'first')
+            ->core($this->getInterceptedCore([
                 $this->pipelineInterceptor,
                 new Interceptor\Append('four'),
                 new Interceptor\Append('five'),
                 new Interceptor\Append('six'),
-            ]))
-            ->addRoute('intercepted:withoutAttribute', $this->createInterceptedRoute('withoutAttribute', [
+            ]));
+        $routes
+            ->add('intercepted:withoutAttribute', '/intercepted/withoutAttribute')
+            ->action(InterceptedController::class, 'withoutAttribute')
+            ->core($this->getInterceptedCore([
                 new Interceptor\Append('one'),
                 new Interceptor\Append('two'),
                 new Interceptor\Append('three'),
-            ]))
-            ->addRoute('intercepted:withAttribute', $this->createInterceptedRoute('withAttribute', [
+            ]));
+        $routes
+            ->add('intercepted:withAttribute', '/intercepted/withAttribute')
+            ->action(InterceptedController::class, 'withAttribute')
+            ->core($this->getInterceptedCore([
                 $this->pipelineInterceptor,
-            ]))
-            ->addRoute('intercepted:mixAttribute', $this->createInterceptedRoute('mixAttribute', [
+            ]));
+        $routes
+            ->add('intercepted:mixAttribute', '/intercepted/mixAttribute')
+            ->action(InterceptedController::class, 'mixAttribute')
+            ->core($this->getInterceptedCore([
                 new Interceptor\Append('four'),
                 new Interceptor\Append('five'),
                 $this->pipelineInterceptor,
                 new Interceptor\Append('six'),
-            ]))
-            ->addRoute('intercepted:dupAttribute', $this->createInterceptedRoute('dupAttribute', [
+            ]));
+        $routes
+            ->add('intercepted:dupAttribute', '/intercepted/dupAttribute')
+            ->action(InterceptedController::class, 'dupAttribute')
+            ->core($this->getInterceptedCore([
                 $this->pipelineInterceptor,
                 new Interceptor\Append('one'),
                 new Interceptor\Append('two'),
                 new Interceptor\Append('three'),
-            ]))
-            ->addRoute('intercepted:skipAttribute', $this->createInterceptedRoute('skipAttribute', [
+            ]));
+        $routes
+            ->add('intercepted:skipAttribute', '/intercepted/skipAttribute')
+            ->action(InterceptedController::class, 'skipAttribute')
+            ->core($this->getInterceptedCore([
                 new Interceptor\Append('one'),
                 $this->pipelineInterceptor,
                 new Interceptor\Append('two'),
                 new Interceptor\Append('three'),
-            ]))
-            ->addRoute('intercepted:firstAttribute', $this->createInterceptedRoute('firstAttribute', [
+            ]));
+        $routes
+            ->add('intercepted:firstAttribute', '/intercepted/firstAttribute')
+            ->action(InterceptedController::class, 'firstAttribute')
+            ->core($this->getInterceptedCore([
                 $this->pipelineInterceptor,
                 new Interceptor\Append('four'),
                 new Interceptor\Append('five'),
                 new Interceptor\Append('six'),
-            ]))
-        ;
+            ]));
 
-        $default = new Route('/<action>[/<name>]', new Controller(TestController::class));
+        // for testing routes import
+        $routes->import(\dirname(__DIR__, 2) . '/routes/api.php')->group('api')->prefix('api');
 
-        $router->setDefault(
-            $default
-                ->withDefaults(['name' => 'Dave'])
-                ->withMiddleware($this->middlewareGroups()['web'])
-        );
-    }
-
-    private function createInterceptedRoute(string $action, array $interceptors): Route
-    {
-        $target = new Action(InterceptedController::class, $action);
-
-        return new Route("/intercepted/$action", $target->withCore($this->getInterceptedCore($interceptors)));
+        $routes
+            ->default('/<action>[/<name>]')
+            ->controller(TestController::class)
+            ->defaults(['name' => 'Dave'])
+            ->middleware($this->middlewareGroups()['web']);
     }
 
     private function getInterceptedCore(array $interceptors): InterceptableCore

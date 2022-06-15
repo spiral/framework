@@ -13,6 +13,8 @@ final class SessionTest extends HttpTest
     {
         parent::setUp();
 
+        $this->enableMiddlewares();
+
         $this->setHttpHandler(function () {
             return ++$this->session()->getSection('cli')->value;
         });

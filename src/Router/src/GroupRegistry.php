@@ -11,6 +11,8 @@ use Spiral\Core\FactoryInterface;
  */
 final class GroupRegistry implements \IteratorAggregate
 {
+    private string $defaultGroup = 'web';
+
     /** @var RouteGroup[] */
     private array $groups = [];
 
@@ -26,6 +28,18 @@ final class GroupRegistry implements \IteratorAggregate
         }
 
         return $this->groups[$name];
+    }
+
+    public function setDefaultGroup(string $group): self
+    {
+        $this->defaultGroup = $group;
+
+        return $this;
+    }
+
+    public function getDefaultGroup(): string
+    {
+        return $this->defaultGroup;
     }
 
     /**

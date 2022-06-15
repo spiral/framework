@@ -21,9 +21,8 @@ final class LoaderRegistryTest extends TestCase
 
         $this->assertInstanceOf(PhpFileLoader::class, $registry->resolve('test/file.php'));
         $this->assertInstanceOf(PhpFileLoader::class, $registry->resolve('test/file.php', 'php'));
-        $this->assertFalse($registry->resolve('test/file.php', 'yaml'));
+        $this->assertFalse($registry->resolve('test/file.php', 'txt'));
 
-        $this->assertInstanceOf(TestLoader::class, $registry->resolve('test/file.yaml'));
         $this->assertInstanceOf(TestLoader::class, $registry->resolve('test/file.yaml', 'yaml'));
         $this->assertFalse($registry->resolve('test/file.yaml', 'php'));
     }

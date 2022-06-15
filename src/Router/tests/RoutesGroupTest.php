@@ -7,6 +7,7 @@ namespace Spiral\Tests\Router;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Spiral\Core\Container;
 use Spiral\Http\Pipeline;
+use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\Route;
 use Spiral\Router\RouteGroup;
 use Spiral\Router\Router;
@@ -18,11 +19,21 @@ use Spiral\Tests\Router\Stub\TestMiddleware;
 
 class RoutesGroupTest extends TestCase
 {
+    private Container $container;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container = new Container();
+        $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
+    }
+
     public function testCoreString(): void
     {
         $handler = new UriHandler(new Psr17Factory());
-        $router = new Router('/', $handler, new Container());
-        $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()), $handler);
+        $router = new Router('/', $handler, $this->container);
+        $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
 
         $group->setCore(RoutesTestCore::class);
 
@@ -40,10 +51,10 @@ class RoutesGroupTest extends TestCase
     public function testCoreObject(): void
     {
         $handler = new UriHandler(new Psr17Factory());
-        $router = new Router('/', $handler, new Container());
-        $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()), $handler);
+        $router = new Router('/', $handler, $this->container);
+        $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
 
-        $group->setCore(new RoutesTestCore(new Container()));
+        $group->setCore(new RoutesTestCore($this->container));
 
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
         $t = $this->getProperty($router->getRoute('name'), 'target');
@@ -59,8 +70,8 @@ class RoutesGroupTest extends TestCase
     public function testMiddleware(): void
     {
         $handler = new UriHandler(new Psr17Factory());
-        $router = new Router('/', $handler, new Container());
-        $group = new RouteGroup(new Container(), $router, new Pipeline(new Container()), $handler);
+        $router = new Router('/', $handler, $this->container);
+        $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
         $group->addMiddleware(TestMiddleware::class);
 
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));

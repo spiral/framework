@@ -7,7 +7,7 @@ namespace Spiral\Bootloader\Http;
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Router\GroupRegistry;
-use Spiral\Router\RouterInterface;
+use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 
 abstract class RoutesBootloader extends Bootloader
 {
@@ -18,17 +18,17 @@ abstract class RoutesBootloader extends Bootloader
         }
     }
 
-    public function boot(RouterInterface $router, GroupRegistry $groups): void
+    public function boot(RoutingConfigurator $routes, GroupRegistry $groups): void
     {
         $this->registerMiddlewareGroups($groups, $this->middlewareGroups());
 
-        $this->defineRoutes($router, $groups);
+        $this->defineRoutes($routes);
     }
 
     /**
      * Override this method to configure application routes
      */
-    protected function defineRoutes(RouterInterface $router, GroupRegistry $groups): void
+    protected function defineRoutes(RoutingConfigurator $routes): void
     {
     }
 

@@ -9,6 +9,7 @@ use Spiral\Core\Container;
 use Spiral\Router\Loader\DelegatingLoader;
 use Spiral\Router\Loader\LoaderRegistry;
 use Spiral\Router\Loader\PhpFileLoader;
+use Spiral\Router\RouteCollection;
 use Spiral\Tests\Router\Stub\TestLoader;
 
 final class DelegatingLoaderTest extends TestCase
@@ -19,7 +20,7 @@ final class DelegatingLoaderTest extends TestCase
             new TestLoader()
         ]));
 
-        $this->assertSame('test', $loader->load('file.yaml'));
+        $this->assertInstanceOf(RouteCollection::class, $loader->load('file.yaml', 'yaml'));
     }
 
     public function testSupports(): void
@@ -42,8 +43,7 @@ final class DelegatingLoaderTest extends TestCase
         ]));
         $this->assertTrue($loader->supports('file.php'));
         $this->assertTrue($loader->supports('file.php', 'php'));
-        $this->assertFalse($loader->supports('file.php', 'yaml'));
-        $this->assertTrue($loader->supports('file.yaml'));
+        $this->assertFalse($loader->supports('file.yaml'));
         $this->assertTrue($loader->supports('file.yaml', 'yaml'));
         $this->assertFalse($loader->supports('file.yaml', 'php'));
     }
