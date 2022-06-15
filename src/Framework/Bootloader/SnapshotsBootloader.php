@@ -39,7 +39,7 @@ final class SnapshotsBootloader extends Bootloader
         return new FileSnapshooter(
             $dirs->get('runtime') . '/snapshots/',
             (int) $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),
-            Verbosity::tryFrom((int) $env->get('SNAPSHOT_VERBOSITY')) ?? Verbosity::VERBOSE,
+            Verbosity::tryFrom((int)($env->get('SNAPSHOT_VERBOSITY') ?? Verbosity::VERBOSE->value)),
             new PlainRenderer(),
             $files,
             $logger
