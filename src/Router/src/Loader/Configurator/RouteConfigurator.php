@@ -11,6 +11,8 @@ use Spiral\Router\Exception\TargetException;
 use Spiral\Router\RouteCollection;
 use Spiral\Router\Target\Action;
 use Spiral\Router\Target\Controller;
+use Spiral\Router\Target\Group;
+use Spiral\Router\Target\Namespaced;
 use Spiral\Router\TargetInterface;
 
 final class RouteConfigurator
@@ -35,8 +37,8 @@ final class RouteConfigurator
     {
         if ($this->target === null) {
             throw new TargetException(
-                \sprintf('The [%s] route has no defined target. 
-                Call one of: `controller`, `action`, `callable`, `handler` methods.', $this->name)
+                \sprintf('The [%s] route has no defined target. Call one of: `controller`, `action`, 
+                    `namespaced`, `groupControllers`, `callable`, `handler` methods.', $this->name)
             );
         }
 
@@ -65,6 +67,20 @@ final class RouteConfigurator
     public function controller(string $controller, int $options = 0, string $defaultAction = 'index'): self
     {
         $this->target = new Controller($controller, $options, $defaultAction);
+
+        return $this;
+    }
+
+    public function namespaced(string $namespace, string $postfix = 'Controller', int $options = 0): self
+    {
+        $this->target = new Namespaced($namespace, $postfix, $options);
+
+        return $this;
+    }
+
+    public function groupControllers(array $controllers, int $options = 0, string $defaultAction = 'index'): self
+    {
+        $this->target = new Group($controllers, $options, $defaultAction);
 
         return $this;
     }
