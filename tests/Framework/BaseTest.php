@@ -1,29 +1,30 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework;
 
-use PHPUnit\Framework\TestCase;
-use Spiral\Boot\Environment;
 use Spiral\App\TestApp;
+use Spiral\Core\Container;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTest extends \Spiral\Testing\TestCase
 {
-    public function makeApp(array $env = []): TestApp
+    public function rootDirectory(): string
     {
-        return TestApp::create([
-            'root'    => __DIR__ . '/../..',
-            'app'     => __DIR__ . '/../app',
-            'runtime' => sys_get_temp_dir() . '/spiral',
-            'cache'   => sys_get_temp_dir() . '/spiral',
-        ], false)->run(new Environment($env));
+        return __DIR__.'/../';
+    }
+
+    public function createAppInstance(Container $container = new Container()): TestApp
+    {
+        return TestApp::create(
+            $this->defineDirectories($this->rootDirectory()),
+            false
+        );
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->cleanUpRuntimeDirectory();
     }
 }

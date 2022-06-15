@@ -123,4 +123,44 @@ class FactoryTest extends BaseTest
         $this->container->get(LogsInterface::class)->getLogger();
         $finalizer->finalize();
     }
+
+    public function testFinalizerShouldNotResetLoggerWhenApplicationTerminating()
+    {
+        $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
+            new class() implements LoaderInterface {
+                public function has(string $section): bool
+                {
+                    return false;
+                }
+
+                public function load(string $section): array
+                {
+                    return [];
+                }
+            }
+        ));
+
+        $this->container->bind(FinalizerInterface::class, $finalizer = new Finalizer());
+
+        $factory = new LogFactory(new MonologConfig([
+            'handlers' => [
+                'default' => [
+                    $handler = \Mockery::mock(HandlerInterface::class, ResettableInterface::class)
+                ]
+            ],
+            'processors' => [
+                'default' => [
+                    $processor = \Mockery::mock(ProcessorInterface::class, ResettableInterface::class)
+                ]
+            ]
+        ]), new ListenerRegistry(), $this->container);
+
+        $handler->shouldReceive('reset')->never();
+        $processor->shouldReceive('reset')->never();
+
+        $this->container->bind(LogFactory::class, $factory);
+        $this->container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->get(LogsInterface::class)->getLogger();
+        $finalizer->finalize(true);
+    }
 }

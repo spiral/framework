@@ -7,13 +7,12 @@ namespace Spiral\Tests\Framework\Views;
 use Spiral\Tests\Framework\BaseTest;
 use Spiral\Views\ViewsInterface;
 
-class RenderTest extends BaseTest
+final class RenderTest extends BaseTest
 {
     public function testWithNullVariable(): void
     {
-        $app = $this->makeApp();
-
-        $out = $app->get(ViewsInterface::class)->render('stempler:null', ['var' => null, 'users' => []]);
+        $out = $this->getContainer()->get(ViewsInterface::class)
+            ->render('stempler:null', ['var' => null, 'users' => []]);
 
         // any exceptions threw
         $this->assertIsString($out);
@@ -21,9 +20,10 @@ class RenderTest extends BaseTest
 
     public function testWithNullVariableExression(): void
     {
-        $app = $this->makeApp();
-
-        $out = $app->get(ViewsInterface::class)->render('stempler:null', ['var' => null, 'users' => ['foo']]);
+        $out = $this->getContainer()->get(ViewsInterface::class)->render(
+            'stempler:null',
+            ['var' => null, 'users' => ['foo']]
+        );
 
         // any exceptions threw
         $this->assertIsString($out);

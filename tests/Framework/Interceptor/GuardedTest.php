@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Interceptor;
@@ -19,14 +12,18 @@ use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\InterceptorException;
 use Spiral\Security\Actor\Actor;
 use Spiral\Security\ActorInterface;
-use Spiral\Tests\Framework\ConsoleTest;
+use Spiral\Tests\Framework\BaseTest;
 
-class GuardedTest extends ConsoleTest
+final class GuardedTest extends BaseTest
 {
+    private function getCore(): CoreInterface
+    {
+        return $this->getContainer()->get(CoreInterface::class);
+    }
+
     public function testInvalidAnnotationConfiguration(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
         $this->expectException(InterceptorException::class);
         $core->callAction(DemoController::class, 'guardedButNoName', []);
@@ -34,8 +31,7 @@ class GuardedTest extends ConsoleTest
 
     public function testInvalidAnnotationConfigurationWithAttribute(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
         $this->expectException(InterceptorException::class);
         $core->callAction(DemoController::class, 'guardedButNoNameAttribute', []);
@@ -43,8 +39,7 @@ class GuardedTest extends ConsoleTest
 
     public function testInvalidAnnotationConfigurationIfEmptyGuarded(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
         $this->expectException(InterceptorException::class);
         $core->callAction(Demo3Controller::class, 'do', []);
@@ -52,8 +47,7 @@ class GuardedTest extends ConsoleTest
 
     public function testNotAllowed(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
         $this->expectException(ControllerException::class);
         $core->callAction(DemoController::class, 'do', []);
@@ -61,8 +55,7 @@ class GuardedTest extends ConsoleTest
 
     public function testNotAllowed2(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
         $this->expectException(ControllerException::class);
         $core->callAction(Demo2Controller::class, 'do1', []);
@@ -70,8 +63,7 @@ class GuardedTest extends ConsoleTest
 
     public function testNotAllowedError1(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
         $this->expectExceptionCode(ControllerException::FORBIDDEN);
         $core->callAction(Demo2Controller::class, 'do1', []);
@@ -79,8 +71,7 @@ class GuardedTest extends ConsoleTest
 
     public function testNotAllowedError2(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
         $this->expectExceptionCode(ControllerException::NOT_FOUND);
         $core->callAction(Demo2Controller::class, 'do2', []);
@@ -89,8 +80,7 @@ class GuardedTest extends ConsoleTest
 
     public function testNotAllowedError3(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
         $this->expectExceptionCode(ControllerException::ERROR);
         $core->callAction(Demo2Controller::class, 'do3', []);
@@ -99,8 +89,7 @@ class GuardedTest extends ConsoleTest
 
     public function testNotAllowedError4(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
         $this->expectExceptionCode(ControllerException::BAD_ACTION);
         $core->callAction(Demo2Controller::class, 'do4', []);
@@ -108,30 +97,27 @@ class GuardedTest extends ConsoleTest
 
     public function testAllowed(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
-        $this->app->getContainer()->bind(ActorInterface::class, new Actor(['user']));
+        $this->getContainer()->bind(ActorInterface::class, new Actor(['user']));
 
         $this->assertSame('ok', $core->callAction(DemoController::class, 'do', []));
     }
 
     public function testAllowedWithAttribute(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
-        $this->app->getContainer()->bind(ActorInterface::class, new Actor(['user']));
+        $this->getContainer()->bind(ActorInterface::class, new Actor(['user']));
 
         $this->assertSame('ok', $core->callAction(DemoController::class, 'doAttribute', []));
     }
 
     public function testNotAllowed3(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
-        $this->app->getContainer()->bind(ActorInterface::class, new Actor(['user']));
+        $this->getContainer()->bind(ActorInterface::class, new Actor(['user']));
 
         $this->expectExceptionCode(ControllerException::FORBIDDEN);
         $this->assertSame('ok', $core->callAction(Demo2Controller::class, 'do1', []));
@@ -139,19 +125,17 @@ class GuardedTest extends ConsoleTest
 
     public function testAllowed2(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
-        $this->app->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
+        $this->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
         $this->assertSame('ok', $core->callAction(Demo2Controller::class, 'do1', []));
     }
 
     public function testNotAllowed2WithAttribute(): void
     {
-        /** @var CoreInterface $core */
-        $core = $this->app->get(CoreInterface::class);
+        $core = $this->getCore();
 
-        $this->app->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
+        $this->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
         $this->assertSame('ok', $core->callAction(Demo2Controller::class, 'do1Attribute', []));
     }
 }

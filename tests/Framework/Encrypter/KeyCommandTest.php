@@ -1,20 +1,14 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Encrypter;
 
+use Spiral\Console\Console;
 use Spiral\Encrypter\EncrypterFactory;
 use Spiral\Tests\Framework\ConsoleTest;
 
-class KeyCommandTest extends ConsoleTest
+final class KeyCommandTest extends ConsoleTest
 {
     public function testKey(): void
     {
@@ -49,7 +43,7 @@ class KeyCommandTest extends ConsoleTest
 
     public function testReplaceCurrent(): void
     {
-        $key = $this->app->get(EncrypterFactory::class)->generateKey();
+        $key = $this->getContainer()->get(EncrypterFactory::class)->generateKey();
 
         $app = $this->makeApp([
             'ENCRYPTER_KEY' => $key
@@ -57,9 +51,10 @@ class KeyCommandTest extends ConsoleTest
 
         file_put_contents(__DIR__ . '/.env', $key);
 
-        $out = $app->console()->run('encrypt:key', [
+        $out = $app->getContainer()->get(Console::class)->run('encrypt:key', [
             '-m' => __DIR__ . '/.env'
         ]);
+
         $out = $out->getOutput()->fetch();
 
         $this->assertStringContainsString('key has been updated', $out);

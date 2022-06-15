@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Dispatcher;
@@ -16,24 +9,29 @@ use Spiral\Tests\Framework\BaseTest;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class ConsoleDispatcherTest extends BaseTest
+final class ConsoleDispatcherTest extends BaseTest
 {
+    public const MAKE_APP_ON_STARTUP = false;
+
     public function testCanServe(): void
     {
-        $this->assertTrue($this->makeApp()->get(ConsoleDispatcher::class)->canServe());
+        $this->initApp();
+        $this->assertDispatcherCanBeServed(ConsoleDispatcher::class);
     }
 
     public function testCanNotServe(): void
     {
-        $this->assertFalse($this->makeApp([
-            'RR' => true
-        ])->get(ConsoleDispatcher::class)->canServe());
+        $this->initApp(['RR' => true]);
+        $this->assertDispatcherCannotBeServed(ConsoleDispatcher::class);
     }
 
     public function testListCommands(): void
     {
         $output = new BufferedOutput();
-        $serveResult = $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([]), $output);
+        $this->initApp();
+
+        $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)
+            ->serve(new ArrayInput([]), $output);
         $result = $output->fetch();
 
         $this->assertStringContainsString('dead', $result);
@@ -43,9 +41,14 @@ class ConsoleDispatcherTest extends BaseTest
     public function testException(): void
     {
         $output = new BufferedOutput();
-        $serveResult = $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
-            'command' => 'dead'
-        ]), $output);
+        $this->initApp();
+
+        $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)->serve(
+            new ArrayInput([
+                'command' => 'dead',
+            ]),
+            $output
+        );
         $result = $output->fetch();
 
         $this->assertStringContainsString('undefined', $result);
@@ -56,10 +59,15 @@ class ConsoleDispatcherTest extends BaseTest
     public function testExceptionVerbose(): void
     {
         $output = new BufferedOutput();
+        $this->initApp();
+
         $output->setVerbosity(BufferedOutput::VERBOSITY_VERBOSE);
-        $serveResult = $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
-            'command' => 'dead'
-        ]), $output);
+        $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)->serve(
+            new ArrayInput([
+                'command' => 'dead',
+            ]),
+            $output
+        );
         $result = $output->fetch();
 
         $this->assertStringContainsString('undefined', $result);
@@ -70,10 +78,16 @@ class ConsoleDispatcherTest extends BaseTest
     public function testExceptionDebug(): void
     {
         $output = new BufferedOutput();
+        $this->initApp();
+
         $output->setVerbosity(BufferedOutput::VERBOSITY_DEBUG);
-        $serveResult = $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
-            'command' => 'dead'
-        ]), $output);
+
+        $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)->serve(
+            new ArrayInput([
+                'command' => 'dead',
+            ]),
+            $output
+        );
         $result = $output->fetch();
 
         $this->assertStringContainsString('undefined', $result);

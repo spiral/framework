@@ -16,18 +16,9 @@ use Spiral\Tests\Framework\BaseTest;
 
 final class StorageBootloaderTest extends BaseTest
 {
-    private \Spiral\App\TestApp $app;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->app = $this->makeApp();
-    }
-
     public function testCreatesStorageWithBucket(): void
     {
-        $this->app->getContainer()->bind(
+        $this->getContainer()->bind(
             StorageConfig::class,
             new StorageConfig([
                 'servers' => [
@@ -44,7 +35,7 @@ final class StorageBootloaderTest extends BaseTest
             ])
         );
 
-        $this->app->getContainer()->bind(
+        $this->getContainer()->bind(
             BucketFactoryInterface::class,
             $bucket = m::mock(BucketFactoryInterface::class)
         );
@@ -59,7 +50,7 @@ final class StorageBootloaderTest extends BaseTest
                 && $resolver === null;
         })->once()->andReturn($bucket = m::mock(BucketInterface::class));
 
-        $storage = $this->app->get(StorageInterface::class);
+        $storage = $this->getContainer()->get(StorageInterface::class);
 
         $this->assertSame($bucket, $storage->bucket('default'));
     }
