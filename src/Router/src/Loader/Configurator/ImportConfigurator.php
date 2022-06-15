@@ -16,14 +16,19 @@ final class ImportConfigurator
     ) {
     }
 
+    public function __destruct()
+    {
+        $this->parent->addCollection($this->routes);
+    }
+
     public function __sleep(): array
     {
-        throw new \BadMethodCallException('Cannot serialize ' . __CLASS__);
+        throw new \BadMethodCallException('Cannot unserialize ' . self::class);
     }
 
     public function __wakeup()
     {
-        throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
+        throw new \BadMethodCallException('Cannot unserialize ' . self::class);
     }
 
     public function defaults(array $defaults): self
@@ -69,10 +74,5 @@ final class ImportConfigurator
         }
 
         return $this;
-    }
-
-    public function __destruct()
-    {
-        $this->parent->addCollection($this->routes);
     }
 }

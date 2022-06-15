@@ -115,7 +115,6 @@ final class Router implements RouterInterface
 
         /** @var RouteConfigurator $configurator */
         foreach ($routes->getCollection() as $name => $configurator) {
-
             $target = $configurator->target;
             if ($configurator->core !== null && $target instanceof AbstractTarget) {
                 $target = $target->withCore($configurator->core);

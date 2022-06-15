@@ -41,7 +41,7 @@ final class RouterBootloader extends Bootloader
         LoaderInterface::class         => DelegatingLoader::class,
         LoaderRegistryInterface::class => [self::class, 'initRegistry'],
         GroupRegistry::class           => GroupRegistry::class,
-        RoutingConfigurator::class     => RoutingConfigurator::class
+        RoutingConfigurator::class     => RoutingConfigurator::class,
     ];
 
     public function __construct(

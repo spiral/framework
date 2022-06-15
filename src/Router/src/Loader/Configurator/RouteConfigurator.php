@@ -31,6 +31,37 @@ final class RouteConfigurator
     ) {
     }
 
+    public function __destruct()
+    {
+        if ($this->target === null) {
+            throw new TargetException(
+                \sprintf('The [%s] route has no defined target. 
+                Call one of: `controller`, `action`, `callable`, `handler` methods.', $this->name)
+            );
+        }
+
+        $this->collection->add($this->name, $this);
+    }
+
+    /**
+     * @internal
+     *
+     * Don't use this method. For internal use only.
+     */
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            'core' => $this->core,
+            'target' => $this->target,
+            'defaults' => $this->defaults,
+            'group' => $this->group,
+            'middleware' => $this->middleware,
+            'pattern' => $this->pattern,
+            'prefix' => \trim($this->prefix, '/'),
+            default => throw new \BadMethodCallException(\sprintf('Unable to access %s.', $name))
+        };
+    }
+
     public function controller(string $controller, int $options = 0, string $defaultAction = 'index'): self
     {
         $this->target = new Controller($controller, $options, $defaultAction);
@@ -92,36 +123,5 @@ final class RouteConfigurator
         $this->middleware = (array) $middleware;
 
         return $this;
-    }
-
-    public function __destruct()
-    {
-        if ($this->target === null) {
-            throw new TargetException(
-                \sprintf('The [%s] route has no defined target. 
-                Call one of: `controller`, `action`, `callable`, `handler` methods.', $this->name)
-            );
-        }
-
-        $this->collection->add($this->name, $this);
-    }
-
-    /**
-     * @internal
-     *
-     * Don't use this method. For internal use only.
-     */
-    public function __get(string $name): mixed
-    {
-        return match ($name) {
-            'core' => $this->core,
-            'target' => $this->target,
-            'defaults' => $this->defaults,
-            'group' => $this->group,
-            'middleware' => $this->middleware,
-            'pattern' => $this->pattern,
-            'prefix' => \trim($this->prefix, '/'),
-            default => throw new \BadMethodCallException(\sprintf('Unable to access %s.', $name))
-        };
     }
 }
