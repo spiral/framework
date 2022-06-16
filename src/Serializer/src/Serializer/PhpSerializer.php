@@ -28,7 +28,7 @@ final class PhpSerializer implements SerializerInterface
 
         if (!$result instanceof $type) {
             throw new UnserializeException(\sprintf(
-                'Data received after unserializing must be of type: %s, received %s.',
+                'Data received after unserializing must be of type: `%s`, received `%s`',
                 $type,
                 \get_debug_type($result)
             ));

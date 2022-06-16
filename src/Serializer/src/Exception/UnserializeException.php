@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Serializer\Exception;
 
-final class UnserializeException extends \RuntimeException
+final class UnserializeException extends \InvalidArgumentException implements ValidationExceptionInterface
 {
 }
