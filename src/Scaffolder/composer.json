@@ -33,7 +33,6 @@
         "spiral/boot": "^2.14",
         "spiral/console": "^2.14",
         "spiral/core": "^2.14",
-        "spiral/filters": "^2.14",
         "spiral/http": "^2.14",
         "spiral/migrations": "^2.3",
         "spiral/prototype": "^2.14",
