@@ -5,17 +5,35 @@ declare(strict_types=1);
 namespace Spiral\DotEnv\Bootloader;
 
 use Dotenv\Dotenv;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 
 final class DotenvBootloader extends Bootloader
 {
-    public function init(DirectoriesInterface $dirs, EnvironmentInterface $env): void
-    {
-        $dotenvPath = $env->get('DOTENV_PATH', $dirs->get('root') . '.env');
+    private bool $init = false;
 
-        if (!\file_exists($dotenvPath)) {
+    public function init(
+        AbstractKernel $kernel,
+        DirectoriesInterface $dirs,
+        EnvironmentInterface $env
+    ): void {
+        $kernel->running(fn() => $this->loadEnvVariables($dirs, $env));
+        $this->loadEnvVariables($dirs, $env);
+    }
+
+    public function loadEnvVariables(DirectoriesInterface $dirs, EnvironmentInterface $env): void
+    {
+        if ($this->init) {
+            return;
+        }
+
+        $this->init = true;
+
+        $dotenvPath = $env->get('DOTENV_PATH', $dirs->get('root').'.env');
+
+        if (! \file_exists($dotenvPath)) {
             return;
         }
 

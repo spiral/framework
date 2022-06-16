@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -9,49 +10,60 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\DotEnv;
 
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Directories;
-use Spiral\Boot\Environment;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\DotEnv\Bootloader\DotenvBootloader;
 
-class LoadTest extends TestCase
+final class LoadTest extends TestCase
 {
-    public function testNotFound()
+    use MockeryPHPUnitIntegration;
+
+    public function testUseKernelCallback(): void
     {
-        $e = new Environment();
-        $d = new Directories(['root' => __DIR__ . '/..']);
+        $k = m::mock(AbstractKernel::class);
+        $k->shouldReceive('running')->once()->andReturnUsing(fn(\Closure $callback) => $callback());
+
+        $d = new Directories(['root' => __DIR__.'/']);
+
+        $e = m::mock(EnvironmentInterface::class);
+        $e->shouldReceive('get')->once()->withSomeOfArgs('DOTENV_PATH')->andReturn($d->get('root').'.env.custom');
+        $e->shouldReceive('set')->once()->with('KEY', 'custom_value');
 
         $b = new DotenvBootloader();
-        $b->boot($d, $e);
-
-        $this->assertNull($e->get('KEY'));
+        $b->init($k, $d, $e);
     }
 
-    public function testFound()
+    public function testNotFound(): void
     {
-        $e = new Environment([
-            'KEY' => 'value'
-        ]);
+        $k = m::mock(AbstractKernel::class);
+        $k->shouldReceive('running')->once();
 
-        $d = new Directories(['root' => __DIR__]);
+        $d = new Directories(['root' => __DIR__.'/']);
+
+        $e = m::mock(EnvironmentInterface::class);
+        $e->shouldReceive('get')->once()->withSomeOfArgs('DOTENV_PATH')->andReturn($d->get('root').'.env');
+        $e->shouldNotReceive('set')->with('KEY', 'custom_value');
 
         $b = new DotenvBootloader();
-        $b->boot($d, $e);
-
-        $this->assertSame('value', $e->get('KEY'));
+        $b->init($k, $d, $e);
     }
 
-    public function testFoundCustom()
+    public function testFoundCustom(): void
     {
-        $e = new Environment([
-            'DOTENV_PATH' => __DIR__ . '/.env.custom'
-        ]);
+        $k = m::mock(AbstractKernel::class);
+        $k->shouldReceive('running')->once();
 
-        $d = new Directories(['root' => __DIR__]);
+        $d = new Directories(['root' => __DIR__.'/']);
+
+        $e = m::mock(EnvironmentInterface::class);
+        $e->shouldReceive('get')->once()->withSomeOfArgs('DOTENV_PATH')->andReturn($d->get('root').'.env.custom');
+        $e->shouldReceive('set')->once()->with('KEY', 'custom_value');
 
         $b = new DotenvBootloader();
-        $b->boot($d, $e);
-
-        $this->assertSame('custom_value', $e->get('KEY'));
+        $b->init($k, $d, $e);
     }
 }
