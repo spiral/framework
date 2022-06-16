@@ -9,6 +9,7 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\JsonRenderer;
+use Spiral\Exceptions\Reporter\LoggerReporter;
 use Spiral\Exceptions\Reporter\SnapshotterReporter;
 
 /**
@@ -23,6 +24,9 @@ final class ExceptionHandlerBootloader extends Bootloader
 
         $errorHandler->addReporter(
             $factory->make(SnapshotterReporter::class)
+        );
+        $errorHandler->addReporter(
+            $factory->make(LoggerReporter::class)
         );
     }
 }

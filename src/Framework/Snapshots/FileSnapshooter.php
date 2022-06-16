@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Snapshots;
 
-use Psr\Log\LoggerInterface;
 use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Exceptions\Verbosity;
 use Spiral\Files\Exception\FilesException;
@@ -19,18 +18,13 @@ final class FileSnapshooter implements SnapshotterInterface
         private readonly int $maxFiles,
         private readonly Verbosity $verbosity,
         private readonly ExceptionRendererInterface $renderer,
-        private readonly FilesInterface $files,
-        private readonly ?LoggerInterface $logger = null
+        private readonly FilesInterface $files
     ) {
     }
 
     public function register(\Throwable $e): SnapshotInterface
     {
         $snapshot = new Snapshot($this->getID($e), $e);
-
-        if ($this->logger !== null) {
-            $this->logger->error($snapshot->getMessage());
-        }
 
         $this->saveSnapshot($snapshot);
         $this->rotateSnapshots();
