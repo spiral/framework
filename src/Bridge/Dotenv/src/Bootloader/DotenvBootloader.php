@@ -19,7 +19,7 @@ final class DotenvBootloader extends Bootloader
         DirectoriesInterface $dirs,
         EnvironmentInterface $env
     ): void {
-        $kernel->running(fn() => $this->loadEnvVariables($dirs, $env));
+        $kernel->running(fn () => $this->loadEnvVariables($dirs, $env));
         $this->loadEnvVariables($dirs, $env);
     }
 
@@ -31,9 +31,9 @@ final class DotenvBootloader extends Bootloader
 
         $this->init = true;
 
-        $dotenvPath = $env->get('DOTENV_PATH', $dirs->get('root').'.env');
+        $dotenvPath = $env->get('DOTENV_PATH', $dirs->get('root') . '.env');
 
-        if (! \file_exists($dotenvPath)) {
+        if (!\file_exists($dotenvPath)) {
             return;
         }
 
