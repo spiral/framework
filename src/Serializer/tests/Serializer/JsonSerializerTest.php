@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Serializer\Serializer;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Serializer\Exception\InvalidArgumentException;
 use Spiral\Serializer\Exception\UnserializeException;
 use Spiral\Serializer\Serializer\JsonSerializer;
 
@@ -24,11 +25,19 @@ final class JsonSerializerTest extends TestCase
         }));
     }
 
-    public function testUnserializeException(): void
+    public function testObjectPassedException(): void
+    {
+        $serializer = new JsonSerializer();
+
+        $this->expectException(InvalidArgumentException::class);
+        $serializer->unserialize('', \stdClass::class);
+    }
+
+    public function testBadPayloadException(): void
     {
         $serializer = new JsonSerializer();
 
         $this->expectException(UnserializeException::class);
-        $serializer->unserialize('', \stdClass::class);
+        $serializer->unserialize('["some","elements');
     }
 }
