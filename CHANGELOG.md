@@ -169,6 +169,8 @@
     They no longer need to be specified explicitly in `DEPENDENCIES` property or in `defineDependencies` method.
   - [spiral/monolog-bridge] Added the ability to configure the default channel using the configuration file or
     environment variable `MONOLOG_DEFAULT_CHANNEL`.
+  - [spiral/serializer] Added a new spiral/serializer component. Contains an interface and a minimal implementation 
+    that can be extended by external serializers.
 
 ## v2.14.0 - Unreleased
 - **High Impact Changes**

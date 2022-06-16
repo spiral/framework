@@ -15,7 +15,6 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Core\QueueInjector;
-use Spiral\Queue\DefaultSerializer;
 use Spiral\Queue\Driver\NullDriver;
 use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
@@ -25,7 +24,6 @@ use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
-use Spiral\Queue\SerializerInterface;
 
 final class QueueBootloader extends Bootloader
 {
@@ -45,7 +43,6 @@ final class QueueBootloader extends Bootloader
     public function init(Container $container, EnvironmentInterface $env, AbstractKernel $kernel): void
     {
         $this->initQueueConfig($env);
-        $this->registerJobsSerializer($container);
         $this->registerQueue($container);
 
         $this->registerDriverAlias(SyncDriver::class, 'sync');
@@ -77,11 +74,6 @@ final class QueueBootloader extends Bootloader
     protected function initRegistry(ContainerInterface $container, ContainerRegistry $registry)
     {
         return new QueueRegistry($container, $registry);
-    }
-
-    private function registerJobsSerializer(Container $container): void
-    {
-        $container->bindSingleton(SerializerInterface::class, static fn () => new DefaultSerializer());
     }
 
     private function registerQueue(Container $container): void
