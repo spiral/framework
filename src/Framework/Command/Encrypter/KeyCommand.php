@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Spiral\Command\Encrypter;
 
 use Spiral\Console\Command;
+use Spiral\Console\Confirmation\ApplicationInProduction;
 use Spiral\Encrypter\EncrypterFactory;
 use Spiral\Files\FilesInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 final class KeyCommand extends Command
 {
-    protected const NAME        = 'encrypt:key';
+    protected const NAME = 'encrypt:key';
     protected const DESCRIPTION = 'Generate new encryption key';
-    protected const OPTIONS     = [
+    protected const OPTIONS = [
         [
             'mount',
             'm',
@@ -29,8 +30,11 @@ final class KeyCommand extends Command
         ],
     ];
 
-    public function perform(EncrypterFactory $enc, FilesInterface $files): int
-    {
+    public function perform(
+        EncrypterFactory $enc,
+        FilesInterface $files,
+        ApplicationInProduction $confirmation
+    ): int {
         $key = $enc->generateKey();
 
         $this->sprintf("<info>New encryption key:</info> <fg=cyan>%s</fg=cyan>\n", $key);
@@ -40,8 +44,13 @@ final class KeyCommand extends Command
             return self::SUCCESS;
         }
 
+        if (!$confirmation->confirmToProceed()) {
+            return self::FAILURE;
+        }
+
         if (!$files->exists($file)) {
-            $this->sprintf('<error>Unable to find `%s`</error>', $file);
+            $this->error(\sprintf('Unable to find `%s`.', $file));
+
             return self::FAILURE;
         }
 
@@ -56,7 +65,7 @@ final class KeyCommand extends Command
 
         $files->write($file, $content);
 
-        $this->writeln('<comment>Encryption key has been updated.</comment>');
+        $this->comment('Encryption key has been updated.');
 
         return self::SUCCESS;
     }

@@ -54,10 +54,6 @@ abstract class Command extends SymfonyCommand
         try {
             [$this->input, $this->output] = [$input, $output];
 
-            if (!$this->confirmToPerform()) {
-                return Command::FAILURE;
-            }
-
             // Executing perform method with method injection
             return (int)$invoker->invoke([$this, $method], \compact('input', 'output'));
         } finally {
@@ -116,40 +112,5 @@ abstract class Command extends SymfonyCommand
     protected function defineArguments(): array
     {
         return static::ARGUMENTS;
-    }
-
-    /**
-     * @deprecated will be replaced with attributes
-     */
-    protected function getConfirmationDefinition(): ?ConfirmationDefinitionInterface
-    {
-        return null;
-    }
-
-    /**
-     * Will be redesigned in the future for using attributes with different types of confirmation.
-     */
-    private function confirmToPerform(): bool
-    {
-        $definition = $this->getConfirmationDefinition();
-        if ($definition === null || !$definition->shouldBeConfirmed()) {
-            return true;
-        }
-
-        if ($this->hasOption('force') && $this->option('force')) {
-            return true;
-        }
-
-        $this->alert($definition->getWarningMessage());
-
-        $confirmed = $this->confirm(\sprintf('Do you really wish to run command [%s]?', $this->getName()));
-
-        if (!$confirmed) {
-            $this->comment('Command Canceled!');
-
-            return false;
-        }
-
-        return true;
     }
 }
