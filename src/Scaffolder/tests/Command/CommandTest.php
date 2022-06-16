@@ -44,6 +44,7 @@ class CommandTest extends AbstractCommandTest
 
         $reflection = new ReflectionClass($className);
         $content = $this->files()->read($reflection->getFileName());
+        $classNameParts = \explode('\\', $className);
 
         $this->assertStringContainsString('strict_types=1', $content);
         $this->assertStringContainsString('{project-name}', $content);
@@ -55,6 +56,7 @@ class CommandTest extends AbstractCommandTest
         $this->assertTrue($reflection->hasConstant('OPTIONS'));
         $this->assertSame($alias ?? $name, $reflection->getConstant('NAME'));
         $this->assertSame('My sample command description', $reflection->getConstant('DESCRIPTION'));
+        $this->assertSame($classNameParts[\array_key_last($classNameParts)], $reflection->getShortName());
 
         $this->deleteDeclaration($className);
     }
@@ -63,6 +65,7 @@ class CommandTest extends AbstractCommandTest
     {
         return [
             ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleCommand', 'sample', null],
+            ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SomeCommand', 'SomeCommand', null],
             ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleAliasCommand', 'sampleAlias', 'my-sample-command-alias'],
         ];
     }
