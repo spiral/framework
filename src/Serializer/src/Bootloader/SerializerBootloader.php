@@ -22,6 +22,7 @@ final class SerializerBootloader extends Bootloader
     protected const SINGLETONS = [
         SerializerManager::class => [self::class, 'initSerializerManager'],
         SerializerRegistryInterface::class => [self::class, 'initSerializerRegistry'],
+        SerializerInterface::class => SerializerManager::class,
     ];
 
     public function __construct(
@@ -59,7 +60,7 @@ final class SerializerBootloader extends Bootloader
             'default' => $env->get('DEFAULT_SERIALIZER_FORMAT', SerializerConfig::DEFAULT_SERIALIZER),
             'serializers' => [
                 'json' => new JsonSerializer(),
-                'serialize' => new PhpSerializer(),
+                'serializer' => new PhpSerializer(),
             ],
         ]);
     }

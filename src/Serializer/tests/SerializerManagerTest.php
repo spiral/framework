@@ -18,14 +18,14 @@ final class SerializerManagerTest extends TestCase
     protected function setUp(): void
     {
         $this->serializer = new SerializerManager(new SerializerRegistry([
-            'serialize' => new PhpSerializer(),
+            'serializer' => new PhpSerializer(),
             'json' => new JsonSerializer(),
         ]), 'json');
     }
 
     public function testGetSerializer(): void
     {
-        $this->assertInstanceOf(PhpSerializer::class, $this->serializer->getSerializer('serialize'));
+        $this->assertInstanceOf(PhpSerializer::class, $this->serializer->getSerializer('serializer'));
         $this->assertInstanceOf(JsonSerializer::class, $this->serializer->getSerializer('json'));
 
         // default serializer
@@ -59,7 +59,7 @@ final class SerializerManagerTest extends TestCase
     public function serializeDataProvider(): \Traversable
     {
         yield [['some', 'elements'], '["some","elements"]', 'json'];
-        yield [['some', 'elements'], 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', 'serialize'];
+        yield [['some', 'elements'], 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', 'serializer'];
         yield [['some', 'elements'], '["some","elements"]'];
     }
 
@@ -72,13 +72,13 @@ final class SerializerManagerTest extends TestCase
                 return '["some","elements"]';
             }
         }, ['some', 'elements'], 'json'];
-        yield ['a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', ['some', 'elements'], 'serialize'];
+        yield ['a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', ['some', 'elements'], 'serializer'];
         yield [new class() implements \Stringable {
             public function __toString(): string
             {
                 return 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}';
             }
-        }, ['some', 'elements'], 'serialize'];
+        }, ['some', 'elements'], 'serializer'];
         yield ['["some","elements"]', ['some', 'elements']];
     }
 }

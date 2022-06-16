@@ -30,12 +30,12 @@ final class SerializerBootloaderTest extends TestCase
     {
         $this->configureSerializer([
             'json' => new JsonSerializer(),
-            'serialize' => new PhpSerializer(),
+            'serializer' => new PhpSerializer(),
         ]);
 
         $manager = $this->container->get(SerializerManager::class);
         $this->assertInstanceOf(SerializerManager::class, $manager);
-        $this->assertInstanceOf(PhpSerializer::class, $manager->getSerializer('serialize'));
+        $this->assertInstanceOf(PhpSerializer::class, $manager->getSerializer('serializer'));
         $this->assertInstanceOf(JsonSerializer::class, $manager->getSerializer('json'));
 
         $this->expectException(SerializerNotFoundException::class);
@@ -55,7 +55,7 @@ final class SerializerBootloaderTest extends TestCase
 
         $this->expectException(SerializerNotFoundException::class);
         $manager->getSerializer('foo');
-        $manager->getSerializer('serialize');
+        $manager->getSerializer('serializer');
         $manager->getSerializer('json');
     }
 
