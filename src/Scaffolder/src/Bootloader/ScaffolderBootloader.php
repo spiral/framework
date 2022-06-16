@@ -35,7 +35,6 @@ class ScaffolderBootloader extends Bootloader
         $console->addCommand(Command\CommandCommand::class);
         $console->addCommand(Command\ConfigCommand::class);
         $console->addCommand(Command\ControllerCommand::class);
-        $console->addCommand(Command\FilterCommand::class);
         $console->addCommand(Command\JobHandlerCommand::class);
         $console->addCommand(Command\MiddlewareCommand::class);
 
@@ -106,69 +105,6 @@ class ScaffolderBootloader extends Bootloader
                     'namespace' => 'Job',
                     'postfix'   => 'Job',
                     'class'     => Declaration\JobHandlerDeclaration::class,
-                ],
-                Declaration\FilterDeclaration::TYPE => [
-                    'namespace' => 'Request',
-                    'postfix'   => 'Request',
-                    'class'     => Declaration\FilterDeclaration::class,
-                    'options'   => [
-                        //Set of default filters and validate rules for various types
-                        'mapping' => [
-                            'int'     => [
-                                'source'    => 'data',
-                                'setter'    => 'intval',
-                                'validates' => ['notEmpty', 'integer'],
-                            ],
-                            'integer' => [
-                                'source'    => 'data',
-                                'setter'    => 'intval',
-                                'validates' => ['notEmpty', 'integer'],
-                            ],
-                            'float'   => [
-                                'source'    => 'data',
-                                'setter'    => 'floatval',
-                                'validates' => ['notEmpty', 'float'],
-                            ],
-                            'double'  => [
-                                'source'    => 'data',
-                                'setter'    => 'floatval',
-                                'validates' => ['notEmpty', 'float'],
-                            ],
-                            'string'  => [
-                                'source'    => 'data',
-                                'setter'    => 'strval',
-                                'validates' => ['notEmpty', 'string'],
-                            ],
-                            'bool'    => [
-                                'source'    => 'data',
-                                'setter'    => 'boolval',
-                                'validates' => ['notEmpty', 'boolean'],
-                            ],
-                            'boolean' => [
-                                'source'    => 'data',
-                                'setter'    => 'boolval',
-                                'validates' => ['notEmpty', 'boolean'],
-                            ],
-                            'email'   => [
-                                'source'    => 'data',
-                                'setter'    => 'strval',
-                                'validates' => ['notEmpty', 'string', 'email'],
-                            ],
-                            'file'    => [
-                                'source'    => 'file',
-                                'validates' => ['file::uploaded'],
-                            ],
-                            'image'   => [
-                                'source'    => 'file',
-                                'validates' => ['image::uploaded', 'image::valid'],
-                            ],
-                            null      => [
-                                'source'    => 'data',
-                                'setter'    => 'strval',
-                                'validates' => ['notEmpty', 'string'],
-                            ],
-                        ],
-                    ],
                 ],
             ],
         ]);

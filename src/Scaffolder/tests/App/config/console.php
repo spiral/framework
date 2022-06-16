@@ -19,7 +19,6 @@ return [
         Command\ConfigCommand::class,
         Command\JobHandlerCommand::class,
         Command\ControllerCommand::class,
-        Command\FilterCommand::class,
         Command\MiddlewareCommand::class,
     ]
 ];
