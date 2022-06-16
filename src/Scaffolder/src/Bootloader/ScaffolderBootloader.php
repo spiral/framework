@@ -50,11 +50,7 @@ class ScaffolderBootloader extends Bootloader
              * This is set of comment lines to be applied to every scaffolded file, you can use env() function
              * to make it developer specific or set one universal pattern per project.
              */
-            'header'       => [
-                '{project-name}',
-                '',
-                '@author {author-name}',
-            ],
+            'header'       => [],
 
             /*
              * Base directory for generated classes, class will be automatically localed into sub directory

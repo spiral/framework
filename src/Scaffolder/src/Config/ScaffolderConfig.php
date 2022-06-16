@@ -36,7 +36,10 @@ class ScaffolderConfig extends InjectableConfig
     {
         ['name' => $name] = $this->parseName($name);
 
-        return $this->classify($name) . $this->elementPostfix($element);
+        $class = $this->classify($name);
+        $postfix = $this->elementPostfix($element);
+
+        return \str_ends_with($class, $postfix) ? $class : $class . $postfix;
     }
 
     public function classNamespace(string $element, string $name = ''): string
