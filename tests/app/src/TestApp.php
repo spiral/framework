@@ -11,12 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\App;
 
-use Psr\Container\ContainerInterface;
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\App\Bootloader\AuthBootloader;
 use Spiral\App\Bootloader\RoutesBootloader;
 use Spiral\Bootloader;
-use Spiral\Bootloader\ExceptionHandlerBootloader;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
 use Spiral\Nyholm\Bootloader\NyholmBootloader;
@@ -73,7 +71,6 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         Bootloader\CommandBootloader::class,
 
         // Debug and debug extensions
-        ExceptionHandlerBootloader::class,
         Bootloader\DebugBootloader::class,
         Bootloader\Debug\LogCollectorBootloader::class,
         Bootloader\Debug\HttpCollectorBootloader::class
