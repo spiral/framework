@@ -19,7 +19,7 @@ class SerializerManager implements SerializerInterface
 
     public function serialize(mixed $payload, ?string $format = null): string|\Stringable
     {
-        return $this->getSerializer($format ?? $this->defaultFormat)->serialize($payload, $format);
+        return $this->getSerializer($format ?? $this->defaultFormat)->serialize($payload);
     }
 
     public function unserialize(
@@ -27,6 +27,6 @@ class SerializerManager implements SerializerInterface
         string|object|null $type = null,
         ?string $format = null
     ): mixed {
-        return $this->getSerializer($format ?? $this->defaultFormat)->unserialize($payload, $type, $format);
+        return $this->getSerializer($format ?? $this->defaultFormat)->unserialize($payload, $type);
     }
 }
