@@ -56,4 +56,26 @@ class KernelTest extends BaseTest
         $this->assertSame($container, $app->getContainer());
         $this->assertInstanceOf(stdClass::class, $app->getContainer()->get('foofoo'));
     }
+
+    public function testRunningCallbackShouldBeFired(): void
+    {
+        $this->initApp();
+
+        $callback1 = false;
+        $callback2 = false;
+
+        $kernel = TestApp::create(['root' => __DIR__.'/../..']);
+        $kernel->running(static function () use (&$callback1): void {
+            $callback1 = true;
+        });
+
+        $kernel->running(static function () use (&$callback2): void {
+            $callback2 = true;
+        });
+
+        $kernel->run();
+
+        $this->assertTrue($callback1);
+        $this->assertTrue($callback2);
+    }
 }

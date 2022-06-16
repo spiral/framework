@@ -37,6 +37,9 @@ abstract class AbstractKernel implements KernelInterface
     protected array $dispatchers = [];
 
     /** @var array<Closure> */
+    private array $runningCallbacks = [];
+
+    /** @var array<Closure> */
     private array $bootingCallbacks = [];
 
     /** @var array<Closure> */
@@ -119,6 +122,8 @@ abstract class AbstractKernel implements KernelInterface
         $environment ??= new Environment();
         $this->container->bindSingleton(EnvironmentInterface::class, $environment);
 
+        $this->fireCallbacks($this->runningCallbacks);
+
         try {
             // will protect any against env overwrite action
             $this->container->runScope(
@@ -138,14 +143,27 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
+     * Register a new callback, that will be fired before framework run.
+     * (After SYSTEM bootloaders, before bootloaders in LOAD section)
+     *
+     * $kernel->running(static function(KernelInterface $kernel) {
+     *     $kernel->getContainer()->...
+     * });
+     */
+    public function running(Closure ...$callbacks): void
+    {
+        foreach ($callbacks as $callback) {
+            $this->runningCallbacks[] = $callback;
+        }
+    }
+
+    /**
      * Register a new callback, that will be fired before framework bootloaders boot.
-     * (Before all framework bootloaders will be booted)
+     * (Before all framework bootloaders in LOAD section will be booted)
      *
      * $kernel->booting(static function(KernelInterface $kernel) {
      *     $kernel->getContainer()->...
      * });
-     *
-     * @internal
      */
     public function booting(Closure ...$callbacks): void
     {
@@ -156,13 +174,11 @@ abstract class AbstractKernel implements KernelInterface
 
     /**
      * Register a new callback, that will be fired after framework bootloaders booted.
-     * (After booting all framework bootloaders)
+     * (After booting all framework bootloaders in LOAD section)
      *
      * $kernel->booted(static function(KernelInterface $kernel) {
      *     $kernel->getContainer()->...
      * });
-     *
-     * @internal
      */
     public function booted(Closure ...$callbacks): void
     {
