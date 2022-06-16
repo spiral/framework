@@ -12,6 +12,9 @@ use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\RouterException;
 use Spiral\Router\Exception\UndefinedRouteException;
+use Spiral\Router\Loader\Configurator\RouteConfigurator;
+use Spiral\Router\Loader\Configurator\RoutingConfigurator;
+use Spiral\Router\Target\AbstractTarget;
 
 /**
  * Manages set of routes.
@@ -103,6 +106,39 @@ final class Router implements RouterInterface
             //In some cases route name can be provided as controller:action pair, we can try to
             //generate such route automatically based on our default/fallback route
             return $this->castRoute($route)->uri($parameters);
+        }
+    }
+
+    public function import(RoutingConfigurator $routes): void
+    {
+        $groups = $this->container->get(GroupRegistry::class);
+
+        /** @var RouteConfigurator $configurator */
+        foreach ($routes->getCollection() as $name => $configurator) {
+            $target = $configurator->target;
+            if ($configurator->core !== null && $target instanceof AbstractTarget) {
+                $target = $target->withCore($configurator->core);
+            }
+
+            $route = new Route(
+                $configurator->prefix . '/' . \ltrim($configurator->pattern, '/'),
+                $target,
+                $configurator->defaults
+            );
+
+            if ($configurator->middleware !== null) {
+                $route = $route->withMiddleware(...$configurator->middleware);
+            }
+
+            if (!isset($this->routes[$name]) && $name !== RoutingConfigurator::DEFAULT_ROUTE_NAME) {
+                $groups->getGroup($configurator->group ?? $groups->getDefaultGroup())->addRoute($name, $route);
+
+                $this->setRoute($name, $route);
+            }
+
+            if ($name === RoutingConfigurator::DEFAULT_ROUTE_NAME) {
+                $this->setDefault($route);
+            }
         }
     }
 

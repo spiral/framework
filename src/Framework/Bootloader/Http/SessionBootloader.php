@@ -10,7 +10,6 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Handler\FileHandler;
-use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionFactoryInterface;
 
@@ -49,7 +48,6 @@ final class SessionBootloader extends Bootloader
 
         $session = $config->getConfig(SessionConfig::CONFIG);
 
-        $http->addMiddleware(SessionMiddleware::class);
         $cookies->whitelistCookie($session['cookie']);
     }
 }

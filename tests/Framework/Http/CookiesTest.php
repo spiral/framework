@@ -7,9 +7,7 @@ namespace Spiral\Tests\Framework\Http;
 use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
 use Spiral\Core\Exception\ScopeException;
-use Spiral\Encrypter\EncrypterFactory;
 use Spiral\Encrypter\EncrypterInterface;
-use Spiral\Http\Http;
 use Spiral\Tests\Framework\HttpTest;
 
 final class CookiesTest extends HttpTest
@@ -17,6 +15,13 @@ final class CookiesTest extends HttpTest
     public const ENV = [
         'ENCRYPTER_KEY' => self::ENCRYPTER_KEY,
     ];
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->enableMiddlewares();
+    }
 
     public function testOutsideOfScopeOK(): void
     {

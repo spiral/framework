@@ -21,12 +21,9 @@ final class HttpCollectorBootloader extends Bootloader
 
     public function init(
         HttpCollector $httpCollector,
-        HttpBootloader $http,
         DebugBootloader $debug,
         FinalizerInterface $finalizer
     ): void {
-        $http->addMiddleware(HttpCollector::class);
-
         $debug->addStateCollector($httpCollector);
         $finalizer->addFinalizer([$httpCollector, 'reset']);
     }

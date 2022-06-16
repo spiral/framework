@@ -9,7 +9,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterface;
 use Spiral\Http\Pipeline;
-use Spiral\Router\Target\Action;
+use Spiral\Router\Target\AbstractTarget;
 
 /**
  * RouteGroup provides the ability to configure multiple routes to controller/actions using same presets.
@@ -17,13 +17,17 @@ use Spiral\Router\Target\Action;
 final class RouteGroup
 {
     private string $prefix = '';
+
+    /** @var string[] */
     private array $routes = [];
+
     private ?CoreInterface $core = null;
 
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly RouterInterface $router,
-        private readonly Pipeline $pipeline
+        private readonly Pipeline $pipeline,
+        private readonly UriHandler $handler
     ) {
     }
 
@@ -74,55 +78,44 @@ final class RouteGroup
     }
 
     /**
-     * Register route to group.
-     */
-    public function registerRoute(
-        string $name,
-        string $pattern,
-        string $controller,
-        string $action,
-        array $verbs,
-        array $defaults,
-        array $middleware
-    ): void {
-        $this->routes[$name] = [
-            'pattern'    => $pattern,
-            'controller' => $controller,
-            'action'     => $action,
-            'verbs'      => $verbs,
-            'defaults'   => $defaults,
-            'middleware' => $middleware,
-        ];
-    }
-
-    /**
      * Push routes to router.
+     *
+     * @internal
      */
     public function flushRoutes(): void
     {
-        foreach ($this->routes as $name => $schema) {
-            $route = $this->createRoute($schema['pattern'], $schema['controller'], $schema['action']);
-
-            if ($schema['defaults'] !== []) {
-                $route = $route->withDefaults($schema['defaults']);
-            }
-
-            $this->router->setRoute(
-                $name,
-                $route->withVerbs(...$schema['verbs'])->withMiddleware(...$schema['middleware'])
-            );
+        foreach ($this->routes as $name) {
+            $this->router->setRoute($name, $this->applyGroupParams($this->router->getRoute($name)));
         }
     }
 
-    public function createRoute(string $pattern, string $controller, string $action): Route
+    /**
+     * Add a route to a route group.
+     */
+    public function addRoute(string $name, Route $route): self
     {
-        $actionObject = new Action($controller, $action);
+        $this->routes[] = $name;
+
+        $this->router->setRoute($name, $this->applyGroupParams($route));
+
+        return $this;
+    }
+
+    private function applyGroupParams(Route $route): Route
+    {
         if ($this->core !== null) {
-            $actionObject = $actionObject->withCore($this->core);
+            $target = $route->getTarget();
+
+            if ($target instanceof AbstractTarget) {
+                return $route
+                    ->withTarget($target->withCore($this->core))
+                    ->withUriHandler($this->handler->withPrefix($this->prefix))
+                    ->withPipeline($this->pipeline);
+            }
         }
 
-        return (new Route($this->prefix . $pattern, $actionObject))
-            // all routes within group share the same middleware pipeline
-            ->withMiddleware($this->pipeline);
+        return $route
+            ->withUriHandler($this->handler->withPrefix($this->prefix))
+            ->withPipeline($this->pipeline);
     }
 }

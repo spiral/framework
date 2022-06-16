@@ -26,7 +26,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
 #[\Attribute(\Attribute::TARGET_METHOD), NamedArgumentConstructor]
 final class Route
 {
-    public const DEFAULT_GROUP = 'default';
+    public const DEFAULT_GROUP = 'web';
 
     /**
      * @psalm-param non-empty-string $route

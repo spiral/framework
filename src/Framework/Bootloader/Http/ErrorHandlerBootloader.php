@@ -17,9 +17,4 @@ final class ErrorHandlerBootloader extends Bootloader
         ErrorHandlerMiddleware\SuppressErrorsInterface::class => ErrorHandlerMiddleware\EnvSuppressErrors::class,
         ErrorHandler\RendererInterface::class                 => ErrorHandler\PlainRenderer::class,
     ];
-
-    public function init(HttpBootloader $http): void
-    {
-        $http->addMiddleware(ErrorHandlerMiddleware::class);
-    }
 }

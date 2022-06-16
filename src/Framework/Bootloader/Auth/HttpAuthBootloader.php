@@ -6,12 +6,10 @@ namespace Spiral\Bootloader\Auth;
 
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\HttpTransportInterface;
-use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\Transport\CookieTransport;
 use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\Autowire;
@@ -37,10 +35,8 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function init(HttpBootloader $http): void
+    public function init(): void
     {
-        $http->addMiddleware(AuthMiddleware::class);
-
         $this->config->setDefaults(
             AuthConfig::CONFIG,
             [

@@ -7,7 +7,6 @@ namespace Spiral\Bootloader\Http;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Http\Middleware\JsonPayloadMiddleware;
 
 final class JsonPayloadsBootloader extends Bootloader
 {
@@ -26,8 +25,6 @@ final class JsonPayloadsBootloader extends Bootloader
                 ],
             ]
         );
-
-        $http->addMiddleware(JsonPayloadMiddleware::class);
     }
 
     /**

@@ -10,7 +10,6 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
-use Spiral\Cookies\Middleware\CookiesMiddleware;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\ScopeException;
 
@@ -35,8 +34,6 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
                 'excluded' => ['PHPSESSID', 'csrf-token'],
             ]
         );
-
-        $http->addMiddleware(CookiesMiddleware::class);
     }
 
     /**

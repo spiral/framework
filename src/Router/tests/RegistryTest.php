@@ -1,30 +1,22 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
-use Spiral\Core\Container;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\UriHandler;
 
-class RegistryTest extends TestCase
+final class RegistryTest extends BaseTest
 {
     public function testSameGroup(): void
     {
-        $registry = new GroupRegistry($c = new Container());
-        $router = new Router('/', new UriHandler(new Psr17Factory()), new Container());
-        $c->bind(RouterInterface::class, $router);
+        $registry = new GroupRegistry($this->container);
+        $router = new Router('/', new UriHandler(new Psr17Factory()), $this->container);
+        $this->container->bind(RouterInterface::class, $router);
 
         $group = $registry->getGroup('default');
         $this->assertSame($group, $registry->getGroup('default'));
