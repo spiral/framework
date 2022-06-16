@@ -7,7 +7,6 @@ namespace Spiral\Tests\Exceptions\Reporter;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Spiral\Core\Container;
 use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\Reporter\LoggerReporter;
 
@@ -22,8 +21,6 @@ final class LoggerReporterTest extends TestCase
     {
         $exception = new \Exception();
 
-        $container = new Container();
-
         $logger = m::mock(LoggerInterface::class);
         $logger->shouldReceive('error')->withArgs([\sprintf(
             '%s: %s in %s at line %s',
@@ -32,7 +29,6 @@ final class LoggerReporterTest extends TestCase
             $exception->getFile(),
             $exception->getLine()
         )])->once();
-        $container->bind(LoggerInterface::class, $logger);
 
         $handler = new class extends ExceptionHandler {
             protected function bootBasicHandlers(): void
@@ -40,7 +36,7 @@ final class LoggerReporterTest extends TestCase
             }
         };
 
-        $handler->addReporter(new LoggerReporter($container));
+        $handler->addReporter(new LoggerReporter($logger));
 
         $handler->report($exception);
 
@@ -55,7 +51,7 @@ final class LoggerReporterTest extends TestCase
             }
         };
 
-        $handler->addReporter(new LoggerReporter(new Container()));
+        $handler->addReporter(new LoggerReporter());
 
         $handler->report(new \Exception());
 

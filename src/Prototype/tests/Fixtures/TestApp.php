@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\Fixtures;
 
-use Spiral\Bootloader\ExceptionHandlerBootloader;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Framework\Kernel;
