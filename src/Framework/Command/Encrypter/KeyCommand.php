@@ -49,7 +49,7 @@ final class KeyCommand extends Command
         }
 
         if (!$files->exists($file)) {
-            $this->error(\sprintf('Unable to find `%s`', $file));
+            $this->error(\sprintf('Unable to find `%s`.', $file));
 
             return self::FAILURE;
         }
