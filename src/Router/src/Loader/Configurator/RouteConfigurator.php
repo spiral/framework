@@ -19,9 +19,10 @@ final class RouteConfigurator
 {
     private array $defaults = [];
     private ?string $group = null;
+    private ?array $methods = null;
     private string $prefix = '';
     private ?CoreInterface $core = null;
-    private MiddlewareInterface|string|array|null $middleware = null;
+    private ?array $middleware = null;
 
     /** @var string|callable|RequestHandlerInterface|TargetInterface */
     private mixed $target = null;
@@ -58,6 +59,7 @@ final class RouteConfigurator
             'defaults' => $this->defaults,
             'group' => $this->group,
             'middleware' => $this->middleware,
+            'methods' => $this->methods,
             'pattern' => $this->pattern,
             'prefix' => \trim($this->prefix, '/'),
             default => throw new \BadMethodCallException(\sprintf('Unable to access %s.', $name))
@@ -136,7 +138,18 @@ final class RouteConfigurator
 
     public function middleware(MiddlewareInterface|string|array $middleware): self
     {
-        $this->middleware = (array) $middleware;
+        if (!\is_array($middleware)) {
+            $middleware = [$middleware];
+        }
+
+        $this->middleware = $middleware;
+
+        return $this;
+    }
+
+    public function methods(string|array $methods): self
+    {
+        $this->methods = (array) $methods;
 
         return $this;
     }

@@ -130,6 +130,10 @@ final class Router implements RouterInterface
                 $route = $route->withMiddleware(...$configurator->middleware);
             }
 
+            if ($configurator->methods !== null) {
+                $route = $route->withVerbs(...$configurator->methods);
+            }
+
             if (!isset($this->routes[$name]) && $name !== RoutingConfigurator::DEFAULT_ROUTE_NAME) {
                 $groups->getGroup($configurator->group ?? $groups->getDefaultGroup())->addRoute($name, $route);
 
