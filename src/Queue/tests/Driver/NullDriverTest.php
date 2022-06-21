@@ -30,14 +30,4 @@ final class NullDriverTest extends TestCase
         $id = $this->queue->pushObject($object);
         $this->assertNotNull($id);
     }
-
-    public function testJobCallableShouldBePushed(): void
-    {
-        $callback = function () {
-            return 'bar';
-        };
-
-        $id = $this->queue->pushCallable($callback);
-        $this->assertNotNull($id);
-    }
 }

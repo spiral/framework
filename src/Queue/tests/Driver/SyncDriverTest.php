@@ -7,7 +7,6 @@ namespace Spiral\Tests\Queue\Driver;
 use Mockery as m;
 use Spiral\Queue\HandlerInterface;
 use Spiral\Queue\HandlerRegistryInterface;
-use Spiral\Queue\Job\CallableJob;
 use Spiral\Queue\Job\ObjectJob;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\Driver\SyncDriver;
@@ -57,23 +56,6 @@ final class SyncDriverTest extends TestCase
         $handler->shouldReceive('handle')->withSomeOfArgs(ObjectJob::class, ['object' => $object]);
 
         $id = $this->queue->pushObject($object);
-
-        $this->assertNotNull($id);
-    }
-
-    public function testJobCallableShouldBePushed(): void
-    {
-        $this->registry->shouldReceive('getHandler')->with(CallableJob::class)->once()->andReturn(
-            $handler = m::mock(HandlerInterface::class)
-        );
-
-        $callback = function () {
-            return 'bar';
-        };
-
-        $handler->shouldReceive('handle')->withSomeOfArgs(CallableJob::class, ['callback' => $callback]);
-
-        $id = $this->queue->pushCallable($callback);
 
         $this->assertNotNull($id);
     }

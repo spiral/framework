@@ -152,6 +152,7 @@
   - [spiral/views] Bootloader `Spiral\Bootloader\Views\ViewsBootloader` moved to the `Spiral\Views\Bootloader\ViewsBootloader`.
   - [spiral/boot] By default, overwriting of environment variable values is disabled, the default value for `$overwrite`
     changed from `true` to `false` in the `Spiral\Boot\Environment`.
+  - [spiral/queue] Removed method `pushCallable` in `Spiral\Queue\QueueTrait`.
 - **Medium Impact Changes**
   - A minimal version of `PHP` increased to `^8.1`
   - A minimal version of `symfony/finder` increased to `^5.3`
