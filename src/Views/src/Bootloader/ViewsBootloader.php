@@ -6,6 +6,7 @@ namespace Spiral\Views\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\Environment\DebugMode;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
@@ -31,7 +32,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function init(EnvironmentInterface $env, DirectoriesInterface $dirs): void
+    public function init(EnvironmentInterface $env, DirectoriesInterface $dirs, DebugMode $debugMode): void
     {
         if (!$dirs->has('views')) {
             $dirs->set('views', $dirs->get('app') . 'views');
@@ -42,7 +43,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
             ViewsConfig::CONFIG,
             [
                 'cache'        => [
-                    'enabled'   => $env->get('VIEW_CACHE', !$env->get('DEBUG', false)),
+                    'enabled'   => $env->get('VIEW_CACHE', !$debugMode->isEnabled()),
                     'directory' => $dirs->get('cache') . 'views',
                 ],
                 'namespaces'   => [
