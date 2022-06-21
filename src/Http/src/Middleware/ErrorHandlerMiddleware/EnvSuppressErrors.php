@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Middleware\ErrorHandlerMiddleware;
 
-use Spiral\Boot\EnvironmentInterface;
+use Spiral\Boot\Environment\DebugMode;
 
 class EnvSuppressErrors implements SuppressErrorsInterface
 {
     public function __construct(
-        private EnvironmentInterface $environment
+        private DebugMode $debugMode
     ) {
     }
 
     public function suppressed(): bool
     {
-        return !$this->environment->get('DEBUG', false);
+        return !$this->debugMode->isEnabled();
     }
 }

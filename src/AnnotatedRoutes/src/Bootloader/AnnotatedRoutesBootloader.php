@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Router\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Environment\DebugMode;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
@@ -30,7 +31,7 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
     ];
 
     public function __construct(
-        private readonly MemoryInterface $memory,
+        private readonly MemoryInterface $memory
     ) {
     }
 
@@ -39,9 +40,13 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
         $console->addCommand(ResetCommand::class);
     }
 
-    public function boot(EnvironmentInterface $env, RouteLocator $locator, GroupRegistry $groups): void
-    {
-        $cached = $env->get('ROUTE_CACHE', !$env->get('DEBUG'));
+    public function boot(
+        EnvironmentInterface $env,
+        RouteLocator $locator,
+        GroupRegistry $groups,
+        DebugMode $debugMode
+    ): void {
+        $cached = $env->get('ROUTE_CACHE', !$debugMode->isEnabled());
 
         $schema = $this->memory->loadData(self::MEMORY_SECTION);
         if (empty($schema) || !$cached) {

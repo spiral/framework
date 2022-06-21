@@ -6,6 +6,7 @@ namespace Spiral\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\Environment\DebugMode;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\SingletonInterface;
@@ -42,7 +43,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function init(EnvironmentInterface $env, DirectoriesInterface $dirs): void
+    public function init(EnvironmentInterface $env, DirectoriesInterface $dirs, DebugMode $debugMode): void
     {
         if (!$dirs->has('locale')) {
             $dirs->set('locale', $dirs->get('app') . 'locale/');
@@ -54,7 +55,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
                 'locale'         => $env->get('LOCALE', 'en'),
                 'fallbackLocale' => $env->get('LOCALE', 'en'),
                 'directory'      => $dirs->get('locale'),
-                'autoRegister'   => $env->get('DEBUG', true),
+                'autoRegister'   => $debugMode->isEnabled(),
                 'loaders'        => [
                     'php'  => Loader\PhpFileLoader::class,
                     'po'   => Loader\PoFileLoader::class,
