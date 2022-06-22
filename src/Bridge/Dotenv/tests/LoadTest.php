@@ -24,46 +24,31 @@ final class LoadTest extends TestCase
 
     public function testUseKernelCallback(): void
     {
-        $k = m::mock(AbstractKernel::class);
-        $k->shouldReceive('running')->once()->andReturnUsing(fn(\Closure $callback) => $callback());
-
         $d = new Directories(['root' => __DIR__.'/']);
 
         $e = m::mock(EnvironmentInterface::class);
         $e->shouldReceive('get')->once()->withSomeOfArgs('DOTENV_PATH')->andReturn($d->get('root').'.env.custom');
         $e->shouldReceive('set')->once()->with('KEY', 'custom_value');
 
+        $k = m::mock(AbstractKernel::class);
+        $k->shouldReceive('running')->once()->andReturnUsing(fn(\Closure $callback) => $callback($e));
+
         $b = new DotenvBootloader();
-        $b->init($k, $d, $e);
+        $b->init($k, $d);
     }
 
     public function testNotFound(): void
     {
-        $k = m::mock(AbstractKernel::class);
-        $k->shouldReceive('running')->once();
-
         $d = new Directories(['root' => __DIR__.'/']);
 
         $e = m::mock(EnvironmentInterface::class);
         $e->shouldReceive('get')->once()->withSomeOfArgs('DOTENV_PATH')->andReturn($d->get('root').'.env');
         $e->shouldNotReceive('set')->with('KEY', 'custom_value');
 
-        $b = new DotenvBootloader();
-        $b->init($k, $d, $e);
-    }
-
-    public function testFoundCustom(): void
-    {
         $k = m::mock(AbstractKernel::class);
-        $k->shouldReceive('running')->once();
-
-        $d = new Directories(['root' => __DIR__.'/']);
-
-        $e = m::mock(EnvironmentInterface::class);
-        $e->shouldReceive('get')->once()->withSomeOfArgs('DOTENV_PATH')->andReturn($d->get('root').'.env.custom');
-        $e->shouldReceive('set')->once()->with('KEY', 'custom_value');
+        $k->shouldReceive('running')->once()->andReturnUsing(fn(\Closure $callback) => $callback($e));
 
         $b = new DotenvBootloader();
-        $b->init($k, $d, $e);
+        $b->init($k, $d);
     }
 }

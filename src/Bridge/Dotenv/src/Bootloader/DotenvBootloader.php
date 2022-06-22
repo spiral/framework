@@ -16,11 +16,9 @@ final class DotenvBootloader extends Bootloader
 
     public function init(
         AbstractKernel $kernel,
-        DirectoriesInterface $dirs,
-        EnvironmentInterface $env
+        DirectoriesInterface $dirs
     ): void {
-        $kernel->running(fn () => $this->loadEnvVariables($dirs, $env));
-        $this->loadEnvVariables($dirs, $env);
+        $kernel->running(fn (EnvironmentInterface $env) => $this->loadEnvVariables($dirs, $env));
     }
 
     public function loadEnvVariables(DirectoriesInterface $dirs, EnvironmentInterface $env): void
