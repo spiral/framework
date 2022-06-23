@@ -107,15 +107,12 @@ final class RouteGroup
             $target = $route->getTarget();
 
             if ($target instanceof AbstractTarget) {
-                return $route
-                    ->withTarget($target->withCore($this->core))
-                    ->withUriHandler($this->handler->withPrefix($this->prefix))
-                    ->withPipeline($this->pipeline);
+                $route = $route->withTarget($target->withCore($this->core));
             }
         }
 
         return $route
             ->withUriHandler($this->handler->withPrefix($this->prefix))
-            ->withPipeline($this->pipeline);
+            ->withMiddleware($this->pipeline);
     }
 }
