@@ -11,6 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
@@ -49,9 +50,9 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
     /**
      * Register new http middleware.
      *
-     * @psalm-param MiddlewareInterface|class-string<MiddlewareInterface>
+     * @psalm-param MiddlewareInterface|Autowire|class-string<MiddlewareInterface>
      */
-    public function addMiddleware(string|MiddlewareInterface $middleware): void
+    public function addMiddleware(string|Autowire|MiddlewareInterface $middleware): void
     {
         $this->config->modify(HttpConfig::CONFIG, new Append('middleware', null, $middleware));
     }

@@ -18,10 +18,8 @@ use Spiral\Tests\Router\Stub\AnotherMiddleware;
 use Spiral\Tests\Router\Stub\RoutesTestCore;
 use Spiral\Tests\Router\Stub\TestMiddleware;
 
-class RoutesGroupTest extends TestCase
+class RoutesGroupTest extends BaseTest
 {
-    private Container $container;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -68,12 +66,13 @@ class RoutesGroupTest extends TestCase
         $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'core'));
     }
 
-    public function testMiddleware(): void
+    /** @dataProvider middlewaresDataProvider */
+    public function testMiddleware(mixed $middleware): void
     {
         $handler = new UriHandler(new Psr17Factory());
         $router = new Router('/', $handler, $this->container);
         $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
-        $group->addMiddleware(TestMiddleware::class);
+        $group->addMiddleware($middleware);
 
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
         $r = $router->getRoute('name');
@@ -106,16 +105,6 @@ class RoutesGroupTest extends TestCase
 
         $this->assertInstanceOf(TestMiddleware::class, $this->getProperty($m[1], 'middleware')[0]);
         $this->assertInstanceOf(AnotherMiddleware::class, $m[0]);
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    private function getProperty(object $object, string $property): mixed
-    {
-        $r = new \ReflectionObject($object);
-
-        return $r->getProperty($property)->getValue($object);
     }
 
     /**
