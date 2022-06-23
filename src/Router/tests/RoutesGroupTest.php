@@ -6,6 +6,7 @@ namespace Spiral\Tests\Router;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Spiral\Core\Container;
+use Spiral\Core\Container\Autowire;
 use Spiral\Http\Pipeline;
 use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\Route;
@@ -68,12 +69,13 @@ class RoutesGroupTest extends TestCase
         $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'core'));
     }
 
-    public function testMiddleware(): void
+    /** @dataProvider middlewaresDataProvider */
+    public function testMiddleware(mixed $middleware): void
     {
         $handler = new UriHandler(new Psr17Factory());
         $router = new Router('/', $handler, $this->container);
         $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
-        $group->addMiddleware(TestMiddleware::class);
+        $group->addMiddleware($middleware);
 
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
         $r = $router->getRoute('name');
@@ -106,6 +108,13 @@ class RoutesGroupTest extends TestCase
 
         $this->assertInstanceOf(TestMiddleware::class, $this->getProperty($m[1], 'middleware')[0]);
         $this->assertInstanceOf(AnotherMiddleware::class, $m[0]);
+    }
+
+    public function middlewaresDataProvider(): \Traversable
+    {
+        yield [TestMiddleware::class];
+        yield [new TestMiddleware()];
+        yield [new Autowire(TestMiddleware::class)];
     }
 
     /**

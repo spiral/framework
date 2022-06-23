@@ -58,12 +58,12 @@ final class RouteGroup
     }
 
     /**
-     * @param MiddlewareInterface|class-string<MiddlewareInterface>|non-empty-string $middleware
+     * @param MiddlewareInterface|Autowire|class-string<MiddlewareInterface>|non-empty-string $middleware
      *
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function addMiddleware(MiddlewareInterface|string $middleware): self
+    public function addMiddleware(MiddlewareInterface|Autowire|string $middleware): self
     {
         if (!$middleware instanceof MiddlewareInterface) {
             $middleware = $this->container->get($middleware);
