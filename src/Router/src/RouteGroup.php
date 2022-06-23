@@ -46,7 +46,7 @@ final class RouteGroup
 
     public function setCore(Autowire|CoreInterface|string $core): self
     {
-        if (! $core instanceof CoreInterface) {
+        if (!$core instanceof CoreInterface) {
             $core = $this->container->get($core);
         }
         $this->core = $core;
@@ -65,7 +65,7 @@ final class RouteGroup
      */
     public function addMiddleware(MiddlewareInterface|string $middleware): self
     {
-        if (! $middleware instanceof MiddlewareInterface) {
+        if (!$middleware instanceof MiddlewareInterface) {
             $middleware = $this->container->get($middleware);
         }
 
