@@ -19,8 +19,9 @@ final class PlainRenderer implements RendererInterface
     ) {
     }
 
-    public function renderException(Request $request, int $code, string $message): Response
+    public function renderException(Request $request, int $code, \Throwable $exception): Response
     {
+        $message = $exception->getMessage();
         $acceptItems = AcceptHeader::fromString($request->getHeaderLine('Accept'))->getAll();
 
         $response = $this->responseFactory->createResponse($code);
