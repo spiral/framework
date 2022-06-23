@@ -6,6 +6,7 @@ namespace Spiral\Router\Traits;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Spiral\Core\Container\Autowire;
 use Spiral\Http\Pipeline;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\RouteInterface;
@@ -43,7 +44,7 @@ trait PipelineTrait
         }
 
         foreach ($middleware as $item) {
-            if (!\is_string($item) && !$item instanceof MiddlewareInterface) {
+            if (!\is_string($item) && !$item instanceof MiddlewareInterface && !$item instanceof Autowire) {
                 $name = get_debug_type($item);
 
                 throw new RouteException(\sprintf('Invalid middleware `%s`', $name));

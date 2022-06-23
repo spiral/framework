@@ -6,7 +6,6 @@ namespace Spiral\Tests\Router;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Spiral\Core\Container;
-use Spiral\Core\Container\Autowire;
 use Spiral\Http\Pipeline;
 use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\Route;
@@ -19,10 +18,8 @@ use Spiral\Tests\Router\Stub\AnotherMiddleware;
 use Spiral\Tests\Router\Stub\RoutesTestCore;
 use Spiral\Tests\Router\Stub\TestMiddleware;
 
-class RoutesGroupTest extends TestCase
+class RoutesGroupTest extends BaseTest
 {
-    private Container $container;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -108,23 +105,6 @@ class RoutesGroupTest extends TestCase
 
         $this->assertInstanceOf(TestMiddleware::class, $this->getProperty($m[1], 'middleware')[0]);
         $this->assertInstanceOf(AnotherMiddleware::class, $m[0]);
-    }
-
-    public function middlewaresDataProvider(): \Traversable
-    {
-        yield [TestMiddleware::class];
-        yield [new TestMiddleware()];
-        yield [new Autowire(TestMiddleware::class)];
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    private function getProperty(object $object, string $property): mixed
-    {
-        $r = new \ReflectionObject($object);
-
-        return $r->getProperty($property)->getValue($object);
     }
 
     /**

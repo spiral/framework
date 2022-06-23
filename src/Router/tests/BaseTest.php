@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use Spiral\Core\Container;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Router\GroupRegistry;
@@ -23,13 +24,14 @@ use Spiral\Tests\Router\Diactoros\ResponseFactory;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Stub\TestLoader;
+use Spiral\Tests\Router\Stub\TestMiddleware;
 
 abstract class BaseTest extends TestCase
 {
     protected Container $container;
     protected Router $router;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->initContainer();
         $this->initRouter();
@@ -41,6 +43,23 @@ abstract class BaseTest extends TestCase
             new UriFactory(),
             new Slugify()
         ), $this->container);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    protected function getProperty(object $object, string $property): mixed
+    {
+        $r = new \ReflectionObject($object);
+
+        return $r->getProperty($property)->getValue($object);
+    }
+
+    protected function middlewaresDataProvider(): \Traversable
+    {
+        yield [TestMiddleware::class];
+        yield [new TestMiddleware()];
+        yield [new Autowire(TestMiddleware::class)];
     }
 
     private function initContainer(): void
