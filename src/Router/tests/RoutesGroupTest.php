@@ -14,6 +14,7 @@ use Spiral\Router\Router;
 use Spiral\Router\Target\AbstractTarget;
 use Spiral\Router\Target\Action;
 use Spiral\Router\UriHandler;
+use Spiral\Tests\Router\Stub\AnotherMiddleware;
 use Spiral\Tests\Router\Stub\RoutesTestCore;
 use Spiral\Tests\Router\Stub\TestMiddleware;
 
@@ -82,6 +83,29 @@ class RoutesGroupTest extends TestCase
 
         $this->assertCount(1, $m);
         $this->assertInstanceOf(TestMiddleware::class, $m[0]);
+    }
+
+    public function testRouteWithMiddlewareAddGroupMiddleware(): void
+    {
+        $handler = new UriHandler(new Psr17Factory());
+        $router = new Router('/', $handler, $this->container);
+
+        $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
+        $group->addMiddleware(TestMiddleware::class);
+
+        $route = new Route('/', new Action('controller', 'method'));
+        $route = $route->withMiddleware(AnotherMiddleware::class);
+
+        $group->addRoute('name', $route);
+        $r = $router->getRoute('name');
+
+        $p = $this->getProperty($r, 'pipeline');
+        $m = $this->getProperty($p, 'middleware');
+
+        $this->assertCount(2, $m);
+
+        $this->assertInstanceOf(TestMiddleware::class, $this->getProperty($m[1], 'middleware')[0]);
+        $this->assertInstanceOf(AnotherMiddleware::class, $m[0]);
     }
 
     /**
