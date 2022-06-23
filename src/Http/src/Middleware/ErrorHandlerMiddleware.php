@@ -54,7 +54,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
 
         $this->logError($request, $code, $e->getMessage());
 
-        return $this->renderer->renderException($request, $code, $e->getMessage());
+        return $this->renderer->renderException($request, $code, $e);
     }
 
     /**

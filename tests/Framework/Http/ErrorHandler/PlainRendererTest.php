@@ -22,7 +22,7 @@ final class PlainRendererTest extends TestCase
             'Accept' => 'application/json',
         ]);
 
-        $response = $renderer->renderException($request, 400, 'message');
+        $response = $renderer->renderException($request, 400, new \Exception('message'));
         self::assertTrue($response->hasHeader('Content-Type'));
         self::assertSame(['application/json; charset=UTF-8'], $response->getHeader('Content-Type'));
 
@@ -36,7 +36,7 @@ final class PlainRendererTest extends TestCase
         $renderer = new PlainRenderer($this->mockResponseFactory());
         $request = new ServerRequest('GET', '', body: 'php://input');
 
-        $response = $renderer->renderException($request, 400, 'message');
+        $response = $renderer->renderException($request, 400, new \Exception('message'));
         $stream = $response->getBody();
         $stream->rewind();
         self::assertEquals('Error code: 400', $stream->getContents());
@@ -55,7 +55,7 @@ final class PlainRendererTest extends TestCase
             ],
         ], 'php://input');
 
-        $response = $renderer->renderException($request, 400, 'message');
+        $response = $renderer->renderException($request, 400, new \Exception('message'));
         self::assertTrue($response->hasHeader('Content-Type'));
         self::assertSame(['application/json; charset=UTF-8'], $response->getHeader('Content-Type'));
 
@@ -95,7 +95,7 @@ final class PlainRendererTest extends TestCase
         $renderer = new PlainRenderer($this->mockResponseFactory());
         $request = new ServerRequest('GET', '', ['Accept' => $acceptHeader], 'php://input');
 
-        $response = $renderer->renderException($request, 400, 'message');
+        $response = $renderer->renderException($request, 400, new \Exception('message'));
         $stream = $response->getBody();
         $stream->rewind();
         self::assertEquals('Error code: 400', $stream->getContents());

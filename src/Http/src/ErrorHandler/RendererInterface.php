@@ -12,5 +12,5 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 interface RendererInterface
 {
-    public function renderException(Request $request, int $code, string $message): Response;
+    public function renderException(Request $request, int $code, \Throwable $exception): Response;
 }
