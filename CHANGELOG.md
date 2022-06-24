@@ -94,6 +94,7 @@
     added return type `mixed` to the method `offsetGet`, added return type `mixed` and `mixed` parameter type
     of `$default` to the method `get`  in `Spiral\Http\Request\InputBag` class.
   - [spiral/config] Added return type `void` to the method `setDefaults` in `Spiral\Config\ConfiguratorInterface` interface.
+    - Added new `existsSection` method in `Spiral\Config\ConfiguratorInterface`. 
   - [spiral/core] Comprehensive code refactoring. A lot of signatures from `Spiral\Core` namespace has been changed.
     New features:
     - Added supporting for PHP 8.0 Union types.
@@ -165,6 +166,8 @@
   - `Spiral\Snapshots\SnapshotterInterface` usage replaced with `Spiral\Exceptions\ExceptionReporterInterface` in all classes.
   - Removed `bin/spiral`. Uses the `spiral/roadrunner-cli` package instead.
 - **Other Features**
+  - [spiral/config] Added new `existsSection` method in `Spiral\Config\ConfigManager`. Using this method, you can check 
+    if a section is defined in a configuration file. Nesting is supported using dot notation.
   - [spiral/debug] Added `Spiral\Debug\StateConsumerInterface`.
   - [spiral/boot] Added new `boot` method in `Bootloaders`. It will be executed after the `init` method is executed in all `Bootloaders`.
     The old `boot` method has been renamed to `init`. See **High Impact Changes** section.

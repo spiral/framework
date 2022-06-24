@@ -6,6 +6,7 @@ namespace Spiral\Config;
 
 use Spiral\Config\Exception\ConfigDeliveredException;
 use Spiral\Config\Exception\PatchException;
+use Spiral\Config\Patch\Traits\DotTrait;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\ConfiguratorException;
 
@@ -15,6 +16,8 @@ use Spiral\Core\Exception\ConfiguratorException;
  */
 final class ConfigManager implements ConfiguratorInterface, SingletonInterface
 {
+    use DotTrait;
+
     private array $data = [];
     private array $defaults = [];
     private array $instances = [];
@@ -35,9 +38,20 @@ final class ConfigManager implements ConfiguratorInterface, SingletonInterface
         $this->instances = [];
     }
 
-    public function exists(string $section): bool
+    public function exists(string $config): bool
     {
-        return isset($this->defaults[$section]) || isset($this->data[$section]) || $this->loader->has($section);
+        return isset($this->defaults[$config]) || isset($this->data[$config]) || $this->loader->has($config);
+    }
+
+    public function existsSection(string $config, string $section): bool
+    {
+        if (!$this->exists($config)) {
+            return false;
+        }
+
+        $data = $this->defaults[$config] ?? $this->data[$config] ?? $this->loader->load($config);
+
+        return $this->dotExists($data, $section);
     }
 
     public function setDefaults(string $section, array $data): void

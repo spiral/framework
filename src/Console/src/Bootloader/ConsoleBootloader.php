@@ -100,7 +100,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string $footer = '',
         array $options = []
     ): void {
-        if (!isset($this->config->getConfig(ConsoleConfig::CONFIG)['sequences'][$name])) {
+        if (!$this->config->existsSection(ConsoleConfig::CONFIG, \sprintf('sequences.%s', $name))) {
             $this->config->modify(
                 ConsoleConfig::CONFIG,
                 new Append('sequences', $name, [])

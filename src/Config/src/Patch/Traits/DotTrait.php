@@ -29,4 +29,19 @@ trait DotTrait
 
         return $data;
     }
+
+    private function dotExists(array &$data, string $name): bool
+    {
+        $path = (!empty($this->prefix) ? $this->prefix . '.' : '') . $name;
+
+        $path = \explode('.', \rtrim($path, '.'));
+        foreach ($path as $step) {
+            if (!\is_array($data) || !\array_key_exists($step, $data)) {
+                return false;
+            }
+            $data = &$data[$step];
+        }
+
+        return true;
+    }
 }

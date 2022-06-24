@@ -14,9 +14,14 @@ use Spiral\Core\Exception\ConfiguratorException;
 interface ConfiguratorInterface extends ConfigsInterface
 {
     /**
-     * Check if configuration sections exists or defined as default.
+     * Check if configuration exists or defined as default.
      */
-    public function exists(string $section): bool;
+    public function exists(string $config): bool;
+
+    /**
+     * Check if configuration section exists or defined as default.
+     */
+    public function existsSection(string $config, string $section): bool;
 
     /**
      * Set default value for configuration section. Default values will be overwritten by user specified config

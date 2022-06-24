@@ -43,6 +43,27 @@ class ConfigFactoryTest extends BaseTest
         $this->assertTrue($cf->exists('magic'));
     }
 
+    public function testExistsSection(): void
+    {
+        $cf = $this->getFactory();
+
+        // config isn't exists
+        $this->assertFalse($cf->existsSection('undefined', 'magic'));
+
+        // exists in defaults
+        $cf->setDefaults('undefined', ['magic' => 'value']);
+        $this->assertTrue($cf->existsSection('undefined', 'magic'));
+
+        // exists in loaded data
+        $cf = $this->getFactory();
+        $this->assertTrue($cf->existsSection('test', 'id'));
+        $this->assertTrue($cf->existsSection('nested', 'nested.other'));
+        $this->assertTrue($cf->existsSection('nested', 'nested.other.key'));
+
+        // isn't exists
+        $this->assertFalse($cf->existsSection('test', 'magic'));
+    }
+
     public function testConfigError(): void
     {
         $this->expectException(LoaderException::class);
