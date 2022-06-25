@@ -51,7 +51,7 @@ abstract class RoutesBootloader extends Bootloader
     private function registerMiddlewareForRouteGroups(GroupRegistry $registry, array $groups): void
     {
         foreach ($groups as $group => $middleware) {
-            $registry->getGroup($group)->addMiddleware('middleware:'.$group);
+            $registry->getGroup($group)->addMiddleware('middleware:' . $group);
         }
     }
 
@@ -59,7 +59,7 @@ abstract class RoutesBootloader extends Bootloader
     {
         foreach ($groups as $group => $middleware) {
             $container->bind(
-                'middleware:'.$group,
+                'middleware:' . $group,
                 static function (PipelineFactory $factory) use ($middleware): Pipeline {
                     return $factory->createWithMiddleware($middleware);
                 }
