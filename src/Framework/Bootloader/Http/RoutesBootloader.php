@@ -26,7 +26,7 @@ abstract class RoutesBootloader extends Bootloader
         $middlewareGroups = $this->middlewareGroups();
 
         $this->registerMiddlewareGroups($container, $middlewareGroups);
-        $this->registerMiddlewareForRouteGroups($groups, $middlewareGroups);
+        $this->registerMiddlewareForRouteGroups($groups, \array_keys($middlewareGroups));
 
         $this->defineRoutes($routes);
     }
@@ -48,13 +48,6 @@ abstract class RoutesBootloader extends Bootloader
      */
     abstract protected function middlewareGroups(): array;
 
-    private function registerMiddlewareForRouteGroups(GroupRegistry $registry, array $groups): void
-    {
-        foreach ($groups as $group => $middleware) {
-            $registry->getGroup($group)->addMiddleware('middleware:' . $group);
-        }
-    }
-
     private function registerMiddlewareGroups(Container $container, array $groups): void
     {
         foreach ($groups as $group => $middleware) {
@@ -64,6 +57,13 @@ abstract class RoutesBootloader extends Bootloader
                     return $factory->createWithMiddleware($middleware);
                 }
             );
+        }
+    }
+
+    private function registerMiddlewareForRouteGroups(GroupRegistry $registry, array $groups): void
+    {
+        foreach ($groups as $group) {
+            $registry->getGroup($group)->addMiddleware('middleware:' . $group);
         }
     }
 }
