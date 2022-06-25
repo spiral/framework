@@ -6,9 +6,9 @@ namespace Spiral\Router\Traits;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Spiral\Core\Container\Autowire;
 use Spiral\Http\Pipeline;
 use Spiral\Router\Exception\RouteException;
+use Spiral\Router\PipelineFactory;
 use Spiral\Router\RouteInterface;
 
 trait PipelineTrait
@@ -44,12 +44,6 @@ trait PipelineTrait
         }
 
         foreach ($middleware as $item) {
-            if (!\is_string($item) && !$item instanceof MiddlewareInterface && !$item instanceof Autowire) {
-                $name = get_debug_type($item);
-
-                throw new RouteException(\sprintf('Invalid middleware `%s`', $name));
-            }
-
             $route->middleware[] = $item;
         }
 
@@ -77,26 +71,12 @@ trait PipelineTrait
      */
     protected function makePipeline(): Pipeline
     {
-        // pre-aggregated
-        if (\count($this->middleware) === 1 && $this->middleware[0] instanceof Pipeline) {
-            return $this->middleware[0];
-        }
-
         try {
-            $pipeline = $this->container->get(Pipeline::class);
-
-            foreach ($this->middleware as $middleware) {
-                if ($middleware instanceof MiddlewareInterface) {
-                    $pipeline->pushMiddleware($middleware);
-                } else {
-                    // dynamically resolved
-                    $pipeline->pushMiddleware($this->container->get($middleware));
-                }
-            }
+            return $this->container
+                ->get(PipelineFactory::class)
+                ->createWithMiddleware($this->middleware);
         } catch (ContainerExceptionInterface $e) {
             throw new RouteException($e->getMessage(), $e->getCode(), $e);
         }
-
-        return $pipeline;
     }
 }

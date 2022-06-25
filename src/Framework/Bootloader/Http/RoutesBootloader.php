@@ -6,8 +6,11 @@ namespace Spiral\Bootloader\Http;
 
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Core\Container;
+use Spiral\Http\Pipeline;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
+use Spiral\Router\PipelineFactory;
 
 abstract class RoutesBootloader extends Bootloader
 {
@@ -18,9 +21,12 @@ abstract class RoutesBootloader extends Bootloader
         }
     }
 
-    public function boot(RoutingConfigurator $routes, GroupRegistry $groups): void
+    public function boot(RoutingConfigurator $routes, Container $container, GroupRegistry $groups): void
     {
-        $this->registerMiddlewareGroups($groups, $this->middlewareGroups());
+        $middlewareGroups = $this->middlewareGroups();
+
+        $this->registerMiddlewareGroups($container, $middlewareGroups);
+        $this->registerMiddlewareForRouteGroups($groups, $middlewareGroups);
 
         $this->defineRoutes($routes);
     }
@@ -42,12 +48,22 @@ abstract class RoutesBootloader extends Bootloader
      */
     abstract protected function middlewareGroups(): array;
 
-    private function registerMiddlewareGroups(GroupRegistry $registry, array $groups)
+    private function registerMiddlewareForRouteGroups(GroupRegistry $registry, array $groups): void
     {
-        foreach ($groups as $group => $middlewares) {
-            foreach ($middlewares as $middleware) {
-                $registry->getGroup($group)->addMiddleware($middleware);
-            }
+        foreach ($groups as $group => $middleware) {
+            $registry->getGroup($group)->addMiddleware('middleware:'.$group);
+        }
+    }
+
+    private function registerMiddlewareGroups(Container $container, array $groups): void
+    {
+        foreach ($groups as $group => $middleware) {
+            $container->bind(
+                'middleware:'.$group,
+                static function (PipelineFactory $factory) use ($middleware): Pipeline {
+                    return $factory->createWithMiddleware($middleware);
+                }
+            );
         }
     }
 }
