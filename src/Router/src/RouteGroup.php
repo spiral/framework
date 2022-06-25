@@ -56,7 +56,7 @@ final class RouteGroup
 
     public function setCore(Autowire|CoreInterface|string $core): self
     {
-        if (! $core instanceof CoreInterface) {
+        if (!$core instanceof CoreInterface) {
             $core = $this->container->get($core);
         }
         $this->core = $core;
