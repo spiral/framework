@@ -7,6 +7,7 @@ namespace Spiral\Command\Router;
 use Spiral\Boot\KernelInterface;
 use Spiral\Console\Command;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Router\GroupRegistry;
 use Spiral\Router\Route;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\Target\Action;
@@ -16,15 +17,15 @@ use Spiral\Router\Target\Namespaced;
 
 final class ListCommand extends Command implements SingletonInterface
 {
-    protected const NAME        = 'route:list';
+    protected const NAME = 'route:list';
     protected const DESCRIPTION = 'List application routes';
 
     /**
      * @throws \ReflectionException
      */
-    public function perform(RouterInterface $router, KernelInterface $kernel): int
+    public function perform(RouterInterface $router, GroupRegistry $registry, KernelInterface $kernel): int
     {
-        $grid = $this->table(['Name:', 'Verbs:', 'Pattern:', 'Target:']);
+        $grid = $this->table(['Name:', 'Verbs:', 'Pattern:', 'Target:', 'Group:']);
 
         foreach ($router->getRoutes() as $name => $route) {
             if ($route instanceof Route) {
@@ -34,6 +35,7 @@ final class ListCommand extends Command implements SingletonInterface
                         $this->getVerbs($route),
                         $this->getPattern($route),
                         $this->getTarget($route, $kernel),
+                        \implode(', ', $this->getRouteGroups($registry, $name)),
                     ]
                 );
             }
@@ -42,6 +44,21 @@ final class ListCommand extends Command implements SingletonInterface
         $grid->render();
 
         return self::SUCCESS;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getRouteGroups(GroupRegistry $registry, string $routeName): array
+    {
+        $groups = [];
+        foreach ($registry as $groupName => $group) {
+            if ($group->hasRoute($routeName)) {
+                $groups[] = $groupName;
+            }
+        }
+
+        return $groups;
     }
 
     private function getVerbs(Route $route): string
@@ -89,6 +106,7 @@ final class ListCommand extends Command implements SingletonInterface
         switch (true) {
             case $target instanceof \Closure:
                 $reflection = new \ReflectionFunction($target);
+
                 return \sprintf(
                     'Closure(%s:%s)',
                     \basename($reflection->getFileName()),
@@ -99,7 +117,7 @@ final class ListCommand extends Command implements SingletonInterface
                 return \sprintf(
                     '%s->%s',
                     $this->relativeClass($this->getValue($target, 'controller'), $kernel),
-                    \implode('|', (array) $this->getValue($target, 'action'))
+                    \implode('|', (array)$this->getValue($target, 'action'))
                 );
 
             case $target instanceof Controller:

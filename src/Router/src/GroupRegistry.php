@@ -13,7 +13,7 @@ final class GroupRegistry implements \IteratorAggregate
 {
     private string $defaultGroup = 'web';
 
-    /** @var RouteGroup[] */
+    /** @var array<non-empty-string, RouteGroup> */
     private array $groups = [];
 
     public function __construct(

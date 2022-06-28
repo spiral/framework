@@ -32,7 +32,7 @@ class RoutesGroupTest extends BaseTest
     {
         $handler = new UriHandler(new Psr17Factory());
         $router = new Router('/', $handler, $this->container);
-        $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
+        $group = new RouteGroup($this->container, $router, $handler);
 
         $group->setCore(RoutesTestCore::class);
 
@@ -51,7 +51,7 @@ class RoutesGroupTest extends BaseTest
     {
         $handler = new UriHandler(new Psr17Factory());
         $router = new Router('/', $handler, $this->container);
-        $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
+        $group = new RouteGroup($this->container, $router, $handler);
 
         $group->setCore(new RoutesTestCore($this->container));
 
@@ -66,12 +66,23 @@ class RoutesGroupTest extends BaseTest
         $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'core'));
     }
 
+    public function testGroupHasRoute(): void
+    {
+        $handler = new UriHandler(new Psr17Factory());
+        $router = new Router('/', $handler, $this->container);
+        $group = new RouteGroup($this->container, $router, $handler);
+
+        $group->addRoute('foo', new Route('/', new Action('controller', 'method')));
+        $this->assertTrue($group->hasRoute('foo'));
+        $this->assertFalse($group->hasRoute('bar'));
+    }
+
     /** @dataProvider middlewaresDataProvider */
     public function testMiddleware(mixed $middleware): void
     {
         $handler = new UriHandler(new Psr17Factory());
         $router = new Router('/', $handler, $this->container);
-        $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
+        $group = new RouteGroup($this->container, $router, $handler);
         $group->addMiddleware($middleware);
 
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
@@ -89,7 +100,7 @@ class RoutesGroupTest extends BaseTest
         $handler = new UriHandler(new Psr17Factory());
         $router = new Router('/', $handler, $this->container);
 
-        $group = new RouteGroup($this->container, $router, new Pipeline($this->container), $handler);
+        $group = new RouteGroup($this->container, $router, $handler);
         $group->addMiddleware(TestMiddleware::class);
 
         $route = new Route('/', new Action('controller', 'method'));
@@ -103,7 +114,7 @@ class RoutesGroupTest extends BaseTest
 
         $this->assertCount(2, $m);
 
-        $this->assertInstanceOf(TestMiddleware::class, $this->getProperty($m[1], 'middleware')[0]);
+        $this->assertInstanceOf(TestMiddleware::class, $m[1]);
         $this->assertInstanceOf(AnotherMiddleware::class, $m[0]);
     }
 

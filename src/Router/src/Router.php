@@ -111,6 +111,7 @@ final class Router implements RouterInterface
 
     public function import(RoutingConfigurator $routes): void
     {
+        /** @var GroupRegistry $groups */
         $groups = $this->container->get(GroupRegistry::class);
 
         /** @var RouteConfigurator $configurator */

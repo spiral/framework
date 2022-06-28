@@ -21,14 +21,24 @@ final class RouteGroup
     /** @var string[] */
     private array $routes = [];
 
+    /** @var array<class-string<MiddlewareInterface>>|MiddlewareInterface|Autowire */
+    private array $middleware = [];
+
     private ?CoreInterface $core = null;
 
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly RouterInterface $router,
-        private readonly Pipeline $pipeline,
         private readonly UriHandler $handler
     ) {
+    }
+
+    /**
+     * Check if group has a route with given name
+     */
+    public function hasRoute(string $name): bool
+    {
+        return \in_array($name, $this->routes);
     }
 
     /**
@@ -59,17 +69,10 @@ final class RouteGroup
 
     /**
      * @param MiddlewareInterface|Autowire|class-string<MiddlewareInterface>|non-empty-string $middleware
-     *
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function addMiddleware(MiddlewareInterface|Autowire|string $middleware): self
     {
-        if (!$middleware instanceof MiddlewareInterface) {
-            $middleware = $this->container->get($middleware);
-        }
-
-        $this->pipeline->pushMiddleware($middleware);
+        $this->middleware[] = $middleware;
 
         // update routes
         $this->flushRoutes();
@@ -113,6 +116,6 @@ final class RouteGroup
 
         return $route
             ->withUriHandler($this->handler->withPrefix($this->prefix))
-            ->withMiddleware($this->pipeline);
+            ->withMiddleware(...$this->middleware);
     }
 }
