@@ -36,7 +36,7 @@
         "psr/http-server-middleware": "^1.0",
         "psr/log": "1 - 3",
         "psr/simple-cache": "2 - 3",
-        "spiral/attributes": "^3.0",
+        "spiral/attributes": "^2.8|^3.0",
         "spiral/composer-publish-plugin": "^1.0",
         "symfony/console": "^6.0",
         "symfony/finder": "^5.3.7|^6.0",
