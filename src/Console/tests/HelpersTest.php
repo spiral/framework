@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Console;
 
-use Spiral\Console\StaticLocator;
 use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,7 +16,7 @@ class HelpersTest extends BaseTest
     {
         parent::setUp();
 
-        $this->core = $this->getCore(new StaticLocator([
+        $this->core = $this->getCore($this->getStaticLocator([
             HelperCommand::class
         ]));
     }

@@ -1,19 +1,11 @@
 <?php
 
-/**
- * Spiral Framework, SpiralScout LLC.
- *
- * @author    Vladislav Gorenkin (vladgorenkin)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Console;
 
 use Spiral\Console\CommandLocator;
-use Spiral\Console\StaticLocator;
 use Spiral\Tests\Console\Fixtures\LazyLoadedCommand;
-use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Symfony\Component\Console\Command\LazyCommand;
 
@@ -21,7 +13,7 @@ class LazyTest extends BaseTest
 {
     public function testLazyCommandCreationInCommandLocator(): void
     {
-        $locator = new CommandLocator(
+        $locator = $this->getCommandLocator(
             new class() implements ScopedClassesInterface {
                 public function getScopedClasses(string $scope, $target = null): array
                 {
@@ -29,8 +21,7 @@ class LazyTest extends BaseTest
                         new \ReflectionClass(LazyLoadedCommand::class),
                     ];
                 }
-            },
-            $this->container
+            }
         );
         $commands = $locator->locateCommands();
         $command = reset($commands);
@@ -42,7 +33,7 @@ class LazyTest extends BaseTest
 
     public function testLazyCommandCreationInStaticLocator(): void
     {
-        $locator = new StaticLocator([LazyLoadedCommand::class]);
+        $locator = $this->getStaticLocator([LazyLoadedCommand::class]);
         $commands = $locator->locateCommands();
         $command = reset($commands);
 
@@ -53,7 +44,7 @@ class LazyTest extends BaseTest
 
     public function testLazyCommandExecution(): void
     {
-        $core = $this->getCore(new StaticLocator([LazyLoadedCommand::class]));
+        $core = $this->getCore($this->getStaticLocator([LazyLoadedCommand::class]));
         $output = $core->run('lazy');
         $this->assertSame('OK', $output->getOutput()->fetch());
     }

@@ -96,7 +96,7 @@ final class Console
         }
 
         // Register user defined commands
-        $static = new StaticLocator($this->config->getCommands(), $this->container);
+        $static = new StaticLocator($this->config->getCommands(), $this->config, $this->container);
         $this->addCommands($static->locateCommands());
 
         return $this->application;
@@ -104,9 +104,12 @@ final class Console
 
     private function addCommands(iterable $commands): void
     {
+        $interceptors = $this->config->getInterceptors();
+
         foreach ($commands as $command) {
             if ($command instanceof Command) {
                 $command->setContainer($this->container);
+                $command->setInterceptors($interceptors);
             }
 
             $this->application->add($command);
