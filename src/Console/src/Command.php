@@ -39,12 +39,14 @@ abstract class Command extends SymfonyCommand
     /** @var array<class-string<CoreInterceptorInterface>> */
     protected array $interceptors = [];
 
+    /** {@internal} */
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
     }
 
     /**
+     * {@internal}
      * @param array<class-string<CoreInterceptorInterface>> $interceptors
      */
     public function setInterceptors(array $interceptors): void

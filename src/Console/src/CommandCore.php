@@ -17,18 +17,14 @@ final class CommandCore implements CoreInterface
     }
 
     /**
-     * @param array{
-     *     input: InputInterface,
-     *     output: OutputInterface,
-     *     command: Command
-     * } $parameters
+     * @param array{input: InputInterface, output: OutputInterface, command: Command}|array<empty, empty> $parameters
      */
-    public function callAction(string $commandName, string $method, array $parameters = []): int
+    public function callAction(string $controller, string $action, array $parameters = []): int
     {
         $input = $parameters['input'];
         $output = $parameters['output'];
         $command = $parameters['command'];
 
-        return (int)$this->invoker->invoke([$command, $method], \compact('input', 'output'));
+        return (int)$this->invoker->invoke([$command, $action], \compact('input', 'output'));
     }
 }
