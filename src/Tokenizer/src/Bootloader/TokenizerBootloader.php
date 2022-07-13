@@ -68,7 +68,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
      */
     public function addScopedDirectory(string $scope, string $directory): void
     {
-        if (! isset($this->config->getConfig(TokenizerConfig::CONFIG)['scopes'][$scope])) {
+        if (!isset($this->config->getConfig(TokenizerConfig::CONFIG)['scopes'][$scope])) {
             $this->config->modify(
                 TokenizerConfig::CONFIG,
                 new Append('scopes', $scope, [])
@@ -77,7 +77,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
 
         $this->config->modify(
             TokenizerConfig::CONFIG,
-            new Append('scopes.'.$scope, null, $directory)
+            new Append('scopes.' . $scope, null, $directory)
         );
     }
 }
