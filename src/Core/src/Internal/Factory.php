@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Core\Internal;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Container\InjectableInterface;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\AutowireException;
@@ -28,6 +28,7 @@ final class Factory implements FactoryInterface
     use DestructorTrait;
 
     private State $state;
+    private BinderInterface $binder;
     private InvokerInterface $invoker;
     private ContainerInterface $container;
     private ResolverInterface $resolver;
@@ -37,6 +38,7 @@ final class Factory implements FactoryInterface
         $constructor->set('factory', $this);
 
         $this->state = $constructor->get('state', State::class);
+        $this->binder = $constructor->get('binder', BinderInterface::class);
         $this->invoker = $constructor->get('invoker', InvokerInterface::class);
         $this->container = $constructor->get('container', ContainerInterface::class);
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
@@ -142,49 +144,6 @@ final class Factory implements FactoryInterface
     }
 
     /**
-     * Checks if given class has associated injector.
-     */
-    private function checkInjector(\ReflectionClass $reflection): bool
-    {
-        $class = $reflection->getName();
-        if (\array_key_exists($class, $this->state->injectors)) {
-            return $this->state->injectors[$class] !== null;
-        }
-
-        if (
-            $reflection->implementsInterface(InjectableInterface::class)
-            && $reflection->hasConstant('INJECTOR')
-        ) {
-            $this->state->injectors[$class] = $reflection->getConstant('INJECTOR');
-
-            return true;
-        }
-
-        // check interfaces
-        foreach ($this->state->injectors as $target => $injector) {
-            if (
-                \class_exists($target, true)
-                && $reflection->isSubclassOf($target)
-            ) {
-                $this->state->injectors[$class] = $injector;
-
-                return true;
-            }
-
-            if (
-                \interface_exists($target, true)
-                && $reflection->implementsInterface($target)
-            ) {
-                $this->state->injectors[$class] = $injector;
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Create instance of desired class.
      *
      * @param array $parameters Constructor parameters.
@@ -201,7 +160,7 @@ final class Factory implements FactoryInterface
         }
 
         //We have to construct class using external injector when we know exact context
-        if ($parameters === [] && $this->checkInjector($reflection)) {
+        if ($parameters === [] && $this->binder->hasInjector($class)) {
             $injector = $this->state->injectors[$reflection->getName()];
 
             $instance = null;
