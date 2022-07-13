@@ -38,7 +38,7 @@ final class QueueBootloader extends Bootloader
         QueueConnectionProviderInterface::class => QueueManager::class,
         QueueManager::class => [self::class, 'initQueueManager'],
         QueueRegistry::class => [self::class, 'initRegistry'],
-        Handler::class => [self::class, 'initHandler']
+        Handler::class => [self::class, 'initHandler'],
     ];
 
     public function __construct(
