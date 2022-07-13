@@ -5,69 +5,72 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Driver;
 
 use Mockery as m;
-use Spiral\Queue\HandlerInterface;
-use Spiral\Queue\HandlerRegistryInterface;
-use Spiral\Queue\Job\ObjectJob;
-use Spiral\Queue\Failed\FailedJobHandlerInterface;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactory;
+use Ramsey\Uuid\UuidFactoryInterface;
+use Spiral\Core\CoreInterface;
 use Spiral\Queue\Driver\SyncDriver;
+use Spiral\Queue\Interceptor\Handler;
+use Spiral\Queue\Job\ObjectJob;
 use Spiral\Tests\Queue\TestCase;
 
 final class SyncDriverTest extends TestCase
 {
-    /** @var SyncDriver */
-    private $queue;
-    /** @var m\LegacyMockInterface|m\MockInterface|HandlerRegistryInterface */
-    private $registry;
-    /** @var m\LegacyMockInterface|m\MockInterface|FailedJobHandlerInterface */
-    private $failedJobHandler;
+    private SyncDriver $queue;
+    private m\LegacyMockInterface|m\MockInterface|CoreInterface $core;
+    private m\LegacyMockInterface|m\MockInterface|UuidFactoryInterface $factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        Uuid::setFactory($this->factory = m::mock(UuidFactoryInterface::class));
+
         $this->queue = new SyncDriver(
-            $this->registry = m::mock(HandlerRegistryInterface::class),
-            $this->failedJobHandler = m::mock(FailedJobHandlerInterface::class)
+            new Handler($this->core = m::mock(CoreInterface::class)),
         );
     }
 
     public function testJobShouldBePushed(): void
     {
-        $this->registry->shouldReceive('getHandler')->with('foo')->once()->andReturn(
-            $handler = m::mock(HandlerInterface::class)
-        );
+        $this->factory->shouldReceive('uuid4')
+            ->once()
+            ->andReturn($uuid = (new UuidFactory())->uuid4());
 
-        $handler->shouldReceive('handle')->withSomeOfArgs('foo', ['foo' => 'bar']);
+        $this->core->shouldReceive('callAction')
+            ->withSomeOfArgs('foo', [
+                'driver' => 'sync',
+                'queue' => 'default',
+                'id' => $uuid->toString(),
+                'payload' => ['foo' => 'bar']
+            ])
+            ->once();
 
         $id = $this->queue->push('foo', ['foo' => 'bar']);
 
-        $this->assertNotNull($id);
+        $this->assertSame($uuid->toString(), $id);
     }
 
     public function testJobObjectShouldBePushed(): void
     {
-        $this->registry->shouldReceive('getHandler')->with(ObjectJob::class)->once()->andReturn(
-            $handler = m::mock(HandlerInterface::class)
-        );
-
         $object = new \stdClass();
         $object->foo = 'bar';
 
-        $handler->shouldReceive('handle')->withSomeOfArgs(ObjectJob::class, ['object' => $object]);
+        $this->factory->shouldReceive('uuid4')
+            ->once()
+            ->andReturn($uuid = (new UuidFactory())->uuid4());
+
+        $this->core->shouldReceive('callAction')
+            ->withSomeOfArgs(ObjectJob::class, [
+                'driver' => 'sync',
+                'queue' => 'default',
+                'id' => $uuid->toString(),
+                'payload' => ['object' => $object]
+            ])
+            ->once();
 
         $id = $this->queue->pushObject($object);
 
-        $this->assertNotNull($id);
-    }
-
-    public function testFailedJobShouldBeHandledByFailedJobHandler(): void
-    {
-        $e = new \Exception('Something went wrong');
-
-        $this->registry->shouldReceive('getHandler')->andThrow($e);
-        $this->failedJobHandler->shouldReceive('handle')->with('sync', 'default', 'foo', ['foo' => 'bar'], $e);
-
-        $id = $this->queue->push('foo', ['foo' => 'bar']);
-        $this->assertNotNull($id);
+        $this->assertSame($uuid->toString(), $id);
     }
 }

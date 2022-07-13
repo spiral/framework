@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Queue\Driver;
 
 use Ramsey\Uuid\Uuid;
-use Spiral\Queue\Failed\FailedJobHandlerInterface;
-use Spiral\Queue\HandlerRegistryInterface;
+use Spiral\Queue\Interceptor\Handler;
 use Spiral\Queue\OptionsInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueTrait;
@@ -19,8 +18,7 @@ final class SyncDriver implements QueueInterface
     use QueueTrait;
 
     public function __construct(
-        private readonly HandlerRegistryInterface $registry,
-        private readonly FailedJobHandlerInterface $failedJobHandler
+        private readonly Handler $coreHandler
     ) {
     }
 
@@ -33,17 +31,13 @@ final class SyncDriver implements QueueInterface
 
         $id = (string)Uuid::uuid4();
 
-        try {
-            $this->registry->getHandler($name)->handle($name, $id, $payload);
-        } catch (\Throwable $e) {
-            $this->failedJobHandler->handle(
-                'sync',
-                'default',
-                $name,
-                $payload,
-                $e
-            );
-        }
+        $this->coreHandler->handle(
+            name: $name,
+            driver: 'sync',
+            queue: 'default',
+            id: $id,
+            payload: $payload
+        );
 
         return $id;
     }

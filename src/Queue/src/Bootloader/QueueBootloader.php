@@ -11,7 +11,9 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
+use Spiral\Core\InterceptableCore;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Core\QueueInjector;
@@ -20,6 +22,9 @@ use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\Failed\LogFailedJobHandler;
 use Spiral\Queue\HandlerRegistryInterface;
+use Spiral\Queue\Interceptor\ErrorHandlerInterceptor;
+use Spiral\Queue\Interceptor\Handler;
+use Spiral\Queue\Interceptor\Core;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
@@ -33,6 +38,7 @@ final class QueueBootloader extends Bootloader
         QueueConnectionProviderInterface::class => QueueManager::class,
         QueueManager::class => [self::class, 'initQueueManager'],
         QueueRegistry::class => [self::class, 'initRegistry'],
+        Handler::class => [self::class, 'initHandler']
     ];
 
     public function __construct(
@@ -58,6 +64,17 @@ final class QueueBootloader extends Bootloader
         });
     }
 
+    /**
+     * @param class-string<CoreInterceptorInterface>|string $interceptor
+     */
+    public function addInterceptor(string $interceptor): void
+    {
+        $this->config->modify(
+            QueueConfig::CONFIG,
+            new Append('interceptors', null, $interceptor)
+        );
+    }
+
     public function registerDriverAlias(string $driverClass, string $alias): void
     {
         $this->config->modify(
@@ -74,6 +91,21 @@ final class QueueBootloader extends Bootloader
     protected function initRegistry(ContainerInterface $container, ContainerRegistry $registry)
     {
         return new QueueRegistry($container, $registry);
+    }
+
+    private function initHandler(Core $core, QueueConfig $config, Container $container): Handler
+    {
+        $core = new InterceptableCore($core);
+
+        foreach ($config->getInterceptors() as $interceptor) {
+            if (\is_string($interceptor)) {
+                $interceptor = $container->get($interceptor);
+            }
+
+            $core->addInterceptor($interceptor);
+        }
+
+        return new Handler($core);
     }
 
     private function registerQueue(Container $container): void
@@ -101,6 +133,9 @@ final class QueueBootloader extends Bootloader
                 'driverAliases' => [
                     'sync' => SyncDriver::class,
                     'null' => NullDriver::class,
+                ],
+                'interceptors' => [
+                    ErrorHandlerInterceptor::class,
                 ],
             ]
         );
