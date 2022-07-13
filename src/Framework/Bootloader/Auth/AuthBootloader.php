@@ -19,7 +19,7 @@ use Spiral\Core\FactoryInterface;
 final class AuthBootloader extends Bootloader implements ActorProviderInterface, SingletonInterface
 {
     protected const SINGLETONS = [
-        AuthScope::class              => AuthScope::class,
+        AuthScope::class => AuthScope::class,
         ActorProviderInterface::class => self::class,
     ];
 
@@ -37,7 +37,7 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
     public function getActor(TokenInterface $token): ?object
     {
         foreach ($this->getProviders() as $provider) {
-            if (!$provider instanceof ActorProviderInterface) {
+            if (! $provider instanceof ActorProviderInterface) {
                 throw new AuthException(
                     \sprintf(
                         'Expected `ActorProviderInterface`, got `%s`',
