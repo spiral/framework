@@ -8,6 +8,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
@@ -41,7 +42,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
             TokenizerConfig::CONFIG,
             [
                 'directories' => [$dirs->get('app')],
-                'exclude'     => [
+                'exclude' => [
                     $dirs->get('resources'),
                     $dirs->get('config'),
                     'tests',
@@ -56,6 +57,27 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
      */
     public function addDirectory(string $directory): void
     {
-        $this->config->modify(TokenizerConfig::CONFIG, new Append('directories', null, $directory));
+        $this->config->modify(
+            TokenizerConfig::CONFIG,
+            new Append('directories', null, $directory)
+        );
+    }
+
+    /**
+     * Add directory for indexation into specific scope.
+     */
+    public function addScopedDirectory(string $scope, string $directory): void
+    {
+        if (! isset($this->config->getConfig(TokenizerConfig::CONFIG)['scopes'][$scope])) {
+            $this->config->modify(
+                TokenizerConfig::CONFIG,
+                new Append('scopes', $scope, [])
+            );
+        }
+
+        $this->config->modify(
+            TokenizerConfig::CONFIG,
+            new Append('scopes.'.$scope, null, $directory)
+        );
     }
 }

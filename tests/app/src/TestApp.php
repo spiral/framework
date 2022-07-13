@@ -49,6 +49,9 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         // Cache
         \Spiral\Cache\Bootloader\CacheBootloader::class,
 
+        // Distribution
+        \Spiral\Distribution\Bootloader\DistributionBootloader::class,
+
         // Broadcasting
         \Spiral\Broadcasting\Bootloader\BroadcastingBootloader::class,
         \Spiral\Broadcasting\Bootloader\WebsocketsBootloader::class,

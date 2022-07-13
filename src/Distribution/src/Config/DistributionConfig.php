@@ -9,6 +9,7 @@ use Aws\S3\S3Client;
 use GuzzleHttp\Psr7\Uri as GuzzleUri;
 use Nyholm\Psr7\Uri as NyholmUri;
 use Psr\Http\Message\UriInterface;
+use Spiral\Core\InjectableConfig;
 use Spiral\Distribution\Manager;
 use Spiral\Distribution\Resolver\CloudFrontResolver;
 use Spiral\Distribution\Resolver\S3SignedResolver;
@@ -16,7 +17,7 @@ use Spiral\Distribution\Resolver\StaticResolver;
 use Spiral\Distribution\UriResolverInterface;
 use Spiral\Config\Exception\InvalidArgumentException;
 
-class DistributionConfig
+final class DistributionConfig extends InjectableConfig
 {
     public const CONFIG = 'distribution';
 
@@ -29,6 +30,8 @@ class DistributionConfig
 
     public function __construct(array $config = [])
     {
+        parent::__construct($config);
+
         $this->bootDefaultDriver($config);
         $this->bootResolvers($config);
     }

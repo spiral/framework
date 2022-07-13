@@ -34,14 +34,14 @@ final class RouterBootloader extends Bootloader
     ];
 
     protected const SINGLETONS = [
-        CoreInterface::class           => Core::class,
-        RouterInterface::class         => [self::class, 'router'],
-        RouteInterface::class          => [self::class, 'route'],
+        CoreInterface::class => Core::class,
+        RouterInterface::class => [self::class, 'router'],
+        RouteInterface::class => [self::class, 'route'],
         RequestHandlerInterface::class => RouterInterface::class,
-        LoaderInterface::class         => DelegatingLoader::class,
+        LoaderInterface::class => DelegatingLoader::class,
         LoaderRegistryInterface::class => [self::class, 'initRegistry'],
-        GroupRegistry::class           => GroupRegistry::class,
-        RoutingConfigurator::class     => RoutingConfigurator::class,
+        GroupRegistry::class => GroupRegistry::class,
+        RoutingConfigurator::class => RoutingConfigurator::class,
     ];
 
     public function __construct(
