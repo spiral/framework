@@ -48,8 +48,7 @@ final class SessionBootloader extends Bootloader
     public function boot(
         ConfiguratorInterface $config,
         CookiesBootloader $cookies
-    ): void
-    {
+    ): void {
         $session = $config->getConfig(SessionConfig::CONFIG);
 
         $cookies->whitelistCookie($session['cookie']);

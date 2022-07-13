@@ -45,8 +45,8 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
 
     public function init(EnvironmentInterface $env, DirectoriesInterface $dirs, DebugMode $debugMode): void
     {
-        if (! $dirs->has('locale')) {
-            $dirs->set('locale', $dirs->get('app').'locale/');
+        if (!$dirs->has('locale')) {
+            $dirs->set('locale', $dirs->get('app') . 'locale/');
         }
 
         $this->config->setDefaults(
