@@ -93,7 +93,7 @@ final class QueueBootloader extends Bootloader
         return new QueueRegistry($container, $registry);
     }
 
-    private function initHandler(Core $core, QueueConfig $config, Container $container): Handler
+    protected function initHandler(Core $core, QueueConfig $config, Container $container): Handler
     {
         $core = new InterceptableCore($core);
 
