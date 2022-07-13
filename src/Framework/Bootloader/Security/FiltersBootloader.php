@@ -6,9 +6,10 @@ namespace Spiral\Bootloader\Security;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Config\Patch\Append;
 use Spiral\Core\Container;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InterceptableCore;
-use Spiral\Filters\Schema;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Config\FiltersConfig;
 use Spiral\Filters\FilterBag;
@@ -54,6 +55,17 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
     }
 
     /**
+     * @param class-string<CoreInterceptorInterface>|string $interceptor
+     */
+    public function addInterceptor(string $interceptor): void
+    {
+        $this->config->modify(
+            FiltersConfig::CONFIG,
+            new Append('interceptors', null, $interceptor)
+        );
+    }
+
+    /**
      * @throws \Throwable
      */
     public function createInjection(\ReflectionClass $class, string $context = null): FilterInterface
@@ -65,7 +77,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         );
     }
 
-    private function initFilterProvider(Container $container, FiltersConfig $config)
+    private function initFilterProvider(Container $container, FiltersConfig $config): FilterProvider
     {
         $core = new InterceptableCore(new Core());
 

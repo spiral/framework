@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Storage\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Exception\EnvironmentException;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
@@ -26,15 +27,18 @@ class StorageBootloader extends Bootloader
         BucketFactoryInterface::class => BucketFactory::class,
     ];
 
-    public function init(Container $app, ConfiguratorInterface $config): void
+    public function __construct(
+        private readonly ConfiguratorInterface $config
+    ) {
+    }
+
+    public function init(Container $app, EnvironmentInterface $env): void
     {
-        $config->setDefaults(StorageConfig::CONFIG, [
-            'default' => Storage::DEFAULT_STORAGE,
+        $this->config->setDefaults(StorageConfig::CONFIG, [
+            'default' => $env->get('STORAGE_DEFAULT', Storage::DEFAULT_STORAGE),
             'servers' => [],
             'buckets' => [],
         ]);
-
-        $app->bindInjector(StorageConfig::class, ConfiguratorInterface::class);
 
         $app->bindSingleton(StorageInterface::class, static function (
             BucketFactoryInterface $bucketFactory,

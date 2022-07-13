@@ -16,21 +16,17 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 use Spiral\Config\Exception\InvalidArgumentException;
 use Spiral\Core\Exception\ConfigException;
+use Spiral\Core\InjectableConfig;
 use Spiral\Storage\Storage;
 use Spiral\Storage\Visibility;
 
-class StorageConfig
+class StorageConfig extends InjectableConfig
 {
-    /**
-     * @var string
-     */
     public const CONFIG = 'storage';
 
     private string $default;
 
-    /**
-     * @var array<string, FilesystemAdapter>
-     */
+    /** @var array<string, FilesystemAdapter> */
     private array $adapters = [];
 
     /**
@@ -41,6 +37,7 @@ class StorageConfig
     public function __construct(array $config = [])
     {
         $config = $this->normalize($config);
+        parent::__construct($config);
 
         $this->default = $config['default'];
         $this->bootStorages($config);
