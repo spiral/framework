@@ -27,8 +27,8 @@ final class ErrorHandlerInterceptor implements CoreInterceptorInterface
                 $parameters['payload'],
                 $e
             );
-        }
 
-        return null;
+            throw $e;
+        }
     }
 }

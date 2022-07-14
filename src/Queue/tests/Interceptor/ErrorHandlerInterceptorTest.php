@@ -14,6 +14,9 @@ final class ErrorHandlerInterceptorTest extends TestCase
 {
     public function testProcessError(): void
     {
+        $this->expectException(\Exception::class);
+        $this->expectErrorMessage('Something went wrong');
+
         $interceptor = new ErrorHandlerInterceptor(
             $handler = m::mock(FailedJobHandlerInterface::class)
         );
@@ -37,7 +40,7 @@ final class ErrorHandlerInterceptorTest extends TestCase
     public function testHandlerShouldBeHandledWithoutError(): void
     {
         $interceptor = new ErrorHandlerInterceptor(
-            $handler = m::mock(FailedJobHandlerInterface::class)
+            m::mock(FailedJobHandlerInterface::class)
         );
 
         $parameters = ['driver' => 'sync', 'queue' => 'default', 'payload' => ['baz' => 'bar']];
