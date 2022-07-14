@@ -19,7 +19,7 @@ use Spiral\Core\FactoryInterface;
 final class AuthBootloader extends Bootloader implements ActorProviderInterface, SingletonInterface
 {
     protected const SINGLETONS = [
-        AuthScope::class              => AuthScope::class,
+        AuthScope::class => AuthScope::class,
         ActorProviderInterface::class => self::class,
     ];
 

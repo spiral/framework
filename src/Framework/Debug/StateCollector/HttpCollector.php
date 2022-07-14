@@ -13,7 +13,7 @@ use Spiral\Debug\StateInterface;
 
 final class HttpCollector implements MiddlewareInterface, StateCollectorInterface
 {
-    private ServerRequestInterface $request;
+    private ?ServerRequestInterface $request = null;
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

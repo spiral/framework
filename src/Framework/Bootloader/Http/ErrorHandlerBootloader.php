@@ -15,6 +15,6 @@ final class ErrorHandlerBootloader extends Bootloader
 {
     protected const BINDINGS = [
         ErrorHandlerMiddleware\SuppressErrorsInterface::class => ErrorHandlerMiddleware\EnvSuppressErrors::class,
-        ErrorHandler\RendererInterface::class                 => ErrorHandler\PlainRenderer::class,
+        ErrorHandler\RendererInterface::class => ErrorHandler\PlainRenderer::class,
     ];
 }
