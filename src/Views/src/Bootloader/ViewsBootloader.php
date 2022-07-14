@@ -34,8 +34,8 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
 
     public function init(EnvironmentInterface $env, DirectoriesInterface $dirs, DebugMode $debugMode): void
     {
-        if (! $dirs->has('views')) {
-            $dirs->set('views', $dirs->get('app').'views');
+        if (!$dirs->has('views')) {
+            $dirs->set('views', $dirs->get('app') . 'views');
         }
 
         // default view config
@@ -43,8 +43,8 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
             ViewsConfig::CONFIG,
             [
                 'cache' => [
-                    'enabled' => $env->get('VIEW_CACHE', ! $debugMode->isEnabled()),
-                    'directory' => $dirs->get('cache').'views',
+                    'enabled' => $env->get('VIEW_CACHE', !$debugMode->isEnabled()),
+                    'directory' => $dirs->get('cache') . 'views',
                 ],
                 'namespaces' => [
                     'default' => [$dirs->get('views')],
@@ -57,13 +57,13 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
 
     public function addDirectory(string $namespace, string $directory): void
     {
-        if (! isset($this->config->getConfig(ViewsConfig::CONFIG)['namespaces'][$namespace])) {
+        if (!isset($this->config->getConfig(ViewsConfig::CONFIG)['namespaces'][$namespace])) {
             $this->config->modify(ViewsConfig::CONFIG, new Append('namespaces', $namespace, []));
         }
 
         $this->config->modify(
             ViewsConfig::CONFIG,
-            new Append('namespaces.'.$namespace, null, $directory)
+            new Append('namespaces.' . $namespace, null, $directory)
         );
     }
 

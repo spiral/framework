@@ -112,7 +112,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     public function initAnnotations(ContainerInterface $container, bool $reset = false): void
     {
         $prototyped = $this->memory->loadData('prototyped');
-        if (! $reset && $prototyped !== null) {
+        if (!$reset && $prototyped !== null) {
             foreach ($prototyped as $property => $class) {
                 $this->bindProperty($property, $class);
             }
@@ -146,7 +146,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
                 if (isset($shortcut['with'])) {
                     // check dependencies
                     foreach ($shortcut['with'] as $dep) {
-                        if (! \class_exists($dep, true) && ! \interface_exists($dep, true)) {
+                        if (!\class_exists($dep, true) && !\interface_exists($dep, true)) {
                             continue 2;
                         }
                     }
