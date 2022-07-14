@@ -24,7 +24,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
     protected const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
-        LoaderInterface::class => ViewLoader::class,
+        LoaderInterface::class => [self::class, 'initLoader'],
     ];
 
     public function __construct(
@@ -34,43 +34,59 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
 
     public function init(EnvironmentInterface $env, DirectoriesInterface $dirs, DebugMode $debugMode): void
     {
-        if (!$dirs->has('views')) {
-            $dirs->set('views', $dirs->get('app') . 'views');
+        if (! $dirs->has('views')) {
+            $dirs->set('views', $dirs->get('app').'views');
         }
 
         // default view config
         $this->config->setDefaults(
             ViewsConfig::CONFIG,
             [
-                'cache'        => [
-                    'enabled'   => $env->get('VIEW_CACHE', !$debugMode->isEnabled()),
-                    'directory' => $dirs->get('cache') . 'views',
+                'cache' => [
+                    'enabled' => $env->get('VIEW_CACHE', ! $debugMode->isEnabled()),
+                    'directory' => $dirs->get('cache').'views',
                 ],
-                'namespaces'   => [
+                'namespaces' => [
                     'default' => [$dirs->get('views')],
                 ],
                 'dependencies' => [],
-                'engines'      => [NativeEngine::class],
+                'engines' => [NativeEngine::class],
             ]
         );
     }
 
     public function addDirectory(string $namespace, string $directory): void
     {
-        if (!isset($this->config->getConfig(ViewsConfig::CONFIG)['namespaces'][$namespace])) {
+        if (! isset($this->config->getConfig(ViewsConfig::CONFIG)['namespaces'][$namespace])) {
             $this->config->modify(ViewsConfig::CONFIG, new Append('namespaces', $namespace, []));
         }
 
-        $this->config->modify(ViewsConfig::CONFIG, new Append('namespaces.' . $namespace, null, $directory));
+        $this->config->modify(
+            ViewsConfig::CONFIG,
+            new Append('namespaces.'.$namespace, null, $directory)
+        );
     }
 
     public function addEngine(string|EngineInterface $engine): void
     {
-        $this->config->modify(ViewsConfig::CONFIG, new Append('engines', null, $engine));
+        $this->config->modify(
+            ViewsConfig::CONFIG,
+            new Append('engines', null, $engine)
+        );
     }
 
     public function addCacheDependency(string|DependencyInterface $dependency): void
     {
-        $this->config->modify(ViewsConfig::CONFIG, new Append('dependencies', null, $dependency));
+        $this->config->modify(
+            ViewsConfig::CONFIG,
+            new Append('dependencies', null, $dependency)
+        );
+    }
+
+    private function initLoader(ViewsConfig $config): LoaderInterface
+    {
+        return new ViewLoader(
+            $config->getNamespaces()
+        );
     }
 }

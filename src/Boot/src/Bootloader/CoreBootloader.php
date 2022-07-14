@@ -22,12 +22,12 @@ final class CoreBootloader extends Bootloader
 
     protected const SINGLETONS = [
         // core services and helpers
-        FilesInterface::class                   => Files::class,
-        MemoryInterface::class                  => [self::class, 'memory'],
+        FilesInterface::class => Files::class,
+        MemoryInterface::class => [self::class, 'memory'],
 
         // debug and logging services
         Logger\ListenerRegistryInterface::class => Logger\ListenerRegistry::class,
-        Logger\LogsInterface::class             => Logger\LogFactory::class,
+        Logger\LogsInterface::class => Logger\LogFactory::class,
     ];
 
     private function memory(

@@ -49,6 +49,15 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         // Cache
         \Spiral\Cache\Bootloader\CacheBootloader::class,
 
+        // Serializer
+        \Spiral\Serializer\Bootloader\SerializerBootloader::class,
+
+        // SendIt
+        \Spiral\SendIt\Bootloader\MailerBootloader::class,
+
+        // Scaffolder
+        \Spiral\Scaffolder\Bootloader\ScaffolderBootloader::class,
+
         // Distribution
         \Spiral\Distribution\Bootloader\DistributionBootloader::class,
 

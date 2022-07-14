@@ -29,41 +29,43 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
 
     // Default spiral specific shortcuts, automatically checked on existence.
     private const DEFAULT_SHORTCUTS = [
-        'app'          => ['resolve' => \Spiral\Boot\KernelInterface::class],
+        'app' => ['resolve' => \Spiral\Boot\KernelInterface::class],
         'classLocator' => \Spiral\Tokenizer\ClassesInterface::class,
-        'console'      => \Spiral\Console\Console::class,
-        'container'    => ContainerInterface::class,
-        'encrypter'    => \Spiral\Encrypter\EncrypterInterface::class,
-        'env'          => \Spiral\Boot\EnvironmentInterface::class,
-        'files'        => \Spiral\Files\FilesInterface::class,
-        'guard'        => \Spiral\Security\GuardInterface::class,
-        'http'         => \Spiral\Http\Http::class,
-        'i18n'         => \Spiral\Translator\TranslatorInterface::class,
-        'input'        => \Spiral\Http\Request\InputManager::class,
-        'session'      => [
+        'console' => \Spiral\Console\Console::class,
+        'broadcast' => \Spiral\Broadcasting\BroadcastInterface::class,
+        'container' => ContainerInterface::class,
+        'encrypter' => \Spiral\Encrypter\EncrypterInterface::class,
+        'env' => \Spiral\Boot\EnvironmentInterface::class,
+        'files' => \Spiral\Files\FilesInterface::class,
+        'guard' => \Spiral\Security\GuardInterface::class,
+        'http' => \Spiral\Http\Http::class,
+        'i18n' => \Spiral\Translator\TranslatorInterface::class,
+        'input' => \Spiral\Http\Request\InputManager::class,
+        'session' => [
             'resolve' => \Spiral\Session\SessionScope::class,
             'with' => [\Spiral\Session\SessionInterface::class],
         ],
-        'cookies'      => \Spiral\Cookies\CookieManager::class,
-        'logger'       => \Psr\Log\LoggerInterface::class,
-        'logs'         => \Spiral\Logger\LogsInterface::class,
-        'memory'       => MemoryInterface::class,
-        'paginators'   => \Spiral\Pagination\PaginationProviderInterface::class,
-        'queue'        => \Spiral\Queue\QueueInterface::class,
+        'cookies' => \Spiral\Cookies\CookieManager::class,
+        'logger' => \Psr\Log\LoggerInterface::class,
+        'logs' => \Spiral\Logger\LogsInterface::class,
+        'memory' => MemoryInterface::class,
+        'paginators' => \Spiral\Pagination\PaginationProviderInterface::class,
+        'queue' => \Spiral\Queue\QueueInterface::class,
         'queueManager' => \Spiral\Queue\QueueConnectionProviderInterface::class,
-        'request'      => \Spiral\Http\Request\InputManager::class,
-        'response'     => \Spiral\Http\ResponseWrapper::class,
-        'router'       => \Spiral\Router\RouterInterface::class,
-        'snapshots'    => \Spiral\Snapshots\SnapshotterInterface::class,
-        'storage'      => \Spiral\Storage\BucketInterface::class,
-        'validator'    => \Spiral\Validation\ValidationInterface::class,
-        'views'        => \Spiral\Views\ViewsInterface::class,
-        'auth'         => [
+        'request' => \Spiral\Http\Request\InputManager::class,
+        'response' => \Spiral\Http\ResponseWrapper::class,
+        'router' => \Spiral\Router\RouterInterface::class,
+        'snapshots' => \Spiral\Snapshots\SnapshotterInterface::class,
+        'storage' => \Spiral\Storage\BucketInterface::class,
+        'serializer' => \Spiral\Serializer\SerializerManager::class,
+        'validator' => \Spiral\Validation\ValidationInterface::class,
+        'views' => \Spiral\Views\ViewsInterface::class,
+        'auth' => [
             'resolve' => \Spiral\Auth\AuthScope::class,
             'with' => [\Spiral\Auth\AuthContextInterface::class],
         ],
-        'authTokens'   => \Spiral\Auth\TokenStorageInterface::class,
-        'cache'        => \Psr\SimpleCache\CacheInterface::class,
+        'authTokens' => \Spiral\Auth\TokenStorageInterface::class,
+        'cache' => \Psr\SimpleCache\CacheInterface::class,
         'cacheManager' => \Spiral\Cache\CacheStorageProviderInterface::class,
         'exceptionHandler' => \Spiral\Exceptions\ExceptionHandlerInterface::class,
     ];
@@ -110,7 +112,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     public function initAnnotations(ContainerInterface $container, bool $reset = false): void
     {
         $prototyped = $this->memory->loadData('prototyped');
-        if (!$reset && $prototyped !== null) {
+        if (! $reset && $prototyped !== null) {
             foreach ($prototyped as $property => $class) {
                 $this->bindProperty($property, $class);
             }
@@ -144,7 +146,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
                 if (isset($shortcut['with'])) {
                     // check dependencies
                     foreach ($shortcut['with'] as $dep) {
-                        if (!\class_exists($dep, true) && !\interface_exists($dep, true)) {
+                        if (! \class_exists($dep, true) && ! \interface_exists($dep, true)) {
                             continue 2;
                         }
                     }

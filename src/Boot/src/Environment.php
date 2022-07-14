@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
+/**
+ * @internal Use {@see \Spiral\Boot\EnvironmentInterface} instead
+ */
 final class Environment implements EnvironmentInterface
 {
     private const VALUE_MAP = [
