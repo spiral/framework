@@ -8,6 +8,7 @@ use Spiral\Console\Exception\ConfigException;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
 use Spiral\Console\SequenceInterface;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InjectableConfig;
 
 final class ConsoleConfig extends InjectableConfig
@@ -19,6 +20,7 @@ final class ConsoleConfig extends InjectableConfig
         'version' => null,
         'commands' => [],
         'sequences' => [],
+        'interceptors' => [],
     ];
 
     public function getName(): string
@@ -29,6 +31,18 @@ final class ConsoleConfig extends InjectableConfig
     public function getVersion(): string
     {
         return $this->config['version'] ?? 'UNKNOWN';
+    }
+
+    /**
+     * @return array<class-string<CoreInterceptorInterface>>
+     */
+    public function getInterceptors(): array
+    {
+        if (!\array_key_exists('interceptors', $this->config)) {
+            return [];
+        }
+
+        return $this->config['interceptors'];
     }
 
     /**

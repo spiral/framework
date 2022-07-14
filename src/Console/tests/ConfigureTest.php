@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral Framework, SpiralScout LLC.
- *
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Console;
@@ -13,7 +7,6 @@ namespace Spiral\Tests\Console;
 use Spiral\Console\Command\ConfigureCommand;
 use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Console;
-use Spiral\Console\StaticLocator;
 use Spiral\Tests\Console\Fixtures\AnotherFailedCommand;
 use Spiral\Tests\Console\Fixtures\FailedCommand;
 use Spiral\Tests\Console\Fixtures\HelperCommand;
@@ -48,11 +41,11 @@ class ConfigureTest extends BaseTest
     public function testConfigure(): void
     {
         $core = $this->getCore(
-            new StaticLocator([
-                HelperCommand::class,
-                ConfigureCommand::class,
-                TestCommand::class,
-            ])
+           $this->getStaticLocator([
+               HelperCommand::class,
+               ConfigureCommand::class,
+               TestCommand::class,
+           ])
         );
 
         $this->container->bind(Console::class, $core);
@@ -147,7 +140,7 @@ class ConfigureTest extends BaseTest
     private function bindFailure(): Console
     {
         $core = $this->getCore(
-            new StaticLocator([
+            $this->getStaticLocator([
                 HelperCommand::class,
                 ConfigureCommand::class,
                 TestCommand::class,

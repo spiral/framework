@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral Framework, SpiralScout LLC.
- *
- * @author    Vladislav Gorenkin (vladgorenkin)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Console\Fixtures;

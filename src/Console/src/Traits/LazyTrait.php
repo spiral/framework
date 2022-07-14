@@ -6,12 +6,14 @@ namespace Spiral\Console\Traits;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Console\Command as SpiralCommand;
+use Spiral\Console\Config\ConsoleConfig;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Command\LazyCommand;
 
 trait LazyTrait
 {
     private ContainerInterface $container;
+    private ConsoleConfig $config;
 
     /**
      * Check if command can be lazy-loaded.
@@ -41,6 +43,7 @@ trait LazyTrait
             function () use ($class): SymfonyCommand {
                 $command = $this->container->get($class);
                 $command->setContainer($this->container);
+                $command->setInterceptors($this->config->getInterceptors());
 
                 return $command;
             }

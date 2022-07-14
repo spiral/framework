@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral Framework, SpiralScout LLC.
- *
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Console\Fixtures;
@@ -18,7 +12,7 @@ class TestCommand extends Command implements SingletonInterface
     public const NAME = 'test';
     public const DESCRIPTION = 'Test Command';
 
-    private $count = 0;
+    private int $count = 0;
 
     public function perform(): void
     {

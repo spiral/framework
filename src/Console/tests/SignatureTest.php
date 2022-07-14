@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Console;
 
 use Spiral\Console\Command;
-use Spiral\Console\StaticLocator;
 use Symfony\Component\Console\Input\StringInput;
 
 final class SignatureTest extends BaseTest
@@ -13,7 +12,7 @@ final class SignatureTest extends BaseTest
     public function testOptions(): void
     {
         $core = $this->getCore(
-            new StaticLocator([
+            $this->getStaticLocator([
                 new class extends Command {
                     protected const SIGNATURE = 'foo:bar {arg?} {--o|option}';
 
@@ -65,14 +64,14 @@ final class SignatureTest extends BaseTest
     public function testArrayableOptions(): void
     {
         $core = $this->getCore(
-            new StaticLocator([
+            $this->getStaticLocator([
                 new class extends Command {
                     protected const SIGNATURE = 'foo:bar {arg[]?} {--o|option[]=}';
 
                     public function perform(): int
                     {
-                        $argument = (array) $this->argument('arg');
-                        $option = (array) $this->option('option');
+                        $argument = (array)$this->argument('arg');
+                        $option = (array)$this->option('option');
 
                         if ($argument) {
                             $this->write('argument : '.\implode(',', $argument));
@@ -110,14 +109,15 @@ final class SignatureTest extends BaseTest
 
         $this->assertSame(
             'argument : bar,baz,bakoption : far,faz',
-            $core->run(command: 'foo:bar', input: new StringInput('foo:bar bar baz bak -ofar --option=faz'))->getOutput()->fetch()
+            $core->run(command: 'foo:bar', input: new StringInput('foo:bar bar baz bak -ofar --option=faz'))->getOutput(
+            )->fetch()
         );
     }
 
     public function testDescription(): void
     {
         $core = $this->getCore(
-            new StaticLocator([
+            $this->getStaticLocator([
                 new class extends Command {
                     protected const SIGNATURE = 'foo:bar 
                                     {foo : Foo arg description. }  
@@ -158,7 +158,7 @@ Options:
   -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
 HELP
-,
+            ,
             $core->run(command: 'help', input: ['command_name' => 'foo:bar'])->getOutput()->fetch()
         );
     }
