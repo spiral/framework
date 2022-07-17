@@ -83,14 +83,14 @@ final class QueueBootloader extends Bootloader
 
     private function registerJobsSerializer(Container $container): void
     {
-        $container->bindSingleton(SerializerInterface::class, static fn() => new DefaultSerializer());
+        $container->bindSingleton(SerializerInterface::class, static fn () => new DefaultSerializer());
     }
 
     private function registerQueue(Container $container): void
     {
         $container->bindSingleton(
             QueueInterface::class,
-            static fn(QueueManager $manager): QueueInterface => $manager->getConnection()
+            static fn (QueueManager $manager): QueueInterface => $manager->getConnection()
         );
     }
 

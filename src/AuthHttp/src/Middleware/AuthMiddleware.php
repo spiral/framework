@@ -61,7 +61,7 @@ final class AuthMiddleware implements MiddlewareInterface
 
         $response = $this->scope->runScope(
             [AuthContextInterface::class => $authContext],
-            static fn() => $handler->handle($request->withAttribute(self::ATTRIBUTE, $authContext))
+            static fn () => $handler->handle($request->withAttribute(self::ATTRIBUTE, $authContext))
         );
 
         return $this->closeContext($request, $response, $authContext);

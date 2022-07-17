@@ -67,7 +67,7 @@ final class RouteLocator
             }
         }
 
-        \uasort($result, static fn(array $route1, array $route2) => $route1['priority'] <=> $route2['priority']);
+        \uasort($result, static fn (array $route1, array $route2) => $route1['priority'] <=> $route2['priority']);
 
         return $result;
     }

@@ -22,11 +22,17 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
 
     public function start(Container $container, HttpBootloader $http, BroadcastConfig $config): void
     {
-        $container->bindSingleton(AuthorizationMiddleware::class, static fn(BroadcastInterface $broadcast, ResponseFactoryInterface $responseFactory, BroadcastConfig $config): AuthorizationMiddleware => new AuthorizationMiddleware(
-            $broadcast,
-            $responseFactory,
-            $config->getAuthorizationPath()
-        ));
+        $container->bindSingleton(
+            AuthorizationMiddleware::class,
+            static fn (BroadcastInterface $broadcast,
+                ResponseFactoryInterface $responseFactory,
+                BroadcastConfig $config): AuthorizationMiddleware =>
+                    new AuthorizationMiddleware(
+                        $broadcast,
+                        $responseFactory,
+                        $config->getAuthorizationPath()
+                    )
+        );
 
 
         if ($config->getAuthorizationPath() !== null) {

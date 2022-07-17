@@ -40,7 +40,8 @@ abstract class CachedReader extends Decorator
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forClass($class), fn() => $this->iterableToArray(parent::getClassMetadata($class)));
+        $result = $this->cached($this->key->forClass($class), fn () =>
+            $this->iterableToArray(parent::getClassMetadata($class)));
 
         return $this->filter($name, $result);
     }
@@ -50,7 +51,8 @@ abstract class CachedReader extends Decorator
      */
     public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forFunction($function), fn() => $this->iterableToArray(parent::getFunctionMetadata($function)));
+        $result = $this->cached($this->key->forFunction($function), fn () =>
+            $this->iterableToArray(parent::getFunctionMetadata($function)));
 
         return $this->filter($name, $result);
     }
@@ -60,7 +62,8 @@ abstract class CachedReader extends Decorator
      */
     public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forProperty($property), fn() => $this->iterableToArray(parent::getPropertyMetadata($property)));
+        $result = $this->cached($this->key->forProperty($property), fn () =>
+            $this->iterableToArray(parent::getPropertyMetadata($property)));
 
         return $this->filter($name, $result);
     }
@@ -70,7 +73,8 @@ abstract class CachedReader extends Decorator
      */
     public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forConstant($constant), fn() => $this->iterableToArray(parent::getConstantMetadata($constant)));
+        $result = $this->cached($this->key->forConstant($constant), fn () =>
+            $this->iterableToArray(parent::getConstantMetadata($constant)));
 
         return $this->filter($name, $result);
     }
@@ -80,7 +84,8 @@ abstract class CachedReader extends Decorator
      */
     public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
     {
-        $result = $this->cached($this->key->forParameter($parameter), fn() => $this->iterableToArray(parent::getParameterMetadata($parameter)));
+        $result = $this->cached($this->key->forParameter($parameter), fn () =>
+            $this->iterableToArray(parent::getParameterMetadata($parameter)));
 
         return $this->filter($name, $result);
     }

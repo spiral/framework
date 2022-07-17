@@ -90,7 +90,7 @@ final class AcceptHeader
             /**
              * Sort item in descending order.
              */
-            uasort($this->items, static fn(AcceptHeaderItem $a, AcceptHeaderItem $b) => self::compare($a, $b) * -1);
+            uasort($this->items, static fn (AcceptHeaderItem $a, AcceptHeaderItem $b) => self::compare($a, $b) * -1);
 
             $this->sorted = true;
         }

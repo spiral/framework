@@ -33,7 +33,7 @@ final class PhpLoader implements FileLoaderInterface
     public function loadFile(string $section, string $filename): array
     {
         try {
-            return ContainerScope::runScope($this->container, fn() => require $filename);
+            return ContainerScope::runScope($this->container, fn () => require $filename);
         } catch (\Throwable $e) {
             throw new LoaderException($e->getMessage(), $e->getCode(), $e);
         }

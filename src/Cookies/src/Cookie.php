@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Cookies;
 
 use Spiral\Cookies\Cookie\SameSite;
+
 /**
  * Represent singular cookie header value with packing abilities.
  */
