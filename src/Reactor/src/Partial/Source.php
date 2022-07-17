@@ -188,7 +188,7 @@ class Source extends AbstractDeclaration
         $lines = explode("\n", self::normalizeEndings($string, false));
 
         //Pre-processing
-        return array_filter(array_map([$this, 'prepareLine'], $lines), static fn($line): bool => $line !== null);
+        return array_filter(array_map([$this, 'prepareLine'], $lines), static fn ($line): bool => $line !== null);
     }
 
     /**

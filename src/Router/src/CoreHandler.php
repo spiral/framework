@@ -104,7 +104,7 @@ final class CoreHandler implements RequestHandlerInterface
                     Request::class  => $request,
                     Response::class => $response,
                 ],
-                fn() => $this->core->callAction(
+                fn () => $this->core->callAction(
                     $this->controller,
                     $this->getAction($request),
                     $this->parameters
