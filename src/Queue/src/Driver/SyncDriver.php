@@ -18,10 +18,8 @@ final class SyncDriver implements QueueInterface
 {
     use QueueTrait;
 
-    /** @var HandlerRegistryInterface */
-    private $registry;
-    /** @var FailedJobHandlerInterface */
-    private $failedJobHandler;
+    private HandlerRegistryInterface $registry;
+    private FailedJobHandlerInterface $failedJobHandler;
 
     public function __construct(
         HandlerRegistryInterface $registry,

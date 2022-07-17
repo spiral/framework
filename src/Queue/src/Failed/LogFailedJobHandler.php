@@ -8,8 +8,7 @@ use Spiral\Snapshots\SnapshotterInterface;
 
 final class LogFailedJobHandler implements FailedJobHandlerInterface
 {
-    /** @var SnapshotterInterface */
-    private $snapshotter;
+    private SnapshotterInterface $snapshotter;
 
     public function __construct(SnapshotterInterface $snapshotter)
     {

@@ -40,27 +40,20 @@ final class Session implements SessionInterface
 
     /**
      * Unique string to identify client. Signature is stored inside the session.
-     *
-     * @var string
      */
-    private $clientSignature;
+    private string $clientSignature;
 
     /**
      * Session lifetime in seconds.
-     *
-     * @var int
      */
-    private $lifetime;
+    private int $lifetime;
 
     /**
      * @var string
      */
     private $id;
 
-    /**
-     * @var bool
-     */
-    private $started = false;
+    private bool $started = false;
 
     /**
      * @param string|null $id

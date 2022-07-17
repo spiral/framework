@@ -15,8 +15,7 @@ use Spiral\Views\Exception\CacheException;
 
 final class ViewCache
 {
-    /** @var array */
-    private $cache = [];
+    private array $cache = [];
 
     /**
      * @param ContextInterface|null $context

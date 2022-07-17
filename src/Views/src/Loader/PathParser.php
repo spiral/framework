@@ -19,11 +19,9 @@ use Spiral\Views\LoaderInterface;
  */
 final class PathParser
 {
-    /** @var string */
-    private $defaultNamespace;
+    private string $defaultNamespace;
 
-    /** @var string */
-    private $extension;
+    private string $extension;
 
     public function __construct(string $defaultNamespace, string $extension)
     {

@@ -23,11 +23,9 @@ final class Element implements ImportInterface
 {
     use ContextTrait;
 
-    /** @var string */
-    private $path;
+    private string $path;
 
-    /** @var string */
-    private $alias;
+    private string $alias;
 
     /**
      * @param string|null  $alias

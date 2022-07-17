@@ -18,14 +18,12 @@ use Spiral\Stempler\Node\NodeInterface;
  */
 final class Assembler
 {
-    /** @var NodeInterface */
-    private $node;
+    private NodeInterface $node;
 
-    /** @var string */
-    private $path;
+    private string $path;
 
     /** @var NodeInterface[] */
-    private $stack = [];
+    private array $stack = [];
 
     public function __construct(NodeInterface $node, string $path)
     {

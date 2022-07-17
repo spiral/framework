@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Declaration;
 
+use Spiral\Scaffolder\Declaration\ConfigDeclaration\TypeAnnotations;
+use Spiral\Scaffolder\Declaration\ConfigDeclaration\TypeHints;
+use Spiral\Scaffolder\Declaration\ConfigDeclaration\Defaults;
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Core\InjectableConfig;
@@ -28,37 +31,29 @@ use function Spiral\Scaffolder\isAssociativeArray;
 
 class ConfigDeclaration extends ClassDeclaration implements DependedInterface
 {
-    /** @var ScaffolderConfig */
-    private $config;
+    private ScaffolderConfig $config;
 
-    /** @var FilesInterface */
-    private $files;
+    private FilesInterface $files;
 
-    /** @var SlugifyInterface */
-    private $slugify;
+    private SlugifyInterface $slugify;
 
-    /** @var ConfigDeclaration\TypeAnnotations */
-    private $typeAnnotations;
+    private TypeAnnotations $typeAnnotations;
 
-    /** @var ConfigDeclaration\TypeHints */
-    private $typeHints;
+    private TypeHints $typeHints;
 
-    /** @var ConfigDeclaration\Defaults */
-    private $defaultValues;
+    private Defaults $defaultValues;
 
-    /** @var string */
-    private $configName;
+    private string $configName;
 
-    /** @var string */
-    private $directory;
+    private string $directory;
 
     public function __construct(
         ScaffolderConfig $config,
         FilesInterface $files,
         SlugifyInterface $slugify,
-        ConfigDeclaration\TypeAnnotations $typeAnnotations,
-        ConfigDeclaration\TypeHints $typeHints,
-        ConfigDeclaration\Defaults $defaultValues,
+        TypeAnnotations $typeAnnotations,
+        TypeHints $typeHints,
+        Defaults $defaultValues,
         string $configName,
         string $name,
         string $comment = '',

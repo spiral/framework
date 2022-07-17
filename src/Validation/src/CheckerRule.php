@@ -18,17 +18,13 @@ final class CheckerRule extends AbstractRule
 {
     use TranslatorTrait;
 
-    /** @var CheckerInterface */
-    private $checker;
+    private CheckerInterface $checker;
 
-    /** @var string */
-    private $method;
+    private string $method;
 
-    /** @var array */
-    private $args;
+    private array $args;
 
-    /** @var string|null */
-    private $message;
+    private ?string $message;
 
     public function __construct(
         CheckerInterface $checker,

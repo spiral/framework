@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax;
 
+use Spiral\Stempler\Parser\Context;
 use Spiral\Stempler\Lexer\Token;
 use Spiral\Stempler\Node\PHP;
 use Spiral\Stempler\Parser;
@@ -30,7 +31,7 @@ final class PHPSyntax implements SyntaxInterface
         $asm->push(new PHP(
             $token->content,
             $token->tokens,
-            new Parser\Context($token, $parser->getPath())
+            new Context($token, $parser->getPath())
         ));
     }
 }

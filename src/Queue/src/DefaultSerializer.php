@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
+use function Opis\Closure\serialize;
+use function Opis\Closure\unserialize;
 use Spiral\Queue\Exception\SerializationException;
 
 /**
@@ -17,7 +19,7 @@ final class DefaultSerializer implements SerializerInterface
     public function serialize(array $payload): string
     {
         try {
-            return \Opis\Closure\serialize($payload);
+            return serialize($payload);
         } catch (\Throwable $e) {
             throw new SerializationException($e->getMessage(), (int)$e->getCode(), $e);
         }
@@ -29,7 +31,7 @@ final class DefaultSerializer implements SerializerInterface
     public function deserialize(string $payload): array
     {
         try {
-            return (array)\Opis\Closure\unserialize($payload);
+            return (array)unserialize($payload);
         } catch (\Throwable $e) {
             throw new SerializationException($e->getMessage(), (int)$e->getCode(), $e);
         }

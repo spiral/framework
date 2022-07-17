@@ -22,14 +22,12 @@ use Spiral\Stempler\Parser\Context;
  */
 final class Result
 {
-    /** @var string */
-    private $content = '';
+    private string $content = '';
 
     /** @var Location[] */
-    private $locations = [];
+    private array $locations = [];
 
-    /** @var Location|null */
-    private $parent;
+    private ?Location $parent = null;
 
     public function withinContext(?Context $ctx, callable $body): void
     {

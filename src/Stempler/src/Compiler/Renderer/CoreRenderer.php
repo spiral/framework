@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Compiler\Renderer;
 
+use Spiral\Stempler\Compiler\Result;
 use Spiral\Stempler\Compiler;
 use Spiral\Stempler\Compiler\RendererInterface;
 use Spiral\Stempler\Node\Aggregate;
@@ -28,7 +29,7 @@ final class CoreRenderer implements RendererInterface
      */
     public function render(
         Compiler $compiler,
-        Compiler\Result $result,
+        Result $result,
         NodeInterface $node
     ): bool {
         switch (true) {
@@ -38,7 +39,7 @@ final class CoreRenderer implements RendererInterface
             case $node instanceof Template || $node instanceof Block || $node instanceof Aggregate:
                 $result->withinContext(
                     $node->getContext(),
-                    function (Compiler\Result $source) use ($node, $compiler): void {
+                    function (Result $source) use ($node, $compiler): void {
                         foreach ($node->nodes as $child) {
                             $compiler->compile($child, $source);
                         }
@@ -50,7 +51,7 @@ final class CoreRenderer implements RendererInterface
             case $node instanceof Mixin:
                 $result->withinContext(
                     $node->getContext(),
-                    function (Compiler\Result $source) use ($node, $compiler): void {
+                    function (Result $source) use ($node, $compiler): void {
                         foreach ($node->nodes as $child) {
                             if (is_string($child)) {
                                 $source->push($child, null);

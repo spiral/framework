@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax;
 
+use Spiral\Stempler\Parser\Syntax\Traits\MixinTrait;
+use Spiral\Stempler\Parser\Context;
 use Spiral\Stempler\Exception\SyntaxException;
 use Spiral\Stempler\Lexer\Grammar\HTMLGrammar;
 use Spiral\Stempler\Lexer\Token;
@@ -29,7 +31,7 @@ use Spiral\Stempler\Parser\SyntaxInterface;
  */
 final class HTMLSyntax implements SyntaxInterface
 {
-    use Parser\Syntax\Traits\MixinTrait;
+    use MixinTrait;
 
     // list of tags which are closed automatically (http://xahlee.info/js/html5_non-closing_tag.html)
     private const VOID_TAGS = [
@@ -55,14 +57,11 @@ final class HTMLSyntax implements SyntaxInterface
         'on*',
     ];
 
-    /** @var Tag|null */
-    private $node;
+    private ?Tag $node = null;
 
-    /** @var Token|null */
-    private $token;
+    private ?Token $token = null;
 
-    /** @var Attr|null */
-    private $attr;
+    private ?Attr $attr = null;
 
     /**
      * @inheritDoc
@@ -72,7 +71,7 @@ final class HTMLSyntax implements SyntaxInterface
         switch ($token->type) {
             case HTMLGrammar::TYPE_OPEN:
             case HTMLGrammar::TYPE_OPEN_SHORT:
-                $this->node = new Tag(new Parser\Context($token, $parser->getPath()));
+                $this->node = new Tag(new Context($token, $parser->getPath()));
                 $this->token = $token;
 
                 break;
@@ -92,7 +91,7 @@ final class HTMLSyntax implements SyntaxInterface
                 $this->attr = new Attr(
                     $this->parseToken($parser, $token),
                     new Nil(),
-                    new Parser\Context($token, $parser->getPath())
+                    new Context($token, $parser->getPath())
                 );
 
                 $this->node->attrs[] = $this->attr;
@@ -163,7 +162,7 @@ final class HTMLSyntax implements SyntaxInterface
                 if ($asm->getNode() instanceof Mixin || $asm->getNode() instanceof Verbatim) {
                     $node = $this->parseToken($parser, $token);
                     if (is_string($node)) {
-                        $node = new Raw($node, new Parser\Context($token, $parser->getPath()));
+                        $node = new Raw($node, new Context($token, $parser->getPath()));
                     }
 
                     $asm->push($node);
@@ -183,7 +182,7 @@ final class HTMLSyntax implements SyntaxInterface
 
     private function parseVerbatim(Parser $parser, Token $token): Verbatim
     {
-        $verbatim = new Verbatim(new Parser\Context($token, $parser->getPath()));
+        $verbatim = new Verbatim(new Context($token, $parser->getPath()));
 
         if ($token->tokens === []) {
             if ($token->content) {

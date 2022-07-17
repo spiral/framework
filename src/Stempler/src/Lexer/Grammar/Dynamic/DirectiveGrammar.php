@@ -31,8 +31,7 @@ final class DirectiveGrammar implements \IteratorAggregate
     // Allowed keyword characters.
     private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
 
-    /** @var array */
-    private $name = [];
+    private array $name = [];
 
     /** @var array */
     private $body = [];

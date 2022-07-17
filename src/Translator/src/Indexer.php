@@ -32,15 +32,12 @@ final class Indexer
 {
     use LoggerTrait;
 
-    /** @var TranslatorConfig */
-    private $config;
+    private TranslatorConfig $config;
 
     /**
      * Catalogue to aggregate messages into.
-     *
-     * @var CatalogueInterface
      */
-    private $catalogue;
+    private CatalogueInterface $catalogue;
 
     public function __construct(TranslatorConfig $config, CatalogueInterface $catalogue)
     {

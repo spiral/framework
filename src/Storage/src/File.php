@@ -22,20 +22,11 @@ final class File implements FileInterface
     use ReadableTrait;
     use WritableTrait;
 
-    /**
-     * @var BucketInterface
-     */
-    private $storage;
+    private BucketInterface $storage;
 
-    /**
-     * @var string
-     */
-    private $pathname;
+    private string $pathname;
 
-    /**
-     * @var UriResolverInterface|null
-     */
-    private $resolver;
+    private ?UriResolverInterface $resolver;
 
     /**
      * @param UriResolverInterface|null $resolver

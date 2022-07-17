@@ -34,8 +34,7 @@ final class ConstructorParam
     /** @var bool */
     public $isVariadic = false;
 
-    /** @var bool */
-    private $builtIn;
+    private ?bool $builtIn = null;
 
     /**
      * ConstructorParam constructor.

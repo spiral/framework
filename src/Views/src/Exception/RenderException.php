@@ -13,8 +13,7 @@ namespace Spiral\Views\Exception;
 
 class RenderException extends ViewException
 {
-    /** @var array */
-    private $userTrace = [];
+    private array $userTrace = [];
 
     /**
      * {@inheritdoc}

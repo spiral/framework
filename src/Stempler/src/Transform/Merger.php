@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Transform;
 
+use Spiral\Stempler\Transform\Merge\Inject\InjectBlocks;
+use Spiral\Stempler\Transform\Merge\Inject\InjectPHP;
+use Spiral\Stempler\Transform\Merge\Inject\InjectAttributes;
 use DeepCopy\DeepCopy;
 use Spiral\Stempler\Node\HTML\Tag;
 use Spiral\Stempler\Node\NodeInterface;
@@ -27,11 +30,9 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class Merger
 {
-    /** @var DeepCopy */
-    private $deepCopy;
+    private DeepCopy $deepCopy;
 
-    /** @var BlockFetcher */
-    private $fetcher;
+    private BlockFetcher $fetcher;
 
     /**
      * Merger constructor.
@@ -58,9 +59,9 @@ final class Merger
         $target = $this->deepCopy->copy($target);
         $target->setContext($source->getContext());
 
-        $target->nodes = $this->traverse($target->nodes, new Inject\InjectBlocks($blocks));
-        $target->nodes = $this->traverse($target->nodes, new Inject\InjectPHP($blocks));
-        $target->nodes = $this->traverse($target->nodes, new Inject\InjectAttributes($blocks));
+        $target->nodes = $this->traverse($target->nodes, new InjectBlocks($blocks));
+        $target->nodes = $this->traverse($target->nodes, new InjectPHP($blocks));
+        $target->nodes = $this->traverse($target->nodes, new InjectAttributes($blocks));
 
         return $target;
     }

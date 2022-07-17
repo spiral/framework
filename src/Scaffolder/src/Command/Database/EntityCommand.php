@@ -126,8 +126,7 @@ class EntityCommand extends AbstractCommand
                 throw new ScaffolderException("Field definition must in 'name:type' or 'name:type' form");
             }
 
-            $parts = explode(':', $field);
-            [$name, $type] = $parts;
+            [$name, $type] = explode(':', $field);
 
             $declaration->addField($name, $accessibility, $type);
         }

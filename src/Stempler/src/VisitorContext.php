@@ -19,7 +19,7 @@ use Spiral\Stempler\Node\NodeInterface;
 final class VisitorContext
 {
     /** @var NodeInterface[] */
-    private $scope = [];
+    private array $scope = [];
 
     public function withNode(NodeInterface $node): self
     {

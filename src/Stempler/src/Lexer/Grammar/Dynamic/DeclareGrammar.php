@@ -32,8 +32,7 @@ final class DeclareGrammar implements GrammarInterface
     // whitespace
     private const REGEXP_WHITESPACE = '/\s/';
 
-    /** @var array */
-    private $keyword = [];
+    private array $keyword = [];
 
     /**
      * @inheritDoc

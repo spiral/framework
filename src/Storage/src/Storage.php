@@ -43,12 +43,9 @@ final class Storage implements MutableStorageInterface
     /**
      * @var array<string, BucketInterface>
      */
-    private $buckets = [];
+    private array $buckets = [];
 
-    /**
-     * @var string
-     */
-    private $default;
+    private string $default;
 
     public function __construct(string $name = self::DEFAULT_STORAGE)
     {
@@ -71,7 +68,7 @@ final class Storage implements MutableStorageInterface
      */
     public function bucket(string $name = null): BucketInterface
     {
-        $name = $name ?? $this->default;
+        $name ??= $this->default;
 
         if (!isset($this->buckets[$name])) {
             throw new InvalidArgumentException(\sprintf(self::ERROR_NOT_FOUND, $name));

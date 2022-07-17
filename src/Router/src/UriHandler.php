@@ -41,35 +41,26 @@ final class UriHandler
         '//'  => '/',
     ];
 
-    /** @var UriFactoryInterface */
-    private $uriFactory;
+    private UriFactoryInterface $uriFactory;
 
-    /** @var string */
-    private $pattern;
+    private ?string $pattern = null;
 
     /** @var SlugifyInterface @internal */
-    private $slugify;
+    private SlugifyInterface $slugify;
 
-    /** @var array */
-    private $constrains = [];
+    private array $constrains = [];
 
-    /** @var array */
-    private $defaults = [];
+    private array $defaults = [];
 
-    /** @var bool */
-    private $matchHost = false;
+    private bool $matchHost = false;
 
-    /** @var string */
-    private $prefix = '';
+    private string $prefix = '';
 
-    /** @var string|null */
-    private $compiled;
+    private ?string $compiled = null;
 
-    /** @var string|null */
-    private $template;
+    private ?string $template = null;
 
-    /** @var array */
-    private $options = [];
+    private array $options = [];
 
     /**
      * @param SlugifyInterface|null $slugify

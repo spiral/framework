@@ -27,14 +27,11 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class ExtendsParent implements VisitorInterface
 {
-    /** @var string */
-    private $extendsKeyword = 'extends';
+    private string $extendsKeyword = 'extends';
 
-    /** @var Builder */
-    private $builder;
+    private Builder $builder;
 
-    /** @var Merger */
-    private $merger;
+    private Merger $merger;
 
     public function __construct(Builder $builder, Merger $merger = null)
     {

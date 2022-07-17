@@ -18,8 +18,7 @@ namespace Spiral\Router\Target;
  */
 final class Group extends AbstractTarget
 {
-    /** @var array */
-    private $controllers;
+    private array $controllers;
 
     public function __construct(array $controllers, int $options = 0, string $defaultAction = 'index')
     {

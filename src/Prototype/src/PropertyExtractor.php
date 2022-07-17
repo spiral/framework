@@ -21,8 +21,7 @@ use Spiral\Prototype\NodeVisitors\LocateProperties;
  */
 final class PropertyExtractor
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
     /**
      * @param Parser|null $parser

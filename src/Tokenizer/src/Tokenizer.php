@@ -29,8 +29,7 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     public const CODE = 1;
     public const LINE = 2;
 
-    /** @var TokenizerConfig */
-    protected $config;
+    protected TokenizerConfig $config;
 
     /**
      * Tokenizer constructor.

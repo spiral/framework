@@ -48,14 +48,11 @@ final class DynamicGrammar implements GrammarInterface
     // grammar control directive
     public const DECLARE_DIRECTIVE = 'declare';
 
-    /** @var DirectiveRendererInterface */
-    private $directiveRenderer;
+    private ?DirectiveRendererInterface $directiveRenderer;
 
-    /** @var BracesGrammar */
-    private $echo;
+    private BracesGrammar $echo;
 
-    /** @var BracesGrammar */
-    private $raw;
+    private BracesGrammar $raw;
 
     /**
      * @param DirectiveRendererInterface|null $directiveRenderer

@@ -28,15 +28,12 @@ class Aggregator extends AbstractDeclaration implements
     Countable,
     ReplaceableInterface
 {
-    /**
-     * @var array
-     */
-    private $allowed;
+    private array $allowed;
 
     /**
      * @var DeclarationInterface[]
      */
-    private $elements;
+    private array $elements;
 
     public function __construct(array $allowed, array $elements = [])
     {

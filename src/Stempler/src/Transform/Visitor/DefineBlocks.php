@@ -25,8 +25,7 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class DefineBlocks implements VisitorInterface
 {
-    /** @var array */
-    private $prefix = ['block:', 'define:', 'yield:', 'section:'];
+    private array $prefix = ['block:', 'define:', 'yield:', 'section:'];
 
     /**
      * @inheritDoc
@@ -63,7 +62,7 @@ final class DefineBlocks implements VisitorInterface
     {
         $name = null;
         foreach ($this->prefix as $prefix) {
-            if (strpos($node->name, $prefix) === 0) {
+            if (strpos($node->name, (string) $prefix) === 0) {
                 $name = substr($node->name, strlen($prefix));
                 break;
             }

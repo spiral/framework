@@ -9,11 +9,9 @@ use Psr\Container\ContainerInterface;
 final class QueueRegistry implements HandlerRegistryInterface
 {
     /** @var array<string, class-string>  */
-    private $handlers = [];
-    /** @var ContainerInterface */
-    private $container;
-    /** @var HandlerRegistryInterface  */
-    private $fallbackHandlers;
+    private array $handlers = [];
+    private ContainerInterface $container;
+    private HandlerRegistryInterface $fallbackHandlers;
 
     public function __construct(
         ContainerInterface $container,

@@ -19,8 +19,7 @@ use Spiral\Logger\Event\LogEvent;
  */
 final class LogFactory implements LogsInterface
 {
-    /** @var ListenerRegistryInterface */
-    private $listenedRegistry;
+    private ListenerRegistryInterface $listenedRegistry;
 
     public function __construct(ListenerRegistryInterface $listenedRegistry)
     {

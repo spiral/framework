@@ -18,8 +18,7 @@ use Spiral\Stempler\VisitorInterface;
 
 final class DefineHidden implements VisitorInterface
 {
-    /** @var string */
-    private $hiddenKeyword = 'hidden';
+    private string $hiddenKeyword = 'hidden';
 
     /**
      * @inheritDoc

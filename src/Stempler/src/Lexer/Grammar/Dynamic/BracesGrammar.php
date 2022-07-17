@@ -24,23 +24,17 @@ final class BracesGrammar
 {
     use TokenTrait;
 
-    /** @var bool */
-    private $active;
+    private bool $active;
 
-    /** @var int */
-    private $startToken;
+    private int $startToken;
 
-    /** @var int */
-    private $endToken;
+    private int $endToken;
 
-    /** @var string */
-    private $startSequence;
+    private string $startSequence;
 
-    /** @var string */
-    private $endSequence;
+    private string $endSequence;
 
-    /** @var array */
-    private $body = [];
+    private array $body = [];
 
     public function __construct(string $startSequence, string $endSequence, int $startToken, int $closeToken)
     {
