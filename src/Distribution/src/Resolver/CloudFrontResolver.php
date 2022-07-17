@@ -24,25 +24,13 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 class CloudFrontResolver extends ExpirationAwareResolver
 {
-    /**
-     * @var string
-     */
-    private $domain;
+    private string $domain;
 
-    /**
-     * @var UrlSigner
-     */
-    private $signer;
+    private UrlSigner $signer;
 
-    /**
-     * @var AmazonUriFactory
-     */
-    private $factory;
+    private AmazonUriFactory $factory;
 
-    /**
-     * @var string|null
-     */
-    private $prefix;
+    private ?string $prefix;
 
     /**
      * @param string|null $prefix

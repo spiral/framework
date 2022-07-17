@@ -41,8 +41,7 @@ class ConsoleHandler extends AbstractHandler
         'reset'      => Color::RESET,
     ];
 
-    /** @var StyleInterface */
-    private $colorsSupport;
+    private StyleInterface $colorsSupport;
 
     /**
      * @param bool|resource $stream

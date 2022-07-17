@@ -19,8 +19,7 @@ use function Spiral\DataGrid\hasKey;
 
 final class ArrayInput implements InputInterface
 {
-    /** @var array */
-    private $data;
+    private array $data;
 
     public function __construct(array $data)
     {

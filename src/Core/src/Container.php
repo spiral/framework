@@ -50,10 +50,7 @@ final class Container implements
     InvokerInterface,
     ScopeInterface
 {
-    /**
-     * @var array
-     */
-    private $bindings = [
+    private array $bindings = [
         ContainerInterface::class => self::class,
         BinderInterface::class    => self::class,
         FactoryInterface::class   => self::class,
@@ -65,10 +62,8 @@ final class Container implements
     /**
      * List of classes responsible for handling specific instance or interface. Provides ability to
      * delegate container functionality.
-     *
-     * @var array
      */
-    private $injectors = [];
+    private array $injectors = [];
 
     /**
      * Container constructor.

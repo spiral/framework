@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Annotations;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\Factory;
 use Spiral\Attributes\ReaderInterface;
@@ -24,20 +25,17 @@ use Spiral\Tokenizer\ClassesInterface;
  */
 final class AnnotationLocator implements SingletonInterface
 {
-    /** @var ClassesInterface */
-    private $classLocator;
+    private ClassesInterface $classLocator;
 
-    /** @var ReaderInterface */
-    private $reader;
+    private ReaderInterface $reader;
 
-    /** @var array */
-    private $targets = [];
+    private array $targets = [];
 
     /**
      * AnnotationLocator constructor.
      *
      * @param ReaderInterface|null $reader
-     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws AnnotationException
      */
     public function __construct(ClassesInterface $classLocator, ReaderInterface $reader = null)
     {

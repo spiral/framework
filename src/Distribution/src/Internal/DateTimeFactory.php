@@ -27,10 +27,7 @@ final class DateTimeFactory implements DateTimeFactoryInterface
      */
     private const DATE_NOW = 'now';
 
-    /**
-     * @var string
-     */
-    private $timezone;
+    private string $timezone;
 
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
     {

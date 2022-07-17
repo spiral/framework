@@ -19,14 +19,11 @@ use Spiral\Logger\Event\LogEvent;
  */
 final class State implements StateInterface
 {
-    /** @var array */
-    private $tags = [];
+    private array $tags = [];
 
-    /** @var array */
-    private $extras = [];
+    private array $extras = [];
 
-    /** @var array */
-    private $logEvents = [];
+    private array $logEvents = [];
 
     public function setTags(array $tags): void
     {

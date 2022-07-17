@@ -21,17 +21,13 @@ use Spiral\Http\Exception\HttpException;
 
 final class Http implements RequestHandlerInterface
 {
-    /** @var HttpConfig */
-    protected $config;
+    protected HttpConfig $config;
 
-    /** @var Pipeline */
-    protected $pipeline;
+    protected Pipeline $pipeline;
 
-    /** @var ResponseFactoryInterface */
-    protected $responseFactory;
+    protected ResponseFactoryInterface $responseFactory;
 
-    /** @var ContainerInterface */
-    protected $container;
+    protected ContainerInterface $container;
 
     /** @var RequestHandlerInterface */
     protected $handler;

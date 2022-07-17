@@ -31,17 +31,13 @@ final class Console
     // Undefined response code for command (errors). See below.
     public const CODE_NONE = 102;
 
-    /** @var ConsoleConfig */
-    private $config;
+    private ConsoleConfig $config;
 
-    /** @var LocatorInterface|null */
-    private $locator;
+    private ?LocatorInterface $locator;
 
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
-    /** @var Application|null */
-    private $application;
+    private ?Application $application = null;
 
     public function __construct(
         ConsoleConfig $config,
@@ -63,16 +59,14 @@ final class Console
      */
     public function start(InputInterface $input = null, OutputInterface $output = null): int
     {
-        $input = $input ?? new ArgvInput();
-        $output = $output ?? new ConsoleOutput();
+        $input ??= new ArgvInput();
+        $output ??= new ConsoleOutput();
 
-        return ContainerScope::runScope($this->container, function () use ($input, $output) {
-            return $this->run(
-                $input->getFirstArgument() ?? 'list',
-                $input,
-                $output
-            )->getCode();
-        });
+        return ContainerScope::runScope($this->container, fn() => $this->run(
+            $input->getFirstArgument() ?? 'list',
+            $input,
+            $output
+        )->getCode());
     }
 
     /**
@@ -91,7 +85,7 @@ final class Console
         OutputInterface $output = null
     ): CommandOutput {
         $input = is_array($input) ? new ArrayInput($input) : $input;
-        $output = $output ?? new BufferedOutput();
+        $output ??= new BufferedOutput();
 
         $this->configureIO($input, $output);
 
@@ -99,9 +93,7 @@ final class Console
             $input = new InputProxy($input, ['firstArgument' => $command]);
         }
 
-        $code = ContainerScope::runScope($this->container, function () use ($input, $output) {
-            return $this->getApplication()->doRun($input, $output);
-        });
+        $code = ContainerScope::runScope($this->container, fn() => $this->getApplication()->doRun($input, $output));
 
         return new CommandOutput($code ?? self::CODE_NONE, $output);
     }

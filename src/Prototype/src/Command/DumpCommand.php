@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Command;
 
+use Spiral\Prototype\Annotation\Parser;
+use Spiral\Prototype\Annotation\Line;
 use Spiral\Prototype\Annotation;
 use Spiral\Prototype\Bootloader\PrototypeBootloader;
 use Spiral\Prototype\Traits\PrototypeTrait;
@@ -77,14 +79,14 @@ final class DumpCommand extends AbstractCommand
 
     private function buildAnnotation(array $dependencies): string
     {
-        $an = new Annotation\Parser('');
-        $an->lines[] = new Annotation\Line(
+        $an = new Parser('');
+        $an->lines[] = new Line(
             'This DocComment is auto-generated, do not edit or commit this file to repository.'
         );
-        $an->lines[] = new Annotation\Line('');
+        $an->lines[] = new Line('');
 
         foreach ($dependencies as $dependency) {
-            $an->lines[] = new Annotation\Line(
+            $an->lines[] = new Line(
                 sprintf('\\%s $%s', $dependency->type->fullName, $dependency->var),
                 'property'
             );

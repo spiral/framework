@@ -21,10 +21,9 @@ use Spiral\Core\Exception\Container\ContainerException;
 final class PrototypeRegistry
 {
     /** @var Dependency[] */
-    private $dependencies = [];
+    private array $dependencies = [];
 
-    /** @var \Spiral\Core\Container */
-    private $container;
+    private Container $container;
 
     /**
      * PrototypeRegistry constructor.

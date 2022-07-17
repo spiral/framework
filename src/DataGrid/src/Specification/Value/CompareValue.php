@@ -15,8 +15,7 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 abstract class CompareValue implements ValueInterface
 {
-    /** @var ValueInterface */
-    private $base;
+    private ValueInterface $base;
 
     public function __construct(ValueInterface $base)
     {

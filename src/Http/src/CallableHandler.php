@@ -27,8 +27,7 @@ final class CallableHandler implements RequestHandlerInterface
     /** @var callable */
     private $callable;
 
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
     public function __construct(callable $callable, ResponseFactoryInterface $responseFactory)
     {

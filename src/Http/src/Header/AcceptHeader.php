@@ -25,10 +25,9 @@ use Spiral\Http\Exception\AcceptHeaderException;
 final class AcceptHeader
 {
     /** @var array|AcceptHeaderItem[] */
-    private $items = [];
+    private array $items = [];
 
-    /** @var bool */
-    private $sorted = false;
+    private bool $sorted = false;
 
     /**
      * AcceptHeader constructor.
@@ -91,9 +90,7 @@ final class AcceptHeader
             /**
              * Sort item in descending order.
              */
-            uasort($this->items, static function (AcceptHeaderItem $a, AcceptHeaderItem $b) {
-                return self::compare($a, $b) * -1;
-            });
+            uasort($this->items, static fn(AcceptHeaderItem $a, AcceptHeaderItem $b) => self::compare($a, $b) * -1);
 
             $this->sorted = true;
         }

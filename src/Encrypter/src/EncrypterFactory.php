@@ -23,8 +23,7 @@ use Spiral\Encrypter\Exception\EncrypterException;
  */
 final class EncrypterFactory implements InjectorInterface, EncryptionInterface, SingletonInterface
 {
-    /** @var EncrypterConfig */
-    protected $config;
+    protected EncrypterConfig $config;
 
     public function __construct(EncrypterConfig $config)
     {

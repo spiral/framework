@@ -19,11 +19,9 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 final class InputProxy implements InputInterface
 {
-    /** @var InputInterface */
-    private $input;
+    private InputInterface $input;
 
-    /** @var array */
-    private $overwrite;
+    private array $overwrite;
 
     public function __construct(InputInterface $input, array $overwrite)
     {

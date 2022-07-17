@@ -20,11 +20,9 @@ final class Prepend implements PatchInterface
 {
     use DotTrait;
 
-    /** @var string */
-    private $position;
+    private string $position;
 
-    /** @var null|string */
-    private $key;
+    private ?string $key;
 
     /** @var mixed */
     private $value;

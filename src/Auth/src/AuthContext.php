@@ -13,20 +13,15 @@ namespace Spiral\Auth;
 
 final class AuthContext implements AuthContextInterface
 {
-    /** @var ActorProviderInterface */
-    private $actorProvider;
+    private ActorProviderInterface $actorProvider;
 
-    /** @var TokenInterface|null */
-    private $token;
+    private ?TokenInterface $token = null;
 
-    /** @var object|null */
-    private $actor;
+    private ?object $actor = null;
 
-    /** @var string|null */
-    private $transport;
+    private ?string $transport = null;
 
-    /** @var bool */
-    private $closed = false;
+    private bool $closed = false;
 
     public function __construct(ActorProviderInterface $actorProvider)
     {

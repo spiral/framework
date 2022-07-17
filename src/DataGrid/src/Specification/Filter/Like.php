@@ -16,8 +16,7 @@ use Spiral\DataGrid\Specification\Value\StringValue;
 
 class Like extends Expression
 {
-    /** @var string */
-    private $pattern;
+    private string $pattern;
 
     /**
      * @param mixed|null $value

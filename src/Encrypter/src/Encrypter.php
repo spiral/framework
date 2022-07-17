@@ -29,8 +29,7 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
 {
     public const INJECTOR = EncrypterFactory::class;
 
-    /** @var Key */
-    private $key;
+    private ?Key $key = null;
 
     /**
      * @param string $key Loads a Key from its encoded form (ANSI).
@@ -78,7 +77,7 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
      */
     public function encrypt($data): string
     {
-        $packed = json_encode($data);
+        $packed = json_encode($data, JSON_THROW_ON_ERROR);
 
         try {
             return base64_encode(Crypto::Encrypt($packed, $this->key));
@@ -100,7 +99,7 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
                 $this->key
             );
 
-            return json_decode($result, true);
+            return json_decode($result, true, 512, JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
             throw new DecryptException($e->getMessage(), $e->getCode(), $e);
         }

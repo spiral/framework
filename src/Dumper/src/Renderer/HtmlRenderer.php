@@ -100,10 +100,8 @@ final class HtmlRenderer implements RendererInterface
 
     /**
      * Set of styles associated with different dumping properties.
-     *
-     * @var array
      */
-    protected $style = self::DEFAULT;
+    protected array $style = self::DEFAULT;
 
     public function __construct(array $style = self::DEFAULT)
     {

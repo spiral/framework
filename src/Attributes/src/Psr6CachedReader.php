@@ -18,10 +18,7 @@ use Spiral\Attributes\Internal\Key\KeyGeneratorInterface;
 
 final class Psr6CachedReader extends CachedReader
 {
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
+    private CacheItemPoolInterface $cache;
 
     /**
      * @param KeyGeneratorInterface|null $generator

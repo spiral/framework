@@ -11,6 +11,15 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Bootloader;
 
+use Spiral\Core\Container\SingletonInterface;
+use Spiral\Boot\Bootloader\CoreBootloader;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
+use Spiral\Prototype\Command\DumpCommand;
+use Spiral\Prototype\Command\ListCommand;
+use Spiral\Prototype\Command\InjectCommand;
+use Cycle\ORM\SchemaInterface;
+use Cycle\ORM\Select\Repository;
 use Cycle\ORM;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -28,10 +37,10 @@ use Spiral\Tokenizer\ClassLocator;
 /**
  * Manages ide-friendly container injections via PrototypeTrait.
  */
-final class PrototypeBootloader extends Bootloader\Bootloader implements Container\SingletonInterface
+final class PrototypeBootloader extends Bootloader\Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
-        Bootloader\CoreBootloader::class,
+        CoreBootloader::class,
         ConsoleBootloader::class,
         AttributesBootloader::class,
     ];
@@ -74,27 +83,24 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'cacheManager' => 'Spiral\Cache\CacheStorageProviderInterface',
     ];
 
-    /** @var MemoryInterface */
-    private $memory;
+    private MemoryInterface $memory;
 
-    /** @var PrototypeRegistry */
-    private $registry;
+    private PrototypeRegistry $registry;
 
-    /** @var \Doctrine\Inflector\Inflector */
-    private $inflector;
+    private Inflector $inflector;
 
     public function __construct(MemoryInterface $memory, PrototypeRegistry $registry)
     {
         $this->memory = $memory;
         $this->registry = $registry;
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
+        $this->inflector = (new InflectorFactory())->build();
     }
 
     public function boot(ConsoleBootloader $console, ContainerInterface $container): void
     {
-        $console->addCommand(Command\DumpCommand::class);
-        $console->addCommand(Command\ListCommand::class);
-        $console->addCommand(Command\InjectCommand::class);
+        $console->addCommand(DumpCommand::class);
+        $console->addCommand(ListCommand::class);
+        $console->addCommand(InjectCommand::class);
 
         $console->addConfigureSequence(
             'prototype:dump',
@@ -156,19 +162,19 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
      */
     public function initCycle(ContainerInterface $container): void
     {
-        if (!$container->has(ORM\SchemaInterface::class)) {
+        if (!$container->has(SchemaInterface::class)) {
             return;
         }
 
         /** @var ORM\SchemaInterface|null $schema */
-        $schema = $container->get(ORM\SchemaInterface::class);
+        $schema = $container->get(SchemaInterface::class);
         if ($schema === null) {
             return;
         }
 
         foreach ($schema->getRoles() as $role) {
-            $repository = $schema->define($role, ORM\SchemaInterface::REPOSITORY);
-            if ($repository === ORM\Select\Repository::class || $repository === null) {
+            $repository = $schema->define($role, SchemaInterface::REPOSITORY);
+            if ($repository === Repository::class || $repository === null) {
                 // default repository can not be wired
                 continue;
             }

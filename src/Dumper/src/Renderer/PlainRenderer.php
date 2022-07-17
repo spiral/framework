@@ -18,8 +18,7 @@ namespace Spiral\Debug\Renderer;
  */
 final class PlainRenderer extends AbstractRenderer
 {
-    /** @var bool */
-    private $escapeStrings = false;
+    private bool $escapeStrings = false;
 
     public function __construct(bool $escapeStrings = true)
     {

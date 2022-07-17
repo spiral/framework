@@ -23,8 +23,7 @@ final class Set implements PatchInterface
 {
     use DotTrait;
 
-    /** @var string */
-    private $key;
+    private string $key;
 
     /** @var mixed */
     private $value;

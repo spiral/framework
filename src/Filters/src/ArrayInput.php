@@ -18,11 +18,9 @@ use Spiral\Filters\Exception\DotNotFoundException;
  */
 final class ArrayInput implements InputInterface
 {
-    /** @var array */
-    private $data;
+    private array $data;
 
-    /** @var string */
-    private $prefix = '';
+    private string $prefix = '';
 
     public function __construct(array $data = [])
     {
