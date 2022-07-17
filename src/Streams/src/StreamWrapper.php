@@ -45,7 +45,10 @@ final class StreamWrapper
     /** @var StreamInterface */
     private $stream;
 
-    private int $mode = 0;
+    /**
+     * @var string|int
+     */
+    private $mode = 0;
 
     /**
      * Check if StreamInterface ended.
