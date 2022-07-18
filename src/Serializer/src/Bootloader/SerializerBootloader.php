@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Serializer\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Environment;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
@@ -31,7 +31,7 @@ final class SerializerBootloader extends Bootloader
     ) {
     }
 
-    public function init(Environment $env): void
+    public function init(EnvironmentInterface $env): void
     {
         $this->initConfig($env);
     }
@@ -54,7 +54,7 @@ final class SerializerBootloader extends Bootloader
         return new SerializerRegistry(\array_map([$this, 'wire'], $config->getSerializers()));
     }
 
-    private function initConfig(Environment $env): void
+    private function initConfig(EnvironmentInterface $env): void
     {
         $this->config->setDefaults(SerializerConfig::CONFIG, [
             'default' => $env->get('DEFAULT_SERIALIZER_FORMAT', SerializerConfig::DEFAULT_SERIALIZER),

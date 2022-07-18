@@ -1,16 +1,9 @@
 <?php
 
-/**
- * Spiral Framework, SpiralScout LLC.
- *
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Console;
 
-use Spiral\Console\StaticLocator;
 use Spiral\Tests\Console\Fixtures\TestCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -19,7 +12,7 @@ class CoreTest extends BaseTest
 {
     public function testWelcome(): void
     {
-        $core = $this->getCore(new StaticLocator([
+        $core = $this->getCore($this->getStaticLocator([
             TestCommand::class
         ]));
 
@@ -36,7 +29,7 @@ class CoreTest extends BaseTest
 
     public function testStart(): void
     {
-        $core = $this->getCore(new StaticLocator([
+        $core = $this->getCore($this->getStaticLocator([
             TestCommand::class
         ]));
 

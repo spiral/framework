@@ -13,10 +13,16 @@ use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\Http;
 use Spiral\Tests\Framework\BaseTest;
 
 final class HttpBootloaderTest extends BaseTest
 {
+    public function testHttpBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(Http::class, Http::class);
+    }
+
     public function testDefaultInputBags(): void
     {
         $this->assertSame([], $this->getContainer()->get(HttpConfig::class)->getInputBags());

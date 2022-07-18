@@ -19,6 +19,7 @@ use Spiral\Console\LocatorInterface;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 
@@ -58,6 +59,17 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
 
         $this->addCommand(CleanCommand::class);
         $this->addCommand(PublishCommand::class);
+    }
+
+    /**
+     * @param class-string<CoreInterceptorInterface>|string $interceptor
+     */
+    public function addInterceptor(string $interceptor): void
+    {
+        $this->config->modify(
+            ConsoleConfig::CONFIG,
+            new Append('interceptors', null, $interceptor)
+        );
     }
 
     /**

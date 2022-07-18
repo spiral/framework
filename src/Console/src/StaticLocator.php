@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Traits\LazyTrait;
 use Spiral\Core\Container;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
@@ -18,6 +19,7 @@ final class StaticLocator implements LocatorInterface
      */
     public function __construct(
         private readonly array $commands,
+        private ConsoleConfig $config,
         private ContainerInterface $container = new Container()
     ) {
     }

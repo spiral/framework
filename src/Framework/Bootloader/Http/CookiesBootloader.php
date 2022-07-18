@@ -29,8 +29,8 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
         $this->config->setDefaults(
             CookiesConfig::CONFIG,
             [
-                'domain'   => '.%s',
-                'method'   => CookiesConfig::COOKIE_ENCRYPT,
+                'domain' => '.%s',
+                'method' => CookiesConfig::COOKIE_ENCRYPT,
                 'excluded' => ['PHPSESSID', 'csrf-token'],
             ]
         );

@@ -235,4 +235,9 @@ final class Container implements
     {
         $this->binder->removeInjector($class);
     }
+
+    public function hasInjector(string $class): bool
+    {
+        return $this->binder->hasInjector($class);
+    }
 }

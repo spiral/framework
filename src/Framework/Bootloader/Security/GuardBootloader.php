@@ -24,9 +24,9 @@ final class GuardBootloader extends Bootloader
     ];
 
     protected const SINGLETONS = [
-        PermissionsInterface::class         => PermissionManager::class,
-        RulesInterface::class               => RuleManager::class,
-        GuardInterface::class               => GuardScope::class,
+        PermissionsInterface::class => PermissionManager::class,
+        RulesInterface::class => RuleManager::class,
+        GuardInterface::class => GuardScope::class,
         PermissionsProviderInterface::class => GuardPermissionsProvider::class,
     ];
 

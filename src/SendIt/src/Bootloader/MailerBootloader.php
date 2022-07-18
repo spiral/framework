@@ -26,6 +26,7 @@ final class MailerBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         QueueBootloader::class,
+        BuilderBootloader::class,
     ];
 
     protected const SINGLETONS = [
@@ -40,11 +41,9 @@ final class MailerBootloader extends Bootloader
 
     public function init(EnvironmentInterface $env): void
     {
-        $queue = $env->get('MAILER_QUEUE', 'local');
-
         $this->config->setDefaults(MailerConfig::CONFIG, [
             'dsn' => $env->get('MAILER_DSN', ''),
-            'queue' => $queue,
+            'queue' => $env->get('MAILER_QUEUE', 'local'),
             'from' => $env->get('MAILER_FROM', 'Spiral <sendit@local.host>'),
             'queueConnection' => $env->get('MAILER_QUEUE_CONNECTION'),
         ]);

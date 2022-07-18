@@ -53,6 +53,7 @@ final class ApplicationInProductionTest extends TestCase
 
         $output->shouldReceive('writeln');
         $output->shouldReceive('write');
+        $output->shouldReceive('newLine');
 
         $output->shouldReceive('confirm')->once()->with('Do you really wish to run command?', false)->andReturnTrue();
 
@@ -71,6 +72,7 @@ final class ApplicationInProductionTest extends TestCase
 
         $output->shouldReceive('writeln');
         $output->shouldReceive('write');
+        $output->shouldReceive('newLine');
 
         $output->shouldReceive('confirm')->once()->with('Do you really wish to run command?', false)->andReturnFalse();
 

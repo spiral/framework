@@ -9,6 +9,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Trait expect command to set $output and $input scopes.
@@ -18,6 +19,7 @@ trait HelpersTrait
     /**
      * OutputInterface is the interface implemented by all Output classes. Only exists when command
      * are being executed.
+     * @var OutputInterface|SymfonyStyle|null
      */
     protected ?OutputInterface $output = null;
 
@@ -174,7 +176,7 @@ trait HelpersTrait
      */
     protected function newLine(int $count = 1): void
     {
-        $this->output->write(\str_repeat(\PHP_EOL, $count));
+        $this->output->newLine($count);
     }
 
     /**

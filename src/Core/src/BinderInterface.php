@@ -35,4 +35,9 @@ interface BinderInterface
     public function bindInjector(string $class, string $injector): void;
 
     public function removeInjector(string $class): void;
+
+    /**
+     * Check if class points to injector.
+     */
+    public function hasInjector(string $class): bool;
 }

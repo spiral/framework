@@ -23,8 +23,6 @@ class DistributionBootloader extends Bootloader
             'resolvers' => [],
         ]);
 
-        $app->bindInjector(DistributionConfig::class, ConfiguratorInterface::class);
-
         $this->registerManager($app);
         $this->registerResolver($app);
     }
@@ -32,7 +30,6 @@ class DistributionBootloader extends Bootloader
     private function registerResolver(Container $app): void
     {
         $app->bindSingleton(UriResolverInterface::class, static fn (DistributionInterface $dist) => $dist->resolver());
-
         $app->bindSingleton(UriResolver::class, static fn (Container $app) => $app->get(UriResolverInterface::class));
     }
 

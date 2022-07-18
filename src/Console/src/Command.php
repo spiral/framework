@@ -7,11 +7,14 @@ namespace Spiral\Console;
 use Psr\Container\ContainerInterface;
 use Spiral\Console\Signature\Parser;
 use Spiral\Console\Traits\HelpersTrait;
+use Spiral\Core\CoreInterceptorInterface;
+use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
-use Spiral\Core\InvokerInterface;
+use Spiral\Core\InterceptableCore;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Provides automatic command configuration and access to global container scope.
@@ -33,9 +36,22 @@ abstract class Command extends SymfonyCommand
 
     protected ?ContainerInterface $container = null;
 
+    /** @var array<class-string<CoreInterceptorInterface>> */
+    protected array $interceptors = [];
+
+    /** {@internal} */
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
+    }
+
+    /**
+     * {@internal}
+     * @param array<class-string<CoreInterceptorInterface>> $interceptors
+     */
+    public function setInterceptors(array $interceptors): void
+    {
+        $this->interceptors = $interceptors;
     }
 
     /**
@@ -49,16 +65,42 @@ abstract class Command extends SymfonyCommand
 
         $method = method_exists($this, 'perform') ? 'perform' : '__invoke';
 
-        $invoker = $this->container->get(InvokerInterface::class);
+        $core = $this->buildCore();
 
         try {
-            [$this->input, $this->output] = [$input, $output];
+            [$this->input, $this->output] = [$this->prepareInput($input), $this->prepareOutput($input, $output)];
 
             // Executing perform method with method injection
-            return (int)$invoker->invoke([$this, $method], \compact('input', 'output'));
+            return (int)$core->callAction(static::class, $method, [
+                'input' => $this->input,
+                'output' => $this->output,
+                'command' => $this,
+            ]);
         } finally {
             [$this->input, $this->output] = [null, null];
         }
+    }
+
+    protected function buildCore(): CoreInterface
+    {
+        $core = $this->container->get(CommandCore::class);
+        $interceptableCore = new InterceptableCore($core);
+
+        foreach ($this->interceptors as $interceptor) {
+            $interceptableCore->addInterceptor($this->container->get($interceptor));
+        }
+
+        return $interceptableCore;
+    }
+
+    protected function prepareInput(InputInterface $input): InputInterface
+    {
+        return $input;
+    }
+
+    protected function prepareOutput(InputInterface $input, OutputInterface $output): OutputInterface
+    {
+        return new SymfonyStyle($input, $output);
     }
 
     /**

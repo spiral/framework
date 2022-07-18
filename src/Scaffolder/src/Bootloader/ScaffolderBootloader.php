@@ -111,6 +111,9 @@ class ScaffolderBootloader extends Bootloader
      */
     public function addDeclaration(string $name, array $declaration): void
     {
-        $this->config->modify(ScaffolderConfig::CONFIG, new Append('declarations', $name, $declaration));
+        $this->config->modify(
+            ScaffolderConfig::CONFIG,
+            new Append('declarations', $name, $declaration)
+        );
     }
 }

@@ -25,8 +25,6 @@ final class SessionBootloader extends Bootloader
      */
     public function init(
         ConfiguratorInterface $config,
-        CookiesBootloader $cookies,
-        HttpBootloader $http,
         DirectoriesInterface $directories
     ): void {
         $config->setDefaults(
@@ -45,7 +43,12 @@ final class SessionBootloader extends Bootloader
                 ),
             ]
         );
+    }
 
+    public function boot(
+        ConfiguratorInterface $config,
+        CookiesBootloader $cookies
+    ): void {
         $session = $config->getConfig(SessionConfig::CONFIG);
 
         $cookies->whitelistCookie($session['cookie']);

@@ -6,9 +6,10 @@ namespace Spiral\Core\Internal;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
-use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\Container\InjectableInterface;
 use Spiral\Core\Container\InjectorInterface;
+use Spiral\Core\Exception\Container\ContainerException;
 
 /**
  * @psalm-type TResolver = class-string|non-empty-string|callable|array{class-string, non-empty-string}
@@ -106,5 +107,50 @@ final class Binder implements BinderInterface
     public function removeInjector(string $class): void
     {
         unset($this->state->injectors[$class]);
+    }
+
+    public function hasInjector(string $class): bool
+    {
+        try {
+            $reflection = new \ReflectionClass($class);
+        } catch (\ReflectionException $e) {
+            throw new ContainerException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        if (\array_key_exists($class, $this->state->injectors)) {
+            return $this->state->injectors[$class] !== null;
+        }
+
+        if (
+            $reflection->implementsInterface(InjectableInterface::class)
+            && $reflection->hasConstant('INJECTOR')
+        ) {
+            $this->state->injectors[$class] = $reflection->getConstant('INJECTOR');
+
+            return true;
+        }
+
+        // check interfaces
+        foreach ($this->state->injectors as $target => $injector) {
+            if (
+                \class_exists($target, true)
+                && $reflection->isSubclassOf($target)
+            ) {
+                $this->state->injectors[$class] = $injector;
+
+                return true;
+            }
+
+            if (
+                \interface_exists($target, true)
+                && $reflection->implementsInterface($target)
+            ) {
+                $this->state->injectors[$class] = $injector;
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

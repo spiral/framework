@@ -24,7 +24,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
     protected const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
-        LoaderInterface::class => ViewLoader::class,
+        LoaderInterface::class => [self::class, 'initLoader'],
     ];
 
     public function __construct(
@@ -42,15 +42,15 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
         $this->config->setDefaults(
             ViewsConfig::CONFIG,
             [
-                'cache'        => [
-                    'enabled'   => $env->get('VIEW_CACHE', !$debugMode->isEnabled()),
+                'cache' => [
+                    'enabled' => $env->get('VIEW_CACHE', !$debugMode->isEnabled()),
                     'directory' => $dirs->get('cache') . 'views',
                 ],
-                'namespaces'   => [
+                'namespaces' => [
                     'default' => [$dirs->get('views')],
                 ],
                 'dependencies' => [],
-                'engines'      => [NativeEngine::class],
+                'engines' => [NativeEngine::class],
             ]
         );
     }
@@ -61,16 +61,32 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
             $this->config->modify(ViewsConfig::CONFIG, new Append('namespaces', $namespace, []));
         }
 
-        $this->config->modify(ViewsConfig::CONFIG, new Append('namespaces.' . $namespace, null, $directory));
+        $this->config->modify(
+            ViewsConfig::CONFIG,
+            new Append('namespaces.' . $namespace, null, $directory)
+        );
     }
 
     public function addEngine(string|EngineInterface $engine): void
     {
-        $this->config->modify(ViewsConfig::CONFIG, new Append('engines', null, $engine));
+        $this->config->modify(
+            ViewsConfig::CONFIG,
+            new Append('engines', null, $engine)
+        );
     }
 
     public function addCacheDependency(string|DependencyInterface $dependency): void
     {
-        $this->config->modify(ViewsConfig::CONFIG, new Append('dependencies', null, $dependency));
+        $this->config->modify(
+            ViewsConfig::CONFIG,
+            new Append('dependencies', null, $dependency)
+        );
+    }
+
+    private function initLoader(ViewsConfig $config): LoaderInterface
+    {
+        return new ViewLoader(
+            $config->getNamespaces()
+        );
     }
 }

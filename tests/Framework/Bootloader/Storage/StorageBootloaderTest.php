@@ -2,20 +2,66 @@
 
 declare(strict_types=1);
 
-namespace Framework\Storage;
+namespace Framework\Bootloader\Storage;
 
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Mockery as m;
 use Spiral\Distribution\UriResolverInterface;
+use Spiral\Storage\Bucket;
+use Spiral\Storage\BucketFactory;
 use Spiral\Storage\BucketFactoryInterface;
 use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Config\StorageConfig;
+use Spiral\Storage\Storage;
 use Spiral\Storage\StorageInterface;
 use Spiral\Tests\Framework\BaseTest;
 
 final class StorageBootloaderTest extends BaseTest
 {
+    public const ENV = ['STORAGE_DEFAULT' => 'foo'];
+
+    public function testBucketFactoryInterfaceBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(BucketFactoryInterface::class, BucketFactory::class);
+    }
+
+    public function testConfig(): void
+    {
+        $this->assertConfigMatches(StorageConfig::CONFIG, [
+            'default' => 'foo',
+            'servers' => [],
+            'buckets' => [],
+        ]);
+    }
+
+    public function testConfigShouldBeInjectable(): void
+    {
+        $this->assertTrue(
+            $this->getContainer()->hasInjector(StorageConfig::class)
+        );
+    }
+
+    public function testStorageInterfaceBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(StorageInterface::class, StorageInterface::class);
+    }
+
+    public function testStorageBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(Storage::class, StorageInterface::class);
+    }
+
+    public function testBucketInterfaceBinding(): void
+    {
+        $storage = $this->mockContainer(StorageInterface::class);
+
+        $storage->shouldReceive('bucket')->once()->andReturn(m::mock(BucketInterface::class));
+
+        $this->assertContainerBoundAsSingleton(BucketInterface::class, BucketInterface::class);
+        $this->assertContainerBoundAsSingleton(Bucket::class, BucketInterface::class);
+    }
+
     public function testCreatesStorageWithBucket(): void
     {
         $this->getContainer()->bind(
@@ -30,7 +76,7 @@ final class StorageBootloaderTest extends BaseTest
                 'buckets' => [
                     'default' => [
                         'server' => 'local',
-                    ]
+                    ],
                 ],
             ])
         );
