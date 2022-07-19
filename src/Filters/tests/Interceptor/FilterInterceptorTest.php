@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Filters\Interceptor;
 
 use Laminas\Diactoros\Response\JsonResponse;
-use Mockery as m;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Domain\FilterInterceptor;
@@ -20,16 +19,13 @@ final class FilterInterceptorTest extends BaseTest
     {
         $filter = $this->getProvider()->createFilter(MessageFilter::class, new ArrayInput([]));
 
-        $core = m::mock(CoreInterface::class);
-        $core->shouldReceive('callAction')
-            ->once()
-            ->with(MessageFilterAction::class, '__invoke', [$filter]);
+        $core = $this->createMock(CoreInterface::class);
+        $core->method('callAction')->with(MessageFilterAction::class, '__invoke', [$filter]);
 
-        $container = m::mock(ContainerInterface::class);
-        $container->shouldReceive('get')
-            ->once()
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')
             ->with(MessageFilter::class)
-            ->andReturn($filter);
+            ->willReturn($filter);
 
         $interceptor = new FilterInterceptor($container);
 
@@ -41,16 +37,14 @@ final class FilterInterceptorTest extends BaseTest
     {
         $filter = $this->getProvider()->createFilter(SelfErrorsRenderingFilter::class, new ArrayInput([]));
 
-        $core = m::mock(CoreInterface::class);
-        $core->shouldReceive('callAction')
-            ->once()
+        $core = $this->createMock(CoreInterface::class);
+        $core->method('callAction')
             ->with(SelfErrorsRenderingFilterAction::class, '__invoke', [$filter]);
 
-        $container = m::mock(ContainerInterface::class);
-        $container->shouldReceive('get')
-            ->once()
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')
             ->with(SelfErrorsRenderingFilter::class)
-            ->andReturn($filter);
+            ->willReturn($filter);
 
         $interceptor = new FilterInterceptor($container);
 
