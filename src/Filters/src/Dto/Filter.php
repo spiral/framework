@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Filters;
+namespace Spiral\Filters\Dto;
 
 /**
  * Filter is data entity which uses input manager to populate its fields, model can

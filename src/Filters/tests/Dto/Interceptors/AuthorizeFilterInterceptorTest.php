@@ -10,8 +10,8 @@ use Spiral\Auth\AuthContextInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Dto\FilterInterface;
 use Spiral\Filters\Dto\Interceptors\AuthorizeFilterInterceptor;
+use Spiral\Filters\Dto\ShouldBeAuthorized;
 use Spiral\Filters\Exception\AuthorizationException;
-use Spiral\Filters\ShouldBeAuthorized;
 use Spiral\Tests\Filters\BaseTest;
 
 final class AuthorizeFilterInterceptorTest extends BaseTest

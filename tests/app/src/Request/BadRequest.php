@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\App\Request;
 
-use Spiral\Filters\Filter;
+use Spiral\Filters\Dto\Filter;
 
 class BadRequest extends Filter
 {

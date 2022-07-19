@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Filters;
+namespace Spiral\Filters\Dto;
 
 use Spiral\Auth\AuthContextInterface;
 

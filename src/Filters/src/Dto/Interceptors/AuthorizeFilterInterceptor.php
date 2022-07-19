@@ -11,8 +11,8 @@ use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Dto\FilterBag;
 use Spiral\Filters\Dto\FilterInterface;
+use Spiral\Filters\Dto\ShouldBeAuthorized;
 use Spiral\Filters\Exception\AuthorizationException;
-use Spiral\Filters\ShouldBeAuthorized;
 
 final class AuthorizeFilterInterceptor implements CoreInterceptorInterface
 {
