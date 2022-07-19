@@ -6,7 +6,7 @@ namespace Spiral\Filters\Attribute;
 
 use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
-use Spiral\Filters\FilterInterface;
+use Spiral\Filters\Dto\FilterInterface;
 
 /**
  * The attribute provides the ability to create nested filters. To demonstrate the composition, we will use a sample

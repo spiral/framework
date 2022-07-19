@@ -9,9 +9,12 @@ use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Config\FiltersConfig;
-use Spiral\Filters\FilterInterface;
-use Spiral\Filters\FilterProvider;
-use Spiral\Filters\FilterProviderInterface;
+use Spiral\Filters\Dto\FilterInterface;
+use Spiral\Filters\Dto\FilterProvider;
+use Spiral\Filters\Dto\FilterProviderInterface;
+use Spiral\Filters\Dto\Interceptors\AuthorizeFilterInterceptor;
+use Spiral\Filters\Dto\Interceptors\PopulateDataFromEntityInterceptor;
+use Spiral\Filters\Dto\Interceptors\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
 use Spiral\Tests\Framework\BaseTest;
 
@@ -38,9 +41,9 @@ final class FiltersBootloaderTest extends BaseTest
     {
         $this->assertConfigMatches(FiltersConfig::CONFIG, [
             'interceptors' => [
-                \Spiral\Filters\Interceptors\PopulateDataFromEntityInterceptor::class,
-                \Spiral\Filters\Interceptors\ValidateFilterInterceptor::class,
-                \Spiral\Filters\Interceptors\AuthorizeFilterInterceptor::class,
+                PopulateDataFromEntityInterceptor::class,
+                ValidateFilterInterceptor::class,
+                AuthorizeFilterInterceptor::class,
             ],
         ]);
     }

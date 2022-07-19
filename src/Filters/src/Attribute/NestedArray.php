@@ -7,7 +7,7 @@ namespace Spiral\Filters\Attribute;
 use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\Attribute\Input\AbstractInput;
-use Spiral\Filters\FilterInterface;
+use Spiral\Filters\Dto\FilterInterface;
 use Spiral\Filters\InputInterface;
 
 /**

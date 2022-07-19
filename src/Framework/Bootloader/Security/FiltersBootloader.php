@@ -8,21 +8,22 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container;
+use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InterceptableCore;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Config\FiltersConfig;
-use Spiral\Filters\FilterBag;
-use Spiral\Filters\FilterInterface;
-use Spiral\Filters\FilterProvider;
-use Spiral\Filters\FilterProviderInterface;
+use Spiral\Filters\Dto\FilterBag;
+use Spiral\Filters\Dto\FilterInterface;
+use Spiral\Filters\Dto\FilterProvider;
+use Spiral\Filters\Dto\FilterProviderInterface;
+use Spiral\Filters\Dto\Interceptors\AuthorizeFilterInterceptor;
+use Spiral\Filters\Dto\Interceptors\Core;
+use Spiral\Filters\Dto\Interceptors\PopulateDataFromEntityInterceptor;
+use Spiral\Filters\Dto\Interceptors\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
-use Spiral\Filters\Interceptors\AuthorizeFilterInterceptor;
-use Spiral\Filters\Interceptors\Core;
-use Spiral\Filters\Interceptors\PopulateDataFromEntityInterceptor;
-use Spiral\Filters\Interceptors\ValidateFilterInterceptor;
 
-final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
+final class FiltersBootloader extends Bootloader implements InjectorInterface
 {
     protected const SINGLETONS = [
         FilterProviderInterface::class => [self::class, 'initFilterProvider'],
@@ -54,6 +55,15 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         );
     }
 
+    public function createInjection(\ReflectionClass $class, string $context = null): object
+    {
+        /** @var FilterBag $filter */
+        return $this->container->get(FilterProviderInterface::class)->createFilter(
+            $class->getName(),
+            $this->container->get(InputInterface::class)
+        );
+    }
+
     /**
      * @param class-string<CoreInterceptorInterface>|string $interceptor
      */
@@ -65,20 +75,10 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         );
     }
 
-    /**
-     * @throws \Throwable
-     */
-    public function createInjection(\ReflectionClass $class, string $context = null): FilterInterface
-    {
-        /** @var FilterBag $filter */
-        return $this->container->get(FilterProviderInterface::class)->createFilter(
-            $class->getName(),
-            $this->container->get(InputInterface::class)
-        );
-    }
-
-    private function initFilterProvider(Container $container, FiltersConfig $config): FilterProvider
-    {
+    private function initFilterProvider(
+        Container $container,
+        FiltersConfig $config
+    ): FilterProvider {
         $core = new InterceptableCore(new Core());
 
         foreach ($config->getInterceptors() as $interceptor) {
