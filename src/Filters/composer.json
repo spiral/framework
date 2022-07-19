@@ -23,7 +23,6 @@
         "spiral/validation": "^2.13"
     },
     "require-dev": {
-        "spiral/validator": "^3.0",
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5"
     },
