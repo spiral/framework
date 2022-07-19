@@ -83,7 +83,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
         );
     }
 
-    private function initLoader(ViewsConfig $config): LoaderInterface
+    protected function initLoader(ViewsConfig $config): LoaderInterface
     {
         return new ViewLoader(
             $config->getNamespaces()

@@ -12,15 +12,15 @@ use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InterceptableCore;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Config\FiltersConfig;
-use Spiral\Filters\FilterBag;
-use Spiral\Filters\FilterInterface;
-use Spiral\Filters\FilterProvider;
-use Spiral\Filters\FilterProviderInterface;
+use Spiral\Filters\Dto\FilterBag;
+use Spiral\Filters\Dto\FilterInterface;
+use Spiral\Filters\Dto\FilterProvider;
+use Spiral\Filters\Dto\FilterProviderInterface;
+use Spiral\Filters\Dto\Interceptor\AuthorizeFilterInterceptor;
+use Spiral\Filters\Dto\Interceptor\Core;
+use Spiral\Filters\Dto\Interceptor\PopulateDataFromEntityInterceptor;
+use Spiral\Filters\Dto\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
-use Spiral\Filters\Interceptors\AuthorizeFilterInterceptor;
-use Spiral\Filters\Interceptors\Core;
-use Spiral\Filters\Interceptors\PopulateDataFromEntityInterceptor;
-use Spiral\Filters\Interceptors\ValidateFilterInterceptor;
 
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {
@@ -77,8 +77,10 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         );
     }
 
-    private function initFilterProvider(Container $container, FiltersConfig $config): FilterProvider
-    {
+    private function initFilterProvider(
+        Container $container,
+        FiltersConfig $config
+    ): FilterProvider {
         $core = new InterceptableCore(new Core());
 
         foreach ($config->getInterceptors() as $interceptor) {
