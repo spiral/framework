@@ -16,6 +16,7 @@ use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Domain\Exception\InvalidFilterException;
 use Spiral\Filters\FilterInterface;
+use Spiral\Filters\ShouldRenderErrors;
 
 /**
  * Automatically validate all Filters and return array error in case of failure.
@@ -80,6 +81,10 @@ class FilterInterceptor implements CoreInterceptorInterface
      */
     protected function renderInvalid(FilterInterface $filter)
     {
+        if ($filter instanceof ShouldRenderErrors) {
+            return $filter->render();
+        }
+
         switch ($this->strategy) {
             case self::STRATEGY_JSON_RESPONSE:
                 return [
