@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Filters\Dto\Interceptors;
+namespace Spiral\Filters\Dto\Interceptor;
 
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;

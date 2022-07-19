@@ -12,9 +12,9 @@ use Spiral\Filters\Config\FiltersConfig;
 use Spiral\Filters\Dto\FilterInterface;
 use Spiral\Filters\Dto\FilterProvider;
 use Spiral\Filters\Dto\FilterProviderInterface;
-use Spiral\Filters\Dto\Interceptors\AuthorizeFilterInterceptor;
-use Spiral\Filters\Dto\Interceptors\PopulateDataFromEntityInterceptor;
-use Spiral\Filters\Dto\Interceptors\ValidateFilterInterceptor;
+use Spiral\Filters\Dto\Interceptor\AuthorizeFilterInterceptor;
+use Spiral\Filters\Dto\Interceptor\PopulateDataFromEntityInterceptor;
+use Spiral\Filters\Dto\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
 use Spiral\Tests\Framework\BaseTest;
 

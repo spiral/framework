@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Filters\Dto\Interceptors;
+namespace Spiral\Tests\Filters\Dto\Interceptor;
 
 use Mockery as m;
 use Spiral\Filters\Dto\FilterBag;
 use Spiral\Filters\Dto\FilterInterface;
-use Spiral\Filters\Dto\Interceptors\Core;
+use Spiral\Filters\Dto\Interceptor\Core;
 use Spiral\Models\AbstractEntity;
 use Spiral\Tests\Filters\BaseTest;
 

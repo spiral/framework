@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Filters\Dto\Interceptors;
+namespace Spiral\Tests\Filters\Dto\Interceptor;
 
 use Mockery as m;
 use Psr\Container\ContainerInterface;
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Dto\FilterInterface;
-use Spiral\Filters\Dto\Interceptors\AuthorizeFilterInterceptor;
+use Spiral\Filters\Dto\Interceptor\AuthorizeFilterInterceptor;
 use Spiral\Filters\Dto\ShouldBeAuthorized;
 use Spiral\Filters\Exception\AuthorizationException;
 use Spiral\Tests\Filters\BaseTest;

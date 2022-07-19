@@ -8,7 +8,6 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container;
-use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InterceptableCore;
 use Spiral\Filter\InputScope;
@@ -17,13 +16,13 @@ use Spiral\Filters\Dto\FilterBag;
 use Spiral\Filters\Dto\FilterInterface;
 use Spiral\Filters\Dto\FilterProvider;
 use Spiral\Filters\Dto\FilterProviderInterface;
-use Spiral\Filters\Dto\Interceptors\AuthorizeFilterInterceptor;
-use Spiral\Filters\Dto\Interceptors\Core;
-use Spiral\Filters\Dto\Interceptors\PopulateDataFromEntityInterceptor;
-use Spiral\Filters\Dto\Interceptors\ValidateFilterInterceptor;
+use Spiral\Filters\Dto\Interceptor\AuthorizeFilterInterceptor;
+use Spiral\Filters\Dto\Interceptor\Core;
+use Spiral\Filters\Dto\Interceptor\PopulateDataFromEntityInterceptor;
+use Spiral\Filters\Dto\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
 
-final class FiltersBootloader extends Bootloader implements InjectorInterface
+final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {
     protected const SINGLETONS = [
         FilterProviderInterface::class => [self::class, 'initFilterProvider'],
@@ -55,15 +54,6 @@ final class FiltersBootloader extends Bootloader implements InjectorInterface
         );
     }
 
-    public function createInjection(\ReflectionClass $class, string $context = null): object
-    {
-        /** @var FilterBag $filter */
-        return $this->container->get(FilterProviderInterface::class)->createFilter(
-            $class->getName(),
-            $this->container->get(InputInterface::class)
-        );
-    }
-
     /**
      * @param class-string<CoreInterceptorInterface>|string $interceptor
      */
@@ -72,6 +62,18 @@ final class FiltersBootloader extends Bootloader implements InjectorInterface
         $this->config->modify(
             FiltersConfig::CONFIG,
             new Append('interceptors', null, $interceptor)
+        );
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function createInjection(\ReflectionClass $class, string $context = null): FilterInterface
+    {
+        /** @var FilterBag $filter */
+        return $this->container->get(FilterProviderInterface::class)->createFilter(
+            $class->getName(),
+            $this->container->get(InputInterface::class)
         );
     }
 

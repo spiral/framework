@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Filters\Dto\Interceptors;
+namespace Spiral\Tests\Filters\Dto\Interceptor;
 
 use Mockery as m;
 use Psr\Container\ContainerInterface;
@@ -11,7 +11,7 @@ use Spiral\Filters\Dto\FilterBag;
 use Spiral\Filters\Dto\FilterDefinitionInterface;
 use Spiral\Filters\Dto\FilterInterface;
 use Spiral\Filters\Dto\HasFilterDefinition;
-use Spiral\Filters\Dto\Interceptors\ValidateFilterInterceptor;
+use Spiral\Filters\Dto\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\Dto\ShouldBeValidated;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Models\AbstractEntity;
