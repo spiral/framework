@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Tests\Filters\Fixtures;
 
 use Spiral\Filters\Filter;
-use Spiral\Filters\ShouldRenderErrors;
+use Spiral\Filters\RenderWith;
 
-final class SelfErrorsRenderingFilter extends Filter implements ShouldRenderErrors
+#[RenderWith(TestErrorsRenderer::class)]
+final class FilterWithErrorsRenderer extends Filter
 {
     public const SCHEMA = [
         'id' => 'query:id'
@@ -18,9 +19,4 @@ final class SelfErrorsRenderingFilter extends Filter implements ShouldRenderErro
             ['notEmpty', 'err' => '[[ID is not valid.]]']
         ]
     ];
-
-    public function render()
-    {
-        return ['success' => false, 'errors' => $this->getErrors(), 'requestParams' => $this->getFields()];
-    }
 }

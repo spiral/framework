@@ -12,37 +12,44 @@ declare(strict_types=1);
 namespace Spiral\Domain;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Domain\Exception\InvalidFilterException;
 use Spiral\Filters\FilterInterface;
-use Spiral\Filters\ShouldRenderErrors;
+use Spiral\Filters\RenderErrors;
+use Spiral\Filters\RenderWith;
 
 /**
  * Automatically validate all Filters and return array error in case of failure.
  */
 class FilterInterceptor implements CoreInterceptorInterface
 {
-    public const STRATEGY_JSON_RESPONSE = 1;
-    public const STRATEGY_EXCEPTION     = 2;
-
     /** @var ContainerInterface @internal */
     private $container;
-
-    /** @var int */
-    private $strategy;
 
     /** @var array @internal */
     private $cache = [];
 
+    /** @var array<class-string<FilterInterface>, RenderErrors> @internal */
+    private $renderersCache = [];
+
+    /** @var ReaderInterface @internal */
+    private $reader;
+
+    /** @var RenderErrors @internal */
+    private $renderErrors;
+
     /**
      * @param ContainerInterface $container
-     * @param int                $strategy
+     * @param ReaderInterface $reader
+     * @param null|RenderErrors  $renderErrors
      */
-    public function __construct(ContainerInterface $container, int $strategy = self::STRATEGY_JSON_RESPONSE)
+    public function __construct(ContainerInterface $container, ReaderInterface $reader, ?RenderErrors $renderErrors = null)
     {
         $this->container = $container;
-        $this->strategy = $strategy;
+        $this->reader = $reader;
+        $this->renderErrors = $renderErrors ?: new DefaultFilterRenderer();
     }
 
     /**
@@ -81,19 +88,7 @@ class FilterInterceptor implements CoreInterceptorInterface
      */
     protected function renderInvalid(FilterInterface $filter)
     {
-        if ($filter instanceof ShouldRenderErrors) {
-            return $filter->render();
-        }
-
-        switch ($this->strategy) {
-            case self::STRATEGY_JSON_RESPONSE:
-                return [
-                    'status' => 400,
-                    'errors' => $filter->getErrors(),
-                ];
-            default:
-                throw new InvalidFilterException($filter);
-        }
+        return ($this->renderersCache[get_class($filter)] ?? $this->renderErrors)->render($filter);
     }
 
     /**
@@ -124,6 +119,10 @@ class FilterInterceptor implements CoreInterceptorInterface
 
             if ($class->implementsInterface(FilterInterface::class)) {
                 $this->cache[$key][$parameter->getName()] = $class->getName();
+
+                if (null !== ($renderWith = $this->reader->firstClassMetadata($class, RenderWith::class))) {
+                    $this->renderersCache[$class->getName()] = $this->container->get($renderWith->getRenderer());
+                }
             }
         }
 

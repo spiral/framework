@@ -6,12 +6,15 @@ namespace Spiral\Tests\Filters\Interceptor;
 
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Container\ContainerInterface;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Domain\FilterInterceptor;
 use Spiral\Filters\ArrayInput;
+use Spiral\Filters\RenderWith;
 use Spiral\Tests\Filters\BaseTest;
 use Spiral\Tests\Filters\Fixtures\MessageFilter;
-use Spiral\Tests\Filters\Fixtures\SelfErrorsRenderingFilter;
+use Spiral\Tests\Filters\Fixtures\FilterWithErrorsRenderer;
+use Spiral\Tests\Filters\Fixtures\TestErrorsRenderer;
 
 final class FilterInterceptorTest extends BaseTest
 {
@@ -27,7 +30,11 @@ final class FilterInterceptorTest extends BaseTest
             ->with(MessageFilter::class)
             ->willReturn($filter);
 
-        $interceptor = new FilterInterceptor($container);
+        $reader = $this->createMock(ReaderInterface::class);
+        $reader->method('firstClassMetadata')
+            ->willReturn(null);
+
+        $interceptor = new FilterInterceptor($container, $reader);
 
         $response = $interceptor->process(MessageFilterAction::class, '__invoke', [$filter], $core);
         self::assertEquals(['status' => 400, 'errors' => ['id' => 'ID is not valid.']], $response);
@@ -35,7 +42,7 @@ final class FilterInterceptorTest extends BaseTest
 
     public function testFilterRenderInvalid(): void
     {
-        $filter = $this->getProvider()->createFilter(SelfErrorsRenderingFilter::class, new ArrayInput([]));
+        $filter = $this->getProvider()->createFilter(FilterWithErrorsRenderer::class, new ArrayInput([]));
 
         $core = $this->createMock(CoreInterface::class);
         $core->method('callAction')
@@ -43,10 +50,17 @@ final class FilterInterceptorTest extends BaseTest
 
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')
-            ->with(SelfErrorsRenderingFilter::class)
-            ->willReturn($filter);
+            ->withConsecutive(
+                [TestErrorsRenderer::class],
+                [FilterWithErrorsRenderer::class],
+            )
+            ->willReturnOnConsecutiveCalls(new TestErrorsRenderer(), $filter);
 
-        $interceptor = new FilterInterceptor($container);
+        $reader = $this->createMock(ReaderInterface::class);
+        $reader->method('firstClassMetadata')
+            ->willReturn(new RenderWith(TestErrorsRenderer::class));
+
+        $interceptor = new FilterInterceptor($container, $reader);
 
         $response = $interceptor->process(SelfErrorsRenderingFilterAction::class, '__invoke', [$filter], $core);
 
@@ -55,7 +69,6 @@ final class FilterInterceptorTest extends BaseTest
             'errors' => [
                 'id' => 'ID is not valid.'
             ],
-            'requestParams' => [],
         ], $response);
     }
 }
@@ -70,7 +83,7 @@ final class MessageFilterAction
 
 final class SelfErrorsRenderingFilterAction
 {
-    public function __invoke(SelfErrorsRenderingFilter $filter): JsonResponse
+    public function __invoke(FilterWithErrorsRenderer $filter): JsonResponse
     {
         return new JsonResponse([]);
     }
