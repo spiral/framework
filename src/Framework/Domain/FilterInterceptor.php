@@ -49,7 +49,7 @@ class FilterInterceptor implements CoreInterceptorInterface
     {
         $this->container = $container;
         $this->reader = $reader;
-        $this->renderErrors = $renderErrors ?: new DefaultFilterRenderer();
+        $this->renderErrors = $renderErrors ?: new DefaultFilterErrorsRenderer();
     }
 
     /**

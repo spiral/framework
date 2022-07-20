@@ -11,7 +11,7 @@ use Spiral\Filters\RenderErrors;
 /**
  * @template-implements RenderErrors<FilterInterface>
  */
-final class DefaultFilterRenderer implements RenderErrors
+final class DefaultFilterErrorsRenderer implements RenderErrors
 {
     public const STRATEGY_JSON_RESPONSE = 1;
     public const STRATEGY_EXCEPTION     = 2;
