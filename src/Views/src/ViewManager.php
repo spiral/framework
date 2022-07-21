@@ -143,6 +143,16 @@ final class ViewManager implements ViewsInterface, GlobalVariablesRegistryInterf
         return $this->get($path)->render(\array_merge($this->globalVariables, $data));
     }
 
+    public function registerVariable(string $name, mixed $data): void
+    {
+        $this->globalVariables[$name] = $data;
+    }
+
+    public function getVariables(): array
+    {
+        return $this->globalVariables;
+    }
+
     /**
      *
      * @throws ViewException
@@ -156,15 +166,5 @@ final class ViewManager implements ViewsInterface, GlobalVariablesRegistryInterf
         }
 
         throw new ViewException(\sprintf('Unable to detect view engine for `%s`.', $path));
-    }
-
-    public function registerVariable(string $name, mixed $data): void
-    {
-        $this->globalVariables[$name] = $data;
-    }
-
-    public function getVariables(): array
-    {
-        return $this->globalVariables;
     }
 }

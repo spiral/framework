@@ -22,7 +22,7 @@ final class ViewsConfig extends InjectableConfig
         'engines' => [
             NativeEngine::class,
         ],
-        'globalVariables' => []
+        'globalVariables' => [],
     ];
 
     public function getGlobalVariables(): array
@@ -32,12 +32,12 @@ final class ViewsConfig extends InjectableConfig
 
     public function isCacheEnabled(): bool
     {
-        return ! empty($this->config['cache']['enable']) || ! empty($this->config['cache']['enabled']);
+        return !empty($this->config['cache']['enable']) || !empty($this->config['cache']['enabled']);
     }
 
     public function getCacheDirectory(): string
     {
-        return \rtrim($this->config['cache']['directory'], '/').'/';
+        return \rtrim($this->config['cache']['directory'], '/') . '/';
     }
 
     /**
