@@ -10,6 +10,7 @@ use Spiral\Views\Bootloader\ViewsBootloader;
 use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\DependencyInterface;
 use Spiral\Views\EngineInterface;
+use Spiral\Views\GlobalVariablesRegistryInterface;
 use Spiral\Views\LoaderInterface;
 use Spiral\Views\ViewLoader;
 use Spiral\Views\ViewManager;
@@ -20,6 +21,16 @@ final class ViewsBootloaderTest extends BaseTest
     public function testViewsInterfaceBinding(): void
     {
         $this->assertContainerBoundAsSingleton(ViewsInterface::class, ViewManager::class);
+    }
+
+    public function testGlobalVariablesRegistryInterfaceBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(GlobalVariablesRegistryInterface::class, ViewManager::class);
+    }
+
+    public function testViewsManagerBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(ViewManager::class, ViewManager::class);
     }
 
     public function testLoaderInterfaceBinding(): void

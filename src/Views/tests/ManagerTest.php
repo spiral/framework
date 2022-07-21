@@ -120,23 +120,25 @@ class ManagerTest extends TestCase
     protected function makeManager(array $config = []): ViewManager
     {
         return new ViewManager(
-            new ViewsConfig([
-                    'cache'        => [
-                        'enable'    => true,
-                        'memory'    => true,
+            new ViewsConfig(
+                [
+                    'cache' => [
+                        'enable' => true,
+                        'memory' => true,
                         'directory' => '/tmp',
                     ],
-                    'namespaces'   => [
-                        'default' => __DIR__ . '/fixtures/default',
-                        'other'   => __DIR__ . '/fixtures/other',
+                    'namespaces' => [
+                        'default' => __DIR__.'/fixtures/default',
+                        'other' => __DIR__.'/fixtures/other',
                     ],
                     'dependencies' => [
 
                     ],
-                    'engines'      => [
+                    'engines' => [
                         NativeEngine::class,
                     ],
-                ] + $config),
+                ] + $config
+            ),
             $this->container
         );
     }

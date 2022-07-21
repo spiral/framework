@@ -13,25 +13,31 @@ final class ViewsConfig extends InjectableConfig
     public const CONFIG = 'views';
 
     protected array $config = [
-        'cache'        => [
-            'enable'    => false,
+        'cache' => [
+            'enable' => false,
             'directory' => '/tmp',
         ],
-        'namespaces'   => [],
+        'namespaces' => [],
         'dependencies' => [],
-        'engines'      => [
+        'engines' => [
             NativeEngine::class,
         ],
+        'globalVariables' => []
     ];
+
+    public function getGlobalVariables(): array
+    {
+        return (array) ($this->config['globalVariables'] ?? []);
+    }
 
     public function isCacheEnabled(): bool
     {
-        return !empty($this->config['cache']['enable']) || !empty($this->config['cache']['enabled']);
+        return ! empty($this->config['cache']['enable']) || ! empty($this->config['cache']['enabled']);
     }
 
     public function getCacheDirectory(): string
     {
-        return \rtrim($this->config['cache']['directory'], '/') . '/';
+        return \rtrim($this->config['cache']['directory'], '/').'/';
     }
 
     /**

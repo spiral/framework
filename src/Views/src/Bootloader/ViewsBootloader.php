@@ -15,6 +15,7 @@ use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\DependencyInterface;
 use Spiral\Views\Engine\Native\NativeEngine;
 use Spiral\Views\EngineInterface;
+use Spiral\Views\GlobalVariablesRegistryInterface;
 use Spiral\Views\LoaderInterface;
 use Spiral\Views\ViewLoader;
 use Spiral\Views\ViewManager;
@@ -25,6 +26,8 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
     protected const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
         LoaderInterface::class => [self::class, 'initLoader'],
+        GlobalVariablesRegistryInterface::class => ViewManager::class,
+        ViewManager::class => ViewManager::class,
     ];
 
     public function __construct(
