@@ -19,5 +19,4 @@ return (new PhpCsFixer\Config())
             ->append([__FILE__])
             ->notPath(['#/Fixtures/#', '#/tests/#', '#/views/#'])
     )
-    ->setCacheFile('.php-cs-fixer.cache')
-;
+    ->setCacheFile('.php-cs-fixer.cache');
