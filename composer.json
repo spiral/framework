@@ -28,7 +28,6 @@
         "myclabs/deep-copy": "^1.9",
         "nette/php-generator": "^4.0.1",
         "nikic/php-parser": "^4.13.2",
-        "opis/closure": "^3.6",
         "psr/cache": ">=1.0",
         "psr/container": "^1.1|^2.0",
         "psr/http-factory": "^1.0",
