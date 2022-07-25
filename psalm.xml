@@ -5,6 +5,7 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 
     errorLevel="7"
+    phpVersion="8.1"
     hoistConstants="true"
     resolveFromConfigFile="true"
     findUnusedPsalmSuppress="true"
