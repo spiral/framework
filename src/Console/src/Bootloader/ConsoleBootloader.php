@@ -86,7 +86,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @param array|string $sequence
+     * @param array|string|\Closure $sequence
      */
     public function addConfigureSequence(
         $sequence,
@@ -101,7 +101,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @param array|string $sequence
+     * @param array|string|\Closure $sequence
      */
     public function addUpdateSequence(
         $sequence,
@@ -116,7 +116,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @param mixed $sequence
+     * @param array|string|\Closure $sequence
      */
     private function sequence(
         string $target,
@@ -135,7 +135,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
 
         return new Append(
             $target,
-            null,
+            $sequence,
             new CommandSequence($sequence, $options, $header, $footer)
         );
     }
