@@ -69,11 +69,17 @@ final class BroadcastingBootloader extends Bootloader
         );
     }
 
+    /**
+     * @noRector RemoveUnusedPrivateMethodRector
+     */
     private function initDefaultBroadcast(BroadcastManagerInterface $manager): BroadcastInterface
     {
         return $manager->connection();
     }
 
+    /**
+     * @noRector RemoveUnusedPrivateMethodRector
+     */
     private function initTopicRegistry(BroadcastConfig $config): TopicRegistryInterface
     {
         return new TopicRegistry($config->getTopics());
