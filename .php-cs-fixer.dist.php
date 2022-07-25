@@ -9,6 +9,7 @@ if (!file_exists(__DIR__.'/src')) {
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
+        'ternary_operator_spaces' => false,
     ])
     ->setRiskyAllowed(true)
     ->setFinder(
