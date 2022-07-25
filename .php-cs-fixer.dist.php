@@ -9,6 +9,7 @@ if (!file_exists(__DIR__.'/src')) {
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
+        'ternary_operator_spaces' => false,
     ])
     ->setRiskyAllowed(true)
     ->setFinder(
@@ -19,5 +20,4 @@ return (new PhpCsFixer\Config())
             ->append([__FILE__])
             ->notPath(['#/Fixtures/#', '#/tests/#', '#/views/#'])
     )
-    ->setCacheFile('.php-cs-fixer.cache')
-    ;
+    ->setCacheFile('.php-cs-fixer.cache');
