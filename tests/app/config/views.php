@@ -7,9 +7,11 @@ use Spiral\Views\Engine\Native\NativeEngine;
 return [
     'cache' => [
         'enable' => false,
-        'directory' => '/tmp',
+        'directory' => directory('cache').'views',
     ],
-    'namespaces' => [],
+    'namespaces' => [
+        'default' => [directory('views')],
+    ],
     'dependencies' => [],
     'engines' => [
         NativeEngine::class,
