@@ -25,7 +25,7 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
         AuthBootloader::class,
-        HttpBootloader::class
+        HttpBootloader::class,
     ];
 
     protected const SINGLETONS = [
