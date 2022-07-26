@@ -12,14 +12,13 @@ use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InterceptableCore;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Config\FiltersConfig;
-use Spiral\Filters\Dto\FilterBag;
-use Spiral\Filters\Dto\FilterInterface;
-use Spiral\Filters\Dto\FilterProvider;
-use Spiral\Filters\Dto\FilterProviderInterface;
-use Spiral\Filters\Dto\Interceptor\AuthorizeFilterInterceptor;
-use Spiral\Filters\Dto\Interceptor\Core;
-use Spiral\Filters\Dto\Interceptor\PopulateDataFromEntityInterceptor;
-use Spiral\Filters\Dto\Interceptor\ValidateFilterInterceptor;
+use Spiral\Filters\Model\FilterBag;
+use Spiral\Filters\Model\FilterInterface;
+use Spiral\Filters\Model\FilterProvider;
+use Spiral\Filters\Model\FilterProviderInterface;
+use Spiral\Filters\Model\Interceptor\Core;
+use Spiral\Filters\Model\Interceptor\PopulateDataFromEntityInterceptor;
+use Spiral\Filters\Model\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
 
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
@@ -48,7 +47,6 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
                 'interceptors' => [
                     PopulateDataFromEntityInterceptor::class,
                     ValidateFilterInterceptor::class,
-                    AuthorizeFilterInterceptor::class,
                 ],
             ]
         );

@@ -13,6 +13,8 @@ enabled:
   - no_useless_else
   - no_useless_return
   - trailing_comma_in_multiline_array
+disabled:
+  - ternary_operator_spaces
 finder:
   exclude:
     - "tests"
