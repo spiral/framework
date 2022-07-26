@@ -9,6 +9,7 @@ use Spiral\Auth\HttpTransportInterface;
 use Spiral\Auth\Transport\CookieTransport;
 use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Config\ConfiguratorInterface;
@@ -37,7 +38,7 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function init(): void
+    public function init(AbstractKernel $kernel): void
     {
         $this->config->setDefaults(
             AuthConfig::CONFIG,
@@ -46,12 +47,11 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
                 'transports' => [],
             ]
         );
-    }
 
-    public function boot(): void
-    {
-        $this->addTransport('cookie', $this->createDefaultCookieTransport());
-        $this->addTransport('header', new HeaderTransport('X-Auth-Token'));
+        $kernel->booting(function () {
+            $this->addTransport('cookie', $this->createDefaultCookieTransport());
+            $this->addTransport('header', new HeaderTransport('X-Auth-Token'));
+        });
     }
 
     /**
