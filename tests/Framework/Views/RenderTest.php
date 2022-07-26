@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Views;
 
 use Spiral\Tests\Framework\BaseTest;
-use Spiral\Views\GlobalVariablesRegistryInterface;
+use Spiral\Views\GlobalVariablesInterface;
 use Spiral\Views\ViewsInterface;
 
 final class RenderTest extends BaseTest
@@ -32,10 +32,10 @@ final class RenderTest extends BaseTest
 
     public function testWithGlobalVariable(): void
     {
-        $global = $this->getContainer()->get(GlobalVariablesRegistryInterface::class);
+        $global = $this->getContainer()->get(GlobalVariablesInterface::class);
 
-        $global->registerVariable('bodyClass', 'global-body');
-        $global->registerVariable('replaced', 'replaced-foo');
+        $global->set('bodyClass', 'global-body');
+        $global->set('replaced', 'replaced-foo');
 
         $out = $this->getContainer()
             ->get(ViewsInterface::class)

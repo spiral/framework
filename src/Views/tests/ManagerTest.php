@@ -17,6 +17,7 @@ use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\Context\ValueDependency;
 use Spiral\Views\Engine\Native\NativeEngine;
 use Spiral\Views\Exception\ViewException;
+use Spiral\Views\GlobalVariables;
 use Spiral\Views\LoaderInterface;
 use Spiral\Views\ViewCache;
 use Spiral\Views\ViewLoader;
@@ -139,6 +140,7 @@ class ManagerTest extends TestCase
                     ],
                 ] + $config
             ),
+            new GlobalVariables(),
             $this->container
         );
     }

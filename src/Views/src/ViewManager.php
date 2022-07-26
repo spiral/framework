@@ -8,7 +8,7 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\Exception\ViewException;
 
-final class ViewManager implements ViewsInterface, GlobalVariablesRegistryInterface
+final class ViewManager implements ViewsInterface
 {
     private readonly LoaderInterface $loader;
     private ?ViewCache $cache = null;
@@ -17,10 +17,9 @@ final class ViewManager implements ViewsInterface, GlobalVariablesRegistryInterf
     /** @var EngineInterface[] */
     private array $engines = [];
 
-    private array $globalVariables = [];
-
     public function __construct(
         private readonly ViewsConfig $config,
+        private readonly GlobalVariablesInterface $globalVariables,
         FactoryInterface $factory,
         ?ContextInterface $context = null
     ) {
@@ -40,8 +39,6 @@ final class ViewManager implements ViewsInterface, GlobalVariablesRegistryInterf
         if ($this->config->isCacheEnabled()) {
             $this->cache = new ViewCache();
         }
-
-        $this->globalVariables = $this->config->getGlobalVariables();
     }
 
     /**
@@ -140,17 +137,7 @@ final class ViewManager implements ViewsInterface, GlobalVariablesRegistryInterf
      */
     public function render(string $path, array $data = []): string
     {
-        return $this->get($path)->render(\array_merge($this->globalVariables, $data));
-    }
-
-    public function registerVariable(string $name, mixed $data): void
-    {
-        $this->globalVariables[$name] = $data;
-    }
-
-    public function getVariables(): array
-    {
-        return $this->globalVariables;
+        return $this->get($path)->render(\array_merge($this->globalVariables->getAll(), $data));
     }
 
     /**
