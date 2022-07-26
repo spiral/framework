@@ -9,12 +9,11 @@ use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Config\FiltersConfig;
-use Spiral\Filters\Dto\FilterInterface;
-use Spiral\Filters\Dto\FilterProvider;
-use Spiral\Filters\Dto\FilterProviderInterface;
-use Spiral\Filters\Dto\Interceptor\AuthorizeFilterInterceptor;
-use Spiral\Filters\Dto\Interceptor\PopulateDataFromEntityInterceptor;
-use Spiral\Filters\Dto\Interceptor\ValidateFilterInterceptor;
+use Spiral\Filters\Model\FilterInterface;
+use Spiral\Filters\Model\FilterProvider;
+use Spiral\Filters\Model\FilterProviderInterface;
+use Spiral\Filters\Model\Interceptor\PopulateDataFromEntityInterceptor;
+use Spiral\Filters\Model\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
 use Spiral\Tests\Framework\BaseTest;
 
@@ -43,7 +42,6 @@ final class FiltersBootloaderTest extends BaseTest
             'interceptors' => [
                 PopulateDataFromEntityInterceptor::class,
                 ValidateFilterInterceptor::class,
-                AuthorizeFilterInterceptor::class,
             ],
         ]);
     }
