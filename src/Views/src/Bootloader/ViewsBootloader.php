@@ -26,9 +26,10 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
     protected const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
+        ViewManager::class => ViewManager::class,
         LoaderInterface::class => [self::class, 'initLoader'],
         GlobalVariablesInterface::class => [self::class, 'initGlobalVariables'],
-        ViewManager::class => ViewManager::class,
+        GlobalVariables::class => GlobalVariables::class,
     ];
 
     public function __construct(
