@@ -134,7 +134,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     ): Append {
         return new Append(
             $target,
-            null,
+            \is_string($sequence) ? $sequence : null,
             \is_array($sequence) || \is_callable($sequence)
                 ? new CallableSequence($sequence, $header, $footer)
                 : new CommandSequence($sequence, $options, $header, $footer)

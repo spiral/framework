@@ -74,9 +74,9 @@ final class ConsoleBootloaderTest extends BaseTest
         $sequences = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['configure'];
 
         $output = new BufferedOutput();
-        $this->assertInstanceOf(CommandSequence::class, $sequences[0]);
-        $sequences[0]->writeHeader($output);
-        $sequences[0]->writeFooter($output);
+        $this->assertInstanceOf(CommandSequence::class, $sequences['foo']);
+        $sequences['foo']->writeHeader($output);
+        $sequences['foo']->writeFooter($output);
         $this->assertSame('header
 footer
 ', $output->fetch());
@@ -93,9 +93,9 @@ footer
         $sequences = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['update'];
 
         $output = new BufferedOutput();
-        $this->assertInstanceOf(CommandSequence::class, $sequences[0]);
-        $sequences[0]->writeHeader($output);
-        $sequences[0]->writeFooter($output);
+        $this->assertInstanceOf(CommandSequence::class, $sequences['foo']);
+        $sequences['foo']->writeHeader($output);
+        $sequences['foo']->writeFooter($output);
         $this->assertSame('header
 footer
 ', $output->fetch());
@@ -112,11 +112,34 @@ footer
         $sequences = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['custom'];
 
         $output = new BufferedOutput();
-        $this->assertInstanceOf(CommandSequence::class, $sequences[0]);
-        $sequences[0]->writeHeader($output);
-        $sequences[0]->writeFooter($output);
+        $this->assertInstanceOf(CommandSequence::class, $sequences['foo']);
+        $sequences['foo']->writeHeader($output);
+        $sequences['foo']->writeFooter($output);
         $this->assertSame('header
 footer
 ', $output->fetch());
+    }
+
+    public function testSequencesIsNotDuplicated(): void
+    {
+        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs->setDefaults(ConsoleConfig::CONFIG, ['sequences' => []]);
+
+        $bootloader = new ConsoleBootloader($configs);
+
+        $bootloader->addUpdateSequence('cycle', 'test');
+        $bootloader->addUpdateSequence('cycle', 'test2');
+        $bootloader->addUpdateSequence('other', 'test3');
+
+        $bootloader->addUpdateSequence(static fn () => 'test', 'test4');
+        $bootloader->addUpdateSequence(static fn () => 'other', 'test5');
+
+        $config = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['update'];
+
+        $this->assertCount(4, $config);
+        $this->assertArrayHasKey('cycle', $config);
+        $this->assertArrayHasKey('other', $config);
+        $this->assertArrayHasKey(0, $config);
+        $this->assertArrayHasKey(1, $config);
     }
 }
