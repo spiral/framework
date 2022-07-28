@@ -48,11 +48,9 @@ final class UuidValue implements ValueInterface
      */
     private const NIL_VALUE = '00000000-0000-0000-0000-000000000000';
 
-    /** @var string */
-    private $mask;
+    private string $mask;
 
-    /** @var RegexValue */
-    private $regex;
+    private RegexValue $regex;
 
     public function __construct(string $mask = self::VALID)
     {

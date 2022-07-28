@@ -16,8 +16,7 @@ namespace Spiral\Annotations;
  */
 final class AnnotatedMethod
 {
-    /** @var \ReflectionMethod */
-    private $method;
+    private \ReflectionMethod $method;
 
     /** @var mixed */
     private $annotation;

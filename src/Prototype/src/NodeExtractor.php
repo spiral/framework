@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype;
 
+use Spiral\Prototype\ClassNode\ConflictResolver\Names;
+use Spiral\Prototype\ClassNode\ConflictResolver\Namespaces;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
 use PhpParser\Parser;
@@ -26,18 +28,15 @@ use Spiral\Prototype\NodeVisitors\ClassNode\LocateVariables;
  */
 final class NodeExtractor
 {
-    /** @var Parser */
-    private $parser;
+    private Parser $parser;
 
-    /** @var ConflictResolver\Names */
-    private $namesResolver;
+    private Names $namesResolver;
 
-    /** @var ConflictResolver\Namespaces */
-    private $namespacesResolver;
+    private Namespaces $namespacesResolver;
 
     public function __construct(
-        ConflictResolver\Names $namesResolver,
-        ConflictResolver\Namespaces $namespacesResolver,
+        Names $namesResolver,
+        Namespaces $namespacesResolver,
         Parser $parser = null
     ) {
         $this->namesResolver = $namesResolver;

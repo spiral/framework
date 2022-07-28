@@ -39,15 +39,14 @@ class Dumper implements LoggerAwareInterface
     public const OUTPUT_CLI_COLORS = 5;
     public const ROADRUNNER        = 6;
 
-    /** @var int */
-    private $maxLevel = 12;
+    private int $maxLevel = 12;
 
     /**
      * Default render associations.
      *
      * @var array|RendererInterface[]
      */
-    private $targets = [
+    private array $targets = [
         self::OUTPUT            => HtmlRenderer::class,
         self::OUTPUT_CLI        => PlainRenderer::class,
         self::OUTPUT_CLI_COLORS => ConsoleRenderer::class,

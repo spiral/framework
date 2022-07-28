@@ -16,8 +16,7 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class Offset implements SpecificationInterface
 {
-    /** @var int */
-    private $value;
+    private int $value;
 
     public function __construct(int $value)
     {

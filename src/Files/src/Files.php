@@ -27,10 +27,8 @@ final class Files implements FilesInterface
 
     /**
      * Files to be removed when component destructed.
-     *
-     * @var array
      */
-    private $destructFiles = [];
+    private array $destructFiles = [];
 
     /**
      * FileManager constructor.
@@ -117,7 +115,7 @@ final class Files implements FilesInterface
         bool $ensureDirectory = false,
         bool $append = false
     ): bool {
-        $mode = $mode ?? self::DEFAULT_FILE_MODE;
+        $mode ??= self::DEFAULT_FILE_MODE;
 
         try {
             if ($ensureDirectory) {
@@ -427,7 +425,7 @@ final class Files implements FilesInterface
      */
     private function filesIterator(string $location, string $pattern = null): \GlobIterator
     {
-        $pattern = $pattern ?? '*';
+        $pattern ??= '*';
         $regexp = rtrim($location, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($pattern, DIRECTORY_SEPARATOR);
 
         return new \GlobIterator($regexp);

@@ -11,6 +11,26 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Bootloader;
 
+use Spiral\Scaffolder\Command\Database\EntityCommand;
+use Spiral\Scaffolder\Command\Database\RepositoryCommand;
+use Spiral\Scaffolder\Command\BootloaderCommand;
+use Spiral\Scaffolder\Command\CommandCommand;
+use Spiral\Scaffolder\Command\ConfigCommand;
+use Spiral\Scaffolder\Command\ControllerCommand;
+use Spiral\Scaffolder\Command\FilterCommand;
+use Spiral\Scaffolder\Command\JobHandlerCommand;
+use Spiral\Scaffolder\Command\MiddlewareCommand;
+use Spiral\Scaffolder\Command\MigrationCommand;
+use Spiral\Scaffolder\Declaration\BootloaderDeclaration;
+use Spiral\Scaffolder\Declaration\ConfigDeclaration;
+use Spiral\Scaffolder\Declaration\ControllerDeclaration;
+use Spiral\Scaffolder\Declaration\MiddlewareDeclaration;
+use Spiral\Scaffolder\Declaration\CommandDeclaration;
+use Spiral\Scaffolder\Declaration\JobHandlerDeclaration;
+use Spiral\Scaffolder\Declaration\MigrationDeclaration;
+use Spiral\Scaffolder\Declaration\FilterDeclaration;
+use Spiral\Scaffolder\Declaration\Database\Entity\AnnotatedDeclaration;
+use Spiral\Scaffolder\Declaration\Database\RepositoryDeclaration;
 use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;
 use ReflectionClass;
@@ -30,11 +50,9 @@ class ScaffolderBootloader extends Bootloader
         SlugifyInterface::class => Slugify::class,
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
+    private ConfiguratorInterface $config;
 
-    /** @var KernelInterface */
-    private $kernel;
+    private KernelInterface $kernel;
 
     /**
      * ScaffolderBootloader constructor.
@@ -47,16 +65,16 @@ class ScaffolderBootloader extends Bootloader
 
     public function boot(ConsoleBootloader $console): void
     {
-        $console->addCommand(Command\Database\EntityCommand::class, true);
-        $console->addCommand(Command\Database\RepositoryCommand::class, true);
-        $console->addCommand(Command\BootloaderCommand::class);
-        $console->addCommand(Command\CommandCommand::class);
-        $console->addCommand(Command\ConfigCommand::class);
-        $console->addCommand(Command\ControllerCommand::class);
-        $console->addCommand(Command\FilterCommand::class);
-        $console->addCommand(Command\JobHandlerCommand::class);
-        $console->addCommand(Command\MiddlewareCommand::class);
-        $console->addCommand(Command\MigrationCommand::class, true);
+        $console->addCommand(EntityCommand::class, true);
+        $console->addCommand(RepositoryCommand::class, true);
+        $console->addCommand(BootloaderCommand::class);
+        $console->addCommand(CommandCommand::class);
+        $console->addCommand(ConfigCommand::class);
+        $console->addCommand(ControllerCommand::class);
+        $console->addCommand(FilterCommand::class);
+        $console->addCommand(JobHandlerCommand::class);
+        $console->addCommand(MiddlewareCommand::class);
+        $console->addCommand(MigrationCommand::class, true);
 
         try {
             $defaultNamespace = (new ReflectionClass($this->kernel))->getNamespaceName();
@@ -96,12 +114,12 @@ class ScaffolderBootloader extends Bootloader
                 'bootloader' => [
                     'namespace' => 'Bootloader',
                     'postfix'   => 'Bootloader',
-                    'class'     => Declaration\BootloaderDeclaration::class,
+                    'class'     => BootloaderDeclaration::class,
                 ],
                 'config'     => [
                     'namespace' => 'Config',
                     'postfix'   => 'Config',
-                    'class'     => Declaration\ConfigDeclaration::class,
+                    'class'     => ConfigDeclaration::class,
                     'options'   => [
                         'directory' => directory('config'),
                     ],
@@ -109,32 +127,32 @@ class ScaffolderBootloader extends Bootloader
                 'controller' => [
                     'namespace' => 'Controller',
                     'postfix'   => 'Controller',
-                    'class'     => Declaration\ControllerDeclaration::class,
+                    'class'     => ControllerDeclaration::class,
                 ],
                 'middleware' => [
                     'namespace' => 'Middleware',
                     'postfix'   => '',
-                    'class'     => Declaration\MiddlewareDeclaration::class,
+                    'class'     => MiddlewareDeclaration::class,
                 ],
                 'command'    => [
                     'namespace' => 'Command',
                     'postfix'   => 'Command',
-                    'class'     => Declaration\CommandDeclaration::class,
+                    'class'     => CommandDeclaration::class,
                 ],
                 'jobHandler' => [
                     'namespace' => 'Job',
                     'postfix'   => 'Job',
-                    'class'     => Declaration\JobHandlerDeclaration::class,
+                    'class'     => JobHandlerDeclaration::class,
                 ],
                 'migration'  => [
                     'namespace' => '',
                     'postfix'   => 'Migration',
-                    'class'     => Declaration\MigrationDeclaration::class,
+                    'class'     => MigrationDeclaration::class,
                 ],
                 'filter'     => [
                     'namespace' => 'Request',
                     'postfix'   => 'Request',
-                    'class'     => Declaration\FilterDeclaration::class,
+                    'class'     => FilterDeclaration::class,
                     'options'   => [
                         //Set of default filters and validate rules for various types
                         'mapping' => [
@@ -198,13 +216,13 @@ class ScaffolderBootloader extends Bootloader
                     'namespace' => 'Database',
                     'postfix'   => '',
                     'options'   => [
-                        'annotated' => Declaration\Database\Entity\AnnotatedDeclaration::class,
+                        'annotated' => AnnotatedDeclaration::class,
                     ],
                 ],
                 'repository' => [
                     'namespace' => 'Repository',
                     'postfix'   => 'Repository',
-                    'class'     => Declaration\Database\RepositoryDeclaration::class,
+                    'class'     => RepositoryDeclaration::class,
                 ],
             ],
         ]);

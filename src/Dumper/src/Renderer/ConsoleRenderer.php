@@ -22,17 +22,13 @@ final class ConsoleRenderer extends AbstractRenderer
 {
     /**
      * Every dumped element is wrapped using this pattern.
-     *
-     * @var string
      */
-    protected $element = '%s%s' . Color::RESET;
+    protected string $element = '%s%s' . Color::RESET;
 
     /**
      * Set of styles associated with different dumping properties.
-     *
-     * @var array
      */
-    protected $styles = [
+    protected array $styles = [
         'common'   => Color::BOLD_WHITE,
         'name'     => Color::LIGHT_WHITE,
         'dynamic'  => Color::PURPLE,

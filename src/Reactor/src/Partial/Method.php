@@ -28,17 +28,13 @@ class Method extends AbstractDeclaration implements ReplaceableInterface, NamedI
     use CommentTrait;
     use AccessTrait;
 
-    /** @var bool */
-    private $static = false;
+    private bool $static = false;
 
-    /** @var string */
-    private $return;
+    private ?string $return = null;
 
-    /** @var Parameters */
-    private $parameters;
+    private Parameters $parameters;
 
-    /** @var Source */
-    private $source;
+    private ?Source $source = null;
 
     /**
      * @param string|array $source

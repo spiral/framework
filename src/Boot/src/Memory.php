@@ -21,11 +21,9 @@ final class Memory implements MemoryInterface
     // data file extension
     private const EXTENSION = 'php';
 
-    /** @var string */
-    private $directory;
+    private string $directory;
 
-    /** @var FilesInterface */
-    private $files;
+    private FilesInterface $files;
 
     public function __construct(string $directory, FilesInterface $files)
     {

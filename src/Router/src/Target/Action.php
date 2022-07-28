@@ -24,8 +24,7 @@ use Spiral\Router\Exception\InvalidArgumentException;
  */
 final class Action extends AbstractTarget
 {
-    /** @var string */
-    private $controller;
+    private string $controller;
 
     /** @var array|string */
     private $action;

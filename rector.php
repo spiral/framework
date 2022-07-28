@@ -2,33 +2,31 @@
 
 declare(strict_types=1);
 
-use Rector\Core\Configuration\Option;
+use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
-use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPromotedPropertyRector;
-use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\Php71\Rector\FuncCall\CountOnNullRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->paths([
         __DIR__ . '/src/*/src',
     ]);
 
-    $parameters->set(Option::PARALLEL, true);
-    $parameters->set(Option::SKIP, [
+    $rectorConfig->importShortClasses(false);
+    $rectorConfig->importNames();
+    $rectorConfig->parallel();
+    $rectorConfig->skip([
         CountOnNullRector::class,
-
-        // for PHP 8
-        RemoveUnusedPromotedPropertyRector::class,
 
         RemoveUnusedPrivateMethodRector::class => [
             __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
+            __DIR__ . '/src/Broadcasting/src/Bootloader/BroadcastingBootloader.php',
         ],
-    ]);
 
-    $containerConfigurator->import(LevelSetList::UP_TO_PHP_72);
-    $containerConfigurator->import(SetList::DEAD_CODE);
+        // deprecated classes
+        __DIR__ . '/src/Http/src/Exception/EmitterException.php',
+        __DIR__ . '/src/Dumper/src/Exception/DumperException.php',
+    ]);
+    $rectorConfig->sets([LevelSetList::UP_TO_PHP_74, SetList::DEAD_CODE]);
 };

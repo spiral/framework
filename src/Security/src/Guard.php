@@ -18,14 +18,11 @@ use Spiral\Security\Exception\GuardException;
  */
 final class Guard implements GuardInterface
 {
-    /** @var PermissionsInterface */
-    private $permissions;
+    private PermissionsInterface $permissions;
 
-    /** @var ActorInterface|null */
-    private $actor;
+    private ?ActorInterface $actor;
 
-    /** @var array */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @param array                $roles Session specific roles.

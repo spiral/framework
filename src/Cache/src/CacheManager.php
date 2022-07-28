@@ -11,14 +11,12 @@ use Spiral\Core\FactoryInterface;
 
 class CacheManager implements CacheStorageProviderInterface, SingletonInterface
 {
-    /** @var CacheConfig */
-    private $config;
+    private CacheConfig $config;
 
     /** @var CacheInterface[] */
-    private $storages = [];
+    private array $storages = [];
 
-    /** @var FactoryInterface */
-    private $factory;
+    private FactoryInterface $factory;
 
     public function __construct(CacheConfig $config, FactoryInterface $factory)
     {

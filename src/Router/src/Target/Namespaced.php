@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Router\Target;
 
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Router\Exception\TargetException;
 
 /**
@@ -20,14 +22,11 @@ use Spiral\Router\Exception\TargetException;
  */
 final class Namespaced extends AbstractTarget
 {
-    /** @var string */
-    private $namespace;
+    private string $namespace;
 
-    /** @var string */
-    private $postfix;
+    private string $postfix;
 
-    /** @var \Doctrine\Inflector\Inflector */
-    private $inflector;
+    private Inflector $inflector;
 
     public function __construct(
         string $namespace,
@@ -43,7 +42,7 @@ final class Namespaced extends AbstractTarget
             $options
         );
 
-        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
+        $this->inflector = (new InflectorFactory())->build();
     }
 
     /**

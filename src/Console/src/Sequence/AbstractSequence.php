@@ -16,11 +16,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractSequence implements SequenceInterface
 {
-    /** @var string */
-    private $header;
+    private string $header;
 
-    /** @var string */
-    private $footer;
+    private string $footer;
 
     public function __construct(string $header, string $footer)
     {

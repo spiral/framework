@@ -31,26 +31,19 @@ final class CoreHandler implements RequestHandlerInterface
 {
     use JsonTrait;
 
-    /** @var CoreInterface */
-    private $core;
+    private CoreInterface $core;
 
-    /** @var ScopeInterface */
-    private $scope;
+    private ScopeInterface $scope;
 
-    /** @var string|null */
-    private $controller;
+    private ?string $controller = null;
 
-    /** @var string|null */
-    private $action;
+    private ?string $action = null;
 
-    /** @var bool */
-    private $verbActions;
+    private ?bool $verbActions = null;
 
-    /** @var array|null */
-    private $parameters;
+    private ?array $parameters = null;
 
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
     public function __construct(
         CoreInterface $core,
@@ -111,13 +104,11 @@ final class CoreHandler implements RequestHandlerInterface
                     Request::class  => $request,
                     Response::class => $response,
                 ],
-                function () use ($request) {
-                    return $this->core->callAction(
-                        $this->controller,
-                        $this->getAction($request),
-                        $this->parameters
-                    );
-                }
+                fn () => $this->core->callAction(
+                    $this->controller,
+                    $this->getAction($request),
+                    $this->parameters
+                )
             );
         } catch (ControllerException $e) {
             ob_get_clean();

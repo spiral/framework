@@ -19,8 +19,7 @@ final class RouteLocator
 {
     private ScopedClassesInterface $locator;
 
-    /** @var ReaderInterface */
-    private $reader;
+    private ReaderInterface $reader;
 
     public function __construct(ScopedClassesInterface $locator, ReaderInterface $reader)
     {
@@ -54,7 +53,7 @@ final class RouteLocator
                     continue;
                 }
 
-                $route->name = $route->name ?? $this->generateName($route);
+                $route->name ??= $this->generateName($route);
                 $result[$route->name] = [
                     'pattern'    => $route->route,
                     'controller' => $class->getName(),
@@ -68,9 +67,7 @@ final class RouteLocator
             }
         }
 
-        \uasort($result, static function (array $route1, array $route2) {
-            return $route1['priority'] <=> $route2['priority'];
-        });
+        \uasort($result, static fn (array $route1, array $route2) => $route1['priority'] <=> $route2['priority']);
 
         return $result;
     }

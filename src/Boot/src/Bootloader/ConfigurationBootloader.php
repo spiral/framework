@@ -33,17 +33,14 @@ final class ConfigurationBootloader extends Bootloader
         ConfigManager::class         => [self::class, 'configManager'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $configurator;
+    private ConfiguratorInterface $configurator;
 
     /** @var FileLoaderInterface[] */
-    private $loaders;
+    private array $loaders;
 
-    /** @var DirectoriesInterface */
-    private $directories;
+    private DirectoriesInterface $directories;
 
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     public function __construct(DirectoriesInterface $directories, Container $container)
     {

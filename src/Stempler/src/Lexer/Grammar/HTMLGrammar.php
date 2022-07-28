@@ -45,14 +45,11 @@ final class HTMLGrammar implements GrammarInterface
     // Allowed keyword characters.
     private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
 
-    /** @var array */
-    private $whitespace = [];
+    private array $whitespace = [];
 
-    /** @var array */
-    private $attribute = [];
+    private array $attribute = [];
 
-    /** @var array */
-    private $keyword = [];
+    private array $keyword = [];
 
     /**
      * @inheritDoc

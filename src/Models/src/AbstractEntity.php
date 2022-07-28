@@ -20,8 +20,7 @@ use Spiral\Models\Exception\EntityException;
  */
 abstract class AbstractEntity implements EntityInterface, ValueInterface, \IteratorAggregate
 {
-    /** @var array */
-    private $fields;
+    private array $fields;
 
     public function __construct(array $data = [])
     {

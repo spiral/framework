@@ -23,8 +23,7 @@ use Spiral\Stempler\VisitorContext;
  */
 final class ImportContext
 {
-    /** @var VisitorContext */
-    private $ctx;
+    private VisitorContext $ctx;
 
     private function __construct(VisitorContext $ctx)
     {

@@ -26,23 +26,17 @@ abstract class AbstractTarget implements TargetInterface
     // Automatically prepend HTTP verb to all action names.
     public const RESTFUL = 1;
 
-    /** @var array */
-    private $defaults = [];
+    private array $defaults = [];
 
-    /** @var array */
-    private $constrains = [];
+    private array $constrains = [];
 
-    /** @var CoreInterface */
-    private $core;
+    private ?CoreInterface $core = null;
 
-    /** @var CoreHandler */
-    private $handler;
+    private ?CoreHandler $handler = null;
 
-    /** @var bool */
-    private $verbActions;
+    private bool $verbActions;
 
-    /** @var string */
-    private $defaultAction;
+    private string $defaultAction;
 
     public function __construct(array $defaults, array $constrains, int $options = 0, string $defaultAction = 'index')
     {

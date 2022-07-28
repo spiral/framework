@@ -20,8 +20,7 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class IsolateBlocks implements VisitorInterface
 {
-    /** @var string */
-    private $path;
+    private string $path;
 
     public function __construct(string $path)
     {

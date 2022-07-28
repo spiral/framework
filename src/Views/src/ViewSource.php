@@ -16,17 +16,13 @@ namespace Spiral\Views;
  */
 final class ViewSource
 {
-    /** @var string */
-    private $filename;
+    private string $filename;
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var string */
-    private $namespace;
+    private string $namespace;
 
-    /** @var string|null */
-    private $code;
+    private ?string $code = null;
 
     public function __construct(string $filename, string $namespace, string $name)
     {

@@ -20,7 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CallableSequence extends AbstractSequence
 {
-    /** @var string */
+    /**
+     * @var array|string
+     */
     private $function;
 
     /**

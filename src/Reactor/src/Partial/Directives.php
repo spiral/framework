@@ -16,7 +16,7 @@ use Spiral\Reactor\DeclarationInterface;
 class Directives implements DeclarationInterface
 {
     /** @var string[] */
-    private $directives;
+    private array $directives;
 
     public function __construct(string ...$directives)
     {

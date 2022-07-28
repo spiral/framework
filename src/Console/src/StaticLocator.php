@@ -20,7 +20,7 @@ final class StaticLocator implements LocatorInterface
     use LazyTrait;
 
     /** @var string[] */
-    private $commands;
+    private array $commands;
 
     /** @var ContainerInterface */
     private $container;

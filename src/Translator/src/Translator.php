@@ -23,17 +23,14 @@ use Symfony\Component\Translation\IdentityTranslator;
  */
 final class Translator implements TranslatorInterface, SingletonInterface
 {
-    /** @var TranslatorConfig */
-    private $config;
+    private TranslatorConfig $config;
 
-    /** @var string */
-    private $locale = '';
+    private string $locale = '';
 
     /** @var IdentityTranslator @internal */
-    private $identityTranslator;
+    private IdentityTranslator $identityTranslator;
 
-    /** @var CatalogueManagerInterface */
-    private $catalogueManager;
+    private CatalogueManagerInterface $catalogueManager;
 
     public function __construct(
         TranslatorConfig $config,
@@ -96,8 +93,8 @@ final class Translator implements TranslatorInterface, SingletonInterface
      */
     public function trans(string $id, array $parameters = [], $domain = null, $locale = null): string
     {
-        $domain = $domain ?? $this->config->getDefaultDomain();
-        $locale = $locale ?? $this->locale;
+        $domain ??= $this->config->getDefaultDomain();
+        $locale ??= $this->locale;
 
         $message = $this->get($locale, $domain, $id);
 
@@ -120,8 +117,8 @@ final class Translator implements TranslatorInterface, SingletonInterface
         $domain = null,
         $locale = null
     ) {
-        $domain = $domain ?? $this->config->getDefaultDomain();
-        $locale = $locale ?? $this->locale;
+        $domain ??= $this->config->getDefaultDomain();
+        $locale ??= $this->locale;
 
         try {
             $message = $this->get($locale, $domain, $id);

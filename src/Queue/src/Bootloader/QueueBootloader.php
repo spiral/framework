@@ -37,8 +37,7 @@ final class QueueBootloader extends Bootloader
         QueueRegistry::class => [self::class, 'initRegistry'],
     ];
 
-    /** @var ConfiguratorInterface */
-    private $config;
+    private ConfiguratorInterface $config;
 
     public function __construct(ConfiguratorInterface $config)
     {
@@ -84,18 +83,14 @@ final class QueueBootloader extends Bootloader
 
     private function registerJobsSerializer(Container $container): void
     {
-        $container->bindSingleton(SerializerInterface::class, static function () {
-            return new DefaultSerializer();
-        });
+        $container->bindSingleton(SerializerInterface::class, static fn () => new DefaultSerializer());
     }
 
     private function registerQueue(Container $container): void
     {
         $container->bindSingleton(
             QueueInterface::class,
-            static function (QueueManager $manager): QueueInterface {
-                return $manager->getConnection();
-            }
+            static fn (QueueManager $manager): QueueInterface => $manager->getConnection()
         );
     }
 

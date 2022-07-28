@@ -23,11 +23,9 @@ final class Inline implements ImportInterface
 {
     use ContextTrait;
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var array */
-    private $nodes;
+    private array $nodes;
 
     /**
      * @param Context|null $context

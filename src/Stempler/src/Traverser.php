@@ -21,10 +21,9 @@ use Spiral\Stempler\Node\NodeInterface;
 final class Traverser
 {
     /** @var VisitorInterface[] */
-    private $visitors = [];
+    private array $visitors = [];
 
-    /** @var bool */
-    private $stopTraversal = false;
+    private bool $stopTraversal = false;
 
     public function __construct(array $visitors = [])
     {
@@ -60,7 +59,7 @@ final class Traverser
      */
     public function traverse(array $nodes, VisitorContext $context = null): array
     {
-        $context = $context ?? new VisitorContext();
+        $context ??= new VisitorContext();
 
         $ctx = clone $context;
         foreach ($nodes as $index => $node) {

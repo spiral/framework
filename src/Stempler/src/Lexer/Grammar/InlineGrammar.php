@@ -38,7 +38,7 @@ final class InlineGrammar implements GrammarInterface
     private const REGEXP_KEYWORD = '/[a-z0-9_\-:\.]/ui';
 
     /** @var Byte[] */
-    private $name = [];
+    private array $name = [];
 
     /** @var Byte[]|null */
     private $default;

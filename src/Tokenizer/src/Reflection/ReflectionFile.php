@@ -46,10 +46,8 @@ final class ReflectionFile
     /**
      * Set of tokens required to detect classes, traits, interfaces and function declarations. We
      * don't need any other token for that.
-     *
-     * @var array
      */
-    private static $processTokens = [
+    private static array $processTokens = [
         '{',
         '}',
         ';',
@@ -69,56 +67,49 @@ final class ReflectionFile
         T_AS,
     ];
 
-    /** @var string */
-    private $filename = '';
+    private string $filename = '';
 
     /**
      * Parsed tokens array.
      *
      * @internal
-     * @var array
      */
-    private $tokens = [];
+    private array $tokens = [];
 
     /**
      * Total tokens count.
      *
      * @internal
-     * @var int
      */
-    private $countTokens = 0;
+    private int $countTokens = 0;
 
     /**
      * Indicator that file has external includes.
      *
      * @internal
-     * @var bool
      */
-    private $hasIncludes = false;
+    private bool $hasIncludes = false;
 
     /**
      * Namespaces used in file and their token positions.
      *
      * @internal
-     * @var array
      */
-    private $namespaces = [];
+    private array $namespaces = [];
 
     /**
      * Declarations of classes, interfaces and traits.
      *
      * @internal
-     * @var array
      */
-    private $declarations = [];
+    private array $declarations = [];
 
     /**
      * Declarations of new functions.
      *
      * @internal
-     * @var array
      */
-    private $functions = [];
+    private array $functions = [];
 
     /**
      * Every found method/function invocation.
@@ -126,7 +117,7 @@ final class ReflectionFile
      * @internal
      * @var ReflectionInvocation[]
      */
-    private $invocations = [];
+    private array $invocations = [];
 
     public function __construct(string $filename)
     {

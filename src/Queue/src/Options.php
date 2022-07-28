@@ -6,11 +6,9 @@ namespace Spiral\Queue;
 
 final class Options implements OptionsInterface, \JsonSerializable
 {
-    /** @var int|null */
-    private $delay;
+    private ?int $delay = null;
 
-    /** @var string|null */
-    private $queue;
+    private ?string $queue = null;
 
     public function withQueue(?string $queue): self
     {

@@ -18,8 +18,7 @@ use Spiral\Filters\Exception\SchemaException;
  */
 final class ErrorMapper
 {
-    /** @var array */
-    private $schema;
+    private array $schema;
 
     public function __construct(array $schema)
     {

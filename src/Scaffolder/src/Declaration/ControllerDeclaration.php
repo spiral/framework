@@ -22,8 +22,7 @@ use Spiral\Reactor\Partial\Method;
  */
 class ControllerDeclaration extends ClassDeclaration implements DependedInterface
 {
-    /** @var bool */
-    private $withPrototype = false;
+    private bool $withPrototype = false;
 
     public function __construct(string $name, string $comment = '')
     {

@@ -47,10 +47,7 @@ final class FallbackAttributeReader extends AttributeReader
      */
     private const KEY_PARAMETERS = 0x04;
 
-    /**
-     * @var AttributeParser
-     */
-    private $parser;
+    private AttributeParser $parser;
 
     /**
      * @psalm-type ClassName       = string
@@ -70,7 +67,7 @@ final class FallbackAttributeReader extends AttributeReader
      *  4: array<FunctionEndLine, array<ParameterName, AttributesList>>
      * }
      */
-    private $attributes = [
+    private array $attributes = [
         self::KEY_CLASSES    => [],
         self::KEY_CONSTANTS  => [],
         self::KEY_PROPERTIES => [],

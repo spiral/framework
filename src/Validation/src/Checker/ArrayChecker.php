@@ -19,8 +19,7 @@ class ArrayChecker extends AbstractChecker
         'range' => '[[Number of elements must be between {1} and {2}.]]',
     ];
 
-    /** @var ValidationInterface */
-    private $validation;
+    private ValidationInterface $validation;
 
     public function __construct(ValidationInterface $validation)
     {

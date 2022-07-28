@@ -16,7 +16,7 @@ use Spiral\Stempler\Node\Dynamic\Directive;
 final class DirectiveGroup implements DirectiveRendererInterface
 {
     /** @var DirectiveRendererInterface[] */
-    private $directives = [];
+    private array $directives = [];
 
     public function __construct(array $directives = [])
     {

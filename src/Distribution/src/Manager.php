@@ -31,12 +31,9 @@ final class Manager implements MutableDistributionInterface
     /**
      * @var array<string, UriResolverInterface>
      */
-    private $resolvers = [];
+    private array $resolvers = [];
 
-    /**
-     * @var string
-     */
-    private $default;
+    private string $default;
 
     public function __construct(string $name = self::DEFAULT_RESOLVER)
     {
@@ -59,7 +56,7 @@ final class Manager implements MutableDistributionInterface
      */
     public function resolver(string $name = null): UriResolverInterface
     {
-        $name = $name ?? $this->default;
+        $name ??= $this->default;
 
         if (!isset($this->resolvers[$name])) {
             throw new \InvalidArgumentException(\sprintf(self::ERROR_NOT_FOUND, $name));

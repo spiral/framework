@@ -30,8 +30,7 @@ final class CsrfMiddleware implements MiddlewareInterface
 {
     public const ATTRIBUTE = 'csrfToken';
 
-    /** @var CsrfConfig */
-    protected $config;
+    protected CsrfConfig $config;
 
     public function __construct(CsrfConfig $config)
     {

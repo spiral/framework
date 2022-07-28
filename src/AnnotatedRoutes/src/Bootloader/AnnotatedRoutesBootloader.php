@@ -40,11 +40,9 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
         GroupRegistry::class => [self::class, 'getGroups'],
     ];
 
-    /** @var MemoryInterface */
-    private $memory;
+    private MemoryInterface $memory;
 
-    /** @var GroupRegistry */
-    private $groups;
+    private GroupRegistry $groups;
 
     public function __construct(MemoryInterface $memory, GroupRegistry $groupRegistry)
     {

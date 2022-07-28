@@ -19,14 +19,11 @@ use Spiral\Stempler\Lexer\Token;
 final class Context
 {
     public $parent;
-    /** @var Token */
-    private $token;
+    private Token $token;
 
-    /** @var string|null */
-    private $path;
+    private ?string $path;
 
-    /** @var array */
-    private $values = [];
+    private array $values = [];
 
     /**
      * @param string|null $path

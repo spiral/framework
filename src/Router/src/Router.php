@@ -34,20 +34,16 @@ final class Router implements RouterInterface
     // attribute to store active route in request
     public const ROUTE_MATCHES = 'matches';
 
-    /** @var string */
-    private $basePath = '/';
+    private string $basePath = '/';
 
     /** @var RouteInterface[] */
-    private $routes = [];
+    private array $routes = [];
 
-    /** @var RouteInterface */
-    private $default;
+    private ?RouteInterface $default = null;
 
-    /** @var UriHandler */
-    private $uriHandler;
+    private UriHandler $uriHandler;
 
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
     public function __construct(string $basePath, UriHandler $uriHandler, ContainerInterface $container)
     {
