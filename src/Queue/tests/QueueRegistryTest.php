@@ -53,4 +53,19 @@ final class QueueRegistryTest extends TestCase
 
         $this->assertSame($handler, $this->registry->getHandler('foo'));
     }
+
+    public function testSerializerFormat(): void
+    {
+        $this->assertFalse($this->registry->hasSerializer('foo'));
+        $this->assertFalse($this->registry->hasSerializer('bar'));
+
+        $this->registry->setSerializerFormat('foo', 'some');
+        $this->registry->setSerializerFormat('bar', 'other');
+
+        $this->assertTrue($this->registry->hasSerializer('foo'));
+        $this->assertTrue($this->registry->hasSerializer('bar'));
+
+        $this->assertSame('some', $this->registry->getSerializerFormat('foo'));
+        $this->assertSame('other', $this->registry->getSerializerFormat('bar'));
+    }
 }

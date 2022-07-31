@@ -55,6 +55,10 @@ final class QueueBootloader extends Bootloader
             foreach ($config->getRegistryHandlers() as $jobType => $handler) {
                 $registry->setHandler($jobType, $handler);
             }
+
+            foreach ($config->getRegistrySerializers() as $jobType => $format) {
+                $registry->setSerializerFormat($jobType, $format);
+            }
         });
     }
 
@@ -97,6 +101,7 @@ final class QueueBootloader extends Bootloader
                 ],
                 'registry' => [
                     'handlers' => [],
+                    'serializers' => [],
                 ],
                 'driverAliases' => [
                     'sync' => SyncDriver::class,
