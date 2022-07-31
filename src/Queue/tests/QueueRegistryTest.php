@@ -9,6 +9,9 @@ use Psr\Container\ContainerInterface;
 use Spiral\Queue\HandlerInterface;
 use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\QueueRegistry;
+use Spiral\Serializer\Serializer\JsonSerializer;
+use Spiral\Serializer\SerializerRegistry;
+use Spiral\Serializer\SerializerRegistryInterface;
 
 final class QueueRegistryTest extends TestCase
 {
@@ -56,6 +59,14 @@ final class QueueRegistryTest extends TestCase
 
     public function testSerializerFormat(): void
     {
+        $registry = new SerializerRegistry([
+            'some' => new JsonSerializer(),
+            'other' => new JsonSerializer(),
+        ]);
+
+        $this->mockContainer->shouldReceive('get')->times(2)->with(SerializerRegistryInterface::class)
+            ->andReturn($registry);
+
         $this->assertFalse($this->registry->hasSerializer('foo'));
         $this->assertFalse($this->registry->hasSerializer('bar'));
 
