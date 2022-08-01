@@ -24,11 +24,13 @@ use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
+use Spiral\Queue\SerializerRegistryInterface;
 
 final class QueueBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         HandlerRegistryInterface::class => QueueRegistry::class,
+        SerializerRegistryInterface::class => QueueRegistry::class,
         FailedJobHandlerInterface::class => LogFailedJobHandler::class,
         QueueConnectionProviderInterface::class => QueueManager::class,
         QueueManager::class => [self::class, 'initQueueManager'],

@@ -7,11 +7,12 @@ namespace Spiral\Queue;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Exception\InvalidArgumentException;
+use Spiral\Queue\SerializerRegistryInterface as QueueSerializerRegistryInterface;
 use Spiral\Serializer\SerializerInterface;
 use Spiral\Serializer\SerializerManager;
 use Spiral\Serializer\SerializerRegistryInterface;
 
-final class QueueRegistry implements HandlerRegistryInterface
+final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRegistryInterface
 {
     /** @var array<string, class-string> */
     private array $handlers = [];
@@ -80,9 +81,9 @@ final class QueueRegistry implements HandlerRegistryInterface
     /**
      * Get serializer object for given job type
      */
-    public function getSerializer(string $jobType): SerializerInterface
+    public function getSerializer(?string $jobType = null): SerializerInterface
     {
-        if ($this->hasSerializer($jobType)) {
+        if ($jobType && $this->hasSerializer($jobType)) {
             return $this->serializers[$jobType];
         }
 
