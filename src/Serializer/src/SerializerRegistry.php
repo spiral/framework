@@ -37,26 +37,4 @@ class SerializerRegistry implements SerializerRegistryInterface
     {
         return isset($this->serializers[$name]);
     }
-
-    public function hasByClass(string $class): bool
-    {
-        foreach ($this->serializers as $serializer) {
-            if ($serializer::class === $class) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getNameByClass(string $class): string
-    {
-        foreach ($this->serializers as $name => $serializer) {
-            if ($serializer::class === $class) {
-                return $name;
-            }
-        }
-
-        throw new SerializerNotFoundException(\sprintf('Serializer [%s] not found.', $class));
-    }
 }

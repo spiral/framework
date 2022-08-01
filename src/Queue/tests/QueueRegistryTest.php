@@ -60,11 +60,8 @@ final class QueueRegistryTest extends TestCase
     }
 
     /** @dataProvider serializersDataProvider */
-    public function testSerializer(
-        SerializerRegistry $registry,
-        string|SerializerInterface|Autowire $serializer,
-        string $expectedFormat
-    ): void {
+    public function testSerializer(SerializerRegistry $registry, string|SerializerInterface|Autowire $serializer): void
+    {
         $this->mockContainer->bind(SerializerRegistryInterface::class, $registry);
 
         $this->assertFalse($this->registry->hasSerializer('foo'));
@@ -72,33 +69,30 @@ final class QueueRegistryTest extends TestCase
         $this->registry->setSerializer('foo', $serializer);
 
         $this->assertTrue($this->registry->hasSerializer('foo'));
-
-        $this->assertSame($expectedFormat, $this->registry->getSerializerFormat('foo'));
+        $this->assertInstanceOf(SerializerInterface::class, $this->registry->getSerializer('foo'));
     }
 
     public function serializersDataProvider(): \Traversable
     {
         // serializer name
-        yield [new SerializerRegistry(['some' => new JsonSerializer()]), 'some', 'some'];
+        yield [new SerializerRegistry(['some' => new JsonSerializer()]), 'some'];
 
         // class-string
-        yield [new SerializerRegistry(['some' => new JsonSerializer()]), JsonSerializer::class, 'some'];
+        yield [new SerializerRegistry(['some' => new JsonSerializer()]), JsonSerializer::class];
 
         // class
-        yield [new SerializerRegistry(['some' => new JsonSerializer()]), new JsonSerializer(), 'some'];
+        yield [new SerializerRegistry(['some' => new JsonSerializer()]), new JsonSerializer()];
 
         // autowire
-        yield [new SerializerRegistry(['some' => new JsonSerializer()]), new Autowire(JsonSerializer::class), 'some'];
+        yield [new SerializerRegistry(['some' => new JsonSerializer()]), new Autowire(JsonSerializer::class)];
 
         // adding by class-string
-        yield [new SerializerRegistry(), JsonSerializer::class, JsonSerializer::class];
+        yield [new SerializerRegistry(), JsonSerializer::class];
 
         // adding by class
-        yield [new SerializerRegistry(), new JsonSerializer(), JsonSerializer::class];
+        yield [new SerializerRegistry(), new JsonSerializer()];
 
         // adding by autowire
-        yield [new SerializerRegistry(), new Autowire(JsonSerializer::class), JsonSerializer::class];
-
-        yield [new SerializerRegistry(), new Autowire(JsonSerializer::class), JsonSerializer::class];
+        yield [new SerializerRegistry(), new Autowire(JsonSerializer::class)];
     }
 }

@@ -51,28 +51,4 @@ final class SerializerRegistryTest extends TestCase
         $this->assertTrue($registry->has('foo'));
         $this->assertTrue($registry->has('bar'));
     }
-
-    public function testHasByClass(): void
-    {
-        $registry = new SerializerRegistry();
-
-        $this->assertFalse($registry->hasByClass(PhpSerializer::class));
-        $this->assertFalse($registry->hasByClass(JsonSerializer::class));
-
-        $registry->register('foo', new PhpSerializer());
-        $registry->register('bar', new JsonSerializer());
-
-        $this->assertTrue($registry->hasByClass(PhpSerializer::class));
-        $this->assertTrue($registry->hasByClass(JsonSerializer::class));
-    }
-
-    public function testGetNameByClass(): void
-    {
-        $registry = new SerializerRegistry();
-        $registry->register('foo', new PhpSerializer());
-
-        $this->assertSame('foo', $registry->getNameByClass(PhpSerializer::class));
-        $this->expectException(SerializerNotFoundException::class);
-        $registry->getNameByClass(JsonSerializer::class);
-    }
 }

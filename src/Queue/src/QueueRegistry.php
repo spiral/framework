@@ -8,13 +8,15 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Serializer\SerializerInterface;
+use Spiral\Serializer\SerializerManager;
 use Spiral\Serializer\SerializerRegistryInterface;
 
 final class QueueRegistry implements HandlerRegistryInterface
 {
-    /** @var array<string, class-string>  */
+    /** @var array<string, class-string> */
     private array $handlers = [];
 
+    /** @var array<string, SerializerInterface> */
     private array $serializers = [];
 
     public function __construct(
@@ -29,41 +31,6 @@ final class QueueRegistry implements HandlerRegistryInterface
     public function setHandler(string $jobType, HandlerInterface|string $handler): void
     {
         $this->handlers[$jobType] = $handler;
-    }
-
-    /**
-     * Associate specific job type with serializer
-     */
-    public function setSerializer(string $jobType, string|Autowire|SerializerInterface $serializer): void
-    {
-        /** @var SerializerRegistryInterface $registry */
-        $registry = $this->container->get(SerializerRegistryInterface::class);
-
-        if ($serializer instanceof Autowire) {
-            $serializer = $this->container->get($serializer);
-        }
-
-        $name = $serializer;
-        if ($serializer instanceof SerializerInterface) {
-            $name = $serializer::class;
-        }
-
-        if (!$registry->has($name) && !$registry->hasByClass($name)) {
-            $name = $this->registerSerializer($serializer);
-        }
-
-        $this->serializers[$jobType] = $registry->has($name) ? $name : $registry->getNameByClass($name);
-    }
-
-    public function getSerializerFormat(string $jobType): string
-    {
-        if ($this->hasSerializer($jobType)) {
-            return $this->serializers[$jobType];
-        }
-
-        return throw new InvalidArgumentException(
-            \sprintf('Serializer format associated with job type `%s` not found.', $jobType)
-        );
     }
 
     /**
@@ -82,28 +49,48 @@ final class QueueRegistry implements HandlerRegistryInterface
         return $this->fallbackHandlers->getHandler($jobType);
     }
 
-    public function hasSerializer(string $jobType): bool
-    {
-        return isset($this->serializers[$jobType]);
-    }
-
-    private function registerSerializer(SerializerInterface|string $serializer): string
+    /**
+     * Associate specific job type with serializer class or object
+     */
+    public function setSerializer(string $jobType, SerializerInterface|string|Autowire $serializer): void
     {
         /** @var SerializerRegistryInterface $registry */
         $registry = $this->container->get(SerializerRegistryInterface::class);
 
-        if ($serializer instanceof SerializerInterface) {
-            $registry->register($serializer::class, $serializer);
-
-            return $serializer::class;
+        if ($serializer instanceof Autowire) {
+            $serializer = $this->container->get($serializer);
         }
 
-        if (\class_exists($serializer)) {
-            $registry->register($serializer, $this->container->get($serializer));
-
-            return $serializer;
+        if (\is_string($serializer)) {
+            $serializer = $registry->has($serializer) ?
+                $registry->get($serializer) :
+                $this->container->get($serializer);
         }
 
-        throw new InvalidArgumentException(\sprintf('Serializer with name or class `%s` not found.', $serializer));
+        if (!$serializer instanceof SerializerInterface) {
+            throw new InvalidArgumentException(\sprintf(
+                'Serializer must be an instance of `SerializerInterface` but `%s` given.',
+                \get_debug_type($serializer)
+            ));
+        }
+
+        $this->serializers[$jobType] = $serializer;
+    }
+
+    /**
+     * Get serializer object for given job type
+     */
+    public function getSerializer(string $jobType): SerializerInterface
+    {
+        if ($this->hasSerializer($jobType)) {
+            return $this->serializers[$jobType];
+        }
+
+        return $this->container->get(SerializerManager::class)->getSerializer();
+    }
+
+    public function hasSerializer(string $jobType): bool
+    {
+        return isset($this->serializers[$jobType]);
     }
 }
