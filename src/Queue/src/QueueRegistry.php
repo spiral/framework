@@ -15,7 +15,6 @@ final class QueueRegistry implements HandlerRegistryInterface
     /** @var array<string, class-string>  */
     private array $handlers = [];
 
-    /** @var array<string, non-empty-string>  */
     private array $serializers = [];
 
     public function __construct(
