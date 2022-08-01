@@ -135,9 +135,6 @@ final class QueueConfig extends InjectableConfig
         return (array)($this->config['registry']['handlers'] ?? []);
     }
 
-    /**
-     * @return array<string, non-empty-string>
-     */
     public function getRegistrySerializers(): array
     {
         return (array)($this->config['registry']['serializers'] ?? []);

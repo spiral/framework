@@ -57,6 +57,6 @@ class SerializerRegistry implements SerializerRegistryInterface
             }
         }
 
-        throw new SerializerNotFoundException(\sprintf('Serializer [%s] not found.', $name));
+        throw new SerializerNotFoundException(\sprintf('Serializer [%s] not found.', $class));
     }
 }

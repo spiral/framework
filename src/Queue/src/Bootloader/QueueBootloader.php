@@ -56,8 +56,8 @@ final class QueueBootloader extends Bootloader
                 $registry->setHandler($jobType, $handler);
             }
 
-            foreach ($config->getRegistrySerializers() as $jobType => $format) {
-                $registry->setSerializerFormat($jobType, $format);
+            foreach ($config->getRegistrySerializers() as $jobType => $serializer) {
+                $registry->setSerializer($jobType, $serializer);
             }
         });
     }
