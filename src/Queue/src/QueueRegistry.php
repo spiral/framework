@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Queue;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Exception\InvalidArgumentException;
+use Spiral\Serializer\SerializerInterface;
 use Spiral\Serializer\SerializerRegistryInterface;
 
 final class QueueRegistry implements HandlerRegistryInterface
@@ -31,15 +33,27 @@ final class QueueRegistry implements HandlerRegistryInterface
     }
 
     /**
-     * Associate specific job type with serializer format
+     * Associate specific job type with serializer
      */
-    public function setSerializerFormat(string $jobType, string $format): void
+    public function setSerializer(string $jobType, string|Autowire|SerializerInterface $serializer): void
     {
-        if (!$this->container->get(SerializerRegistryInterface::class)->has($format)) {
-            throw new InvalidArgumentException(\sprintf('Serializer format `%s` not found.', $format));
+        /** @var SerializerRegistryInterface $registry */
+        $registry = $this->container->get(SerializerRegistryInterface::class);
+
+        if ($serializer instanceof Autowire) {
+            $serializer = $this->container->get($serializer);
         }
 
-        $this->serializers[$jobType] = $format;
+        $name = $serializer;
+        if ($serializer instanceof SerializerInterface) {
+            $name = $serializer::class;
+        }
+
+        if (!$registry->has($name) && !$registry->hasByClass($name)) {
+            $name = $this->registerSerializer($serializer);
+        }
+
+        $this->serializers[$jobType] = $registry->has($name) ? $name : $registry->getNameByClass($name);
     }
 
     public function getSerializerFormat(string $jobType): string
@@ -72,5 +86,25 @@ final class QueueRegistry implements HandlerRegistryInterface
     public function hasSerializer(string $jobType): bool
     {
         return isset($this->serializers[$jobType]);
+    }
+
+    private function registerSerializer(SerializerInterface|string $serializer): string
+    {
+        /** @var SerializerRegistryInterface $registry */
+        $registry = $this->container->get(SerializerRegistryInterface::class);
+
+        if ($serializer instanceof SerializerInterface) {
+            $registry->register($serializer::class, $serializer);
+
+            return $serializer::class;
+        }
+
+        if (\class_exists($serializer)) {
+            $registry->register($serializer, $this->container->get($serializer));
+
+            return $serializer;
+        }
+
+        throw new InvalidArgumentException(\sprintf('Serializer with name or class `%s` not found.', $serializer));
     }
 }

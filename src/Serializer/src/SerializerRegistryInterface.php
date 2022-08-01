@@ -16,4 +16,8 @@ interface SerializerRegistryInterface
     public function get(string $name): SerializerInterface;
 
     public function has(string $name): bool;
+
+    public function hasByClass(string $class): bool;
+
+    public function getNameByClass(string $class): string;
 }
