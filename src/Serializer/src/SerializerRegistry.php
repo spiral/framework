@@ -28,9 +28,7 @@ class SerializerRegistry implements SerializerRegistryInterface
      */
     public function get(string $name): SerializerInterface
     {
-        return
-            $this->serializers[$name] ??
-            throw new SerializerNotFoundException(\sprintf('Serializer with name [%s] not found.', $name));
+        return $this->serializers[$name] ?? throw new SerializerNotFoundException($name);
     }
 
     public function has(string $name): bool
