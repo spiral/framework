@@ -16,6 +16,10 @@ final class QueueConfig extends InjectableConfig
         'aliases' => [],
         'driverAliases' => [],
         'connections' => [],
+        'registry' => [
+            'handlers' => [],
+            'serializers' => [],
+        ],
     ];
 
     /**
@@ -129,5 +133,10 @@ final class QueueConfig extends InjectableConfig
     public function getRegistryHandlers(): array
     {
         return (array)($this->config['registry']['handlers'] ?? []);
+    }
+
+    public function getRegistrySerializers(): array
+    {
+        return (array)($this->config['registry']['serializers'] ?? []);
     }
 }
