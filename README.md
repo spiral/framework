@@ -49,7 +49,7 @@ the PHP code of your application stays in memory permanently (anti-memory leak t
 - Helpful class discovery via static analysis
 - Authentication, RBAC security, validation, and encryption
 - Dynamic template engine to create your own HTML tags (or just use Twig)
-- Durable and scalable workflow orchesrtation via [Temporal](https://github.com/temporalio)
+- Durable and scalable workflow orchestration via [Temporal](https://github.com/temporalio)
 - MVC, HMVC, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps
 
 ## Skeletons
