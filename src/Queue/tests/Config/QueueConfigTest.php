@@ -19,6 +19,28 @@ final class QueueConfigTest extends TestCase
         $this->assertSame(['foo', 'bar'], $config->getAliases());
     }
 
+    public function testConsumeInterceptors(): void
+    {
+        $config = new QueueConfig([
+            'interceptors' => [
+                'consume' => ['foo', 'bar'],
+            ],
+        ]);
+
+        $this->assertSame(['foo', 'bar'], $config->getConsumeInterceptors());
+    }
+
+    public function testPushInterceptors(): void
+    {
+        $config = new QueueConfig([
+            'interceptors' => [
+                'push' => ['foo', 'bar'],
+            ],
+        ]);
+
+        $this->assertSame(['foo', 'bar'], $config->getPushInterceptors());
+    }
+
     public function testGetNotExistsAliases(): void
     {
         $config = new QueueConfig();

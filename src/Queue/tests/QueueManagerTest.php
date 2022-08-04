@@ -6,6 +6,7 @@ namespace Spiral\Tests\Queue;
 
 use Mockery as m;
 use Spiral\Core\Container;
+use Spiral\Core\CoreInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\HandlerRegistryInterface;
@@ -32,9 +33,7 @@ final class QueueManagerTest extends TestCase
         ]);
 
         $container = new Container();
-        $container->bind(QueueConfig::class, $config);
-        $container->bind(HandlerRegistryInterface::class, m::mock(HandlerRegistryInterface::class));
-        $container->bind(FailedJobHandlerInterface::class, m::mock(FailedJobHandlerInterface::class));
+        $container->bind(CoreInterface::class, m::mock(CoreInterface::class));
 
         parent::setUp();
 

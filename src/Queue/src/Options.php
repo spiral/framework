@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
-final class Options implements OptionsInterface, \JsonSerializable
+class Options implements OptionsInterface, \JsonSerializable
 {
     private ?int $delay = null;
     private ?string $queue = null;

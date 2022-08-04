@@ -165,6 +165,7 @@
   - `Spiral\Snapshots\SnapshotterInterface` usage replaced with `Spiral\Exceptions\ExceptionReporterInterface` in all classes.
   - Removed `bin/spiral`. Uses the `spiral/roadrunner-cli` package instead.
 - **Other Features**
+  - [spiral/queue] Added queue interceptors.
   - [spiral/debug] Added `Spiral\Debug\StateConsumerInterface`.
   - [spiral/boot] Added new `boot` method in `Bootloaders`. It will be executed after the `init` method is executed in all `Bootloaders`.
     The old `boot` method has been renamed to `init`. See **High Impact Changes** section.

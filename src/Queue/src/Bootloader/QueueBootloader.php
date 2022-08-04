@@ -11,7 +11,10 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container;
+use Spiral\Core\Container\Autowire;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
+use Spiral\Core\InterceptableCore;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Core\QueueInjector;
@@ -20,6 +23,11 @@ use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\Failed\LogFailedJobHandler;
 use Spiral\Queue\HandlerRegistryInterface;
+use Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor;
+use Spiral\Queue\Interceptor\Consume\Handler;
+use Spiral\Queue\Interceptor\Consume\Core as ConsumeCore;
+use Spiral\Queue\Interceptor\Push\Core as PushCore;
+use Spiral\Queue\Queue;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
@@ -35,6 +43,8 @@ final class QueueBootloader extends Bootloader
         QueueConnectionProviderInterface::class => QueueManager::class,
         QueueManager::class => [self::class, 'initQueueManager'],
         QueueRegistry::class => [self::class, 'initRegistry'],
+        Handler::class => [self::class, 'initHandler'],
+        QueueInterface::class => [self::class, 'initQueue'],
     ];
 
     public function __construct(
@@ -45,7 +55,6 @@ final class QueueBootloader extends Bootloader
     public function init(Container $container, EnvironmentInterface $env, AbstractKernel $kernel): void
     {
         $this->initQueueConfig($env);
-        $this->registerQueue($container);
 
         $this->registerDriverAlias(SyncDriver::class, 'sync');
         $container->bindInjector(QueueInterface::class, QueueInjector::class);
@@ -62,6 +71,28 @@ final class QueueBootloader extends Bootloader
                 $registry->setSerializer($jobType, $serializer);
             }
         });
+    }
+
+    /**
+     * @param class-string<CoreInterceptorInterface>|CoreInterceptorInterface|Autowire $interceptor
+     */
+    public function addConsumeInterceptor(string|CoreInterceptorInterface|Autowire $interceptor): void
+    {
+        $this->config->modify(
+            QueueConfig::CONFIG,
+            new Append('interceptors.consume', null, $interceptor)
+        );
+    }
+
+    /**
+     * @param class-string<CoreInterceptorInterface>|CoreInterceptorInterface|Autowire $interceptor
+     */
+    public function addPushInterceptor(string|CoreInterceptorInterface|Autowire $interceptor): void
+    {
+        $this->config->modify(
+            QueueConfig::CONFIG,
+            new Append('interceptors.push', null, $interceptor)
+        );
     }
 
     public function registerDriverAlias(string $driverClass, string $alias): void
@@ -82,12 +113,37 @@ final class QueueBootloader extends Bootloader
         return new QueueRegistry($container, $registry);
     }
 
-    private function registerQueue(Container $container): void
+    protected function initHandler(ConsumeCore $core, QueueConfig $config, Container $container): Handler
     {
-        $container->bindSingleton(
-            QueueInterface::class,
-            static fn (QueueManager $manager): QueueInterface => $manager->getConnection()
-        );
+        $core = new InterceptableCore($core);
+
+        foreach ($config->getConsumeInterceptors() as $interceptor) {
+            if (\is_string($interceptor) || $interceptor instanceof Container\Autowire) {
+                $interceptor = $container->get($interceptor);
+            }
+
+            $core->addInterceptor($interceptor);
+        }
+
+        return new Handler($core);
+    }
+
+    protected function initQueue(
+        QueueConfig $config,
+        QueueConnectionProviderInterface $manager,
+        Container $container
+    ): Queue {
+        $core = new InterceptableCore(new PushCore($manager->getConnection()));
+
+        foreach ($config->getPushInterceptors() as $interceptor) {
+            if (\is_string($interceptor) || $interceptor instanceof Container\Autowire) {
+                $interceptor = $container->get($interceptor);
+            }
+
+            $core->addInterceptor($interceptor);
+        }
+
+        return new Queue($core);
     }
 
     private function initQueueConfig(EnvironmentInterface $env): void
@@ -108,6 +164,12 @@ final class QueueBootloader extends Bootloader
                 'driverAliases' => [
                     'sync' => SyncDriver::class,
                     'null' => NullDriver::class,
+                ],
+                'interceptors' => [
+                    'consume' => [
+                        ErrorHandlerInterceptor::class,
+                    ],
+                    'push' => [],
                 ],
             ]
         );
