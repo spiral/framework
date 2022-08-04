@@ -6,13 +6,17 @@ namespace Framework\Bootloader\Queue;
 
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
+use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Bootloader\QueueBootloader;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\Failed\LogFailedJobHandler;
 use Spiral\Queue\HandlerRegistryInterface;
+use Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor;
 use Spiral\Queue\Interceptor\Consume\Handler;
+use Spiral\Queue\Queue;
 use Spiral\Queue\QueueConnectionProviderInterface;
+use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
 use Spiral\Tests\Framework\BaseTest;
@@ -53,6 +57,14 @@ final class QueueBootloaderTest extends BaseTest
         $this->assertContainerBoundAsSingleton(Handler::class, Handler::class);
     }
 
+    public function testQueueBinding(): void
+    {
+        $mock = $this->mockContainer(QueueConnectionProviderInterface::class);
+        $mock->shouldReceive('getConnection')->andReturn($this->createMock(QueueInterface::class));
+
+        $this->assertContainerBoundAsSingleton(QueueInterface::class, Queue::class);
+    }
+
     public function testConfig(): void
     {
         $this->assertConfigMatches(QueueConfig::CONFIG, [
@@ -83,12 +95,16 @@ final class QueueBootloaderTest extends BaseTest
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
         $configs->setDefaults(QueueConfig::CONFIG, ['interceptors' => ['consume' => []]]);
 
+        $interceptor = new ErrorHandlerInterceptor($this->createMock(FailedJobHandlerInterface::class));
+        $autowire = new Autowire(ErrorHandlerInterceptor::class);
+
         $bootloader = new QueueBootloader($configs);
         $bootloader->addConsumeInterceptor('foo');
-        $bootloader->addConsumeInterceptor('bar');
+        $bootloader->addConsumeInterceptor($interceptor);
+        $bootloader->addConsumeInterceptor($autowire);
 
         $this->assertSame([
-            'foo', 'bar'
+            'foo', $interceptor, $autowire
         ], $configs->getConfig(QueueConfig::CONFIG)['interceptors']['consume']);
     }
 
@@ -97,12 +113,16 @@ final class QueueBootloaderTest extends BaseTest
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
         $configs->setDefaults(QueueConfig::CONFIG, ['interceptors' => ['push' => []]]);
 
+        $interceptor = new ErrorHandlerInterceptor($this->createMock(FailedJobHandlerInterface::class));
+        $autowire = new Autowire(ErrorHandlerInterceptor::class);
+
         $bootloader = new QueueBootloader($configs);
         $bootloader->addPushInterceptor('foo');
-        $bootloader->addPushInterceptor('bar');
+        $bootloader->addPushInterceptor($interceptor);
+        $bootloader->addPushInterceptor($autowire);
 
         $this->assertSame([
-            'foo', 'bar'
+            'foo', $interceptor, $autowire
         ], $configs->getConfig(QueueConfig::CONFIG)['interceptors']['push']);
     }
 

@@ -128,8 +128,11 @@ final class QueueBootloader extends Bootloader
         return new Handler($core);
     }
 
-    protected function initQueue(QueueConfig $config, QueueManager $manager, Container $container): Queue
-    {
+    protected function initQueue(
+        QueueConfig $config,
+        QueueConnectionProviderInterface $manager,
+        Container $container
+    ): Queue {
         $core = new InterceptableCore(new PushCore($manager->getConnection()));
 
         foreach ($config->getPushInterceptors() as $interceptor) {
