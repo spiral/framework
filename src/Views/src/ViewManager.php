@@ -19,6 +19,7 @@ final class ViewManager implements ViewsInterface
 
     public function __construct(
         private readonly ViewsConfig $config,
+        private readonly GlobalVariablesInterface $globalVariables,
         FactoryInterface $factory,
         ?ContextInterface $context = null
     ) {
@@ -136,7 +137,7 @@ final class ViewManager implements ViewsInterface
      */
     public function render(string $path, array $data = []): string
     {
-        return $this->get($path)->render($data);
+        return $this->get($path)->render(\array_merge($this->globalVariables->getAll(), $data));
     }
 
     /**

@@ -175,6 +175,7 @@
     environment variable `MONOLOG_DEFAULT_CHANNEL`.
   - [spiral/serializer] Added a new spiral/serializer component. Contains an interface and a minimal implementation 
     that can be extended by external serializers.
+  - [spiral/queue] Added the ability to configure serializers for different types of jobs.
 
 ## v2.14.0 - Unreleased
 - **High Impact Changes**

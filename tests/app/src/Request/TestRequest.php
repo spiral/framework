@@ -1,18 +1,11 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\App\Request;
 
 use Spiral\Filters\Attribute\Input\Data;
-use Spiral\Filters\Filter;
+use Spiral\Filters\Model\Filter;
 
 class TestRequest extends Filter
 {

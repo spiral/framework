@@ -17,6 +17,10 @@ final class QueueConfig extends InjectableConfig
         'aliases' => [],
         'driverAliases' => [],
         'connections' => [],
+        'registry' => [
+            'handlers' => [],
+            'serializers' => [],
+        ],
         'interceptors' => [],
     ];
 
@@ -26,15 +30,6 @@ final class QueueConfig extends InjectableConfig
     public function getAliases(): array
     {
         return (array)($this->config['aliases'] ?? []);
-    }
-
-    /**
-     * Get consumer interceptors
-     * @return array<class-string<CoreInterceptorInterface>>
-     */
-    public function getInterceptors(): array
-    {
-        return (array)($this->config['interceptors'] ?? []);
     }
 
     /**
@@ -140,5 +135,10 @@ final class QueueConfig extends InjectableConfig
     public function getRegistryHandlers(): array
     {
         return (array)($this->config['registry']['handlers'] ?? []);
+    }
+
+    public function getRegistrySerializers(): array
+    {
+        return (array)($this->config['registry']['serializers'] ?? []);
     }
 }

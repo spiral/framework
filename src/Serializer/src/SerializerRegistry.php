@@ -8,6 +8,7 @@ use Spiral\Serializer\Exception\SerializerNotFoundException;
 
 class SerializerRegistry implements SerializerRegistryInterface
 {
+    /** @var SerializerInterface[] */
     private array $serializers = [];
 
     public function __construct(array $serializers = [])

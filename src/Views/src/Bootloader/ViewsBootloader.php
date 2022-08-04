@@ -15,6 +15,8 @@ use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\DependencyInterface;
 use Spiral\Views\Engine\Native\NativeEngine;
 use Spiral\Views\EngineInterface;
+use Spiral\Views\GlobalVariables;
+use Spiral\Views\GlobalVariablesInterface;
 use Spiral\Views\LoaderInterface;
 use Spiral\Views\ViewLoader;
 use Spiral\Views\ViewManager;
@@ -24,7 +26,10 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
     protected const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
+        ViewManager::class => ViewManager::class,
         LoaderInterface::class => [self::class, 'initLoader'],
+        GlobalVariablesInterface::class => [self::class, 'initGlobalVariables'],
+        GlobalVariables::class => GlobalVariables::class,
     ];
 
     public function __construct(
@@ -83,7 +88,14 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
         );
     }
 
-    private function initLoader(ViewsConfig $config): LoaderInterface
+    protected function initGlobalVariables(ViewsConfig $config): GlobalVariablesInterface
+    {
+        return new GlobalVariables(
+            $config->getGlobalVariables()
+        );
+    }
+
+    protected function initLoader(ViewsConfig $config): LoaderInterface
     {
         return new ViewLoader(
             $config->getNamespaces()

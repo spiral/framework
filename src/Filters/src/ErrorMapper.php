@@ -23,7 +23,7 @@ final class ErrorMapper
                 continue;
             }
 
-            $this->mount($mapped, $this->schema[$field][Schema\Builder::SCHEMA_ORIGIN], $message);
+            $this->mount($mapped, $this->schema[$field][Model\Schema\Builder::SCHEMA_ORIGIN], $message);
         }
 
         return $mapped;

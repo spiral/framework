@@ -243,4 +243,22 @@ final class QueueConfigTest extends TestCase
 
         $this->assertSame([], $config->getRegistryHandlers());
     }
+
+    public function testGetRegistrySerializers(): void
+    {
+        $config = new QueueConfig([
+            'registry' => [
+                'serializers' => ['foo' => 'some', 'bar' => 'other'],
+            ]
+        ]);
+
+        $this->assertSame(['foo' => 'some', 'bar' => 'other'], $config->getRegistrySerializers());
+    }
+
+    public function testGetNotExistsRegistrySerializers(): void
+    {
+        $config = new QueueConfig();
+
+        $this->assertSame([], $config->getRegistrySerializers());
+    }
 }
