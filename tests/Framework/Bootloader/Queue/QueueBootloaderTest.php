@@ -11,7 +11,7 @@ use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\Failed\LogFailedJobHandler;
 use Spiral\Queue\HandlerRegistryInterface;
-use Spiral\Queue\Interceptor\Handler;
+use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
@@ -63,29 +63,47 @@ final class QueueBootloaderTest extends BaseTest
 
             'registry' => [
                 'handlers' => [],
+                'serializers' => [],
             ],
             'driverAliases' => [
                 'sync' => \Spiral\Queue\Driver\SyncDriver::class,
                 'null' => \Spiral\Queue\Driver\NullDriver::class,
             ],
             'interceptors' => [
-                \Spiral\Queue\Interceptor\ErrorHandlerInterceptor::class,
+                'consume' => [
+                    \Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor::class,
+                ],
+                'push' => []
             ],
         ]);
     }
 
-    public function testAddInterceptor(): void
+    public function testAddConsumeInterceptor(): void
     {
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
-        $configs->setDefaults(QueueConfig::CONFIG, ['interceptors' => []]);
+        $configs->setDefaults(QueueConfig::CONFIG, ['interceptors' => ['consume' => []]]);
 
         $bootloader = new QueueBootloader($configs);
-        $bootloader->addInterceptor('foo');
-        $bootloader->addInterceptor('bar');
+        $bootloader->addConsumeInterceptor('foo');
+        $bootloader->addConsumeInterceptor('bar');
 
         $this->assertSame([
             'foo', 'bar'
-        ], $configs->getConfig(QueueConfig::CONFIG)['interceptors']);
+        ], $configs->getConfig(QueueConfig::CONFIG)['interceptors']['consume']);
+    }
+
+    public function testAddPushInterceptor(): void
+    {
+        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs->setDefaults(QueueConfig::CONFIG, ['interceptors' => ['push' => []]]);
+
+        $bootloader = new QueueBootloader($configs);
+        $bootloader->addPushInterceptor('foo');
+        $bootloader->addPushInterceptor('bar');
+
+        $this->assertSame([
+            'foo', 'bar'
+        ], $configs->getConfig(QueueConfig::CONFIG)['interceptors']['push']);
     }
 
     public function testRegisterDriverAlias(): void

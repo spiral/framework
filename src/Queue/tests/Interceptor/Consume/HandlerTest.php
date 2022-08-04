@@ -6,7 +6,7 @@ namespace Spiral\Tests\Queue\Interceptor;
 
 use Mockery as m;
 use Spiral\Core\CoreInterface;
-use Spiral\Queue\Interceptor\Handler;
+use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Tests\Queue\TestCase;
 
 final class HandlerTest extends TestCase

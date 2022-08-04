@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Config;
 
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InjectableConfig;
 use Spiral\Queue\Exception\InvalidArgumentException;
@@ -21,7 +22,10 @@ final class QueueConfig extends InjectableConfig
             'handlers' => [],
             'serializers' => [],
         ],
-        'interceptors' => [],
+        'interceptors' => [
+            'push' => [],
+            'consume' => [],
+        ],
     ];
 
     /**
@@ -30,6 +34,26 @@ final class QueueConfig extends InjectableConfig
     public function getAliases(): array
     {
         return (array)($this->config['aliases'] ?? []);
+    }
+
+    /**
+     * Get consumer interceptors
+     *
+     * @return array<class-string<CoreInterceptorInterface>|CoreInterceptorInterface|Autowire>
+     */
+    public function getConsumeInterceptors(): array
+    {
+        return (array)($this->config['interceptors']['consume'] ?? []);
+    }
+
+    /**
+     * Get pusher interceptors
+     *
+     * @return array<class-string<CoreInterceptorInterface>|CoreInterceptorInterface|Autowire>
+     */
+    public function getPushInterceptors(): array
+    {
+        return (array)($this->config['interceptors']['push'] ?? []);
     }
 
     /**

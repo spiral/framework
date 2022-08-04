@@ -10,7 +10,7 @@ use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidFactoryInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Queue\Driver\SyncDriver;
-use Spiral\Queue\Interceptor\Handler;
+use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\Job\ObjectJob;
 use Spiral\Tests\Queue\TestCase;
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Queue\Driver;
 
 use Ramsey\Uuid\Uuid;
-use Spiral\Queue\Interceptor\Handler;
+use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\OptionsInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueTrait;

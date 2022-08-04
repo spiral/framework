@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Queue\Interceptor;
+namespace Spiral\Tests\Queue\Interceptor\Consume;
 
 use Mockery as m;
 use Spiral\Queue\HandlerInterface;
 use Spiral\Queue\HandlerRegistryInterface;
-use Spiral\Queue\Interceptor\Core;
+use Spiral\Queue\Interceptor\Consume\Core;
 use Spiral\Tests\Queue\TestCase;
 
 final class CoreTest extends TestCase

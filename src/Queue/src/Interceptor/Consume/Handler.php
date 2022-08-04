@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Queue\Interceptor;
+namespace Spiral\Queue\Interceptor\Consume;
 
 use Spiral\Core\CoreInterface;
 
 final class Handler
 {
     public function __construct(
-        readonly CoreInterface $core
+        private readonly CoreInterface $core
     ) {
     }
 
