@@ -22,6 +22,7 @@ use Spiral\Bootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
+use Spiral\Queue\Bootloader\QueueBootloader;
 use Spiral\Stempler\Bootloader\StemplerBootloader;
 
 class TestApp extends Kernel
@@ -83,6 +84,9 @@ class TestApp extends Kernel
 
         // Storage
         Bootloader\Storage\StorageBootloader::class,
+
+        // Queue
+        QueueBootloader::class,
 
         // Framework commands
         Bootloader\CommandBootloader::class,

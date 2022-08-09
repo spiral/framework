@@ -9,9 +9,6 @@ use Spiral\Queue\Exception\SerializationException;
 use function Opis\Closure\serialize;
 use function Opis\Closure\unserialize;
 
-/**
- * @internal
- */
 final class DefaultSerializer implements SerializerInterface
 {
     /**
