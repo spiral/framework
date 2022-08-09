@@ -11,6 +11,7 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
@@ -66,7 +67,7 @@ final class QueueBootloader extends Bootloader
             }
 
             foreach ($config->getRegistrySerializers() as $jobType => $serializer) {
-                if ($serializer instanceof Container\Autowire || \is_string($serializer)) {
+                if ($serializer instanceof Autowire || \is_string($serializer)) {
                     $serializer = $container->get($serializer);
                 }
                 $serializersRegistry->addSerializer($jobType, $serializer);
@@ -96,7 +97,7 @@ final class QueueBootloader extends Bootloader
     {
         $default = $config->getDefaultSerializer();
 
-        if ($default instanceof Container\Autowire || \is_string($default)) {
+        if ($default instanceof Autowire || \is_string($default)) {
             $default = $container->get($default);
         }
 
