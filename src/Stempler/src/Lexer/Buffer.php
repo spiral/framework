@@ -25,7 +25,7 @@ final class Buffer implements \IteratorAggregate
     /** @var Byte[]|Token[] */
     private array $replay = [];
 
-    private int $offset = 0;
+    private ?int $offset = 0;
 
     public function __construct(\Generator $generator, int $offset = 0)
     {

@@ -16,20 +16,11 @@ final class Token
     // Does not any type, raw user content.
     public const TYPE_RAW = 0;
 
-    /** @var string */
-    public $grammar;
-
-    /** @var int */
-    public $type;
-
-    /** @var int */
-    public $offset;
-
-    /** @var string */
-    public $content;
-
-    /** @var array */
-    public $tokens = [];
+    public ?string $grammar = null;
+    public int $type;
+    public ?int $offset;
+    public string $content;
+    public array $tokens = [];
 
     /**
      * @param string|null $grammar
