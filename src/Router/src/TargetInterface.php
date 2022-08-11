@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Router;
 
-use Spiral\Router\Exception\TargetException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 
@@ -38,7 +37,7 @@ interface TargetInterface
      * Generates target handler.
      *
      *
-     * @throws TargetException
+     * @throws \Spiral\Router\Exception\TargetException
      */
     public function getHandler(ContainerInterface $container, array $matches): Handler;
 }

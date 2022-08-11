@@ -13,15 +13,20 @@ namespace Spiral\Logger\Event;
 
 final class LogEvent
 {
-    private \DateTimeInterface $time;
+    /** @var \DateTimeInterface */
+    private $time;
 
-    private string $channel;
+    /** @var string */
+    private $channel;
 
-    private string $level;
+    /** @var string */
+    private $level;
 
-    private string $message;
+    /** @var string */
+    private $message;
 
-    private array $context;
+    /** @var array */
+    private $context;
 
     public function __construct(
         \DateTimeInterface $time,

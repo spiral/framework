@@ -19,7 +19,8 @@ use Spiral\Stempler\Lexer\Token;
  */
 class SyntaxException extends \RuntimeException
 {
-    private Token $token;
+    /** @var Token */
+    private $token;
 
     public function __construct(string $message, Token $context)
     {

@@ -26,7 +26,10 @@ class NamespaceDeclaration extends AbstractDeclaration implements ReplaceableInt
     use UsesTrait;
     use CommentTrait;
 
-    private Aggregator $elements;
+    /**
+     * @var Aggregator
+     */
+    private $elements;
 
     public function __construct(string $name = '', string $comment = '')
     {

@@ -18,7 +18,8 @@ use Spiral\Stempler\VisitorContext;
 
 final class StackContext
 {
-    private VisitorContext $ctx;
+    /** @var VisitorContext */
+    private $ctx;
 
     private function __construct(VisitorContext $ctx)
     {

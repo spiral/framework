@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
-use Spiral\Core\Container\SingletonInterface;
 use Closure;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\Bootloader\DependedInterface;
@@ -21,13 +20,13 @@ use Spiral\Core\Container;
 /**
  * Provides ability to bootload ServiceProviders.
  */
-final class BootloadManager implements SingletonInterface
+final class BootloadManager implements Container\SingletonInterface
 {
     /* @var Container @internal */
     protected $container;
 
     /** @var array<class-string> */
-    private array $classes = [];
+    private $classes = [];
 
     public function __construct(Container $container)
     {

@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype;
 
-use PhpParser\Lexer\Emulative;
-use PhpParser\Parser\Php7;
 use PhpParser\Lexer;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\CloningVisitor;
@@ -31,14 +29,17 @@ use Spiral\Prototype\NodeVisitors\UpdateConstructor;
  */
 final class Injector
 {
-    private Parser $parser;
+    /** @var Parser */
+    private $parser;
 
-    private Lexer $lexer;
+    /** @var Lexer */
+    private $lexer;
 
     /** @var null|Standard|PrettyPrinterAbstract */
     private $printer;
 
-    private NodeTraverser $cloner;
+    /** @var NodeTraverser */
+    private $cloner;
 
     /**
      * @param Lexer|null                 $lexer
@@ -47,7 +48,7 @@ final class Injector
     public function __construct(Lexer $lexer = null, PrettyPrinterAbstract $printer = null)
     {
         if ($lexer === null) {
-            $lexer = new Emulative([
+            $lexer = new Lexer\Emulative([
                 'usedAttributes' => [
                     'comments',
                     'startLine',
@@ -59,7 +60,7 @@ final class Injector
         }
 
         $this->lexer = $lexer;
-        $this->parser = new Php7($this->lexer);
+        $this->parser = new Parser\Php7($this->lexer);
 
         $this->cloner = new NodeTraverser();
         $this->cloner->addVisitor(new CloningVisitor());

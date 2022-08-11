@@ -21,9 +21,11 @@ use Spiral\Security\Rule\CallableRule;
  */
 final class RuleManager implements RulesInterface, SingletonInterface
 {
-    private ContainerInterface $container;
+    /** @var ContainerInterface */
+    private $container;
 
-    private array $rules = [];
+    /** @var array */
+    private $rules = [];
 
     public function __construct(ContainerInterface $container)
     {

@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Value;
 
-use Spiral\DataGrid\Specification\Value\RangeValue\Boundary;
 use Spiral\DataGrid\Exception\ValueException;
 use Spiral\DataGrid\Specification\ValueInterface;
 
@@ -20,21 +19,24 @@ use Spiral\DataGrid\Specification\ValueInterface;
  */
 final class RangeValue implements ValueInterface
 {
-    private ValueInterface $base;
+    /** @var ValueInterface */
+    private $base;
 
-    private Boundary $from;
+    /** @var RangeValue\Boundary */
+    private $from;
 
-    private Boundary $to;
+    /** @var RangeValue\Boundary */
+    private $to;
 
     /**
      * @param RangeValue\Boundary|null $from
      * @param RangeValue\Boundary|null $to
      */
-    public function __construct(ValueInterface $base, Boundary $from = null, Boundary $to = null)
+    public function __construct(ValueInterface $base, RangeValue\Boundary $from = null, RangeValue\Boundary $to = null)
     {
         $this->base = $base;
-        $from ??= Boundary::empty();
-        $to ??= Boundary::empty();
+        $from = $from ?? RangeValue\Boundary::empty();
+        $to = $to ?? RangeValue\Boundary::empty();
 
         $this->validateBoundaries($from, $to);
         $this->setBoundaries($from, $to);
@@ -56,7 +58,7 @@ final class RangeValue implements ValueInterface
         return $this->base->convert($value);
     }
 
-    private function validateBoundaries(Boundary $from, Boundary $to): void
+    private function validateBoundaries(RangeValue\Boundary $from, RangeValue\Boundary $to): void
     {
         if (!$this->acceptsBoundary($from) || !$this->acceptsBoundary($to)) {
             throw new ValueException('Range boundaries should be applicable via passed type.');
@@ -67,7 +69,7 @@ final class RangeValue implements ValueInterface
         }
     }
 
-    private function acceptsBoundary(Boundary $boundary): bool
+    private function acceptsBoundary(RangeValue\Boundary $boundary): bool
     {
         return $boundary->empty || $this->base->accepts($boundary->value);
     }
@@ -75,7 +77,7 @@ final class RangeValue implements ValueInterface
     /**
      * @return mixed|null
      */
-    private function convertBoundaryValue(Boundary $boundary)
+    private function convertBoundaryValue(RangeValue\Boundary $boundary)
     {
         return $boundary->empty ? null : $this->base->convert($boundary->value);
     }
@@ -108,7 +110,7 @@ final class RangeValue implements ValueInterface
         return $this->to->include ? ($value <= $to) : ($value < $to);
     }
 
-    private function setBoundaries(Boundary $from, Boundary $to): void
+    private function setBoundaries(RangeValue\Boundary $from, RangeValue\Boundary $to): void
     {
         //Swap if from < to and both not empty
         if (!$from->empty && !$to->empty && $from->value > $to->value) {

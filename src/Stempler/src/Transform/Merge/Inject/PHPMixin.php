@@ -16,9 +16,11 @@ namespace Spiral\Stempler\Transform\Merge\Inject;
  */
 final class PHPMixin
 {
-    private array $tokens = [];
+    /** @var array */
+    private $tokens = [];
 
-    private array $blocks = [];
+    /** @var array */
+    private $blocks = [];
 
     public function __construct(array $tokens, string $func)
     {

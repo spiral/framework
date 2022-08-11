@@ -17,14 +17,17 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class Between implements FilterInterface
 {
-    private string $expression;
+    /** @var string */
+    private $expression;
 
     /** @var ValueInterface|array */
     private $value;
 
-    private bool $includeFrom;
+    /** @var bool */
+    private $includeFrom;
 
-    private bool $includeTo;
+    /** @var bool */
+    private $includeTo;
 
     /**
      * @param ValueInterface|array $value

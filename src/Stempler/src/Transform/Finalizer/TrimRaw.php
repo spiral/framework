@@ -21,7 +21,8 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class TrimRaw implements VisitorInterface
 {
-    private string $trim;
+    /** @var string */
+    private $trim;
 
     public function __construct(string $charset = " \n\t\r")
     {

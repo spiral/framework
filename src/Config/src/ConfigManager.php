@@ -22,15 +22,20 @@ use Spiral\Core\Exception\ConfiguratorException;
  */
 final class ConfigManager implements ConfiguratorInterface, SingletonInterface
 {
-    private LoaderInterface $loader;
+    /** @var LoaderInterface */
+    private $loader;
 
-    private bool $strict;
+    /** @var bool */
+    private $strict;
 
-    private array $data = [];
+    /** @var array */
+    private $data = [];
 
-    private array $defaults = [];
+    /** @var array */
+    private $defaults = [];
 
-    private array $instances = [];
+    /** @var array */
+    private $instances = [];
 
     public function __construct(LoaderInterface $loader, bool $strict = true)
     {

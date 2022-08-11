@@ -15,14 +15,17 @@ use Spiral\Validation\Exception\ValidationException;
 
 abstract class AbstractValidator implements ValidatorInterface
 {
-    private array $errors;
+    /** @var array */
+    private $errors;
 
-    private array $rules;
+    /** @var array */
+    private $rules;
 
     /** @var mixed */
     private $context;
 
-    private ?RulesInterface $provider;
+    /** @var RulesInterface */
+    private $provider;
 
     /**
      * @param mixed          $context

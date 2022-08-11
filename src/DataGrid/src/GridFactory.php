@@ -31,13 +31,17 @@ class GridFactory implements GridFactoryInterface
     /** @var callable */
     private $count = 'count';
 
-    private Compiler $compiler;
+    /** @var Compiler */
+    private $compiler;
 
-    private InputInterface $input;
+    /** @var InputInterface */
+    private $input;
 
-    private InputInterface $defaults;
+    /** @var InputInterface */
+    private $defaults;
 
-    private GridInterface $view;
+    /** @var GridInterface */
+    private $view;
 
     /**
      * @param InputInterface|null $input

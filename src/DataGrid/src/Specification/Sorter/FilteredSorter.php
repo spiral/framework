@@ -13,7 +13,7 @@ class FilteredSorter implements SequenceInterface, SorterInterface
     private $value;
 
     /** @var SpecificationInterface[] */
-    private array $specifications;
+    private $specifications;
 
     public function __construct(string $value, SpecificationInterface ...$specifications)
     {

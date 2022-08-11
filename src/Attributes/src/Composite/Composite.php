@@ -34,8 +34,9 @@ abstract class Composite extends Reader
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
     {
-        return $this->each(static fn (ReaderInterface $reader): iterable =>
-            $reader->getClassMetadata($class, $name));
+        return $this->each(static function (ReaderInterface $reader) use ($class, $name): iterable {
+            return $reader->getClassMetadata($class, $name);
+        });
     }
 
     /**
@@ -43,8 +44,9 @@ abstract class Composite extends Reader
      */
     public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
     {
-        return $this->each(static fn (ReaderInterface $reader): iterable =>
-            $reader->getFunctionMetadata($function, $name));
+        return $this->each(static function (ReaderInterface $reader) use ($function, $name): iterable {
+            return $reader->getFunctionMetadata($function, $name);
+        });
     }
 
     /**
@@ -52,8 +54,9 @@ abstract class Composite extends Reader
      */
     public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
     {
-        return $this->each(static fn (ReaderInterface $reader): iterable =>
-            $reader->getPropertyMetadata($property, $name));
+        return $this->each(static function (ReaderInterface $reader) use ($property, $name): iterable {
+            return $reader->getPropertyMetadata($property, $name);
+        });
     }
 
     /**
@@ -61,8 +64,9 @@ abstract class Composite extends Reader
      */
     public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
     {
-        return $this->each(static fn (ReaderInterface $reader): iterable =>
-            $reader->getConstantMetadata($constant, $name));
+        return $this->each(static function (ReaderInterface $reader) use ($constant, $name): iterable {
+            return $reader->getConstantMetadata($constant, $name);
+        });
     }
 
     /**
@@ -70,8 +74,9 @@ abstract class Composite extends Reader
      */
     public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
     {
-        return $this->each(static fn (ReaderInterface $reader): iterable =>
-            $reader->getParameterMetadata($parameter, $name));
+        return $this->each(static function (ReaderInterface $reader) use ($parameter, $name): iterable {
+            return $reader->getParameterMetadata($parameter, $name);
+        });
     }
 
 

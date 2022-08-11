@@ -16,9 +16,11 @@ namespace Spiral\Core;
  */
 final class InterceptableCore implements CoreInterface
 {
-    private InterceptorPipeline $pipeline;
+    /** @var InterceptorPipeline */
+    private $pipeline;
 
-    private CoreInterface $core;
+    /** @var CoreInterface */
+    private $core;
 
     public function __construct(CoreInterface $core)
     {

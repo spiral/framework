@@ -29,9 +29,11 @@ use Spiral\Encrypter\Exception\EncryptException;
  */
 final class CookiesMiddleware implements MiddlewareInterface
 {
-    private CookiesConfig $config;
+    /** @var CookiesConfig */
+    private $config;
 
-    private EncryptionInterface $encryption;
+    /** @var EncryptionInterface */
+    private $encryption;
 
     public function __construct(CookiesConfig $config, EncryptionInterface $encryption)
     {

@@ -10,7 +10,8 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class ILike implements FilterInterface
 {
-    private Like $like;
+    /** @var Like */
+    private $like;
 
     public function __construct(string $expression, $value = null, string $pattern = '%%%s%%')
     {

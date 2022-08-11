@@ -38,9 +38,11 @@ final class CsrfFirewall implements MiddlewareInterface
      */
     public const ALLOW_METHODS = ['GET', 'HEAD', 'OPTIONS'];
 
-    private ResponseFactoryInterface $responseFactory;
+    /** @var ResponseFactoryInterface */
+    private $responseFactory;
 
-    private array $allowMethods;
+    /** @var array */
+    private $allowMethods;
 
     public function __construct(ResponseFactoryInterface $responseFactory, array $allowMethods = self::ALLOW_METHODS)
     {

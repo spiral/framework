@@ -24,10 +24,13 @@ final class ReflectionArgument
     public const CONSTANT   = 'constant';   //Scalar constant and not variable.
     public const VARIABLE   = 'variable';   //PHP variable
     public const EXPRESSION = 'expression'; //PHP code (expression).
-    public const STRING     = 'string';
-    private string $type;
+    public const STRING     = 'string';     //Simple scalar string, can be fetched using stringValue().
 
-    private string $value;
+    /** @var string */
+    private $type;
+
+    /** @var string */
+    private $value;
 
     /**
      * New instance of ReflectionArgument.

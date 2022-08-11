@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt\Bootloader;
 
-use Spiral\SendIt\Jobs\MailJobAdapter;
-use Spiral\SendIt\MailJob;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
@@ -47,7 +45,8 @@ class MailerBootloader extends Bootloader
         SymfonyMailer::class => [self::class, 'mailer'],
     ];
 
-    private ConfiguratorInterface $config;
+    /** @var ConfiguratorInterface */
+    private $config;
 
     public function __construct(ConfiguratorInterface $config)
     {
@@ -72,7 +71,7 @@ class MailerBootloader extends Bootloader
         if ($container->has(JobRegistry::class)) {
             // Will be removed since v3.0
             $registry = $container->get(JobRegistry::class);
-            $registry->setHandler(MailQueue::JOB_NAME, MailJobAdapter::class);
+            $registry->setHandler(MailQueue::JOB_NAME, \Spiral\SendIt\Jobs\MailJobAdapter::class);
             $registry->setSerializer(MailQueue::JOB_NAME, JsonJobSerializer::class);
 
             $container->bindSingleton(
@@ -90,16 +89,18 @@ class MailerBootloader extends Bootloader
         } else {
             $container->bindSingleton(
                 MailerInterface::class,
-                static fn (MailerConfig $config, QueueConnectionProviderInterface $provider) => new MailQueue(
-                    $config,
-                    $provider->getConnection($config->getQueueConnection())
-                )
+                static function (MailerConfig $config, QueueConnectionProviderInterface $provider) {
+                    return new MailQueue(
+                        $config,
+                        $provider->getConnection($config->getQueueConnection())
+                    );
+                }
             );
         }
 
         if ($container->has(HandlerRegistryInterface::class)) {
             $registry = $container->get(HandlerRegistryInterface::class);
-            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
+            $registry->setHandler(MailQueue::JOB_NAME, \Spiral\SendIt\MailJob::class);
         }
     }
 

@@ -18,12 +18,14 @@ use Spiral\Views\DependencyInterface;
  */
 final class ValueDependency implements DependencyInterface
 {
-    private string $name;
+    /** @var string */
+    private $name;
 
     /** @var mixed */
     private $value;
 
-    private array $variants;
+    /** @var array */
+    private $variants;
 
     /**
      * @param mixed  $value

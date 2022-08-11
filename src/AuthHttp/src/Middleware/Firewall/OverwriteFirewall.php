@@ -21,9 +21,11 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class OverwriteFirewall extends AbstractFirewall
 {
-    private UriInterface $uri;
+    /** @var UriInterface */
+    private $uri;
 
-    private int $status;
+    /** @var int */
+    private $status;
 
     public function __construct(UriInterface $uri, int $status = 401)
     {

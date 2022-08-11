@@ -60,7 +60,9 @@ if (!function_exists('defineArrayType')) {
      */
     function defineArrayType(array $array, string $failureType = null): ?string
     {
-        $types = array_map(static fn ($value): string => gettype($value), $array);
+        $types = array_map(static function ($value): string {
+            return gettype($value);
+        }, $array);
 
         $types = array_unique($types);
 

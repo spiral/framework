@@ -17,10 +17,11 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class EnumValue implements ValueInterface
 {
-    private ValueInterface $base;
+    /** @var ValueInterface */
+    private $base;
 
     /** @var array|mixed[] */
-    private array $values;
+    private $values;
 
     /**
      * @param mixed          ...$values

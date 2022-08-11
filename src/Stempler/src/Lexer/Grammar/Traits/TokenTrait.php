@@ -28,7 +28,7 @@ trait TokenTrait
         $bufferOffset = 0;
 
         foreach ($inner as $n) {
-            $token->offset ??= $n->offset;
+            $token->offset = $token->offset ?? $n->offset;
 
             if ($n instanceof Byte) {
                 if ($buffer === null) {

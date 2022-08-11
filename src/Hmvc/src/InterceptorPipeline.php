@@ -18,12 +18,14 @@ use Spiral\Core\Exception\InterceptorException;
  */
 final class InterceptorPipeline implements CoreInterface
 {
-    private ?CoreInterface $core = null;
+    /** @var CoreInterface */
+    private $core;
 
     /** @var CoreInterceptorInterface[] */
-    private array $interceptors = [];
+    private $interceptors = [];
 
-    private int $position = 0;
+    /** @var int */
+    private $position = 0;
 
     public function addInterceptor(CoreInterceptorInterface $interceptor): void
     {

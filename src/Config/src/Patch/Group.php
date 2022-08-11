@@ -16,7 +16,7 @@ use Spiral\Config\PatchInterface;
 final class Group implements PatchInterface
 {
     /** @var array|PatchInterface[] */
-    private array $patches = [];
+    private $patches = [];
 
     public function __construct(PatchInterface ...$patch)
     {

@@ -20,25 +20,33 @@ use Spiral\Tokenizer\Exception\ReflectionException;
  */
 final class ReflectionInvocation
 {
-    private string $filename = '';
+    /** @var string */
+    private $filename = '';
 
-    private int $line = 0;
+    /** @var int */
+    private $line = 0;
 
-    private string $class = '';
+    /** @var string */
+    private $class = '';
 
-    private string $operator = '';
+    /** @var string */
+    private $operator = '';
 
-    private string $name = '';
+    /** @var string */
+    private $name = '';
 
-    private string $source = '';
+    /** @var string */
+    private $source = '';
 
     /** @var ReflectionArgument[] */
-    private array $arguments = [];
+    private $arguments = [];
 
     /**
      * Was a function used inside another function call?
+     *
+     * @var int
      */
-    private int $level = 0;
+    private $level = 0;
 
     /**
      * New call reflection.

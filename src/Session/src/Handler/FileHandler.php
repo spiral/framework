@@ -18,9 +18,15 @@ use Spiral\Files\FilesInterface;
  */
 final class FileHandler implements \SessionHandlerInterface
 {
-    protected FilesInterface $files;
+    /**
+     * @var FilesInterface
+     */
+    protected $files;
 
-    protected string $directory = '';
+    /**
+     * @var string
+     */
+    protected $directory = '';
 
     /**
      * @param int            $lifetime Default session lifetime.

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Validation\Checker;
 
-use Spiral\Validation\Checker\DatetimeChecker\ThresholdChecker;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Validation\AbstractChecker;
 
@@ -39,12 +38,13 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
 
     /** @var callable|\DateTimeInterface|string|numeric|null */
     private $now;
-    private ThresholdChecker $threshold;
+    /** @var DatetimeChecker\ThresholdChecker */
+    private $threshold;
 
     public function __construct($now = null)
     {
         $this->now = $now;
-        $this->threshold = new ThresholdChecker();
+        $this->threshold = new DatetimeChecker\ThresholdChecker();
     }
 
     /**

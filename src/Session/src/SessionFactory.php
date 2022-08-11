@@ -23,9 +23,11 @@ use Spiral\Session\Exception\SessionException;
  */
 final class SessionFactory implements SessionFactoryInterface, SingletonInterface
 {
-    private SessionConfig $config;
+    /** @var SessionConfig */
+    private $config;
 
-    private FactoryInterface $factory;
+    /** @var FactoryInterface */
+    private $factory;
 
     public function __construct(SessionConfig $config, FactoryInterface $factory)
     {

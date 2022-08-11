@@ -23,7 +23,8 @@ final class ContextProcessor implements ProcessorInterface
     // Context injection pattern @{key|default}
     private const PATTERN = '/@\\{(?P<name>[a-z0-9_\\.\\-]+)(?: *\\| *(?P<default>[^}]+))?}/i';
 
-    private string $pattern = '';
+    /** @var string */
+    private $pattern = '';
 
     public function __construct(string $pattern = null)
     {
@@ -35,7 +36,8 @@ final class ContextProcessor implements ProcessorInterface
      */
     public function process(ViewSource $source, ContextInterface $context): ViewSource
     {
-        return $source->withCode(preg_replace_callback($this->pattern, static fn ($matches) =>
-            $context->resolveValue($matches[1]), $source->getCode()));
+        return $source->withCode(preg_replace_callback($this->pattern, static function ($matches) use ($context) {
+            return $context->resolveValue($matches[1]);
+        }, $source->getCode()));
     }
 }

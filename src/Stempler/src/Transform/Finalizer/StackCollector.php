@@ -22,9 +22,11 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class StackCollector implements VisitorInterface
 {
-    private string $pushKeyword = 'stack:push';
+    /** @var string */
+    private $pushKeyword = 'stack:push';
 
-    private string $prependKeyword = 'stack:prepend';
+    /** @var string */
+    private $prependKeyword = 'stack:prepend';
 
     /**
      * @inheritDoc

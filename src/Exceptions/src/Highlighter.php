@@ -16,7 +16,8 @@ namespace Spiral\Exceptions;
  */
 class Highlighter
 {
-    private StyleInterface $r;
+    /** @var StyleInterface */
+    private $r;
 
     public function __construct(StyleInterface $renderer)
     {

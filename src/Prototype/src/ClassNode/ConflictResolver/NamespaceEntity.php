@@ -13,7 +13,8 @@ namespace Spiral\Prototype\ClassNode\ConflictResolver;
 
 final class NamespaceEntity extends AbstractEntity
 {
-    private ?string $fullName = null;
+    /** @var string */
+    private $fullName;
 
     public static function createWithSequence(string $name, string $fullName, int $sequence): NamespaceEntity
     {

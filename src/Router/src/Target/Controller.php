@@ -18,7 +18,8 @@ namespace Spiral\Router\Target;
  */
 final class Controller extends AbstractTarget
 {
-    private string $controller;
+    /** @var string */
+    private $controller;
 
     public function __construct(string $controller, int $options = 0, string $defaultAction = 'index')
     {

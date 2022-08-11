@@ -30,7 +30,8 @@ abstract class AbstractCommand extends Command
     /** @var PrototypeRegistry */
     protected $registry;
 
-    private array $cache = [];
+    /** @var array */
+    private $cache = [];
 
     public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
     {

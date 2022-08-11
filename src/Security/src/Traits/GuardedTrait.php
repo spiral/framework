@@ -53,7 +53,7 @@ trait GuardedTrait
     {
         if (defined('static::GUARD_NAMESPACE')) {
             // Yay! Isolation
-            $permission = constant(static::class . '::' . 'GUARD_NAMESPACE') . '.' . $permission;
+            $permission = constant(get_called_class() . '::' . 'GUARD_NAMESPACE') . '.' . $permission;
         }
 
         return $permission;

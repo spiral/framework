@@ -22,13 +22,17 @@ use Spiral\Views\Loader\ViewPath;
  */
 final class ViewLoader implements LoaderInterface
 {
-    private FilesInterface $files;
+    /** @var FilesInterface */
+    private $files;
 
-    private ?PathParser $parser = null;
+    /** @var PathParser|null */
+    private $parser;
 
-    private array $namespaces;
+    /** @var array */
+    private $namespaces;
 
-    private string $defaultNamespace;
+    /** @var string */
+    private $defaultNamespace;
 
     public function __construct(
         array $namespaces,

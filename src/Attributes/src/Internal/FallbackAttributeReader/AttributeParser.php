@@ -11,12 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\FallbackAttributeReader;
 
-use PhpParser\Node\Scalar\MagicConst\File;
-use PhpParser\Node\Scalar\MagicConst\Dir;
-use PhpParser\Node\Scalar\MagicConst\Line;
-use PhpParser\Node\Scalar\MagicConst\Method;
-use PhpParser\Node\Expr\ClassConstFetch;
-use PhpParser\Node\Scalar\MagicConst;
 use PhpParser\ConstExprEvaluationException;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\Node\Attribute;
@@ -65,9 +59,15 @@ final class AttributeParser
      */
     private const ERROR_BAD_CONSTANT = 'Undefined constant %s';
 
-    private Parser $parser;
+    /**
+     * @var Parser
+     */
+    private $parser;
 
-    private NodeTraverser $resolver;
+    /**
+     * @var NodeTraverser
+     */
+    private $resolver;
 
     /**
      * @param Parser|null $parser
@@ -134,22 +134,22 @@ final class AttributeParser
     {
         return static function (Expr $expr) use ($file, $context) {
             switch (\get_class($expr)) {
-                case File::class:
+                case Scalar\MagicConst\File::class:
                     return $file;
 
-                case Dir::class:
+                case Scalar\MagicConst\Dir::class:
                     return \dirname($file);
 
-                case Line::class:
+                case Scalar\MagicConst\Line::class:
                     return $expr->getStartLine();
 
-                case Method::class:
+                case Scalar\MagicConst\Method::class:
                     $namespace = $context[self::CTX_NAMESPACE] ?? '';
                     $function = $context[self::CTX_FUNCTION] ?? '';
 
                     return \ltrim($namespace . '\\' . $function, '\\');
 
-                case ClassConstFetch::class:
+                case Expr\ClassConstFetch::class:
                     $constant = $expr->name->toString();
                     $class = $expr->class->toString();
 
@@ -167,7 +167,7 @@ final class AttributeParser
                     return \constant($definition);
             }
 
-            if ($expr instanceof MagicConst) {
+            if ($expr instanceof Scalar\MagicConst) {
                 return $context[$expr->getName()] ?? '';
             }
 

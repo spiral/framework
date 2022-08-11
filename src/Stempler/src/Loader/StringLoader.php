@@ -15,7 +15,8 @@ use Spiral\Stempler\Exception\LoaderException;
 
 final class StringLoader implements LoaderInterface
 {
-    private array $paths = [];
+    /** @var array */
+    private $paths = [];
 
     public function set(string $path, string $content): void
     {

@@ -14,7 +14,8 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class NotEmpty implements ValueInterface
 {
-    private ?ValueInterface $value;
+    /** @var ValueInterface|null */
+    private $value;
 
     public function __construct(?ValueInterface $value = null)
     {

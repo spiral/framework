@@ -34,12 +34,14 @@ final class DynamicToPHP implements VisitorInterface
     // default output filter
     public const DEFAULT_FILTER = DynamicRenderer::DEFAULT_FILTER;
 
-    private string $defaultFilter;
+    /** @var string */
+    private $defaultFilter;
 
     /** @var DirectiveRendererInterface[] */
-    private array $directives;
+    private $directives;
 
-    private Traverser $traverser;
+    /** @var Traverser */
+    private $traverser;
 
     public function __construct(string $defaultFilter = self::DEFAULT_FILTER, array $directives = [])
     {

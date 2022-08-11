@@ -33,7 +33,8 @@ final class InjectCommand extends AbstractCommand
         ],
     ];
 
-    private Injector $injector;
+    /** @var Injector */
+    private $injector;
 
     public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
     {

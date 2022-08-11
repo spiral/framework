@@ -19,7 +19,8 @@ use Spiral\Views\Context\ValueDependency;
  */
 final class ContextGenerator
 {
-    private ContextInterface $context;
+    /** @var ContextInterface */
+    private $context;
 
     public function __construct(ContextInterface $context)
     {
