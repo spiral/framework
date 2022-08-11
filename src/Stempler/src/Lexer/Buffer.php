@@ -18,7 +18,7 @@ final class Buffer implements \IteratorAggregate
     public function __construct(
         /** @internal */
         private readonly \Generator $generator,
-        private int $offset = 0
+        private ?int $offset = 0
     ) {
     }
 
