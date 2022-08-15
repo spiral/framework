@@ -20,9 +20,11 @@ use Spiral\DataGrid\Exception\GridViewException;
  */
 class Grid implements GridInterface
 {
-    private array $options = [];
+    /** @var array */
+    private $options = [];
 
-    private ?iterable $source = null;
+    /** @var iterable */
+    private $source;
 
     /** @var callable */
     private $mapper;

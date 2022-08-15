@@ -10,6 +10,6 @@ final class JsonJobSerializer implements SerializerInterface
 {
     public function serialize(string $jobType, array $payload): string
     {
-        return json_encode($payload, JSON_THROW_ON_ERROR);
+        return json_encode($payload);
     }
 }

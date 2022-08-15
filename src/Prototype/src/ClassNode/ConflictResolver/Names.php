@@ -16,7 +16,8 @@ use Spiral\Prototype\Utils;
 
 final class Names
 {
-    private Sequences $sequences;
+    /** @var Sequences */
+    private $sequences;
 
     public function __construct(Sequences $sequences)
     {

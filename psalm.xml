@@ -23,7 +23,6 @@
     <issueHandlers>
         <UndefinedClass>
             <errorLevel type="suppress">
-                <file name="src/Framework/Bootloader/I18nBootloader.php" />
                 <file name="src/Framework/Bootloader/Server/RoadRunnerBootloader.php" />
                 <file name="src/Framework/Bootloader/Server/LegacyRoadRunnerBootloader.php" />
                 <file name="src/Framework/Bootloader/Jobs/JobsBootloader.php" />

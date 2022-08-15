@@ -37,7 +37,8 @@ abstract class CompositeRule implements RuleInterface
     /** List of rules to be composited. */
     protected const RULES = [];
 
-    private RulesInterface $repository;
+    /** @var RulesInterface */
+    private $repository;
 
     public function __construct(RulesInterface $repository)
     {

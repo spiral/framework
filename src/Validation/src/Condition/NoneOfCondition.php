@@ -16,7 +16,8 @@ use Spiral\Validation\ValidatorInterface;
 
 class NoneOfCondition extends AbstractCondition
 {
-    private Compositor $compositor;
+    /** @var Compositor */
+    private $compositor;
 
     public function __construct(Compositor $compositor)
     {

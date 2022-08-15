@@ -35,14 +35,17 @@ final class Builder
     public const STAGE_FINALIZE  = 2;
     public const STAGE_COMPILE   = 3;
 
-    private LoaderInterface $loader;
+    /** @var LoaderInterface */
+    private $loader;
 
-    private Parser $parser;
+    /** @var Parser */
+    private $parser;
 
-    private Compiler $compiler;
+    /** @var Compiler */
+    private $compiler;
 
     /** @var VisitorInterface[][] */
-    private array $visitors = [];
+    private $visitors = [];
 
     /**
      * @param Parser|null     $parser

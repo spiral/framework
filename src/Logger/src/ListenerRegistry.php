@@ -17,7 +17,7 @@ namespace Spiral\Logger;
 final class ListenerRegistry implements ListenerRegistryInterface
 {
     /** @var callable[] */
-    private array $listeners = [];
+    private $listeners = [];
 
     public function addListener(callable $listener): void
     {

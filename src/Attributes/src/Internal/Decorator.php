@@ -20,7 +20,10 @@ use Spiral\Attributes\ReaderInterface;
  */
 abstract class Decorator extends Reader
 {
-    private ReaderInterface $reader;
+    /**
+     * @var FallbackAttributeReader|NativeAttributeReader
+     */
+    private $reader;
 
     public function __construct(ReaderInterface $reader)
     {

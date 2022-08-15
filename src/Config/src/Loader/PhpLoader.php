@@ -20,7 +20,8 @@ use Spiral\Core\ContainerScope;
  */
 final class PhpLoader implements FileLoaderInterface
 {
-    private ContainerInterface $container;
+    /** @var ContainerInterface */
+    private $container;
 
     public function __construct(ContainerInterface $container)
     {
@@ -33,7 +34,9 @@ final class PhpLoader implements FileLoaderInterface
     public function loadFile(string $section, string $filename): array
     {
         try {
-            return ContainerScope::runScope($this->container, fn () => require $filename);
+            return ContainerScope::runScope($this->container, function () use ($filename) {
+                return (require $filename);
+            });
         } catch (\Throwable $e) {
             throw new LoaderException($e->getMessage(), $e->getCode(), $e);
         }

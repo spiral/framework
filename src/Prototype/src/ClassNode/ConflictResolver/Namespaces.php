@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\ClassNode\ConflictResolver;
 
-use Spiral\Prototype\ClassNode\Type;
 use Spiral\Prototype\ClassNode;
 use Spiral\Prototype\Utils;
 
 final class Namespaces
 {
-    private Sequences $sequences;
+    /** @var Sequences */
+    private $sequences;
 
     public function __construct(Sequences $sequences)
     {
@@ -149,7 +149,7 @@ final class Namespaces
         return null;
     }
 
-    private function parseNamespaceFromType(Type $type): NamespaceEntity
+    private function parseNamespaceFromType(ClassNode\Type $type): NamespaceEntity
     {
         return $this->parseNamespace($type->shortName, $type->name());
     }

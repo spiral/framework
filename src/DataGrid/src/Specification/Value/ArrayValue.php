@@ -16,7 +16,8 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class ArrayValue implements ValueInterface
 {
-    private ValueInterface $base;
+    /** @var ValueInterface */
+    private $base;
 
     public function __construct(ValueInterface $base)
     {

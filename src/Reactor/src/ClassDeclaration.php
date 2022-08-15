@@ -30,17 +30,23 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
     use NamedTrait;
     use CommentTrait;
 
-    private string $extends = '';
+    /** @var string */
+    private $extends = '';
 
-    private array $interfaces = [];
+    /** @var array */
+    private $interfaces = [];
 
-    private array $traits = [];
+    /** @var array */
+    private $traits = [];
 
-    private Constants $constants;
+    /** @var Constants */
+    private $constants;
 
-    private Properties $properties;
+    /** @var Properties */
+    private $properties;
 
-    private Methods $methods;
+    /** @var Methods */
+    private $methods;
 
     /**
      *

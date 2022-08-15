@@ -65,15 +65,17 @@ abstract class Filter extends SchematicEntity implements FilterInterface
     protected const SETTERS   = [];
     protected const GETTERS   = [];
 
-    private ErrorMapper $errorMapper;
+    /** @var ErrorMapper */
+    private $errorMapper;
 
     /** @var array|null */
     private $errors;
 
-    private array $mappings;
+    /** @var array */
+    private $mappings;
 
     /** @var ValidatorInterface @internal */
-    private ValidatorInterface $validator;
+    private $validator;
 
     /**
      * Filter constructor.

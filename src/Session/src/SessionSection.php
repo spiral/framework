@@ -18,7 +18,8 @@ use Spiral\Core\Container\InjectableInterface;
  */
 final class SessionSection implements SessionSectionInterface, InjectableInterface
 {
-    private SessionInterface $session;
+    /** @var SessionInterface */
+    private $session;
 
     /**
      * Reference to _SESSION segment.

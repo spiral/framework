@@ -24,11 +24,14 @@ final class Bundle implements ImportInterface
 {
     use ContextTrait;
 
-    private string $path;
+    /** @var string */
+    private $path;
 
-    private ?Template $template = null;
+    /** @var Template */
+    private $template;
 
-    private ?string $prefix;
+    /** @var string|null */
+    private $prefix;
 
     /**
      * @param Context|null $context

@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
 
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
@@ -28,14 +26,14 @@ final class DefineConstructor extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
-        if (!$node instanceof Class_) {
+        if (!$node instanceof Node\Stmt\Class_) {
             return null;
         }
 
         $placementID = 0;
         foreach ($node->stmts as $index => $child) {
             $placementID = $index;
-            if ($child instanceof ClassMethod) {
+            if ($child instanceof Node\Stmt\ClassMethod) {
                 if ($child->name->name === '__construct') {
                     $node->setAttribute('constructor', $child);
 
@@ -53,12 +51,12 @@ final class DefineConstructor extends NodeVisitorAbstract
         return $node;
     }
 
-    private function buildConstructor(): ClassMethod
+    private function buildConstructor(): Node\Stmt\ClassMethod
     {
-        $constructor = new ClassMethod('__construct');
+        $constructor = new Node\Stmt\ClassMethod('__construct');
         $constructor->flags = BuilderHelpers::addModifier(
             $constructor->flags,
-            Class_::MODIFIER_PUBLIC
+            Node\Stmt\Class_::MODIFIER_PUBLIC
         );
 
         return $constructor;

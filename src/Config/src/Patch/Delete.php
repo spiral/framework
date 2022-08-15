@@ -19,9 +19,11 @@ final class Delete implements PatchInterface
 {
     use DotTrait;
 
-    private string $position;
+    /** @var string */
+    private $position;
 
-    private ?string $key;
+    /** @var null|string */
+    private $key;
 
     /** @var mixed */
     private $value;

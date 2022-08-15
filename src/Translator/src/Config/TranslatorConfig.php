@@ -37,7 +37,8 @@ final class TranslatorConfig extends InjectableConfig
         'dumpers'        => [],
     ];
 
-    private Matcher $matcher;
+    /** @var Matcher */
+    private $matcher;
 
     public function __construct(array $config = [])
     {

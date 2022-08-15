@@ -20,7 +20,8 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class ExceptionFirewall extends AbstractFirewall
 {
-    private \Throwable $e;
+    /** @var \Throwable */
+    private $e;
 
     public function __construct(\Throwable $e)
     {

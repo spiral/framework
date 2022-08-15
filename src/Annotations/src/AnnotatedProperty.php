@@ -16,7 +16,8 @@ namespace Spiral\Annotations;
  */
 final class AnnotatedProperty
 {
-    private \ReflectionProperty $property;
+    /** @var \ReflectionProperty */
+    private $property;
 
     /** @var mixed */
     private $annotation;

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax;
 
-use Spiral\Stempler\Parser\Context;
 use Spiral\Stempler\Lexer\Grammar\DynamicGrammar;
 use Spiral\Stempler\Lexer\StringStream;
 use Spiral\Stempler\Lexer\Token;
@@ -26,9 +25,11 @@ use Spiral\Stempler\Parser\SyntaxInterface;
  */
 final class DynamicSyntax implements SyntaxInterface
 {
-    private ?Directive $directive = null;
+    /** @var Directive|null */
+    private $directive;
 
-    private ?Output $output = null;
+    /** @var Output|null */
+    private $output;
 
     /**
      * @inheritDoc
@@ -37,18 +38,18 @@ final class DynamicSyntax implements SyntaxInterface
     {
         switch ($token->type) {
             case DynamicGrammar::TYPE_DIRECTIVE:
-                $this->directive = new Directive(new Context($token, $parser->getPath()));
+                $this->directive = new Directive(new Parser\Context($token, $parser->getPath()));
                 $asm->push($this->directive);
                 break;
 
             case DynamicGrammar::TYPE_OPEN_TAG:
-                $this->output = new Output(new Context($token, $parser->getPath()));
+                $this->output = new Output(new Parser\Context($token, $parser->getPath()));
 
                 $asm->push($this->output);
                 break;
 
             case DynamicGrammar::TYPE_OPEN_RAW_TAG:
-                $this->output = new Output(new Context($token, $parser->getPath()));
+                $this->output = new Output(new Parser\Context($token, $parser->getPath()));
                 $this->output->rawOutput = true;
 
                 $asm->push($this->output);

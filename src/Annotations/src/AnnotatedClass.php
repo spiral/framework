@@ -16,7 +16,8 @@ namespace Spiral\Annotations;
  */
 final class AnnotatedClass
 {
-    private \ReflectionClass $class;
+    /** @var \ReflectionClass */
+    private $class;
 
     /** @var mixed */
     private $annotation;

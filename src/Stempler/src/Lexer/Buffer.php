@@ -17,15 +17,16 @@ namespace Spiral\Stempler\Lexer;
 final class Buffer implements \IteratorAggregate
 {
     /** @var \Generator @internal */
-    private \Generator $generator;
+    private $generator;
 
     /** @var Byte[]|Token[] */
-    private array $buffer = [];
+    private $buffer = [];
 
     /** @var Byte[]|Token[] */
-    private array $replay = [];
+    private $replay = [];
 
-    private ?int $offset = 0;
+    /** @var int */
+    private $offset = 0;
 
     public function __construct(\Generator $generator, int $offset = 0)
     {

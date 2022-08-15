@@ -15,7 +15,10 @@ use Psr\Http\Message\UriInterface;
 
 class RouteNotFoundException extends UndefinedRouteException
 {
-    private UriInterface $uri;
+    /**
+     * @var UriInterface
+     */
+    private $uri;
 
     /**
      * @param \Throwable|null $previous

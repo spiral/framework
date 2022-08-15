@@ -13,7 +13,8 @@ class SameSite
     private const VALUES  = [self::STRICT, self::LAX, self::NONE];
     private const DEFAULT = self::LAX;
 
-    private ?string $sameSite;
+    /** @var string|null */
+    private $sameSite;
 
     public function __construct(?string $sameSite = null, bool $secure = false)
     {

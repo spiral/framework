@@ -16,7 +16,8 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 final class StringValue implements ValueInterface
 {
-    private bool $allowEmpty;
+    /** @var bool */
+    private $allowEmpty;
 
     public function __construct(bool $allowEmpty = false)
     {

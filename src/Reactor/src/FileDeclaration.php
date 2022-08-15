@@ -27,12 +27,18 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
 
     /**
      * File namespace.
+     *
+     * @var string
      */
-    private string $namespace;
+    private $namespace;
 
-    private ?Directives $directives = null;
+    /** @var Directives|null */
+    private $directives;
 
-    private Aggregator $elements;
+    /**
+     * @var Aggregator
+     */
+    private $elements;
 
     public function __construct(string $namespace = '', string $comment = '')
     {
@@ -125,8 +131,9 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
         }
 
         $result .= $this->elements->render($indentLevel);
+        $result .= "\n";
 
-        return $result . "\n";
+        return $result;
     }
 
     /**

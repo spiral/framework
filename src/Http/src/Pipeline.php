@@ -26,11 +26,14 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 {
     use MiddlewareTrait;
 
-    private ScopeInterface $scope;
+    /** @var ScopeInterface */
+    private $scope;
 
-    private int $position = 0;
+    /** @var int */
+    private $position = 0;
 
-    private ?RequestHandlerInterface $handler = null;
+    /** @var RequestHandlerInterface */
+    private $handler;
 
     public function __construct(ScopeInterface $scope)
     {
@@ -74,6 +77,8 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             return $this->middleware[$position]->process($request, $this);
         }
 
-        return $this->scope->runScope([Request::class => $request], fn () => $this->handler->handle($request));
+        return $this->scope->runScope([Request::class => $request], function () use ($request) {
+            return $this->handler->handle($request);
+        });
     }
 }

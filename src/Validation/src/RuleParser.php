@@ -130,6 +130,6 @@ final class RuleParser implements ParserInterface
      */
     protected function getID($rule): string
     {
-        return json_encode($rule, JSON_THROW_ON_ERROR);
+        return json_encode($rule);
     }
 }

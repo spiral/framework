@@ -14,7 +14,8 @@ use Spiral\DataGrid\Specification\ValueInterface;
 
 class RegexValue implements ValueInterface
 {
-    private string $pattern;
+    /** @var string */
+    private $pattern;
 
     public function __construct(string $pattern)
     {

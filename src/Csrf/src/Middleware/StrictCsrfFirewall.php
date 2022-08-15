@@ -22,7 +22,8 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class StrictCsrfFirewall implements MiddlewareInterface
 {
-    private CsrfFirewall $csrfFirewall;
+    /** @var CsrfFirewall */
+    private $csrfFirewall;
 
     public function __construct(ResponseFactoryInterface $responseFactory)
     {

@@ -16,7 +16,8 @@ namespace Spiral\Models;
  */
 class SchematicEntity extends AbstractEntity
 {
-    private array $schema = [];
+    /** @var array */
+    private $schema = [];
 
     public function __construct(array $data, array $schema)
     {

@@ -23,7 +23,8 @@ final class SchemaBuilder
     protected const ITERATE  = 2;
     protected const OPTIONAL = 'optional';
 
-    private ReflectionEntity $entity;
+    /** @var ReflectionEntity */
+    private $entity;
 
     public function __construct(ReflectionEntity $entity)
     {

@@ -16,15 +16,20 @@ namespace Spiral\Pagination;
  */
 final class Paginator implements PaginatorInterface, \Countable
 {
-    private int $pageNumber = 1;
+    /** @var int */
+    private $pageNumber = 1;
 
-    private int $countPages = 1;
+    /** @var int */
+    private $countPages = 1;
 
-    private int $limit = 25;
+    /** @var int */
+    private $limit = 25;
 
-    private int $count = 0;
+    /** @var int */
+    private $count = 0;
 
-    private ?string $parameter;
+    /** @var string|null */
+    private $parameter;
 
     /**
      * @param string|null $parameter

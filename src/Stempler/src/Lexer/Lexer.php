@@ -20,7 +20,7 @@ use Spiral\Stempler\Lexer\Grammar\RawGrammar;
 final class Lexer
 {
     /** @var GrammarInterface[] */
-    private array $grammars = [];
+    private $grammars = [];
 
     /**
      * Attach grammar layer.

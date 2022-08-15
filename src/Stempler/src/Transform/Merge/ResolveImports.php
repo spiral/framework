@@ -29,11 +29,14 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class ResolveImports implements VisitorInterface
 {
-    private string $useKeyword = 'use:';
+    /** @var string */
+    private $useKeyword = 'use:';
 
-    private Builder $builder;
+    /** @var Builder */
+    private $builder;
 
-    private Merger $merger;
+    /** @var Merger */
+    private $merger;
 
     public function __construct(Builder $builder, Merger $merger = null)
     {

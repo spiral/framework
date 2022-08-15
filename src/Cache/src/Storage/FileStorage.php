@@ -12,14 +12,16 @@ final class FileStorage implements CacheInterface
 {
     use InteractsWithTime;
 
-    private string $path;
+    /** @var string */
+    private $path;
 
-    private FilesInterface $files;
+    /** @var FilesInterface */
+    private $files;
 
     /** @var int */
     private $ttl;
 
-    public function __construct(FilesInterface $files, string $path, int $ttl = 2_592_000)
+    public function __construct(FilesInterface $files, string $path, int $ttl = 2592000)
     {
         $this->path = $path;
         $this->files = $files;

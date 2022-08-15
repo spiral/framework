@@ -18,9 +18,11 @@ use Throwable;
 
 final class DatetimeFormatValue implements ValueInterface
 {
-    private string $readFrom;
+    /** @var string */
+    private $readFrom;
 
-    private ?string $convertInto;
+    /** @var string|null */
+    private $convertInto;
 
     public function __construct(string $readFrom, ?string $convertInto = null)
     {

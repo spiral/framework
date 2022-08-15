@@ -16,7 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class CommandOutput
 {
-    private int $code = 0;
+    /** @var int */
+    private $code = 0;
 
     /** @var OutputInterface */
     private $output = '';

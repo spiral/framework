@@ -19,7 +19,8 @@ use Spiral\Validation\RulesInterface;
  */
 final class Compositor
 {
-    private RulesInterface $provider;
+    /** @var RulesInterface $provider */
+    private $provider;
 
     public function __construct(RulesInterface $provider)
     {

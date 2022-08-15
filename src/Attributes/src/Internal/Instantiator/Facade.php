@@ -19,11 +19,20 @@ use Spiral\Attributes\ReaderInterface;
 
 final class Facade implements InstantiatorInterface
 {
-    private DoctrineInstantiator $doctrine;
+    /**
+     * @var DoctrineInstantiator
+     */
+    private $doctrine;
 
-    private NamedArgumentsInstantiator $named;
+    /**
+     * @var NamedArgumentsInstantiator
+     */
+    private $named;
 
-    private ReaderInterface $reader;
+    /**
+     * @var ReaderInterface
+     */
+    private $reader;
 
     /**
      * @param ReaderInterface|null $reader

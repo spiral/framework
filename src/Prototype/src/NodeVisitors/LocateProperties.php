@@ -11,10 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
 
-use PhpParser\Node\Expr\PropertyFetch;
-use PhpParser\Node\Expr\Variable;
-use PhpParser\Node\Stmt\Property;
-use PhpParser\Node\Stmt\PropertyProperty;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
@@ -23,9 +19,11 @@ use PhpParser\NodeVisitorAbstract;
  */
 final class LocateProperties extends NodeVisitorAbstract
 {
-    private array $properties = [];
+    /** @var array */
+    private $properties = [];
 
-    private array $requested = [];
+    /** @var array */
+    private $requested = [];
 
     /**
      * Get names of all virtual properties.
@@ -46,16 +44,16 @@ final class LocateProperties extends NodeVisitorAbstract
     public function enterNode(Node $node)
     {
         if (
-            $node instanceof PropertyFetch &&
-            $node->var instanceof Variable &&
+            $node instanceof Node\Expr\PropertyFetch &&
+            $node->var instanceof Node\Expr\Variable &&
             $node->var->name === 'this'
         ) {
             $this->requested[$node->name->name] = $node->name->name;
         }
 
-        if ($node instanceof Property) {
+        if ($node instanceof Node\Stmt\Property) {
             foreach ($node->props as $prop) {
-                if ($prop instanceof PropertyProperty) {
+                if ($prop instanceof Node\Stmt\PropertyProperty) {
                     $this->properties[$prop->name->name] = $prop->name->name;
                 }
             }

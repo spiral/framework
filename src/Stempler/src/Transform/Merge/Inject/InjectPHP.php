@@ -33,7 +33,8 @@ final class InjectPHP implements VisitorInterface
 
     private const PHP_MARCO_EXISTS_FUNCTION = 'injected';
 
-    private BlockClaims $blocks;
+    /** @var BlockClaims */
+    private $blocks;
 
     public function __construct(BlockClaims $blocks)
     {
