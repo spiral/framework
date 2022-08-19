@@ -21,13 +21,13 @@ use Spiral\DataGrid\Exception\GridViewException;
 class Grid implements GridInterface
 {
     /** @var array */
-    private $options = [];
+    protected $options = [];
 
     /** @var iterable */
-    private $source;
+    protected $source;
 
     /** @var callable */
-    private $mapper;
+    protected $mapper;
 
     public function getIterator(): Generator
     {
