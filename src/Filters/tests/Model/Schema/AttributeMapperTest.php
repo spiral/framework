@@ -45,6 +45,7 @@ final class AttributeMapperTest extends BaseTest
         $input->shouldReceive('withPrefix')->once()->with('bar')->andReturn($barInput);
         $input->shouldReceive('withPrefix')->once()->with('bazFilter.first')->andReturn($bazInputFirst);
         $input->shouldReceive('withPrefix')->once()->with('bazFilter.second')->andReturn($bazInputSecond);
+        $input->shouldReceive('withPrefix')->once()->with('fooFilter')->andReturn($input);
 
         $this->provider->shouldReceive('createFilter')->once()->with('fooFilter', $input)
             ->andReturn($fooFilter = m::mock(FilterInterface::class));
@@ -149,6 +150,7 @@ final class AttributeMapperTest extends BaseTest
         $bazInputSecond = m::mock(InputInterface::class);
         $input->shouldReceive('withPrefix')->once()->with('baz.first')->andReturn($bazInputFirst);
         $input->shouldReceive('withPrefix')->once()->with('baz.second')->andReturn($bazInputSecond);
+        $input->shouldReceive('withPrefix')->once()->with('fooFilter')->andReturn($input);
 
         $this->provider->shouldReceive('createFilter')->once()->with('fooFilter', $input)
             ->andThrow(new ValidationException(['fooFilter' => 'Error']));
