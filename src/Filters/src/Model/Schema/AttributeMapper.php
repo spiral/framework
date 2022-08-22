@@ -37,8 +37,6 @@ final class AttributeMapper
         $class = new \ReflectionClass($filter);
 
         foreach ($class->getProperties() as $property) {
-            $property->setAccessible(true);
-
             foreach ($this->reader->getPropertyMetadata($property) as $attribute) {
                 if ($attribute instanceof AbstractInput) {
                     $this->setValue($filter, $property, $attribute->getValue($input, $property));
@@ -47,7 +45,9 @@ final class AttributeMapper
                     try {
                         $value = $this->provider->createFilter(
                             $attribute->class,
-                            $attribute->prefix ? $input->withPrefix($attribute->prefix) : $input
+                            $attribute->prefix ?
+                                $input->withPrefix($attribute->prefix) :
+                                $input->withPrefix($property->name)
                         );
 
                         $this->setValue($filter, $property, $value);
