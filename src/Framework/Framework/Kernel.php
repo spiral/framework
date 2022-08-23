@@ -33,8 +33,6 @@ abstract class Kernel extends AbstractKernel
      * $kernel->appBooting(static function(KernelInterface $kernel) {
      *     $kernel->getContainer()->...
      * });
-     *
-     * @internal
      */
     public function appBooting(\Closure ...$callbacks): void
     {
@@ -50,8 +48,6 @@ abstract class Kernel extends AbstractKernel
      * $kernel->booted(static function(KernelInterface $kernel) {
      *     $kernel->getContainer()->...
      * });
-     *
-     * @internal
      */
     public function appBooted(\Closure ...$callbacks): void
     {
