@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Queue\Config;
 
+use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Config\QueueConfig;
+use Spiral\Queue\DefaultSerializer;
 use Spiral\Queue\Exception\InvalidArgumentException;
+use Spiral\Queue\PhpSerializer;
 use Spiral\Tests\Queue\TestCase;
 
 final class QueueConfigTest extends TestCase
@@ -233,5 +236,42 @@ final class QueueConfigTest extends TestCase
         $config = new QueueConfig();
 
         $this->assertSame([], $config->getRegistryHandlers());
+    }
+
+    public function testGetRegistrySerializers(): void
+    {
+        $config = new QueueConfig([
+            'registry' => [
+                'serializers' => ['foo' => 'some', 'bar' => 'other'],
+            ]
+        ]);
+
+        $this->assertSame(['foo' => 'some', 'bar' => 'other'], $config->getRegistrySerializers());
+    }
+
+    public function testGetNotExistsRegistrySerializers(): void
+    {
+        $config = new QueueConfig();
+
+        $this->assertSame([], $config->getRegistrySerializers());
+    }
+
+    /** @dataProvider defaultSerializerDataProvider */
+    public function testGetDefaultSerializer($serializer, $expected): void
+    {
+        $config = new QueueConfig([
+            'defaultSerializer' => $serializer
+        ]);
+
+        $this->assertEquals($expected, $config->getDefaultSerializer());
+    }
+
+    public function defaultSerializerDataProvider(): \Traversable
+    {
+        yield [null, new DefaultSerializer()];
+        yield ['class-string', 'class-string'];
+        yield [PhpSerializer::class, PhpSerializer::class];
+        yield [new DefaultSerializer(), new DefaultSerializer()];
+        yield [new Autowire(PhpSerializer::class), new Autowire(PhpSerializer::class)];
     }
 }

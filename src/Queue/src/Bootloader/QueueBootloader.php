@@ -11,11 +11,11 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Core\QueueInjector;
-use Spiral\Queue\DefaultSerializer;
 use Spiral\Queue\Driver\NullDriver;
 use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
@@ -26,6 +26,8 @@ use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
 use Spiral\Queue\SerializerInterface;
+use Spiral\Queue\SerializerRegistry;
+use Spiral\Queue\SerializerRegistryInterface;
 
 final class QueueBootloader extends Bootloader
 {
@@ -33,8 +35,11 @@ final class QueueBootloader extends Bootloader
         HandlerRegistryInterface::class => QueueRegistry::class,
         FailedJobHandlerInterface::class => LogFailedJobHandler::class,
         QueueConnectionProviderInterface::class => QueueManager::class,
+        SerializerRegistryInterface::class => SerializerRegistry::class,
+        SerializerInterface::class => SerializerRegistryInterface::class,
         QueueManager::class => [self::class, 'initQueueManager'],
         QueueRegistry::class => [self::class, 'initRegistry'],
+        SerializerRegistry::class => [self::class, 'initSerializerRegistry'],
     ];
 
     /** @var ConfiguratorInterface */
@@ -48,7 +53,6 @@ final class QueueBootloader extends Bootloader
     public function boot(Container $container, EnvironmentInterface $env, AbstractKernel $kernel): void
     {
         $this->initQueueConfig($env);
-        $this->registerJobsSerializer($container);
         $this->registerQueue($container);
 
         $this->registerDriverAlias(SyncDriver::class, 'sync');
@@ -57,9 +61,17 @@ final class QueueBootloader extends Bootloader
         $kernel->started(static function () use ($container): void {
             $registry = $container->get(HandlerRegistryInterface::class);
             $config = $container->get(QueueConfig::class);
+            $serializersRegistry = $container->get(SerializerRegistryInterface::class);
 
             foreach ($config->getRegistryHandlers() as $jobType => $handler) {
                 $registry->setHandler($jobType, $handler);
+            }
+
+            foreach ($config->getRegistrySerializers() as $jobType => $serializer) {
+                if ($serializer instanceof Autowire || \is_string($serializer)) {
+                    $serializer = $container->get($serializer);
+                }
+                $serializersRegistry->addSerializer($jobType, $serializer);
             }
         });
     }
@@ -67,7 +79,7 @@ final class QueueBootloader extends Bootloader
     public function registerDriverAlias(string $driverClass, string $alias): void
     {
         $this->config->modify(
-            'queue',
+            QueueConfig::CONFIG,
             new Append('driverAliases', $alias, $driverClass)
         );
     }
@@ -82,11 +94,15 @@ final class QueueBootloader extends Bootloader
         return new QueueRegistry($container, $registry);
     }
 
-    private function registerJobsSerializer(Container $container): void
+    protected function initSerializerRegistry(Container $container, QueueConfig $config): SerializerRegistry
     {
-        $container->bindSingleton(SerializerInterface::class, static function () {
-            return new DefaultSerializer();
-        });
+        $default = $config->getDefaultSerializer();
+
+        if ($default instanceof Autowire || \is_string($default)) {
+            $default = $container->get($default);
+        }
+
+        return new SerializerRegistry($default);
     }
 
     private function registerQueue(Container $container): void
@@ -112,6 +128,7 @@ final class QueueBootloader extends Bootloader
                 ],
                 'registry' => [
                     'handlers' => [],
+                    'serializers' => [],
                 ],
                 'driverAliases' => [
                     'sync' => SyncDriver::class,
