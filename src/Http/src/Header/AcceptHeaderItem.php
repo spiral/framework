@@ -18,11 +18,14 @@ namespace Spiral\Http\Header;
  */
 final class AcceptHeaderItem
 {
-    private ?string $value;
+    /** @var string|null */
+    private $value;
 
-    private float $quality;
+    /** @var float */
+    private $quality;
 
-    private array $params = [];
+    /** @var array */
+    private $params = [];
 
     /**
      * AcceptHeaderItem constructor.

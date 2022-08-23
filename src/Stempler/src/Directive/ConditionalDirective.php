@@ -18,7 +18,8 @@ use Spiral\Stempler\Node\Dynamic\Directive;
  */
 final class ConditionalDirective extends AbstractDirective
 {
-    private bool $firstSwitchCase = false;
+    /** @var bool */
+    private $firstSwitchCase = false;
 
     public function renderIf(Directive $directive): string
     {

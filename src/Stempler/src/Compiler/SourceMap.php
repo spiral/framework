@@ -19,12 +19,14 @@ use Spiral\Stempler\Loader\Source;
  */
 final class SourceMap
 {
-    private array $paths = [];
+    /** @var array */
+    private $paths = [];
 
-    private array $lines = [];
+    /** @var array */
+    private $lines = [];
 
     /** @var Source[] */
-    private ?array $sourceCache = null;
+    private $sourceCache;
 
     public function __serialize(): array
     {
@@ -86,7 +88,7 @@ final class SourceMap
      */
     public function serialize()
     {
-        return json_encode($this->__serialize(), JSON_THROW_ON_ERROR);
+        return json_encode($this->__serialize());
     }
 
     /**
@@ -94,7 +96,7 @@ final class SourceMap
      */
     public function unserialize($serialized): void
     {
-        $this->__unserialize(json_decode($serialized, true, 512, JSON_THROW_ON_ERROR));
+        $this->__unserialize(json_decode($serialized, true));
     }
 
     public static function calculate(string $content, array $locations, LoaderInterface $loader): SourceMap

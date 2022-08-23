@@ -24,7 +24,7 @@ final class JsonHandler extends AbstractHandler
                 $e->getLine()
             ),
             'stacktrace' => iterator_to_array($this->renderTrace($e->getTrace(), $verbosity)),
-        ], JSON_THROW_ON_ERROR);
+        ]);
     }
 
     private function renderTrace(array $trace, int $verbosity): \Generator

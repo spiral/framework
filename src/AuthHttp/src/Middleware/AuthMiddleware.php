@@ -31,13 +31,17 @@ final class AuthMiddleware implements MiddlewareInterface
 {
     public const ATTRIBUTE = 'authContext';
 
-    private ScopeInterface $scope;
+    /** @var ScopeInterface */
+    private $scope;
 
-    private ActorProviderInterface $actorProvider;
+    /** @var ActorProviderInterface */
+    private $actorProvider;
 
-    private TokenStorageInterface $tokenStorage;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
-    private TransportRegistry $transportRegistry;
+    /** @var TransportRegistry */
+    private $transportRegistry;
 
     public function __construct(
         ScopeInterface $scope,
@@ -61,7 +65,9 @@ final class AuthMiddleware implements MiddlewareInterface
 
         $response = $this->scope->runScope(
             [AuthContextInterface::class => $authContext],
-            static fn () => $handler->handle($request->withAttribute(self::ATTRIBUTE, $authContext))
+            static function () use ($request, $handler, $authContext) {
+                return $handler->handle($request->withAttribute(self::ATTRIBUTE, $authContext));
+            }
         );
 
         return $this->closeContext($request, $response, $authContext);

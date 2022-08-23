@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Spiral\DataGrid\Specification\Pagination;
 
-use Spiral\DataGrid\Specification\Value\EnumValue;
-use Spiral\DataGrid\Specification\Value\IntValue;
 use Spiral\DataGrid\Specification\FilterInterface;
 use Spiral\DataGrid\Specification\SequenceInterface;
 use Spiral\DataGrid\Specification\Value;
@@ -21,11 +19,14 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class PagePaginator implements SequenceInterface, FilterInterface
 {
-    private EnumValue $limitValue;
+    /** @var Value\EnumValue */
+    private $limitValue;
 
-    private int $limit;
+    /** @var int */
+    private $limit;
 
-    private int $page;
+    /** @var int */
+    private $page;
 
     public function __construct(int $defaultLimit, array $allowedLimits = [])
     {
@@ -36,7 +37,7 @@ final class PagePaginator implements SequenceInterface, FilterInterface
 
         sort($allowedLimits);
 
-        $this->limitValue = new EnumValue(new IntValue(), ...$allowedLimits);
+        $this->limitValue = new Value\EnumValue(new Value\IntValue(), ...$allowedLimits);
     }
 
     /**

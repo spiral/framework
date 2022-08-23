@@ -26,7 +26,10 @@ abstract class AttributeReader extends Reader
      * @var ContextRenderer
      */
     protected $renderer;
-    private InstantiatorInterface $instantiator;
+    /**
+     * @var InstantiatorInterface
+     */
+    private $instantiator;
 
     /**
      * @param InstantiatorInterface|null $instantiator

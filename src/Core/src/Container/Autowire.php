@@ -20,12 +20,14 @@ use Spiral\Core\FactoryInterface;
  */
 final class Autowire
 {
-    private ?object $target = null;
+    /** @var object|null */
+    private $target;
 
     /** @var mixed */
     private $alias;
 
-    private array $parameters;
+    /** @var array */
+    private $parameters;
 
     /**
      * Autowire constructor.

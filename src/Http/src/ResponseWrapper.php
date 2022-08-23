@@ -28,11 +28,14 @@ final class ResponseWrapper
 {
     use JsonTrait;
 
-    private ResponseFactoryInterface $responseFactory;
+    /** @var ResponseFactoryInterface */
+    private $responseFactory;
 
-    private StreamFactoryInterface $streamFactory;
+    /** @var StreamFactoryInterface */
+    private $streamFactory;
 
-    private FilesInterface $files;
+    /** @var FilesInterface */
+    private $files;
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,

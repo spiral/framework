@@ -26,14 +26,17 @@ class Parameter extends AbstractDeclaration implements NamedInterface
     use NamedTrait;
     use SerializerTrait;
 
-    private string $type = '';
+    /** @var string */
+    private $type = '';
 
-    private bool $isOptional = false;
+    /** @var bool */
+    private $isOptional = false;
 
     /** @var mixed */
     private $defaultValue;
 
-    private bool $pdb = false;
+    /** @var bool */
+    private $pdb = false;
 
     public function __construct(string $name)
     {

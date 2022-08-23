@@ -28,12 +28,14 @@ use Spiral\Stempler\Parser\SyntaxInterface;
  */
 final class Parser
 {
-    private Lexer $lexer;
+    /** @var Lexer */
+    private $lexer;
 
-    private ?string $path = null;
+    /** @var string */
+    private $path;
 
     /** @var SyntaxInterface[] */
-    private array $syntax = [];
+    private $syntax = [];
 
     /**
      * Parser constructor.

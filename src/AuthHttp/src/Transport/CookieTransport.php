@@ -23,17 +23,23 @@ use Spiral\Cookies\CookieQueue;
  */
 final class CookieTransport implements HttpTransportInterface
 {
-    private string $cookie;
+    /** @var string */
+    private $cookie;
 
-    private string $basePath;
+    /** @var string */
+    private $basePath;
 
-    private ?string $domain;
+    /** @var string|null */
+    private $domain;
 
-    private bool $secure;
+    /** @var bool */
+    private $secure;
 
-    private bool $httpOnly;
+    /** @var bool */
+    private $httpOnly;
 
-    private ?string $sameSite;
+    /** @var string|null */
+    private $sameSite;
 
     public function __construct(
         string $cookie,

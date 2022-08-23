@@ -13,7 +13,8 @@ namespace Spiral\Views\Exception;
 
 class CompileException extends EngineException
 {
-    private array $userTrace = [];
+    /** @var array */
+    private $userTrace = [];
 
     /**
      * {@inheritdoc}

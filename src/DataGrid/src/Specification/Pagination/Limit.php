@@ -16,7 +16,8 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class Limit implements SpecificationInterface
 {
-    private int $value;
+    /** @var int */
+    private $value;
 
     public function __construct(int $value)
     {

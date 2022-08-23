@@ -14,7 +14,7 @@ namespace Spiral\Boot;
 final class Finalizer implements FinalizerInterface
 {
     /** @var callable[] */
-    private array $finalizers = [];
+    private $finalizers = [];
 
     /**
      * @inheritdoc

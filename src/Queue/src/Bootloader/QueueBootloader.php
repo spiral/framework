@@ -42,7 +42,8 @@ final class QueueBootloader extends Bootloader
         SerializerRegistry::class => [self::class, 'initSerializerRegistry'],
     ];
 
-    private ConfiguratorInterface $config;
+    /** @var ConfiguratorInterface */
+    private $config;
 
     public function __construct(ConfiguratorInterface $config)
     {
@@ -108,7 +109,9 @@ final class QueueBootloader extends Bootloader
     {
         $container->bindSingleton(
             QueueInterface::class,
-            static fn (QueueManager $manager): QueueInterface => $manager->getConnection()
+            static function (QueueManager $manager): QueueInterface {
+                return $manager->getConnection();
+            }
         );
     }
 

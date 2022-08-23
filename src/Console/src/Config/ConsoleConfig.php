@@ -120,7 +120,7 @@ final class ConsoleConfig extends InjectableConfig
 
         throw new ConfigException(sprintf(
             'Unable to parse sequence `%s`.',
-            json_encode($item, JSON_THROW_ON_ERROR)
+            json_encode($item)
         ));
     }
 }

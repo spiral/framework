@@ -23,17 +23,23 @@ use Spiral\Router\Target\Action;
  */
 final class RouteGroup
 {
-    private ContainerInterface $container;
+    /** @var ContainerInterface */
+    private $container;
 
-    private string $prefix = '';
+    /** @var string */
+    private $prefix = '';
 
-    private Pipeline $pipeline;
+    /** @var Pipeline */
+    private $pipeline;
 
-    private Router $router;
+    /** @var Router */
+    private $router;
 
-    private array $routes = [];
+    /** @var array */
+    private $routes = [];
 
-    private ?CoreInterface $core = null;
+    /** @var CoreInterface */
+    private $core;
 
     public function __construct(
         ContainerInterface $container,

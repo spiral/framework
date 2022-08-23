@@ -19,7 +19,8 @@ use Spiral\Stempler\Node\Dynamic\Directive;
  */
 abstract class AbstractDirective implements DirectiveRendererInterface
 {
-    private \ReflectionObject $r;
+    /** @var ReflectionObject */
+    private $r;
 
     /**
      * AbstractDirective constructor.

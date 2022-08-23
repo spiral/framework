@@ -21,15 +21,17 @@ use Spiral\Validation\Config\ValidatorConfig;
 
 final class ValidationProvider implements ValidationInterface, RulesInterface, SingletonInterface
 {
-    private ?ValidatorConfig $config;
+    /** @var ValidatorConfig */
+    private $config;
 
-    private ParserInterface $parser;
+    /** @var ParserInterface */
+    private $parser;
 
     /** @var FactoryInterface */
     private $factory;
 
     /** @var RuleInterface[] */
-    private array $rules = [];
+    private $rules = [];
 
     /**
      * @param ParserInterface|null  $parser

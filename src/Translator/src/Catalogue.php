@@ -20,10 +20,11 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 final class Catalogue implements CatalogueInterface
 {
-    private string $locale;
+    /** @var string */
+    private $locale;
 
     /** @var array<string, array<string, string>> */
-    private array $data = [];
+    private $data = [];
 
     public function __construct(string $locale, array $data = [])
     {

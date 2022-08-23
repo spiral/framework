@@ -44,10 +44,10 @@ abstract class AbstractKernel implements KernelInterface
     protected $dispatchers = [];
 
     /** @var array<Closure> */
-    private array $startingCallbacks = [];
+    private $startingCallbacks = [];
 
     /** @var array<Closure> */
-    private array $startedCallbacks = [];
+    private $startedCallbacks = [];
 
     /**
      * @throws \Throwable
@@ -133,7 +133,7 @@ abstract class AbstractKernel implements KernelInterface
      */
     public function run(?EnvironmentInterface $environment = null): ?self
     {
-        $environment ??= new Environment();
+        $environment = $environment ?? new Environment();
         $this->container->bindSingleton(EnvironmentInterface::class, $environment);
 
         try {

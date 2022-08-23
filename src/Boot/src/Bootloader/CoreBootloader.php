@@ -11,10 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
 
-use Spiral\Logger\ListenerRegistryInterface;
-use Spiral\Logger\ListenerRegistry;
-use Spiral\Logger\LogsInterface;
-use Spiral\Logger\LogFactory;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Memory;
 use Spiral\Boot\MemoryInterface;
@@ -39,8 +35,8 @@ final class CoreBootloader extends Bootloader
 
         // debug and logging services
         Dumper::class                           => Dumper::class,
-        ListenerRegistryInterface::class => ListenerRegistry::class,
-        LogsInterface::class             => LogFactory::class,
+        Logger\ListenerRegistryInterface::class => Logger\ListenerRegistry::class,
+        Logger\LogsInterface::class             => Logger\LogFactory::class,
     ];
 
     private function memory(

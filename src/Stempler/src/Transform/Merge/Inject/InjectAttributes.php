@@ -27,7 +27,8 @@ use Spiral\Stempler\VisitorInterface;
  */
 final class InjectAttributes implements VisitorInterface
 {
-    private BlockClaims $blocks;
+    /** @var BlockClaims */
+    private $blocks;
 
     public function __construct(BlockClaims $blocks)
     {

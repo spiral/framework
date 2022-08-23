@@ -29,15 +29,19 @@ class GridFactory implements GridFactoryInterface
     public const KEY_FETCH_COUNT = 'fetchCount';
 
     /** @var callable */
-    private $count = 'count';
+    protected $count = 'count';
 
-    private Compiler $compiler;
+    /** @var Compiler */
+    protected $compiler;
 
-    private InputInterface $input;
+    /** @var InputInterface */
+    protected $input;
 
-    private InputInterface $defaults;
+    /** @var InputInterface */
+    protected $defaults;
 
-    private GridInterface $view;
+    /** @var GridInterface */
+    protected $view;
 
     /**
      * @param InputInterface|null $input

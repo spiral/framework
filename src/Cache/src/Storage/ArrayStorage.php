@@ -20,7 +20,7 @@ class ArrayStorage implements CacheInterface
     /** @var int */
     private $ttl;
 
-    public function __construct(int $ttl = 2_592_000)
+    public function __construct(int $ttl = 2592000)
     {
         $this->ttl = $ttl;
     }

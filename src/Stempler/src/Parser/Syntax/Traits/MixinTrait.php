@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Parser\Syntax\Traits;
 
-use Spiral\Stempler\Parser\Context;
 use Spiral\Stempler\Lexer\Token;
 use Spiral\Stempler\Node\Mixin;
 use Spiral\Stempler\Node\Raw;
@@ -33,7 +32,7 @@ trait MixinTrait
             return $token->content;
         }
 
-        $mixin = new Mixin([], new Context($token, $parser->getPath()));
+        $mixin = new Mixin([], new Parser\Context($token, $parser->getPath()));
         $parser->parseTokens(
             new Assembler($mixin, 'nodes'),
             $token->tokens

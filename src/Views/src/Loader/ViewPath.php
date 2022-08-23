@@ -13,11 +13,14 @@ namespace Spiral\Views\Loader;
 
 final class ViewPath
 {
-    private string $namespace;
+    /** @var string */
+    private $namespace;
 
-    private string $name;
+    /** @var string */
+    private $name;
 
-    private string $basename;
+    /** @var string */
+    private $basename;
 
     public function __construct(string $namespace, string $name, string $basename)
     {

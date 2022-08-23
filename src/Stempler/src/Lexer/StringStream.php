@@ -15,11 +15,14 @@ use Spiral\Stempler\Exception\ScannerException;
 
 final class StringStream implements StreamInterface
 {
-    private string $source;
+    /** @var string */
+    private $source;
 
-    private int $length;
+    /** @var int */
+    private $length;
 
-    private int $offset;
+    /** @var int */
+    private $offset;
 
     public function __construct(string $source)
     {

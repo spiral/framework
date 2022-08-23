@@ -16,9 +16,11 @@ namespace Spiral\Snapshots;
  */
 final class Snapshot implements SnapshotInterface
 {
-    private string $id;
+    /** @var string */
+    private $id;
 
-    private \Throwable $exception;
+    /** @var \Throwable */
+    private $exception;
 
     public function __construct(string $id, \Throwable $exception)
     {

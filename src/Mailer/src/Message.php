@@ -13,21 +13,29 @@ namespace Spiral\Mailer;
 
 class Message implements MessageInterface
 {
-    private string $subject;
+    /** @var string */
+    private $subject;
 
-    private array $data;
+    /** @var array */
+    private $data;
 
-    private array $to = [];
+    /** @var array */
+    private $to = [];
 
-    private array $cc = [];
+    /** @var array */
+    private $cc = [];
 
-    private array $bcc = [];
+    /** @var array */
+    private $bcc = [];
 
-    private ?string $from = null;
+    /** @var string|null */
+    private $from;
 
-    private ?string $replyTo = null;
+    /** @var string|null */
+    private $replyTo;
 
-    private array $options = [];
+    /** @var array */
+    private $options = [];
 
     /**
      * @param string|string[] $to

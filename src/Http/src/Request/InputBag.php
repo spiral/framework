@@ -20,9 +20,11 @@ use Spiral\Http\Exception\InputException;
  */
 class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 {
-    private array $data = [];
+    /** @var array */
+    private $data = [];
 
-    private string $prefix = '';
+    /** @var string */
+    private $prefix = '';
 
     public function __construct(array $data, string $prefix = '')
     {

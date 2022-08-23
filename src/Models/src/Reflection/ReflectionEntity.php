@@ -42,9 +42,10 @@ class ReflectionEntity
     private const MUTATOR_ACCESSOR = 'accessor';
 
     /** @var array @internal */
-    private array $propertyCache = [];
+    private $propertyCache = [];
 
-    private ?\ReflectionClass $reflection;
+    /** @var \ReflectionClass */
+    private $reflection;
 
     /**
      * Only support SchematicEntity classes!

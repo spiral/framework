@@ -24,7 +24,8 @@ final class IsolatePHPBlocks implements VisitorInterface
     // php marcos to inject values into
     private const PHP_MARCO_EXISTS_FUNCTION = 'injected';
 
-    private string $path;
+    /** @var string */
+    private $path;
 
     public function __construct(string $path)
     {

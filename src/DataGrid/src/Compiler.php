@@ -21,7 +21,7 @@ use Spiral\DataGrid\Specification\SequenceInterface;
 final class Compiler
 {
     /** @var WriterInterface[] */
-    private array $writers = [];
+    private $writers = [];
 
     public function addWriter(WriterInterface $writer): void
     {

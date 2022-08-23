@@ -21,7 +21,8 @@ use Throwable;
  */
 final class ContainerScope
 {
-    private static ?ContainerInterface $container = null;
+    /** @var ContainerInterface */
+    private static $container;
 
     /**
      * Returns currently active container scope if any.

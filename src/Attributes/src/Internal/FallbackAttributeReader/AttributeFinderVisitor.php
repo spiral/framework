@@ -11,13 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Internal\FallbackAttributeReader;
 
-use PhpParser\Node\Stmt\ClassLike;
-use PhpParser\Node\FunctionLike;
-use PhpParser\Node\Stmt\ClassConst;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Trait_;
-use PhpParser\Node\Stmt\Function_;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\NodeTraverser;
@@ -51,31 +44,37 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
     /**
      * @var array<ClassName, AttributePrototypeList>
      */
-    private array $classes = [];
+    private $classes = [];
 
     /**
      * @var array<FunctionEndLine, AttributePrototypeList>
      */
-    private array $functions = [];
+    private $functions = [];
 
     /**
      * @var array<ClassName, array<ConstantName, AttributePrototypeList>>
      */
-    private array $constants = [];
+    private $constants = [];
 
     /**
      * @var array<ClassName, array<PropertyName, AttributePrototypeList>>
      */
-    private array $properties = [];
+    private $properties = [];
 
     /**
      * @var array<FunctionEndLine, array<ParameterName, AttributePrototypeList>>
      */
-    private array $parameters = [];
+    private $parameters = [];
 
-    private string $file;
+    /**
+     * @var string
+     */
+    private $file;
 
-    private AttributeParser $parser;
+    /**
+     * @var AttributeParser
+     */
+    private $parser;
 
     public function __construct(string $file, AttributeParser $parser)
     {
@@ -141,7 +140,7 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
     {
         $this->updateContext($node);
 
-        if ($node instanceof ClassLike) {
+        if ($node instanceof Node\Stmt\ClassLike) {
             foreach ($this->parse($node->attrGroups) as $prototype) {
                 $this->classes[$node->namespacedName->toString()][] = $prototype;
             }
@@ -149,7 +148,7 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        if ($node instanceof FunctionLike) {
+        if ($node instanceof Node\FunctionLike) {
             $line = $node->getEndLine();
 
             foreach ($this->parse($node->getAttrGroups()) as $prototype) {
@@ -167,7 +166,7 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
             return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
         }
 
-        if ($node instanceof ClassConst) {
+        if ($node instanceof Node\Stmt\ClassConst) {
             $class = $this->fqn();
 
             foreach ($this->parse($node->attrGroups) as $prototype) {
@@ -196,20 +195,20 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
 
     public function leaveNode(Node $node): void
     {
-        if ($node instanceof Namespace_) {
+        if ($node instanceof Node\Stmt\Namespace_) {
             $this->context[AttributeParser::CTX_NAMESPACE] = '';
 
             return;
         }
 
-        if ($node instanceof ClassLike) {
+        if ($node instanceof Node\Stmt\ClassLike) {
             $this->context[AttributeParser::CTX_CLASS] = '';
             $this->context[AttributeParser::CTX_TRAIT] = '';
 
             return;
         }
 
-        if ($node instanceof FunctionLike) {
+        if ($node instanceof Node\FunctionLike) {
             $this->context[AttributeParser::CTX_FUNCTION] = '';
         }
     }
@@ -217,20 +216,20 @@ final class AttributeFinderVisitor extends NodeVisitorAbstract
     private function updateContext(Node $node): void
     {
         switch (true) {
-            case $node instanceof Namespace_:
+            case $node instanceof Node\Stmt\Namespace_:
                 $this->context[AttributeParser::CTX_NAMESPACE] = $this->name($node->name);
                 break;
 
-            case $node instanceof ClassLike:
+            case $node instanceof Node\Stmt\ClassLike:
                 $this->context[AttributeParser::CTX_CLASS] = $this->name($node->name);
 
             // no break
-            case $node instanceof Trait_:
+            case $node instanceof Node\Stmt\Trait_:
                 $this->context[AttributeParser::CTX_TRAIT] = $this->name($node->name);
                 break;
 
-            case $node instanceof Function_:
-            case $node instanceof ClassMethod:
+            case $node instanceof Node\Stmt\Function_:
+            case $node instanceof Node\Stmt\ClassMethod:
                 $this->context[AttributeParser::CTX_FUNCTION] = $this->name($node->name);
                 break;
         }

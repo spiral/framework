@@ -17,13 +17,17 @@ use Spiral\DataGrid\SpecificationInterface;
 
 final class DirectionalSorter implements SorterInterface
 {
-    private SorterInterface $asc;
+    /** @var SorterInterface */
+    private $asc;
 
-    private SorterInterface $desc;
+    /** @var SorterInterface */
+    private $desc;
 
-    private ?SorterInterface $sorter = null;
+    /** @var SorterInterface */
+    private $sorter;
 
-    private ?string $direction = null;
+    /** @var string|null */
+    private $direction;
 
     public function __construct(SorterInterface $asc, SorterInterface $desc)
     {

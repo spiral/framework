@@ -21,16 +21,21 @@ use Spiral\Debug\RendererInterface;
  */
 class ValueWrapper
 {
-    private RendererInterface $r;
+    /** @var RendererInterface */
+    private $r;
 
-    private Dumper $dumper;
+    /** @var Dumper */
+    private $dumper;
 
-    private int $verbosity;
+    /** @var int */
+    private $verbosity;
 
     /**
      * Aggregated list of value dumps, only for DEBUG mode.
+     *
+     * @var array
      */
-    private array $values = [];
+    private $values = [];
 
     public function __construct(Dumper $dumper, RendererInterface $renderer, int $verbosity)
     {
@@ -66,7 +71,7 @@ class ValueWrapper
             if ($this->verbosity < HandlerInterface::VERBOSITY_DEBUG) {
                 $result[] = sprintf('<span>%s</span>', $type);
             } else {
-                $hash = is_object($arg) ? spl_object_hash($arg) : md5(json_encode($arg, JSON_THROW_ON_ERROR));
+                $hash = is_object($arg) ? spl_object_hash($arg) : md5(json_encode($arg));
 
                 if (!isset($this->values[$hash])) {
                     $this->values[$hash] = $this->dumper->dump($arg, Dumper::RETURN);

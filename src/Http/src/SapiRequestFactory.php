@@ -56,13 +56,17 @@ use Psr\Http\Message\UriInterface;
  */
 final class SapiRequestFactory
 {
-    private ServerRequestFactoryInterface $requestFactory;
+    /** @var ServerRequestFactoryInterface */
+    private $requestFactory;
 
-    private UriFactoryInterface $uriFactory;
+    /** @var UriFactoryInterface */
+    private $uriFactory;
 
-    private StreamFactoryInterface $streamFactory;
+    /** @var StreamFactoryInterface */
+    private $streamFactory;
 
-    private UploadedFileFactoryInterface $uploadedFileFactory;
+    /** @var UploadedFileFactoryInterface */
+    private $uploadedFileFactory;
 
     public function __construct(
         ServerRequestFactoryInterface $requestFactory,

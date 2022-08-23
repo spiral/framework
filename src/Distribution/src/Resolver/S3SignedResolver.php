@@ -22,11 +22,20 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 class S3SignedResolver extends ExpirationAwareResolver
 {
-    private S3ClientInterface $client;
+    /**
+     * @var S3ClientInterface
+     */
+    private $client;
 
-    private string $bucket;
+    /**
+     * @var string
+     */
+    private $bucket;
 
-    private ?string $prefix;
+    /**
+     * @var string|null
+     */
+    private $prefix;
 
     /**
      * @param string|null $prefix

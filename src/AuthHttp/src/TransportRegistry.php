@@ -19,9 +19,10 @@ use Spiral\Auth\Exception\TransportException;
 final class TransportRegistry
 {
     /** @var HttpTransportInterface[] */
-    private array $transports = [];
+    private $transports = [];
 
-    private ?string $default = null;
+    /** @var string */
+    private $default;
 
     public function setDefaultTransport(string $name): void
     {
@@ -38,7 +39,7 @@ final class TransportRegistry
      */
     public function getTransport(string $name = null): HttpTransportInterface
     {
-        $name ??= $this->default;
+        $name = $name ?? $this->default;
 
         if (!isset($this->transports[$name])) {
             throw new TransportException("Undefined auth transport {$name}");

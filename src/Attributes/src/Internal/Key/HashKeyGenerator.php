@@ -32,9 +32,15 @@ final class HashKeyGenerator implements KeyGeneratorInterface
      */
     private const DEFAULT_HASH_ALGO = 'md5';
 
-    private KeyGeneratorInterface $generator;
+    /**
+     * @var KeyGeneratorInterface
+     */
+    private $generator;
 
-    private string $algo;
+    /**
+     * @var string
+     */
+    private $algo;
 
     /**
      * @param KeyGeneratorInterface|null $base

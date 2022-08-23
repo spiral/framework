@@ -44,7 +44,9 @@ final class DoctrineAnnotationReader extends BaseReader
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
     {
-        $result = $this->wrapDoctrineExceptions(fn () => $this->reader->getClassAnnotations($class));
+        $result = $this->wrapDoctrineExceptions(function () use ($class) {
+            return $this->reader->getClassAnnotations($class);
+        });
 
         yield from $this->filter($name, $result);
 
@@ -59,7 +61,9 @@ final class DoctrineAnnotationReader extends BaseReader
     public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
     {
         if ($function instanceof \ReflectionMethod) {
-            $result = $this->wrapDoctrineExceptions(fn () => $this->reader->getMethodAnnotations($function));
+            $result = $this->wrapDoctrineExceptions(function () use ($function) {
+                return $this->reader->getMethodAnnotations($function);
+            });
 
             return $this->filter($name, $result);
         }
@@ -72,7 +76,9 @@ final class DoctrineAnnotationReader extends BaseReader
      */
     public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
     {
-        $result = $this->wrapDoctrineExceptions(fn () => $this->reader->getPropertyAnnotations($property));
+        $result = $this->wrapDoctrineExceptions(function () use ($property) {
+            return $this->reader->getPropertyAnnotations($property);
+        });
 
         return $this->filter($name, $result);
     }

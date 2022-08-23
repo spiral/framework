@@ -38,17 +38,20 @@ final class FilterProvider implements FilterProviderInterface
     public const ITERATE_SOURCE = 'iterate_source';
     public const ITERATE_ORIGIN = 'iterate_origin';
 
-    private array $cache;
+    /** @var array */
+    private $cache;
 
     /** @var ErrorMapper[] */
-    private array $errorMappers = [];
+    private $errorMappers = [];
 
     /** @var ValidatorInterface[] */
-    private array $validators = [];
+    private $validators = [];
 
-    private ValidationInterface $validation;
+    /** @var ValidationInterface */
+    private $validation;
 
-    private FactoryInterface $factory;
+    /** @var FactoryInterface */
+    private $factory;
 
     /**
      * @param FactoryInterface|null $factory

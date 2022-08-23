@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Compiler\Renderer;
 
-use Spiral\Stempler\Compiler\Result;
 use Spiral\Stempler\Compiler;
 use Spiral\Stempler\Compiler\RendererInterface;
 use Spiral\Stempler\Node\NodeInterface;
@@ -22,7 +21,7 @@ final class PHPRenderer implements RendererInterface
     /**
      * @inheritDoc
      */
-    public function render(Compiler $compiler, Result $result, NodeInterface $node): bool
+    public function render(Compiler $compiler, Compiler\Result $result, NodeInterface $node): bool
     {
         if ($node instanceof PHP) {
             $result->push($node->content, $node->getContext());

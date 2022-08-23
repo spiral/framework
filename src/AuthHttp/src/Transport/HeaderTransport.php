@@ -20,9 +20,11 @@ use Spiral\Auth\HttpTransportInterface;
  */
 final class HeaderTransport implements HttpTransportInterface
 {
-    private string $header;
+    /** @var string */
+    private $header;
 
-    private string $valueFormat;
+    /** @var string */
+    private $valueFormat;
 
     public function __construct(string $header = 'X-Auth-Token', string $valueFormat = '%s')
     {

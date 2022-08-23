@@ -19,10 +19,11 @@ use Spiral\Core\FactoryInterface;
  */
 final class GroupRegistry implements \IteratorAggregate
 {
-    private ContainerInterface $factory;
+    /** @var ContainerInterface */
+    private $factory;
 
     /** @var RouteGroup[] */
-    private array $groups = [];
+    private $groups = [];
 
     public function __construct(FactoryInterface $factory)
     {

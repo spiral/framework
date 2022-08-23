@@ -17,7 +17,8 @@ use Spiral\DataGrid\SpecificationInterface;
 
 abstract class AbstractSorter implements SorterInterface
 {
-    private array $expressions;
+    /** @var array */
+    private $expressions;
 
     public function __construct(string ...$expressions)
     {

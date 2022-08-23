@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
-use Spiral\Queue\Exception\NotSupportedDriverException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
@@ -12,9 +11,11 @@ use Spiral\Queue\Config\QueueConfig;
 final class QueueManager implements QueueConnectionProviderInterface
 {
     /** @var QueueInterface[] */
-    private array $pipelines = [];
-    private QueueConfig $config;
-    private FactoryInterface $factory;
+    private $pipelines = [];
+    /** @var QueueConfig */
+    private $config;
+    /** @var FactoryInterface */
+    private $factory;
 
     public function __construct(QueueConfig $config, FactoryInterface $factory)
     {
@@ -46,7 +47,7 @@ final class QueueManager implements QueueConnectionProviderInterface
         try {
             return $this->factory->make($config['driver'], $config);
         } catch (ContainerException $e) {
-            throw new NotSupportedDriverException(
+            throw new Exception\NotSupportedDriverException(
                 \sprintf(
                     'Driver `%s` is not supported. Connection `%s` cannot be created. Reason: `%s`',
                     $config['driver'],

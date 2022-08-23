@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
 
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Name;
 use PhpParser\Builder\Use_;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
@@ -25,10 +22,11 @@ use Spiral\Prototype\Utils;
  */
 final class AddUse extends NodeVisitorAbstract
 {
-    private ClassNode $node;
+    /** @var ClassNode */
+    private $node;
 
     /** @var Node\Stmt\Use_[] */
-    private array $nodes = [];
+    private $nodes = [];
 
     public function __construct(ClassNode $node)
     {
@@ -40,7 +38,7 @@ final class AddUse extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
-        if (!$node instanceof Namespace_) {
+        if (!$node instanceof Node\Stmt\Namespace_) {
             return null;
         }
 
@@ -82,10 +80,10 @@ final class AddUse extends NodeVisitorAbstract
         return $node;
     }
 
-    private function definePlacementID(Namespace_ $node): int
+    private function definePlacementID(Node\Stmt\Namespace_ $node): int
     {
         foreach ($node->stmts as $index => $child) {
-            if ($child instanceof Class_) {
+            if ($child instanceof Node\Stmt\Class_) {
                 return $index;
             }
         }
@@ -142,7 +140,7 @@ final class AddUse extends NodeVisitorAbstract
 
     private function buildUse(string $type, ?string $alias = null): Node\Stmt\Use_
     {
-        $b = new Use_(new Name($type), Node\Stmt\Use_::TYPE_NORMAL);
+        $b = new Use_(new Node\Name($type), Node\Stmt\Use_::TYPE_NORMAL);
         if (!empty($alias)) {
             $b->as($alias);
         }

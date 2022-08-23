@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
 
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Builder\Property;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
@@ -23,9 +21,12 @@ use Spiral\Prototype\Utils;
 
 final class AddProperty extends NodeVisitorAbstract
 {
-    private ClassNode $definition;
-    private bool $useTypedProperties;
-    private bool $noPhpDoc;
+    /** @var ClassNode */
+    private $definition;
+    /** @var bool */
+    private $useTypedProperties;
+    /** @var bool */
+    private $noPhpDoc;
 
     public function __construct(ClassNode $definition, bool $useTypedProperties = false, bool $noPhpDoc = false)
     {
@@ -39,7 +40,7 @@ final class AddProperty extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node)
     {
-        if (!$node instanceof Class_) {
+        if (!$node instanceof Node\Stmt\Class_) {
             return null;
         }
 
@@ -54,10 +55,10 @@ final class AddProperty extends NodeVisitorAbstract
         return $node;
     }
 
-    private function definePlacementID(Class_ $node): int
+    private function definePlacementID(Node\Stmt\Class_ $node): int
     {
         foreach ($node->stmts as $index => $child) {
-            if ($child instanceof ClassMethod || $child instanceof Node\Stmt\Property) {
+            if ($child instanceof Node\Stmt\ClassMethod || $child instanceof Node\Stmt\Property) {
                 return $index;
             }
         }

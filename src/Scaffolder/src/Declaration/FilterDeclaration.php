@@ -23,7 +23,8 @@ class FilterDeclaration extends ClassDeclaration implements DependedInterface
      */
     private const DEFAULT_SOURCE = 'data';
 
-    private array $mapping;
+    /** @var array */
+    private $mapping;
 
     public function __construct(string $name, string $comment = '', array $mapping = [])
     {
@@ -60,7 +61,7 @@ class FilterDeclaration extends ClassDeclaration implements DependedInterface
         $definition = $this->mapping[$type];
 
         //Source can depend on type
-        $source ??= $definition['source'];
+        $source = $source ?? $definition['source'];
         $schema[$field] = $source . ':' . ($origin ?: $field);
 
         if (!empty($definition['validates'])) {
