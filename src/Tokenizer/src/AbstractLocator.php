@@ -17,7 +17,8 @@ use Symfony\Component\Finder\Finder;
  */
 abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterface
 {
-    use LoggerTrait, TargetTrait;
+    use LoggerTrait;
+    use TargetTrait;
 
     public const INJECTOR = Tokenizer::class;
 

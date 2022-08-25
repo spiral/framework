@@ -32,7 +32,7 @@ final class CommandLocatorListener implements TokenizationListenerInterface
 
     public function listen(\ReflectionClass $class): void
     {
-        if (! $this->isTargeted($class, $this->target)) {
+        if (!$this->isTargeted($class, $this->target)) {
             return;
         }
 

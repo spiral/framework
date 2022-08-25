@@ -121,7 +121,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
                 if (isset($shortcut['with'])) {
                     // check dependencies
                     foreach ($shortcut['with'] as $dep) {
-                        if (! \class_exists($dep, true) && ! \interface_exists($dep, true)) {
+                        if (!\class_exists($dep, true) && !\interface_exists($dep, true)) {
                             continue 2;
                         }
                     }
