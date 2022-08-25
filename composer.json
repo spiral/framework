@@ -18,6 +18,7 @@
         "php": ">=8.1",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "ext-tokenizer": "*",
         "cocur/slugify": "^3.2",
         "codedungeon/php-cli-colors": "^1.11",
         "defuse/php-encryption": "^2.2",
