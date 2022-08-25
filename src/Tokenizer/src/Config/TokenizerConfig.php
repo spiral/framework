@@ -15,10 +15,16 @@ final class TokenizerConfig extends InjectableConfig
 
     /** @var array<non-empty-string, array<int, non-empty-string>> */
     protected array $config = [
+        'debug' => false,
         'directories' => [],
         'exclude' => [],
         'scopes' => [],
     ];
+
+    public function isDebug(): bool
+    {
+        return (bool) ($this->config['debug'] ?? false);
+    }
 
     public function getDirectories(): array
     {

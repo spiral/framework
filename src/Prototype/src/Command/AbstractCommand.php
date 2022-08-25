@@ -8,7 +8,7 @@ use Spiral\Console\Command;
 use Spiral\Prototype\Dependency;
 use Spiral\Prototype\NodeExtractor;
 use Spiral\Prototype\PropertyExtractor;
-use Spiral\Prototype\PrototypeLocator;
+use Spiral\Prototype\PrototypeLocatorListener;
 use Spiral\Prototype\PrototypeRegistry;
 use Psr\Container\ContainerExceptionInterface;
 
@@ -17,7 +17,7 @@ abstract class AbstractCommand extends Command
     private array $cache = [];
 
     public function __construct(
-        protected PrototypeLocator $locator,
+        protected PrototypeLocatorListener $locator,
         protected NodeExtractor $extractor,
         protected PrototypeRegistry $registry
     ) {

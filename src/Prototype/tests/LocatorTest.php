@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Prototype;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Prototype\PrototypeLocator;
+use Spiral\Prototype\PrototypeLocatorListener;
 use Spiral\Tests\Prototype\Fixtures\HydratedClass;
 use Spiral\Tests\Prototype\Fixtures\TestClass;
 use Spiral\Tokenizer\ClassesInterface;
@@ -28,7 +28,7 @@ class LocatorTest extends TestCase
     public function testLocate(): void
     {
         $classes = $this->makeClasses();
-        $l = new PrototypeLocator($classes);
+        $l = new PrototypeLocatorListener($classes);
 
         $this->assertArrayHasKey(TestClass::class, $l->getTargetClasses());
     }
@@ -36,7 +36,7 @@ class LocatorTest extends TestCase
     public function testLocateNot(): void
     {
         $classes = $this->makeClasses();
-        $l = new PrototypeLocator($classes);
+        $l = new PrototypeLocatorListener($classes);
 
         $this->assertArrayNotHasKey(HydratedClass::class, $l->getTargetClasses());
     }

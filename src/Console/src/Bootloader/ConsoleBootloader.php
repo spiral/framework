@@ -11,17 +11,16 @@ use Spiral\Command\PublishCommand;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Config\Patch\Prepend;
-use Spiral\Console\CommandLocator;
+use Spiral\Console\CommandLocatorListener;
 use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Console;
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Console\LocatorInterface;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
-use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
+use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
 /**
  * Bootloads console and provides ability to register custom bootload commands.
@@ -29,12 +28,11 @@ use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 final class ConsoleBootloader extends Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
-        TokenizerBootloader::class,
+        TokenizerListenerBootloader::class,
     ];
 
     protected const SINGLETONS = [
         Console::class => Console::class,
-        LocatorInterface::class => CommandLocator::class,
     ];
 
     public function __construct(
@@ -42,12 +40,17 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function init(AbstractKernel $kernel, FactoryInterface $factory): void
-    {
+    public function init(
+        AbstractKernel $kernel,
+        TokenizerListenerBootloader $tokenizer,
+        CommandLocatorListener $commandLocatorListener
+    ): void {
         // Lowest priority
-        $kernel->booted(static function (AbstractKernel $kernel) use ($factory): void {
+        $kernel->bootstrapped(static function (AbstractKernel $kernel, FactoryInterface $factory): void {
             $kernel->addDispatcher($factory->make(ConsoleDispatcher::class));
         });
+
+        $tokenizer->addListener($commandLocatorListener);
 
         $this->config->setDefaults(
             ConsoleConfig::CONFIG,

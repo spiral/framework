@@ -49,24 +49,4 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
 
         return $classes;
     }
-
-    /**
-     * Check if given class targeted by locator.
-     *
-     * @param \ReflectionClass|null $target
-     */
-    protected function isTargeted(\ReflectionClass $class, \ReflectionClass $target = null): bool
-    {
-        if (empty($target)) {
-            return true;
-        }
-
-        if (!$target->isTrait()) {
-            //Target is interface or class
-            return $class->isSubclassOf($target) || $class->getName() === $target->getName();
-        }
-
-        //Checking using traits
-        return \in_array($target->getName(), $this->fetchTraits($class->getName()));
-    }
 }

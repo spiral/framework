@@ -43,7 +43,7 @@ trait LazyTrait
             function () use ($class): SymfonyCommand {
                 $command = $this->container->get($class);
                 $command->setContainer($this->container);
-                $command->setInterceptors($this->config->getInterceptors());
+                $command->setInterceptors($this->interceptors);
 
                 return $command;
             }

@@ -17,11 +17,11 @@
     "require": {
         "php": ">=8.1",
         "spiral/core": "^2.14",
+        "spiral/tokenizer": "^2.14",
         "symfony/console": "^5.3.7|^6.0"
     },
     "require-dev": {
         "spiral/boot": "^2.14",
-        "spiral/tokenizer": "^2.14",
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5"
     },

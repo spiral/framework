@@ -14,7 +14,9 @@ use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Core\Container;
 use Spiral\Prototype\Annotation\Prototyped;
 use Spiral\Prototype\Command;
+use Spiral\Prototype\PrototypeLocatorListener;
 use Spiral\Prototype\PrototypeRegistry;
+use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\ClassLocator;
 
 /**
@@ -24,7 +26,12 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
 {
     protected const DEPENDENCIES = [
         Bootloader\CoreBootloader::class,
+        TokenizerListenerBootloader::class,
         AttributesBootloader::class,
+    ];
+
+    protected const SINGLETONS = [
+        PrototypeRegistry::class => PrototypeRegistry::class,
     ];
 
     // Default spiral specific shortcuts, automatically checked on existence.
@@ -71,7 +78,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     ];
 
     public function __construct(
-        private readonly MemoryInterface $memory,
         private readonly PrototypeRegistry $registry
     ) {
     }
@@ -93,50 +99,19 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         );
     }
 
-    public function boot(ContainerInterface $container): void
-    {
+    public function boot(
+        ContainerInterface $container,
+        TokenizerListenerBootloader $tokenizer,
+        PrototypeLocatorListener $listener
+    ): void {
         $this->initDefaults($container);
-        $this->initAnnotations($container, false);
+
+        $tokenizer->addListener($listener);
     }
 
     public function bindProperty(string $property, string $type): void
     {
         $this->registry->bindProperty($property, $type);
-    }
-
-    public function defineSingletons(): array
-    {
-        return [PrototypeRegistry::class => $this->registry];
-    }
-
-    public function initAnnotations(ContainerInterface $container, bool $reset = false): void
-    {
-        $prototyped = $this->memory->loadData('prototyped');
-        if (!$reset && $prototyped !== null) {
-            foreach ($prototyped as $property => $class) {
-                $this->bindProperty($property, $class);
-            }
-
-            return;
-        }
-
-        /** @var ClassLocator $locator */
-        $locator = $container->get(ClassLocator::class);
-        $reader = $container->get(ReaderInterface::class);
-
-        $prototyped = [];
-        foreach ($locator->getClasses() as $class) {
-            $meta = $reader->firstClassMetadata($class, Prototyped::class);
-
-            if ($meta === null) {
-                continue;
-            }
-
-            $prototyped[$meta->property] = $class->getName();
-            $this->bindProperty($meta->property, $class->getName());
-        }
-
-        $this->memory->saveData('prototyped', $prototyped);
     }
 
     private function initDefaults(ContainerInterface $container): void
@@ -146,7 +121,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
                 if (isset($shortcut['with'])) {
                     // check dependencies
                     foreach ($shortcut['with'] as $dep) {
-                        if (!\class_exists($dep, true) && !\interface_exists($dep, true)) {
+                        if (! \class_exists($dep, true) && ! \interface_exists($dep, true)) {
                             continue 2;
                         }
                     }

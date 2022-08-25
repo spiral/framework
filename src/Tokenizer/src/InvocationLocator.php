@@ -58,7 +58,11 @@ final class InvocationLocator extends AbstractLocator implements InvocationsInte
 
         try {
             $reflection = $this->classReflection($invocation->getClass());
-        } catch (LocatorException) {
+        } catch (LocatorException $e) {
+            if ($this->debug) {
+                throw $e;
+            }
+
             return false;
         }
 
