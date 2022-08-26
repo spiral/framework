@@ -50,7 +50,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
     /**
      * Register new http middleware.
      *
-     * @psalm-param MiddlewareInterface|Autowire|class-string<MiddlewareInterface>
+     * @psalm-param MiddlewareInterface|Autowire|class-string<MiddlewareInterface> Middleware definition
      */
     public function addMiddleware(string|Autowire|MiddlewareInterface $middleware): void
     {

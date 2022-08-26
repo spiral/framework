@@ -21,6 +21,9 @@ use Spiral\Filters\Model\Interceptor\PopulateDataFromEntityInterceptor;
 use Spiral\Filters\Model\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
 
+/**
+ * @implements Container\InjectorInterface<FilterInterface>
+ */
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {
     protected const SINGLETONS = [
