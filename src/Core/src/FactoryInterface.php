@@ -18,10 +18,11 @@ interface FactoryInterface
      *
      * @template T
      *
-     * @param class-string<T> $alias
+     * @param class-string<T>|string $alias
      * @param array $parameters Parameters to construct new class.
      *
      * @return T
+     * @psalm-return ($alias is class-string ? T : mixed)
      *
      * @throws AutowireException
      */

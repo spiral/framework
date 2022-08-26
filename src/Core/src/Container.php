@@ -101,14 +101,7 @@ final class Container implements
     }
 
     /**
-     * @template T
-     *
-     * @param class-string<T> $alias
      * @param string|null $context Related to parameter caused injection if any.
-     *
-     * @return T
-     *
-     * @throws \Throwable
      */
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
