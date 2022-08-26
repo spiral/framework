@@ -133,7 +133,7 @@ final class AcceptHeaderItem implements \Stringable
             }
 
             $name = \trim($name);
-            $value = \trim($value);
+            $value = \trim((string)$value);
 
             if ($name === '' || $value === '') {
                 continue;
