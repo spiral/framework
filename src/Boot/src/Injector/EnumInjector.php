@@ -12,8 +12,6 @@ use UnitEnum;
 
 /**
  * @internal
- *
- * @implements InjectorInterface<UnitEnum>
  */
 final class EnumInjector implements InjectorInterface
 {
@@ -23,6 +21,9 @@ final class EnumInjector implements InjectorInterface
     ) {
     }
 
+    /**
+     * @psalm-if-this-is InjectorInterface<UnitEnum>
+     */
     public function createInjection(\ReflectionClass $class, string $context = null): UnitEnum
     {
         $attribute = $this->reader->firstClassMetadata($class, ProvideFrom::class);
@@ -53,7 +54,7 @@ final class EnumInjector implements InjectorInterface
     }
 
     /**
-     * @param \ReflectionClass<UnitEnum> $class
+     * @psalm-assert \ReflectionClass<UnitEnum> $class
      *
      * @throws InjectionException
      */

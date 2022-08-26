@@ -9,7 +9,7 @@ namespace Spiral\Core\Internal;
  */
 trait DestructorTrait
 {
-    public function destruct()
+    public function destruct(): void
     {
         foreach ($this as $var => $value) {
             unset($this->$var);

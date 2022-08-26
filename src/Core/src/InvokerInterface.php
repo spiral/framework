@@ -8,6 +8,8 @@ use Spiral\Core\Exception\Container\NotCallableException;
 
 /**
  * Invoke a callable.
+ *
+ * @psalm-type TInvokable = callable|non-empty-string|array{class-string, non-empty-string}
  */
 interface InvokerInterface
 {
