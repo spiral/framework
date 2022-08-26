@@ -16,7 +16,7 @@ final class ResolvingState
     public readonly bool $modeNamed;
 
     /**
-     * @psalm-var list<mixed>
+     * @psalm-var array<array-key, mixed>
      */
     private array $resolvedValues = [];
 
