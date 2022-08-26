@@ -8,9 +8,12 @@ use Spiral\Attributes\AttributeReader;
 use Spiral\Core\Container;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Exception\Container\InjectionException;
+use UnitEnum;
 
 /**
  * @internal
+ *
+ * @implements InjectorInterface<UnitEnum>
  */
 final class EnumInjector implements InjectorInterface
 {
@@ -20,7 +23,7 @@ final class EnumInjector implements InjectorInterface
     ) {
     }
 
-    public function createInjection(\ReflectionClass $class, string $context = null): object
+    public function createInjection(\ReflectionClass $class, string $context = null): UnitEnum
     {
         $attribute = $this->reader->firstClassMetadata($class, ProvideFrom::class);
         if ($attribute === null) {
@@ -34,10 +37,15 @@ final class EnumInjector implements InjectorInterface
         }
 
         $this->validateClass($class, $attribute);
+        $closure = $class->getMethod($attribute->method)->getClosure();
+        \assert($closure !== null);
 
-        $object = $this->container->invoke(
-            $class->getMethod($attribute->method)->getClosure()
-        );
+        $object = $this->container->invoke($closure);
+        \assert($object instanceof UnitEnum, \sprintf(
+            'The method `%s::%s` must provide the same enum instance.',
+            $class->getName(),
+            $attribute->method,
+        ));
 
         $this->container->bind($class->getName(), $object);
 
@@ -45,6 +53,8 @@ final class EnumInjector implements InjectorInterface
     }
 
     /**
+     * @param \ReflectionClass<UnitEnum> $class
+     *
      * @throws InjectionException
      */
     private function validateClass(\ReflectionClass $class, ProvideFrom $attribute): void

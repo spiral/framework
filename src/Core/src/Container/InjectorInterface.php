@@ -11,7 +11,7 @@ use Spiral\Core\Exception\Container\ContainerException;
  * execute such method if INJECTOR constant found in requested class. Potentially changed to
  * lazy binding in spiral container (deprecated).
  *
- * @template TClass
+ * @template TClass of object
  */
 interface InjectorInterface
 {
