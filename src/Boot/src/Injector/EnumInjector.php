@@ -11,6 +11,8 @@ use Spiral\Core\Exception\Container\InjectionException;
 use UnitEnum;
 
 /**
+ * @implements InjectorInterface<UnitEnum>
+ *
  * @internal
  */
 final class EnumInjector implements InjectorInterface
@@ -21,9 +23,6 @@ final class EnumInjector implements InjectorInterface
     ) {
     }
 
-    /**
-     * @psalm-if-this-is InjectorInterface<UnitEnum>
-     */
     public function createInjection(\ReflectionClass $class, string $context = null): UnitEnum
     {
         $attribute = $this->reader->firstClassMetadata($class, ProvideFrom::class);
@@ -37,6 +36,7 @@ final class EnumInjector implements InjectorInterface
             );
         }
 
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         $this->validateClass($class, $attribute);
         $closure = $class->getMethod($attribute->method)->getClosure();
         \assert($closure !== null);

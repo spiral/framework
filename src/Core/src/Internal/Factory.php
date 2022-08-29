@@ -96,6 +96,8 @@ final class Factory implements FactoryInterface
     /**
      * Automatically create class.
      *
+     * @param class-string $class
+     *
      * @throws AutowireException
      * @throws \Throwable
      */
