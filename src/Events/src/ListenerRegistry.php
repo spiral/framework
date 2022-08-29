@@ -15,7 +15,6 @@ final class ListenerRegistry implements ListenerRegistryInterface, ListenerProvi
     {
         $name = $event::class;
         foreach ($this->listeners as $eventName => $eventListeners) {
-
         }
 
         return \array_filter($this->sorted);

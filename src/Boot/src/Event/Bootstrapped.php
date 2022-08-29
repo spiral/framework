@@ -6,5 +6,4 @@ namespace Spiral\Boot\Event;
 
 final class Bootstrapped
 {
-
 }

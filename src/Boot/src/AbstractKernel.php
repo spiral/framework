@@ -41,6 +41,8 @@ abstract class AbstractKernel implements KernelInterface
     /** @var DispatcherInterface[] */
     protected array $dispatchers = [];
 
+    protected readonly ?EventDispatcherInterface $dispatcher;
+
     /** @var array<Closure> */
     private array $runningCallbacks = [];
 
@@ -52,8 +54,6 @@ abstract class AbstractKernel implements KernelInterface
 
     /** @var array<Closure> */
     private array $bootstrappedCallbacks = [];
-
-    protected readonly ?EventDispatcherInterface $dispatcher;
 
     /**
      * @throws \Throwable
@@ -252,12 +252,10 @@ abstract class AbstractKernel implements KernelInterface
                 return $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
                     function () use ($dispatcher): mixed {
-
                         $this->dispatcher?->dispatch(new DispatcherFound($dispatcher));
 
                         return $dispatcher->serve();
                     }
-
                 );
             }
         }
