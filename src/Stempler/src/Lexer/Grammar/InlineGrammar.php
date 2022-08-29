@@ -33,7 +33,7 @@ final class InlineGrammar implements GrammarInterface
     /** @var Byte[] */
     private array $name = [];
 
-    /** @var Byte[]|null */
+    /** @var array<array-key, Byte|Token>|null */
     private ?array $default = null;
 
     public function parse(Buffer $src): \Generator

@@ -11,13 +11,16 @@ use Spiral\Router\Exception\RouteException;
 use Spiral\Router\PipelineFactory;
 use Spiral\Router\RouteInterface;
 
+/**
+ * @psalm-type MiddlewareType = MiddlewareInterface|class-string<MiddlewareInterface>|non-empty-string
+ */
 trait PipelineTrait
 {
     use ContainerTrait;
 
     protected ?Pipeline $pipeline = null;
 
-    /** @psalm-var array<array-key, class-string<MiddlewareInterface>>|MiddlewareInterface[] */
+    /** @psalm-var array<array-key, MiddlewareType> */
     protected array $middleware = [];
 
     /**
@@ -29,7 +32,7 @@ trait PipelineTrait
      * $route->withMiddleware(ProxyMiddleware::class, OtherMiddleware::class);
      * $route->withMiddleware([ProxyMiddleware::class, OtherMiddleware::class]);
      *
-     * @param MiddlewareInterface|string|array ...$middleware
+     * @param MiddlewareType|array{0:MiddlewareType[]} ...$middleware
      * @return RouteInterface|$this
      *
      * @throws RouteException
@@ -43,6 +46,7 @@ trait PipelineTrait
             $middleware = $middleware[0];
         }
 
+        /** @var MiddlewareType[] $middleware */
         foreach ($middleware as $item) {
             $route->middleware[] = $item;
         }

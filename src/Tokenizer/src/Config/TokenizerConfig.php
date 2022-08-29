@@ -8,12 +8,23 @@ use Spiral\Core\InjectableConfig;
 
 /**
  * Tokenizer component configuration.
+ *
+ * @psalm-type Scope = array{
+ *     "directories": array<array-key, non-empty-string>,
+ *     "exclude": array<array-key, non-empty-string>
+ * }
  */
 final class TokenizerConfig extends InjectableConfig
 {
     public const CONFIG = 'tokenizer';
 
-    /** @var array<non-empty-string, array<int, non-empty-string>> */
+    /**
+     * @var array{
+     *     "directories": array<array-key, non-empty-string>,
+     *     "exclude": array<array-key, non-empty-string>,
+     *     "scopes": array<non-empty-string, Scope>
+     * }
+     */
     protected array $config = [
         'directories' => [],
         'exclude' => [],
@@ -31,7 +42,7 @@ final class TokenizerConfig extends InjectableConfig
     }
 
     /**
-     * @return array{directories: array<string>, exclude: array<string>}
+     * @return Scope
      */
     public function getScope(string $scope): array
     {

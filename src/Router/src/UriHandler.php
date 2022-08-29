@@ -163,7 +163,7 @@ final class UriHandler
 
         $result = [];
         foreach ($parameters as $key => $parameter) {
-            if (\is_numeric($key) && isset($allowed[$key])) {
+            if (\is_int($key) && isset($allowed[$key])) {
                 // this segment fetched keys from given parameters either by name or by position
                 $key = $allowed[$key];
             } elseif (!\array_key_exists($key, $this->options) && \is_array($parameters)) {
@@ -267,8 +267,10 @@ final class UriHandler
     {
         $replaces = [];
         foreach ($values as $key => $value) {
-            $value = (\is_array($value) || $value instanceof \Closure) ? '' : $value;
-            $replaces[\sprintf('<%s>', $key)] = \is_object($value) ? (string)$value : $value;
+            $replaces[\sprintf('<%s>', $key)] = match (true) {
+                $value instanceof \Stringable || \is_scalar($value) => (string) $value,
+                default => '',
+            };
         }
 
         return \strtr($string, $replaces + self::URI_FIXERS);

@@ -61,7 +61,10 @@ final class InjectAttributes implements VisitorInterface
         return null;
     }
 
-    private function wrapValue(mixed $value): array|Mixin|Nil
+    /**
+     * @return Nil|Verbatim|Mixin|array|scalar
+     */
+    private function wrapValue(mixed $value): Nil|Verbatim|Mixin|array
     {
         return match (true) {
             $value === [] || $value === null || $value instanceof Nil => new Nil(),
