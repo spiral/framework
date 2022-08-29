@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Router;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -40,7 +41,8 @@ final class Router implements RouterInterface
     public function __construct(
         string $basePath,
         private readonly UriHandler $uriHandler,
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
+        private readonly ?EventDispatcherInterface $eventDispatcher = null
     ) {
         $this->basePath = '/' . \ltrim($basePath, '/');
     }
@@ -58,8 +60,11 @@ final class Router implements RouterInterface
         }
 
         if ($route === null) {
+            $this->eventDispatcher?->dispatch(new RouteNotFound($request));
             throw new RouteNotFoundException($request->getUri());
         }
+
+        $this->eventDispatcher?->dispatch(new RouteFound($route));
 
         return $route->handle(
             $request
