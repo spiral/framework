@@ -16,6 +16,7 @@
     ],
     "require": {
         "php": ">=8.1",
+        "ext-tokenizer": "*",
         "spiral/core": "^2.14",
         "spiral/logger": "^2.14",
         "symfony/finder": "^5.3.7|^6.0"
