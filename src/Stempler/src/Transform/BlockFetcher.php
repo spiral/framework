@@ -23,9 +23,6 @@ final class BlockFetcher
 {
     /**
      * Extract "value" blocks from the import caller. Block values are always array of nodes.
-     *
-     * @param Tag $caller
-     * @return BlockClaims
      */
     public function fetchBlocks(Tag $caller): BlockClaims
     {

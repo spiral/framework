@@ -22,18 +22,13 @@ final class Compositor
     /** @var RulesInterface $provider */
     private $provider;
 
-    /**
-     * @param RulesInterface $provider
-     */
     public function __construct(RulesInterface $provider)
     {
         $this->provider = $provider;
     }
 
     /**
-     * @param string $field
-     * @param array  $options
-     * @return ConditionInterface[]
+     * @return iterable<ConditionInterface>
      */
     public function makeConditions(string $field, array $options): iterable
     {

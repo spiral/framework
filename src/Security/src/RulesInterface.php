@@ -40,24 +40,18 @@ interface RulesInterface
     /**
      * Remove created rule.
      *
-     * @param string $name
      * @throws RuleException
      */
     public function remove(string $name);
 
     /**
      * Check if requested rule exists.
-     *
-     * @param string $name
-     * @return bool
      */
     public function has(string $name): bool;
 
     /**
      * Get rule object based on it's name.
      *
-     * @param string $name
-     * @return RuleInterface
      *
      * @throws RuleException
      */

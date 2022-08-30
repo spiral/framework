@@ -26,9 +26,6 @@ final class FilesBag extends InputBag
 {
     /**
      * Locale local filename (virtual filename) associated with UploadedFile resource.
-     *
-     * @param string $name
-     * @return null|string
      */
     public function getFilename(string $name): ?string
     {

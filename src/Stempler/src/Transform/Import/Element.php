@@ -30,7 +30,6 @@ final class Element implements ImportInterface
     private $alias;
 
     /**
-     * @param string       $path
      * @param string|null  $alias
      * @param Context|null $context
      */
@@ -46,17 +45,11 @@ final class Element implements ImportInterface
         $this->context = $context;
     }
 
-    /**
-     * @return string
-     */
     public function getPath(): string
     {
         return $this->path;
     }
 
-    /**
-     * @return string
-     */
     public function getAlias(): string
     {
         return $this->alias;

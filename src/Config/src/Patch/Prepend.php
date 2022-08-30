@@ -30,8 +30,6 @@ final class Prepend implements PatchInterface
     private $value;
 
     /**
-     * @param string      $position
-     * @param null|string $key
      * @param mixed       $value
      */
     public function __construct(string $position, ?string $key, $value)

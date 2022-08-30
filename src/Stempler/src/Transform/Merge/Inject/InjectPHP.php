@@ -36,16 +36,9 @@ final class InjectPHP implements VisitorInterface
     /** @var BlockClaims */
     private $blocks;
 
-    /** @var BlockFetcher */
-    private $fetcher;
-
-    /**
-     * @param BlockClaims $blocks
-     */
     public function __construct(BlockClaims $blocks)
     {
         $this->blocks = $blocks;
-        $this->fetcher = new BlockFetcher();
     }
 
     /**
@@ -107,7 +100,6 @@ final class InjectPHP implements VisitorInterface
 
     /**
      * @param array|NodeInterface $node
-     * @return bool
      */
     private function isReference($node): bool
     {
@@ -142,7 +134,6 @@ final class InjectPHP implements VisitorInterface
 
     /**
      * @param array|NodeInterface $node
-     * @return string
      */
     private function trimPHP($node): string
     {
@@ -183,10 +174,6 @@ final class InjectPHP implements VisitorInterface
         return 'null';
     }
 
-    /**
-     * @param Raw $node
-     * @return string
-     */
     private function exportValue(Raw $node): string
     {
         $value = $node->content;

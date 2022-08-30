@@ -13,14 +13,7 @@ namespace Spiral\Attributes;
 
 interface ReaderAwareInterface
 {
-    /**
-     * @param ReaderInterface $reader
-     * @return $this
-     */
     public function withReader(ReaderInterface $reader): self;
 
-    /**
-     * @return ReaderInterface
-     */
     public function getReader(): ReaderInterface;
 }

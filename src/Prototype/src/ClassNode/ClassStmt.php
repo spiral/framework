@@ -31,9 +31,6 @@ final class ClassStmt
     {
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         if ($this->alias) {
@@ -43,11 +40,6 @@ final class ClassStmt
         return $this->name;
     }
 
-    /**
-     * @param string      $name
-     * @param string|null $alias
-     * @return ClassStmt
-     */
     public static function create(string $name, ?string $alias): ClassStmt
     {
         $stmt = new self();

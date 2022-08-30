@@ -32,7 +32,6 @@ final class Aggregate implements NodeInterface
 
     /**
      * @param Context|null $context
-     * @param string       $pattern
      */
     public function __construct(Context $context = null, string $pattern = '*')
     {
@@ -43,9 +42,6 @@ final class Aggregate implements NodeInterface
     /**
      * Checks if aggregate can accept given node by it's name and return final name (if prefix presented),
      * or return null.
-     *
-     * @param string $name
-     * @return string|null
      */
     public function accepts(string $name): ?string
     {

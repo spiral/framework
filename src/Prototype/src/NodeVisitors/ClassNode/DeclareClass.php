@@ -21,7 +21,6 @@ final class DeclareClass extends NodeVisitorAbstract
     private $class;
 
     /**
-     * @param Node $node
      * @return int|null|Node|Node[]
      */
     public function enterNode(Node $node)
@@ -39,17 +38,11 @@ final class DeclareClass extends NodeVisitorAbstract
         return null;
     }
 
-    /**
-     * @return string|null
-     */
     public function getNamespace(): ?string
     {
         return $this->namespace;
     }
 
-    /**
-     * @return string|null
-     */
     public function getClass(): ?string
     {
         return $this->class;

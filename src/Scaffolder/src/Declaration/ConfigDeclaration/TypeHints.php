@@ -31,7 +31,6 @@ class TypeHints
     ];
 
     /**
-     * @param string $type
      * @return string
      */
     public function getHint(string $type): ?string

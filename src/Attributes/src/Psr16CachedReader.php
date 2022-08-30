@@ -24,8 +24,6 @@ final class Psr16CachedReader extends CachedReader
     private $cache;
 
     /**
-     * @param ReaderInterface $reader
-     * @param CacheInterface $cache
      * @param KeyGeneratorInterface|null $generator
      */
     public function __construct(ReaderInterface $reader, CacheInterface $cache, KeyGeneratorInterface $generator = null)

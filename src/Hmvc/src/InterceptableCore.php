@@ -22,18 +22,12 @@ final class InterceptableCore implements CoreInterface
     /** @var CoreInterface */
     private $core;
 
-    /**
-     * @param CoreInterface $core
-     */
     public function __construct(CoreInterface $core)
     {
         $this->pipeline = new InterceptorPipeline();
         $this->core = $core;
     }
 
-    /**
-     * @param CoreInterceptorInterface $interceptor
-     */
     public function addInterceptor(CoreInterceptorInterface $interceptor): void
     {
         $this->pipeline->addInterceptor($interceptor);

@@ -18,20 +18,11 @@ interface StyleInterface
 {
     /**
      * Apply render specific colorization to the line.
-     *
-     * @param array $token
-     * @param array $previous
-     * @return string
      */
     public function token(array $token, array $previous): string;
 
     /**
      * Render specific code line.
-     *
-     * @param int    $number
-     * @param string $code
-     * @param bool   $target
-     * @return string
      */
     public function line(int $number, string $code, bool $target = false): string;
 }

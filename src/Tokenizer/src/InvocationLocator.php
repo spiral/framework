@@ -60,12 +60,6 @@ final class InvocationLocator extends AbstractLocator implements InvocationsInte
         }
     }
 
-    /**
-     * @param ReflectionInvocation        $invocation
-     * @param \ReflectionFunctionAbstract $function
-     *
-     * @return bool
-     */
     protected function isTargeted(ReflectionInvocation $invocation, \ReflectionFunctionAbstract $function): bool
     {
         if ($function instanceof \ReflectionFunction) {

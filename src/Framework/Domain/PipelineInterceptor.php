@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Domain;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Psr\Container\ContainerInterface;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptableCore;
@@ -17,17 +17,17 @@ class PipelineInterceptor implements CoreInterceptorInterface
     /** @var array */
     private $cache = [];
 
-    /** @var AnnotationReader */
+    /** @var ReaderInterface */
     private $reader;
 
     /** @var ContainerInterface */
     private $container;
 
     /**
-     * @param AnnotationReader   $reader
+     * @param ReaderInterface $reader
      * @param ContainerInterface $container
      */
-    public function __construct(AnnotationReader $reader, ContainerInterface $container)
+    public function __construct(ReaderInterface $reader, ContainerInterface $container)
     {
         $this->reader = $reader;
         $this->container = $container;
@@ -77,7 +77,7 @@ class PipelineInterceptor implements CoreInterceptorInterface
         }
 
         /** @var Pipeline $annotation */
-        $annotation = $this->reader->getMethodAnnotation($method, Pipeline::class);
+        $annotation = $this->reader->firstFunctionMetadata($method, Pipeline::class);
         return $annotation ?? new Pipeline();
     }
 

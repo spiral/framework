@@ -107,18 +107,11 @@ final class InputManager implements SingletonInterface
         'application/json',
     ];
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
-    /**
-     * @param string $name
-     * @return InputBag
-     */
     public function __get(string $name): InputBag
     {
         return $this->bag($name);
@@ -134,10 +127,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Creates new input slice associated with request sub-tree.
-     *
-     * @param string $prefix
-     * @param bool   $add
-     * @return InputManager
      */
     public function withPrefix(string $prefix, bool $add = true): self
     {
@@ -155,8 +144,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Get page path (including leading slash) associated with active request.
-     *
-     * @return string
      */
     public function path(): string
     {
@@ -175,8 +162,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Get UriInterface associated with active request.
-     *
-     * @return UriInterface
      */
     public function uri(): UriInterface
     {
@@ -186,7 +171,6 @@ final class InputManager implements SingletonInterface
     /**
      * Get active instance of ServerRequestInterface and reset all bags if instance changed.
      *
-     * @return Request
      *
      * @throws ScopeException
      */
@@ -213,8 +197,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Http method. Always uppercase.
-     *
-     * @return string
      */
     public function method(): string
     {
@@ -223,8 +205,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Check if request was made over http protocol.
-     *
-     * @return bool
      */
     public function isSecure(): bool
     {
@@ -236,8 +216,6 @@ final class InputManager implements SingletonInterface
      * Check if request was via AJAX.
      * Legacy-support alias for isXmlHttpRequest()
      * @see isXmlHttpRequest()
-     *
-     * @return bool
      */
     public function isAjax(): bool
     {
@@ -246,8 +224,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Check if request was made using XmlHttpRequest.
-     *
-     * @return bool
      */
     public function isXmlHttpRequest(): bool
     {
@@ -258,9 +234,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Client requesting json response by Accept header.
-     *
-     * @param bool $softMatch
-     * @return bool
      */
     public function isJsonExpected(bool $softMatch = false): bool
     {
@@ -285,9 +258,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Add new content type that will be considered as JSON.
-     *
-     * @param string $type
-     * @return $this
      */
     public function withJsonType(string $type): self
     {
@@ -300,8 +270,6 @@ final class InputManager implements SingletonInterface
     /**
      * Get remove addr resolved from $_SERVER['REMOTE_ADDR']. Will return null if nothing if key not
      * exists. Consider using psr-15 middlewares to customize configuration.
-     *
-     * @return string|null
      */
     public function remoteAddress(): ?string
     {
@@ -312,9 +280,6 @@ final class InputManager implements SingletonInterface
 
     /**
      * Get bag instance or create new one on demand.
-     *
-     * @param string $name
-     * @return InputBag
      */
     public function bag(string $name): InputBag
     {
@@ -340,7 +305,6 @@ final class InputManager implements SingletonInterface
     }
 
     /**
-     * @param string      $name
      * @param mixed       $default
      * @param bool|string $implode Implode header lines, false to return header as array.
      * @return mixed
@@ -351,10 +315,8 @@ final class InputManager implements SingletonInterface
     }
 
     /**
-     * @param string $name
      * @param mixed  $default
      * @return mixed
-     *
      * @see data()
      */
     public function post(string $name, $default = null)
@@ -363,9 +325,7 @@ final class InputManager implements SingletonInterface
     }
 
     /**
-     * @param string $name
      * @param mixed  $default
-     *
      * @return mixed
      */
     public function data(string $name, $default = null)
@@ -376,7 +336,6 @@ final class InputManager implements SingletonInterface
     /**
      * Reads data from data array, if not found query array will be used as fallback.
      *
-     * @param string $name
      * @param mixed  $default
      * @return mixed
      */
@@ -386,9 +345,7 @@ final class InputManager implements SingletonInterface
     }
 
     /**
-     * @param string $name
      * @param mixed  $default
-
      * @return mixed
      */
     public function query(string $name, $default = null)
@@ -397,9 +354,7 @@ final class InputManager implements SingletonInterface
     }
 
     /**
-     * @param string $name
      * @param mixed  $default
-
      * @return mixed
      */
     public function cookie(string $name, $default = null)
@@ -408,10 +363,8 @@ final class InputManager implements SingletonInterface
     }
 
     /**
-     * @param string $name
      * @param mixed  $default
      *
-     * @return UploadedFileInterface|null
      */
     public function file(string $name, $default = null): ?UploadedFileInterface
     {
@@ -419,9 +372,7 @@ final class InputManager implements SingletonInterface
     }
 
     /**
-     * @param string $name
      * @param mixed  $default
-     *
      * @return mixed
      */
     public function server(string $name, $default = null)
@@ -430,9 +381,7 @@ final class InputManager implements SingletonInterface
     }
 
     /**
-     * @param string $name
      * @param mixed  $default
-     *
      * @return mixed
      */
     public function attribute(string $name, $default = null)

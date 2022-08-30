@@ -38,7 +38,7 @@ final class TranslatorConfig extends InjectableConfig
     ];
 
     /** @var Matcher */
-    private $matcher = null;
+    private $matcher;
 
     public function __construct(array $config = [])
     {
@@ -48,50 +48,32 @@ final class TranslatorConfig extends InjectableConfig
 
     /**
      * Default translation domain.
-     *
-     * @return string
      */
     public function getDefaultDomain(): string
     {
         return 'messages';
     }
 
-    /**
-     * @return string
-     */
     public function getDefaultLocale(): string
     {
         return $this->config['locale'];
     }
 
-    /**
-     * @return string
-     */
     public function getFallbackLocale(): string
     {
         return $this->config['fallbackLocale'] ?? $this->config['locale'];
     }
 
-    /**
-     * @return bool
-     */
     public function isAutoRegisterMessages(): bool
     {
         return !empty($this->config['autoRegister']) || !empty($this->config['registerMessages']);
     }
 
-    /**
-     * @return string
-     */
     public function getLocalesDirectory(): string
     {
         return $this->config['localesDirectory'] ?? $this->config['directory'];
     }
 
-    /**
-     * @param string $locale
-     * @return string
-     */
     public function getLocaleDirectory(string $locale): string
     {
         return $this->getLocalesDirectory() . $locale . '/';
@@ -99,9 +81,6 @@ final class TranslatorConfig extends InjectableConfig
 
     /**
      * Get domain name associated with given bundle.
-     *
-     * @param string $bundle
-     * @return string
      */
     public function resolveDomain(string $bundle): string
     {
@@ -119,19 +98,11 @@ final class TranslatorConfig extends InjectableConfig
         return $bundle;
     }
 
-    /**
-     * @param string $extension
-     * @return bool
-     */
     public function hasLoader(string $extension): bool
     {
         return isset($this->config['loaders'][$extension]);
     }
 
-    /**
-     * @param string $extension
-     * @return LoaderInterface
-     */
     public function getLoader(string $extension): LoaderInterface
     {
         $class = $this->config['loaders'][$extension];
@@ -139,19 +110,11 @@ final class TranslatorConfig extends InjectableConfig
         return new $class();
     }
 
-    /**
-     * @param string $dumper
-     * @return bool
-     */
     public function hasDumper(string $dumper): bool
     {
         return isset($this->config['dumpers'][$dumper]);
     }
 
-    /**
-     * @param string $dumper
-     * @return DumperInterface
-     */
     public function getDumper(string $dumper): DumperInterface
     {
         $class = $this->config['dumpers'][$dumper];

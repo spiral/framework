@@ -31,10 +31,6 @@ class NamespaceDeclaration extends AbstractDeclaration implements ReplaceableInt
      */
     private $elements;
 
-    /**
-     * @param string $name
-     * @param string $comment
-     */
     public function __construct(string $name = '', string $comment = '')
     {
         $this->setName($name);
@@ -51,8 +47,6 @@ class NamespaceDeclaration extends AbstractDeclaration implements ReplaceableInt
     /**
      * Method will automatically mount requested uses is any.
      *
-     * @param DeclarationInterface $element
-     * @return self
      * @throws Exception\ReactorException
      */
     public function addElement(DeclarationInterface $element): NamespaceDeclaration
@@ -67,7 +61,6 @@ class NamespaceDeclaration extends AbstractDeclaration implements ReplaceableInt
 
     /**
      * {@inheritdoc}
-     * @return self
      */
     public function replace($search, $replace): NamespaceDeclaration
     {

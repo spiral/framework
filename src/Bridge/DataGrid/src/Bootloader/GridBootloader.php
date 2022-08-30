@@ -14,8 +14,9 @@ namespace Spiral\DataGrid\Bootloader;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Config\Patch\Append;
 use Spiral\DataGrid\GridFactoryInterface;
-use Spiral\Database\DatabaseInterface;
+use Cycle\Database\DatabaseInterface;
 use Spiral\DataGrid\Compiler;
 use Spiral\DataGrid\Config\GridConfig;
 use Spiral\DataGrid\Grid;
@@ -75,5 +76,13 @@ final class GridBootloader extends Bootloader
         }
 
         return $compiler;
+    }
+
+    /**
+     * @psalm-param class-string $writer
+     */
+    public function addWriter(string $writer): void
+    {
+        $this->config->modify(GridConfig::CONFIG, new Append('writers', null, $writer));
     }
 }

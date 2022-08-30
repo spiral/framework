@@ -11,12 +11,15 @@ declare(strict_types=1);
 
 namespace Spiral\DataGrid\Writer;
 
-use Spiral\Database\Injection\Parameter;
+use Cycle\Database\Injection\Parameter;
 use Spiral\DataGrid\Compiler;
 use Spiral\DataGrid\Specification\Filter;
 use Spiral\DataGrid\SpecificationInterface;
 use Spiral\DataGrid\WriterInterface;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 class BetweenWriter implements WriterInterface
 {
     /** @var bool */

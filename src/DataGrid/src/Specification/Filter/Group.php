@@ -44,7 +44,6 @@ abstract class Group implements FilterInterface
 
     /**
      * @param mixed $value
-     * @return $this
      */
     protected function clone($value): self
     {

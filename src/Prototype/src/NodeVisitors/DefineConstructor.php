@@ -22,7 +22,6 @@ use Spiral\Prototype\Utils;
 final class DefineConstructor extends NodeVisitorAbstract
 {
     /**
-     * @param Node $node
      * @return int|null|Node|Node[]
      */
     public function leaveNode(Node $node)
@@ -52,9 +51,6 @@ final class DefineConstructor extends NodeVisitorAbstract
         return $node;
     }
 
-    /**
-     * @return Node\Stmt\ClassMethod
-     */
     private function buildConstructor(): Node\Stmt\ClassMethod
     {
         $constructor = new Node\Stmt\ClassMethod('__construct');

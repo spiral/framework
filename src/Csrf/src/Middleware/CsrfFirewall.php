@@ -44,10 +44,6 @@ final class CsrfFirewall implements MiddlewareInterface
     /** @var array */
     private $allowMethods;
 
-    /**
-     * @param ResponseFactoryInterface $responseFactory
-     * @param array                    $allowMethods
-     */
     public function __construct(ResponseFactoryInterface $responseFactory, array $allowMethods = self::ALLOW_METHODS)
     {
         $this->responseFactory = $responseFactory;
@@ -74,9 +70,6 @@ final class CsrfFirewall implements MiddlewareInterface
 
     /**
      * Check if middleware should validate csrf token.
-     *
-     * @param Request $request
-     * @return bool
      */
     protected function isRequired(Request $request): bool
     {
@@ -85,14 +78,11 @@ final class CsrfFirewall implements MiddlewareInterface
 
     /**
      * Fetch token from request.
-     *
-     * @param Request $request
-     * @return string
      */
     protected function fetchToken(Request $request): string
     {
         if ($request->hasHeader(self::HEADER)) {
-            return (string)$request->getHeaderLine(self::HEADER);
+            return $request->getHeaderLine(self::HEADER);
         }
 
         $data = $request->getParsedBody();

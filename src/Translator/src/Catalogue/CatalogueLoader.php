@@ -23,11 +23,8 @@ final class CatalogueLoader implements LoaderInterface
     use LoggerTrait;
 
     /** @var TranslatorConfig */
-    private $config = null;
+    private $config;
 
-    /**
-     * @param TranslatorConfig $config
-     */
     public function __construct(TranslatorConfig $config)
     {
         $this->config = $config;

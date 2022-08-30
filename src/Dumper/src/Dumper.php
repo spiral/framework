@@ -21,6 +21,8 @@ use Spiral\Debug\Renderer\PlainRenderer;
 
 /**
  * Renderer exports the content of the given variable, array or object into human friendly form.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 class Dumper implements LoggerAwareInterface
 {
@@ -55,20 +57,15 @@ class Dumper implements LoggerAwareInterface
         self::ROADRUNNER        => PlainRenderer::class,
     ];
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function __construct(LoggerInterface $logger = null)
     {
-        if (!empty($logger)) {
+        if ($logger !== null) {
             $this->setLogger($logger);
         }
     }
 
     /**
      * Set max nesting level for value dumping.
-     *
-     * @param int $maxLevel
      */
     public function setMaxLevel(int $maxLevel): void
     {
@@ -98,10 +95,10 @@ class Dumper implements LoggerAwareInterface
                 return $dump;
 
             case self::LOGGER:
-                if ($this->logger == null) {
-                    throw new DumperException('Unable to dump value to log, no associated LoggerInterface');
+                if ($this->logger === null) {
+                    throw new DumperException('Unable to dump value to log, no associated LoggerInterface.');
                 }
-                $this->logger->debug($dump);
+                $this->logger->debug((string) $dump);
                 break;
 
             case self::ERROR_LOG:
@@ -115,9 +112,6 @@ class Dumper implements LoggerAwareInterface
     /**
      * Associate rendered with given output target.
      *
-     * @param int               $target
-     * @param RendererInterface $renderer
-     * @return Dumper
      * @throws DumperException
      */
     public function setRenderer(int $target, RendererInterface $renderer): Dumper
@@ -135,8 +129,6 @@ class Dumper implements LoggerAwareInterface
      * Returns renderer instance associated with given output target. Automatically detects CLI mode, RR mode and
      * colorization support.
      *
-     * @param int $target
-     * @return RendererInterface
      * @throws DumperException
      */
     private function getRenderer(int $target): RendererInterface
@@ -168,8 +160,6 @@ class Dumper implements LoggerAwareInterface
      * @param string            $name       Variable name, internal.
      * @param int               $level      Dumping level, internal.
      * @param bool              $hideHeader Hide array/object header, internal.
-     *
-     * @return string
      */
     private function renderValue(
         RendererInterface $r,
@@ -191,15 +181,15 @@ class Dumper implements LoggerAwareInterface
 
         $type = strtolower(gettype($value));
 
-        if ($type == 'array') {
+        if ($type === 'array') {
             return $header . $this->renderArray($r, $value, $level, $hideHeader);
         }
 
-        if ($type == 'object') {
+        if ($type === 'object') {
             return $header . $this->renderObject($r, $value, $level, $hideHeader);
         }
 
-        if ($type == 'resource') {
+        if ($type === 'resource') {
             //No need to dump resource value
             $element = get_resource_type($value) . ' resource ';
 
@@ -233,14 +223,6 @@ class Dumper implements LoggerAwareInterface
         return $header . ' ' . $r->apply($element, 'value', $type) . "\n";
     }
 
-    /**
-     * @param RendererInterface $r
-     * @param array             $array
-     * @param int               $level
-     * @param bool              $hideHeader
-     *
-     * @return string
-     */
     private function renderArray(RendererInterface $r, array $array, int $level, bool $hideHeader = false): string
     {
         if (!$hideHeader) {
@@ -274,13 +256,8 @@ class Dumper implements LoggerAwareInterface
     }
 
     /**
-     * @param RendererInterface $r
      * @param object            $value
-     * @param int               $level
-     * @param bool              $hideHeader
-     * @param string            $class
      *
-     * @return string
      */
     private function renderObject(
         RendererInterface $r,
@@ -333,12 +310,8 @@ class Dumper implements LoggerAwareInterface
     }
 
     /**
-     * @param RendererInterface   $r
      * @param object              $value
-     * @param \ReflectionProperty $p
-     * @param int                 $level
      *
-     * @return string
      */
     private function renderProperty(RendererInterface $r, $value, \ReflectionProperty $p, int $level): string
     {
@@ -374,9 +347,6 @@ class Dumper implements LoggerAwareInterface
 
     /**
      * Fetch information about the closure.
-     *
-     * @param \Closure $closure
-     * @return array
      */
     private function describeClosure(\Closure $closure): array
     {
@@ -396,9 +366,7 @@ class Dumper implements LoggerAwareInterface
     /**
      * Property access level label.
      *
-     * @param \ReflectionProperty $p
      *
-     * @return string
      */
     private function getAccess(\ReflectionProperty $p): string
     {

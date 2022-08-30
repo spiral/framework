@@ -26,11 +26,6 @@ class FilterDeclaration extends ClassDeclaration implements DependedInterface
     /** @var array */
     private $mapping;
 
-    /**
-     * @param string $name
-     * @param string $comment
-     * @param array  $mapping
-     */
     public function __construct(string $name, string $comment = '', array $mapping = [])
     {
         parent::__construct($name, 'Filter', [], $comment);
@@ -49,11 +44,6 @@ class FilterDeclaration extends ClassDeclaration implements DependedInterface
 
     /**
      * Add new field to request and generate default filters and validations if type presented in mapping.
-     *
-     * @param string      $field
-     * @param string|null $type
-     * @param string|null $source
-     * @param string|null $origin
      */
     public function declareField(string $field, ?string $type, ?string $source, ?string $origin = null): void
     {

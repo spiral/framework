@@ -46,9 +46,6 @@ final class CookiesConfig extends InjectableConfig
 
     /**
      * Return domain associated with the cookie.
-     *
-     * @param UriInterface $uri
-     * @return string|null
      */
     public function resolveDomain(UriInterface $uri): ?string
     {
@@ -78,8 +75,6 @@ final class CookiesConfig extends InjectableConfig
 
     /**
      * Cookie protection method.
-     *
-     * @return int
      */
     public function getProtectionMethod(): int
     {
@@ -88,8 +83,6 @@ final class CookiesConfig extends InjectableConfig
 
     /**
      * Cookies excluded from protection.
-     *
-     * @return array
      */
     public function getExcludedCookies(): array
     {

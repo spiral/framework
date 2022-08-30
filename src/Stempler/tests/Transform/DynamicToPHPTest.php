@@ -35,7 +35,7 @@ class DynamicToPHPTest extends BaseTest
     public function testContextAwareEscapeSimpleEcho(): void
     {
         $this->assertSame(
-            '<?php echo htmlspecialchars("hello world", ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>',
+            '<?php echo htmlspecialchars((string) ("hello world"), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>',
             $res = $this->compile('{{ "hello world" }}')->getContent()
         );
 
@@ -49,7 +49,7 @@ class DynamicToPHPTest extends BaseTest
     {
         $this->assertSame(
             '<a href="<?php echo htmlspecialchars'
-            . '("hello world", ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>"></a>',
+            . '((string) ("hello world"), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>"></a>',
             $res = $this->compile('<a href="{{ "hello world" }}"></a>')->getContent()
         );
 
@@ -63,7 +63,7 @@ class DynamicToPHPTest extends BaseTest
     {
         $this->assertSame(
             '<a style="color: <?php echo htmlspecialchars'
-            . '("hello world", ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>"></a>',
+            . '((string) ("hello world"), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?>"></a>',
             $res = $this->compile('<a style="color: {{ "hello world" }}"></a>')->getContent()
         );
 
@@ -77,7 +77,7 @@ class DynamicToPHPTest extends BaseTest
     {
         $this->assertSame(
             '<a onclick="alert(<?php echo \'&quot;\', '
-            . 'htmlspecialchars("hello world", ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'), \'&quot;\'; ?>)"></a>',
+            . 'htmlspecialchars((string) ("hello world"), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'), \'&quot;\'; ?>)"></a>',
             $res = $this->compile('<a onclick="alert({{ "hello world" }})"></a>')->getContent()
         );
 

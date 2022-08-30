@@ -30,8 +30,6 @@ final class Inline implements ImportInterface
     private $nodes;
 
     /**
-     * @param string       $name
-     * @param array        $nodes
      * @param Context|null $context
      */
     public function __construct(string $name, array $nodes, Context $context = null)

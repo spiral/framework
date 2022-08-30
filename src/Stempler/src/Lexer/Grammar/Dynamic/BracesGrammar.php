@@ -42,12 +42,6 @@ final class BracesGrammar
     /** @var array */
     private $body = [];
 
-    /**
-     * @param string $startSequence
-     * @param string $endSequence
-     * @param int    $startToken
-     * @param int    $closeToken
-     */
     public function __construct(string $startSequence, string $endSequence, int $startToken, int $closeToken)
     {
         $this->active = true;
@@ -75,17 +69,11 @@ final class BracesGrammar
         $this->active = true;
     }
 
-    /**
-     * @param string $startSequence
-     */
     public function setStartSequence(string $startSequence): void
     {
         $this->startSequence = $startSequence;
     }
 
-    /**
-     * @param string $endSequence
-     */
     public function setEndSequence(string $endSequence): void
     {
         $this->endSequence = $endSequence;
@@ -93,18 +81,12 @@ final class BracesGrammar
 
     /**
      * Enable to disable grammar.
-     *
-     * @param bool $active
      */
     public function setActive(bool $active): void
     {
         $this->active = $active;
     }
 
-    /**
-     * @param Buffer $src
-     * @return bool
-     */
     public function nextToken(Buffer $src): bool
     {
         return $this->active && $src->lookaheadByte(strlen($this->startSequence)) === $this->startSequence;
@@ -112,10 +94,6 @@ final class BracesGrammar
 
     /**
      * Check if braces starts here.
-     *
-     * @param Buffer $src
-     * @param Byte   $n
-     * @return bool
      */
     public function starts(Buffer $src, Byte $n): bool
     {
@@ -128,10 +106,6 @@ final class BracesGrammar
 
     /**
      * Parse braces content and return generated tokens or null in case of error.
-     *
-     * @param Buffer $src
-     * @param Byte   $n
-     * @return array|null
      */
     public function parse(Buffer $src, Byte $n): ?array
     {
@@ -190,10 +164,6 @@ final class BracesGrammar
 
     /**
      * Check if braces ends here.
-     *
-     * @param Buffer $src
-     * @param Byte   $n
-     * @return bool
      */
     private function ends(Buffer $src, Byte $n): bool
     {
@@ -202,10 +172,6 @@ final class BracesGrammar
 
     /**
      * Fetch next N bytes.
-     *
-     * @param Buffer $src
-     * @param int    $size
-     * @return string
      */
     private function nextBytes(Buffer $src, int $size): string
     {

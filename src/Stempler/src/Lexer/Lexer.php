@@ -24,9 +24,6 @@ final class Lexer
 
     /**
      * Attach grammar layer.
-     *
-     * @param GrammarInterface $grammar
-     * @return int
      */
     public function addGrammar(GrammarInterface $grammar): int
     {
@@ -37,9 +34,6 @@ final class Lexer
 
     /**
      * Generate token stream.
-     *
-     * @param StreamInterface $src
-     * @return \Generator
      */
     public function parse(StreamInterface $src): \Generator
     {
@@ -54,11 +48,6 @@ final class Lexer
         }
     }
 
-    /**
-     * @param GrammarInterface $grammar
-     * @param Buffer           $stream
-     * @return \Generator
-     */
     private function wrap(GrammarInterface $grammar, Buffer $stream): \Generator
     {
         foreach ($grammar->parse($stream) as $n) {
@@ -73,7 +62,6 @@ final class Lexer
     /**
      * Generate character stream and aggregate grammar results.
      *
-     * @param StreamInterface $src
      * @return array|\Generator
      */
     private function generate(StreamInterface $src)

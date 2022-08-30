@@ -15,6 +15,8 @@ use Spiral\Debug\RendererInterface;
 
 /**
  * HTML renderer with switchable color schemas.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 final class HtmlRenderer implements RendererInterface
 {
@@ -103,9 +105,6 @@ final class HtmlRenderer implements RendererInterface
      */
     protected $style = self::DEFAULT;
 
-    /**
-     * @param array $style
-     */
     public function __construct(array $style = self::DEFAULT)
     {
         $this->style = $style;
@@ -154,10 +153,7 @@ final class HtmlRenderer implements RendererInterface
     /**
      * Get valid stype based on type and context/.
      *
-     * @param string $type
-     * @param string $context
      *
-     * @return string
      */
     private function getStyle(string $type, string $context): string
     {

@@ -20,9 +20,6 @@ use Spiral\Router\Exception\UndefinedRouteException;
 interface RouterInterface extends RequestHandlerInterface
 {
     /**
-     * @param string         $name
-     * @param RouteInterface $route
-     *
      * @throws RouterException
      * @deprecated see setRoute()
      */
@@ -30,24 +27,17 @@ interface RouterInterface extends RequestHandlerInterface
 
     /**
      * Set route.
-     *
-     * @param string         $name
-     * @param RouteInterface $route
      */
     public function setRoute(string $name, RouteInterface $route): void;
 
     /**
      * Default route is needed as fallback if no other route matched the request.
-     *
-     * @param RouteInterface $route
      */
     public function setDefault(RouteInterface $route): void;
 
     /**
      * Get route by it's name.
      *
-     * @param string $name
-     * @return RouteInterface
      *
      * @throws UndefinedRouteException
      */
@@ -67,7 +57,6 @@ interface RouterInterface extends RequestHandlerInterface
      *
      * @param string             $route Route name.
      * @param array|\Traversable $parameters Routing parameters.
-     * @return UriInterface
      *
      * @throws RouteException
      * @throws UndefinedRouteException

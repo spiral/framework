@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\DataGrid\QueryWriter;
 
-use Spiral\Database\Database;
-use Spiral\Database\Driver\Postgres\PostgresDriver;
-use Spiral\Database\Query\SelectQuery;
+use Cycle\Database\Database;
+use Cycle\Database\Driver\Postgres\PostgresDriver;
+use Cycle\Database\Query\SelectQuery;
 use Spiral\DataGrid\Compiler;
 use Spiral\DataGrid\Specification\Filter;
 use Spiral\DataGrid\SpecificationInterface;

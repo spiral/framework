@@ -33,8 +33,6 @@ final class ViewCache
 
     /**
      * Reset view cache from all the contexts.
-     *
-     * @param string $path
      */
     public function resetPath(string $path): void
     {
@@ -43,30 +41,17 @@ final class ViewCache
         }
     }
 
-    /**
-     * @param ContextInterface $context
-     * @param string           $path
-     * @return bool
-     */
     public function has(ContextInterface $context, string $path): bool
     {
         return isset($this->cache[$context->getID()][$path]);
     }
 
-    /**
-     * @param ContextInterface $context
-     * @param string           $path
-     * @param ViewInterface    $view
-     */
     public function set(ContextInterface $context, string $path, ViewInterface $view): void
     {
         $this->cache[$context->getID()][$path] = $view;
     }
 
     /**
-     * @param ContextInterface $context
-     * @param string           $path
-     * @return ViewInterface
      *
      * @throws CacheException
      */

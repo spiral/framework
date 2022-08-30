@@ -18,8 +18,6 @@ interface KernelInterface
     /**
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
-     *
-     * @param DispatcherInterface $dispatcher
      */
     public function addDispatcher(DispatcherInterface $dispatcher);
 

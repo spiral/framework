@@ -34,18 +34,11 @@ class AmazonUriFactory implements UriFactoryInterface
         $this->assertAvailable();
     }
 
-    /**
-     * @param string $uri
-     * @return UriInterface
-     */
     public function createUri(string $uri = ''): UriInterface
     {
         return new Uri($uri);
     }
 
-    /**
-     * @return void
-     */
     private function assertAvailable(): void
     {
         if (\class_exists(Uri::class)) {

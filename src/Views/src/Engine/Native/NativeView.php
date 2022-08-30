@@ -24,16 +24,11 @@ final class NativeView implements ViewInterface
     protected $view;
 
     /** @var ContainerInterface */
-    protected $container = null;
+    protected $container;
 
     /** @var ContextInterface */
     protected $context;
 
-    /**
-     * @param ViewSource         $view
-     * @param ContainerInterface $container
-     * @param ContextInterface   $context
-     */
     public function __construct(ViewSource $view, ContainerInterface $container, ContextInterface $context)
     {
         $this->view = $view;

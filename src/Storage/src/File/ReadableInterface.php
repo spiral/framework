@@ -24,7 +24,6 @@ interface ReadableInterface extends EntryInterface
     /**
      * {@see BucketInterface::exists()}
      *
-     * @return bool
      * @throws FileOperationException
      */
     public function exists(): bool;
@@ -32,7 +31,6 @@ interface ReadableInterface extends EntryInterface
     /**
      * {@see BucketInterface::getContents()}
      *
-     * @return string
      * @throws FileOperationException
      */
     public function getContents(): string;
@@ -64,7 +62,6 @@ interface ReadableInterface extends EntryInterface
     /**
      * {@see BucketInterface::getMimeType()}
      *
-     * @return string
      * @throws FileOperationException
      */
     public function getMimeType(): string;

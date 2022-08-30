@@ -21,18 +21,11 @@ final class ErrorMapper
     /** @var array */
     private $schema;
 
-    /**
-     * @param array $schema
-     */
     public function __construct(array $schema)
     {
         $this->schema = $schema;
     }
 
-    /**
-     * @param array $errors
-     * @return array
-     */
     public function mapErrors(array $errors): array
     {
         //De-mapping
@@ -52,8 +45,6 @@ final class ErrorMapper
     /**
      * Set element using dot notation.
      *
-     * @param array  $array
-     * @param string $path
      * @param mixed  $message
      *
      * @throws SchemaException

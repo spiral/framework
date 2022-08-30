@@ -82,13 +82,11 @@ abstract class Composite extends Reader
 
     /**
      * @param callable(ReaderInterface): list<array-key, object> $resolver
-     * @return iterable
      */
     abstract protected function each(callable $resolver): iterable;
 
     /**
      * @param \Traversable|array $result
-     * @return array
      */
     protected function iterableToArray(iterable $result): array
     {

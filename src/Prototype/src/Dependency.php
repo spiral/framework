@@ -31,11 +31,6 @@ final class Dependency
     {
     }
 
-    /**
-     * @param string $name
-     * @param string $type
-     * @return Dependency
-     */
     public static function create(string $name, string $type): Dependency
     {
         $dependency = new self();

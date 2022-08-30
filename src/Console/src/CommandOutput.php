@@ -22,27 +22,17 @@ final class CommandOutput
     /** @var OutputInterface */
     private $output = '';
 
-    /**
-     * @param int             $code
-     * @param OutputInterface $output
-     */
     public function __construct(int $code, OutputInterface $output)
     {
         $this->code = $code;
         $this->output = $output;
     }
 
-    /**
-     * @return int
-     */
     public function getCode(): int
     {
         return $this->code;
     }
 
-    /**
-     * @return OutputInterface|BufferedOutput
-     */
     public function getOutput(): OutputInterface
     {
         return $this->output;

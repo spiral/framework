@@ -20,10 +20,7 @@ use Spiral\Validation\ValidatorInterface;
 final class WithAllCondition extends AbstractCondition
 {
     /**
-     * @param ValidatorInterface $validator
-     * @param string             $field
      * @param mixed              $value
-     * @return bool
      */
     public function isMet(ValidatorInterface $validator, string $field, $value): bool
     {

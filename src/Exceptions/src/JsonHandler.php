@@ -13,11 +13,6 @@ namespace Spiral\Exceptions;
 
 final class JsonHandler extends AbstractHandler
 {
-    /**
-     * @param \Throwable $e
-     * @param int        $verbosity
-     * @return string
-     */
     public function renderException(\Throwable $e, int $verbosity = self::VERBOSITY_VERBOSE): string
     {
         return json_encode([
@@ -32,11 +27,6 @@ final class JsonHandler extends AbstractHandler
         ]);
     }
 
-    /**
-     * @param array $trace
-     * @param int   $verbosity
-     * @return \Generator
-     */
     private function renderTrace(array $trace, int $verbosity): \Generator
     {
         foreach ($trace as $item) {

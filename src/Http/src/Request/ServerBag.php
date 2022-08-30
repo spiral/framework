@@ -46,9 +46,7 @@ final class ServerBag extends InputBag
     /**
      * Normalizing name to simplify selection.
      *
-     * @param string $name
      *
-     * @return string
      */
     protected function normalize(string $name): string
     {

@@ -18,10 +18,6 @@ use Spiral\Reactor\DependedInterface;
 
 class CommandDeclaration extends ClassDeclaration implements DependedInterface
 {
-    /**
-     * @param string $name
-     * @param string $comment
-     */
     public function __construct(string $name, string $comment = '')
     {
         parent::__construct($name, 'Command', [], $comment);
@@ -39,17 +35,12 @@ class CommandDeclaration extends ClassDeclaration implements DependedInterface
 
     /**
      * Set command alias.
-     *
-     * @param string $name
      */
     public function setAlias(string $name): void
     {
         $this->constant('NAME')->setValue($name);
     }
 
-    /**
-     * @param string $description
-     */
     public function setDescription(string $description): void
     {
         $this->constant('DESCRIPTION')->setValue($description);

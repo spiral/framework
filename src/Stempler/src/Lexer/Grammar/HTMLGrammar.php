@@ -119,8 +119,6 @@ final class HTMLGrammar implements GrammarInterface
     }
 
     /**
-     * @param Buffer $src
-     * @param string $verbatim
      * @return \Generator
      */
     private function parseVerbatim(Buffer $src, string $verbatim)
@@ -217,10 +215,6 @@ final class HTMLGrammar implements GrammarInterface
         }
     }
 
-    /**
-     * @param array $tag
-     * @return string
-     */
     private function tagName(array $tag): string
     {
         foreach ($tag as $token) {
@@ -232,10 +226,6 @@ final class HTMLGrammar implements GrammarInterface
         return '';
     }
 
-    /**
-     * @param Buffer $src
-     * @return array|null
-     */
     private function parseGrammar(Buffer $src): ?array
     {
         $this->tokens = [
@@ -329,9 +319,6 @@ final class HTMLGrammar implements GrammarInterface
         return $this->tokens;
     }
 
-    /**
-     * @return bool
-     */
     private function isValid(): bool
     {
         // tag is too short or does not have name keyword

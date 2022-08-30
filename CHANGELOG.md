@@ -1,11 +1,115 @@
 # CHANGELOG
 
-## v2.9.0 - Unreleased
-
+## v2.14.0 - Unreleased
 - **High Impact Changes**
 - **Medium Impact Changes**
+- **Low Impact Changes**
 - **Other Features**
 - **Bug Fixes**
+
+## v2.13.1 - 2022-05-16
+- **Bug Fixes**
+  - [spiral/sendit] Fixed problem with MailJob compatibility with `spiral\jobs` and `spiral\roadrunner-jobs`
+
+## v2.13.0 - 2022-04-28
+- **Medium Impact Changes**
+  - Dispatcher `Spiral\Http\SapiDispatcher` is deprecated. Will be moved to `spiral/sapi-bridge` and removed in v3.0
+  - Classes `Spiral\Http\Emitter\SapiEmitter`, `Spiral\Http\Exception\EmitterException`, `Spiral\Http\EmitterInterface`,
+    `Spiral\Http\SapiRequestFactory` is deprecated. Will be removed in version v3.0.
+    After the release of v3.0, must use the package `spiral/sapi-bridge` for SAPI functionality.
+  - The `dumper` component is deprecated and will be removed in v3.0
+- **Other Features**
+  - [spiral/http] Added parameter `chunkSize` in the `http` configuration file.
+  - [spiral/queue] Added attribute `Queueable` to mark classes that can be queued.
+    Added `Spiral\Queue\QueueableDetector` class to easily check if an object should be queued or not and get the queue 
+    from an attribute or getQueue method on the object.
+  - [spiral/broadcasting] New component with common interfaces (RR2.0 support)
+
+## v2.12.0 - 2022-04-07
+- **Medium Impact Changes**
+  - Bootloaders `Spiral\Bootloader\Broadcast\BroadcastBootloader`, `Spiral\Bootloader\Http\WebsocketsBootloader`
+    are deprecated. Will be removed in v3.0.
+  - Console commands `Spiral\Command\Database\ListCommand`, `Spiral\Command\Database\TableCommand`,
+    `Spiral\Command\GRPC\GenerateCommand`, `Spiral\Command\GRPC\ListCommand`, `Spiral\Command\Migrate\AbstractCommand`,
+    `Spiral\Command\Migrate\InitCommand`, `Spiral\Command\Migrate\MigrateCommand`, `Spiral\Command\Migrate\ReplayCommand`,
+    `Spiral\Command\Migrate\RollbackCommand`, `Spiral\Command\Migrate\StatusCommand` are deprecated. Will be removed in v3.0.
+  - Classes `Spiral\Broadcast\Config\WebsocketsConfig`, `Spiral\Broadcast\Middleware\WebsocketsMiddleware`, 
+    `Spiral\GRPC\Exception\CompileException`, `Spiral\GRPC\GRPCDispatcher`, `Spiral\GRPC\LocatorInterface`, 
+    `Spiral\GRPC\ProtoCompiler`, `Spiral\GRPC\ServiceLocator`, `Spiral\Http\LegacyRrDispatcher`, `Spiral\Http\RrDispatcher`
+    are deprecated. Will be removed in v3.0.
+  - Changed package replacement strategy. "*" is replaced by "self.version".
+  - Sapi emitter now supports streaming emitting.
+  - [spiral/data-grid-bridge] Removed deprecation in classes `Spiral\DataGrid\Annotation\DataGrid`, `Spiral\DataGrid\Bootloader\GridBootloader`,
+    `Spiral\DataGrid\Config\GridConfig`, `Spiral\DataGrid\Interceptor\GridInterceptor`, `Spiral\DataGrid\Response\GridResponse`,
+    `Spiral\DataGrid\Response\GridResponseInterface`, `Spiral\DataGrid\GridInput`.
+- **Other Features**
+  - [spiral/data-grid-bridge] Added method `addWriter` in `Spiral\DataGrid\Bootloader\GridBootloader`.
+  - Extended version of `psr/log` dependency from `^1.0` to `1 - 3`
+## v2.11.0 - 2022-03-18
+- **High Impact Changes**
+  - [spiral/queue] Added queue injector #592
+  - [spiral/cache] Added cache injector #600
+- **Medium Impact Changes**
+  - [spiral/tokenizer] Added ability to use scopes for indexing files with specific scopes #593
+- **Other Features**
+  - [spiral/boot] Added ability to disable overwriting env variables for `Spiral\Boot\Environment` #599
+  - [spiral/storage] Added storage bucket factory #601
+  - [spiral/console] Added return types for interface compatibility #591
+
+## v2.10.0 - 2022-03-04
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - [spiral/session] Added `Spiral\Session\SessionFactoryInterface`. Now you can use custom implementation of sessions.
+  - [spiral/scaffolder] Console commands `Spiral\Scaffolder\Command\MigrationCommand`, `Spiral\Scaffolder\Command\Database\RepositoryCommand`, 
+    `Spiral\Scaffolder\Command\Database\EntityCommand` is deprecated. Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - [spiral/scaffolder] Scaffolder `Spiral\Scaffolder\Declaration\MigrationDeclaration` is deprecated. Will be moved to `spiral/cycle-bridge`
+    and removed in v3.0
+  - [spiral/attributes] Class annotations will be discovered from class traits.
+  - A minimal version of `PHP` increased to `^7.4`
+- **Other Features**
+  - [spiral/prototype] Added `queue` and `cache` properties
+  - [spiral/mailer] Added ability to set delay for messages
+  - [spiral/queue] Added NullDriver
+  - [spiral/mailer] Class `Spiral\Mailer\Message` is no longer final and is available for extension
+
+## v2.9.1 - 2022-02-11
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - [spiral/sendit] Method `getQueuePipeline` of `Spiral\SendIt\Config\MailerConfig` class is deprecated.
+    Use method `getQueue` instead. Added environment variables `MAILER_QUEUE` and `MAILER_QUEUE_CONNECTION`
+- **Other Features**
+  - Added Symfony 6 support
+
+## v2.9.0 - 2022-02-03
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - Classes `Spiral\Validation\Checker\EntityChecker`, `Spiral\Auth\Cycle\Token`, `Spiral\Auth\Cycle\TokenStorage`, 
+    `Spiral\Cycle\RepositoryInjector`, `Spiral\Cycle\SchemaCompiler`, is deprecated. 
+    Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - Console commands `Spiral\Command\Cycle\MigrateCommand`, `Spiral\Command\Cycle\SyncCommand`, 
+    `Spiral\Command\Cycle\UpdateCommand` is deprecated. Will be moved to `spiral/cycle-bridge` and removed in v3.0
+  - Bootloaders `Spiral\Bootloader\Cycle\AnnotatedBootloader`, `Spiral\Bootloader\Cycle\CycleBootloader`,
+    `Spiral\Bootloader\Cycle\ProxiesBootloader`, `Spiral\Bootloader\Cycle\SchemaBootloader` is deprecated.
+    Use `spiral/cycle-bridge` instead
+  - Interceptor `Spiral\Domain\CycleInterceptor` is deprecated. 
+    Will be moved to `spiral/cycle-bridge` and removed in v3.0 
+  - Scaffolders `Spiral\Scaffolder\Declaration\Database\Entity\AnnotatedDeclaration`, 
+    `Spiral\Scaffolder\Declaration\Database\RepositoryDeclaration` is deprecated. Will be moved to `spiral/cycle-bridge` 
+    and removed in v3.0 
+  - Component `spiral/data-grid-bridge` is deprecated. Will be moved to spiral/cycle-bridge and removed in v3.0
+  - Component `spiral/annotations` is deprecated. Use `spiral/attributes` instead
+  - A minimal version of `doctrine/annotations` increased to `^1.12`
+  - [spiral/validation] Error messages for 'number::lower' and
+    'number::higher' rules were changed to reflect that these checks are in
+    fact 'lower or equal' and 'higher or equal'. You may need to adjust
+    translations file accordingly.
+  - [spiral/sendit] Added ability to use `sync` driver for mail queue (#398)
+- **Other Features**
+  - [spiral/validation] Add array::count, array::range, array::shorter and array::longer
+  - [spiral/queue] New component with common interfaces (RR2.0 support) rules (#435)
+  - [spiral/cache] New component with common interfaces (RR2.0 support)
+  - [spiral/views] [Allow custom loader in ViewManager](https://github.com/spiral/framework/issues/488)
+  - [spiral/monolog-bridge] [Added ability to configure Monolog processors](https://github.com/spiral/framework/issues/474)
 
 ## v2.8.0 - 2021-06-03
 

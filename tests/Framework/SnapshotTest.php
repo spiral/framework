@@ -16,6 +16,17 @@ use Spiral\Snapshots\SnapshotterInterface;
 
 class SnapshotTest extends BaseTest
 {
+    public function testStringConfigParams()
+    {
+        // string important. Emulating string from .env
+        $app = $this->makeApp([
+            'SNAPSHOT_MAX_FILES' => '1',
+            'SNAPSHOT_VERBOSITY' => '1'
+        ]);
+
+        $this->assertInstanceOf(SnapshotterInterface::class, $app->get(SnapshotterInterface::class));
+    }
+
     public function testSnapshot(): void
     {
         $app = $this->makeApp();

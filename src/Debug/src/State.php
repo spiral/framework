@@ -28,9 +28,6 @@ final class State implements StateInterface
     /** @var array */
     private $logEvents = [];
 
-    /**
-     * @param array $tags
-     */
     public function setTags(array $tags): void
     {
         $setTags = [];
@@ -48,10 +45,6 @@ final class State implements StateInterface
         $this->tags = $setTags;
     }
 
-    /**
-     * @param string $key
-     * @param string $value
-     */
     public function setTag(string $key, string $value): void
     {
         $this->tags[$key] = $value;
@@ -59,24 +52,18 @@ final class State implements StateInterface
 
     /**
      * Get current key-value description.
-     *
-     * @return array
      */
     public function getTags(): array
     {
         return $this->tags;
     }
 
-    /**
-     * @param array $extras
-     */
     public function setVariables(array $extras): void
     {
         $this->extras = $extras;
     }
 
     /**
-     * @param string $key
      * @param        $value
      */
     public function setVariable(string $key, $value): void
@@ -86,17 +73,12 @@ final class State implements StateInterface
 
     /**
      * Get current state metadata. Arbitrary array form.
-     *
-     * @return array
      */
     public function getVariables(): array
     {
         return $this->extras;
     }
 
-    /**
-     * @param LogEvent ...$events
-     */
     public function addLogEvent(LogEvent ...$events): void
     {
         $this->logEvents = array_merge($this->logEvents, $events);

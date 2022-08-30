@@ -30,21 +30,15 @@ interface StorageInterface extends
 {
     /**
      * @param string|null $name
-     * @return BucketInterface
      * @throws InvalidArgumentException
      */
     public function bucket(string $name = null): BucketInterface;
 
     /**
      * @param IdType $id
-     * @return FileInterface
      * @throws InvalidArgumentException
      */
     public function file($id): FileInterface;
 
-    /**
-     * @param string $name
-     * @return $this
-     */
     public function withDefault(string $name): self;
 }

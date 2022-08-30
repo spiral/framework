@@ -18,18 +18,11 @@ final class Group implements PatchInterface
     /** @var array|PatchInterface[] */
     private $patches = [];
 
-    /**
-     * @param PatchInterface ...$patch
-     */
     public function __construct(PatchInterface ...$patch)
     {
         $this->patches = $patch;
     }
 
-    /**
-     * @param array $config
-     * @return array
-     */
     public function patch(array $config): array
     {
         foreach ($this->patches as $patch) {

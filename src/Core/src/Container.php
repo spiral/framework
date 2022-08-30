@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
-use Psr\Container\ContainerExceptionInterface;
+use Closure;
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use Spiral\Core\Container\Autowire;
@@ -22,6 +22,7 @@ use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\InjectionException;
+use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\LogicException;
 
@@ -46,6 +47,7 @@ final class Container implements
     BinderInterface,
     FactoryInterface,
     ResolverInterface,
+    InvokerInterface,
     ScopeInterface
 {
     /**
@@ -57,6 +59,7 @@ final class Container implements
         FactoryInterface::class   => self::class,
         ScopeInterface::class     => self::class,
         ResolverInterface::class  => self::class,
+        InvokerInterface::class   => self::class,
     ];
 
     /**
@@ -66,13 +69,6 @@ final class Container implements
      * @var array
      */
     private $injectors = [];
-
-    /**
-     * Contains names of all classes which were checked for the available injectors.
-     *
-     * @var array
-     */
-    private $injectorsCache = [];
 
     /**
      * Container constructor.
@@ -109,6 +105,16 @@ final class Container implements
              */
             if ($type instanceof \ReflectionUnionType) {
                 $error = 'Parameter $%s in %s contains a union type hint that cannot be inferred unambiguously';
+                $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
+
+                throw new ContainerException($error);
+            }
+
+            /**
+             * Container do not currently support intersection types.
+             */
+            if ($type instanceof \ReflectionIntersectionType) {
+                $error = 'Parameter $%s in %s contains a intersection type hint that cannot be inferred unambiguously';
                 $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
 
                 throw new ContainerException($error);
@@ -186,24 +192,35 @@ final class Container implements
      *
      * Attention, context ignored when outer container has instance by alias.
      *
+     * @template T
+     *
+     * @param class-string<T>|string|Autowire $id
      * @param string|null $context Call context.
+     *
+     * @return T
+     * @psalm-return ($id is class-string ? T : mixed)
      *
      * @throws ContainerException
      * @throws \Throwable
      */
-    public function get($alias, string $context = null)
+    public function get($id, string $context = null)
     {
-        if ($alias instanceof Autowire) {
-            return $alias->resolve($this);
+        if ($id instanceof Autowire) {
+            return $id->resolve($this);
         }
 
-        return $this->make($alias, [], $context);
+        return $this->make($id, [], $context);
     }
 
     /**
      * {@inheritdoc}
      *
+     * @template T
+     *
+     * @param class-string<T> $alias
      * @param string|null $context Related to parameter caused injection if any.
+     *
+     * @return T
      *
      * @throws \Throwable
      */
@@ -282,12 +299,11 @@ final class Container implements
      * for each method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
      *
-     * @param string $alias
      * @param string|array|callable $resolver
      */
     public function bind(string $alias, $resolver): void
     {
-        if (\is_array($resolver) || $resolver instanceof \Closure || $resolver instanceof Autowire) {
+        if (\is_array($resolver) || $resolver instanceof Closure || $resolver instanceof Autowire) {
             // array means = execute me, false = not singleton
             $this->bindings[$alias] = [$resolver, false];
 
@@ -301,12 +317,11 @@ final class Container implements
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
      * (will be constructed only once), function array or Closure (executed only once call).
      *
-     * @param string $alias
-     * @param string|array|callable $resolver
+     * @param object|string|array|callable $resolver
      */
     public function bindSingleton(string $alias, $resolver): void
     {
-        if (\is_object($resolver) && !$resolver instanceof \Closure && !$resolver instanceof Autowire) {
+        if (\is_object($resolver) && !$resolver instanceof Closure && !$resolver instanceof Autowire) {
             // direct binding to an instance
             $this->bindings[$alias] = $resolver;
 
@@ -318,9 +333,6 @@ final class Container implements
 
     /**
      * Check if alias points to constructed instance (singleton).
-     *
-     * @param string $alias
-     * @return bool
      */
     public function hasInstance(string $alias): bool
     {
@@ -339,48 +351,88 @@ final class Container implements
     /**
      * {@inheritdoc}
      */
-    public function has($alias): bool
+    public function has($id): bool
     {
-        return \array_key_exists($alias, $this->bindings);
+        return \array_key_exists($id, $this->bindings);
     }
 
-    /**
-     * @param string $alias
-     */
     public function removeBinding(string $alias): void
     {
         unset($this->bindings[$alias]);
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function invoke($target, array $parameters = [])
+    {
+        if (\is_array($target) && isset($target[1])) {
+            // In a form of resolver and method
+            [$resolver, $method] = $target;
+
+            // Resolver instance (i.e. [ClassName::class, 'method'])
+            if (\is_string($resolver)) {
+                $resolver = $this->get($resolver);
+            }
+
+            try {
+                $method = new \ReflectionMethod($resolver, $method);
+            } catch (\ReflectionException $e) {
+                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
+            }
+
+            $method->setAccessible(true);
+
+            // Invoking factory method with resolved arguments
+            return $method->invokeArgs(
+                $resolver,
+                $this->resolveArguments($method, $parameters)
+            );
+        }
+
+        if (\is_string($target) && \is_callable($target)) {
+            $target = Closure::fromCallable($target);
+        }
+
+        if ($target instanceof Closure) {
+            try {
+                $reflection = new \ReflectionFunction($target);
+            } catch (\ReflectionException $e) {
+                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
+            }
+
+            // Invoking Closure with resolved arguments
+            return $reflection->invokeArgs(
+                $this->resolveArguments($reflection, $parameters)
+            );
+        }
+
+        throw new NotCallableException('Unsupported callable');
+    }
+
+    /**
      * Bind class or class interface to the injector source (InjectorInterface).
      *
-     * @param string $class
-     * @param string $injector
-     * @return self
+     * @template TClass
+     *
+     * @param class-string<TClass> $class
+     * @param class-string<InjectorInterface<TClass>> $injector
      */
     public function bindInjector(string $class, string $injector): Container
     {
         $this->injectors[$class] = $injector;
-        $this->injectorsCache = [];
 
         return $this;
     }
 
-    /**
-     * @param string $class
-     */
     public function removeInjector(string $class): void
     {
         unset($this->injectors[$class]);
-        $this->injectorsCache = [];
     }
 
     /**
      * Every declared Container binding. Must not be used in production code due container format is
      * vary.
-     *
-     * @return array
      */
     public function getBindings(): array
     {
@@ -389,8 +441,6 @@ final class Container implements
 
     /**
      * Every binded injector.
-     *
-     * @return array
      */
     public function getInjectors(): array
     {
@@ -400,9 +450,6 @@ final class Container implements
     /**
      * Automatically create class.
      *
-     * @param string $class
-     * @param array $parameters
-     * @param string $context
      * @return object
      *
      * @throws AutowireException
@@ -410,7 +457,7 @@ final class Container implements
      */
     protected function autowire(string $class, array $parameters, string $context = null)
     {
-        if (!\class_exists($class)) {
+        if (!\class_exists($class) && !isset($this->injectors[$class])) {
             throw new NotFoundException(\sprintf("Undefined class or binding '%s'", $class));
         }
 
@@ -421,10 +468,6 @@ final class Container implements
         return $this->registerInstance($instance, $parameters);
     }
 
-    /**
-     * @param ContextFunction $reflection
-     * @return string
-     */
     private function getLocationString(ContextFunction $reflection): string
     {
         $location = $reflection->getName();
@@ -439,20 +482,14 @@ final class Container implements
     /**
      * Assert that given value are matched parameter type.
      *
-     * @param \ReflectionParameter $parameter
-     * @param ContextFunction $context
      * @param mixed $value
-     *
      * @throws ArgumentException
      * @throws \ReflectionException
      */
     private function assertType(\ReflectionParameter $parameter, ContextFunction $context, $value): void
     {
         if ($value === null) {
-            if (
-                !$parameter->isOptional() &&
-                !($parameter->isDefaultValueAvailable() && $parameter->getDefaultValue() === null)
-            ) {
+            if (!$parameter->allowsNull()) {
                 throw new ArgumentException($parameter, $context);
             }
 
@@ -481,7 +518,6 @@ final class Container implements
     /**
      * Create instance of desired class.
      *
-     * @param string $class
      * @param array $parameters Constructor parameters.
      * @param string|null $context
      * @return object
@@ -503,7 +539,7 @@ final class Container implements
 
             $instance = null;
             try {
-                /** @var InjectorInterface $injectorInstance */
+                /** @var InjectorInterface|mixed $injectorInstance */
                 $injectorInstance = $this->get($injector);
 
                 if (!$injectorInstance instanceof InjectorInterface) {
@@ -551,9 +587,6 @@ final class Container implements
 
     /**
      * Checks if given class has associated injector.
-     *
-     * @param \ReflectionClass $reflection
-     * @return bool
      */
     private function checkInjector(\ReflectionClass $reflection): bool
     {
@@ -571,28 +604,24 @@ final class Container implements
             return true;
         }
 
-        if (!isset($this->injectorsCache[$class])) {
-            $this->injectorsCache[$class] = null;
+        // check interfaces
+        foreach ($this->injectors as $target => $injector) {
+            if (
+                \class_exists($target, true)
+                && $reflection->isSubclassOf($target)
+            ) {
+                $this->injectors[$class] = $injector;
 
-            // check interfaces
-            foreach ($this->injectors as $target => $injector) {
-                if (
-                    \class_exists($target, true)
-                    && $reflection->isSubclassOf($target)
-                ) {
-                    $this->injectors[$class] = $injector;
+                return true;
+            }
 
-                    return true;
-                }
+            if (
+                \interface_exists($target, true)
+                && $reflection->implementsInterface($target)
+            ) {
+                $this->injectors[$class] = $injector;
 
-                if (
-                    \interface_exists($target, true)
-                    && $reflection->implementsInterface($target)
-                ) {
-                    $this->injectors[$class] = $injector;
-
-                    return true;
-                }
+                return true;
             }
         }
 
@@ -622,12 +651,9 @@ final class Container implements
     }
 
     /**
-     * @param string $alias
      * @param mixed $target Value binded by user.
-     * @param array $parameters
      * @param string|null $context
      * @return mixed|null|object
-     *
      * @throws ContainerException
      * @throws \Throwable
      */
@@ -642,41 +668,10 @@ final class Container implements
             return $target->resolve($this, $parameters);
         }
 
-        if ($target instanceof \Closure) {
-            try {
-                $reflection = new \ReflectionFunction($target);
-            } catch (\ReflectionException $e) {
-                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
-            }
-
-            // Invoking Closure with resolved arguments
-            return $reflection->invokeArgs(
-                $this->resolveArguments($reflection, $parameters)
-            );
+        try {
+            return $this->invoke($target, $parameters);
+        } catch (NotCallableException $e) {
+            throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias), $e->getCode(), $e);
         }
-
-        if (is_array($target) && isset($target[1])) {
-            // In a form of resolver and method
-            [$resolver, $method] = $target;
-
-            // Resolver instance (i.e. [ClassName::class, 'method'])
-            $resolver = $this->get($resolver);
-
-            try {
-                $method = new \ReflectionMethod($resolver, $method);
-            } catch (\ReflectionException $e) {
-                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
-            }
-
-            $method->setAccessible(true);
-
-            // Invoking factory method with resolved arguments
-            return $method->invokeArgs(
-                $resolver,
-                $this->resolveArguments($method, $parameters)
-            );
-        }
-
-        throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias));
     }
 }

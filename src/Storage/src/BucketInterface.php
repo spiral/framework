@@ -20,20 +20,9 @@ interface BucketInterface extends
     WritableInterface,
     UriResolvableInterface
 {
-    /**
-     * @param string $pathname
-     * @return FileInterface
-     */
     public function file(string $pathname): FileInterface;
 
-    /**
-     * @return string|null
-     */
     public function getName(): ?string;
 
-    /**
-     * @param string|null $name
-     * @return $this
-     */
     public function withName(?string $name): self;
 }

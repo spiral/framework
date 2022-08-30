@@ -24,18 +24,11 @@ final class TransportRegistry
     /** @var string */
     private $default;
 
-    /**
-     * @param string $name
-     */
     public function setDefaultTransport(string $name): void
     {
         $this->default = $name;
     }
 
-    /**
-     * @param string                 $name
-     * @param HttpTransportInterface $transport
-     */
     public function setTransport(string $name, HttpTransportInterface $transport): void
     {
         $this->transports[$name] = $transport;
@@ -43,7 +36,6 @@ final class TransportRegistry
 
     /**
      * @param string|null $name
-     * @return HttpTransportInterface
      */
     public function getTransport(string $name = null): HttpTransportInterface
     {

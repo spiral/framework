@@ -23,9 +23,6 @@ final class ExceptionFirewall extends AbstractFirewall
     /** @var \Throwable */
     private $e;
 
-    /**
-     * @param \Throwable $e
-     */
     public function __construct(\Throwable $e)
     {
         $this->e = $e;

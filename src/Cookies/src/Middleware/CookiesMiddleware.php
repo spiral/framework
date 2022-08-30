@@ -35,10 +35,6 @@ final class CookiesMiddleware implements MiddlewareInterface
     /** @var EncryptionInterface */
     private $encryption;
 
-    /**
-     * @param CookiesConfig       $config
-     * @param EncryptionInterface $encryption
-     */
     public function __construct(CookiesConfig $config, EncryptionInterface $encryption)
     {
         $this->config = $config;
@@ -65,9 +61,6 @@ final class CookiesMiddleware implements MiddlewareInterface
 
     /**
      * Unpack incoming cookies and decrypt their content.
-     *
-     * @param Request $request
-     * @return Request
      */
     protected function unpackCookies(Request $request): Request
     {
@@ -86,9 +79,6 @@ final class CookiesMiddleware implements MiddlewareInterface
 
     /**
      * Check if cookie has to be protected.
-     *
-     * @param string $cookie
-     * @return bool
      */
     protected function isProtected(string $cookie): bool
     {
@@ -103,9 +93,6 @@ final class CookiesMiddleware implements MiddlewareInterface
     /**
      * Pack outcoming cookies with encrypted value.
      *
-     * @param Response    $response
-     * @param CookieQueue $queue
-     * @return Response
      *
      * @throws EncryptException
      */
@@ -166,7 +153,6 @@ final class CookiesMiddleware implements MiddlewareInterface
      * Sign string.
      *
      * @param string|null $value
-     * @return string
      */
     private function hmacSign($value): string
     {
@@ -177,10 +163,6 @@ final class CookiesMiddleware implements MiddlewareInterface
         );
     }
 
-    /**
-     * @param Cookie $cookie
-     * @return Cookie
-     */
     private function encodeCookie(Cookie $cookie): Cookie
     {
         if ($this->config->getProtectionMethod() === CookiesConfig::COOKIE_ENCRYPT) {

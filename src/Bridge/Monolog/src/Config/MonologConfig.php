@@ -52,34 +52,50 @@ final class MonologConfig extends InjectableConfig
                 continue;
             }
 
-            $wire = $this->wire($channel, $handler);
-            if (!empty($wire)) {
-                yield $wire;
+            $wire = $this->wire($handler);
+            if (\is_null($wire)) {
+                throw new ConfigException("Invalid handler definition for channel `{$channel}`.");
             }
+
+            yield $wire;
         }
     }
 
-    /**
-     * @param string $channel
-     * @param mixed  $handler
-     * @return null|Autowire
-     *
-     * @throws ConfigException
-     */
-    private function wire(string $channel, $handler): ?Autowire
+    public function getProcessors(string $channel): \Generator
     {
-        if ($handler instanceof Autowire) {
-            return $handler;
+        if (empty($this->config['processors'][$channel])) {
+            return;
         }
 
-        if (is_string($handler)) {
-            return new Autowire($handler);
+        foreach ($this->config['processors'][$channel] as $processor) {
+            if (\is_object($processor) && !$processor instanceof Autowire) {
+                yield $processor;
+                continue;
+            }
+
+            $wire = $this->wire($processor);
+            if (\is_null($wire)) {
+                throw new ConfigException("Invalid processor definition for channel `{$channel}`.");
+            }
+
+            yield $wire;
+        }
+    }
+
+    private function wire($definition): ?Autowire
+    {
+        if ($definition instanceof Autowire) {
+            return $definition;
         }
 
-        if (isset($handler['class'])) {
-            return new Autowire($handler['class'], $handler['options'] ?? []);
+        if (is_string($definition)) {
+            return new Autowire($definition);
         }
 
-        throw new ConfigException("Invalid handler definition for channel `{$channel}`.");
+        if (isset($definition['class'])) {
+            return new Autowire($definition['class'], $definition['options'] ?? []);
+        }
+
+        return null;
     }
 }

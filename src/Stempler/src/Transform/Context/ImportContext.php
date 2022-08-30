@@ -26,24 +26,18 @@ final class ImportContext
     /** @var VisitorContext */
     private $ctx;
 
-    /**
-     * @param VisitorContext $ctx
-     */
     private function __construct(VisitorContext $ctx)
     {
         $this->ctx = $ctx;
     }
 
-    /**
-     * @param ImportInterface $import
-     */
     public function add(ImportInterface $import): void
     {
         $node = $this->ctx->getParentNode();
         if (!$node instanceof AttributedInterface) {
-            throw new LogicException(sprintf(
+            throw new LogicException(\sprintf(
                 'Unable to create import on node without attribute storage (%s)',
-                is_object($node) ? get_class($node) : gettype($node)
+                \is_object($node) ? \get_class($node) : \gettype($node)
             ));
         }
 
@@ -54,10 +48,6 @@ final class ImportContext
 
     /**
      * Resolve imported element template.
-     *
-     * @param Builder $builder
-     * @param string  $name
-     * @return Template|null
      */
     public function resolve(Builder $builder, string $name): ?Template
     {
@@ -90,10 +80,6 @@ final class ImportContext
         return $imports;
     }
 
-    /**
-     * @param VisitorContext $ctx
-     * @return ImportContext
-     */
     public static function on(VisitorContext $ctx): self
     {
         return new self($ctx);

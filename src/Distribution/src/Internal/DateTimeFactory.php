@@ -32,9 +32,6 @@ final class DateTimeFactory implements DateTimeFactoryInterface
      */
     private $timezone;
 
-    /**
-     * @param string $timezone
-     */
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
     {
         $this->timezone = new \DateTimeZone($timezone);

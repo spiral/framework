@@ -20,9 +20,6 @@ interface LogsInterface
 {
     /**
      * Get pre-configured logger instance.
-     *
-     * @param string $channel
-     * @return LoggerInterface
      */
     public function getLogger(string $channel): LoggerInterface;
 }

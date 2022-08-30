@@ -18,13 +18,10 @@ use Spiral\Reactor\DependedInterface;
 
 /**
  * Migration declaration
+ * @deprecated since v2.10. Will be moved to spiral/cycle-bridge and removed in v3.0
  */
 class MigrationDeclaration extends ClassDeclaration implements DependedInterface
 {
-    /**
-     * @param string $name
-     * @param string $comment
-     */
     public function __construct(string $name, string $comment = '')
     {
         parent::__construct($name, 'Migration', [], $comment);
@@ -42,9 +39,6 @@ class MigrationDeclaration extends ClassDeclaration implements DependedInterface
 
     /**
      * Declare table creation with specific set of columns
-     *
-     * @param string $table
-     * @param array  $columns
      */
     public function declareCreation(string $table, array $columns): void
     {

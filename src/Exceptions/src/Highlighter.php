@@ -17,11 +17,8 @@ namespace Spiral\Exceptions;
 class Highlighter
 {
     /** @var StyleInterface */
-    private $r = null;
+    private $r;
 
-    /**
-     * @param StyleInterface $renderer
-     */
     public function __construct(StyleInterface $renderer)
     {
         $this->r = $renderer;
@@ -29,11 +26,6 @@ class Highlighter
 
     /**
      * Highlight PHP source and return N lines around target line.
-     *
-     * @param string $source
-     * @param int    $line
-     * @param int    $around
-     * @return string
      */
     public function highlightLines(string $source, int $line, int $around = 5): string
     {
@@ -55,9 +47,6 @@ class Highlighter
 
     /**
      * Returns highlighted PHP source.
-     *
-     * @param string $source
-     * @return string
      */
     public function highlight(string $source): string
     {
@@ -73,9 +62,6 @@ class Highlighter
 
     /**
      * Get all tokens from PHP source normalized to always include line number.
-     *
-     * @param string $source
-     * @return array
      */
     private function getTokens(string $source): array
     {

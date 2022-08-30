@@ -21,7 +21,6 @@ trait NotEmptyTrait
      *
      * @param mixed $value
      * @param bool  $asString Cut spaces and make sure it's not empty when value is string.
-     * @return bool
      */
     public function notEmpty($value, bool $asString = true): bool
     {

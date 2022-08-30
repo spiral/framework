@@ -25,9 +25,7 @@ trait PrototypeTrait
      * Automatic resolution of scoped dependency to it's value. Relies
      * on global container scope.
      *
-     * @param string $name
      * @return mixed
-     *
      * @throws ScopeException
      */
     public function __get(string $name)

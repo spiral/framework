@@ -33,7 +33,6 @@ class TypeAnnotations
 
     /**
      * @param mixed $value
-     * @return string
      */
     public function getAnnotation($value): string
     {
@@ -44,19 +43,11 @@ class TypeAnnotations
         return $this->mapType(gettype($value));
     }
 
-    /**
-     * @param string $type
-     * @return string
-     */
     public function mapType(string $type): string
     {
         return self::MAPPED_ANNOTATION_TYPES[$type] ?? self::REAL_ANNOTATION_TYPES[$type] ?? 'mixed';
     }
 
-    /**
-     * @param array $value
-     * @return string
-     */
     private function arrayAnnotationString(array $value): string
     {
         $types = [];

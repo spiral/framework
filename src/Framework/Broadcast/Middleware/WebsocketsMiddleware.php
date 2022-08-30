@@ -23,20 +23,29 @@ use Spiral\Core\ScopeInterface;
 use Spiral\Http\Exception\ClientException;
 
 /**
+ * @deprecated since v2.12. Will be removed in v3.0
  * Authorizes websocket connections to server and topics.
  */
 final class WebsocketsMiddleware implements MiddlewareInterface
 {
-    /** @var WebsocketsConfig */
+    /**
+     * @var WebsocketsConfig
+     */
     private $config;
 
-    /** @var ScopeInterface */
+    /**
+     * @var ScopeInterface
+     */
     private $scope;
 
-    /** @var ResolverInterface */
+    /**
+     * @var ResolverInterface
+     */
     private $resolver;
 
-    /** @var ResponseFactoryInterface */
+    /**
+     * @var ResponseFactoryInterface
+     */
     private $responseFactory;
 
     /**
@@ -81,9 +90,9 @@ final class WebsocketsMiddleware implements MiddlewareInterface
         }
 
         // topic authorization
-        if (is_string($request->getAttribute('ws:joinTopics', null))) {
-            $topics = explode(',', $request->getAttribute('ws:joinTopics'));
-            foreach ($topics as $topic) {
+        $topics = $request->getAttribute('ws:joinTopics');
+        if (\is_string($topics)) {
+            foreach (\explode(',', $topics) as $topic) {
                 if (!$this->authorizeTopic($request, $topic)) {
                     return $this->responseFactory->createResponse(403);
                 }
@@ -104,6 +113,7 @@ final class WebsocketsMiddleware implements MiddlewareInterface
     private function authorizeServer(ServerRequestInterface $request): bool
     {
         $callback = $this->config->getServerCallback();
+
         if ($callback === null) {
             return true;
         }
@@ -140,15 +150,16 @@ final class WebsocketsMiddleware implements MiddlewareInterface
     private function invoke(ServerRequestInterface $request, callable $callback, array $parameters = []): bool
     {
         switch (true) {
-            case $callback instanceof \Closure || is_string($callback):
+            case $callback instanceof \Closure:
+            case \is_string($callback):
                 $reflection = new \ReflectionFunction($callback);
                 break;
 
-            case is_array($callback) && is_object($callback[0]):
+            case \is_array($callback) && \is_object($callback[0]):
                 $reflection = (new \ReflectionObject($callback[0]))->getMethod($callback[1]);
                 break;
 
-            case is_array($callback):
+            case \is_array($callback):
                 $reflection = (new \ReflectionClass($callback[0]))->getMethod($callback[1]);
                 break;
 
@@ -156,16 +167,10 @@ final class WebsocketsMiddleware implements MiddlewareInterface
                 throw new LogicException('Unable to invoke callable function');
         }
 
-        return $this->scope->runScope(
-            [
-                ServerRequestInterface::class => $request,
-            ],
-            function () use ($reflection, $parameters, $callback) {
-                return call_user_func_array(
-                    $callback,
-                    $this->resolver->resolveArguments($reflection, $parameters)
-                );
-            }
-        );
+        $scoped = function () use ($reflection, $parameters, $callback) {
+            return \call_user_func_array($callback, $this->resolver->resolveArguments($reflection, $parameters));
+        };
+
+        return $this->scope->runScope([ServerRequestInterface::class => $request], $scoped);
     }
 }

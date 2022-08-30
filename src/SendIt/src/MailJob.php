@@ -1,25 +1,20 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\SendIt;
 
-use Spiral\Jobs\HandlerInterface;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Logger\Traits\LoggerTrait;
+use Spiral\Queue\Exception\InvalidArgumentException;
+use Spiral\Queue\HandlerInterface;
 use Spiral\SendIt\Config\MailerConfig;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-final class MailJob implements HandlerInterface
+final class MailJob implements HandlerInterface, SingletonInterface
 {
     use LoggerTrait;
 
@@ -32,11 +27,6 @@ final class MailJob implements HandlerInterface
     /**  @var RendererInterface */
     private $renderer;
 
-    /**
-     * @param MailerConfig      $config
-     * @param SymfonyMailer     $mailer
-     * @param RendererInterface $renderer
-     */
     public function __construct(MailerConfig $config, SymfonyMailer $mailer, RendererInterface $renderer)
     {
         $this->config = $config;
@@ -45,14 +35,22 @@ final class MailJob implements HandlerInterface
     }
 
     /**
-     * @param string $jobType
-     * @param string $jobID
-     * @param string $payload
      * @throws TransportExceptionInterface
+     * @throws InvalidArgumentException
+     *
+     * @psalm-suppress ParamNameMismatch
      */
-    public function handle(string $jobType, string $jobID, string $payload): void
+    public function handle(string $name, string $id, $payload): void
     {
-        $message = MessageSerializer::unpack(json_decode($payload, true));
+        if (\is_string($payload)) {
+            $payload = json_decode($payload, true);
+        }
+
+        if (!\is_array($payload)) {
+            throw new InvalidArgumentException('Mail job payload should be an array.');
+        }
+
+        $message = MessageSerializer::unpack($payload);
 
         $email = $this->renderer->render($message);
 
@@ -88,10 +86,6 @@ final class MailJob implements HandlerInterface
         );
     }
 
-    /**
-     * @param Email $message
-     * @return array
-     */
     private function getRecipients(Email $message): array
     {
         $emails = [];

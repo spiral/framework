@@ -30,10 +30,6 @@ abstract class AbstractRoute implements RouteInterface
     /** @var array|null */
     protected $matches;
 
-    /**
-     * @param string $pattern
-     * @param array  $defaults
-     */
     public function __construct(string $pattern, array $defaults = [])
     {
         $this->pattern = $pattern;
@@ -41,8 +37,7 @@ abstract class AbstractRoute implements RouteInterface
     }
 
     /**
-     * @param UriHandler $uriHandler
-     * @return RouteInterface
+     * @return static
      */
     public function withUriHandler(UriHandler $uriHandler): RouteInterface
     {
@@ -91,11 +86,11 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * @inheritdoc
      */
-    public function uri($parameters = []): UriInterface
+    public function uri(iterable $parameters = []): UriInterface
     {
         return $this->uriHandler->uri(
             $parameters,
-            array_merge($this->defaults, $this->matches ?? [])
+            \array_merge($this->defaults, $this->matches ?? [])
         );
     }
 }

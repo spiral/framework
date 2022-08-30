@@ -19,6 +19,9 @@ use Spiral\Boot\FinalizerInterface;
 use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotterInterface;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class GRPCDispatcher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */

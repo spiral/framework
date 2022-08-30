@@ -30,8 +30,6 @@ final class Directory implements ImportInterface
     public $prefix;
 
     /**
-     * @param string       $path
-     * @param string       $prefix
      * @param Context|null $context
      */
     public function __construct(string $path, string $prefix, Context $context = null)

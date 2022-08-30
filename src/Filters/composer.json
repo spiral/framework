@@ -15,15 +15,15 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
-        "spiral/core": "^2.8",
-        "spiral/models": "^2.8",
-        "spiral/translator": "^2.8",
-        "spiral/validation": "^2.8"
+        "php": ">=7.4",
+        "spiral/core": "^2.14",
+        "spiral/models": "^2.14",
+        "spiral/translator": "^2.14",
+        "spiral/validation": "^2.14"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.0",
-        "mockery/mockery": "^1.3"
+        "phpunit/phpunit": "^8.5|^9.5",
+        "mockery/mockery": "^1.5"
     },
     "autoload": {
         "psr-4": {
@@ -37,7 +37,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.14.x-dev"
         }
     },
     "config": {

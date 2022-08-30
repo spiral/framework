@@ -25,7 +25,6 @@ final class Mixin implements NodeInterface
     public $nodes = [];
 
     /**
-     * @param array        $nodes
      * @param Context|null $context
      */
     public function __construct(array $nodes = [], Context $context = null)

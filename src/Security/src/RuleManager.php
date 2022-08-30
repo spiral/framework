@@ -22,14 +22,11 @@ use Spiral\Security\Rule\CallableRule;
 final class RuleManager implements RulesInterface, SingletonInterface
 {
     /** @var ContainerInterface */
-    private $container = null;
+    private $container;
 
     /** @var array */
     private $rules = [];
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -37,8 +34,6 @@ final class RuleManager implements RulesInterface, SingletonInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return $this
      */
     public function set(string $name, $rule = null): RuleManager
     {
@@ -57,8 +52,6 @@ final class RuleManager implements RulesInterface, SingletonInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return $this
      */
     public function remove(string $name): RuleManager
     {
@@ -132,7 +125,6 @@ final class RuleManager implements RulesInterface, SingletonInterface
      * Must return true if rule is valid.
      *
      * @param mixed $rule
-     * @return bool
      */
     private function validateRule($rule): bool
     {

@@ -20,8 +20,6 @@ trait ContainerTrait
 
     /**
      * Indicates that route has associated container.
-     *
-     * @return bool
      */
     public function hasContainer(): bool
     {

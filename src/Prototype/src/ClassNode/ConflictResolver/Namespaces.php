@@ -19,17 +19,11 @@ final class Namespaces
     /** @var Sequences */
     private $sequences;
 
-    /**
-     * @param Sequences $sequences
-     */
     public function __construct(Sequences $sequences)
     {
         $this->sequences = $sequences;
     }
 
-    /**
-     * @param ClassNode $definition
-     */
     public function resolve(ClassNode $definition): void
     {
         $namespaces = $this->getReservedNamespaces($definition);
@@ -38,24 +32,14 @@ final class Namespaces
         $this->resolveImportsNamespaces($definition, $counters);
     }
 
-    /**
-     * @param ClassNode $definition
-     * @return array
-     */
     private function getReservedNamespaces(ClassNode $definition): array
     {
         $namespaces = [];
         $namespaces = $this->getReservedNamespacesWithAlias($definition, $namespaces);
-        $namespaces = $this->getReservedNamespacesWithoutAlias($definition, $namespaces);
 
-        return $namespaces;
+        return $this->getReservedNamespacesWithoutAlias($definition, $namespaces);
     }
 
-    /**
-     * @param ClassNode $definition
-     * @param array     $namespaces
-     * @return array
-     */
     private function getReservedNamespacesWithAlias(ClassNode $definition, array $namespaces): array
     {
         foreach ($definition->getStmts() as $stmt) {
@@ -69,11 +53,6 @@ final class Namespaces
         return $namespaces;
     }
 
-    /**
-     * @param ClassNode $definition
-     * @param array     $namespaces
-     * @return array
-     */
     private function getReservedNamespacesWithoutAlias(ClassNode $definition, array $namespaces): array
     {
         foreach ($definition->getStmts() as $stmt) {
@@ -87,10 +66,6 @@ final class Namespaces
         return $namespaces;
     }
 
-    /**
-     * @param array $namespaces
-     * @return array
-     */
     private function initiateCounters(array $namespaces): array
     {
         $counters = [];
@@ -107,10 +82,6 @@ final class Namespaces
         return $counters;
     }
 
-    /**
-     * @param ClassNode $definition
-     * @param array     $counters
-     */
     private function resolveImportsNamespaces(ClassNode $definition, array $counters): void
     {
         if (!$definition->hasConstructor && $definition->constructorParams) {
@@ -166,8 +137,6 @@ final class Namespaces
 
     /**
      * @param NamespaceEntity[] $counters
-     * @param NamespaceEntity   $namespace
-     * @return NamespaceEntity|null
      */
     private function getAlreadyImportedNamespace(array $counters, NamespaceEntity $namespace): ?NamespaceEntity
     {
@@ -180,20 +149,11 @@ final class Namespaces
         return null;
     }
 
-    /**
-     * @param ClassNode\Type $type
-     * @return NamespaceEntity
-     */
     private function parseNamespaceFromType(ClassNode\Type $type): NamespaceEntity
     {
         return $this->parseNamespace($type->shortName, $type->name());
     }
 
-    /**
-     * @param string $shortName
-     * @param string $fullName
-     * @return NamespaceEntity
-     */
     private function parseNamespace(string $shortName, string $fullName): NamespaceEntity
     {
         if (preg_match("/\d+$/", $shortName, $match)) {

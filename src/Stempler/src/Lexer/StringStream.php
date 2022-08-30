@@ -24,9 +24,6 @@ final class StringStream implements StreamInterface
     /** @var int */
     private $offset;
 
-    /**
-     * @param string $source
-     */
     public function __construct(string $source)
     {
         $this->source = $source;
@@ -36,8 +33,6 @@ final class StringStream implements StreamInterface
 
     /**
      * Current scanner offset.
-     *
-     * @return int
      */
     public function getOffset(): int
     {
@@ -47,7 +42,6 @@ final class StringStream implements StreamInterface
     /**
      * Peak next character and advance the position.
      *
-     * @return string|null
      *
      * @throws ScannerException
      */
@@ -60,9 +54,6 @@ final class StringStream implements StreamInterface
         return $this->source[$this->offset++];
     }
 
-    /**
-     * @return bool
-     */
     public function isEOI(): bool
     {
         return $this->offset >= $this->length;

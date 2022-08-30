@@ -24,9 +24,6 @@ final class TrimRaw implements VisitorInterface
     /** @var string */
     private $trim;
 
-    /**
-     * @param string $charset
-     */
     public function __construct(string $charset = " \n\t\r")
     {
         $this->trim = $charset;

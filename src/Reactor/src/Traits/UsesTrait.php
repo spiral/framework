@@ -21,11 +21,6 @@ trait UsesTrait
      */
     private $uses = [];
 
-    /**
-     * @param string $class
-     *
-     * @return bool
-     */
     public function uses(string $class): bool
     {
         $class = ltrim($class, '\\');
@@ -36,9 +31,7 @@ trait UsesTrait
     /**
      * Declare uses in a form of array [class => alias|null]. Existed uses will be dropped.
      *
-     * @param array $uses
      *
-     * @return self
      */
     public function setUses(array $uses): self
     {
@@ -50,9 +43,7 @@ trait UsesTrait
     /**
      * Add additional set of uses.
      *
-     * @param array $uses
      *
-     * @return self
      */
     public function addUses(array $uses): self
     {
@@ -64,10 +55,8 @@ trait UsesTrait
     }
 
     /**
-     * @param string $class
      * @param string $alias Optional.
      *
-     * @return self
      */
     public function addUse(string $class, string $alias = null): self
     {
@@ -76,11 +65,6 @@ trait UsesTrait
         return $this;
     }
 
-    /**
-     * @param string $class
-     *
-     * @return self
-     */
     public function removeUse(string $class): self
     {
         unset($this->uses[ltrim($class, '\\')]);
@@ -88,27 +72,13 @@ trait UsesTrait
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getUses(): array
     {
         return $this->uses;
     }
 
-    /**
-     * @param string $string
-     * @param int    $indent
-     *
-     * @return string
-     */
     abstract protected function addIndent(string $string, int $indent = 0): string;
 
-    /**
-     * @param int $indentLevel
-     *
-     * @return string
-     */
     private function renderUses(int $indentLevel = 0): string
     {
         $lines = [];

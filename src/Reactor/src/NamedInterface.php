@@ -16,8 +16,5 @@ namespace Spiral\Reactor;
  */
 interface NamedInterface extends DeclarationInterface
 {
-    /**
-     * @return string
-     */
     public function getName(): string;
 }

@@ -17,10 +17,13 @@ use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\MemoryInterface;
-use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Core\Container;
 use Spiral\Cycle\SchemaCompiler;
+use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 final class SchemaBootloader extends Bootloader implements Container\SingletonInterface
 {
     public const GROUP_INDEX       = 'index';

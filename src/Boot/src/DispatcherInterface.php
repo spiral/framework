@@ -19,8 +19,6 @@ interface DispatcherInterface
 {
     /**
      * Must return true if dispatcher expects to handle requests in a current environment.
-     *
-     * @return bool
      */
     public function canServe(): bool;
 

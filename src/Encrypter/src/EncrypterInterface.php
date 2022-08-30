@@ -23,17 +23,13 @@ interface EncrypterInterface
     /**
      * Create and encrypter instance with new key.
      *
-     * @param string $key
      *
-     * @return self
      * @throws EncrypterException
      */
     public function withKey(string $key): EncrypterInterface;
 
     /**
      * Encryption ket value. Returns in a format of ANSI string.
-     *
-     * @return string
      */
     public function getKey(): string;
 
@@ -45,7 +41,6 @@ interface EncrypterInterface
      *
      * @param mixed $data
      *
-     * @return string
      * @throws EncryptException
      * @throws EncrypterException
      */
@@ -56,7 +51,6 @@ interface EncrypterInterface
      *
      * @see encrypt()
      *
-     * @param string $payload
      *
      * @return mixed
      * @throws DecryptException

@@ -23,10 +23,6 @@ trait NamedTrait
 
     /**
      * Attention, element name will be automatically classified.
-     *
-     * @param string $name
-     *
-     * @return $this|self
      */
     public function setName(string $name): self
     {
@@ -35,9 +31,6 @@ trait NamedTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;

@@ -23,14 +23,8 @@ final class CallableSequence extends AbstractSequence
     /** @var string */
     private $function;
 
-    /** @var array */
-    private $parameters = [];
-
     /**
      * @param callable $function
-     * @param array    $parameters
-     * @param string   $header
-     * @param string   $footer
      */
     public function __construct(
         $function,
@@ -39,7 +33,6 @@ final class CallableSequence extends AbstractSequence
         string $footer = ''
     ) {
         $this->function = $function;
-        $this->parameters = $parameters;
 
         parent::__construct($header, $footer);
     }

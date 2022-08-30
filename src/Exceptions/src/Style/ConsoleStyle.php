@@ -125,10 +125,6 @@ class ConsoleStyle implements StyleInterface
 
     /**
      * Get styles for a given token.
-     *
-     * @param array $token
-     * @param array $previous
-     * @return string
      */
     private function getStyle(array $token, array $previous): string
     {

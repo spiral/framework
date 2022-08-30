@@ -18,9 +18,6 @@ final class Utils
 {
     /**
      * Create short name (without namespaces).
-     *
-     * @param string $name
-     * @return string
      */
     public static function shortName(string $name): string
     {
@@ -34,11 +31,6 @@ final class Utils
 
     /**
      * Inject values to array at given index.
-     *
-     * @param array $stmts
-     * @param int   $index
-     * @param array $child
-     * @return array
      */
     public static function injectValues(array $stmts, int $index, array $child): array
     {
@@ -50,10 +42,6 @@ final class Utils
 
     /**
      * Remove trailing digits in the given name.
-     *
-     * @param string $name
-     * @param int    $number
-     * @return string
      */
     public static function trimTrailingDigits(string $name, int $number): string
     {

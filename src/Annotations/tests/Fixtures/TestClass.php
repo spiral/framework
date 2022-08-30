@@ -11,20 +11,20 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Annotations\Fixtures;
 
-use Spiral\Tests\Annotations\Fixtures\Annotation\Another;
-use Spiral\Tests\Annotations\Fixtures\Annotation\Route;
-use Spiral\Tests\Annotations\Fixtures\Annotation\Value;
+use Spiral\Tests\Annotations\Fixtures\Annotation\PropertyAnnotation;
+use Spiral\Tests\Annotations\Fixtures\Annotation\MethodAnnotation;
+use Spiral\Tests\Annotations\Fixtures\Annotation\ClassAnnotation;
 
 /**
- * @Value(value="abc")
+ * @ClassAnnotation(value="abc")
  */
 class TestClass
 {
-    /** @Another(id="123") */
+    /** @PropertyAnnotation(id="123") */
     public $name;
 
     /**
-     * @Route(path="/")
+     * @MethodAnnotation(path="/")
      */
     public function testMethod()
     {

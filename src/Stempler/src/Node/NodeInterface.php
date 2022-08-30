@@ -18,8 +18,5 @@ use Spiral\Stempler\Parser\Context;
  */
 interface NodeInterface extends \IteratorAggregate
 {
-    /**
-     * @return Context|null
-     */
     public function getContext(): ?Context;
 }

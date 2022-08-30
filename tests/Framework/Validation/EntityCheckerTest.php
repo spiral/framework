@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Validation;
 
 use Cycle\ORM\TransactionInterface;
-use Spiral\Database\Database;
-use Spiral\Database\DatabaseInterface;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseInterface;
 use Spiral\App\TestApp;
 use Spiral\App\User\User;
 use Spiral\Tests\Framework\BaseTest;
@@ -45,6 +45,16 @@ class EntityCheckerTest extends BaseTest
         $this->assertTrue($this->exists(1));
     }
 
+    public function testCaseInsensitiveExists(): void
+    {
+        $transaction = $this->app->get(TransactionInterface::class);
+        $transaction->persist(new User('Valentin'));
+        $transaction->run();
+
+        $this->assertTrue($this->exists('vALenTIn', 'name', true));
+        $this->assertFalse($this->exists('valentin', 'name', false));
+    }
+
     /**
      * @throws Throwable
      */
@@ -72,6 +82,18 @@ class EntityCheckerTest extends BaseTest
 
         $this->assertTrue($this->isUnique('John', 'name'));
         $this->assertFalse($this->isUnique('Valentin', 'name'));
+    }
+
+    public function testCaseInsensitiveUnique(): void
+    {
+        $transaction = $this->app->get(TransactionInterface::class);
+        $transaction->persist(new User('Valentin'));
+        $transaction->run();
+
+        $this->assertFalse($this->isUnique('vaLeNtIN', 'name', [], null, [], true));
+        $this->assertFalse($this->isUnique('1', 'id', ['name' => 'valEntIn'], null, ['name'], true));
+        $this->assertTrue($this->isUnique('vaLeNtIN', 'name'));
+        $this->assertTrue($this->isUnique('1', 'id', ['name' => 'valEntIn'], null, ['name']));
     }
 
     /**
@@ -107,15 +129,16 @@ class EntityCheckerTest extends BaseTest
     /**
      * @param mixed       $value
      * @param string|null $field
+     * @param bool        $ignoreCase
      * @return bool
      */
-    private function exists($value, ?string $field = null): bool
+    private function exists($value, ?string $field = null, bool $ignoreCase = false): bool
     {
         /** @var ValidationInterface $validator */
         $validator = $this->app->get(ValidationInterface::class);
         $validator = $validator->validate(
             ['value' => $value],
-            ['value' => [['entity::exists', User::class, $field]]]
+            ['value' => [['entity::exists', User::class, $field, $ignoreCase]]]
         );
 
         return $validator->isValid();
@@ -127,6 +150,7 @@ class EntityCheckerTest extends BaseTest
      * @param array       $data
      * @param object|null $context
      * @param string[]    $fields
+     * @param bool        $ignoreCase
      * @return bool
      */
     private function isUnique(
@@ -134,13 +158,14 @@ class EntityCheckerTest extends BaseTest
         string $field,
         array $data = [],
         ?object $context = null,
-        array $fields = []
+        array $fields = [],
+        bool $ignoreCase = false
     ): bool {
         /** @var ValidationInterface $validator */
         $validator = $this->app->get(ValidationInterface::class);
         $validator = $validator->validate(
             ['value' => $value] + $data,
-            ['value' => [['entity::unique', User::class, $field, $fields]]]
+            ['value' => [['entity::unique', User::class, $field, $fields, $ignoreCase]]]
         );
         if ($context !== null) {
             $validator = $validator->withContext($context);

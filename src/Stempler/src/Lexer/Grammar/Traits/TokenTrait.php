@@ -19,11 +19,6 @@ trait TokenTrait
     /** @var Token[] */
     private $tokens = [];
 
-    /**
-     * @param array $inner
-     * @param int   $type
-     * @return Token
-     */
     private function packToken(array $inner, int $type): Token
     {
         $token = new Token($type, 0, '');

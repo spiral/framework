@@ -16,6 +16,7 @@ use DateTimeInterface;
 use Spiral\Auth\TokenInterface;
 
 /**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
  * @Cycle\Entity(table="auth_tokens")
  */
 final class Token implements TokenInterface

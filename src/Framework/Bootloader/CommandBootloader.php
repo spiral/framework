@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader;
 
+use Cycle\Database\DatabaseProviderInterface;
 use Cycle\ORM\ORMInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
@@ -23,9 +24,9 @@ use Spiral\Command\Router;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
 use Spiral\Console;
+use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Container;
-use Spiral\Database\DatabaseProviderInterface;
 use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\GRPC\InvokerInterface;
@@ -112,31 +113,33 @@ final class CommandBootloader extends Bootloader
     }
 
     /**
+     * @deprecated since v2.12. Will be moved to spiral/cycle-bridge and removed in v3.0
      * @param ConsoleBootloader $console
      */
     private function configureDatabase(ConsoleBootloader $console): void
     {
-        $console->addCommand(Database\ListCommand::class);
-        $console->addCommand(Database\TableCommand::class);
+        $console->addCommand(Database\ListCommand::class, true);
+        $console->addCommand(Database\TableCommand::class, true);
     }
 
     /**
+     * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
      * @param ConsoleBootloader  $console
      * @param ContainerInterface $container
      */
     private function configureCycle(ConsoleBootloader $console, ContainerInterface $container): void
     {
-        $console->addCommand(Cycle\UpdateCommand::class);
+        $console->addCommand(Cycle\UpdateCommand::class, true);
 
         $console->addUpdateSequence(
             'cycle',
             '<fg=magenta>[cycle]</fg=magenta> <fg=cyan>update Cycle schema...</fg=cyan>'
         );
 
-        $console->addCommand(Cycle\SyncCommand::class);
+        $console->addCommand(Cycle\SyncCommand::class, true);
 
         if ($container->has(Migrator::class)) {
-            $console->addCommand(Cycle\MigrateCommand::class);
+            $console->addCommand(Cycle\MigrateCommand::class, true);
         }
     }
 
@@ -178,24 +181,26 @@ final class CommandBootloader extends Bootloader
     }
 
     /**
+     * @deprecated since v2.12. Will be moved to spiral/cycle-bridge and removed in v3.0
      * @param ConsoleBootloader $console
      */
     private function configureMigrations(ConsoleBootloader $console): void
     {
-        $console->addCommand(Migrate\InitCommand::class);
-        $console->addCommand(Migrate\StatusCommand::class);
-        $console->addCommand(Migrate\MigrateCommand::class);
-        $console->addCommand(Migrate\RollbackCommand::class);
-        $console->addCommand(Migrate\ReplayCommand::class);
+        $console->addCommand(Migrate\InitCommand::class, true);
+        $console->addCommand(Migrate\StatusCommand::class, true);
+        $console->addCommand(Migrate\MigrateCommand::class, true);
+        $console->addCommand(Migrate\RollbackCommand::class, true);
+        $console->addCommand(Migrate\ReplayCommand::class, true);
     }
 
     /**
+     * @deprecated since v2.12. Will be moved to spiral/roadrunner-bridge and removed in v3.0
      * @param ConsoleBootloader $console
      */
     private function configureGRPC(ConsoleBootloader $console): void
     {
-        $console->addCommand(GRPC\GenerateCommand::class);
-        $console->addCommand(GRPC\ListCommand::class);
+        $console->addCommand(GRPC\GenerateCommand::class, true);
+        $console->addCommand(GRPC\ListCommand::class, true);
     }
 
     /**

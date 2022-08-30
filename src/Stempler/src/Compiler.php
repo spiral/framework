@@ -24,9 +24,6 @@ final class Compiler
     /** @var RendererInterface[] */
     private $renders = [];
 
-    /**
-     * @param RendererInterface $renderer
-     */
     public function addRenderer(RendererInterface $renderer): void
     {
         $this->renders[] = $renderer;
@@ -35,7 +32,6 @@ final class Compiler
     /**
      * @param NodeInterface|array $node
      * @param Result|null         $result
-     * @return Result
      */
     public function compile($node, Result $result = null): Result
     {

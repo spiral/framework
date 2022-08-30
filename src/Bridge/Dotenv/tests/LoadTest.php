@@ -29,7 +29,10 @@ class LoadTest extends TestCase
 
     public function testFound()
     {
-        $e = new Environment();
+        $e = new Environment([
+            'KEY' => 'value'
+        ]);
+
         $d = new Directories(['root' => __DIR__]);
 
         $b = new DotenvBootloader();

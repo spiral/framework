@@ -20,9 +20,6 @@ final class Sorter implements SorterInterface
     /** @var DirectionalSorter */
     private $sorter;
 
-    /**
-     * @param string ...$expressions
-     */
     public function __construct(string ...$expressions)
     {
         $this->sorter = new DirectionalSorter(new AscSorter(...$expressions), new DescSorter(...$expressions));
@@ -40,7 +37,6 @@ final class Sorter implements SorterInterface
 
     /**
      * @inheritDoc
-     * @return string|null
      */
     public function getValue(): ?string
     {

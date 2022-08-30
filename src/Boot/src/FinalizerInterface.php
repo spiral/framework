@@ -19,8 +19,6 @@ interface FinalizerInterface
     /**
      * Finalizers are executed after every request and used for garbage collection
      * or to close open connections.
-     *
-     * @param callable $finalizer
      */
     public function addFinalizer(callable $finalizer);
 

@@ -65,7 +65,7 @@ final class ConfigurationBootloader extends Bootloader
         }
     }
 
-    private function createConfigManager(): ConfiguratorInterface
+    private function createConfigManager(): ConfigManager
     {
         return new ConfigManager(
             new DirectoryLoader($this->directories->get('config'), $this->loaders),
@@ -73,9 +73,6 @@ final class ConfigurationBootloader extends Bootloader
         );
     }
 
-    /**
-     * @return ConfiguratorInterface
-     */
     private function configManager(): ConfiguratorInterface
     {
         return $this->configurator;

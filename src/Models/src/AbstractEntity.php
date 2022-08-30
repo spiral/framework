@@ -23,9 +23,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /** @var array */
     private $fields;
 
-    /**
-     * @param array $data
-     */
     public function __construct(array $data = [])
     {
         $this->fields = $data;
@@ -39,37 +36,28 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
         $this->flushFields();
     }
 
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function __isset($offset)
+    public function __isset(string $offset): bool
     {
         return $this->hasField($offset);
     }
 
     /**
-     * @param mixed $offset
      * @return mixed
      */
-    public function __get($offset)
+    public function __get(string $offset)
     {
         return $this->getField($offset);
     }
 
     /**
-     * @param mixed $offset
      * @param mixed $value
      */
-    public function __set($offset, $value): void
+    public function __set(string $offset, $value): void
     {
         $this->setField($offset, $value);
     }
 
-    /**
-     * @param mixed $offset
-     */
-    public function __unset($offset): void
+    public function __unset(string $offset): void
     {
         unset($this->fields[$offset]);
     }
@@ -149,10 +137,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array|\Traversable $fields
-     * @param bool               $all Fill all fields including non fillable.
+     * @param bool $all Fill all fields including non fillable.
      * @return $this
      *
      * @throws AccessException
@@ -161,9 +146,9 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
      * @see   isFillable()
      * @see   $fillable
      */
-    public function setFields($fields = [], bool $all = false)
+    public function setFields(iterable $fields = [], bool $all = false)
     {
-        if (!is_array($fields) && !$fields instanceof \Traversable) {
+        if (!\is_array($fields) && !$fields instanceof \Traversable) {
             return $this;
         }
 
@@ -172,7 +157,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
                 try {
                     $this->setField($name, $value, true);
                 } catch (AccessExceptionInterface $e) {
-                    //We are suppressing field setting exceptions
+                    // We are suppressing field setting exceptions
                 }
             }
         }
@@ -202,7 +187,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->__isset($offset);
     }
@@ -210,6 +195,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getField($offset);
@@ -241,8 +227,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
 
     /**
      * AccessorInterface dependency.
-     *
-     * {@inheritdoc}
      */
     public function setValue($data)
     {
@@ -252,7 +236,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * Pack entity fields into plain array.
      *
-     * @return array
      *
      * @throws AccessException
      */
@@ -272,8 +255,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
 
     /**
      * Alias for packFields.
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -281,21 +262,21 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     }
 
     /**
-     * {@inheritdoc}
-     *
      * By default use publicFields to be json serialized.
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->getValue();
     }
 
     /**
-     * @return array
+     * @return int[]|string[]
+     *
+     * @psalm-return list<array-key>
      */
     protected function getKeys(): array
     {
-        return array_keys($this->fields);
+        return \array_keys($this->fields);
     }
 
     /**
@@ -309,28 +290,20 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * Check if field is fillable.
      *
-     * @param string $field
      *
-     * @return bool
      */
     abstract protected function isFillable(string $field): bool;
 
     /**
      * Get mutator associated with given field.
      *
-     * @param string $field
      * @param string $type See MUTATOR_* constants
-     *
      * @return mixed
      */
     abstract protected function getMutator(string $field, string $type);
 
     /**
      * Nullable fields would not require automatic accessor creation.
-     *
-     * @param string $field
-     *
-     * @return bool
      */
     protected function isNullable(string $field): bool
     {
@@ -341,7 +314,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
      * Create instance of field accessor.
      *
      * @param mixed|string $type    Might be entity implementation specific.
-     * @param string       $name
      * @param mixed        $value
      * @param array        $context Custom accessor context.
      * @return ValueInterface|null
@@ -368,8 +340,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * Get value thought associated mutator.
      *
-     * @param string $name
-     * @param bool   $filter
      * @param mixed  $value
      * @return mixed
      */
@@ -392,7 +362,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * Set value thought associated mutator.
      *
-     * @param string $name
      * @param mixed  $value
      */
     private function setMutated(string $name, $value): void
@@ -413,7 +382,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * Set value in/thought associated accessor.
      *
-     * @param string       $name
      * @param string|array $type Accessor definition (implementation specific).
      * @param mixed        $value
      */

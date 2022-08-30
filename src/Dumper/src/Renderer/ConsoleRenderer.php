@@ -15,6 +15,8 @@ use Codedungeon\PHPCliColors\Color;
 
 /**
  * Colorful styling for CLI dumps.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 final class ConsoleRenderer extends AbstractRenderer
 {
@@ -80,10 +82,7 @@ final class ConsoleRenderer extends AbstractRenderer
     /**
      * Get valid style based on type and context/.
      *
-     * @param string $type
-     * @param string $context
      *
-     * @return string
      */
     private function getStyle(string $type, string $context): string
     {

@@ -16,9 +16,5 @@ use Symfony\Component\Mime\Email;
 
 interface RendererInterface
 {
-    /**
-     * @param MessageInterface $message
-     * @return Email
-     */
     public function render(MessageInterface $message): Email;
 }

@@ -21,20 +21,14 @@ interface RuleInterface
      * ["email"]             // passed empty values
      *
      * @param mixed $value
-     *
-     * @return bool
      */
     public function ignoreEmpty($value): bool;
 
     /**
      * @param \SplObjectStorage|null $conditions
-     * @return RuleInterface
      */
     public function withConditions(\SplObjectStorage $conditions = null): RuleInterface;
 
-    /**
-     * @return bool
-     */
     public function hasConditions(): bool;
 
     /**
@@ -45,21 +39,16 @@ interface RuleInterface
     public function getConditions(): \Generator;
 
     /**
-     * @param ValidatorInterface $v
-     * @param string             $field
      * @param mixed              $value
      *
-     * @return bool
      */
     public function validate(ValidatorInterface $v, string $field, $value): bool;
 
     /**
      * Get validation error message.
      *
-     * @param string $field
      * @param mixed  $value
      *
-     * @return string
      */
     public function getMessage(string $field, $value): string;
 }

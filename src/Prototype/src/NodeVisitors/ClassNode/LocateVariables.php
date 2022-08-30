@@ -41,9 +41,6 @@ final class LocateVariables extends NodeVisitorAbstract
         return null;
     }
 
-    /**
-     * @return array
-     */
     public function getVars(): array
     {
         return $this->vars;

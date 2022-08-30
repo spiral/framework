@@ -181,11 +181,6 @@ final class HTMLSyntax implements SyntaxInterface
         $this->attr = null;
     }
 
-    /**
-     * @param Parser $parser
-     * @param Token  $token
-     * @return Verbatim
-     */
     private function parseVerbatim(Parser $parser, Token $token): Verbatim
     {
         $verbatim = new Verbatim(new Parser\Context($token, $parser->getPath()));

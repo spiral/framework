@@ -23,7 +23,6 @@ use Spiral\Prototype\Utils;
 final class RemoveTrait extends NodeVisitorAbstract
 {
     /**
-     * @param Node $node
      * @return int|null|Node|Node[]
      */
     public function leaveNode(Node $node)

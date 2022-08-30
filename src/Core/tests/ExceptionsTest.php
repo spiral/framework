@@ -19,6 +19,7 @@ use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\DependencyException;
 use Spiral\Core\Exception\LogicException;
+use Spiral\Tests\Core\Fixtures\IntersectionTypes;
 use Spiral\Tests\Core\Fixtures\UnionTypes;
 
 class ExceptionsTest extends TestCase
@@ -64,6 +65,19 @@ class ExceptionsTest extends TestCase
         $container = new Container();
 
         $container->resolveArguments(new \ReflectionMethod(UnionTypes::class, 'example'));
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testInjectionUsingIntersectionTypes(): void
+    {
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage('intersection type hint that cannot be inferred unambiguously');
+
+        $container = new Container();
+
+        $container->resolveArguments(new \ReflectionMethod(IntersectionTypes::class, 'example'));
     }
 
     public function testArgumentException(string $param = null): void

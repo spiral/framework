@@ -28,9 +28,7 @@ final class ValueDependency implements DependencyInterface
     private $variants;
 
     /**
-     * @param string $name
      * @param mixed  $value
-     * @param array  $variants
      */
     public function __construct(string $name, $value, array $variants = null)
     {

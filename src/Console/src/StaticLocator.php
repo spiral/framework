@@ -12,24 +12,23 @@ declare(strict_types=1);
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Console\Traits\LazyTrait;
 use Spiral\Core\Container;
 
 final class StaticLocator implements LocatorInterface
 {
-    /** @var []string */
+    use LazyTrait;
+
+    /** @var string[] */
     private $commands;
 
     /** @var ContainerInterface */
-    private $factory;
+    private $container;
 
-    /**
-     * @param array               $commands
-     * @param  ContainerInterface $container
-     */
     public function __construct(array $commands, ContainerInterface $container = null)
     {
         $this->commands = $commands;
-        $this->factory = $container ?? new Container();
+        $this->container = $container ?? new Container();
     }
 
     /**
@@ -39,7 +38,9 @@ final class StaticLocator implements LocatorInterface
     {
         $commands = [];
         foreach ($this->commands as $command) {
-            $commands[] = $this->factory->get($command);
+            $commands[] = $this->supportsLazyLoading($command)
+                ? $this->createLazyCommand($command)
+                : $this->container->get($command);
         }
 
         return $commands;

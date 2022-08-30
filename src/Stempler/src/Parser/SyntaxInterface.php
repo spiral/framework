@@ -19,9 +19,6 @@ interface SyntaxInterface
 {
     /**
      *
-     * @param Parser    $parser
-     * @param Assembler $asm
-     * @param Token     $token
      *
      * @throws SyntaxException
      */

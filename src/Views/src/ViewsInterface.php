@@ -18,8 +18,6 @@ interface ViewsInterface
     /**
      * Get instance of view class associated with view path (path can include namespace).
      *
-     * @param string $path
-     * @return ViewInterface
      *
      * @throws ViewException
      */
@@ -28,7 +26,6 @@ interface ViewsInterface
     /**
      * Compile one of multiple cache versions for a given view path.
      *
-     * @param string $path
      *
      * @throws ViewException
      */
@@ -37,7 +34,6 @@ interface ViewsInterface
     /**
      * Reset view cache for a given path.
      *
-     * @param string $path
      *
      * @throws ViewException
      */
@@ -45,10 +41,6 @@ interface ViewsInterface
 
     /**
      * Render template.
-     *
-     * @param string $path
-     * @param array  $data
-     * @return string
      */
     public function render(string $path, array $data = []): string;
 }

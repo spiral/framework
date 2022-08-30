@@ -24,20 +24,16 @@ final class ILike implements FilterInterface
     public function withValue($value): ?SpecificationInterface
     {
         $filter = clone $this;
-        return $filter->like->withValue($value);
+        $filter->like = $filter->like->withValue($value);
+
+        return $filter;
     }
 
-    /**
-     * @return string
-     */
     public function getExpression(): string
     {
         return $this->like->getExpression();
     }
 
-    /**
-     * @return string
-     */
     public function getPattern(): string
     {
         return $this->like->getPattern();

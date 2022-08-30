@@ -45,8 +45,6 @@ final class ConstructorParam
     }
 
     /**
-     * @param \ReflectionParameter $parameter
-     * @return ConstructorParam
      *
      * @throws \ReflectionException
      */
@@ -73,9 +71,6 @@ final class ConstructorParam
         return $stmt;
     }
 
-    /**
-     * @return bool
-     */
     public function isBuiltIn(): bool
     {
         return $this->builtIn;

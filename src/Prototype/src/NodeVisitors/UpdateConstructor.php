@@ -28,16 +28,12 @@ final class UpdateConstructor extends NodeVisitorAbstract
     /** @var ClassNode */
     private $definition;
 
-    /**
-     * @param ClassNode $definition
-     */
     public function __construct(ClassNode $definition)
     {
         $this->definition = $definition;
     }
 
     /**
-     * @param Node $node
      * @return int|null|Node|Node[]
      */
     public function leaveNode(Node $node)
@@ -61,8 +57,6 @@ final class UpdateConstructor extends NodeVisitorAbstract
 
     /**
      * Add dependencies to constructor method.
-     *
-     * @param Node\Stmt\ClassMethod $constructor
      */
     private function addDependencies(Node\Stmt\ClassMethod $constructor): void
     {
@@ -86,9 +80,6 @@ final class UpdateConstructor extends NodeVisitorAbstract
         return $param->setType(new Node\Name($this->getPropertyType($dependency)))->getNode();
     }
 
-    /**
-     * @param Node\Stmt\ClassMethod $constructor
-     */
     private function addParentConstructorCall(Node\Stmt\ClassMethod $constructor): void
     {
         $parentConstructorDependencies = [];
@@ -133,10 +124,6 @@ final class UpdateConstructor extends NodeVisitorAbstract
         }
     }
 
-    /**
-     * @param Node\Stmt\Class_ $node
-     * @return Node\Stmt\ClassMethod
-     */
     private function getConstructorAttribute(Node\Stmt\Class_ $node): Node\Stmt\ClassMethod
     {
         return $node->getAttribute('constructor');
@@ -146,7 +133,6 @@ final class UpdateConstructor extends NodeVisitorAbstract
      * Add PHPDoc comments into __construct.
      *
      * @param Doc|null $doc
-     * @return Doc
      */
     private function addComments(Doc $doc = null): Doc
     {
@@ -207,10 +193,6 @@ final class UpdateConstructor extends NodeVisitorAbstract
         return new Doc($an->compile());
     }
 
-    /**
-     * @param Dependency $dependency
-     * @return string
-     */
     private function getPropertyType(Dependency $dependency): string
     {
         foreach ($this->definition->getStmts() as $stmt) {
@@ -224,10 +206,6 @@ final class UpdateConstructor extends NodeVisitorAbstract
         return $dependency->type->getAliasOrShortName();
     }
 
-    /**
-     * @param ClassNode\ConstructorParam $param
-     * @return string
-     */
     private function getParamType(ClassNode\ConstructorParam $param): string
     {
         foreach ($this->definition->getStmts() as $stmt) {

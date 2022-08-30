@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Annotations;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class AnnotatedClass
 {
     /** @var \ReflectionClass */
@@ -20,7 +23,6 @@ final class AnnotatedClass
     private $annotation;
 
     /**
-     * @param \ReflectionClass $class
      * @param mixed            $annotation
      */
     public function __construct(\ReflectionClass $class, $annotation)
@@ -29,9 +31,6 @@ final class AnnotatedClass
         $this->annotation = $annotation;
     }
 
-    /**
-     * @return \ReflectionClass
-     */
     public function getClass(): \ReflectionClass
     {
         return $this->class;

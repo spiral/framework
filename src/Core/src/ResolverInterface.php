@@ -24,7 +24,6 @@ interface ResolverInterface
      *
      * @param ContextFunction $reflection Target function or method.
      * @param array           $parameters User specified parameters.
-     * @return array
      *
      * @throws ArgumentException
      */

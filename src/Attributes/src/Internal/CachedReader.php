@@ -26,7 +26,6 @@ abstract class CachedReader extends Decorator
     protected $key;
 
     /**
-     * @param ReaderInterface $reader
      * @param KeyGeneratorInterface|null $generator
      */
     public function __construct(ReaderInterface $reader, KeyGeneratorInterface $generator = null)
@@ -96,9 +95,6 @@ abstract class CachedReader extends Decorator
         return $this->filter($name, $result);
     }
 
-    /**
-     * @return KeyGeneratorInterface
-     */
     protected function createDefaultKeyGenerator(): KeyGeneratorInterface
     {
         return new HashKeyGenerator(
@@ -111,7 +107,6 @@ abstract class CachedReader extends Decorator
 
     /**
      * @template T of object
-     * @param string $key
      * @param callable(): array<T> $then
      * @return iterable<T>
      */

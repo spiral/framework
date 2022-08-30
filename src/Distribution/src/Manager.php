@@ -38,16 +38,12 @@ final class Manager implements MutableDistributionInterface
      */
     private $default;
 
-    /**
-     * @param string $name
-     */
     public function __construct(string $name = self::DEFAULT_RESOLVER)
     {
         $this->default = $name;
     }
 
     /**
-     * @param string $name
      * @return $this
      */
     public function withDefault(string $name): DistributionInterface

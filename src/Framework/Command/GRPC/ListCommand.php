@@ -14,6 +14,9 @@ namespace Spiral\Command\GRPC;
 use Spiral\Console\Command;
 use Spiral\GRPC\LocatorInterface;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class ListCommand extends Command
 {
     protected const NAME        = 'grpc:services';

@@ -18,6 +18,8 @@ use Spiral\Exceptions\Style\HtmlStyle;
 
 /**
  * Render exception information into html.
+ *
+ * @deprecated since v2.13. Will be removed in v3.0
  */
 class HtmlHandler extends AbstractHandler
 {
@@ -28,23 +30,20 @@ class HtmlHandler extends AbstractHandler
     public const INVERTED = 'inverted';
 
     /** @var HtmlRenderer */
-    protected $renderer = null;
+    protected $renderer;
 
     /** @var Highlighter */
-    protected $highlighter = null;
+    protected $highlighter;
 
     /** @var string */
     protected $style = self::DEFAULT;
 
     /** @var Dumper */
-    protected $dumper = null;
+    protected $dumper;
 
     /** @var StateInterface|null */
     protected $state;
 
-    /**
-     * @param string $style
-     */
     public function __construct(string $style = self::DEFAULT)
     {
         $this->style = $style;
@@ -61,10 +60,6 @@ class HtmlHandler extends AbstractHandler
         $this->dumper->setRenderer(Dumper::RETURN, $this->renderer);
     }
 
-    /**
-     * @param StateInterface $state
-     * @return HandlerInterface
-     */
     public function withState(StateInterface $state): HandlerInterface
     {
         $handler = clone $this;
@@ -130,10 +125,6 @@ class HtmlHandler extends AbstractHandler
 
     /**
      * Render PHP template.
-     *
-     * @param string $view
-     * @param array  $options
-     * @return string
      */
     private function render(string $view, array $options = []): string
     {
@@ -147,9 +138,6 @@ class HtmlHandler extends AbstractHandler
 
     /**
      * Get view filename.
-     *
-     * @param string $view
-     * @return string
      */
     private function getFilename(string $view): string
     {

@@ -19,6 +19,9 @@ use Spiral\Boot\FinalizerInterface;
 use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotterInterface;
 
+/**
+ * @deprecated since 2.9. Will be removed since 3.0
+ */
 final class JobDispatcher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */

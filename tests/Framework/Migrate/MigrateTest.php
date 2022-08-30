@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Migrate;
 
-use Spiral\Database\Database;
+use Cycle\Database\Database;
 use Spiral\Tests\Framework\ConsoleTest;
 
 class MigrateTest extends ConsoleTest

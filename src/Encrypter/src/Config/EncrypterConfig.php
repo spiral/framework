@@ -32,8 +32,6 @@ final class EncrypterConfig extends InjectableConfig
 
     /**
      * Encryption key in BASE64 format.
-     *
-     * @return string
      */
     public function getKey(): string
     {

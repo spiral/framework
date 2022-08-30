@@ -29,7 +29,6 @@ final class Context
     private $values = [];
 
     /**
-     * @param Token       $token
      * @param string|null $path
      */
     public function __construct(Token $token, string $path = null)
@@ -38,26 +37,18 @@ final class Context
         $this->path = $path;
     }
 
-    /**
-     * @return Token
-     */
     public function getToken(): Token
     {
         return $this->token;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPath(): ?string
     {
         return $this->path;
     }
 
     /**
-     * @param string $name
      * @param mixed  $value
-     * @return $this
      */
     public function withValue(string $name, $value): self
     {
@@ -67,7 +58,6 @@ final class Context
     }
 
     /**
-     * @param string $name
      * @param null   $default
      * @return mixed|null
      */

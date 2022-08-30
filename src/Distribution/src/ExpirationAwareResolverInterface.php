@@ -19,14 +19,10 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 interface ExpirationAwareResolverInterface
 {
-    /**
-     * @return \DateInterval
-     */
     public function getExpirationDate(): \DateInterval;
 
     /**
      * @param DateIntervalFormat $duration
-     * @return $this
      */
     public function withExpirationDate($duration): self;
 }

@@ -72,7 +72,6 @@ final class UriHandler
     private $options = [];
 
     /**
-     * @param UriFactoryInterface   $uriFactory
      * @param SlugifyInterface|null $slugify
      */
     public function __construct(
@@ -83,19 +82,11 @@ final class UriHandler
         $this->slugify = $slugify ?? new Slugify();
     }
 
-    /**
-     * @return string
-     */
     public function getPattern(): string
     {
         return $this->pattern;
     }
 
-    /**
-     * @param array $constrains
-     * @param array $defaults
-     * @return UriHandler
-     */
     public function withConstrains(array $constrains, array $defaults = []): self
     {
         $uriHandler = clone $this;
@@ -106,9 +97,6 @@ final class UriHandler
         return $uriHandler;
     }
 
-    /**
-     * @return array
-     */
     public function getConstrains(): array
     {
         return $this->constrains;
@@ -116,7 +104,6 @@ final class UriHandler
 
     /**
      * @param string $prefix
-     * @return UriHandler
      */
     public function withPrefix($prefix): self
     {
@@ -127,18 +114,11 @@ final class UriHandler
         return $uriHandler;
     }
 
-    /**
-     * @return string
-     */
     public function getPrefix(): string
     {
         return $this->prefix;
     }
 
-    /**
-     * @param string $pattern
-     * @return UriHandler
-     */
     public function withPattern(string $pattern): self
     {
         $uriHandler = clone $this;
@@ -149,9 +129,6 @@ final class UriHandler
         return $uriHandler;
     }
 
-    /**
-     * @return bool
-     */
     public function isCompiled(): bool
     {
         return $this->compiled !== null;
@@ -160,10 +137,6 @@ final class UriHandler
     /**
      * Match given url against compiled template and return matches array or null if pattern does
      * not match.
-     *
-     * @param UriInterface $uri
-     * @param array        $defaults
-     * @return array|null
      */
     public function match(UriInterface $uri, array $defaults): ?array
     {
@@ -185,8 +158,6 @@ final class UriHandler
      * Generate Uri for a given parameters and default values.
      *
      * @param array|\Traversable $parameters
-     * @param array              $defaults
-     * @return UriInterface
      */
     public function uri($parameters = [], array $defaults = []): UriInterface
     {
@@ -220,7 +191,6 @@ final class UriHandler
      *
      * @param \Traversable|array $parameters
      * @param array|null         $query Query parameters.
-     * @return array
      */
     private function fetchOptions($parameters, &$query): array
     {
@@ -251,9 +221,6 @@ final class UriHandler
 
     /**
      * Part of uri path which is being matched.
-     *
-     * @param UriInterface $uri
-     * @return string
      */
     private function fetchTarget(UriInterface $uri): string
     {
@@ -329,10 +296,6 @@ final class UriHandler
 
     /**
      * Interpolate string with given values.
-     *
-     * @param string $string
-     * @param array  $values
-     * @return string
      */
     private function interpolate(string $string, array $values): string
     {
@@ -347,10 +310,6 @@ final class UriHandler
 
     /**
      * Prepares segment pattern with given constrains.
-     *
-     * @param string $name
-     * @param string $segment
-     * @return string
      */
     private function prepareSegment(string $name, string $segment): string
     {
@@ -371,10 +330,6 @@ final class UriHandler
         return $this->filterSegment((string)$this->constrains[$name]);
     }
 
-    /**
-     * @param string $segment
-     * @return string
-     */
     private function filterSegment(string $segment): string
     {
         return strtr($segment, self::SEGMENT_REPLACES);

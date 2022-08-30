@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Database;
 
-use Spiral\Database\Database;
-use Spiral\Database\Exception\DBALException;
+use Cycle\Database\Database;
+use Cycle\Database\Exception\DBALException;
 use Spiral\Tests\Framework\ConsoleTest;
 
 class DescribeTest extends ConsoleTest

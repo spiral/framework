@@ -43,10 +43,6 @@ final class DynamicToPHP implements VisitorInterface
     /** @var Traverser */
     private $traverser;
 
-    /**
-     * @param string $defaultFilter
-     * @param array  $directives
-     */
     public function __construct(string $defaultFilter = self::DEFAULT_FILTER, array $directives = [])
     {
         $this->defaultFilter = $defaultFilter;
@@ -58,8 +54,6 @@ final class DynamicToPHP implements VisitorInterface
 
     /**
      * Add new directive(s) compiler.
-     *
-     * @param DirectiveRendererInterface $directiveCompiler
      */
     public function addDirective(DirectiveRendererInterface $directiveCompiler): void
     {
@@ -96,10 +90,6 @@ final class DynamicToPHP implements VisitorInterface
         return null;
     }
 
-    /**
-     * @param Directive      $node
-     * @return PHP
-     */
     private function directive(Directive $node): PHP
     {
         foreach ($this->directives as $renderer) {
@@ -115,11 +105,6 @@ final class DynamicToPHP implements VisitorInterface
         );
     }
 
-    /**
-     * @param Output         $node
-     * @param VisitorContext $ctx
-     * @return PHP
-     */
     private function output(Output $node, VisitorContext $ctx): PHP
     {
         /*
@@ -141,10 +126,6 @@ final class DynamicToPHP implements VisitorInterface
         );
     }
 
-    /**
-     * @param VisitorContext $ctx
-     * @return string
-     */
     private function getFilterContext(VisitorContext $ctx): string
     {
         // only "interesting" nodes

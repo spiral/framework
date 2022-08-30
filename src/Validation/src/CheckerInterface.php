@@ -19,24 +19,16 @@ interface CheckerInterface
      * Return true if validation is required for given method. Used to skip validation for empty
      * values.
      *
-     * @param string $method
      * @param mixed  $value
-     * @param array  $args
      *
-     * @return bool
      */
     public function ignoreEmpty(string $method, $value, array $args): bool;
 
     /**
      * Check value using checker method.
      *
-     * @param ValidatorInterface $v
-     * @param string             $method
-     * @param string             $field
      * @param mixed              $value
-     * @param array              $args
      *
-     * @return bool
      *
      * @throws CheckerException
      */
@@ -51,12 +43,8 @@ interface CheckerInterface
     /**
      * Return error message associated with check method.
      *
-     * @param string $method
-     * @param string $field
      * @param mixed  $value
-     * @param array  $arguments
      *
-     * @return string
      *
      * @throws CheckerException
      */

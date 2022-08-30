@@ -17,6 +17,8 @@ use Spiral\Bootloader\Distribution\DistributionBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\NotFoundException;
+use Spiral\Storage\BucketFactory;
+use Spiral\Storage\BucketFactoryInterface;
 use Spiral\Storage\Storage;
 use Spiral\Storage\StorageInterface;
 use Spiral\Storage\Bucket;
@@ -25,6 +27,11 @@ use Spiral\Distribution\DistributionInterface as CdnInterface;
 
 class StorageBootloader extends Bootloader
 {
+    /** @var array<string, class-string|callable> */
+    protected const SINGLETONS = [
+        BucketFactoryInterface::class => BucketFactory::class,
+    ];
+
     /**
      * @param Container $app
      * @param ConfiguratorInterface $config
@@ -39,7 +46,11 @@ class StorageBootloader extends Bootloader
 
         $app->bindInjector(StorageConfig::class, ConfiguratorInterface::class);
 
-        $app->bindSingleton(StorageInterface::class, static function (StorageConfig $config, Container $app) {
+        $app->bindSingleton(StorageInterface::class, static function (
+            BucketFactoryInterface $bucketFactory,
+            StorageConfig $config,
+            Container $app
+        ) {
             $manager = new Storage($config->getDefaultBucket());
 
             $distributions = $config->getDistributions();
@@ -61,7 +72,7 @@ class StorageBootloader extends Bootloader
                     $resolver = $cdn->resolver($distributions[$name]);
                 }
 
-                $manager->add($name, Bucket::fromAdapter($adapter, $name, $resolver));
+                $manager->add($name, $bucketFactory->createFromAdapter($adapter, $name, $resolver));
             }
 
             return $manager;

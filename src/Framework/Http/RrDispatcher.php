@@ -25,17 +25,15 @@ use Spiral\RoadRunner\Http\PSR7WorkerInterface;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 class RrDispatcher implements DispatcherInterface
 {
     /**
      * @var EnvironmentInterface
      */
     private $env;
-
-    /**
-     * @var PSR7WorkerInterface
-     */
-    private $worker;
 
     /**
      * @var ContainerInterface
@@ -49,18 +47,15 @@ class RrDispatcher implements DispatcherInterface
 
     /**
      * @param EnvironmentInterface $env
-     * @param PSR7WorkerInterface $worker
      * @param ContainerInterface $container
      * @param FinalizerInterface $finalizer
      */
     public function __construct(
         EnvironmentInterface $env,
-        PSR7WorkerInterface $worker,
         ContainerInterface $container,
         FinalizerInterface $finalizer
     ) {
         $this->env = $env;
-        $this->worker = $worker;
         $this->container = $container;
         $this->finalizer = $finalizer;
     }
@@ -78,16 +73,19 @@ class RrDispatcher implements DispatcherInterface
      */
     public function serve(): void
     {
+        /** @var PSR7WorkerInterface $worker */
+        $worker = $this->container->get(PSR7WorkerInterface::class);
+
         /** @var Http $http */
         $http = $this->container->get(Http::class);
 
-        while ($request = $this->worker->waitRequest()) {
+        while ($request = $worker->waitRequest()) {
             try {
                 $response = $http->handle($request);
 
-                $this->worker->respond($response);
+                $worker->respond($response);
             } catch (\Throwable $e) {
-                $this->worker->respond($this->errorToResponse($e));
+                $worker->respond($this->errorToResponse($e));
             } finally {
                 $this->finalizer->finalize(false);
             }

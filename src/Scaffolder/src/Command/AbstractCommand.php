@@ -40,12 +40,6 @@ abstract class AbstractCommand extends Command
     /** @var FactoryInterface */
     private $factory;
 
-    /**
-     * @param ScaffolderConfig   $config
-     * @param FilesInterface     $files
-     * @param ContainerInterface $container
-     * @param FactoryInterface   $factory
-     */
     public function __construct(
         ScaffolderConfig $config,
         FilesInterface $files,
@@ -60,10 +54,6 @@ abstract class AbstractCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * @param array $parameters
-     * @return ClassDeclaration
-     */
     protected function createDeclaration(array $parameters = []): ClassDeclaration
     {
         return $this->factory->make(
@@ -75,10 +65,6 @@ abstract class AbstractCommand extends Command
         );
     }
 
-    /**
-     * @param string $element
-     * @return string
-     */
     protected function declarationClass(string $element): string
     {
         return $this->config->declarationClass($element);
@@ -86,8 +72,6 @@ abstract class AbstractCommand extends Command
 
     /**
      * Get class name of element being rendered.
-     *
-     * @return string
      */
     protected function getClass(): string
     {
@@ -100,7 +84,6 @@ abstract class AbstractCommand extends Command
     /**
      * Write declaration into file.
      *
-     * @param ClassDeclaration $declaration
      * @param string           $type If null static::ELEMENT to be used.
      */
     protected function writeDeclaration(ClassDeclaration $declaration, string $type = null): void
@@ -143,8 +126,6 @@ abstract class AbstractCommand extends Command
 
     /**
      * Get namespace of element being rendered.
-     *
-     * @return string
      */
     protected function getNamespace(): string
     {

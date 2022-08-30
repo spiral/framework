@@ -15,6 +15,7 @@ use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\BootloadManager;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\LoaderInterface;
@@ -26,6 +27,10 @@ class RotateHandlerTest extends TestCase
     public function testRotateHandler(): void
     {
         $container = new Container();
+
+        $container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
+        $finalizer->shouldReceive('addFinalizer')->once();
+
         $container->bind(ConfiguratorInterface::class, new ConfigManager(
             new class() implements LoaderInterface {
                 public function has(string $section): bool

@@ -12,17 +12,13 @@ declare(strict_types=1);
 namespace Spiral\Prototype;
 
 use Spiral\Prototype\Traits\PrototypeTrait;
-use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Tokenizer\ScopedClassesInterface;
 
 final class PrototypeLocator
 {
-    /** @var ClassesInterface */
-    private $classes;
+    private ScopedClassesInterface $classes;
 
-    /**
-     * @param ClassesInterface $classes
-     */
-    public function __construct(ClassesInterface $classes)
+    public function __construct(ScopedClassesInterface $classes)
     {
         $this->classes = $classes;
     }
@@ -34,6 +30,6 @@ final class PrototypeLocator
      */
     public function getTargetClasses(): array
     {
-        return $this->classes->getClasses(PrototypeTrait::class);
+        return $this->classes->getScopedClasses('prototypes', PrototypeTrait::class);
     }
 }

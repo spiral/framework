@@ -20,8 +20,6 @@ use Spiral\Stempler\Parser\Assembler;
 trait MixinTrait
 {
     /**
-     * @param Parser $parser
-     * @param Token  $token
      * @return Mixin|string
      */
     private function parseToken(Parser $parser, Token $token)

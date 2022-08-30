@@ -25,9 +25,6 @@ final class NativeEngine extends AbstractEngine
 
     /**
      * NativeEngine constructor.
-     *
-     * @param ContainerInterface $container
-     * @param string             $extension
      */
     public function __construct(ContainerInterface $container, string $extension = self::EXTENSION)
     {

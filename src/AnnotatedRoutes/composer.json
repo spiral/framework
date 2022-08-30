@@ -15,19 +15,22 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
-        "spiral/router": "^2.8",
-        "spiral/annotations": "^2.8"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.0",
-        "mockery/mockery": "^1.3",
-        "laminas/laminas-diactoros": "^2.3"
+        "php": ">=7.4",
+        "spiral/annotations": "^2.14",
+        "spiral/attributes": "^2.14",
+        "spiral/router": "^2.14"
     },
     "autoload": {
         "psr-4": {
             "Spiral\\Router\\": "src"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.5",
+        "mockery/mockery": "^1.5",
+        "laminas/laminas-diactoros": "^2.8",
+        "spiral/boot": "^2.14",
+        "spiral/console": "^2.14"
     },
     "autoload-dev": {
         "psr-4": {
@@ -36,7 +39,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.14.x-dev"
         }
     },
     "config": {

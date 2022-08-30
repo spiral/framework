@@ -34,8 +34,6 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
 
     /**
      * Tokenizer constructor.
-     *
-     * @param TokenizerConfig $config
      */
     public function __construct(TokenizerConfig $config)
     {
@@ -43,11 +41,17 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     }
 
     /**
+     * Get pre-configured class locator for specific scope.
+     */
+    public function scopedClassLocator(string $scope): ClassesInterface
+    {
+        $dirs = $this->config->getScope($scope);
+
+        return $this->classLocator($dirs['directories'], $dirs['exclude']);
+    }
+
+    /**
      * Get pre-configured class locator.
-     *
-     * @param array $directories
-     * @param array $exclude
-     * @return ClassesInterface
      */
     public function classLocator(
         array $directories = [],
@@ -58,10 +62,6 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
 
     /**
      * Get pre-configured invocation locator.
-     *
-     * @param array $directories
-     * @param array $exclude
-     * @return InvocationsInterface
      */
     public function invocationLocator(
         array $directories = [],
@@ -88,9 +88,6 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
 
     /**
      * Get all tokes for specific file.
-     *
-     * @param string $filename
-     * @return array
      */
     public static function getTokens(string $filename): array
     {
@@ -115,8 +112,6 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     /**
      * @param array $directories Overwrites default config values.
      * @param array $exclude     Overwrites default config values.
-     *
-     * @return Finder
      */
     private function makeFinder(array $directories = [], array $exclude = []): Finder
     {

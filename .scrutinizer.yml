@@ -1,0 +1,36 @@
+build:
+  image: default-bionic
+
+  environment:
+    php:
+      version: 8.1.2
+      ini:
+        "xdebug.mode": coverage
+
+  dependencies:
+    before:
+      - >
+        export COMPOSER_ROOT_VERSION=$(grep '"dev-master": ' composer.json | grep -P -o '[0-9]+.[0-9]+').x-dev
+    override:
+      - composer validate
+      - composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+
+    phpunit:
+      tests:
+        override:
+          - command: "./vendor/bin/phpunit --coverage-clover ./coverage.xml"
+            on_node: 1
+            coverage:
+              file: coverage.xml
+              format: php-clover
+filter:
+  excluded_paths:
+    - 'tests/*'
+    - 'src/*/tests'
+    - 'src/Bridge/*/tests'

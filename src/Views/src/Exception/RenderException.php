@@ -28,17 +28,12 @@ class RenderException extends ViewException
 
     /**
      * Set user trace pointing to the location of error in view templates.
-     *
-     * @param array $trace
      */
     public function setUserTrace(array $trace): void
     {
         $this->userTrace = $trace;
     }
 
-    /**
-     * @return array
-     */
     public function getUserTrace(): array
     {
         return $this->userTrace;

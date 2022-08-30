@@ -176,9 +176,7 @@ final class FallbackAttributeReader extends AttributeReader
     /**
      * @psalm-type Context = FallbackAttributeReader::KEY_*
      *
-     * @param string $file
      * @param Context $context
-     * @return array
      */
     private function parseAttributes(string $file, int $context): array
     {
@@ -215,11 +213,6 @@ final class FallbackAttributeReader extends AttributeReader
         }
     }
 
-    /**
-     * @param array $attributes
-     * @param \ReflectionFunctionAbstract $function
-     * @return array
-     */
     private function extractFunctionAttributes(array $attributes, \ReflectionFunctionAbstract $function): array
     {
         /**

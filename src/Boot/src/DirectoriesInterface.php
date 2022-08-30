@@ -18,10 +18,6 @@ use Spiral\Boot\Exception\DirectoryException;
  */
 interface DirectoriesInterface
 {
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function has(string $name): bool;
 
     /**
@@ -35,8 +31,6 @@ interface DirectoriesInterface
     /**
      * Get directory value.
      *
-     * @param string $name
-     * @return string
      *
      * @throws DirectoryException When no directory found.
      */
@@ -44,8 +38,6 @@ interface DirectoriesInterface
 
     /**
      * List all registered directories.
-     *
-     * @return array
      */
     public function getAll(): array;
 }

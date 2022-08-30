@@ -1,0 +1,51 @@
+{
+    "name": "spiral/queue",
+    "type": "library",
+    "description": "Spiral: Jobs and Queue",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wolfy-J",
+            "email": "wolfy.jd@gmail.com"
+        },
+        {
+            "name": "Pavel Buchnev",
+            "email": "butschster@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "spiral/snapshots": "^2.14",
+        "spiral/attributes": "^2.14",
+        "doctrine/inflector": "^1.4|^2.0",
+        "opis/closure": "^3.6",
+        "ramsey/uuid": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Queue\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Queue\\": "tests"
+        }
+    },
+    "require-dev": {
+        "doctrine/annotations": "^1.12",
+        "phpunit/phpunit": "^9.5",
+        "mockery/mockery": "^1.5",
+        "spiral/boot": "^2.14"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.14.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

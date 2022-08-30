@@ -34,8 +34,6 @@ final class Bundle implements ImportInterface
     private $prefix;
 
     /**
-     * @param string       $path
-     * @param string       $prefix
      * @param Context|null $context
      */
     public function __construct(string $path, string $prefix = null, Context $context = null)

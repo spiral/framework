@@ -28,11 +28,6 @@ final class AddProperty extends NodeVisitorAbstract
     /** @var bool */
     private $noPhpDoc;
 
-    /**
-     * @param ClassNode $definition
-     * @param bool      $useTypedProperties
-     * @param bool      $noPhpDoc
-     */
     public function __construct(ClassNode $definition, bool $useTypedProperties = false, bool $noPhpDoc = false)
     {
         $this->definition = $definition;
@@ -41,8 +36,7 @@ final class AddProperty extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node $node
-     * @return int|null|Node|Node[]
+     * @return Node\Stmt\Class_|null
      */
     public function leaveNode(Node $node)
     {
@@ -61,10 +55,6 @@ final class AddProperty extends NodeVisitorAbstract
         return $node;
     }
 
-    /**
-     * @param Node\Stmt\Class_ $node
-     * @return int
-     */
     private function definePlacementID(Node\Stmt\Class_ $node): int
     {
         foreach ($node->stmts as $index => $child) {
@@ -76,10 +66,6 @@ final class AddProperty extends NodeVisitorAbstract
         return 0;
     }
 
-    /**
-     * @param Dependency $dependency
-     * @return Node\Stmt\Property
-     */
     private function buildProperty(Dependency $dependency): Node\Stmt\Property
     {
         $b = new Property($dependency->property);
@@ -106,10 +92,6 @@ final class AddProperty extends NodeVisitorAbstract
         return !($this->useTypedProperties && $this->noPhpDoc);
     }
 
-    /**
-     * @param Dependency $dependency
-     * @return string
-     */
     private function getPropertyType(Dependency $dependency): string
     {
         foreach ($this->definition->getStmts() as $stmt) {

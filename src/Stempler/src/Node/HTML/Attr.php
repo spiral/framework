@@ -42,7 +42,9 @@ final class Attr implements NodeInterface
     }
 
     /**
-     * @return \Generator
+     * @return \Generator<string, Mixin|Nil|string, mixed, void>
+     *
+     * @psalm-return \Generator<'name'|'value', Mixin|Nil|string, mixed, void>
      */
     public function getIterator(): \Generator
     {

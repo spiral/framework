@@ -41,7 +41,7 @@ final class Router implements RouterInterface
     private $routes = [];
 
     /** @var RouteInterface */
-    private $default = null;
+    private $default;
 
     /** @var UriHandler */
     private $uriHandler;
@@ -49,11 +49,6 @@ final class Router implements RouterInterface
     /** @var ContainerInterface */
     private $container;
 
-    /**
-     * @param string             $basePath
-     * @param UriHandler         $uriHandler
-     * @param ContainerInterface $container
-     */
     public function __construct(string $basePath, UriHandler $uriHandler, ContainerInterface $container)
     {
         $this->basePath = '/' . ltrim($basePath, '/');
@@ -155,9 +150,6 @@ final class Router implements RouterInterface
 
     /**
      * Find route matched for given request.
-     *
-     * @param ServerRequestInterface $request
-     * @return null|RouteInterface
      */
     protected function matchRoute(ServerRequestInterface $request, string &$routeName = null): ?RouteInterface
     {
@@ -181,9 +173,6 @@ final class Router implements RouterInterface
 
     /**
      * Configure route with needed dependencies.
-     *
-     * @param RouteInterface $route
-     * @return RouteInterface
      */
     protected function configure(RouteInterface $route): RouteInterface
     {
@@ -201,8 +190,6 @@ final class Router implements RouterInterface
      * Default route: `controller:action`
      * Only action:   `name/action`
      *
-     * @param string $route
-     * @return RouteInterface
      *
      * @throws UndefinedRouteException
      */

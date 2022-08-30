@@ -27,10 +27,6 @@ final class NullLogger implements LoggerInterface
     /** @var string */
     private $channel;
 
-    /**
-     * @param callable $receptor
-     * @param string   $channel
-     */
     public function __construct(callable $receptor, string $channel)
     {
         $this->receptor = $receptor;
@@ -40,7 +36,6 @@ final class NullLogger implements LoggerInterface
     /**
      * @param mixed  $level
      * @param string $message
-     * @param array  $context
      */
     public function log($level, $message, array $context = []): void
     {

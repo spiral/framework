@@ -26,9 +26,6 @@ final class Traverser
     /** @var bool */
     private $stopTraversal = false;
 
-    /**
-     * @param array $visitors
-     */
     public function __construct(array $visitors = [])
     {
         foreach ($visitors as $visitor) {
@@ -38,17 +35,12 @@ final class Traverser
 
     /**
      * Adds visitor.
-     *
-     * @param VisitorInterface $visitor
      */
     public function addVisitor(VisitorInterface $visitor): void
     {
         $this->visitors[] = $visitor;
     }
 
-    /**
-     * @param VisitorInterface $visitor
-     */
     public function removeVisitor(VisitorInterface $visitor): void
     {
         foreach ($this->visitors as $index => $added) {
@@ -63,9 +55,7 @@ final class Traverser
      * Traverses an array of nodes using added visitors.
      *
      * @param NodeInterface[] $nodes
-     * @param VisitorContext  $context
      * @return NodeInterface[]
-     *
      * @throws \Throwable
      */
     public function traverse(array $nodes, VisitorContext $context = null): array
@@ -161,10 +151,6 @@ final class Traverser
 
     /**
      * Recursively traverse a node.
-     *
-     * @param NodeInterface  $node
-     * @param VisitorContext $context
-     * @return NodeInterface
      */
     private function traverseNode(NodeInterface $node, VisitorContext $context): NodeInterface
     {

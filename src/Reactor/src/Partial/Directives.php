@@ -18,9 +18,6 @@ class Directives implements DeclarationInterface
     /** @var string[] */
     private $directives;
 
-    /**
-     * @param string ...$directives
-     */
     public function __construct(string ...$directives)
     {
         $this->directives = $directives;

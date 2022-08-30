@@ -19,9 +19,6 @@ final class StringValue implements ValueInterface
     /** @var bool */
     private $allowEmpty;
 
-    /**
-     * @param bool $allowEmpty
-     */
     public function __construct(bool $allowEmpty = false)
     {
         $this->allowEmpty = $allowEmpty;
@@ -37,7 +34,6 @@ final class StringValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return string
      */
     public function convert($value): string
     {

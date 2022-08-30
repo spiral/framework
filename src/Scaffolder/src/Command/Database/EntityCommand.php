@@ -23,6 +23,9 @@ use Throwable;
 
 use function Spiral\Scaffolder\trimPostfix;
 
+/**
+ * @deprecated since v2.10. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 class EntityCommand extends AbstractCommand
 {
     protected const ELEMENT = 'entity';
@@ -95,8 +98,6 @@ class EntityCommand extends AbstractCommand
     /**
      * Create entity declaration.
      *
-     * @param Console          $console
-     * @param ScaffolderConfig $config
      * @throws Throwable
      */
     public function perform(Console $console, ScaffolderConfig $config): void
@@ -142,18 +143,11 @@ class EntityCommand extends AbstractCommand
         }
     }
 
-    /**
-     * @param string $element
-     * @return string
-     */
     protected function declarationClass(string $element): string
     {
         return $this->config->declarationOptions($element)[(string)$this->argument('format')];
     }
 
-    /**
-     * @param string $accessibility
-     */
     private function validateAccessibility(string $accessibility): void
     {
         if (

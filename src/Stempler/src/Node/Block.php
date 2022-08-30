@@ -30,7 +30,6 @@ final class Block implements NodeInterface, AttributedInterface
     public $nodes = [];
 
     /**
-     * @param string       $name
      * @param Context|null $context
      */
     public function __construct(string $name, Context $context = null)

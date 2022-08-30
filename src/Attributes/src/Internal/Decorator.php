@@ -25,9 +25,6 @@ abstract class Decorator extends Reader
      */
     private $reader;
 
-    /**
-     * @param ReaderInterface $reader
-     */
     public function __construct(ReaderInterface $reader)
     {
         $this->reader = $reader;

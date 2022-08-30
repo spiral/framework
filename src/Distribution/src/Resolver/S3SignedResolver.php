@@ -38,8 +38,6 @@ class S3SignedResolver extends ExpirationAwareResolver
     private $prefix;
 
     /**
-     * @param S3ClientInterface $client
-     * @param string $bucket
      * @param string|null $prefix
      */
     public function __construct(S3ClientInterface $client, string $bucket, string $prefix = null)
@@ -52,9 +50,7 @@ class S3SignedResolver extends ExpirationAwareResolver
     }
 
     /**
-     * @param string $file
      * @param DateIntervalFormat|null $expiration
-     * @return UriInterface
      * @throws \Exception
      */
     public function resolve(string $file, $expiration = null): UriInterface
@@ -69,10 +65,6 @@ class S3SignedResolver extends ExpirationAwareResolver
         return $request->getUri();
     }
 
-    /**
-     * @param string $file
-     * @return CommandInterface
-     */
     private function createCommand(string $file): CommandInterface
     {
         return $this->client->getCommand('GetObject', [

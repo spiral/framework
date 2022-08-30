@@ -30,7 +30,7 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
     public const INJECTOR = EncrypterFactory::class;
 
     /** @var Key */
-    private $key = null;
+    private $key;
 
     /**
      * @param string $key Loads a Key from its encoded form (ANSI).

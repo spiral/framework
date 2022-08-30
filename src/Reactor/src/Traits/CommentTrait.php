@@ -25,8 +25,6 @@ trait CommentTrait
 
     /**
      * Get associated file comment.
-     *
-     * @return Comment
      */
     public function getComment(): Comment
     {

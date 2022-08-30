@@ -22,12 +22,10 @@ use Spiral\Logger\LogsInterface;
 trait LoggerTrait
 {
     /** @var LoggerInterface|null @internal */
-    private $logger = null;
+    private $logger;
 
     /**
      * Sets a logger.
-     *
-     * @param LoggerInterface $logger
      */
     public function setLogger(LoggerInterface $logger): void
     {
@@ -36,9 +34,6 @@ trait LoggerTrait
 
     /**
      * Get associated or create new instance of LoggerInterface.
-     *
-     * @param string $channel
-     * @return LoggerInterface
      */
     protected function getLogger(string $channel = null): LoggerInterface
     {
@@ -56,9 +51,6 @@ trait LoggerTrait
 
     /**
      * Create new instance of associated logger (on demand creation).
-     *
-     * @param string $channel
-     * @return LoggerInterface
      */
     private function allocateLogger(string $channel): LoggerInterface
     {

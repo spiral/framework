@@ -68,13 +68,8 @@ final class Route extends AbstractRoute implements ContainerizedInterface
         $this->target = $target;
     }
 
-    /**
-     * @param UriHandler $uriHandler
-     * @return RouteInterface
-     */
     public function withUriHandler(UriHandler $uriHandler): RouteInterface
     {
-        /** @var self $route */
         $route = parent::withUriHandler($uriHandler);
         if ($this->target instanceof TargetInterface) {
             $route->uriHandler = $route->uriHandler->withConstrains(
@@ -89,8 +84,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     /**
      * Associated route with given container.
      *
-     * @param ContainerInterface $container
-     * @return ContainerizedInterface|$this
+     * @return self
      */
     public function withContainer(ContainerInterface $container): ContainerizedInterface
     {
@@ -107,8 +101,6 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
      *
      * @throws RouteException
      */
@@ -125,8 +117,6 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     }
 
     /**
-     * @return RequestHandlerInterface
-     *
      * @throws RouteException
      */
     protected function requestHandler(): RequestHandlerInterface

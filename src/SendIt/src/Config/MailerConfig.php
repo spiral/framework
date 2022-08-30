@@ -19,32 +19,38 @@ final class MailerConfig extends InjectableConfig
 
     /** @var array */
     protected $config = [
-        'dsn'      => '',
-        'from'     => '',
-        'pipeline' => '',
+        'dsn' => '',
+        'from' => '',
+        'queue' => null,
+        'pipeline' => null,
+        'queueConnection' => null,
     ];
 
-    /**
-     * @return string
-     */
     public function getDSN(): string
     {
         return $this->config['dsn'];
     }
 
-    /**
-     * @return string
-     */
     public function getFromAddress(): string
     {
         return $this->config['from'];
     }
 
     /**
-     * @return string
+     * @deprecated since v2.9.
      */
-    public function getQueuePipeline(): string
+    public function getQueuePipeline(): ?string
     {
-        return $this->config['pipeline'];
+        return $this->getQueue();
+    }
+
+    public function getQueue(): ?string
+    {
+        return $this->config['queue'] ?? $this->config['pipeline'] ?? null;
+    }
+
+    public function getQueueConnection(): ?string
+    {
+        return $this->config['queueConnection'] ?? null;
     }
 }

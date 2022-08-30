@@ -21,8 +21,6 @@ class RouteNotFoundException extends UndefinedRouteException
     private $uri;
 
     /**
-     * @param UriInterface    $uri
-     * @param int             $code
      * @param \Throwable|null $previous
      */
     public function __construct(UriInterface $uri, int $code = 0, \Throwable $previous = null)
@@ -31,9 +29,6 @@ class RouteNotFoundException extends UndefinedRouteException
         parent::__construct(sprintf('Unable to route `%s`.', $uri), $code, $previous);
     }
 
-    /**
-     * @return UriInterface
-     */
     public function getUri(): UriInterface
     {
         return $this->uri;

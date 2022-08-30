@@ -14,12 +14,15 @@ namespace Spiral\Bootloader\Database;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Migrations\FileRepository;
 use Spiral\Migrations\Migrator;
 use Spiral\Migrations\RepositoryInterface;
+use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 final class MigrationsBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [

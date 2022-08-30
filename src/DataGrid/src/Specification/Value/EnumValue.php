@@ -24,7 +24,6 @@ final class EnumValue implements ValueInterface
     private $values;
 
     /**
-     * @param ValueInterface $base
      * @param mixed          ...$values
      */
     public function __construct(ValueInterface $base, ...$values)
@@ -57,10 +56,6 @@ final class EnumValue implements ValueInterface
         return $this->base->convert($value);
     }
 
-    /**
-     * @param array $values
-     * @return array
-     */
     private function convertEnum(array $values): array
     {
         if (empty($values)) {

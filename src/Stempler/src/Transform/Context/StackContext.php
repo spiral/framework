@@ -21,18 +21,11 @@ final class StackContext
     /** @var VisitorContext */
     private $ctx;
 
-    /**
-     * @param VisitorContext $ctx
-     */
     private function __construct(VisitorContext $ctx)
     {
         $this->ctx = $ctx;
     }
 
-    /**
-     * @param Aggregate $aggregate
-     * @param int       $level
-     */
     public function register(Aggregate $aggregate, int $level = 0): void
     {
         // collect all stack withing specific scope
@@ -44,10 +37,7 @@ final class StackContext
     }
 
     /**
-     * @param string      $name
-     * @param Tag         $child
      * @param string|null $uniqueID
-     * @return bool
      */
     public function push(string $name, Tag $child, string $uniqueID = null): bool
     {
@@ -72,10 +62,7 @@ final class StackContext
     }
 
     /**
-     * @param string      $name
-     * @param Tag         $child
      * @param string|null $uniqueID
-     * @return bool
      */
     public function prepend(string $name, Tag $child, string $uniqueID = null): bool
     {
@@ -118,19 +105,11 @@ final class StackContext
         return $stacks;
     }
 
-    /**
-     * @param VisitorContext $ctx
-     * @return StackContext
-     */
     public static function on(VisitorContext $ctx): self
     {
         return new self($ctx);
     }
 
-    /**
-     * @param int $level
-     * @return AttributedInterface
-     */
     private function getStackRootNode(int $level): AttributedInterface
     {
         if ($level === 0) {

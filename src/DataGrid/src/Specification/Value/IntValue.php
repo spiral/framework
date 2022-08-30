@@ -39,7 +39,6 @@ final class IntValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return int
      */
     public function convert($value): int
     {

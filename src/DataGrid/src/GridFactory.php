@@ -29,22 +29,21 @@ class GridFactory implements GridFactoryInterface
     public const KEY_FETCH_COUNT = 'fetchCount';
 
     /** @var callable */
-    private $count = 'count';
+    protected $count = 'count';
 
     /** @var Compiler */
-    private $compiler;
+    protected $compiler;
 
     /** @var InputInterface */
-    private $input;
+    protected $input;
 
     /** @var InputInterface */
-    private $defaults;
+    protected $defaults;
 
     /** @var GridInterface */
-    private $view;
+    protected $view;
 
     /**
-     * @param Compiler            $compiler
      * @param InputInterface|null $input
      * @param GridInterface|null  $view
      */
@@ -58,9 +57,6 @@ class GridFactory implements GridFactoryInterface
 
     /**
      * Associate new input source with grid generator.
-     *
-     * @param InputInterface $input
-     * @return GridFactory
      */
     public function withInput(InputInterface $input): self
     {
@@ -72,9 +68,6 @@ class GridFactory implements GridFactoryInterface
 
     /**
      * USe default filter values.
-     *
-     * @param array $data
-     * @return $this
      */
     public function withDefaults(array $data): self
     {
@@ -84,10 +77,6 @@ class GridFactory implements GridFactoryInterface
         return $generator;
     }
 
-    /**
-     * @param callable $counter
-     * @return $this
-     */
     public function withCounter(callable $counter): self
     {
         $generator = clone $this;
@@ -204,9 +193,6 @@ class GridFactory implements GridFactoryInterface
 
     /**
      * Return array of options for the input. Checks the default input in case of value missing in parent.
-     *
-     * @param string $option
-     * @return array
      */
     protected function getOptionArray(string $option): array
     {
@@ -221,7 +207,6 @@ class GridFactory implements GridFactoryInterface
     /**
      * Return array of options for the input. Checks the default input in case of value missing in parent.
      *
-     * @param string $option
      * @return mixed
      */
     protected function getOption(string $option)

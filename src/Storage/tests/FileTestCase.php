@@ -216,7 +216,7 @@ class FileTestCase extends TestCase
      */
     public function testLastModified(): void
     {
-        $now = \time();
+        $now = (int) \floor(\microtime(true));
 
         $file = $this->local->file('file.txt')
             ->create()

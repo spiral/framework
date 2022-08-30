@@ -24,10 +24,6 @@ final class DirectoryLoader implements LoaderInterface
     /** @var string */
     private $extension;
 
-    /**
-     * @param string $directory
-     * @param string $extension
-     */
     public function __construct(string $directory, string $extension = '.dark.php')
     {
         $this->directory = $directory;
@@ -35,8 +31,6 @@ final class DirectoryLoader implements LoaderInterface
     }
 
     /**
-     * @param string $path
-     * @return Source
      *
      * @throws LoaderException
      */

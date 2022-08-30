@@ -48,8 +48,6 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
 
     /**
      * Classes available in finder scope.
-     *
-     * @return array
      */
     protected function availableClasses(): array
     {
@@ -65,9 +63,7 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
     /**
      * Check if given class targeted by locator.
      *
-     * @param \ReflectionClass      $class
      * @param \ReflectionClass|null $target
-     * @return bool
      */
     protected function isTargeted(\ReflectionClass $class, \ReflectionClass $target = null): bool
     {

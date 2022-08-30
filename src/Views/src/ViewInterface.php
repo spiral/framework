@@ -18,8 +18,6 @@ interface ViewInterface
     /**
      * Render view source using internal logic.
      *
-     * @param array $data
-     * @return string
      *
      * @throws RenderException
      */

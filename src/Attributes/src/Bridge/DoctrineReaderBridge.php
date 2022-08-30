@@ -42,9 +42,6 @@ final class DoctrineReaderBridge implements Reader
      */
     private ReaderInterface $reader;
 
-    /**
-     * @param ReaderInterface $reader
-     */
     public function __construct(ReaderInterface $reader)
     {
         $this->reader = $reader;

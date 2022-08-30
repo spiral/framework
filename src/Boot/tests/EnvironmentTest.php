@@ -54,14 +54,50 @@ class EnvironmentTest extends TestCase
         $this->assertFalse($env->get('other'));
     }
 
+    public function testSetVariableWithOverwriting(): void
+    {
+        $env = $this->getEnv(['key' => 'foo']);
+
+        $this->assertSame('foo', $env->get('key'));
+        $env->set('key', 'bar');
+        $this->assertSame('bar', $env->get('key'));
+    }
+
+    public function testSetVariableWithoutOverwriting(): void
+    {
+        $env = $this->getEnv(['key' => 'foo'], false);
+
+        $this->assertSame('foo', $env->get('key'));
+        $env->set('key', 'bar');
+        $this->assertSame('foo', $env->get('key'));
+    }
+
+    public function testSetNullValueWithOverwriting(): void
+    {
+        $env = $this->getEnv(['key' => null]);
+
+        $this->assertNull($env->get('key'));
+        $env->set('key', 'bar');
+        $this->assertSame('bar', $env->get('key'));
+    }
+
+    public function testSetNullValueWithoutOverwriting(): void
+    {
+        $env = $this->getEnv(['key' => null], false);
+
+        $this->assertNull($env->get('key'));
+        $env->set('key', 'bar');
+        $this->assertNull($env->get('key'));
+    }
+
     /**
      * @param array $env
      * @return EnvironmentInterface
      * @throws \Throwable
      */
-    protected function getEnv(array $env): EnvironmentInterface
+    protected function getEnv(array $env, bool $overwite= true): EnvironmentInterface
     {
-        $core = TestCore::init(['root' => __DIR__], new Environment($env));
+        $core = TestCore::init(['root' => __DIR__], new Environment($env, $overwite));
 
         return $core->getContainer()->get(EnvironmentInterface::class);
     }

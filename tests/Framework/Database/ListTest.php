@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Database;
 
-use Spiral\Database\Database;
-use Spiral\Database\DatabaseManager;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseManager;
 use Spiral\Tests\Framework\ConsoleTest;
 
 class ListTest extends ConsoleTest

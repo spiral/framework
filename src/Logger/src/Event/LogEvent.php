@@ -28,13 +28,6 @@ final class LogEvent
     /** @var array */
     private $context;
 
-    /**
-     * @param \DateTimeInterface $time
-     * @param string             $channel
-     * @param string             $level
-     * @param string             $message
-     * @param array              $context
-     */
     public function __construct(
         \DateTimeInterface $time,
         string $channel,
@@ -49,41 +42,26 @@ final class LogEvent
         $this->context = $context;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function getTime(): \DateTimeInterface
     {
         return $this->time;
     }
 
-    /**
-     * @return string
-     */
     public function getChannel(): string
     {
         return $this->channel;
     }
 
-    /**
-     * @return string
-     */
     public function getLevel(): string
     {
         return $this->level;
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string
     {
         return $this->message;
     }
 
-    /**
-     * @return array
-     */
     public function getContext(): array
     {
         return $this->context;

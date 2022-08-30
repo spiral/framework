@@ -41,12 +41,9 @@ abstract class Command extends SymfonyCommand
     // getArguments() method.
     protected const ARGUMENTS = [];
 
-    /** @var Container */
+    /** @var Container|null */
     protected $container;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
@@ -66,11 +63,10 @@ abstract class Command extends SymfonyCommand
         $reflection = new \ReflectionMethod($this, 'perform');
         $reflection->setAccessible(true);
 
-        /** @var ResolverInterface $resolver */
         $resolver = $this->container->get(ResolverInterface::class);
 
         try {
-            list($this->input, $this->output) = [$input, $output];
+            [$this->input, $this->output] = [$input, $output];
 
             //Executing perform method with method injection
             return (int)$reflection->invokeArgs($this, $resolver->resolveArguments(
@@ -101,8 +97,6 @@ abstract class Command extends SymfonyCommand
 
     /**
      * Define command options.
-     *
-     * @return array
      */
     protected function defineOptions(): array
     {
@@ -111,8 +105,6 @@ abstract class Command extends SymfonyCommand
 
     /**
      * Define command arguments.
-     *
-     * @return array
      */
     protected function defineArguments(): array
     {

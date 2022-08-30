@@ -14,7 +14,7 @@ namespace Spiral\Framework;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
-use Spiral\Bootloader\TokenizerBootloader;
+use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 
 abstract class Kernel extends AbstractKernel
 {

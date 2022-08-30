@@ -24,10 +24,6 @@ final class CookieQueue
     /** @var bool */
     private $secure;
 
-    /**
-     * @param string|null $domain
-     * @param bool        $secure
-     */
     public function __construct(?string $domain = null, bool $secure = false)
     {
         $this->domain = $domain;
@@ -79,8 +75,6 @@ final class CookieQueue
      *                              values of the explicit parameters. If the samesite element is omitted, no SameSite
      *                              cookie attribute is set. When Same-Site attribute is set to "None" it is required
      *                              to have "Secure" attribute enable. Otherwise it will be converted to "Lax".
-     *
-     * @return $this
      */
     public function set(
         string $name,
@@ -109,9 +103,7 @@ final class CookieQueue
     /**
      * Schedule new cookie instance to be send while dispatching request.
      *
-     * @param Cookie $cookie
      *
-     * @return CookieQueue
      */
     public function schedule(Cookie $cookie): CookieQueue
     {
@@ -122,8 +114,6 @@ final class CookieQueue
 
     /**
      * Schedule cookie removal.
-     *
-     * @param string $name
      */
     public function delete(string $name): void
     {

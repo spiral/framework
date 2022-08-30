@@ -23,7 +23,6 @@ interface InvocationsInterface
      * Find all possible invocations of given function or method. Make sure you know about location
      * limitations.
      *
-     * @param \ReflectionFunctionAbstract $function
      * @return ReflectionInvocation[]
      */
     public function getInvocations(\ReflectionFunctionAbstract $function): array;

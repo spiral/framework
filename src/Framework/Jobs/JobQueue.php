@@ -15,6 +15,8 @@ use Spiral\Goridge\RPC;
 
 /**
  * Provides the ability to automatically specify the job pipeline.
+ *
+ * @deprecated since 2.9. Will be removed since 3.0
  */
 final class JobQueue implements QueueInterface
 {

@@ -23,14 +23,9 @@ use Spiral\Auth\Middleware\AuthMiddleware;
  */
 abstract class AbstractFirewall implements MiddlewareInterface
 {
-    /**
-     * @param Request                 $request
-     * @param RequestHandlerInterface $handler
-     * @return Response
-     */
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
-        /** @var AuthContextInterface $context */
+        /** @var AuthContextInterface $authContext */
         $authContext = $request->getAttribute(AuthMiddleware::ATTRIBUTE);
 
         if ($authContext === null || $authContext->getActor() === null) {
@@ -40,18 +35,8 @@ abstract class AbstractFirewall implements MiddlewareInterface
         return $this->grantAccess($request, $handler);
     }
 
-    /**
-     * @param Request                 $request
-     * @param RequestHandlerInterface $handler
-     * @return Response
-     */
     abstract protected function denyAccess(Request $request, RequestHandlerInterface $handler): Response;
 
-    /**
-     * @param Request                 $request
-     * @param RequestHandlerInterface $handler
-     * @return Response
-     */
     protected function grantAccess(Request $request, RequestHandlerInterface $handler): Response
     {
         return $handler->handle($request);

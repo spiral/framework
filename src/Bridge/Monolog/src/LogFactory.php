@@ -14,6 +14,7 @@ namespace Spiral\Monolog;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use Monolog\ResettableInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Core\Container\Autowire;
@@ -24,7 +25,7 @@ use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
-final class LogFactory implements LogsInterface, InjectorInterface
+final class LogFactory implements LogsInterface, InjectorInterface, ResettableInterface
 {
     // Default logger channel (supplied via injection)
     public const DEFAULT = 'default';
@@ -42,9 +43,9 @@ final class LogFactory implements LogsInterface, InjectorInterface
     private $eventHandler;
 
     /**
-     * @param MonologConfig             $config
+     * @param MonologConfig $config
      * @param ListenerRegistryInterface $listenerRegistry
-     * @param FactoryInterface          $factory
+     * @param FactoryInterface $factory
      */
     public function __construct(
         MonologConfig $config,
@@ -90,6 +91,13 @@ final class LogFactory implements LogsInterface, InjectorInterface
         return $this->getLogger();
     }
 
+    public function reset()
+    {
+        if ($this->default instanceof ResettableInterface) {
+            $this->default->reset();
+        }
+    }
+
     /**
      * Get list of channel specific handlers.
      *
@@ -122,13 +130,31 @@ final class LogFactory implements LogsInterface, InjectorInterface
     }
 
     /**
-     * Get list of channel specific log processors. Falls back to PsrLogMessageProcessor for now.
+     * Get list of channel specific log processors.
      *
      * @param string $channel
      * @return callable[]
      */
     protected function getProcessors(string $channel): array
     {
-        return [new PsrLogMessageProcessor()];
+        $processors = [];
+        foreach ($this->config->getProcessors($channel) as $processor) {
+            if (!$processor instanceof Autowire) {
+                $processors[] = $processor;
+                continue;
+            }
+
+            try {
+                $processors[] = $processor->resolve($this->factory);
+            } catch (ContainerExceptionInterface $e) {
+                throw new ConfigException($e->getMessage(), $e->getCode(), $e);
+            }
+        }
+
+        if ($processors === []) {
+            $processors[] = new PsrLogMessageProcessor();
+        }
+
+        return $processors;
     }
 }

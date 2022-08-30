@@ -20,9 +20,6 @@ final class ResetCommand extends Command
     protected const NAME        = 'route:reset';
     protected const DESCRIPTION = 'Reset route cache';
 
-    /**
-     * @param MemoryInterface $memory
-     */
     public function perform(MemoryInterface $memory): void
     {
         $memory->saveData(AnnotatedRoutesBootloader::MEMORY_SECTION, null);

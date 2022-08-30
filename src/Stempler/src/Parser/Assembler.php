@@ -27,27 +27,17 @@ final class Assembler
     /** @var NodeInterface[] */
     private $stack = [];
 
-    /**
-     * @param NodeInterface $node
-     * @param string        $path
-     */
     public function __construct(NodeInterface $node, string $path)
     {
         $this->node = $node;
         $this->path = $path;
     }
 
-    /**
-     * @return NodeInterface
-     */
     public function getNode(): NodeInterface
     {
         return $this->node;
     }
 
-    /**
-     * @return string
-     */
     public function getStackPath(): string
     {
         $path = [$this->nodeName($this->node)];
@@ -58,18 +48,11 @@ final class Assembler
         return implode('.', array_reverse($path));
     }
 
-    /**
-     * @param NodeInterface $node
-     */
     public function push(NodeInterface $node): void
     {
         $this->node->{$this->path}[] = $node;
     }
 
-    /**
-     * @param NodeInterface $node
-     * @param string        $path
-     */
     public function open(NodeInterface $node, string $path): void
     {
         $this->push($node);
@@ -87,10 +70,6 @@ final class Assembler
         [$this->node, $this->path] = array_pop($this->stack);
     }
 
-    /**
-     * @param NodeInterface $node
-     * @return string
-     */
     private function nodeName(NodeInterface $node): string
     {
         $r = new \ReflectionClass($node);

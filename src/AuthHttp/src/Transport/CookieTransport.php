@@ -41,14 +41,6 @@ final class CookieTransport implements HttpTransportInterface
     /** @var string|null */
     private $sameSite;
 
-    /**
-     * @param string      $cookie
-     * @param string      $basePath
-     * @param string|null $domain
-     * @param bool        $secure
-     * @param bool        $httpOnly
-     * @param string|null $sameSite
-     */
     public function __construct(
         string $cookie,
         string $basePath = '/',
@@ -130,7 +122,6 @@ final class CookieTransport implements HttpTransportInterface
 
     /**
      * @param \DateTimeInterface|null $expiresAt
-     * @return int|null
      */
     private function getLifetime(\DateTimeInterface $expiresAt = null): ?int
     {

@@ -22,6 +22,7 @@ use Spiral\Core\ScopeInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\SessionFactory;
+use Spiral\Session\SessionFactoryInterface;
 use Spiral\Session\SessionInterface;
 
 final class SessionMiddleware implements MiddlewareInterface
@@ -47,18 +48,11 @@ final class SessionMiddleware implements MiddlewareInterface
     /** @var ScopeInterface */
     private $scope;
 
-    /**
-     * @param SessionConfig  $config
-     * @param HttpConfig     $httpConfig
-     * @param CookiesConfig  $cookiesConfig
-     * @param SessionFactory $factory
-     * @param ScopeInterface $scope
-     */
     public function __construct(
         SessionConfig $config,
         HttpConfig $httpConfig,
         CookiesConfig $cookiesConfig,
-        SessionFactory $factory,
+        SessionFactoryInterface $factory,
         ScopeInterface $scope
     ) {
         $this->config = $config;
@@ -144,12 +138,10 @@ final class SessionMiddleware implements MiddlewareInterface
      */
     protected function withCookie(Request $request, Response $response, string $id = null): Response
     {
-        $response = $response->withAddedHeader(
+        return $response->withAddedHeader(
             'Set-Cookie',
             $this->sessionCookie($request->getUri(), $id)->createHeader()
         );
-
-        return $response;
     }
 
     /**

@@ -20,9 +20,7 @@ class Like extends Expression
     private $pattern;
 
     /**
-     * @param string     $expression
      * @param mixed|null $value
-     * @param string     $pattern
      */
     public function __construct(string $expression, $value = null, string $pattern = '%%%s%%')
     {
@@ -30,9 +28,6 @@ class Like extends Expression
         parent::__construct($expression, $value ?? new StringValue());
     }
 
-    /**
-     * @return string
-     */
     public function getPattern(): string
     {
         return $this->pattern;

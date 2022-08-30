@@ -23,18 +23,14 @@ final class Environment implements EnvironmentInterface
         'empty'   => '',
     ];
 
-    /** @var string|null */
-    private $id = null;
+    private ?string $id = null;
+    private array $values;
+    private bool $overwrite;
 
-    /** @var array */
-    private $values = [];
-
-    /**
-     * @param array $values
-     */
-    public function __construct(array $values = [])
+    public function __construct(array $values = [], bool $overwrite = true)
     {
         $this->values = $values + $_ENV + $_SERVER;
+        $this->overwrite = $overwrite;
     }
 
     /**
@@ -54,6 +50,10 @@ final class Environment implements EnvironmentInterface
      */
     public function set(string $name, $value): void
     {
+        if (\array_key_exists($name, $this->values) && !$this->overwrite) {
+            return;
+        }
+
         $this->values[$name] = $_ENV[$name] = $value;
         putenv("$name=$value");
 
@@ -74,8 +74,6 @@ final class Environment implements EnvironmentInterface
 
     /**
      * Get all environment values.
-     *
-     * @return array
      */
     public function getAll(): array
     {

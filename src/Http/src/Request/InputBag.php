@@ -26,10 +26,6 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /** @var string */
     private $prefix = '';
 
-    /**
-     * @param array  $data
-     * @param string $prefix
-     */
     public function __construct(array $data, string $prefix = '')
     {
         $this->data = $data;
@@ -52,9 +48,6 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
         return count($this->all());
     }
 
-    /**
-     * @return array
-     */
     public function all(): array
     {
         try {
@@ -76,7 +69,6 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      * Fetch only specified keys from property values. Missed values can be filled with defined
      * filler. Only one variable layer can be fetched (no dot notation).
      *
-     * @param array $keys
      * @param bool  $fill Fill missing key with filler value.
      * @param mixed $filler
      * @return array
@@ -95,16 +87,13 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->has($offset);
     }
 
     /**
      * Check if field presented (can be empty) by it's name. Dot notation allowed.
-     *
-     * @param string $name
-     * @return bool
      */
     public function has(string $name): bool
     {
@@ -120,6 +109,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -128,7 +118,6 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * Get property or return default value. Dot notation allowed.
      *
-     * @param string $name
      * @param mixed  $default
      * @return mixed
      */
@@ -164,9 +153,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * Get element using dot notation.
      *
-     * @param string $name
      * @return mixed|null
-     *
      * @throws DotNotFoundException
      */
     private function dotGet(string $name)

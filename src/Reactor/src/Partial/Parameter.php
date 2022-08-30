@@ -38,9 +38,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
     /** @var bool */
     private $pdb = false;
 
-    /**
-     * @param string $name
-     */
     public function __construct(string $name)
     {
         $this->setName($name);
@@ -56,10 +53,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
         return $this;
     }
 
-    /**
-     * @param string $type
-     * @return self
-     */
     public function setType(string $type): Parameter
     {
         $this->type = $type;
@@ -67,9 +60,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
@@ -77,9 +67,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
 
     /**
      * Flag that parameter should pass by reference.
-     *
-     * @param bool $passedByReference
-     * @return self
      */
     public function setPBR(bool $passedByReference = false): Parameter
     {
@@ -88,9 +75,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isPBR(): bool
     {
         return $this->pdb;
@@ -98,8 +82,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
 
     /**
      * Check if parameter is optional.
-     *
-     * @return bool
      */
     public function isOptional(): bool
     {
@@ -110,7 +92,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
      * Set parameter default value.
      *
      * @param mixed $defaultValue
-     * @return self
      */
     public function setDefaultValue($defaultValue): Parameter
     {
@@ -130,8 +111,6 @@ class Parameter extends AbstractDeclaration implements NamedInterface
 
     /**
      * Remove default value.
-     *
-     * @return self
      */
     public function removeDefaultValue(): Parameter
     {

@@ -84,9 +84,6 @@ final class DynamicSyntax implements SyntaxInterface
 
     /**
      * Parse directive body and split it into values.
-     *
-     * @param string $body
-     * @return array
      */
     private function fetchValues(string $body): array
     {

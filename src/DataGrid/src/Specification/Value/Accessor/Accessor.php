@@ -46,7 +46,6 @@ abstract class Accessor implements ValueInterface
 
     /**
      * @param mixed $value
-     * @return bool
      */
     abstract protected function acceptsCurrent($value): bool;
 

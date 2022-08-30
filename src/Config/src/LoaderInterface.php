@@ -17,15 +17,10 @@ interface LoaderInterface
 {
     /**
      * Return true if config section exists.
-     *
-     * @param string $section
-     * @return bool
      */
     public function has(string $section): bool;
 
     /**
-     * @param string $section
-     * @return array
      *
      * @throws LoaderException
      */

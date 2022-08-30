@@ -22,19 +22,12 @@ final class PHPMixin
     /** @var array */
     private $blocks = [];
 
-    /**
-     * @param array  $tokens
-     * @param string $func
-     */
     public function __construct(array $tokens, string $func)
     {
         $this->tokens = $tokens;
         $this->parse($func);
     }
 
-    /**
-     * @return string
-     */
     public function compile(): string
     {
         $replace = [];
@@ -67,8 +60,6 @@ final class PHPMixin
 
     /**
      * Compiles the PHP blocks (with replacements) but excludes the php open, close tag and echo function.
-     *
-     * @return string
      */
     public function trimBody(): string
     {
@@ -106,8 +97,6 @@ final class PHPMixin
 
     /**
      * Get macros detected in PHP code and their default values (if any).
-     *
-     * @return array
      */
     public function getBlocks(): array
     {
@@ -119,19 +108,11 @@ final class PHPMixin
         return $result;
     }
 
-    /**
-     * @param string $block
-     * @return bool
-     */
     public function has(string $block): bool
     {
         return isset($this->blocks[$block]);
     }
 
-    /**
-     * @param string $block
-     * @param string $value
-     */
     public function set(string $block, string $value): void
     {
         if (!isset($this->blocks[$block])) {
@@ -141,9 +122,6 @@ final class PHPMixin
         $this->blocks[$block]['value'] = $value;
     }
 
-    /**
-     * @param string $func
-     */
     private function parse(string $func): void
     {
         $level = 0;

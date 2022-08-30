@@ -75,11 +75,13 @@ abstract class Reader implements ReaderInterface
 
     /**
      * @template T of object
+     *
      * @param class-string<T>|null $name
      * @param iterable<T|object> $annotations
-     * @return iterable<T>
+     *
+     * @psalm-return \Generator<int|mixed, T|object, mixed, void>
      */
-    protected function filter(?string $name, iterable $annotations): iterable
+    protected function filter(?string $name, iterable $annotations): \Generator
     {
         if ($name === null) {
             yield from $annotations;

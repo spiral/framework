@@ -18,7 +18,6 @@ final class Validator extends AbstractValidator
 
     /**
      * @param array|\ArrayAccess $data
-     * @param array              $rules
      * @param mixed              $context
      * @param RulesInterface     $ruleProvider
      */
@@ -38,9 +37,9 @@ final class Validator extends AbstractValidator
     }
 
     /**
-     * @inheritdoc
+     * @param \ArrayAccess|array $data
      */
-    public function withData($data): ValidatorInterface
+    public function withData(iterable $data): ValidatorInterface
     {
         $validator = clone $this;
         $validator->data = $data;

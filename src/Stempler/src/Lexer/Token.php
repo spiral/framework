@@ -32,9 +32,6 @@ final class Token
     public $tokens = [];
 
     /**
-     * @param int         $type
-     * @param int         $offset
-     * @param string      $content
      * @param string|null $grammar
      */
     public function __construct(int $type, int $offset, string $content, string $grammar = null)

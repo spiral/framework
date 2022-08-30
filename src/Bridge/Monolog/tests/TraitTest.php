@@ -15,6 +15,7 @@ use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Spiral\Boot\BootloadManager;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\LoaderInterface;
@@ -52,6 +53,10 @@ class TraitTest extends TestCase
     public function testScope(): void
     {
         $container = new Container();
+
+        $container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
+        $finalizer->shouldReceive('addFinalizer')->once();
+
         $container->bind(ConfiguratorInterface::class, new ConfigManager(
             new class() implements LoaderInterface {
                 public function has(string $section): bool

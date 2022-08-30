@@ -19,9 +19,6 @@ final class Parser
     /** @var Line[] */
     public $lines = [];
 
-    /**
-     * @param string $comment
-     */
     public function __construct(string $comment)
     {
         $lines = explode("\n", $comment);
@@ -46,9 +43,6 @@ final class Parser
         }
     }
 
-    /**
-     * @return string
-     */
     public function compile(): string
     {
         $result = [];

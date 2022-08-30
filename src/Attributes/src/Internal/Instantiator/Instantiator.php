@@ -33,10 +33,6 @@ abstract class Instantiator implements InstantiatorInterface
         $this->renderer = $renderer ?? new ContextRenderer();
     }
 
-    /**
-     * @param \ReflectionClass $class
-     * @return \ReflectionMethod|null
-     */
     protected function getConstructor(\ReflectionClass $class): ?\ReflectionMethod
     {
         if ($class->hasMethod(self::CONSTRUCTOR_NAME)) {
@@ -54,10 +50,6 @@ abstract class Instantiator implements InstantiatorInterface
         return null;
     }
 
-    /**
-     * @param \ReflectionClass $class
-     * @return \ReflectionMethod|null
-     */
     private function getTraitConstructors(\ReflectionClass $class): ?\ReflectionMethod
     {
         foreach ($class->getTraits() as $trait) {

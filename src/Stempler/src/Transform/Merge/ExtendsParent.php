@@ -36,10 +36,6 @@ final class ExtendsParent implements VisitorInterface
     /** @var Merger */
     private $merger;
 
-    /**
-     * @param Builder $builder
-     * @param Merger  $merger
-     */
     public function __construct(Builder $builder, Merger $merger = null)
     {
         $this->builder = $builder;
@@ -103,10 +99,6 @@ final class ExtendsParent implements VisitorInterface
         return null;
     }
 
-    /**
-     * @param Tag $tag
-     * @return string
-     */
     private function getPath(Tag $tag): string
     {
         if (strpos($tag->name, $this->extendsKeyword . ':') === 0) {

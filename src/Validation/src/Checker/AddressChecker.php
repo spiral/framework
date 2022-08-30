@@ -32,7 +32,6 @@ final class AddressChecker extends AbstractChecker implements SingletonInterface
      *
      * @link http://www.ietf.org/rfc/rfc2822.txt
      * @param string $address
-     * @return bool
      */
     public function email($address): bool
     {
@@ -43,10 +42,6 @@ final class AddressChecker extends AbstractChecker implements SingletonInterface
      * Check if URL is valid.
      *
      * @link http://www.faqs.org/rfcs/rfc2396.html
-     * @param string      $url
-     * @param null|array  $schemas
-     * @param null|string $defaultSchema
-     * @return bool
      */
     public function url(string $url, ?array $schemas = null, ?string $defaultSchema = null): bool
     {
@@ -77,8 +72,6 @@ final class AddressChecker extends AbstractChecker implements SingletonInterface
     /**
      * @link http://www.ietf.org/rfc/rfc3986.txt
      * @link https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
-     * @param string $uri
-     * @return bool
      */
     public function uri(string $uri): bool
     {
@@ -89,39 +82,21 @@ final class AddressChecker extends AbstractChecker implements SingletonInterface
         return (bool)preg_match($pattern, $uri);
     }
 
-    /**
-     * @param string $url
-     * @return bool
-     */
     private function hasSchema(string $url): bool
     {
         return mb_stripos($url, '://') !== false;
     }
 
-    /**
-     * @param string $schema
-     * @return string
-     */
     private function trimSchema(string $schema): string
     {
         return preg_replace('/^([a-z]+):\/\/$/i', '$1', $schema);
     }
 
-    /**
-     * @param string $url
-     * @param string $schema
-     *
-     * @return bool
-     */
     private function containsSchema(string $url, string $schema): bool
     {
         return mb_stripos($url, "$schema://") === 0;
     }
 
-    /**
-     * @param string $url
-     * @return string
-     */
     private function trimURL(string $url): string
     {
         return preg_replace('/^\/\/(.*)$/', '$1', $url);

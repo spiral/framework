@@ -25,10 +25,6 @@ class ControllerDeclaration extends ClassDeclaration implements DependedInterfac
     /** @var bool */
     private $withPrototype = false;
 
-    /**
-     * @param string $name
-     * @param string $comment
-     */
     public function __construct(string $name, string $comment = '')
     {
         parent::__construct($name, '', [], $comment);
@@ -42,10 +38,6 @@ class ControllerDeclaration extends ClassDeclaration implements DependedInterfac
         return $this->withPrototype ? [PrototypeTrait::class => null] : [];
     }
 
-    /**
-     * @param string $action
-     * @return Method
-     */
     public function addAction(string $action): Method
     {
         $method = $this->method($action);

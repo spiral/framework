@@ -15,12 +15,12 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
-        "spiral/boot": "^2.8",
-        "vlucas/phpdotenv": "^3.6"
+        "php": ">=7.4",
+        "spiral/boot": "^2.14",
+        "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.0"
+        "phpunit/phpunit": "^8.5|^9.5"
     },
     "autoload": {
         "psr-4": {
@@ -34,7 +34,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8.x-dev"
+            "dev-master": "2.14.x-dev"
         }
     },
     "config": {

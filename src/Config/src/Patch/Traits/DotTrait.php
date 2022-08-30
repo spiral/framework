@@ -17,7 +17,6 @@ trait DotTrait
 {
     /**
      * @param array  $data Pointer.
-     * @param string $name
      * @return array|mixed
      */
     private function &dotGet(array &$data, string $name)

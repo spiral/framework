@@ -12,17 +12,20 @@ declare(strict_types=1);
 namespace Spiral\Command\Database;
 
 use Spiral\Console\Command;
-use Spiral\Database\Database;
-use Spiral\Database\DatabaseManager;
-use Spiral\Database\Driver\DriverInterface;
-use Spiral\Database\Exception\DBALException;
-use Spiral\Database\Injection\FragmentInterface;
-use Spiral\Database\Query\QueryParameters;
-use Spiral\Database\Schema\AbstractColumn;
-use Spiral\Database\Schema\AbstractTable;
+use Cycle\Database\Database;
+use Cycle\Database\DatabaseManager;
+use Cycle\Database\Driver\DriverInterface;
+use Cycle\Database\Exception\DBALException;
+use Cycle\Database\Injection\FragmentInterface;
+use Cycle\Database\Query\QueryParameters;
+use Cycle\Database\Schema\AbstractColumn;
+use Cycle\Database\Schema\AbstractTable;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class TableCommand extends Command
 {
     protected const NAME        = 'db:table';

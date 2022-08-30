@@ -66,21 +66,21 @@ trait WritableTrait
     /**
      * {@inheritDoc}
      */
-    public function copy(string $pathname, BucketInterface $bucket = null, array $config = []): FileInterface
+    public function copy(string $pathname, BucketInterface $storage = null, array $config = []): FileInterface
     {
         $source = $this->getBucket();
 
-        return $source->copy($this->getPathname(), $pathname, $bucket, $config);
+        return $source->copy($this->getPathname(), $pathname, $storage, $config);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function move(string $pathname, BucketInterface $bucket = null, array $config = []): FileInterface
+    public function move(string $pathname, BucketInterface $storage = null, array $config = []): FileInterface
     {
         $source = $this->getBucket();
 
-        return $source->move($this->getPathname(), $pathname, $bucket, $config);
+        return $source->move($this->getPathname(), $pathname, $storage, $config);
     }
 
     /**

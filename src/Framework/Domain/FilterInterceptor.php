@@ -128,6 +128,7 @@ class FilterInterceptor implements CoreInterceptorInterface
 
     /**
      * @param \ReflectionParameter $parameter
+     *
      * @return \ReflectionClass|null
      */
     private function getParameterClass(\ReflectionParameter $parameter): ?\ReflectionClass

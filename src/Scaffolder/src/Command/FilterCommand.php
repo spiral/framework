@@ -92,9 +92,6 @@ class FilterCommand extends AbstractCommand
 
     /**
      * Parse field to fetch source, origin and type.
-     *
-     * @param string $field
-     * @return array
      */
     private function parseField(string $field): array
     {
@@ -119,8 +116,6 @@ class FilterCommand extends AbstractCommand
     }
 
     /**
-     * @param string $name
-     * @return array
      * @throws ReflectionException
      */
     private function parseSourceEntity(string $name): array
@@ -138,14 +133,9 @@ class FilterCommand extends AbstractCommand
         return $fields;
     }
 
-    /**
-     * @param ReflectionProperty $property
-     * @return string|null
-     */
     private function getTypedPropertyType(ReflectionProperty $property): ?string
     {
         if (method_exists($property, 'hasType') && method_exists($property, 'getType') && $property->hasType()) {
-            /** @var ReflectionType $type */
             $type = $property->getType();
             if (method_exists($type, 'getName') && $this->isKnownType($type->getName())) {
                 return $type->getName();
@@ -155,11 +145,6 @@ class FilterCommand extends AbstractCommand
         return null;
     }
 
-    /**
-     * @param ReflectionProperty $property
-     * @param ReflectionClass    $reflection
-     * @return string|null
-     */
     private function getPropertyTypeFromDefaults(ReflectionProperty $property, ReflectionClass $reflection): ?string
     {
         if (!isset($reflection->getDefaultProperties()[$property->name])) {
@@ -171,10 +156,6 @@ class FilterCommand extends AbstractCommand
         return $default !== null ? gettype($default) : null;
     }
 
-    /**
-     * @param ReflectionProperty $property
-     * @return string|null
-     */
     private function getPropertyTypeFromDocBlock(ReflectionProperty $property): ?string
     {
         $doc = $property->getDocComment();
@@ -188,10 +169,6 @@ class FilterCommand extends AbstractCommand
         return null;
     }
 
-    /**
-     * @param string $type
-     * @return bool
-     */
     private function isKnownType(string $type): bool
     {
         return in_array($type, self::NATIVE_TYPES, true);

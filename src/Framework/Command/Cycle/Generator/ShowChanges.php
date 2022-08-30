@@ -13,10 +13,13 @@ namespace Spiral\Command\Cycle\Generator;
 
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
-use Spiral\Database\Schema\AbstractTable;
-use Spiral\Database\Schema\Comparator;
+use Cycle\Database\Schema\AbstractTable;
+use Cycle\Database\Schema\Comparator;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
+ */
 final class ShowChanges implements GeneratorInterface
 {
     /** @var OutputInterface */

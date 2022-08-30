@@ -28,7 +28,6 @@ final class DatetimeValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return DateTimeImmutable|null
      */
     public function convert($value): ?DateTimeImmutable
     {

@@ -32,17 +32,11 @@ final class ConsoleConfig extends InjectableConfig
         'update'    => [],
     ];
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->config['name'] ?? 'Spiral Framework';
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->config['version'] ?? 'UNKNOWN';
@@ -50,8 +44,6 @@ final class ConsoleConfig extends InjectableConfig
 
     /**
      * User defined set of commands (to be used when auto-location is off).
-     *
-     * @return array
      */
     public function getCommands(): array
     {
@@ -95,7 +87,6 @@ final class ConsoleConfig extends InjectableConfig
 
     /**
      * @param mixed $item
-     * @return SequenceInterface
      *
      * @throws ConfigException
      */

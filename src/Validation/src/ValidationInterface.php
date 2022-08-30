@@ -23,7 +23,6 @@ interface ValidationInterface
      * @param array              $rules   List of associated validation rules (see Rule).
      * @param mixed              $context Validation context (available for checkers and validation
      *                                    methods but is not validated).
-     * @return ValidatorInterface
      */
     public function validate($data, array $rules, $context = null): ValidatorInterface;
 }

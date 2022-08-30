@@ -19,10 +19,6 @@ class SchematicEntity extends AbstractEntity
     /** @var array */
     private $schema = [];
 
-    /**
-     * @param array $data
-     * @param array $schema
-     */
     public function __construct(array $data, array $schema)
     {
         $this->schema = $schema;
@@ -39,23 +35,23 @@ class SchematicEntity extends AbstractEntity
         }
 
         if (!empty($this->schema[ModelSchema::FILLABLE])) {
-            return in_array($field, $this->schema[ModelSchema::FILLABLE]);
+            return in_array($field, $this->schema[ModelSchema::FILLABLE], true);
         }
 
         if (!empty($this->schema[ModelSchema::SECURED]) && $this->schema[ModelSchema::SECURED] === '*') {
             return false;
         }
 
-        return !in_array($field, $this->schema[ModelSchema::SECURED]);
+        return !in_array($field, $this->schema[ModelSchema::SECURED], true);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getMutator(string $field, string $mutator)
+    protected function getMutator(string $field, string $type)
     {
-        if (isset($this->schema[ModelSchema::MUTATORS][$mutator][$field])) {
-            return $this->schema[ModelSchema::MUTATORS][$mutator][$field];
+        if (isset($this->schema[ModelSchema::MUTATORS][$type][$field])) {
+            return $this->schema[ModelSchema::MUTATORS][$type][$field];
         }
 
         return null;

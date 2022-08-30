@@ -19,9 +19,6 @@ final class Limit implements SpecificationInterface
     /** @var int */
     private $value;
 
-    /**
-     * @param int $value
-     */
     public function __construct(int $value)
     {
         $this->value = $value;
@@ -29,7 +26,6 @@ final class Limit implements SpecificationInterface
 
     /**
      * @inheritDoc
-     * @return int
      */
     public function getValue(): int
     {

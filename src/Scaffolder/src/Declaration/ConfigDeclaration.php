@@ -52,18 +52,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
     /** @var string */
     private $directory;
 
-    /**
-     * @param ScaffolderConfig                  $config
-     * @param FilesInterface                    $files
-     * @param SlugifyInterface                  $slugify
-     * @param ConfigDeclaration\TypeAnnotations $typeAnnotations
-     * @param ConfigDeclaration\TypeHints       $typeHints
-     * @param ConfigDeclaration\Defaults        $defaultValues
-     * @param string                            $configName
-     * @param string                            $name
-     * @param string                            $comment
-     * @param string                            $directory
-     */
     public function __construct(
         ScaffolderConfig $config,
         FilesInterface $files,
@@ -96,9 +84,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         return [InjectableConfig::class => null];
     }
 
-    /**
-     * @param bool $reverse
-     */
     public function create(bool $reverse): void
     {
         $filename = $this->makeConfigFilename($this->configName);
@@ -119,18 +104,11 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         }
     }
 
-    /**
-     * @param string $filename
-     * @return string
-     */
     private function makeConfigFilename(string $filename): string
     {
         return "{$this->directory}{$filename}.php";
     }
 
-    /**
-     * @param string $filename
-     */
     private function touchConfigFile(string $filename): void
     {
         $this->files->touch($filename);
@@ -149,9 +127,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         );
     }
 
-    /**
-     * @return string
-     */
     private function phpDocSeeReference(): string
     {
         $namespace = trim($this->config->classNamespace('config', $this->getName()), '\\');
@@ -160,7 +135,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
     }
 
     /**
-     * @param array $defaults
      * @return double[]|float[]
      */
     private function declareGetters(array $defaults): array
@@ -198,12 +172,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         return $output;
     }
 
-    /**
-     * @param array  $methodNames
-     * @param string $key
-     * @param array  $value
-     * @return Method|null
-     */
     private function declareGettersByKey(array $methodNames, string $key, array $value): ?Method
     {
         //Won't create if there's less than 2 sub-items
@@ -251,12 +219,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         return $method;
     }
 
-    /**
-     * @param string $name
-     * @param string $prefix
-     * @param string $postfix
-     * @return string
-     */
     private function makeGetterName(string $name, string $prefix = 'get', string $postfix = ''): string
     {
         $chunks = [];
@@ -275,9 +237,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
 
     /**
      * Declare constant and property.
-     *
-     * @param string $configName
-     * @param array  $defaults
      */
     private function declareStructure(string $configName, array $defaults): void
     {
@@ -286,10 +245,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
             ->setComment('@internal For internal usage. Will be hydrated in the constructor.');
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     private function classify(string $name): string
     {
         return ( new InflectorFactory() )
@@ -297,10 +252,6 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
             ->classify($name);
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     private function singularize(string $name): string
     {
         return ( new InflectorFactory() )

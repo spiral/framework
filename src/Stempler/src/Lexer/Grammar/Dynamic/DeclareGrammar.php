@@ -40,6 +40,7 @@ final class DeclareGrammar implements GrammarInterface
      */
     public function parse(Buffer $src): \Generator
     {
+        $quoted = [];
         while ($n = $src->next()) {
             switch ($n->char) {
                 case '"':

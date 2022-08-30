@@ -16,11 +16,5 @@ use Spiral\Stempler\Node\NodeInterface;
 
 interface RendererInterface
 {
-    /**
-     * @param Compiler      $compiler
-     * @param Result        $result
-     * @param NodeInterface $node
-     * @return bool
-     */
     public function render(Compiler $compiler, Result $result, NodeInterface $node): bool;
 }

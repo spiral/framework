@@ -18,10 +18,6 @@ final class StringLoader implements LoaderInterface
     /** @var array */
     private $paths = [];
 
-    /**
-     * @param string $path
-     * @param string $content
-     */
     public function set(string $path, string $content): void
     {
         $this->paths[$path] = $content;

@@ -28,11 +28,8 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
     public const INJECTOR = Tokenizer::class;
 
     /** @var Finder */
-    protected $finder = null;
+    protected $finder;
 
-    /**
-     * @param Finder $finder
-     */
     public function __construct(Finder $finder)
     {
         $this->finder = $finder;
@@ -41,8 +38,9 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
     /**
      * Available file reflections. Generator.
      *
-     * @return ReflectionFile[]|\Generator
      * @throws \Exception
+     *
+     * @return \Generator<int, ReflectionFile, mixed, void>
      */
     protected function availableReflections(): \Generator
     {
@@ -67,9 +65,11 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
      * Safely get class reflection, class loading errors will be blocked and reflection will be
      * excluded from analysis.
      *
-     * @param string $class
+     * @template T
+     * @param class-string<T> $class
+     * @return \ReflectionClass<T>
      *
-     * @return \ReflectionClass
+     * @throws LocatorException
      */
     protected function classReflection(string $class): \ReflectionClass
     {
@@ -113,24 +113,24 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
     /**
      * Get every class trait (including traits used in parents).
      *
-     * @param string $class
+     * @return string[]
      *
-     * @return array
+     * @psalm-return array<string, string>
      */
     protected function fetchTraits(string $class): array
     {
         $traits = [];
 
-        while ($class) {
-            $traits = array_merge(class_uses($class), $traits);
-            $class = get_parent_class($class);
-        }
+        do {
+            $traits = \array_merge(\class_uses($class), $traits);
+            $class = \get_parent_class($class);
+        } while ($class !== false);
 
         //Traits from traits
-        foreach (array_flip($traits) as $trait) {
-            $traits = array_merge(class_uses($trait), $traits);
+        foreach (\array_flip($traits) as $trait) {
+            $traits = \array_merge(\class_uses($trait), $traits);
         }
 
-        return array_unique($traits);
+        return \array_unique($traits);
     }
 }

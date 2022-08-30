@@ -19,7 +19,6 @@ final class BoolValue implements ValueInterface
 {
     /**
      * @inheritDoc
-     * @return bool
      */
     public function accepts($value): bool
     {
@@ -36,7 +35,6 @@ final class BoolValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return bool
      */
     public function convert($value): bool
     {

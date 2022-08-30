@@ -28,17 +28,13 @@ final class AddUse extends NodeVisitorAbstract
     /** @var Node\Stmt\Use_[] */
     private $nodes = [];
 
-    /**
-     * @param ClassNode $node
-     */
     public function __construct(ClassNode $node)
     {
         $this->node = $node;
     }
 
     /**
-     * @param Node $node
-     * @return int|null|Node|Node[]
+     * @return Node\Stmt\Namespace_|null
      */
     public function leaveNode(Node $node)
     {
@@ -84,10 +80,6 @@ final class AddUse extends NodeVisitorAbstract
         return $node;
     }
 
-    /**
-     * @param Node\Stmt\Namespace_ $node
-     * @return int
-     */
     private function definePlacementID(Node\Stmt\Namespace_ $node): int
     {
         foreach ($node->stmts as $index => $child) {
@@ -125,7 +117,10 @@ final class AddUse extends NodeVisitorAbstract
 
     /**
      * @param Node\Stmt[] $stmts
-     * @return array
+     *
+     * @return string[][]
+     *
+     * @psalm-return list<non-empty-list<string>>
      */
     private function getExistingUseParts(array $stmts): array
     {
@@ -143,11 +138,6 @@ final class AddUse extends NodeVisitorAbstract
         return $uses;
     }
 
-    /**
-     * @param string      $type
-     * @param string|null $alias
-     * @return Node\Stmt\Use_
-     */
     private function buildUse(string $type, ?string $alias = null): Node\Stmt\Use_
     {
         $b = new Use_(new Node\Name($type), Node\Stmt\Use_::TYPE_NORMAL);

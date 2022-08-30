@@ -16,7 +16,6 @@ final class DescSorter extends AbstractSorter
 {
     /**
      * @inheritDoc
-     * @return string
      */
     public function getValue(): string
     {

@@ -20,10 +20,12 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Bootloader\Auth\HttpAuthBootloader;
 use Spiral\Bootloader\Cycle\AnnotatedBootloader;
 use Spiral\Bootloader\Cycle\CycleBootloader;
-use Spiral\Bootloader\TokenizerBootloader;
+use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 
 /**
  * Stores authentication token in database via Cycle ORM.
+ *
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
  */
 final class CycleTokensBootloader extends Bootloader
 {

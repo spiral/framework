@@ -44,9 +44,6 @@ final class HTMLRenderer implements RendererInterface
 
     /**
      * @psalm-suppress UndefinedClass
-     * @param Compiler        $compiler
-     * @param Compiler\Result $result
-     * @param Tag             $node
      */
     private function tag(Compiler $compiler, Compiler\Result $result, Tag $node): void
     {
@@ -72,11 +69,6 @@ final class HTMLRenderer implements RendererInterface
         }
     }
 
-    /**
-     * @param Compiler        $compiler
-     * @param Compiler\Result $result
-     * @param Attr            $node
-     */
     private function attribute(Compiler $compiler, Compiler\Result $result, Attr $node): void
     {
         if ($node->name instanceof NodeInterface) {
@@ -100,11 +92,6 @@ final class HTMLRenderer implements RendererInterface
         $result->push(sprintf('=%s', $value), $node->getContext());
     }
 
-    /**
-     * @param Compiler        $compiler
-     * @param Compiler\Result $result
-     * @param Verbatim        $node
-     */
     private function verbatim(Compiler $compiler, Compiler\Result $result, Verbatim $node): void
     {
         foreach ($node->nodes as $child) {

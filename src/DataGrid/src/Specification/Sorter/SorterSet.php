@@ -20,9 +20,6 @@ final class SorterSet implements SorterInterface
     /** @var SorterInterface[] */
     private $sorters;
 
-    /**
-     * @param SorterInterface ...$sorters
-     */
     public function __construct(SorterInterface ...$sorters)
     {
         $this->sorters = $sorters;
@@ -53,7 +50,6 @@ final class SorterSet implements SorterInterface
 
     /**
      * @inheritDoc
-     * @return string
      */
     public function getValue(): string
     {

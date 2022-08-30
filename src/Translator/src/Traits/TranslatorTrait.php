@@ -35,7 +35,6 @@ trait TranslatorTrait
      * @param string $string
      * @param array  $options Interpolation options.
      * @param string $bundle  Translation bundle, by default current class name.
-     * @return string
      *
      * @throws ScopeException
      */

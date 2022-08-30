@@ -24,6 +24,9 @@ use Spiral\RoadRunner\PSR7Client;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class LegacyRrDispatcher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */

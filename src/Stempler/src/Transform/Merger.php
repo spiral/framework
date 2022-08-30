@@ -42,9 +42,6 @@ final class Merger
         $this->fetcher = new BlockFetcher();
     }
 
-    /**
-     * @return BlockFetcher
-     */
     public function getFetcher(): BlockFetcher
     {
         return $this->fetcher;
@@ -52,10 +49,6 @@ final class Merger
 
     /**
      * Merge given template with array of blocks.
-     *
-     * @param Template $target
-     * @param Tag      $source
-     * @return Template
      */
     public function merge(Template $target, Tag $source): Template
     {
@@ -72,11 +65,6 @@ final class Merger
         return $target;
     }
 
-    /**
-     * @param Template $node
-     * @param string   $path
-     * @return Template
-     */
     public function isolateNodes(Template $node, string $path): Template
     {
         $node->nodes = $this->traverse(
@@ -89,8 +77,6 @@ final class Merger
     }
 
     /**
-     * @param array               $nodes
-     * @param VisitorInterface... $visitors
      * @return array|NodeInterface[]
      */
     protected function traverse(array $nodes, VisitorInterface ...$visitors)

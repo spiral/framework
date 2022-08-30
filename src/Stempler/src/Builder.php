@@ -48,7 +48,6 @@ final class Builder
     private $visitors = [];
 
     /**
-     * @param LoaderInterface $loader
      * @param Parser|null     $parser
      * @param Compiler|null   $compiler
      */
@@ -59,25 +58,16 @@ final class Builder
         $this->compiler = $compiler ?? new Compiler();
     }
 
-    /**
-     * @return LoaderInterface
-     */
     public function getLoader(): LoaderInterface
     {
         return $this->loader;
     }
 
-    /**
-     * @return Parser
-     */
     public function getParser(): Parser
     {
         return $this->parser;
     }
 
-    /**
-     * @return Compiler
-     */
     public function getCompiler(): Compiler
     {
         return $this->compiler;
@@ -85,9 +75,6 @@ final class Builder
 
     /**
      * Add visitor to specific builder stage.
-     *
-     * @param VisitorInterface $visitor
-     * @param int              $stage
      */
     public function addVisitor(VisitorInterface $visitor, int $stage = self::STAGE_PREPARE): void
     {
@@ -97,8 +84,6 @@ final class Builder
     /**
      * Compile template.
      *
-     * @param string $path
-     * @return Result
      *
      * @throws CompilerException
      * @throws \Throwable
@@ -111,8 +96,6 @@ final class Builder
     }
 
     /**
-     * @param Template $tpl
-     * @return Result
      * @throws ContextExceptionInterface
      * @throws \Throwable
      */
@@ -131,8 +114,6 @@ final class Builder
     }
 
     /**
-     * @param string $path
-     * @return Template
      *
      * @throws \Throwable
      */
@@ -161,8 +142,6 @@ final class Builder
     }
 
     /**
-     * @param Template $template
-     * @return Template
      *
      * @throws \Throwable
      */
@@ -188,9 +167,6 @@ final class Builder
 
     /**
      * Set exception path and line.
-     *
-     * @param ContextExceptionInterface $e
-     * @return ContextExceptionInterface
      */
     private function mapException(ContextExceptionInterface $e): ContextExceptionInterface
     {

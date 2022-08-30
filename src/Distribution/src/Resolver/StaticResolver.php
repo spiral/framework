@@ -27,37 +27,23 @@ class StaticResolver extends UriResolver
      */
     private $host;
 
-    /**
-     * @param UriInterface $host
-     */
     public function __construct(UriInterface $host)
     {
         $this->host = clone $host;
     }
 
-    /**
-     * @param UriFactoryInterface $factory
-     * @param string $host
-     * @return static
-     */
     public static function fromFactory(UriFactoryInterface $factory, string $host): self
     {
         return new static($factory->createUri($host));
     }
 
-    /**
-     * @param string $host
-     * @return static
-     */
     public static function create(string $host): self
     {
         return new static(new Uri($host));
     }
 
     /**
-     * @param string $file
      * @param array<string, string> $query
-     * @return UriInterface
      */
     public function resolve(string $file, array $query = []): UriInterface
     {
@@ -66,10 +52,6 @@ class StaticResolver extends UriResolver
         ;
     }
 
-    /**
-     * @param string $file
-     * @return string
-     */
     private function suffix(string $file): string
     {
         $prefix = \trim($this->host->getPath(), self::URI_PATH_DELIMITER);

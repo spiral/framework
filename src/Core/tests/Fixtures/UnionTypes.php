@@ -16,4 +16,9 @@ class UnionTypes
     public static function example(SampleClass|TypedClass $example)
     {
     }
+
+    public static function unionNull(null|string $nullable): null|string
+    {
+        return $nullable;
+    }
 }

@@ -22,6 +22,9 @@ use Spiral\RoadRunner\Metrics;
 use Spiral\RoadRunner\MetricsInterface;
 use Spiral\RoadRunner\Worker;
 
+/**
+ * @deprecated since v2.9. Will be moved to spiral/roadrunner-bridge and removed in v3.0
+ */
 class LegacyRoadRunnerBootloader extends Bootloader
 {
     /**

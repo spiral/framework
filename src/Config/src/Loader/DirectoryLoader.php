@@ -22,10 +22,6 @@ final class DirectoryLoader implements LoaderInterface
     /** @var FileLoaderInterface[] */
     private $loaders;
 
-    /**
-     * @param string $directory
-     * @param array  $loaders
-     */
     public function __construct(string $directory, array $loaders = [])
     {
         $this->directory = rtrim($directory, '/');
@@ -61,11 +57,11 @@ final class DirectoryLoader implements LoaderInterface
             try {
                 return $this->getLoader($extension)->loadFile($section, $filename);
             } catch (LoaderException $e) {
-                throw new LoaderException("Unable to load config `{$section}`.", $e->getCode(), $e);
+                throw new LoaderException("Unable to load config `{$section}`: {$e->getMessage()}", $e->getCode(), $e);
             }
         }
 
-        throw new LoaderException("Unable to load config `{$section}`.");
+        throw new LoaderException("Unable to load config `{$section}`: no suitable loader found.");
     }
 
     private function loaderExtensions(): array
@@ -73,10 +69,6 @@ final class DirectoryLoader implements LoaderInterface
         return array_keys($this->loaders);
     }
 
-    /**
-     * @param string $extension
-     * @return FileLoaderInterface
-     */
     private function getLoader(string $extension): FileLoaderInterface
     {
         return $this->loaders[$extension];

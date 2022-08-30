@@ -46,9 +46,6 @@ final class NodeExtractor
     }
 
     /**
-     * @param string $filename
-     * @param array  $dependencies
-     * @return ClassNode
      *
      * @throws ClassNotDeclaredException
      * @throws \ReflectionException
@@ -71,8 +68,6 @@ final class NodeExtractor
     }
 
     /**
-     * @param string $filename
-     * @return ClassNode
      *
      * @throws ClassNotDeclaredException
      */
@@ -92,10 +87,6 @@ final class NodeExtractor
         return ClassNode::create($declarator->getClass());
     }
 
-    /**
-     * @param string      $filename
-     * @param NodeVisitor ...$visitors
-     */
     private function traverse(string $filename, NodeVisitor ...$visitors): void
     {
         $tr = new NodeTraverser();
@@ -107,10 +98,6 @@ final class NodeExtractor
         $tr->traverse($this->parser->parse(file_get_contents($filename)));
     }
 
-    /**
-     * @param ClassNode $definition
-     * @param array     $imports
-     */
     private function fillStmts(ClassNode $definition, array $imports): void
     {
         foreach ($imports as $import) {
@@ -119,8 +106,6 @@ final class NodeExtractor
     }
 
     /**
-     * @param ClassNode $definition
-     *
      * @throws \ReflectionException
      */
     private function fillConstructorParams(ClassNode $definition): void
@@ -140,9 +125,6 @@ final class NodeExtractor
     /**
      * Collect all variable definitions from constructor method body.
      * Vars which are however also inserted via method are ignored (and still used as constructor params).
-     *
-     * @param array     $vars
-     * @param ClassNode $definition
      */
     private function fillConstructorVars(array $vars, ClassNode $definition): void
     {
@@ -155,9 +137,6 @@ final class NodeExtractor
         $definition->constructorVars = $vars;
     }
 
-    /**
-     * @param ClassNode $definition
-     */
     private function resolveConflicts(ClassNode $definition): void
     {
         $this->namesResolver->resolve($definition);

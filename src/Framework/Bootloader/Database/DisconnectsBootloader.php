@@ -14,10 +14,12 @@ namespace Spiral\Bootloader\Database;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\FinalizerInterface;
-use Spiral\Database\DatabaseManager;
+use Cycle\Database\DatabaseManager;
 
 /**
  * Close all the connections after each serve() cycle.
+ *
+ * @deprecated since v2.9. Will be moved to spiral/cycle-bridge and removed in v3.0
  */
 final class DisconnectsBootloader extends Bootloader
 {

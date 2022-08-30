@@ -90,6 +90,7 @@ class AppBootloader extends DomainBootloader
         );
 
         $views->addDirectory('custom', __DIR__ . '/../../views/custom/');
+        $views->addDirectory('stempler', __DIR__ . '/../../views/stempler/');
         $views->addEngine(TestEngine::class);
 
         $validation->addAlias('aliased', 'notEmpty');
@@ -148,6 +149,64 @@ class AppBootloader extends DomainBootloader
         $this->registerInterceptedRoute(
             $router,
             'first',
+            [
+                $pipelineInterceptor,
+                new Interceptor\Append('four'),
+                new Interceptor\Append('five'),
+                new Interceptor\Append('six'),
+            ]
+        );
+
+        $this->registerInterceptedRoute(
+            $router,
+            'withoutAttribute',
+            [
+                new Interceptor\Append('one'),
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+
+        $this->registerInterceptedRoute(
+            $router,
+            'withAttribute',
+            [
+                $pipelineInterceptor,
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'mixAttribute',
+            [
+                new Interceptor\Append('four'),
+                new Interceptor\Append('five'),
+                $pipelineInterceptor,
+                new Interceptor\Append('six'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'dupAttribute',
+            [
+                $pipelineInterceptor,
+                new Interceptor\Append('one'),
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'skipAttribute',
+            [
+                new Interceptor\Append('one'),
+                $pipelineInterceptor,
+                new Interceptor\Append('two'),
+                new Interceptor\Append('three'),
+            ]
+        );
+        $this->registerInterceptedRoute(
+            $router,
+            'firstAttribute',
             [
                 $pipelineInterceptor,
                 new Interceptor\Append('four'),

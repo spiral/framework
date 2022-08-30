@@ -22,7 +22,6 @@ trait ReaderAwareTrait
     private $reader;
 
     /**
-     * @param ReaderInterface $reader
      * @return $this|ReaderAwareInterface
      */
     public function withReader(ReaderInterface $reader): ReaderAwareInterface
@@ -30,9 +29,6 @@ trait ReaderAwareTrait
         return (clone $this)->setReader($reader);
     }
 
-    /**
-     * @return ReaderInterface
-     */
     public function getReader(): ReaderInterface
     {
         assert($this->reader !== null, 'Invariant violation');
@@ -41,7 +37,6 @@ trait ReaderAwareTrait
     }
 
     /**
-     * @param ReaderInterface $reader
      * @return $this|ReaderAwareInterface
      */
     protected function setReader(ReaderInterface $reader): ReaderAwareInterface

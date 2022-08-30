@@ -27,7 +27,6 @@ abstract class SequenceCommand extends Command
     /**
      * @param iterable|SequenceInterface[] $commands
      * @param ContainerInterface           $container
-     * @return int
      */
     protected function runSequence(iterable $commands, ContainerInterface $container): int
     {

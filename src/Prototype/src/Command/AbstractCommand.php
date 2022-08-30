@@ -17,6 +17,7 @@ use Spiral\Prototype\NodeExtractor;
 use Spiral\Prototype\PropertyExtractor;
 use Spiral\Prototype\PrototypeLocator;
 use Spiral\Prototype\PrototypeRegistry;
+use Psr\Container\ContainerExceptionInterface;
 
 abstract class AbstractCommand extends Command
 {
@@ -32,11 +33,6 @@ abstract class AbstractCommand extends Command
     /** @var array */
     private $cache = [];
 
-    /**
-     * @param PrototypeLocator  $locator
-     * @param NodeExtractor     $extractor
-     * @param PrototypeRegistry $registry
-     */
     public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
     {
         parent::__construct();
@@ -49,8 +45,6 @@ abstract class AbstractCommand extends Command
     /**
      * Fetch class dependencies.
      *
-     * @param \ReflectionClass $class
-     * @param array            $all
      * @return null[]|Dependency[]|\Throwable[]
      */
     protected function getPrototypeProperties(\ReflectionClass $class, array $all = []): array
@@ -63,12 +57,9 @@ abstract class AbstractCommand extends Command
             $parent = $parent->getParentClass();
         }
 
-        return iterator_to_array($this->reverse($results));
+        return \iterator_to_array($this->reverse($results));
     }
 
-    /**
-     * @return PropertyExtractor
-     */
     protected function getExtractor(): PropertyExtractor
     {
         return $this->container->get(PropertyExtractor::class);
@@ -76,7 +67,6 @@ abstract class AbstractCommand extends Command
 
     /**
      * @param Dependency[] $properties
-     * @return string
      */
     protected function mergeNames(array $properties): string
     {
@@ -85,7 +75,6 @@ abstract class AbstractCommand extends Command
 
     /**
      * @param Dependency[] $properties
-     * @return string
      */
     protected function mergeTargets(array $properties): string
     {
@@ -113,6 +102,9 @@ abstract class AbstractCommand extends Command
         return implode("\n", $result);
     }
 
+    /**
+     * @return array<string, Dependency|ContainerExceptionInterface|null>
+     */
     private function readProperties(\ReflectionClass $class): array
     {
         if (isset($this->cache[$class->getFileName()])) {
@@ -132,9 +124,14 @@ abstract class AbstractCommand extends Command
         return $result;
     }
 
-    private function reverse(array $results): ?\Generator
+    /**
+     * @param null[]|Dependency[]|\Throwable[] $results
+     *
+     * @return \Generator<array-key, null|Dependency|\Throwable, mixed, void>
+     */
+    private function reverse(array $results): \Generator
     {
-        foreach (array_reverse($results) as $result) {
+        foreach (\array_reverse($results) as $result) {
             yield from $result;
         }
     }

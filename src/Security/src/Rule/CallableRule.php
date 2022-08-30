@@ -22,11 +22,8 @@ final class CallableRule implements RuleInterface
     /**
      * @var callable
      */
-    private $callable = null;
+    private $callable;
 
-    /**
-     * @param callable $callable
-     */
     public function __construct(callable $callable)
     {
         $this->callable = $callable;

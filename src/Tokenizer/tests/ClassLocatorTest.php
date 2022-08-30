@@ -123,7 +123,7 @@ class ClassLocatorTest extends TestCase
         {
             private $messages = [];
 
-            public function log($level, $message, array $context = [])
+            public function log($level, $message, array $context = []): void
             {
                 $this->messages[] = compact('level', 'message');
             }
@@ -139,7 +139,7 @@ class ClassLocatorTest extends TestCase
          */
         $locator->setLogger($logger);
 
-        $classes = $locator->getClasses(ClassB::class);
+        $locator->getClasses(ClassB::class);
 
         $this->assertStringContainsString(
             ' has includes and excluded from analysis',

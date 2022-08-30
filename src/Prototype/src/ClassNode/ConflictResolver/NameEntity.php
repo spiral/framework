@@ -13,11 +13,6 @@ namespace Spiral\Prototype\ClassNode\ConflictResolver;
 
 final class NameEntity extends AbstractEntity
 {
-    /**
-     * @param string $name
-     * @param int    $sequence
-     * @return NameEntity
-     */
     public static function createWithSequence(string $name, int $sequence): NameEntity
     {
         $self = new self();
@@ -27,10 +22,6 @@ final class NameEntity extends AbstractEntity
         return $self;
     }
 
-    /**
-     * @param string $name
-     * @return NameEntity
-     */
     public static function create(string $name): NameEntity
     {
         $self = new self();

@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Annotations;
 
+/**
+ * @deprecated since v2.12. Will be removed in v3.0
+ */
 final class AnnotatedProperty
 {
     /** @var \ReflectionProperty */
@@ -20,7 +23,6 @@ final class AnnotatedProperty
     private $annotation;
 
     /**
-     * @param \ReflectionProperty $property
      * @param mixed               $annotation
      */
     public function __construct(\ReflectionProperty $property, $annotation)
@@ -29,17 +31,11 @@ final class AnnotatedProperty
         $this->annotation = $annotation;
     }
 
-    /**
-     * @return \ReflectionClass
-     */
     public function getClass(): \ReflectionClass
     {
         return $this->property->getDeclaringClass();
     }
 
-    /**
-     * @return \ReflectionProperty
-     */
     public function getProperty(): \ReflectionProperty
     {
         return $this->property;

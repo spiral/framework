@@ -30,8 +30,6 @@ final class PHP implements NodeInterface
     public $tokens;
 
     /**
-     * @param string       $content
-     * @param array        $tokens
      * @param Context|null $context
      */
     public function __construct(string $content, array $tokens, Context $context = null)

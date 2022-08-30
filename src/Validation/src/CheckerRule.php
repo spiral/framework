@@ -11,10 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Validation;
 
+use Spiral\Translator\Traits\TranslatorTrait;
 use Spiral\Translator\Translator;
 
 final class CheckerRule extends AbstractRule
 {
+    use TranslatorTrait;
+
     /** @var CheckerInterface */
     private $checker;
 
@@ -27,12 +30,6 @@ final class CheckerRule extends AbstractRule
     /** @var string|null */
     private $message;
 
-    /**
-     * @param CheckerInterface $checker
-     * @param string           $method
-     * @param array            $args
-     * @param null|string      $message
-     */
     public function __construct(
         CheckerInterface $checker,
         string $method,
@@ -67,7 +64,7 @@ final class CheckerRule extends AbstractRule
     public function getMessage(string $field, $value): string
     {
         if (!empty($this->message)) {
-            return Translator::interpolate(
+            return $this->say(
                 $this->message,
                 array_merge([$value, $field], $this->args)
             );

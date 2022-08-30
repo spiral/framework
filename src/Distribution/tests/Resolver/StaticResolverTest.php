@@ -16,7 +16,12 @@ class StaticResolverTest extends TestCase
         $uri = $resolver->resolve('file.jpg');
 
         self::assertSame('http://localhost/file.jpg', (string)$uri);
-        self::assertNull(error_get_last());
+
+        // PHP 8.1 deprecation error fix
+        self::assertTrue(
+            ($error = error_get_last()) === null ||
+            \strpos($error['message'], 'Spiral') === false
+        );
     }
 
     public function testGuzzleResolveWithPrefix(): void
@@ -26,6 +31,11 @@ class StaticResolverTest extends TestCase
         $uri = $resolver->resolve('file.jpg');
 
         self::assertSame('http://localhost/upload/file.jpg', (string)$uri);
-        self::assertNull(error_get_last());
+
+        // PHP 8.1 deprecation error fix
+        self::assertTrue(
+            ($error = error_get_last()) === null ||
+            \strpos($error['message'], 'Spiral') === false
+        );
     }
 }

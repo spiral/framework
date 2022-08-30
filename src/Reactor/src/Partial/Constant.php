@@ -36,7 +36,6 @@ class Constant extends AbstractDeclaration implements NamedInterface
     private $value;
 
     /**
-     * @param string       $name
      * @param string       $value
      * @param string|array $comment
      */
@@ -65,9 +64,8 @@ class Constant extends AbstractDeclaration implements NamedInterface
      * Array values allowed (but works in PHP7 only).
      *
      * @param mixed $value
-     * @return self
      */
-    public function setValue($value): Constant
+    public function setValue($value): self
     {
         $this->value = $value;
 
@@ -105,10 +103,6 @@ class Constant extends AbstractDeclaration implements NamedInterface
 
     /**
      * Mount indentation to value. Attention, to be applied to arrays only!
-     *
-     * @param string $serialized
-     * @param int    $indentLevel
-     * @return string
      */
     private function mountIndents(string $serialized, int $indentLevel): string
     {

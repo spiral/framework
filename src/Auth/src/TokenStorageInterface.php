@@ -21,8 +21,6 @@ interface TokenStorageInterface
     /**
      * Load token by id, must return null if token not found.
      *
-     * @param string $id
-     * @return TokenInterface|null
      *
      * @throws TokenStorageException
      */
@@ -31,9 +29,7 @@ interface TokenStorageInterface
     /**
      * Create token based on the payload provided by actor provider.
      *
-     * @param array                   $payload
      * @param \DateTimeInterface|null $expiresAt
-     * @return TokenInterface
      *
      * @throws TokenStorageException
      */
@@ -42,7 +38,6 @@ interface TokenStorageInterface
     /**
      * Delete token from the persistent storage.
      *
-     * @param TokenInterface $token
      *
      * @throws TokenStorageException
      */

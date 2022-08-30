@@ -24,10 +24,6 @@ final class Type
     /** @var string|null */
     public $fullName;
 
-    /**
-     * @param string $name
-     * @return Type
-     */
     public static function create(string $name): Type
     {
         $type = new self();
@@ -44,18 +40,11 @@ final class Type
         return $type;
     }
 
-    /**
-     * @return string
-     */
     public function getAliasOrShortName(): string
     {
         return $this->alias ?: $this->shortName;
     }
 
-    /**
-     * @param bool $builtIn
-     * @return string
-     */
     public function getSlashedShortName(bool $builtIn): string
     {
         $type = $this->shortName;
@@ -71,10 +60,6 @@ final class Type
         return $this->fullName ?? $this->shortName;
     }
 
-    /**
-     * @param string $type
-     * @return bool
-     */
     private function hasShortName(string $type): bool
     {
         return mb_strpos($type, '\\') !== false;

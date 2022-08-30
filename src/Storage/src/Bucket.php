@@ -40,7 +40,6 @@ class Bucket implements BucketInterface
     protected $name;
 
     /**
-     * @param FilesystemOperator $fs
      * @param string|null $name
      * @param UriResolverInterface|null $resolver
      */
@@ -98,10 +97,8 @@ class Bucket implements BucketInterface
     }
 
     /**
-     * @param FilesystemAdapter $adapter
      * @param string|null $name
      * @param UriResolverInterface|null $resolver
-     * @return static
      */
     public static function fromAdapter(
         FilesystemAdapter $adapter,
@@ -113,9 +110,6 @@ class Bucket implements BucketInterface
         return new self($fs, $name, $resolver);
     }
 
-    /**
-     * @return FilesystemOperator
-     */
     protected function getOperator(): FilesystemOperator
     {
         return $this->fs;

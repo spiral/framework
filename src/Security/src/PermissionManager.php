@@ -46,10 +46,6 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
     /** @var string */
     private $defaultRule = ForbidRule::class;
 
-    /**
-     * @param RulesInterface $rules
-     * @param string         $defaultRule
-     */
     public function __construct(RulesInterface $rules, string $defaultRule = ForbidRule::class)
     {
         $this->matcher = new Matcher();
@@ -67,8 +63,6 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
 
     /**
      * {@inheritdoc}
-     *
-     * @return $this
      */
     public function addRole(string $role): PermissionManager
     {
@@ -85,8 +79,6 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
 
     /**
      * {@inheritdoc}
-     *
-     * @return $this
      */
     public function removeRole(string $role): PermissionManager
     {
@@ -134,8 +126,6 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
 
     /**
      * {@inheritdoc}
-     *
-     * @return $this|self
      */
     public function associate(string $role, string $permission, string $rule = AllowRule::class): PermissionManager
     {
@@ -155,9 +145,6 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
     /**
      * Associate role/permission with Forbid rule.
      *
-     * @param string $role
-     * @param string $permission
-     * @return $this|self
      *
      * @throws RoleException
      * @throws PermissionException
@@ -168,9 +155,6 @@ final class PermissionManager implements PermissionsInterface, SingletonInterfac
     }
 
     /**
-     * @param string $role
-     * @param string $permission
-     * @return string
      *
      * @throws PermissionException
      */

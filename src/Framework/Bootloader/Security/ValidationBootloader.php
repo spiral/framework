@@ -12,11 +12,11 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Security;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Security\RulesInterface;
+use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 use Spiral\Validation\Checker;
 use Spiral\Validation\Condition;
 use Spiral\Validation\ParserInterface;
@@ -69,6 +69,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
                     'image'    => Checker\ImageChecker::class,
                     'datetime' => Checker\DatetimeChecker::class,
                     'entity'   => Checker\EntityChecker::class,
+                    'array'    => Checker\ArrayChecker::class,
                 ],
 
                 // Enable/disable validation conditions

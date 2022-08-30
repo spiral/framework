@@ -13,6 +13,9 @@ namespace Spiral\Debug\Renderer;
 
 use Spiral\Debug\RendererInterface;
 
+/**
+ * @deprecated since v2.13. Will be removed in v3.0
+ */
 abstract class AbstractRenderer implements RendererInterface
 {
     /**

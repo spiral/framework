@@ -12,6 +12,9 @@ declare(strict_types=1);
 namespace Spiral\App;
 
 use Psr\Container\ContainerInterface;
+use Spiral\App\Bootloader\AppBootloader;
+use Spiral\App\Bootloader\AuthBootloader;
+use Spiral\App\Bootloader\WSBootloader;
 use Spiral\Boot\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -19,9 +22,8 @@ use Spiral\Bootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
-use Spiral\App\Bootloader\AppBootloader;
-use Spiral\App\Bootloader\AuthBootloader;
-use Spiral\App\Bootloader\WSBootloader;
+use Spiral\Queue\Bootloader\QueueBootloader;
+use Spiral\Stempler\Bootloader\StemplerBootloader;
 
 class TestApp extends Kernel
 {
@@ -39,7 +41,7 @@ class TestApp extends Kernel
         // Dispatchers
         Bootloader\Jobs\JobsBootloader::class,
         Bootloader\GRPC\GRPCBootloader::class,
-        Bootloader\ConsoleBootloader::class,
+        \Spiral\Console\Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
         Bootloader\Http\DiactorosBootloader::class,
@@ -50,6 +52,13 @@ class TestApp extends Kernel
         Bootloader\Http\SessionBootloader::class,
         Bootloader\Http\CsrfBootloader::class,
         Bootloader\Http\PaginationBootloader::class,
+
+        // Cache
+        \Spiral\Cache\Bootloader\CacheBootloader::class,
+
+        // Broadcasting
+        \Spiral\Broadcasting\Bootloader\BroadcastingBootloader::class,
+        \Spiral\Broadcasting\Bootloader\WebsocketsBootloader::class,
 
         // Auth
         Bootloader\Auth\HttpAuthBootloader::class,
@@ -69,8 +78,15 @@ class TestApp extends Kernel
         Bootloader\Cycle\ProxiesBootloader::class,
 
         // Template engines and rendering
+        StemplerBootloader::class,
         Bootloader\Views\ViewsBootloader::class,
         Bootloader\Views\TranslatedCacheBootloader::class,
+
+        // Storage
+        Bootloader\Storage\StorageBootloader::class,
+
+        // Queue
+        QueueBootloader::class,
 
         // Framework commands
         Bootloader\CommandBootloader::class,

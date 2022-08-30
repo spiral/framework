@@ -45,9 +45,6 @@ abstract class Rule implements RuleInterface
     /* @var ResolverInterface */
     protected $resolver;
 
-    /**
-     * @param ResolverInterface $resolver
-     */
     public function __construct(ResolverInterface $resolver)
     {
         $this->resolver = $resolver;

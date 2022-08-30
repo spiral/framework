@@ -18,9 +18,6 @@ abstract class CompareValue implements ValueInterface
     /** @var ValueInterface */
     private $base;
 
-    /**
-     * @param ValueInterface $base
-     */
     public function __construct(ValueInterface $base)
     {
         if ($base instanceof ArrayValue) {
@@ -32,7 +29,6 @@ abstract class CompareValue implements ValueInterface
 
     /**
      * @inheritDoc
-     * @return bool
      */
     public function accepts($value): bool
     {
@@ -55,7 +51,6 @@ abstract class CompareValue implements ValueInterface
      * Checks if value comparison with zero is ok.
      *
      * @param mixed $value
-     * @return bool
      */
     abstract protected function compare($value): bool;
 }

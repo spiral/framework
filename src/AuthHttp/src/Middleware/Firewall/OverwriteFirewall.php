@@ -27,10 +27,6 @@ final class OverwriteFirewall extends AbstractFirewall
     /** @var int */
     private $status;
 
-    /**
-     * @param UriInterface $uri
-     * @param int          $status
-     */
     public function __construct(UriInterface $uri, int $status = 401)
     {
         $this->uri = $uri;

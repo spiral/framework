@@ -19,9 +19,6 @@ class AnyOfCondition extends AbstractCondition
     /** @var Compositor */
     private $compositor;
 
-    /**
-     * @param Compositor $compositor
-     */
     public function __construct(Compositor $compositor)
     {
         $this->compositor = $compositor;

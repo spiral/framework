@@ -18,6 +18,8 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Views\Engine\Native\NativeEngine;
+use Spiral\Views\LoaderInterface;
+use Spiral\Views\ViewLoader;
 use Spiral\Views\ViewManager;
 use Spiral\Views\ViewsInterface;
 
@@ -25,6 +27,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
     protected const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
+        LoaderInterface::class => ViewLoader::class,
     ];
 
     /** @var ConfiguratorInterface */

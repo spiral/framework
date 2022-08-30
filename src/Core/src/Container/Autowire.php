@@ -31,9 +31,6 @@ final class Autowire
 
     /**
      * Autowire constructor.
-     *
-     * @param string $alias
-     * @param array  $parameters
      */
     public function __construct(string $alias, array $parameters = [])
     {
@@ -54,7 +51,6 @@ final class Autowire
      * Init the autowire based on string or array definition.
      *
      * @param mixed $definition
-     * @return Autowire
      */
     public static function wire($definition): Autowire
     {
@@ -83,7 +79,6 @@ final class Autowire
     }
 
     /**
-     * @param FactoryInterface $factory
      * @param array            $parameters Context specific parameters (always prior to declared ones).
      * @return mixed
      *

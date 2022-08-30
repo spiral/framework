@@ -19,17 +19,15 @@ use Spiral\Security\Exception\GuardException;
 final class Guard implements GuardInterface
 {
     /** @var PermissionsInterface */
-    private $permissions = null;
+    private $permissions;
 
     /** @var ActorInterface|null */
-    private $actor = null;
+    private $actor;
 
     /** @var array */
     private $roles = [];
 
     /**
-     * @param PermissionsInterface $permissions
-     * @param ActorInterface       $actor
      * @param array                $roles Session specific roles.
      */
     public function __construct(
@@ -65,7 +63,6 @@ final class Guard implements GuardInterface
     /**
      * Currently active actor/session roles.
      *
-     * @return array
      *
      * @throws GuardException
      */
@@ -76,9 +73,6 @@ final class Guard implements GuardInterface
 
     /**
      * Create instance of guard with session specific roles (existed roles will be droppped).
-     *
-     * @param array $roles
-     * @return self
      */
     public function withRoles(array $roles): Guard
     {

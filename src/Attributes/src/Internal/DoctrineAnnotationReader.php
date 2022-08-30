@@ -48,7 +48,11 @@ final class DoctrineAnnotationReader extends BaseReader
             return $this->reader->getClassAnnotations($class);
         });
 
-        return $this->filter($name, $result);
+        yield from $this->filter($name, $result);
+
+        foreach ($class->getTraits() as $trait) {
+            yield from $this->getClassMetadata($trait, $name);
+        }
     }
 
     /**
@@ -95,9 +99,6 @@ final class DoctrineAnnotationReader extends BaseReader
         return [];
     }
 
-    /**
-     * @return bool
-     */
     protected function isAvailable(): bool
     {
         return \interface_exists(Reader::class);
@@ -123,13 +124,10 @@ final class DoctrineAnnotationReader extends BaseReader
                     $class = AttributeException::class;
             }
 
-            throw new $class($e->getMessage(), (int)$e->getCode(), $e);
+            throw new $class($e->getMessage(), $e->getCode(), $e);
         }
     }
 
-    /**
-     * @return void
-     */
     private function bootAnnotations(): void
     {
         // doctrine/annotations ^1.0 compatibility.
@@ -138,9 +136,6 @@ final class DoctrineAnnotationReader extends BaseReader
         }
     }
 
-    /**
-     * @return void
-     */
     private function checkAvailability(): void
     {
         if ($this->isAvailable()) {

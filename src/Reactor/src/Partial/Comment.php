@@ -20,7 +20,6 @@ class Comment extends Source implements ReplaceableInterface
 {
     /**
      * {@inheritdoc}
-     * @return self
      */
     public function replace($search, $replace): Comment
     {
@@ -47,9 +46,7 @@ class Comment extends Source implements ReplaceableInterface
             $result .= $this->addIndent(" * {$line}\n", $indentLevel);
         }
 
-        $result .= $this->addIndent(' */', $indentLevel);
-
-        return $result;
+        return $result . $this->addIndent(' */', $indentLevel);
     }
 
     /**

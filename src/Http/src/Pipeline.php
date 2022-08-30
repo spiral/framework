@@ -35,9 +35,6 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
     /** @var RequestHandlerInterface */
     private $handler;
 
-    /**
-     * @param ScopeInterface $scope
-     */
     public function __construct(ScopeInterface $scope)
     {
         $this->scope = $scope;
@@ -46,8 +43,6 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
     /**
      * Configures pipeline with target endpoint.
      *
-     * @param RequestHandlerInterface $handler
-     * @return Pipeline
      *
      * @throws PipelineException
      */

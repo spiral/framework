@@ -53,11 +53,6 @@ final class PHPGrammar implements GrammarInterface
         return 'PHP:CODE';
     }
 
-    /**
-     * @param string $content
-     * @param int    $offset
-     * @return Token|null
-     */
     private function parseGrammar(string $content, int $offset): ?Token
     {
         $tokens = null;
@@ -96,8 +91,6 @@ final class PHPGrammar implements GrammarInterface
 
     /**
      * @param string|array $token
-     * @param array        $type
-     * @return bool
      */
     private function is($token, array $type): bool
     {

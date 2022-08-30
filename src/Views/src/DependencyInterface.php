@@ -16,9 +16,6 @@ namespace Spiral\Views;
  */
 interface DependencyInterface
 {
-    /**
-     * @return string
-     */
     public function getName(): string;
 
     /**
@@ -30,8 +27,6 @@ interface DependencyInterface
 
     /**
      * Return list of all possible dependency values.
-     *
-     * @return array
      */
     public function getVariants(): array;
 }

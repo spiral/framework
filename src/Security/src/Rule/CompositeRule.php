@@ -38,11 +38,8 @@ abstract class CompositeRule implements RuleInterface
     protected const RULES = [];
 
     /** @var RulesInterface */
-    private $repository = null;
+    private $repository;
 
-    /**
-     * @param RulesInterface $repository
-     */
     public function __construct(RulesInterface $repository)
     {
         $this->repository = $repository;
