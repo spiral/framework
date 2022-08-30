@@ -8,9 +8,7 @@ use Spiral\Router\Loader\Configurator\RouteConfigurator;
 
 class RouteCollection implements \IteratorAggregate, \Countable
 {
-    /**
-     * @var array<string, RouteConfigurator>
-     */
+    /** @var array<string, RouteConfigurator> */
     private array $routes = [];
 
     public function __clone()
@@ -23,7 +21,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * Gets the current RouteCollection as an Iterator that includes all routes.
      *
-     * @return \ArrayIterator<string, Route>
+     * @return \ArrayIterator<string, RouteConfigurator>
      */
     public function getIterator(): \ArrayIterator
     {

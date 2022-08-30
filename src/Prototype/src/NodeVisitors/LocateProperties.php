@@ -12,7 +12,9 @@ use PhpParser\NodeVisitorAbstract;
  */
 final class LocateProperties extends NodeVisitorAbstract
 {
+    /** @var array<non-empty-string, non-empty-string> */
     private array $properties = [];
+    /** @var array<non-empty-string, non-empty-string> */
     private array $requested = [];
 
     /**
@@ -34,7 +36,8 @@ final class LocateProperties extends NodeVisitorAbstract
         if (
             $node instanceof Node\Expr\PropertyFetch &&
             $node->var instanceof Node\Expr\Variable &&
-            $node->var->name === 'this'
+            $node->var->name === 'this' &&
+            $node->name instanceof Node\Identifier
         ) {
             $this->requested[$node->name->name] = $node->name->name;
         }

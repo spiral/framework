@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
-use Psr\Container\ContainerInterface;
+use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Queue\SerializerRegistryInterface as QueueSerializerRegistryInterface;
@@ -21,7 +21,7 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
     private array $serializers = [];
 
     public function __construct(
-        private readonly ContainerInterface $container,
+        private readonly Container $container,
         private readonly HandlerRegistryInterface $fallbackHandlers
     ) {
     }
@@ -36,6 +36,7 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
 
     /**
      * Get handler object for given job type
+     * @throws \Throwable
      */
     public function getHandler(string $jobType): HandlerInterface
     {
@@ -52,10 +53,10 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
 
     /**
      * Associate specific job type with serializer class or object
+     * @throws \Throwable
      */
     public function setSerializer(string $jobType, SerializerInterface|string|Autowire $serializer): void
     {
-        /** @var SerializerRegistryInterface $registry */
         $registry = $this->container->get(SerializerRegistryInterface::class);
 
         if ($serializer instanceof Autowire) {

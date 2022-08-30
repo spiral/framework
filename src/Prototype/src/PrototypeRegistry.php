@@ -41,10 +41,8 @@ final class PrototypeRegistry
 
     /**
      * Resolves the name of prototype dependency into target class name.
-     *
-     * @return Dependency|null|ContainerExceptionInterface
      */
-    public function resolveProperty(string $name): mixed
+    public function resolveProperty(string $name): Dependency|ContainerExceptionInterface|null
     {
         $dependency = $this->dependencies[$name] ?? null;
         if ($dependency === null) {
