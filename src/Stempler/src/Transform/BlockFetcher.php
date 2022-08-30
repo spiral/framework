@@ -14,34 +14,43 @@ use Spiral\Stempler\Node\NodeInterface;
  */
 final class BlockFetcher
 {
+    private const CONTEXT_KEY = 'context';
+
     /**
      * Extract "value" blocks from the import caller. Block values are always array of nodes.
      */
     public function fetchBlocks(Tag $caller): BlockClaims
     {
-        $blocks = ['context' => []];
+        $blocks = [self::CONTEXT_KEY => []];
 
         foreach ($caller->attrs as $attr) {
-            if (!$attr instanceof Attr || $attr->name instanceof NodeInterface) {
+            if (! $attr instanceof Attr || $attr->name instanceof NodeInterface) {
                 // ignore name when attribute is dynamic
                 $blocks[\sprintf('attr-%s', \count($blocks))] = $attr;
                 continue;
             }
 
+            \assert($attr->name !== self::CONTEXT_KEY);
+
             // to identify that we are dealing with possibly quoted value
             $blocks[$attr->name] = new QuotedValue($attr->value);
         }
+
 
         foreach ($caller->nodes as $node) {
             if ($node instanceof Block) {
                 $blocks[$node->name] = $node->nodes;
             } else {
-                $blocks['context'][] = $node;
+                \assert(
+                    \is_array($blocks[self::CONTEXT_KEY]) || $blocks[self::CONTEXT_KEY] instanceof \ArrayAccess
+                );
+
+                $blocks[self::CONTEXT_KEY][] = $node;
             }
         }
 
-        if ($blocks['context'] === []) {
-            unset($blocks['context']);
+        if ($blocks[self::CONTEXT_KEY] === []) {
+            unset($blocks[self::CONTEXT_KEY]);
         }
 
         return new BlockClaims($blocks);

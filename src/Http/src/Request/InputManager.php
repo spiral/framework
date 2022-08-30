@@ -195,13 +195,13 @@ final class InputManager implements SingletonInterface
             );
         }
 
-        //Flushing input state
+        // Flushing input state
         if ($this->request !== $request) {
             $this->bags = [];
             $this->request = $request;
         }
 
-        return $this->request;
+        return $request;
     }
 
     /**
