@@ -42,7 +42,6 @@ class ConfigCommand extends AbstractCommand
     {
         $declaration = $this->createDeclaration(ConfigDeclaration::class);
 
-        /** @var ConfigDeclaration $declaration */
         $declaration->create(
             (bool) $this->option('reverse'),
             (string) $this->argument('name')

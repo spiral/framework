@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
 
-use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator;
 use Spiral\Reactor\Partial\PhpNamespace;
 
 /**
  * TraitUses aggregation
  *
- * @method $this add(PhpNamespace $element)
- * @method PhpNamespace|AggregableInterface get(string $name)
+ * @implements Aggregator<PhpNamespace>
  */
 final class Namespaces extends Aggregator
 {

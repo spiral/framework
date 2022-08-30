@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
 
-use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator;
 use Spiral\Reactor\ClassDeclaration;
 
 /**
  * Classes aggregation.
  *
- * @method $this add(ClassDeclaration $element)
- * @method ClassDeclaration|AggregableInterface get(string $name)
+ * @implements Aggregator<ClassDeclaration>
  */
 final class Classes extends Aggregator
 {

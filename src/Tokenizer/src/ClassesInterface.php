@@ -14,9 +14,9 @@ interface ClassesInterface
      * Unreachable classes or files with conflicts must be skipped. This is SLOW method, should be
      * used only for static analysis.
      *
-     * @param mixed $target  Class, interface or trait parent. By default - null (all classes).
-     *                       Parent (class) will also be included to classes list as one of
-     *                       results.
+     * @param object|string|null $target  Class, interface or trait parent. By default - null (all classes).
+     *                                    Parent (class) will also be included to classes list as one of
+     *                                    results.
      * @return \ReflectionClass[]
      */
     public function getClasses(object|string|null $target = null): array;

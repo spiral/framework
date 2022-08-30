@@ -11,7 +11,7 @@ use Spiral\Stempler\Node\NodeInterface;
  */
 final class Assembler
 {
-    /** @var NodeInterface[] */
+    /** @var array<array-key, array{0: NodeInterface, 1: string}> */
     private array $stack = [];
 
     public function __construct(

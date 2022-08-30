@@ -10,13 +10,18 @@ use Spiral\Filters\Model\Filter;
 use Spiral\Filters\Model\FilterBag;
 use Spiral\Filters\Model\FilterInterface;
 
+/**
+ * @psalm-type TParameters = array{filterBag: FilterBag}
+ */
 final class PopulateDataFromEntityInterceptor implements CoreInterceptorInterface
 {
     /**
-     * @param array{filterBag: FilterBag} $parameters
+     * @param-assert TParameters $parameters
      */
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
+        \assert($parameters['filterBag'] instanceof FilterBag);
+
         $bag = $parameters['filterBag'];
 
         if ($bag->filter instanceof Filter) {

@@ -38,11 +38,17 @@ trait ReadableTrait
         return $this->getBucket()->getStream($this->getPathname());
     }
 
+    /**
+     * @return positive-int|0
+     */
     public function getLastModified(): int
     {
         return $this->getBucket()->getLastModified($this->getPathname());
     }
 
+    /**
+     * @return positive-int|0
+     */
     public function getSize(): int
     {
         return $this->getBucket()->getSize($this->getPathname());
@@ -53,6 +59,9 @@ trait ReadableTrait
         return $this->getBucket()->getMimeType($this->getPathname());
     }
 
+    /**
+     * @return Visibility::VISIBILITY_*
+     */
     #[ExpectedValues(valuesFromClass: Visibility::class)]
     public function getVisibility(): string
     {

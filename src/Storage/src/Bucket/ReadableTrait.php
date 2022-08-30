@@ -48,6 +48,9 @@ trait ReadableTrait
         }
     }
 
+    /**
+     * @return positive-int|0
+     */
     public function getLastModified(string $pathname): int
     {
         $fs = $this->getOperator();
@@ -59,6 +62,9 @@ trait ReadableTrait
         }
     }
 
+    /**
+     * @return positive-int|0
+     */
     public function getSize(string $pathname): int
     {
         $fs = $this->getOperator();
@@ -81,6 +87,9 @@ trait ReadableTrait
         }
     }
 
+    /**
+     * @return Visibility::VISIBILITY_*
+     */
     #[ExpectedValues(valuesFromClass: Visibility::class)]
     public function getVisibility(string $pathname): string
     {

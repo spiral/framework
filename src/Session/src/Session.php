@@ -158,7 +158,7 @@ final class Session implements SessionInterface
 
     public function getSection(string $name = null): SessionSectionInterface
     {
-        return new SessionSection($this, $name ?? static::DEFAULT_SECTION);
+        return new SessionSection($this, $name ?? self::DEFAULT_SECTION);
     }
 
     /**

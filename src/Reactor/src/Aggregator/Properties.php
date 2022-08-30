@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
 
-use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator;
 use Spiral\Reactor\Partial\Property;
 
 /**
  * Property aggregation
  *
- * @method $this add(Property $element)
- * @method Property|AggregableInterface get(string $name)
+ * @implements Aggregator<Property>
  */
 final class Properties extends Aggregator
 {

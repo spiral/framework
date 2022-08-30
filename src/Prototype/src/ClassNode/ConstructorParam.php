@@ -13,7 +13,7 @@ final class ConstructorParam
     public ?Type $type = null;
     public bool $byRef = false;
     public bool $isVariadic = false;
-    private ?bool $builtIn = null;
+    private bool $builtIn = false;
 
     private function __construct()
     {

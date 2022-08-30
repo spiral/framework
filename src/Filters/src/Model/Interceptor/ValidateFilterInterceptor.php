@@ -16,16 +16,18 @@ use Spiral\Filters\ErrorMapper;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Validation\ValidationProviderInterface;
 
-class ValidateFilterInterceptor implements CoreInterceptorInterface
+/**
+ * @psalm-type TParameters = array{filterBag: FilterBag}
+ */
+final class ValidateFilterInterceptor implements CoreInterceptorInterface
 {
-    /** @param Container $container */
     public function __construct(
         private readonly ContainerInterface $container
     ) {
     }
 
     /**
-     * @param array{filterBag: FilterBag} $parameters
+     * @param-assert TParameters $parameters
      */
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
@@ -34,6 +36,7 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
 
         if ($filter instanceof HasFilterDefinition) {
             $this->validateFilter(
+                $filter,
                 $bag,
                 $bag->errors ?? [],
                 $parameters['context'] ?? null
@@ -43,10 +46,12 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
         return $filter;
     }
 
-    private function validateFilter(FilterBag $bag, array $errors, mixed $context): void
-    {
-        $definition = $bag->filter->filterDefinition();
-
+    private function validateFilter(
+        HasFilterDefinition $definition,
+        FilterBag $bag,
+        array $errors,
+        mixed $context
+    ): void {
         if ($definition instanceof ShouldBeValidated) {
             $errorMapper = new ErrorMapper($bag->schema);
             $validationProvider = $this->container->get(ValidationProviderInterface::class);

@@ -13,7 +13,7 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
 {
     public function __construct(
         private readonly SessionInterface $session,
-        private ?string $name = null
+        private readonly string $name
     ) {
     }
 
