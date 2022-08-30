@@ -36,17 +36,18 @@ final class Initializer implements Container\SingletonInterface
 
             // Replace class aliases with source classes
             try {
-                $class = (new \ReflectionClass($class))->getName();
+                $ref = (new \ReflectionClass($class));
             } catch (\ReflectionException) {
                 throw new ClassNotFoundException(
                     \sprintf('Bootloader class `%s` is not exist.', $class)
                 );
             }
 
-            if ($this->bootloaders->isBooted($class)) {
+            if ($this->bootloaders->isBooted($class) || $ref->isAbstract()) {
                 continue;
             }
 
+            $class = $ref->getName();
             $this->bootloaders->register($class);
             $bootloader = $this->container->get($class);
 
