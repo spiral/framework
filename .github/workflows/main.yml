@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - '*.*'
   pull_request: null
   schedule:
     - cron: '0 0 * * *'
