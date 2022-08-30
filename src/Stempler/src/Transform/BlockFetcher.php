@@ -24,7 +24,7 @@ final class BlockFetcher
         $blocks = [self::CONTEXT_KEY => []];
 
         foreach ($caller->attrs as $attr) {
-            if (! $attr instanceof Attr || $attr->name instanceof NodeInterface) {
+            if (!$attr instanceof Attr || $attr->name instanceof NodeInterface) {
                 // ignore name when attribute is dynamic
                 $blocks[\sprintf('attr-%s', \count($blocks))] = $attr;
                 continue;
