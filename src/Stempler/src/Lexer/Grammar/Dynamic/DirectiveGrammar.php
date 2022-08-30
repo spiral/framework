@@ -146,6 +146,11 @@ final class DirectiveGrammar implements \IteratorAggregate
         $this->name = [];
     }
 
+    /**
+     * TODO issue #767
+     * @link https://github.com/spiral/framework/issues/767
+     * @psalm-suppress UndefinedPropertyFetch
+     */
     private function parseBody(Buffer $src): bool
     {
         $this->body = [];

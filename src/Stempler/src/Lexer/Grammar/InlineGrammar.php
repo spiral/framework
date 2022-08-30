@@ -72,6 +72,10 @@ final class InlineGrammar implements GrammarInterface
 
     /**
      * @return Token[]|null
+     *
+     * TODO issue #767
+     * @link https://github.com/spiral/framework/issues/767
+     * @psalm-suppress UndefinedPropertyFetch
      */
     private function parseGrammar(Buffer $src, int $offset): ?array
     {

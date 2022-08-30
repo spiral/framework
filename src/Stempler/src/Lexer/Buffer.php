@@ -80,7 +80,7 @@ final class Buffer implements \IteratorAggregate
     /**
      * Get next generator value without advancing the position.
      */
-    public function lookahead()
+    public function lookahead(): Byte|Token|null
     {
         if ($this->replay !== []) {
             return $this->replay[0];
@@ -97,9 +97,9 @@ final class Buffer implements \IteratorAggregate
     /**
      * Get next byte(s) value if any.
      *
-     * @param int $size Size of lookup string.
+     * @param positive-int $size Size of lookup string.
      */
-    public function lookaheadByte(int $size = 1): ?string
+    public function lookaheadByte(int $size = 1): string
     {
         $result = '';
         $replay = [];
