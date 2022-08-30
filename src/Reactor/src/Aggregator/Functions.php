@@ -10,7 +10,7 @@ use Spiral\Reactor\FunctionDeclaration;
 /**
  * TraitUses aggregation
  *
- * @implements Aggregator<FunctionDeclaration>
+ * @extends Aggregator<FunctionDeclaration>
  */
 final class Functions extends Aggregator
 {

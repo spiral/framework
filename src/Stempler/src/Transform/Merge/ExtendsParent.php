@@ -9,7 +9,10 @@ use Spiral\Stempler\Builder;
 use Spiral\Stempler\Exception\ExtendsException;
 use Spiral\Stempler\Exception\SyntaxException;
 use Spiral\Stempler\Node\AttributedInterface;
+use Spiral\Stempler\Node\Block;
 use Spiral\Stempler\Node\HTML\Tag;
+use Spiral\Stempler\Node\HTML\Verbatim;
+use Spiral\Stempler\Node\Template;
 use Spiral\Stempler\Transform\Merger;
 use Spiral\Stempler\VisitorContext;
 use Spiral\Stempler\VisitorInterface;
@@ -54,6 +57,7 @@ final class ExtendsParent implements VisitorInterface
         }
 
         // extend current node
+        /** @psalm-var Template|Block|Verbatim|Tag $node */
         if ($node instanceof AttributedInterface && $node->getAttribute(self::class) !== null) {
             /** @var Tag $extends */
             $extends = $node->getAttribute(self::class);

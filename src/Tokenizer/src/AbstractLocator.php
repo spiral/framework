@@ -40,7 +40,7 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
             if ($reflection->hasIncludes()) {
                 // We are not analyzing files which has includes, it's not safe to require such reflections
                 $this->getLogger()->warning(
-                    \sprintf('File `%s` has includes and excluded from analysis', $file),
+                    \sprintf('File `%s` has includes and excluded from analysis', (string) $file),
                     ['file' => $file]
                 );
 
@@ -94,7 +94,7 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
                 ['error' => $e]
             );
 
-            throw new LocatorException($e->getMessage(), $e->getCode(), $e);
+            throw new LocatorException($e->getMessage(), (int) $e->getCode(), $e);
         } finally {
             \spl_autoload_unregister($loader);
         }

@@ -10,7 +10,7 @@ class CompileException extends EngineException
 
     public function __construct(\Throwable $previous = null)
     {
-        parent::__construct($previous?->getMessage(), $previous?->getCode() ?? 0, $previous);
+        parent::__construct($previous?->getMessage(), (int) ($previous?->getCode() ?? 0), $previous);
 
         $this->file = $previous?->getFile();
         $this->line = $previous?->getLine();

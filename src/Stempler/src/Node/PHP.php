@@ -9,6 +9,8 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Static PHP block.
+ *
+ * @implements NodeInterface<PHP>
  */
 final class PHP implements NodeInterface
 {

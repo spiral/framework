@@ -10,7 +10,7 @@ use Spiral\Reactor\Partial\TraitUse;
 /**
  * TraitUses aggregation
  *
- * @implements Aggregator<TraitUse>
+ * @extends Aggregator<TraitUse>
  */
 final class TraitUses extends Aggregator
 {

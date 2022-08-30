@@ -8,13 +8,16 @@ use Spiral\Stempler\Node\NodeInterface;
 use Spiral\Stempler\Node\Traits\ContextTrait;
 use Spiral\Stempler\Parser\Context;
 
+/**
+ * @implements NodeInterface<Directive>
+ */
 final class Directive implements NodeInterface
 {
     use ContextTrait;
 
     public string $name;
     public ?string $body = null;
-    public $values = [];
+    public array $values = [];
 
     public function __construct(Context $context = null)
     {

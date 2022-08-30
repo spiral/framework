@@ -112,7 +112,7 @@ abstract class AbstractCommand extends Command
      * @template TK
      * @param array<array-key, array<TK, T>> $results
      *
-     * @return \Iterator<TK, T>
+     * @return \Generator<TK, T>
      */
     private function reverse(array $results): \Generator
     {

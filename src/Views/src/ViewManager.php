@@ -127,6 +127,10 @@ final class ViewManager implements ViewsInterface
 
         $view = $this->findEngine($path)->get($path, $this->context);
 
+        /**
+         * @psalm-suppress TypeDoesNotContainType
+         * @psalm-suppress RedundantCondition
+         */
         $this->cache?->set($this->context, $path, $view);
 
         return $view;

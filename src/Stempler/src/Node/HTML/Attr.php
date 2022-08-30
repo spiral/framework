@@ -11,6 +11,8 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Represents single node/tag attribute and it's value.
+ *
+ * @implements NodeInterface<Attr>
  */
 final class Attr implements NodeInterface
 {

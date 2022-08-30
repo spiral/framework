@@ -10,7 +10,7 @@ use Spiral\Reactor\ClassDeclaration;
 /**
  * Classes aggregation.
  *
- * @implements Aggregator<ClassDeclaration>
+ * @extends Aggregator<ClassDeclaration>
  */
 final class Classes extends Aggregator
 {

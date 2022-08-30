@@ -49,7 +49,7 @@ trait ReadableTrait
     }
 
     /**
-     * @return positive-int|0
+     * @return positive-int
      */
     public function getLastModified(string $pathname): int
     {

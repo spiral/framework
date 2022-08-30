@@ -58,8 +58,8 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @psalm-param non-empty-string $bag
-     * @psalm-param array{class: class-string, source: string, alias: string}
+     * @param non-empty-string $bag
+     * @param array{"class": class-string, "source": string, "alias": string} $config
      */
     public function addInputBag(string $bag, array $config): void
     {

@@ -20,14 +20,14 @@ interface ViewsInterface
      *
      * @throws ViewException
      */
-    public function compile(string $path);
+    public function compile(string $path): void;
 
     /**
      * Reset view cache for a given path.
      *
      * @throws ViewException
      */
-    public function reset(string $path);
+    public function reset(string $path): void;
 
     /**
      * Render template.

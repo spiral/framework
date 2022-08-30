@@ -13,7 +13,7 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
 {
     public function getClasses(object|string|null $target = null): array
     {
-        if (!empty($target) && (\is_object($target) || \is_string($target))) {
+        if (!empty($target)) {
             $target = new \ReflectionClass($target);
         }
 
@@ -38,6 +38,8 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
 
     /**
      * Classes available in finder scope.
+     *
+     * @return class-string[]
      */
     protected function availableClasses(): array
     {

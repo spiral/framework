@@ -79,7 +79,7 @@ final class Session implements SessionInterface
         try {
             \session_start(['use_cookies' => false]);
         } catch (\Throwable $e) {
-            throw new SessionException('Unable to start session', $e->getCode(), $e);
+            throw new SessionException('Unable to start session', (int) $e->getCode(), $e);
         }
 
         if (empty($this->id)) {
@@ -166,6 +166,8 @@ final class Session implements SessionInterface
      */
     protected function validSession(): bool
     {
+        \assert(isset($_SESSION));
+
         if (
             !\array_key_exists(self::CLIENT_SIGNATURE, $_SESSION)
             || !\array_key_exists(self::SESSION_CREATED, $_SESSION)

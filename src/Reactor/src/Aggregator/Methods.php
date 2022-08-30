@@ -10,7 +10,7 @@ use Spiral\Reactor\Partial\Method;
 /**
  * Method aggregation
  *
- * @implements Aggregator<Method>
+ * @extends Aggregator<Method>
  */
 final class Methods extends Aggregator
 {

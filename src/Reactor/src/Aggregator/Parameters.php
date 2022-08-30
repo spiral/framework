@@ -10,7 +10,7 @@ use Spiral\Reactor\Partial\Parameter;
 /**
  * Constants aggregation
  *
- * @implements Aggregator<Parameter>
+ * @extends Aggregator<Parameter>
  */
 final class Parameters extends Aggregator
 {

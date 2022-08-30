@@ -111,7 +111,7 @@ final class CoreHandler implements RequestHandlerInterface
             return \strtolower($request->getMethod()) . \ucfirst($this->action);
         }
 
-        return $this->action ?? '';
+        return $this->action;
     }
 
     /**

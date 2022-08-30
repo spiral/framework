@@ -109,9 +109,7 @@ final class ReflectionInvocation
     }
 
     /**
-     * Get call argument by it's position.
-     *
-     * @return ReflectionArgument|null
+     * Get call argument by it position.
      */
     public function getArgument(int $index): ReflectionArgument
     {

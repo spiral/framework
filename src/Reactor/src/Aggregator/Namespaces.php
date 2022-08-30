@@ -10,7 +10,7 @@ use Spiral\Reactor\Partial\PhpNamespace;
 /**
  * TraitUses aggregation
  *
- * @implements Aggregator<PhpNamespace>
+ * @extends Aggregator<PhpNamespace>
  */
 final class Namespaces extends Aggregator
 {

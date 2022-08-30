@@ -23,7 +23,7 @@ if (!function_exists('spiral')) {
      * @template T
      * @param class-string<T>|string $alias Class name or alias.
      * @return T
-     * @psalm-return ($id is class-string ? T : mixed)
+     * @psalm-return ($alias is class-string ? T : mixed)
      *
      * @throws ScopeException
      */

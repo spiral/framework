@@ -10,7 +10,7 @@ use Spiral\Reactor\Partial\EnumCase;
 /**
  * TraitUses aggregation.
  *
- * @implements Aggregator<EnumCase>
+ * @extends Aggregator<EnumCase>
  */
 final class EnumCases extends Aggregator
 {

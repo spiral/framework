@@ -8,12 +8,17 @@ use Spiral\Stempler\Node\NodeInterface;
 
 /**
  * Assembles node tree by keeping current node context.
+ *
+ * @template TNode of NodeInterface
  */
 final class Assembler
 {
-    /** @var array<array-key, array{0: NodeInterface, 1: string}> */
+    /** @var array<array-key, array{0: TNode, 1: string}> */
     private array $stack = [];
 
+    /**
+     * @param TNode $node
+     */
     public function __construct(
         private NodeInterface $node,
         private string $path
@@ -35,11 +40,17 @@ final class Assembler
         return \implode('.', \array_reverse($path));
     }
 
+    /**
+     * @param TNode $node
+     */
     public function push(NodeInterface $node): void
     {
         $this->node->{$this->path}[] = $node;
     }
 
+    /**
+     * @param TNode $node
+     */
     public function open(NodeInterface $node, string $path): void
     {
         $this->push($node);
@@ -57,6 +68,9 @@ final class Assembler
         [$this->node, $this->path] = \array_pop($this->stack);
     }
 
+    /**
+     * @param TNode $node
+     */
     private function nodeName(NodeInterface $node): string
     {
         $r = new \ReflectionClass($node);

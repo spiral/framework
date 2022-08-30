@@ -8,6 +8,9 @@ use Spiral\Stempler\Node\NodeInterface;
 use Spiral\Stempler\Node\Traits\ContextTrait;
 use Spiral\Stempler\Parser\Context;
 
+/**
+ * @implements NodeInterface<Output>
+ */
 final class Output implements NodeInterface
 {
     use ContextTrait;

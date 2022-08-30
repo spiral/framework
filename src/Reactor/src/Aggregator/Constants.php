@@ -10,7 +10,7 @@ use Spiral\Reactor\Partial\Constant;
 /**
  * Constants aggregation.
  *
- * @implements Aggregator<Constant>
+ * @extends Aggregator<Constant>
  */
 final class Constants extends Aggregator
 {

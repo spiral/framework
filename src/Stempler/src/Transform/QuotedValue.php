@@ -6,6 +6,7 @@ namespace Spiral\Stempler\Transform;
 
 use Spiral\Stempler\Node\HTML\Nil;
 use Spiral\Stempler\Node\Mixin;
+use Spiral\Stempler\Node\NodeInterface;
 use Spiral\Stempler\Node\Raw;
 
 /**
@@ -14,7 +15,7 @@ use Spiral\Stempler\Node\Raw;
 final class QuotedValue
 {
     public function __construct(
-        private mixed $value
+        private readonly NodeInterface|string $value
     ) {
     }
 
@@ -23,6 +24,9 @@ final class QuotedValue
         return $this->value;
     }
 
+    /**
+     * @return NodeInterface[]
+     */
     public function trimValue(): array
     {
         $value = $this->value;

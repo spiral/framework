@@ -19,7 +19,7 @@ final class DefineHidden implements VisitorInterface
         return null;
     }
 
-    public function leaveNode(mixed $node, VisitorContext $ctx): mixed
+    public function leaveNode(mixed $node, VisitorContext $ctx): ?Hidden
     {
         if ($node instanceof Tag && \str_starts_with($node->name, $this->hiddenKeyword)) {
             return new Hidden([$node]);

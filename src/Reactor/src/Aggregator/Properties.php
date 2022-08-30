@@ -10,7 +10,7 @@ use Spiral\Reactor\Partial\Property;
 /**
  * Property aggregation
  *
- * @implements Aggregator<Property>
+ * @extends Aggregator<Property>
  */
 final class Properties extends Aggregator
 {
