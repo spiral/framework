@@ -28,7 +28,7 @@ final class Type
         return $type;
     }
 
-    public function getAliasOrShortName(): string
+    public function getAliasOrShortName(): ?string
     {
         return $this->alias ?: $this->shortName;
     }

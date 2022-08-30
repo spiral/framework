@@ -53,7 +53,7 @@ final class UriHandler
         $this->slugify = $slugify ?? new Slugify();
     }
 
-    public function getPattern(): string
+    public function getPattern(): ?string
     {
         return $this->pattern;
     }
