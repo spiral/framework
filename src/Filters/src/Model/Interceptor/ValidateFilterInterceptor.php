@@ -9,6 +9,7 @@ use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Model\FilterBag;
+use Spiral\Filters\Model\FilterDefinitionInterface;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\HasFilterDefinition;
 use Spiral\Filters\Model\ShouldBeValidated;
@@ -36,7 +37,7 @@ final class ValidateFilterInterceptor implements CoreInterceptorInterface
 
         if ($filter instanceof HasFilterDefinition) {
             $this->validateFilter(
-                $filter,
+                $filter->filterDefinition(),
                 $bag,
                 $bag->errors ?? [],
                 $parameters['context'] ?? null
@@ -47,7 +48,7 @@ final class ValidateFilterInterceptor implements CoreInterceptorInterface
     }
 
     private function validateFilter(
-        HasFilterDefinition $definition,
+        FilterDefinitionInterface $definition,
         FilterBag $bag,
         array $errors,
         mixed $context
