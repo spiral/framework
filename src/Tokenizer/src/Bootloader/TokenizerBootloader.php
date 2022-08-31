@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Bootloader;
 
-use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\EnvironmentInterface;
-use Spiral\Boot\KernelInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
@@ -36,7 +32,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function init(Container $container, DirectoriesInterface $dirs, EnvironmentInterface $env): void
+    public function init(Container $container, DirectoriesInterface $dirs): void
     {
         $container->bindInjector(ClassLocator::class, Tokenizer::class);
         $container->bindInjector(InvocationLocator::class, Tokenizer::class);
@@ -44,7 +40,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
         $this->config->setDefaults(
             TokenizerConfig::CONFIG,
             [
-                'debug' => $env->get('TOKENIZER_DEBUG', false),
+                'debug' => false,
                 'directories' => [$dirs->get('app')],
                 'exclude' => [
                     $dirs->get('resources'),

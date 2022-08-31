@@ -25,8 +25,9 @@ final class CommandLocatorListener implements TokenizationListenerInterface
     public function __construct(
         private readonly ReaderInterface $reader,
         private readonly ConsoleBootloader $bootloader,
-        private readonly ContainerInterface $container
+        ContainerInterface $container
     ) {
+        $this->container = $container;
         $this->target = new \ReflectionClass(SymfonyCommand::class);
     }
 

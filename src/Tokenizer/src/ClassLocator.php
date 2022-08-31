@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Spiral\Tokenizer;
 
 use Spiral\Tokenizer\Exception\LocatorException;
+use Spiral\Tokenizer\Traits\TargetTrait;
 
 /**
  * Can locate classes in a specified directory.
  */
 final class ClassLocator extends AbstractLocator implements ClassesInterface
 {
+    use TargetTrait;
+
     public function getClasses(object|string|null $target = null): array
     {
         if (!empty($target) && (\is_object($target) || \is_string($target))) {
