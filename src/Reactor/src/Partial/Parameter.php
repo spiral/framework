@@ -44,7 +44,9 @@ class Parameter implements NamedInterface, AggregableInterface
 
     public function getType(): ?string
     {
-        return $this->element->getType(false);
+        $type = $this->element->getType(false);
+
+        return $type === null ? null : (string) $type;
     }
 
     public function setNullable(bool $state = true): self
