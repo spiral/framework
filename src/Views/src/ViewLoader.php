@@ -43,6 +43,10 @@ final class ViewLoader implements LoaderInterface
         return null;
     }
 
+    /**
+     * @psalm-assert-if-true non-empty-string $filename
+     * @psalm-assert-if-true ViewPath $parsed
+     */
     public function exists(string $path, string &$filename = null, ViewPath &$parsed = null): bool
     {
         if (empty($this->parser)) {
@@ -50,7 +54,7 @@ final class ViewLoader implements LoaderInterface
         }
 
         $parsed = $this->parser->parse($path);
-        if (empty($parsed)) {
+        if ($parsed === null) {
             return false;
         }
 
@@ -76,8 +80,11 @@ final class ViewLoader implements LoaderInterface
             throw new LoaderException(\sprintf('Unable to load view `%s`, file does not exists.', $path));
         }
 
-        /** @var ViewPath $parsed */
-        return new ViewSource($filename, $parsed->getNamespace(), $parsed->getName());
+        return new ViewSource(
+            $filename,
+            $parsed->getNamespace(),
+            $parsed->getName()
+        );
     }
 
     public function list(string $namespace = null): array

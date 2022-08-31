@@ -101,9 +101,9 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
     /**
      * Get every class trait (including traits used in parents).
      *
+     * @param class-string $class
      * @return string[]
      *
-     * @psalm-return array<string, string>
      */
     protected function fetchTraits(string $class): array
     {

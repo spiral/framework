@@ -9,9 +9,11 @@ use Spiral\Core\InjectableConfig;
 /**
  * Tokenizer component configuration.
  *
- * @psalm-type Scope = array{
- *     "directories": array<array-key, non-empty-string>,
- *     "exclude": array<array-key, non-empty-string>
+ * @psalm-type TDirectories = array<array-key, string>
+ *
+ * @psalm-type TScope = array{
+ *     "directories": TDirectories,
+ *     "exclude": TDirectories
  * }
  */
 final class TokenizerConfig extends InjectableConfig
@@ -19,11 +21,12 @@ final class TokenizerConfig extends InjectableConfig
     public const CONFIG = 'tokenizer';
 
     /**
-     * @var array{
-     *     "directories": array<array-key, non-empty-string>,
-     *     "exclude": array<array-key, non-empty-string>,
-     *     "scopes": array<non-empty-string, Scope>
+     * @psalm-var array{
+     *     "directories": TDirectories,
+     *     "exclude": TDirectories,
+     *     "scopes": array<non-empty-string, TScope>
      * }
+     * @var array
      */
     protected array $config = [
         'directories' => [],
@@ -31,18 +34,24 @@ final class TokenizerConfig extends InjectableConfig
         'scopes' => [],
     ];
 
+    /**
+     * @return TDirectories
+     */
     public function getDirectories(): array
     {
-        return $this->config['directories'] ?? [\getcwd()];
+        return $this->config['directories'] ?? [(string) \getcwd()];
     }
 
+    /**
+     * @return TDirectories
+     */
     public function getExcludes(): array
     {
         return $this->config['exclude'] ?? ['vendor', 'tests'];
     }
 
     /**
-     * @return Scope
+     * @return TScope
      */
     public function getScope(string $scope): array
     {

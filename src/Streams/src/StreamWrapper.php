@@ -43,6 +43,10 @@ final class StreamWrapper
      */
     public function stream_eof(): bool
     {
+        if ($this->stream === null) {
+            throw new WrapperException('Stream is not opened.');
+        }
+
         return $this->stream->eof();
     }
 
@@ -68,6 +72,10 @@ final class StreamWrapper
      */
     public function stream_read(int $length): string|false
     {
+        if ($this->stream === null) {
+            throw new WrapperException('Stream is not opened.');
+        }
+
         return $this->stream->isReadable() ? $this->stream->read($length) : false;
     }
 
@@ -76,6 +84,10 @@ final class StreamWrapper
      */
     public function stream_seek(int $offset, int $whence = SEEK_SET): bool
     {
+        if ($this->stream === null) {
+            throw new WrapperException('Stream is not opened.');
+        }
+
         //Note, MongoDB native streams DO NOT support seeking at the moment
         //@see https://jira.mongodb.org/browse/PHPLIB-213
         $this->stream->seek($offset, $whence);
@@ -90,6 +102,10 @@ final class StreamWrapper
      */
     public function stream_stat(): array
     {
+        if ($this->stream === null) {
+            throw new WrapperException('Stream is not opened.');
+        }
+
         return $this->getStreamStats($this->stream);
     }
 
@@ -98,6 +114,10 @@ final class StreamWrapper
      */
     public function stream_tell(): int
     {
+        if ($this->stream === null) {
+            throw new WrapperException('Stream is not opened.');
+        }
+
         //Note, MongoDB native streams DO NOT support seeking at the moment
         //@see https://jira.mongodb.org/browse/PHPLIB-213
         return $this->stream->tell();
@@ -108,6 +128,10 @@ final class StreamWrapper
      */
     public function stream_write(string $data): int
     {
+        if ($this->stream === null) {
+            throw new WrapperException('Stream is not opened.');
+        }
+
         return $this->stream->write($data);
     }
 

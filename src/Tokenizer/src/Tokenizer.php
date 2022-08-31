@@ -43,7 +43,7 @@ final class Tokenizer implements SingletonInterface
     public function classLocator(
         array $directories = [],
         array $exclude = []
-    ): ClassesInterface {
+    ): ClassLocator {
         return new ClassLocator($this->makeFinder($directories, $exclude));
     }
 
@@ -53,7 +53,7 @@ final class Tokenizer implements SingletonInterface
     public function invocationLocator(
         array $directories = [],
         array $exclude = []
-    ): InvocationsInterface {
+    ): InvocationLocator {
         return new InvocationLocator($this->makeFinder($directories, $exclude));
     }
 
