@@ -9,7 +9,7 @@ interface GrammarInterface
     /**
      * Generate stream of tokens or pass generation to overlay grammar.
      *
-     * @return \Generator<array-key, Byte|Token>
+     * @return \Generator<array-key, Byte|Token|null>
      */
     public function parse(Buffer $src): \Generator;
 
