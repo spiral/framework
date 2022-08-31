@@ -20,7 +20,7 @@ final class FilesBag extends InputBag
     /**
      * Locale local filename (virtual filename) associated with UploadedFile resource.
      */
-    public function getFilename(string $name): ?string
+    public function getFilename(int|string $name): ?string
     {
         if (!empty($file = $this->get($name)) && !$file->getError()) {
             return StreamWrapper::getFilename($file->getStream());

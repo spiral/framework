@@ -15,7 +15,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     public function __construct(
         private readonly array $data,
-        private readonly string $prefix = ''
+        private readonly int|string $prefix = ''
     ) {
     }
 
@@ -59,15 +59,10 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
         return $result + \array_fill_keys($keys, $filler);
     }
 
-    public function offsetExists(mixed $offset): bool
-    {
-        return $this->has($offset);
-    }
-
     /**
      * Check if field presented (can be empty) by it's name. Dot notation allowed.
      */
-    public function has(string $name): bool
+    public function has(int|string $name): bool
     {
         try {
             $this->dotGet($name);
@@ -78,6 +73,15 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
         return true;
     }
 
+    public function offsetExists(mixed $offset): bool
+    {
+        try {
+            return !\is_null($this->dotGet($offset));
+        } catch (DotNotFoundException) {
+            return false;
+        }
+    }
+
     public function offsetGet(mixed $offset): mixed
     {
         return $this->get($offset);
@@ -86,7 +90,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * Get property or return default value. Dot notation allowed.
      */
-    public function get(string $name, mixed $default = null): mixed
+    public function get(int|string $name, mixed $default = null): mixed
     {
         try {
             return $this->dotGet($name);
@@ -116,7 +120,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @throws DotNotFoundException
      */
-    private function dotGet(string $name): mixed
+    private function dotGet(int|string $name): mixed
     {
         $data = $this->data;
 
