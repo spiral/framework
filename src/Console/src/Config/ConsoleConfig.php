@@ -61,7 +61,7 @@ final class ConsoleConfig extends InjectableConfig
     /**
      * Get list of sequences with given name.
      *
-     * @return \Generator|SequenceInterface[]
+     * @return \Generator<array-key, SequenceInterface>
      *
      * @throws ConfigException
      */
@@ -78,7 +78,7 @@ final class ConsoleConfig extends InjectableConfig
     /**
      * Get list of configure sequences.
      *
-     * @return \Generator|SequenceInterface[]
+     * @return \Generator<array-key, SequenceInterface>
      *
      * @throws ConfigException
      */
@@ -90,7 +90,7 @@ final class ConsoleConfig extends InjectableConfig
     /**
      * Get list of all update sequences.
      *
-     * @return \Generator|SequenceInterface[]
+     * @return \Generator<array-key, SequenceInterface>
      *
      * @throws ConfigException
      */

@@ -15,6 +15,8 @@ use Spiral\Tokenizer\Reflection\ReflectionInvocation;
  */
 final class InvocationLocator extends AbstractLocator implements InvocationsInterface
 {
+    public const INJECTOR = InvocationLocatorInjector::class;
+
     public function getInvocations(\ReflectionFunctionAbstract $function): array
     {
         $result = [];

@@ -18,8 +18,6 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
 {
     use LoggerTrait;
 
-    public const INJECTOR = Tokenizer::class;
-
     public function __construct(
         protected Finder $finder
     ) {

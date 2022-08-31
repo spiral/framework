@@ -55,7 +55,7 @@ final class Lexer
     /**
      * Generate character stream and aggregate grammar results.
      *
-     * @return \Generator<int, Byte>
+     * @return \Generator<array-key, Byte>
      */
     private function generate(StreamInterface $src): \Generator
     {
