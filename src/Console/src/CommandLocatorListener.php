@@ -47,11 +47,7 @@ final class CommandLocatorListener implements TokenizationListenerInterface
                 continue;
             }
 
-            $this->bootloader->addCommand(
-                $this->supportsLazyLoading($class->getName())
-                    ? $this->createLazyCommand($class->getName())
-                    : $this->container->get($class->getName())
-            );
+            $this->bootloader->addCommand($class->getName());
         }
     }
 }
