@@ -26,7 +26,7 @@ final class Buffer implements \IteratorAggregate
      * Delegate generation to the nested generator and collect
      * generated token/char stream.
      *
-     * @return \Generator
+     * @return \Generator<array-key, Byte|Token|null>
      */
     public function getIterator(): \Traversable
     {

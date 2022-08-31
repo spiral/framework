@@ -11,6 +11,8 @@ use Spiral\Tokenizer\Exception\LocatorException;
  */
 final class ClassLocator extends AbstractLocator implements ClassesInterface
 {
+    public const INJECTOR = ClassLocatorInjector::class;
+
     public function getClasses(object|string|null $target = null): array
     {
         if (!empty($target)) {
