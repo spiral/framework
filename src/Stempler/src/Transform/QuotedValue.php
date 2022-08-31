@@ -46,14 +46,25 @@ final class QuotedValue
         $nodes = $value->nodes;
 
         if (\count($nodes) >= 3 && $nodes[0] instanceof Raw && $nodes[\count($nodes) - 1] instanceof Raw) {
+            /**
+             * TODO issue #767
+             * @link https://github.com/spiral/framework/issues/767
+             * @psalm-suppress InvalidArrayAccess
+             */
             $quote = $nodes[0]->content[0];
             if (!\in_array($quote, ['"', "'"])) {
                 return $nodes;
             }
 
             $nodes[0] = new Raw(\ltrim($nodes[0]->content, $quote));
+            /**
+             * TODO issue #767
+             * @link https://github.com/spiral/framework/issues/767
+             * @psalm-suppress NoInterfaceProperties
+             */
+            $content = $nodes[\count($nodes) - 1]->content;
             $nodes[\count($nodes) - 1] = new Raw(
-                \rtrim($nodes[\count($nodes) - 1]->content, $quote)
+                \rtrim($content, $quote)
             );
         }
 

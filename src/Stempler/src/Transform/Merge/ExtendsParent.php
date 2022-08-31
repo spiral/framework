@@ -63,6 +63,11 @@ final class ExtendsParent implements VisitorInterface
             $extends = $node->getAttribute(self::class);
 
             foreach ($node->nodes as $child) {
+                /**
+                 * TODO issue #767
+                 * @link https://github.com/spiral/framework/issues/767
+                 * @psalm-suppress InvalidPropertyAssignmentValue
+                 */
                 $extends->nodes[] = $child;
             }
 

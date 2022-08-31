@@ -75,6 +75,11 @@ final class Assembler
     {
         $r = new \ReflectionClass($node);
         if (\property_exists($node, 'name')) {
+            /**
+             * TODO issue #767
+             * @link https://github.com/spiral/framework/issues/767
+             * @psalm-suppress NoInterfaceProperties
+             */
             return \lcfirst($r->getShortName()) . \sprintf('[%s]', $node->name);
         }
 
