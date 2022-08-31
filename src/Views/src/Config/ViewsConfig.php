@@ -56,7 +56,7 @@ final class ViewsConfig extends InjectableConfig
     public function getDependencies(): array
     {
         return \array_map(
-            fn(mixed $dependency): Autowire =>  $this->wire($dependency),
+            fn (mixed $dependency): Autowire =>  $this->wire($dependency),
             (array) ($this->config['dependencies'] ?? [])
         );
     }
@@ -69,7 +69,7 @@ final class ViewsConfig extends InjectableConfig
     public function getEngines(): array
     {
         return \array_map(
-            fn(mixed $engine): Autowire =>  $this->wire($engine),
+            fn (mixed $engine): Autowire =>  $this->wire($engine),
             (array) ($this->config['engines'] ?? [])
         );
     }
