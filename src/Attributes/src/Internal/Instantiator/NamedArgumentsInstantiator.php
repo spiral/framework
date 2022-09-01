@@ -32,7 +32,7 @@ final class NamedArgumentsInstantiator extends Instantiator
     /**
      * @var string
      */
-    private const ERROR_NAMED_ARG_TO_VARIADIC = 'Cannot pass named argument $%s to variadic parameter ...$%s in PHP < 8';
+    private const ERROR_NAMED_ARG_TO_VARIADIC = 'Cannot pass named argument $%s to variadic parameter $%s in PHP < 8';
 
     /**
      * @var string
@@ -86,7 +86,6 @@ final class NamedArgumentsInstantiator extends Instantiator
     }
 
     /**
-     * @return array
      * @throws \Throwable
      */
     private function doResolveParameters(\ReflectionClass $ctx, \ReflectionMethod $constructor, array $arguments): array
@@ -121,21 +120,19 @@ final class NamedArgumentsInstantiator extends Instantiator
     /**
      * Analyzes keys of an arguments array.
      *
-     * @param array $arguments
-     *   By reference. Numeric keys will be reordered.
-     *   Before (success): Mixed numeric keys, then only string keys.
-     *   Before (fail): Some string keys are followed by numeric keys.
-     *   After (success): Seq. numeric keys starting from 0, then string keys.
-     *   After (failure): Seq. numeric keys starting from 0, mixed with string
-     *     keys.
+     * @param array $arguments Arguments array.
+     *        By reference. Numeric keys will be reordered.
+     *        Before (success): Mixed numeric keys, then only string keys.
+     *        Before (fail): Some string keys are followed by numeric keys.
+     *        After (success): Seq. numeric keys starting from 0, then string keys.
+     *        After (failure): Seq. numeric keys starting from 0, mixed with string keys.
      *
-     * @return int|null
-     *   Position of the first string key, or NULL if all keys are numeric.
+     * @return int|null Position of the first string key, or NULL if all keys are numeric.
      */
     private function analyzeKeys(array &$arguments): ?int
     {
         // Normalize all numeric keys, but keep string keys.
-        $arguments = array_merge($arguments);
+        $arguments = \array_merge($arguments);
 
         $i = 0;
         foreach ($arguments as $k => $_) {
@@ -155,28 +152,27 @@ final class NamedArgumentsInstantiator extends Instantiator
     }
 
     /**
-     * @param \ReflectionClass $ctx
-     * @param array $passed
-     *   Positional arguments.
-     *   Format: $[] = $value.
-     * @param array $named
-     *   Named arguments.
-     *   Format: $[$name] = $value.
-     * @param int $namedArgsBegin
-     *   Position of first named argument.
-     *   This is identical to count($passed).
-     * @param \ReflectionParameter[] $parameters
-     *   Full list of parameters.
+     * @param array $passed Positional arguments.
+     *        Format: $[] = $value.
+     * @param array $named Named arguments.
+     *        Format: $[$name] = $value.
+     * @param int $namedArgsBegin Position of first named argument.
+     *        This is identical to count($passed).
+     * @param \ReflectionParameter[] $parameters Full list of parameters.
      *
-     * @return array
-     *   Sequential list of all parameter values.
-     *   Format: $[] = $value.
+     * @return array Sequential list of all parameter values.
+     *         Format: $[] = $value.
      *
      * @throws \Throwable
      *   Arguments provided are incompatible with the parameters.
      */
-    private function appendNamedArgs(\ReflectionClass $ctx, array $passed, array $named, int $namedArgsBegin, array $parameters): array
-    {
+    private function appendNamedArgs(
+        \ReflectionClass $ctx,
+        array $passed,
+        array $named,
+        int $namedArgsBegin,
+        array $parameters
+    ): array {
         // Analyze parameters.
         $n = count($parameters);
         if ($n > 0 && end($parameters)->isVariadic()) {

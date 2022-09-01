@@ -216,7 +216,7 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
         if (PHP_VERSION_ID < 80000) {
             $this->expectException(\BadMethodCallException::class);
             /* @see NamedArgumentsInstantiator::ERROR_NAMED_ARG_TO_VARIADIC */
-            $this->expectExceptionMessageEquals('Cannot pass named argument $x to variadic parameter ...$args in PHP < 8');
+            $this->expectExceptionMessageEquals('Cannot pass named argument $x to variadic parameter $args in PHP < 8');
         }
 
         /** @var VariadicConstructorFixture $object */
@@ -237,7 +237,7 @@ class NamedArgumentsInstantiatorTestCase extends InstantiatorTestCase
         if (PHP_VERSION_ID < 80000) {
             $this->expectException(\BadMethodCallException::class);
             /* @see NamedArgumentsInstantiator::ERROR_NAMED_ARG_TO_VARIADIC */
-            $this->expectExceptionMessageEquals('Cannot pass named argument $x to variadic parameter ...$args in PHP < 8');
+            $this->expectExceptionMessageEquals('Cannot pass named argument $x to variadic parameter $args in PHP < 8');
         }
 
         /** @var VariadicConstructorFixture $object */
