@@ -17,7 +17,7 @@ final class Container implements ContainerInterface
     use DestructorTrait;
 
     private State $state;
-    private FactoryInterface $factory;
+    private FactoryInterface|Factory $factory;
 
     public function __construct(Registry $constructor)
     {

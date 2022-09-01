@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
 
-use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator;
 use Spiral\Reactor\Partial\TraitUse;
 
 /**
  * TraitUses aggregation
  *
- * @method $this add(TraitUse $element)
- * @method TraitUse|AggregableInterface get(string $name)
+ * @extends Aggregator<TraitUse>
  */
 final class TraitUses extends Aggregator
 {

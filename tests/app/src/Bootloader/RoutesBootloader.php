@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\App\Bootloader;
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Spiral\App\Controller\AuthController;
 use Spiral\App\Controller\InterceptedController;
 use Spiral\App\Controller\TestController;
@@ -40,6 +41,9 @@ final class RoutesBootloader extends BaseRoutesBootloader
         ];
     }
 
+    /**
+     * @return array<non-empty-string, list<class-string<MiddlewareInterface>>>
+     */
     protected function middlewareGroups(): array
     {
         return [

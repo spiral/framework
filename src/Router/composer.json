@@ -17,9 +17,9 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "spiral/core": "^2.14",
-        "spiral/hmvc": "^2.14",
-        "spiral/http": "^2.14",
+        "spiral/core": "^3.0",
+        "spiral/hmvc": "^3.0",
+        "spiral/http": "^3.0",
         "cocur/slugify": "^3.2",
         "doctrine/inflector": "^1.4|^2.0"
     },

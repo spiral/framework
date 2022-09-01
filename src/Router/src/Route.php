@@ -63,7 +63,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
         $this->target = $target;
     }
 
-    public function withUriHandler(UriHandler $uriHandler): RouteInterface
+    public function withUriHandler(UriHandler $uriHandler): static
     {
         $route = parent::withUriHandler($uriHandler);
         if ($this->target instanceof TargetInterface) {
@@ -93,7 +93,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
         return $route;
     }
 
-    public function withTarget(mixed $target): RouteInterface
+    public function withTarget(mixed $target): static
     {
         $route = clone $this;
         $route->target = $target;

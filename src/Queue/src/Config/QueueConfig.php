@@ -8,6 +8,7 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InjectableConfig;
 use Spiral\Queue\Exception\InvalidArgumentException;
+use Spiral\Serializer\SerializerInterface;
 
 final class QueueConfig extends InjectableConfig
 {
@@ -26,6 +27,7 @@ final class QueueConfig extends InjectableConfig
             'push' => [],
             'consume' => [],
         ],
+        'defaultSerializer' => null,
     ];
 
     /**
@@ -164,5 +166,13 @@ final class QueueConfig extends InjectableConfig
     public function getRegistrySerializers(): array
     {
         return (array)($this->config['registry']['serializers'] ?? []);
+    }
+
+    /**
+     * @psalm-return SerializerInterface|class-string|Autowire|null
+     */
+    public function getDefaultSerializer(): SerializerInterface|string|Autowire|null
+    {
+        return $this->config['defaultSerializer'] ?? null;
     }
 }

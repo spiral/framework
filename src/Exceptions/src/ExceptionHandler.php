@@ -48,7 +48,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
                 }
             }
         }
-        return $this->renderers[\array_key_last($this->renderers)] ?? null;
+        return \end($this->renderers) ?: null;
     }
 
     public function render(
@@ -138,13 +138,17 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     /**
      * Convert application error into exception.
-     *
+     * Handler for the {@see \set_error_handler()}.
      * @throws \ErrorException
      */
-    protected function handleError(int $errno, string $errstr, string $errfile = '', int $errline = 0): void
-    {
+    protected function handleError(
+        int $errno,
+        string $errstr,
+        string $errfile = '',
+        int $errline = 0,
+    ): bool {
         if (!(\error_reporting() & $errno)) {
-            return;
+            return false;
         }
 
         throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);

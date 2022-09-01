@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
 
-use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator;
 use Spiral\Reactor\Partial\Parameter;
 
 /**
  * Constants aggregation
  *
- * @method $this add(Parameter $element)
- * @method Parameter|AggregableInterface get(string $name)
+ * @extends Aggregator<Parameter>
  */
 final class Parameters extends Aggregator
 {

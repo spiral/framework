@@ -8,12 +8,10 @@ use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectableInterface;
-use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Core\Internal\DestructorTrait;
-use WeakReference;
 
 /**
  * Auto-wiring container: declarative singletons, contextual injections, parent container
@@ -31,7 +29,9 @@ use WeakReference;
  * @see InjectableInterface
  * @see SingletonInterface
  *
- * @psalm-type TResolver = class-string|non-empty-string|callable|array{class-string, non-empty-string}
+ * @psalm-import-type TResolver from BinderInterface
+ * @psalm-import-type TInvokable from InvokerInterface
+ * @psalm-suppress PropertyNotSetInConstructor
  */
 final class Container implements
     ContainerInterface,
@@ -44,11 +44,11 @@ final class Container implements
     use DestructorTrait;
 
     private Internal\State $state;
-    private Internal\Resolver $resolver;
-    private Internal\Factory $factory;
-    private ContainerInterface $container;
-    private BinderInterface $binder;
-    private InvokerInterface $invoker;
+    private ResolverInterface|Internal\Resolver $resolver;
+    private FactoryInterface|Internal\Factory $factory;
+    private ContainerInterface|Internal\Container $container;
+    private BinderInterface|Internal\Binder $binder;
+    private InvokerInterface|Internal\Invoker $invoker;
 
     /**
      * Container constructor.
@@ -62,8 +62,9 @@ final class Container implements
             $this->$property = $constructor->get($property, $class);
         }
 
+        /** @psalm-suppress PossiblyNullPropertyAssignment */
         $this->state->bindings = [
-            self::class               => WeakReference::create($this),
+            self::class               => \WeakReference::create($this),
             ContainerInterface::class => self::class,
             BinderInterface::class    => self::class,
             FactoryInterface::class   => self::class,
@@ -100,14 +101,7 @@ final class Container implements
     }
 
     /**
-     * @template T
-     *
-     * @param class-string<T> $alias
      * @param string|null $context Related to parameter caused injection if any.
-     *
-     * @return T
-     *
-     * @throws \Throwable
      */
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
@@ -133,7 +127,7 @@ final class Container implements
      * @throws ContainerException
      * @throws \Throwable
      *
-     * @psalm-suppress MethodSignatureMismatch
+     * @psalm-suppress PossiblyInvalidArgument, PossiblyInvalidCast
      */
     public function get(string|Autowire $id, string $context = null): mixed
     {
@@ -178,8 +172,6 @@ final class Container implements
      * Bind value resolver to container alias. Resolver can be class name (will be constructed
      * for each method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
-     *
-     * @psalm-param TResolver|object $resolver
      */
     public function bind(string $alias, string|array|callable|object $resolver): void
     {
@@ -190,7 +182,7 @@ final class Container implements
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
      * (will be constructed only once), function array or Closure (executed only once call).
      *
-     * @psalm-param TResolver|object $resolver
+     * @psalm-param TResolver $resolver
      */
     public function bindSingleton(string $alias, string|array|callable|object $resolver): void
     {
@@ -211,7 +203,7 @@ final class Container implements
     }
 
     /**
-     * @psalm-param TResolver $target
+     * @psalm-param TInvokable $target
      */
     public function invoke(mixed $target, array $parameters = []): mixed
     {
@@ -220,11 +212,6 @@ final class Container implements
 
     /**
      * Bind class or class interface to the injector source (InjectorInterface).
-     *
-     * @template TClass
-     *
-     * @param class-string<TClass> $class
-     * @param class-string<InjectorInterface<TClass>> $injector
      */
     public function bindInjector(string $class, string $injector): void
     {

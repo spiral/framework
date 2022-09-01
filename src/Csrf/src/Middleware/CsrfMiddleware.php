@@ -80,7 +80,7 @@ final class CsrfMiddleware implements MiddlewareInterface
                 throw new \RuntimeException('Unable to generate random string');
             }
         } catch (\Throwable $e) {
-            throw new \RuntimeException('Unable to generate random string', $e->getCode(), $e);
+            throw new \RuntimeException('Unable to generate random string', (int) $e->getCode(), $e);
         }
 
         return \substr(\base64_encode($string), 0, $length);

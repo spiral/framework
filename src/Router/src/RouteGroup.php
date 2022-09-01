@@ -21,7 +21,7 @@ final class RouteGroup
     /** @var string[] */
     private array $routes = [];
 
-    /** @var array<class-string<MiddlewareInterface>>|MiddlewareInterface|Autowire */
+    /** @var array<class-string<MiddlewareInterface>|MiddlewareInterface|Autowire> */
     private array $middleware = [];
 
     private ?CoreInterface $core = null;

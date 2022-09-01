@@ -10,19 +10,19 @@ namespace Spiral\Http\Request;
  */
 final class HeadersBag extends InputBag
 {
-    public function has(string $name): bool
+    public function has(int|string $name): bool
     {
-        return parent::has($this->normalize($name));
+        return parent::has($this->normalize((string) $name));
     }
 
     /**
-     * @param bool|string $implode Implode header lines, false to return header as array.
+     * @param false|string $implode Implode header lines, false to return header as array.
      */
-    public function get(string $name, mixed $default = null, bool|string $implode = ','): array|string
+    public function get(int|string $name, mixed $default = null, bool|string $implode = ','): array|string|null
     {
-        $value = parent::get($this->normalize($name), $default);
+        $value = parent::get($this->normalize((string) $name), $default);
 
-        if (!empty($implode) && \is_array($value)) {
+        if (\is_string($implode) && !empty($implode) && \is_array($value)) {
             return \implode($implode, $value);
         }
 

@@ -38,7 +38,7 @@ interface ReadableInterface
     /**
      * Returns the timestamp of last file modification.
      *
-     * @return positive-int|0
+     * @return positive-int
      * @throws FileOperationException
      */
     public function getLastModified(string $pathname): int;

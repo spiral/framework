@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Filters\Model\Interceptor;
 
 use Mockery as m;
-use Psr\Container\ContainerInterface;
+use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Model\FilterBag;
 use Spiral\Filters\Model\FilterDefinitionInterface;
@@ -23,13 +23,19 @@ use Spiral\Validation\ValidatorInterface;
 final class ValidateFilterInterceptorTest extends BaseTest
 {
     private ValidateFilterInterceptor $interceptor;
+    private m\MockInterface $validationProvider;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->interceptor = new ValidateFilterInterceptor(
-            $this->container = m::mock(ContainerInterface::class)
+            $this->container = new Container()
+        );
+
+        $this->container->bind(
+            ValidationProviderInterface::class,
+            $this->validationProvider = m::mock(ValidationProviderInterface::class)
         );
     }
 
@@ -71,10 +77,7 @@ final class ValidateFilterInterceptorTest extends BaseTest
 
         $definition->shouldReceive('validationRules')->once()->andReturn($rules = ['baz' => 'bar']);
 
-        $this->container->shouldReceive('get')->with(ValidationProviderInterface::class)
-            ->andReturn($provider = m::mock(ValidationProviderInterface::class));
-
-        $provider->shouldReceive('getValidation')->once()->with($definition::class)
+        $this->validationProvider->shouldReceive('getValidation')->once()->with($definition::class)
             ->andReturn($validation = m::mock(ValidationInterface::class));
 
         $validation->shouldReceive('validate')->with($bag, $rules, 'context-data')->andReturn(
@@ -105,10 +108,7 @@ final class ValidateFilterInterceptorTest extends BaseTest
 
         $definition->shouldReceive('validationRules')->once()->andReturn($rules = ['baz' => 'bar']);
 
-        $this->container->shouldReceive('get')->with(ValidationProviderInterface::class)
-            ->andReturn($provider = m::mock(ValidationProviderInterface::class));
-
-        $provider->shouldReceive('getValidation')->once()->with($definition::class)
+        $this->validationProvider->shouldReceive('getValidation')->once()->with($definition::class)
             ->andReturn($validation = m::mock(ValidationInterface::class));
 
         $validation->shouldReceive('validate')->with($bag, $rules, 'context-data')->andReturn(

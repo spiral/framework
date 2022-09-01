@@ -17,7 +17,7 @@ final class CommandCore implements CoreInterface
     }
 
     /**
-     * @param array{input: InputInterface, output: OutputInterface, command: Command}|array<empty, empty> $parameters
+     * @param array{input: InputInterface, output: OutputInterface, command: Command}|array $parameters
      */
     public function callAction(string $controller, string $action, array $parameters = []): int
     {

@@ -11,7 +11,6 @@ final class RoutingConfigurator
 {
     public const DEFAULT_ROUTE_NAME = 'default';
 
-    /** @param RouteConfigurator[] */
     public function __construct(
         private readonly RouteCollection $collection,
         private readonly LoaderInterface $loader

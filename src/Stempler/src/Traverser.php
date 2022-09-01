@@ -45,7 +45,9 @@ final class Traverser
     /**
      * Traverses an array of nodes using added visitors.
      *
-     * @param NodeInterface[] $nodes
+     * @template TNode of NodeInterface
+     *
+     * @param TNode[] $nodes
      * @return NodeInterface[]
      * @throws \Throwable
      */

@@ -33,7 +33,7 @@ final class SessionFactory implements SessionFactoryInterface, SingletonInterfac
             try {
                 $handler = $this->config->getHandler()->resolve($this->factory);
             } catch (\Throwable | ContainerExceptionInterface $e) {
-                throw new SessionException($e->getMessage(), $e->getCode(), $e);
+                throw new SessionException($e->getMessage(), (int) $e->getCode(), $e);
             }
 
             \session_set_save_handler($handler, true);

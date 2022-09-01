@@ -124,7 +124,7 @@ final class Files implements FilesInterface
                 $this->setPermissions($filename, $mode);
             }
         } catch (\Exception $e) {
-            throw new WriteErrorException($e->getMessage(), $e->getCode(), $e);
+            throw new WriteErrorException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $result !== false;
@@ -352,9 +352,6 @@ final class Files implements FilesInterface
         return \implode('/', $relative);
     }
 
-    /**
-     * @return \GlobIterator|\SplFileInfo[]
-     */
     private function filesIterator(string $location, string $pattern = null): \GlobIterator
     {
         $pattern ??= '*';

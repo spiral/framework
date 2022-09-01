@@ -87,7 +87,7 @@ final class CompileCommand extends Command
         );
     }
 
-    private function describeContext(ContextInterface $context): string
+    private function describeContext(ContextInterface $context): ?string
     {
         $values = [];
 
@@ -103,7 +103,7 @@ final class CompileCommand extends Command
             );
         }
 
-        return \implode(', ', $values);
+        return $values === [] ? null : \implode(', ', $values);
     }
 
     private function describeEngine(EngineInterface $engine): string

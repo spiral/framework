@@ -25,7 +25,7 @@ final class CoreHandler implements RequestHandlerInterface
     use JsonTrait;
 
     private ?string $controller = null;
-    private ?string $action = null;
+    private string $action;
     private ?bool $verbActions = null;
     private ?array $parameters = null;
 
@@ -121,7 +121,7 @@ final class CoreHandler implements RequestHandlerInterface
      * @param mixed    $result   Generated endpoint output.
      * @param string   $output   Buffer output.
      */
-    private function wrapResponse(Response $response, $result = null, string $output = ''): Response
+    private function wrapResponse(Response $response, mixed $result = null, string $output = ''): Response
     {
         if ($result instanceof Response) {
             if ($output !== '' && $result->getBody()->isWritable()) {

@@ -7,11 +7,14 @@ namespace Spiral\Tests\Queue;
 use Mockery as m;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
+use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\HandlerInterface;
 use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\QueueRegistry;
 use Spiral\Serializer\Serializer\JsonSerializer;
+use Spiral\Serializer\Serializer\PhpSerializer;
 use Spiral\Serializer\SerializerInterface;
+use Spiral\Serializer\SerializerManager;
 use Spiral\Serializer\SerializerRegistry;
 use Spiral\Serializer\SerializerRegistryInterface;
 
@@ -57,6 +60,29 @@ final class QueueRegistryTest extends TestCase
         $this->mockContainer->bind('bar', $handler);
 
         $this->assertSame($handler, $this->registry->getHandler('foo'));
+    }
+
+    public function testDefaultSerializerIsNull(): void
+    {
+        $this->mockContainer->bind(QueueConfig::class, new QueueConfig());
+
+        $this->mockContainer->bind(SerializerManager::class, new SerializerManager(new SerializerRegistry([
+            'serializer' => new PhpSerializer(),
+            'json' => new JsonSerializer()
+        ]), 'json'));
+
+        $this->assertInstanceOf(JsonSerializer::class, $this->registry->getSerializer());
+    }
+
+    /** @dataProvider serializersDataProvider */
+    public function testDefaultSerializer(
+        SerializerRegistry $registry,
+        string|SerializerInterface|Autowire $serializer
+    ): void {
+        $this->mockContainer->bind(QueueConfig::class, new QueueConfig(['defaultSerializer' => $serializer]));
+        $this->mockContainer->bind(SerializerRegistryInterface::class, $registry);
+
+        $this->assertInstanceOf(JsonSerializer::class, $this->registry->getSerializer());
     }
 
     /** @dataProvider serializersDataProvider */

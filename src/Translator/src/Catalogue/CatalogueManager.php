@@ -18,7 +18,7 @@ final class CatalogueManager implements CatalogueManagerInterface
     /** @internal */
     private readonly CacheInterface $cache;
 
-    /** @var Catalogue[] */
+    /** @var CatalogueInterface[] */
     private array $catalogues = [];
 
     public function __construct(

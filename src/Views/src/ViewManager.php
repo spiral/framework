@@ -62,7 +62,10 @@ final class ViewManager implements ViewsInterface
         $this->engines[] = $engine->withLoader($this->loader);
 
         \uasort($this->engines, static function (EngineInterface $a, EngineInterface $b) {
-            return \strcmp($a->getLoader()->getExtension(), $b->getLoader()->getExtension());
+            return \strcmp(
+                $a->getLoader()->getExtension() ?? '',
+                $b->getLoader()->getExtension() ?? ''
+            );
         });
 
         $this->engines = \array_values($this->engines);
@@ -127,6 +130,10 @@ final class ViewManager implements ViewsInterface
 
         $view = $this->findEngine($path)->get($path, $this->context);
 
+        /**
+         * @psalm-suppress TypeDoesNotContainType
+         * @psalm-suppress RedundantCondition
+         */
         $this->cache?->set($this->context, $path, $view);
 
         return $view;

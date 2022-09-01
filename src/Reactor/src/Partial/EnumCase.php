@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Reactor\Partial;
 
 use Nette\PhpGenerator\EnumCase as NetteEnumCase;
+use Nette\PhpGenerator\Literal;
 use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\Traits;
@@ -29,7 +30,7 @@ final class EnumCase implements NamedInterface, AggregableInterface
         return $this;
     }
 
-    public function getValue(): string|int|null
+    public function getValue(): string|int|null|Literal
     {
         return $this->element->getValue();
     }

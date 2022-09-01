@@ -24,8 +24,8 @@
         "psr/http-server-middleware": "^1.0",
         "psr/http-factory": "^1.0",
         "psr/log": "1 - 3",
-        "spiral/core": "^2.14",
-        "spiral/config": "^2.14"
+        "spiral/core": "^3.0",
+        "spiral/config": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -35,7 +35,7 @@
     "require-dev": {
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^9.5.20",
-        "spiral/boot": "^2.14"
+        "spiral/boot": "^3.0"
     },
     "autoload-dev": {
         "psr-4": {
