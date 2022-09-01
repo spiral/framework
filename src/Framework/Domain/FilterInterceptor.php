@@ -30,6 +30,10 @@ class FilterInterceptor implements CoreInterceptorInterface
     /** @internal */
     protected RenderErrorsInterface $renderErrors;
 
+    /**
+     * @param RenderErrorsInterface|null $renderErrors Renderer for all filter errors.
+     *                                                 By default, will be used DefaultFilterErrorsRendererInterface
+     */
     public function __construct(
         ContainerInterface $container,
         int $strategy = self::STRATEGY_JSON_RESPONSE,
@@ -37,7 +41,7 @@ class FilterInterceptor implements CoreInterceptorInterface
     ) {
         $this->container = $container;
         $this->strategy = $strategy;
-        $this->renderErrors = $renderErrors ?: new DefaultFilterErrorsRendererInterface($strategy);
+        $this->renderErrors = $renderErrors ?? new DefaultFilterErrorsRendererInterface($strategy);
     }
 
     /**
@@ -54,7 +58,7 @@ class FilterInterceptor implements CoreInterceptorInterface
             $filter = $this->container->get($filterClass);
 
             if (isset($parameters['@context'])) {
-                // other interceptors can define the validation contex
+                // other interceptors can define the validation context
                 $filter->setContext($parameters['@context']);
             }
 
@@ -69,9 +73,6 @@ class FilterInterceptor implements CoreInterceptorInterface
     }
 
     /**
-     * @param FilterInterface $filter
-     * @return mixed
-     *
      * @throws InvalidFilterException
      */
     protected function renderInvalid(FilterInterface $filter)
@@ -79,11 +80,6 @@ class FilterInterceptor implements CoreInterceptorInterface
         return $this->renderErrors->render($filter);
     }
 
-    /**
-     * @param string $controller
-     * @param string $action
-     * @return array
-     */
     private function getDeclaredFilters(string $controller, string $action): array
     {
         $key = sprintf('%s:%s', $controller, $action);
@@ -113,12 +109,6 @@ class FilterInterceptor implements CoreInterceptorInterface
         return $this->cache[$key];
     }
 
-
-    /**
-     * @param \ReflectionParameter $parameter
-     *
-     * @return \ReflectionClass|null
-     */
     private function getParameterClass(\ReflectionParameter $parameter): ?\ReflectionClass
     {
         $type = $parameter->getType();

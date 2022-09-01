@@ -14,7 +14,7 @@ use Spiral\Filters\RenderWith;
 /**
  * Automatically validate all Filters and return array error in case of failure.
  */
-class FilterWithRendererInterceptor extends FilterInterceptor
+final class FilterWithAttributeInterceptor extends FilterInterceptor
 {
     /**
      * @var array<class-string<FilterInterface>, RenderErrorsInterface>
@@ -25,6 +25,10 @@ class FilterWithRendererInterceptor extends FilterInterceptor
     /** @internal */
     private ReaderInterface $reader;
 
+    /**
+     * @param RenderErrorsInterface|null $renderErrors Renderer for all filter errors.
+     *                                                 By default, will be used DefaultFilterErrorsRendererInterface
+     */
     public function __construct(
         ContainerInterface $container,
         ReaderInterface $reader,
