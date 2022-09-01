@@ -152,7 +152,6 @@ final class NamedArgumentsInstantiator extends Instantiator
     }
 
     /**
-     * @param \ReflectionClass $ctx
      * @param array $passed Positional arguments.
      *        Format: $[] = $value.
      * @param array $named Named arguments.
@@ -167,8 +166,13 @@ final class NamedArgumentsInstantiator extends Instantiator
      * @throws \Throwable
      *   Arguments provided are incompatible with the parameters.
      */
-    private function appendNamedArgs(\ReflectionClass $ctx, array $passed, array $named, int $namedArgsBegin, array $parameters): array
-    {
+    private function appendNamedArgs(
+        \ReflectionClass $ctx,
+        array $passed,
+        array $named,
+        int $namedArgsBegin,
+        array $parameters
+    ): array {
         // Analyze parameters.
         $n = count($parameters);
         if ($n > 0 && end($parameters)->isVariadic()) {
