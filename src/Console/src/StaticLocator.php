@@ -19,8 +19,9 @@ final class StaticLocator implements LocatorInterface
     public function __construct(
         private readonly array $commands,
         private readonly array $interceptors,
-        private ContainerInterface $container = new Container()
+        ContainerInterface $container = new Container()
     ) {
+        $this->container = $container;
     }
 
     /**

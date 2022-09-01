@@ -56,7 +56,7 @@ abstract class BaseTest extends TestCase
     {
         return new StaticLocator(
             $commands,
-            $this->container->get(ConsoleConfig::class),
+            [],
             $this->container
         );
     }
