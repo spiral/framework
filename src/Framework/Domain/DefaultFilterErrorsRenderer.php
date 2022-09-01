@@ -13,12 +13,9 @@ use Spiral\Filters\RenderErrors;
  */
 final class DefaultFilterErrorsRenderer implements RenderErrors
 {
-    public const STRATEGY_JSON_RESPONSE = 1;
-    public const STRATEGY_EXCEPTION     = 2;
-
     private int $strategy;
 
-    public function __construct(int $strategy = self::STRATEGY_JSON_RESPONSE)
+    public function __construct(int $strategy = FilterInterceptor::STRATEGY_JSON_RESPONSE)
     {
         $this->strategy = $strategy;
     }
@@ -29,7 +26,7 @@ final class DefaultFilterErrorsRenderer implements RenderErrors
     public function render(FilterInterface $filter)
     {
         switch ($this->strategy) {
-            case self::STRATEGY_JSON_RESPONSE:
+            case FilterInterceptor::STRATEGY_JSON_RESPONSE:
                 return [
                     'status' => 400,
                     'errors' => $filter->getErrors(),

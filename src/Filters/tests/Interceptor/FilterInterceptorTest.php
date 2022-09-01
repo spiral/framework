@@ -8,7 +8,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Container\ContainerInterface;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Domain\FilterInterceptor;
+use Spiral\Domain\FilterWithRendererInterceptor;
 use Spiral\Filters\ArrayInput;
 use Spiral\Filters\RenderWith;
 use Spiral\Tests\Filters\BaseTest;
@@ -34,7 +34,7 @@ final class FilterInterceptorTest extends BaseTest
         $reader->method('firstClassMetadata')
             ->willReturn(null);
 
-        $interceptor = new FilterInterceptor($container, $reader);
+        $interceptor = new FilterWithRendererInterceptor($container, $reader);
 
         $response = $interceptor->process(MessageFilterAction::class, '__invoke', [$filter], $core);
         self::assertEquals(['status' => 400, 'errors' => ['id' => 'ID is not valid.']], $response);
@@ -60,7 +60,7 @@ final class FilterInterceptorTest extends BaseTest
         $reader->method('firstClassMetadata')
             ->willReturn(new RenderWith(TestErrorsRenderer::class));
 
-        $interceptor = new FilterInterceptor($container, $reader);
+        $interceptor = new FilterWithRendererInterceptor($container, $reader);
 
         $response = $interceptor->process(SelfErrorsRenderingFilterAction::class, '__invoke', [$filter], $core);
 

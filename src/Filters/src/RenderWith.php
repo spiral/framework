@@ -9,28 +9,27 @@ use Doctrine\Common\Annotations\Annotation\Target;
 /**
  * @Annotation
  * @Target({ "CLASS" })
+ * @psalm-type TClass = class-string<RenderErrors>
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class RenderWith
 {
-    /**
-     * @var class-string<RenderErrors>
-     */
-    private string $rendererFqcn;
+    /** @var TClass */
+    private string $class;
 
     /**
-     * @param class-string<RenderErrors> $rendererFqcn
+     * @param TClass $class
      */
-    public function __construct(string $rendererFqcn)
+    public function __construct(string $class)
     {
-        $this->rendererFqcn = $rendererFqcn;
+        $this->class = $class;
     }
 
     /**
-     * @return class-string<RenderErrors>
+     * @return TClass
      */
     public function getRenderer(): string
     {
-        return $this->rendererFqcn;
+        return $this->class;
     }
 }
