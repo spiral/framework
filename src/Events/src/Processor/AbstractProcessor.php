@@ -16,7 +16,9 @@ abstract class AbstractProcessor implements ProcessorInterface
             $type->isBuiltin()
         ) {
             throw new InvalidArgumentException(\sprintf(
-                'The %s must accept the Event as parameter in the method %s.', $method->class, $method->getName()
+                'The %s must accept the Event as parameter in the method %s.',
+                $method->class,
+                $method->getName()
             ));
         }
 
@@ -29,7 +31,9 @@ abstract class AbstractProcessor implements ProcessorInterface
             return new \ReflectionMethod($class, $name);
         } catch (\ReflectionException) {
             throw new InvalidArgumentException(\sprintf(
-                'The %s class must accept the Event as parameter in the method %s.', $class, $name
+                'The %s class must accept the Event as parameter in the method %s.',
+                $class,
+                $name
             ));
         }
     }
