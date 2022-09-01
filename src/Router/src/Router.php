@@ -9,6 +9,8 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
+use Spiral\Router\Event\RouteFound;
+use Spiral\Router\Event\RouteNotFound;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\RouterException;

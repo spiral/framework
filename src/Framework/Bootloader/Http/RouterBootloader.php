@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\AbstractKernel;
@@ -69,7 +70,12 @@ final class RouterBootloader extends Bootloader
         UriHandler $uriHandler,
         ContainerInterface $container
     ): RouterInterface {
-        return new Router($this->config->getConfig(HttpConfig::CONFIG)['basePath'], $uriHandler, $container);
+        return new Router(
+            $this->config->getConfig(HttpConfig::CONFIG)['basePath'],
+            $uriHandler,
+            $container,
+            $container->has(EventDispatcherInterface::class) ? $container->get(EventDispatcherInterface::class) : null
+        );
     }
 
     /**
