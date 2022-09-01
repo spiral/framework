@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
+use MonorepoBuilder\MostRecentTagResolver;
+use MonorepoBuilder\ProcessParser;
+use MonorepoBuilder\TagParserInterface;
+use MonorepoBuilder\ValidateVersionReleaseWorker;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\MonorepoBuilder\Contract\Git\TagResolverInterface;
 use Symplify\MonorepoBuilder\ValueObject\Option;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\AddTagToChangelogReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\PushNextDevReleaseWorker;
@@ -79,6 +84,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         'autoload-dev' => [
             'psr-4' => [
+                'MonorepoBuilder\\'          => 'builder',
                 'Spiral\\Tests\\Framework\\' => 'tests/Framework',
                 'Spiral\\App\\'              => 'tests/app/src',
             ],
@@ -107,7 +113,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services = $containerConfigurator->services();
 
+    $services->set(TagResolverInterface::class, MostRecentTagResolver::class);
+    $services->set(TagParserInterface::class, ProcessParser::class)->autowire();
+
     # release workers - in order to execute
+    $services->set(ValidateVersionReleaseWorker::class);
     $services->set(SetCurrentMutualDependenciesReleaseWorker::class);
     $services->set(AddTagToChangelogReleaseWorker::class);
     $services->set(TagVersionReleaseWorker::class);
