@@ -68,15 +68,7 @@ class FilterInterceptor implements CoreInterceptorInterface
      */
     protected function renderInvalid(FilterInterface $filter)
     {
-        switch ($this->strategy) {
-            case self::STRATEGY_JSON_RESPONSE:
-                return [
-                    'status' => 400,
-                    'errors' => $filter->getErrors(),
-                ];
-            default:
-                throw new InvalidFilterException($filter);
-        }
+        return (new DefaultFilterErrorsRenderer($this->strategy))->render($filter);
     }
 
     /**
