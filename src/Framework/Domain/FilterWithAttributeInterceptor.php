@@ -27,7 +27,7 @@ final class FilterWithAttributeInterceptor extends FilterInterceptor
 
     /**
      * @param RenderErrorsInterface|null $renderErrors Renderer for all filter errors.
-     *                                                 By default, will be used DefaultFilterErrorsRendererInterface
+     *        By default, will be used DefaultFilterErrorsRendererInterface
      */
     public function __construct(
         ContainerInterface $container,
