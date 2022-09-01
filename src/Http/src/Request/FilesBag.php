@@ -10,7 +10,7 @@ use Spiral\Streams\StreamWrapper;
 /**
  * Used to provide access to UploadedFiles property of request.
  *
- * @method UploadedFileInterface|null get(string $name, $default = null)
+ * @method UploadedFileInterface|null get(int|string $name, $default = null)
  * @method UploadedFileInterface[] all()
  * @method UploadedFileInterface[] fetch(array $keys, bool $fill = false, $filler = null)
  * @method \Traversable|UploadedFileInterface[] getIterator()
