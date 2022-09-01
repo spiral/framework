@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Domain;
@@ -16,6 +9,7 @@ use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Domain\Exception\InvalidFilterException;
 use Spiral\Filters\FilterInterface;
+use Spiral\Filters\RenderErrorsInterface;
 
 /**
  * Automatically validate all Filters and return array error in case of failure.
@@ -25,23 +19,29 @@ class FilterInterceptor implements CoreInterceptorInterface
     public const STRATEGY_JSON_RESPONSE = 1;
     public const STRATEGY_EXCEPTION     = 2;
 
-    /** @var ContainerInterface @internal */
-    private $container;
+    /** @internal */
+    protected ContainerInterface $container;
 
-    /** @var int */
-    private $strategy;
+    protected int $strategy;
 
-    /** @var array @internal */
-    private $cache = [];
+    /** @internal */
+    private array $cache = [];
+
+    /** @internal */
+    protected RenderErrorsInterface $renderErrors;
 
     /**
-     * @param ContainerInterface $container
-     * @param int                $strategy
+     * @param RenderErrorsInterface|null $renderErrors Renderer for all filter errors.
+     *        By default, will be used {@see DefaultFilterErrorsRendererInterface}
      */
-    public function __construct(ContainerInterface $container, int $strategy = self::STRATEGY_JSON_RESPONSE)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        int $strategy = self::STRATEGY_JSON_RESPONSE,
+        ?RenderErrorsInterface $renderErrors = null
+    ) {
         $this->container = $container;
         $this->strategy = $strategy;
+        $this->renderErrors = $renderErrors ?? new DefaultFilterErrorsRendererInterface($strategy);
     }
 
     /**
@@ -58,7 +58,7 @@ class FilterInterceptor implements CoreInterceptorInterface
             $filter = $this->container->get($filterClass);
 
             if (isset($parameters['@context'])) {
-                // other interceptors can define the validation contex
+                // other interceptors can define the validation context
                 $filter->setContext($parameters['@context']);
             }
 
@@ -73,29 +73,13 @@ class FilterInterceptor implements CoreInterceptorInterface
     }
 
     /**
-     * @param FilterInterface $filter
-     * @return mixed
-     *
      * @throws InvalidFilterException
      */
     protected function renderInvalid(FilterInterface $filter)
     {
-        switch ($this->strategy) {
-            case self::STRATEGY_JSON_RESPONSE:
-                return [
-                    'status' => 400,
-                    'errors' => $filter->getErrors(),
-                ];
-            default:
-                throw new InvalidFilterException($filter);
-        }
+        return $this->renderErrors->render($filter);
     }
 
-    /**
-     * @param string $controller
-     * @param string $action
-     * @return array
-     */
     private function getDeclaredFilters(string $controller, string $action): array
     {
         $key = sprintf('%s:%s', $controller, $action);
@@ -118,19 +102,13 @@ class FilterInterceptor implements CoreInterceptorInterface
             }
 
             if ($class->implementsInterface(FilterInterface::class)) {
-                $this->cache[$key][$parameter->getName()] = $class->getName();
+                $this->buildCache($parameter, $class, $key);
             }
         }
 
         return $this->cache[$key];
     }
 
-
-    /**
-     * @param \ReflectionParameter $parameter
-     *
-     * @return \ReflectionClass|null
-     */
     private function getParameterClass(\ReflectionParameter $parameter): ?\ReflectionClass
     {
         $type = $parameter->getType();
@@ -144,5 +122,10 @@ class FilterInterceptor implements CoreInterceptorInterface
         }
 
         return new \ReflectionClass($type->getName());
+    }
+
+    protected function buildCache(\ReflectionParameter $parameter, \ReflectionClass $class, string $key): void
+    {
+        $this->cache[$key][$parameter->getName()] = $class->getName();
     }
 }

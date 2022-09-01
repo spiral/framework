@@ -28,7 +28,7 @@ use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptableCore;
 use Spiral\Domain\CycleInterceptor;
-use Spiral\Domain\FilterInterceptor;
+use Spiral\Domain\FilterWithAttributeInterceptor;
 use Spiral\Domain\GuardInterceptor;
 use Spiral\Domain\PipelineInterceptor;
 use Spiral\Router\Route;
@@ -46,7 +46,7 @@ class AppBootloader extends DomainBootloader
     protected const INTERCEPTORS = [
         CycleInterceptor::class,
         GuardInterceptor::class,
-        FilterInterceptor::class
+        FilterWithAttributeInterceptor::class
     ];
     /** @var ContainerInterface */
     private $container;
