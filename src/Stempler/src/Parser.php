@@ -72,6 +72,11 @@ final class Parser
         $template = new Template();
 
         try {
+            /**
+             * TODO issue #767
+             * @link https://github.com/spiral/framework/issues/767
+             * @psalm-suppress InvalidArgument
+             */
             $this->parseTokens(
                 new Assembler($template, 'nodes'),
                 $this->lexer->parse($stream)

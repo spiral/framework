@@ -14,7 +14,7 @@ interface DependedInterface
      * Related bootloaders will be initiated automatically with nested
      * dependencies.
      *
-     * @return array<int, class-string<BootloaderInterface|DependedInterface>>
+     * @return array<int, class-string<BootloaderInterface>|class-string<DependedInterface>>
      */
     public function defineDependencies(): array;
 }

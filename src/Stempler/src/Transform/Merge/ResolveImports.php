@@ -76,8 +76,7 @@ final class ResolveImports implements VisitorInterface
 
     /**
      * Create import definition (aka "use").
-     *
-     * @return ImportInterface|null
+     * @throws ImportException
      */
     private function makeImport(Tag $tag): ImportInterface
     {

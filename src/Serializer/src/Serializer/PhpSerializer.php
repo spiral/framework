@@ -12,13 +12,7 @@ final class PhpSerializer implements SerializerInterface
 {
     public function serialize(mixed $payload): string|\Stringable
     {
-        $result = \serialize($payload);
-
-        if ($result === false) {
-            throw new UnserializeException('Failed to serialize data.');
-        }
-
-        return $result;
+        return \serialize($payload);
     }
 
     public function unserialize(\Stringable|string $payload, object|string|null $type = null): mixed

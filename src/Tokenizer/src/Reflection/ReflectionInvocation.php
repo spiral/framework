@@ -16,6 +16,7 @@ final class ReflectionInvocation
     /**
      * New call reflection.
      *
+     * @param class-string $class
      * @param ReflectionArgument[] $arguments
      * @param int $level Was a function used inside another function call?
      */
@@ -49,6 +50,8 @@ final class ReflectionInvocation
 
     /**
      * Parent class.
+     *
+     * @return class-string
      */
     public function getClass(): string
     {
@@ -106,9 +109,7 @@ final class ReflectionInvocation
     }
 
     /**
-     * Get call argument by it's position.
-     *
-     * @return ReflectionArgument|null
+     * Get call argument by it position.
      */
     public function getArgument(int $index): ReflectionArgument
     {

@@ -95,7 +95,9 @@ trait FunctionLike
 
     public function getReturnType(): ?string
     {
-        return $this->element->getReturnType(false);
+        $type = $this->element->getReturnType(false);
+
+        return $type === null ? null : (string) $type;
     }
 
     public function setReturnReference(bool $state = true): static

@@ -23,6 +23,11 @@ trait MixinTrait
         }
 
         $mixin = new Mixin([], new Parser\Context($token, $parser->getPath()));
+        /**
+         * TODO issue #767
+         * @link https://github.com/spiral/framework/issues/767
+         * @psalm-suppress InvalidArgument
+         */
         $parser->parseTokens(
             new Assembler($mixin, 'nodes'),
             $token->tokens

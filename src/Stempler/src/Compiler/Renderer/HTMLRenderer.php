@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Compiler\Renderer;
 
-use PHPUnit\Framework\Constraint\Attribute;
 use Spiral\Stempler\Compiler;
 use Spiral\Stempler\Compiler\RendererInterface;
 use Spiral\Stempler\Node\HTML\Attr;
@@ -40,7 +39,7 @@ final class HTMLRenderer implements RendererInterface
         $result->push(\sprintf('<%s', $node->name), $node->getContext());
 
         foreach ($node->attrs as $attr) {
-            if (!$attr instanceof Attribute) {
+            if (!$attr instanceof Attr) {
                 $compiler->compile($attr, $result);
                 continue;
             }

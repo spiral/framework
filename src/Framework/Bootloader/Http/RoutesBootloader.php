@@ -39,7 +39,7 @@ abstract class RoutesBootloader extends Bootloader
     }
 
     /**
-     * @return array<string,array<MiddlewareInterface|class-string<MiddlewareInterface>>>
+     * @return array<MiddlewareInterface|class-string<MiddlewareInterface>>
      */
     abstract protected function globalMiddleware(): array;
 

@@ -40,16 +40,31 @@ final class InjectAttributes implements VisitorInterface
             $value = $this->blocks->claim($name);
 
             if ($value instanceof QuotedValue) {
+                /**
+                 * TODO issue #767
+                 * @link https://github.com/spiral/framework/issues/767
+                 * @psalm-suppress InvalidPropertyAssignmentValue
+                 */
                 $node->nodes[] = new Attr($alias, $value->getValue());
                 continue;
             }
 
             // simple copy attribute copy
             if ($value instanceof Attr) {
+                /**
+                 * TODO issue #767
+                 * @link https://github.com/spiral/framework/issues/767
+                 * @psalm-suppress InvalidPropertyAssignmentValue
+                 */
                 $node->nodes[] = clone $value;
                 continue;
             }
 
+            /**
+             * TODO issue #767
+             * @link https://github.com/spiral/framework/issues/767
+             * @psalm-suppress InvalidPropertyAssignmentValue
+             */
             $node->nodes[] = new Attr($alias, $this->wrapValue($value));
         }
 
@@ -61,7 +76,10 @@ final class InjectAttributes implements VisitorInterface
         return null;
     }
 
-    private function wrapValue(mixed $value): array|Mixin|Nil
+    /**
+     * @return Nil|Verbatim|Mixin|scalar
+     */
+    private function wrapValue(mixed $value): mixed
     {
         return match (true) {
             $value === [] || $value === null || $value instanceof Nil => new Nil(),

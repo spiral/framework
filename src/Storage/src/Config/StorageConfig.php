@@ -39,7 +39,7 @@ class StorageConfig extends InjectableConfig
         $config = $this->normalize($config);
         parent::__construct($config);
 
-        $this->default = $config['default'];
+        $this->default = $config['default'] ?? '';
         $this->bootStorages($config);
     }
 

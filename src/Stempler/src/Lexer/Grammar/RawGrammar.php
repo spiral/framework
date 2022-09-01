@@ -11,6 +11,9 @@ use Spiral\Stempler\Lexer\Token;
 
 final class RawGrammar implements GrammarInterface
 {
+    /**
+     * @return \Generator<int, Byte|Token|null>
+     */
     public function parse(Buffer $src): \Generator
     {
         /** @var string|null $buffer */

@@ -9,7 +9,7 @@ namespace Spiral\Prototype\Annotation;
  */
 final class Parser
 {
-    /** @var Line[] */
+    /** @var array<int, Line> */
     public array $lines = [];
 
     public function __construct(string $comment)

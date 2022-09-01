@@ -33,7 +33,7 @@ final class InlineGrammar implements GrammarInterface
     /** @var Byte[] */
     private array $name = [];
 
-    /** @var Byte[]|null */
+    /** @var array<array-key, Byte|Token>|null */
     private ?array $default = null;
 
     public function parse(Buffer $src): \Generator
@@ -72,6 +72,10 @@ final class InlineGrammar implements GrammarInterface
 
     /**
      * @return Token[]|null
+     *
+     * TODO issue #767
+     * @link https://github.com/spiral/framework/issues/767
+     * @psalm-suppress UndefinedPropertyFetch
      */
     private function parseGrammar(Buffer $src, int $offset): ?array
     {

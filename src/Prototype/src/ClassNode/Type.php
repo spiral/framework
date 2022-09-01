@@ -8,24 +8,23 @@ use Spiral\Prototype\Utils;
 
 final class Type
 {
-    public ?string $shortName = null;
     public ?string $alias = null;
-    public ?string $fullName = null;
+
+    private function __construct(
+        public readonly string $shortName,
+        public readonly ?string $fullName = null,
+    ) {
+    }
 
     public static function create(string $name): Type
     {
-        $type = new self();
-
         $fullName = null;
-        if ($type->hasShortName($name)) {
+        if (Utils::hasShortName($name)) {
             $fullName = $name;
             $name = Utils::shortName($name);
         }
 
-        $type->shortName = $name;
-        $type->fullName = $fullName;
-
-        return $type;
+        return new self($name, $fullName);
     }
 
     public function getAliasOrShortName(): string
@@ -46,10 +45,5 @@ final class Type
     public function name(): string
     {
         return $this->fullName ?? $this->shortName;
-    }
-
-    private function hasShortName(string $type): bool
-    {
-        return \mb_strpos($type, '\\') !== false;
     }
 }

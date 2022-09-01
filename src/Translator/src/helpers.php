@@ -20,6 +20,7 @@ if (!\function_exists('l')) {
      */
     function l(string $string, array $options = [], string $domain = null): string
     {
+        /** @psalm-suppress InternalMethod */
         $container = ContainerScope::getContainer();
         if ($container === null || !$container->has(TranslatorInterface::class)) {
             throw new ScopeException(
@@ -48,6 +49,7 @@ if (!\function_exists('p')) {
      */
     function p(string $string, int $number, array $options = [], string $domain = null): string
     {
+        /** @psalm-suppress InternalMethod */
         $container = ContainerScope::getContainer();
         if (empty($container) || !$container->has(TranslatorInterface::class)) {
             throw new ScopeException(

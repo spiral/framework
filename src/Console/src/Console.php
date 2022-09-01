@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Exception\LocatorException;
 use Spiral\Core\Container;
+use Spiral\Core\ScopeInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -28,7 +29,8 @@ final class Console
     public function __construct(
         private readonly ConsoleConfig $config,
         private readonly ?LocatorInterface $locator = null,
-        private readonly ContainerInterface $container = new Container()
+        private readonly ContainerInterface $container = new Container(),
+        private readonly ScopeInterface $scope = new Container()
     ) {
     }
 
@@ -39,7 +41,7 @@ final class Console
      */
     public function start(InputInterface $input = new ArgvInput(), OutputInterface $output = new ConsoleOutput()): int
     {
-        return $this->container->runScope(
+        return $this->scope->runScope(
             [],
             fn () => $this->run(
                 $input->getFirstArgument() ?? 'list',
@@ -68,7 +70,7 @@ final class Console
             $input = new InputProxy($input, ['firstArgument' => $command]);
         }
 
-        $code = $this->container->runScope([
+        $code = $this->scope->runScope([
             InputInterface::class => $input,
             OutputInterface::class => $output,
         ], fn () => $this->getApplication()->doRun($input, $output));

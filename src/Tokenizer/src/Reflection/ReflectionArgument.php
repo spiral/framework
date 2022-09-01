@@ -119,6 +119,7 @@ final class ReflectionArgument
     /**
      * Create Argument reflection using token definition. Internal method.
      *
+     * @param array{value: string, tokens: array, type: string} $definition
      * @see locateArguments
      */
     private static function createArgument(array $definition): ReflectionArgument

@@ -6,7 +6,7 @@ namespace Spiral\Mailer;
 
 class Message implements MessageInterface
 {
-    private ?string $subject = null;
+    private string $subject;
     private array $data = [];
     private array $to = [];
     private array $cc = [];

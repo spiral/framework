@@ -13,6 +13,9 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Tag or other control block.
+ *
+ * @implements NodeInterface<Tag>
+ * @template TNode of NodeInterface
  */
 final class Tag implements NodeInterface, AttributedInterface
 {
@@ -26,7 +29,9 @@ final class Tag implements NodeInterface, AttributedInterface
     /** @var Attr[] */
     public array $attrs = [];
 
-    /** @var NodeInterface[] */
+    /**
+     * @var TNode[]
+     */
     public array $nodes = [];
 
     public function __construct(Context $context = null)

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Factory;
 
+use DateTimeInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\CorruptedClass;
+use Spiral\Tests\Core\Fixtures\DatetimeInjector;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Stub\EnumService;
 use Spiral\Tests\Core\Stub\LightEngineDecorator;
@@ -94,6 +96,15 @@ final class CommonCasesTest extends BaseTest
         $this->assertInstanceOf(Bucket::class, $bucket);
         $this->assertSame('via-closure', $bucket->getName());
         $this->assertSame('some data', $bucket->getData());
+    }
+
+    public function testMakeInterfaceWithDefinition(): void
+    {
+        $this->bindInjector(DateTimeInterface::class, DatetimeInjector::class);
+
+        $object = $this->make(DateTimeInterface::class);
+
+        $this->assertInstanceOf(DateTimeInterface::class, $object);
     }
 
     public function testPrivateMethodFactory(): void

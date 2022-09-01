@@ -24,6 +24,12 @@ use Spiral\Http\Header\AcceptHeader;
  * Technically this class can be made as middleware, but due spiral provides container scoping
  * such functionality may be replaces with simple container request routing.
  *
+ * @psalm-type InputBagStructure = array{
+ *     "class": class-string<InputBag>,
+ *     "source": non-empty-string,
+ *     "alias": non-empty-string
+ * }
+ *
  * @property-read HeadersBag $headers
  * @property-read InputBag   $data
  * @property-read InputBag   $query
@@ -47,6 +53,7 @@ final class InputManager implements SingletonInterface
      * Associations between bags and representing class/request method.
      *
      * @invisible
+     * @var array<non-empty-string, InputBagStructure>
      */
     protected array $bagAssociations = [
         'headers'    => [
@@ -188,13 +195,13 @@ final class InputManager implements SingletonInterface
             );
         }
 
-        //Flushing input state
+        // Flushing input state
         if ($this->request !== $request) {
             $this->bags = [];
             $this->request = $request;
         }
 
-        return $this->request;
+        return $request;
     }
 
     /**
@@ -209,10 +216,12 @@ final class InputManager implements SingletonInterface
         if ($position !== false) {
             $header = \substr($header, $position + 7);
 
-            return \strpos($header, ',') !== false
-                ? \strstr(',', $header, true)
+            return \str_contains($header, ',')
+                ? \strstr($header, ',', true)
                 : $header;
         }
+
+        return null;
     }
 
     /**
@@ -342,6 +351,9 @@ final class InputManager implements SingletonInterface
         return $this->data($name, $this->query->get($name, $default));
     }
 
+    /**
+     * @return InputBagStructure|null
+     */
     private function findBagDefinition(string $name): ?array
     {
         if (isset($this->bagAssociations[$name])) {

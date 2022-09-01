@@ -8,6 +8,8 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Defines an ability to represent AST node.
+ *
+ * @template TNode
  */
 interface NodeInterface extends \IteratorAggregate
 {
