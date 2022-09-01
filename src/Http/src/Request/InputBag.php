@@ -104,7 +104,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        throw new InputException('InputBag is immutable');
+        throw new InputException('InputBag is immutable.');
     }
 
     /**
@@ -112,7 +112,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetUnset(mixed $offset): void
     {
-        throw new InputException('InputBag is immutable');
+        throw new InputException('InputBag is immutable.');
     }
 
     /**
@@ -134,7 +134,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 
         foreach ($path as $step) {
             if (!\is_array($data) || !\array_key_exists($step, $data)) {
-                throw new DotNotFoundException(\sprintf("Unable to find requested element '%s'", $name));
+                throw new DotNotFoundException(\sprintf("Unable to find requested element '%s'.", $name));
             }
 
             $data = &$data[$step];
