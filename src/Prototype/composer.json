@@ -19,8 +19,8 @@
         "ext-json": "*",
         "nikic/php-parser": "^4.13.2",
         "doctrine/inflector": "^1.4|^2.0",
-        "spiral/console": "^2.14",
-        "spiral/annotations": "^2.14"
+        "spiral/console": "^3.0",
+        "spiral/annotations": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -31,7 +31,7 @@
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "cycle/orm": "^1.8.1",
-        "spiral/debug": "^2.14"
+        "spiral/debug": "^3.0"
     },
     "autoload-dev": {
         "psr-4": {
