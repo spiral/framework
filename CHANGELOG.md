@@ -1,11 +1,15 @@
 # CHANGELOG
 
 ## v2.14.0 - Unreleased
-- **High Impact Changes**
-- **Medium Impact Changes**
-- **Low Impact Changes**
 - **Other Features**
+  - [spiral/queue] Adding `Spiral\Queue\SerializerRegistry` and ability to define job serializers
+  - [spiral/data-grid] Changing private to protected in non-final classes
+  - [spiral/filters] Self-rendering filters #737
 - **Bug Fixes**
+  - [spiral/console] Adding keys for commands in console sequences to prevent command duplication
+  - [spiral/data-grid] Fixes problem with passing value via `withValue`
+  - [spiral/stempler] Adding nullable to Buffer offset
+  - [spiral/attributes] Align arguments resolving in NamedArgumentsInstantiator with native PHP 8 behavior.
 
 ## v2.13.1 - 2022-05-16
 - **Bug Fixes**
