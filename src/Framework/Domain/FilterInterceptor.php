@@ -25,10 +25,10 @@ class FilterInterceptor implements CoreInterceptorInterface
     protected int $strategy;
 
     /** @internal */
-    private array $cache = [];
+    protected RenderErrorsInterface $renderErrors;
 
     /** @internal */
-    protected RenderErrorsInterface $renderErrors;
+    private array $cache = [];
 
     /**
      * @param RenderErrorsInterface|null $renderErrors Renderer for all filter errors.
@@ -80,6 +80,11 @@ class FilterInterceptor implements CoreInterceptorInterface
         return $this->renderErrors->render($filter);
     }
 
+    protected function buildCache(\ReflectionParameter $parameter, \ReflectionClass $class, string $key): void
+    {
+        $this->cache[$key][$parameter->getName()] = $class->getName();
+    }
+
     private function getDeclaredFilters(string $controller, string $action): array
     {
         $key = sprintf('%s:%s', $controller, $action);
@@ -122,10 +127,5 @@ class FilterInterceptor implements CoreInterceptorInterface
         }
 
         return new \ReflectionClass($type->getName());
-    }
-
-    protected function buildCache(\ReflectionParameter $parameter, \ReflectionClass $class, string $key): void
-    {
-        $this->cache[$key][$parameter->getName()] = $class->getName();
     }
 }
