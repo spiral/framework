@@ -38,6 +38,11 @@ final class StackContext
             }
             $stack->uniqueIDs[$uniqueID] = true;
 
+            /**
+             * TODO issue #767
+             * @link https://github.com/spiral/framework/issues/767
+             * @psalm-suppress NoInterfaceProperties
+             */
             foreach ($child->nodes as $child) {
                 $stack->nodes[] = $child;
             }
@@ -59,7 +64,11 @@ final class StackContext
                 return true;
             }
             $stack->uniqueIDs[$uniqueID] = true;
-
+            /**
+             * TODO issue #767
+             * @link https://github.com/spiral/framework/issues/767
+             * @psalm-suppress NoInterfaceProperties
+             */
             foreach ($child->nodes as $child) {
                 \array_unshift($stack->nodes, $child);
             }

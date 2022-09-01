@@ -9,13 +9,15 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Plain text or comment. Might contain inclusion of other syntaxes within it.
+ *
+ * @implements NodeInterface<Raw>
  */
 final class Raw implements NodeInterface
 {
     use ContextTrait;
 
     public function __construct(
-        public string $content,
+        public string|int|float $content,
         Context $context = null
     ) {
         $this->context = $context;

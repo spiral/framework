@@ -10,6 +10,9 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Top level template node.
+ *
+ * @implements NodeInterface<Template>
+ * @template TNode of NodeInterface
  */
 final class Template implements NodeInterface, AttributedInterface
 {
@@ -17,7 +20,7 @@ final class Template implements NodeInterface, AttributedInterface
     use ContextTrait;
 
     /**
-     * @param NodeInterface[] $nodes
+     * @param TNode[] $nodes
      */
     public function __construct(
         public array $nodes = []

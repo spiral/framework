@@ -23,7 +23,7 @@ final class PhpLoader implements FileLoaderInterface
         try {
             return ContainerScope::runScope($this->container, static fn () => require $filename);
         } catch (\Throwable $e) {
-            throw new LoaderException($e->getMessage(), $e->getCode(), $e);
+            throw new LoaderException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 }

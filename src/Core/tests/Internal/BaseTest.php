@@ -7,6 +7,7 @@ namespace Spiral\Tests\Core\Internal;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Config;
+use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\Internal\Factory;
 use Spiral\Core\Internal\Registry;
@@ -40,6 +41,19 @@ abstract class BaseTest extends TestCase
         $binder = $this->constructor->get('binder', BinderInterface::class);
         \assert($binder instanceof BinderInterface);
         $binder->bindSingleton($alias, $resolver);
+    }
+
+    /**
+     * @template TClass
+     *
+     * @param class-string<TClass> $class
+     * @param class-string<InjectorInterface<TClass>> $injector
+     */
+    protected function bindInjector(string $class, string $injector): void
+    {
+        $binder = $this->constructor->get('binder', BinderInterface::class);
+        \assert($binder instanceof BinderInterface);
+        $binder->bindInjector($class, $injector);
     }
 
     protected function createResolver(): ResolverInterface

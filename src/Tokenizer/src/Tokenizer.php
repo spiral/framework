@@ -13,7 +13,7 @@ use Symfony\Component\Finder\Finder;
 /**
  * Manages automatic container injections of class and invocation locators.
  */
-final class Tokenizer implements SingletonInterface, InjectorInterface
+final class Tokenizer implements SingletonInterface
 {
     /**
      * Token array constants.
@@ -43,7 +43,7 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     public function classLocator(
         array $directories = [],
         array $exclude = []
-    ): ClassesInterface {
+    ): ClassLocator {
         return new ClassLocator($this->makeFinder($directories, $exclude));
     }
 
@@ -53,26 +53,8 @@ final class Tokenizer implements SingletonInterface, InjectorInterface
     public function invocationLocator(
         array $directories = [],
         array $exclude = []
-    ): InvocationsInterface {
+    ): InvocationLocator {
         return new InvocationLocator($this->makeFinder($directories, $exclude));
-    }
-
-    /**
-     * @throws InjectionException
-     */
-    public function createInjection(
-        \ReflectionClass $class,
-        string $context = null
-    ): ClassesInterface|InvocationsInterface {
-        if ($class->isSubclassOf(ClassesInterface::class)) {
-            return $this->classLocator();
-        }
-
-        if ($class->isSubclassOf(InvocationsInterface::class)) {
-            return $this->invocationLocator();
-        }
-
-        throw new InjectionException(\sprintf('Unable to create injection for %s', $class));
     }
 
     /**

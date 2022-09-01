@@ -27,9 +27,6 @@ final class ClassesRegistry implements Container\SingletonInterface
         $this->classes[] = $class;
     }
 
-    /**
-     * @psalm-param class-string $class
-     */
     public function isBooted(string $class): bool
     {
         return \in_array($class, $this->classes, true);

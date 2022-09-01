@@ -48,7 +48,7 @@ trait ClosureRendererTrait
             $parameterString = \sprintf(
                 '%s %s%s$%s',
                 // type
-                $type,
+                (string) $type,
                 // reference
                 $parameter->isPassedByReference() ? '&' : '',
                 // variadic

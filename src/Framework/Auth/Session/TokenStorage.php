@@ -32,7 +32,7 @@ final class TokenStorage implements TokenStorageInterface
 
             $token = Token::unpack($tokenData);
         } catch (\Throwable $e) {
-            throw new TokenStorageException('Unable to load session token', $e->getCode(), $e);
+            throw new TokenStorageException('Unable to load session token', (int) $e->getCode(), $e);
         }
 
         if (!\hash_equals($token->getID(), $id)) {
@@ -56,7 +56,7 @@ final class TokenStorage implements TokenStorageInterface
 
             return $token;
         } catch (\Throwable $e) {
-            throw new TokenStorageException('Unable to create session token', $e->getCode(), $e);
+            throw new TokenStorageException('Unable to create session token', (int) $e->getCode(), $e);
         }
     }
 
@@ -65,8 +65,11 @@ final class TokenStorage implements TokenStorageInterface
         $this->session->getSection(self::SESSION_SECTION)->delete('token');
     }
 
+    /**
+     * @param positive-int $length
+     */
     private function randomHash(int $length): string
     {
-        return \substr(\bin2hex(random_bytes($length)), 0, $length);
+        return \substr(\bin2hex(\random_bytes($length)), 0, $length);
     }
 }

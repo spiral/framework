@@ -7,11 +7,13 @@ namespace Spiral\Stempler\Node;
 use Spiral\Stempler\Node\Traits\ContextTrait;
 use Spiral\Stempler\Parser\Context;
 
+/**
+ * @implements NodeInterface<Inline>
+ */
 final class Inline implements NodeInterface
 {
     use ContextTrait;
 
-    /** @var string */
     public string $name;
     public mixed $value = null;
 

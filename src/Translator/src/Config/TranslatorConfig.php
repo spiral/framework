@@ -17,6 +17,16 @@ final class TranslatorConfig extends InjectableConfig
     public const CONFIG = 'translator';
 
     /**
+     * @psalm-var array{
+     *     locale: string,
+     *     fallbackLocale: string,
+     *     directory: string,
+     *     cacheLocales: bool,
+     *     autoRegister: bool,
+     *     domains: array<non-empty-string, array<string>>,
+     *     loaders: class-string<LoaderInterface>[],
+     *     dumpers: class-string<DumperInterface>[]
+     * }
      * @var array
      */
     protected array $config = [
@@ -48,12 +58,12 @@ final class TranslatorConfig extends InjectableConfig
 
     public function getDefaultLocale(): string
     {
-        return $this->config['locale'];
+        return $this->config['locale'] ?? '';
     }
 
     public function getFallbackLocale(): string
     {
-        return $this->config['fallbackLocale'] ?? $this->config['locale'];
+        return $this->config['fallbackLocale'] ?? $this->getDefaultLocale();
     }
 
     public function isAutoRegisterMessages(): bool
@@ -63,7 +73,7 @@ final class TranslatorConfig extends InjectableConfig
 
     public function getLocalesDirectory(): string
     {
-        return $this->config['localesDirectory'] ?? $this->config['directory'];
+        return $this->config['localesDirectory'] ?? $this->config['directory'] ?? '';
     }
 
     public function getLocaleDirectory(string $locale): string
@@ -77,8 +87,9 @@ final class TranslatorConfig extends InjectableConfig
     public function resolveDomain(string $bundle): string
     {
         $bundle = \strtolower(\str_replace(['/', '\\'], '-', $bundle));
+        $domains = (array) ($this->config['domains'] ?? []);
 
-        foreach ($this->config['domains'] as $domain => $patterns) {
+        foreach ($domains as $domain => $patterns) {
             foreach ($patterns as $pattern) {
                 if ($this->matcher->matches($bundle, $pattern)) {
                     return $domain;

@@ -61,7 +61,7 @@ final class ConsoleConfig extends InjectableConfig
     /**
      * Get list of sequences with given name.
      *
-     * @return \Generator|SequenceInterface[]
+     * @return \Generator<array-key, SequenceInterface>
      *
      * @throws ConfigException
      */
@@ -78,7 +78,7 @@ final class ConsoleConfig extends InjectableConfig
     /**
      * Get list of configure sequences.
      *
-     * @return \Generator|SequenceInterface[]
+     * @return \Generator<array-key, SequenceInterface>
      *
      * @throws ConfigException
      */
@@ -90,7 +90,7 @@ final class ConsoleConfig extends InjectableConfig
     /**
      * Get list of all update sequences.
      *
-     * @return \Generator|SequenceInterface[]
+     * @return \Generator<array-key, SequenceInterface>
      *
      * @throws ConfigException
      */
@@ -100,7 +100,14 @@ final class ConsoleConfig extends InjectableConfig
     }
 
     /**
-     * @throws ConfigException
+     * @param SequenceInterface|string|array{
+     *     command: string,
+     *     options?: array,
+     *     header?: string,
+     *     footer?: string
+     * } $item
+     * @return SequenceInterface
+     * @throws \JsonException
      */
     protected function parseSequence(SequenceInterface|string|array $item): SequenceInterface
     {

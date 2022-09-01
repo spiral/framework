@@ -27,6 +27,11 @@ final class DeclareGrammar implements GrammarInterface
 
     private array $keyword = [];
 
+    /**
+     * TODO issue #767
+     * @link https://github.com/spiral/framework/issues/767
+     * @psalm-suppress UndefinedPropertyFetch
+     */
     public function parse(Buffer $src): \Generator
     {
         $quoted = [];

@@ -9,6 +9,7 @@ use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Model\FilterBag;
+use Spiral\Filters\Model\FilterDefinitionInterface;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\HasFilterDefinition;
 use Spiral\Filters\Model\ShouldBeValidated;
@@ -16,16 +17,18 @@ use Spiral\Filters\ErrorMapper;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Validation\ValidationProviderInterface;
 
-class ValidateFilterInterceptor implements CoreInterceptorInterface
+/**
+ * @psalm-type TParameters = array{filterBag: FilterBag}
+ */
+final class ValidateFilterInterceptor implements CoreInterceptorInterface
 {
-    /** @param Container $container */
     public function __construct(
         private readonly ContainerInterface $container
     ) {
     }
 
     /**
-     * @param array{filterBag: FilterBag} $parameters
+     * @param-assert TParameters $parameters
      */
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): FilterInterface
     {
@@ -34,6 +37,7 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
 
         if ($filter instanceof HasFilterDefinition) {
             $this->validateFilter(
+                $filter->filterDefinition(),
                 $bag,
                 $bag->errors ?? [],
                 $parameters['context'] ?? null
@@ -43,10 +47,12 @@ class ValidateFilterInterceptor implements CoreInterceptorInterface
         return $filter;
     }
 
-    private function validateFilter(FilterBag $bag, array $errors, mixed $context): void
-    {
-        $definition = $bag->filter->filterDefinition();
-
+    private function validateFilter(
+        FilterDefinitionInterface $definition,
+        FilterBag $bag,
+        array $errors,
+        mixed $context
+    ): void {
         if ($definition instanceof ShouldBeValidated) {
             $errorMapper = new ErrorMapper($bag->schema);
             $validationProvider = $this->container->get(ValidationProviderInterface::class);

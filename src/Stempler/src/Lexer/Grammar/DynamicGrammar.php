@@ -62,6 +62,9 @@ final class DynamicGrammar implements GrammarInterface
         );
     }
 
+    /**
+     * @return \Generator<int, Byte|Token|null>
+     */
     public function parse(Buffer $src): \Generator
     {
         while ($n = $src->next()) {

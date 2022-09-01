@@ -8,29 +8,35 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Validation\Exception\ValidationException;
 
+/**
+ * @template TValidation of ValidationInterface
+ */
 final class ValidationProvider implements ValidationProviderInterface, SingletonInterface
 {
-    /** @var array<class-string, \Closure> */
-    private array $validations = [];
+    /** @var array<class-string<TValidation>, \Closure> */
+    private array $resolvers = [];
 
     public function __construct(
         private readonly InvokerInterface $invoker
     ) {
     }
 
-    public function register(string $name, \Closure $validation): void
+    /**
+     * @param class-string<TValidation> $name
+     */
+    public function register(string $name, \Closure $resolver): void
     {
-        $this->validations[$name] = $validation;
+        $this->resolvers[$name] = $resolver;
     }
 
     public function getValidation(string $name, array $params = []): ValidationInterface
     {
-        if (!isset($this->validations[$name])) {
+        if (!isset($this->resolvers[$name])) {
             throw new ValidationException(\sprintf('Validation with name `%s` is not registered.', $name));
         }
 
         return $this->invoker->invoke(
-            $this->validations[$name],
+            $this->resolvers[$name],
             $params
         );
     }

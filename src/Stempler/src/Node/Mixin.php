@@ -9,13 +9,16 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Combines
+ *
+ * @implements NodeInterface<Mixin>
+ * @template TNode of NodeInterface
  */
 final class Mixin implements NodeInterface
 {
     use ContextTrait;
 
     /**
-     * @param NodeInterface[] $nodes
+     * @param TNode[] $nodes
      */
     public function __construct(
         public array $nodes = [],

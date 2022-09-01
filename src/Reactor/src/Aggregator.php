@@ -9,11 +9,13 @@ use Spiral\Reactor\Exception\ReactorException;
 /**
  * Provides ability to aggregate specific set of elements (type constrained), render them or
  * apply set of operations.
+ *
+ * @template TElement of AggregableInterface
  */
 class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
 {
     /**
-     * @param AggregableInterface[] $elements
+     * @param TElement[] $elements
      */
     public function __construct(
         private array $allowed,
@@ -24,6 +26,7 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Get element by it's name.
      *
+     * @return TElement
      * @throws ReactorException
      */
     public function __get($name): AggregableInterface
@@ -58,7 +61,7 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Add new element.
      *
-     * @throws ReactorException
+     * @param TElement $element
      */
     public function add(AggregableInterface $element): self
     {
@@ -85,6 +88,7 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Get named element by it's name.
      *
+     * @return TElement
      * @throws ReactorException
      */
     public function get(string $name): AggregableInterface
@@ -107,7 +111,7 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
-     * @return \ArrayIterator<array-key, AggregableInterface>
+     * @return \ArrayIterator<array-key, TElement>
      */
     public function getIterator(): \ArrayIterator
     {
@@ -119,11 +123,17 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
         return $this->has($offset);
     }
 
-    public function offsetGet(mixed $offset): mixed
+    /**
+     * @return TElement
+     */
+    public function offsetGet(mixed $offset): AggregableInterface
     {
         return $this->get($offset);
     }
 
+    /**
+     * @param TElement $value
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->remove($offset)->add($value);
@@ -137,6 +147,7 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Find element by it's name (NamedDeclarations only).
      *
+     * @return TElement
      * @throws ReactorException When unable to find.
      */
     protected function find(string $name): AggregableInterface

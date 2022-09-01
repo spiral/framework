@@ -10,13 +10,16 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Blocks used to extend and import templates. Block operate as template variable.
+ *
+ * @implements NodeInterface<Block>
+ * @template TNode of NodeInterface
  */
 final class Block implements NodeInterface, AttributedInterface
 {
     use ContextTrait;
     use AttributeTrait;
 
-    /** @var NodeInterface[] */
+    /** @var TNode[] */
     public array $nodes = [];
 
     public function __construct(

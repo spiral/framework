@@ -151,6 +151,12 @@ final class BracesGrammar
 
     /**
      * Fetch next N bytes.
+     *
+     * @param positive-int $size
+     *
+     * TODO issue #767
+     * @link https://github.com/spiral/framework/issues/767
+     * @psalm-suppress UndefinedPropertyFetch
      */
     private function nextBytes(Buffer $src, int $size): string
     {

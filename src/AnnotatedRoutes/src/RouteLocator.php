@@ -49,7 +49,7 @@ final class RouteLocator
                     'group'      => $route->group,
                     'verbs'      => (array) $route->methods,
                     'defaults'   => $route->defaults,
-                    'middleware' => (array) $route->middleware,
+                    'middleware' => $route->middleware,
                     'priority'   => $route->priority,
                 ];
             }

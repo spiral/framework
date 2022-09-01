@@ -37,7 +37,7 @@ final class ViewsConfig extends InjectableConfig
 
     public function getCacheDirectory(): string
     {
-        return \rtrim($this->config['cache']['directory'], '/') . '/';
+        return \rtrim($this->config['cache']['directory'] ?? '', '/') . '/';
     }
 
     /**
@@ -45,7 +45,7 @@ final class ViewsConfig extends InjectableConfig
      */
     public function getNamespaces(): array
     {
-        return $this->config['namespaces'];
+        return (array) ($this->config['namespaces'] ?? []);
     }
 
     /**
@@ -55,12 +55,10 @@ final class ViewsConfig extends InjectableConfig
      */
     public function getDependencies(): array
     {
-        $dependencies = [];
-        foreach ($this->config['dependencies'] as $dependency) {
-            $dependencies[] = $this->wire($dependency);
-        }
-
-        return $dependencies;
+        return \array_map(
+            fn (mixed $dependency): Autowire =>  $this->wire($dependency),
+            (array) ($this->config['dependencies'] ?? [])
+        );
     }
 
     /**
@@ -70,12 +68,10 @@ final class ViewsConfig extends InjectableConfig
      */
     public function getEngines(): array
     {
-        $engines = [];
-        foreach ($this->config['engines'] as $engine) {
-            $engines[] = $this->wire($engine);
-        }
-
-        return $engines;
+        return \array_map(
+            fn (mixed $engine): Autowire =>  $this->wire($engine),
+            (array) ($this->config['engines'] ?? [])
+        );
     }
 
     /**

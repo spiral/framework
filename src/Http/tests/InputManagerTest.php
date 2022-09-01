@@ -26,15 +26,8 @@ use Nyholm\Psr7\ServerRequest;
 
 class InputManagerTest extends TestCase
 {
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @var InputManager
-     */
-    private $input;
+    private Container $container;
+    private InputManager $input;
 
     public function setUp(): void
     {
@@ -121,6 +114,29 @@ class InputManagerTest extends TestCase
         $this->assertTrue($this->input->isSecure());
     }
 
+    public function testBearerToken(): void
+    {
+        $request = new ServerRequest('GET', 'http://domain.com/hello-world');
+        $this->container->bind(ServerRequestInterface::class, $request);
+
+        $this->assertNull($this->input->bearerToken());
+
+        $request = new ServerRequest(method: 'GET', uri: 'http://domain.com/hello-world', headers: [
+            'Authorization' => 'Bearer some-token'
+        ]);
+
+        $this->container->bind(ServerRequestInterface::class, $request);
+        $this->assertSame('some-token', $this->input->bearerToken());
+
+        // Case with coma separated header values
+        $request = new ServerRequest(method: 'GET', uri: 'http://domain.com/hello-world', headers: [
+            'Authorization' => 'Bearer some-token'
+        ]);
+
+        $this->container->bind(ServerRequestInterface::class, $request->withAddedHeader('Authorization', 'baz'));
+        $this->assertSame('some-token', $this->input->bearerToken());
+    }
+
     public function testIsAjax(): void
     {
         $request = new ServerRequest('GET', 'http://domain.com/hello-world', body: 'php://input');
@@ -137,6 +153,23 @@ class InputManagerTest extends TestCase
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertTrue($this->input->isAjax());
+    }
+
+    public function testIsXmlHttpRequest(): void
+    {
+        $request = new ServerRequest('GET', 'http://domain.com/hello-world');
+        $this->container->bind(ServerRequestInterface::class, $request);
+
+        $this->assertFalse($this->input->isXmlHttpRequest());
+
+        $request = new ServerRequest(
+            'GET',
+            'http://domain.com/hello-world',
+            ['X-Requested-With' => 'xmlhttprequest'],
+        );
+        $this->container->bind(ServerRequestInterface::class, $request);
+
+        $this->assertTrue($this->input->isXmlHttpRequest());
     }
 
     /**

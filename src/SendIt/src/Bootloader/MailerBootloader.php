@@ -12,6 +12,7 @@ use Spiral\Mailer\MailerInterface;
 use Spiral\Queue\Bootloader\QueueBootloader;
 use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\QueueConnectionProviderInterface;
+use Spiral\Queue\QueueRegistry;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
@@ -59,10 +60,7 @@ final class MailerBootloader extends Bootloader
             )
         );
 
-        if ($container->has(HandlerRegistryInterface::class)) {
-            $registry = $container->get(HandlerRegistryInterface::class);
-            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
-        }
+        $container->get(QueueRegistry::class)->setHandler(MailQueue::JOB_NAME, MailJob::class);
     }
 
     public function mailer(MailerConfig $config): SymfonyMailer

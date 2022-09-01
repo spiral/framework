@@ -11,9 +11,6 @@ use Spiral\Storage\StorageInterface;
 use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
-/**
- * @mixin ReadableInterface
- */
 trait ReadableTrait
 {
     /**
@@ -42,6 +39,9 @@ trait ReadableTrait
         return $this->bucket($name)->exists($pathname);
     }
 
+    /**
+     * @return positive-int|0
+     */
     public function getLastModified(string|\Stringable $id): int
     {
         [$name, $pathname] = $this->parseUri($id);
@@ -49,6 +49,9 @@ trait ReadableTrait
         return $this->bucket($name)->getLastModified($pathname);
     }
 
+    /**
+     * @return positive-int|0
+     */
     public function getSize(string|\Stringable $id): int
     {
         [$name, $pathname] = $this->parseUri($id);
@@ -63,6 +66,9 @@ trait ReadableTrait
         return $this->bucket($name)->getMimeType($pathname);
     }
 
+    /**
+     * @return Visibility::VISIBILITY_*
+     */
     #[ExpectedValues(valuesFromClass: Visibility::class)]
     public function getVisibility(string|\Stringable $id): string
     {

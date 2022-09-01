@@ -146,7 +146,7 @@ interface FilesInterface
     /**
      * Current file permissions (if exists).
      *
-     * @return int|bool
+     * @return positive-int
      * @throws FileNotFoundException
      */
     public function getPermissions(string $filename): int;

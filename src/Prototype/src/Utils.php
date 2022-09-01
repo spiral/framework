@@ -9,6 +9,11 @@ namespace Spiral\Prototype;
  */
 final class Utils
 {
+    public static function hasShortName(string $name): bool
+    {
+        return \mb_strpos($name, '\\') !== false;
+    }
+
     /**
      * Create short name (without namespaces).
      */

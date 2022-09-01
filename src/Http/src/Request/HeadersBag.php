@@ -16,13 +16,13 @@ final class HeadersBag extends InputBag
     }
 
     /**
-     * @param bool|string $implode Implode header lines, false to return header as array.
+     * @param false|string $implode Implode header lines, false to return header as array.
      */
     public function get(string $name, mixed $default = null, bool|string $implode = ','): array|string
     {
         $value = parent::get($this->normalize($name), $default);
 
-        if (!empty($implode) && \is_array($value)) {
+        if (\is_string($implode) && !empty($implode) && \is_array($value)) {
             return \implode($implode, $value);
         }
 

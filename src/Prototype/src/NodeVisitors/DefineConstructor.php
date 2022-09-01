@@ -44,6 +44,10 @@ final class DefineConstructor extends NodeVisitorAbstract
     private function buildConstructor(): Node\Stmt\ClassMethod
     {
         $constructor = new Node\Stmt\ClassMethod('__construct');
+        /**
+         * @psalm-suppress InternalMethod
+         * @psalm-suppress InternalClass
+         */
         $constructor->flags = BuilderHelpers::addModifier(
             $constructor->flags,
             Node\Stmt\Class_::MODIFIER_PUBLIC

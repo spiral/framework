@@ -67,7 +67,7 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
         try {
             return \base64_encode(Crypto::Encrypt($packed, $this->key));
         } catch (\Throwable $e) {
-            throw new EncryptException($e->getMessage(), $e->getCode(), $e);
+            throw new EncryptException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -84,7 +84,7 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
 
             return \json_decode($result, true);
         } catch (\Throwable $e) {
-            throw new DecryptException($e->getMessage(), $e->getCode(), $e);
+            throw new DecryptException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 }

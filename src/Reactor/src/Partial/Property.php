@@ -56,7 +56,9 @@ final class Property implements NamedInterface, AggregableInterface
 
     public function getType(): ?string
     {
-        return $this->element->getType();
+        $type = $this->element->getType();
+
+        return $type === null ? null : (string) $type;
     }
 
     public function setNullable(bool $state = true): self
