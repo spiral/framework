@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Tests\Filters\Fixtures;
 
 use Spiral\Filters\FilterInterface;
-use Spiral\Filters\RenderErrors;
+use Spiral\Filters\RenderErrorsInterface;
 
 /**
- * @template-implements RenderErrors<FilterInterface>
+ * @template-implements RenderErrorsInterface<FilterInterface>
  */
-final class TestErrorsRenderer implements RenderErrors
+final class TestErrorsInterfaceRenderer implements RenderErrorsInterface
 {
     public function render(FilterInterface $filter)
     {

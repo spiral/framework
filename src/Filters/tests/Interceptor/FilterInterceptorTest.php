@@ -14,7 +14,7 @@ use Spiral\Filters\RenderWith;
 use Spiral\Tests\Filters\BaseTest;
 use Spiral\Tests\Filters\Fixtures\MessageFilter;
 use Spiral\Tests\Filters\Fixtures\FilterWithErrorsRenderer;
-use Spiral\Tests\Filters\Fixtures\TestErrorsRenderer;
+use Spiral\Tests\Filters\Fixtures\TestErrorsInterfaceRenderer;
 
 final class FilterInterceptorTest extends BaseTest
 {
@@ -51,14 +51,14 @@ final class FilterInterceptorTest extends BaseTest
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')
             ->withConsecutive(
-                [TestErrorsRenderer::class],
+                [TestErrorsInterfaceRenderer::class],
                 [FilterWithErrorsRenderer::class],
             )
-            ->willReturnOnConsecutiveCalls(new TestErrorsRenderer(), $filter);
+            ->willReturnOnConsecutiveCalls(new TestErrorsInterfaceRenderer(), $filter);
 
         $reader = $this->createMock(ReaderInterface::class);
         $reader->method('firstClassMetadata')
-            ->willReturn(new RenderWith(TestErrorsRenderer::class));
+            ->willReturn(new RenderWith(TestErrorsInterfaceRenderer::class));
 
         $interceptor = new FilterWithRendererInterceptor($container, $reader);
 

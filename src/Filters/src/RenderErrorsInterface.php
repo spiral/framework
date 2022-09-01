@@ -7,7 +7,7 @@ namespace Spiral\Filters;
 /**
  * @psalm-template F of FilterInterface
  */
-interface RenderErrors
+interface RenderErrorsInterface
 {
     /**
      * @param F $filter

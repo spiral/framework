@@ -7,7 +7,7 @@ namespace Spiral\Tests\Filters\Fixtures;
 use Spiral\Filters\Filter;
 use Spiral\Filters\RenderWith;
 
-#[RenderWith(TestErrorsRenderer::class)]
+#[RenderWith(TestErrorsInterfaceRenderer::class)]
 final class FilterWithErrorsRenderer extends Filter
 {
     public const SCHEMA = [

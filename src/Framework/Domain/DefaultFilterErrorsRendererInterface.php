@@ -6,12 +6,12 @@ namespace Spiral\Domain;
 
 use Spiral\Domain\Exception\InvalidFilterException;
 use Spiral\Filters\FilterInterface;
-use Spiral\Filters\RenderErrors;
+use Spiral\Filters\RenderErrorsInterface;
 
 /**
- * @template-implements RenderErrors<FilterInterface>
+ * @template-implements RenderErrorsInterface<FilterInterface>
  */
-final class DefaultFilterErrorsRenderer implements RenderErrors
+final class DefaultFilterErrorsRendererInterface implements RenderErrorsInterface
 {
     private int $strategy;
 

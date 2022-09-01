@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Domain\Exception\InvalidFilterException;
 use Spiral\Filters\FilterInterface;
-use Spiral\Filters\RenderErrors;
+use Spiral\Filters\RenderErrorsInterface;
 use Spiral\Filters\RenderWith;
 
 /**
@@ -16,25 +16,24 @@ use Spiral\Filters\RenderWith;
  */
 class FilterWithRendererInterceptor extends FilterInterceptor
 {
-    /** @var array<class-string<FilterInterface>, RenderErrors> @internal */
+    /**
+     * @var array<class-string<FilterInterface>, RenderErrorsInterface>
+     * @internal
+     */
     private array $renderersCache = [];
 
     /** @internal */
     private ReaderInterface $reader;
 
-    /** @internal */
-    private RenderErrors $renderErrors;
-
     public function __construct(
         ContainerInterface $container,
         ReaderInterface $reader,
-        ?RenderErrors $renderErrors = null,
+        ?RenderErrorsInterface $renderErrors = null,
         int $strategy = self::STRATEGY_JSON_RESPONSE
     ) {
-        parent::__construct($container, $strategy);
+        parent::__construct($container, $strategy, $renderErrors);
 
         $this->reader = $reader;
-        $this->renderErrors = $renderErrors ?: new DefaultFilterErrorsRenderer($strategy);
     }
 
     /**
@@ -42,7 +41,13 @@ class FilterWithRendererInterceptor extends FilterInterceptor
      */
     protected function renderInvalid(FilterInterface $filter)
     {
-        return ($this->renderersCache[get_class($filter)] ?? $this->renderErrors)->render($filter);
+        $filterClass = get_class($filter);
+
+        if (isset($this->renderersCache[$filterClass])) {
+            return $this->renderersCache[$filterClass]->render($filter);
+        }
+
+        return parent::renderInvalid($filter);
     }
 
     protected function buildCache(\ReflectionParameter $parameter, \ReflectionClass $class, string $key): void

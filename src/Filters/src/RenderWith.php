@@ -9,7 +9,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 /**
  * @Annotation
  * @Target({ "CLASS" })
- * @psalm-type TClass = class-string<RenderErrors>
+ * @psalm-type TClass = class-string<RenderErrorsInterface>
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class RenderWith

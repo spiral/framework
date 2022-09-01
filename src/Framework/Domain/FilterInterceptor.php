@@ -9,6 +9,7 @@ use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Domain\Exception\InvalidFilterException;
 use Spiral\Filters\FilterInterface;
+use Spiral\Filters\RenderErrorsInterface;
 
 /**
  * Automatically validate all Filters and return array error in case of failure.
@@ -26,10 +27,17 @@ class FilterInterceptor implements CoreInterceptorInterface
     /** @internal */
     private array $cache = [];
 
-    public function __construct(ContainerInterface $container, int $strategy = self::STRATEGY_JSON_RESPONSE)
-    {
+    /** @internal */
+    protected RenderErrorsInterface $renderErrors;
+
+    public function __construct(
+        ContainerInterface $container,
+        int $strategy = self::STRATEGY_JSON_RESPONSE,
+        ?RenderErrorsInterface $renderErrors = null
+    ) {
         $this->container = $container;
         $this->strategy = $strategy;
+        $this->renderErrors = $renderErrors ?: new DefaultFilterErrorsRendererInterface($strategy);
     }
 
     /**
@@ -68,7 +76,7 @@ class FilterInterceptor implements CoreInterceptorInterface
      */
     protected function renderInvalid(FilterInterface $filter)
     {
-        return (new DefaultFilterErrorsRenderer($this->strategy))->render($filter);
+        return $this->renderErrors->render($filter);
     }
 
     /**
