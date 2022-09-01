@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/distribution": "^2.14",
+        "spiral/distribution": "^2.15",
         "symfony/polyfill-php80": "^1.22",
         "league/flysystem": "^2.0"
     },
@@ -52,7 +52,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "2.15.x-dev"
         }
     },
     "config": {

@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/boot": "^2.14",
+        "spiral/boot": "^2.15",
         "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
@@ -34,7 +34,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "2.15.x-dev"
         }
     },
     "config": {

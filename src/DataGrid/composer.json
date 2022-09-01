@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/attributes": "^2.14",
+        "spiral/attributes": "^2.15",
         "symfony/polyfill-php73": "^1.22"
     },
     "require-dev": {
@@ -42,7 +42,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "2.15.x-dev"
         }
     },
     "config": {

@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/core": "^2.14"
+        "spiral/core": "^2.15"
     },
     "autoload": {
         "psr-4": {
@@ -24,7 +24,7 @@
         }
     },
     "require-dev": {
-        "spiral/console": "^2.14",
+        "spiral/console": "^2.15",
         "phpunit/phpunit": "^8.5|^9.5"
     },
     "autoload-dev": {
@@ -34,7 +34,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "2.15.x-dev"
         }
     },
     "config": {

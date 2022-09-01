@@ -17,9 +17,9 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "spiral/core": "^2.14",
-        "spiral/hmvc": "^2.14",
-        "spiral/http": "^2.14",
+        "spiral/core": "^2.15",
+        "spiral/hmvc": "^2.15",
+        "spiral/http": "^2.15",
         "cocur/slugify": "^3.2",
         "doctrine/inflector": "^1.4|^2.0"
     },
@@ -40,7 +40,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "2.15.x-dev"
         }
     },
     "config": {
