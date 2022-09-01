@@ -32,7 +32,7 @@ final class NamedArgumentsInstantiator extends Instantiator
     /**
      * @var string
      */
-    private const ERROR_NAMED_ARG_TO_VARIADIC = 'Cannot pass named argument $%s to variadic parameter ...$%s in PHP < 8';
+    private const ERROR_NAMED_ARG_TO_VARIADIC = 'Can\'t pass named argument $%s to variadic parameter ...$%s in PHP < 8';
 
     /**
      * @var string
