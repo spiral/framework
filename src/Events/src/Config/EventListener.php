@@ -12,7 +12,6 @@ final class EventListener
 
     public function __construct(
         public string $listener,
-        public ?string $event = null,
         ?string $method = null,
         public int $priority = 0
     ) {

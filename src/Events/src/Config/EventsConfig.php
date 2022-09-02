@@ -20,17 +20,20 @@ final class EventsConfig extends InjectableConfig
     /**
      * Get registered listeners.
      *
-     * @return EventListener[]
+     * @psalm-return array{class-string: array<EventListener>}
      */
     public function getListeners(): array
     {
-        return \array_map(static function (string|EventListener $listener): EventListener {
-            if ($listener instanceof EventListener) {
-                return $listener;
-            }
+        $listeners = [];
+        foreach ($this->config['listeners'] as $event => $eventListeners) {
+            $listeners[$event] = \array_map(
+                static fn (string|EventListener $listener): EventListener =>
+                    \is_string($listener) ? new EventListener($listener) : $listener,
+                $eventListeners
+            );
+        }
 
-            return new EventListener($listener);
-        }, $this->config['listeners']);
+        return $listeners;
     }
 
     /**

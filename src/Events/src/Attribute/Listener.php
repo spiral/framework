@@ -12,7 +12,7 @@ class Listener
 {
     public function __construct(
         public readonly ?string $event = null,
-        public readonly ?string $method = null,
+        public ?string $method = null,
         public readonly int $priority = 0
     ) {
     }

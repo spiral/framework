@@ -6,7 +6,6 @@ namespace Spiral\Events;
 
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Events\Attribute\Listener;
-use Spiral\Events\Config\EventListener;
 use Spiral\Tokenizer\ScopedClassesInterface;
 
 final class ListenerLocator implements ListenerLocatorInterface
@@ -18,32 +17,24 @@ final class ListenerLocator implements ListenerLocatorInterface
     }
 
     /**
-     * @psalm-return \Generator<EventListener>
+     * @psalm-return \Generator<class-string, Listener>
      */
     public function findListeners(): \Generator
     {
         foreach ($this->locator->getScopedClasses('listeners') as $class) {
-            $listenerAttr = $this->reader->firstClassMetadata($class, Listener::class);
+            $attr = $this->reader->firstClassMetadata($class, Listener::class);
 
-            if ($listenerAttr !== null) {
-                yield new EventListener(
-                    listener: $class->getName(),
-                    event: $listenerAttr->event,
-                    method: $listenerAttr->method,
-                    priority: $listenerAttr->priority
-                );
+            if ($attr !== null) {
+                yield $class->getName() => $attr;
             }
 
             foreach ($class->getMethods() as $method) {
-                $listenerAttr = $this->reader->firstFunctionMetadata($method, Listener::class);
+                $attr = $this->reader->firstFunctionMetadata($method, Listener::class);
 
-                if ($listenerAttr !== null) {
-                    yield new EventListener(
-                        listener: $class->getName(),
-                        event: $listenerAttr->event,
-                        method: $method->getName(),
-                        priority: $listenerAttr->priority
-                    );
+                if ($attr !== null) {
+                    $attr->method = $method->getName();
+
+                    yield $class->getName() => $attr;
                 }
             }
         }
