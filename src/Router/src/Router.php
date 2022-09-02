@@ -9,8 +9,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Router\Event\RouteFound;
+use Spiral\Router\Event\RouteMatched;
 use Spiral\Router\Event\RouteNotFound;
+use Spiral\Router\Event\Routing;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\RouterException;
@@ -54,6 +55,8 @@ final class Router implements RouterInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $this->eventDispatcher?->dispatch(new Routing($request));
+
         try {
             $route = $this->matchRoute($request, $routeName);
         } catch (RouteException $e) {
@@ -65,7 +68,7 @@ final class Router implements RouterInterface
             throw new RouteNotFoundException($request->getUri());
         }
 
-        $this->eventDispatcher?->dispatch(new RouteFound($route));
+        $this->eventDispatcher?->dispatch(new RouteMatched($request, $route));
 
         return $route->handle(
             $request

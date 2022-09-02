@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Queue\Bootloader;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
@@ -113,9 +114,13 @@ final class QueueBootloader extends Bootloader
         return new QueueRegistry($container, $registry);
     }
 
-    protected function initHandler(ConsumeCore $core, QueueConfig $config, Container $container): Handler
-    {
-        $core = new InterceptableCore($core);
+    protected function initHandler(
+        ConsumeCore $core,
+        QueueConfig $config,
+        Container $container,
+        ?EventDispatcherInterface $dispatcher = null
+    ): Handler {
+        $core = new InterceptableCore($core, $dispatcher);
 
         foreach ($config->getConsumeInterceptors() as $interceptor) {
             if (\is_string($interceptor) || $interceptor instanceof Container\Autowire) {
@@ -131,9 +136,10 @@ final class QueueBootloader extends Bootloader
     protected function initQueue(
         QueueConfig $config,
         QueueConnectionProviderInterface $manager,
-        Container $container
+        Container $container,
+        ?EventDispatcherInterface $dispatcher = null
     ): Queue {
-        $core = new InterceptableCore(new PushCore($manager->getConnection()));
+        $core = new InterceptableCore(new PushCore($manager->getConnection()), $dispatcher);
 
         foreach ($config->getPushInterceptors() as $interceptor) {
             if (\is_string($interceptor) || $interceptor instanceof Container\Autowire) {

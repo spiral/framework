@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Spiral\Http;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\Event\RequestHandled;
+use Spiral\Http\Event\RequestReceived;
 use Spiral\Http\Exception\HttpException;
 
 final class Http implements RequestHandlerInterface
@@ -46,10 +49,21 @@ final class Http implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $dispatcher = $this->container->has(EventDispatcherInterface::class) ?
+            $this->container->get(EventDispatcherInterface::class) :
+            null;
+
+
+        $dispatcher?->dispatch(new RequestReceived($request));
+
         if ($this->handler === null) {
             throw new HttpException('Unable to run HttpCore, no handler is set.');
         }
 
-        return $this->pipeline->withHandler($this->handler)->handle($request);
+        $response = $this->pipeline->withHandler($this->handler)->handle($request);
+
+        $dispatcher?->dispatch(new RequestHandled($request, $response));
+
+        return $response;
     }
 }

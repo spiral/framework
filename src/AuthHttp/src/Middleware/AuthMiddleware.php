@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Auth\Middleware;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
@@ -26,7 +27,8 @@ final class AuthMiddleware implements MiddlewareInterface
         private readonly ScopeInterface $scope,
         private readonly ActorProviderInterface $actorProvider,
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly TransportRegistry $transportRegistry
+        private readonly TransportRegistry $transportRegistry,
+        private readonly ?EventDispatcherInterface $eventDispatcher = null
     ) {
     }
 
@@ -35,7 +37,7 @@ final class AuthMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
-        $authContext = $this->initContext($request, new AuthContext($this->actorProvider));
+        $authContext = $this->initContext($request, new AuthContext($this->actorProvider, $this->eventDispatcher));
 
         $response = $this->scope->runScope(
             [AuthContextInterface::class => $authContext],

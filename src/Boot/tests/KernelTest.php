@@ -12,9 +12,15 @@ declare(strict_types=1);
 namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
+use Spiral\Boot\Event\Bootstrapped;
+use Spiral\Boot\Event\DispatcherFound;
+use Spiral\Boot\Event\DispatcherNotFound;
+use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
+use Spiral\Core\Container;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 use Throwable;
 
@@ -192,5 +198,58 @@ class KernelTest extends TestCase
             EnvironmentInterface::class,
             $kernel->getContainer()->get(EnvironmentInterface::class)
         );
+    }
+
+    public function testEventsShouldBeDispatched(): void
+    {
+        $testDispatcher = new class implements DispatcherInterface {
+            public function canServe(): bool
+            {
+                return true;
+            }
+
+            public function serve(): void
+            {
+            }
+        };
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::exactly(3))
+            ->method('dispatch')
+            ->with($this->logicalOr(
+                new Bootstrapped(),
+                new Serving([$testDispatcher]),
+                new DispatcherFound($testDispatcher),
+            ));
+
+        $container = new Container();
+        $container->bind(EventDispatcherInterface::class, $dispatcher);
+
+        TestCore::create(directories: ['root' => __DIR__,], container: $container)
+            ->addDispatcher($testDispatcher)
+            ->run()
+            ->serve();
+    }
+
+    public function testDispatcherNotFoundEventShouldBeDispatched(): void
+    {
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::exactly(3))
+            ->method('dispatch')
+            ->with($this->logicalOr(
+                new Bootstrapped(),
+                new Serving([]),
+                new DispatcherNotFound(),
+            ));
+
+        $container = new Container();
+        $container->bind(EventDispatcherInterface::class, $dispatcher);
+
+        $this->expectException(BootException::class);
+        TestCore::create(directories: ['root' => __DIR__,], container: $container)
+            ->run()
+            ->serve();
     }
 }

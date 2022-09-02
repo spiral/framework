@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Views;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
+use Spiral\Views\Event\ViewNotFound;
 use Spiral\Views\Exception\LoaderException;
 use Spiral\Views\Loader\PathParser;
 use Spiral\Views\Loader\ViewPath;
@@ -21,7 +23,8 @@ final class ViewLoader implements LoaderInterface
     public function __construct(
         private readonly array $namespaces,
         FilesInterface $files = null,
-        private readonly string $defaultNamespace = self::DEFAULT_NAMESPACE
+        private readonly string $defaultNamespace = self::DEFAULT_NAMESPACE,
+        private readonly ?EventDispatcherInterface $dispatcher = null
     ) {
         $this->files = $files ?? new Files();
     }
@@ -77,6 +80,8 @@ final class ViewLoader implements LoaderInterface
     public function load(string $path): ViewSource
     {
         if (!$this->exists($path, $filename, $parsed)) {
+            $this->dispatcher?->dispatch(new ViewNotFound($path));
+
             throw new LoaderException(\sprintf('Unable to load view `%s`, file does not exists.', $path));
         }
 

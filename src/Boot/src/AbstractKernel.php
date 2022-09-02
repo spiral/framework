@@ -9,8 +9,10 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Boot\Event\Bootstrapped;
 use Spiral\Boot\Event\DispatcherFound;
 use Spiral\Boot\Event\DispatcherNotFound;
+use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
 use Spiral\Exceptions\ExceptionHandler;
@@ -147,6 +149,12 @@ abstract class AbstractKernel implements KernelInterface
             return null;
         }
 
+        $eventDispatcher = $this->container->has(EventDispatcherInterface::class) ?
+            $this->container->get(EventDispatcherInterface::class) :
+            null;
+
+        $eventDispatcher?->dispatch(new Bootstrapped());
+
         return $this;
     }
 
@@ -218,6 +226,8 @@ abstract class AbstractKernel implements KernelInterface
         $eventDispatcher = $this->container->has(EventDispatcherInterface::class) ?
             $this->container->get(EventDispatcherInterface::class) :
             null;
+
+        $eventDispatcher?->dispatch(new Serving($this->dispatchers));
 
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {

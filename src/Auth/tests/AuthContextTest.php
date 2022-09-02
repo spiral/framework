@@ -12,7 +12,10 @@ declare(strict_types=1);
 namespace Spiral\Tests\Auth;
 
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Auth\AuthContext;
+use Spiral\Auth\Event\Authenticated;
+use Spiral\Auth\Event\Logout;
 use Spiral\Auth\TokenInterface;
 use Spiral\Tests\Auth\Stub\TestAuthProvider;
 use Spiral\Tests\Auth\Stub\TestAuthToken;
@@ -65,5 +68,36 @@ class AuthContextTest extends TestCase
         $this->assertNull($context->getActor());
         $this->assertSame('cookie', $context->getTransport());
         $this->assertTrue($context->isClosed());
+    }
+
+    public function testAuthenticatedEventShouldBeDispatched(): void
+    {
+        $token = new TestAuthToken('1', ['ok' => true]);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::once())
+            ->method('dispatch')
+            ->with(new Authenticated($token, 'cookie'));
+
+        $context = new AuthContext(new TestAuthProvider(), $dispatcher);
+        $context->start($token, 'cookie');
+    }
+
+    public function testLogoutEventShouldBeDispatched(): void
+    {
+        $token = new TestAuthToken('1', ['ok' => true]);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::once())
+            ->method('dispatch')
+            ->with(new Logout($token));
+
+        $context = new AuthContext(new TestAuthProvider(), $dispatcher);
+
+        (new \ReflectionProperty($context, 'actor'))->setValue($context, $token);
+
+        $context->close();
     }
 }

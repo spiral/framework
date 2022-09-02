@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Spiral\Events\Bootloader;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Events\Config\EventsConfig;
+use Spiral\Events\EventDispatcherAwareInterface;
 use Spiral\Events\ListenerLocator;
 use Spiral\Events\ListenerLocatorInterface;
 use Spiral\Events\Processor\AttributeProcessor;
@@ -48,6 +51,11 @@ final class EventsBootloader extends Bootloader
                 $processor = $container->get($processor);
                 $processor->process();
             }
+        }
+
+        $finalizer = $container->get(FinalizerInterface::class);
+        if ($finalizer instanceof EventDispatcherAwareInterface && $container->has(EventDispatcherInterface::class)) {
+            $finalizer->setEventDispatcher($container->get(EventDispatcherInterface::class));
         }
     }
 }

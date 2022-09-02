@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Http;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\ScopeInterface;
+use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
 use Spiral\Http\Traits\MiddlewareTrait;
 
@@ -23,7 +25,8 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
     private ?RequestHandlerInterface $handler = null;
 
     public function __construct(
-        private readonly ScopeInterface $scope
+        private readonly ScopeInterface $scope,
+        private readonly ?EventDispatcherInterface $dispatcher = null
     ) {
     }
 
@@ -54,6 +57,8 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
         $position = $this->position++;
         if (isset($this->middleware[$position])) {
+            $this->dispatcher?->dispatch(new MiddlewareProcessing($request, $this->middleware[$position]));
+
             return $this->middleware[$position]->process($request, $this);
         }
 

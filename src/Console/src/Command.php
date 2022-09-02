@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Console\Event\CommandFinished;
+use Spiral\Console\Event\CommandStarting;
 use Spiral\Console\Signature\Parser;
 use Spiral\Console\Traits\HelpersTrait;
 use Spiral\Core\CoreInterceptorInterface;
@@ -70,12 +73,22 @@ abstract class Command extends SymfonyCommand
         try {
             [$this->input, $this->output] = [$this->prepareInput($input), $this->prepareOutput($input, $output)];
 
+            $dispatcher = $this->container->has(EventDispatcherInterface::class) ?
+                $this->container->get(EventDispatcherInterface::class) :
+                null;
+
+            $dispatcher?->dispatch(new CommandStarting($this, $this->input, $this->output));
+
             // Executing perform method with method injection
-            return (int)$core->callAction(static::class, $method, [
+            $code = (int)$core->callAction(static::class, $method, [
                 'input' => $this->input,
                 'output' => $this->output,
                 'command' => $this,
             ]);
+
+            $dispatcher?->dispatch(new CommandFinished($this, $code, $this->input, $this->output));
+
+            return $code;
         } finally {
             [$this->input, $this->output] = [null, null];
         }
@@ -84,7 +97,11 @@ abstract class Command extends SymfonyCommand
     protected function buildCore(): CoreInterface
     {
         $core = $this->container->get(CommandCore::class);
-        $interceptableCore = new InterceptableCore($core);
+        $dispatcher = $this->container->has(EventDispatcherInterface::class) ?
+            $this->container->get(EventDispatcherInterface::class) :
+            null;
+
+        $interceptableCore = new InterceptableCore($core, $dispatcher);
 
         foreach ($this->interceptors as $interceptor) {
             $interceptableCore->addInterceptor($this->container->get($interceptor));

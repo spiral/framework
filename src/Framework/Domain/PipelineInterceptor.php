@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Domain;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
@@ -18,7 +19,8 @@ class PipelineInterceptor implements CoreInterceptorInterface
 
     public function __construct(
         private ReaderInterface $reader,
-        private ContainerInterface $container
+        private ContainerInterface $container,
+        private ?EventDispatcherInterface $dispatcher = null
     ) {
     }
 
@@ -37,7 +39,7 @@ class PipelineInterceptor implements CoreInterceptorInterface
             if ($core instanceof InterceptorPipeline) {
                 $this->injectInterceptorsIntoOriginalPipeline($core, $pipeline);
             } else {
-                $core = new InterceptableCore($core);
+                $core = new InterceptableCore($core, $this->dispatcher);
                 foreach ($pipeline as $interceptor) {
                     $core->addInterceptor($interceptor);
                 }

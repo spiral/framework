@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Auth;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Auth\Event\Authenticated;
+use Spiral\Auth\Event\Logout;
+
 final class AuthContext implements AuthContextInterface
 {
     private ?TokenInterface $token = null;
@@ -12,7 +16,8 @@ final class AuthContext implements AuthContextInterface
     private bool $closed = false;
 
     public function __construct(
-        private readonly ActorProviderInterface $actorProvider
+        private readonly ActorProviderInterface $actorProvider,
+        private readonly ?EventDispatcherInterface $eventDispatcher = null
     ) {
     }
 
@@ -22,6 +27,8 @@ final class AuthContext implements AuthContextInterface
         $this->actor = null;
         $this->token = $token;
         $this->transport = $transport;
+
+        $this->eventDispatcher?->dispatch(new Authenticated($token, $transport));
     }
 
     public function getToken(): ?TokenInterface
@@ -49,6 +56,8 @@ final class AuthContext implements AuthContextInterface
 
     public function close(): void
     {
+        $this->eventDispatcher?->dispatch(new Logout($this->actor, $this->transport));
+
         $this->closed = true;
         $this->actor = null;
     }
