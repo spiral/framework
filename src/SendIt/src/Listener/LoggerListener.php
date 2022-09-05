@@ -40,7 +40,6 @@ final class LoggerListener
             ),
             ['emails' => $this->getRecipients($event->message)]
         );
-
     }
 
     private function getRecipients(Email $message): array
