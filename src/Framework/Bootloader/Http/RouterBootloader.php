@@ -68,13 +68,14 @@ final class RouterBootloader extends Bootloader
      */
     private function router(
         UriHandler $uriHandler,
-        ContainerInterface $container
+        ContainerInterface $container,
+        ?EventDispatcherInterface $dispatcher = null
     ): RouterInterface {
         return new Router(
             $this->config->getConfig(HttpConfig::CONFIG)['basePath'],
             $uriHandler,
             $container,
-            $container->has(EventDispatcherInterface::class) ? $container->get(EventDispatcherInterface::class) : null
+            $dispatcher
         );
     }
 

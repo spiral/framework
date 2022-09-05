@@ -98,7 +98,7 @@ abstract class AbstractKernel implements KernelInterface
         array $directories,
         bool $handleErrors = true,
         ExceptionHandlerInterface|string|null $exceptionHandler = null,
-        Container $container = new Container()
+        Container $container = new Container(),
     ): static {
         $exceptionHandler ??= ExceptionHandler::class;
 
@@ -223,9 +223,9 @@ abstract class AbstractKernel implements KernelInterface
      */
     public function serve(): mixed
     {
-        $eventDispatcher = $this->container->has(EventDispatcherInterface::class) ?
-            $this->container->get(EventDispatcherInterface::class) :
-            null;
+        $eventDispatcher = $this->container->has(EventDispatcherInterface::class)
+            ? $this->container->get(EventDispatcherInterface::class)
+            : null;
 
         $eventDispatcher?->dispatch(new Serving($this->dispatchers));
 
@@ -233,7 +233,7 @@ abstract class AbstractKernel implements KernelInterface
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
-                    function () use ($dispatcher, $eventDispatcher): mixed {
+                    static function () use ($dispatcher, $eventDispatcher): mixed {
                         $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
 
                         return $dispatcher->serve();
