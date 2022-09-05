@@ -6,8 +6,4 @@ namespace Spiral\Boot\Event;
 
 final class Serving
 {
-    public function __construct(
-        public readonly array $dispatchers
-    ) {
-    }
 }

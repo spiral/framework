@@ -149,11 +149,11 @@ abstract class AbstractKernel implements KernelInterface
             return null;
         }
 
-        $eventDispatcher = $this->container->has(EventDispatcherInterface::class) ?
-            $this->container->get(EventDispatcherInterface::class) :
-            null;
+        $eventDispatcher = $this->container->has(EventDispatcherInterface::class)
+            ? $this->container->get(EventDispatcherInterface::class)
+            : null;
 
-        $eventDispatcher?->dispatch(new Bootstrapped());
+        $eventDispatcher?->dispatch(new Bootstrapped($this));
 
         return $this;
     }
@@ -227,7 +227,7 @@ abstract class AbstractKernel implements KernelInterface
             ? $this->container->get(EventDispatcherInterface::class)
             : null;
 
-        $eventDispatcher?->dispatch(new Serving($this->dispatchers));
+        $eventDispatcher?->dispatch(new Serving());
 
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {

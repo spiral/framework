@@ -212,44 +212,44 @@ class KernelTest extends TestCase
             {
             }
         };
+        $container = new Container();
+        $kernel = TestCore::create(directories: ['root' => __DIR__,], container: $container)
+            ->addDispatcher($testDispatcher);
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
             ->expects(self::exactly(3))
             ->method('dispatch')
             ->with($this->logicalOr(
-                new Bootstrapped(),
-                new Serving([$testDispatcher]),
+                new Bootstrapped($kernel),
+                new Serving(),
                 new DispatcherFound($testDispatcher),
             ));
 
-        $container = new Container();
         $container->bind(EventDispatcherInterface::class, $dispatcher);
 
-        TestCore::create(directories: ['root' => __DIR__,], container: $container)
-            ->addDispatcher($testDispatcher)
-            ->run()
-            ->serve();
+        $kernel->run()->serve();
     }
 
     public function testDispatcherNotFoundEventShouldBeDispatched(): void
     {
+        $container = new Container();
+        $kernel = TestCore::create(directories: ['root' => __DIR__,], container: $container);
+
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
             ->expects(self::exactly(3))
             ->method('dispatch')
             ->with($this->logicalOr(
-                new Bootstrapped(),
-                new Serving([]),
+                new Bootstrapped($kernel),
+                new Serving(),
                 new DispatcherNotFound(),
             ));
 
-        $container = new Container();
         $container->bind(EventDispatcherInterface::class, $dispatcher);
 
         $this->expectException(BootException::class);
-        TestCore::create(directories: ['root' => __DIR__,], container: $container)
-            ->run()
-            ->serve();
+
+        $kernel->run()->serve();
     }
 }
