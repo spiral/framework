@@ -6,7 +6,6 @@ namespace Spiral\Tokenizer\Traits;
 
 trait TargetTrait
 {
-
     /**
      * Get every class trait (including traits used in parents).
      *
