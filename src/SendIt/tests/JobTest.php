@@ -13,7 +13,6 @@ namespace Spiral\Tests\SendIt;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Spiral\Mailer\Message;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailJob;
@@ -30,8 +29,6 @@ class JobTest extends TestCase
     protected $mailer;
     /** @var RendererInterface */
     protected $renderer;
-    /** @var LoggerInterface */
-    protected $logger;
 
     public function setUp(): void
     {
@@ -39,7 +36,6 @@ class JobTest extends TestCase
 
         $this->mailer = m::mock(MailerInterface::class);
         $this->renderer = m::mock(RendererInterface::class);
-        $this->logger = m::mock(LoggerInterface::class);
     }
 
     public function testHandler(): void
@@ -49,11 +45,6 @@ class JobTest extends TestCase
         $this->expectRenderer($email);
 
         $this->mailer->expects('send')->with($email);
-
-        $this->logger->expects('debug')->with(
-            'Sent `test` to "email@domain.com"',
-            ['emails' => ['email@domain.com']]
-        );
 
         $this->getHandler()->handle(
             MailQueue::JOB_NAME,
@@ -70,11 +61,6 @@ class JobTest extends TestCase
 
         $this->mailer->expects('send')->with($email)->andThrow(new TransportException('failed'));
 
-        $this->logger->expects('error')->with(
-            'Failed to send `test` to "email@domain.com": failed',
-            ['emails' => ['email@domain.com']]
-        );
-
         try {
             $this->getHandler()->handle(
                 MailQueue::JOB_NAME,
@@ -83,8 +69,6 @@ class JobTest extends TestCase
             );
         } catch (TransportException $e) {
         }
-
-        $this->logger->mockery_verify();
     }
 
     private function getEmail(): Email
@@ -112,7 +96,7 @@ class JobTest extends TestCase
             $this->mailer,
             $this->renderer
         );
-        $handler->setLogger($this->logger);
+
         return $handler;
     }
 

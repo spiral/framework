@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Spiral\Mailer\Event\MessageSent;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Mailer\MessageInterface;
 use Spiral\Queue\Options;
@@ -18,8 +16,7 @@ final class MailQueue implements MailerInterface
 
     public function __construct(
         private readonly MailerConfig $config,
-        private readonly QueueInterface $queue,
-        private readonly ?EventDispatcherInterface $eventDispatcher = null
+        private readonly QueueInterface $queue
     ) {
     }
 
@@ -33,8 +30,6 @@ final class MailQueue implements MailerInterface
                 MessageSerializer::pack($msg),
                 $options->withDelay($msg->getOptions()['delay'] ?? null)
             );
-
-            $this->eventDispatcher?->dispatch(new MessageSent($msg));
         }
     }
 }
