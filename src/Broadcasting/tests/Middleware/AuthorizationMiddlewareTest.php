@@ -6,6 +6,7 @@ namespace Spiral\Tests\Broadcasting\Middleware;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,6 +14,8 @@ use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Broadcasting\AuthorizationStatus;
 use Spiral\Broadcasting\BroadcastInterface;
+use Spiral\Broadcasting\Event\AuthorizationFailed;
+use Spiral\Broadcasting\Event\AuthorizationSuccess;
 use Spiral\Broadcasting\GuardInterface;
 use Spiral\Broadcasting\Middleware\AuthorizationMiddleware;
 
@@ -126,5 +129,43 @@ final class AuthorizationMiddlewareTest extends TestCase
             ));
 
         $this->assertSame($response, $middleware->process($request, $handler));
+    }
+
+    /** @dataProvider eventsDataProvider */
+    public function testAuthorizationEventsShouldBeDispatched(string $event, bool $authStatus, int $code): void
+    {
+        $request = m::mock(ServerRequestInterface::class);
+        $handler = m::mock(RequestHandlerInterface::class);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::once())
+            ->method('dispatch')
+            ->with(new $event($request));
+
+        $middleware = new AuthorizationMiddleware(
+            $broadcast = m::mock(BroadcastInterface::class, GuardInterface::class),
+            $responseFactory = m::mock(ResponseFactoryInterface::class),
+            '/auth',
+            $dispatcher
+        );
+
+        $request->shouldReceive('getUri')->once()->andReturn($uri = m::mock(UriInterface::class));
+        $uri->shouldReceive('getPath')->once()->andReturn('/auth');
+
+        $broadcast->shouldReceive('authorize')->once()->with($request)
+            ->andReturn(new AuthorizationStatus(
+                $authStatus, ['topic_name'], ['foo' => 'bar']
+            ));
+
+        $responseFactory->shouldReceive('createResponse')->once()->with($code)->andReturn(m::mock(ResponseInterface::class));
+
+        $middleware->process($request, $handler);
+    }
+
+    public function eventsDataProvider(): \Traversable
+    {
+        yield [AuthorizationSuccess::class, true, 200];
+        yield [AuthorizationFailed::class, false, 403];
     }
 }

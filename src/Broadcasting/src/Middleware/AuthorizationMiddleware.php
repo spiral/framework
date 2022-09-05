@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Broadcasting\Middleware;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Broadcasting\BroadcastInterface;
+use Spiral\Broadcasting\Event\AuthorizationFailed;
+use Spiral\Broadcasting\Event\AuthorizationSuccess;
 use Spiral\Broadcasting\GuardInterface;
 
 final class AuthorizationMiddleware implements MiddlewareInterface
@@ -17,7 +20,8 @@ final class AuthorizationMiddleware implements MiddlewareInterface
     public function __construct(
         private readonly BroadcastInterface $broadcast,
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly ?string $authorizationPath = null
+        private readonly ?string $authorizationPath = null,
+        private readonly ?EventDispatcherInterface $dispatcher = null
     ) {
     }
 
@@ -37,9 +41,13 @@ final class AuthorizationMiddleware implements MiddlewareInterface
             }
 
             if (!$status->success) {
+                $this->dispatcher?->dispatch(new AuthorizationFailed($request));
+
                 return $this->responseFactory->createResponse(403);
             }
         }
+
+        $this->dispatcher?->dispatch(new AuthorizationSuccess($request));
 
         return $this->responseFactory->createResponse(200);
     }
