@@ -49,14 +49,15 @@ final class InterceptorPipeline implements CoreInterface
 
         $position = $this->position++;
         if (isset($this->interceptors[$position])) {
+            $interceptor = $this->interceptors[$position];
             $this->dispatcher?->dispatch(new InterceptorCalling(
                 controller: $controller,
                 action: $action,
                 parameters: $parameters,
-                interceptor: $this->interceptors[$position]
+                interceptor: $interceptor
             ));
 
-            return $this->interceptors[$position]->process($controller, $action, $parameters, $this);
+            return $interceptor->process($controller, $action, $parameters, $this);
         }
 
         return $this->core->callAction($controller, $action, $parameters);

@@ -57,9 +57,10 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
         $position = $this->position++;
         if (isset($this->middleware[$position])) {
-            $this->dispatcher?->dispatch(new MiddlewareProcessing($request, $this->middleware[$position]));
+            $middleware = $this->middleware[$position];
+            $this->dispatcher?->dispatch(new MiddlewareProcessing($request, $middleware));
 
-            return $this->middleware[$position]->process($request, $this);
+            return $middleware->process($request, $this);
         }
 
         $handler = $this->handler;

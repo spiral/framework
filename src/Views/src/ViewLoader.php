@@ -82,7 +82,7 @@ final class ViewLoader implements LoaderInterface
         if (!$this->exists($path, $filename, $parsed)) {
             $this->dispatcher?->dispatch(new ViewNotFound($path));
 
-            throw new LoaderException(\sprintf('Unable to load view `%s`, file does not exists.', $path));
+            throw new LoaderException(\sprintf('Unable to load view `%s`, file does not exist.', $path));
         }
 
         return new ViewSource(

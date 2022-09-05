@@ -49,9 +49,9 @@ final class Http implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $dispatcher = $this->container->has(EventDispatcherInterface::class) ?
-            $this->container->get(EventDispatcherInterface::class) :
-            null;
+        $dispatcher = $this->container->has(EventDispatcherInterface::class)
+            ? $this->container->get(EventDispatcherInterface::class)
+            : null;
 
 
         $dispatcher?->dispatch(new RequestReceived($request));

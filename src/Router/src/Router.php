@@ -68,14 +68,14 @@ final class Router implements RouterInterface
             throw new RouteNotFoundException($request->getUri());
         }
 
+        $request = $request
+            ->withAttribute(self::ROUTE_ATTRIBUTE, $route)
+            ->withAttribute(self::ROUTE_NAME, $routeName)
+            ->withAttribute(self::ROUTE_MATCHES, $route->getMatches() ?? []);
+
         $this->eventDispatcher?->dispatch(new RouteMatched($request, $route));
 
-        return $route->handle(
-            $request
-                ->withAttribute(self::ROUTE_ATTRIBUTE, $route)
-                ->withAttribute(self::ROUTE_NAME, $routeName)
-                ->withAttribute(self::ROUTE_MATCHES, $route->getMatches() ?? [])
-        );
+        return $route->handle($request);
     }
 
     public function setRoute(string $name, RouteInterface $route): void

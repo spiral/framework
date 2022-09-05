@@ -73,9 +73,9 @@ abstract class Command extends SymfonyCommand
         try {
             [$this->input, $this->output] = [$this->prepareInput($input), $this->prepareOutput($input, $output)];
 
-            $dispatcher = $this->container->has(EventDispatcherInterface::class) ?
-                $this->container->get(EventDispatcherInterface::class) :
-                null;
+            $dispatcher = $this->container->has(EventDispatcherInterface::class)
+                ? $this->container->get(EventDispatcherInterface::class)
+                : null;
 
             $dispatcher?->dispatch(new CommandStarting($this, $this->input, $this->output));
 
@@ -97,9 +97,9 @@ abstract class Command extends SymfonyCommand
     protected function buildCore(): CoreInterface
     {
         $core = $this->container->get(CommandCore::class);
-        $dispatcher = $this->container->has(EventDispatcherInterface::class) ?
-            $this->container->get(EventDispatcherInterface::class) :
-            null;
+        $dispatcher = $this->container->has(EventDispatcherInterface::class)
+            ? $this->container->get(EventDispatcherInterface::class)
+            : null;
 
         $interceptableCore = new InterceptableCore($core, $dispatcher);
 

@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
-use Spiral\Queue\Event\PipelineCreated;
 
 final class QueueManager implements QueueConnectionProviderInterface
 {
@@ -18,7 +16,6 @@ final class QueueManager implements QueueConnectionProviderInterface
     public function __construct(
         private readonly QueueConfig $config,
         private readonly FactoryInterface $factory,
-        private readonly ?EventDispatcherInterface $dispatcher = null
     ) {
     }
 
@@ -31,8 +28,6 @@ final class QueueManager implements QueueConnectionProviderInterface
         if (!isset($this->pipelines[$name])) {
             $this->pipelines[$name] = $this->resolveConnection($name);
         }
-
-        $this->dispatcher?->dispatch(new PipelineCreated($name, $this->pipelines[$name]));
 
         return $this->pipelines[$name];
     }
