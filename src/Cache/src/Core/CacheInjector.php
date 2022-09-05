@@ -52,7 +52,7 @@ final class CacheInjector implements InjectorInterface
      */
     private function matchType(ReflectionClass $class, ?string $context, CacheInterface $connection): void
     {
-        if ($connection::class === CacheRepository::class)  {
+        if ($connection::class === CacheRepository::class) {
             $connection = $connection->getStorage();
         }
         $className = $class->getName();
