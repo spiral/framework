@@ -6,6 +6,7 @@ namespace Spiral\Tests\Router;
 
 use Cocur\Slugify\Slugify;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use Spiral\Core\Container;
@@ -37,12 +38,12 @@ abstract class BaseTest extends TestCase
         $this->initRouter();
     }
 
-    protected function makeRouter(string $basePath = ''): RouterInterface
+    protected function makeRouter(string $basePath = '', ?EventDispatcherInterface $dispatcher = null): RouterInterface
     {
         return new Router($basePath, new UriHandler(
             new UriFactory(),
             new Slugify()
-        ), $this->container);
+        ), $this->container, $dispatcher);
     }
 
     /**

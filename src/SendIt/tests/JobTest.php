@@ -13,8 +13,11 @@ namespace Spiral\Tests\SendIt;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Mailer\Message;
 use Spiral\SendIt\Config\MailerConfig;
+use Spiral\SendIt\Event\MessageNotSent;
+use Spiral\SendIt\Event\MessageSent;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
@@ -71,6 +74,49 @@ class JobTest extends TestCase
         }
     }
 
+    public function testMessageSentEventShouldBeDispatched(): void
+    {
+        $email = $this->getEmail();
+
+        $this->expectRenderer($email);
+
+        $this->mailer->expects('send')->with($email);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::once())
+            ->method('dispatch')
+            ->with(new MessageSent($email));
+
+        $this->getHandler($dispatcher)->handle(
+            MailQueue::JOB_NAME,
+            'id',
+            \json_encode(MessageSerializer::pack($this->getMail()))
+        );
+    }
+
+    public function testMessageNotSentEventShouldBeDispatched(): void
+    {
+        $email = $this->getEmail();
+        $exception = new TransportException('failed');
+
+        $this->expectRenderer($email);
+        $this->mailer->expects('send')->with($email)->andThrow($exception);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::once())
+            ->method('dispatch')
+            ->with(new MessageNotSent($email, $exception));
+
+        $this->expectException(TransportException::class);
+        $this->getHandler($dispatcher)->handle(
+            MailQueue::JOB_NAME,
+            'id',
+            \json_encode(MessageSerializer::pack($this->getMail()))
+        );
+    }
+
     private function getEmail(): Email
     {
         $email = new Email();
@@ -89,12 +135,13 @@ class JobTest extends TestCase
         )->andReturn($email);
     }
 
-    private function getHandler(): MailJob
+    private function getHandler(?EventDispatcherInterface $dispatcher = null): MailJob
     {
         $handler = new MailJob(
             new MailerConfig(['from' => 'no-reply@spiral.dev']),
             $this->mailer,
-            $this->renderer
+            $this->renderer,
+            $dispatcher
         );
 
         return $handler;
