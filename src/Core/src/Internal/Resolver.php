@@ -85,10 +85,10 @@ final class Resolver implements ResolverInterface
                 $variadic = $parameter?->isVariadic() ?? false;
             }
 
-            if ($parameter === null && !$positional) {
+            if ($parameter === null) {
                 throw new UnknownParameterException($reflection, $key);
             }
-            $name = $parameter?->getName();
+            $name = $parameter->getName();
 
             if (($positional || $variadic) && $key !== null) {
                 $value = \array_shift($arguments);
@@ -114,7 +114,6 @@ final class Resolver implements ResolverInterface
             return true;
         }
         $type = $parameter->getType();
-        \assert($type !== null);
 
         [$or, $types] = match (true) {
             $type instanceof ReflectionNamedType => [true, [$type]],
@@ -123,6 +122,7 @@ final class Resolver implements ResolverInterface
         };
 
         foreach ($types as $t) {
+            \assert($t instanceof ReflectionNamedType);
             if (!$this->validateValueNamedType($t, $value)) {
                 // If it is TypeIntersection
                 if ($or) {
@@ -194,9 +194,10 @@ final class Resolver implements ResolverInterface
 
         $error = null;
         if ($hasType) {
+            /** @var ReflectionIntersectionType|ReflectionUnionType|ReflectionNamedType $reflectionType */
             $reflectionType = $parameter->getType();
 
-            if ($reflectionType instanceof \ReflectionIntersectionType) {
+            if ($reflectionType instanceof ReflectionIntersectionType) {
                 throw new UnsupportedTypeException($parameter->getDeclaringFunction(), $parameter->getName());
             }
 
@@ -270,7 +271,7 @@ final class Resolver implements ResolverInterface
         string $context,
         ReflectionParameter $validateWith = null,
     ): bool {
-        /** @var mixed $argument */
+        /** @psalm-suppress TooManyArguments */
         $argument = $this->container->get($class, $context);
         $this->processArgument($state, $argument, $validateWith);
         return true;

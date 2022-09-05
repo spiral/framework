@@ -39,6 +39,9 @@ final class HTMLGrammar implements GrammarInterface
     private const REGEXP_KEYWORD = '/[a-z0-9_\\-:\\.]/ui';
 
     private array $whitespace = [];
+    /**
+     * @var array<array-key, Byte|Token>|array{0: Byte}
+     */
     private array $attribute = [];
     private array $keyword = [];
 
@@ -196,6 +199,11 @@ final class HTMLGrammar implements GrammarInterface
         return '';
     }
 
+    /**
+     * TODO issue #767
+     * @link https://github.com/spiral/framework/issues/767
+     * @psalm-suppress UndefinedPropertyFetch
+     */
     private function parseGrammar(Buffer $src): ?array
     {
         $this->tokens = [

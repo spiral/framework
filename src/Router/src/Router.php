@@ -12,7 +12,6 @@ use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\RouterException;
 use Spiral\Router\Exception\UndefinedRouteException;
-use Spiral\Router\Loader\Configurator\RouteConfigurator;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 use Spiral\Router\Target\AbstractTarget;
 
@@ -114,7 +113,6 @@ final class Router implements RouterInterface
         /** @var GroupRegistry $groups */
         $groups = $this->container->get(GroupRegistry::class);
 
-        /** @var RouteConfigurator $configurator */
         foreach ($routes->getCollection() as $name => $configurator) {
             $target = $configurator->target;
             if ($configurator->core !== null && $target instanceof AbstractTarget) {

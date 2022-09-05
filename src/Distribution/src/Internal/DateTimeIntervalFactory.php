@@ -30,11 +30,13 @@ final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
 
     public function toDateTime(\DateInterval $interval): \DateTimeImmutable
     {
+        /** @psalm-suppress InternalMethod */
         return $this->factory->now()->add($interval);
     }
 
     /**
      * @throws \Exception
+     * @psalm-suppress InternalMethod
      */
     private function createOrFail(mixed $duration): \DateInterval
     {

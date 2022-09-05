@@ -25,6 +25,12 @@ abstract class AbstractCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * @template TClass of DeclarationInterface
+     *
+     * @param class-string<TClass> $class
+     * @return TClass
+     */
     protected function createDeclaration(string $class): DeclarationInterface
     {
         return $this->factory->make(

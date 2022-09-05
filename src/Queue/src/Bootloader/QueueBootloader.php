@@ -60,7 +60,7 @@ final class QueueBootloader extends Bootloader
         $container->bindInjector(QueueInterface::class, QueueInjector::class);
 
         $kernel->booted(static function () use ($container): void {
-            $registry = $container->get(HandlerRegistryInterface::class);
+            $registry = $container->get(QueueRegistry::class);
             $config = $container->get(QueueConfig::class);
 
             foreach ($config->getRegistryHandlers() as $jobType => $handler) {

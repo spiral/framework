@@ -16,9 +16,9 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^2.14",
-        "spiral/config": "^2.14",
-        "spiral/files": "^2.14",
+        "spiral/core": "^3.0",
+        "spiral/config": "^3.0",
+        "spiral/files": "^3.0",
         "psr/simple-cache": "2 - 3"
     },
     "autoload": {
@@ -27,7 +27,7 @@
         }
     },
     "require-dev": {
-        "spiral/boot": "^2.14",
+        "spiral/boot": "^3.0",
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^9.5.20"
     },

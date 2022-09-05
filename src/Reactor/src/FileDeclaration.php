@@ -95,6 +95,10 @@ class FileDeclaration implements \Stringable, DeclarationInterface
 
     public function getClass(string $name): ClassDeclaration
     {
+        /**
+         * @psalm-suppress InternalClass
+         * @psalm-suppress InternalMethod
+         */
         return $this->getClasses()->get(Helpers::extractShortName($name));
     }
 

@@ -142,6 +142,7 @@ class AutowireTest extends TestCase
     {
         $container = new Container();
 
+        /** @psalm-suppress UndefinedClass */
         $container->bind(SampleClass::class, \WrongClass::class);
 
         $object = $container->make(
@@ -224,7 +225,7 @@ class AutowireTest extends TestCase
 
         $container = new Container();
 
-        $object = $container->make(
+        $container->make(
             TypedClass::class,
             [
                 'string' => '',
@@ -241,7 +242,7 @@ class AutowireTest extends TestCase
 
         $container = new Container();
 
-        $object = $container->make(
+        $container->make(
             TypedClass::class,
             [
                 'string' => '',
@@ -258,7 +259,7 @@ class AutowireTest extends TestCase
 
         $container = new Container();
 
-        $object = $container->make(
+        $container->make(
             TypedClass::class,
             [
                 'string' => '',

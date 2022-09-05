@@ -9,6 +9,8 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Attribute without any value.
+ *
+ * @implements NodeInterface<Nil>
  */
 final class Nil implements NodeInterface
 {

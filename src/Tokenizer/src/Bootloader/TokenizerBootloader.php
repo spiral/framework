@@ -12,12 +12,13 @@ use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
+use Spiral\Tokenizer\ClassLocatorInjector;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\InvocationLocator;
+use Spiral\Tokenizer\InvocationLocatorInjector;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\ScopedClassLocator;
-use Spiral\Tokenizer\Tokenizer;
 
 final class TokenizerBootloader extends Bootloader implements SingletonInterface
 {
@@ -34,8 +35,8 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
 
     public function init(Container $container, DirectoriesInterface $dirs): void
     {
-        $container->bindInjector(ClassLocator::class, Tokenizer::class);
-        $container->bindInjector(InvocationLocator::class, Tokenizer::class);
+        $container->bindInjector(ClassLocator::class, ClassLocatorInjector::class);
+        $container->bindInjector(InvocationLocator::class, InvocationLocatorInjector::class);
 
         $this->config->setDefaults(
             TokenizerConfig::CONFIG,

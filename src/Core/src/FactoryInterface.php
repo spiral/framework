@@ -16,7 +16,13 @@ interface FactoryInterface
      * by user, rest of constructor parameters must be filled by container. Method might return
      * pre-constructed singleton when no parameters are specified.
      *
+     * @template T
+     *
+     * @param class-string<T>|string $alias
      * @param array $parameters Parameters to construct new class.
+     *
+     * @return T
+     * @psalm-return ($alias is class-string ? T : mixed)
      *
      * @throws AutowireException
      */

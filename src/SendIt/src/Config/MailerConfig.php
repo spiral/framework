@@ -10,21 +10,25 @@ final class MailerConfig extends InjectableConfig
 {
     public const CONFIG = 'mailer';
 
-    protected array $config = [
-        'dsn' => '',
-        'from' => '',
-        'queue' => null,
-        'queueConnection' => null,
-    ];
+    public function __construct(
+        array $config = [
+            'dsn' => '',
+            'from' => '',
+            'queue' => null,
+            'queueConnection' => null,
+        ]
+    ) {
+        parent::__construct($config);
+    }
 
     public function getDSN(): string
     {
-        return $this->config['dsn'];
+        return $this->config['dsn'] ?? '';
     }
 
     public function getFromAddress(): string
     {
-        return $this->config['from'];
+        return $this->config['from'] ?? '';
     }
 
     public function getQueue(): ?string

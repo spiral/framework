@@ -11,8 +11,8 @@ namespace Spiral\Http\Header;
  */
 final class AcceptHeaderItem implements \Stringable
 {
-    private ?string $value = null;
-    private ?float $quality = null;
+    private string $value;
+    private float $quality;
     private array $params = [];
 
     /**
@@ -27,7 +27,7 @@ final class AcceptHeaderItem implements \Stringable
 
     public function __toString(): string
     {
-        if ($this->value === '' || $this->value === null) {
+        if ($this->value === '') {
             return '';
         }
 
@@ -133,7 +133,7 @@ final class AcceptHeaderItem implements \Stringable
             }
 
             $name = \trim($name);
-            $value = \trim($value);
+            $value = \trim((string)$value);
 
             if ($name === '' || $value === '') {
                 continue;

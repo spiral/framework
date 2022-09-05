@@ -16,7 +16,7 @@ use Spiral\Tokenizer\Traits\TargetTrait;
  */
 final class InvocationLocator extends AbstractLocator implements InvocationsInterface
 {
-    use TargetTrait;
+    public const INJECTOR = InvocationLocatorInjector::class;
 
     public function getInvocations(\ReflectionFunctionAbstract $function): array
     {
@@ -34,7 +34,7 @@ final class InvocationLocator extends AbstractLocator implements InvocationsInte
      * Invocations available in finder scope.
      *
      * @param string $signature Method or function signature (name), for pre-filtering.
-     * @return ReflectionInvocation[]|\Generator
+     * @return \Generator<int, ReflectionInvocation>
      */
     protected function availableInvocations(string $signature = ''): \Generator
     {

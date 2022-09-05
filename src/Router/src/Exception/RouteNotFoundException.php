@@ -13,7 +13,7 @@ class RouteNotFoundException extends UndefinedRouteException
         int $code = 0,
         \Throwable $previous = null
     ) {
-        parent::__construct(\sprintf('Unable to route `%s`.', $uri), $code, $previous);
+        parent::__construct(\sprintf('Unable to route `%s`.', (string) $uri), $code, $previous);
     }
 
     public function getUri(): UriInterface

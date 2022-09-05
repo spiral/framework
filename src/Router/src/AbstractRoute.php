@@ -24,7 +24,7 @@ abstract class AbstractRoute implements RouteInterface
         $this->defaults = $defaults;
     }
 
-    public function withUriHandler(UriHandler $uriHandler): RouteInterface
+    public function withUriHandler(UriHandler $uriHandler): static
     {
         $route = clone $this;
         $route->uriHandler = $uriHandler->withPattern($this->pattern);
@@ -37,7 +37,7 @@ abstract class AbstractRoute implements RouteInterface
         return $this->uriHandler;
     }
 
-    public function match(Request $request): ?RouteInterface
+    public function match(Request $request): ?static
     {
         if (!\in_array(\strtoupper($request->getMethod()), $this->getVerbs(), true)) {
             return null;

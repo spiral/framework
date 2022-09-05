@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Queue\Config;
 
+use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Exception\InvalidArgumentException;
+use Spiral\Serializer\Serializer\JsonSerializer;
 use Spiral\Tests\Queue\TestCase;
 
 final class QueueConfigTest extends TestCase
@@ -273,5 +275,23 @@ final class QueueConfigTest extends TestCase
         $config = new QueueConfig();
 
         $this->assertSame([], $config->getRegistrySerializers());
+    }
+
+    /** @dataProvider defaultSerializerDataProvider */
+    public function testGetDefaultSerializer(array $config, mixed $expected): void
+    {
+        $config = new QueueConfig($config);
+
+        $this->assertEquals($expected, $config->getDefaultSerializer());
+    }
+
+    public function defaultSerializerDataProvider(): \Generator
+    {
+        yield [[], null];
+        yield [['defaultSerializer' => null], null];
+        yield [['defaultSerializer' => 'json'], 'json'];
+        yield [['defaultSerializer' => JsonSerializer::class], JsonSerializer::class];
+        yield [['defaultSerializer' => new JsonSerializer ()], new JsonSerializer()];
+        yield [['defaultSerializer' => new Autowire(JsonSerializer::class)], new Autowire(JsonSerializer::class)];
     }
 }

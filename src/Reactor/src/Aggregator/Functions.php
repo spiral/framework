@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Aggregator;
 
-use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator;
 use Spiral\Reactor\FunctionDeclaration;
 
 /**
  * TraitUses aggregation
  *
- * @method $this add(FunctionDeclaration $element)
- * @method FunctionDeclaration|AggregableInterface get(string $name)
+ * @extends Aggregator<FunctionDeclaration>
  */
 final class Functions extends Aggregator
 {

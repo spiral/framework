@@ -29,11 +29,15 @@ final class Builder
     /**
      * Generate entity schema based on schema definitions.
      *
-     * @return array{
-     *     string: array<string, array{
-     *         string: string,
-     *     }
-     * }
+     * @return array<array-key, array{
+     *     array?: bool,
+     *     filter?: class-string|mixed,
+     *     iterate_origin?: mixed,
+     *     iterate_source?: mixed,
+     *     optional?: bool,
+     *     origin: array-key|mixed,
+     *     source: mixed|null
+     * }>
      * @throws SchemaException
      */
     public function makeSchema(string $name, array $schema): array
@@ -88,7 +92,7 @@ final class Builder
                 $iterate = true;
             }
 
-            if (!empty($definition[self::OPTIONAL]) && $definition[self::OPTIONAL]) {
+            if (!empty($definition[self::OPTIONAL])) {
                 $optional = true;
             }
 
@@ -125,7 +129,7 @@ final class Builder
     private function parseDefinition(string $field, string $definition): array
     {
         if (!\str_contains($definition, ':')) {
-            return ['data', $definition ?? $field];
+            return ['data', empty($definition) ? $field : $definition];
         }
 
         return \explode(':', $definition);

@@ -6,12 +6,12 @@ namespace Spiral\Tokenizer\Traits;
 
 trait TargetTrait
 {
+
     /**
      * Get every class trait (including traits used in parents).
      *
+     * @param class-string $class
      * @return string[]
-     *
-     * @psalm-return array<string, string>
      */
     protected function fetchTraits(string $class): array
     {
@@ -22,7 +22,7 @@ trait TargetTrait
             $class = \get_parent_class($class);
         } while ($class !== false);
 
-        // Traits from traits
+        //Traits from traits
         foreach (\array_flip($traits) as $trait) {
             $traits = \array_merge(\class_uses($trait), $traits);
         }

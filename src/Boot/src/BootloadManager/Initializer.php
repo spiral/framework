@@ -16,7 +16,7 @@ final class Initializer implements Container\SingletonInterface
 {
     public function __construct(
         private readonly Container $container,
-        private ClassesRegistry $bootloaders = new ClassesRegistry()
+        private readonly ClassesRegistry $bootloaders = new ClassesRegistry()
     ) {
     }
 
@@ -36,17 +36,18 @@ final class Initializer implements Container\SingletonInterface
 
             // Replace class aliases with source classes
             try {
-                $class = (new \ReflectionClass($class))->getName();
+                $ref = (new \ReflectionClass($class));
             } catch (\ReflectionException) {
                 throw new ClassNotFoundException(
                     \sprintf('Bootloader class `%s` is not exist.', $class)
                 );
             }
 
-            if ($this->bootloaders->isBooted($class)) {
+            if ($this->bootloaders->isBooted($class) || $ref->isAbstract()) {
                 continue;
             }
 
+            $class = $ref->getName();
             $this->bootloaders->register($class);
             $bootloader = $this->container->get($class);
 
@@ -54,6 +55,7 @@ final class Initializer implements Container\SingletonInterface
                 continue;
             }
 
+            /** @var BootloaderInterface $bootloader */
             yield from $this->initBootloader($bootloader);
             yield $class => \compact('bootloader', 'options');
         }
@@ -117,7 +119,7 @@ final class Initializer implements Container\SingletonInterface
         $args = [];
         foreach ($method->getParameters() as $parameter) {
             $type = $parameter->getType();
-            if ($this->shouldBeBooted($type)) {
+            if ($type instanceof \ReflectionNamedType && $this->shouldBeBooted($type)) {
                 $args[] = $type->getName();
             }
         }
@@ -125,24 +127,16 @@ final class Initializer implements Container\SingletonInterface
         return $args;
     }
 
-    private function shouldBeBooted(?\ReflectionType $type): bool
+    private function shouldBeBooted(\ReflectionNamedType $type): bool
     {
-        if (!$type instanceof \ReflectionNamedType) {
-            return false;
-        }
-
         return $this->isBootloader($type->getName()) && !$this->bootloaders->isBooted($type->getName());
     }
 
     /**
-     * @psalm-param class-string|object $class
+     * @psalm-pure
      */
     private function isBootloader(string|object $class): bool
     {
-        if (\is_object($class)) {
-            return $class instanceof BootloaderInterface;
-        }
-
-        return \class_exists($class) && \is_subclass_of($class, BootloaderInterface::class);
+        return \is_subclass_of($class, BootloaderInterface::class);
     }
 }

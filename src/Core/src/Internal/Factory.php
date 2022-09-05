@@ -45,12 +45,7 @@ final class Factory implements FactoryInterface
     }
 
     /**
-     * @template T
-     *
-     * @param class-string<T> $alias
      * @param string|null $context Related to parameter caused injection if any.
-     *
-     * @return T
      *
      * @throws \Throwable
      */
@@ -85,11 +80,13 @@ final class Factory implements FactoryInterface
                 ? $this->autowire($alias, $parameters, $context)
                 : $this->evaluateBinding($alias, $binding[0], $parameters, $context);
         } finally {
+            /** @psalm-var class-string $alias */
             $this->state->bindings[$alias] = $binding;
         }
 
         if ($binding[1]) {
             // Indicates singleton
+            /** @psalm-var class-string $alias */
             $this->state->bindings[$alias] = $instance;
         }
 
@@ -98,6 +95,8 @@ final class Factory implements FactoryInterface
 
     /**
      * Automatically create class.
+     *
+     * @param class-string $class
      *
      * @throws AutowireException
      * @throws \Throwable
@@ -146,7 +145,12 @@ final class Factory implements FactoryInterface
     /**
      * Create instance of desired class.
      *
+     * @template TObject
+     *
+     * @param class-string<TObject> $class
      * @param array $parameters Constructor parameters.
+     *
+     * @return TObject
      *
      * @throws ContainerException
      * @throws \Throwable
@@ -163,35 +167,34 @@ final class Factory implements FactoryInterface
         if ($parameters === [] && $this->binder->hasInjector($class)) {
             $injector = $this->state->injectors[$reflection->getName()];
 
-            $instance = null;
             try {
-                /** @var InjectorInterface|mixed $injectorInstance */
                 $injectorInstance = $this->container->get($injector);
 
                 if (!$injectorInstance instanceof InjectorInterface) {
                     throw new InjectionException(
                         \sprintf(
-                            "Class '%s' must be an instance of InjectorInterface for '%s'",
+                            "Class '%s' must be an instance of InjectorInterface for '%s'.",
                             $injectorInstance::class,
                             $reflection->getName()
                         )
                     );
                 }
 
+                /** @var InjectorInterface<TObject> $injectorInstance */
                 $instance = $injectorInstance->createInjection($reflection, $context);
                 if (!$reflection->isInstance($instance)) {
                     throw new InjectionException(
                         \sprintf(
-                            "Invalid injection response for '%s'",
+                            "Invalid injection response for '%s'.",
                             $reflection->getName()
                         )
                     );
                 }
+
+                return $instance;
             } finally {
                 $this->state->injectors[$reflection->getName()] = $injector;
             }
-
-            return $instance;
         }
 
         if (!$reflection->isInstantiable()) {

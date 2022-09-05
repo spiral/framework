@@ -124,6 +124,7 @@ trait WritableTrait
             $fs->delete($pathname);
 
             if ($clean) {
+                /** @psalm-suppress InternalMethod */
                 $this->deleteEmptyDirectories($this->getParentDirectory($pathname));
             }
         } catch (FilesystemException $e) {
@@ -175,6 +176,7 @@ trait WritableTrait
      *
      * @internal This is an internal method, please do not use it in your code.
      * @psalm-internal Spiral\Storage\Storage
+     * @psalm-suppress InternalMethod
      *
      * @throws FileOperationException
      */
@@ -189,7 +191,6 @@ trait WritableTrait
         try {
             if (!$this->hasFiles($directory)) {
                 $fs->deleteDirectory($directory);
-
                 $this->deleteEmptyDirectories($this->getParentDirectory($directory));
             }
         } catch (FilesystemException $e) {

@@ -8,12 +8,26 @@ use Spiral\Core\InjectableConfig;
 
 /**
  * Tokenizer component configuration.
+ *
+ * @psalm-type TDirectories = array<array-key, string>
+ *
+ * @psalm-type TScope = array{
+ *     "directories": TDirectories,
+ *     "exclude": TDirectories
+ * }
  */
 final class TokenizerConfig extends InjectableConfig
 {
     public const CONFIG = 'tokenizer';
 
-    /** @var array<non-empty-string, array<int, non-empty-string>> */
+    /**
+     * @psalm-var array{
+     *     "directories": TDirectories,
+     *     "exclude": TDirectories,
+     *     "scopes": array<non-empty-string, TScope>
+     * }
+     * @var array
+     */
     protected array $config = [
         'debug' => false,
         'directories' => [],
@@ -26,18 +40,24 @@ final class TokenizerConfig extends InjectableConfig
         return (bool) ($this->config['debug'] ?? false);
     }
 
+    /**
+     * @return TDirectories
+     */
     public function getDirectories(): array
     {
-        return $this->config['directories'] ?? [\getcwd()];
+        return $this->config['directories'] ?? [(string) \getcwd()];
     }
 
+    /**
+     * @return TDirectories
+     */
     public function getExcludes(): array
     {
         return $this->config['exclude'] ?? ['vendor', 'tests'];
     }
 
     /**
-     * @return array{directories: array<string>, exclude: array<string>}
+     * @return TScope
      */
     public function getScope(string $scope): array
     {

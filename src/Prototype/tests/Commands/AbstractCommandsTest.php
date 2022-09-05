@@ -30,15 +30,9 @@ abstract class AbstractCommandsTest extends TestCase
         'InheritedInjection/ChildClass.php',
     ];
 
-    /** @var TestApp */
-    protected $app;
-
-    /** @var array */
-    protected $buf = [];
-    /**
-     * @var Storage
-     */
-    private $storage;
+    protected TestApp $app;
+    protected array $buf = [];
+    private Storage $storage;
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {

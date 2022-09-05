@@ -9,12 +9,15 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Aggregated multiple nodes together using public pattern.
+ *
+ * @implements NodeInterface<Aggregate>
+ * @template TNode of NodeInterface
  */
 final class Aggregate implements NodeInterface
 {
     use ContextTrait;
 
-    /** @var NodeInterface[] */
+    /** @var TNode[] */
     public array $nodes = [];
 
     public array $uniqueIDs = [];
@@ -78,6 +81,9 @@ final class Aggregate implements NodeInterface
         return null;
     }
 
+    /**
+     * @return \Generator<string, TNode[]>
+     */
     public function getIterator(): \Generator
     {
         yield 'nodes' => $this->nodes;

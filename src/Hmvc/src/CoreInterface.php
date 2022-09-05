@@ -16,8 +16,8 @@ interface CoreInterface
      * controller, we can request it too.
      *
      * @param string $controller Controller class.
-     * @param string $action     Controller method name.
-     * @param array  $parameters Action parameters (if any).
+     * @param string $action Controller method name.
+     * @param array $parameters Action parameters (if any).
      *
      * @throws ControllerException
      * @throws \Throwable

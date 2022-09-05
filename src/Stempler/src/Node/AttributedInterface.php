@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Stempler\Node;
 
+/**
+ * @template TAttribute of AttributedInterface
+ */
 interface AttributedInterface
 {
     public function setAttribute(string $name, mixed $value): void;

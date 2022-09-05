@@ -6,18 +6,15 @@ namespace Spiral\Prototype\Bootloader;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\Bootloader;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Core\Container;
-use Spiral\Prototype\Annotation\Prototyped;
 use Spiral\Prototype\Command;
 use Spiral\Prototype\PrototypeLocatorListener;
 use Spiral\Prototype\PrototypeRegistry;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
-use Spiral\Tokenizer\ClassLocator;
 
 /**
  * Manages ide-friendly container injections via PrototypeTrait.
@@ -110,6 +107,17 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         $this->registry->bindProperty($property, $type);
     }
 
+    /**
+     * @return array<class-string, PrototypeRegistry>
+     */
+    public function defineSingletons(): array
+    {
+        return [PrototypeRegistry::class => $this->registry];
+    }
+
+    /**
+     * @return array<class-string, PrototypeRegistry>
+     */
     private function initDefaults(ContainerInterface $container): void
     {
         foreach (self::DEFAULT_SHORTCUTS as $property => $shortcut) {

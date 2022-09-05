@@ -68,7 +68,7 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
     }
 
     /**
-     * @return \Generator<int, ActorProviderInterface>
+     * @return \Generator<array-key, ActorProviderInterface>
      */
     private function getProviders(): \Generator
     {

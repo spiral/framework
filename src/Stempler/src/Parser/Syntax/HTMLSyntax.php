@@ -121,6 +121,11 @@ final class HTMLSyntax implements SyntaxInterface
             case HTMLGrammar::TYPE_CLOSE:
                 if ($this->token->type == HTMLGrammar::TYPE_OPEN_SHORT) {
                     if (!$asm->getNode() instanceof Tag || $asm->getNode()->name !== $this->node->name) {
+                        /**
+                         * TODO issue #767
+                         * @link https://github.com/spiral/framework/issues/767
+                         * @psalm-suppress NoInterfaceProperties
+                         */
                         throw new SyntaxException(
                             "Invalid closing tag `{$this->node->name}`, expected `{$asm->getNode()->name}`",
                             $this->token
@@ -173,6 +178,11 @@ final class HTMLSyntax implements SyntaxInterface
                 $verbatim->nodes[] = $token->content;
             }
         } else {
+            /**
+             * TODO issue #767
+             * @link https://github.com/spiral/framework/issues/767
+             * @psalm-suppress InvalidArgument
+             */
             $parser->parseTokens(
                 new Assembler($verbatim, 'nodes'),
                 $token->tokens

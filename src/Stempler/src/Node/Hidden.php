@@ -8,19 +8,20 @@ use Spiral\Stempler\Parser\Context;
 
 /**
  * Allow traversing but do not render.
+ *
+ * @implements NodeInterface<Hidden>
+ * @template TNode of NodeInterface
  */
 final class Hidden implements NodeInterface
 {
-    /**
-     * @param NodeInterface[] $nodes
-     */
+    /** @param TNode[] $nodes */
     public function __construct(
         public array $nodes
     ) {
     }
 
     /**
-     * @return \Generator|\Traversable
+     * @return \Generator<string, TNode[]>
      */
     public function getIterator(): \Generator
     {
