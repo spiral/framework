@@ -50,7 +50,7 @@ final class DumpCommand extends AbstractCommand
                 )
             );
         } catch (\Throwable $e) {
-            $this->write('<fg=red>'.$e->getMessage()."</fg=red>\n");
+            $this->write('<fg=red>' . $e->getMessage() . "</fg=red>\n");
 
             return self::FAILURE;
         }

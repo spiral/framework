@@ -87,7 +87,7 @@ final class InjectCommand extends AbstractCommand
             }
         }
 
-        if (! empty($targets)) {
+        if (!empty($targets)) {
             $grid = $this->table(['Class:', 'Property:', 'Target:']);
             foreach ($targets as $target) {
                 $grid->addRow($target);
