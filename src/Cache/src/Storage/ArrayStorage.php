@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Storage;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
-use Spiral\Cache\Event\CacheHit;
-use Spiral\Cache\Event\CacheMissed;
-use Spiral\Cache\Event\KeyDeleted;
-use Spiral\Cache\Event\KeyWritten;
 
 class ArrayStorage implements CacheInterface
 {
@@ -21,16 +16,13 @@ class ArrayStorage implements CacheInterface
     protected array $storage = [];
 
     public function __construct(
-        private readonly int $ttl = 2_592_000,
-        private readonly ?EventDispatcherInterface $dispatcher = null
+        private readonly int $ttl = 2_592_000
     ) {
     }
 
     public function get(string $key, mixed $default = null): mixed
     {
         if (!isset($this->storage[$key])) {
-            $this->dispatcher?->dispatch(new CacheMissed($key));
-
             return $default;
         }
 
@@ -44,8 +36,6 @@ class ArrayStorage implements CacheInterface
             return $default;
         }
 
-        $this->dispatcher?->dispatch(new CacheHit($key, $item['value']));
-
         return $item['value'];
     }
 
@@ -56,8 +46,6 @@ class ArrayStorage implements CacheInterface
             'timestamp' => $this->ttlToTimestamp($ttl),
         ];
 
-        $this->dispatcher?->dispatch(new KeyWritten($key, $value));
-
         return true;
     }
 
@@ -65,8 +53,6 @@ class ArrayStorage implements CacheInterface
     {
         if ($this->has($key)) {
             unset($this->storage[$key]);
-
-            $this->dispatcher?->dispatch(new KeyDeleted($key));
 
             return true;
         }

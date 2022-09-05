@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 use RuntimeException;
 use Spiral\Cache\CacheManager;
+use Spiral\Cache\CacheRepository;
 use Spiral\Cache\Config\CacheConfig;
 use Spiral\Cache\Core\CacheInjector;
 use Spiral\Cache\Storage\ArrayStorage;
@@ -25,7 +26,8 @@ final class CacheInjectorTest extends TestCase
 
         $result = $injector->createInjection($reflection, 'array');
 
-        $this->assertInstanceOf(ArrayStorage::class, $result);
+        $this->assertInstanceOf(CacheRepository::class, $result);
+        $this->assertInstanceOf(ArrayStorage::class, $result->getStorage());
     }
 
     public function testGetByIncorrectContext(): void
@@ -36,7 +38,7 @@ final class CacheInjectorTest extends TestCase
         $result = $injector->createInjection($reflection, 'userCache');
 
         // The default connection should be returned
-        $this->assertSame($this->defaultCache, $result);
+        $this->assertSame($this->defaultCache, $result->getStorage());
     }
 
     public function testBadArgumentTypeException(): void
@@ -83,6 +85,6 @@ final class CacheInjectorTest extends TestCase
         });
         $manager = new CacheManager($config, $factory);
 
-        return new CacheInjector($manager, $config);
+        return new CacheInjector($manager);
     }
 }

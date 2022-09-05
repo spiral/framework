@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Cache\Core;
 
 use ReflectionClass;
+use Spiral\Cache\CacheRepository;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Cache\Exception\InvalidArgumentException;
@@ -51,6 +52,9 @@ final class CacheInjector implements InjectorInterface
      */
     private function matchType(ReflectionClass $class, ?string $context, CacheInterface $connection): void
     {
+        if ($connection::class === CacheRepository::class)  {
+            $connection = $connection->getStorage();
+        }
         $className = $class->getName();
         if ($className !== CacheInterface::class && !$connection instanceof $className) {
             throw new \RuntimeException(

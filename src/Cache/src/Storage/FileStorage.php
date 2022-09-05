@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Storage;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
-use Spiral\Cache\Event\CacheHit;
-use Spiral\Cache\Event\CacheMissed;
-use Spiral\Cache\Event\KeyDeleted;
-use Spiral\Cache\Event\KeyWritten;
 use Spiral\Files\Exception\FileNotFoundException;
 use Spiral\Files\FilesInterface;
 
@@ -20,8 +15,7 @@ final class FileStorage implements CacheInterface
     public function __construct(
         private readonly FilesInterface $files,
         private readonly string $path,
-        private readonly int $ttl = 2_592_000,
-        private readonly ?EventDispatcherInterface $dispatcher = null
+        private readonly int $ttl = 2_592_000
     ) {
     }
 
@@ -30,42 +24,26 @@ final class FileStorage implements CacheInterface
         $payload = $this->getPayload($key)['value'];
 
         if ($payload === null) {
-            $this->dispatcher?->dispatch(new CacheMissed($key));
-
             return $default;
         }
-
-        $this->dispatcher?->dispatch(new CacheHit($key, $payload));
 
         return $payload;
     }
 
     public function set(string $key, mixed $value, null|int|\DateInterval|\DateTimeInterface $ttl = null): bool
     {
-        $result = $this->files->write(
+        return $this->files->write(
             $this->makePath($key),
             $this->ttlToTimestamp($ttl) . \serialize($value),
             null,
             true
         );
-
-        if ($result) {
-            $this->dispatcher?->dispatch(new KeyWritten($key, $value));
-        }
-
-        return $result;
     }
 
     public function delete(string $key): bool
     {
         if ($this->has($key)) {
-            $result = $this->files->delete($this->makePath($key));
-
-            if ($result) {
-                $this->dispatcher?->dispatch(new KeyDeleted($key));
-            }
-
-            return $result;
+            return $this->files->delete($this->makePath($key));
         }
 
         return false;
