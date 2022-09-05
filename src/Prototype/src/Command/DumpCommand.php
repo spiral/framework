@@ -10,9 +10,9 @@ use Spiral\Prototype\Traits\PrototypeTrait;
 
 final class DumpCommand extends AbstractCommand
 {
-    public const NAME        = 'prototype:dump';
+    public const NAME = 'prototype:dump';
     public const DESCRIPTION = 'Dump all prototyped dependencies as PrototypeTrait DOCComment.';
-    public const OPTIONS     = [];
+    public const OPTIONS = [];
 
     /**
      * Show list of available shortcuts and update trait docComment.
@@ -21,12 +21,10 @@ final class DumpCommand extends AbstractCommand
      */
     public function perform(PrototypeBootloader $prototypeBootloader): int
     {
-        // reindex annotations
-        $prototypeBootloader->initAnnotations($this->container, true);
-
         $dependencies = $this->registry->getPropertyBindings();
         if ($dependencies === []) {
             $this->writeln('<comment>No prototyped shortcuts found.</comment>');
+
             return self::SUCCESS;
         }
 
@@ -36,6 +34,7 @@ final class DumpCommand extends AbstractCommand
         $docComment = $trait->getDocComment();
         if ($docComment === false) {
             $this->write('<fg=reg>DOCComment is missing</fg=red>');
+
             return self::FAILURE;
         }
 
@@ -51,7 +50,8 @@ final class DumpCommand extends AbstractCommand
                 )
             );
         } catch (\Throwable $e) {
-            $this->write('<fg=red>' . $e->getMessage() . "</fg=red>\n");
+            $this->write('<fg=red>'.$e->getMessage()."</fg=red>\n");
+
             return self::FAILURE;
         }
 

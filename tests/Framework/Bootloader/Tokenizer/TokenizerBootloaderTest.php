@@ -52,6 +52,7 @@ final class TokenizerBootloaderTest extends BaseTest
         $this->assertConfigMatches(
             TokenizerConfig::CONFIG,
             [
+                'debug' => false,
                 'directories' => [
                     $this->getDirectoryByAlias('app'),
                 ],

@@ -41,9 +41,14 @@ trait LazyTrait
                 : '',
             false,
             function () use ($class): SymfonyCommand {
+                /** @var SpiralCommand $command */
                 $command = $this->container->get($class);
+
                 $command->setContainer($this->container);
-                $command->setInterceptors($this->interceptors);
+
+                if (isset($this->interceptors)) {
+                    $command->setInterceptors($this->interceptors);
+                }
 
                 return $command;
             }

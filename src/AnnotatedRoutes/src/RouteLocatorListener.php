@@ -56,6 +56,9 @@ final class RouteLocatorListener implements TokenizationListenerInterface
             ];
         }
 
+        // Sort routes by priority
+        \uasort($routes, static fn (array $route1, array $route2) => $route1['priority'] <=> $route2['priority']);
+
         $this->configureRoutes($routes);
     }
 

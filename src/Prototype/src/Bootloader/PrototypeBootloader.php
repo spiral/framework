@@ -30,10 +30,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         AttributesBootloader::class,
     ];
 
-    protected const SINGLETONS = [
-        PrototypeRegistry::class => PrototypeRegistry::class,
-    ];
-
     // Default spiral specific shortcuts, automatically checked on existence.
     private const DEFAULT_SHORTCUTS = [
         'app' => ['resolve' => \Spiral\Boot\KernelInterface::class],

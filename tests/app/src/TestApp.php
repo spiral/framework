@@ -91,7 +91,9 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         // Debug and debug extensions
         Bootloader\DebugBootloader::class,
         Bootloader\Debug\LogCollectorBootloader::class,
-        Bootloader\Debug\HttpCollectorBootloader::class
+        Bootloader\Debug\HttpCollectorBootloader::class,
+
+        \Spiral\Prototype\Bootloader\PrototypeBootloader::class,
     ];
 
     public const APP = [

@@ -6,6 +6,7 @@ namespace Spiral\Tokenizer;
 
 use Spiral\Tokenizer\Exception\LocatorException;
 use Spiral\Tokenizer\Reflection\ReflectionInvocation;
+use Spiral\Tokenizer\Traits\TargetTrait;
 
 /**
  * Can locate invocations in a specified directory. Can only find simple invocations!
@@ -15,6 +16,8 @@ use Spiral\Tokenizer\Reflection\ReflectionInvocation;
  */
 final class InvocationLocator extends AbstractLocator implements InvocationsInterface
 {
+    use TargetTrait;
+
     public function getInvocations(\ReflectionFunctionAbstract $function): array
     {
         $result = [];
