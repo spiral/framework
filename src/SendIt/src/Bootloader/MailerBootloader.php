@@ -73,7 +73,7 @@ class MailerBootloader extends Bootloader
     public function mailer(TransportInterface $transport, ?EventDispatcherInterface $dispatcher = null): SymfonyMailer
     {
         return new Mailer(
-            transport: Transport::fromDsn($config->getDSN()),
+            transport: $transport,
             dispatcher: $dispatcher
         );
     }
