@@ -17,7 +17,7 @@ final class ListenerLocator implements ListenerLocatorInterface
     }
 
     /**
-     * @psalm-return \Generator<class-string, Listener>
+     * @return \Generator<class-string, Listener>
      */
     public function findListeners(): \Generator
     {

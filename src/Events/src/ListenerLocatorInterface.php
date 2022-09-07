@@ -9,7 +9,7 @@ use Spiral\Events\Attribute\Listener;
 interface ListenerLocatorInterface
 {
     /**
-     * @psalm-return \Generator<class-string, Listener>
+     * @return \Iterator<class-string, Listener>
      */
-    public function findListeners(): \Generator;
+    public function findListeners(): \Iterator;
 }

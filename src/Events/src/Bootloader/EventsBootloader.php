@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace Spiral\Events\Bootloader;
 
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Core\Container;
+use Spiral\Events\AutowireListenerFactory;
 use Spiral\Events\Config\EventsConfig;
 use Spiral\Events\EventDispatcherAwareInterface;
+use Spiral\Events\ListenerFactoryInterface;
 use Spiral\Events\ListenerLocator;
 use Spiral\Events\ListenerLocatorInterface;
 use Spiral\Events\Processor\AttributeProcessor;
 use Spiral\Events\Processor\ConfigProcessor;
-use Spiral\Events\Processor\ProcessorInterface;
+use Spiral\Events\ListenerProcessorRegistry;
 
 final class EventsBootloader extends Bootloader
 {
@@ -26,6 +29,11 @@ final class EventsBootloader extends Bootloader
 
     protected const BINDINGS = [
         ListenerLocatorInterface::class => ListenerLocator::class,
+    ];
+
+    protected const SINGLETONS = [
+        ListenerFactoryInterface::class => AutowireListenerFactory::class,
+        ListenerProcessorRegistry::class => ListenerProcessorRegistry::class,
     ];
 
     public function __construct(
@@ -44,18 +52,28 @@ final class EventsBootloader extends Bootloader
         ]);
     }
 
-    public function boot(EventsConfig $config, ContainerInterface $container): void
-    {
-        foreach ($config->getProcessors() as $processor) {
-            if (!$processor instanceof ProcessorInterface) {
-                $processor = $container->get($processor);
-                $processor->process();
-            }
-        }
+    public function boot(
+        AbstractKernel $kernel,
+        ListenerProcessorRegistry $registry,
+        FinalizerInterface $finalizer,
+        ?EventDispatcherInterface $eventDispatcher = null
+    ): void {
+        $kernel->bootstrapped(
+            static function (Container $container, EventsConfig $config) use ($registry): void {
+                foreach ($config->getProcessors() as $processor) {
+                    if (\is_string($processor)) {
+                        $processor = $container->get($processor);
+                    }
 
-        $finalizer = $container->get(FinalizerInterface::class);
-        if ($finalizer instanceof EventDispatcherAwareInterface && $container->has(EventDispatcherInterface::class)) {
-            $finalizer->setEventDispatcher($container->get(EventDispatcherInterface::class));
+                    $registry->addProcessor($processor);
+                }
+
+                $registry->process();
+            }
+        );
+
+        if ($finalizer instanceof EventDispatcherAwareInterface && $eventDispatcher !== null) {
+            $finalizer->setEventDispatcher($eventDispatcher);
         }
     }
 }

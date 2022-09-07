@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Events\Config\EventListener;
 use Spiral\Events\Config\EventsConfig;
-use Spiral\Events\ListenerFactory;
+use Spiral\Events\AutowireListenerFactory;
 use Spiral\Events\ListenerRegistryInterface;
 use Spiral\Events\Processor\ConfigProcessor;
 use Spiral\Tests\Events\Fixtures\Event\BarEvent;
@@ -39,8 +39,8 @@ final class ConfigProcessorTest extends TestCase
 
         $processor = new ConfigProcessor(
             new EventsConfig(['listeners' => $listener]),
+            new AutowireListenerFactory(),
             $registry,
-            new ListenerFactory(new Container())
         );
         $processor->process();
 
@@ -58,7 +58,7 @@ final class ConfigProcessorTest extends TestCase
             ],
             [
                 FooEvent::class,
-                (new ListenerFactory(new Container()))->create(ClassAndMethodAttribute::class, 'onFooEvent'),
+                (new AutowireListenerFactory())->create(ClassAndMethodAttribute::class, 'onFooEvent'),
                 1
             ]
         ];
@@ -69,7 +69,7 @@ final class ConfigProcessorTest extends TestCase
             ],
             [
                 BarEvent::class,
-                (new ListenerFactory(new Container()))->create(ClassAndMethodAttribute::class, 'onBarEvent'),
+                (new AutowireListenerFactory())->create(ClassAndMethodAttribute::class, 'onBarEvent'),
                 1
             ]
         ];
@@ -78,7 +78,7 @@ final class ConfigProcessorTest extends TestCase
             [BarEvent::class => [ClassAttribute::class]],
             [
                 BarEvent::class,
-                (new ListenerFactory(new Container()))->create(ClassAttribute::class, '__invoke'),
+                (new AutowireListenerFactory())->create(ClassAttribute::class, '__invoke'),
                 0
             ]
         ];

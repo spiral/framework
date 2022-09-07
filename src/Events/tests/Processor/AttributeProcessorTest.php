@@ -7,7 +7,7 @@ namespace Spiral\Tests\Events\Processor;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Events\Attribute\Listener;
-use Spiral\Events\ListenerFactory;
+use Spiral\Events\AutowireListenerFactory;
 use Spiral\Events\ListenerLocatorInterface;
 use Spiral\Events\ListenerRegistryInterface;
 use Spiral\Events\Processor\AttributeProcessor;
@@ -53,7 +53,7 @@ final class AttributeProcessorTest extends TestCase
             }
         };
 
-        $processor = new AttributeProcessor($locator, $registry, new ListenerFactory(new Container()));
+        $processor = new AttributeProcessor($locator, new AutowireListenerFactory(), $registry);
         $processor->process();
 
         $this->assertSame($args[0], $registry->event);
@@ -68,7 +68,7 @@ final class AttributeProcessorTest extends TestCase
             new Listener(method: 'onFooEvent'),
             [
                 FooEvent::class,
-                (new ListenerFactory(new Container()))->create(ClassAndMethodAttribute::class, 'onFooEvent'),
+                (new AutowireListenerFactory(new Container()))->create(ClassAndMethodAttribute::class, 'onFooEvent'),
                 0
             ]
         ];
@@ -77,7 +77,7 @@ final class AttributeProcessorTest extends TestCase
             new Listener(method: 'onBarEvent'),
             [
                 BarEvent::class,
-                (new ListenerFactory(new Container()))->create(ClassAndMethodAttribute::class, 'onBarEvent'),
+                (new AutowireListenerFactory(new Container()))->create(ClassAndMethodAttribute::class, 'onBarEvent'),
                 0
             ]
         ];
@@ -86,7 +86,7 @@ final class AttributeProcessorTest extends TestCase
             new Listener(),
             [
                 BarEvent::class,
-                (new ListenerFactory(new Container()))->create(ClassAttribute::class, '__invoke'),
+                (new AutowireListenerFactory(new Container()))->create(ClassAttribute::class, '__invoke'),
                 0
             ]
         ];
@@ -95,7 +95,7 @@ final class AttributeProcessorTest extends TestCase
             new Listener(method: 'customMethod'),
             [
                 FooEvent::class,
-                (new ListenerFactory(new Container()))->create(ClassAttributeWithParameters::class, 'customMethod'),
+                (new AutowireListenerFactory(new Container()))->create(ClassAttributeWithParameters::class, 'customMethod'),
                 0
             ]
         ];
@@ -104,7 +104,7 @@ final class AttributeProcessorTest extends TestCase
             new Listener(method: '__invoke'),
             [
                 BarEvent::class,
-                (new ListenerFactory(new Container()))->create(MethodAttribute::class, '__invoke'),
+                (new AutowireListenerFactory(new Container()))->create(MethodAttribute::class, '__invoke'),
                 0
             ]
         ];
@@ -113,7 +113,7 @@ final class AttributeProcessorTest extends TestCase
             new Listener(method: 'customMethod'),
             [
                 FooEvent::class,
-                (new ListenerFactory(new Container()))->create(MethodAttributeWithParameters::class, 'customMethod'),
+                (new AutowireListenerFactory(new Container()))->create(MethodAttributeWithParameters::class, 'customMethod'),
                 0
             ]
         ];

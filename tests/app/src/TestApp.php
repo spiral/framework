@@ -68,6 +68,9 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         \Spiral\Broadcasting\Bootloader\BroadcastingBootloader::class,
         \Spiral\Broadcasting\Bootloader\WebsocketsBootloader::class,
 
+        // Events
+        \Spiral\Events\Bootloader\EventsBootloader::class,
+
         // Auth
         Bootloader\Auth\HttpAuthBootloader::class,
 

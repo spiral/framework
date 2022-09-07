@@ -9,9 +9,13 @@ use Spiral\Tests\Events\Fixtures\Event\BarEvent;
 use Spiral\Tests\Events\Fixtures\Event\FooEvent;
 
 #[Listener(method: 'onFooEvent')]
-final class ClassAndMethodAttribute
+class ClassAndMethodAttribute
 {
     public function onFooEvent(FooEvent $event): void
+    {
+    }
+
+    public function onFooEventWithTwoArguments(FooEvent $event, string $test): void
     {
     }
 

@@ -10,6 +10,9 @@ use Spiral\Attributes\NamedArgumentConstructor;
 #[NamedArgumentConstructor]
 class Listener
 {
+    /**
+     * @param class-string|null $event
+     */
     public function __construct(
         public readonly ?string $event = null,
         public ?string $method = null,

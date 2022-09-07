@@ -1,7 +1,7 @@
 {
     "name": "spiral/events",
     "type": "library",
-    "description": "Spiral Framework: Event Dispatcher",
+    "description": "Spiral Framework: PSR-14 Event Dispatcher",
     "license": "MIT",
     "homepage": "https://spiral.dev",
     "support": {
@@ -12,6 +12,14 @@
         {
             "name": "Anton Titov (wolfy-j)",
             "email": "wolfy-j@spiralscout.com"
+        },
+        {
+            "name": "Pavel Butchnev (butschster)",
+            "email": "pavel.buchnev@spiralscout.com"
+        },
+        {
+            "name": "Maksim Smakouz (msmakouz)",
+            "email": "maksim.smakouz@spiralscout.com"
         }
     ],
     "require": {

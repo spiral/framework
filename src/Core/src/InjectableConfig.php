@@ -17,13 +17,15 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
      */
     public const INJECTOR = ConfigsInterface::class;
 
+    protected array $config = [];
+
     /**
      * At this moment on array based configs can be supported.
      * @param array $config Configuration data
      */
-    public function __construct(
-        protected array $config = []
-    ) {
+    public function __construct(array $config = [])
+    {
+        $this->config = \array_merge($this->config, $config);
     }
 
     /**

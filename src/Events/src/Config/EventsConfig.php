@@ -8,6 +8,14 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\InjectableConfig;
 use Spiral\Events\Processor\ProcessorInterface;
 
+/**
+ * @psalm-type TProcessor = ProcessorInterface|class-string<ProcessorInterface>|Autowire
+ * @psalm-type TListener = class-string|EventListener
+ * @property array{
+ *     processors: TProcessor[],
+ *     listeners: array<class-string, TListener[]>
+ * } $config
+ */
 final class EventsConfig extends InjectableConfig
 {
     public const CONFIG = 'events';
@@ -20,7 +28,7 @@ final class EventsConfig extends InjectableConfig
     /**
      * Get registered listeners.
      *
-     * @psalm-return array{class-string: array<EventListener>}
+     * @return array<class-string, EventListener[]>
      */
     public function getListeners(): array
     {
@@ -37,7 +45,7 @@ final class EventsConfig extends InjectableConfig
     }
 
     /**
-     * @psalm-return array<ProcessorInterface|class-string|Autowire>
+     * @return TProcessor[]
      */
     public function getProcessors(): array
     {

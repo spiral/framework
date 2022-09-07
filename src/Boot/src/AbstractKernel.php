@@ -50,6 +50,9 @@ abstract class AbstractKernel implements KernelInterface
     /** @var array<Closure> */
     private array $bootedCallbacks = [];
 
+    /** @var array<Closure>  */
+    private array $bootstrappedCallbacks = [];
+
     /**
      * @throws \Throwable
      */
@@ -122,6 +125,7 @@ abstract class AbstractKernel implements KernelInterface
      * $app = App::create([...]);
      * $app->booting(...);
      * $app->booted(...);
+     * $app->bootstrapped(...);
      * $app->run(new Environment([
      *     'APP_ENV' => 'production'
      * ]));
@@ -141,6 +145,8 @@ abstract class AbstractKernel implements KernelInterface
                 function (): void {
                     $this->bootload();
                     $this->bootstrap();
+
+                    $this->fireCallbacks($this->bootstrappedCallbacks);
                 }
             );
         } catch (\Throwable $e) {
@@ -200,6 +206,21 @@ abstract class AbstractKernel implements KernelInterface
     {
         foreach ($callbacks as $callback) {
             $this->bootedCallbacks[] = $callback;
+        }
+    }
+
+    /**
+     * Register a new callback, that will be fired after framework bootstrapped.
+     * (Before serving)
+     *
+     * $kernel->bootstrapped(static function(KernelInterface $kernel) {
+     *     $kernel->getContainer()->...
+     * });
+     */
+    public function bootstrapped(Closure ...$callbacks): void
+    {
+        foreach ($callbacks as $callback) {
+            $this->bootstrappedCallbacks[] = $callback;
         }
     }
 
