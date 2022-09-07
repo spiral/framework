@@ -23,7 +23,11 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
         foreach ($this->availableClasses() as $class) {
             try {
                 $reflection = $this->classReflection($class);
-            } catch (LocatorException) {
+            } catch (LocatorException $e) {
+                if ($this->debug) {
+                    throw $e;
+                }
+
                 //Ignoring
                 continue;
             }
