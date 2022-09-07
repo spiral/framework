@@ -59,6 +59,11 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
         $this->interceptors = $interceptors;
     }
 
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
     /**
      * Pass execution to "perform" method using container to resolve method dependencies.
      */
@@ -166,10 +171,5 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
     protected function defineArguments(): array
     {
         return static::ARGUMENTS;
-    }
-
-    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
-    {
-        $this->eventDispatcher = $eventDispatcher;
     }
 }
