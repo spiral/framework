@@ -40,7 +40,7 @@ final class AutowireListenerFactory implements ListenerFactoryInterface
 
     private function listenerShouldBeAutowired(object|string $listener, string $method): bool
     {
-        if (! \is_object($listener) && ! \class_exists($listener) && ! \interface_exists($listener)) {
+        if (!\is_object($listener) && !\class_exists($listener) && !\interface_exists($listener)) {
             return false;
         }
 
