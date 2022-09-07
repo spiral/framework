@@ -91,7 +91,13 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
         // we are safe to handle global exceptions (system level) with maximum verbosity
         $this->report($e);
-        \fwrite($this->output, $this->render($e, verbosity: $this->verbosity, format: $format));
+
+        // There is possible an exception on the application termination
+        try {
+            \fwrite($this->output, $this->render($e, verbosity: $this->verbosity, format: $format));
+        } catch (\Throwable) {
+            $this->output = null;
+        }
     }
 
     /**
