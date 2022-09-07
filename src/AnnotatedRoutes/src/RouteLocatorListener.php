@@ -40,7 +40,6 @@ final class RouteLocatorListener implements TokenizationListenerInterface
         $routes = [];
 
         foreach ($this->attributes as $classes) {
-            /** @var ReflectionMethod $method */
             [$method, $route] = $classes;
             $class = $method->getDeclaringClass();
 
@@ -51,7 +50,7 @@ final class RouteLocatorListener implements TokenizationListenerInterface
                 'group' => $route->group,
                 'verbs' => (array)$route->methods,
                 'defaults' => $route->defaults,
-                'middleware' => (array)$route->middleware,
+                'middleware' => $route->middleware,
                 'priority' => $route->priority,
             ];
         }

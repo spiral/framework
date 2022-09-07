@@ -25,12 +25,9 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
     ];
 
     public function init(
-        ConsoleBootloader $console,
         TokenizerListenerBootloader $tokenizer,
         RouteLocatorListener $routeRegistrar
     ): void {
-        $console->addCommand(ResetCommand::class);
-
         $tokenizer->addListener($routeRegistrar);
     }
 }

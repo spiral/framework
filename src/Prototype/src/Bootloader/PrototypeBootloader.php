@@ -115,9 +115,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         return [PrototypeRegistry::class => $this->registry];
     }
 
-    /**
-     * @return array<class-string, PrototypeRegistry>
-     */
     private function initDefaults(ContainerInterface $container): void
     {
         foreach (self::DEFAULT_SHORTCUTS as $property => $shortcut) {

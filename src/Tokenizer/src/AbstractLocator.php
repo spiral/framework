@@ -9,6 +9,7 @@ use Spiral\Core\Container\InjectableInterface;
 use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Tokenizer\Exception\LocatorException;
 use Spiral\Tokenizer\Reflection\ReflectionFile;
+use Spiral\Tokenizer\Traits\TargetTrait;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -16,12 +17,13 @@ use Symfony\Component\Finder\Finder;
  */
 abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterface
 {
-    use LoggerTrait;
+    use LoggerTrait, TargetTrait;
 
     public const INJECTOR = Tokenizer::class;
 
     public function __construct(
-        protected Finder $finder
+        protected Finder $finder,
+        protected readonly bool $debug = false
     ) {
     }
 

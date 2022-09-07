@@ -14,6 +14,7 @@ trait LazyTrait
 {
     private ContainerInterface $container;
     private ConsoleConfig $config;
+    private array $interceptors = [];
 
     /**
      * Check if command can be lazy-loaded.
@@ -45,10 +46,7 @@ trait LazyTrait
                 $command = $this->container->get($class);
 
                 $command->setContainer($this->container);
-
-                if (isset($this->interceptors)) {
-                    $command->setInterceptors($this->interceptors);
-                }
+                $command->setInterceptors($this->interceptors);
 
                 return $command;
             }
