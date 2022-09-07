@@ -35,7 +35,7 @@ final class CsrfConfig extends InjectableConfig
 
     public function isCookieSecure(): bool
     {
-        return ! empty($this->config['secure']);
+        return !empty($this->config['secure']);
     }
 
     public function getSameSite(): ?string
