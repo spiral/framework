@@ -10,7 +10,6 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Queue\Bootloader\QueueBootloader;
-use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueRegistry;
 use Spiral\SendIt\Config\MailerConfig;
@@ -19,11 +18,12 @@ use Spiral\SendIt\MailQueue;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 
 /**
  * Enables email sending pipeline.
  */
-final class MailerBootloader extends Bootloader
+class MailerBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         QueueBootloader::class,
@@ -33,6 +33,7 @@ final class MailerBootloader extends Bootloader
     protected const SINGLETONS = [
         MailJob::class => MailJob::class,
         SymfonyMailer::class => [self::class, 'mailer'],
+        TransportInterface::class => [self::class, 'initTransport'],
     ];
 
     public function __construct(
@@ -63,10 +64,13 @@ final class MailerBootloader extends Bootloader
         $container->get(QueueRegistry::class)->setHandler(MailQueue::JOB_NAME, MailJob::class);
     }
 
-    public function mailer(MailerConfig $config): SymfonyMailer
+    public function initTransport(MailerConfig $config): TransportInterface
     {
-        return new Mailer(
-            Transport::fromDsn($config->getDSN())
-        );
+        return Transport::fromDsn($config->getDSN());
+    }
+
+    public function mailer(TransportInterface $transport): SymfonyMailer
+    {
+        return new Mailer($transport);
     }
 }
