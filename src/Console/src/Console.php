@@ -10,6 +10,7 @@ use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Exception\LocatorException;
 use Spiral\Core\Container;
 use Spiral\Core\ScopeInterface;
+use Spiral\Events\EventDispatcherAwareInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -118,6 +119,10 @@ final class Console
             if ($command instanceof Command) {
                 $command->setContainer($this->container);
                 $command->setInterceptors($interceptors);
+            }
+
+            if ($this->dispatcher !== null && $command instanceof EventDispatcherAwareInterface) {
+                $command->setEventDispatcher($this->dispatcher);
             }
 
             $this->application->add($command);

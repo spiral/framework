@@ -14,6 +14,7 @@ use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Core\InterceptableCore;
+use Spiral\Events\EventDispatcherAwareInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,7 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Provides automatic command configuration and access to global container scope.
  */
-abstract class Command extends SymfonyCommand
+abstract class Command extends SymfonyCommand implements EventDispatcherAwareInterface
 {
     use HelpersTrait;
 
@@ -38,6 +39,7 @@ abstract class Command extends SymfonyCommand
     protected const ARGUMENTS = [];
 
     protected ?ContainerInterface $container = null;
+    protected ?EventDispatcherInterface $eventDispatcher = null;
 
     /** @var array<class-string<CoreInterceptorInterface>> */
     protected array $interceptors = [];
@@ -73,11 +75,7 @@ abstract class Command extends SymfonyCommand
         try {
             [$this->input, $this->output] = [$this->prepareInput($input), $this->prepareOutput($input, $output)];
 
-            $dispatcher = $this->container->has(EventDispatcherInterface::class)
-                ? $this->container->get(EventDispatcherInterface::class)
-                : null;
-
-            $dispatcher?->dispatch(new CommandStarting($this, $this->input, $this->output));
+            $this->eventDispatcher?->dispatch(new CommandStarting($this, $this->input, $this->output));
 
             // Executing perform method with method injection
             $code = (int)$core->callAction(static::class, $method, [
@@ -86,7 +84,7 @@ abstract class Command extends SymfonyCommand
                 'command' => $this,
             ]);
 
-            $dispatcher?->dispatch(new CommandFinished($this, $code, $this->input, $this->output));
+            $this->eventDispatcher?->dispatch(new CommandFinished($this, $code, $this->input, $this->output));
 
             return $code;
         } finally {
@@ -97,11 +95,8 @@ abstract class Command extends SymfonyCommand
     protected function buildCore(): CoreInterface
     {
         $core = $this->container->get(CommandCore::class);
-        $dispatcher = $this->container->has(EventDispatcherInterface::class)
-            ? $this->container->get(EventDispatcherInterface::class)
-            : null;
 
-        $interceptableCore = new InterceptableCore($core, $dispatcher);
+        $interceptableCore = new InterceptableCore($core, $this->eventDispatcher);
 
         foreach ($this->interceptors as $interceptor) {
             $interceptableCore->addInterceptor($this->container->get($interceptor));
@@ -171,5 +166,10 @@ abstract class Command extends SymfonyCommand
     protected function defineArguments(): array
     {
         return static::ARGUMENTS;
+    }
+
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
+    {
+        $this->eventDispatcher = $eventDispatcher;
     }
 }
