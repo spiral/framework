@@ -41,7 +41,7 @@ final class HttpConfig extends InjectableConfig
      */
     public function getMiddleware(): array
     {
-        return $this->config['middleware'] ?? $this->config['middlewares'];
+        return $this->config['middleware'];
     }
 
     public function getInputBags(): array

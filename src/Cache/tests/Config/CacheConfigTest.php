@@ -50,16 +50,6 @@ final class CacheConfigTest extends TestCase
         );
     }
 
-    public function testNotDefinedDefaultKeyShouldThrowAnException(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Default cache storage is not defined.');
-
-        $config = new CacheConfig();
-
-        $config->getDefaultStorage();
-    }
-
     public function testGetsStorageConfigByStorageName(): void
     {
         $this->assertSame(

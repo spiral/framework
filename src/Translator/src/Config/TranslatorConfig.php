@@ -19,7 +19,7 @@ final class TranslatorConfig extends InjectableConfig
     /**
      * @psalm-var array{
      *     locale: string,
-     *     fallbackLocale: string,
+     *     fallbackLocale?: string,
      *     directory: string,
      *     cacheLocales: bool,
      *     autoRegister: bool,
@@ -31,7 +31,6 @@ final class TranslatorConfig extends InjectableConfig
      */
     protected array $config = [
         'locale'         => '',
-        'fallbackLocale' => '',
         'directory'      => '',
         'cacheLocales'   => true,
         'autoRegister'   => true,

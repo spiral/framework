@@ -11,9 +11,10 @@ final class CsrfConfig extends InjectableConfig
     public const CONFIG = 'csrf';
 
     protected array $config = [
-        'cookie'   => 'csrf-token',
-        'length'   => 16,
-        'lifetime' => 86400,
+        'cookie' => 'csrf-token',
+        'length' => 16,
+        'lifetime' => null,
+        'sameSite' => null,
     ];
 
     public function getTokenLength(): int
@@ -29,16 +30,16 @@ final class CsrfConfig extends InjectableConfig
 
     public function getCookieLifetime(): ?int
     {
-        return $this->config['lifetime'] ?? null;
+        return $this->config['lifetime'];
     }
 
     public function isCookieSecure(): bool
     {
-        return !empty($this->config['secure']);
+        return ! empty($this->config['secure']);
     }
 
     public function getSameSite(): ?string
     {
-        return $this->config['sameSite'] ?? null;
+        return $this->config['sameSite'];
     }
 }

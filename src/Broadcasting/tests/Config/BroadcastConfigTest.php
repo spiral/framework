@@ -55,16 +55,6 @@ final class BroadcastConfigTest extends TestCase
         );
     }
 
-    public function testNotDefinedDefaultKeyShouldThrowAnException(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Default broadcast connection is not defined.');
-
-        $config = new BroadcastConfig();
-
-        $config->getDefaultConnection();
-    }
-
     public function testGetsConnectionConfigByName(): void
     {
         $this->assertSame(

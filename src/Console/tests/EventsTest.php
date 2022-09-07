@@ -19,15 +19,16 @@ final class EventsTest extends BaseTest
             ->method('dispatch')
             ->with(
                 $this->callback(
-                    static fn (CommandStarting|CommandFinished $event): bool => $event->command instanceof TestCommand
+                    static fn(CommandStarting|CommandFinished $event): bool => $event->command instanceof TestCommand
                 ),
             );
 
-        $this->container->bind(EventDispatcherInterface::class, $dispatcher);
-
-        $core = $this->getCore($this->getStaticLocator([
-            TestCommand::class
-        ]));
+        $core = $this->getCore(
+            locator: $this->getStaticLocator([
+                new TestCommand(),
+            ]),
+            eventDispatcher: $dispatcher
+        );
 
         $core->run('test');
     }

@@ -48,13 +48,4 @@ class ConfigTest extends TestCase
 
         $this->assertSame([TestMiddleware::class], $c->getMiddleware());
     }
-
-    public function testBaseMiddlewareFallback(): void
-    {
-        $c = new HttpConfig([
-            'middlewares' => [TestMiddleware::class]
-        ]);
-
-        $this->assertSame([TestMiddleware::class], $c->getMiddleware());
-    }
 }
