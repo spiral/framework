@@ -106,7 +106,6 @@ final class ConsoleConfig extends InjectableConfig
      *     header?: string,
      *     footer?: string
      * } $item
-     * @return SequenceInterface
      * @throws \JsonException
      */
     protected function parseSequence(SequenceInterface|string|array $item): SequenceInterface
