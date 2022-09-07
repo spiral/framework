@@ -33,7 +33,7 @@ class MailerBootloader extends Bootloader
     protected const SINGLETONS = [
         MailJob::class => MailJob::class,
         SymfonyMailer::class => [self::class, 'mailer'],
-        TransportInterface::class => [self::class, 'initTransport']
+        TransportInterface::class => [self::class, 'initTransport'],
     ];
 
     public function __construct(
