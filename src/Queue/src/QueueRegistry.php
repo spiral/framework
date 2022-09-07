@@ -73,7 +73,6 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
             return $this->serializers[$jobType];
         }
 
-        /** @var QueueConfig $config */
         $config = $this->container->get(QueueConfig::class);
 
         return $config->getDefaultSerializer() === null ?
@@ -93,7 +92,6 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
      */
     private function resolveSerializer(SerializerInterface|string|Autowire $serializer): SerializerInterface
     {
-        /** @var SerializerRegistryInterface $registry */
         $registry = $this->container->get(SerializerRegistryInterface::class);
 
         if ($serializer instanceof Autowire) {
