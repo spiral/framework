@@ -15,9 +15,11 @@ final class CommandLocator implements LocatorInterface
 
     public function __construct(
         private readonly ScopedClassesInterface $classes,
-        ContainerInterface $container
+        ContainerInterface $container,
+        array $interceptors = [],
     ) {
         $this->container = $container;
+        $this->interceptors = $interceptors;
     }
 
     public function locateCommands(): array
