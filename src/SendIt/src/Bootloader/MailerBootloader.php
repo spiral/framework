@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt\Bootloader;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Queue\Bootloader\QueueBootloader;
-use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueRegistry;
 use Spiral\SendIt\Config\MailerConfig;
@@ -63,10 +63,11 @@ final class MailerBootloader extends Bootloader
         $container->get(QueueRegistry::class)->setHandler(MailQueue::JOB_NAME, MailJob::class);
     }
 
-    public function mailer(MailerConfig $config): SymfonyMailer
+    public function mailer(MailerConfig $config, ?EventDispatcherInterface $dispatcher = null): SymfonyMailer
     {
         return new Mailer(
-            Transport::fromDsn($config->getDSN())
+            transport: Transport::fromDsn($config->getDSN()),
+            dispatcher: $dispatcher
         );
     }
 }
