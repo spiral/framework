@@ -16,9 +16,6 @@ final class ListenerLocator implements ListenerLocatorInterface
     ) {
     }
 
-    /**
-     * @return \Generator<class-string, Listener>
-     */
     public function findListeners(): \Generator
     {
         foreach ($this->locator->getScopedClasses('listeners') as $class) {

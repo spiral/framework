@@ -13,7 +13,7 @@ use Spiral\Events\ListenerRegistryInterface;
 final class PlainListenerRegistry implements ListenerRegistryInterface
 {
     /** @var class-string[] */
-    public array $events;
+    public array $events = [];
     /** @var \Closure Last listener */
     public \Closure $listener;
     public int $priority;
