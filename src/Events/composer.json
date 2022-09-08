@@ -18,6 +18,10 @@
             "email": "pavel.buchnev@spiralscout.com"
         },
         {
+            "name": "Aleksei Gagarin (roxblnfk)",
+            "email": "alexey.gagarin@spiralscout.com"
+        },
+        {
             "name": "Maksim Smakouz (msmakouz)",
             "email": "maksim.smakouz@spiralscout.com"
         }
@@ -41,11 +45,6 @@
     "autoload-dev": {
         "psr-4": {
             "Spiral\\Tests\\Events\\": "tests"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.14.x-dev"
         }
     },
     "config": {
