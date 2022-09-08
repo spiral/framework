@@ -64,26 +64,6 @@ final class AttributeProcessorTest extends TestCase
             2
         ];
         yield [
-            ClassDoubleAttribute::class,
-            new Listener(method: '__invoke'),
-            [
-                [FooEvent::class, BarEvent::class],
-                (new AutowireListenerFactory())->create(ClassDoubleAttribute::class, '__invoke'),
-                0
-            ],
-            2
-        ];
-        yield [
-            ClassDoubleTheSameAttribute::class,
-            new Listener(method: '__invoke'),
-            [
-                [FooEvent::class, BarEvent::class],
-                (new AutowireListenerFactory())->create(ClassDoubleTheSameAttribute::class, '__invoke'),
-                0
-            ],
-            2
-        ];
-        yield [
             ClassAndMethodAttribute::class,
             new Listener(method: 'onBarEvent'),
             [
