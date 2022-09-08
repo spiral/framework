@@ -27,6 +27,7 @@ final class AutowireListenerFactory implements ListenerFactoryInterface
     /**
      * @template TClass
      * @param class-string<TClass>|TClass $listener
+     *
      * @return TClass
      */
     private static function getListener(string|object $listener): object

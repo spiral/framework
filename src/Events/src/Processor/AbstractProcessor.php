@@ -9,6 +9,9 @@ use Spiral\Events\Exception\InvalidArgumentException;
 abstract class AbstractProcessor implements ProcessorInterface
 {
     /**
+     * Get event class list from the listener method signature.
+     * The signature must have only one parameter with Event class type.
+     *
      * @return class-string[]
      */
     protected function getEventFromTypeDeclaration(\ReflectionMethod $method): array

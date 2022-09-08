@@ -16,6 +16,7 @@ use Spiral\Tests\Events\Fixtures\Listener\ClassAndMethodAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\ClassAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\ClassAttributeUnionType;
 use Spiral\Tests\Events\Fixtures\Listener\ClassAttributeWithParameters;
+use Spiral\Tests\Events\Fixtures\Listener\ClassDoubleAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\MethodAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\MethodAttributeWithParameters;
 use Spiral\Tests\Events\Stub\PlainListenerRegistry;
@@ -57,6 +58,15 @@ final class AttributeProcessorTest extends TestCase
             [
                 [FooEvent::class, BarEvent::class],
                 (new AutowireListenerFactory())->create(ClassAttributeUnionType::class, '__invoke'),
+                0
+            ]
+        ];
+        yield [
+            ClassDoubleAttribute::class,
+            new Listener(method: '__invoke'),
+            [
+                [FooEvent::class, BarEvent::class],
+                (new AutowireListenerFactory())->create(ClassDoubleAttribute::class, '__invoke'),
                 0
             ]
         ];
