@@ -15,8 +15,6 @@ use Spiral\Tests\Events\Fixtures\Listener\ClassAndMethodAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\ClassAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\ClassAttributeUnionType;
 use Spiral\Tests\Events\Fixtures\Listener\ClassAttributeWithParameters;
-use Spiral\Tests\Events\Fixtures\Listener\ClassDoubleAttribute;
-use Spiral\Tests\Events\Fixtures\Listener\ClassDoubleTheSameAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\MethodAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\MethodAttributeWithParameters;
 use Spiral\Tests\Events\Stub\PlainListenerRegistry;
