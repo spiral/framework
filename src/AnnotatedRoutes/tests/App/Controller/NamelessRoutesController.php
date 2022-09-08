@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Vladislav Gorenkin (vladgorenkin)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Router\App\Controller;

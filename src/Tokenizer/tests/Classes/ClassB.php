@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 namespace Spiral\Tests\Tokenizer\Classes;
 
 use Spiral\Tests\Tokenizer\Fixtures\TestInterface;
