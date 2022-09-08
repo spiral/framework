@@ -42,12 +42,11 @@ final class AutowireListenerFactory implements ListenerFactoryInterface
     private function listenerShouldBeAutowired(object|string $listener, string $method): bool
     {
         if (!\is_object($listener) && !\class_exists($listener) && !\interface_exists($listener)) {
-            return false;
+            return true;
         }
 
         try {
-            $ref = new \ReflectionClass($listener);
-            $refMethod = $ref->getMethod($method);
+            $refMethod = new \ReflectionMethod($listener, $method);
 
             return $refMethod->getNumberOfParameters() > 1;
         } catch (\ReflectionException $e) {
