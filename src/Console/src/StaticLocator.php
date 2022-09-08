@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Traits\LazyTrait;
 use Spiral\Core\Container;
-use Spiral\Events\EventDispatcherAwareInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 final class StaticLocator implements LocatorInterface
@@ -22,10 +20,8 @@ final class StaticLocator implements LocatorInterface
     public function __construct(
         private readonly array $commands,
         private ConsoleConfig $config,
-        ContainerInterface $container = new Container(),
-        ?EventDispatcherInterface $eventDispatcher = null
+        ContainerInterface $container = new Container()
     ) {
-        $this->dispatcher = $eventDispatcher;
         $this->container = $container;
     }
 
@@ -41,13 +37,9 @@ final class StaticLocator implements LocatorInterface
                 continue;
             }
 
-            $commands[] = $command = $this->supportsLazyLoading($command)
+            $commands[] = $this->supportsLazyLoading($command)
                 ? $this->createLazyCommand($command)
                 : $this->container->get($command);
-
-            if ($this->dispatcher !== null && $command instanceof EventDispatcherAwareInterface) {
-                $command->setEventDispatcher($this->dispatcher);
-            }
         }
 
         return $commands;

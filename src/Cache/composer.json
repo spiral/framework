@@ -19,7 +19,8 @@
         "spiral/core": "^3.0",
         "spiral/config": "^3.0",
         "spiral/files": "^3.0",
-        "psr/simple-cache": "2 - 3"
+        "psr/simple-cache": "2 - 3",
+        "psr/event-dispatcher": "^1.0"
     },
     "autoload": {
         "psr-4": {
