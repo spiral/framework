@@ -35,8 +35,7 @@ final class EventsConfig extends InjectableConfig
         $listeners = [];
         foreach ($this->config['listeners'] as $event => $eventListeners) {
             $listeners[$event] = \array_map(
-                static fn (string|EventListener $listener): EventListener =>
-                    \is_string($listener) ? new EventListener($listener) : $listener,
+                self::normalizeListener(...),
                 $eventListeners
             );
         }
@@ -50,5 +49,13 @@ final class EventsConfig extends InjectableConfig
     public function getProcessors(): array
     {
         return $this->config['processors'];
+    }
+
+    /**
+     * @param TListener $listener
+     */
+    private static function normalizeListener(string|EventListener $listener): EventListener
+    {
+        return \is_string($listener) ? new EventListener($listener) : $listener;
     }
 }
