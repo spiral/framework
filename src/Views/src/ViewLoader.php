@@ -24,7 +24,7 @@ final class ViewLoader implements LoaderInterface
         private readonly array $namespaces,
         FilesInterface $files = null,
         private readonly string $defaultNamespace = self::DEFAULT_NAMESPACE,
-        private readonly ?EventDispatcherInterface $dispatcher = null
+        private readonly ?EventDispatcherInterface $dispatcher = null,
     ) {
         $this->files = $files ?? new Files();
     }

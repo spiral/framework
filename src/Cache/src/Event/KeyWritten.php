@@ -8,7 +8,7 @@ final class KeyWritten
 {
     public function __construct(
         public readonly string $key,
-        public readonly mixed $value
+        public readonly mixed $value,
     ) {
     }
 }

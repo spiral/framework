@@ -11,6 +11,9 @@ use Spiral\Cache\Event\CacheMissed;
 use Spiral\Cache\Event\KeyDeleted;
 use Spiral\Cache\Event\KeyWritten;
 
+/**
+ * @internal
+ */
 class CacheRepository implements CacheInterface
 {
     public function __construct(

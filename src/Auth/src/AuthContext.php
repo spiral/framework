@@ -56,10 +56,14 @@ final class AuthContext implements AuthContextInterface
 
     public function close(): void
     {
-        $this->eventDispatcher?->dispatch(new Logout($this->actor, $this->transport));
+        // Store for Event Dispatcher
+        $actor = $this->actor;
 
         $this->closed = true;
         $this->actor = null;
+
+        /** The {@see Logout} event should be processed after state reset. */
+        $this->eventDispatcher?->dispatch(new Logout($actor, $this->transport));
     }
 
     public function isClosed(): bool

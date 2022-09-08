@@ -7,7 +7,7 @@ namespace Spiral\Cache\Event;
 final class KeyDeleted
 {
     public function __construct(
-        public readonly string $key
+        public readonly string $key,
     ) {
     }
 }

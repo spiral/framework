@@ -25,7 +25,7 @@ final class Translator implements TranslatorInterface, SingletonInterface
         private readonly CatalogueManagerInterface $catalogueManager,
         /** @internal */
         private readonly IdentityTranslator $identityTranslator = new IdentityTranslator(),
-        private readonly ?EventDispatcherInterface $dispatcher = null
+        private readonly ?EventDispatcherInterface $dispatcher = null,
     ) {
         $this->locale = $this->config->getDefaultLocale();
         $this->catalogueManager->load($this->locale);

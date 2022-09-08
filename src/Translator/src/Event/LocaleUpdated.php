@@ -7,7 +7,7 @@ namespace Spiral\Translator\Event;
 final class LocaleUpdated
 {
     public function __construct(
-        public readonly string $locale
+        public readonly string $locale,
     ) {
     }
 }
