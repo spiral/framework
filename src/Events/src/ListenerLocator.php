@@ -10,6 +10,8 @@ use Spiral\Tokenizer\ScopedClassesInterface;
 
 final class ListenerLocator implements ListenerLocatorInterface
 {
+    public const SCOPE_NAME = 'event-listeners';
+
     public function __construct(
         private readonly ScopedClassesInterface $locator,
         private readonly ReaderInterface $reader
@@ -18,17 +20,17 @@ final class ListenerLocator implements ListenerLocatorInterface
 
     public function findListeners(): \Generator
     {
-        foreach ($this->locator->getScopedClasses('listeners') as $class) {
-            $attr = $this->reader->firstClassMetadata($class, Listener::class);
+        foreach ($this->locator->getScopedClasses(self::SCOPE_NAME) as $class) {
+            $attrs = $this->reader->getClassMetadata($class, Listener::class);
 
-            if ($attr !== null) {
+            foreach ($attrs as $attr) {
                 yield $class->getName() => $attr;
             }
 
             foreach ($class->getMethods() as $method) {
-                $attr = $this->reader->firstFunctionMetadata($method, Listener::class);
+                $attrs = $this->reader->getFunctionMetadata($method, Listener::class);
 
-                if ($attr !== null) {
+                foreach ($attrs as $attr) {
                     $attr->method = $method->getName();
 
                     yield $class->getName() => $attr;
