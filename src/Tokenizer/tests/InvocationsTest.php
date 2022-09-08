@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral, Core Components
- *
- * @author Wolfy-J
- */
-
 namespace Spiral\Tests\Tokenizer;
 
 use PHPUnit\Framework\TestCase;
