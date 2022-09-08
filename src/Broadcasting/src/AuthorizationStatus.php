@@ -9,10 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 final class AuthorizationStatus
 {
     /**
-     * @param bool $success
      * @param array<string, string>|null $topics
-     * @param array $attributes
-     * @param ResponseInterface|null $response
      */
     public function __construct(
         public readonly bool $success,
@@ -24,9 +21,9 @@ final class AuthorizationStatus
 
     /**
      * @param bool $success
-     * @param array $topics
+     * @param array<string, string>|null $topics
      * @param array $attributes
-     * @param ResponseInterface $response
+     * @param ResponseInterface|null $response
      */
     public function with(mixed ...$values): self
     {
