@@ -51,4 +51,25 @@ final class AuthorizationStatusTest extends TestCase
         $this->assertSame($response, $status->response);
         $this->assertTrue($status->hasResponse());
     }
+
+    public function testWith(): void
+    {
+        $status = new AuthorizationStatus(success: false, topics: null);
+
+        $this->assertNull($status->response);
+        $newStatus = $status->with(response: $response = m::mock(ResponseInterface::class));
+        $this->assertSame($response, $newStatus->response);
+
+        $this->assertFalse($status->success);
+        $newStatus = $status->with(success: true);
+        $this->assertTrue($newStatus->success);
+
+        $this->assertNull($status->topics);
+        $newStatus = $status->with(topics: $topics = ['foo', 'bar']);
+        $this->assertSame($topics, $newStatus->topics);
+
+        $this->assertSame([], $status->attributes);
+        $newStatus = $status->with(attributes: $attributes = ['foo', 'bar']);
+        $this->assertSame($attributes, $newStatus->attributes);
+    }
 }

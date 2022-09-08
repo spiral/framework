@@ -10,9 +10,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Spiral\Broadcasting\AuthorizationStatus;
 use Spiral\Broadcasting\BroadcastInterface;
-use Spiral\Broadcasting\Event\AuthorizationFailed;
-use Spiral\Broadcasting\Event\AuthorizationSuccess;
+use Spiral\Broadcasting\Event\Authorized;
 use Spiral\Broadcasting\GuardInterface;
 
 final class AuthorizationMiddleware implements MiddlewareInterface
@@ -35,19 +35,22 @@ final class AuthorizationMiddleware implements MiddlewareInterface
 
         if ($this->broadcast instanceof GuardInterface) {
             $status = $this->broadcast->authorize($request);
-
-            if ($status->response !== null) {
-                return $status->response;
-            }
-
-            if (!$status->success) {
-                $this->dispatcher?->dispatch(new AuthorizationFailed($request));
-
-                return $this->responseFactory->createResponse(403);
-            }
+        } else {
+            $status = new AuthorizationStatus(
+                success: true,
+                topics: null
+            );
         }
 
-        $this->dispatcher?->dispatch(new AuthorizationSuccess($request));
+        $this->dispatcher?->dispatch(new Authorized($status, $request));
+
+        if ($status->response !== null) {
+            return $status->response;
+        }
+
+        if (!$status->success) {
+            return $this->responseFactory->createResponse(403);
+        }
 
         return $this->responseFactory->createResponse(200);
     }
