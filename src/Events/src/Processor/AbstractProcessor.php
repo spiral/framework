@@ -9,19 +9,31 @@ use Spiral\Events\Exception\InvalidArgumentException;
 abstract class AbstractProcessor implements ProcessorInterface
 {
     /**
-     * @return class-string
+     * @return class-string[]
      */
-    protected function getEventFromTypeDeclaration(\ReflectionMethod $method): string
+    protected function getEventFromTypeDeclaration(\ReflectionMethod $method): array
     {
-        if (
-            $method->getNumberOfParameters() > 1
-            || !($type = $method->getParameters()[0]->getType()) instanceof \ReflectionNamedType
-            || $type->isBuiltin()
-        ) {
+        if ($method->getNumberOfParameters() > 1) {
             throw $this->badClassMethod($method->class, $method->getName());
         }
+        $type = $method->getParameters()[0]->getType();
 
-        return $type->getName();
+        /** @var \ReflectionNamedType[] $eventTypes */
+        $eventTypes = match (true) {
+            $type instanceof \ReflectionNamedType => [$type],
+            $type instanceof \ReflectionUnionType => $type->getTypes(),
+            default => throw $this->badClassMethod($method->class, $method->getName()),
+        };
+
+        $result = [];
+        foreach ($eventTypes as $type) {
+            if ($type->isBuiltin()) {
+                continue;
+            }
+            $result[] = $type->getName();
+        }
+
+        return $result;
     }
 
     /**

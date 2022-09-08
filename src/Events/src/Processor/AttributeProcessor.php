@@ -22,11 +22,14 @@ final class AttributeProcessor extends AbstractProcessor
         foreach ($this->locator->findListeners() as $listener => $attr) {
             $method = $this->getMethod($listener, $attr->method ?? '__invoke');
 
-            $this->registry?->addListener(
-                event: $attr->event ?? $this->getEventFromTypeDeclaration($method),
-                listener: $this->factory->create($listener, $method->getName()),
-                priority: $attr->priority
-            );
+            $events = (array)($attr->event ?? $this->getEventFromTypeDeclaration($method));
+            foreach ($events as $event) {
+                $this->registry?->addListener(
+                    event: $event,
+                    listener: $this->factory->create($listener, $method->getName()),
+                    priority: $attr->priority
+                );
+            }
         }
     }
 }
