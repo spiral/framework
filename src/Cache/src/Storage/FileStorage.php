@@ -21,13 +21,7 @@ final class FileStorage implements CacheInterface
 
     public function get(string $key, mixed $default = null): mixed
     {
-        $payload = $this->getPayload($key)['value'];
-
-        if ($payload === null) {
-            return $default;
-        }
-
-        return $payload;
+        return $this->getPayload($key)['value'] ?? $default;
     }
 
     public function set(string $key, mixed $value, null|int|\DateInterval|\DateTimeInterface $ttl = null): bool
