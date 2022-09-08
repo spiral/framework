@@ -72,8 +72,8 @@ class InvocationsTest extends TestCase
         $invocation1 = $invocations[0];
         $invocation2 = $invocations[1];
 
-        $this->assertSame(21, $invocation1->getLine());
-        $this->assertSame(22, $invocation2->getLine());
+        $this->assertSame(15, $invocation1->getLine());
+        $this->assertSame(16, $invocation2->getLine());
     }
 
     public function testLevel()
