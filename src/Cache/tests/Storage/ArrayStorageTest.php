@@ -181,7 +181,6 @@ final class ArrayStorageTest extends TestCase
     {
         $reflection = new \ReflectionClass($this->storage);
         $property = $reflection->getProperty('storage');
-        $property->setAccessible(true);
 
         return $property->getValue($this->storage)[$key]['timestamp'] ?? null;
     }
@@ -190,7 +189,6 @@ final class ArrayStorageTest extends TestCase
     {
         $reflection = new \ReflectionClass($this->storage);
         $property = $reflection->getProperty('storage');
-        $property->setAccessible(true);
 
         return $property->getValue($this->storage) === [];
     }

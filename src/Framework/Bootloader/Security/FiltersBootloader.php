@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Security;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
@@ -80,9 +81,10 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
 
     private function initFilterProvider(
         Container $container,
-        FiltersConfig $config
+        FiltersConfig $config,
+        ?EventDispatcherInterface $dispatcher = null
     ): FilterProvider {
-        $core = new InterceptableCore(new Core());
+        $core = new InterceptableCore(new Core(), $dispatcher);
 
         foreach ($config->getInterceptors() as $interceptor) {
             $core->addInterceptor($container->get($interceptor));

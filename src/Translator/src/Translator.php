@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Translator;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Translator\Config\TranslatorConfig;
+use Spiral\Translator\Event\LocaleUpdated;
 use Spiral\Translator\Exception\LocaleException;
 use Spiral\Translator\Exception\PluralizationException;
 use Symfony\Component\Translation\IdentityTranslator;
@@ -22,7 +24,8 @@ final class Translator implements TranslatorInterface, SingletonInterface
         private readonly TranslatorConfig $config,
         private readonly CatalogueManagerInterface $catalogueManager,
         /** @internal */
-        private readonly IdentityTranslator $identityTranslator = new IdentityTranslator()
+        private readonly IdentityTranslator $identityTranslator = new IdentityTranslator(),
+        private readonly ?EventDispatcherInterface $dispatcher = null,
     ) {
         $this->locale = $this->config->getDefaultLocale();
         $this->catalogueManager->load($this->locale);
@@ -44,6 +47,8 @@ final class Translator implements TranslatorInterface, SingletonInterface
 
         $this->locale = $locale;
         $this->catalogueManager->load($locale);
+
+        $this->dispatcher?->dispatch(new LocaleUpdated($locale));
     }
 
     public function getLocale(): string

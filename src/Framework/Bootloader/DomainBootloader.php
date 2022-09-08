@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Bootloader;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Core;
 use Spiral\Core\InterceptableCore;
@@ -19,9 +20,12 @@ abstract class DomainBootloader extends Bootloader
     // the set of interceptors for the domain code
     protected const INTERCEPTORS = [];
 
-    protected static function domainCore(Core $core, ContainerInterface $container): InterceptableCore
-    {
-        $interceptableCore = new InterceptableCore($core);
+    protected static function domainCore(
+        Core $core,
+        ContainerInterface $container,
+        ?EventDispatcherInterface $dispatcher = null
+    ): InterceptableCore {
+        $interceptableCore = new InterceptableCore($core, $dispatcher);
 
         foreach (static::INTERCEPTORS as $interceptor) {
             $interceptableCore->addInterceptor($container->get($interceptor));

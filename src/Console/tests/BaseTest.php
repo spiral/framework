@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Console;
 
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Console\CommandLocator;
 use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Console;
@@ -41,14 +42,15 @@ abstract class BaseTest extends TestCase
         );
     }
 
-    protected function getCore(LocatorInterface $locator = null): Console
+    protected function getCore(LocatorInterface $locator = null, ?EventDispatcherInterface $eventDispatcher = null): Console
     {
         $config = $this->container->get(ConsoleConfig::class);
 
         return new Console(
-            $config,
-            $locator ?? $this->getStaticLocator([]),
-            $this->container
+            config: $config,
+            locator: $locator ?? $this->getStaticLocator([]),
+            container: $this->container,
+            dispatcher: $eventDispatcher
         );
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Auth\Middleware;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -25,13 +26,15 @@ final class AuthTransportMiddleware implements MiddlewareInterface
         ScopeInterface $scope,
         ActorProviderInterface $actorProvider,
         TokenStorageInterface $tokenStorage,
-        TransportRegistry $transportRegistry
+        TransportRegistry $transportRegistry,
+        ?EventDispatcherInterface $eventDispatcher = null
     ) {
         $this->authMiddleware = new AuthMiddleware(
             $scope,
             $actorProvider,
             $tokenStorage,
-            $this->getTransportRegistry($transportRegistry, $transportName)
+            $this->getTransportRegistry($transportRegistry, $transportName),
+            $eventDispatcher
         );
     }
 

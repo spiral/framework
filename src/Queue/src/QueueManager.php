@@ -15,7 +15,7 @@ final class QueueManager implements QueueConnectionProviderInterface
 
     public function __construct(
         private readonly QueueConfig $config,
-        private readonly FactoryInterface $factory
+        private readonly FactoryInterface $factory,
     ) {
     }
 

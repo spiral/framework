@@ -17,7 +17,7 @@ use Spiral\Mailer\Exception\MailerException;
 use Spiral\Mailer\Message;
 
 /**
- * @requires function \Spiral\Framework\Kernel::init
+ * @requires function \Spiral\Framework\Kernel::create
  */
 class RenderTest extends TestCase
 {

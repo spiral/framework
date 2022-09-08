@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Exception\LocatorException;
 use Spiral\Core\Container;
 use Spiral\Core\ScopeInterface;
+use Spiral\Events\EventDispatcherAwareInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -18,6 +20,7 @@ use Symfony\Component\Console\Input\StreamableInputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as SymfonyEventDispatcherInterface;
 
 final class Console
 {
@@ -30,7 +33,8 @@ final class Console
         private readonly ConsoleConfig $config,
         private readonly ?LocatorInterface $locator = null,
         private readonly ContainerInterface $container = new Container(),
-        private readonly ScopeInterface $scope = new Container()
+        private readonly ScopeInterface $scope = new Container(),
+        private readonly ?EventDispatcherInterface $dispatcher = null
     ) {
     }
 
@@ -92,6 +96,9 @@ final class Console
         $this->application = new Application($this->config->getName(), $this->config->getVersion());
         $this->application->setCatchExceptions(false);
         $this->application->setAutoExit(false);
+        if ($this->dispatcher instanceof SymfonyEventDispatcherInterface) {
+            $this->application->setDispatcher($this->dispatcher);
+        }
 
         if ($this->locator !== null) {
             $this->addCommands($this->locator->locateCommands());
@@ -112,6 +119,10 @@ final class Console
             if ($command instanceof Command) {
                 $command->setContainer($this->container);
                 $command->setInterceptors($interceptors);
+            }
+
+            if ($this->dispatcher !== null && $command instanceof EventDispatcherAwareInterface) {
+                $command->setEventDispatcher($this->dispatcher);
             }
 
             $this->application->add($command);

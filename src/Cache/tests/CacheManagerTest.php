@@ -63,7 +63,7 @@ final class CacheManagerTest extends TestCase
             'foo' => 'bar',
         ])->andReturn($storage);
 
-        $this->assertSame($storage, $this->manager->storage());
+        $this->assertSame($storage, $this->manager->storage()->getStorage());
     }
 
     public function testGetStorageByName(): void
@@ -75,7 +75,7 @@ final class CacheManagerTest extends TestCase
             'foo' => 'baz',
         ])->andReturn($storage);
 
-        $this->assertSame($storage, $this->manager->storage('file'));
+        $this->assertSame($storage, $this->manager->storage('file')->getStorage());
     }
 
     public function testGetStorageWithStorageTypeAlias(): void
@@ -87,7 +87,7 @@ final class CacheManagerTest extends TestCase
             'bar' => 'baz',
         ])->andReturn($storage);
 
-        $this->assertSame($storage, $this->manager->storage('inMemory'));
+        $this->assertSame($storage, $this->manager->storage('inMemory')->getStorage());
     }
 
     public function testGetStorageByAlias(): void
@@ -99,7 +99,7 @@ final class CacheManagerTest extends TestCase
             'foo' => 'bar',
         ])->andReturn($storage);
 
-        $this->assertSame($storage, $this->manager->storage('user-data'));
+        $this->assertSame($storage, $this->manager->storage('user-data')->getStorage());
     }
 
     public function testStorageShouldBeCreatedOnlyOnce(): void
@@ -112,15 +112,15 @@ final class CacheManagerTest extends TestCase
             'foo' => 'bar',
         ])->andReturn($storage1);
 
-        $this->assertSame($storage1, $this->manager->storage());
-        $this->assertSame($storage1, $this->manager->storage());
+        $this->assertSame($storage1, $this->manager->storage()->getStorage());
+        $this->assertSame($storage1, $this->manager->storage()->getStorage());
 
         $this->factory->shouldReceive('make')->once()->with('file-storage-class', [
             'type' => 'file-storage-class',
             'foo' => 'baz',
         ])->andReturn($storage2);
 
-        $this->assertSame($storage2, $this->manager->storage('file'));
-        $this->assertSame($storage2, $this->manager->storage('file'));
+        $this->assertSame($storage2, $this->manager->storage('file')->getStorage());
+        $this->assertSame($storage2, $this->manager->storage('file')->getStorage());
     }
 }

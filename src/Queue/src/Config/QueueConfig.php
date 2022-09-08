@@ -35,7 +35,7 @@ final class QueueConfig extends InjectableConfig
      */
     public function getAliases(): array
     {
-        return (array)($this->config['aliases'] ?? []);
+        return $this->config['aliases'];
     }
 
     /**
@@ -64,10 +64,6 @@ final class QueueConfig extends InjectableConfig
      */
     public function getDefaultDriver(): string
     {
-        if (!isset($this->config['default']) || empty($this->config['default'])) {
-            throw new InvalidArgumentException('Default queue connection is not defined.');
-        }
-
         if (!\is_string($this->config['default'])) {
             throw new InvalidArgumentException('Default queue connection config value must be a string');
         }

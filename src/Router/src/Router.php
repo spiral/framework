@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Spiral\Router;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
+use Spiral\Router\Event\RouteMatched;
+use Spiral\Router\Event\RouteNotFound;
+use Spiral\Router\Event\Routing;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\RouterException;
@@ -39,7 +43,8 @@ final class Router implements RouterInterface
     public function __construct(
         string $basePath,
         private readonly UriHandler $uriHandler,
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
+        private readonly ?EventDispatcherInterface $eventDispatcher = null
     ) {
         $this->basePath = '/' . \ltrim($basePath, '/');
     }
@@ -50,6 +55,8 @@ final class Router implements RouterInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $this->eventDispatcher?->dispatch(new Routing($request));
+
         try {
             $route = $this->matchRoute($request, $routeName);
         } catch (RouteException $e) {
@@ -57,15 +64,18 @@ final class Router implements RouterInterface
         }
 
         if ($route === null) {
+            $this->eventDispatcher?->dispatch(new RouteNotFound($request));
             throw new RouteNotFoundException($request->getUri());
         }
 
-        return $route->handle(
-            $request
-                ->withAttribute(self::ROUTE_ATTRIBUTE, $route)
-                ->withAttribute(self::ROUTE_NAME, $routeName)
-                ->withAttribute(self::ROUTE_MATCHES, $route->getMatches() ?? [])
-        );
+        $request = $request
+            ->withAttribute(self::ROUTE_ATTRIBUTE, $route)
+            ->withAttribute(self::ROUTE_NAME, $routeName)
+            ->withAttribute(self::ROUTE_MATCHES, $route->getMatches() ?? []);
+
+        $this->eventDispatcher?->dispatch(new RouteMatched($request, $route));
+
+        return $route->handle($request);
     }
 
     public function setRoute(string $name, RouteInterface $route): void
