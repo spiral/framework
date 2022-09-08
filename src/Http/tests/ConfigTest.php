@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
@@ -44,15 +37,6 @@ class ConfigTest extends TestCase
     {
         $c = new HttpConfig([
             'middleware' => [TestMiddleware::class]
-        ]);
-
-        $this->assertSame([TestMiddleware::class], $c->getMiddleware());
-    }
-
-    public function testBaseMiddlewareFallback(): void
-    {
-        $c = new HttpConfig([
-            'middlewares' => [TestMiddleware::class]
         ]);
 
         $this->assertSame([TestMiddleware::class], $c->getMiddleware());

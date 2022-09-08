@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace Spiral\Boot;
 
 use Closure;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Boot\Event\Bootstrapped;
+use Spiral\Boot\Event\DispatcherFound;
+use Spiral\Boot\Event\DispatcherNotFound;
+use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
 use Spiral\Exceptions\ExceptionHandler;
@@ -54,13 +59,14 @@ abstract class AbstractKernel implements KernelInterface
     protected function __construct(
         protected Container $container,
         protected ExceptionHandlerInterface $exceptionHandler,
-        array $directories,
+        array $directories
     ) {
         $container->bindSingleton(ExceptionHandlerInterface::class, $exceptionHandler);
         $container->bindSingleton(ExceptionRendererInterface::class, $exceptionHandler);
         $container->bindSingleton(ExceptionReporterInterface::class, $exceptionHandler);
         $container->bindSingleton(ExceptionHandler::class, $exceptionHandler);
         $container->bindSingleton(KernelInterface::class, $this);
+
         $container->bindSingleton(self::class, $this);
         $container->bindSingleton(static::class, $this);
 
@@ -106,7 +112,11 @@ abstract class AbstractKernel implements KernelInterface
             $exceptionHandler->register();
         }
 
-        return new static($container, $exceptionHandler, $directories);
+        return new static(
+            $container,
+            $exceptionHandler,
+            $directories
+        );
     }
 
     /**
@@ -144,6 +154,12 @@ abstract class AbstractKernel implements KernelInterface
 
             return null;
         }
+
+        $eventDispatcher = $this->container->has(EventDispatcherInterface::class)
+            ? $this->container->get(EventDispatcherInterface::class)
+            : null;
+
+        $eventDispatcher?->dispatch(new Bootstrapped($this));
 
         return $this;
     }
@@ -210,6 +226,21 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
+     * Register a new callback, that will be fired after framework bootstrapped.
+     * (Before serving)
+     *
+     * $kernel->bootstrapped(static function(KernelInterface $kernel) {
+     *     $kernel->getContainer()->...
+     * });
+     */
+    public function bootstrapped(Closure ...$callbacks): void
+    {
+        foreach ($callbacks as $callback) {
+            $this->bootstrappedCallbacks[] = $callback;
+        }
+    }
+
+    /**
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
      */
@@ -229,14 +260,26 @@ abstract class AbstractKernel implements KernelInterface
      */
     public function serve(): mixed
     {
+        $eventDispatcher = $this->container->has(EventDispatcherInterface::class)
+            ? $this->container->get(EventDispatcherInterface::class)
+            : null;
+
+        $eventDispatcher?->dispatch(new Serving());
+
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
-                    static fn () => $dispatcher->serve()
+                    static function () use ($dispatcher, $eventDispatcher): mixed {
+                        $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
+
+                        return $dispatcher->serve();
+                    }
                 );
             }
         }
+
+        $eventDispatcher?->dispatch(new DispatcherNotFound());
 
         throw new BootException('Unable to locate active dispatcher.');
     }

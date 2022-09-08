@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\App;
@@ -70,6 +63,9 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         // Broadcasting
         \Spiral\Broadcasting\Bootloader\BroadcastingBootloader::class,
         \Spiral\Broadcasting\Bootloader\WebsocketsBootloader::class,
+
+        // Events
+        \Spiral\Events\Bootloader\EventsBootloader::class,
 
         // Auth
         Bootloader\Auth\HttpAuthBootloader::class,

@@ -8,12 +8,26 @@ use Psr\Http\Message\ResponseInterface;
 
 final class AuthorizationStatus
 {
+    /**
+     * @param array<string, string>|null $topics
+     */
     public function __construct(
         public readonly bool $success,
-        public readonly array $topics,
+        public readonly ?array $topics,
         public readonly array $attributes = [],
         public readonly ?ResponseInterface $response = null
     ) {
+    }
+
+    /**
+     * @param bool $success
+     * @param array<string, string>|null $topics
+     * @param array $attributes
+     * @param ResponseInterface|null $response
+     */
+    public function with(mixed ...$values): self
+    {
+        return new self(...($values + (array)$this));
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Broadcasting\Bootloader;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Bootloader\Http\HttpBootloader;
@@ -20,17 +21,19 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
         BroadcastingBootloader::class,
     ];
 
-    public function boot(Container $container, HttpBootloader $http, BroadcastConfig $config): void
+    public function boot(Container $container): void
     {
         $container->bindSingleton(AuthorizationMiddleware::class, static function (
             BroadcastInterface $broadcast,
             ResponseFactoryInterface $responseFactory,
-            BroadcastConfig $config
+            BroadcastConfig $config,
+            ?EventDispatcherInterface $dispatcher = null
         ): AuthorizationMiddleware {
             return new AuthorizationMiddleware(
                 $broadcast,
                 $responseFactory,
-                $config->getAuthorizationPath()
+                $config->getAuthorizationPath(),
+                $dispatcher
             );
         });
     }

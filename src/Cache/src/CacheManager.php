@@ -38,6 +38,6 @@ class CacheManager implements CacheStorageProviderInterface, SingletonInterface
     {
         $config = $this->config->getStorageConfig($name);
 
-        return $this->factory->make($config['type'], $config);
+        return new CacheRepository($this->factory->make($config['type'], $config));
     }
 }

@@ -1,21 +1,16 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\SendIt;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Mailer\Message;
 use Spiral\SendIt\Config\MailerConfig;
+use Spiral\SendIt\Event\MessageNotSent;
+use Spiral\SendIt\Event\MessageSent;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
@@ -30,8 +25,6 @@ class JobTest extends TestCase
     protected $mailer;
     /** @var RendererInterface */
     protected $renderer;
-    /** @var LoggerInterface */
-    protected $logger;
 
     public function setUp(): void
     {
@@ -39,7 +32,6 @@ class JobTest extends TestCase
 
         $this->mailer = m::mock(MailerInterface::class);
         $this->renderer = m::mock(RendererInterface::class);
-        $this->logger = m::mock(LoggerInterface::class);
     }
 
     public function testHandler(): void
@@ -49,11 +41,6 @@ class JobTest extends TestCase
         $this->expectRenderer($email);
 
         $this->mailer->expects('send')->with($email);
-
-        $this->logger->expects('debug')->with(
-            'Sent `test` to "email@domain.com"',
-            ['emails' => ['email@domain.com']]
-        );
 
         $this->getHandler()->handle(
             MailQueue::JOB_NAME,
@@ -70,11 +57,6 @@ class JobTest extends TestCase
 
         $this->mailer->expects('send')->with($email)->andThrow(new TransportException('failed'));
 
-        $this->logger->expects('error')->with(
-            'Failed to send `test` to "email@domain.com": failed',
-            ['emails' => ['email@domain.com']]
-        );
-
         try {
             $this->getHandler()->handle(
                 MailQueue::JOB_NAME,
@@ -83,8 +65,49 @@ class JobTest extends TestCase
             );
         } catch (TransportException $e) {
         }
+    }
 
-        $this->logger->mockery_verify();
+    public function testMessageSentEventShouldBeDispatched(): void
+    {
+        $email = $this->getEmail();
+
+        $this->expectRenderer($email);
+
+        $this->mailer->expects('send')->with($email);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::once())
+            ->method('dispatch')
+            ->with(new MessageSent($email));
+
+        $this->getHandler($dispatcher)->handle(
+            MailQueue::JOB_NAME,
+            'id',
+            \json_encode(MessageSerializer::pack($this->getMail()))
+        );
+    }
+
+    public function testMessageNotSentEventShouldBeDispatched(): void
+    {
+        $email = $this->getEmail();
+        $exception = new TransportException('failed');
+
+        $this->expectRenderer($email);
+        $this->mailer->expects('send')->with($email)->andThrow($exception);
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::once())
+            ->method('dispatch')
+            ->with(new MessageNotSent($email, $exception));
+
+        $this->expectException(TransportException::class);
+        $this->getHandler($dispatcher)->handle(
+            MailQueue::JOB_NAME,
+            'id',
+            \json_encode(MessageSerializer::pack($this->getMail()))
+        );
     }
 
     private function getEmail(): Email
@@ -105,14 +128,15 @@ class JobTest extends TestCase
         )->andReturn($email);
     }
 
-    private function getHandler(): MailJob
+    private function getHandler(?EventDispatcherInterface $dispatcher = null): MailJob
     {
         $handler = new MailJob(
             new MailerConfig(['from' => 'no-reply@spiral.dev']),
             $this->mailer,
-            $this->renderer
+            $this->renderer,
+            $dispatcher
         );
-        $handler->setLogger($this->logger);
+
         return $handler;
     }
 

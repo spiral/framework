@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 namespace Spiral\Tests\Streams;
 
 use PHPUnit\Framework\TestCase;

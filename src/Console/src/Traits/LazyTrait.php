@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace Spiral\Console\Traits;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Console\Command as SpiralCommand;
 use Spiral\Console\Config\ConsoleConfig;
+use Spiral\Events\EventDispatcherAwareInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Command\LazyCommand;
 
 trait LazyTrait
 {
     private ContainerInterface $container;
-    private ConsoleConfig $config;
     private array $interceptors = [];
+    private ?EventDispatcherInterface $dispatcher = null;
 
     /**
      * Check if command can be lazy-loaded.
@@ -47,6 +49,10 @@ trait LazyTrait
 
                 $command->setContainer($this->container);
                 $command->setInterceptors($this->interceptors);
+
+                if ($this->dispatcher !== null && $command instanceof EventDispatcherAwareInterface) {
+                    $command->setEventDispatcher($this->dispatcher);
+                }
 
                 return $command;
             }

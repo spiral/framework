@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\SendIt\App;
@@ -18,14 +11,14 @@ use Symfony\Component\Mime\RawMessage;
 
 class MailInterceptor implements MailerInterface
 {
-    private $last;
+    private RawMessage $last;
 
     public function send(RawMessage $message, Envelope $envelope = null): void
     {
         $this->last = $message;
     }
 
-    public function getLast(): Email
+    public function getLast(): RawMessage
     {
         return $this->last;
     }

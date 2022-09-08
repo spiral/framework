@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Pavel Z
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Http;

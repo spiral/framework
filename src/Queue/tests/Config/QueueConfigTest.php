@@ -58,16 +58,6 @@ final class QueueConfigTest extends TestCase
         $this->assertSame('foo', $config->getDefaultDriver());
     }
 
-    public function testGetsEmptyDefaultDriverShouldThrowAnException(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Default queue connection is not defined.');
-
-        $config = new QueueConfig();
-
-        $config->getDefaultDriver();
-    }
-
     public function testGetsNonStringDefaultDriverShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);

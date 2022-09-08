@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Console\Event\CommandFinished;
+use Spiral\Console\Event\CommandStarting;
 use Spiral\Console\Signature\Parser;
 use Spiral\Console\Traits\HelpersTrait;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Core\InterceptableCore;
+use Spiral\Events\EventDispatcherAwareInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,7 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Provides automatic command configuration and access to global container scope.
  */
-abstract class Command extends SymfonyCommand
+abstract class Command extends SymfonyCommand implements EventDispatcherAwareInterface
 {
     use HelpersTrait;
 
@@ -35,6 +39,7 @@ abstract class Command extends SymfonyCommand
     protected const ARGUMENTS = [];
 
     protected ?ContainerInterface $container = null;
+    protected ?EventDispatcherInterface $eventDispatcher = null;
 
     /** @var array<class-string<CoreInterceptorInterface>> */
     protected array $interceptors = [];
@@ -54,6 +59,11 @@ abstract class Command extends SymfonyCommand
         $this->interceptors = $interceptors;
     }
 
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
     /**
      * Pass execution to "perform" method using container to resolve method dependencies.
      */
@@ -70,12 +80,18 @@ abstract class Command extends SymfonyCommand
         try {
             [$this->input, $this->output] = [$this->prepareInput($input), $this->prepareOutput($input, $output)];
 
+            $this->eventDispatcher?->dispatch(new CommandStarting($this, $this->input, $this->output));
+
             // Executing perform method with method injection
-            return (int)$core->callAction(static::class, $method, [
+            $code = (int)$core->callAction(static::class, $method, [
                 'input' => $this->input,
                 'output' => $this->output,
                 'command' => $this,
             ]);
+
+            $this->eventDispatcher?->dispatch(new CommandFinished($this, $code, $this->input, $this->output));
+
+            return $code;
         } finally {
             [$this->input, $this->output] = [null, null];
         }
@@ -84,7 +100,8 @@ abstract class Command extends SymfonyCommand
     protected function buildCore(): CoreInterface
     {
         $core = $this->container->get(CommandCore::class);
-        $interceptableCore = new InterceptableCore($core);
+
+        $interceptableCore = new InterceptableCore($core, $this->eventDispatcher);
 
         foreach ($this->interceptors as $interceptor) {
             $interceptableCore->addInterceptor($this->container->get($interceptor));

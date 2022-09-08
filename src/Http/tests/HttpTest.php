@@ -1,21 +1,17 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\Event\RequestHandled;
+use Spiral\Http\Event\RequestReceived;
 use Spiral\Http\Exception\HttpException;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
@@ -244,6 +240,27 @@ class HttpTest extends TestCase
         $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html;charset=UTF-8'], $response->getHeader('Content-Type'));
         $this->assertSame(['value'], $response->getHeader('hello'));
+    }
+
+    public function testEventsShouldBeDispatched(): void
+    {
+        $request = new ServerRequest('GET', '');
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::exactly(2))
+            ->method('dispatch')
+            ->with($this->callback(static fn (RequestReceived|RequestHandled $event): bool => true));
+        $this->container->bind(EventDispatcherInterface::class, $dispatcher);
+
+        $core = $this->getCore();
+
+        $core->setHandler(function () {
+            return 'hello world';
+        });
+
+        $response = $core->handle($request);
+        $this->assertSame('hello world', (string)$response->getBody());
     }
 
     protected function getCore(array $middleware = []): Http

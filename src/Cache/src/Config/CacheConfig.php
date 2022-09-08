@@ -23,7 +23,7 @@ final class CacheConfig extends InjectableConfig
      */
     public function getAliases(): array
     {
-        return (array)($this->config['aliases'] ?? []);
+        return $this->config['aliases'];
     }
 
     /**
@@ -31,10 +31,6 @@ final class CacheConfig extends InjectableConfig
      */
     public function getDefaultStorage(): string
     {
-        if (!isset($this->config['default']) || empty($this->config['default'])) {
-            throw new InvalidArgumentException('Default cache storage is not defined.');
-        }
-
         if (!\is_string($this->config['default'])) {
             throw new InvalidArgumentException('Default cache storage config value must be a string');
         }

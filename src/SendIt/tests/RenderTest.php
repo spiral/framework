@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\SendIt;
@@ -17,7 +10,7 @@ use Spiral\Mailer\Exception\MailerException;
 use Spiral\Mailer\Message;
 
 /**
- * @requires function \Spiral\Framework\Kernel::init
+ * @requires function \Spiral\Framework\Kernel::create
  */
 class RenderTest extends TestCase
 {

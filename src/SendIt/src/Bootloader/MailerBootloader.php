@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt\Bootloader;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
@@ -69,8 +70,11 @@ class MailerBootloader extends Bootloader
         return Transport::fromDsn($config->getDSN());
     }
 
-    public function mailer(TransportInterface $transport): SymfonyMailer
+    public function mailer(TransportInterface $transport, ?EventDispatcherInterface $dispatcher = null): SymfonyMailer
     {
-        return new Mailer($transport);
+        return new Mailer(
+            transport: $transport,
+            dispatcher: $dispatcher
+        );
     }
 }

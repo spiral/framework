@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Interceptor\Consume;
 
 use Mockery as m;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Queue\Event\JobProcessed;
+use Spiral\Queue\Event\JobProcessing;
 use Spiral\Queue\HandlerInterface;
 use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\Interceptor\Consume\Core;
@@ -27,6 +30,35 @@ final class CoreTest extends TestCase
         $core->callAction('foo', 'bar', [
             'id' => 'job-id',
             'payload' => ['baz' => 'baf'],
+        ]);
+    }
+
+    public function testEventsShouldBeDispatched(): void
+    {
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher
+            ->expects(self::exactly(2))
+            ->method('dispatch')
+            ->with($this->logicalOr(
+                new JobProcessing('foo', 'bar', 'other', 'id', []),
+                new JobProcessed('foo', 'bar', 'other', 'id', [])
+            ));
+
+        $core = new Core(
+            $registry = m::mock(HandlerRegistryInterface::class),
+            $dispatcher
+        );
+
+        $registry->shouldReceive('getHandler')->with('foo')->once()
+            ->andReturn($handler = m::mock(HandlerInterface::class));
+        $handler->shouldReceive('handle')->once()
+            ->with('foo', 'id', []);
+
+        $core->callAction('foo', 'bar', [
+            'driver' => 'bar',
+            'queue' => 'other',
+            'id' => 'id',
+            'payload' => []
         ]);
     }
 }

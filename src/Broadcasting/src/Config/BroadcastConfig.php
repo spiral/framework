@@ -53,7 +53,7 @@ final class BroadcastConfig extends InjectableConfig
      */
     public function getDefaultConnection(): string
     {
-        if (!isset($this->config['default']) || empty($this->config['default'])) {
+        if (empty($this->config['default'])) {
             throw new InvalidArgumentException('Default broadcast connection is not defined.');
         }
 

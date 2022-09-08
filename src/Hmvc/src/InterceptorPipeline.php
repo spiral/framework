@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Core\Event\InterceptorCalling;
 use Spiral\Core\Exception\InterceptorException;
 
 /**
@@ -17,6 +19,11 @@ final class InterceptorPipeline implements CoreInterface
     private array $interceptors = [];
 
     private int $position = 0;
+
+    public function __construct(
+        private readonly ?EventDispatcherInterface $dispatcher = null
+    ) {
+    }
 
     public function addInterceptor(CoreInterceptorInterface $interceptor): void
     {
@@ -42,7 +49,15 @@ final class InterceptorPipeline implements CoreInterface
 
         $position = $this->position++;
         if (isset($this->interceptors[$position])) {
-            return $this->interceptors[$position]->process($controller, $action, $parameters, $this);
+            $interceptor = $this->interceptors[$position];
+            $this->dispatcher?->dispatch(new InterceptorCalling(
+                controller: $controller,
+                action: $action,
+                parameters: $parameters,
+                interceptor: $interceptor
+            ));
+
+            return $interceptor->process($controller, $action, $parameters, $this);
         }
 
         return $this->core->callAction($controller, $action, $parameters);
