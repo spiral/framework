@@ -19,11 +19,14 @@ final class ConfigProcessor extends AbstractProcessor
 
     public function process(): void
     {
+        if ($this->registry === null) {
+            return;
+        }
         foreach ($this->config->getListeners() as $event => $eventListeners) {
             foreach ($eventListeners as $listener) {
                 $method = $this->getMethod($listener->listener, $listener->method);
 
-                $this->registry?->addListener(
+                $this->registry->addListener(
                     event: $event,
                     listener: $this->factory->create($listener->listener, $method->getName()),
                     priority: $listener->priority
