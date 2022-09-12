@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\BootloadManager;
 
-use Spiral\Boot\Bootloader\BootloaderInterface;
+use Spiral\Boot\BootloadManagerInterface;
 use Spiral\Boot\Exception\BootloaderAlreadyBootedException;
 use Spiral\Core\Container;
 
 /**
  * @internal
- * @psalm-type TClass = class-string<BootloaderInterface>
+ * @psalm-import-type TClass from BootloadManagerInterface
  */
 final class ClassesRegistry implements Container\SingletonInterface
 {

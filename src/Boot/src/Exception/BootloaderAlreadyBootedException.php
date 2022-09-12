@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\Exception;
 
+use Spiral\Boot\BootloadManagerInterface;
+
+/**
+ * @psalm-import-type TClass from BootloadManagerInterface
+ */
 final class BootloaderAlreadyBootedException extends BootException
 {
     /**
-     * @psalm-param class-string $bootloader
+     * @psalm-param TClass $bootloader
      */
     public function __construct(string $bootloader)
     {
