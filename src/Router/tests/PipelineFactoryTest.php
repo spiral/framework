@@ -6,6 +6,7 @@ namespace Spiral\Tests\Router;
 
 use Mockery as m;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -18,6 +19,8 @@ use Spiral\Router\PipelineFactory;
 
 final class PipelineFactoryTest extends TestCase
 {
+    use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     private ContainerInterface&m\MockInterface $container;
     private FactoryInterface&m\MockInterface $factory;
     private PipelineFactory $pipeline;
@@ -48,7 +51,7 @@ final class PipelineFactoryTest extends TestCase
             ->shouldReceive('make')
             ->once()
             ->with(Pipeline::class)
-            ->andReturn($p = new Pipeline(m::mock(ScopeInterface::class)));
+            ->andReturn($p = new Pipeline($scope = m::mock(ScopeInterface::class)));
 
         $this->factory
             ->shouldReceive('make')
@@ -68,10 +71,16 @@ final class PipelineFactoryTest extends TestCase
             new Autowire('bar'),
         ]));
 
-        $middleware1->shouldReceive('process')->once();
-        $middleware2->shouldReceive('process')->once();
-        $middleware4->shouldReceive('process')->once();
-        $middleware5->shouldReceive('process')->once();
+        $handle = function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
+            return $handler->handle($request);
+        };
+
+        $middleware1->shouldReceive('process')->once()->andReturnUsing($handle);
+        $middleware2->shouldReceive('process')->once()->andReturnUsing($handle);
+        $middleware4->shouldReceive('process')->once()->andReturnUsing($handle);
+        $middleware5->shouldReceive('process')->once()->andReturnUsing($handle);
+
+        $scope->shouldReceive('runScope')->once()->andReturn(m::mock(ResponseInterface::class));
 
         $p
             ->withHandler(m::mock(RequestHandlerInterface::class))
