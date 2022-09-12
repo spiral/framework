@@ -25,7 +25,7 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
      */
     public function __construct(array $config = [])
     {
-        $this->config = \array_merge($this->config, $config);
+        $this->config = $config + $this->config;
     }
 
     /**
