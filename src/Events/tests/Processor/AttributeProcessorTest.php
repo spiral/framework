@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Events\Processor;
 
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Events\Attribute\Listener;
 use Spiral\Events\AutowireListenerFactory;
-use Spiral\Events\ListenerLocatorInterface;
+use Spiral\Events\ListenerFactoryInterface;
+use Spiral\Events\ListenerRegistryInterface;
 use Spiral\Events\Processor\AttributeProcessor;
 use Spiral\Tests\Events\Fixtures\Event\BarEvent;
 use Spiral\Tests\Events\Fixtures\Event\FooEvent;
@@ -18,20 +21,77 @@ use Spiral\Tests\Events\Fixtures\Listener\ClassAttributeWithParameters;
 use Spiral\Tests\Events\Fixtures\Listener\MethodAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\MethodAttributeWithParameters;
 use Spiral\Tests\Events\Stub\PlainListenerRegistry;
+use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
+use Spiral\Events\Attribute;
 
 final class AttributeProcessorTest extends TestCase
 {
+    use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    public function testEventListenerShouldNotBeRegisteredWithoutListenerRegistry(): void
+    {
+        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
+        $reader = m::mock(ReaderInterface::class);
+        $factory = m::mock(ListenerFactoryInterface::class);
+
+        $tokenizerRegistry->shouldNotReceive('addListener');
+
+        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory);
+        $processor->process();
+    }
+
+    public function testEventListenerShouldNotBeRegisteredWithListenerRegistry(): void
+    {
+        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
+        $reader = m::mock(ReaderInterface::class);
+        $factory = m::mock(ListenerFactoryInterface::class);
+        $listenerRegistry = m::mock(ListenerRegistryInterface::class);
+
+        $tokenizerRegistry->shouldReceive('addListener')
+            ->once()
+            ->withArgs(fn (AttributeProcessor $attributeProcessor) => true);
+
+        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory, $listenerRegistry);
+    }
+
+    public function testEventListenerShouldThrowAnExceptionWhenListenerNotFinalized(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectErrorMessage('Tokenizer did not finalize Spiral\Events\Processor\AttributeProcessor listener.');
+
+        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
+        $reader = m::mock(ReaderInterface::class);
+        $factory = m::mock(ListenerFactoryInterface::class);
+        $listenerRegistry = m::mock(ListenerRegistryInterface::class);
+
+        $tokenizerRegistry->shouldReceive('addListener')->once();
+
+        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory, $listenerRegistry);
+        $processor->process();
+    }
+
     /**
      * @param class-string $class
-     *
      * @dataProvider listenersDataProvider
      */
     public function testProcess(string $class, Listener $listener, array $args, int $listeners = 1): void
     {
-        $locator = $this->createListenerLocator($class, $listener);
+        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
+        $reader = m::mock(ReaderInterface::class);
+        $factory = m::mock(ListenerFactoryInterface::class);
         $registry = $this->createListenerRegistry();
 
-        $processor = new AttributeProcessor($locator, new AutowireListenerFactory(), $registry);
+        $tokenizerRegistry->shouldReceive('addListener')->once();
+
+        $ref = new \ReflectionClass($class);
+        $reader->shouldReceive('getClassMetadata')->once()->with($ref, Listener::class)->andReturn([$listener]);
+        $reader->shouldReceive('getFunctionMetadata');
+        $factory->shouldReceive('create');
+
+        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory, $registry);
+        $processor->listen($ref);
+        $processor->finalize();
+
         $processor->process();
 
         $this->assertSame((array)$args[0], $registry->events);
@@ -48,8 +108,8 @@ final class AttributeProcessorTest extends TestCase
             [
                 FooEvent::class,
                 (new AutowireListenerFactory())->create(ClassAndMethodAttribute::class, 'onFooEvent'),
-                0
-            ]
+                0,
+            ],
         ];
         yield [
             ClassAttributeUnionType::class,
@@ -57,9 +117,9 @@ final class AttributeProcessorTest extends TestCase
             [
                 [FooEvent::class, BarEvent::class],
                 (new AutowireListenerFactory())->create(ClassAttributeUnionType::class, '__invoke'),
-                0
+                0,
             ],
-            2
+            2,
         ];
         yield [
             ClassAndMethodAttribute::class,
@@ -67,8 +127,8 @@ final class AttributeProcessorTest extends TestCase
             [
                 BarEvent::class,
                 (new AutowireListenerFactory())->create(ClassAndMethodAttribute::class, 'onBarEvent'),
-                0
-            ]
+                0,
+            ],
         ];
         yield [
             ClassAttribute::class,
@@ -76,8 +136,8 @@ final class AttributeProcessorTest extends TestCase
             [
                 BarEvent::class,
                 (new AutowireListenerFactory())->create(ClassAttribute::class, '__invoke'),
-                0
-            ]
+                0,
+            ],
         ];
         yield [
             ClassAttributeWithParameters::class,
@@ -85,8 +145,8 @@ final class AttributeProcessorTest extends TestCase
             [
                 FooEvent::class,
                 (new AutowireListenerFactory())->create(ClassAttributeWithParameters::class, 'customMethod'),
-                0
-            ]
+                0,
+            ],
         ];
         yield [
             MethodAttribute::class,
@@ -94,8 +154,8 @@ final class AttributeProcessorTest extends TestCase
             [
                 BarEvent::class,
                 (new AutowireListenerFactory())->create(MethodAttribute::class, '__invoke'),
-                0
-            ]
+                0,
+            ],
         ];
         yield [
             MethodAttributeWithParameters::class,
@@ -103,31 +163,9 @@ final class AttributeProcessorTest extends TestCase
             [
                 FooEvent::class,
                 (new AutowireListenerFactory())->create(MethodAttributeWithParameters::class, 'customMethod'),
-                0
-            ]
+                0,
+            ],
         ];
-    }
-
-    /**
-     * @param class-string $class
-     */
-    public function createListenerLocator(string $class, Listener $listener): ListenerLocatorInterface
-    {
-        return new class($class, $listener) implements ListenerLocatorInterface {
-            /**
-             * @param class-string $class
-             */
-            public function __construct(
-                private readonly string $class,
-                private readonly Listener $listener
-            ) {
-            }
-
-            public function findListeners(): \Generator
-            {
-                yield $this->class => $this->listener;
-            }
-        };
     }
 
     public function createListenerRegistry(): PlainListenerRegistry

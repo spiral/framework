@@ -9,11 +9,18 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\TokenizationListenerInterface;
+use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
-final class TokenizerListenerBootloader extends Bootloader implements SingletonInterface
+final class TokenizerListenerBootloader extends Bootloader implements
+    SingletonInterface,
+    TokenizerListenerRegistryInterface
 {
     protected const DEPENDENCIES = [
         TokenizerBootloader::class,
+    ];
+
+    protected const SINGLETONS = [
+        TokenizerListenerRegistryInterface::class => self::class,
     ];
 
     /** @var TokenizationListenerInterface[] */
@@ -26,7 +33,7 @@ final class TokenizerListenerBootloader extends Bootloader implements SingletonI
 
     public function boot(AbstractKernel $kernel, ClassesInterface $classes): void
     {
-        $kernel->bootstrapped(function () use ($classes) {
+        $kernel->bootstrapped(function () use ($classes): void {
             foreach ($classes->getClasses() as $class) {
                 $this->invokeListeners($class);
             }

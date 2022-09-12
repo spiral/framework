@@ -76,9 +76,7 @@ class ConfigTest extends BaseTest
 
     public function testBootloaderDirective(): void
     {
-        $this->container->bind('testBinding', function () {
-            return 'test result';
-        });
+        $this->container->bind('testBinding', $object = new \stdClass());
 
         /** @var StemplerBootloader $bootloader */
         $bootloader = $this->container->get(StemplerBootloader::class);
@@ -89,96 +87,76 @@ class ConfigTest extends BaseTest
         $cfg = $this->container->get(StemplerConfig::class);
 
         $this->assertCount(7, $cfg->getDirectives());
-        $this->assertSame('test result', $cfg->getDirectives()[6]->resolve($this->container));
+        $this->assertSame($object, $cfg->getDirectives()[6]->resolve($this->container));
     }
 
     public function testBootloaderProcessors(): void
     {
-        $this->container->bind('testBinding', function () {
-            return 'test result';
-        });
+        $this->container->bind('testBinding', $object = new \stdClass());
 
-        /** @var StemplerBootloader $bootloader */
         $bootloader = $this->container->get(StemplerBootloader::class);
 
         $bootloader->addProcessor('testBinding');
 
-        /** @var StemplerConfig $cfg */
         $cfg = $this->container->get(StemplerConfig::class);
 
         $this->assertCount(2, $cfg->getProcessors());
-        $this->assertSame('test result', $cfg->getProcessors()[1]->resolve($this->container));
+        $this->assertSame($object, $cfg->getProcessors()[1]->resolve($this->container));
     }
 
     public function testBootloaderVisitors(): void
     {
-        $this->container->bind('testBinding', function () {
-            return 'test result';
-        });
+        $this->container->bind('testBinding', $object = new \stdClass());
 
-        /** @var StemplerBootloader $bootloader */
         $bootloader = $this->container->get(StemplerBootloader::class);
 
         $bootloader->addVisitor('testBinding', Builder::STAGE_FINALIZE);
 
-        /** @var StemplerConfig $cfg */
         $cfg = $this->container->get(StemplerConfig::class);
 
         $this->assertCount(3, $cfg->getVisitors(Builder::STAGE_FINALIZE));
-        $this->assertSame('test result', $cfg->getVisitors(Builder::STAGE_FINALIZE)[2]->resolve($this->container));
+        $this->assertSame($object, $cfg->getVisitors(Builder::STAGE_FINALIZE)[2]->resolve($this->container));
     }
 
     public function testBootloaderVisitors0(): void
     {
-        $this->container->bind('testBinding', function () {
-            return 'test result';
-        });
+        $this->container->bind('testBinding', $object = new \stdClass());
 
-        /** @var StemplerBootloader $bootloader */
         $bootloader = $this->container->get(StemplerBootloader::class);
 
         $bootloader->addVisitor('testBinding', Builder::STAGE_COMPILE);
 
-        /** @var StemplerConfig $cfg */
         $cfg = $this->container->get(StemplerConfig::class);
 
         $this->assertCount(3, $cfg->getVisitors(Builder::STAGE_COMPILE));
-        $this->assertSame('test result', $cfg->getVisitors(Builder::STAGE_COMPILE)[2]->resolve($this->container));
+        $this->assertSame($object, $cfg->getVisitors(Builder::STAGE_COMPILE)[2]->resolve($this->container));
     }
 
     public function testBootloaderVisitors2(): void
     {
-        $this->container->bind('testBinding', function () {
-            return 'test result';
-        });
+        $this->container->bind('testBinding', $object = new \stdClass());
 
-        /** @var StemplerBootloader $bootloader */
         $bootloader = $this->container->get(StemplerBootloader::class);
 
         $bootloader->addVisitor('testBinding', Builder::STAGE_TRANSFORM);
 
-        /** @var StemplerConfig $cfg */
         $cfg = $this->container->get(StemplerConfig::class);
 
         $this->assertCount(1, $cfg->getVisitors(Builder::STAGE_TRANSFORM));
-        $this->assertSame('test result', $cfg->getVisitors(Builder::STAGE_TRANSFORM)[0]->resolve($this->container));
+        $this->assertSame($object, $cfg->getVisitors(Builder::STAGE_TRANSFORM)[0]->resolve($this->container));
     }
 
     public function testBootloaderVisitors3(): void
     {
-        $this->container->bind('testBinding', function () {
-            return 'test result';
-        });
+        $this->container->bind('testBinding', $object = new \stdClass());
 
-        /** @var StemplerBootloader $bootloader */
         $bootloader = $this->container->get(StemplerBootloader::class);
 
         $bootloader->addVisitor('testBinding', Builder::STAGE_PREPARE);
 
-        /** @var StemplerConfig $cfg */
         $cfg = $this->container->get(StemplerConfig::class);
 
         $this->assertCount(4, $cfg->getVisitors(Builder::STAGE_PREPARE));
-        $this->assertSame('test result', $cfg->getVisitors(Builder::STAGE_PREPARE)[3]->resolve($this->container));
+        $this->assertSame($object, $cfg->getVisitors(Builder::STAGE_PREPARE)[3]->resolve($this->container));
     }
 }

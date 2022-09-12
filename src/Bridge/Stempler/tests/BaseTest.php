@@ -65,7 +65,13 @@ abstract class BaseTest extends TestCase
 
         $this->container->bind(ViewsInterface::class, ViewManager::class);
 
-        $this->app = new BootloadManager($this->container, new Initializer($this->container));
+        $this->app = new BootloadManager(
+            $this->container,
+            $this->container,
+            $this->container,
+            new Initializer($this->container, $this->container)
+        );
+        
         $this->app->bootload(static::BOOTLOADERS);
     }
 

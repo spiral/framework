@@ -9,6 +9,7 @@ use Spiral\Tests\Framework\BaseTest;
 use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\TokenizationListenerInterface;
+use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
 final class TokenizerListenerBootloaderTest extends BaseTest
 {
@@ -48,6 +49,14 @@ final class TokenizerListenerBootloaderTest extends BaseTest
     public function testDependencies(): void
     {
         $this->assertBootloaderRegistered(TokenizerBootloader::class);
+    }
+
+    public function testTokenizerListenerRegistryInterfaceBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(
+            TokenizerListenerRegistryInterface::class,
+            TokenizerListenerBootloader::class
+        );
     }
 
     public function testListenerShouldBeListen(): void
