@@ -125,13 +125,16 @@ final class QueueBootloader extends Bootloader
         ConsumeCore $core,
         QueueConfig $config,
         ContainerInterface $container,
+        FactoryInterface $factory,
         ?EventDispatcherInterface $dispatcher = null
     ): Handler {
         $core = new InterceptableCore($core, $dispatcher);
 
         foreach ($config->getConsumeInterceptors() as $interceptor) {
-            if (\is_string($interceptor) || $interceptor instanceof Autowire) {
+            if (\is_string($interceptor)) {
                 $interceptor = $container->get($interceptor);
+            } elseif ($interceptor instanceof Autowire) {
+                $interceptor = $interceptor->resolve($factory);
             }
 
             \assert($interceptor instanceof CoreInterceptorInterface);

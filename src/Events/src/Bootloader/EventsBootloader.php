@@ -67,6 +67,7 @@ final class EventsBootloader extends Bootloader
                         $processor = $container->get($processor);
                         \assert($processor instanceof ProcessorInterface);
                     }
+                    // todo: check case when $processor is an Autowire object
 
                     $registry->addProcessor($processor);
                 }
