@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Core\Exception\ConfigException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Traits\Config\AliasTrait;
+use Spiral\Tests\Core\Fixtures\IntKeysConfig;
 use Spiral\Tests\Core\Fixtures\TestConfig;
 
 class InjectableConfigTest extends TestCase
@@ -141,5 +142,17 @@ class InjectableConfigTest extends TestCase
         ]);
 
         $config->resolveAlias('foo');
+    }
+
+    public function testConfigWithIntKeys(): void
+    {
+        $config = new IntKeysConfig([10 => 'value']);
+
+        $this->assertEquals([
+            1 => 'some',
+            3 => 'other',
+            7 => 'key',
+            10 => 'value'
+        ], $config->toArray());
     }
 }
