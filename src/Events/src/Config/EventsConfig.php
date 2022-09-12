@@ -9,7 +9,7 @@ use Spiral\Core\InjectableConfig;
 use Spiral\Events\Processor\ProcessorInterface;
 
 /**
- * @psalm-type TProcessor = ProcessorInterface|class-string<ProcessorInterface>|Autowire
+ * @psalm-type TProcessor = ProcessorInterface|class-string<ProcessorInterface>|Autowire<ProcessorInterface>
  * @psalm-type TListener = class-string|EventListener
  * @property array{
  *     processors: TProcessor[],
