@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## v2.14.0 - Unreleased
+## v2.14.1 - - Unreleased
+- **Bug Fixes**
+  - [spiral/logger] Added deprecation for `Spiral\Monolog\LogFactory::DEFAULT` constant.
+
+## v2.14.0 - 2022-09-02
 - **Other Features**
   - [spiral/queue] Adding `Spiral\Queue\SerializerRegistry` and ability to define job serializers
   - [spiral/data-grid] Changing private to protected in non-final classes
