@@ -16,6 +16,7 @@ use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
+use Spiral\Core\FactoryInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
 use Spiral\Core\ScopeInterface;
@@ -61,7 +62,7 @@ abstract class AbstractKernel implements KernelInterface
      * @throws \Throwable
      */
     protected function __construct(
-        protected ScopeInterface&InvokerInterface&ResolverInterface&BinderInterface $container,
+        protected FactoryInterface&BinderInterface $container,
         protected ExceptionHandlerInterface $exceptionHandler,
         array $directories
     ) {
@@ -82,12 +83,7 @@ abstract class AbstractKernel implements KernelInterface
         $this->finalizer = new Finalizer();
         $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
 
-        $this->bootloader = new BootloadManager(
-            $container,
-            $container,
-            $container,
-            new Initializer($container, $container)
-        );
+        $this->bootloader = $container->make(BootloadManager::class);
 
         $this->bootloader->bootload(static::SYSTEM);
     }
@@ -107,7 +103,7 @@ abstract class AbstractKernel implements KernelInterface
      *
      * @throws \Throwable
      */
-    public static function create(
+    final public static function create(
         array $directories,
         bool $handleErrors = true,
         ExceptionHandlerInterface|string|null $exceptionHandler = null,
