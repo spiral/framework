@@ -88,19 +88,20 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
     }
 
     /**
-     * @psalm-param SerializerInterface|class-string|Autowire $serializer
+     * @psalm-param SerializerInterface|class-string<SerializerInterface>|Autowire<SerializerInterface> $serializer
      *
      * @throws InvalidArgumentException
      */
     private function resolveSerializer(SerializerInterface|string|Autowire $serializer): SerializerInterface
     {
-        $registry = $this->container->get(SerializerRegistryInterface::class);
-
         if ($serializer instanceof Autowire) {
             $serializer = $serializer->resolve($this->factory);
         }
 
         if (\is_string($serializer)) {
+            $registry = $this->container->get(SerializerRegistryInterface::class);
+            \assert($registry instanceof SerializerRegistryInterface);
+
             $serializer = $registry->has($serializer) ?
                 $registry->get($serializer) :
                 $this->container->get($serializer);

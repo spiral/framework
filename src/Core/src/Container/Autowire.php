@@ -10,13 +10,18 @@ use Spiral\Core\FactoryInterface;
 
 /**
  * Provides ability to delegate option to container.
+ *
+ * @template TObject of object
  */
 final class Autowire
 {
+    /** @var null|TObject */
     private ?object $target = null;
 
     /**
      * Autowire constructor.
+     *
+     * @param non-empty-string|class-string<TObject> $alias
      */
     public function __construct(
         private readonly string $alias,
@@ -62,6 +67,7 @@ final class Autowire
 
     /**
      * @param array $parameters Context specific parameters (always prior to declared ones).
+     * @return TObject
      *
      * @throws AutowireException  No entry was found for this identifier.
      * @throws ContainerException Error while retrieving the entry.
