@@ -249,8 +249,6 @@ abstract class AbstractKernel implements KernelInterface
         $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher?->dispatch(new Serving());
 
-        $this->clean();
-
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
@@ -320,14 +318,6 @@ abstract class AbstractKernel implements KernelInterface
         );
 
         $this->fireCallbacks($this->bootedCallbacks);
-    }
-
-    private function clean(): void
-    {
-        // Removes all bootloader objects from the container
-        foreach ($this->bootloader->getClasses() as $class) {
-            $this->container->removeBinding($class);
-        }
     }
 
     private function getEventDispatcher(): ?EventDispatcherInterface

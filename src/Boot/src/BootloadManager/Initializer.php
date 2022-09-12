@@ -15,6 +15,7 @@ use Spiral\Core\Container;
 /**
  * @internal
  * @psalm-import-type TClass from BootloadManagerInterface
+ * @psalm-import-type TFullBinding from BootloaderInterface
  */
 final class Initializer implements Container\SingletonInterface
 {
@@ -88,6 +89,9 @@ final class Initializer implements Container\SingletonInterface
 
     /**
      * Bind declared bindings.
+     *
+     * @param TFullBinding $bindings
+     * @param TFullBinding $singletons
      */
     private function initBindings(array $bindings, array $singletons): void
     {
