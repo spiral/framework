@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Events\Bootloader;
 
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
@@ -20,6 +21,7 @@ use Spiral\Events\ListenerLocatorInterface;
 use Spiral\Events\Processor\AttributeProcessor;
 use Spiral\Events\Processor\ConfigProcessor;
 use Spiral\Events\ListenerProcessorRegistry;
+use Spiral\Events\Processor\ProcessorInterface;
 
 final class EventsBootloader extends Bootloader
 {
@@ -59,10 +61,11 @@ final class EventsBootloader extends Bootloader
         ?EventDispatcherInterface $eventDispatcher = null
     ): void {
         $kernel->bootstrapped(
-            static function (Container $container, EventsConfig $config) use ($registry): void {
+            static function (ContainerInterface $container, EventsConfig $config) use ($registry): void {
                 foreach ($config->getProcessors() as $processor) {
                     if (\is_string($processor)) {
                         $processor = $container->get($processor);
+                        \assert($processor instanceof ProcessorInterface);
                     }
 
                     $registry->addProcessor($processor);

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Serializer\Bootloader;
 
+use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\FactoryInterface;
 use Spiral\Serializer\Config\SerializerConfig;
 use Spiral\Serializer\Serializer\JsonSerializer;
 use Spiral\Serializer\Serializer\PhpSerializer;
@@ -27,7 +28,8 @@ final class SerializerBootloader extends Bootloader
 
     public function __construct(
         private readonly ConfiguratorInterface $config,
-        private readonly Container $container
+        private readonly ContainerInterface $container,
+        private readonly FactoryInterface $factory
     ) {
     }
 
@@ -65,11 +67,15 @@ final class SerializerBootloader extends Bootloader
         ]);
     }
 
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     private function wire(string|Autowire|SerializerInterface $serializer): SerializerInterface
     {
         return match (true) {
             $serializer instanceof SerializerInterface => $serializer,
-            $serializer instanceof Autowire => $serializer->resolve($this->container),
+            $serializer instanceof Autowire => $serializer->resolve($this->factory),
             default => $this->container->get($serializer)
         };
     }

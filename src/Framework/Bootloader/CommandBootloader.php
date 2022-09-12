@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader;
 
+use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Command\Encrypter;
 use Spiral\Command\Router;
@@ -12,7 +13,6 @@ use Spiral\Command\Views;
 use Spiral\Console;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Console\Sequence\RuntimeDirectory;
-use Spiral\Core\Container;
 use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Router\RouterInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CommandBootloader extends Bootloader
 {
-    public function init(ConsoleBootloader $console, Container $container): void
+    public function init(ConsoleBootloader $console, ContainerInterface $container): void
     {
         $console->addCommand(Console\Command\ConfigureCommand::class);
         $console->addCommand(Console\Command\UpdateCommand::class);
@@ -39,7 +39,7 @@ final class CommandBootloader extends Bootloader
         $this->configureExtensions($console, $container);
     }
 
-    private function configureExtensions(ConsoleBootloader $console, Container $container): void
+    private function configureExtensions(ConsoleBootloader $console, ContainerInterface $container): void
     {
         if ($container->has(TranslatorInterface::class)) {
             $this->configureTranslator($console);

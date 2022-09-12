@@ -6,7 +6,7 @@ namespace Spiral\Bootloader\Http;
 
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Core\Container;
+use Spiral\Core\BinderInterface;
 use Spiral\Http\Pipeline;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
@@ -21,11 +21,11 @@ abstract class RoutesBootloader extends Bootloader
         }
     }
 
-    public function boot(RoutingConfigurator $routes, Container $container, GroupRegistry $groups): void
+    public function boot(RoutingConfigurator $routes, BinderInterface $binder, GroupRegistry $groups): void
     {
         $middlewareGroups = $this->middlewareGroups();
 
-        $this->registerMiddlewareGroups($container, $middlewareGroups);
+        $this->registerMiddlewareGroups($binder, $middlewareGroups);
         $this->registerMiddlewareForRouteGroups($groups, \array_keys($middlewareGroups));
 
         $this->defineRoutes($routes);
@@ -48,10 +48,10 @@ abstract class RoutesBootloader extends Bootloader
      */
     abstract protected function middlewareGroups(): array;
 
-    private function registerMiddlewareGroups(Container $container, array $groups): void
+    private function registerMiddlewareGroups(BinderInterface $binder, array $groups): void
     {
         foreach ($groups as $group => $middleware) {
-            $container->bind(
+            $binder->bind(
                 'middleware:' . $group,
                 static function (PipelineFactory $factory) use ($middleware): Pipeline {
                     return $factory->createWithMiddleware($middleware);

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt\Bootloader;
 
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Container;
+use Spiral\Core\BinderInterface;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Queue\Bootloader\QueueBootloader;
 use Spiral\Queue\QueueConnectionProviderInterface;
@@ -52,9 +53,9 @@ class MailerBootloader extends Bootloader
         ]);
     }
 
-    public function boot(Container $container): void
+    public function boot(BinderInterface $binder, ContainerInterface $container): void
     {
-        $container->bindSingleton(
+        $binder->bindSingleton(
             MailerInterface::class,
             static fn (MailerConfig $config, QueueConnectionProviderInterface $provider): MailQueue => new MailQueue(
                 $config,
@@ -62,7 +63,9 @@ class MailerBootloader extends Bootloader
             )
         );
 
-        $container->get(QueueRegistry::class)->setHandler(MailQueue::JOB_NAME, MailJob::class);
+        $registry = $container->get(QueueRegistry::class);
+        \assert($registry instanceof QueueRegistry);
+        $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
     }
 
     public function initTransport(MailerConfig $config): TransportInterface

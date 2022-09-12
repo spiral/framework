@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Security;
 
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InterceptableCore;
@@ -33,7 +35,8 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
     ];
 
     public function __construct(
-        private readonly Container $container,
+        private readonly ContainerInterface $container,
+        private readonly BinderInterface $binder,
         private readonly ConfiguratorInterface $config
     ) {
     }
@@ -43,7 +46,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
      */
     public function init(): void
     {
-        $this->container->bindInjector(FilterInterface::class, self::class);
+        $this->binder->bindInjector(FilterInterface::class, self::class);
 
         $this->config->setDefaults(
             FiltersConfig::CONFIG,

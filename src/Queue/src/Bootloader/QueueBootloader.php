@@ -11,7 +11,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Core\Container;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
@@ -53,12 +53,16 @@ final class QueueBootloader extends Bootloader
     ) {
     }
 
-    public function init(Container $container, EnvironmentInterface $env, AbstractKernel $kernel): void
-    {
+    public function init(
+        ContainerInterface $container,
+        BinderInterface $binder,
+        EnvironmentInterface $env,
+        AbstractKernel $kernel
+    ): void {
         $this->initQueueConfig($env);
 
         $this->registerDriverAlias(SyncDriver::class, 'sync');
-        $container->bindInjector(QueueInterface::class, QueueInjector::class);
+        $binder->bindInjector(QueueInterface::class, QueueInjector::class);
 
         $kernel->booted(static function () use ($container): void {
             $registry = $container->get(QueueRegistry::class);
@@ -120,16 +124,17 @@ final class QueueBootloader extends Bootloader
     protected function initHandler(
         ConsumeCore $core,
         QueueConfig $config,
-        Container $container,
+        ContainerInterface $container,
         ?EventDispatcherInterface $dispatcher = null
     ): Handler {
         $core = new InterceptableCore($core, $dispatcher);
 
         foreach ($config->getConsumeInterceptors() as $interceptor) {
-            if (\is_string($interceptor) || $interceptor instanceof Container\Autowire) {
+            if (\is_string($interceptor) || $interceptor instanceof Autowire) {
                 $interceptor = $container->get($interceptor);
             }
 
+            \assert($interceptor instanceof CoreInterceptorInterface);
             $core->addInterceptor($interceptor);
         }
 
@@ -139,16 +144,17 @@ final class QueueBootloader extends Bootloader
     protected function initQueue(
         QueueConfig $config,
         QueueConnectionProviderInterface $manager,
-        Container $container,
+        ContainerInterface $container,
         ?EventDispatcherInterface $dispatcher = null
     ): Queue {
         $core = new InterceptableCore(new PushCore($manager->getConnection()), $dispatcher);
 
         foreach ($config->getPushInterceptors() as $interceptor) {
-            if (\is_string($interceptor) || $interceptor instanceof Container\Autowire) {
+            if (\is_string($interceptor) || $interceptor instanceof Autowire) {
                 $interceptor = $container->get($interceptor);
             }
 
+            \assert($interceptor instanceof CoreInterceptorInterface);
             $core->addInterceptor($interceptor);
         }
 
