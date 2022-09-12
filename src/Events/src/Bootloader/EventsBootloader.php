@@ -12,6 +12,7 @@ use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
+use Spiral\Core\FactoryInterface;
 use Spiral\Events\AutowireListenerFactory;
 use Spiral\Events\Config\EventsConfig;
 use Spiral\Events\EventDispatcherAwareInterface;
@@ -61,12 +62,19 @@ final class EventsBootloader extends Bootloader
         ?EventDispatcherInterface $eventDispatcher = null
     ): void {
         $kernel->bootstrapped(
-            static function (ContainerInterface $container, EventsConfig $config) use ($registry): void {
+            static function (
+                ContainerInterface $container,
+                FactoryInterface $factory,
+                EventsConfig $config
+            ) use ($registry): void {
                 foreach ($config->getProcessors() as $processor) {
                     if (\is_string($processor)) {
                         $processor = $container->get($processor);
-                        \assert($processor instanceof ProcessorInterface);
+                    } elseif ($processor instanceof Container\Autowire) {
+                        $processor = $processor->resolve($factory);
                     }
+
+                    \assert($processor instanceof ProcessorInterface);
 
                     $registry->addProcessor($processor);
                 }
