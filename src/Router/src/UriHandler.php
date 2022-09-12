@@ -113,11 +113,12 @@ final class UriHandler
         }
 
         $matches = [];
+
         if (!\preg_match($this->compiled, $this->fetchTarget($uri), $matches)) {
             return null;
         }
 
-        $matches = \array_intersect_key($matches, $this->options);
+        $matches = \array_intersect_key(\array_filter($matches), $this->options);
 
         return \array_merge($this->options, $defaults, $matches);
     }
