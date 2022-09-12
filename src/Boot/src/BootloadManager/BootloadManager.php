@@ -6,6 +6,7 @@ namespace Spiral\Boot\BootloadManager;
 
 use Closure;
 use Spiral\Boot\Bootloader\BootloaderInterface;
+use Spiral\Boot\BootloadManagerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
@@ -14,40 +15,22 @@ use Spiral\Core\ScopeInterface;
 /**
  * Provides ability to bootload ServiceProviders.
  */
-final class BootloadManager implements Container\SingletonInterface
+final class BootloadManager implements BootloadManagerInterface, Container\SingletonInterface
 {
     public function __construct(
         /* @internal */
         private readonly ScopeInterface $scope,
         private readonly InvokerInterface $invoker,
         private readonly ResolverInterface $resolver,
-        private Initializer $initializer
+        private readonly Initializer $initializer
     ) {
     }
 
-    /**
-     * Get bootloaded classes.
-     */
     public function getClasses(): array
     {
         return $this->initializer->getRegistry()->getClasses();
     }
 
-    /**
-     * Bootload set of classes. Support short and extended syntax with
-     * bootload options (to be passed into boot method).
-     *
-     * [
-     *    SimpleBootloader::class,
-     *    CustomizedBootloader::class => ["option" => "value"]
-     * ]
-     *
-     * @param array<class-string>|array<class-string,array<string,mixed>> $classes
-     * @param array<Closure> $bootingCallbacks
-     * @param array<Closure> $bootedCallbacks
-     *
-     * @throws \Throwable
-     */
     public function bootload(array $classes, array $bootingCallbacks = [], array $bootedCallbacks = []): void
     {
         $this->scope->runScope(

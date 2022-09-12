@@ -8,18 +8,12 @@ use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\BootloadManager\BootloadManager;
-use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Event\Bootstrapped;
 use Spiral\Boot\Event\DispatcherFound;
 use Spiral\Boot\Event\DispatcherNotFound;
 use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
-use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
-use Spiral\Core\FactoryInterface;
-use Spiral\Core\InvokerInterface;
-use Spiral\Core\ResolverInterface;
-use Spiral\Core\ScopeInterface;
 use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\ExceptionRendererInterface;
@@ -41,7 +35,6 @@ abstract class AbstractKernel implements KernelInterface
     protected const LOAD = [];
 
     protected FinalizerInterface $finalizer;
-    protected BootloadManager $bootloader;
 
     /** @var DispatcherInterface[] */
     protected array $dispatchers = [];
@@ -62,8 +55,9 @@ abstract class AbstractKernel implements KernelInterface
      * @throws \Throwable
      */
     protected function __construct(
-        protected FactoryInterface&BinderInterface $container,
-        protected ExceptionHandlerInterface $exceptionHandler,
+        protected readonly Container $container,
+        protected readonly ExceptionHandlerInterface $exceptionHandler,
+        protected readonly BootloadManagerInterface $bootloader,
         array $directories
     ) {
         $container->bindSingleton(ExceptionHandlerInterface::class, $exceptionHandler);
@@ -82,8 +76,6 @@ abstract class AbstractKernel implements KernelInterface
 
         $this->finalizer = new Finalizer();
         $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
-
-        $this->bootloader = $container->make(BootloadManager::class);
 
         $this->bootloader->bootload(static::SYSTEM);
     }
@@ -108,19 +100,26 @@ abstract class AbstractKernel implements KernelInterface
         bool $handleErrors = true,
         ExceptionHandlerInterface|string|null $exceptionHandler = null,
         Container $container = new Container(),
+        ?BootloadManagerInterface $bootloadManager = null
     ): static {
         $exceptionHandler ??= ExceptionHandler::class;
 
         if (\is_string($exceptionHandler)) {
             $exceptionHandler = $container->make($exceptionHandler);
         }
+
         if ($handleErrors) {
             $exceptionHandler->register();
         }
 
+        $bootloadManager ??= $container->make(BootloadManager::class);
+        \assert($bootloadManager instanceof BootloadManagerInterface);
+        $container->bind(BootloadManagerInterface::class, $bootloadManager);
+
         return new static(
             $container,
             $exceptionHandler,
+            $bootloadManager,
             $directories
         );
     }
@@ -161,11 +160,7 @@ abstract class AbstractKernel implements KernelInterface
             return null;
         }
 
-        $eventDispatcher = $this->container->has(EventDispatcherInterface::class)
-            ? $this->container->get(EventDispatcherInterface::class)
-            : null;
-
-        $eventDispatcher?->dispatch(new Bootstrapped($this));
+        $this->getEventDispatcher()?->dispatch(new Bootstrapped($this));
 
         return $this;
     }
@@ -251,11 +246,10 @@ abstract class AbstractKernel implements KernelInterface
      */
     public function serve(): mixed
     {
-        $eventDispatcher = $this->container->has(EventDispatcherInterface::class)
-            ? $this->container->get(EventDispatcherInterface::class)
-            : null;
-
+        $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher?->dispatch(new Serving());
+
+        $this->clean();
 
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
@@ -263,7 +257,6 @@ abstract class AbstractKernel implements KernelInterface
                     [DispatcherInterface::class => $dispatcher],
                     static function () use ($dispatcher, $eventDispatcher): mixed {
                         $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
-
                         return $dispatcher->serve();
                     }
                 );
@@ -327,5 +320,20 @@ abstract class AbstractKernel implements KernelInterface
         );
 
         $this->fireCallbacks($this->bootedCallbacks);
+    }
+
+    private function clean(): void
+    {
+        // Removes all bootloader objects from the container
+        foreach ($this->bootloader->getClasses() as $class) {
+            $this->container->removeBinding($class);
+        }
+    }
+
+    private function getEventDispatcher(): ?EventDispatcherInterface
+    {
+        return $this->container->has(EventDispatcherInterface::class)
+            ? $this->container->get(EventDispatcherInterface::class)
+            : null;
     }
 }
