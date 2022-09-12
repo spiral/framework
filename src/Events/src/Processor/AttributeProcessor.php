@@ -35,7 +35,7 @@ final class AttributeProcessor extends AbstractProcessor implements Tokenization
             return;
         }
 
-        if (! $this->collected) {
+        if (!$this->collected) {
             throw new \RuntimeException(\sprintf('Tokenizer did not finalize %s listener.', self::class));
         }
 

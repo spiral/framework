@@ -20,7 +20,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
     ];
 
     protected const SINGLETONS = [
-        TokenizerListenerRegistryInterface::class => self::class
+        TokenizerListenerRegistryInterface::class => self::class,
     ];
 
     /** @var TokenizationListenerInterface[] */
