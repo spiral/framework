@@ -226,21 +226,6 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Register a new callback, that will be fired after framework bootstrapped.
-     * (Before serving)
-     *
-     * $kernel->bootstrapped(static function(KernelInterface $kernel) {
-     *     $kernel->getContainer()->...
-     * });
-     */
-    public function bootstrapped(Closure ...$callbacks): void
-    {
-        foreach ($callbacks as $callback) {
-            $this->bootstrappedCallbacks[] = $callback;
-        }
-    }
-
-    /**
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
      */
