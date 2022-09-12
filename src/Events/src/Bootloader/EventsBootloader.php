@@ -17,21 +17,17 @@ use Spiral\Events\AutowireListenerFactory;
 use Spiral\Events\Config\EventsConfig;
 use Spiral\Events\EventDispatcherAwareInterface;
 use Spiral\Events\ListenerFactoryInterface;
-use Spiral\Events\ListenerLocator;
-use Spiral\Events\ListenerLocatorInterface;
+use Spiral\Events\ListenerProcessorRegistry;
 use Spiral\Events\Processor\AttributeProcessor;
 use Spiral\Events\Processor\ConfigProcessor;
-use Spiral\Events\ListenerProcessorRegistry;
 use Spiral\Events\Processor\ProcessorInterface;
+use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
 final class EventsBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
+        TokenizerListenerBootloader::class,
         AttributesBootloader::class,
-    ];
-
-    protected const BINDINGS = [
-        ListenerLocatorInterface::class => ListenerLocator::class,
     ];
 
     protected const SINGLETONS = [
@@ -56,32 +52,29 @@ final class EventsBootloader extends Bootloader
     }
 
     public function boot(
+        ContainerInterface $container,
+        FactoryInterface $factory,
+        EventsConfig $config,
         AbstractKernel $kernel,
         ListenerProcessorRegistry $registry,
         FinalizerInterface $finalizer,
         ?EventDispatcherInterface $eventDispatcher = null
     ): void {
-        $kernel->bootstrapped(
-            static function (
-                ContainerInterface $container,
-                FactoryInterface $factory,
-                EventsConfig $config
-            ) use ($registry): void {
-                foreach ($config->getProcessors() as $processor) {
-                    if (\is_string($processor)) {
-                        $processor = $container->get($processor);
-                    } elseif ($processor instanceof Container\Autowire) {
-                        $processor = $processor->resolve($factory);
-                    }
-
-                    \assert($processor instanceof ProcessorInterface);
-
-                    $registry->addProcessor($processor);
-                }
-
-                $registry->process();
+        foreach ($config->getProcessors() as $processor) {
+            if (\is_string($processor)) {
+                $processor = $container->get($processor);
+            } elseif ($processor instanceof Container\Autowire) {
+                $processor = $processor->resolve($factory);
             }
-        );
+
+            \assert($processor instanceof ProcessorInterface);
+
+            $registry->addProcessor($processor);
+        }
+
+        $kernel->bootstrapped(static function () use ($registry): void {
+            $registry->process();
+        });
 
         if ($finalizer instanceof EventDispatcherAwareInterface && $eventDispatcher !== null) {
             $finalizer->setEventDispatcher($eventDispatcher);

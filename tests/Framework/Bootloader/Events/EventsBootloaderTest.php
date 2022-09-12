@@ -12,20 +12,11 @@ use Spiral\Events\Config\EventsConfig;
 use Spiral\Events\EventDispatcherAwareInterface;
 use Spiral\Events\ListenerFactoryInterface;
 use Spiral\Events\ListenerLocator;
-use Spiral\Events\ListenerLocatorInterface;
 use Spiral\Events\ListenerProcessorRegistry;
 use Spiral\Tests\Framework\BaseTest;
 
 final class EventsBootloaderTest extends BaseTest
 {
-    public function testListenerLocatorInterfaceBinding(): void
-    {
-        $this->assertContainerBound(
-            ListenerLocatorInterface::class,
-            ListenerLocator::class
-        );
-    }
-
     public function testListenerFactoryInterfaceBinding(): void
     {
         $this->assertContainerBoundAsSingleton(

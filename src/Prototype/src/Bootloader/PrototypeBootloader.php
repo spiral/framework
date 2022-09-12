@@ -15,6 +15,7 @@ use Spiral\Prototype\Command;
 use Spiral\Prototype\PrototypeLocatorListener;
 use Spiral\Prototype\PrototypeRegistry;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
+use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
 /**
  * Manages ide-friendly container injections via PrototypeTrait.
@@ -94,12 +95,12 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
 
     public function boot(
         ContainerInterface $container,
-        TokenizerListenerBootloader $tokenizer,
+        TokenizerListenerRegistryInterface $listenerRegistry,
         PrototypeLocatorListener $listener
     ): void {
         $this->initDefaults($container);
 
-        $tokenizer->addListener($listener);
+        $listenerRegistry->addListener($listener);
     }
 
     public function bindProperty(string $property, string $type): void

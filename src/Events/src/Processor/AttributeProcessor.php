@@ -4,17 +4,29 @@ declare(strict_types=1);
 
 namespace Spiral\Events\Processor;
 
+use Spiral\Attributes\ReaderInterface;
+use Spiral\Events\Attribute\Listener;
 use Spiral\Events\ListenerFactoryInterface;
-use Spiral\Events\ListenerLocatorInterface;
 use Spiral\Events\ListenerRegistryInterface;
+use Spiral\Tokenizer\TokenizationListenerInterface;
+use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
-final class AttributeProcessor extends AbstractProcessor
+final class AttributeProcessor extends AbstractProcessor implements TokenizationListenerInterface
 {
+    /** @var array<class-string, Listener[]> */
+    private array $attributes = [];
+    private bool $collected = false;
+
     public function __construct(
-        private readonly ListenerLocatorInterface $locator,
+        TokenizerListenerRegistryInterface $listenerRegistry,
+        private readonly ReaderInterface $reader,
         private readonly ListenerFactoryInterface $factory,
         private readonly ?ListenerRegistryInterface $registry = null,
     ) {
+        // Look for Spiral\Events\Attribute\Listener attribute only when ListenerRegistry provided by container
+        if ($this->registry !== null) {
+            $listenerRegistry->addListener($this);
+        }
     }
 
     public function process(): void
@@ -22,17 +34,47 @@ final class AttributeProcessor extends AbstractProcessor
         if ($this->registry === null) {
             return;
         }
-        foreach ($this->locator->findListeners() as $listener => $attr) {
-            $method = $this->getMethod($listener, $attr->method ?? '__invoke');
 
-            $events = (array)($attr->event ?? $this->getEventFromTypeDeclaration($method));
-            foreach ($events as $event) {
-                $this->registry->addListener(
-                    event: $event,
-                    listener: $this->factory->create($listener, $method->getName()),
-                    priority: $attr->priority
-                );
+        if (! $this->collected) {
+            throw new \RuntimeException(\sprintf('Tokenizer did not finalize %s listener.', self::class));
+        }
+
+        foreach ($this->attributes as $event => $attributes) {
+            foreach ($attributes as $attribute) {
+                $method = $this->getMethod($event, $attribute->method ?? '__invoke');
+
+                $events = (array)($attribute->event ?? $this->getEventFromTypeDeclaration($method));
+                foreach ($events as $event) {
+                    $this->registry->addListener(
+                        event: $event,
+                        listener: $this->factory->create($event, $method->getName()),
+                        priority: $attribute->priority
+                    );
+                }
             }
         }
+    }
+
+    public function listen(\ReflectionClass $class): void
+    {
+        $attrs = $this->reader->getClassMetadata($class, Listener::class);
+
+        foreach ($attrs as $attr) {
+            $this->attributes[$class->getName()][] = $attr;
+        }
+
+        foreach ($class->getMethods() as $method) {
+            $attrs = $this->reader->getFunctionMetadata($method, Listener::class);
+
+            foreach ($attrs as $attr) {
+                $attr->method = $method->getName();
+                $this->attributes[$class->getName()][] = $attr;
+            }
+        }
+    }
+
+    public function finalize(): void
+    {
+        $this->collected = true;
     }
 }

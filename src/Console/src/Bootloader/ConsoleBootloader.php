@@ -23,6 +23,7 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
+use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
 /**
  * Bootloads console and provides ability to register custom bootload commands.
@@ -62,9 +63,9 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         $this->addCommand(PublishCommand::class);
     }
 
-    public function boot(TokenizerListenerBootloader $bootloader, CommandLocatorListener $listener): void
+    public function boot(TokenizerListenerRegistryInterface $listenerRegistry, CommandLocatorListener $listener): void
     {
-        $bootloader->addListener($listener);
+        $listenerRegistry->addListener($listener);
     }
 
     /**
