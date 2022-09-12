@@ -8,18 +8,12 @@ use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\BootloadManager\BootloadManager;
-use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Event\Bootstrapped;
 use Spiral\Boot\Event\DispatcherFound;
 use Spiral\Boot\Event\DispatcherNotFound;
 use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
-use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
-use Spiral\Core\FactoryInterface;
-use Spiral\Core\InvokerInterface;
-use Spiral\Core\ResolverInterface;
-use Spiral\Core\ScopeInterface;
 use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\ExceptionRendererInterface;
@@ -62,7 +56,7 @@ abstract class AbstractKernel implements KernelInterface
      * @throws \Throwable
      */
     protected function __construct(
-        protected FactoryInterface&BinderInterface $container,
+        protected Container $container,
         protected ExceptionHandlerInterface $exceptionHandler,
         array $directories
     ) {

@@ -73,7 +73,6 @@ final class EventsBootloader extends Bootloader
                     } elseif ($processor instanceof Container\Autowire) {
                         $processor = $processor->resolve($factory);
                     }
-                    // todo: check case when $processor is an Autowire object
 
                     \assert($processor instanceof ProcessorInterface);
 
