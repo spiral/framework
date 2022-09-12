@@ -6,6 +6,7 @@ namespace Spiral\Tokenizer;
 
 use Spiral\Tokenizer\Exception\LocatorException;
 use Spiral\Tokenizer\Reflection\ReflectionInvocation;
+use Spiral\Tokenizer\Traits\TargetTrait;
 
 /**
  * Can locate invocations in a specified directory. Can only find simple invocations!
@@ -60,7 +61,11 @@ final class InvocationLocator extends AbstractLocator implements InvocationsInte
 
         try {
             $reflection = $this->classReflection($invocation->getClass());
-        } catch (LocatorException) {
+        } catch (LocatorException $e) {
+            if ($this->debug) {
+                throw $e;
+            }
+
             return false;
         }
 

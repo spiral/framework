@@ -58,7 +58,7 @@ abstract class BaseTest extends TestCase
     {
         return new StaticLocator(
             $commands,
-            $this->container->get(ConsoleConfig::class),
+            $this->container->get(ConsoleConfig::class)->getInterceptors(),
             $this->container
         );
     }
@@ -67,8 +67,8 @@ abstract class BaseTest extends TestCase
     {
         return new CommandLocator(
             $classes,
-            $this->container->get(ConsoleConfig::class),
-            $this->container
+            $this->container,
+            $this->container->get(ConsoleConfig::class)->getInterceptors(),
         );
     }
 }

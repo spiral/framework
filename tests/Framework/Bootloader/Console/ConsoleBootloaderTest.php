@@ -23,10 +23,10 @@ final class ConsoleBootloaderTest extends BaseTest
         $this->assertContainerBoundAsSingleton(Console::class, Console::class);
     }
 
-    public function testLocatorInterfaceBinding(): void
-    {
-        $this->assertContainerBoundAsSingleton(LocatorInterface::class, CommandLocator::class);
-    }
+//    public function testLocatorInterfaceBinding(): void
+//    {
+//        $this->assertContainerBoundAsSingleton(LocatorInterface::class, CommandLocator::class);
+//    }
 
     public function testConsoleDispatcher(): void
     {

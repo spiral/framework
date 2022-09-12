@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Traits\LazyTrait;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
@@ -16,10 +15,11 @@ final class CommandLocator implements LocatorInterface
 
     public function __construct(
         private readonly ScopedClassesInterface $classes,
-        private ConsoleConfig $config,
-        ContainerInterface $container
+        ContainerInterface $container,
+        array $interceptors = [],
     ) {
         $this->container = $container;
+        $this->interceptors = $interceptors;
     }
 
     public function locateCommands(): array

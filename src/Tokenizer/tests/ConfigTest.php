@@ -7,6 +7,25 @@ use Spiral\Tokenizer\Config\TokenizerConfig;
 
 class ConfigTest extends TestCase
 {
+    public function testDebugNotSet()
+    {
+        $config = new TokenizerConfig([]);
+
+        $this->assertFalse($config->isDebug());
+    }
+
+    public function testDebug()
+    {
+        $config = new TokenizerConfig(['debug' => false]);
+        $this->assertFalse($config->isDebug());
+
+        $config = new TokenizerConfig(['debug' => true]);
+        $this->assertTrue($config->isDebug());
+
+        $config = new TokenizerConfig(['debug' => 1]);
+        $this->assertTrue($config->isDebug());
+    }
+
     public function testDirectories()
     {
         $config = new TokenizerConfig([

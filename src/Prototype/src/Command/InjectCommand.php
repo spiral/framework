@@ -13,9 +13,9 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class InjectCommand extends AbstractCommand
 {
-    public const NAME        = 'prototype:inject';
+    public const NAME = 'prototype:inject';
     public const DESCRIPTION = 'Inject all prototype dependencies';
-    public const OPTIONS     = [
+    public const OPTIONS = [
         ['remove', 'r', InputOption::VALUE_NONE, 'Remove PrototypeTrait'],
         ['typedProperties', 't', InputOption::VALUE_NONE, 'Use PHP7.4 Typed Properties'],
         [
@@ -28,8 +28,11 @@ final class InjectCommand extends AbstractCommand
 
     private readonly Injector $injector;
 
-    public function __construct(PrototypeLocator $locator, NodeExtractor $extractor, PrototypeRegistry $registry)
-    {
+    public function __construct(
+        PrototypeLocator $locator,
+        NodeExtractor $extractor,
+        PrototypeRegistry $registry
+    ) {
         parent::__construct($locator, $extractor, $registry);
         $this->injector = new Injector();
     }
@@ -109,6 +112,7 @@ final class InjectCommand extends AbstractCommand
             );
 
             \file_put_contents($class->getFileName(), $modified);
+
             return null;
         } catch (\Throwable $e) {
             return [$class->getName(), $e->getMessage(), \sprintf('%s:L%s', $e->getFile(), $e->getLine())];

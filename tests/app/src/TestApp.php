@@ -12,10 +12,13 @@ use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
 use Spiral\Nyholm\Bootloader\NyholmBootloader;
 use Spiral\Stempler\Bootloader\StemplerBootloader;
+use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
 class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
 {
     public const LOAD = [
+        TokenizerListenerBootloader::class,
+
         // Core Services
         Bootloader\SnapshotsBootloader::class,
         Bootloader\I18nBootloader::class,
@@ -84,7 +87,9 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         // Debug and debug extensions
         Bootloader\DebugBootloader::class,
         Bootloader\Debug\LogCollectorBootloader::class,
-        Bootloader\Debug\HttpCollectorBootloader::class
+        Bootloader\Debug\HttpCollectorBootloader::class,
+
+        \Spiral\Prototype\Bootloader\PrototypeBootloader::class,
     ];
 
     public const APP = [

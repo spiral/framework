@@ -17,9 +17,9 @@ abstract class AbstractCommand extends Command
     private array $cache = [];
 
     public function __construct(
-        protected PrototypeLocator $locator,
-        protected NodeExtractor $extractor,
-        protected PrototypeRegistry $registry
+        protected readonly PrototypeLocator $locator,
+        protected readonly NodeExtractor $extractor,
+        protected readonly PrototypeRegistry $registry
     ) {
         parent::__construct();
     }

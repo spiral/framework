@@ -209,6 +209,7 @@ abstract class AbstractKernel implements KernelInterface
         }
     }
 
+
     /**
      * Register a new callback, that will be fired after framework bootstrapped.
      * (Before serving)

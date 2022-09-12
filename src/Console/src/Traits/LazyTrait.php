@@ -15,7 +15,7 @@ use Symfony\Component\Console\Command\LazyCommand;
 trait LazyTrait
 {
     private ContainerInterface $container;
-    private ConsoleConfig $config;
+    private array $interceptors = [];
     private ?EventDispatcherInterface $dispatcher = null;
 
     /**
@@ -44,9 +44,11 @@ trait LazyTrait
                 : '',
             false,
             function () use ($class): SymfonyCommand {
+                /** @var SpiralCommand $command */
                 $command = $this->container->get($class);
+
                 $command->setContainer($this->container);
-                $command->setInterceptors($this->config->getInterceptors());
+                $command->setInterceptors($this->interceptors);
 
                 if ($this->dispatcher !== null && $command instanceof EventDispatcherAwareInterface) {
                     $command->setEventDispatcher($this->dispatcher);

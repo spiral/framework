@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
 
-use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Core\Exception\Container\InjectionException;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Symfony\Component\Finder\Finder;
 
@@ -44,7 +42,7 @@ final class Tokenizer implements SingletonInterface
         array $directories = [],
         array $exclude = []
     ): ClassLocator {
-        return new ClassLocator($this->makeFinder($directories, $exclude));
+        return new ClassLocator($this->makeFinder($directories, $exclude), $this->config->isDebug());
     }
 
     /**
@@ -54,7 +52,7 @@ final class Tokenizer implements SingletonInterface
         array $directories = [],
         array $exclude = []
     ): InvocationLocator {
-        return new InvocationLocator($this->makeFinder($directories, $exclude));
+        return new InvocationLocator($this->makeFinder($directories, $exclude), $this->config->isDebug());
     }
 
     /**

@@ -7,31 +7,10 @@ namespace Spiral\Tokenizer\Traits;
 trait TargetTrait
 {
     /**
-     * Check if given class targeted by locator.
-     *
-     * @param \ReflectionClass|null $target
-     */
-    protected function isTargeted(\ReflectionClass $class, \ReflectionClass $target = null): bool
-    {
-        if (empty($target)) {
-            return true;
-        }
-
-        if (!$target->isTrait()) {
-            //Target is interface or class
-            return $class->isSubclassOf($target) || $class->getName() === $target->getName();
-        }
-
-        //Checking using traits
-        return \in_array($target->getName(), $this->fetchTraits($class->getName()));
-    }
-
-    /**
      * Get every class trait (including traits used in parents).
      *
+     * @param class-string $class
      * @return string[]
-     *
-     * @psalm-return array<string, string>
      */
     protected function fetchTraits(string $class): array
     {

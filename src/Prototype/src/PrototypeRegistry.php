@@ -10,7 +10,7 @@ use Spiral\Core\Container;
 /**
  * Contains aliases and targets for all declared prototype dependencies.
  */
-final class PrototypeRegistry
+final class PrototypeRegistry implements Container\SingletonInterface
 {
     /** @var Dependency[] */
     private array $dependencies = [];

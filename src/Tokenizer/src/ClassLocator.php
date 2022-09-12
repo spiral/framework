@@ -23,7 +23,11 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
         foreach ($this->availableClasses() as $class) {
             try {
                 $reflection = $this->classReflection($class);
-            } catch (LocatorException) {
+            } catch (LocatorException $e) {
+                if ($this->debug) {
+                    throw $e;
+                }
+
                 //Ignoring
                 continue;
             }
@@ -70,7 +74,7 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
             return $class->isSubclassOf($target) || $class->getName() === $target->getName();
         }
 
-        //Checking using traits
+        // Checking using traits
         return \in_array($target->getName(), $this->fetchTraits($class->getName()));
     }
 }

@@ -105,7 +105,12 @@ final class Console
         }
 
         // Register user defined commands
-        $static = new StaticLocator($this->config->getCommands(), $this->config, $this->container);
+        $static = new StaticLocator(
+            $this->config->getCommands(),
+            $this->config->getInterceptors(),
+            $this->container
+        );
+
         $this->addCommands($static->locateCommands());
 
         return $this->application;

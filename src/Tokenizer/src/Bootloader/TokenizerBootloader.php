@@ -41,6 +41,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
         $this->config->setDefaults(
             TokenizerConfig::CONFIG,
             [
+                'debug' => false,
                 'directories' => [$dirs->get('app')],
                 'exclude' => [
                     $dirs->get('resources'),
