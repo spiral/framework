@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
-use Spiral\Core\Container;
+use Psr\Container\ContainerInterface;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Queue\SerializerRegistryInterface as QueueSerializerRegistryInterface;
@@ -22,7 +23,8 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
     private array $serializers = [];
 
     public function __construct(
-        private readonly Container $container,
+        private readonly ContainerInterface $container,
+        private readonly FactoryInterface $factory,
         private readonly HandlerRegistryInterface $fallbackHandlers
     ) {
     }
@@ -95,7 +97,7 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
         $registry = $this->container->get(SerializerRegistryInterface::class);
 
         if ($serializer instanceof Autowire) {
-            $serializer = $this->container->get($serializer);
+            $serializer = $serializer->resolve($this->factory);
         }
 
         if (\is_string($serializer)) {

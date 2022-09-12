@@ -27,8 +27,8 @@ final class EnumInjectorTest extends TestCase
         );
 
         $class = new SampleClass();
-
-        $injector = new EnumInjector(new Container(), new AttributeReader());
+        $container = new Container();
+        $injector = new EnumInjector($container, $container, new AttributeReader());
         $injector->createInjection(new \ReflectionClass($class));
     }
 
@@ -42,7 +42,8 @@ final class EnumInjectorTest extends TestCase
         $this->expectException(InjectionException::class);
         $this->expectErrorMessage(\sprintf('Class `%s` should be an enum.', $ref->getName()));
 
-        $injector = new EnumInjector(new Container(), new AttributeReader());
+        $container = new Container();
+        $injector = new EnumInjector($container, $container, new AttributeReader());
         $injector->createInjection($ref);
     }
 
@@ -62,7 +63,7 @@ final class EnumInjectorTest extends TestCase
         );
 
         $container = new Container();
-        $enum = $container->get(InjectableEnumWithoutMethod::class);
+        $container->get(InjectableEnumWithoutMethod::class);
     }
 
     public function testCreateInjectionForClassWithoutStaticMethod(): void
@@ -73,6 +74,6 @@ final class EnumInjectorTest extends TestCase
         );
 
         $container = new Container();
-        $enum = $container->get(InjectableEnumWithNonStaticMethod::class);
+        $container->get(InjectableEnumWithNonStaticMethod::class);
     }
 }

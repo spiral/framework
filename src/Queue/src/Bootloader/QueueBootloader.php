@@ -109,9 +109,12 @@ final class QueueBootloader extends Bootloader
         return $factory->make(QueueManager::class);
     }
 
-    protected function initRegistry(ContainerInterface $container, ContainerRegistry $registry)
-    {
-        return new QueueRegistry($container, $registry);
+    protected function initRegistry(
+        ContainerInterface $container,
+        FactoryInterface $factory,
+        ContainerRegistry $registry
+    ) {
+        return new QueueRegistry($container, $factory, $registry);
     }
 
     protected function initHandler(

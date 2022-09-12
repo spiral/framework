@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Model;
 
+use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\ResolverInterface;
 use Spiral\Filters\Model\Schema\AttributeMapper;
 use Spiral\Filters\Model\Schema\Builder;
 use Spiral\Filters\Model\Schema\InputMapper;
@@ -19,7 +21,8 @@ use Spiral\Models\SchematicEntity;
 final class FilterProvider implements FilterProviderInterface
 {
     public function __construct(
-        private readonly Container $container,
+        private readonly ContainerInterface $container,
+        private readonly ResolverInterface $resolver,
         private readonly CoreInterface $core
     ) {
     }
@@ -27,6 +30,7 @@ final class FilterProvider implements FilterProviderInterface
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
         $attributeMapper = $this->container->get(AttributeMapper::class);
+        \assert($attributeMapper instanceof AttributeMapper);
 
         $filter = $this->createFilterInstance($name);
         [$mappingSchema, $errors] = $attributeMapper->map($filter, $input);
@@ -39,7 +43,10 @@ final class FilterProvider implements FilterProviderInterface
         }
 
         $inputMapper = $this->container->get(InputMapper::class);
+        \assert($inputMapper instanceof InputMapper);
+
         $schemaBuilder = $this->container->get(Builder::class);
+        \assert($schemaBuilder instanceof Builder);
 
         $schema = $schemaBuilder->makeSchema($name, $mappingSchema);
 
@@ -58,7 +65,7 @@ final class FilterProvider implements FilterProviderInterface
 
         $args = [];
         if ($constructor = $class->getConstructor()) {
-            $args = $this->container->resolveArguments($constructor);
+            $args = $this->resolver->resolveArguments($constructor);
         }
 
         return $class->newInstanceArgs($args);

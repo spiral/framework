@@ -30,7 +30,9 @@ final class DelegatingLoaderTest extends TestCase
         $this->assertFalse($loader->supports('file.php'));
         $this->assertFalse($loader->supports('file.php', 'php'));
 
-        $loader = new DelegatingLoader(new LoaderRegistry([new PhpFileLoader(new Container())]));
+        $container = new Container();
+
+        $loader = new DelegatingLoader(new LoaderRegistry([new PhpFileLoader($container, $container)]));
         $this->assertTrue($loader->supports('file.php'));
         $this->assertTrue($loader->supports('file.php', 'php'));
         $this->assertFalse($loader->supports('file.php', 'yaml'));
@@ -38,7 +40,7 @@ final class DelegatingLoaderTest extends TestCase
         $this->assertFalse($loader->supports('file.yaml', 'yaml'));
 
         $loader = new DelegatingLoader(new LoaderRegistry([
-            new PhpFileLoader(new Container()),
+            new PhpFileLoader($container, $container),
             new TestLoader()
         ]));
         $this->assertTrue($loader->supports('file.php'));

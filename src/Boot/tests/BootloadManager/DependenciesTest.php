@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\BootloadManager;
 
-use PHPUnit\Framework\TestCase;
-use Spiral\Boot\BootloadManager\BootloadManager;
-use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Tests\Boot\TestCase;
 use Spiral\Core\Container;
 use Spiral\Tests\Boot\Fixtures\BootloaderA;
 use Spiral\Tests\Boot\Fixtures\BootloaderB;
@@ -16,8 +14,7 @@ class DependenciesTest extends TestCase
     public function testDep(): void
     {
         $c = new Container();
-
-        $b = new BootloadManager($c, new Initializer($c));
+        $b = $this->getBootloadManager($c);
 
         $b->bootload([BootloaderA::class]);
 
@@ -28,8 +25,7 @@ class DependenciesTest extends TestCase
     public function testDep2(): void
     {
         $c = new Container();
-
-        $b = new BootloadManager($c, new Initializer($c));
+        $b = $this->getBootloadManager($c);
 
         $b->bootload([BootloaderB::class]);
 

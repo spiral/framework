@@ -27,7 +27,7 @@ final class PhpFileLoaderTest extends TestCase
 
     public function testLoad(): void
     {
-        $loader = new PhpFileLoader($this->container);
+        $loader = new PhpFileLoader($this->container, $this->container);
 
         $routes = $loader->load(\dirname(__DIR__) . '/Fixtures/file.php');
         $this->assertInstanceOf(RouteCollection::class, $routes);
@@ -39,7 +39,7 @@ final class PhpFileLoaderTest extends TestCase
 
     public function testSupports(): void
     {
-        $loader = new PhpFileLoader($this->container);
+        $loader = new PhpFileLoader($this->container, $this->container);
 
         $this->assertTrue($loader->supports('file.php'));
         $this->assertTrue($loader->supports('file.php', 'php'));

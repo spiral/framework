@@ -90,6 +90,6 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
             $core->addInterceptor($container->get($interceptor));
         }
 
-        return new FilterProvider($container, $core);
+        return new FilterProvider($container, $container, $core);
     }
 }

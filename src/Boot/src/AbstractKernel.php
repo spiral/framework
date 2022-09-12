@@ -78,7 +78,13 @@ abstract class AbstractKernel implements KernelInterface
         $this->finalizer = new Finalizer();
         $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
 
-        $this->bootloader = new BootloadManager($container, new Initializer($this->container));
+        $this->bootloader = new BootloadManager(
+            $container,
+            $container,
+            $container,
+            new Initializer($container, $container)
+        );
+
         $this->bootloader->bootload(static::SYSTEM);
     }
 

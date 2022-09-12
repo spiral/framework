@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\BootloadManager;
 
+use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\Exception\ClassNotFoundException;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 
 /**
@@ -15,7 +17,8 @@ use Spiral\Core\Container;
 final class Initializer implements Container\SingletonInterface
 {
     public function __construct(
-        private readonly Container $container,
+        private readonly ContainerInterface $container,
+        private readonly BinderInterface $binder,
         private readonly ClassesRegistry $bootloaders = new ClassesRegistry()
     ) {
     }
@@ -87,11 +90,11 @@ final class Initializer implements Container\SingletonInterface
     private function initBindings(array $bindings, array $singletons): void
     {
         foreach ($bindings as $aliases => $resolver) {
-            $this->container->bind($aliases, $resolver);
+            $this->binder->bind($aliases, $resolver);
         }
 
         foreach ($singletons as $aliases => $resolver) {
-            $this->container->bindSingleton($aliases, $resolver);
+            $this->binder->bindSingleton($aliases, $resolver);
         }
     }
 
