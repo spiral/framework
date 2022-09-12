@@ -7,12 +7,14 @@ namespace Spiral\Boot\BootloadManager;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\Bootloader\DependedInterface;
+use Spiral\Boot\BootloadManagerInterface;
 use Spiral\Boot\Exception\ClassNotFoundException;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 
 /**
  * @internal
+ * @psalm-import-type TClass from BootloadManagerInterface
  */
 final class Initializer implements Container\SingletonInterface
 {
@@ -26,7 +28,7 @@ final class Initializer implements Container\SingletonInterface
     /**
      * Instantiate bootloader objects and resolve dependencies
      *
-     * @param array<class-string>|array<class-string, array<string,mixed>> $classes
+     * @param TClass[]|array<TClass, array<string,mixed>> $classes
      */
     public function init(array $classes): \Generator
     {
@@ -132,11 +134,17 @@ final class Initializer implements Container\SingletonInterface
 
     private function shouldBeBooted(\ReflectionNamedType $type): bool
     {
-        return $this->isBootloader($type->getName()) && !$this->bootloaders->isBooted($type->getName());
+        /** @var TClass $class */
+        $class = $type->getName();
+
+        /** @psalm-suppress InvalidArgument */
+        return $this->isBootloader($class)
+            && !$this->bootloaders->isBooted($class);
     }
 
     /**
      * @psalm-pure
+     * @psalm-assert-if-true TClass $class
      */
     private function isBootloader(string|object $class): bool
     {
