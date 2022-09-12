@@ -69,7 +69,7 @@ abstract class BaseTest extends TestCase
         $this->container->bind(ResponseFactoryInterface::class, new ResponseFactory(new HttpConfig(['headers' => []])));
         $this->container->bind(UriFactoryInterface::class, new UriFactory());
         $this->container->bind(LoaderInterface::class, new DelegatingLoader(new LoaderRegistry([
-            new PhpFileLoader($this->container),
+            new PhpFileLoader($this->container, $this->container),
             new TestLoader()
         ])));
 

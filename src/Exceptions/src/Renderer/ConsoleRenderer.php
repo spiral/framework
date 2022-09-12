@@ -205,10 +205,8 @@ class ConsoleRenderer extends AbstractRenderer
 
         try {
             if (\DIRECTORY_SEPARATOR === '\\') {
-                return (
-                    \function_exists('sapi_windows_vt100_support')
-                    && @\sapi_windows_vt100_support($stream)
-                ) || \getenv('ANSICON') !== false
+                return (\function_exists('sapi_windows_vt100_support') && @\sapi_windows_vt100_support($stream))
+                    || \getenv('ANSICON') !== false
                     || \getenv('ConEmuANSI') === 'ON'
                     || \getenv('TERM') === 'xterm';
             }

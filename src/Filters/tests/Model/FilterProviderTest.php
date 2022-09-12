@@ -33,7 +33,7 @@ final class FilterProviderTest extends BaseTest
         $inputManager = new InputManager($this->container);
         $input = new InputScope($inputManager);
 
-        $provider = new FilterProvider($this->container, new Core());
+        $provider = new FilterProvider($this->container, $this->container, new Core());
         $this->container->bind(FilterProviderInterface::class, $provider);
 
         $mapper = new AttributeMapper($provider, (new Factory())->create());

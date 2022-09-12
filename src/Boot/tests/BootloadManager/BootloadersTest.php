@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\BootloadManager;
 
-use PHPUnit\Framework\TestCase;
-use Spiral\Boot\BootloadManager\BootloadManager;
-use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Core\Container;
 use Spiral\Tests\Boot\Fixtures\BootloaderA;
 use Spiral\Tests\Boot\Fixtures\BootloaderB;
@@ -14,6 +11,7 @@ use Spiral\Tests\Boot\Fixtures\BootloaderC;
 use Spiral\Tests\Boot\Fixtures\SampleBoot;
 use Spiral\Tests\Boot\Fixtures\SampleBootWithMethodBoot;
 use Spiral\Tests\Boot\Fixtures\SampleClass;
+use Spiral\Tests\Boot\TestCase;
 
 class BootloadersTest extends TestCase
 {
@@ -21,7 +19,8 @@ class BootloadersTest extends TestCase
     {
         $container = new Container();
 
-        $bootloader = new BootloadManager($container, new Initializer($container));
+        $bootloader = $this->getBootloadManager($container);
+
         $bootloader->bootload($classes = [
             SampleClass::class,
             SampleBootWithMethodBoot::class,
@@ -56,17 +55,13 @@ class BootloadersTest extends TestCase
         $this->expectException(\Spiral\Boot\Exception\ClassNotFoundException::class);
         $this->expectErrorMessage('Bootloader class `Foo\Bar\Invalid` is not exist.');
 
-        $container = new Container();
-
-        $bootloader = new BootloadManager($container, new Initializer($container));
+        $bootloader = $this->getBootloadManager();
         $bootloader->bootload(['Foo\Bar\Invalid']);
     }
 
     public function testDependenciesFromConstant(): void
     {
-        $container = new Container();
-
-        $bootloader = new BootloadManager($container, new Initializer($container));
+        $bootloader = $this->getBootloadManager();
         $bootloader->bootload($classes = [
             SampleBoot::class,
         ]);
@@ -79,9 +74,7 @@ class BootloadersTest extends TestCase
 
     public function testDependenciesFromInterfaceMethod(): void
     {
-        $container = new Container();
-
-        $bootloader = new BootloadManager($container, new Initializer($container));
+        $bootloader = $this->getBootloadManager();
         $bootloader->bootload($classes = [
             BootloaderB::class,
         ]);
@@ -93,9 +86,7 @@ class BootloadersTest extends TestCase
 
     public function testDependenciesFromInitAndBootMethods(): void
     {
-        $container = new Container();
-
-        $bootloader = new BootloadManager($container, new Initializer($container));
+        $bootloader = $this->getBootloadManager();
         $bootloader->bootload($classes = [
             BootloaderC::class,
         ]);

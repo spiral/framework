@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Boot\Injector;
 
 use Spiral\Attributes\AttributeReader;
-use Spiral\Core\Container;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Exception\Container\InjectionException;
+use Spiral\Core\InvokerInterface;
 use UnitEnum;
 
 /**
@@ -18,7 +19,8 @@ use UnitEnum;
 final class EnumInjector implements InjectorInterface
 {
     public function __construct(
-        private readonly Container $container,
+        private readonly InvokerInterface $invoker,
+        private readonly BinderInterface $binder,
         private readonly AttributeReader $reader
     ) {
     }
@@ -41,14 +43,14 @@ final class EnumInjector implements InjectorInterface
         $closure = $class->getMethod($attribute->method)->getClosure();
         \assert($closure !== null);
 
-        $object = $this->container->invoke($closure);
+        $object = $this->invoker->invoke($closure);
         \assert($object instanceof UnitEnum, \sprintf(
             'The method `%s::%s` must provide the same enum instance.',
             $class->getName(),
             $attribute->method,
         ));
 
-        $this->container->bind($class->getName(), $object);
+        $this->binder->bind($class->getName(), $object);
 
         return $object;
     }

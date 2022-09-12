@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Tests\Boot\Fixtures\TestConfig;
-use Spiral\Tests\Boot\Fixtures\TestConfigurationCore;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 
 class ConfigsTest extends TestCase

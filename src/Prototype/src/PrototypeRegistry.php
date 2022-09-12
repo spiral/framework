@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Prototype;
 
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 
 /**
@@ -15,11 +16,8 @@ final class PrototypeRegistry implements Container\SingletonInterface
     /** @var Dependency[] */
     private array $dependencies = [];
 
-    /**
-     * PrototypeRegistry constructor.
-     */
     public function __construct(
-        private readonly Container $container
+        private readonly ContainerInterface $container
     ) {
     }
 

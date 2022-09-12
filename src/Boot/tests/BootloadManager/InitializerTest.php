@@ -14,7 +14,9 @@ final class InitializerTest extends TestCase
 {
     public function testDontBootloadAbstractBootloader(): void
     {
-        $initializer = new Initializer(new Container());
+        $container = new Container();
+
+        $initializer = new Initializer($container, $container);
 
         $result = \iterator_to_array($initializer->init([AbstractBootloader::class, BootloaderD::class]));
 

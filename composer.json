@@ -127,10 +127,7 @@
         "spiral/nyholm-bridge": "^1.2",
         "symfony/var-dumper": "^5.2|^6.0",
         "symplify/monorepo-builder": "^10.2.7",
-        "vimeo/psalm": "^4.21"
-    },
-    "conflict": {
-        "vimeo/psalm": "4.22.0"
+        "vimeo/psalm": "^4.27"
     },
     "autoload-dev": {
         "psr-4": {

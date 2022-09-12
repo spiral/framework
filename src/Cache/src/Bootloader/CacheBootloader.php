@@ -16,7 +16,8 @@ use Spiral\Cache\Storage\ArrayStorage;
 use Spiral\Cache\Storage\FileStorage;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Core\Container;
+use Spiral\Core\BinderInterface;
+use Spiral\Core\FactoryInterface;
 
 final class CacheBootloader extends Bootloader
 {
@@ -38,22 +39,25 @@ final class CacheBootloader extends Bootloader
         );
     }
 
-    public function init(Container $container, EnvironmentInterface $env, DirectoriesInterface $dirs): void
+    public function init(BinderInterface $binder, EnvironmentInterface $env, DirectoriesInterface $dirs): void
     {
         $this->initConfig($env, $dirs);
 
-        $container->bindInjector(CacheInterface::class, CacheInjector::class);
+        $binder->bindInjector(CacheInterface::class, CacheInjector::class);
     }
 
     /**
      * @noRector RemoveUnusedPrivateMethodRector
      */
-    private function initCacheManager(Container $container, CacheConfig $config): CacheManager
-    {
-        $manager = new CacheManager($config, $container);
+    private function initCacheManager(
+        BinderInterface $binder,
+        FactoryInterface $factory,
+        CacheConfig $config
+    ): CacheManager {
+        $manager = new CacheManager($config, $factory);
 
         foreach ($config->getAliases() as $alias => $storageName) {
-            $container->bind(
+            $binder->bind(
                 $alias,
                 static fn (CacheManager $manager): CacheInterface => $manager->storage($storageName)
             );

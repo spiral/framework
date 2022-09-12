@@ -8,7 +8,6 @@ use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\BootloadManager\BootloadManager;
-use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Event\Bootstrapped;
 use Spiral\Boot\Event\DispatcherFound;
 use Spiral\Boot\Event\DispatcherNotFound;
@@ -78,7 +77,8 @@ abstract class AbstractKernel implements KernelInterface
         $this->finalizer = new Finalizer();
         $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
 
-        $this->bootloader = new BootloadManager($container, new Initializer($this->container));
+        $this->bootloader = $container->make(BootloadManager::class);
+
         $this->bootloader->bootload(static::SYSTEM);
     }
 
@@ -97,7 +97,7 @@ abstract class AbstractKernel implements KernelInterface
      *
      * @throws \Throwable
      */
-    public static function create(
+    final public static function create(
         array $directories,
         bool $handleErrors = true,
         ExceptionHandlerInterface|string|null $exceptionHandler = null,

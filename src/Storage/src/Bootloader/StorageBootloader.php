@@ -8,8 +8,9 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Exception\EnvironmentException;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Container;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Exception\Container\NotFoundException;
+use Spiral\Core\FactoryInterface;
 use Spiral\Distribution\Bootloader\DistributionBootloader;
 use Spiral\Distribution\DistributionInterface as CdnInterface;
 use Spiral\Storage\Bucket;
@@ -32,7 +33,7 @@ class StorageBootloader extends Bootloader
     ) {
     }
 
-    public function init(Container $app, EnvironmentInterface $env): void
+    public function init(BinderInterface $binder, EnvironmentInterface $env): void
     {
         $this->config->setDefaults(StorageConfig::CONFIG, [
             'default' => $env->get('STORAGE_DEFAULT', Storage::DEFAULT_STORAGE),
@@ -40,10 +41,10 @@ class StorageBootloader extends Bootloader
             'buckets' => [],
         ]);
 
-        $app->bindSingleton(StorageInterface::class, static function (
+        $binder->bindSingleton(StorageInterface::class, static function (
             BucketFactoryInterface $bucketFactory,
             StorageConfig $config,
-            Container $app
+            FactoryInterface $factory
         ) {
             $manager = new Storage($config->getDefaultBucket());
 
@@ -54,7 +55,7 @@ class StorageBootloader extends Bootloader
 
                 if (isset($distributions[$name])) {
                     try {
-                        $cdn = $app->make(CdnInterface::class);
+                        $cdn = $factory->make(CdnInterface::class);
                     } catch (NotFoundException $e) {
                         $message = 'Unable to create distribution for bucket "%s". '
                             . 'Please make sure that bootloader %s is added in your application';
@@ -72,10 +73,10 @@ class StorageBootloader extends Bootloader
             return $manager;
         });
 
-        $app->bindSingleton(Storage::class, static fn (StorageInterface $manager) => $manager);
+        $binder->bindSingleton(Storage::class, static fn (StorageInterface $manager) => $manager);
 
-        $app->bindSingleton(BucketInterface::class, static fn (StorageInterface $manager) => $manager->bucket());
+        $binder->bindSingleton(BucketInterface::class, static fn (StorageInterface $manager) => $manager->bucket());
 
-        $app->bindSingleton(Bucket::class, static fn (BucketInterface $storage) => $storage);
+        $binder->bindSingleton(Bucket::class, static fn (BucketInterface $storage) => $storage);
     }
 }

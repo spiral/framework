@@ -14,8 +14,9 @@ final class LoaderRegistryTest extends TestCase
 {
     public function testResolve(): void
     {
+        $container = new Container();
         $registry = new LoaderRegistry([
-            new PhpFileLoader(new Container()),
+            new PhpFileLoader($container, $container),
             new TestLoader()
         ]);
 
@@ -30,7 +31,8 @@ final class LoaderRegistryTest extends TestCase
     public function testAddAndGetLoaders(): void
     {
         $registry = new LoaderRegistry();
-        $php = new PhpFileLoader(new Container());
+        $container = new Container();
+        $php = new PhpFileLoader($container, $container);
         $yaml = new TestLoader();
 
         $this->assertSame([], $registry->getLoaders());

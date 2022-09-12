@@ -7,6 +7,9 @@ namespace Spiral\Boot\BootloadManager;
 use Closure;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Core\Container;
+use Spiral\Core\InvokerInterface;
+use Spiral\Core\ResolverInterface;
+use Spiral\Core\ScopeInterface;
 
 /**
  * Provides ability to bootload ServiceProviders.
@@ -15,7 +18,9 @@ final class BootloadManager implements Container\SingletonInterface
 {
     public function __construct(
         /* @internal */
-        private readonly Container $container,
+        private readonly ScopeInterface $scope,
+        private readonly InvokerInterface $invoker,
+        private readonly ResolverInterface $resolver,
         private Initializer $initializer
     ) {
     }
@@ -45,7 +50,7 @@ final class BootloadManager implements Container\SingletonInterface
      */
     public function bootload(array $classes, array $bootingCallbacks = [], array $bootedCallbacks = []): void
     {
-        $this->container->runScope(
+        $this->scope->runScope(
             [self::class => $this],
             function () use ($classes, $bootingCallbacks, $bootedCallbacks): void {
                 $this->boot($classes, $bootingCallbacks, $bootedCallbacks);
@@ -86,7 +91,7 @@ final class BootloadManager implements Container\SingletonInterface
 
         $method = $refl->getMethod($method->value);
 
-        $args = $this->container->resolveArguments($method);
+        $args = $this->resolver->resolveArguments($method);
         if (!isset($args['boot'])) {
             $args['boot'] = $options;
         }
@@ -100,7 +105,7 @@ final class BootloadManager implements Container\SingletonInterface
     private function fireCallbacks(array $callbacks): void
     {
         foreach ($callbacks as $callback) {
-            $this->container->invoke($callback);
+            $this->invoker->invoke($callback);
         }
     }
 }

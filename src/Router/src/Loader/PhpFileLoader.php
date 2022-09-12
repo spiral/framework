@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Router\Loader;
 
 use Spiral\Core\Container;
+use Spiral\Core\FactoryInterface;
+use Spiral\Core\ResolverInterface;
 use Spiral\Router\Exception\LoaderLoadException;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 use Spiral\Router\RouteCollection;
@@ -12,7 +14,8 @@ use Spiral\Router\RouteCollection;
 final class PhpFileLoader implements LoaderInterface
 {
     public function __construct(
-        private readonly Container $container
+        private readonly FactoryInterface $factory,
+        private readonly ResolverInterface $resolver,
     ) {
     }
 
@@ -33,9 +36,9 @@ final class PhpFileLoader implements LoaderInterface
 
         $collection = new RouteCollection();
 
-        $configurator = new RoutingConfigurator($collection, $this->container->make(LoaderInterface::class));
+        $configurator = new RoutingConfigurator($collection, $this->factory->make(LoaderInterface::class));
 
-        $args = $this->container->resolveArguments(new \ReflectionFunction($callback), [$configurator]);
+        $args = $this->resolver->resolveArguments(new \ReflectionFunction($callback), [$configurator]);
 
         // Compiling routes from callback
         $callback(...$args);

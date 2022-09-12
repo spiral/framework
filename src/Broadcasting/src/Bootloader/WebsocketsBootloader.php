@@ -11,7 +11,7 @@ use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Broadcasting\BroadcastInterface;
 use Spiral\Broadcasting\Config\BroadcastConfig;
 use Spiral\Broadcasting\Middleware\AuthorizationMiddleware;
-use Spiral\Core\Container;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\SingletonInterface;
 
 final class WebsocketsBootloader extends Bootloader implements SingletonInterface
@@ -21,9 +21,9 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
         BroadcastingBootloader::class,
     ];
 
-    public function boot(Container $container): void
+    public function boot(BinderInterface $binder): void
     {
-        $container->bindSingleton(AuthorizationMiddleware::class, static function (
+        $binder->bindSingleton(AuthorizationMiddleware::class, static function (
             BroadcastInterface $broadcast,
             ResponseFactoryInterface $responseFactory,
             BroadcastConfig $config,

@@ -8,7 +8,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Core\Container;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
@@ -33,10 +33,10 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function init(Container $container, DirectoriesInterface $dirs): void
+    public function init(BinderInterface $binder, DirectoriesInterface $dirs): void
     {
-        $container->bindInjector(ClassLocator::class, ClassLocatorInjector::class);
-        $container->bindInjector(InvocationLocator::class, InvocationLocatorInjector::class);
+        $binder->bindInjector(ClassLocator::class, ClassLocatorInjector::class);
+        $binder->bindInjector(InvocationLocator::class, InvocationLocatorInjector::class);
 
         $this->config->setDefaults(
             TokenizerConfig::CONFIG,
