@@ -11,6 +11,7 @@ use Spiral\Exceptions\Renderer\PlainRenderer;
 use Spiral\Exceptions\Verbosity;
 use Spiral\Files\FilesInterface;
 use Spiral\Snapshots\FileSnapshooter;
+use Spiral\Snapshots\FileSnapshot;
 use Spiral\Snapshots\SnapshotterInterface;
 
 /**
@@ -21,7 +22,8 @@ use Spiral\Snapshots\SnapshotterInterface;
 final class SnapshotsBootloader extends Bootloader
 {
     protected const SINGLETONS = [
-        SnapshotterInterface::class => [self::class, 'fileSnapshooter'],
+        FileSnapshot::class => [self::class, 'fileSnapshot'],
+        SnapshotterInterface::class => FileSnapshooter::class,
     ];
 
     private const MAX_SNAPSHOTS = 25;
@@ -29,12 +31,12 @@ final class SnapshotsBootloader extends Bootloader
     /**
      * @noRector RemoveUnusedPrivateMethodRector
      */
-    private function fileSnapshooter(
+    private function fileSnapshot(
         EnvironmentInterface $env,
         DirectoriesInterface $dirs,
         FilesInterface $files
-    ): SnapshotterInterface {
-        return new FileSnapshooter(
+    ): FileSnapshot {
+        return new FileSnapshot(
             $dirs->get('runtime') . '/snapshots/',
             (int) $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),
             Verbosity::tryFrom((int)($env->get('SNAPSHOT_VERBOSITY') ?? Verbosity::VERBOSE->value)),
