@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Attributes\ReaderInterface;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Console\Traits\LazyTrait;
 use Spiral\Tokenizer\TokenizationListenerInterface;
@@ -22,7 +21,6 @@ final class CommandLocatorListener implements TokenizationListenerInterface
     private readonly \ReflectionClass $target;
 
     public function __construct(
-        private readonly ReaderInterface $reader,
         private readonly ConsoleBootloader $bootloader,
         ContainerInterface $container
     ) {
