@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Exceptions\Renderer;
 
 use Codedungeon\PHPCliColors\Color;
-use Spiral\Debug\System;
 use Spiral\Exceptions\Style\ConsoleStyle;
 use Spiral\Exceptions\Style\PlainStyle;
 use Spiral\Exceptions\Verbosity;
@@ -44,7 +43,7 @@ class ConsoleRenderer extends AbstractRenderer
     public function __construct(mixed $stream = null)
     {
         $stream ??= \defined('\STDOUT') ? '\STDOUT' : \fopen('php://stdout', 'wb');
-        $this->colorsSupport = System::isColorsSupported($stream);
+        $this->colorsSupport = $this->isColorsSupported($stream);
     }
 
     /**
@@ -191,5 +190,32 @@ class ConsoleRenderer extends AbstractRenderer
         }
 
         return \sprintf($format, ...$args);
+    }
+
+    /**
+     * Returns true if the STDOUT supports colorization.
+     * @codeCoverageIgnore
+     * @link https://github.com/symfony/Console/blob/master/Output/StreamOutput.php#L94
+     */
+    private function isColorsSupported(mixed $stream = STDOUT): bool
+    {
+        if ('Hyper' === \getenv('TERM_PROGRAM')) {
+            return true;
+        }
+
+        try {
+            if (\DIRECTORY_SEPARATOR === '\\') {
+                return (
+                        \function_exists('sapi_windows_vt100_support')
+                        && @\sapi_windows_vt100_support($stream)
+                    ) || \getenv('ANSICON') !== false
+                    || \getenv('ConEmuANSI') === 'ON'
+                    || \getenv('TERM') === 'xterm';
+            }
+
+            return @\stream_isatty($stream);
+        } catch (\Throwable) {
+            return false;
+        }
     }
 }
