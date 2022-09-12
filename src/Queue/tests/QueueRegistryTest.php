@@ -30,8 +30,11 @@ final class QueueRegistryTest extends TestCase
     {
         parent::setUp();
 
+        $this->mockContainer = new Container();
+
         $this->registry = new QueueRegistry(
-            $this->mockContainer = new Container(),
+            $this->mockContainer,
+            $this->mockContainer,
             $this->fallbackHandlers = m::mock(HandlerRegistryInterface::class)
         );
     }
