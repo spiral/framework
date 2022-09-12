@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace Spiral\Boot;
 
 use Closure;
+use Spiral\Boot\Bootloader\BootloaderInterface;
 
+/**
+ * @psalm-type TClass = class-string<BootloaderInterface>
+ */
 interface BootloadManagerInterface
 {
     /**
      * Get bootloaded classes.
+     *
+     * @return TClass[]
      */
     public function getClasses(): array;
 
@@ -22,7 +28,7 @@ interface BootloadManagerInterface
      *    CustomizedBootloader::class => ["option" => "value"]
      * ]
      *
-     * @param array<class-string>|array<class-string,array<string,mixed>> $classes
+     * @param TClass[]|array<TClass, array<string,mixed>> $classes
      * @param array<Closure> $bootingCallbacks
      * @param array<Closure> $bootedCallbacks
      *
