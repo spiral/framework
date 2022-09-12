@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Nyholm\Psr7\Uri;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Route;
 use Spiral\Tests\Router\Diactoros\UriFactory;
