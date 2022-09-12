@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Framework\Bootloader\Exceptions;
 
 use Spiral\Snapshots\FileSnapshooter;
+use Spiral\Snapshots\FileSnapshot;
 use Spiral\Snapshots\SnapshotterInterface;
 use Spiral\Tests\Framework\BaseTest;
 
@@ -15,6 +16,14 @@ final class SnapshotsBootloaderTest extends BaseTest
         $this->assertContainerBoundAsSingleton(
             SnapshotterInterface::class,
             FileSnapshooter::class
+        );
+    }
+
+    public function testFileSnapshotBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(
+            FileSnapshot::class,
+            FileSnapshot::class
         );
     }
 }

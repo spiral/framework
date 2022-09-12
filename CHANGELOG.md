@@ -176,6 +176,8 @@
   - [spiral/serializer] Added a new spiral/serializer component. Contains an interface and a minimal implementation 
     that can be extended by external serializers.
   - [spiral/queue] Added the ability to configure serializers for different types of jobs.
+  - Added class `Spiral\Exceptions\Reporter\FileReporter`, which implements `Spiral\Exceptions\ExceptionReporterInterface` 
+    and can create text files with information about an exception. 
 
 ## v2.14.0 - Unreleased
 - **High Impact Changes**
