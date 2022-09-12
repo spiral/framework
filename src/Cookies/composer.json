@@ -16,14 +16,14 @@
     ],
     "require": {
         "php": ">=7.4",
-        "spiral/core": "^2.15",
-        "spiral/encrypter": "^2.15",
+        "spiral/core": "^2.14.1",
+        "spiral/encrypter": "^2.14.1",
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.5",
         "mockery/mockery": "^1.5",
-        "spiral/http": "^2.15",
+        "spiral/http": "^2.14.1",
         "laminas/laminas-diactoros": "^2.8"
     },
     "autoload": {
