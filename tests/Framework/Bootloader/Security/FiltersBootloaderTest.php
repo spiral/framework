@@ -51,7 +51,8 @@ final class FiltersBootloaderTest extends BaseTest
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
         $configs->setDefaults(FiltersConfig::CONFIG, ['interceptors' => []]);
 
-        $bootloader = new FiltersBootloader($this->getContainer(), $configs);
+        $container = $this->getContainer();
+        $bootloader = new FiltersBootloader($container, $container, $configs);
         $bootloader->addInterceptor('foo');
         $bootloader->addInterceptor('bar');
 

@@ -81,7 +81,7 @@ final class SerializerBootloaderTest extends TestCase
             'default' => 'json',
             'serializers' => $serializers
         ]));
-        $bootloader = new SerializerBootloader($this->createMock(ConfiguratorInterface::class), $this->container);
+        $bootloader = new SerializerBootloader($this->createMock(ConfiguratorInterface::class), $this->container, $this->container);
 
         $this->container->bindSingleton(SerializerRegistryInterface::class, [$bootloader, 'initSerializerRegistry']);
         $this->container->bindSingleton(SerializerManager::class, [$bootloader, 'initSerializerManager']);
