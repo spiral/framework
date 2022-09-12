@@ -27,7 +27,11 @@ use Spiral\Monolog\Exception\ConfigException;
 
 final class LogFactory implements LogsInterface, InjectorInterface, ResettableInterface
 {
-    // Default logger channel (supplied via injection)
+    /**
+     * Default logger channel (supplied via injection)
+     *
+     * @deprecated wil be removed in 3.0. Use {@see \Spiral\Monolog\Config\MonologConfig::DEFAULT_CHANNEL}
+     */
     public const DEFAULT = 'default';
 
     /** @var MonologConfig */
