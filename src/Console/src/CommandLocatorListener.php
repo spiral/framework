@@ -9,11 +9,13 @@ use Spiral\Attributes\ReaderInterface;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Console\Traits\LazyTrait;
 use Spiral\Tokenizer\TokenizationListenerInterface;
+use Spiral\Tokenizer\Traits\TargetTrait;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 final class CommandLocatorListener implements TokenizationListenerInterface
 {
     use LazyTrait;
+    use TargetTrait;
 
     /** @var \ReflectionClass[] */
     private array $commands = [];
