@@ -30,7 +30,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
     /**
      * Default logger channel (supplied via injection)
      *
-     * @deprecated wil be removed in 3.0. Use Spiral\Monolog\Config\MonologConfig::DEFAULT_CHANNEL
+     * @deprecated wil be removed in 3.0. Use {@see \Spiral\Monolog\Config\MonologConfig::DEFAULT_CHANNEL}
      */
     public const DEFAULT = 'default';
 
