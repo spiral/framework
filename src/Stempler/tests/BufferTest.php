@@ -110,7 +110,7 @@ class BufferTest extends TestCase
 
     public function testOffset(): void
     {
-        $src = $this->buffer('abcs');
+        $src = $this->buffer('abc');
         $this->assertEquals(0, $src->getOffset());
 
         $this->assertEquals(new Byte(0, 'a'), $src->next());
