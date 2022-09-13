@@ -41,7 +41,8 @@
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "spiral/boot": "^3.0",
-        "spiral/stempler-bridge": "^3.0"
+        "spiral/stempler-bridge": "^3.0",
+        "vimeo/psalm": "^4.27"
     },
     "autoload": {
         "psr-4": {
@@ -55,7 +56,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "3.0.x-dev"
         }
     },
     "config": {

@@ -1,4 +1,14 @@
 # Exception Snapshot Manager
-[![Latest Stable Version](https://poser.pugx.org/spiral/snapshots/version)](https://packagist.org/packages/spiral/snapshots)
-[![Build Status](https://travis-ci.org/spiral/snapshots.svg?branch=master)](https://travis-ci.org/spiral/snapshots)
-[![Codecov](https://codecov.io/gh/spiral/snapshots/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/snapshots/)
+
+[![PHP Version Require](https://poser.pugx.org/spiral/stempler/require/php)](https://packagist.org/packages/spiral/stempler)
+[![Latest Stable Version](https://poser.pugx.org/spiral/stempler/v/stable)](https://packagist.org/packages/spiral/stempler)
+[![phpunit](https://github.com/spiral/stempler/workflows/phpunit/badge.svg)](https://github.com/spiral/stempler/actions)
+[![psalm](https://github.com/spiral/stempler/workflows/psalm/badge.svg)](https://github.com/spiral/stempler/actions)
+[![Codecov](https://codecov.io/gh/spiral/stempler/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/stempler/)
+[![Total Downloads](https://poser.pugx.org/spiral/stempler/downloads)](https://packagist.org/packages/spiral/stempler)
+
+<b>[Documentation](https://spiral.dev/docs/stempler-configuration)</b> | [Framework Bundle](https://github.com/spiral/framework)
+
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

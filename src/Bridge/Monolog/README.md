@@ -1,5 +1,14 @@
-Spiral Framework: Monolog Adapter
-================================
-[![Latest Stable Version](https://poser.pugx.org/spiral/monolog-bridge/version)](https://packagist.org/packages/spiral/monolog-bridge)
-[![Build Status](https://travis-ci.org/spiral/monolog-bridge.svg?branch=master)](https://travis-ci.org/spiral/monolog-bridge)
+# Spiral Framework: Monolog Adapter
+
+[![PHP Version Require](https://poser.pugx.org/spiral/monolog-bridge/require/php)](https://packagist.org/packages/spiral/monolog-bridge)
+[![Latest Stable Version](https://poser.pugx.org/spiral/monolog-bridge/v/stable)](https://packagist.org/packages/spiral/monolog-bridge)
+[![phpunit](https://github.com/spiral/monolog-bridge/workflows/phpunit/badge.svg)](https://github.com/spiral/monolog-bridge/actions)
+[![psalm](https://github.com/spiral/monolog-bridge/workflows/psalm/badge.svg)](https://github.com/spiral/monolog-bridge/actions)
 [![Codecov](https://codecov.io/gh/spiral/monolog-bridge/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/monolog-bridge/)
+[![Total Downloads](https://poser.pugx.org/spiral/monolog-bridge/downloads)](https://packagist.org/packages/spiral/monolog-bridge)
+
+<b>[Documentation](https://spiral.dev/docs/extension-monolog)</b> | [Framework Bundle](https://github.com/spiral/framework)
+
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

@@ -1,6 +1,14 @@
 # Spiral: Universal Exception Handler
-[![Latest Stable Version](https://poser.pugx.org/spiral/exceptions/version)](https://packagist.org/packages/spiral/exceptions)
-[![Build Status](https://travis-ci.org/spiral/exceptions.svg?branch=master)](https://travis-ci.org/spiral/exceptions)
-[![Codecov](https://codecov.io/gh/spiral/exceptions/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/exceptions/)
 
-![html exception](https://user-images.githubusercontent.com/796136/64450764-7c21e980-d0eb-11e9-9f93-ba554101d8df.jpg)
+[![PHP Version Require](https://poser.pugx.org/spiral/exceptions/require/php)](https://packagist.org/packages/spiral/exceptions)
+[![Latest Stable Version](https://poser.pugx.org/spiral/exceptions/v/stable)](https://packagist.org/packages/spiral/exceptions)
+[![phpunit](https://github.com/spiral/exceptions/workflows/phpunit/badge.svg)](https://github.com/spiral/exceptions/actions)
+[![psalm](https://github.com/spiral/exceptions/workflows/psalm/badge.svg)](https://github.com/spiral/exceptions/actions)
+[![Codecov](https://codecov.io/gh/spiral/exceptions/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/exceptions/)
+[![Total Downloads](https://poser.pugx.org/spiral/exceptions/downloads)](https://packagist.org/packages/spiral/exceptions)
+
+<b>[Documentation](https://spiral.dev/docs/component-exceptions)</b> | [Framework Bundle](https://github.com/spiral/framework)
+
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

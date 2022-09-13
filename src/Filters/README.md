@@ -1,5 +1,14 @@
-Deep Structural Validation, Data Mapper, Inheritance
-================================
-[![Latest Stable Version](https://poser.pugx.org/spiral/filters/version)](https://packagist.org/packages/spiral/filters)
-[![Build Status](https://github.com/spiral/filters/workflows/build/badge.svg)](https://github.com/spiral/filters/actions)
+# Deep Structural Validation, Data Mapper, Inheritance
+
+[![PHP Version Require](https://poser.pugx.org/spiral/filters/require/php)](https://packagist.org/packages/spiral/filters)
+[![Latest Stable Version](https://poser.pugx.org/spiral/filters/v/stable)](https://packagist.org/packages/spiral/filters)
+[![phpunit](https://github.com/spiral/filters/workflows/phpunit/badge.svg)](https://github.com/spiral/filters/actions)
+[![psalm](https://github.com/spiral/filters/workflows/psalm/badge.svg)](https://github.com/spiral/filters/actions)
 [![Codecov](https://codecov.io/gh/spiral/filters/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/filters/)
+[![Total Downloads](https://poser.pugx.org/spiral/filters/downloads)](https://packagist.org/packages/spiral/filters)
+
+<b>[Documentation](https://spiral.dev/docs/filters-filter)</b> | [Framework Bundle](https://github.com/spiral/framework)
+
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

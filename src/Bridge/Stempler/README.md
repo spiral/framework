@@ -1,41 +1,14 @@
 # Spiral Framework: Stempler Adapter
-[![Latest Stable Version](https://poser.pugx.org/spiral/stempler-bridge/version)](https://packagist.org/packages/spiral/stempler-bridge)
-[![Build Status](https://travis-ci.org/spiral/stempler-bridge.svg?branch=master)](https://travis-ci.org/spiral/stempler-bridge)
+========
+[![PHP Version Require](https://poser.pugx.org/spiral/stempler-bridge/require/php)](https://packagist.org/packages/spiral/stempler-bridge)
+[![Latest Stable Version](https://poser.pugx.org/spiral/stempler-bridge/v/stable)](https://packagist.org/packages/spiral/stempler-bridge)
+[![phpunit](https://github.com/spiral/stempler-bridge/workflows/phpunit/badge.svg)](https://github.com/spiral/stempler-bridge/actions)
+[![psalm](https://github.com/spiral/stempler-bridge/workflows/psalm/badge.svg)](https://github.com/spiral/stempler-bridge/actions)
 [![Codecov](https://codecov.io/gh/spiral/stempler-bridge/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/stempler-bridge/)
+[![Total Downloads](https://poser.pugx.org/spiral/stempler-bridge/downloads)](https://packagist.org/packages/spiral/stempler-bridge)
 
-## Installation
-The extension requires `spiral/views` package.
+<b>[Documentation](https://spiral.dev/docs/stempler-configuratio)</b> | [Framework Bundle](https://github.com/spiral/framework)
 
-```
-$ composer require spiral/stempler-bridge
-```
+## License:
 
-To enable extension modify your application by adding `Spiral\Stempler\Bootloader\StemplerBootloader`:
-
-```php
-
-class App extends Kernel
-{
-    /*
-     * List of components and extensions to be automatically registered
-     * within system container on application start.
-     */
-    protected const LOAD = [
-        // ...
-        
-        Spiral\Stempler\Bootloader\StemplerBootloader::class,
-    ];
-}
-```
-
-## Usage
-You can now use view files via extension `.dark.php`.
-
-```php
-<extends:layouts.parent title="My Page"/>
-<use:element path="path/element"/>
-
-<block:content>
-    <element label="hello world">{{ $variable }}</element>
-</block:content>
-```
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

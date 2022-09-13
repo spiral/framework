@@ -36,7 +36,8 @@
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "spiral/http": "^3.0",
-        "nyholm/psr7": "^1.5"
+        "nyholm/psr7": "^1.5",
+        "vimeo/psalm": "^4.27"
     },
     "autoload": {
         "psr-4": {
@@ -50,7 +51,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "3.0.x-dev"
         }
     },
     "config": {

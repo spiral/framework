@@ -18,6 +18,9 @@ use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
+/**
+ * @implements InjectorInterface<Logger>
+ */
 final class LogFactory implements LogsInterface, InjectorInterface, ResettableInterface
 {
     private ?LoggerInterface $default = null;

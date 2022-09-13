@@ -41,16 +41,12 @@
         "mockery/mockery": "^1.5",
         "spiral/nyholm-bridge": "^1.2",
         "spiral/boot": "^3.0",
-        "spiral/console": "^3.0"
+        "spiral/console": "^3.0",
+        "vimeo/psalm": "^4.27"
     },
     "autoload-dev": {
         "psr-4": {
             "Spiral\\Tests\\Router\\": "tests"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.14.x-dev"
         }
     },
     "config": {

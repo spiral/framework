@@ -1,23 +1,14 @@
 # Spiral Framework: DotEnv Loader
-[![Latest Stable Version](https://poser.pugx.org/spiral/dotenv-bridge/version)](https://packagist.org/packages/spiral/dotenv-bridge)
-[![Build Status](https://travis-ci.org/spiral/dotenv-bridge.svg?branch=master)](https://travis-ci.org/spiral/dotenv-bridge)
+
+[![PHP Version Require](https://poser.pugx.org/spiral/dotenv-bridge/require/php)](https://packagist.org/packages/spiral/dotenv-bridge)
+[![Latest Stable Version](https://poser.pugx.org/spiral/dotenv-bridge/v/stable)](https://packagist.org/packages/spiral/dotenv-bridge)
+[![phpunit](https://github.com/spiral/dotenv-bridge/workflows/phpunit/badge.svg)](https://github.com/spiral/dotenv-bridge/actions)
+[![psalm](https://github.com/spiral/dotenv-bridge/workflows/psalm/badge.svg)](https://github.com/spiral/dotenv-bridge/actions)
 [![Codecov](https://codecov.io/gh/spiral/dotenv-bridge/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/dotenv-bridge/)
+[![Total Downloads](https://poser.pugx.org/spiral/dotenv-bridge/downloads)](https://packagist.org/packages/spiral/dotenv-bridge)
 
-## Installation
-Mount DotEnv bootloader at top of bootload list in your application:
+<b>[Documentation](https://spiral.dev/docs/extension-dotenv)</b> | [Framework Bundle](https://github.com/spiral/framework)
 
-```php
-class App extends Kernel
-{
-    /*
-     * List of components and extensions to be automatically registered
-     * within system container on application start.
-     */
-    protected const LOAD = [
-        // Environment configuration
-        DotenvBootloader::class,
-        
-        // ...
-    ];
-}
-```
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

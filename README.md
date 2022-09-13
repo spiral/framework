@@ -3,10 +3,12 @@
 </p>
 
 <p align="center">
+<a href="https://packagist.org/packages/spiral/framework"><img src="https://poser.pugx.org/spiral/framework/require/php"></a>
 <a href="https://packagist.org/packages/spiral/framework"><img src="https://poser.pugx.org/spiral/framework/version"></a>
 <a href="https://github.com/spiral/framework/actions"><img src="https://github.com/spiral/framework/workflows/build/badge.svg"></a>
 <a href="https://codecov.io/gh/spiral/framework"><img src="https://codecov.io/gh/spiral/framework/graph/badge.svg"></a>
 <a href="https://scrutinizer-ci.com/g/spiral/framework/?branch=master"><img src="https://scrutinizer-ci.com/g/spiral/framework/badges/quality-score.png"></a>
+<a href="https://packagist.org/packages/spiral/framework"><img src="https://poser.pugx.org/spiral/framework/downloads"></a>
 </p>
 
 <hr />

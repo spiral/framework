@@ -27,8 +27,8 @@
         "aws/aws-sdk-php": "^3.0",
         "guzzlehttp/psr7": "^1.7",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "symfony/var-dumper": "^5.2|^6.0",
-        "phpunit/phpunit": "^9.5.20"
+        "phpunit/phpunit": "^9.5.20",
+        "vimeo/psalm": "^4.27"
     },
     "autoload-dev": {
         "psr-4": {
@@ -40,7 +40,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "3.0.x-dev"
         }
     },
     "scripts": {

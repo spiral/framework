@@ -34,7 +34,8 @@
         "symfony/finder": "^5.3.7|^6.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.20"
+        "phpunit/phpunit": "^9.5.20",
+        "vimeo/psalm": "^4.27"
     },
     "autoload": {
         "psr-4": {
@@ -48,7 +49,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "3.0.x-dev"
         }
     },
     "config": {

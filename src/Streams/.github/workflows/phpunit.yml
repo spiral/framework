@@ -1,0 +1,15 @@
+on:
+  push:
+    branches:
+      - master
+
+name: phpunit
+
+jobs:
+  phpunit:
+    uses: spiral/gh-actions/.github/workflows/phpunit.yml@master
+    with:
+      os: >-
+        ['ubuntu-latest']
+      php: >-
+        ['8.1']
