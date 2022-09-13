@@ -33,7 +33,7 @@
         "spiral/config": "^3.0",
         "spiral/debug": "^3.0",
         "spiral/exceptions": "^3.0",
-        "spiral/attributes": "^3.0",
+        "spiral/attributes": "^2.8|^3.0",
         "spiral/events": "^3.0"
     },
     "require-dev": {

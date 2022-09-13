@@ -49,7 +49,7 @@
         "psr/simple-cache": "2 - 3",
         "spiral/attributes": "^2.8|^3.0",
         "spiral/composer-publish-plugin": "^1.0",
-        "symfony/console": "^6.0",
+        "symfony/console": "^5.3.7|^6.0",
         "symfony/finder": "^5.3.7|^6.0",
         "symfony/mailer": "^5.1|^6.0",
         "symfony/translation": "^5.1|^6.0",

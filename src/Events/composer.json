@@ -28,7 +28,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/attributes": "^2.8 || ^3.0",
+        "spiral/attributes": "^2.8|^3.0",
         "spiral/tokenizer": "^3.0",
         "psr/event-dispatcher": "^1.0"
     },
