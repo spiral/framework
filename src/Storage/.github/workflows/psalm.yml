@@ -7,7 +7,7 @@ name: static analysis
 
 jobs:
   psalm:
-    uses: spiral/gh-actions/.github/actions/workflows/psalm.yml@master
+    uses: spiral/gh-actions/.github/workflows/psalm.yml@master
     with:
       os: >-
         ['ubuntu-latest']
