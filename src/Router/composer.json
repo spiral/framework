@@ -29,9 +29,9 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "spiral/core": "^3.0",
-        "spiral/hmvc": "^3.0",
-        "spiral/http": "^3.0",
+        "spiral/core": "^3.1",
+        "spiral/hmvc": "^3.1",
+        "spiral/http": "^3.1",
         "cocur/slugify": "^3.2",
         "doctrine/inflector": "^1.4|^2.0",
         "psr/event-dispatcher": "^1.0"
@@ -54,7 +54,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.0.x-dev"
+            "dev-master": "3.1.x-dev"
         }
     },
     "config": {

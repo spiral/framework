@@ -28,9 +28,9 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.0",
-        "spiral/logger": "^3.0",
-        "spiral/tokenizer": "^3.0",
+        "spiral/core": "^3.1",
+        "spiral/logger": "^3.1",
+        "spiral/tokenizer": "^3.1",
         "symfony/translation": "^5.1|^6.0",
         "psr/event-dispatcher": "^1.0"
     },
@@ -54,7 +54,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.0.x-dev"
+            "dev-master": "3.1.x-dev"
         }
     },
     "config": {

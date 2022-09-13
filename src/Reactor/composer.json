@@ -28,7 +28,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/files": "^3.0",
+        "spiral/files": "^3.1",
         "doctrine/inflector": "^1.4|^2.0",
         "nette/php-generator": "^4.0.1"
     },
@@ -50,7 +50,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.0.x-dev"
+            "dev-master": "3.1.x-dev"
         }
     },
     "config": {

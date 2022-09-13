@@ -31,7 +31,7 @@
         "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
-        "spiral/boot": "^3.0",
+        "spiral/boot": "^3.1",
         "phpunit/phpunit": "^9.5.20",
         "vimeo/psalm": "^4.27"
     },
@@ -47,7 +47,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.0.x-dev"
+            "dev-master": "3.1.x-dev"
         }
     },
     "config": {
