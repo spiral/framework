@@ -28,10 +28,10 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/boot": "^3.0",
         "monolog/monolog": "^2.2"
     },
     "require-dev": {
+        "spiral/boot": "^3.0",
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^4.27"
