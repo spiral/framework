@@ -39,15 +39,15 @@ final class AttributeProcessor extends AbstractProcessor implements Tokenization
             throw new \RuntimeException(\sprintf('Tokenizer did not finalize %s listener.', self::class));
         }
 
-        foreach ($this->attributes as $event => $attributes) {
+        foreach ($this->attributes as $listener => $attributes) {
             foreach ($attributes as $attribute) {
-                $method = $this->getMethod($event, $attribute->method ?? '__invoke');
+                $method = $this->getMethod($listener, $attribute->method ?? '__invoke');
 
                 $events = (array)($attribute->event ?? $this->getEventFromTypeDeclaration($method));
                 foreach ($events as $event) {
                     $this->registry->addListener(
                         event: $event,
-                        listener: $this->factory->create($event, $method->getName()),
+                        listener: $this->factory->create($listener, $method->getName()),
                         priority: $attribute->priority
                     );
                 }
