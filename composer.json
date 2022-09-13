@@ -124,7 +124,6 @@
     "require-dev": {
         "aws/aws-sdk-php": "^3.0",
         "guzzlehttp/psr7": "^1.7",
-        "icanhazstring/composer-unused": "^0.8.2",
         "jetbrains/phpstorm-attributes": "^1.0",
         "league/flysystem-async-aws-s3": "^2.0",
         "league/flysystem-aws-s3-v3": "^2.0",
