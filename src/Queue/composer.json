@@ -3,14 +3,27 @@
     "type": "library",
     "description": "Spiral: Jobs and Queue",
     "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/queue"
+    },
     "authors": [
         {
-            "name": "Wolfy-J",
-            "email": "wolfy.jd@gmail.com"
+            "name": "Anton Titov (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
         },
         {
-            "name": "Pavel Buchnev",
-            "email": "butschster@gmail.com"
+            "name": "Pavel Butchnev (butschster)",
+            "email": "pavel.buchnev@spiralscout.com"
+        },
+        {
+            "name": "Aleksei Gagarin (roxblnfk)",
+            "email": "alexey.gagarin@spiralscout.com"
+        },
+        {
+            "name": "Maksim Smakouz (msmakouz)",
+            "email": "maksim.smakouz@spiralscout.com"
         }
     ],
     "require": {

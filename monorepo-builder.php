@@ -37,8 +37,20 @@ use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorke
         ],
         'authors'           => [
             [
-                'name'  => 'Wolfy-J',
-                'email' => 'wolfy.jd@gmail.com',
+                'name'  => 'Anton Titov (wolfy-j)',
+                'email' => 'wolfy-j@spiralscout.com',
+            ],
+            [
+                'name'  => 'Pavel Butchnev (butschster)',
+                'email' => 'pavel.buchnev@spiralscout.com',
+            ],
+            [
+                'name'  => 'Aleksei Gagarin (roxblnfk)',
+                'email' => 'alexey.gagarin@spiralscout.com',
+            ],
+            [
+                'name'  => 'Maksim Smakouz (msmakouz)',
+                'email' => 'maksim.smakouz@spiralscout.com',
             ],
         ],
         'require'           => $dest['require'] ?? [],
@@ -90,7 +102,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'mockery/mockery'           => '^1.5',
             'spiral/code-style'         => '^1.1',
             'symplify/monorepo-builder' => '^10.2.7',
-            'vimeo/psalm'               => '^4.21',
+            'vimeo/psalm'               => '^4.27',
         ],
     ]);
 
