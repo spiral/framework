@@ -53,7 +53,7 @@ final class Buffer implements \IteratorAggregate
             $this->buffer[] = $n;
         }
 
-        if ($n !== null) {
+        if ($n !== null && $n->offset !== null) {
             $this->offset = $n->offset;
         }
 

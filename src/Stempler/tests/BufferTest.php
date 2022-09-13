@@ -9,6 +9,7 @@ use Spiral\Stempler\Lexer\Buffer;
 use Spiral\Stempler\Lexer\Byte;
 use Spiral\Stempler\Lexer\StreamInterface;
 use Spiral\Stempler\Lexer\StringStream;
+use Spiral\Stempler\Lexer\Token;
 
 class BufferTest extends TestCase
 {
@@ -120,6 +121,10 @@ class BufferTest extends TestCase
 
         $this->assertEquals(new Byte(2, 'c'), $src->next());
         $this->assertEquals(2, $src->getOffset());
+
+        $src = new Buffer($this->generateToken(new StringStream('abc')));
+        $this->assertEquals(new Token(0, null, 'a'), $src->next());
+        $this->assertEquals(0, $src->getOffset());
     }
 
     public function testLookupBytes(): void
@@ -146,6 +151,13 @@ class BufferTest extends TestCase
     {
         while (!$src->isEOI()) {
             yield new Byte($src->getOffset(), $src->peak());
+        }
+    }
+
+    private function generateToken(StreamInterface $src): \Generator
+    {
+        while (!$src->isEOI()) {
+            yield new Token(0, null, $src->peak());
         }
     }
 }
