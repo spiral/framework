@@ -1,5 +1,5 @@
 # Spiral Framework: Stempler Adapter
-========
+
 [![PHP Version Require](https://poser.pugx.org/spiral/stempler-bridge/require/php)](https://packagist.org/packages/spiral/stempler-bridge)
 [![Latest Stable Version](https://poser.pugx.org/spiral/stempler-bridge/v/stable)](https://packagist.org/packages/spiral/stempler-bridge)
 [![phpunit](https://github.com/spiral/stempler-bridge/actions/workflows/phpunit.yml/badge.svg)](https://github.com/spiral/stempler-bridge/actions)

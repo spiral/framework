@@ -45,8 +45,6 @@ final class Container implements ContainerInterface
      *
      * @throws ContainerException
      * @throws \Throwable
-     *
-     * @psalm-suppress MethodSignatureMismatch
      */
     public function get(string|Autowire $id, string $context = null): mixed
     {

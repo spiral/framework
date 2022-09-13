@@ -34,6 +34,7 @@
         "symfony/finder": "^5.3.7|^6.0"
     },
     "require-dev": {
+        "spiral/boot": "^3.0",
         "phpunit/phpunit": "^9.5.20",
         "vimeo/psalm": "^4.27"
     },

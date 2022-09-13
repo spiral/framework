@@ -30,6 +30,8 @@
         "php": ">=8.1",
         "ext-json": "*",
         "spiral/core": "^3.0",
+        "spiral/hmvc": "^3.0",
+        "spiral/serializer": "^3.0",
         "spiral/snapshots": "^3.0",
         "spiral/attributes": "^3.0",
         "doctrine/inflector": "^1.4|^2.0",
