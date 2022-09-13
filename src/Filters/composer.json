@@ -32,7 +32,9 @@
         "spiral/attributes": "^3.0",
         "spiral/core": "^3.0",
         "spiral/models": "^3.0",
-        "spiral/validation": "^3.0"
+        "spiral/validation": "^3.0",
+        "spiral/hmvc": "^3.0",
+        "psr/http-message": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5.20",

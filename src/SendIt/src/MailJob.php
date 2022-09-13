@@ -27,8 +27,6 @@ final class MailJob implements HandlerInterface
     /**
      * @throws TransportExceptionInterface
      * @throws InvalidArgumentException
-     *
-     * @psalm-suppress ParamNameMismatch
      */
     public function handle(string $name, string $id, string|array $payload): void
     {

@@ -33,6 +33,7 @@
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
+        "spiral/boot": "^3.0",
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^4.27"

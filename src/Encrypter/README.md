@@ -1,11 +1,11 @@
 # Spiral: Encryption Component
 
-[![PHP Version Require](https://poser.pugx.org/sspiral/encrypter/require/php)](https://packagist.org/packages/sspiral/encrypter)
-[![Latest Stable Version](https://poser.pugx.org/sspiral/encrypter/v/stable)](https://packagist.org/packages/sspiral/encrypter)
-[![phpunit](https://github.com/sspiral/encrypter/actions/workflows/phpunit.yml/badge.svg)](https://github.com/sspiral/encrypter/actions)
-[![psalm](https://github.com/sspiral/encrypter/actions/workflows/psalm.yml/badge.svg)](https://github.com/sspiral/encrypter/actions)
-[![Codecov](https://codecov.io/gh/sspiral/encrypter/branch/master/graph/badge.svg)](https://codecov.io/gh/sspiral/encrypter/)
-[![Total Downloads](https://poser.pugx.org/sspiral/encrypter/downloads)](https://packagist.org/packages/sspiral/encrypter)
+[![PHP Version Require](https://poser.pugx.org/spiral/encrypter/require/php)](https://packagist.org/packages/spiral/encrypter)
+[![Latest Stable Version](https://poser.pugx.org/spiral/encrypter/v/stable)](https://packagist.org/packages/spiral/encrypter)
+[![phpunit](https://github.com/spiral/encrypter/actions/workflows/phpunit.yml/badge.svg)](https://github.com/spiral/encrypter/actions)
+[![psalm](https://github.com/spiral/encrypter/actions/workflows/psalm.yml/badge.svg)](https://github.com/spiral/encrypter/actions)
+[![Codecov](https://codecov.io/gh/spiral/encrypter/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/encrypter/)
+[![Total Downloads](https://poser.pugx.org/spiral/encrypter/downloads)](https://packagist.org/packages/spiral/encrypter)
 
 <b>[Documentation](https://spiral.dev/docs/security-encrypter)</b> | [Framework Bundle](https://github.com/spiral/framework)
 
