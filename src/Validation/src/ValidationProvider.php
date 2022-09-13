@@ -10,6 +10,7 @@ use Spiral\Validation\Exception\ValidationException;
 
 /**
  * @template TValidation of ValidationInterface
+ * @template TFilterDefinition
  */
 final class ValidationProvider implements ValidationProviderInterface, SingletonInterface
 {
@@ -22,7 +23,7 @@ final class ValidationProvider implements ValidationProviderInterface, Singleton
     }
 
     /**
-     * @param class-string<TValidation> $name
+     * @param class-string<TFilterDefinition> $name
      */
     public function register(string $name, \Closure $resolver): void
     {
