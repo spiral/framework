@@ -1,5 +1,14 @@
 # Spiral: Common Broadcasting Interfaces
 
-[![Latest Stable Version](https://poser.pugx.org/spiral/broadcasting/version)](https://packagist.org/packages/spiral/broadcasting)
-[![Build Status](https://travis-ci.org/spiral/broadcasting.svg?branch=master)](https://travis-ci.org/spiral/broadcasting)
+[![PHP Version Require](https://poser.pugx.org/spiral/broadcasting/require/php)](https://packagist.org/packages/spiral/broadcasting)
+[![Latest Stable Version](https://poser.pugx.org/spiral/broadcasting/v/stable)](https://packagist.org/packages/spiral/broadcasting)
+[![phpunit](https://github.com/spiral/broadcasting/workflows/phpunit/badge.svg)](https://github.com/spiral/broadcasting/actions)
+[![psalm](https://github.com/spiral/broadcasting/workflows/psalm/badge.svg)](https://github.com/spiral/broadcasting/actions)
 [![Codecov](https://codecov.io/gh/spiral/broadcasting/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/broadcasting/)
+[![Total Downloads](https://poser.pugx.org/spiral/broadcasting/downloads)](https://packagist.org/packages/spiral/broadcasting)
+
+<b>[Documentation](https://spiral.dev/docs/component-broadcasting)</b> | [Framework Bundle](https://github.com/spiral/framework)
+
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

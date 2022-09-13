@@ -1,19 +1,14 @@
-Static Analysis: Class and Invocation locators
-================================
-[![Latest Stable Version](https://poser.pugx.org/spiral/tokenizer/version)](https://packagist.org/packages/spiral/tokenizer)
-[![Build Status](https://travis-ci.org/spiral/tokenizer.svg?branch=master)](https://travis-ci.org/spiral/tokenizer)
+# Static Analysis: Class and Invocation locators
+
+[![PHP Version Require](https://poser.pugx.org/spiral/tokenizer/require/php)](https://packagist.org/packages/spiral/tokenizer)
+[![Latest Stable Version](https://poser.pugx.org/spiral/tokenizer/v/stable)](https://packagist.org/packages/spiral/tokenizer)
+[![phpunit](https://github.com/spiral/tokenizer/workflows/phpunit/badge.svg)](https://github.com/spiral/tokenizer/actions)
+[![psalm](https://github.com/spiral/tokenizer/workflows/psalm/badge.svg)](https://github.com/spiral/tokenizer/actions)
 [![Codecov](https://codecov.io/gh/spiral/tokenizer/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/tokenizer/)
+[![Total Downloads](https://poser.pugx.org/spiral/tokenizer/downloads)](https://packagist.org/packages/spiral/tokenizer)
 
-The package provides the ability to locate all instances of desired classes, function/method invocations.
+<b>[Documentation](https://spiral.dev/docs/component-tokenizer)</b> | [Framework Bundle](https://github.com/spiral/framework)
 
-Example:
---------
-```php
-$cl = new ClassLocator((new Finder())->files()->in([__DIR__]));
+## License:
 
-print_r($cl->getClasses(TargetInterface::class));
-```
-
-License:
---------
-The MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [SpiralScout](https://spiralscout.com).
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

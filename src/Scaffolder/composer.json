@@ -45,7 +45,8 @@
         "spiral/core": "^3.0",
         "spiral/http": "^3.0",
         "spiral/prototype": "^3.0",
-        "spiral/queue": "^3.0"
+        "spiral/queue": "^3.0",
+        "vimeo/psalm": "^4.27"
     },
     "autoload": {
         "files": [
@@ -62,7 +63,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.14.x-dev"
+            "dev-master": "3.0.x-dev"
         }
     },
     "config": {

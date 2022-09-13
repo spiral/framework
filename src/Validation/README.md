@@ -1,7 +1,14 @@
 Nested Validation, Checkers, Conditional Validation
-================================
-[![Latest Stable Version](https://poser.pugx.org/spiral/validation/version)](https://packagist.org/packages/spiral/validation)
-[![Build Status](https://travis-ci.org/spiral/validation.svg?branch=master)](https://travis-ci.org/spiral/validation)
-[![Codecov](https://codecov.io/gh/spiral/validation/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/validation/)
 
-<b>[Documentation](https://spiral.dev/docs/security-validation)</b>
+[![PHP Version Require](https://poser.pugx.org/spiral/validation/require/php)](https://packagist.org/packages/spiral/validation)
+[![Latest Stable Version](https://poser.pugx.org/spiral/validation/v/stable)](https://packagist.org/packages/spiral/validation)
+[![phpunit](https://github.com/spiral/validation/workflows/phpunit/badge.svg)](https://github.com/spiral/validation/actions)
+[![psalm](https://github.com/spiral/validation/workflows/psalm/badge.svg)](https://github.com/spiral/validation/actions)
+[![Codecov](https://codecov.io/gh/spiral/validation/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/validation/)
+[![Total Downloads](https://poser.pugx.org/spiral/validation/downloads)](https://packagist.org/packages/spiral/validation)
+
+<b>[Documentation](https://spiral.dev/docs/security-validation)</b> | [Framework Bundle](https://github.com/spiral/framework)
+
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

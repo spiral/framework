@@ -1,16 +1,13 @@
 # RoadRunner: Background PHP workers, Queue brokers
-[![Latest Stable Version](https://poser.pugx.org/spiral/jobs/version)](https://packagist.org/packages/spiral/jobs)
-[![GoDoc](https://godoc.org/github.com/spiral/jobs?status.svg)](https://godoc.org/github.com/spiral/jobs)
-[![CI](https://github.com/spiral/jobs/workflows/CI/badge.svg)](https://github.com/spiral/jobs/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/spiral/jobs)](https://goreportcard.com/report/github.com/spiral/jobs)
-[![Codecov](https://codecov.io/gh/spiral/jobs/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/jobs/)
 
+[![PHP Version Require](https://poser.pugx.org/spiral/queue/require/php)](https://packagist.org/packages/spiral/queue)
+[![Latest Stable Version](https://poser.pugx.org/spiral/queue/v/stable)](https://packagist.org/packages/spiral/queue)
+[![phpunit](https://github.com/spiral/queue/workflows/phpunit/badge.svg)](https://github.com/spiral/queue/actions)
+[![psalm](https://github.com/spiral/queue/workflows/psalm/badge.svg)](https://github.com/spiral/queue/actions)
+[![Codecov](https://codecov.io/gh/spiral/queue/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/queue/)
+[![Total Downloads](https://poser.pugx.org/spiral/queue/downloads)](https://packagist.org/packages/spiral/queue)
 
-## Documentation
-  * [Installation and Configuration](https://spiral.dev/docs/queue-configuration)
-  * [Console Commands](https://spiral.dev/docs/queue-commands)
-  * [Running Jobs](https://spiral.dev/docs/queue-jobs)
-  * [Standalone Usage](https://spiral.dev/docs/queue-standalone)
+<b>[Documentation](https://spiral.dev/docs/queue-configuration)</b> | [Framework Bundle](https://github.com/spiral/framework)
 
 ## Features
 - supports in memory queue, Beanstalk, AMQP, AWS SQS
@@ -26,6 +23,6 @@
 - interactive stats, events, RPC
 - works on Windows
 
-License:
---------
-The MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

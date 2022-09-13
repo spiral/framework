@@ -1,4 +1,14 @@
 # Boot Core
-[![Latest Stable Version](https://poser.pugx.org/spiral/boot/version)](https://packagist.org/packages/spiral/boot)
-[![Build Status](https://travis-ci.org/spiral/boot.svg?branch=master)](https://travis-ci.org/spiral/boot)
+
+[![PHP Version Require](https://poser.pugx.org/spiral/boot/require/php)](https://packagist.org/packages/spiral/boot)
+[![Latest Stable Version](https://poser.pugx.org/spiral/boot/v/stable)](https://packagist.org/packages/spiral/boot)
+[![phpunit](https://github.com/spiral/boot/workflows/phpunit/badge.svg)](https://github.com/spiral/boot/actions)
+[![psalm](https://github.com/spiral/boot/workflows/psalm/badge.svg)](https://github.com/spiral/boot/actions)
 [![Codecov](https://codecov.io/gh/spiral/boot/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/boot/)
+[![Total Downloads](https://poser.pugx.org/spiral/boot/downloads)](https://packagist.org/packages/spiral/boot)
+
+<b>[Documentation](https://spiral.dev/docs/framework-kernel)</b> | [Framework Bundle](https://github.com/spiral/framework)
+
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

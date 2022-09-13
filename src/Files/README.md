@@ -1,4 +1,14 @@
 # File Toolkit: file manager, virtual streams wrapper
-[![Latest Stable Version](https://poser.pugx.org/spiral/files/version)](https://packagist.org/packages/spiral/files)
-[![Build Status](https://travis-ci.org/spiral/files.svg?branch=master)](https://travis-ci.org/spiral/files)
+
+[![PHP Version Require](https://poser.pugx.org/spiral/files/require/php)](https://packagist.org/packages/spiral/files)
+[![Latest Stable Version](https://poser.pugx.org/spiral/files/v/stable)](https://packagist.org/packages/spiral/files)
+[![phpunit](https://github.com/spiral/files/workflows/phpunit/badge.svg)](https://github.com/spiral/files/actions)
+[![psalm](https://github.com/spiral/files/workflows/psalm/badge.svg)](https://github.com/spiral/files/actions)
 [![Codecov](https://codecov.io/gh/spiral/files/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/files/)
+[![Total Downloads](https://poser.pugx.org/spiral/files/downloads)](https://packagist.org/packages/spiral/files)
+
+<b>[Documentation](https://spiral.dev/docs/component-files)</b> | [Framework Bundle](https://github.com/spiral/framework)
+
+## License:
+
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

@@ -38,7 +38,6 @@ final class EnumInjector implements InjectorInterface
             );
         }
 
-        /** @psalm-suppress RedundantConditionGivenDocblockType */
         $this->validateClass($class, $attribute);
         $closure = $class->getMethod($attribute->method)->getClosure();
         \assert($closure !== null);
