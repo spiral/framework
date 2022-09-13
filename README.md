@@ -9,6 +9,8 @@
 <a href="https://codecov.io/gh/spiral/framework"><img src="https://codecov.io/gh/spiral/framework/graph/badge.svg"></a>
 <a href="https://scrutinizer-ci.com/g/spiral/framework/?branch=master"><img src="https://scrutinizer-ci.com/g/spiral/framework/badges/quality-score.png"></a>
 <a href="https://packagist.org/packages/spiral/framework"><img src="https://poser.pugx.org/spiral/framework/downloads"></a>
+<a href="https://shepherd.dev/github/spiral/framework"><img src="https://shepherd.dev/github/spiral/framework/coverage.svg"></a>
+<a href="https://shepherd.dev/github/spiral/framework"><img src="https://shepherd.dev/github/spiral/framework/level.svg"></a>
 </p>
 
 <hr />

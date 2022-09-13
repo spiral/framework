@@ -2,10 +2,12 @@
 
 [![PHP Version Require](https://poser.pugx.org/spiral/http/require/php)](https://packagist.org/packages/spiral/http)
 [![Latest Stable Version](https://poser.pugx.org/spiral/http/v/stable)](https://packagist.org/packages/spiral/http)
-[![phpunit](https://github.com/spiral/http/workflows/phpunit/badge.svg)](https://github.com/spiral/http/actions)
-[![psalm](https://github.com/spiral/http/workflows/psalm/badge.svg)](https://github.com/spiral/http/actions)
+[![phpunit](https://github.com/spiral/http/actions/workflows/phpunit.yml/badge.svg)](https://github.com/spiral/http/actions)
+[![psalm](https://github.com/spiral/http/actions/workflows/psalm.yml/badge.svg)](https://github.com/spiral/http/actions)
 [![Codecov](https://codecov.io/gh/spiral/http/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/http/)
 [![Total Downloads](https://poser.pugx.org/spiral/http/downloads)](https://packagist.org/packages/spiral/http)
+[![type-coverage](https://shepherd.dev/github/spiral/http/coverage.svg)](https://shepherd.dev/github/spiral/http)
+[![psalm-level](https://shepherd.dev/github/spiral/http/level.svg)](https://shepherd.dev/github/spiral/http)
 
 <b>[Documentation](https://spiral.dev/docs/http-configuration)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

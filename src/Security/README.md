@@ -2,10 +2,12 @@
 
 [![PHP Version Require](https://poser.pugx.org/spiral/security/require/php)](https://packagist.org/packages/spiral/security)
 [![Latest Stable Version](https://poser.pugx.org/spiral/security/v/stable)](https://packagist.org/packages/spiral/security)
-[![phpunit](https://github.com/spiral/security/workflows/phpunit/badge.svg)](https://github.com/spiral/security/actions)
-[![psalm](https://github.com/spiral/security/workflows/psalm/badge.svg)](https://github.com/spiral/security/actions)
+[![phpunit](https://github.com/spiral/security/actions/workflows/phpunit.yml/badge.svg)](https://github.com/spiral/security/actions)
+[![psalm](https://github.com/spiral/security/actions/workflows/psalm.yml/badge.svg)](https://github.com/spiral/security/actions)
 [![Codecov](https://codecov.io/gh/spiral/security/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/security/)
 [![Total Downloads](https://poser.pugx.org/spiral/security/downloads)](https://packagist.org/packages/spiral/security)
+[![type-coverage](https://shepherd.dev/github/spiral/security/coverage.svg)](https://shepherd.dev/github/spiral/security)
+[![psalm-level](https://shepherd.dev/github/spiral/security/level.svg)](https://shepherd.dev/github/spiral/security)
 
 <b>[Documentation](https://spiral.dev/docs/security-rbac)</b> | [Framework Bundle](https://github.com/spiral/framework)
 
