@@ -31,7 +31,7 @@
         "spiral/core": "^3.1",
         "spiral/hmvc": "^3.1",
         "spiral/tokenizer": "^3.1",
-        "symfony/console": "^5.3.7|^6.0",
+        "symfony/console": "^6.0",
         "spiral/events": "^3.1"
     },
     "require-dev": {
