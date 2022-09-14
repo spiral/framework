@@ -20,12 +20,10 @@ final class NativeEngine extends AbstractEngine
         $this->extension = $extension;
     }
 
-    /**
-     * @return void
-     */
     public function compile(string $path, ContextInterface $context): mixed
     {
         // doing nothing, native views can not be compiled
+        return null;
     }
 
     public function reset(string $path, ContextInterface $context): void
