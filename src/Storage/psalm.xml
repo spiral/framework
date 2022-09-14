@@ -15,4 +15,12 @@
     <projectFiles>
         <directory name="src" />
     </projectFiles>
+    <issueHandlers>
+        <UndefinedClass>
+            <errorLevel type="suppress">
+                <referencedClass name="AsyncAws\S3\S3Client" />
+                <referencedClass name="League\Flysystem\AwsS3V3\PortableVisibilityConverter" />
+            </errorLevel>
+        </UndefinedClass>
+    </issueHandlers>
 </psalm>

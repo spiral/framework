@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters;
 
-use GuzzleHttp\Psr7\ServerRequest;
+use Nyholm\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\InputInterface;

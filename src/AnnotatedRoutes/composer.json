@@ -37,11 +37,10 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
+        "phpunit/phpunit": "^9.5.20",
+        "spiral/framework": "^3.0",
         "spiral/nyholm-bridge": "^1.2",
-        "spiral/boot": "^3.0",
-        "spiral/console": "^3.0",
         "vimeo/psalm": "^4.27"
     },
     "autoload-dev": {
