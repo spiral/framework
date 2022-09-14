@@ -20,7 +20,7 @@ final class Template implements NodeInterface, AttributedInterface
     use ContextTrait;
 
     /**
-     * @param TNode[] $nodes
+     * @param list<TNode> $nodes
      */
     public function __construct(
         public array $nodes = []

@@ -140,57 +140,6 @@ class KernelTest extends TestCase
         $this->assertFalse($kernel->getContainer()->has('klm'));
         $this->assertTrue($kernel->getContainer()->has('lmn'));
         $this->assertTrue($kernel->getContainer()->has('mno'));
-
-
-        $this->assertInstanceOf(
-            EnvironmentInterface::class,
-            $kernel->getContainer()->get(EnvironmentInterface::class)
-        );
-    }
-
-    public function testAppBootingCallbacks()
-    {
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ]);
-
-        $kernel->appBooting(static function (TestCore $core) {
-            $core->getContainer()->bind('abc', 'foo');
-        });
-
-        $kernel->appBooting(static function (TestCore $core) {
-            $core->getContainer()->bind('bcd', 'foo');
-        });
-
-        $kernel->appBooted( static function (TestCore $core) {
-            $core->getContainer()->bind('cde', 'foo');
-        });
-
-        $kernel->appBooted( static function (TestCore $core) {
-            $core->getContainer()->bind('def', 'foo');
-        });
-
-        $kernel->run();
-
-        $this->assertTrue($kernel->getContainer()->has('abc'));
-        $this->assertTrue($kernel->getContainer()->has('bcd'));
-        $this->assertTrue($kernel->getContainer()->has('cde'));
-        $this->assertTrue($kernel->getContainer()->has('def'));
-        $this->assertTrue($kernel->getContainer()->has('efg'));
-        $this->assertFalse($kernel->getContainer()->has('fgh'));
-        $this->assertFalse($kernel->getContainer()->has('ghi'));
-        $this->assertTrue($kernel->getContainer()->has('hij'));
-        $this->assertTrue($kernel->getContainer()->has('ijk'));
-        $this->assertTrue($kernel->getContainer()->has('jkl'));
-        $this->assertFalse($kernel->getContainer()->has('klm'));
-        $this->assertTrue($kernel->getContainer()->has('lmn'));
-        $this->assertTrue($kernel->getContainer()->has('mno'));
-
-
-        $this->assertInstanceOf(
-            EnvironmentInterface::class,
-            $kernel->getContainer()->get(EnvironmentInterface::class)
-        );
     }
 
     public function testEventsShouldBeDispatched(): void
@@ -205,6 +154,7 @@ class KernelTest extends TestCase
             {
             }
         };
+
         $container = new Container();
         $kernel = TestCore::create(directories: ['root' => __DIR__,], container: $container)
             ->addDispatcher($testDispatcher);

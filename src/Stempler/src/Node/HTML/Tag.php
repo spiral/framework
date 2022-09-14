@@ -30,7 +30,7 @@ final class Tag implements NodeInterface, AttributedInterface
     public array $attrs = [];
 
     /**
-     * @var TNode[]
+     * @var list<TNode>
      */
     public array $nodes = [];
 

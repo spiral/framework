@@ -15,4 +15,11 @@
     <projectFiles>
         <directory name="src" />
     </projectFiles>
+    <issueHandlers>
+        <UndefinedClass>
+            <errorLevel type="suppress">
+                <referencedClass name="Spiral\Bootloader\Attributes\AttributesBootloader" />
+            </errorLevel>
+        </UndefinedClass>
+    </issueHandlers>
 </psalm>

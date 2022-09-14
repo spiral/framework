@@ -28,18 +28,17 @@ interface EngineInterface
      * @throws EngineException
      * @throws LoaderException
      */
-    public function compile(string $path, ContextInterface $context);
+    public function compile(string $path, ContextInterface $context): mixed;
 
     /**
      * Reset view cache.
      */
-    public function reset(string $path, ContextInterface $context);
+    public function reset(string $path, ContextInterface $context): void;
 
     /**
      * Get instance of view class associated with view path (path can include namespace). Engine
      * must attempt to use existed cache if such presented (or compile view directly if cache has
      * been disabled).
-     *
      *
      * @throws EngineException
      * @throws LoaderException
