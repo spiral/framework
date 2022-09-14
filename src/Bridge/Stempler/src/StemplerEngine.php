@@ -132,7 +132,7 @@ final class StemplerEngine implements EngineInterface
             }
         }
 
-        if (!\class_exists($class) || !\is_subclass_of(ViewInterface::class, $class)) {
+        if (!\class_exists($class) || !\is_subclass_of($class, ViewInterface::class)) {
             throw new EngineException(\sprintf('Unable to load `%s`, cache might be corrupted.', $path));
         }
 
