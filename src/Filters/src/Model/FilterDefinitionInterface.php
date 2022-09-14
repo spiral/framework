@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Model;
 
+/**
+ * @template TFilterDefinition of FilterDefinitionInterface
+ */
 interface FilterDefinitionInterface
 {
     /**
