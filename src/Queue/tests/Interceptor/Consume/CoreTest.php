@@ -27,10 +27,16 @@ final class CoreTest extends TestCase
         $handler->shouldReceive('handle')->once()
             ->with('foo', 'job-id', ['baz' => 'baf']);
 
-        $core->callAction('foo', 'bar', [
-            'id' => 'job-id',
-            'payload' => ['baz' => 'baf'],
-        ]);
+        $core->callAction(
+            controller: 'foo',
+            action: 'bar',
+            parameters: [
+                'driver' => 'array',
+                'queue' => 'default',
+                'id' => 'job-id',
+                'payload' => ['baz' => 'baf'],
+            ]
+        );
     }
 
     public function testEventsShouldBeDispatched(): void
@@ -39,10 +45,12 @@ final class CoreTest extends TestCase
         $dispatcher
             ->expects(self::exactly(2))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new JobProcessing('foo', 'bar', 'other', 'id', []),
-                new JobProcessed('foo', 'bar', 'other', 'id', [])
-            ));
+            ->with(
+                $this->logicalOr(
+                    new JobProcessing('foo', 'bar', 'other', 'id', []),
+                    new JobProcessed('foo', 'bar', 'other', 'id', [])
+                )
+            );
 
         $core = new Core(
             $registry = m::mock(HandlerRegistryInterface::class),
@@ -58,7 +66,7 @@ final class CoreTest extends TestCase
             'driver' => 'bar',
             'queue' => 'other',
             'id' => 'id',
-            'payload' => []
+            'payload' => [],
         ]);
     }
 }
