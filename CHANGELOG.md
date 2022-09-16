@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v3.0.0 - Unreleased
+## v3.0.0 - 2022-09-12
 - **High Impact Changes**
   - Component `spiral/data-grid-bridge` is removed from `spiral/framework` repository.
     Please, use standalone package `spiral/data-grid-bridge` instead.
@@ -179,7 +179,7 @@
   - Added class `Spiral\Exceptions\Reporter\FileReporter`, which implements `Spiral\Exceptions\ExceptionReporterInterface` 
     and can create text files with information about an exception. 
 
-## v2.14.0 - Unreleased
+## v2.14.0 - 2022-09-02
 - **High Impact Changes**
 - **Medium Impact Changes**
 - **Low Impact Changes**
