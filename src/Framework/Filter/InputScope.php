@@ -28,7 +28,7 @@ final class InputScope implements InputInterface
 
     public function getValue(string $source, mixed $name = null): mixed
     {
-        if (!$this->input->hasBag($source)) {
+        if ($source !== 'input' && !$this->input->hasBag($source)) {
             throw new InputException(\sprintf('Undefined input source %s', $source));
         }
 
