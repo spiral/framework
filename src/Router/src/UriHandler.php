@@ -119,7 +119,7 @@ final class UriHandler
         }
 
         $matches = \array_intersect_key(
-            \array_filter($matches, static fn(string $value) => $value !== ''),
+            \array_filter($matches, static fn (string $value) => $value !== ''),
             $this->options
         );
 
