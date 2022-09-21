@@ -118,7 +118,10 @@ final class UriHandler
             return null;
         }
 
-        $matches = \array_intersect_key(\array_filter($matches), $this->options);
+        $matches = \array_intersect_key(
+            \array_filter($matches, static fn(string $value) => $value !== ''),
+            $this->options
+        );
 
         return \array_merge($this->options, $defaults, $matches);
     }
