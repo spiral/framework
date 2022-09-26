@@ -1,6 +1,13 @@
 # CHANGELOG
 
-## v3.0.0 - Unreleased
+## Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Other Features**
+  - [spiral/filters] Added `Spiral\Filter\ValidationHandlerMiddleware` for handling filter validation exception.
+  - [spiral/router] Fixed the problem with parsing a pattern with `0` value in route parameter.
+
+## v3.0.0 - 2022-09-13
 - **High Impact Changes**
   - Component `spiral/data-grid-bridge` is removed from `spiral/framework` repository.
     Please, use standalone package `spiral/data-grid-bridge` instead.
