@@ -21,7 +21,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
 {
     protected const SINGLETONS = [
         ValidationProviderInterface::class => ValidationProvider::class,
-        ValidationInterface::class => [self::class, 'initDefaultValidator']
+        ValidationInterface::class => [self::class, 'initDefaultValidator'],
     ];
 
     public function __construct(
