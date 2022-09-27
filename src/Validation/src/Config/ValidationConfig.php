@@ -16,6 +16,6 @@ final class ValidationConfig extends InjectableConfig
 
     public function getDefaultValidator(): ?string
     {
-        return $this->config['defaultValidator'] ?? null;
+        return $this->config['defaultValidator'];
     }
 }
