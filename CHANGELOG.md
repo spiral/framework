@@ -1,6 +1,13 @@
 # CHANGELOG
 
-## v3.0.0 - Unreleased
+## Unreleased
+- **High Impact Changes**     
+- **Medium Impact Changes**
+- **Other Features**
+  - [spiral/validation] Added the ability to configure the default validator via method `setDefaultValidator` 
+    in the `Spiral\Validation\Bootloader\ValidationBootloader`.
+
+## v3.0.0 - 2022-09-13
 - **High Impact Changes**
   - Component `spiral/data-grid-bridge` is removed from `spiral/framework` repository.
     Please, use standalone package `spiral/data-grid-bridge` instead.
