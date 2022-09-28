@@ -1,9 +1,11 @@
 # CHANGELOG
 
 ## Unreleased
-- **High Impact Changes**     
+- **High Impact Changes**
 - **Medium Impact Changes**
 - **Other Features**
+  - [spiral/filters] Added `Spiral\Filter\ValidationHandlerMiddleware` for handling filter validation exception.
+  - [spiral/router] Fixed the problem with parsing a pattern with `0` value in route parameter.
   - [spiral/validation] Added the ability to configure the default validator via method `setDefaultValidator` 
     in the `Spiral\Validation\Bootloader\ValidationBootloader`.
 
