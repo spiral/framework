@@ -14,9 +14,6 @@ use Spiral\Validation\ValidationInterface;
 use Spiral\Validation\ValidationProvider;
 use Spiral\Validation\ValidationProviderInterface;
 
-/**
- * @template TFilterDefinition
- */
 final class ValidationBootloader extends Bootloader implements SingletonInterface
 {
     protected const SINGLETONS = [
@@ -37,7 +34,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
     }
 
     /**
-     * @param class-string<TFilterDefinition> $name
+     * @param non-empty-string $name
      */
     public function setDefaultValidator(string $name): void
     {
