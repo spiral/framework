@@ -10,6 +10,8 @@ use Spiral\Command\Encrypter;
 use Spiral\Command\Router;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
+use Spiral\Command\CleanCommand;
+use Spiral\Command\PublishCommand;
 use Spiral\Console;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Console\Sequence\RuntimeDirectory;
@@ -28,6 +30,9 @@ final class CommandBootloader extends Bootloader
 {
     public function init(ConsoleBootloader $console, ContainerInterface $container): void
     {
+        $console->addCommand(CleanCommand::class);
+        $console->addCommand(PublishCommand::class);
+
         $console->addCommand(Console\Command\ConfigureCommand::class);
         $console->addCommand(Console\Command\UpdateCommand::class);
 

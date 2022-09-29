@@ -17,7 +17,7 @@ use Spiral\Http\Pipeline;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\PipelineFactory;
 
-final class PipelineFactoryTest extends TestCase
+final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 {
     use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

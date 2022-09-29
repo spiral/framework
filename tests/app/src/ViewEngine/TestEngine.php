@@ -23,7 +23,7 @@ class TestEngine extends AbstractEngine
         $this->processors[] = $localeProcessor;
     }
 
-    public function compile(string $path, ContextInterface $context): void
+    public function compile(string $path, ContextInterface $context): mixed
     {
         if ($path === 'custom:error') {
             throw new EngineException('Unable to compile custom:error');

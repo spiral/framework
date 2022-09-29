@@ -50,7 +50,7 @@ class KernelTest extends BaseTest
         $container->bind('foofoo', new stdClass());
 
         $app = TestApp::create([
-            'root' => __DIR__.'/../..',
+            'root' => __DIR__.'/../',
         ], container: $container);
 
         $this->assertSame($container, $app->getContainer());
@@ -64,7 +64,7 @@ class KernelTest extends BaseTest
         $callback1 = false;
         $callback2 = false;
 
-        $kernel = TestApp::create(['root' => __DIR__.'/../..']);
+        $kernel = TestApp::create(['root' => __DIR__.'/../']);
         $kernel->running(static function () use (&$callback1): void {
             $callback1 = true;
         });

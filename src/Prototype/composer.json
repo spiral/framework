@@ -31,7 +31,6 @@
         "ext-json": "*",
         "nikic/php-parser": "^4.13.2",
         "doctrine/inflector": "^1.4|^2.0",
-        "spiral/console": "^3.1",
         "spiral/attributes": "^2.8|^3.0"
     },
     "autoload": {
@@ -40,10 +39,9 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
-        "spiral/boot": "^3.1",
-        "spiral/debug": "^3.1",
+        "phpunit/phpunit": "^9.5.20",
+        "spiral/framework": "^3.1",
         "vimeo/psalm": "^4.27"
     },
     "autoload-dev": {
