@@ -3,7 +3,7 @@
 ## Unreleased
 - **Bug Fixes**
   - Removed readonly from `Spiral\Stempler\Transform\Import\Bundle`
-  - Fixed the problem with parsing a route pattern with zero value
+  - Fixed the problem with parsing a route pattern with zero value #773
   - Fixed phpdoc for `AuthorizationStatus::$topics` property
 
 ## v3.0.0 - 2022-09-13
