@@ -185,7 +185,7 @@
   - Added class `Spiral\Exceptions\Reporter\FileReporter`, which implements `Spiral\Exceptions\ExceptionReporterInterface` 
     and can create text files with information about an exception. 
 
-## v2.14.0 - Unreleased
+## v2.14.0 - 2022-09-02
 - **High Impact Changes**
 - **Medium Impact Changes**
 - **Low Impact Changes**
