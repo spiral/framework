@@ -1,13 +1,17 @@
 # CHANGELOG
 
-## Unreleased
-- **High Impact Changes**
-- **Medium Impact Changes**
+## v3.1.0 - 2022-09-29
 - **Other Features**
   - [spiral/filters] Added `Spiral\Filter\ValidationHandlerMiddleware` for handling filter validation exception.
   - [spiral/router] Fixed the problem with parsing a pattern with `0` value in route parameter.
   - [spiral/validation] Added the ability to configure the default validator via method `setDefaultValidator` 
     in the `Spiral\Validation\Bootloader\ValidationBootloader`.
+
+## v3.0.2 - 2022-09-29
+- **Bug Fixes**
+  - Removed readonly from `Spiral\Stempler\Transform\Import\Bundle`
+  - Fixed the problem with parsing a route pattern with zero value #773
+  - Fixed phpdoc for AuthorizationStatus::$topics property
 
 ## v3.0.0 - 2022-09-13
 - **High Impact Changes**
