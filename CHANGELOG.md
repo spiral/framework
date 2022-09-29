@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## v3.0.0 - Unreleased
+## Unreleased
+- **Bug Fixes**
+  - Removed readonly from `Spiral\Stempler\Transform\Import\Bundle`
+  - Fixed the problem with parsing a route pattern with zero value
+  - Fixed phpdoc for `AuthorizationStatus::$topics` property
+
+## v3.0.0 - 2022-09-13
 - **High Impact Changes**
   - Component `spiral/data-grid-bridge` is removed from `spiral/framework` repository.
     Please, use standalone package `spiral/data-grid-bridge` instead.
