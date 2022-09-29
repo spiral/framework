@@ -31,9 +31,6 @@ final class HTMLRenderer implements RendererInterface
         }
     }
 
-    /**
-     * @psalm-suppress UndefinedClass
-     */
     private function tag(Compiler $compiler, Compiler\Result $result, Tag $node): void
     {
         $result->push(\sprintf('<%s', $node->name), $node->getContext());

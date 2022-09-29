@@ -6,17 +6,13 @@ namespace Spiral\Console\Bootloader;
 
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Command\CleanCommand;
-use Spiral\Command\PublishCommand;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Config\Patch\Prepend;
-use Spiral\Console\CommandLocator;
 use Spiral\Console\CommandLocatorListener;
 use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Console;
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Console\LocatorInterface;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
 use Spiral\Core\Container\SingletonInterface;
@@ -58,9 +54,6 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
                 'sequences' => [],
             ]
         );
-
-        $this->addCommand(CleanCommand::class);
-        $this->addCommand(PublishCommand::class);
     }
 
     public function boot(TokenizerListenerRegistryInterface $listenerRegistry, CommandLocatorListener $listener): void

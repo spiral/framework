@@ -31,9 +31,9 @@ final class TokenizerListenerBootloader extends Bootloader implements
         $this->listeners[] = $listener;
     }
 
-    public function boot(AbstractKernel $kernel, ClassesInterface $classes): void
+    public function boot(AbstractKernel $kernel): void
     {
-        $kernel->bootstrapped(function () use ($classes): void {
+        $kernel->bootstrapped(function (ClassesInterface $classes): void {
             foreach ($classes->getClasses() as $class) {
                 $this->invokeListeners($class);
             }

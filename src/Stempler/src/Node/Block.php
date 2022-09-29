@@ -19,7 +19,7 @@ final class Block implements NodeInterface, AttributedInterface
     use ContextTrait;
     use AttributeTrait;
 
-    /** @var TNode[] */
+    /** @var list<TNode> */
     public array $nodes = [];
 
     public function __construct(

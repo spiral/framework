@@ -14,6 +14,7 @@ use Spiral\Filters\Model\Interceptor\Core;
 use Spiral\Filters\Model\Schema\AttributeMapper;
 use Spiral\Http\Request\InputManager;
 use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\Fixtures\LogoutFilter;
 use Spiral\Tests\Filters\Fixtures\SomeFilter;
 
 final class FilterProviderTest extends BaseTest
@@ -45,5 +46,28 @@ final class FilterProviderTest extends BaseTest
         $this->assertSame('John', $filter->name);
         $this->assertSame('Some street', $filter->address->address);
         $this->assertSame('Portland', $filter->address->city);
+    }
+
+    public function testCreateFilterWithInputAttribute(): void
+    {
+        $request = new ServerRequest('GET', '/');
+        $request = $request->withQueryParams([
+            'token' => 'some'
+        ]);
+        $this->container->bind(ServerRequestInterface::class, $request);
+
+        $inputManager = new InputManager($this->container);
+        $input = new InputScope($inputManager);
+
+        $provider = new FilterProvider($this->container, $this->container, new Core());
+        $this->container->bind(FilterProviderInterface::class, $provider);
+
+        $mapper = new AttributeMapper($provider, (new Factory())->create());
+        $this->container->bind(AttributeMapper::class, $mapper);
+
+        /** @var LogoutFilter $filter */
+        $filter = $provider->createFilter(LogoutFilter::class, $input);
+
+        $this->assertSame('some', $filter->token);
     }
 }
