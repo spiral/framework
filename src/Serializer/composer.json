@@ -10,7 +10,7 @@
     },
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.1"
+        "spiral/core": "^3.2"
     },
     "autoload": {
         "psr-4": {
@@ -18,7 +18,7 @@
         }
     },
     "require-dev": {
-        "spiral/boot": "^3.1",
+        "spiral/boot": "^3.2",
         "phpunit/phpunit": "^9.5.20",
         "vimeo/psalm": "^4.27"
     },
@@ -29,7 +29,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.1.x-dev"
+            "dev-master": "3.2.x-dev"
         }
     },
     "config": {

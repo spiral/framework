@@ -30,11 +30,11 @@
         "php": ">=8.1",
         "psr/http-message": "^1.0",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/auth": "^3.1",
-        "spiral/core": "^3.1",
-        "spiral/hmvc": "^3.1",
-        "spiral/models": "^3.1",
-        "spiral/validation": "^3.1"
+        "spiral/auth": "^3.2",
+        "spiral/core": "^3.2",
+        "spiral/hmvc": "^3.2",
+        "spiral/models": "^3.2",
+        "spiral/validation": "^3.2"
     },
     "require-dev": {
         "mockery/mockery": "^1.5",
@@ -54,7 +54,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.1.x-dev"
+            "dev-master": "3.2.x-dev"
         }
     },
     "config": {
