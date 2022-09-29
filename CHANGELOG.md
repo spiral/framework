@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.0.2 - 2022-09-29
 - **Bug Fixes**
   - Removed readonly from `Spiral\Stempler\Transform\Import\Bundle`
   - Fixed the problem with parsing a route pattern with zero value #773
