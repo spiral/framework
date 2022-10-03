@@ -32,7 +32,7 @@ final class ObjectJob implements HandlerInterface
             [
                 'name' => $name,
                 'id' => $id,
-                'context' => $context
+                'context' => $context,
             ]
         );
     }

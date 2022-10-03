@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Other Features**
+  - [spiral/queue] Added the ability to pass additional data in the `context` parameter in the job handlers.
+
 ## v3.1.0 - 2022-09-29
 - **Other Features**
   - [spiral/filters] Added `Spiral\Filter\ValidationHandlerMiddleware` for handling filter validation exception.
