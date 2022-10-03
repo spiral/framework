@@ -15,7 +15,7 @@ final class ObjectJob implements HandlerInterface
     ) {
     }
 
-    public function handle(string $name, string $id, array $payload): void
+    public function handle(string $name, string $id, array $payload, array $context = []): void
     {
         if (!isset($payload['object'])) {
             throw new InvalidArgumentException('Payload `object` key is required.');
@@ -32,6 +32,7 @@ final class ObjectJob implements HandlerInterface
             [
                 'name' => $name,
                 'id' => $id,
+                'context' => $context,
             ]
         );
     }

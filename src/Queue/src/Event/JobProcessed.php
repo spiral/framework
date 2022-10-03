@@ -11,7 +11,8 @@ final class JobProcessed
         public readonly string $driver,
         public readonly string $queue,
         public readonly string $id,
-        public readonly array $payload
+        public readonly array $payload,
+        public readonly array $context = []
     ) {
     }
 }

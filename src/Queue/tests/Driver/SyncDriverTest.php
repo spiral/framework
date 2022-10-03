@@ -42,7 +42,8 @@ final class SyncDriverTest extends TestCase
                 'driver' => 'sync',
                 'queue' => 'default',
                 'id' => $uuid->toString(),
-                'payload' => ['foo' => 'bar']
+                'payload' => ['foo' => 'bar'],
+                'context' => []
             ])
             ->once();
 
@@ -65,7 +66,8 @@ final class SyncDriverTest extends TestCase
                 'driver' => 'sync',
                 'queue' => 'default',
                 'id' => $uuid->toString(),
-                'payload' => ['object' => $object]
+                'payload' => ['object' => $object],
+                'context' => []
             ])
             ->once();
 

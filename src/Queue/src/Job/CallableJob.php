@@ -15,7 +15,7 @@ final class CallableJob implements HandlerInterface
     ) {
     }
 
-    public function handle(string $name, string $id, array $payload): void
+    public function handle(string $name, string $id, array $payload, array $context = []): void
     {
         if (!isset($payload['callback'])) {
             throw new InvalidArgumentException('Payload `callback` key is required.');
@@ -30,6 +30,7 @@ final class CallableJob implements HandlerInterface
             [
                 'name' => $name,
                 'id' => $id,
+                'context' => $context,
             ]
         );
     }
