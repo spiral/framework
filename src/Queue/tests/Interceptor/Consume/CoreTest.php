@@ -48,8 +48,8 @@ final class CoreTest extends TestCase
             ->method('dispatch')
             ->with(
                 $this->logicalOr(
-                    new JobProcessing('foo', 'bar', 'other', 'id', []),
-                    new JobProcessed('foo', 'bar', 'other', 'id', [])
+                    new JobProcessing('foo', 'bar', 'other', 'id', [], []),
+                    new JobProcessed('foo', 'bar', 'other', 'id', [], [])
                 )
             );
 
