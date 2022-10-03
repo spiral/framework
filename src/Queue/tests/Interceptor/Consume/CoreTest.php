@@ -25,7 +25,7 @@ final class CoreTest extends TestCase
             ->andReturn($handler = m::mock(HandlerInterface::class));
 
         $handler->shouldReceive('handle')->once()
-            ->with('foo', 'job-id', ['baz' => 'baf']);
+            ->with('foo', 'job-id', ['baz' => 'baf'], ['foo']);
 
         $core->callAction(
             controller: 'foo',
@@ -35,6 +35,7 @@ final class CoreTest extends TestCase
                 'queue' => 'default',
                 'id' => 'job-id',
                 'payload' => ['baz' => 'baf'],
+                'context' => ['foo']
             ]
         );
     }
@@ -60,7 +61,7 @@ final class CoreTest extends TestCase
         $registry->shouldReceive('getHandler')->with('foo')->once()
             ->andReturn($handler = m::mock(HandlerInterface::class));
         $handler->shouldReceive('handle')->once()
-            ->with('foo', 'id', []);
+            ->with('foo', 'id', [], []);
 
         $core->callAction('foo', 'bar', [
             'driver' => 'bar',

@@ -40,7 +40,7 @@ final class Core implements CoreInterface
 
         $this->registry
             ->getHandler($controller)
-            ->handle($controller, $parameters['id'], $parameters['payload']);
+            ->handle($controller, $parameters['id'], $parameters['payload'], $parameters['context'] ?? []);
 
         $this->dispatchEvent(JobProcessed::class, $controller, $parameters);
 

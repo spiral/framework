@@ -13,13 +13,20 @@ final class Handler
     ) {
     }
 
-    public function handle(string $name, string $driver, string $queue, string $id, array $payload): mixed
-    {
+    public function handle(
+        string $name,
+        string $driver,
+        string $queue,
+        string $id,
+        array $payload,
+        array $context = []
+    ): mixed {
         return $this->core->callAction($name, 'handle', [
             'driver' => $driver,
             'queue' => $queue,
             'id' => $id,
             'payload' => $payload,
+            'context' => $context,
         ]);
     }
 }
