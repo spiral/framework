@@ -40,7 +40,7 @@ trait ReadableTrait
     }
 
     /**
-     * @return positive-int|0
+     * @return int<0, max>
      */
     public function getLastModified(string|\Stringable $id): int
     {
@@ -50,7 +50,7 @@ trait ReadableTrait
     }
 
     /**
-     * @return positive-int|0
+     * @return int<0, max>
      */
     public function getSize(string|\Stringable $id): int
     {

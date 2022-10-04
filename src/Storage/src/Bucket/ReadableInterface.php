@@ -46,7 +46,7 @@ interface ReadableInterface
     /**
      * Returns the file size in bytes.
      *
-     * @return positive-int|0
+     * @return int<0, max>
      * @throws FileOperationException
      */
     public function getSize(string $pathname): int;
