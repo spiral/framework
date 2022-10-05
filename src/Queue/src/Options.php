@@ -109,6 +109,8 @@ class Options implements OptionsInterface, \JsonSerializable
      */
     public function withHeader(string $name, string|array $value): self
     {
+        $value = \is_iterable($value) ? $value : [$value];
+
         $self = clone $this;
         $self->headers[$name] = [];
 
