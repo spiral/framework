@@ -105,14 +105,10 @@ class Options implements OptionsInterface, \JsonSerializable
 
     /**
      * @param non-empty-string $name
-     * @param non-empty-string|iterable<non-empty-string> $value
+     * @param non-empty-string|array<non-empty-string> $value
      */
-    public function withHeader(string $name, $value): self
+    public function withHeader(string $name, string|array $value): self
     {
-        \assert($name !== '', 'Precondition [name !== ""] failed');
-
-        $value = \is_iterable($value) ? $value : [$value];
-
         $self = clone $this;
         $self->headers[$name] = [];
 
@@ -125,12 +121,10 @@ class Options implements OptionsInterface, \JsonSerializable
 
     /**
      * @param non-empty-string $name
-     * @param non-empty-string|iterable<non-empty-string> $value
+     * @param non-empty-string|array<non-empty-string> $value
      */
-    public function withAddedHeader(string $name, $value): self
+    public function withAddedHeader(string $name, string|array $value): self
     {
-        \assert($name !== '', 'Precondition [name !== ""] failed');
-
         /** @var iterable<non-empty-string> $value */
         $value = \is_iterable($value) ? $value : [$value];
 
@@ -149,8 +143,6 @@ class Options implements OptionsInterface, \JsonSerializable
      */
     public function withoutHeader(string $name): self
     {
-        \assert($name !== '', 'Precondition [name !== ""] failed');
-
         if (!isset($this->headers[$name])) {
             return $this;
         }
