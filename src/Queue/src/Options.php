@@ -115,7 +115,7 @@ class Options implements OptionsInterface, \JsonSerializable
         $self->headers[$name] = [];
 
         foreach ($value as $item) {
-            $self->headers[$name][] = (string)$item;
+            $self->headers[$name][] = $item;
         }
 
         return $self;
