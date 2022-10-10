@@ -13,6 +13,9 @@ use Spiral\Core\ScopeInterface;
 use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
 use Spiral\Http\Traits\MiddlewareTrait;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\SpanInterface;
+use Spiral\Telemetry\TracerInterface;
 
 /**
  * Pipeline used to pass request and response thought the chain of middleware.
@@ -26,6 +29,7 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
     public function __construct(
         private readonly ScopeInterface $scope,
+        private readonly TracerInterface $tracer = new NullTracer(),
         private readonly ?EventDispatcherInterface $dispatcher = null
     ) {
     }
@@ -60,7 +64,29 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             $middleware = $this->middleware[$position];
             $this->dispatcher?->dispatch(new MiddlewareProcessing($request, $middleware));
 
-            return $middleware->process($request, $this);
+            return $this->tracer->trace(
+                name: 'middleware',
+                callback: function (SpanInterface $span) use ($request, $middleware): Response {
+                    $response = $middleware->process($request, $this);
+
+                    $span
+                        ->setAttribute(
+                            'http.status_code',
+                            $response->getStatusCode()
+                        )
+                        ->setAttribute(
+                            'http.response_content_length',
+                            $response->getHeaderLine('Content-Length') ?: $response->getBody()->getSize()
+                        )
+                        ->setStatus($response->getStatusCode() < 500 ? 'OK' : 'ERROR');
+
+                    return $response;
+                },
+                scoped: true,
+                attributes: [
+                    'class' => $middleware::class,
+                ]
+            );
         }
 
         $handler = $this->handler;

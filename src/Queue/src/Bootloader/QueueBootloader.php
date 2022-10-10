@@ -16,6 +16,7 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\InterceptableCore;
+use Spiral\Core\ScopeInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Core\QueueInjector;
@@ -28,12 +29,14 @@ use Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\Interceptor\Consume\Core as ConsumeCore;
 use Spiral\Queue\Interceptor\Push\Core as PushCore;
+use Spiral\Queue\Interceptor\Push\TelemetryInterceptor;
 use Spiral\Queue\Queue;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
 use Spiral\Queue\SerializerRegistryInterface;
+use Spiral\Telemetry\TracerFactoryInterface;
 
 final class QueueBootloader extends Bootloader
 {
@@ -124,8 +127,10 @@ final class QueueBootloader extends Bootloader
     protected function initHandler(
         ConsumeCore $core,
         QueueConfig $config,
+        ScopeInterface $scope,
         ContainerInterface $container,
         FactoryInterface $factory,
+        TracerFactoryInterface $tracerFactory,
         ?EventDispatcherInterface $dispatcher = null
     ): Handler {
         $core = new InterceptableCore($core, $dispatcher);
@@ -141,7 +146,7 @@ final class QueueBootloader extends Bootloader
             $core->addInterceptor($interceptor);
         }
 
-        return new Handler($core);
+        return new Handler($tracerFactory, $scope, $core);
     }
 
     protected function initQueue(
@@ -187,7 +192,9 @@ final class QueueBootloader extends Bootloader
                     'consume' => [
                         ErrorHandlerInterceptor::class,
                     ],
-                    'push' => [],
+                    'push' => [
+                        TelemetryInterceptor::class,
+                    ],
                 ],
             ]
         );

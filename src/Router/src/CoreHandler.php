@@ -19,6 +19,8 @@ use Spiral\Http\Exception\ClientException\UnauthorizedException;
 use Spiral\Http\Stream\GeneratorStream;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Router\Exception\HandlerException;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\TracerInterface;
 
 final class CoreHandler implements RequestHandlerInterface
 {
@@ -32,7 +34,8 @@ final class CoreHandler implements RequestHandlerInterface
     public function __construct(
         private readonly CoreInterface $core,
         private readonly ScopeInterface $scope,
-        private readonly ResponseFactoryInterface $responseFactory
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly TracerInterface $tracer = new NullTracer()
     ) {
     }
 
@@ -74,16 +77,26 @@ final class CoreHandler implements RequestHandlerInterface
 
         $response = $this->responseFactory->createResponse(200);
         try {
+            $action = $this->getAction($request);
+
             // run the core withing PSR-7 Request/Response scope
             $result = $this->scope->runScope(
                 [
                     Request::class  => $request,
                     Response::class => $response,
                 ],
-                fn () => $this->core->callAction(
-                    $this->controller,
-                    $this->getAction($request),
-                    $this->parameters
+                fn () => $this->tracer->trace(
+                    name: \sprintf('Controller [%s:%s]', $this->controller, $action),
+                    callback: fn () => $this->core->callAction(
+                        controller: $this->controller,
+                        action: $action,
+                        parameters: $this->parameters
+                    ),
+                    attributes: [
+                        'controller' => $this->controller,
+                        'action' => $action,
+                        'parameters' => \array_keys($this->parameters)
+                    ]
                 )
             );
         } catch (ControllerException $e) {

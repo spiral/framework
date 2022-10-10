@@ -27,6 +27,7 @@ use Spiral\Router\RouteInterface;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\UriHandler;
+use Spiral\Telemetry\TracerInterface;
 
 final class RouterBootloader extends Bootloader
 {
@@ -69,12 +70,14 @@ final class RouterBootloader extends Bootloader
     private function router(
         UriHandler $uriHandler,
         ContainerInterface $container,
+        TracerInterface $tracer,
         ?EventDispatcherInterface $dispatcher = null
     ): RouterInterface {
         return new Router(
             $this->config->getConfig(HttpConfig::CONFIG)['basePath'],
             $uriHandler,
             $container,
+            $tracer,
             $dispatcher
         );
     }

@@ -13,6 +13,7 @@ use Spiral\Core\ScopeInterface;
 use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\TargetInterface;
+use Spiral\Telemetry\TracerInterface;
 
 abstract class AbstractTarget implements TargetInterface
 {
@@ -71,7 +72,8 @@ abstract class AbstractTarget implements TargetInterface
             $this->handler = new CoreHandler(
                 $this->core ?? $container->get(CoreInterface::class),
                 $container->get(ScopeInterface::class),
-                $container->get(ResponseFactoryInterface::class)
+                $container->get(ResponseFactoryInterface::class),
+                $container->get(TracerInterface::class)
             );
 
             return $this->handler;
