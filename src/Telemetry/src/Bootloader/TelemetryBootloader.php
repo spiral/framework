@@ -64,7 +64,7 @@ final class TelemetryBootloader extends Bootloader
                 'default' => $env->get('TELEMETRY_DRIVER', 'null'),
                 'drivers' => [
                     'null' => NullTracer::class,
-                    'log' => LogTracer::class
+                    'log' => LogTracer::class,
                 ],
             ]
         );

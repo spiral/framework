@@ -95,7 +95,7 @@ final class CoreHandler implements RequestHandlerInterface
                     attributes: [
                         'controller' => $this->controller,
                         'action' => $action,
-                        'parameters' => \array_keys($this->parameters)
+                        'parameters' => \array_keys($this->parameters),
                     ]
                 )
             );

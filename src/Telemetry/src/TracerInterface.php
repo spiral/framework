@@ -24,5 +24,4 @@ interface TracerInterface
         bool $debug = false,
         ?TraceKind $traceKind = null
     ): mixed;
-
 }

@@ -37,7 +37,7 @@ final class LogTracer implements TracerInterface
 
         $result = $this->scope->runScope([
             SpanInterface::class => $span,
-        ], fn(): mixed => $this->invoker->invoke($callback));
+        ], fn (): mixed => $this->invoker->invoke($callback));
 
         $elapsedSecs = microtime(true) - $startTime;
 
