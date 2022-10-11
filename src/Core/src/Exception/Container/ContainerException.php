@@ -18,12 +18,12 @@ class ContainerException extends RuntimeException implements ContainerExceptionI
         ?\Throwable $previous = null,
         protected array &$trace = []
     ) {
-        parent::__construct($this->addTrace($message), $code, $previous);
+        parent::__construct($this->generateTrace($message), $code, $previous);
 
         $trace = [];
     }
 
-    protected function addTrace(string $message): string
+    protected function generateTrace(string $message): string
     {
         $result = [];
         $result[] = $message;
@@ -32,7 +32,7 @@ class ContainerException extends RuntimeException implements ContainerExceptionI
             $result[] = 'Container stack trace:';
 
             foreach ($this->trace as $item) {
-                $result[] = $item;
+                $result[] = '- ' . $item;
             }
         }
 

@@ -100,18 +100,18 @@ class ExceptionsTest extends TestCase
 
         yield [
             new Container(),
-            'Undefinedclassorbinding`Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:Spiral\Tests\Core\
-            Fixtures\ClassWithUndefinedDependencySpiral\Tests\Core\Fixtures\InvalidClass'
+            'Undefinedclassorbinding`Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:-Spiral\Tests\Core\
+            Fixtures\ClassWithUndefinedDependency-Spiral\Tests\Core\Fixtures\InvalidClass'
         ];
         yield [
             $binding,
-            'Invalidbindingfor`Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:Spiral\Tests\Core\Fixtures\
-            ClassWithUndefinedDependencySpiral\Tests\Core\Fixtures\InvalidClass'
+            'Invalidbindingfor`Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:-Spiral\Tests\Core\Fixtures\
+            ClassWithUndefinedDependency-Spiral\Tests\Core\Fixtures\InvalidClass'
         ];
         yield [
             $notConstructed,
-            'Class`Spiral\Tests\Core\Fixtures\WithPrivateConstructor`cannotbeconstructed.Containerstacktrace:Spiral\
-            Tests\Core\Fixtures\ClassWithUndefinedDependencySpiral\Tests\Core\Fixtures\InvalidClassSpiral\Tests\Core\
+            'Class`Spiral\Tests\Core\Fixtures\WithPrivateConstructor`cannotbeconstructed.Containerstacktrace:-Spiral\
+            Tests\Core\Fixtures\ClassWithUndefinedDependency-Spiral\Tests\Core\Fixtures\InvalidClass-Spiral\Tests\Core\
             Fixtures\WithPrivateConstructor'
         ];
     }
