@@ -21,7 +21,7 @@ final class ConsoleDispatcherTest extends BaseTest
 
     public function testCanNotServe(): void
     {
-        $this->initApp(['RR' => true]);
+        $this->initApp(['RR_MODE' => 'http']);
         $this->assertDispatcherCannotBeServed(ConsoleDispatcher::class);
     }
 
