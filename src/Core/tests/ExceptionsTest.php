@@ -11,7 +11,9 @@ use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
+use Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency;
 use Spiral\Tests\Core\Fixtures\IntersectionTypes;
+use Spiral\Tests\Core\Fixtures\WithPrivateConstructor;
 
 class ExceptionsTest extends TestCase
 {
@@ -66,6 +68,52 @@ class ExceptionsTest extends TestCase
 
         $this->assertSame($method, $e->getContext());
         $this->assertSame('param', $e->getParameter()->getName());
+    }
+
+    /**
+     * @dataProvider exceptionTraceDataProvider
+     */
+    public function testExceptionTrace(Container $container, string $message): void
+    {
+        $this->expectException(ContainerException::class);
+
+        try {
+            $container->get(ClassWithUndefinedDependency::class);
+        } catch (ContainerException $e) {
+            $this->assertSame(
+                \preg_replace('/\s+/', '', $message),
+                \preg_replace('/\s+/', '', $e->getMessage())
+            );
+
+            throw $e;
+        }
+    }
+
+
+    public function exceptionTraceDataProvider(): \Traversable
+    {
+        $binding = new Container();
+        $binding->bind('Spiral\Tests\Core\Fixtures\InvalidClass', ['invalid']);
+
+        $notConstructed = new Container();
+        $notConstructed->bind('Spiral\Tests\Core\Fixtures\InvalidClass', WithPrivateConstructor::class);
+
+        yield [
+            new Container(),
+            'Undefinedclassorbinding`Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:Spiral\Tests\Core\
+            Fixtures\ClassWithUndefinedDependencySpiral\Tests\Core\Fixtures\InvalidClass'
+        ];
+        yield [
+            $binding,
+            'Invalidbindingfor`Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:Spiral\Tests\Core\Fixtures\
+            ClassWithUndefinedDependencySpiral\Tests\Core\Fixtures\InvalidClass'
+        ];
+        yield [
+            $notConstructed,
+            'Class`Spiral\Tests\Core\Fixtures\WithPrivateConstructor`cannotbeconstructed.Containerstacktrace:Spiral\
+            Tests\Core\Fixtures\ClassWithUndefinedDependencySpiral\Tests\Core\Fixtures\InvalidClassSpiral\Tests\Core\
+            Fixtures\WithPrivateConstructor'
+        ];
     }
 
     protected function invalidInjection(InvalidClass $class): void

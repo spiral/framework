@@ -12,4 +12,30 @@ use Spiral\Core\Exception\RuntimeException;
  */
 class ContainerException extends RuntimeException implements ContainerExceptionInterface
 {
+    public function __construct(
+        string $message = '',
+        int $code = 0,
+        ?\Throwable $previous = null,
+        protected array &$trace = []
+    ) {
+        parent::__construct($this->addTrace($message), $code, $previous);
+
+        $trace = [];
+    }
+
+    protected function addTrace(string $message): string
+    {
+        $result = [];
+        $result[] = $message;
+
+        if ($this->trace !== []) {
+            $result[] = 'Container stack trace:';
+
+            foreach ($this->trace as $item) {
+                $result[] = $item;
+            }
+        }
+
+        return \implode(PHP_EOL, $result);
+    }
 }

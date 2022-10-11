@@ -32,6 +32,7 @@ final class Factory implements FactoryInterface
     private InvokerInterface $invoker;
     private ContainerInterface $container;
     private ResolverInterface $resolver;
+    private array $trace = [];
 
     public function __construct(Registry $constructor)
     {
@@ -51,6 +52,8 @@ final class Factory implements FactoryInterface
      */
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
+        $this->trace[] = $alias;
+
         if (!isset($this->state->bindings[$alias])) {
             //No direct instructions how to construct class, make is automatically
             return $this->autowire($alias, $parameters, $context);
@@ -82,6 +85,7 @@ final class Factory implements FactoryInterface
         } finally {
             /** @psalm-var class-string $alias */
             $this->state->bindings[$alias] = $binding;
+            $this->trace = [];
         }
 
         if ($binding[1]) {
@@ -104,7 +108,10 @@ final class Factory implements FactoryInterface
     private function autowire(string $class, array $parameters, string $context = null): object
     {
         if (!\class_exists($class) && !isset($this->state->injectors[$class])) {
-            throw new NotFoundException(\sprintf('Undefined class or binding `%s`.', $class));
+            throw new NotFoundException(
+                message: \sprintf('Undefined class or binding `%s`.', $class),
+                trace: $this->trace
+            );
         }
 
         // automatically create instance
@@ -138,7 +145,12 @@ final class Factory implements FactoryInterface
         try {
             return $this->invoker->invoke($target, $parameters);
         } catch (NotCallableException $e) {
-            throw new ContainerException(\sprintf('Invalid binding for `%s`.', $alias), $e->getCode(), $e);
+            throw new ContainerException(
+                \sprintf('Invalid binding for `%s`.', $alias),
+                $e->getCode(),
+                $e,
+                $this->trace
+            );
         }
     }
 
@@ -160,7 +172,7 @@ final class Factory implements FactoryInterface
         try {
             $reflection = new \ReflectionClass($class);
         } catch (\ReflectionException $e) {
-            throw new ContainerException($e->getMessage(), $e->getCode(), $e);
+            throw new ContainerException($e->getMessage(), $e->getCode(), $e, $this->trace);
         }
 
         //We have to construct class using external injector when we know exact context
@@ -203,7 +215,10 @@ final class Factory implements FactoryInterface
                 $reflection->isAbstract() => 'Abstract class',
                 default => 'Class',
             };
-            throw new ContainerException(\sprintf('%s `%s` can not be constructed.', $itIs, $class));
+            throw new ContainerException(
+                message: \sprintf('%s `%s` can not be constructed.', $itIs, $class),
+                trace: $this->trace
+            );
         }
 
         $constructor = $reflection->getConstructor();
