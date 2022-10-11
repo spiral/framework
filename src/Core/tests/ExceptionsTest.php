@@ -13,6 +13,7 @@ use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency;
 use Spiral\Tests\Core\Fixtures\IntersectionTypes;
+use Spiral\Tests\Core\Fixtures\WithContainerInside;
 use Spiral\Tests\Core\Fixtures\WithPrivateConstructor;
 
 class ExceptionsTest extends TestCase
@@ -36,7 +37,9 @@ class ExceptionsTest extends TestCase
     public function testInvalidInjectionParameter(): void
     {
         $this->expectException(ContainerException::class);
-        $this->expectExceptionMessage('Undefined class or binding `Spiral\Tests\Core\InvalidClass`.');
+        $this->expectExceptionMessage(
+            'Can\'t resolve `Spiral\Tests\Core\InvalidClass`: undefined class or binding `Spiral\Tests\Core\InvalidClass`.'
+        );
 
         $container = new Container();
 
@@ -70,6 +73,27 @@ class ExceptionsTest extends TestCase
         $this->assertSame('param', $e->getParameter()->getName());
     }
 
+    public function testExceptionTraceWithContainerInside(): void
+    {
+        $container = new Container();
+
+        $this->expectException(ContainerException::class);
+
+        try {
+            $container->get(WithContainerInside::class);
+        } catch (ContainerException $e) {
+            $this->assertSame(
+                \preg_replace('/\s+/', '', 'Can\'tresolve`Spiral\Tests\Core\Fixtures\
+                    WithContainerInside`:undefinedclassorbinding`Spiral\Tests\Core\Fixtures\InvalidClass`.
+                    Containerstacktrace:-Spiral\Tests\Core\Fixtures\InvalidClass-Spiral\Core\Container-Psr\Container
+                    \ContainerInterface-Spiral\Tests\Core\Fixtures\WithContainerInside'),
+                \preg_replace('/\s+/', '', $e->getMessage())
+            );
+
+            throw $e;
+        }
+    }
+
     /**
      * @dataProvider exceptionTraceDataProvider
      */
@@ -89,7 +113,6 @@ class ExceptionsTest extends TestCase
         }
     }
 
-
     public function exceptionTraceDataProvider(): \Traversable
     {
         $binding = new Container();
@@ -100,19 +123,20 @@ class ExceptionsTest extends TestCase
 
         yield [
             new Container(),
-            'Undefinedclassorbinding`Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:-Spiral\Tests\Core\
-            Fixtures\ClassWithUndefinedDependency-Spiral\Tests\Core\Fixtures\InvalidClass'
+            'Can\'tresolve`Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`:undefinedclassorbinding`
+            Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:-Spiral\Tests\Core\Fixtures\InvalidClass
+            -Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
         ];
         yield [
             $binding,
             'Invalidbindingfor`Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:-Spiral\Tests\Core\Fixtures\
-            ClassWithUndefinedDependency-Spiral\Tests\Core\Fixtures\InvalidClass'
+            InvalidClass-Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
         ];
         yield [
             $notConstructed,
             'Class`Spiral\Tests\Core\Fixtures\WithPrivateConstructor`cannotbeconstructed.Containerstacktrace:-Spiral\
-            Tests\Core\Fixtures\ClassWithUndefinedDependency-Spiral\Tests\Core\Fixtures\InvalidClass-Spiral\Tests\Core\
-            Fixtures\WithPrivateConstructor'
+            Tests\Core\Fixtures\WithPrivateConstructor-Spiral\Tests\Core\Fixtures\InvalidClass-Spiral\Tests\Core\
+            Fixtures\ClassWithUndefinedDependency'
         ];
     }
 

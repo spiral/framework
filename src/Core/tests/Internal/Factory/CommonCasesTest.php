@@ -42,7 +42,9 @@ final class CommonCasesTest extends BaseTest
     public function testNotExistingClass(): void
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Undefined class or binding `\Foo\Bar\Class\Not\Exists`.');
+        $this->expectExceptionMessage(
+            'Can\'t resolve `\Foo\Bar\Class\Not\Exists`: undefined class or binding `\Foo\Bar\Class\Not\Exists`.'
+        );
 
         $this->make('\\Foo\\Bar\\Class\\Not\\Exists');
     }

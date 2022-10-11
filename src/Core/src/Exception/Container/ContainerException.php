@@ -31,7 +31,7 @@ class ContainerException extends RuntimeException implements ContainerExceptionI
         if ($this->trace !== []) {
             $result[] = 'Container stack trace:';
 
-            foreach ($this->trace as $item) {
+            foreach (\array_reverse($this->trace) as $item) {
                 $result[] = '- ' . $item;
             }
         }

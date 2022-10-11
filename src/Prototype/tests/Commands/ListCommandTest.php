@@ -62,7 +62,7 @@ class ListCommandTest extends AbstractCommandsTest
         $result = $out->fetch();
 
         $this->assertStringContainsString('testClass', $result);
-        $this->assertStringContainsString('Undefined class', $result);
+        $this->assertStringContainsString('Can\'t resolve', $result);
         $this->assertStringContainsString(TestApp::class, $result);
     }
 }

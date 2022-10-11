@@ -22,7 +22,9 @@ class InjectableTest extends TestCase
 {
     public function testMissingInjector(): void
     {
-        $this->expectExceptionMessage("Undefined class or binding `Spiral\Core\ConfigsInterface`");
+        $this->expectExceptionMessage(
+            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `Spiral\Core\ConfigsInterface`."
+        );
         $this->expectException(AutowireException::class);
 
         $container = new Container();
@@ -45,7 +47,9 @@ class InjectableTest extends TestCase
     public function testInvalidInjectorBinding(): void
     {
         $this->expectException(AutowireException::class);
-        $this->expectExceptionMessage("Undefined class or binding `invalid-injector`");
+        $this->expectExceptionMessage(
+            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `invalid-injector`."
+        );
 
         $container = new Container();
 
@@ -71,7 +75,9 @@ class InjectableTest extends TestCase
     public function testInjectorOuterBinding(): void
     {
         $this->expectException(AutowireException::class);
-        $this->expectExceptionMessage("Undefined class or binding `invalid-configurator`");
+        $this->expectExceptionMessage(
+            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `invalid-configurator`."
+        );
         $container = new Container();
         $container->bind(ConfigsInterface::class, 'invalid-configurator');
 

@@ -121,7 +121,9 @@ class AutowireTest extends TestCase
 
     public function testAutowireException(): void
     {
-        $this->expectExceptionMessage('Undefined class or binding `WrongClass`');
+        $this->expectExceptionMessage(
+            'Can\'t resolve `Spiral\Tests\Core\Fixtures\DependedClass`: undefined class or binding `WrongClass`.'
+        );
         $this->expectException(NotFoundException::class);
         $container = new Container();
 
