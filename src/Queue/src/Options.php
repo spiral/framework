@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
-class Options implements OptionsInterface, \JsonSerializable
+class Options implements OptionsInterface, ExtendedOptionsInterface, \JsonSerializable
 {
-    /**
-     * @var 0|positive-int
-     */
-    private int $priority = 0;
-    private ?int $delay = null;
-    private ?string $queue = null;
-    private bool $autoAck = false;
     /**
      * @var array<non-empty-string, array<string>>
      */
     private array $headers = [];
+    private ?int $delay = null;
+    private ?string $queue = null;
 
     public function withQueue(?string $queue): self
     {
@@ -42,32 +37,6 @@ class Options implements OptionsInterface, \JsonSerializable
     public function getDelay(): ?int
     {
         return $this->delay;
-    }
-
-    public function withPriority(int $priority): self
-    {
-        $options = clone $this;
-        $options->priority = $priority;
-
-        return $options;
-    }
-
-    public function getPriority(): int
-    {
-        return $this->priority;
-    }
-
-    public function autoAck(bool $autoAck = true): self
-    {
-        $options = clone $this;
-        $options->autoAck = $autoAck;
-
-        return $options;
-    }
-
-    public function isAutoAck(): bool
-    {
-        return $this->autoAck;
     }
 
     /**
@@ -159,8 +128,6 @@ class Options implements OptionsInterface, \JsonSerializable
         return [
             'delay' => $this->delay,
             'queue' => $this->queue,
-            'priority' => $this->priority,
-            'autoAck' => $this->autoAck,
             'headers' => $this->headers,
         ];
     }

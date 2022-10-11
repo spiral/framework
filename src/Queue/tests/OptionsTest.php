@@ -26,24 +26,6 @@ final class OptionsTest extends TestCase
         $this->assertNull($options->withDelay(null)->getDelay());
     }
 
-    public function testPriority(): void
-    {
-        $options = new Options();
-
-        $this->assertSame(0, $options->getPriority());
-        $this->assertSame(5, $options->withPriority(5)->getPriority());
-        $this->assertSame(0, $options->withPriority(0)->getPriority());
-    }
-
-    public function testAutoAck(): void
-    {
-        $options = new Options();
-
-        $this->assertFalse($options->isAutoAck());
-        $this->assertTrue($options->autoAck()->isAutoAck());
-        $this->assertFalse($options->autoAck(false)->isAutoAck());
-    }
-
     public function testHeaders(): void
     {
         $options = new Options();
@@ -83,15 +65,11 @@ final class OptionsTest extends TestCase
         $options = (new Options())
             ->withDelay(5)
             ->withQueue('foo')
-            ->withPriority(3)
-            ->autoAck()
             ->withHeader('foo', 'bar');
 
         $this->assertSame([
             'delay' => 5,
             'queue' => 'foo',
-            'priority' => 3,
-            'autoAck' => true,
             'headers' => ['foo' => ['bar']],
         ], $options->jsonSerialize());
     }
