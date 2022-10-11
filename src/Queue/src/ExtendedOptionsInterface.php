@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
-interface ExtendedOptionsInterface
+interface ExtendedOptionsInterface extends OptionsInterface
 {
     /**
      * @return array<non-empty-string, array<string>>
