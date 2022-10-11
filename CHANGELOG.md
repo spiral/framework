@@ -4,7 +4,7 @@
 - **High Impact Changes**
 - **Medium Impact Changes**
 - **Other Features**
-  - [spiral/queue] Added the ability to pass additional data in the `context` parameter in the job handlers.
+  - [spiral/queue] Added the ability to pass headers in the `headers` parameter in the job handlers.
 
 ## v3.1.0 - 2022-09-29
 - **Other Features**
