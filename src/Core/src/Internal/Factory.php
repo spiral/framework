@@ -109,8 +109,10 @@ final class Factory implements FactoryInterface
     {
         if (!\class_exists($class) && !isset($this->state->injectors[$class])) {
             throw new NotFoundException(
-                message: \sprintf('Undefined class or binding `%s`.', $class),
-                trace: $this->trace
+                \sprintf('Undefined class or binding `%s`.', $class),
+                0,
+                null,
+                $this->trace
             );
         }
 
@@ -216,8 +218,10 @@ final class Factory implements FactoryInterface
                 default => 'Class',
             };
             throw new ContainerException(
-                message: \sprintf('%s `%s` can not be constructed.', $itIs, $class),
-                trace: $this->trace
+                \sprintf('%s `%s` can not be constructed.', $itIs, $class),
+                0,
+                null,
+                $this->trace
             );
         }
 
