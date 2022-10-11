@@ -6,5 +6,4 @@ namespace Spiral\Telemetry\Exception;
 
 class InvalidArgumentException extends TracerException
 {
-
 }

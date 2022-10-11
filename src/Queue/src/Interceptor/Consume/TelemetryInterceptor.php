@@ -27,10 +27,9 @@ class TelemetryInterceptor implements CoreInterceptorInterface
 
         return $this->scope->runScope([
             TracerInterface::class => $tracer,
-        ], fn(): mixed => $tracer->trace('telemetry', fn() => $core->callAction($controller, $action, $parameters), [
+        ], fn (): mixed => $tracer->trace('telemetry', fn () => $core->callAction($controller, $action, $parameters), [
             'controller' => $controller,
             'action' => $action,
         ]));
     }
 }
-

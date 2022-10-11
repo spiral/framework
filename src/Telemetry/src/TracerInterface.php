@@ -31,5 +31,4 @@ interface TracerInterface
         ?TraceKind $traceKind = null,
         ?int $startTime = null
     ): mixed;
-
 }
