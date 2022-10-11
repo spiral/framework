@@ -15,6 +15,12 @@ interface TracerInterface
 
     /**
      * Trace a given callback
+     *
+     * @param non-empty-string $name
+     * @param array<non-empty-string, mixed> $attributes
+     * @param int|null $startTime Start time in nanoseconds.
+     *
+     * @throws \Throwable
      */
     public function trace(
         string $name,
@@ -22,7 +28,8 @@ interface TracerInterface
         array $attributes = [],
         bool $scoped = false,
         bool $debug = false,
-        ?TraceKind $traceKind = null
+        ?TraceKind $traceKind = null,
+        ?int $startTime = null
     ): mixed;
 
 }

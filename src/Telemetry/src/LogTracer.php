@@ -17,6 +17,7 @@ final class LogTracer implements TracerInterface
     public function __construct(
         private readonly InvokerInterface $invoker,
         private readonly ScopeInterface $scope,
+        private readonly ClockInterface $clock,
         LogsInterface $logs,
         string $channel = 'telemetry'
     ) {
@@ -29,24 +30,26 @@ final class LogTracer implements TracerInterface
         array $attributes = [],
         bool $scoped = false,
         bool $debug = false,
-        ?TraceKind $traceKind = null
+        ?TraceKind $traceKind = null,
+        ?int $startTime = null
     ): mixed {
         $span = new Span($name);
 
-        $startTime = \microtime(true);
+        $startTime ??= $this->clock->now();
 
         $result = $this->scope->runScope([
             SpanInterface::class => $span,
         ], fn(): mixed => $this->invoker->invoke($callback));
 
-        $elapsedSecs = microtime(true) - $startTime;
+        $elapsed = $this->clock->now() - $startTime;
 
-        $this->logger->debug(\sprintf('Trace [%s] - [%01.4f sec.]', $name, $elapsedSecs), [
+        $this->logger->debug(\sprintf('Trace [%s] - [%01.4f ms.]', $name, $elapsed / 1_000_000_000), [
             'attributes' => $span->getAttributes(),
             'status' => $span->getStatus(),
             'context' => $this->getContext(),
             'scoped' => $scoped,
             'trace_kind' => $traceKind,
+            'elapsed' => $elapsed,
         ]);
 
         return $result;

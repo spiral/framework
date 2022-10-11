@@ -23,7 +23,8 @@ final class NullTracer implements TracerInterface
         array $attributes = [],
         bool $scoped = false,
         bool $debug = false,
-        ?TraceKind $traceKind = null
+        ?TraceKind $traceKind = null,
+        ?int $startTime = null
     ): mixed {
         $span = new Span($name);
 

@@ -9,6 +9,8 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\Autowire;
+use Spiral\Telemetry\Clock\SystemClock;
+use Spiral\Telemetry\ClockInterface;
 use Spiral\Telemetry\Config\TelemetryConfig;
 use Spiral\Telemetry\ConfigTracerProvider;
 use Spiral\Telemetry\LogTracer;
@@ -23,6 +25,7 @@ final class TelemetryBootloader extends Bootloader
     protected const SINGLETONS = [
         TracerFactoryInterface::class => TracerFactory::class,
         TracerProviderInterface::class => ConfigTracerProvider::class,
+        ClockInterface::class => SystemClock::class,
     ];
 
     protected const BINDINGS = [
@@ -64,7 +67,7 @@ final class TelemetryBootloader extends Bootloader
                 'default' => $env->get('TELEMETRY_DRIVER', 'null'),
                 'drivers' => [
                     'null' => NullTracer::class,
-                    'log' => LogTracer::class
+                    'log' => LogTracer::class,
                 ],
             ]
         );
