@@ -85,8 +85,10 @@ class ExceptionsTest extends TestCase
             $this->assertSame(
                 \preg_replace('/\s+/', '', 'Can\'tresolve`Spiral\Tests\Core\Fixtures\
                     WithContainerInside`:undefinedclassorbinding`Spiral\Tests\Core\Fixtures\InvalidClass`.
-                    Containerstacktrace:-Spiral\Tests\Core\Fixtures\InvalidClass-Spiral\Core\Container-Psr\Container
-                    \ContainerInterface-Spiral\Tests\Core\Fixtures\WithContainerInside'),
+                    Containertracelist:-Spiral\Tests\Core\Fixtures\WithContainerInsideInfo:AutowiringContext:-
+                    -Psr\Container\ContainerInterfaceInfo:Bindingfound`Spiral\Core\Container`Context:container
+                    -Spiral\Core\ContainerInfo:Bindingfound,theinstanceof`WeakReference`Context:container
+                    -Spiral\Tests\Core\Fixtures\InvalidClassInfo:AutowiringContext:class'),
                 \preg_replace('/\s+/', '', $e->getMessage())
             );
 
@@ -123,20 +125,23 @@ class ExceptionsTest extends TestCase
 
         yield [
             new Container(),
-            'Can\'tresolve`Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`:undefinedclassorbinding`
-            Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:-Spiral\Tests\Core\Fixtures\InvalidClass
-            -Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
+            'Can\'tresolve`Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`:undefinedclassorbinding`Spiral\
+            Tests\Core\Fixtures\InvalidClass`.Containertracelist:-Spiral\Tests\Core\Fixtures\
+            ClassWithUndefinedDependencyInfo:AutowiringContext:--Spiral\Tests\Core\Fixtures\InvalidClassInfo:
+            AutowiringContext:class'
         ];
         yield [
             $binding,
-            'Invalidbindingfor`Spiral\Tests\Core\Fixtures\InvalidClass`.Containerstacktrace:-Spiral\Tests\Core\Fixtures\
-            InvalidClass-Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
+            'Invalidbindingfor`Spiral\Tests\Core\Fixtures\InvalidClass`.Containertracelist:-Spiral\Tests\Core\Fixtures\
+            ClassWithUndefinedDependencyInfo:AutowiringContext:--Spiral\Tests\Core\Fixtures\InvalidClassInfo:
+            BindingfoundContext:class'
         ];
         yield [
             $notConstructed,
-            'Class`Spiral\Tests\Core\Fixtures\WithPrivateConstructor`cannotbeconstructed.Containerstacktrace:-Spiral\
-            Tests\Core\Fixtures\WithPrivateConstructor-Spiral\Tests\Core\Fixtures\InvalidClass-Spiral\Tests\Core\
-            Fixtures\ClassWithUndefinedDependency'
+            'Class`Spiral\Tests\Core\Fixtures\WithPrivateConstructor`cannotbeconstructed.Containertracelist:-Spiral\
+            Tests\Core\Fixtures\ClassWithUndefinedDependencyInfo:AutowiringContext:--Spiral\Tests\Core\Fixtures\
+            InvalidClassInfo:Bindingfound`Spiral\Tests\Core\Fixtures\WithPrivateConstructor`Context:class-Spiral\
+            Tests\Core\Fixtures\WithPrivateConstructorInfo:AutowiringContext:class'
         ];
     }
 

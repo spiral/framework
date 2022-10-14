@@ -6,6 +6,7 @@ namespace Spiral\Core\Exception\Container;
 
 use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Exception\RuntimeException;
+use Spiral\Core\Internal\Tracer;
 
 /**
  * Something inside container.
@@ -16,26 +17,8 @@ class ContainerException extends RuntimeException implements ContainerExceptionI
         string $message = '',
         int $code = 0,
         ?\Throwable $previous = null,
-        protected array &$trace = []
+        protected ?Tracer $tracer = null
     ) {
-        parent::__construct($this->generateTrace($message), $code, $previous);
-
-        $trace = [];
-    }
-
-    protected function generateTrace(string $message): string
-    {
-        $result = [];
-        $result[] = $message;
-
-        if ($this->trace !== []) {
-            $result[] = 'Container stack trace:';
-
-            foreach (\array_reverse($this->trace) as $item) {
-                $result[] = '- ' . $item;
-            }
-        }
-
-        return \implode(PHP_EOL, $result);
+        parent::__construct($tracer !== null ? $message . PHP_EOL . $tracer : $message, $code, $previous);
     }
 }

@@ -32,7 +32,7 @@ final class Factory implements FactoryInterface
     private InvokerInterface $invoker;
     private ContainerInterface $container;
     private ResolverInterface $resolver;
-    private array $trace = [];
+    private Tracer $tracer;
 
     public function __construct(Registry $constructor)
     {
@@ -43,6 +43,7 @@ final class Factory implements FactoryInterface
         $this->invoker = $constructor->get('invoker', InvokerInterface::class);
         $this->container = $constructor->get('container', ContainerInterface::class);
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
+        $this->tracer = $constructor->get('tracer', Tracer::class);
     }
 
     /**
@@ -52,14 +53,15 @@ final class Factory implements FactoryInterface
      */
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
-        $this->trace[] = $alias;
-
         if (!isset($this->state->bindings[$alias])) {
+            $this->tracer->traceAutowire($alias, $context);
             //No direct instructions how to construct class, make is automatically
             return $this->autowire($alias, $parameters, $context);
         }
 
         $binding = $this->state->bindings[$alias];
+        $this->tracer->traceBinding($alias, $binding, $context);
+
         if (\is_object($binding)) {
             if ($binding::class === WeakReference::class) {
                 if ($binding->get() === null && \class_exists($alias)) {
@@ -85,7 +87,7 @@ final class Factory implements FactoryInterface
         } finally {
             /** @psalm-var class-string $alias */
             $this->state->bindings[$alias] = $binding;
-            $this->trace = [];
+            $this->tracer->clean();
         }
 
         if ($binding[1]) {
@@ -108,12 +110,10 @@ final class Factory implements FactoryInterface
     private function autowire(string $class, array $parameters, string $context = null): object
     {
         if (!\class_exists($class) && !isset($this->state->injectors[$class])) {
-            throw new NotFoundException(
-                \sprintf('Can\'t resolve `%s`: undefined class or binding `%s`.', $this->trace[0], $class),
-                0,
-                null,
-                $this->trace
-            );
+            throw new NotFoundException(\sprintf(
+                'Can\'t resolve `%s`: undefined class or binding `%s`.', $this->tracer->getRootConstructedClass(),
+                $class
+            ), 0, null, $this->tracer);
         }
 
         // automatically create instance
@@ -151,7 +151,7 @@ final class Factory implements FactoryInterface
                 \sprintf('Invalid binding for `%s`.', $alias),
                 $e->getCode(),
                 $e,
-                $this->trace
+                $this->tracer
             );
         }
     }
@@ -174,7 +174,7 @@ final class Factory implements FactoryInterface
         try {
             $reflection = new \ReflectionClass($class);
         } catch (\ReflectionException $e) {
-            throw new ContainerException($e->getMessage(), $e->getCode(), $e, $this->trace);
+            throw new ContainerException($e->getMessage(), $e->getCode(), $e, $this->tracer);
         }
 
         //We have to construct class using external injector when we know exact context
@@ -221,7 +221,7 @@ final class Factory implements FactoryInterface
                 \sprintf('%s `%s` can not be constructed.', $itIs, $class),
                 0,
                 null,
-                $this->trace
+                $this->tracer
             );
         }
 
