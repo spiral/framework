@@ -253,7 +253,7 @@ abstract class AbstractKernel implements KernelInterface
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
-                    static function () use ($dispatcher, $eventDispatcher, $tracer): mixed {
+                    static function () use ($dispatcher, $eventDispatcher): mixed {
                         $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
                         return $dispatcher->serve();
                     }
