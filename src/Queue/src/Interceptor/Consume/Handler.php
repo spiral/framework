@@ -19,14 +19,14 @@ final class Handler
         string $queue,
         string $id,
         array $payload,
-        array $context = []
+        array $headers = []
     ): mixed {
         return $this->core->callAction($name, 'handle', [
             'driver' => $driver,
             'queue' => $queue,
             'id' => $id,
             'payload' => $payload,
-            'context' => $context,
+            'headers' => $headers,
         ]);
     }
 }

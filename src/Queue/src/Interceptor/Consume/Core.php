@@ -16,7 +16,7 @@ use Spiral\Queue\HandlerRegistryInterface;
  *     queue: non-empty-string,
  *     id: non-empty-string,
  *     payload: array,
- *     context: array
+ *     headers: array
  * }
  */
 final class Core implements CoreInterface
@@ -42,7 +42,7 @@ final class Core implements CoreInterface
         /** @psalm-suppress TooManyArguments */
         $this->registry
             ->getHandler($controller)
-            ->handle($controller, $parameters['id'], $parameters['payload'], $parameters['context'] ?? []);
+            ->handle($controller, $parameters['id'], $parameters['payload'], $parameters['headers'] ?? []);
 
         $this->dispatchEvent(JobProcessed::class, $controller, $parameters);
 
@@ -61,7 +61,7 @@ final class Core implements CoreInterface
             queue: $parameters['queue'],
             id: $parameters['id'],
             payload: $parameters['payload'],
-            context: $parameters['context'] ?? []
+            headers: $parameters['headers'] ?? []
         ));
     }
 }
