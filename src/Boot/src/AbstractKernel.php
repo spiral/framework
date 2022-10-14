@@ -264,9 +264,9 @@ abstract class AbstractKernel implements KernelInterface
 
                         return $tracer->trace(
                             name: 'dispatcher::serving',
-                            callback: fn(): int => $dispatcher->serve(),
+                            callback: fn (): int => $dispatcher->serve(),
                             attributes: [
-                                'dispatcher' => $dispatcher::class
+                                'dispatcher' => $dispatcher::class,
                             ],
                             scoped: true
                         );
