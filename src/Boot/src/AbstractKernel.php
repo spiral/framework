@@ -18,7 +18,6 @@ use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Exceptions\ExceptionReporterInterface;
-use Spiral\Telemetry\TracerInterface;
 
 /**
  * Core responsible for application initialization, bootloading of all required services,
@@ -250,26 +249,13 @@ abstract class AbstractKernel implements KernelInterface
         $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher?->dispatch(new Serving());
 
-        $tracer = $this->container->get(TracerInterface::class);
-
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
-                    [
-                        DispatcherInterface::class => $dispatcher,
-                        TracerInterface::class => $tracer,
-                    ],
+                    [DispatcherInterface::class => $dispatcher],
                     static function () use ($dispatcher, $eventDispatcher, $tracer): mixed {
                         $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
-
-                        return $tracer->trace(
-                            name: 'dispatcher::serving',
-                            callback: fn(): int => $dispatcher->serve(),
-                            attributes: [
-                                'dispatcher' => $dispatcher::class
-                            ],
-                            scoped: true
-                        );
+                        return $dispatcher->serve();
                     }
                 );
             }
