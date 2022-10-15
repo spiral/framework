@@ -18,7 +18,7 @@ use Traversable;
 /**
  * @implements IteratorAggregate<
  *     non-empty-string,
- *     class-string<State>|class-string<ResolverInterface>|class-string<FactoryInterface>|class-string<ContainerInterface>|class-string<BinderInterface>|class-string<InvokerInterface>
+ *     class-string<State>|class-string<ResolverInterface>|class-string<FactoryInterface>|class-string<ContainerInterface>|class-string<BinderInterface>|class-string<InvokerInterface>|class-string<Tracer>
  * >
  */
 class Config implements IteratorAggregate

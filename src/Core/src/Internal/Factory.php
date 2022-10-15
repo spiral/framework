@@ -111,7 +111,8 @@ final class Factory implements FactoryInterface
     {
         if (!\class_exists($class) && !isset($this->state->injectors[$class])) {
             throw new NotFoundException(\sprintf(
-                'Can\'t resolve `%s`: undefined class or binding `%s`.', $this->tracer->getRootConstructedClass(),
+                'Can\'t resolve `%s`: undefined class or binding `%s`.',
+                $this->tracer->getRootConstructedClass(),
                 $class
             ), 0, null, $this->tracer);
         }
