@@ -14,6 +14,20 @@ final class Tracer implements \Stringable
      */
     private array $traces = [];
 
+    public function __toString(): string
+    {
+        $result = [];
+        if ($this->traces !== []) {
+            $result[] = 'Container trace list:';
+
+            foreach ($this->traces as $item) {
+                $result[] = (string) $item;
+            }
+        }
+
+        return \implode(PHP_EOL, $result);
+    }
+
     public function traceAutowire(string $alias, string $context = null): void
     {
         $this->trace($alias, 'Autowiring', $context);
@@ -38,20 +52,6 @@ final class Tracer implements \Stringable
     public function clean(): void
     {
         $this->traces = [];
-    }
-
-    public function __toString(): string
-    {
-        $result = [];
-        if ($this->traces !== []) {
-            $result[] = 'Container trace list:';
-
-            foreach ($this->traces as $item) {
-                $result[] = (string) $item;
-            }
-        }
-
-        return \implode(PHP_EOL, $result);
     }
 
     private function trace(string $alias, string $information, string $context = null): void
