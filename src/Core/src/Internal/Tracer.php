@@ -18,7 +18,7 @@ final class Tracer implements \Stringable
 
     public function __toString(): string
     {
-        return $this->traces === [] ? '' : 'Container trace list:' . PHP_EOL . $this->renderTraceList($this->traces);
+        return $this->traces === [] ? '' : "Container trace list:\n" . $this->renderTraceList($this->traces);
     }
 
     /**
@@ -60,7 +60,7 @@ final class Tracer implements \Stringable
 
     public function getRootAlias(): string
     {
-        return $this->traces[0][0]->alias;
+        return $this->traces[0][0]->alias ?? '';
     }
 
     /**
@@ -73,7 +73,7 @@ final class Tracer implements \Stringable
         foreach ($blocks as $block) {
             \array_push($result, ...$this->blockToStringList($block, $i++));
         }
-        return \implode(PHP_EOL, $result);
+        return \implode("\n", $result);
     }
 
     /**

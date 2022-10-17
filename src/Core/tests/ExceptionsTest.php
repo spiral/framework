@@ -81,22 +81,24 @@ class ExceptionsTest extends TestCase
         $container = new Container();
 
         $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage(
+            <<<MARKDOWN
+            Can't resolve `Spiral\Tests\Core\Fixtures\WithContainerInside`: undefined class or binding `Spiral\Tests\Core\Fixtures\InvalidClass`.
+            Container trace list:
+            - Spiral\Tests\Core\Fixtures\WithContainerInside
+              source: 'autowiring'
+              context: NULL
+            - Psr\Container\ContainerInterface
+              source: 'binding'
+              binding: 'Spiral\Core\Container'
+              context: 'container'
+              - Spiral\Tests\Core\Fixtures\InvalidClass
+                source: 'autowiring'
+                context: 'class'
+            MARKDOWN,
+        );
 
-        try {
-            $container->get(WithContainerInside::class);
-        } catch (ContainerException $e) {
-            $this->assertSame(
-                \preg_replace('/\s+/', '', 'Can\'tresolve`Spiral\Tests\Core\Fixtures\
-                    WithContainerInside`:undefinedclassorbinding`Spiral\Tests\Core\Fixtures\InvalidClass`.
-                    Containertracelist:-Spiral\Tests\Core\Fixtures\WithContainerInsideInfo:AutowiringContext:-
-                    -Psr\Container\ContainerInterfaceInfo:Bindingfound`Spiral\Core\Container`Context:container
-                    -Spiral\Core\ContainerInfo:Bindingfound,theinstanceof`WeakReference`Context:container
-                    -Spiral\Tests\Core\Fixtures\InvalidClassInfo:AutowiringContext:class'),
-                \preg_replace('/\s+/', '', $e->getMessage())
-            );
-
-            throw $e;
-        }
+        $container->get(WithContainerInside::class);
     }
 
     /**
@@ -105,17 +107,9 @@ class ExceptionsTest extends TestCase
     public function testExceptionTrace(Container $container, string $message): void
     {
         $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage($message);
 
-        try {
-            $container->get(ClassWithUndefinedDependency::class);
-        } catch (ContainerException $e) {
-            $this->assertSame(
-                \preg_replace('/\s+/', '', $message),
-                \preg_replace('/\s+/', '', $e->getMessage())
-            );
-
-            throw $e;
-        }
+        $container->get(ClassWithUndefinedDependency::class);
     }
 
     public function exceptionTraceDataProvider(): \Traversable
@@ -126,25 +120,74 @@ class ExceptionsTest extends TestCase
         $notConstructed = new Container();
         $notConstructed->bind('Spiral\Tests\Core\Fixtures\InvalidClass', WithPrivateConstructor::class);
 
+        $withClosure = new Container();
+        $withClosure->bind('Spiral\Tests\Core\Fixtures\InvalidClass', static fn() => 'FooBar');
+
         yield [
             new Container(),
-            'Can\'tresolve`Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`:undefinedclassorbinding`Spiral\
-            Tests\Core\Fixtures\InvalidClass`.Containertracelist:-Spiral\Tests\Core\Fixtures\
-            ClassWithUndefinedDependencyInfo:AutowiringContext:--Spiral\Tests\Core\Fixtures\InvalidClassInfo:
-            AutowiringContext:class'
+            <<<MARKDOWN
+            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `Spiral\Tests\Core\Fixtures\InvalidClass`.
+            Container trace list:
+            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+              source: 'autowiring'
+              context: NULL
+              - Spiral\Tests\Core\Fixtures\InvalidClass
+                source: 'autowiring'
+                context: 'class'
+            MARKDOWN
         ];
         yield [
             $binding,
-            'Invalidbindingfor`Spiral\Tests\Core\Fixtures\InvalidClass`.Containertracelist:-Spiral\Tests\Core\Fixtures\
-            ClassWithUndefinedDependencyInfo:AutowiringContext:--Spiral\Tests\Core\Fixtures\InvalidClassInfo:
-            BindingfoundContext:class'
+            <<<MARKDOWN
+            Invalid binding for `Spiral\Tests\Core\Fixtures\InvalidClass`.
+            Container trace list:
+            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+              source: 'autowiring'
+              context: NULL
+            - Spiral\Tests\Core\Fixtures\InvalidClass
+              source: 'binding'
+              binding: array
+              context: 'class'
+            - Spiral\Tests\Core\Fixtures\InvalidClass
+              source: 'binding'
+              binding: array
+              context: 'class'
+            MARKDOWN
         ];
         yield [
             $notConstructed,
-            'Class`Spiral\Tests\Core\Fixtures\WithPrivateConstructor`cannotbeconstructed.Containertracelist:-Spiral\
-            Tests\Core\Fixtures\ClassWithUndefinedDependencyInfo:AutowiringContext:--Spiral\Tests\Core\Fixtures\
-            InvalidClassInfo:Bindingfound`Spiral\Tests\Core\Fixtures\WithPrivateConstructor`Context:class-Spiral\
-            Tests\Core\Fixtures\WithPrivateConstructorInfo:AutowiringContext:class'
+            <<<MARKDOWN
+            Class `Spiral\Tests\Core\Fixtures\WithPrivateConstructor` can not be constructed.
+            Container trace list:
+            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+              source: 'autowiring'
+              context: NULL
+            - Spiral\Tests\Core\Fixtures\InvalidClass
+              source: 'binding'
+              binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
+              context: 'class'
+            - Spiral\Tests\Core\Fixtures\InvalidClass
+              source: 'binding'
+              binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
+              context: 'class'
+              - Spiral\Tests\Core\Fixtures\WithPrivateConstructor
+                source: 'autowiring'
+                context: 'class'
+            MARKDOWN
+        ];
+        yield [
+            $withClosure,
+            <<<MARKDOWN
+            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`. Invalid argument value type for the `class` parameter when validating arguments for `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency::__construct`.
+            Container trace list:
+            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+              source: 'autowiring'
+              context: NULL
+            - Spiral\Tests\Core\Fixtures\InvalidClass
+              source: 'binding'
+              binding: array
+              context: 'class'
+            MARKDOWN
         ];
     }
 
