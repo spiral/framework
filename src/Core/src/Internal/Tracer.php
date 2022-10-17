@@ -28,8 +28,6 @@ final class Tracer implements \Stringable
      */
     public function getExceptionMessage(string $header, bool $lastBlock = false, bool $clear = false): string
     {
-
-
         return "$header\n$this";
     }
 
