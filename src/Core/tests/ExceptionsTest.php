@@ -73,7 +73,10 @@ class ExceptionsTest extends TestCase
         $this->assertSame('param', $e->getParameter()->getName());
     }
 
-    public function testExceptionTraceWithContainerInside(): void
+    /**
+     * Broken dependency in a constructor signature.
+     */
+    public function testExceptionTraceWithInvalidDependencyInSignature(): void
     {
         $container = new Container();
 

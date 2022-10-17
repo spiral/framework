@@ -17,7 +17,7 @@ class ContainerException extends RuntimeException implements ContainerExceptionI
         string $message = '',
         int $code = 0,
         ?\Throwable $previous = null,
-        protected ?Tracer $tracer = null
+        protected ?Tracer $tracer = null,
     ) {
         parent::__construct($tracer !== null ? $message . PHP_EOL . $tracer : $message, $code, $previous);
 
