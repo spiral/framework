@@ -33,6 +33,7 @@
         "spiral/hmvc": "^3.2",
         "spiral/http": "^3.2",
         "cocur/slugify": "^3.2",
+        "spiral/telemetry": "^3.2",
         "doctrine/inflector": "^1.4|^2.0",
         "psr/event-dispatcher": "^1.0"
     },

@@ -13,6 +13,7 @@ use Spiral\Telemetry\Clock\SystemClock;
 use Spiral\Telemetry\ClockInterface;
 use Spiral\Telemetry\Config\TelemetryConfig;
 use Spiral\Telemetry\ConfigTracerProvider;
+use Spiral\Telemetry\Exception\TracerException;
 use Spiral\Telemetry\LogTracer;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerFactory;
@@ -53,6 +54,9 @@ final class TelemetryBootloader extends Bootloader
         );
     }
 
+    /**
+     * @throws TracerException
+     */
     public function getTracer(
         TracerProviderInterface $tracerProvider
     ): TracerInterface {

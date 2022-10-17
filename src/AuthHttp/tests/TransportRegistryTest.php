@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\Auth\Exception\TransportException;
 use Spiral\Auth\Transport\CookieTransport;
 use Spiral\Auth\TransportRegistry;
 
-class TransportRegistryTest extends TestCase
+class TransportRegistryTest extends BaseTest
 {
     public function testGetTransports(): void
     {

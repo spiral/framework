@@ -31,8 +31,8 @@ final class Http implements RequestHandlerInterface
         private readonly Pipeline $pipeline,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ContainerInterface $container,
-        private readonly ScopeInterface $scope = new Container(),
-        private readonly TracerFactoryInterface $tracerFactory = new TracerFactory()
+        private readonly ?ScopeInterface $scope = new Container(),
+        private readonly ?TracerFactoryInterface $tracerFactory = new TracerFactory()
     ) {
         foreach ($this->config->getMiddleware() as $middleware) {
             $this->pipeline->pushMiddleware($this->container->get($middleware));
@@ -91,10 +91,10 @@ final class Http implements RequestHandlerInterface
 
         return $this->scope->runScope([
             TracerInterface::class => $tracer,
-        ], function () use ($callback, $request, $tracer): ResponseInterface {
+        ], static function () use ($callback, $request, $tracer): ResponseInterface {
             /** @var ResponseInterface $response */
             $response = $tracer->trace(
-                name: sprintf('%s %s', $request->getMethod(), (string)$request->getUri()),
+                name: \sprintf('%s %s', $request->getMethod(), (string)$request->getUri()),
                 callback: $callback,
                 attributes: [
                     'http.method' => $request->getMethod(),

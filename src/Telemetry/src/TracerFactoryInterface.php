@@ -9,5 +9,5 @@ interface TracerFactoryInterface
     /**
      * Make tracer object with given context
      */
-    public function fromContext(mixed $context): TracerInterface;
+    public function fromContext(?array $context): TracerInterface;
 }

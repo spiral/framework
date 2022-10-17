@@ -146,7 +146,7 @@ final class QueueBootloader extends Bootloader
             $core->addInterceptor($interceptor);
         }
 
-        return new Handler($tracerFactory, $scope, $core);
+        return new Handler($core, $scope, $tracerFactory);
     }
 
     protected function initQueue(

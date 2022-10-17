@@ -19,21 +19,15 @@ use Spiral\Core\Container;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
+use Spiral\Telemetry\TracerFactory;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
-class FirewallTest extends TestCase
+class FirewallTest extends BaseTest
 {
-    private $container;
-
-    public function setUp(): void
-    {
-        $this->container = new Container();
-    }
-
     public function testExceptionOK(): void
     {
         $http = $this->getCore(
@@ -165,7 +159,9 @@ class FirewallTest extends TestCase
             $config,
             new Pipeline($this->container),
             new ResponseFactory($config),
-            $this->container
+            $this->container,
+            $this->container,
+            new TracerFactory($this->container)
         );
 
         $http->getPipeline()->pushMiddleware(

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Telemetry;
 
 use Psr\Log\LoggerInterface;
-use Spiral\Core\InvokerInterface;
+use Spiral\Core\ContainerScope;
 use Spiral\Core\ScopeInterface;
 use Spiral\Logger\LogsInterface;
 
@@ -15,7 +15,6 @@ final class LogTracer implements TracerInterface
     private readonly LoggerInterface $logger;
 
     public function __construct(
-        private readonly InvokerInterface $invoker,
         private readonly ScopeInterface $scope,
         private readonly ClockInterface $clock,
         LogsInterface $logs,
@@ -39,7 +38,7 @@ final class LogTracer implements TracerInterface
 
         $result = $this->scope->runScope([
             SpanInterface::class => $span,
-        ], fn (): mixed => $this->invoker->invoke($callback));
+        ], static fn (): mixed => ContainerScope::getContainer()->invoke($callback));
 
         $elapsed = $this->clock->now() - $startTime;
 

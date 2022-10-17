@@ -10,12 +10,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\ScopeInterface;
 use Spiral\Http\Pipeline;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\PipelineFactory;
+use Spiral\Telemetry\NullTracer;
 
 final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -37,7 +39,12 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreatesFromArrayWithPipeline(): void
     {
-        $newPipeline = new Pipeline(m::mock(ScopeInterface::class));
+        $container = new Container();
+
+        $newPipeline = new Pipeline(
+            scope: m::mock(ScopeInterface::class),
+            tracer: new NullTracer($container)
+        );
 
         $this->assertSame(
             $newPipeline,
@@ -80,7 +87,13 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
         $middleware4->shouldReceive('process')->once()->andReturnUsing($handle);
         $middleware5->shouldReceive('process')->once()->andReturnUsing($handle);
 
-        $scope->shouldReceive('runScope')->once()->andReturn(m::mock(ResponseInterface::class));
+        $scope->shouldReceive('runScope')
+            ->once()
+            ->andReturn($response = m::mock(ResponseInterface::class));
+
+        $response
+            ->shouldReceive('getHeaderLine')->with('Content-Length')->andReturn(['test'])
+            ->shouldReceive('getStatusCode')->andReturn(200);
 
         $p
             ->withHandler(m::mock(RequestHandlerInterface::class))

@@ -17,6 +17,7 @@ use Spiral\Core\ScopeInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
+use Spiral\Telemetry\Bootloader\TelemetryBootloader;
 use Spiral\Telemetry\TracerFactoryInterface;
 
 /**
@@ -24,6 +25,10 @@ use Spiral\Telemetry\TracerFactoryInterface;
  */
 final class HttpBootloader extends Bootloader implements SingletonInterface
 {
+    protected const DEPENDENCIES = [
+        TelemetryBootloader::class,
+    ];
+
     protected const SINGLETONS = [
         Http::class => [self::class, 'httpCore'],
     ];

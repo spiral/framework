@@ -29,8 +29,8 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
     public function __construct(
         private readonly ScopeInterface $scope,
+        private readonly ?EventDispatcherInterface $dispatcher = null,
         private readonly TracerInterface $tracer = new NullTracer(),
-        private readonly ?EventDispatcherInterface $dispatcher = null
     ) {
     }
 

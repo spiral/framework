@@ -43,7 +43,7 @@ final class HeaderTransport implements HttpTransportInterface
 
     public function removeToken(Request $request, Response $response, string $tokenID): Response
     {
-        return $response;
+        return $response->withoutHeader($this->header);
     }
 
     private function extractToken(Request $request): ?string

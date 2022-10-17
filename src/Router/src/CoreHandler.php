@@ -35,7 +35,7 @@ final class CoreHandler implements RequestHandlerInterface
         private readonly CoreInterface $core,
         private readonly ScopeInterface $scope,
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly TracerInterface $tracer = new NullTracer()
+        private readonly ?TracerInterface $tracer = new NullTracer()
     ) {
     }
 

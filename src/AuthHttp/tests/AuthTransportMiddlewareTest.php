@@ -4,26 +4,23 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\Auth\ActorProviderInterface;
 use Spiral\Auth\Middleware\AuthTransportMiddleware;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\Transport\CookieTransport;
 use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
-use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\ScopeInterface;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
-final class AuthTransportMiddlewareTest extends TestCase
+final class AuthTransportMiddlewareTest extends BaseTest
 {
-    private Container $container;
-
     protected function setUp(): void
     {
-        $this->container = new Container();
+        parent::setUp();
+
         $transports = new TransportRegistry();
         $transports->setTransport('cookie', new CookieTransport('/'));
         $transports->setTransport('header', new HeaderTransport());

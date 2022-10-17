@@ -7,10 +7,11 @@ namespace Spiral\Tests\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Tests\Router\App\App;
 
 class IntegrationTest extends TestCase
 {
-    private $app;
+    private App $app;
 
     public function setUp(): void
     {

@@ -47,8 +47,8 @@ final class Router implements RouterInterface
         string $basePath,
         private readonly UriHandler $uriHandler,
         private readonly ContainerInterface $container,
+        private readonly ?EventDispatcherInterface $eventDispatcher = null,
         private readonly TracerInterface $tracer = new NullTracer(),
-        private readonly ?EventDispatcherInterface $eventDispatcher = null
     ) {
         $this->basePath = '/' . \ltrim($basePath, '/');
     }
@@ -62,7 +62,7 @@ final class Router implements RouterInterface
         $this->eventDispatcher?->dispatch(new Routing($request));
 
         return $this->tracer->trace(
-            name: 'routing',
+            name: 'Routing',
             callback: function (SpanInterface $span) use ($request) {
                 try {
                     $route = $this->matchRoute($request, $routeName);

@@ -27,12 +27,14 @@ use Spiral\Router\RouteInterface;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\UriHandler;
+use Spiral\Telemetry\Bootloader\TelemetryBootloader;
 use Spiral\Telemetry\TracerInterface;
 
 final class RouterBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         HttpBootloader::class,
+        TelemetryBootloader::class,
     ];
 
     protected const SINGLETONS = [
@@ -77,8 +79,8 @@ final class RouterBootloader extends Bootloader
             $this->config->getConfig(HttpConfig::CONFIG)['basePath'],
             $uriHandler,
             $container,
+            $dispatcher,
             $tracer,
-            $dispatcher
         );
     }
 

@@ -21,6 +21,9 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Nyholm\Psr7\ServerRequest;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\TracerFactory;
+use Spiral\Telemetry\TracerInterface;
 
 class CookiesTest extends TestCase
 {
@@ -29,6 +32,7 @@ class CookiesTest extends TestCase
     public function setUp(): void
     {
         $this->container = new Container();
+        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
         $this->container->bind(CookiesConfig::class, new CookiesConfig([
             'domain'   => '.%s',
             'method'   => CookiesConfig::COOKIE_ENCRYPT,
@@ -282,7 +286,9 @@ class CookiesTest extends TestCase
             $config,
             new Pipeline($this->container),
             new TestResponseFactory($config),
-            $this->container
+            $this->container,
+            $this->container,
+            new TracerFactory($this->container)
         );
     }
 
