@@ -10,80 +10,96 @@ namespace Spiral\Core\Internal;
 final class Tracer implements \Stringable
 {
     /**
-     * @var Trace[]
+     * Trace blocks
+     *
+     * @var Trace[][]
      */
     private array $traces = [];
 
     public function __toString(): string
     {
-        $result = [];
-        if ($this->traces !== []) {
-            $result = ['Container trace list:', ...$this->toStringList($this->traces)];
-        }
-
-        return \implode(PHP_EOL, $result);
+        return $this->traces === [] ? '' : 'Container trace list:' . PHP_EOL . $this->renderTraceList($this->traces);
     }
 
-    private function toStringList(array $items, int $level = 0): array
+    /**
+     * @param string $header Message before stack list
+     * @param bool $lastBlock Generate trace list only for last block
+     * @param bool $clear Remove touched trace list
+     */
+    public function getExceptionMessage(string $header, bool $lastBlock = false, bool $clear = false): string
     {
-        $result = [];
-        foreach ($items as $item) {
-            if (\is_array($item)) {
-                \array_push($result, ...$this->toStringList($item, $level + 1));
-            } else {
-                $padding ??= \str_repeat('  ', $level);
-                $result[] = "$padding- " . \str_replace("\n", "\n$padding  ", (string)$item);
-            }
-        }
-        return $result;
+
+
+        return "$header\n$this";
     }
 
     public function push(string $alias, array $details, bool $nextLevel = false): void
     {
-        $list = &$this->traces;
-        // Find trace bag
-        if ($list === []) {
-            $init = true;
-        } else {
-            $init = false;
-            // $list = $this->traces[\array_key_last($this->traces)];
-            while (\is_array($list) && $list !== []) {
-                $key = \array_key_last($list);
-                if (!\is_array($list[$key])) {
-                    break;
-                }
-                $list = &$list[$key];
-            }
-        }
         $trace = new Trace($alias, $details);
-        $list[] = $nextLevel && !$init
-            ? [$trace]
-            : $trace;
+        if ($nextLevel || $this->traces === []) {
+            $this->traces[] = [$trace];
+        } else {
+            $this->traces[\array_key_last($this->traces)][] = $trace;
+        }
     }
 
-    public function pop(): void
+    public function pop(bool $previousLevel = false): void
     {
         if ($this->traces === []) {
             return;
         }
-        $list = $this->traces[\array_key_last($this->traces)];
-        while (\is_array($list)) {
-            $key = \array_key_last($list);
-            if (!\is_array($list[$key])) {
-                continue;
-            }
-            $list = &$list[$key];
+        if ($previousLevel) {
+            \array_pop($this->traces);
+            return;
         }
-        $list = [];
+        $key = \array_key_last($this->traces);
+        $list = &$this->traces[$key];
+        \array_pop($list);
+        if ($list === []) {
+            unset($this->traces[$key]);
+        }
     }
 
-    public function getRootConstructedClass(): string
+    public function getRootAlias(): string
     {
-        return $this->traces[0]->alias;
+        return $this->traces[0][0]->alias;
     }
 
     public function clean(): void
     {
         $this->traces = [];
+    }
+
+    /**
+     * @param Trace[][] $blocks
+     */
+    private function renderTraceList(array $blocks): string
+    {
+        $result = [];
+        $i = 0;
+        foreach ($blocks as $block) {
+            \array_push($result, ...$this->blockToStringList($block, $i++));
+        }
+        return \implode(PHP_EOL, $result);
+    }
+
+    /**
+     * @param Trace[] $items
+     * @param int<0, max> $level
+     *
+     * @return string[]
+     */
+    private function blockToStringList(array $items, int $level = 0): array
+    {
+        $result = [];
+        $padding = \str_repeat('  ', $level);
+        $firstPrefix = "$padding- ";
+        // Separator
+        $s = "\n";
+        $nexPrefix = "$s$padding  ";
+        foreach ($items as $item) {
+            $result[] = $firstPrefix . \str_replace($s, $nexPrefix, (string)$item);
+        }
+        return $result;
     }
 }

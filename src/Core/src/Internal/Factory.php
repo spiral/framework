@@ -59,7 +59,7 @@ final class Factory implements FactoryInterface
                 //No direct instructions how to construct class, make is automatically
                 return $this->autowire($alias, $parameters, $context);
             } finally {
-                $this->tracer->pop();
+                $this->tracer->pop(true);
             }
         }
 
@@ -94,7 +94,7 @@ final class Factory implements FactoryInterface
                 $this->state->bindings[$alias] = $binding;
             }
         } finally {
-            $this->tracer->pop();
+            $this->tracer->pop(false);
         }
 
         if ($binding[1]) {
@@ -117,11 +117,11 @@ final class Factory implements FactoryInterface
     private function autowire(string $class, array $parameters, string $context = null): object
     {
         if (!\class_exists($class) && !isset($this->state->injectors[$class])) {
-            throw new NotFoundException(\sprintf(
+            throw new NotFoundException($this->tracer->getExceptionMessage(\sprintf(
                 'Can\'t resolve `%s`: undefined class or binding `%s`.',
-                $this->tracer->getRootConstructedClass(),
+                $this->tracer->getRootAlias(),
                 $class
-            ), 0, null, $this->tracer);
+            )));
         }
 
         // automatically create instance
@@ -156,10 +156,9 @@ final class Factory implements FactoryInterface
             return $this->invoker->invoke($target, $parameters);
         } catch (NotCallableException $e) {
             throw new ContainerException(
-                \sprintf('Invalid binding for `%s`.', $alias),
+                $this->tracer->getExceptionMessage(\sprintf('Invalid binding for `%s`.', $alias)),
                 $e->getCode(),
                 $e,
-                $this->tracer
             );
         }
     }
@@ -226,10 +225,7 @@ final class Factory implements FactoryInterface
                 default => 'Class',
             };
             throw new ContainerException(
-                \sprintf('%s `%s` can not be constructed.', $itIs, $class),
-                0,
-                null,
-                $this->tracer
+                $this->tracer->getExceptionMessage(\sprintf('%s `%s` can not be constructed.', $itIs, $class)),
             );
         }
 
