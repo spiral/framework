@@ -22,7 +22,7 @@ final class HandlerTest extends TestCase
                 'queue' => 'default',
                 'id' => 'job-id',
                 'payload' => ['baz' => 'bar'],
-                'context' => ['some' => 'data'],
+                'headers' => ['some' => 'data'],
             ]);
 
         $handler->handle('foo', 'sync', 'default', 'job-id', ['baz' => 'bar'], ['some' => 'data']);
