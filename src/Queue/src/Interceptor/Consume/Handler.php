@@ -31,9 +31,11 @@ final class Handler
     ): mixed {
         $tracer = $this->tracerFactory->fromContext($context['headers'] ?? []);
 
-        return $this->scope->runScope([
+        return $this->scope->runScope(
+            [
                 TracerInterface::class => $tracer,
-            ], fn (): mixed => $tracer->trace(
+            ],
+            fn (): mixed => $tracer->trace(
                 name: 'queue.handler',
                 callback: fn (): mixed => $this->core->callAction($name, 'handle', [
                     'driver' => $driver,
