@@ -14,6 +14,7 @@ use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\InjectionException;
 use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Exception\Container\NotFoundException;
+use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\InvokerInterface;
@@ -54,7 +55,7 @@ final class Factory implements FactoryInterface
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
         if (!isset($this->state->bindings[$alias])) {
-            $this->tracer->push($alias, ['source' => 'autowiring', 'context' => $context], true);
+            $this->tracer->push($alias, true, source: 'autowiring', context: $context);
             try {
                 //No direct instructions how to construct class, make is automatically
                 return $this->autowire($alias, $parameters, $context);
@@ -65,19 +66,31 @@ final class Factory implements FactoryInterface
 
         $binding = $this->state->bindings[$alias];
         try {
-            $this->tracer->push($alias, ['source' => 'binding', 'binding' => $binding, 'context' => $context], false);
+            $this->tracer->push($alias, false, source: 'binding', binding: $binding, context: $context);
 
             if (\is_object($binding)) {
                 if ($binding::class === WeakReference::class) {
                     if ($binding->get() === null && \class_exists($alias)) {
-                        $object = $this->createInstance($alias, $parameters, $context);
-                        $binding = $this->state->bindings[$alias] = WeakReference::create($object);
+                        try {
+                            $this->tracer->push($alias, false, source: 'WeakReference', context: $context);
+                            $object = $this->createInstance($alias, $parameters, $context);
+                            $binding = $this->state->bindings[$alias] = WeakReference::create($object);
+                        } catch (\Throwable) {
+                            throw new ContainerException($this->tracer->combineTraceMessage(\sprintf(
+                                'Can\'t resolve `%s`: can\'t instantiate `%s` from WeakReference binding.',
+                                $this->tracer->getRootAlias(),
+                                $alias,
+                            )));
+                        } finally {
+                            $this->tracer->pop();
+                        }
                     }
                     return $binding->get();
                 }
                 //When binding is instance, assuming singleton
                 return $binding;
             }
+            $this->tracer->push($alias, false, source: 'binding', binding: $binding, context: $context);
 
             if (\is_string($binding)) {
                 //Binding is pointing to something else
@@ -117,7 +130,7 @@ final class Factory implements FactoryInterface
     private function autowire(string $class, array $parameters, string $context = null): object
     {
         if (!\class_exists($class) && !isset($this->state->injectors[$class])) {
-            throw new NotFoundException($this->tracer->getExceptionMessage(\sprintf(
+            throw new NotFoundException($this->tracer->combineTraceMessage(\sprintf(
                 'Can\'t resolve `%s`: undefined class or binding `%s`.',
                 $this->tracer->getRootAlias(),
                 $class
@@ -156,7 +169,7 @@ final class Factory implements FactoryInterface
             return $this->invoker->invoke($target, $parameters);
         } catch (NotCallableException $e) {
             throw new ContainerException(
-                $this->tracer->getExceptionMessage(\sprintf('Invalid binding for `%s`.', $alias)),
+                $this->tracer->combineTraceMessage(\sprintf('Invalid binding for `%s`.', $alias)),
                 $e->getCode(),
                 $e,
             );
@@ -225,7 +238,7 @@ final class Factory implements FactoryInterface
                 default => 'Class',
             };
             throw new ContainerException(
-                $this->tracer->getExceptionMessage(\sprintf('%s `%s` can not be constructed.', $itIs, $class)),
+                $this->tracer->combineTraceMessage(\sprintf('%s `%s` can not be constructed.', $itIs, $class)),
             );
         }
 
@@ -233,8 +246,20 @@ final class Factory implements FactoryInterface
 
         if ($constructor !== null) {
             try {
+                $arguments = $this->resolver->resolveArguments($constructor, $parameters);
+            } catch (ValidationException $e) {
+                throw new ContainerException(
+                    $this->tracer->combineTraceMessage(
+                        \sprintf('Can\'t resolve `%s`. %s',
+                            $this->tracer->getRootAlias(),
+                            $e->getMessage()
+                        )
+                    ),
+                );
+            }
+            try {
                 // Using constructor with resolved arguments
-                $instance = new $class(...$this->resolver->resolveArguments($constructor, $parameters));
+                $instance = new $class(...$arguments);
             } catch (\TypeError $e) {
                 throw new WrongTypeException($constructor, $e);
             }

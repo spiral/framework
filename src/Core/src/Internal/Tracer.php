@@ -26,12 +26,12 @@ final class Tracer implements \Stringable
      * @param bool $lastBlock Generate trace list only for last block
      * @param bool $clear Remove touched trace list
      */
-    public function getExceptionMessage(string $header, bool $lastBlock = false, bool $clear = false): string
+    public function combineTraceMessage(string $header, bool $lastBlock = false, bool $clear = false): string
     {
         return "$header\n$this";
     }
 
-    public function push(string $alias, array $details, bool $nextLevel = false): void
+    public function push(string $alias, bool $nextLevel = false, mixed ...$details): void
     {
         $trace = new Trace($alias, $details);
         if ($nextLevel || $this->traces === []) {
@@ -61,11 +61,6 @@ final class Tracer implements \Stringable
     public function getRootAlias(): string
     {
         return $this->traces[0][0]->alias;
-    }
-
-    public function clean(): void
-    {
-        $this->traces = [];
     }
 
     /**
