@@ -22,12 +22,12 @@ abstract class JobHandler implements HandlerInterface
     ) {
     }
 
-    public function handle(string $name, string $id, array $payload, array $context = []): void
+    public function handle(string $name, string $id, array $payload, array $headers = []): void
     {
         try {
             $this->invoker->invoke(
                 [$this, $this->getHandlerMethod()],
-                \array_merge(['payload' => $payload, 'id' => $id, 'context' => $context], $payload)
+                \array_merge(['payload' => $payload, 'id' => $id, 'headers' => $headers], $payload)
             );
         } catch (\Throwable $e) {
             $message = \sprintf('[%s] %s', $this::class, $e->getMessage());

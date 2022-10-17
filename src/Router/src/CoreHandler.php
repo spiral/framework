@@ -166,11 +166,11 @@ final class CoreHandler implements RequestHandlerInterface
     private function mapException(ControllerException $exception): ClientException
     {
         return match ($exception->getCode()) {
-            ControllerException::BAD_ACTION => new NotFoundException($exception->getMessage()),
-            ControllerException::NOT_FOUND => new NotFoundException($exception->getMessage()),
-            ControllerException::FORBIDDEN => new ForbiddenException($exception->getMessage()),
-            ControllerException::UNAUTHORIZED => new UnauthorizedException($exception->getMessage()),
-            default => new BadRequestException($exception->getMessage()),
+            ControllerException::BAD_ACTION,
+            ControllerException::NOT_FOUND => new NotFoundException('Not found', $exception),
+            ControllerException::FORBIDDEN => new ForbiddenException('Forbidden', $exception),
+            ControllerException::UNAUTHORIZED => new UnauthorizedException('Unauthorized', $exception),
+            default => new BadRequestException('Bad request', $exception),
         };
     }
 }

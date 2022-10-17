@@ -35,7 +35,7 @@ final class CoreTest extends TestCase
                 'queue' => 'default',
                 'id' => 'job-id',
                 'payload' => ['baz' => 'baf'],
-                'context' => ['foo']
+                'headers' => ['foo']
             ]
         );
     }

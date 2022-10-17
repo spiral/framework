@@ -27,7 +27,7 @@ final class Handler
         string $queue,
         string $id,
         array $payload,
-        array $context = []
+        array $headers = []
     ): mixed {
         $tracer = $this->tracerFactory->fromContext($context['headers'] ?? []);
 
