@@ -250,7 +250,8 @@ final class Factory implements FactoryInterface
             } catch (ValidationException $e) {
                 throw new ContainerException(
                     $this->tracer->combineTraceMessage(
-                        \sprintf('Can\'t resolve `%s`. %s',
+                        \sprintf(
+                            'Can\'t resolve `%s`. %s',
                             $this->tracer->getRootAlias(),
                             $e->getMessage()
                         )
