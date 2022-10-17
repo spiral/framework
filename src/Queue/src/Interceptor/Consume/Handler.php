@@ -29,7 +29,7 @@ final class Handler
         array $payload,
         array $headers = []
     ): mixed {
-        $tracer = $this->tracerFactory->fromContext($context['headers'] ?? []);
+        $tracer = $this->tracerFactory->fromContext($headers);
 
         return $this->scope->runScope(
             [
@@ -42,7 +42,7 @@ final class Handler
                     'queue' => $queue,
                     'id' => $id,
                     'payload' => $payload,
-                    'context' => $context,
+                    'headers' => $headers,
                 ]),
                 scoped: true,
                 traceKind: TraceKind::CONSUMER
