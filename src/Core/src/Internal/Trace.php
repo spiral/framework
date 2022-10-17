@@ -11,19 +11,12 @@ final class Trace implements \Stringable
 {
     public function __construct(
         public readonly string $alias,
-        public readonly string $information,
-        public ?string $context = null
+        public array $info,
     ) {
-        $this->context ??= '-';
     }
 
     public function __toString(): string
     {
-        $result = [];
-        $result[] = '- ' . $this->alias;
-        $result[] = '    Info: ' . $this->information;
-        $result[] = '    Context: ' . $this->context;
-
-        return \implode(PHP_EOL, $result);
+        return $this->alias . '  ' . \json_encode($this->info, JSON_PRETTY_PRINT);
     }
 }

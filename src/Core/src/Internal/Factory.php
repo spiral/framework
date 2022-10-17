@@ -54,40 +54,47 @@ final class Factory implements FactoryInterface
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
         if (!isset($this->state->bindings[$alias])) {
-            $this->tracer->traceAutowire($alias, $context);
-            //No direct instructions how to construct class, make is automatically
-            return $this->autowire($alias, $parameters, $context);
+            $this->tracer->push($alias, ['source' => 'autowiring', 'context' => $context], true);
+            try {
+                //No direct instructions how to construct class, make is automatically
+                return $this->autowire($alias, $parameters, $context);
+            } finally {
+                $this->tracer->pop();
+            }
         }
 
         $binding = $this->state->bindings[$alias];
-        $this->tracer->traceBinding($alias, $binding, $context);
-
-        if (\is_object($binding)) {
-            if ($binding::class === WeakReference::class) {
-                if ($binding->get() === null && \class_exists($alias)) {
-                    $object = $this->createInstance($alias, $parameters, $context);
-                    $binding = $this->state->bindings[$alias] = WeakReference::create($object);
-                }
-                return $binding->get();
-            }
-            //When binding is instance, assuming singleton
-            return $binding;
-        }
-
-        if (\is_string($binding)) {
-            //Binding is pointing to something else
-            return $this->make($binding, $parameters, $context);
-        }
-
-        unset($this->state->bindings[$alias]);
         try {
-            $instance = $binding[0] === $alias
-                ? $this->autowire($alias, $parameters, $context)
-                : $this->evaluateBinding($alias, $binding[0], $parameters, $context);
+            $this->tracer->push($alias, ['source' => 'binding', 'binding' => $binding, 'context' => $context], false);
+
+            if (\is_object($binding)) {
+                if ($binding::class === WeakReference::class) {
+                    if ($binding->get() === null && \class_exists($alias)) {
+                        $object = $this->createInstance($alias, $parameters, $context);
+                        $binding = $this->state->bindings[$alias] = WeakReference::create($object);
+                    }
+                    return $binding->get();
+                }
+                //When binding is instance, assuming singleton
+                return $binding;
+            }
+
+            if (\is_string($binding)) {
+                //Binding is pointing to something else
+                return $this->make($binding, $parameters, $context);
+            }
+
+            unset($this->state->bindings[$alias]);
+            try {
+                $instance = $binding[0] === $alias
+                    ? $this->autowire($alias, $parameters, $context)
+                    : $this->evaluateBinding($alias, $binding[0], $parameters, $context);
+            } finally {
+                /** @psalm-var class-string $alias */
+                $this->state->bindings[$alias] = $binding;
+            }
         } finally {
-            /** @psalm-var class-string $alias */
-            $this->state->bindings[$alias] = $binding;
-            $this->tracer->clean();
+            $this->tracer->pop();
         }
 
         if ($binding[1]) {

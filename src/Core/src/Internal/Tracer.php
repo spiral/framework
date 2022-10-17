@@ -18,30 +18,63 @@ final class Tracer implements \Stringable
     {
         $result = [];
         if ($this->traces !== []) {
-            $result[] = 'Container trace list:';
-
-            foreach ($this->traces as $item) {
-                $result[] = (string) $item;
-            }
+            $result = ['Container trace list:', ...$this->toStringList($this->traces)];
         }
 
         return \implode(PHP_EOL, $result);
     }
 
-    public function traceAutowire(string $alias, string $context = null): void
+    private function toStringList(array $items, int $level = 0): array
     {
-        $this->trace($alias, 'Autowiring', $context);
+        $result = [];
+        foreach ($items as $item) {
+            if (\is_array($item)) {
+                \array_push($result, ...$this->toStringList($item, $level + 1));
+            } else {
+                $padding ??= \str_repeat('  ', $level);
+                $result[] = "$padding- " . \str_replace("\n", "\n$padding  ", (string)$item);
+            }
+        }
+        return $result;
     }
 
-    public function traceBinding(string $alias, string|array|object $binding, string $context = null): void
+    public function push(string $alias, array $details, bool $nextLevel = false): void
     {
-        $message = match (true) {
-            \is_string($binding) => \sprintf('Binding found `%s`', $binding),
-            \is_object($binding) => \sprintf('Binding found, the instance of `%s`', $binding::class),
-            default => 'Binding found'
-        };
+        $list = &$this->traces;
+        // Find trace bag
+        if ($list === []) {
+            $init = true;
+        } else {
+            $init = false;
+            // $list = $this->traces[\array_key_last($this->traces)];
+            while (\is_array($list) && $list !== []) {
+                $key = \array_key_last($list);
+                if (!\is_array($list[$key])) {
+                    break;
+                }
+                $list = &$list[$key];
+            }
+        }
+        $trace = new Trace($alias, $details);
+        $list[] = $nextLevel && !$init
+            ? [$trace]
+            : $trace;
+    }
 
-        $this->trace($alias, $message, $context);
+    public function pop(): void
+    {
+        if ($this->traces === []) {
+            return;
+        }
+        $list = $this->traces[\array_key_last($this->traces)];
+        while (\is_array($list)) {
+            $key = \array_key_last($list);
+            if (!\is_array($list[$key])) {
+                continue;
+            }
+            $list = &$list[$key];
+        }
+        $list = [];
     }
 
     public function getRootConstructedClass(): string
@@ -52,10 +85,5 @@ final class Tracer implements \Stringable
     public function clean(): void
     {
         $this->traces = [];
-    }
-
-    private function trace(string $alias, string $information, string $context = null): void
-    {
-        $this->traces[] = new Trace($alias, $information, $context);
     }
 }
