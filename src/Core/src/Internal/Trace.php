@@ -12,9 +12,10 @@ use Spiral\Core\Exception\Traits\ClosureRendererTrait;
  */
 final class Trace implements \Stringable
 {
+    use ClosureRendererTrait;
+
     private const ARRAY_MAX_LEVEL = 3;
 
-    use ClosureRendererTrait;
     public readonly ?string $alias;
 
     public function __construct(
