@@ -14,7 +14,7 @@ final class InvalidArgumentException extends ValidationException
         \ReflectionFunctionAbstract $reflection,
         private readonly string $parameter
     ) {
-        $pattern = "Invalid argument value type for the `$parameter` parameter when validating arguments for `%s` %s.";
+        $pattern = "Invalid argument value type for the `$parameter` parameter when validating arguments for `%s`.";
         parent::__construct($this->renderFunctionAndParameter($reflection, $pattern));
     }
 

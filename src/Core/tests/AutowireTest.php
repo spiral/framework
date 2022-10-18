@@ -6,6 +6,7 @@ namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
+use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
@@ -121,7 +122,9 @@ class AutowireTest extends TestCase
 
     public function testAutowireException(): void
     {
-        $this->expectExceptionMessage('Undefined class or binding `WrongClass`');
+        $this->expectExceptionMessage(
+            'Can\'t resolve `Spiral\Tests\Core\Fixtures\DependedClass`: undefined class or binding `WrongClass`.'
+        );
         $this->expectException(NotFoundException::class);
         $container = new Container();
 
@@ -436,7 +439,8 @@ class AutowireTest extends TestCase
 
     private function expectValidationException(string $parameter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        // $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ContainerException::class);
         $this->expectExceptionMessage(
             "Invalid argument value type for the `$parameter` parameter when validating arguments"
         );

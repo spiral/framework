@@ -70,7 +70,9 @@ final class CommonCasesTest extends BaseTest
     public function testNotInstantiableTrait(): void
     {
         $this->expectException(ContainerException::class);
-        $this->expectExceptionMessage('Undefined class or binding `Spiral\Tests\Core\Stub\TestTrait`.');
+        $this->expectExceptionMessage(
+            'Can\'t resolve `Spiral\Tests\Core\Stub\TestTrait`: undefined class or binding `Spiral\Tests\Core\Stub\TestTrait`.'
+        );
 
         $this->resolveClosure(
             static function (TestTrait $enum) {},
