@@ -55,7 +55,7 @@ final class Factory implements FactoryInterface
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
         if (!isset($this->state->bindings[$alias])) {
-            $this->tracer->push(false, alias: $alias, source: 'autowiring', context: $context);
+            $this->tracer->push(false, action: 'autowire', alias: $alias, context: $context);
             try {
                 //No direct instructions how to construct class, make is automatically
                 return $this->autowire($alias, $parameters, $context);
@@ -66,7 +66,7 @@ final class Factory implements FactoryInterface
 
         $binding = $this->state->bindings[$alias];
         try {
-            $this->tracer->push(false, alias: $alias, source: 'binding', binding: $binding, context: $context);
+            $this->tracer->push(false, alias: $alias, action: 'get from binding', binding: $binding, context: $context);
 
             if (\is_object($binding)) {
                 if ($binding::class === WeakReference::class) {
@@ -245,6 +245,8 @@ final class Factory implements FactoryInterface
 
         if ($constructor !== null) {
             try {
+                $this->tracer->push(false, action: 'resolve arguments', signature: $constructor);
+                $this->tracer->push(true);
                 $arguments = $this->resolver->resolveArguments($constructor, $parameters);
             } catch (ValidationException $e) {
                 throw new ContainerException(
@@ -256,6 +258,9 @@ final class Factory implements FactoryInterface
                         )
                     ),
                 );
+            } finally {
+                $this->tracer->pop(true);
+                $this->tracer->pop(false);
             }
             try {
                 // Using constructor with resolved arguments

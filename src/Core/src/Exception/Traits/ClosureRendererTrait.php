@@ -38,7 +38,7 @@ trait ClosureRendererTrait
         return \sprintf($pattern, $method, $fileAndLine);
     }
 
-    private function renderClosureSignature(ReflectionFunction $reflection): string
+    private function renderClosureSignature(\ReflectionFunctionAbstract $reflection): string
     {
         $closureParameters = [];
 

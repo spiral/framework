@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
-use Closure;
 use ReflectionFunction;
 use Spiral\Core\Exception\Traits\ClosureRendererTrait;
 
@@ -38,7 +37,9 @@ final class Trace implements \Stringable
         return match (true) {
             \is_string($item) => "'$item'",
             \is_scalar($item) => \var_export($item, true),
-            $item instanceof Closure => $this->renderClosureSignature(new ReflectionFunction($item)),
+            $item instanceof \Closure => $this->renderClosureSignature(new \ReflectionFunction($item)),
+            $item instanceof \ReflectionFunctionAbstract => $this->renderClosureSignature($item),
+            $item instanceof \UnitEnum => $item::class . "::$item->name",
             \is_object($item) => 'instance of ' . $item::class,
             \is_array($item) => $this->renderArray($item),
             default => \gettype($item),
