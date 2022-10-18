@@ -22,7 +22,6 @@ use Spiral\Tests\Events\Fixtures\Listener\MethodAttribute;
 use Spiral\Tests\Events\Fixtures\Listener\MethodAttributeWithParameters;
 use Spiral\Tests\Events\Stub\PlainListenerRegistry;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
-use Spiral\Events\Attribute;
 
 final class AttributeProcessorTest extends TestCase
 {

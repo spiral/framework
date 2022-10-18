@@ -6,6 +6,8 @@
 - **Other Features**
   - [spiral/queue] Added the ability to pass headers in the `headers` parameter in the job handlers.
   - [spiral/telemetry] Added new component
+  - [spiral/queue] Added new option `headers` in the `Spiral\Queue\Options` and new interface `Spiral\Queue\ExtendedOptionsInterface`.
+  - [spiral/events] Added event interceptors.
 
 ## v3.1.0 - 2022-09-29
 - **Other Features**

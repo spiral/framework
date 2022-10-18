@@ -9,10 +9,14 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\FinalizerInterface;
+use Spiral\Config\ConfigManager;
+use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Events\Bootloader\EventsBootloader;
 use Spiral\Events\Config\EventsConfig;
+use Spiral\Events\EventDispatcher;
 use Spiral\Events\EventDispatcherAwareInterface;
 use Spiral\Events\ListenerFactoryInterface;
 use Spiral\Events\ListenerProcessorRegistry;
@@ -70,14 +74,8 @@ final class EventsBootloaderTest extends BaseTest
     public function testStringProcessorsShouldBeProcessed(): void
     {
         $bootloader = $this->getContainer()->get(EventsBootloader::class);
-        $container = m::mock(ContainerInterface::class);
-
-        $container->shouldReceive('get')
-            ->once()
-            ->with('foo')
-            ->andReturn(
-                $processor = m::mock(ProcessorInterface::class)
-            );
+        $container = new Container();
+        $container->bind('foo', $processor = m::mock(ProcessorInterface::class));
 
         $kernel = $this->getContainer()->get(AbstractKernel::class);
 
@@ -158,6 +156,48 @@ final class EventsBootloaderTest extends BaseTest
             kernel: $kernel,
             finalizer: $finalizer,
             eventDispatcher: $dispatcher
+        );
+    }
+
+    public function testAddInterceptor(): void
+    {
+        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs->setDefaults(EventsConfig::CONFIG, ['interceptors' => []]);
+
+        $interceptor = $this->createMock(CoreInterceptorInterface::class);
+        $autowire = new Container\Autowire('foo');
+
+        $bootloader = new EventsBootloader($configs);
+        $bootloader->addInterceptor('foo');
+        $bootloader->addInterceptor($interceptor);
+        $bootloader->addInterceptor($autowire);
+
+        $this->assertSame([
+            'foo', $interceptor, $autowire
+        ], $configs->getConfig(EventsConfig::CONFIG)['interceptors']);
+    }
+
+    public function testEventDispatcherShouldBeWrapped(): void
+    {
+        $bootloader = $this->getContainer()->get(EventsBootloader::class);
+        $kernel = $this->getContainer()->get(AbstractKernel::class);
+
+        $finalizer = m::mock(FinalizerInterface::class, EventDispatcherAwareInterface::class);
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $finalizer->shouldReceive('setEventDispatcher')->once()->with($dispatcher);
+        $this->getContainer()->bind(EventDispatcherInterface::class, $dispatcher);
+
+        $this->bootBootloader(
+            bootloader: $bootloader,
+            kernel: $kernel,
+            container: $this->getContainer(),
+            finalizer: $finalizer,
+            eventDispatcher: $dispatcher
+        );
+
+        $this->assertInstanceOf(
+            EventDispatcher::class,
+            $this->getContainer()->get(EventDispatcherInterface::class)
         );
     }
 
