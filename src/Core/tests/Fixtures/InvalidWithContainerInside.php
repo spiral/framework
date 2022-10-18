@@ -6,9 +6,9 @@ namespace Spiral\Tests\Core\Fixtures;
 
 use Psr\Container\ContainerInterface;
 
-final class WithContainerInside
+final class InvalidWithContainerInside
 {
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, InvalidClass $class)
     {
         $container->get('invalid');
     }

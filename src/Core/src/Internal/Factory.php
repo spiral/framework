@@ -65,49 +65,44 @@ final class Factory implements FactoryInterface
         }
 
         $binding = $this->state->bindings[$alias];
-        try {
-            $this->tracer->push($alias, false, source: 'binding', binding: $binding, context: $context);
+        $this->tracer->push($alias, false, source: 'binding', binding: $binding, context: $context);
 
-            if (\is_object($binding)) {
-                if ($binding::class === WeakReference::class) {
-                    if ($binding->get() === null && \class_exists($alias)) {
-                        try {
-                            $this->tracer->push($alias, false, source: WeakReference::class, context: $context);
-                            $object = $this->createInstance($alias, $parameters, $context);
-                            $binding = $this->state->bindings[$alias] = WeakReference::create($object);
-                        } catch (\Throwable) {
-                            throw new ContainerException($this->tracer->combineTraceMessage(\sprintf(
-                                'Can\'t resolve `%s`: can\'t instantiate `%s` from WeakReference binding.',
-                                $this->tracer->getRootAlias(),
-                                $alias,
-                            )));
-                        } finally {
-                            $this->tracer->pop();
-                        }
+        if (\is_object($binding)) {
+            if ($binding::class === WeakReference::class) {
+                if ($binding->get() === null && \class_exists($alias)) {
+                    try {
+                        $this->tracer->push($alias, false, source: WeakReference::class, context: $context);
+                        $object = $this->createInstance($alias, $parameters, $context);
+                        $binding = $this->state->bindings[$alias] = WeakReference::create($object);
+                    } catch (\Throwable) {
+                        throw new ContainerException($this->tracer->combineTraceMessage(\sprintf(
+                            'Can\'t resolve `%s`: can\'t instantiate `%s` from WeakReference binding.',
+                            $this->tracer->getRootAlias(),
+                            $alias,
+                        )));
+                    } finally {
+                        $this->tracer->pop();
                     }
-                    return $binding->get();
                 }
-                //When binding is instance, assuming singleton
-                return $binding;
+                return $binding->get();
             }
-            $this->tracer->push($alias, false, source: 'binding', binding: $binding, context: $context);
+            //When binding is instance, assuming singleton
+            return $binding;
+        }
 
-            if (\is_string($binding)) {
-                //Binding is pointing to something else
-                return $this->make($binding, $parameters, $context);
-            }
+        if (\is_string($binding)) {
+            //Binding is pointing to something else
+            return $this->make($binding, $parameters, $context);
+        }
 
-            unset($this->state->bindings[$alias]);
-            try {
-                $instance = $binding[0] === $alias
-                    ? $this->autowire($alias, $parameters, $context)
-                    : $this->evaluateBinding($alias, $binding[0], $parameters, $context);
-            } finally {
-                /** @psalm-var class-string $alias */
-                $this->state->bindings[$alias] = $binding;
-            }
+        unset($this->state->bindings[$alias]);
+        try {
+            $instance = $binding[0] === $alias
+                ? $this->autowire($alias, $parameters, $context)
+                : $this->evaluateBinding($alias, $binding[0], $parameters, $context);
         } finally {
-            $this->tracer->pop(false);
+            /** @psalm-var class-string $alias */
+            $this->state->bindings[$alias] = $binding;
         }
 
         if ($binding[1]) {

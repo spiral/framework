@@ -6,6 +6,7 @@ namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\AutowireException;
@@ -13,6 +14,7 @@ use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency;
 use Spiral\Tests\Core\Fixtures\IntersectionTypes;
+use Spiral\Tests\Core\Fixtures\InvalidWithContainerInside;
 use Spiral\Tests\Core\Fixtures\WithContainerInside;
 use Spiral\Tests\Core\Fixtures\WithPrivateConstructor;
 
@@ -83,7 +85,39 @@ class ExceptionsTest extends TestCase
         $this->expectException(ContainerException::class);
         $this->expectExceptionMessage(
             <<<MARKDOWN
-            Can't resolve `Spiral\Tests\Core\Fixtures\WithContainerInside`: undefined class or binding `Spiral\Tests\Core\Fixtures\InvalidClass`.
+            Can't resolve `Spiral\Tests\Core\Fixtures\InvalidWithContainerInside`: undefined class or binding `Spiral\Tests\Core\Fixtures\InvalidClass`.
+            Container trace list:
+            - Spiral\Tests\Core\Fixtures\InvalidWithContainerInside
+              source: 'autowiring'
+              context: NULL
+            - Psr\Container\ContainerInterface
+              source: 'binding'
+              binding: 'Spiral\Core\Container'
+              context: 'container'
+            - Spiral\Core\Container
+              source: 'binding'
+              binding: instance of WeakReference
+              context: 'container'
+            - Spiral\Tests\Core\Fixtures\InvalidClass
+              source: 'autowiring'
+              context: 'class'
+            MARKDOWN,
+        );
+
+        $container->get(InvalidWithContainerInside::class);
+    }
+
+    /**
+     * Broken dependency in a constructor body.
+     */
+    public function testExceptionTraceWithInvalidDependencyInConstructorBody(): void
+    {
+        $container = new Container();
+
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage(
+            <<<MARKDOWN
+            Can't resolve `Spiral\Tests\Core\Fixtures\WithContainerInside`: undefined class or binding `invalid`.
             Container trace list:
             - Spiral\Tests\Core\Fixtures\WithContainerInside
               source: 'autowiring'
@@ -92,13 +126,50 @@ class ExceptionsTest extends TestCase
               source: 'binding'
               binding: 'Spiral\Core\Container'
               context: 'container'
-            - Spiral\Tests\Core\Fixtures\InvalidClass
+            - Spiral\Core\Container
+              source: 'binding'
+              binding: instance of WeakReference
+              context: 'container'
+            - invalid
               source: 'autowiring'
-              context: 'class'
+              context: NULL
             MARKDOWN,
         );
 
         $container->get(WithContainerInside::class);
+    }
+
+    public function testOldTraceShouldBeCleared(): void
+    {
+        $container = new Container();
+
+        try {
+            $container->get('invalid');
+        } catch (ContainerException $e) {
+            $this->assertSame(
+                $e->getMessage(),
+                <<<MARKDOWN
+                Can't resolve `invalid`: undefined class or binding `invalid`.
+                Container trace list:
+                - invalid
+                  source: 'autowiring'
+                  context: NULL
+                MARKDOWN
+            );
+        }
+
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage(
+            <<<MARKDOWN
+            Can't resolve ``: undefined class or binding `invalid-other`.
+            Container trace list:
+            - invalid-other
+              source: 'autowiring'
+              context: NULL
+            MARKDOWN
+        );
+
+        $container->get('invalid-other');
     }
 
     /**
@@ -122,6 +193,12 @@ class ExceptionsTest extends TestCase
 
         $withClosure = new Container();
         $withClosure->bind('Spiral\Tests\Core\Fixtures\InvalidClass', static fn() => 'FooBar');
+
+        $closureWithContainer = new Container();
+        $closureWithContainer->bind(
+            'Spiral\Tests\Core\Fixtures\InvalidClass',
+            static fn(ContainerInterface $container) => $container->get('invalid')
+        );
 
         yield [
             new Container(),
@@ -148,10 +225,6 @@ class ExceptionsTest extends TestCase
               source: 'binding'
               binding: array
               context: 'class'
-            - Spiral\Tests\Core\Fixtures\InvalidClass
-              source: 'binding'
-              binding: array
-              context: 'class'
             MARKDOWN
         ];
         yield [
@@ -162,10 +235,6 @@ class ExceptionsTest extends TestCase
             - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
               source: 'autowiring'
               context: NULL
-            - Spiral\Tests\Core\Fixtures\InvalidClass
-              source: 'binding'
-              binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
-              context: 'class'
             - Spiral\Tests\Core\Fixtures\InvalidClass
               source: 'binding'
               binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
@@ -187,6 +256,31 @@ class ExceptionsTest extends TestCase
               source: 'binding'
               binding: array
               context: 'class'
+            MARKDOWN
+        ];
+        yield [
+            $closureWithContainer,
+            <<<MARKDOWN
+            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `invalid`.
+            Container trace list:
+            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+              source: 'autowiring'
+              context: NULL
+            - Spiral\Tests\Core\Fixtures\InvalidClass
+              source: 'binding'
+              binding: array
+              context: 'class'
+            - Psr\Container\ContainerInterface
+              source: 'binding'
+              binding: 'Spiral\Core\Container'
+              context: 'container'
+            - Spiral\Core\Container
+              source: 'binding'
+              binding: instance of WeakReference
+              context: 'container'
+            - invalid
+              source: 'autowiring'
+              context: NULL
             MARKDOWN
         ];
     }
