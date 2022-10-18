@@ -12,7 +12,6 @@ use Spiral\Logger\LogsInterface;
 
 final class LogTracer implements TracerInterface
 {
-    private ?array $context = null;
     private readonly LoggerInterface $logger;
 
     public function __construct(
@@ -46,7 +45,6 @@ final class LogTracer implements TracerInterface
         $this->logger->debug(\sprintf('Trace [%s] - [%01.4f ms.]', $name, $elapsed / 1_000_000_000), [
             'attributes' => $span->getAttributes(),
             'status' => $span->getStatus(),
-            'context' => $this->getContext(),
             'scoped' => $scoped,
             'trace_kind' => $traceKind,
             'elapsed' => $elapsed,
@@ -55,16 +53,13 @@ final class LogTracer implements TracerInterface
         return $result;
     }
 
-    public function withContext(mixed $context): self
+    public function withContext(?array $context): self
     {
-        $self = clone $this;
-        $self->context = $context;
-
-        return $self;
+        return $this;
     }
 
     public function getContext(): ?array
     {
-        return $this->context;
+        return null;
     }
 }

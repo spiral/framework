@@ -11,8 +11,6 @@ use Spiral\Core\ScopeInterface;
 
 final class NullTracer implements TracerInterface
 {
-    private ?array $context = null;
-
     public function __construct(
         private readonly ?ScopeInterface $scope = new Container(),
     ) {
@@ -34,16 +32,13 @@ final class NullTracer implements TracerInterface
         ], static fn (): mixed => ContainerScope::getContainer()->get(InvokerInterface::class)->invoke($callback));
     }
 
-    public function withContext(mixed $context): self
+    public function withContext(?array $context): self
     {
-        $self = clone $this;
-        $self->context = $context;
-
-        return $self;
+        return $this;
     }
 
     public function getContext(): ?array
     {
-        return $this->context;
+        return null;
     }
 }
