@@ -31,12 +31,12 @@ final class Tracer implements \Stringable
         return "$header\n$this";
     }
 
-    public function push(string $alias, bool $nextLevel = false, mixed ...$details): void
+    public function push(bool $nextLevel, mixed ...$details): void
     {
-        $trace = new Trace($alias, $details);
+        $trace = $details === [] ? null : new Trace($details);
         if ($nextLevel || $this->traces === []) {
-            $this->traces[] = [$trace];
-        } else {
+            $this->traces[] = $trace === null ? [] : [$trace];
+        } elseif ($trace !== null) {
             $this->traces[\array_key_last($this->traces)][] = $trace;
         }
     }
@@ -53,9 +53,6 @@ final class Tracer implements \Stringable
         $key = \array_key_last($this->traces);
         $list = &$this->traces[$key];
         \array_pop($list);
-        if ($list === []) {
-            unset($this->traces[$key]);
-        }
     }
 
     public function getRootAlias(): string

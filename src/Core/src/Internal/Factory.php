@@ -55,7 +55,7 @@ final class Factory implements FactoryInterface
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
         if (!isset($this->state->bindings[$alias])) {
-            $this->tracer->push($alias, false, source: 'autowiring', context: $context);
+            $this->tracer->push(false, alias: $alias, source: 'autowiring', context: $context);
             try {
                 //No direct instructions how to construct class, make is automatically
                 return $this->autowire($alias, $parameters, $context);
@@ -66,13 +66,13 @@ final class Factory implements FactoryInterface
 
         $binding = $this->state->bindings[$alias];
         try {
-            $this->tracer->push($alias, false, source: 'binding', binding: $binding, context: $context);
+            $this->tracer->push(false, alias: $alias, source: 'binding', binding: $binding, context: $context);
 
             if (\is_object($binding)) {
                 if ($binding::class === WeakReference::class) {
                     if ($binding->get() === null && \class_exists($alias)) {
                         try {
-                            $this->tracer->push($alias, false, source: WeakReference::class, context: $context);
+                            $this->tracer->push(false, alias: $alias, source: WeakReference::class, context: $context);
                             $object = $this->createInstance($alias, $parameters, $context);
                             $binding = $this->state->bindings[$alias] = WeakReference::create($object);
                         } catch (\Throwable) {
@@ -259,12 +259,14 @@ final class Factory implements FactoryInterface
             }
             try {
                 // Using constructor with resolved arguments
-                $this->tracer->push($class, true, ...['constructor', ...$arguments]);
+                $this->tracer->push(false, call: "$class::__construct", arguments: $arguments);
+                $this->tracer->push(true);
                 $instance = new $class(...$arguments);
             } catch (\TypeError $e) {
                 throw new WrongTypeException($constructor, $e);
             } finally {
                 $this->tracer->pop(true);
+                $this->tracer->pop(false);
             }
         } else {
             // No constructor specified

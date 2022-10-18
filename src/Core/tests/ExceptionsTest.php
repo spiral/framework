@@ -87,10 +87,10 @@ class ExceptionsTest extends TestCase
             <<<MARKDOWN
             Can't resolve `Spiral\Tests\Core\Fixtures\InvalidWithContainerInside`: undefined class or binding `Spiral\Tests\Core\Fixtures\InvalidClass`.
             Container trace list:
-            - Spiral\Tests\Core\Fixtures\InvalidWithContainerInside
+            - alias: 'Spiral\Tests\Core\Fixtures\InvalidWithContainerInside'
               source: 'autowiring'
               context: NULL
-            - Spiral\Tests\Core\Fixtures\InvalidClass
+            - alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
               source: 'autowiring'
               context: 'class'
             MARKDOWN,
@@ -111,13 +111,14 @@ class ExceptionsTest extends TestCase
             <<<MARKDOWN
             Can't resolve `Spiral\Tests\Core\Fixtures\WithContainerInside`: undefined class or binding `invalid`.
             Container trace list:
-            - Spiral\Tests\Core\Fixtures\WithContainerInside
+            - alias: 'Spiral\Tests\Core\Fixtures\WithContainerInside'
               source: 'autowiring'
               context: NULL
-              - Spiral\Tests\Core\Fixtures\WithContainerInside
-                0: 'constructor'
-                1: instance of Spiral\Core\Container
-              - invalid
+            - call: 'Spiral\Tests\Core\Fixtures\WithContainerInside::__construct'
+              arguments: [
+                0: instance of Spiral\Core\Container
+              ]
+              - alias: 'invalid'
                 source: 'autowiring'
                 context: NULL
             MARKDOWN,
@@ -134,23 +135,24 @@ class ExceptionsTest extends TestCase
             $container->get('invalid');
         } catch (ContainerException $e) {
             $this->assertSame(
-                $e->getMessage(),
                 <<<MARKDOWN
                 Can't resolve `invalid`: undefined class or binding `invalid`.
                 Container trace list:
-                - invalid
+                - alias: 'invalid'
                   source: 'autowiring'
                   context: NULL
-                MARKDOWN
+                MARKDOWN,
+                $e->getMessage(),
             );
         }
 
+        // TODO fix error message
         $this->expectException(ContainerException::class);
         $this->expectExceptionMessage(
             <<<MARKDOWN
-            Can't resolve ``: undefined class or binding `invalid-other`.
+            Can't resolve `invalid-other`: undefined class or binding `invalid-other`.
             Container trace list:
-            - invalid-other
+            - alias: 'invalid-other'
               source: 'autowiring'
               context: NULL
             MARKDOWN
@@ -187,73 +189,81 @@ class ExceptionsTest extends TestCase
             static fn(ContainerInterface $container) => $container->get('invalid')
         );
 
-        yield [
+        yield 'empty container' => [
             new Container(),
             <<<MARKDOWN
             Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `Spiral\Tests\Core\Fixtures\InvalidClass`.
             Container trace list:
-            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+            - alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
               source: 'autowiring'
               context: NULL
-            - Spiral\Tests\Core\Fixtures\InvalidClass
+            - alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
               source: 'autowiring'
               context: 'class'
             MARKDOWN
         ];
-        yield [
+        yield 'binding' => [
             $binding,
             <<<MARKDOWN
             Invalid binding for `Spiral\Tests\Core\Fixtures\InvalidClass`.
             Container trace list:
-            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+            - alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
               source: 'autowiring'
               context: NULL
-            - Spiral\Tests\Core\Fixtures\InvalidClass
+            - alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
               source: 'binding'
-              binding: array
+              binding: [
+                0: [
+                  0: 'invalid'
+                ],
+                1: false
+              ]
               context: 'class'
             MARKDOWN
         ];
-        yield [
+        yield 'notConstructed' => [
             $notConstructed,
             <<<MARKDOWN
             Class `Spiral\Tests\Core\Fixtures\WithPrivateConstructor` can not be constructed.
             Container trace list:
-            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+            - alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
               source: 'autowiring'
               context: NULL
-            - Spiral\Tests\Core\Fixtures\InvalidClass
+            - alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
               source: 'binding'
               binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
               context: 'class'
-            - Spiral\Tests\Core\Fixtures\WithPrivateConstructor
+            - alias: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
               source: 'autowiring'
               context: 'class'
             MARKDOWN
         ];
-        yield [
+        yield 'withClosure' => [
             $withClosure,
             <<<MARKDOWN
             Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`. Invalid argument value type for the `class` parameter when validating arguments for `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency::__construct`.
             Container trace list:
-            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+            - alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
               source: 'autowiring'
               context: NULL
             MARKDOWN
         ];
-        yield [
+        yield 'closureWithContainer' => [
             $closureWithContainer,
-            <<<MARKDOWN
+            <<<'MARKDOWN'
             Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `invalid`.
             Container trace list:
-            - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
+            - alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
               source: 'autowiring'
               context: NULL
-            - Spiral\Tests\Core\Fixtures\InvalidClass
+            - alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
               source: 'binding'
-              binding: array
+              binding: [
+                0: static function (Psr\Container\ContainerInterface $container),
+                1: false
+              ]
               context: 'class'
-            - invalid
+            - alias: 'invalid'
               source: 'autowiring'
               context: NULL
             MARKDOWN

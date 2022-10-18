@@ -13,17 +13,20 @@ use Spiral\Core\Exception\Traits\ClosureRendererTrait;
  */
 final class Trace implements \Stringable
 {
+    private const ARRAY_MAX_LEVEL = 3;
+
     use ClosureRendererTrait;
+    public readonly ?string $alias;
 
     public function __construct(
-        public readonly string $alias,
-        public array $info,
+        public array $info = [],
     ) {
+        $this->alias = $info['alias'] ?? null;
     }
 
     public function __toString(): string
     {
-        $info = [$this->alias];
+        $info = [];
         foreach ($this->info as $key => $item) {
             $info[] = "$key: {$this->stringifyValue($item)}";
         }
@@ -34,10 +37,34 @@ final class Trace implements \Stringable
     {
         return match (true) {
             \is_string($item) => "'$item'",
-            \is_scalar($item) => (string)$item,
+            \is_scalar($item) => \var_export($item, true),
             $item instanceof Closure => $this->renderClosureSignature(new ReflectionFunction($item)),
             \is_object($item) => 'instance of ' . $item::class,
+            \is_array($item) => $this->renderArray($item),
             default => \gettype($item),
         };
+    }
+
+    private function renderArray(array $array, int $level = 0): string
+    {
+        if ($array === []) {
+            return '[]';
+        }
+        if ($level >= self::ARRAY_MAX_LEVEL) {
+            return 'array';
+        }
+        $result = [];
+        foreach ($array as $key => $value) {
+            $result[] = \sprintf(
+                '%s: %s',
+                $key,
+                \is_array($value)
+                    ? $this->renderArray($value, $level + 1)
+                    : $this->stringifyValue($value),
+            );
+        }
+
+        $pad = \str_repeat('  ', $level);
+        return "[\n  $pad" . \implode(",\n  $pad", $result) . "\n$pad]";
     }
 }
