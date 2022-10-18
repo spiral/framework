@@ -194,7 +194,7 @@ final class Factory implements FactoryInterface
         try {
             $reflection = new \ReflectionClass($class);
         } catch (\ReflectionException $e) {
-            throw new ContainerException($e->getMessage(), $e->getCode(), $e, $this->tracer);
+            throw new ContainerException($e->getMessage(), $e->getCode(), $e);
         }
 
         //We have to construct class using external injector when we know exact context
