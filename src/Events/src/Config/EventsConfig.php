@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace Spiral\Events\Config;
 
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InjectableConfig;
 use Spiral\Events\Processor\ProcessorInterface;
 
 /**
  * @psalm-type TProcessor = ProcessorInterface|class-string<ProcessorInterface>|Autowire<ProcessorInterface>
  * @psalm-type TListener = class-string|EventListener
+ * @psalm-type TInterceptor = class-string<CoreInterceptorInterface>|CoreInterceptorInterface|Autowire<CoreInterceptorInterface>
  * @property array{
  *     processors: TProcessor[],
- *     listeners: array<class-string, TListener[]>
+ *     listeners: array<class-string, TListener[]>,
+ *     interceptors: TInterceptor[]
  * } $config
  */
 final class EventsConfig extends InjectableConfig
@@ -23,6 +26,7 @@ final class EventsConfig extends InjectableConfig
     protected array $config = [
         'processors' => [],
         'listeners' => [],
+        'interceptors' => [],
     ];
 
     /**
@@ -49,6 +53,14 @@ final class EventsConfig extends InjectableConfig
     public function getProcessors(): array
     {
         return $this->config['processors'];
+    }
+
+    /**
+     * @return TInterceptor[]
+     */
+    public function getInterceptors(): array
+    {
+        return $this->config['interceptors'];
     }
 
     /**
