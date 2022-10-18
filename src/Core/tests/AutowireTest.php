@@ -6,6 +6,7 @@ namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
+use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
@@ -438,7 +439,8 @@ class AutowireTest extends TestCase
 
     private function expectValidationException(string $parameter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        // $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ContainerException::class);
         $this->expectExceptionMessage(
             "Invalid argument value type for the `$parameter` parameter when validating arguments"
         );

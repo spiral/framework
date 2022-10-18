@@ -4,26 +4,40 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
+use Closure;
+use ReflectionFunction;
+use Spiral\Core\Exception\Traits\ClosureRendererTrait;
+
 /**
  * @internal
  */
 final class Trace implements \Stringable
 {
+    use ClosureRendererTrait;
+
     public function __construct(
         public readonly string $alias,
-        public readonly string $information,
-        public ?string $context = null
+        public array $info,
     ) {
-        $this->context ??= '-';
     }
 
     public function __toString(): string
     {
-        $result = [];
-        $result[] = '- ' . $this->alias;
-        $result[] = '    Info: ' . $this->information;
-        $result[] = '    Context: ' . $this->context;
+        $info = [$this->alias];
+        foreach ($this->info as $key => $item) {
+            $info[] = "$key: {$this->stringifyValue($item)}";
+        }
+        return \implode("\n", $info);
+    }
 
-        return \implode(PHP_EOL, $result);
+    private function stringifyValue(mixed $item): string
+    {
+        return match (true) {
+            \is_string($item) => "'$item'",
+            \is_scalar($item) => (string)$item,
+            $item instanceof Closure => $this->renderClosureSignature(new ReflectionFunction($item)),
+            \is_object($item) => 'instance of ' . $item::class,
+            default => \gettype($item),
+        };
     }
 }

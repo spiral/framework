@@ -10,52 +10,89 @@ namespace Spiral\Core\Internal;
 final class Tracer implements \Stringable
 {
     /**
-     * @var Trace[]
+     * Trace blocks
+     *
+     * @var Trace[][]
      */
     private array $traces = [];
 
     public function __toString(): string
     {
-        $result = [];
-        if ($this->traces !== []) {
-            $result[] = 'Container trace list:';
+        return $this->traces === [] ? '' : "Container trace list:\n" . $this->renderTraceList($this->traces);
+    }
 
-            foreach ($this->traces as $item) {
-                $result[] = (string) $item;
-            }
+    /**
+     * @param string $header Message before stack list
+     * @param bool $lastBlock Generate trace list only for last block
+     * @param bool $clear Remove touched trace list
+     */
+    public function combineTraceMessage(string $header, bool $lastBlock = false, bool $clear = false): string
+    {
+        return "$header\n$this";
+    }
+
+    public function push(string $alias, bool $nextLevel = false, mixed ...$details): void
+    {
+        $trace = new Trace($alias, $details);
+        if ($nextLevel || $this->traces === []) {
+            $this->traces[] = [$trace];
+        } else {
+            $this->traces[\array_key_last($this->traces)][] = $trace;
         }
-
-        return \implode(PHP_EOL, $result);
     }
 
-    public function traceAutowire(string $alias, string $context = null): void
+    public function pop(bool $previousLevel = false): void
     {
-        $this->trace($alias, 'Autowiring', $context);
+        if ($this->traces === []) {
+            return;
+        }
+        if ($previousLevel) {
+            \array_pop($this->traces);
+            return;
+        }
+        $key = \array_key_last($this->traces);
+        $list = &$this->traces[$key];
+        \array_pop($list);
+        if ($list === []) {
+            unset($this->traces[$key]);
+        }
     }
 
-    public function traceBinding(string $alias, string|array|object $binding, string $context = null): void
+    public function getRootAlias(): string
     {
-        $message = match (true) {
-            \is_string($binding) => \sprintf('Binding found `%s`', $binding),
-            \is_object($binding) => \sprintf('Binding found, the instance of `%s`', $binding::class),
-            default => 'Binding found'
-        };
-
-        $this->trace($alias, $message, $context);
+        return $this->traces[0][0]->alias ?? '';
     }
 
-    public function getRootConstructedClass(): string
+    /**
+     * @param Trace[][] $blocks
+     */
+    private function renderTraceList(array $blocks): string
     {
-        return $this->traces[0]->alias;
+        $result = [];
+        $i = 0;
+        foreach ($blocks as $block) {
+            \array_push($result, ...$this->blockToStringList($block, $i++));
+        }
+        return \implode("\n", $result);
     }
 
-    public function clean(): void
+    /**
+     * @param Trace[] $items
+     * @param int<0, max> $level
+     *
+     * @return string[]
+     */
+    private function blockToStringList(array $items, int $level = 0): array
     {
-        $this->traces = [];
-    }
-
-    private function trace(string $alias, string $information, string $context = null): void
-    {
-        $this->traces[] = new Trace($alias, $information, $context);
+        $result = [];
+        $padding = \str_repeat('  ', $level);
+        $firstPrefix = "$padding- ";
+        // Separator
+        $s = "\n";
+        $nexPrefix = "$s$padding  ";
+        foreach ($items as $item) {
+            $result[] = $firstPrefix . \str_replace($s, $nexPrefix, (string)$item);
+        }
+        return $result;
     }
 }
