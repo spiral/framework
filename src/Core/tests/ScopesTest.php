@@ -97,4 +97,20 @@ class ScopesTest extends TestCase
         $this->assertSame('a', $c->get('bucket')->getName());
         $this->assertFalse($c->has('other'));
     }
+
+    public function testContainerInScope(): void
+    {
+        $container = new Container();
+
+        $this->assertSame(
+            $container,
+            ContainerScope::runScope($container, static fn (ContainerInterface $container) => $container)
+        );
+
+        $result = ContainerScope::runScope($container, static function (Container $container) {
+            return $container->runScope([], static fn (Container $container) => $container);
+        });
+
+        $this->assertSame($container, $result);
+    }
 }

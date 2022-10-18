@@ -34,7 +34,7 @@ final class ContainerScope
         [$previous, self::$container] = [self::$container, $container];
 
         try {
-            return $scope();
+            return $scope(self::$container);
         } finally {
             self::$container = $previous;
         }
