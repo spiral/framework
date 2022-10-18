@@ -92,9 +92,9 @@ class ExceptionsTest extends TestCase
               source: 'binding'
               binding: 'Spiral\Core\Container'
               context: 'container'
-              - Spiral\Tests\Core\Fixtures\InvalidClass
-                source: 'autowiring'
-                context: 'class'
+            - Spiral\Tests\Core\Fixtures\InvalidClass
+              source: 'autowiring'
+              context: 'class'
             MARKDOWN,
         );
 
@@ -131,9 +131,9 @@ class ExceptionsTest extends TestCase
             - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
               source: 'autowiring'
               context: NULL
-              - Spiral\Tests\Core\Fixtures\InvalidClass
-                source: 'autowiring'
-                context: 'class'
+            - Spiral\Tests\Core\Fixtures\InvalidClass
+              source: 'autowiring'
+              context: 'class'
             MARKDOWN
         ];
         yield [
@@ -170,9 +170,9 @@ class ExceptionsTest extends TestCase
               source: 'binding'
               binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
               context: 'class'
-              - Spiral\Tests\Core\Fixtures\WithPrivateConstructor
-                source: 'autowiring'
-                context: 'class'
+            - Spiral\Tests\Core\Fixtures\WithPrivateConstructor
+              source: 'autowiring'
+              context: 'class'
             MARKDOWN
         ];
         yield [
