@@ -65,44 +65,48 @@ final class Factory implements FactoryInterface
         }
 
         $binding = $this->state->bindings[$alias];
-        $this->tracer->push($alias, false, source: 'binding', binding: $binding, context: $context);
-
-        if (\is_object($binding)) {
-            if ($binding::class === WeakReference::class) {
-                if ($binding->get() === null && \class_exists($alias)) {
-                    try {
-                        $this->tracer->push($alias, false, source: WeakReference::class, context: $context);
-                        $object = $this->createInstance($alias, $parameters, $context);
-                        $binding = $this->state->bindings[$alias] = WeakReference::create($object);
-                    } catch (\Throwable) {
-                        throw new ContainerException($this->tracer->combineTraceMessage(\sprintf(
-                            'Can\'t resolve `%s`: can\'t instantiate `%s` from WeakReference binding.',
-                            $this->tracer->getRootAlias(),
-                            $alias,
-                        )));
-                    } finally {
-                        $this->tracer->pop();
-                    }
-                }
-                return $binding->get();
-            }
-            //When binding is instance, assuming singleton
-            return $binding;
-        }
-
-        if (\is_string($binding)) {
-            //Binding is pointing to something else
-            return $this->make($binding, $parameters, $context);
-        }
-
-        unset($this->state->bindings[$alias]);
         try {
-            $instance = $binding[0] === $alias
-                ? $this->autowire($alias, $parameters, $context)
-                : $this->evaluateBinding($alias, $binding[0], $parameters, $context);
+            $this->tracer->push($alias, false, source: 'binding', binding: $binding, context: $context);
+
+            if (\is_object($binding)) {
+                if ($binding::class === WeakReference::class) {
+                    if ($binding->get() === null && \class_exists($alias)) {
+                        try {
+                            $this->tracer->push($alias, false, source: WeakReference::class, context: $context);
+                            $object = $this->createInstance($alias, $parameters, $context);
+                            $binding = $this->state->bindings[$alias] = WeakReference::create($object);
+                        } catch (\Throwable) {
+                            throw new ContainerException($this->tracer->combineTraceMessage(\sprintf(
+                                'Can\'t resolve `%s`: can\'t instantiate `%s` from WeakReference binding.',
+                                $this->tracer->getRootAlias(),
+                                $alias,
+                            )));
+                        } finally {
+                            $this->tracer->pop();
+                        }
+                    }
+                    return $binding->get();
+                }
+                //When binding is instance, assuming singleton
+                return $binding;
+            }
+
+            if (\is_string($binding)) {
+                //Binding is pointing to something else
+                return $this->make($binding, $parameters, $context);
+            }
+
+            unset($this->state->bindings[$alias]);
+            try {
+                $instance = $binding[0] === $alias
+                    ? $this->autowire($alias, $parameters, $context)
+                    : $this->evaluateBinding($alias, $binding[0], $parameters, $context);
+            } finally {
+                /** @psalm-var class-string $alias */
+                $this->state->bindings[$alias] = $binding;
+            }
         } finally {
-            /** @psalm-var class-string $alias */
-            $this->state->bindings[$alias] = $binding;
+            $this->tracer->pop(false);
         }
 
         if ($binding[1]) {
@@ -255,9 +259,12 @@ final class Factory implements FactoryInterface
             }
             try {
                 // Using constructor with resolved arguments
+                $this->tracer->push($class, true, ...['constructor', ...$arguments]);
                 $instance = new $class(...$arguments);
             } catch (\TypeError $e) {
                 throw new WrongTypeException($constructor, $e);
+            } finally {
+                $this->tracer->pop(true);
             }
         } else {
             // No constructor specified

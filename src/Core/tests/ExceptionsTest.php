@@ -90,14 +90,6 @@ class ExceptionsTest extends TestCase
             - Spiral\Tests\Core\Fixtures\InvalidWithContainerInside
               source: 'autowiring'
               context: NULL
-            - Psr\Container\ContainerInterface
-              source: 'binding'
-              binding: 'Spiral\Core\Container'
-              context: 'container'
-            - Spiral\Core\Container
-              source: 'binding'
-              binding: instance of WeakReference
-              context: 'container'
             - Spiral\Tests\Core\Fixtures\InvalidClass
               source: 'autowiring'
               context: 'class'
@@ -122,17 +114,12 @@ class ExceptionsTest extends TestCase
             - Spiral\Tests\Core\Fixtures\WithContainerInside
               source: 'autowiring'
               context: NULL
-            - Psr\Container\ContainerInterface
-              source: 'binding'
-              binding: 'Spiral\Core\Container'
-              context: 'container'
-            - Spiral\Core\Container
-              source: 'binding'
-              binding: instance of WeakReference
-              context: 'container'
-            - invalid
-              source: 'autowiring'
-              context: NULL
+              - Spiral\Tests\Core\Fixtures\WithContainerInside
+                0: 'constructor'
+                1: instance of Spiral\Core\Container
+              - invalid
+                source: 'autowiring'
+                context: NULL
             MARKDOWN,
         );
 
@@ -252,10 +239,6 @@ class ExceptionsTest extends TestCase
             - Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency
               source: 'autowiring'
               context: NULL
-            - Spiral\Tests\Core\Fixtures\InvalidClass
-              source: 'binding'
-              binding: array
-              context: 'class'
             MARKDOWN
         ];
         yield [
@@ -270,14 +253,6 @@ class ExceptionsTest extends TestCase
               source: 'binding'
               binding: array
               context: 'class'
-            - Psr\Container\ContainerInterface
-              source: 'binding'
-              binding: 'Spiral\Core\Container'
-              context: 'container'
-            - Spiral\Core\Container
-              source: 'binding'
-              binding: instance of WeakReference
-              context: 'container'
             - invalid
               source: 'autowiring'
               context: NULL
