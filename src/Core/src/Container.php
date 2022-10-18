@@ -156,7 +156,7 @@ final class Container implements
         try {
             return ContainerScope::getContainer() !== $this
                 ? ContainerScope::runScope($this, $scope)
-                : $scope();
+                : $scope($this);
         } finally {
             foreach ($previous as $alias => $resolver) {
                 $binds[$alias] = $resolver;
