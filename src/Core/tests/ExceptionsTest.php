@@ -215,7 +215,7 @@ class ExceptionsTest extends TestCase
               context: NULL
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - action: 'get from binding'
+              - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 context: 'class'
                 binding: [
@@ -236,13 +236,13 @@ class ExceptionsTest extends TestCase
               context: NULL
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - action: 'get from binding'
+              - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 context: 'class'
                 binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
-              - action: 'autowire'
-                alias: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
-                context: 'class'
+                - action: 'autowire'
+                  alias: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
+                  context: 'class'
             MARKDOWN
         ];
         yield 'withClosure' => [
@@ -267,16 +267,16 @@ class ExceptionsTest extends TestCase
               context: NULL
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - action: 'get from binding'
+              - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 context: 'class'
                 binding: [
                   0: static function (Psr\Container\ContainerInterface $container),
                   1: false
                 ]
-              - action: 'autowire'
-                alias: 'invalid'
-                context: NULL
+                - action: 'autowire'
+                  alias: 'invalid'
+                  context: NULL
             MARKDOWN
         ];
     }
