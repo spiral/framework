@@ -66,7 +66,7 @@ final class Factory implements FactoryInterface
 
         $binding = $this->state->bindings[$alias];
         try {
-            $this->tracer->push(false, alias: $alias, action: 'get from binding', binding: $binding, context: $context);
+            $this->tracer->push(false, action: 'get from binding', alias: $alias, context: $context, binding: $binding);
 
             if (\is_object($binding)) {
                 if ($binding::class === WeakReference::class) {

@@ -215,15 +215,15 @@ class ExceptionsTest extends TestCase
               context: NULL
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                action: 'get from binding'
+              - action: 'get from binding'
+                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
+                context: 'class'
                 binding: [
                   0: [
                     0: 'invalid'
                   ],
                   1: false
                 ]
-                context: 'class'
             MARKDOWN
         ];
         yield 'notConstructed' => [
@@ -236,10 +236,10 @@ class ExceptionsTest extends TestCase
               context: NULL
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                action: 'get from binding'
-                binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
+              - action: 'get from binding'
+                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 context: 'class'
+                binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
               - action: 'autowire'
                 alias: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
                 context: 'class'
@@ -267,13 +267,13 @@ class ExceptionsTest extends TestCase
               context: NULL
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                action: 'get from binding'
+              - action: 'get from binding'
+                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
+                context: 'class'
                 binding: [
                   0: static function (Psr\Container\ContainerInterface $container),
                   1: false
                 ]
-                context: 'class'
               - action: 'autowire'
                 alias: 'invalid'
                 context: NULL
