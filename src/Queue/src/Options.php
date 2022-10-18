@@ -12,15 +12,6 @@ class Options implements OptionsInterface, ExtendedOptionsInterface, \JsonSerial
     private array $headers = [];
     private ?int $delay = null;
     private ?string $queue = null;
-    private array $context = [];
-
-    public function withContext(array $context): self
-    {
-        $options = clone $this;
-        $options->context = $context;
-
-        return $options;
-    }
 
     public function withQueue(?string $queue): self
     {
