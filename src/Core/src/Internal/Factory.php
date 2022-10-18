@@ -72,7 +72,7 @@ final class Factory implements FactoryInterface
                 if ($binding::class === WeakReference::class) {
                     if ($binding->get() === null && \class_exists($alias)) {
                         try {
-                            $this->tracer->push($alias, false, source: 'WeakReference', context: $context);
+                            $this->tracer->push($alias, false, source: WeakReference::class, context: $context);
                             $object = $this->createInstance($alias, $parameters, $context);
                             $binding = $this->state->bindings[$alias] = WeakReference::create($object);
                         } catch (\Throwable) {
