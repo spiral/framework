@@ -6,12 +6,10 @@ namespace Spiral\Telemetry;
 
 interface TracerInterface
 {
-    public function withContext(?array $context): self;
-
     /**
      * Get current tracer context
      */
-    public function getContext(): ?array;
+    public function getContext(): array;
 
     /**
      * Trace a given callback

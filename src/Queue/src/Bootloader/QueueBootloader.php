@@ -192,9 +192,7 @@ final class QueueBootloader extends Bootloader
                     'consume' => [
                         ErrorHandlerInterceptor::class,
                     ],
-                    'push' => [
-                        TelemetryInterceptor::class,
-                    ],
+                    'push' => [],
                 ],
             ]
         );

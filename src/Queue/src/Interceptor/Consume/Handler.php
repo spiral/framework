@@ -8,17 +8,20 @@ use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\ScopeInterface;
 use Spiral\Telemetry\TraceKind;
-use Spiral\Telemetry\TracerFactory;
+use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerFactoryInterface;
 use Spiral\Telemetry\TracerInterface;
 
 final class Handler
 {
+    private readonly TracerFactoryInterface $tracerFactory;
+
     public function __construct(
         private readonly CoreInterface $core,
         private readonly ?ScopeInterface $scope = new Container(),
-        private readonly ?TracerFactoryInterface $tracerFactory = new TracerFactory(),
+        ?TracerFactoryInterface $tracerFactory = null
     ) {
+        $this->tracerFactory = $tracerFactory ?? new NullTracerFactory($this->scope);
     }
 
     public function handle(
@@ -29,14 +32,14 @@ final class Handler
         array $payload,
         array $headers = []
     ): mixed {
-        $tracer = $this->tracerFactory->fromContext($headers);
+        $tracer = $this->tracerFactory->make($headers);
 
         return $this->scope->runScope(
             [
                 TracerInterface::class => $tracer,
             ],
             fn (): mixed => $tracer->trace(
-                name: 'queue.handler',
+                name: \sprintf('Job handling [%s:%s]', $name, $id),
                 callback: fn (): mixed => $this->core->callAction($name, 'handle', [
                     'driver' => $driver,
                     'queue' => $queue,
@@ -44,9 +47,10 @@ final class Handler
                     'payload' => $payload,
                     'headers' => $headers,
                 ]),
+                attributes: compact('driver', 'queue', 'id', 'headers'),
                 scoped: true,
                 traceKind: TraceKind::CONSUMER
-            ),
+            )
         );
     }
 }

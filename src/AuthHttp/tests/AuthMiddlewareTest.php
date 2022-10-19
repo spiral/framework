@@ -12,7 +12,6 @@ use Spiral\Auth\TransportRegistry;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
-use Spiral\Telemetry\TracerFactory;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
@@ -87,8 +86,7 @@ class AuthMiddlewareTest extends BaseTest
             new Pipeline($this->container),
             new ResponseFactory($config),
             $this->container,
-            $this->container,
-            new TracerFactory($this->container)
+            $this->container
         );
     }
 }

@@ -48,7 +48,7 @@ final class Router implements RouterInterface
         private readonly UriHandler $uriHandler,
         private readonly ContainerInterface $container,
         private readonly ?EventDispatcherInterface $eventDispatcher = null,
-        private readonly TracerInterface $tracer = new NullTracer(),
+        private readonly ?TracerInterface $tracer = new NullTracer(),
     ) {
         $this->basePath = '/' . \ltrim($basePath, '/');
     }

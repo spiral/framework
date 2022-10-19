@@ -17,7 +17,7 @@ use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\TracerFactory;
+use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 

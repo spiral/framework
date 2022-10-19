@@ -16,7 +16,7 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\RequestHandled;
 use Spiral\Http\Event\RequestReceived;
 use Spiral\Http\Exception\HttpException;
-use Spiral\Telemetry\TracerFactory;
+use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\SpanInterface;
 use Spiral\Telemetry\TraceKind;
 use Spiral\Telemetry\TracerFactoryInterface;
@@ -25,6 +25,7 @@ use Spiral\Telemetry\TracerInterface;
 final class Http implements RequestHandlerInterface
 {
     private ?RequestHandlerInterface $handler = null;
+    private readonly TracerFactoryInterface $tracerFactory;
 
     public function __construct(
         private readonly HttpConfig $config,
@@ -32,11 +33,13 @@ final class Http implements RequestHandlerInterface
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ContainerInterface $container,
         private readonly ?ScopeInterface $scope = new Container(),
-        private readonly ?TracerFactoryInterface $tracerFactory = new TracerFactory()
+        ?TracerFactoryInterface $tracerFactory = null
     ) {
         foreach ($this->config->getMiddleware() as $middleware) {
             $this->pipeline->pushMiddleware($this->container->get($middleware));
         }
+
+        $this->tracerFactory = $tracerFactory ?? new NullTracerFactory($scope);
     }
 
     public function getPipeline(): Pipeline
@@ -87,7 +90,7 @@ final class Http implements RequestHandlerInterface
             return $response;
         };
 
-        $tracer = $this->tracerFactory->fromContext($request->getHeaders());
+        $tracer = $this->tracerFactory->make($request->getHeaders());
 
         return $this->scope->runScope([
             TracerInterface::class => $tracer,
@@ -105,12 +108,8 @@ final class Http implements RequestHandlerInterface
                 traceKind: TraceKind::SERVER
             );
 
-            $context = $tracer->getContext();
-
-            if ($context !== null) {
-                foreach ($context as $key => $value) {
-                    $response = $response->withHeader($key, $value);
-                }
+            foreach ($tracer->getContext() as $key => $value) {
+                $response = $response->withHeader($key, $value);
             }
 
             return $response;

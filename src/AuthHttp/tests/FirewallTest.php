@@ -15,11 +15,9 @@ use Spiral\Auth\Middleware\Firewall\ExceptionFirewall;
 use Spiral\Auth\Middleware\Firewall\OverwriteFirewall;
 use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
-use Spiral\Core\Container;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
-use Spiral\Telemetry\TracerFactory;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
@@ -160,8 +158,7 @@ class FirewallTest extends BaseTest
             new Pipeline($this->container),
             new ResponseFactory($config),
             $this->container,
-            $this->container,
-            new TracerFactory($this->container)
+            $this->container
         );
 
         $http->getPipeline()->pushMiddleware(

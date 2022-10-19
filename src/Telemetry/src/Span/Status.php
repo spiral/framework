@@ -7,11 +7,11 @@ namespace Spiral\Telemetry\Span;
 final class Status
 {
     /**
-     * @param non-empty-string $code
+     * @param non-empty-string|int $code
      * @param non-empty-string|null $description
      */
     public function __construct(
-        public readonly string $code,
+        public readonly string|int $code,
         public readonly ?string $description = null
     ) {
     }

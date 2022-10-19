@@ -54,10 +54,10 @@ class Span implements SpanInterface
 
     public function getAttribute(string $name): mixed
     {
-        return $this->attributes[$name];
+        return $this->attributes[$name] ?? null;
     }
 
-    public function setStatus(string $code, string $description = null): self
+    public function setStatus(string|int $code, string $description = null): self
     {
         $this->status = new Status($code, $description);
 

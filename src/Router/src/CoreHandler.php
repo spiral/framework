@@ -26,6 +26,8 @@ final class CoreHandler implements RequestHandlerInterface
 {
     use JsonTrait;
 
+    private readonly TracerInterface $tracer;
+
     private ?string $controller = null;
     private string $action;
     private ?bool $verbActions = null;
@@ -35,8 +37,9 @@ final class CoreHandler implements RequestHandlerInterface
         private readonly CoreInterface $core,
         private readonly ScopeInterface $scope,
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly ?TracerInterface $tracer = new NullTracer()
+        ?TracerInterface $tracer = null
     ) {
+        $this->tracer = $tracer ?? new NullTracer($scope);
     }
 
     public function withContext(string $controller, string $action, array $parameters): CoreHandler

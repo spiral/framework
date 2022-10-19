@@ -6,12 +6,12 @@ namespace Spiral\Telemetry;
 
 use Spiral\Telemetry\Exception\TracerException;
 
-interface TracerProviderInterface
+interface TracerFactoryProviderInterface
 {
     /**
      * Get a tracer instance by name.
      *
      * @throws TracerException
      */
-    public function getTracer(?string $name = null): TracerInterface;
+    public function getTracerFactory(?string $name = null): TracerFactoryInterface;
 }

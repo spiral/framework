@@ -39,11 +39,8 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreatesFromArrayWithPipeline(): void
     {
-        $container = new Container();
-
         $newPipeline = new Pipeline(
-            scope: m::mock(ScopeInterface::class),
-            tracer: new NullTracer($container)
+            scope: m::mock(ScopeInterface::class)
         );
 
         $this->assertSame(
@@ -54,11 +51,16 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreates(): void
     {
+        $container = new Container();
+
         $this->factory
             ->shouldReceive('make')
             ->once()
             ->with(Pipeline::class)
-            ->andReturn($p = new Pipeline($scope = m::mock(ScopeInterface::class)));
+            ->andReturn($p = new Pipeline(
+                $scope = m::mock(ScopeInterface::class),
+                tracer: new NullTracer($container)
+            ));
 
         $this->factory
             ->shouldReceive('make')

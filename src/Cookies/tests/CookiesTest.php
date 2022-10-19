@@ -22,7 +22,6 @@ use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Nyholm\Psr7\ServerRequest;
 use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\TracerFactory;
 use Spiral\Telemetry\TracerInterface;
 
 class CookiesTest extends TestCase
@@ -287,8 +286,7 @@ class CookiesTest extends TestCase
             new Pipeline($this->container),
             new TestResponseFactory($config),
             $this->container,
-            $this->container,
-            new TracerFactory($this->container)
+            $this->container
         );
     }
 

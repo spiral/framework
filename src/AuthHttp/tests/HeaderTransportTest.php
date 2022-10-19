@@ -16,7 +16,6 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\TracerFactory;
 use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
@@ -31,7 +30,7 @@ class HeaderTransportTest extends TestCase
     public function setUp(): void
     {
         $this->container = new Container();
-        $this->container->bind(TracerInterface::class, new NullTracer($this->container, $this->container));
+        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
     }
 
     public function testHeaderToken(): void
@@ -172,8 +171,7 @@ class HeaderTransportTest extends TestCase
             new Pipeline($this->container),
             new ResponseFactory($config),
             $this->container,
-            $this->container,
-            new TracerFactory($this->container)
+            $this->container
         );
 
         $http->getPipeline()->pushMiddleware(

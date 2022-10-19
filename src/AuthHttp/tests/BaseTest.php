@@ -7,8 +7,6 @@ namespace Spiral\Tests\Auth;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\Span;
-use Spiral\Telemetry\SpanInterface;
 use Spiral\Telemetry\TracerInterface;
 
 abstract class BaseTest extends TestCase
@@ -21,7 +19,7 @@ abstract class BaseTest extends TestCase
 
         $this->container->bind(
             TracerInterface::class,
-            new NullTracer($this->container, $this->container)
+            new NullTracer($this->container)
         );
     }
 }

@@ -7,7 +7,7 @@ namespace Spiral\Telemetry\Config;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\InjectableConfig;
 use Spiral\Telemetry\Exception\InvalidArgumentException;
-use Spiral\Telemetry\TracerInterface;
+use Spiral\Telemetry\TracerFactoryInterface;
 
 final class TelemetryConfig extends InjectableConfig
 {
@@ -34,20 +34,24 @@ final class TelemetryConfig extends InjectableConfig
 
     /**
      * @param non-empty-string $name
-     * @return class-string<TracerInterface>|Autowire
+     * @return class-string<TracerFactoryInterface>|Autowire|TracerFactoryInterface
      * @throws InvalidArgumentException
      */
-    public function geDriverConfig(string $name): string|Autowire
+    public function getDriverConfig(string $name): string|Autowire|TracerFactoryInterface
     {
         if (!isset($this->config['drivers'][$name])) {
             throw new InvalidArgumentException(
-                \sprintf('Config for trace `%s` is not defined.', $name)
+                \sprintf('Config for telemetry driver `%s` is not defined.', $name)
             );
         }
 
         $driver = $this->config['drivers'][$name];
 
-        if (!\is_string($driver) && $driver instanceof Autowire) {
+        if ($driver instanceof TracerFactoryInterface) {
+            return $driver;
+        }
+
+        if (!\is_string($driver) && !$driver instanceof Autowire) {
             throw new InvalidArgumentException(
                 \sprintf('Trace type value for `%s` must be a string or %s', $name, Autowire::class)
             );

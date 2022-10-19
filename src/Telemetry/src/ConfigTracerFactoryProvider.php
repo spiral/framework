@@ -8,9 +8,9 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use Spiral\Telemetry\Config\TelemetryConfig;
 
-final class ConfigTracerProvider implements TracerProviderInterface
+final class ConfigTracerFactoryProvider implements TracerFactoryProviderInterface
 {
-    /** @var TracerInterface[] */
+    /** @var TracerFactoryInterface[] */
     private array $drivers = [];
 
     public function __construct(
@@ -19,7 +19,7 @@ final class ConfigTracerProvider implements TracerProviderInterface
     ) {
     }
 
-    public function getTracer(?string $name = null): TracerInterface
+    public function getTracerFactory(?string $name = null): TracerFactoryInterface
     {
         $name ??= $this->config->getDefaultDriver();
 
@@ -30,9 +30,13 @@ final class ConfigTracerProvider implements TracerProviderInterface
         return $this->drivers[$name] = $this->resolve($name);
     }
 
-    private function resolve(string $name): TracerInterface
+    private function resolve(string $name): TracerFactoryInterface
     {
-        $config = $this->config->geDriverConfig($name);
+        $config = $this->config->getDriverConfig($name);
+
+        if ($config instanceof TracerFactoryInterface) {
+            return $config;
+        }
 
         if ($config instanceof Autowire) {
             return $config->resolve($this->factory);

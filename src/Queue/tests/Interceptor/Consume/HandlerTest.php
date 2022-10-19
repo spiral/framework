@@ -7,9 +7,10 @@ namespace Spiral\Tests\Queue\Interceptor;
 use Mockery as m;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\ScopeInterface;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\TracerFactory;
+use Spiral\Telemetry\TracerFactoryInterface;
 use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Queue\TestCase;
 
@@ -17,13 +18,23 @@ final class HandlerTest extends TestCase
 {
     public function testHandle(): void
     {
-        $container = new Container();
-        $container->bind(TracerInterface::class, new NullTracer($container));
+        $tracerFactory = m::mock(TracerFactoryInterface::class);
+        $scope = m::mock(ScopeInterface::class);
+
+        $tracerFactory->shouldReceive('make')
+            ->once()
+            ->with(['some' => 'data'])
+            ->andReturn( $tracer = new NullTracer());
+
+        $scope->shouldReceive('runScope')
+            ->once()
+            ->withSomeOfArgs([TracerInterface::class => $tracer])
+            ->andReturnUsing(fn(array $scope, callable $callback) => $callback());
 
         $handler = new Handler(
-            $core = m::mock(CoreInterface::class),
-            $container,
-            new TracerFactory($container)
+            core: $core = m::mock(CoreInterface::class),
+            scope: $scope,
+            tracerFactory: $tracerFactory
         );
 
         $core->shouldReceive('callAction')

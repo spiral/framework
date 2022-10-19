@@ -14,7 +14,6 @@ use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\Job\ObjectJob;
 use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\TracerFactory;
 use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Queue\TestCase;
 
@@ -36,8 +35,7 @@ final class SyncDriverTest extends TestCase
         $this->queue = new SyncDriver(
             new Handler(
                 $this->core = m::mock(CoreInterface::class),
-                $container,
-                new TracerFactory($container)
+                $container
             )
         );
     }

@@ -12,20 +12,21 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Telemetry\Clock\SystemClock;
 use Spiral\Telemetry\ClockInterface;
 use Spiral\Telemetry\Config\TelemetryConfig;
-use Spiral\Telemetry\ConfigTracerProvider;
+use Spiral\Telemetry\ConfigTracerFactoryProvider;
 use Spiral\Telemetry\Exception\TracerException;
 use Spiral\Telemetry\LogTracer;
+use Spiral\Telemetry\LogTracerFactory;
 use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\TracerFactory;
+use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerFactoryInterface;
 use Spiral\Telemetry\TracerInterface;
-use Spiral\Telemetry\TracerProviderInterface;
+use Spiral\Telemetry\TracerFactoryProviderInterface;
 
 final class TelemetryBootloader extends Bootloader
 {
     protected const SINGLETONS = [
-        TracerFactoryInterface::class => TracerFactory::class,
-        TracerProviderInterface::class => ConfigTracerProvider::class,
+        TracerFactoryInterface::class => [self::class, 'initFactory'],
+        TracerFactoryProviderInterface::class => ConfigTracerFactoryProvider::class,
         ClockInterface::class => SystemClock::class,
     ];
 
@@ -44,9 +45,9 @@ final class TelemetryBootloader extends Bootloader
     }
 
     /**
-     * @param class-string<TracerInterface>|Autowire $driver
+     * @param class-string<TracerFactoryInterface>|TracerFactoryInterface|Autowire $driver
      */
-    public function registerTracer(string $name, string|Autowire $driver): void
+    public function registerTracer(string $name, string|TracerFactoryInterface|Autowire $driver): void
     {
         $this->config->modify(
             TelemetryConfig::CONFIG,
@@ -57,10 +58,19 @@ final class TelemetryBootloader extends Bootloader
     /**
      * @throws TracerException
      */
+    public function initFactory(
+        TracerFactoryProviderInterface $tracerProvider
+    ): TracerFactoryInterface {
+        return $tracerProvider->getTracerFactory();
+    }
+
+    /**
+     * @throws TracerException
+     */
     public function getTracer(
-        TracerProviderInterface $tracerProvider
+        TracerFactoryInterface $tracerFactory
     ): TracerInterface {
-        return $tracerProvider->getTracer();
+        return $tracerFactory->make();
     }
 
     private function initConfig(EnvironmentInterface $env): void
@@ -70,8 +80,8 @@ final class TelemetryBootloader extends Bootloader
             [
                 'default' => $env->get('TELEMETRY_DRIVER', 'null'),
                 'drivers' => [
-                    'null' => NullTracer::class,
-                    'log' => LogTracer::class,
+                    'null' => NullTracerFactory::class,
+                    'log' => LogTracerFactory::class,
                 ],
             ]
         );

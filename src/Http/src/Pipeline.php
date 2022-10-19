@@ -25,13 +25,15 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
     use MiddlewareTrait;
 
     private int $position = 0;
+    private readonly TracerInterface $tracer;
     private ?RequestHandlerInterface $handler = null;
 
     public function __construct(
         private readonly ScopeInterface $scope,
         private readonly ?EventDispatcherInterface $dispatcher = null,
-        private readonly TracerInterface $tracer = new NullTracer(),
+        ?TracerInterface $tracer = null
     ) {
+        $this->tracer = $tracer ?? new NullTracer($scope);
     }
 
     /**
@@ -92,7 +94,7 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
         $handler = $this->handler;
         return $this->scope->runScope(
             [Request::class => $request],
-            static fn (): Response => $handler->handle($request)
+            static fn(): Response => $handler->handle($request)
         );
     }
 }

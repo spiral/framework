@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Telemetry;
 
 use Spiral\Core\Container;
-use Spiral\Core\ContainerScope;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ScopeInterface;
 
@@ -26,19 +25,15 @@ final class NullTracer implements TracerInterface
         ?int $startTime = null
     ): mixed {
         $span = new Span($name);
+        $span->setAttributes($attributes);
 
         return $this->scope->runScope([
             SpanInterface::class => $span,
-        ], static fn (): mixed => ContainerScope::getContainer()->get(InvokerInterface::class)->invoke($callback));
+        ], static fn (InvokerInterface $invoker): mixed => $invoker->invoke($callback));
     }
 
-    public function withContext(?array $context): self
+    public function getContext(): array
     {
-        return $this;
-    }
-
-    public function getContext(): ?array
-    {
-        return null;
+        return [];
     }
 }
