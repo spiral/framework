@@ -1,4 +1,4 @@
-# Static Analysis: Class and Invocation locators
+# Generates telemetry traces to help you analyze your software’s performance and behavior.
 
 [![PHP Version Require](https://poser.pugx.org/spiral/telemetry/require/php)](https://packagist.org/packages/spiral/telemetry)
 [![Latest Stable Version](https://poser.pugx.org/spiral/telemetry/v/stable)](https://packagist.org/packages/spiral/telemetry)
