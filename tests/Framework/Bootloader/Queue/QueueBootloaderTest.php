@@ -85,9 +85,7 @@ final class QueueBootloaderTest extends BaseTest
                 'consume' => [
                     \Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor::class,
                 ],
-                'push' => [
-                    \Spiral\Queue\Interceptor\Push\TelemetryInterceptor::class
-                ]
+                'push' => []
             ],
         ]);
     }
