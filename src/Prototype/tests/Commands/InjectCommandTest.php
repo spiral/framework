@@ -72,7 +72,7 @@ class InjectCommandTest extends AbstractCommandsTest
 
         $result = $out->fetch();
 
-        $this->assertStringContainsString('Undefined class', $result);
+        $this->assertStringContainsString('Can\'t resolve', $result);
         $this->assertStringContainsString('Invalid', $result);
     }
 

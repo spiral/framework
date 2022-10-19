@@ -12,12 +12,13 @@ use Spiral\Core\Internal\Invoker;
 use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\State;
 use Spiral\Core\Internal\Container;
+use Spiral\Core\Internal\Tracer;
 use Traversable;
 
 /**
  * @implements IteratorAggregate<
  *     non-empty-string,
- *     class-string<State>|class-string<ResolverInterface>|class-string<FactoryInterface>|class-string<ContainerInterface>|class-string<BinderInterface>|class-string<InvokerInterface>
+ *     class-string<State>|class-string<ResolverInterface>|class-string<FactoryInterface>|class-string<ContainerInterface>|class-string<BinderInterface>|class-string<InvokerInterface>|class-string<Tracer>
  * >
  */
 class Config implements IteratorAggregate
@@ -29,6 +30,7 @@ class Config implements IteratorAggregate
      * @param class-string<ContainerInterface> $container
      * @param class-string<BinderInterface> $binder
      * @param class-string<InvokerInterface> $invoker
+     * @param class-string<Tracer> $tracer
      */
     public function __construct(
         public readonly string $state = State::class,
@@ -37,6 +39,7 @@ class Config implements IteratorAggregate
         public readonly string $container = Container::class,
         public readonly string $binder = Binder::class,
         public readonly string $invoker = Invoker::class,
+        public readonly string $tracer = Tracer::class,
     ) {
     }
 
@@ -48,5 +51,6 @@ class Config implements IteratorAggregate
         yield 'container' => $this->container;
         yield 'binder' => $this->binder;
         yield 'invoker' => $this->invoker;
+        yield 'tracer' => $this->tracer;
     }
 }
