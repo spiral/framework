@@ -3,12 +3,13 @@
 namespace Spiral\Tests\Queue\Core;
 
 use Mockery as m;
+use Psr\Container\ContainerInterface;
 use ReflectionClass;
-use RuntimeException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Core\QueueInjector;
+use Spiral\Queue\Queue;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Tests\Queue\Core\Stub\TestQueueClass;
@@ -16,16 +17,28 @@ use Spiral\Tests\Queue\TestCase;
 
 final class QueueInjectorTest extends TestCase
 {
-    private ?QueueInterface $defaultQueue = null;
+    private QueueInterface $defaultQueue;
+    private QueueInterface $testQueue;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->testQueue = m::mock(QueueInterface::class);
+        $this->defaultQueue = m::mock(QueueInterface::class);
+    }
 
     public function testGetByContext(): void
     {
         $injector = $this->createInjector();
         $reflection = new ReflectionClass(TestQueueClass::class);
 
-        $result = $injector->createInjection($reflection, 'test');
+        $this->testQueue->shouldReceive('push')->once();
 
-        $this->assertInstanceOf(TestQueueClass::class, $result);
+        $result = $injector->createInjection($reflection, 'test');
+        $result->push('foo');
+
+        $this->assertInstanceOf(Queue::class, $result);
     }
 
     public function testGetByIncorrectContext(): void
@@ -33,25 +46,15 @@ final class QueueInjectorTest extends TestCase
         $injector = $this->createInjector();
         $reflection = new ReflectionClass(QueueInterface::class);
 
+        $this->defaultQueue->shouldReceive('push')->once();
+
         $result = $injector->createInjection($reflection, 'userQueue');
-
-        // The default connection should be returned
-        $this->assertSame($this->defaultQueue, $result);
-    }
-
-    public function testBadArgumentTypeException(): void
-    {
-        $injector = $this->createInjector();
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The queue obtained by the context');
-
-        $reflection = new ReflectionClass(TestQueueClass::class);
-        $injector->createInjection($reflection, 'queue');
+        $result->push('foo');
     }
 
     private function createInjector(): QueueInjector
     {
-        $this->defaultQueue = m::mock(QueueInterface::class);
+
         $config = new QueueConfig([
             'default' => 'sync',
             'aliases' => [
@@ -82,17 +85,23 @@ final class QueueInjectorTest extends TestCase
         ]);
         $factory = m::mock(FactoryInterface::class);
         $factory->shouldReceive('make')->andReturnUsing(function (string $name): QueueInterface {
-            $result = [
-                    'sync' => $this->defaultQueue,
-                    'test' => new TestQueueClass(),
-                ][$name] ?? null;
+            var_dump($name);
+            $result = ['sync' => $this->defaultQueue, 'test' => $this->testQueue][$name] ?? null;
+
             if ($result === null) {
                 throw new NotFoundException();
             }
             return $result;
         });
-        $manager = new QueueManager($config, $factory);
 
-        return new QueueInjector($manager, $config);
+        $container = m::mock(ContainerInterface::class);
+
+        return new QueueInjector(
+            new QueueManager(
+                $config,
+                $container,
+                $factory
+            )
+        );
     }
 }
