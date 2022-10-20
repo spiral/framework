@@ -9,7 +9,6 @@ use Spiral\Core\CoreInterface;
 use Spiral\Telemetry\TraceKind;
 use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerFactoryInterface;
-use Spiral\Telemetry\TracerInterface;
 
 final class Handler
 {

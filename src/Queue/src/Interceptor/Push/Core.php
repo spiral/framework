@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Queue\Interceptor\Push;
 
+use Spiral\Core\ContainerScope;
 use Spiral\Core\CoreInterface;
-use Spiral\Queue\ExtendedOptionsInterface;
 use Spiral\Queue\Options;
 use Spiral\Queue\OptionsInterface;
 use Spiral\Queue\QueueInterface;
@@ -18,8 +18,7 @@ use Spiral\Telemetry\TracerInterface;
 final class Core implements CoreInterface
 {
     public function __construct(
-        private readonly QueueInterface $connection,
-        private readonly ?TracerInterface $tracer = new NullTracer()
+        private readonly QueueInterface $connection
     ) {
     }
 
@@ -38,16 +37,31 @@ final class Core implements CoreInterface
             $parameters['options'] = new Options();
         }
 
+        $tracer = $this->getTracer();
+
         if (\method_exists($parameters['options'], 'withHeader')) {
-            foreach ($this->tracer->getContext() as $key => $data) {
+            foreach ($tracer->getContext() as $key => $data) {
                 $parameters['options'] = $parameters['options']->withHeader($key, $data);
             }
         }
 
-        return $this->connection->push(
-            name: $controller,
-            payload: $parameters['payload'],
-            options: $parameters['options']
+        return $tracer->trace(
+            name: \sprintf('Job push [%s]', $controller),
+            callback: fn (): string => $this->connection->push(
+                name: $controller,
+                payload: $parameters['payload'],
+                options: $parameters['options']
+            ),
+            attributes: compact('controller', 'action')
         );
+    }
+
+    private function getTracer(): TracerInterface
+    {
+        try {
+            return ContainerScope::getContainer()->get(TracerInterface::class);
+        } catch (\Throwable $e) {
+            return new NullTracer();
+        }
     }
 }
