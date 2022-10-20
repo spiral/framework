@@ -60,9 +60,9 @@ final class QueueBootloaderTest extends BaseTest
     public function testQueueBinding(): void
     {
         $mock = $this->mockContainer(QueueConnectionProviderInterface::class);
-        $mock->shouldReceive('getConnection')->andReturn($this->createMock(QueueInterface::class));
+        $mock->shouldReceive('getConnection')->andReturn($queue = $this->createMock(QueueInterface::class));
 
-        $this->assertContainerBoundAsSingleton(QueueInterface::class, Queue::class);
+        $this->assertContainerBoundAsSingleton(QueueInterface::class, $queue::class);
     }
 
     public function testConfig(): void

@@ -35,31 +35,10 @@ final class QueueInjector implements InjectorInterface
                     return $this->queueManager->getConnection();
                 }
             }
-
-            $this->matchType($class, $context, $connection);
         } catch (\Throwable $e) {
             throw new ContainerException(\sprintf("Can't inject the required queue. %s", $e->getMessage()), 0, $e);
         }
 
         return $connection;
-    }
-
-    /**
-     * Check the resolved connection implements required type
-     *
-     * @throws \RuntimeException
-     */
-    private function matchType(ReflectionClass $class, ?string $context, QueueInterface $connection): void
-    {
-        $className = $class->getName();
-        if ($className !== QueueInterface::class && !$connection instanceof $className) {
-            throw new \RuntimeException(
-                \sprintf(
-                    "The queue obtained by the context `%s` doesn't match the type `%s`.",
-                    $context ?? 'NULL',
-                    $className
-                )
-            );
-        }
     }
 }
