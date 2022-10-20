@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
+use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Core\Container\Autowire;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
+use Spiral\Core\InterceptableCore;
 use Spiral\Queue\Config\QueueConfig;
+use Spiral\Queue\Interceptor\Push\Core as PushCore;
 
 final class QueueManager implements QueueConnectionProviderInterface
 {
@@ -15,7 +21,9 @@ final class QueueManager implements QueueConnectionProviderInterface
 
     public function __construct(
         private readonly QueueConfig $config,
+        private readonly ContainerInterface $container,
         private readonly FactoryInterface $factory,
+        private readonly ?EventDispatcherInterface $dispatcher = null
     ) {
     }
 
@@ -41,7 +49,23 @@ final class QueueManager implements QueueConnectionProviderInterface
         $config = $this->config->getConnection($name);
 
         try {
-            return $this->factory->make($config['driver'], $config);
+            $driver = $this->factory->make($config['driver'], $config);
+
+            $core = new InterceptableCore(
+                new PushCore($driver),
+                $this->dispatcher
+            );
+
+            foreach ($this->config->getPushInterceptors() as $interceptor) {
+                if (\is_string($interceptor) || $interceptor instanceof Autowire) {
+                    $interceptor = $this->container->get($interceptor);
+                }
+
+                \assert($interceptor instanceof CoreInterceptorInterface);
+                $core->addInterceptor($interceptor);
+            }
+
+            return new Queue($core);
         } catch (ContainerException $e) {
             throw new Exception\NotSupportedDriverException(
                 \sprintf(
