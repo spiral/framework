@@ -33,7 +33,7 @@ final class DumpCommand extends AbstractCommand
         $trait = new \ReflectionClass(PrototypeTrait::class);
         $docComment = $trait->getDocComment();
         if ($docComment === false) {
-            $this->write('<fg=reg>DOCComment is missing</fg=red>');
+            $this->write('<fg=red>DOCComment is missing</fg=red>');
 
             return self::FAILURE;
         }
