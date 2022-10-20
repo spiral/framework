@@ -27,8 +27,6 @@ use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\Interceptor\Consume\Core as ConsumeCore;
-use Spiral\Queue\Interceptor\Push\Core as PushCore;
-use Spiral\Queue\Queue;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
@@ -144,24 +142,9 @@ final class QueueBootloader extends Bootloader
         return new Handler($core);
     }
 
-    protected function initQueue(
-        QueueConfig $config,
-        QueueConnectionProviderInterface $manager,
-        ContainerInterface $container,
-        ?EventDispatcherInterface $dispatcher = null
-    ): Queue {
-        $core = new InterceptableCore(new PushCore($manager->getConnection()), $dispatcher);
-
-        foreach ($config->getPushInterceptors() as $interceptor) {
-            if (\is_string($interceptor) || $interceptor instanceof Autowire) {
-                $interceptor = $container->get($interceptor);
-            }
-
-            \assert($interceptor instanceof CoreInterceptorInterface);
-            $core->addInterceptor($interceptor);
-        }
-
-        return new Queue($core);
+    protected function initQueue(QueueConnectionProviderInterface $manager): QueueInterface
+    {
+        return $manager->getConnection();
     }
 
     private function initQueueConfig(EnvironmentInterface $env): void
