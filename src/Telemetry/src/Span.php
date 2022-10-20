@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace Spiral\Telemetry;
 
+use Ramsey\Uuid\Uuid;
 use Spiral\Telemetry\Span\Status;
 
-class Span implements SpanInterface
+/**
+ * @internal
+ */
+final class Span implements SpanInterface
 {
     private ?Status $status = null;
 
+    /**
+     * @param non-empty-string $name
+     */
     public function __construct(
         private string $name,
         private array $attributes = []

@@ -13,7 +13,6 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Core\ScopeInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
@@ -79,10 +78,9 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         RequestHandlerInterface $handler,
         ResponseFactoryInterface $responseFactory,
         ContainerInterface $container,
-        ScopeInterface $scope,
         TracerFactoryInterface $tracerFactory
     ): Http {
-        $core = new Http($config, $pipeline, $responseFactory, $container, $scope, $tracerFactory);
+        $core = new Http($config, $pipeline, $responseFactory, $container, $tracerFactory);
         $core->setHandler($handler);
 
         return $core;

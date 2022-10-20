@@ -20,28 +20,25 @@ use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\SpanInterface;
 use Spiral\Telemetry\TraceKind;
 use Spiral\Telemetry\TracerFactoryInterface;
-use Spiral\Telemetry\TracerInterface;
 
 final class Http implements RequestHandlerInterface
 {
     private ?RequestHandlerInterface $handler = null;
     private readonly TracerFactoryInterface $tracerFactory;
-    private readonly ScopeInterface $scope;
 
     public function __construct(
         private readonly HttpConfig $config,
         private readonly Pipeline $pipeline,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ContainerInterface $container,
-        ?ScopeInterface $scope = null,
         ?TracerFactoryInterface $tracerFactory = null
     ) {
         foreach ($this->config->getMiddleware() as $middleware) {
             $this->pipeline->pushMiddleware($this->container->get($middleware));
         }
 
-        $this->scope = $scope ?? ($this->container instanceof ScopeInterface ? $this->container : new Container());
-        $this->tracerFactory = $tracerFactory ?? new NullTracerFactory($this->scope);
+        $scope = $this->container instanceof ScopeInterface ? $this->container : new Container();
+        $this->tracerFactory = $tracerFactory ?? new NullTracerFactory($scope);
     }
 
     public function getPipeline(): Pipeline
@@ -94,27 +91,23 @@ final class Http implements RequestHandlerInterface
 
         $tracer = $this->tracerFactory->make($request->getHeaders());
 
-        return $this->scope->runScope([
-            TracerInterface::class => $tracer,
-        ], static function () use ($callback, $request, $tracer): ResponseInterface {
-            /** @var ResponseInterface $response */
-            $response = $tracer->trace(
-                name: \sprintf('%s %s', $request->getMethod(), (string)$request->getUri()),
-                callback: $callback,
-                attributes: [
-                    'http.method' => $request->getMethod(),
-                    'http.url' => $request->getUri(),
-                    'http.headers' => $request->getHeaders(),
-                ],
-                scoped: true,
-                traceKind: TraceKind::SERVER
-            );
+        /** @var ResponseInterface $response */
+        $response = $tracer->trace(
+            name: \sprintf('%s %s', $request->getMethod(), (string)$request->getUri()),
+            callback: $callback,
+            attributes: [
+                'http.method' => $request->getMethod(),
+                'http.url' => $request->getUri(),
+                'http.headers' => $request->getHeaders(),
+            ],
+            scoped: true,
+            traceKind: TraceKind::SERVER
+        );
 
-            foreach ($tracer->getContext() as $key => $value) {
-                $response = $response->withHeader($key, $value);
-            }
+        foreach ($tracer->getContext() as $key => $value) {
+            $response = $response->withHeader($key, $value);
+        }
 
-            return $response;
-        });
+        return $response;
     }
 }

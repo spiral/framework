@@ -16,7 +16,6 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\InterceptableCore;
-use Spiral\Core\ScopeInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Core\QueueInjector;
@@ -29,7 +28,6 @@ use Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\Interceptor\Consume\Core as ConsumeCore;
 use Spiral\Queue\Interceptor\Push\Core as PushCore;
-use Spiral\Queue\Interceptor\Push\TelemetryInterceptor;
 use Spiral\Queue\Queue;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
@@ -127,7 +125,6 @@ final class QueueBootloader extends Bootloader
     protected function initHandler(
         ConsumeCore $core,
         QueueConfig $config,
-        ScopeInterface $scope,
         ContainerInterface $container,
         FactoryInterface $factory,
         TracerFactoryInterface $tracerFactory,
@@ -146,7 +143,7 @@ final class QueueBootloader extends Bootloader
             $core->addInterceptor($interceptor);
         }
 
-        return new Handler($core, $scope, $tracerFactory);
+        return new Handler($core, $tracerFactory);
     }
 
     protected function initQueue(

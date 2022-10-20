@@ -14,6 +14,7 @@ use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\Job\ObjectJob;
 use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Queue\TestCase;
 
@@ -35,7 +36,7 @@ final class SyncDriverTest extends TestCase
         $this->queue = new SyncDriver(
             new Handler(
                 $this->core = m::mock(CoreInterface::class),
-                $container
+                new NullTracerFactory($container)
             )
         );
     }
@@ -43,7 +44,6 @@ final class SyncDriverTest extends TestCase
     public function testJobShouldBePushed(): void
     {
         $this->factory->shouldReceive('uuid4')
-            ->once()
             ->andReturn($uuid = (new UuidFactory())->uuid4());
 
         $this->core->shouldReceive('callAction')
@@ -67,7 +67,6 @@ final class SyncDriverTest extends TestCase
         $object->foo = 'bar';
 
         $this->factory->shouldReceive('uuid4')
-            ->once()
             ->andReturn($uuid = (new UuidFactory())->uuid4());
 
         $this->core->shouldReceive('callAction')

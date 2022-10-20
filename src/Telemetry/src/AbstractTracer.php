@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Telemetry;
 
 use Spiral\Core\Container;
+use Spiral\Core\InvokerInterface;
 use Spiral\Core\ScopeInterface;
 
 /**
@@ -12,15 +13,21 @@ use Spiral\Core\ScopeInterface;
  * Something may be changed in the future. We will stable it soon.
  * Feedback is welcome {@link https://github.com/spiral/framework/discussions/822}.
  */
-final class NullTracerFactory implements TracerFactoryInterface
+abstract class AbstractTracer implements TracerInterface
 {
     public function __construct(
         private readonly ?ScopeInterface $scope = new Container(),
     ) {
     }
 
-    public function make(array $context = []): TracerInterface
+    /**
+     * @throws \Throwable
+     */
+    final protected function runScope(Span $span, callable $callback): mixed
     {
-        return new NullTracer($this->scope);
+        return $this->scope->runScope([
+            SpanInterface::class => $span,
+            TracerInterface::class => $this,
+        ], static fn (InvokerInterface $invoker): mixed => $invoker->invoke($callback));
     }
 }

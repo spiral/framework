@@ -177,7 +177,6 @@ class CookieTransportTest extends BaseTest
             $config,
             new Pipeline($this->container),
             new ResponseFactory($config),
-            $this->container,
             $this->container
         );
 

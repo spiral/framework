@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container;
-use Spiral\Core\ScopeInterface;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\RequestHandled;
@@ -283,7 +282,6 @@ class HttpTest extends TestCase
             new Pipeline($this->container),
             new ResponseFactory($config),
             $this->container,
-            $scope = m::mock(ScopeInterface::class),
             $tracerFactory = m::mock(TracerFactoryInterface::class),
         );
 
@@ -295,11 +293,6 @@ class HttpTest extends TestCase
             ->once()
             ->with(['foo' => ['bar']])
             ->andReturn($tracer = new NullTracer());
-
-        $scope->shouldReceive('runScope')
-            ->once()
-            ->withSomeOfArgs([TracerInterface::class => $tracer])
-            ->andReturnUsing(fn(array $scope, callable $callback) => $callback());
 
         $response = $http->handle($request);
         $this->assertSame('hello world', (string)$response->getBody());

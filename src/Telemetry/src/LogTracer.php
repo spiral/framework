@@ -5,17 +5,26 @@ declare(strict_types=1);
 namespace Spiral\Telemetry;
 
 use Psr\Log\LoggerInterface;
-use Spiral\Core\Container;
-use Spiral\Core\InvokerInterface;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactoryInterface;
 use Spiral\Core\ScopeInterface;
 
-final class LogTracer implements TracerInterface
+/**
+ * @internal The component is under development.
+ * Something may be changed in the future. We will stable it soon.
+ * Feedback is welcome {@link https://github.com/spiral/framework/discussions/822}.
+ */
+final class LogTracer extends AbstractTracer
 {
+    private array $context = [];
+
     public function __construct(
-        private readonly ScopeInterface $scope,
+        ScopeInterface $scope,
         private readonly ClockInterface $clock,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly UuidFactoryInterface $uuidFactory
     ) {
+        parent::__construct($scope);
     }
 
     public function trace(
@@ -23,17 +32,16 @@ final class LogTracer implements TracerInterface
         callable $callback,
         array $attributes = [],
         bool $scoped = false,
-        bool $debug = false,
         ?TraceKind $traceKind = null,
         ?int $startTime = null
     ): mixed {
         $span = new Span($name);
 
+        $this->context['telemetry'] = $this->uuidFactory->uuid4()->toString();
+
         $startTime ??= $this->clock->now();
 
-        $result = $this->scope->runScope([
-            SpanInterface::class => $span,
-        ], static fn (InvokerInterface $invoker): mixed => $invoker->invoke($callback));
+        $result = $this->runScope($span, $callback);
 
         $elapsed = $this->clock->now() - $startTime;
 
@@ -43,6 +51,7 @@ final class LogTracer implements TracerInterface
             'scoped' => $scoped,
             'trace_kind' => $traceKind,
             'elapsed' => $elapsed,
+            'id' => $this->context['telemetry'],
         ]);
 
         return $result;
@@ -50,6 +59,6 @@ final class LogTracer implements TracerInterface
 
     public function getContext(): array
     {
-        return [];
+        return $this->context;
     }
 }

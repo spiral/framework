@@ -7,6 +7,8 @@ namespace Spiral\Tests\Telemetry;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\UuidFactoryInterface;
+use Ramsey\Uuid\UuidInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ScopeInterface;
 use Spiral\Telemetry\ClockInterface;
@@ -21,10 +23,14 @@ final class LogTracerTest extends TestCase
         $tracer = new LogTracer(
             $scope = m::mock(ScopeInterface::class),
             $clock = m::mock(ClockInterface::class),
-            $logger = m::mock(LoggerInterface::class)
+            $logger = m::mock(LoggerInterface::class),
+            $uuid = m::mock(UuidFactoryInterface::class)
         );
 
         $invoker = m::mock(InvokerInterface::class);
+
+        $uuid->shouldReceive('uuid4')->once()->andReturn($uuid = m::mock(UuidInterface::class));
+        $uuid->shouldReceive('toString')->once()->andReturn('12345');
 
         $callable = fn() => 'hello';
 
@@ -46,6 +52,10 @@ final class LogTracerTest extends TestCase
         $this->assertSame(
             'hello',
             $tracer->trace('foo', $callable, ['foo' => 'bar'])
+        );
+        $this->assertSame(
+            ['telemetry' => '12345'],
+            $tracer->getContext()
         );
     }
 }

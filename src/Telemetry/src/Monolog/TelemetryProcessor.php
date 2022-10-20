@@ -8,14 +8,14 @@ use Monolog\Processor\ProcessorInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Telemetry\TracerInterface;
 
-class TelemetryProcessor implements ProcessorInterface
+final class TelemetryProcessor implements ProcessorInterface
 {
     public function __construct(
         private readonly ContainerInterface $container
     ) {
     }
 
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         $tracer = $this->container->get(TracerInterface::class);
         \assert($tracer instanceof TracerInterface);

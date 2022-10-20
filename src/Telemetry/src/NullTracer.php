@@ -4,32 +4,25 @@ declare(strict_types=1);
 
 namespace Spiral\Telemetry;
 
-use Spiral\Core\Container;
-use Spiral\Core\InvokerInterface;
-use Spiral\Core\ScopeInterface;
-
-final class NullTracer implements TracerInterface
+/**
+ * @internal The component is under development.
+ * Something may be changed in the future. We will stable it soon.
+ * Feedback is welcome {@link https://github.com/spiral/framework/discussions/822}.
+ */
+final class NullTracer extends AbstractTracer
 {
-    public function __construct(
-        private readonly ?ScopeInterface $scope = new Container(),
-    ) {
-    }
-
     public function trace(
         string $name,
         callable $callback,
         array $attributes = [],
         bool $scoped = false,
-        bool $debug = false,
         ?TraceKind $traceKind = null,
         ?int $startTime = null
     ): mixed {
         $span = new Span($name);
         $span->setAttributes($attributes);
 
-        return $this->scope->runScope([
-            SpanInterface::class => $span,
-        ], static fn (InvokerInterface $invoker): mixed => $invoker->invoke($callback));
+        return $this->runScope($span, $callback);
     }
 
     public function getContext(): array

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\Exception\AuthException;
@@ -157,7 +156,6 @@ class FirewallTest extends BaseTest
             $config,
             new Pipeline($this->container),
             new ResponseFactory($config),
-            $this->container,
             $this->container
         );
 
