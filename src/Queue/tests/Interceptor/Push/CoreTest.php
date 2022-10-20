@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Interceptor\Push;
 
 use Mockery as m;
+use Spiral\Core\Container;
+use Spiral\Core\ContainerScope;
 use Spiral\Queue\Interceptor\Push\Core;
 use Spiral\Queue\Options;
 use Spiral\Queue\OptionsInterface;
@@ -53,10 +55,16 @@ final class CoreTest extends TestCase
     {
         $core = new Core(
             $queue = m::mock(QueueInterface::class),
-            $tracer = m::mock(TracerInterface::class),
         );
 
+        $container = new Container();
+        $container->bind(TracerInterface::class, $tracer = m::mock(TracerInterface::class));
+
+
         $tracer->shouldReceive('getContext')->once()->andReturn(['foo' => ['bar']]);
+        $tracer->shouldReceive('trace')->once()->andReturnUsing(function ($name, $callback) {
+            return $callback();
+        });
 
         $queue->shouldReceive('push')->once()
             ->withArgs(function (string $name, array $payload = [], OptionsInterface $options = null) {
@@ -65,11 +73,13 @@ final class CoreTest extends TestCase
                     && $options->getHeader('foo') === ['bar'];
             });
 
-        $core->callAction('foo', 'bar', [
-            'id' => 'job-id',
-            'payload' => ['baz' => 'baf'],
-            'options' => null,
-        ]);
+        ContainerScope::runScope($container, function() use($core) {
+            $core->callAction('foo', 'bar', [
+                'id' => 'job-id',
+                'payload' => ['baz' => 'baf'],
+                'options' => null,
+            ]);
+        });
     }
 
     public function testCallWithTracerContextWitoutOptionsWithHeadersSupport(): void
