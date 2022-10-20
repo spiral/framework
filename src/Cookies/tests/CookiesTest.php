@@ -285,7 +285,6 @@ class CookiesTest extends TestCase
             $config,
             new Pipeline($this->container),
             new TestResponseFactory($config),
-            $this->container,
             $this->container
         );
     }

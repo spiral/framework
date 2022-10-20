@@ -170,7 +170,6 @@ class HeaderTransportTest extends TestCase
             $config,
             new Pipeline($this->container),
             new ResponseFactory($config),
-            $this->container,
             $this->container
         );
 
