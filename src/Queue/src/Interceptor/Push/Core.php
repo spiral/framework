@@ -30,7 +30,6 @@ final class Core implements CoreInterface
         string $action,
         array $parameters = ['options' => null, 'payload' => []]
     ): string {
-        \assert($parameters['options'] === null || $parameters['options'] instanceof OptionsInterface);
         \assert(\is_array($parameters['payload']));
 
         if ($parameters['options'] === null) {
