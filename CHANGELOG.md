@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.2.0 - 2022-10-21
 - **High Impact Changes**
 - **Medium Impact Changes**
 - **Other Features**
