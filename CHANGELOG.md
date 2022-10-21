@@ -9,7 +9,10 @@
     `Spiral\Queue\ExtendedOptionsInterface`.
   - [spiral/events] Added event interceptors.
   - [spiral/core] Added container instance to callback function parameters in `Spiral\Core\Container` and 
-    `Spiral\Core\ContainerScope`.       
+    `Spiral\Core\ContainerScope`.
+  - [spiral/core] Improved ContainerException message
+- **Bug Fixes**     
+  - [spiral/queue] Fixed problem with using push interceptors in Queue component
 
 ## v3.1.0 - 2022-09-29
 - **Other Features**
