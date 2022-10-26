@@ -51,7 +51,9 @@ final class Core implements CoreInterface
                 payload: $parameters['payload'],
                 options: $parameters['options']
             ),
-            attributes: compact('controller', 'action')
+            attributes: [
+                'queue.handler' => $controller,
+            ]
         );
     }
 

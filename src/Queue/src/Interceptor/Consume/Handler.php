@@ -40,7 +40,12 @@ final class Handler
                 'payload' => $payload,
                 'headers' => $headers,
             ]),
-            attributes: compact('driver', 'queue', 'id', 'headers'),
+            attributes: [
+                'queue.driver' => $driver,
+                'queue.name' => $queue,
+                'queue.id' => $id,
+                'queue.headers' => $headers
+            ],
             scoped: true,
             traceKind: TraceKind::CONSUMER
         );
