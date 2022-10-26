@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.2.0 - 2022-10-21
 - **High Impact Changes**
 - **Medium Impact Changes**
 - **Other Features**
@@ -9,7 +9,10 @@
   - [spiral/queue] Added new option `headers` in the `Spiral\Queue\Options` and new interface `Spiral\Queue\ExtendedOptionsInterface`.
   - [spiral/events] Added event interceptors.
   - [spiral/core] Added container instance to callback function parameters in `Spiral\Core\Container` and 
-    `Spiral\Core\ContainerScope`.       
+    `Spiral\Core\ContainerScope`.
+  - [spiral/core] Improved ContainerException message
+- **Bug Fixes**     
+  - [spiral/queue] Fixed problem with using push interceptors in Queue component
 
 ## v3.1.0 - 2022-09-29
 - **Other Features**

@@ -28,8 +28,8 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/exceptions": "^3.2",
-        "spiral/files": "^3.2",
+        "spiral/exceptions": "^3.3",
+        "spiral/files": "^3.3",
         "symfony/finder": "^5.3.7|^6.0"
     },
     "require-dev": {
@@ -48,7 +48,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.2.x-dev"
+            "dev-master": "3.3.x-dev"
         }
     },
     "config": {
