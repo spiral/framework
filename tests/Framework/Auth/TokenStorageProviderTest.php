@@ -79,7 +79,7 @@ class TokenStorageProviderTest extends BaseTest
         $provider->getStorage();
     }
 
-    function testGetAutowireStorage(): void
+    public function testGetAutowireStorage(): void
     {
         $storage = m::mock(TokenStorageInterface::class);
 
@@ -95,5 +95,24 @@ class TokenStorageProviderTest extends BaseTest
         $factory->shouldReceive('make')->once()->with('...', [])->andReturn($storage);
 
         $this->assertSame($storage, $provider->getStorage('session'));
+    }
+
+    public function testGetStringStorage(): void
+    {
+        $storage = m::mock(TokenStorageInterface::class);
+
+        $provider = new TokenStorageProvider(
+            new AuthConfig([
+                'defaultStorage' => 'session',
+                'storages' => [
+                    'session' => 'test1',
+                    'database' => 'test2',
+                ],
+            ]), $factory = m::mock(FactoryInterface::class)
+        );
+
+        $factory->shouldReceive('make')->once()->with('test2')->andReturn($storage);
+
+        $this->assertSame($storage, $provider->getStorage('database'));
     }
 }

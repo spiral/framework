@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Framework\Bootloader\Http;
 
 use Spiral\Auth\Config\AuthConfig;
+use Spiral\Auth\Session\TokenStorage;
 use Spiral\Auth\Session\TokenStorage as SessionTokenStorage;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageProvider;
@@ -20,9 +21,7 @@ final class HttpAuthBootloaderTest extends BaseTest
 
     public function testTokenStorageInterfaceBinding(): void
     {
-        $this->mockContainer(TokenStorageProviderInterface::class);
-
-        $this->assertContainerBoundAsSingleton(TokenStorageInterface::class, SessionTokenStorage::class);
+        $this->assertContainerBoundAsSingleton(TokenStorageInterface::class, TokenStorage::class);
     }
 
     public function testConfig(): void
@@ -30,7 +29,7 @@ final class HttpAuthBootloaderTest extends BaseTest
         $this->assertConfigHasFragments(AuthConfig::CONFIG, [
             'defaultStorage' => 'session',
             'storages' => [
-                'session' => SessionTokenStorage::class
+                'session' => SessionTokenStorage::class,
             ],
         ]);
     }

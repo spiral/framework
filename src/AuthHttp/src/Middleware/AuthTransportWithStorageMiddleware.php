@@ -28,13 +28,13 @@ final class AuthTransportWithStorageMiddleware implements MiddlewareInterface
         TokenStorageProviderInterface $tokenStorageProvider,
         TransportRegistry $transportRegistry,
         ?EventDispatcherInterface $eventDispatcher = null,
-        ?string $tokenStorageName = null
+        ?string $storage = null
     ) {
         $this->authMiddleware = new AuthTransportMiddleware(
             $transportName,
             $scope,
             $actorProvider,
-            $tokenStorageProvider->getStorage($tokenStorageName),
+            $tokenStorageProvider->getStorage($storage),
             $transportRegistry,
             $eventDispatcher
         );

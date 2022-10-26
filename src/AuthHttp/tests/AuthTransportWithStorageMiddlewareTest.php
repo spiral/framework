@@ -61,7 +61,7 @@ final class AuthTransportWithStorageMiddlewareTest extends TestCase
             m::mock(ActorProviderInterface::class),
             $storageProvider,
             $registry,
-            tokenStorageName: 'session'
+            storage: 'session'
         );
 
         $this->assertSame(
