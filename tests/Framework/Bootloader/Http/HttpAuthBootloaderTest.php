@@ -28,9 +28,10 @@ final class HttpAuthBootloaderTest extends BaseTest
     {
         $this->assertConfigHasFragments(AuthConfig::CONFIG, [
             'defaultStorage' => 'session',
+            'defaultTransport' => 'cookie',
             'storages' => [
                 'session' => SessionTokenStorage::class,
-            ],
+            ]
         ]);
     }
 }

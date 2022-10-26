@@ -6,5 +6,4 @@ namespace Spiral\Auth\Exception;
 
 class InvalidArgumentException extends AuthException
 {
-
 }

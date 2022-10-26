@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Framework\Auth;
+namespace Spiral\Tests\Auth;
 
+use Mockery as m;
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\Exception\InvalidArgumentException;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageProvider;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
-use Spiral\Tests\Framework\BaseTest;
-use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class TokenStorageProviderTest extends BaseTest
+class TokenStorageProviderTest extends TestCase
 {
     public function testGetStorageByName(): void
     {

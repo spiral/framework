@@ -18,8 +18,10 @@ final class AuthConfig extends InjectableConfig
     public const CONFIG = 'auth';
 
     protected array $config = [
+        'defaultTransport' => 'cookie',
         'defaultStorage' => 'session',
-        'storages' => []
+        'storages' => [],
+        'transports' => [],
     ];
 
     public function getDefaultTransport(): string
