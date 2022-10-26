@@ -44,7 +44,7 @@ final class Handler
                 'queue.driver' => $driver,
                 'queue.name' => $queue,
                 'queue.id' => $id,
-                'queue.headers' => $headers
+                'queue.headers' => $headers,
             ],
             scoped: true,
             traceKind: TraceKind::CONSUMER
