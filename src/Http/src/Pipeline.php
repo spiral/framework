@@ -67,7 +67,7 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             $this->dispatcher?->dispatch(new MiddlewareProcessing($request, $middleware));
 
             return $this->tracer->trace(
-                name: \sprintf('Middleware processing [%]', $middleware::class),
+                name: \sprintf('Middleware processing [%s]', $middleware::class),
                 callback: function (SpanInterface $span) use ($request, $middleware): Response {
                     $response = $middleware->process($request, $this);
 
