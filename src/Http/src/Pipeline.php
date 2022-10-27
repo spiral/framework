@@ -13,6 +13,9 @@ use Spiral\Core\ScopeInterface;
 use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
 use Spiral\Http\Traits\MiddlewareTrait;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\SpanInterface;
+use Spiral\Telemetry\TracerInterface;
 
 /**
  * Pipeline used to pass request and response thought the chain of middleware.
@@ -22,12 +25,15 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
     use MiddlewareTrait;
 
     private int $position = 0;
+    private readonly TracerInterface $tracer;
     private ?RequestHandlerInterface $handler = null;
 
     public function __construct(
         private readonly ScopeInterface $scope,
-        private readonly ?EventDispatcherInterface $dispatcher = null
+        private readonly ?EventDispatcherInterface $dispatcher = null,
+        ?TracerInterface $tracer = null
     ) {
+        $this->tracer = $tracer ?? new NullTracer($scope);
     }
 
     /**
@@ -60,7 +66,29 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             $middleware = $this->middleware[$position];
             $this->dispatcher?->dispatch(new MiddlewareProcessing($request, $middleware));
 
-            return $middleware->process($request, $this);
+            return $this->tracer->trace(
+                name: \sprintf('Middleware processing [%s]', $middleware::class),
+                callback: function (SpanInterface $span) use ($request, $middleware): Response {
+                    $response = $middleware->process($request, $this);
+
+                    $span
+                        ->setAttribute(
+                            'http.status_code',
+                            $response->getStatusCode()
+                        )
+                        ->setAttribute(
+                            'http.response_content_length',
+                            $response->getHeaderLine('Content-Length') ?: $response->getBody()->getSize()
+                        )
+                        ->setStatus($response->getStatusCode() < 500 ? 'OK' : 'ERROR');
+
+                    return $response;
+                },
+                scoped: true,
+                attributes: [
+                    'http.middleware' => $middleware::class,
+                ]
+            );
         }
 
         $handler = $this->handler;

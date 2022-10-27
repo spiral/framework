@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Spiral\Telemetry;
+
+use Spiral\Core\Container;
+use Spiral\Core\ScopeInterface;
+
+/**
+ * @internal The component is under development.
+ * Something may be changed in the future. We will stable it soon.
+ * Feedback is welcome {@link https://github.com/spiral/framework/discussions/822}.
+ */
+final class NullTracerFactory implements TracerFactoryInterface
+{
+    public function __construct(
+        private readonly ?ScopeInterface $scope = new Container(),
+    ) {
+    }
+
+    public function make(array $context = []): TracerInterface
+    {
+        return new NullTracer($this->scope);
+    }
+}

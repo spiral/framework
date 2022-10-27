@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\AuthContext;
 use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\TransportRegistry;
-use Spiral\Core\Container;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
@@ -19,15 +17,8 @@ use Nyholm\Psr7\ServerRequest;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
-class AuthMiddlewareTest extends TestCase
+class AuthMiddlewareTest extends BaseTest
 {
-    private $container;
-
-    public function setUp(): void
-    {
-        $this->container = new Container();
-    }
-
     public function testAttributeRead(): void
     {
         $http = $this->getCore([]);

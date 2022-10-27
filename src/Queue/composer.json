@@ -33,6 +33,7 @@
         "spiral/hmvc": "^3.3",
         "spiral/serializer": "^3.3",
         "spiral/snapshots": "^3.3",
+        "spiral/telemetry": "^3.3",
         "spiral/attributes": "^2.8|^3.0",
         "doctrine/inflector": "^1.4|^2.0",
         "ramsey/uuid": "^4.2.3",

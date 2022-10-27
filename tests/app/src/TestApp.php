@@ -19,6 +19,9 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
     public const LOAD = [
         TokenizerListenerBootloader::class,
 
+        // Telemetry
+        \Spiral\Telemetry\Bootloader\TelemetryBootloader::class,
+
         // Core Services
         Bootloader\SnapshotsBootloader::class,
         Bootloader\I18nBootloader::class,

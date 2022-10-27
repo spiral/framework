@@ -102,6 +102,8 @@ jobs:
             split_repository: 'storage'
           - local_path: 'Streams'
             split_repository: 'streams'
+          - local_path: 'Telemetry'
+            split_repository: 'telemetry'
           - local_path: 'Tokenizer'
             split_repository: 'tokenizer'
           - local_path: 'Translator'

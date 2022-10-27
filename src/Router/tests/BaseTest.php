@@ -21,6 +21,8 @@ use Spiral\Router\Loader\LoaderRegistry;
 use Spiral\Router\Loader\PhpFileLoader;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Router\Diactoros\ResponseFactory;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Router\UriHandler;
@@ -40,10 +42,16 @@ abstract class BaseTest extends TestCase
 
     protected function makeRouter(string $basePath = '', ?EventDispatcherInterface $dispatcher = null): RouterInterface
     {
-        return new Router($basePath, new UriHandler(
-            new UriFactory(),
-            new Slugify()
-        ), $this->container, $dispatcher);
+        return new Router(
+            $basePath,
+            new UriHandler(
+                new UriFactory(),
+                new Slugify()
+            ),
+            $this->container,
+            $dispatcher,
+            new NullTracer($this->container)
+        );
     }
 
     /**
@@ -66,12 +74,18 @@ abstract class BaseTest extends TestCase
     private function initContainer(): void
     {
         $this->container = new Container();
+        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
         $this->container->bind(ResponseFactoryInterface::class, new ResponseFactory(new HttpConfig(['headers' => []])));
         $this->container->bind(UriFactoryInterface::class, new UriFactory());
-        $this->container->bind(LoaderInterface::class, new DelegatingLoader(new LoaderRegistry([
-            new PhpFileLoader($this->container, $this->container),
-            new TestLoader()
-        ])));
+        $this->container->bind(
+            LoaderInterface::class,
+            new DelegatingLoader(
+                new LoaderRegistry([
+                    new PhpFileLoader($this->container, $this->container),
+                    new TestLoader(),
+                ])
+            )
+        );
 
         $this->container->bind(CoreInterface::class, Core::class);
         $this->container->bindSingleton(GroupRegistry::class, GroupRegistry::class);

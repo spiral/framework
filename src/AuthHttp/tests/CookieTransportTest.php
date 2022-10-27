@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\HttpTransportInterface;
@@ -12,7 +11,6 @@ use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\Transport\CookieTransport;
 use Spiral\Auth\TransportRegistry;
 use Spiral\Cookies\Cookie\SameSite;
-use Spiral\Core\Container;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
@@ -22,15 +20,8 @@ use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 use Spiral\Tests\Auth\Stub\TestAuthHttpToken;
 
-class CookieTransportTest extends TestCase
+class CookieTransportTest extends BaseTest
 {
-    private $container;
-
-    public function setUp(): void
-    {
-        $this->container = new Container();
-    }
-
     public function testCookieToken(): void
     {
         $http = $this->getCore(new CookieTransport('auth-token'));

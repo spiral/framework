@@ -32,6 +32,7 @@ use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
 use Spiral\Queue\SerializerRegistryInterface;
+use Spiral\Telemetry\TracerFactoryInterface;
 
 final class QueueBootloader extends Bootloader
 {
@@ -124,6 +125,7 @@ final class QueueBootloader extends Bootloader
         QueueConfig $config,
         ContainerInterface $container,
         FactoryInterface $factory,
+        TracerFactoryInterface $tracerFactory,
         ?EventDispatcherInterface $dispatcher = null
     ): Handler {
         $core = new InterceptableCore($core, $dispatcher);
@@ -139,7 +141,7 @@ final class QueueBootloader extends Bootloader
             $core->addInterceptor($interceptor);
         }
 
-        return new Handler($core);
+        return new Handler($core, $tracerFactory);
     }
 
     protected function initQueue(QueueConnectionProviderInterface $manager): QueueInterface

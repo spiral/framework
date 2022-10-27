@@ -33,6 +33,7 @@
         "spiral/core": "^3.3",
         "spiral/files": "^3.3",
         "spiral/streams": "^3.3",
+        "spiral/telemetry": "^3.3",
         "psr/http-message": "^1.0",
         "psr/http-factory": "^1.0",
         "psr/http-server-middleware": "^1.0",

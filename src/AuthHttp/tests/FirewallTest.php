@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\Exception\AuthException;
@@ -15,7 +14,6 @@ use Spiral\Auth\Middleware\Firewall\ExceptionFirewall;
 use Spiral\Auth\Middleware\Firewall\OverwriteFirewall;
 use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
-use Spiral\Core\Container;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
@@ -25,15 +23,8 @@ use Nyholm\Psr7\Uri;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
-class FirewallTest extends TestCase
+class FirewallTest extends BaseTest
 {
-    private $container;
-
-    public function setUp(): void
-    {
-        $this->container = new Container();
-    }
-
     public function testExceptionOK(): void
     {
         $http = $this->getCore(

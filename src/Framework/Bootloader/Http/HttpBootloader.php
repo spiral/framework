@@ -16,12 +16,18 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
+use Spiral\Telemetry\Bootloader\TelemetryBootloader;
+use Spiral\Telemetry\TracerFactoryInterface;
 
 /**
  * Configures Http dispatcher.
  */
 final class HttpBootloader extends Bootloader implements SingletonInterface
 {
+    protected const DEPENDENCIES = [
+        TelemetryBootloader::class,
+    ];
+
     protected const SINGLETONS = [
         Http::class => [self::class, 'httpCore'],
     ];
@@ -71,9 +77,10 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         Pipeline $pipeline,
         RequestHandlerInterface $handler,
         ResponseFactoryInterface $responseFactory,
-        ContainerInterface $container
+        ContainerInterface $container,
+        TracerFactoryInterface $tracerFactory
     ): Http {
-        $core = new Http($config, $pipeline, $responseFactory, $container);
+        $core = new Http($config, $pipeline, $responseFactory, $container, $tracerFactory);
         $core->setHandler($handler);
 
         return $core;

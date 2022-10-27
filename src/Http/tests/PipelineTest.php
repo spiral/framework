@@ -16,6 +16,8 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
 use Spiral\Http\Pipeline;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 
@@ -78,7 +80,14 @@ class PipelineTest extends TestCase
             ->method('dispatch')
             ->with(new MiddlewareProcessing($request, $middleware));
 
-        $pipeline = new Pipeline(new Container(), $dispatcher);
+        $container = new Container();
+
+        $pipeline = new Pipeline(
+            $container,
+            $dispatcher,
+            new NullTracer($container)
+        );
+
         $pipeline->pushMiddleware($middleware);
 
         $pipeline->withHandler($handler)->handle($request);

@@ -128,7 +128,7 @@ final class FileStorageTest extends TestCase
         $this->files->shouldReceive('exists')->with($path)->andReturnTrue();
         $this->files->shouldReceive('delete')->with($path)->andReturnTrue();
 
-        $this->storage->delete('foo');
+        $this->assertTrue($this->storage->delete('foo'));
     }
 
     public function testDeleteNonExistsKey(): void

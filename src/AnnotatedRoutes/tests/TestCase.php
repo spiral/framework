@@ -14,8 +14,6 @@ use Spiral\Tests\Router\App\App;
 abstract class TestCase extends BaseTestCase
 {
     /**
-     * @param array $env
-     * @return App
      * @throws \Throwable
      */
     protected function makeApp(array $env): App

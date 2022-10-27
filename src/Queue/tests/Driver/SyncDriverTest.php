@@ -8,10 +8,14 @@ use Mockery as m;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidFactoryInterface;
+use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\Job\ObjectJob;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\NullTracerFactory;
+use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Queue\TestCase;
 
 final class SyncDriverTest extends TestCase
@@ -24,17 +28,22 @@ final class SyncDriverTest extends TestCase
     {
         parent::setUp();
 
+        $container = new Container();
+        $container->bind(TracerInterface::class, new NullTracer($container));
+
         Uuid::setFactory($this->factory = m::mock(UuidFactoryInterface::class));
 
         $this->queue = new SyncDriver(
-            new Handler($this->core = m::mock(CoreInterface::class)),
+            new Handler(
+                $this->core = m::mock(CoreInterface::class),
+                new NullTracerFactory($container)
+            )
         );
     }
 
     public function testJobShouldBePushed(): void
     {
         $this->factory->shouldReceive('uuid4')
-            ->once()
             ->andReturn($uuid = (new UuidFactory())->uuid4());
 
         $this->core->shouldReceive('callAction')
@@ -58,7 +67,6 @@ final class SyncDriverTest extends TestCase
         $object->foo = 'bar';
 
         $this->factory->shouldReceive('uuid4')
-            ->once()
             ->andReturn($uuid = (new UuidFactory())->uuid4());
 
         $this->core->shouldReceive('callAction')

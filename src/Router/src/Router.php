@@ -18,6 +18,9 @@ use Spiral\Router\Exception\RouterException;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 use Spiral\Router\Target\AbstractTarget;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\SpanInterface;
+use Spiral\Telemetry\TracerInterface;
 
 /**
  * Manages set of routes.
@@ -44,7 +47,8 @@ final class Router implements RouterInterface
         string $basePath,
         private readonly UriHandler $uriHandler,
         private readonly ContainerInterface $container,
-        private readonly ?EventDispatcherInterface $eventDispatcher = null
+        private readonly ?EventDispatcherInterface $eventDispatcher = null,
+        private readonly ?TracerInterface $tracer = new NullTracer(),
     ) {
         $this->basePath = '/' . \ltrim($basePath, '/');
     }
@@ -57,25 +61,35 @@ final class Router implements RouterInterface
     {
         $this->eventDispatcher?->dispatch(new Routing($request));
 
-        try {
-            $route = $this->matchRoute($request, $routeName);
-        } catch (RouteException $e) {
-            throw new RouterException('Invalid route definition', $e->getCode(), $e);
-        }
+        return $this->tracer->trace(
+            name: 'Routing',
+            callback: function (SpanInterface $span) use ($request) {
+                try {
+                    $route = $this->matchRoute($request, $routeName);
+                } catch (RouteException $e) {
+                    throw new RouterException('Invalid route definition', $e->getCode(), $e);
+                }
 
-        if ($route === null) {
-            $this->eventDispatcher?->dispatch(new RouteNotFound($request));
-            throw new RouteNotFoundException($request->getUri());
-        }
+                if ($route === null) {
+                    $this->eventDispatcher?->dispatch(new RouteNotFound($request));
+                    throw new RouteNotFoundException($request->getUri());
+                }
 
-        $request = $request
-            ->withAttribute(self::ROUTE_ATTRIBUTE, $route)
-            ->withAttribute(self::ROUTE_NAME, $routeName)
-            ->withAttribute(self::ROUTE_MATCHES, $route->getMatches() ?? []);
+                $span
+                    ->setAttribute('request.uri', (string)$request->getUri())
+                    ->setAttribute('route.name', $routeName)
+                    ->setAttribute('route.matches', $route->getMatches() ?? []);
 
-        $this->eventDispatcher?->dispatch(new RouteMatched($request, $route));
+                $request = $request
+                    ->withAttribute(self::ROUTE_ATTRIBUTE, $route)
+                    ->withAttribute(self::ROUTE_NAME, $routeName)
+                    ->withAttribute(self::ROUTE_MATCHES, $route->getMatches() ?? []);
 
-        return $route->handle($request);
+                $this->eventDispatcher?->dispatch(new RouteMatched($request, $route));
+
+                return $route->handle($request);
+            }
+        );
     }
 
     public function setRoute(string $name, RouteInterface $route): void
@@ -222,7 +236,7 @@ final class Router implements RouterInterface
         return $routeObject->withDefaults(
             [
                 'controller' => $matches['controller'],
-                'action'     => $matches['action'],
+                'action' => $matches['action'],
             ]
         );
     }

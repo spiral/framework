@@ -1,0 +1,58 @@
+{
+    "name": "spiral/telemetry",
+    "type": "library",
+    "description": "Telemetry is a collection of tools to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) to help you analyze your software’s performance and behavior.",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/telemetry"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
+        },
+        {
+            "name": "Pavel Butchnev (butschster)",
+            "email": "pavel.buchnev@spiralscout.com"
+        },
+        {
+            "name": "Aleksei Gagarin (roxblnfk)",
+            "email": "alexey.gagarin@spiralscout.com"
+        },
+        {
+            "name": "Maksim Smakouz (msmakouz)",
+            "email": "maksim.smakouz@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "spiral/boot": "^3.2",
+        "spiral/core": "^3.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.20",
+        "vimeo/psalm": "^4.27"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Telemetry\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Telemetry\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.2.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

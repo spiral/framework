@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,16 +16,22 @@ use Spiral\Http\Event\RequestReceived;
 use Spiral\Http\Exception\HttpException;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\TracerFactoryInterface;
+use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 
 class HttpTest extends TestCase
 {
-    private $container;
+    use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    private Container $container;
 
     public function setUp(): void
     {
         $this->container = new Container();
+        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
     }
 
     public function testGetPipeline(): void
@@ -58,9 +65,11 @@ class HttpTest extends TestCase
     public function testHandlerInterface(): void
     {
         $core = $this->getCore();
-        $core->setHandler(new CallableHandler(function () {
-            return 'hello world';
-        }, new ResponseFactory(new HttpConfig(['headers' => []]))));
+        $core->setHandler(
+            new CallableHandler(function () {
+                return 'hello world';
+            }, new ResponseFactory(new HttpConfig(['headers' => []])))
+        );
 
         $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame('hello world', (string)$response->getBody());
@@ -139,7 +148,7 @@ class HttpTest extends TestCase
 
         $core->setHandler(function () {
             return [
-                'status'  => 404,
+                'status' => 404,
                 'message' => 'not found',
             ];
         });
@@ -155,7 +164,7 @@ class HttpTest extends TestCase
 
         $core->setHandler(function () {
             return new Json([
-                'status'  => 404,
+                'status' => 404,
                 'message' => 'not found',
             ]);
         });
@@ -250,7 +259,7 @@ class HttpTest extends TestCase
         $dispatcher
             ->expects(self::exactly(2))
             ->method('dispatch')
-            ->with($this->callback(static fn (RequestReceived|RequestHandled $event): bool => true));
+            ->with($this->callback(static fn(RequestReceived|RequestHandled $event): bool => true));
         $this->container->bind(EventDispatcherInterface::class, $dispatcher);
 
         $core = $this->getCore();
@@ -263,15 +272,35 @@ class HttpTest extends TestCase
         $this->assertSame('hello world', (string)$response->getBody());
     }
 
+    public function testPassingTracerIntoScope(): void
+    {
+        $config = $this->getHttpConfig();
+        $request = new ServerRequest('GET', '', ['foo' => ['bar']]);
+
+        $http = new Http(
+            $config,
+            new Pipeline($this->container),
+            new ResponseFactory($config),
+            $this->container,
+            $tracerFactory = m::mock(TracerFactoryInterface::class),
+        );
+
+        $http->setHandler(function () {
+            return 'hello world';
+        });
+
+        $tracerFactory->shouldReceive('make')
+            ->once()
+            ->with(['foo' => ['bar']])
+            ->andReturn($tracer = new NullTracer());
+
+        $response = $http->handle($request);
+        $this->assertSame('hello world', (string)$response->getBody());
+    }
+
     protected function getCore(array $middleware = []): Http
     {
-        $config = new HttpConfig([
-            'basePath'   => '/',
-            'headers'    => [
-                'Content-Type' => 'text/html; charset=UTF-8',
-            ],
-            'middleware' => $middleware,
-        ]);
+        $config = $this->getHttpConfig($middleware);
 
         return new Http(
             $config,
@@ -279,5 +308,16 @@ class HttpTest extends TestCase
             new ResponseFactory($config),
             $this->container
         );
+    }
+
+    public function getHttpConfig(array $middleware = []): HttpConfig
+    {
+        return new HttpConfig([
+            'basePath' => '/',
+            'headers' => [
+                'Content-Type' => 'text/html; charset=UTF-8',
+            ],
+            'middleware' => $middleware,
+        ]);
     }
 }

@@ -85,7 +85,6 @@ final class QueueInjectorTest extends TestCase
         ]);
         $factory = m::mock(FactoryInterface::class);
         $factory->shouldReceive('make')->andReturnUsing(function (string $name): QueueInterface {
-            var_dump($name);
             $result = ['sync' => $this->defaultQueue, 'test' => $this->testQueue][$name] ?? null;
 
             if ($result === null) {

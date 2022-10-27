@@ -16,10 +16,12 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Nyholm\Psr7\ServerRequest;
+use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\TracerInterface;
 
 class CsrfTest extends TestCase
 {
-    private $container;
+    private Container $container;
 
     public function setUp(): void
     {
@@ -33,6 +35,11 @@ class CsrfTest extends TestCase
                     'lifetime' => 86400
                 ]
             )
+        );
+
+        $this->container->bind(
+            TracerInterface::class,
+            new NullTracer($this->container)
         );
 
         $this->container->bind(
