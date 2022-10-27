@@ -37,7 +37,7 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
     protected const SINGLETONS = [
         TransportRegistry::class => [self::class, 'transportRegistry'],
         TokenStorageInterface::class => [self::class, 'getDefaultTokenStorage'],
-        TokenStorageProviderInterface::class => TokenStorageProvider::class
+        TokenStorageProviderInterface::class => TokenStorageProvider::class,
     ];
 
     public function __construct(
@@ -53,7 +53,7 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
                 'defaultTransport' => $env->get('AUTH_TOKEN_TRANSPORT', 'cookie'),
                 'defaultStorage' => $env->get('AUTH_TOKEN_STORAGE', 'session'),
                 'transports' => [],
-                'storages' => []
+                'storages' => [],
             ]
         );
 

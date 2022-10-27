@@ -31,7 +31,7 @@ final class HttpAuthBootloaderTest extends BaseTest
             'defaultTransport' => 'cookie',
             'storages' => [
                 'session' => SessionTokenStorage::class,
-            ]
+            ],
         ]);
     }
 }
