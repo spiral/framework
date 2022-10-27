@@ -67,9 +67,6 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         // Events
         \Spiral\Events\Bootloader\EventsBootloader::class,
 
-        // Auth
-        Bootloader\Auth\HttpAuthBootloader::class,
-
         // selects between session and cycle based on env configuration
         AuthBootloader::class,
 

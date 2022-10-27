@@ -115,6 +115,9 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
         return $registry;
     }
 
+    /**
+     * Get default token storage from provider
+     */
     private function getDefaultTokenStorage(TokenStorageProviderInterface $provider): TokenStorageInterface
     {
         return $provider->getStorage();
