@@ -10,6 +10,9 @@ use Spiral\Auth\Session\TokenStorage as SessionTokenStorage;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageProvider;
 use Spiral\Auth\TokenStorageProviderInterface;
+use Spiral\Bootloader\Auth\HttpAuthBootloader;
+use Spiral\Config\LoaderInterface;
+use Spiral\Config\ConfigManager;
 use Spiral\Tests\Framework\BaseTest;
 
 final class HttpAuthBootloaderTest extends BaseTest
@@ -33,5 +36,27 @@ final class HttpAuthBootloaderTest extends BaseTest
                 'session' => SessionTokenStorage::class,
             ],
         ]);
+    }
+
+    public function testAddTokenStorage(): void
+    {
+        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs->setDefaults(AuthConfig::CONFIG, ['storages' => []]);
+
+        $bootloader = new HttpAuthBootloader($configs);
+        $bootloader->addTokenStorage('foo', 'bar');
+
+        $this->assertSame(['foo' => 'bar'], $configs->getConfig(AuthConfig::CONFIG)['storages']);
+    }
+
+    public function testAddTransport(): void
+    {
+        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs->setDefaults(AuthConfig::CONFIG, ['transports' => []]);
+
+        $bootloader = new HttpAuthBootloader($configs);
+        $bootloader->addTransport('foo', 'bar');
+
+        $this->assertSame(['foo' => 'bar'], $configs->getConfig(AuthConfig::CONFIG)['transports']);
     }
 }
