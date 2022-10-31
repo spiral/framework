@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Auth;
+namespace Spiral\Tests\Auth\Middleware;
 
 use Spiral\Auth\ActorProviderInterface;
 use Spiral\Auth\Middleware\AuthTransportMiddleware;
@@ -12,6 +12,7 @@ use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\ScopeInterface;
+use Spiral\Tests\Auth\BaseTest;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
