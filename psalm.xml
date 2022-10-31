@@ -29,9 +29,4 @@
             </errorLevel>
         </InvalidThrow>
     </issueHandlers>
-    <stubs>
-        <file name="resources/stubs/php/reflection/Attribute.phpstub" />
-        <file name="resources/stubs/php/reflection/ReflectionAttribute.phpstub" />
-        <file name="resources/stubs/php/reflection/ReflectionUnionType.phpstub" />
-    </stubs>
 </psalm>
