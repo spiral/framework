@@ -93,7 +93,7 @@ final class ListCommand extends Command implements SingletonInterface
         return \preg_replace_callback(
             '/<([^>]*)>/',
             static fn ($m) => \sprintf('<fg=magenta>%s</>', $m[0]),
-            !empty($prefix) ? $prefix . '/' .  \trim($pattern, '/') : $pattern
+            !empty($prefix) ? $prefix . '/' . \trim($pattern, '/') : $pattern
         );
     }
 
