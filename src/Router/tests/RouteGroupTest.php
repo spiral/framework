@@ -75,11 +75,12 @@ final class RouteGroupTest extends BaseTest
         $group = $this->createRouteGroup();
         $group->addMiddleware($middleware);
 
-        $group->addRoute('name', new Route('/', new Action('controller', 'method')));
+        $route = new Route('/', new Action('controller', 'method'));
+        $group->addRoute('name', $route->withContainer($this->container));
         $r = $this->router->getRoute('name');
 
         $p = $this->getProperty($r, 'pipeline');
-        $m = $this->getProperty($p, 'middleware');
+        $m = $this->getProperty($this->getProperty($p, 'middleware')[0], 'middleware');
 
         $this->assertCount(1, $m);
         $this->assertInstanceOf(TestMiddleware::class, $m[0]);
@@ -91,9 +92,7 @@ final class RouteGroupTest extends BaseTest
         $group->addMiddleware(TestMiddleware::class);
 
         $route = new Route('/', new Action('controller', 'method'));
-        $route = $route->withMiddleware(AnotherMiddleware::class);
-
-        $group->addRoute('name', $route);
+        $group->addRoute('name', $route->withContainer($this->container)->withMiddleware(AnotherMiddleware::class));
         $r = $this->router->getRoute('name');
 
         $p = $this->getProperty($r, 'pipeline');
@@ -101,7 +100,7 @@ final class RouteGroupTest extends BaseTest
 
         $this->assertCount(2, $m);
 
-        $this->assertInstanceOf(TestMiddleware::class, $m[1]);
+        $this->assertInstanceOf(TestMiddleware::class, $this->getProperty($m[1], 'middleware')[0]);
         $this->assertInstanceOf(AnotherMiddleware::class, $m[0]);
     }
 
@@ -137,6 +136,6 @@ final class RouteGroupTest extends BaseTest
     {
         $handler = new UriHandler(new Psr17Factory());
 
-        return new RouteGroup($this->container, $this->router, $handler);
+        return new RouteGroup($this->container, $this->router, $handler, 'foo');
     }
 }

@@ -24,7 +24,7 @@ final class GroupRegistry implements \IteratorAggregate
     public function getGroup(string $name): RouteGroup
     {
         if (!isset($this->groups[$name])) {
-            $this->groups[$name] = $this->factory->make(RouteGroup::class);
+            $this->groups[$name] = $this->factory->make(RouteGroup::class, ['name' => $name]);
         }
 
         return $this->groups[$name];

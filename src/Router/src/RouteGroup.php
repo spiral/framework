@@ -6,8 +6,10 @@ namespace Spiral\Router;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterface;
+use Spiral\Http\Pipeline;
 use Spiral\Router\Target\AbstractTarget;
 
 /**
@@ -29,7 +31,8 @@ final class RouteGroup
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly RouterInterface $router,
-        private readonly UriHandler $handler
+        private readonly UriHandler $handler,
+        private readonly ?string $name = null
     ) {
     }
 
@@ -87,6 +90,15 @@ final class RouteGroup
     {
         $this->middleware[] = $middleware;
 
+        if ($this->container instanceof BinderInterface && $this->name !== null) {
+            $this->container->bind(
+                'middleware:' . $this->name,
+                function (PipelineFactory $factory): Pipeline {
+                    return $factory->createWithMiddleware($this->middleware);
+                }
+            );
+        }
+
         // update routes
         $this->flushRoutes();
 
@@ -110,6 +122,10 @@ final class RouteGroup
      */
     public function addRoute(string $name, Route $route): self
     {
+        if ($this->name !== null && $this->middleware !== []) {
+            $route = $route->withMiddleware('middleware:' . $this->name);
+        }
+
         $this->routes[] = $this->namePrefix . $name;
 
         $this->router->setRoute($this->namePrefix . $name, $this->applyGroupParams($route));
@@ -133,8 +149,6 @@ final class RouteGroup
             $uriHandler = $this->handler;
         }
 
-        return $route
-            ->withUriHandler($uriHandler->withPrefix($this->prefix))
-            ->withMiddleware(...$this->middleware);
+        return $route->withUriHandler($uriHandler->withPrefix($this->prefix));
     }
 }
