@@ -37,8 +37,9 @@ final class RouteLocatorListener implements TokenizationListenerInterface
 
     public function finalize(): void
     {
-        $routes = [];
+        $defaultGroup = $this->groups->getDefaultGroup();
 
+        $routes = [];
         foreach ($this->attributes as $classes) {
             [$method, $route] = $classes;
             $class = $method->getDeclaringClass();
@@ -47,7 +48,7 @@ final class RouteLocatorListener implements TokenizationListenerInterface
                 'pattern' => $route->route,
                 'controller' => $class->getName(),
                 'action' => $method->getName(),
-                'group' => $route->group,
+                'group' => $route->group ?? $defaultGroup,
                 'verbs' => (array)$route->methods,
                 'defaults' => $route->defaults,
                 'middleware' => $route->middleware,

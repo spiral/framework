@@ -13,15 +13,23 @@ use Spiral\Tests\Router\Stub\TestMiddleware;
 
 class RouteTest extends BaseTest
 {
-    public function testPrefix(): void
+    public function testEmptyPrefix(): void
     {
         $route = new Route('/action', Call::class);
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
-        $this->assertSame('', $route->getUriHandler()->getPrefix());
 
-        $route2 = $route->withUriHandler($route->getUriHandler()->withPrefix('/something'));
-        $this->assertSame('/something', $route2->getUriHandler()->getPrefix());
         $this->assertSame('', $route->getUriHandler()->getPrefix());
+    }
+
+    /**
+     * @dataProvider prefixesDataProvider
+     */
+    public function testPrefix(string $prefix, string $expected): void
+    {
+        $route = new Route('/action', Call::class);
+        $route = $route->withUriHandler((new UriHandler(new UriFactory()))->withPrefix($prefix));
+
+        $this->assertSame($expected, $route->getUriHandler()->getPrefix());
     }
 
     public function testContainerException(): void
@@ -45,5 +53,15 @@ class RouteTest extends BaseTest
 
         $this->assertCount(1, $m);
         $this->assertInstanceOf(TestMiddleware::class, $m[0]);
+    }
+
+    public function prefixesDataProvider(): \Traversable
+    {
+        yield ['something', 'something'];
+        yield ['/something/', 'something'];
+        yield ['//something/', 'something'];
+        yield ['something//', 'something'];
+        yield ['something/other', 'something/other'];
+        yield ['/something/other/', 'something/other'];
     }
 }

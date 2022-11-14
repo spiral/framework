@@ -8,7 +8,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterface;
-use Spiral\Http\Pipeline;
 use Spiral\Router\Target\AbstractTarget;
 
 /**
@@ -17,6 +16,7 @@ use Spiral\Router\Target\AbstractTarget;
 final class RouteGroup
 {
     private string $prefix = '';
+    private string $namePrefix = '';
 
     /** @var string[] */
     private array $routes = [];
@@ -47,6 +47,19 @@ final class RouteGroup
     public function setPrefix(string $prefix): self
     {
         $this->prefix = $prefix;
+
+        // update routes
+        $this->flushRoutes();
+
+        return $this;
+    }
+
+    /**
+     * Route name prefix added to all routes.
+     */
+    public function setNamePrefix(string $prefix): self
+    {
+        $this->namePrefix = $prefix;
 
         // update routes
         $this->flushRoutes();
@@ -97,9 +110,9 @@ final class RouteGroup
      */
     public function addRoute(string $name, Route $route): self
     {
-        $this->routes[] = $name;
+        $this->routes[] = $this->namePrefix . $name;
 
-        $this->router->setRoute($name, $this->applyGroupParams($route));
+        $this->router->setRoute($this->namePrefix . $name, $this->applyGroupParams($route));
 
         return $this;
     }
@@ -114,8 +127,14 @@ final class RouteGroup
             }
         }
 
+        try {
+            $uriHandler = $route->getUriHandler();
+        } catch (\Throwable) {
+            $uriHandler = $this->handler;
+        }
+
         return $route
-            ->withUriHandler($this->handler->withPrefix($this->prefix))
+            ->withUriHandler($uriHandler->withPrefix($this->prefix))
             ->withMiddleware(...$this->middleware);
     }
 }
