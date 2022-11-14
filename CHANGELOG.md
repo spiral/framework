@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Other Features**
+- [spiral/router] Added the ability to add a `prefix` to the `name` of all routes in a **group**.
+
 ## 3.2.0 - 2022-10-21
 - **High Impact Changes**
 - **Medium Impact Changes**
