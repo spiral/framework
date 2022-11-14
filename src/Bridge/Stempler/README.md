@@ -9,7 +9,7 @@
 [![type-coverage](https://shepherd.dev/github/spiral/stempler-bridge/coverage.svg)](https://shepherd.dev/github/spiral/stempler-bridge)
 [![psalm-level](https://shepherd.dev/github/spiral/stempler-bridge/level.svg)](https://shepherd.dev/github/spiral/stempler-bridge)
 
-<b>[Documentation](https://spiral.dev/docs/stempler-configuratio)</b> | [Framework Bundle](https://github.com/spiral/framework)
+<b>[Documentation](https://spiral.dev/docs/stempler-configuration)</b> | [Framework Bundle](https://github.com/spiral/framework)
 
 ## License:
 
