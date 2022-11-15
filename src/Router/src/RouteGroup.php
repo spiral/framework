@@ -34,6 +34,7 @@ final class RouteGroup
         private readonly UriHandler $handler,
         private readonly ?string $name = null
     ) {
+        $this->bindMiddlewares();
     }
 
     /**
@@ -90,18 +91,6 @@ final class RouteGroup
     {
         $this->middleware[] = $middleware;
 
-        if ($this->container instanceof BinderInterface && $this->name !== null) {
-            $this->container->bind(
-                'middleware:' . $this->name,
-                function (PipelineFactory $factory): Pipeline {
-                    return $factory->createWithMiddleware($this->middleware);
-                }
-            );
-        }
-
-        // update routes
-        $this->flushRoutes();
-
         return $this;
     }
 
@@ -150,5 +139,17 @@ final class RouteGroup
         }
 
         return $route->withUriHandler($uriHandler->withPrefix($this->prefix));
+    }
+
+    private function bindMiddlewares(): void
+    {
+        if ($this->container instanceof BinderInterface && $this->name !== null) {
+            $this->container->bind(
+                'middleware:' . $this->name,
+                function (PipelineFactory $factory): Pipeline {
+                    return $factory->createWithMiddleware($this->middleware);
+                }
+            );
+        }
     }
 }
