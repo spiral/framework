@@ -21,13 +21,12 @@ final class PlainRenderer implements RendererInterface
 
     public function renderException(Request $request, int $code, \Throwable $exception): Response
     {
-        $message = $exception->getMessage();
         $acceptItems = AcceptHeader::fromString($request->getHeaderLine('Accept'))->getAll();
 
         $response = $this->responseFactory->createResponse($code);
         if ($acceptItems && $acceptItems[0]->getValue() === 'application/json') {
             $response = $response->withHeader('Content-Type', 'application/json; charset=UTF-8');
-            $response->getBody()->write(\json_encode(['status' => $code, 'error' => $message]));
+            $response->getBody()->write(\json_encode(['status' => $code]));
         } else {
             $response->getBody()->write("Error code: {$code}");
         }

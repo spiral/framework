@@ -44,12 +44,13 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         } catch (ClientException|RouterException $e) {
             $code = $e instanceof ClientException ? $e->getCode() : 404;
         } catch (\Throwable $e) {
-            $this->errorHandler->report($e);
-
-            if (!$this->suppressErrors->suppressed()) {
-                return $this->renderError($request, $e);
-            }
             $code = 500;
+        }
+
+        $this->errorHandler->report($e);
+
+        if (!$this->suppressErrors->suppressed()) {
+            return $this->renderError($request, $e, $code);
         }
 
         $this->logError($request, $code, $e->getMessage());
@@ -60,9 +61,9 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     /**
      * @throws \Throwable
      */
-    private function renderError(Request $request, \Throwable $e): Response
+    private function renderError(Request $request, \Throwable $e, int $code): Response
     {
-        $response = $this->responseFactory->createResponse(500);
+        $response = $this->responseFactory->createResponse($code);
 
         [$format, $renderer] = $this->getRenderer($this->errorHandler, $request);
 
