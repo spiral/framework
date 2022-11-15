@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Spiral\Tests\Router;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Http\Message\UriFactoryInterface;
 use Spiral\Core\Container;
 use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\Route;
 use Spiral\Router\RouteGroup;
 use Spiral\Router\Target\AbstractTarget;
 use Spiral\Router\Target\Action;
-use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Stub\AnotherMiddleware;
 use Spiral\Tests\Router\Stub\RoutesTestCore;
 use Spiral\Tests\Router\Stub\TestMiddleware;
@@ -24,15 +24,17 @@ final class RouteGroupTest extends BaseTest
 
         $this->container = new Container();
         $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
+        $this->container->bind(UriFactoryInterface::class, Psr17Factory::class);
     }
 
     public function testCoreString(): void
     {
-        $group = $this->createRouteGroup();
+        $group = new RouteGroup();
 
         $group->setCore(RoutesTestCore::class);
-
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
+        $group->register($this->router, $this->container);
+
         $t = $this->getProperty($this->router->getRoute('name'), 'target');
 
         $this->assertInstanceOf(Action::class, $t);
@@ -45,11 +47,12 @@ final class RouteGroupTest extends BaseTest
 
     public function testCoreObject(): void
     {
-        $group = $this->createRouteGroup();
+        $group = new RouteGroup();
 
         $group->setCore(new RoutesTestCore($this->container));
-
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
+        $group->register($this->router, $this->container);
+
         $t = $this->getProperty($this->router->getRoute('name'), 'target');
 
         $this->assertInstanceOf(Action::class, $t);
@@ -62,9 +65,11 @@ final class RouteGroupTest extends BaseTest
 
     public function testGroupHasRoute(): void
     {
-        $group = $this->createRouteGroup();
+        $group = new RouteGroup();
 
         $group->addRoute('foo', new Route('/', new Action('controller', 'method')));
+        $group->register($this->router, $this->container);
+
         $this->assertTrue($group->hasRoute('foo'));
         $this->assertFalse($group->hasRoute('bar'));
     }
@@ -72,15 +77,17 @@ final class RouteGroupTest extends BaseTest
     /** @dataProvider middlewaresDataProvider */
     public function testMiddleware(mixed $middleware): void
     {
-        $group = $this->createRouteGroup();
+        $group = new RouteGroup();
         $group->addMiddleware($middleware);
 
         $route = new Route('/', new Action('controller', 'method'));
         $group->addRoute('name', $route->withContainer($this->container));
+        $group->register($this->router, $this->container);
+
         $r = $this->router->getRoute('name');
 
         $p = $this->getProperty($r, 'pipeline');
-        $m = $this->getProperty($this->getProperty($p, 'middleware')[0], 'middleware');
+        $m = $this->getProperty($p, 'middleware');
 
         $this->assertCount(1, $m);
         $this->assertInstanceOf(TestMiddleware::class, $m[0]);
@@ -88,11 +95,13 @@ final class RouteGroupTest extends BaseTest
 
     public function testRouteWithMiddlewareAddGroupMiddleware(): void
     {
-        $group = $this->createRouteGroup();
+        $group = new RouteGroup();
         $group->addMiddleware(TestMiddleware::class);
 
         $route = new Route('/', new Action('controller', 'method'));
         $group->addRoute('name', $route->withContainer($this->container)->withMiddleware(AnotherMiddleware::class));
+        $group->register($this->router, $this->container);
+
         $r = $this->router->getRoute('name');
 
         $p = $this->getProperty($r, 'pipeline');
@@ -100,23 +109,25 @@ final class RouteGroupTest extends BaseTest
 
         $this->assertCount(2, $m);
 
-        $this->assertInstanceOf(TestMiddleware::class, $this->getProperty($m[1], 'middleware')[0]);
+        $this->assertInstanceOf(TestMiddleware::class, $m[1]);
         $this->assertInstanceOf(AnotherMiddleware::class, $m[0]);
     }
 
     public function testWithoutNamePrefix(): void
     {
-        $group = $this->createRouteGroup();
+        $group = new RouteGroup();
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
+        $group->register($this->router, $this->container);
 
         $this->assertTrue($group->hasRoute('name'));
     }
 
     public function testWithNamePrefix(): void
     {
-        $group = $this->createRouteGroup();
+        $group = new RouteGroup();
         $group->setNamePrefix('admin.');
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
+        $group->register($this->router, $this->container);
 
         $this->assertTrue($group->hasRoute('admin.name'));
         $this->assertFalse($group->hasRoute('name'));
@@ -130,12 +141,5 @@ final class RouteGroupTest extends BaseTest
         $r = new \ReflectionClass(AbstractTarget::class);
 
         return $r->getProperty($property)->getValue($object);
-    }
-
-    private function createRouteGroup(): RouteGroup
-    {
-        $handler = new UriHandler(new Psr17Factory());
-
-        return new RouteGroup($this->container, $this->router, $handler, 'foo');
     }
 }

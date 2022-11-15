@@ -24,7 +24,7 @@ final class GroupRegistry implements \IteratorAggregate
     public function getGroup(string $name): RouteGroup
     {
         if (!isset($this->groups[$name])) {
-            $this->groups[$name] = $this->factory->make(RouteGroup::class, ['name' => $name]);
+            $this->groups[$name] = $this->factory->make(RouteGroup::class);
         }
 
         return $this->groups[$name];
@@ -40,6 +40,18 @@ final class GroupRegistry implements \IteratorAggregate
     public function getDefaultGroup(): string
     {
         return $this->defaultGroup;
+    }
+
+    /**
+     * Push routes from each group to the router.
+     *
+     * @internal
+     */
+    public function registerRoutes(): void
+    {
+        foreach ($this->groups as $group) {
+            $group->register($this->factory->make(RouterInterface::class), $this->factory);
+        }
     }
 
     /**

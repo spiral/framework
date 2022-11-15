@@ -55,14 +55,19 @@ final class RouterBootloader extends Bootloader
 
     public function boot(AbstractKernel $kernel): void
     {
+        $configuratorCallback = static function (RouterInterface $router, RoutingConfigurator $routes): void {
+            $router->import($routes);
+        };
+        $groupsCallback = static function (GroupRegistry $groups): void {
+            $groups->registerRoutes();
+        };
+
         if ($kernel instanceof Kernel) {
-            $kernel->appBooted(static function (RouterInterface $router, RoutingConfigurator $routes): void {
-                $router->import($routes);
-            });
+            $kernel->appBooted($configuratorCallback);
+            $kernel->appBooted($groupsCallback);
         } else {
-            $kernel->booted(static function (RouterInterface $router, RoutingConfigurator $routes): void {
-                $router->import($routes);
-            });
+            $kernel->booted($configuratorCallback);
+            $kernel->booted($groupsCallback);
         }
     }
 
