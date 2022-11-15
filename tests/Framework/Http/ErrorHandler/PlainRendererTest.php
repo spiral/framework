@@ -28,7 +28,7 @@ final class PlainRendererTest extends TestCase
 
         $stream = $response->getBody();
         $stream->rewind();
-        self::assertJsonStringEqualsJsonString('{"status": 400, "error": "message"}', $stream->getContents());
+        self::assertJsonStringEqualsJsonString('{"status": 400}', $stream->getContents());
     }
 
     public function testNoAcceptHeader(): void
@@ -61,7 +61,7 @@ final class PlainRendererTest extends TestCase
 
         $stream = $response->getBody();
         $stream->rewind();
-        self::assertJsonStringEqualsJsonString('{"status": 400, "error": "message"}', $stream->getContents());
+        self::assertJsonStringEqualsJsonString('{"status": 400}', $stream->getContents());
     }
 
     public function dataResponseIsJson(): iterable
