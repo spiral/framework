@@ -47,10 +47,10 @@ final class GroupRegistry implements \IteratorAggregate
      *
      * @internal
      */
-    public function registerRoutes(): void
+    public function registerRoutes(RouterInterface $router): void
     {
         foreach ($this->groups as $group) {
-            $group->register($this->factory->make(RouterInterface::class), $this->factory);
+            $group->register($router, $this->factory);
         }
     }
 

@@ -58,8 +58,8 @@ final class RouterBootloader extends Bootloader
         $configuratorCallback = static function (RouterInterface $router, RoutingConfigurator $routes): void {
             $router->import($routes);
         };
-        $groupsCallback = static function (GroupRegistry $groups): void {
-            $groups->registerRoutes();
+        $groupsCallback = static function (RouterInterface $router, GroupRegistry $groups): void {
+            $groups->registerRoutes($router);
         };
 
         if ($kernel instanceof Kernel) {
