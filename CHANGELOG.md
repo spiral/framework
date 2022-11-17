@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.3.0 - 2022-11-17
 - **High Impact Changes**
   - [spiral/router] Added the ability to add a `prefix` to the `name` of all routes in a **group**.
   - [spiral/auth] Added `Spiral\Auth\TokenStorageProviderInterface` to allow custom token storages and an ability to set default token storage via `auth` config.
