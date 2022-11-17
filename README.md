@@ -11,6 +11,7 @@
 <a href="https://packagist.org/packages/spiral/framework"><img src="https://poser.pugx.org/spiral/framework/downloads"></a>
 <a href="https://shepherd.dev/github/spiral/framework"><img src="https://shepherd.dev/github/spiral/framework/coverage.svg"></a>
 <a href="https://shepherd.dev/github/spiral/framework"><img src="https://shepherd.dev/github/spiral/framework/level.svg"></a>
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 </p>
 
 <hr />
