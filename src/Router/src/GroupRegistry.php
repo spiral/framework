@@ -43,6 +43,18 @@ final class GroupRegistry implements \IteratorAggregate
     }
 
     /**
+     * Push routes from each group to the router.
+     *
+     * @internal
+     */
+    public function registerRoutes(RouterInterface $router): void
+    {
+        foreach ($this->groups as $group) {
+            $group->register($router, $this->factory);
+        }
+    }
+
+    /**
      * @return \ArrayIterator<array-key, RouteGroup>
      */
     public function getIterator(): \Traversable

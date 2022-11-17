@@ -11,7 +11,7 @@ class HomeController
     /**
      * @Route(route="/", name="index", methods="GET")
      */
-    public function index()
+    public function index(): string
     {
         return 'index';
     }
@@ -19,13 +19,13 @@ class HomeController
     /**
      * @Route(route="/", name="method", methods="POST")
      */
-    public function method()
+    public function method(): string
     {
         return 'method';
     }
 
     #[Route(route: '/attribute', name: 'attribute', methods: 'GET', group: 'test')]
-    public function attribute()
+    public function attribute(): string
     {
         return 'attribute';
     }

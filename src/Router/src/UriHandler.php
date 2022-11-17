@@ -42,6 +42,7 @@ final class UriHandler
     private array $defaults = [];
     private bool $matchHost = false;
     private string $prefix = '';
+    private string $basePath = '/';
     private ?string $compiled = null;
     private ?string $template = null;
     private array $options = [];
@@ -77,7 +78,7 @@ final class UriHandler
     {
         $uriHandler = clone $this;
         $uriHandler->compiled = null;
-        $uriHandler->prefix = $prefix;
+        $uriHandler->prefix = \trim($prefix, '/');
 
         return $uriHandler;
     }
@@ -85,6 +86,24 @@ final class UriHandler
     public function getPrefix(): string
     {
         return $this->prefix;
+    }
+
+    public function withBasePath(string $basePath): self
+    {
+        if (!\str_ends_with($basePath, '/')) {
+            $basePath .= '/';
+        }
+
+        $uriHandler = clone $this;
+        $uriHandler->compiled = null;
+        $uriHandler->basePath = $basePath;
+
+        return $uriHandler;
+    }
+
+    public function getBasePath(): string
+    {
+        return $this->basePath;
     }
 
     public function withPattern(string $pattern): self
@@ -113,7 +132,6 @@ final class UriHandler
         }
 
         $matches = [];
-
         if (!\preg_match($this->compiled, $this->fetchTarget($uri), $matches)) {
             return null;
         }
@@ -150,8 +168,8 @@ final class UriHandler
         //Uri without empty blocks (pretty stupid implementation)
         $path = $this->interpolate($this->template, $parameters);
 
-        //Uri with added prefix
-        $uri = $this->uriFactory->createUri(($this->matchHost ? '' : $this->prefix) . trim($path, '/'));
+        //Uri with added base path and prefix
+        $uri = $this->uriFactory->createUri(($this->matchHost ? '' : $this->basePath) . \trim($path, '/'));
 
         return empty($query) ? $uri : $uri->withQuery(\http_build_query($query));
     }
@@ -202,7 +220,7 @@ final class UriHandler
         if ($this->matchHost) {
             $uriString = $uri->getHost() . $path;
         } else {
-            $uriString = \substr($path, \strlen($this->prefix));
+            $uriString = \substr($path, \strlen($this->basePath));
             if ($uriString === false) {
                 $uriString = '';
             }
@@ -222,7 +240,7 @@ final class UriHandler
 
         $options = [];
         $replaces = [];
-        $pattern = \rtrim(\ltrim($this->pattern, ':/'), '/');
+        $pattern = \rtrim(\ltrim($this->getPrefix() . '/' . $this->pattern, ':/'), '/');
 
         // correct [/ first occurrence]
         if (\str_starts_with($pattern, '[/')) {

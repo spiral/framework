@@ -40,6 +40,9 @@ final class ImportConfigurator
         return $this;
     }
 
+    /**
+     * @param non-empty-string $group
+     */
     public function group(string $group): self
     {
         foreach ($this->routes->all() as $configurator) {
@@ -49,10 +52,26 @@ final class ImportConfigurator
         return $this;
     }
 
+    /**
+     * @param non-empty-string $prefix
+     */
     public function prefix(string $prefix): self
     {
         foreach ($this->routes->all() as $configurator) {
             $configurator->prefix($prefix);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param non-empty-string $prefix
+     */
+    public function namePrefix(string $prefix): self
+    {
+        foreach ($this->routes->all() as $name => $configurator) {
+            $this->routes->add($prefix . $name, $configurator);
+            $this->routes->remove($name);
         }
 
         return $this;

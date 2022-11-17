@@ -143,11 +143,7 @@ final class Router implements RouterInterface
                 $target = $target->withCore($configurator->core);
             }
 
-            $route = new Route(
-                $configurator->prefix . '/' . \ltrim($configurator->pattern, '/'),
-                $target,
-                $configurator->defaults
-            );
+            $route = new Route(\ltrim($configurator->pattern, '/'), $target, $configurator->defaults);
 
             if ($configurator->middleware !== null) {
                 $route = $route->withMiddleware(...$configurator->middleware);
@@ -158,7 +154,9 @@ final class Router implements RouterInterface
             }
 
             if (!isset($this->routes[$name]) && $name !== RoutingConfigurator::DEFAULT_ROUTE_NAME) {
-                $groups->getGroup($configurator->group ?? $groups->getDefaultGroup())->addRoute($name, $route);
+                $group = $groups->getGroup($configurator->group ?? $groups->getDefaultGroup());
+                $group->setPrefix($configurator->prefix);
+                $group->addRoute($name, $route);
             }
 
             if ($name === RoutingConfigurator::DEFAULT_ROUTE_NAME) {
@@ -200,7 +198,13 @@ final class Router implements RouterInterface
             $route = $route->withContainer($this->container);
         }
 
-        return $route->withUriHandler($this->uriHandler->withPrefix($this->basePath));
+        try {
+            $uriHandler = $route->getUriHandler();
+        } catch (\Throwable) {
+            $uriHandler = $this->uriHandler;
+        }
+
+        return $route->withUriHandler($uriHandler->withBasePath($this->basePath));
     }
 
     /**

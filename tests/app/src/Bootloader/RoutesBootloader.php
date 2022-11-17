@@ -158,8 +158,18 @@ final class RoutesBootloader extends BaseRoutesBootloader
                 new Interceptor\Append('six'),
             ]));
 
-        // for testing routes import
-        $routes->import(\dirname(__DIR__, 2) . '/routes/api.php')->group('api')->prefix('api');
+        // with group, prefix, name prefix
+        $routes
+            ->import(\dirname(__DIR__, 2) . '/routes/api.php')
+            ->group('api')
+            ->prefix('api')
+            ->namePrefix('api.');
+
+        // with group, prefix
+        $routes
+            ->import(\dirname(__DIR__, 2) . '/routes/api.php')
+            ->group('other')
+            ->prefix('other');
 
         $routes
             ->default('/<action>[/<name>]')

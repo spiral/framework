@@ -28,6 +28,7 @@ abstract class RoutesBootloader extends Bootloader
         $this->registerMiddlewareGroups($binder, $middlewareGroups);
         $this->registerMiddlewareForRouteGroups($groups, \array_keys($middlewareGroups));
 
+        $this->configureRouteGroups($groups);
         $this->defineRoutes($routes);
     }
 
@@ -35,6 +36,13 @@ abstract class RoutesBootloader extends Bootloader
      * Override this method to configure application routes
      */
     protected function defineRoutes(RoutingConfigurator $routes): void
+    {
+    }
+
+    /**
+     * Override this method to configure route groups
+     */
+    protected function configureRouteGroups(GroupRegistry $groups): void
     {
     }
 

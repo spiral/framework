@@ -26,6 +26,9 @@ use Spiral\Attributes\NamedArgumentConstructor;
 #[\Attribute(\Attribute::TARGET_METHOD), NamedArgumentConstructor]
 final class Route
 {
+    /**
+     * @deprecated Deprecated since v3.3.0.
+     */
     public const DEFAULT_GROUP = 'web';
 
     /**
@@ -40,7 +43,7 @@ final class Route
         public readonly ?string $name = null,
         public readonly array|string $methods = \Spiral\Router\Route::VERBS,
         public readonly array $defaults = [],
-        public readonly string $group = self::DEFAULT_GROUP,
+        public readonly ?string $group = null,
         public readonly array $middleware = [],
         public readonly int $priority = 0
     ) {

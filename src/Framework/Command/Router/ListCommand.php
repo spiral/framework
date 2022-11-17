@@ -83,6 +83,7 @@ final class ListCommand extends Command implements SingletonInterface
     private function getPattern(Route $route): string
     {
         $pattern = $this->getValue($route->getUriHandler(), 'pattern');
+        $prefix = $this->getValue($route->getUriHandler(), 'prefix');
         $pattern = \str_replace(
             '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}',
             'uuid',
@@ -92,7 +93,7 @@ final class ListCommand extends Command implements SingletonInterface
         return \preg_replace_callback(
             '/<([^>]*)>/',
             static fn ($m) => \sprintf('<fg=magenta>%s</>', $m[0]),
-            $pattern
+            !empty($prefix) ? $prefix . '/' . \trim($pattern, '/') : $pattern
         );
     }
 
