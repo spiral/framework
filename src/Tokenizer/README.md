@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/tokenizer/downloads)](https://packagist.org/packages/spiral/tokenizer)
 [![type-coverage](https://shepherd.dev/github/spiral/tokenizer/coverage.svg)](https://shepherd.dev/github/spiral/tokenizer)
 [![psalm-level](https://shepherd.dev/github/spiral/tokenizer/level.svg)](https://shepherd.dev/github/spiral/tokenizer)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/component-tokenizer)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/annotated-routes/downloads)](https://packagist.org/packages/spiral/annotated-routes)
 [![type-coverage](https://shepherd.dev/github/spiral/annotated-routes/coverage.svg)](https://shepherd.dev/github/spiral/annotated-routes)
 [![psalm-level](https://shepherd.dev/github/spiral/annotated-routes/level.svg)](https://shepherd.dev/github/spiral/annotated-routes)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/http-annotated-routes)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

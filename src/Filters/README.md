@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/filters/downloads)](https://packagist.org/packages/spiral/filters)
 [![type-coverage](https://shepherd.dev/github/spiral/filters/coverage.svg)](https://shepherd.dev/github/spiral/filters)
 [![psalm-level](https://shepherd.dev/github/spiral/filters/level.svg)](https://shepherd.dev/github/spiral/filters)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/filters-filter)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

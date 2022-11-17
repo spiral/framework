@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/auth-http/downloads)](https://packagist.org/packages/spiral/auth-http)
 [![type-coverage](https://shepherd.dev/github/spiral/auth-http/coverage.svg)](https://shepherd.dev/github/spiral/auth-http)
 [![psalm-level](https://shepherd.dev/github/spiral/auth-http/level.svg)](https://shepherd.dev/github/spiral/auth-http)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/security-authentication)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

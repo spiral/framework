@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/translator/downloads)](https://packagist.org/packages/spiral/translator)
 [![type-coverage](https://shepherd.dev/github/spiral/translator/coverage.svg)](https://shepherd.dev/github/spiral/translator)
 [![psalm-level](https://shepherd.dev/github/spiral/translator/level.svg)](https://shepherd.dev/github/spiral/translator)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/i18n-configuration)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

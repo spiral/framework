@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/monolog-bridge/downloads)](https://packagist.org/packages/spiral/monolog-bridge)
 [![type-coverage](https://shepherd.dev/github/spiral/monolog-bridge/coverage.svg)](https://shepherd.dev/github/spiral/monolog-bridge)
 [![psalm-level](https://shepherd.dev/github/spiral/monolog-bridge/level.svg)](https://shepherd.dev/github/spiral/monolog-bridge)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/extension-monolog)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

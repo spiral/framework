@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/security/downloads)](https://packagist.org/packages/spiral/security)
 [![type-coverage](https://shepherd.dev/github/spiral/security/coverage.svg)](https://shepherd.dev/github/spiral/security)
 [![psalm-level](https://shepherd.dev/github/spiral/security/level.svg)](https://shepherd.dev/github/spiral/security)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/security-rbac)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

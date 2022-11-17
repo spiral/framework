@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/telemetry/downloads)](https://packagist.org/packages/spiral/telemetry)
 [![type-coverage](https://shepherd.dev/github/spiral/telemetry/coverage.svg)](https://shepherd.dev/github/spiral/telemetry)
 [![psalm-level](https://shepherd.dev/github/spiral/telemetry/level.svg)](https://shepherd.dev/github/spiral/telemetry)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/component-telemetry)</b> | [Framework Bundle](https://github.com/spiral/framework)
 
