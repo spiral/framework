@@ -2,9 +2,17 @@
 
 ## Unreleased
 - **High Impact Changes**
+  - [spiral/router] Added the ability to add a `prefix` to the `name` of all routes in a **group**.
+  - [spiral/auth] Added `Spiral\Auth\TokenStorageProviderInterface` to allow custom token storages and an ability to set default token storage via `auth` config.
+  - [spiral/telemetry] Added new component to collect and report application metrics.
 - **Medium Impact Changes**
+  - Removed go files from the repository
 - **Other Features**
-- [spiral/router] Added the ability to add a `prefix` to the `name` of all routes in a **group**.
+  - [spiral/auth-http] Added `Spiral\Auth\Middleware\Firewall\RedirectFirewall` middleware to redirect user to login page if they are not authenticated.
+- **Bug Fixes**
+  - [spiral/http] Fixed error suppressing in the `Spiral\Http\Middleware\ErrorHandlerMiddleware`
+  - [spiral/stempler] Fixed documentation link
+  - [spiral/auth] Fixed downloads badge
 
 ## 3.2.0 - 2022-10-21
 - **High Impact Changes**
