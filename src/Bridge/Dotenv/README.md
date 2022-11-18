@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/dotenv-bridge/downloads)](https://packagist.org/packages/spiral/dotenv-bridge)
 [![type-coverage](https://shepherd.dev/github/spiral/dotenv-bridge/coverage.svg)](https://shepherd.dev/github/spiral/dotenv-bridge)
 [![psalm-level](https://shepherd.dev/github/spiral/dotenv-bridge/level.svg)](https://shepherd.dev/github/spiral/dotenv-bridge)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/extension-dotenv)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

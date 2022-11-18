@@ -8,6 +8,7 @@ Nested Validation, Checkers, Conditional Validation
 [![Total Downloads](https://poser.pugx.org/spiral/validation/downloads)](https://packagist.org/packages/spiral/validation)
 [![type-coverage](https://shepherd.dev/github/spiral/validation/coverage.svg)](https://shepherd.dev/github/spiral/validation)
 [![psalm-level](https://shepherd.dev/github/spiral/validation/level.svg)](https://shepherd.dev/github/spiral/validation)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/security-validation)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/hmvc/downloads)](https://packagist.org/packages/spiral/hmvc)
 [![type-coverage](https://shepherd.dev/github/spiral/hmvc/coverage.svg)](https://shepherd.dev/github/spiral/hmvc)
 [![psalm-level](https://shepherd.dev/github/spiral/hmvc/level.svg)](https://shepherd.dev/github/spiral/hmvc)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/cookbook-domain-core)</b> | [Framework Bundle](https://github.com/spiral/framework)
 

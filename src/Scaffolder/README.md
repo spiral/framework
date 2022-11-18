@@ -8,6 +8,7 @@
 [![Total Downloads](https://poser.pugx.org/spiral/scaffolder/downloads)](https://packagist.org/packages/spiral/scaffolder)
 [![type-coverage](https://shepherd.dev/github/spiral/scaffolder/coverage.svg)](https://shepherd.dev/github/spiral/scaffolder)
 [![psalm-level](https://shepherd.dev/github/spiral/scaffolder/level.svg)](https://shepherd.dev/github/spiral/scaffolder)
+<a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <b>[Documentation](https://spiral.dev/docs/basics-scaffolding)</b> | [Framework Bundle](https://github.com/spiral/framework)
 
