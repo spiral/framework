@@ -59,7 +59,7 @@ final class CacheHandlerTest extends TestCase
 
     public function testReadExpired(): void
     {
-        $this->cache->shouldReceive('get')->with('session:foo')->andReturn('');
+        $this->cache->shouldReceive('get')->with('session:foo')->andReturn(null);
 
         $this->assertSame('', $this->handler->read('foo'));
     }
