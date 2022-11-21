@@ -12,102 +12,65 @@ use Mockery as m;
 
 final class CacheHandlerTest extends TestCase
 {
+    private m\MockInterface|CacheStorageProviderInterface $storage;
+    private CacheHandler $handler;
+    private m\MockInterface|CacheInterface $cache;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->storage = m::mock(CacheStorageProviderInterface::class);
+
+        $this->storage->shouldReceive('storage')->andReturn($cache = m::mock(CacheInterface::class));
+
+        $this->cache = $cache;
+
+        $this->handler = new CacheHandler(
+            $this->storage
+        );
+    }
+
     public function testClose(): void
     {
-        $storage = m::mock(CacheStorageProviderInterface::class);
-
-        $storage->shouldReceive('storage')->andReturn(m::mock(CacheInterface::class));
-
-        $handler = new CacheHandler(
-            $storage
-        );
-
-        $this->assertTrue($handler->close());
+        $this->assertTrue($this->handler->close());
     }
 
     public function testDestroy(): void
     {
-        $storage = m::mock(CacheStorageProviderInterface::class);
+        $this->cache->shouldReceive('delete')->with('1')->andReturn(false);
 
-        $storage->shouldReceive('storage')->andReturn($cache = m::mock(CacheInterface::class));
-
-        $handler = new CacheHandler(
-            $storage
-        );
-
-        $cache->shouldReceive('delete')->with('1')->andReturn(false);
-
-        $this->assertTrue($handler->destroy('1'));
+        $this->assertTrue($this->handler->destroy('1'));
     }
 
     public function testGc(): void
     {
-        $storage = m::mock(CacheStorageProviderInterface::class);
-
-        $storage->shouldReceive('storage')->andReturn(m::mock(CacheInterface::class));
-
-        $handler = new CacheHandler(
-            $storage
-        );
-
-        $this->assertSame(0, $handler->gc(100));
+        $this->assertSame(0, $this->handler->gc(100));
     }
 
     public function testOpen(): void
     {
-        $storage = m::mock(CacheStorageProviderInterface::class);
-
-        $storage->shouldReceive('storage')->andReturn(m::mock(CacheInterface::class));
-
-        $handler = new CacheHandler(
-            $storage
-        );
-
-        $this->assertTrue($handler->open('root', 'test'));
+        $this->assertTrue($this->handler->open('root', 'test'));
     }
 
     public function testRead(): void
     {
-        $storage = m::mock(CacheStorageProviderInterface::class);
+        $this->cache->shouldReceive('get')->with('1')->andReturn('foo');
 
-        $storage->shouldReceive('storage')->andReturn($cache = m::mock(CacheInterface::class));
-
-        $handler = new CacheHandler(
-            $storage
-        );
-
-        $cache->shouldReceive('get')->with('1')->andReturn('foo');
-
-        $this->assertSame('foo', $handler->read('1'));
+        $this->assertSame('foo', $this->handler->read('1'));
     }
 
     public function testReadExpired(): void
     {
-        $storage = m::mock(CacheStorageProviderInterface::class);
+        $this->cache->shouldReceive('get')->with('1')->andReturn(null);
 
-        $storage->shouldReceive('storage')->andReturn($cache = m::mock(CacheInterface::class));
-
-        $handler = new CacheHandler(
-            $storage
-        );
-
-        $cache->shouldReceive('get')->with('1')->andReturn(null);
-
-        $this->assertSame('', $handler->read('1'));
+        $this->assertSame('', $this->handler->read('1'));
     }
 
     public function testWrite(): void
     {
-        $storage = m::mock(CacheStorageProviderInterface::class);
+        $this->cache->shouldReceive('set')->with('session:1', 'foo', 86400)->andReturn(true);
 
-        $storage->shouldReceive('storage')->andReturn($cache = m::mock(CacheInterface::class));
-
-        $handler = new CacheHandler(
-            $storage
-        );
-
-        $cache->shouldReceive('set')->with('session:1', 'foo', 86400)->andReturn(true);
-
-        $this->assertTrue($handler->write('1', 'foo'));
+        $this->assertTrue($this->handler->write('1', 'foo'));
     }
 }
