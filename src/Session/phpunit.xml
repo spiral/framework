@@ -16,11 +16,11 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
-            <directory>src</directory>
-        </whitelist>
-    </filter>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
     <php>
         <ini name="error_reporting" value="-1"/>
         <ini name="memory_limit" value="-1"/>
