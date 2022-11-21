@@ -12,7 +12,6 @@ use Mockery as m;
 
 final class CacheHandlerTest extends TestCase
 {
-    private m\MockInterface|CacheStorageProviderInterface $storage;
     private CacheHandler $handler;
     private m\MockInterface|CacheInterface $cache;
 
@@ -20,14 +19,14 @@ final class CacheHandlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->storage = m::mock(CacheStorageProviderInterface::class);
+        $storage = m::mock(CacheStorageProviderInterface::class);
 
-        $this->storage->shouldReceive('storage')->andReturn($cache = m::mock(CacheInterface::class));
+        $storage->shouldReceive('storage')->once()->andReturn($cache = m::mock(CacheInterface::class));
 
         $this->cache = $cache;
 
         $this->handler = new CacheHandler(
-            $this->storage
+            $storage
         );
     }
 
@@ -55,16 +54,16 @@ final class CacheHandlerTest extends TestCase
 
     public function testRead(): void
     {
-        $this->cache->shouldReceive('get')->with('1')->andReturn('foo');
+        $this->cache->shouldReceive('get')->with('session-id')->andReturn('foo');
 
-        $this->assertSame('foo', $this->handler->read('1'));
+        $this->assertSame('foo', $this->handler->read('session-id'));
     }
 
     public function testReadExpired(): void
     {
-        $this->cache->shouldReceive('get')->with('1')->andReturn(null);
+        $this->cache->shouldReceive('get')->with('session-id')->andReturn(null);
 
-        $this->assertSame('', $this->handler->read('1'));
+        $this->assertSame('', $this->handler->read('session-id'));
     }
 
     public function testWrite(): void

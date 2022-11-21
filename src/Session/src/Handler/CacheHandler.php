@@ -52,7 +52,7 @@ final class CacheHandler implements \SessionHandlerInterface
     {
         $result = $this->cache->get($id);
 
-        return is_string($result) ? $result : '';
+        return (string)$result;
     }
 
     /**
