@@ -32,10 +32,15 @@ use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
 use Spiral\Queue\SerializerRegistryInterface;
+use Spiral\Telemetry\Bootloader\TelemetryBootloader;
 use Spiral\Telemetry\TracerFactoryInterface;
 
 final class QueueBootloader extends Bootloader
 {
+    protected const DEPENDENCIES = [
+        TelemetryBootloader::class,
+    ];
+
     protected const SINGLETONS = [
         HandlerRegistryInterface::class => QueueRegistry::class,
         SerializerRegistryInterface::class => QueueRegistry::class,
