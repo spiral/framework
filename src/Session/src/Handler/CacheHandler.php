@@ -15,7 +15,8 @@ final class CacheHandler implements \SessionHandlerInterface
     public function __construct(
         CacheStorageProviderInterface $storageProvider,
         private readonly ?string $storage = null,
-        private readonly int $ttl = 86400
+        private readonly int $ttl = 86400,
+        private readonly string $prefix = 'session:'
     ) {
         $this->cache = $storageProvider->storage($this->storage);
     }
@@ -30,7 +31,7 @@ final class CacheHandler implements \SessionHandlerInterface
      */
     public function destroy(string $id): bool
     {
-        $this->cache->delete($id);
+        $this->cache->delete($this->getKey($id));
 
         return true;
     }
@@ -50,9 +51,9 @@ final class CacheHandler implements \SessionHandlerInterface
      */
     public function read(string $id): string|false
     {
-        $result = $this->cache->get($id);
+        $result = $this->cache->get($this->getKey($id));
 
-        return (string)$result;
+        return (string) $result;
     }
 
     /**
@@ -65,6 +66,6 @@ final class CacheHandler implements \SessionHandlerInterface
 
     private function getKey(string $id): string
     {
-        return 'session:' . $id;
+        return $this->prefix . $id;
     }
 }

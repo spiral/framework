@@ -21,9 +21,7 @@ final class CacheHandlerTest extends TestCase
 
         $storage = m::mock(CacheStorageProviderInterface::class);
 
-        $storage->shouldReceive('storage')->once()->andReturn($cache = m::mock(CacheInterface::class));
-
-        $this->cache = $cache;
+        $storage->shouldReceive('storage')->once()->andReturn($this->cache = m::mock(CacheInterface::class));
 
         $this->handler = new CacheHandler(
             $storage
@@ -37,9 +35,9 @@ final class CacheHandlerTest extends TestCase
 
     public function testDestroy(): void
     {
-        $this->cache->shouldReceive('delete')->with('1')->andReturn(false);
+        $this->cache->shouldReceive('delete')->with('session:foo')->andReturn(true);
 
-        $this->assertTrue($this->handler->destroy('1'));
+        $this->assertTrue($this->handler->destroy('foo'));
     }
 
     public function testGc(): void
@@ -54,22 +52,22 @@ final class CacheHandlerTest extends TestCase
 
     public function testRead(): void
     {
-        $this->cache->shouldReceive('get')->with('session-id')->andReturn('foo');
+        $this->cache->shouldReceive('get')->with('session:foo')->andReturn('bar');
 
-        $this->assertSame('foo', $this->handler->read('session-id'));
+        $this->assertSame('bar', $this->handler->read('foo'));
     }
 
     public function testReadExpired(): void
     {
-        $this->cache->shouldReceive('get')->with('session-id')->andReturn(null);
+        $this->cache->shouldReceive('get')->with('session:foo')->andReturn('');
 
-        $this->assertSame('', $this->handler->read('session-id'));
+        $this->assertSame('', $this->handler->read('foo'));
     }
 
     public function testWrite(): void
     {
-        $this->cache->shouldReceive('set')->with('session:1', 'foo', 86400)->andReturn(true);
+        $this->cache->shouldReceive('set')->with('session:foo', 'bar', 86400)->andReturn(true);
 
-        $this->assertTrue($this->handler->write('1', 'foo'));
+        $this->assertTrue($this->handler->write('foo', 'bar'));
     }
 }
