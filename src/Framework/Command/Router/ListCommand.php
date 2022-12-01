@@ -72,6 +72,7 @@ final class ListCommand extends Command implements SingletonInterface
             $result[] = match (\strtolower($verb)) {
                 'get' => '<fg=green>GET</>',
                 'post' => '<fg=blue>POST</>',
+                'patch' => '<fg=cyan>PATCH</>',
                 'put' => '<fg=yellow>PUT</>',
                 'delete' => '<fg=red>DELETE</>'
             };
