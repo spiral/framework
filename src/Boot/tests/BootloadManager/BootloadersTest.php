@@ -50,6 +50,34 @@ class BootloadersTest extends TestCase
         ]), $bootloader->getClasses());
     }
 
+    public function testBootloadFromInstance(): void
+    {
+        $container = new Container();
+
+        $bootloader = $this->getBootloadManager($container);
+
+        $bootloader->bootload([
+            SampleClass::class,
+            new SampleBootWithMethodBoot(),
+            new SampleBoot(),
+        ]);
+
+        $this->assertTrue($container->has('abc'));
+        $this->assertTrue($container->has('single'));
+        $this->assertTrue($container->hasInstance('def'));
+        $this->assertTrue($container->hasInstance('efg'));
+        $this->assertTrue($container->hasInstance('cde'));
+        $this->assertTrue($container->has('ghi'));
+
+        $this->assertSame([
+            SampleClass::class,
+            SampleBootWithMethodBoot::class,
+            SampleBoot::class,
+            BootloaderA::class,
+            BootloaderB::class,
+        ], $bootloader->getClasses());
+    }
+
     public function testException(): void
     {
         $this->expectException(\Spiral\Boot\Exception\ClassNotFoundException::class);

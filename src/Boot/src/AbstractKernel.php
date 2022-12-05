@@ -8,6 +8,8 @@ use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Boot\BootloadManager\InitializerInterface;
 use Spiral\Boot\Event\Bootstrapped;
 use Spiral\Boot\Event\DispatcherFound;
 use Spiral\Boot\Event\DispatcherNotFound;
@@ -110,6 +112,10 @@ abstract class AbstractKernel implements KernelInterface
 
         if ($handleErrors) {
             $exceptionHandler->register();
+        }
+
+        if (!$container->has(InitializerInterface::class)) {
+            $container->bind(InitializerInterface::class, Initializer::class);
         }
 
         $bootloadManager ??= $container->make(BootloadManager::class);

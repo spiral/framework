@@ -22,7 +22,7 @@ final class BootloadManager implements BootloadManagerInterface, Container\Singl
         private readonly ScopeInterface $scope,
         private readonly InvokerInterface $invoker,
         private readonly ResolverInterface $resolver,
-        private readonly Initializer $initializer
+        private readonly InitializerInterface $initializer
     ) {
     }
 

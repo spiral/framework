@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Other Features**
+  - [spiral/boot] Added `Spiral\Boot\BootloadManager\InitializerInterface`. This will allow changing the implementation 
+    of this interface by the developer.
+  - [spiral/boot] Added the ability to register application bootloaders via object instance.
+  - [spiral/boot] Removed from the `Spiral\Boot\BootloadManager\Initializer`.
+
 ## 3.3.0 - 2022-11-17
 - **High Impact Changes**
   - [spiral/router] Added the ability to add a `prefix` to the `name` of all routes in a **group**.
