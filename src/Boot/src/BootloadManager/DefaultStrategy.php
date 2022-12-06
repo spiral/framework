@@ -52,7 +52,7 @@ final class DefaultStrategy implements InvokerStrategyInterface
     }
 
     /**
-     * @param array<Closure> $callbacks
+     * @param array<\Closure> $callbacks
      */
     private function fireCallbacks(array $callbacks): void
     {
