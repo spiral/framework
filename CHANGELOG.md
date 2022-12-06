@@ -3,6 +3,7 @@
 ## Unreleased
 - **High Impact Changes**
 - **Medium Impact Changes**
+  - [spiral/boot] Class `Spiral\Boot\BootloadManager\BootloadManager` is deprecated. Will be removed in version v4.0.
 - **Other Features**
   - [spiral/boot] Added `Spiral\Boot\BootloadManager\InitializerInterface`. This will allow changing the implementation 
     of this interface by the developer.
