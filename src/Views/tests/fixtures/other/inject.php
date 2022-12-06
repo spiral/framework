@@ -1,1 +1,1 @@
-hello @{name|default}
+hello @{name}
