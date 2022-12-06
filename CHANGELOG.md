@@ -7,7 +7,7 @@
   - [spiral/boot] Added `Spiral\Boot\BootloadManager\InitializerInterface`. This will allow changing the implementation 
     of this interface by the developer.
   - [spiral/boot] Added the ability to register application bootloaders via object instance.
-  - [spiral/boot] Removed from the `Spiral\Boot\BootloadManager\Initializer`.
+  - [spiral/boot] Removed `final` from the `Spiral\Boot\BootloadManager\Initializer` class.
 
 ## 3.3.0 - 2022-11-17
 - **High Impact Changes**
