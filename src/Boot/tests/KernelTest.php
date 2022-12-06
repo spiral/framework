@@ -6,8 +6,10 @@ namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Boot\BootloadManager\DefaultStrategy;
 use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\BootloadManager\InitializerInterface;
+use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Event\Bootstrapped;
@@ -17,6 +19,7 @@ use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
 use Spiral\Tests\Boot\Fixtures\CustomInitializer;
+use Spiral\Tests\Boot\Fixtures\CustomInvokerStrategy;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 use Throwable;
 
@@ -218,5 +221,26 @@ class KernelTest extends TestCase
 
         $this->assertTrue($container->has(InitializerInterface::class));
         $this->assertInstanceOf(CustomInitializer::class, $container->get(InitializerInterface::class));
+    }
+
+    public function testDefaultInvokerStrategyShouldBeBound(): void
+    {
+        $container = new Container();
+
+        TestCore::create(directories: ['root' => __DIR__], container: $container);
+
+        $this->assertTrue($container->has(InvokerStrategyInterface::class));
+        $this->assertInstanceOf(DefaultStrategy::class, $container->get(InvokerStrategyInterface::class));
+    }
+
+    public function testCustomInvokerStrategyShouldBeBound(): void
+    {
+        $container = new Container();
+        $container->bind(InvokerStrategyInterface::class, CustomInvokerStrategy::class);
+
+        TestCore::create(directories: ['root' => __DIR__], container: $container);
+
+        $this->assertTrue($container->has(InvokerStrategyInterface::class));
+        $this->assertInstanceOf(CustomInvokerStrategy::class, $container->get(InvokerStrategyInterface::class));
     }
 }

@@ -7,9 +7,11 @@ namespace Spiral\Boot;
 use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
-use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\CustomizableBootloadManager;
+use Spiral\Boot\BootloadManager\DefaultStrategy;
 use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\BootloadManager\InitializerInterface;
+use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 use Spiral\Boot\Event\Bootstrapped;
 use Spiral\Boot\Event\DispatcherFound;
 use Spiral\Boot\Event\DispatcherNotFound;
@@ -117,8 +119,11 @@ abstract class AbstractKernel implements KernelInterface
         if (!$container->has(InitializerInterface::class)) {
             $container->bind(InitializerInterface::class, Initializer::class);
         }
+        if (!$container->has(InvokerStrategyInterface::class)) {
+            $container->bind(InvokerStrategyInterface::class, DefaultStrategy::class);
+        }
 
-        $bootloadManager ??= $container->make(BootloadManager::class);
+        $bootloadManager ??= $container->make(CustomizableBootloadManager::class);
         \assert($bootloadManager instanceof BootloadManagerInterface);
         $container->bind(BootloadManagerInterface::class, $bootloadManager);
 

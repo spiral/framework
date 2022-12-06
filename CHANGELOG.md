@@ -6,6 +6,8 @@
 - **Other Features**
   - [spiral/boot] Added `Spiral\Boot\BootloadManager\InitializerInterface`. This will allow changing the implementation 
     of this interface by the developer.
+  - [spiral/boot] Added `Spiral\Boot\BootloadManager\CustomizableBootloadManager`. This BootloadManager allows 
+    the implementation of a custom bootloaders loading strategy.
   - [spiral/boot] Added the ability to register application bootloaders via object instance.
   - [spiral/boot] Removed `final` from the `Spiral\Boot\BootloadManager\Initializer` class.
 
