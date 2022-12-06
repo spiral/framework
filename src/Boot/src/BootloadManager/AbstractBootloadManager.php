@@ -35,7 +35,7 @@ abstract class AbstractBootloadManager implements BootloadManagerInterface, Cont
     }
 
     /**
-     * Bootloader all given classes.
+     * Bootload all given bootloaders.
      *
      * @param array<class-string>|array<class-string, array<string,mixed>> $classes
      *
