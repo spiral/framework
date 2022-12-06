@@ -38,8 +38,6 @@ abstract class AbstractBootloadManager implements BootloadManagerInterface, Cont
      * Bootload all given bootloaders.
      *
      * @param array<class-string>|array<class-string, array<string,mixed>> $classes
-     *
-     * @throws \Throwable
      */
     abstract protected function boot(array $classes, array $bootingCallbacks, array $bootedCallbacks): void;
 }
