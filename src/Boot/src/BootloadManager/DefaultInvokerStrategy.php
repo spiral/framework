@@ -8,7 +8,7 @@ use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
 
-final class DefaultStrategy implements InvokerStrategyInterface
+final class DefaultInvokerStrategy implements InvokerStrategyInterface
 {
     public function __construct(
         private readonly InitializerInterface $initializer,

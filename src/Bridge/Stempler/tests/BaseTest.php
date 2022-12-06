@@ -6,7 +6,7 @@ namespace Spiral\Tests\Stempler;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\BootloadManager\CustomizableBootloadManager;
-use Spiral\Boot\BootloadManager\DefaultStrategy;
+use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
 use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Directories;
 use Spiral\Boot\DirectoriesInterface;
@@ -65,7 +65,7 @@ abstract class BaseTest extends TestCase
 
         $initializer = new Initializer($this->container, $this->container);
         $this->app = new CustomizableBootloadManager(
-            new DefaultStrategy($initializer, $this->container, $this->container),
+            new DefaultInvokerStrategy($initializer, $this->container, $this->container),
             $this->container,
             $initializer
         );
