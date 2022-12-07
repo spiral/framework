@@ -31,13 +31,9 @@ final class ContextProcessor implements ProcessorInterface
                 $this->pattern,
                 static function (array $matches) use ($context) {
                     try {
-                        return $context->resolveValue($matches['name']);
+                        return $context->resolveValue($matches['name']) ?? $matches['default'] ?? null;
                     } catch (ContextException $e) {
-                        if (isset($matches['default'])) {
-                            return $matches['default'];
-                        }
-
-                        throw $e;
+                        return $matches['default'] ?? throw $e;
                     }
                 },
                 $source->getCode()

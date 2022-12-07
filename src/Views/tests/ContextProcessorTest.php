@@ -46,6 +46,15 @@ final class ContextProcessorTest extends TestCase
         $this->assertSame("hello default\n", $source2->getCode());
     }
 
+    public function testProcessContextShouldUseDefaultValueIfContextIsNull(): void
+    {
+        $this->processors[] = new ContextProcessor();
+        $source = $this->getSource('other:injectWithDefault');
+        $ctx = new ViewContext();
+        $source2 = $this->process($source, $ctx->withDependency(new ValueDependency('name', null)));
+        $this->assertSame("hello default\n", $source2->getCode());
+    }
+
     public function testProcessContextException(): void
     {
         $this->expectException(ContextException::class);
@@ -61,7 +70,7 @@ final class ContextProcessorTest extends TestCase
     {
         $loader = new ViewLoader([
             'default' => __DIR__ . '/fixtures/default',
-            'other'   => __DIR__ . '/fixtures/other',
+            'other' => __DIR__ . '/fixtures/other',
         ]);
 
         return $loader->withExtension('php')->load($path);
