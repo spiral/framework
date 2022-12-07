@@ -31,7 +31,6 @@
         "spiral/stempler": "^3.4",
         "spiral/files": "^3.4",
         "spiral/config": "^3.4",
-        "spiral/translator": "^3.4",
         "spiral/router": "^3.4",
         "spiral/views": "^3.4",
         "spiral/core": "^3.4"
