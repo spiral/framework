@@ -13,21 +13,46 @@ use Spiral\Views\ViewContext;
 use Spiral\Views\ViewLoader;
 use Spiral\Views\ViewSource;
 
-class ContextProcessorTest extends TestCase
+final class ContextProcessorTest extends TestCase
 {
     use ProcessorTrait;
 
     public function testProcessContext(): void
     {
         $this->processors[] = new ContextProcessor();
-
         $source = $this->getSource('other:inject');
-
-        $this->assertSame('hello @{name|default}', $source->getCode());
-
+        $this->assertSame("hello @{name}\n", $source->getCode());
         $ctx = new ViewContext();
         $source2 = $this->process($source, $ctx->withDependency(new ValueDependency('name', 'Bobby')));
-        $this->assertSame('hello Bobby', $source2->getCode());
+        $this->assertSame("hello Bobby\n", $source2->getCode());
+    }
+
+    public function testProcessContextWithDefaultValue(): void
+    {
+        $this->processors[] = new ContextProcessor();
+        $source = $this->getSource('other:injectWithDefault');
+        $this->assertSame("hello @{name|default}\n", $source->getCode());
+        $ctx = new ViewContext();
+        $source2 = $this->process($source, $ctx->withDependency(new ValueDependency('name', 'Bobby')));
+        $this->assertSame("hello Bobby\n", $source2->getCode());
+    }
+
+    public function testProcessContextShouldUseDefaultValueIfKeyNotFound(): void
+    {
+        $this->processors[] = new ContextProcessor();
+        $source = $this->getSource('other:injectWithDefault');
+        $ctx = new ViewContext();
+        $source2 = $this->process($source, $ctx);
+        $this->assertSame("hello default\n", $source2->getCode());
+    }
+
+    public function testProcessContextShouldUseDefaultValueIfContextIsNull(): void
+    {
+        $this->processors[] = new ContextProcessor();
+        $source = $this->getSource('other:injectWithDefault');
+        $ctx = new ViewContext();
+        $source2 = $this->process($source, $ctx->withDependency(new ValueDependency('name', null)));
+        $this->assertSame("hello default\n", $source2->getCode());
     }
 
     public function testProcessContextException(): void
@@ -37,9 +62,6 @@ class ContextProcessorTest extends TestCase
         $this->processors[] = new ContextProcessor();
 
         $source = $this->getSource('other:inject');
-
-        $this->assertSame('hello @{name|default}', $source->getCode());
-
         $ctx = new ViewContext();
         $this->process($source, $ctx);
     }
@@ -48,7 +70,7 @@ class ContextProcessorTest extends TestCase
     {
         $loader = new ViewLoader([
             'default' => __DIR__ . '/fixtures/default',
-            'other'   => __DIR__ . '/fixtures/other',
+            'other' => __DIR__ . '/fixtures/other',
         ]);
 
         return $loader->withExtension('php')->load($path);
