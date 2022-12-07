@@ -100,8 +100,8 @@ class ConfigTest extends BaseTest
 
         $cfg = $this->container->get(StemplerConfig::class);
 
-        $this->assertCount(2, $cfg->getProcessors());
-        $this->assertSame($object, $cfg->getProcessors()[1]->resolve($this->container));
+        $this->assertCount(3, $cfg->getProcessors());
+        $this->assertSame($object, $cfg->getProcessors()[2]->resolve($this->container));
     }
 
     public function testBootloaderVisitors(): void
