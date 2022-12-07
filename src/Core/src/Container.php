@@ -49,7 +49,6 @@ final class Container implements
     private ContainerInterface|Internal\Container $container;
     private BinderInterface|Internal\Binder $binder;
     private InvokerInterface|Internal\Invoker $invoker;
-    private Internal\Tracer $tracer;
 
     /**
      * Container constructor.
@@ -60,7 +59,9 @@ final class Container implements
             'state' => new Internal\State(),
         ]);
         foreach ($config as $property => $class) {
-            $this->$property = $constructor->get($property, $class);
+            if (\property_exists($this, $property)) {
+                $this->$property = $constructor->get($property, $class);
+            }
         }
 
         /** @psalm-suppress PossiblyNullPropertyAssignment */
