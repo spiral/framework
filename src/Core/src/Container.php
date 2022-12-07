@@ -49,6 +49,7 @@ final class Container implements
     private ContainerInterface|Internal\Container $container;
     private BinderInterface|Internal\Binder $binder;
     private InvokerInterface|Internal\Invoker $invoker;
+    private Internal\Tracer $tracer;
 
     /**
      * Container constructor.
