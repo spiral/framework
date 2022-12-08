@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\Stempler;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
+use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
 use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Directories;
 use Spiral\Boot\DirectoriesInterface;
@@ -30,12 +31,9 @@ abstract class BaseTest extends TestCase
         StemplerBootloader::class,
         PrettyPrintBootloader::class
     ];
-    /** @var Container */
-    protected $container;
-    /**
-     * @var BootloadManager
-     */
-    protected $app;
+
+    protected Container $container;
+    protected StrategyBasedBootloadManager $app;
 
     public function setUp(): void
     {
@@ -65,13 +63,13 @@ abstract class BaseTest extends TestCase
 
         $this->container->bind(ViewsInterface::class, ViewManager::class);
 
-        $this->app = new BootloadManager(
+        $initializer = new Initializer($this->container, $this->container);
+        $this->app = new StrategyBasedBootloadManager(
+            new DefaultInvokerStrategy($initializer, $this->container, $this->container),
             $this->container,
-            $this->container,
-            $this->container,
-            new Initializer($this->container, $this->container)
+            $initializer
         );
-        
+
         $this->app->bootload(static::BOOTLOADERS);
     }
 

@@ -10,7 +10,7 @@ use Monolog\Logger;
 use Monolog\Processor\ProcessorInterface;
 use Monolog\ResettableInterface;
 use Psr\Log\LoggerInterface;
-use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\Finalizer;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
@@ -70,7 +70,7 @@ class FactoryTest extends BaseTest
         $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
         $finalizer->shouldReceive('addFinalizer')->once();
 
-        $this->container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->bind(LogFactory::class, $factory);
 
         $this->assertSame($logger, $this->container->get(Logger::class));
@@ -112,7 +112,7 @@ class FactoryTest extends BaseTest
         $processor->shouldReceive('reset')->once();
 
         $this->container->bind(LogFactory::class, $factory);
-        $this->container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->get(LogsInterface::class)->getLogger();
         $finalizer->finalize();
     }
@@ -152,7 +152,7 @@ class FactoryTest extends BaseTest
         $processor->shouldReceive('reset')->never();
 
         $this->container->bind(LogFactory::class, $factory);
-        $this->container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->get(LogsInterface::class)->getLogger();
         $finalizer->finalize(true);
     }

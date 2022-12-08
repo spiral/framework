@@ -6,7 +6,7 @@ namespace Spiral\Tests\Monolog;
 
 use Monolog\Logger;
 use Psr\Log\NullLogger;
-use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
@@ -61,7 +61,7 @@ class TraitTest extends BaseTest
                 }
             }
         ));
-        $this->container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->bind(MonologConfig::class, new MonologConfig());
         $this->container->bind(ListenerRegistryInterface::class, new ListenerRegistry());
 

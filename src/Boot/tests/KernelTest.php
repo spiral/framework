@@ -6,6 +6,12 @@ namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
+use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
+use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Boot\BootloadManager\InitializerInterface;
+use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
+use Spiral\Boot\BootloadManagerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Event\Bootstrapped;
@@ -14,6 +20,9 @@ use Spiral\Boot\Event\DispatcherNotFound;
 use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
+use Spiral\Core\Container\Autowire;
+use Spiral\Tests\Boot\Fixtures\CustomInitializer;
+use Spiral\Tests\Boot\Fixtures\CustomInvokerStrategy;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 use Throwable;
 
@@ -194,5 +203,68 @@ class KernelTest extends TestCase
         $this->expectException(BootException::class);
 
         $kernel->run()->serve();
+    }
+
+    public function testDefaultInitializerShouldBeBound(): void
+    {
+        $container = new Container();
+
+        TestCore::create(directories: ['root' => __DIR__], container: $container);
+
+        $this->assertTrue($container->has(InitializerInterface::class));
+        $this->assertInstanceOf(Initializer::class, $container->get(InitializerInterface::class));
+    }
+
+    public function testCustomInitializerShouldBeBound(): void
+    {
+        $container = new Container();
+        $container->bind(InitializerInterface::class, CustomInitializer::class);
+
+        TestCore::create(directories: ['root' => __DIR__], container: $container);
+
+        $this->assertTrue($container->has(InitializerInterface::class));
+        $this->assertInstanceOf(CustomInitializer::class, $container->get(InitializerInterface::class));
+    }
+
+    public function testDefaultInvokerStrategyShouldBeBound(): void
+    {
+        $container = new Container();
+
+        TestCore::create(directories: ['root' => __DIR__], container: $container);
+
+        $this->assertTrue($container->has(InvokerStrategyInterface::class));
+        $this->assertInstanceOf(DefaultInvokerStrategy::class, $container->get(InvokerStrategyInterface::class));
+    }
+
+    public function testCustomInvokerStrategyShouldBeBound(): void
+    {
+        $container = new Container();
+        $container->bind(InvokerStrategyInterface::class, CustomInvokerStrategy::class);
+
+        TestCore::create(directories: ['root' => __DIR__], container: $container);
+
+        $this->assertTrue($container->has(InvokerStrategyInterface::class));
+        $this->assertInstanceOf(CustomInvokerStrategy::class, $container->get(InvokerStrategyInterface::class));
+    }
+
+    public function testResolveBootloadManagerFromAutowire(): void
+    {
+        $container = new Container();
+
+        TestCore::create(
+            directories: ['root' => __DIR__],
+            container: $container,
+            bootloadManager: new Autowire(StrategyBasedBootloadManager::class, [
+                'invoker' => new CustomInvokerStrategy()
+            ])
+        );
+
+        /** @var BootloadManagerInterface $manager */
+        $manager = $container->get(BootloadManagerInterface::class);
+
+        $this->assertInstanceOf(
+            CustomInvokerStrategy::class,
+            (new \ReflectionProperty($manager, 'invoker'))->getValue($manager)
+        );
     }
 }

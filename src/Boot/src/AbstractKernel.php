@@ -7,12 +7,17 @@ namespace Spiral\Boot;
 use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
-use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
+use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
+use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Boot\BootloadManager\InitializerInterface;
+use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 use Spiral\Boot\Event\Bootstrapped;
 use Spiral\Boot\Event\DispatcherFound;
 use Spiral\Boot\Event\DispatcherNotFound;
 use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container;
 use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\ExceptionHandlerInterface;
@@ -100,7 +105,7 @@ abstract class AbstractKernel implements KernelInterface
         bool $handleErrors = true,
         ExceptionHandlerInterface|string|null $exceptionHandler = null,
         Container $container = new Container(),
-        ?BootloadManagerInterface $bootloadManager = null
+        BootloadManagerInterface|Autowire|null $bootloadManager = null
     ): static {
         $exceptionHandler ??= ExceptionHandler::class;
 
@@ -112,7 +117,17 @@ abstract class AbstractKernel implements KernelInterface
             $exceptionHandler->register();
         }
 
-        $bootloadManager ??= $container->make(BootloadManager::class);
+        if (!$container->has(InitializerInterface::class)) {
+            $container->bind(InitializerInterface::class, Initializer::class);
+        }
+        if (!$container->has(InvokerStrategyInterface::class)) {
+            $container->bind(InvokerStrategyInterface::class, DefaultInvokerStrategy::class);
+        }
+
+        if ($bootloadManager instanceof Autowire) {
+            $bootloadManager = $bootloadManager->resolve($container);
+        }
+        $bootloadManager ??= $container->make(StrategyBasedBootloadManager::class);
         \assert($bootloadManager instanceof BootloadManagerInterface);
         $container->bind(BootloadManagerInterface::class, $bootloadManager);
 

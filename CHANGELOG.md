@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+  - [spiral/boot] Class `Spiral\Boot\BootloadManager\BootloadManager` is deprecated. Will be removed in version v4.0.
+- **Other Features**
+  - [spiral/boot] Added `Spiral\Boot\BootloadManager\InitializerInterface`. This will allow changing the implementation 
+    of this interface by the developer.
+  - [spiral/boot] Added `Spiral\Boot\BootloadManager\StrategyBasedBootloadManager`. This BootloadManager allows 
+    the implementation of a custom bootloaders loading strategy.
+  - [spiral/boot] Added the ability to register application bootloaders via object instance.
+  - [spiral/boot] Removed `final` from the `Spiral\Boot\BootloadManager\Initializer` class.
+
 ## 3.3.0 - 2022-11-17
 - **High Impact Changes**
   - [spiral/router] Added the ability to add a `prefix` to the `name` of all routes in a **group**.

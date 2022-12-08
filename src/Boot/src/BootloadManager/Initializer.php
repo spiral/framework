@@ -17,12 +17,12 @@ use Spiral\Core\Container;
  * @psalm-import-type TClass from BootloadManagerInterface
  * @psalm-import-type TFullBinding from BootloaderInterface
  */
-final class Initializer implements Container\SingletonInterface
+class Initializer implements InitializerInterface, Container\SingletonInterface
 {
     public function __construct(
-        private readonly ContainerInterface $container,
-        private readonly BinderInterface $binder,
-        private readonly ClassesRegistry $bootloaders = new ClassesRegistry()
+        protected readonly ContainerInterface $container,
+        protected readonly BinderInterface $binder,
+        protected readonly ClassesRegistry $bootloaders = new ClassesRegistry()
     ) {
     }
 
@@ -33,29 +33,32 @@ final class Initializer implements Container\SingletonInterface
      */
     public function init(array $classes): \Generator
     {
-        foreach ($classes as $class => $options) {
+        foreach ($classes as $bootloader => $options) {
             // default bootload syntax as simple array
-            if (\is_string($options)) {
-                $class = $options;
+            if (\is_string($options) || $options instanceof BootloaderInterface) {
+                $bootloader = $options;
                 $options = [];
             }
 
             // Replace class aliases with source classes
             try {
-                $ref = (new \ReflectionClass($class));
+                $ref = (new \ReflectionClass($bootloader));
+                $className = $ref->getName();
             } catch (\ReflectionException) {
                 throw new ClassNotFoundException(
-                    \sprintf('Bootloader class `%s` is not exist.', $class)
+                    \sprintf('Bootloader class `%s` is not exist.', $bootloader)
                 );
             }
 
-            if ($this->bootloaders->isBooted($class) || $ref->isAbstract()) {
+            if ($this->bootloaders->isBooted($className) || $ref->isAbstract()) {
                 continue;
             }
 
-            $class = $ref->getName();
-            $this->bootloaders->register($class);
-            $bootloader = $this->container->get($class);
+            $this->bootloaders->register($className);
+
+            if (!$bootloader instanceof BootloaderInterface) {
+                $bootloader = $this->container->get($bootloader);
+            }
 
             if (!$this->isBootloader($bootloader)) {
                 continue;
@@ -63,7 +66,7 @@ final class Initializer implements Container\SingletonInterface
 
             /** @var BootloaderInterface $bootloader */
             yield from $this->initBootloader($bootloader);
-            yield $class => \compact('bootloader', 'options');
+            yield $className => \compact('bootloader', 'options');
         }
     }
 
@@ -75,7 +78,7 @@ final class Initializer implements Container\SingletonInterface
     /**
      * Resolve all bootloader dependencies and init bindings
      */
-    private function initBootloader(BootloaderInterface $bootloader): iterable
+    protected function initBootloader(BootloaderInterface $bootloader): iterable
     {
         if ($bootloader instanceof DependedInterface) {
             yield from $this->init($this->getDependencies($bootloader));
@@ -93,7 +96,7 @@ final class Initializer implements Container\SingletonInterface
      * @param TFullBinding $bindings
      * @param TFullBinding $singletons
      */
-    private function initBindings(array $bindings, array $singletons): void
+    protected function initBindings(array $bindings, array $singletons): void
     {
         foreach ($bindings as $aliases => $resolver) {
             $this->binder->bind($aliases, $resolver);
@@ -104,7 +107,7 @@ final class Initializer implements Container\SingletonInterface
         }
     }
 
-    private function getDependencies(DependedInterface $bootloader): array
+    protected function getDependencies(DependedInterface $bootloader): array
     {
         $deps = $bootloader->defineDependencies();
 
@@ -123,7 +126,7 @@ final class Initializer implements Container\SingletonInterface
         return \array_values(\array_unique(\array_merge($deps, ...$methodsDeps)));
     }
 
-    private function findBootloaderClassesInMethod(\ReflectionMethod $method): array
+    protected function findBootloaderClassesInMethod(\ReflectionMethod $method): array
     {
         $args = [];
         foreach ($method->getParameters() as $parameter) {
@@ -136,7 +139,7 @@ final class Initializer implements Container\SingletonInterface
         return $args;
     }
 
-    private function shouldBeBooted(\ReflectionNamedType $type): bool
+    protected function shouldBeBooted(\ReflectionNamedType $type): bool
     {
         /** @var TClass $class */
         $class = $type->getName();
@@ -150,7 +153,7 @@ final class Initializer implements Container\SingletonInterface
      * @psalm-pure
      * @psalm-assert-if-true TClass $class
      */
-    private function isBootloader(string|object $class): bool
+    protected function isBootloader(string|object $class): bool
     {
         return \is_subclass_of($class, BootloaderInterface::class);
     }

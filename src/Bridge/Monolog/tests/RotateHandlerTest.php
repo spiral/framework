@@ -6,7 +6,7 @@ namespace Spiral\Tests\Monolog;
 
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
-use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
@@ -34,7 +34,7 @@ class RotateHandlerTest extends BaseTest
                 }
             }
         ));
-        $this->container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
 
         $autowire = new Container\Autowire('log.rotate', [
             'filename' => 'monolog.log'

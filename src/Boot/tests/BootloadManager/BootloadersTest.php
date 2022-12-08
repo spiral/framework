@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\BootloadManager;
 
+use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 use Spiral\Tests\Boot\Fixtures\BootloaderA;
 use Spiral\Tests\Boot\Fixtures\BootloaderB;
@@ -48,6 +50,67 @@ class BootloadersTest extends TestCase
             BootloaderA::class,
             BootloaderB::class,
         ]), $bootloader->getClasses());
+    }
+
+    public function testBootloadFromInstance(): void
+    {
+        $container = new Container();
+
+        $bootloader = $this->getBootloadManager($container);
+
+        $bootloader->bootload([
+            SampleClass::class,
+            new SampleBootWithMethodBoot(),
+            new SampleBoot(),
+        ]);
+
+        $this->assertTrue($container->has('abc'));
+        $this->assertTrue($container->has('single'));
+        $this->assertTrue($container->hasInstance('def'));
+        $this->assertTrue($container->hasInstance('efg'));
+        $this->assertTrue($container->hasInstance('cde'));
+        $this->assertTrue($container->has('ghi'));
+
+        $this->assertSame([
+            SampleClass::class,
+            SampleBootWithMethodBoot::class,
+            SampleBoot::class,
+            BootloaderA::class,
+            BootloaderB::class,
+        ], $bootloader->getClasses());
+    }
+
+    public function testBootloadFromAnonymousClass(): void
+    {
+        $container = new Container();
+
+        $bootloader = $this->getBootloadManager($container);
+
+        $bootloader->bootload([
+            new class () extends Bootloader {
+                public const BINDINGS = ['abc' => self::class];
+                public const SINGLETONS = ['single' => self::class];
+
+                public function init(BinderInterface $binder): void
+                {
+                    $binder->bind('def', new SampleBoot());
+                }
+
+                public function boot(BinderInterface $binder): void
+                {
+                    $binder->bind('efg', new SampleClass());
+                    $binder->bind('ghi', 'foo');
+                }
+            },
+        ]);
+
+        $this->assertTrue($container->has('abc'));
+        $this->assertTrue($container->has('single'));
+        $this->assertTrue($container->hasInstance('def'));
+        $this->assertTrue($container->hasInstance('efg'));
+        $this->assertTrue($container->has('ghi'));
+
+        $this->assertCount(1, $bootloader->getClasses());
     }
 
     public function testException(): void

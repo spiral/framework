@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Monolog;
 
 use Monolog\Processor\PsrLogMessageProcessor;
-use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
@@ -40,7 +40,7 @@ class ProcessorsTest extends BaseTest
             }
         ));
         $this->container->bindSingleton(ListenerRegistryInterface::class, new ListenerRegistry());
-        $this->container->get(BootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
     }
 
     public function testDefaultProcessor(): void
