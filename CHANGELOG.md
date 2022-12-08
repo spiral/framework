@@ -1,18 +1,22 @@
 # CHANGELOG
 
 ## Unreleased
-- **High Impact Changes**
 - **Medium Impact Changes**
   - [spiral/boot] Class `Spiral\Boot\BootloadManager\BootloadManager` is deprecated. Will be removed in version v4.0.
+  - [spiral/stempler] Adds null locale processor to remove brackets `[[ ... ]]` when don't use Translator component.
+  - [spiral/views] Fixes problem with using view context with default value.
 - **Other Features**
+  - [spiral/session] Added session cache driver.
+  - [spiral/router] Added routes with `PATCH` method into `route:list` command.
   - [spiral/boot] Added `Spiral\Boot\BootloadManager\InitializerInterface`. This will allow changing the implementation 
-    of this interface by the developer.
+  of this interface by the developer.
   - [spiral/boot] Added `Spiral\Boot\BootloadManager\StrategyBasedBootloadManager`. This BootloadManager allows 
-    the implementation of a custom bootloaders loading strategy.
+  the implementation of a custom bootloaders loading strategy.
   - [spiral/boot] Added the ability to register application bootloaders via object instance.
   - [spiral/boot] Removed `final` from the `Spiral\Boot\BootloadManager\Initializer` class.
 - **Bug Fixes**
-    - [spiral/queue] Added `Spiral\Telemetry\Bootloader\TelemetryBootloader` dependency to QueueBootloader.
+  - [spiral/queue] Added `Spiral\Telemetry\Bootloader\TelemetryBootloader` dependency to QueueBootloader.
+  - [spiral/core] Fixed problem with dynamic properties in `Spiral\Core\Container`.
 
 ## 3.3.0 - 2022-11-17
 - **High Impact Changes**
