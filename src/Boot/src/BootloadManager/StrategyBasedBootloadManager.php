@@ -6,7 +6,7 @@ namespace Spiral\Boot\BootloadManager;
 
 use Spiral\Core\ScopeInterface;
 
-final class CustomizableBootloadManager extends AbstractBootloadManager
+final class StrategyBasedBootloadManager extends AbstractBootloadManager
 {
     public function __construct(
         private readonly InvokerStrategyInterface $invoker,

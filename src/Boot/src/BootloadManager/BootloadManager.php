@@ -9,7 +9,7 @@ use Spiral\Core\ResolverInterface;
 use Spiral\Core\ScopeInterface;
 
 /**
- * @deprecated since v3.4. Use the {@see CustomizableBootloadManager} instead.
+ * @deprecated since v3.4. Use the {@see StrategyBasedBootloadManager} instead.
  */
 final class BootloadManager extends AbstractBootloadManager
 {

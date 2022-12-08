@@ -6,7 +6,7 @@ namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Spiral\Boot\BootloadManager\CustomizableBootloadManager;
+use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
 use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\BootloadManager\InitializerInterface;
@@ -254,7 +254,7 @@ class KernelTest extends TestCase
         TestCore::create(
             directories: ['root' => __DIR__],
             container: $container,
-            bootloadManager: new Autowire(CustomizableBootloadManager::class, [
+            bootloadManager: new Autowire(StrategyBasedBootloadManager::class, [
                 'invoker' => new CustomInvokerStrategy()
             ])
         );

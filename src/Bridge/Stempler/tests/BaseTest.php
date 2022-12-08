@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Stempler;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Boot\BootloadManager\CustomizableBootloadManager;
+use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
 use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Directories;
@@ -33,7 +33,7 @@ abstract class BaseTest extends TestCase
     ];
 
     protected Container $container;
-    protected CustomizableBootloadManager $app;
+    protected StrategyBasedBootloadManager $app;
 
     public function setUp(): void
     {
@@ -64,7 +64,7 @@ abstract class BaseTest extends TestCase
         $this->container->bind(ViewsInterface::class, ViewManager::class);
 
         $initializer = new Initializer($this->container, $this->container);
-        $this->app = new CustomizableBootloadManager(
+        $this->app = new StrategyBasedBootloadManager(
             new DefaultInvokerStrategy($initializer, $this->container, $this->container),
             $this->container,
             $initializer
