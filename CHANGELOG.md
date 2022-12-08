@@ -11,6 +11,8 @@
     the implementation of a custom bootloaders loading strategy.
   - [spiral/boot] Added the ability to register application bootloaders via object instance.
   - [spiral/boot] Removed `final` from the `Spiral\Boot\BootloadManager\Initializer` class.
+- **Bug Fixes**
+    - [spiral/queue] Added `Spiral\Telemetry\Bootloader\TelemetryBootloader` dependency to QueueBootloader.
 
 ## 3.3.0 - 2022-11-17
 - **High Impact Changes**
