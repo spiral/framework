@@ -59,7 +59,9 @@ final class Container implements
             'state' => new Internal\State(),
         ]);
         foreach ($config as $property => $class) {
-            $this->$property = $constructor->get($property, $class);
+            if (\property_exists($this, $property)) {
+                $this->$property = $constructor->get($property, $class);
+            }
         }
 
         /** @psalm-suppress PossiblyNullPropertyAssignment */
