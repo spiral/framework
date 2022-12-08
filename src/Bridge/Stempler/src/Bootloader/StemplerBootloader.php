@@ -13,6 +13,7 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Stempler\Builder;
 use Spiral\Stempler\Config\StemplerConfig;
 use Spiral\Stempler\Directive;
+use Spiral\Stempler\Processor\NullLocaleProcessor;
 use Spiral\Stempler\StemplerCache;
 use Spiral\Stempler\StemplerEngine;
 use Spiral\Stempler\Transform\Finalizer;
@@ -54,8 +55,8 @@ final class StemplerBootloader extends Bootloader implements SingletonInterface
                 'processors' => [
                     Processor\ContextProcessor::class,
                 ],
-                'visitors'   => [
-                    Builder::STAGE_PREPARE   => [
+                'visitors' => [
+                    Builder::STAGE_PREPARE => [
                         Visitor\DefineBlocks::class,
                         Visitor\DefineAttributes::class,
                         Visitor\DefineHidden::class,
@@ -63,11 +64,11 @@ final class StemplerBootloader extends Bootloader implements SingletonInterface
                     Builder::STAGE_TRANSFORM => [
 
                     ],
-                    Builder::STAGE_FINALIZE  => [
+                    Builder::STAGE_FINALIZE => [
                         Visitor\DefineStacks::class,
                         Finalizer\StackCollector::class,
                     ],
-                    Builder::STAGE_COMPILE   => [
+                    Builder::STAGE_COMPILE => [
                     ],
                 ],
             ]
@@ -77,6 +78,8 @@ final class StemplerBootloader extends Bootloader implements SingletonInterface
 
         if ($container->has(LocaleProcessor::class)) {
             $this->addProcessor(LocaleProcessor::class);
+        } else {
+            $this->addProcessor(NullLocaleProcessor::class);
         }
     }
 
