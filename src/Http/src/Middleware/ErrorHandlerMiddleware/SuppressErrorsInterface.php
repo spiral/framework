@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Middleware\ErrorHandlerMiddleware;
 
+/**
+ * @deprecated
+ */
 interface SuppressErrorsInterface
 {
     /**

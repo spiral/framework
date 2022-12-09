@@ -11,6 +11,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\ExceptionRendererInterface;
+use Spiral\Exceptions\Verbosity;
 use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Header\AcceptHeader;
@@ -30,6 +31,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         private readonly RendererInterface $renderer,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ExceptionHandlerInterface $errorHandler,
+        private readonly Verbosity $verbosity
     ) {
     }
 
@@ -74,7 +76,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         $response->getBody()->write(
             (string)$renderer?->render(
                 exception: $e,
-                verbosity: null,
+                verbosity: $this->verbosity,
                 format: $format
             )
         );

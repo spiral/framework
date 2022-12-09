@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use Spiral\Boot\Environment\DebugMode;
 use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\ExceptionRendererInterface;
+use Spiral\Exceptions\Verbosity;
 use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Middleware\ErrorHandlerMiddleware;
@@ -69,7 +70,8 @@ final class ErrorHandlerMiddlewareTest extends TestCase
             new EnvSuppressErrors(DebugMode::Disabled),
             $this->renderer,
             new Psr17Factory(),
-            $this->exceptionHandler
+            $this->exceptionHandler,
+            Verbosity::BASIC
         );
         $middleware->setLogger($this->logger);
 
@@ -85,7 +87,7 @@ final class ErrorHandlerMiddlewareTest extends TestCase
         $renderer
             ->expects($this->once())
             ->method('render')
-            ->with($e);
+            ->with($e, Verbosity::DEBUG);
 
         $this->handler
             ->expects($this->once())
@@ -115,7 +117,8 @@ final class ErrorHandlerMiddlewareTest extends TestCase
             new EnvSuppressErrors(DebugMode::Enabled),
             $this->renderer,
             new Psr17Factory(),
-            $this->exceptionHandler
+            $this->exceptionHandler,
+            Verbosity::DEBUG
         );
         $middleware->setLogger($this->logger);
 
