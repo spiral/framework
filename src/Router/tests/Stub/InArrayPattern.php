@@ -1,6 +1,6 @@
 <?php
 
-namespace Spiral\Tests\Router\Fixtures;
+namespace Spiral\Tests\Router\Stub;
 
 class InArrayPattern implements \Stringable
 {

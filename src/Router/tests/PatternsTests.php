@@ -8,10 +8,12 @@ use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Spiral\Router\Registry\DefaultPatternRegistry;
+use Spiral\Router\Registry\RoutePatternRegistryInterface;
 use Spiral\Router\Route;
 use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Diactoros\UriFactory;
-use Spiral\Tests\Router\Fixtures\InArrayPattern;
+use Spiral\Tests\Router\Stub\InArrayPattern;
+use Mockery as m;
 
 class PatternsTests extends TestCase
 {
@@ -142,16 +144,12 @@ class PatternsTests extends TestCase
             'test'
         );
 
-        $registry = new DefaultPatternRegistry();
-
-        $registry->register(
-            'foo',
-            '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
-        );
-        $registry->register(
-            'bar',
-            '[0-9]+'
-        );
+        $registry = m::mock(RoutePatternRegistryInterface::class);
+        $registry->shouldReceive('all')
+            ->once()
+            ->andReturn([
+                'foo' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}',
+            ]);
 
         $route = $route->withUriHandler(
             new UriHandler(
@@ -197,9 +195,19 @@ class PatternsTests extends TestCase
         $match = $route->match(
             new ServerRequest('GET', new Uri('http://site.com/users/foo'))
         );
+        $match1 = $route->match(
+            new ServerRequest('GET', new Uri('http://site.com/users/bar'))
+        );
+        $match2 = $route->match(
+            new ServerRequest('GET', new Uri('http://site.com/users/baz'))
+        );
 
         $this->assertSame([
             'name' => 'foo',
         ], $match->getMatches());
+        $this->assertSame([
+            'name' => 'bar',
+        ], $match1->getMatches());
+        $this->assertNull($match2);
     }
 }

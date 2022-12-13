@@ -22,11 +22,6 @@ final class UriHandler
     private const DEFAULT_SEGMENT = '[^\/]+';
     private const PATTERN_REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
     private const SEGMENT_REPLACES = ['/' => '\\/', '.' => '\.'];
-    private const SEGMENT_TYPES = [
-        'int' => '\d+',
-        'integer' => '\d+',
-        'uuid' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}',
-    ];
     private const URI_FIXERS = [
         '[]' => '',
         '[/]' => '',
@@ -52,9 +47,7 @@ final class UriHandler
     public function __construct(
         private readonly UriFactoryInterface $uriFactory,
         SlugifyInterface $slugify = null,
-        private readonly ?RoutePatternRegistryInterface $patternRegistry = new DefaultPatternRegistry(
-            self::SEGMENT_TYPES
-        )
+        private readonly ?RoutePatternRegistryInterface $patternRegistry = new DefaultPatternRegistry()
     ) {
         $this->slugify = $slugify ?? new Slugify();
     }
