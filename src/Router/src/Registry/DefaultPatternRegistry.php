@@ -18,6 +18,9 @@ final class DefaultPatternRegistry implements RoutePatternRegistryInterface
         $this->patterns[$name] = (string)$pattern;
     }
 
+    /**
+     * @return array<non-empty-string, non-empty-string>
+     */
     public function all(): array
     {
         return $this->patterns;
