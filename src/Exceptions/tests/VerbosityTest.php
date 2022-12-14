@@ -14,7 +14,10 @@ final class VerbosityTest extends TestCase
     {
         $env = m::mock(EnvironmentInterface::class);
 
-        $env->shouldReceive('get')->with('VERBOSITY')->andReturn($name);
+        $env->shouldReceive('get')
+            ->once()
+            ->with('VERBOSITY_LEVEL')
+            ->andReturn($name);
 
         $enum = Verbosity::detect($env);
 
@@ -25,9 +28,13 @@ final class VerbosityTest extends TestCase
     {
         return [
             ['basic', Verbosity::BASIC],
+            [0, Verbosity::BASIC],
+            ['Basic', Verbosity::BASIC],
             ['debug', Verbosity::DEBUG],
+            [2, Verbosity::DEBUG],
             ['invalid', Verbosity::VERBOSE],
             ['', Verbosity::VERBOSE],
+            [null, Verbosity::VERBOSE],
         ];
     }
 }
