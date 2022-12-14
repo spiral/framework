@@ -4,6 +4,9 @@ namespace Spiral\Router\Registry;
 
 final class DefaultPatternRegistry implements RoutePatternRegistryInterface
 {
+    /**
+     * @var array<non-empty-string, non-empty-string>
+     */
     private array $patterns = [
         'int' => '\d+',
         'integer' => '\d+',
