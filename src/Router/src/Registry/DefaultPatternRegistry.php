@@ -17,10 +17,6 @@ final class DefaultPatternRegistry implements RoutePatternRegistryInterface
      * @param non-empty-string $name
      * @param non-empty-string|\Stringable $pattern
      */
-    /**
-     * @param non-empty-string $name
-     * @param non-empty-string|\Stringable $pattern
-     */
     public function register(string $name, string|\Stringable $pattern): void
     {
         $this->patterns[$name] = (string)$pattern;
