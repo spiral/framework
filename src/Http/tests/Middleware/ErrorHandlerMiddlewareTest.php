@@ -127,6 +127,54 @@ final class ErrorHandlerMiddlewareTest extends TestCase
         $this->assertSame($code, $response->getStatusCode());
     }
 
+    /**
+     * @dataProvider exceptionsDataProvider
+     */
+    public function testHandleExceptionWithDefaultVerbosity(\Throwable $e, int $code): void
+    {
+        $renderer = $this->createMock(ExceptionRendererInterface::class);
+        $renderer
+            ->expects($this->once())
+            ->method('render')
+            ->with($e, Verbosity::VERBOSE);
+
+        $this->handler
+            ->expects($this->once())
+            ->method('handle')
+            ->with($this->request)
+            ->willThrowException($e);
+
+        $this->exceptionHandler
+            ->expects($this->once())
+            ->method('report')
+            ->with($e);
+
+        $this->exceptionHandler
+            ->expects($this->once())
+            ->method('getRenderer')
+            ->willReturn($renderer);
+
+        $this->logger
+            ->expects($this->never())
+            ->method('error');
+
+        $this->renderer
+            ->expects($this->never())
+            ->method('renderException');
+
+        $middleware = new ErrorHandlerMiddleware(
+            new EnvSuppressErrors(DebugMode::Enabled),
+            $this->renderer,
+            new Psr17Factory(),
+            $this->exceptionHandler
+        );
+        $middleware->setLogger($this->logger);
+
+        $response = $middleware->process($this->request, $this->handler);
+
+        $this->assertSame($code, $response->getStatusCode());
+    }
+
     public function exceptionsDataProvider(): \Traversable
     {
         yield [new ClientException(message: 'some error'), 400];

@@ -31,7 +31,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         private readonly RendererInterface $renderer,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ExceptionHandlerInterface $errorHandler,
-        private readonly Verbosity $verbosity
+        private readonly Verbosity $verbosity = Verbosity::VERBOSE,
     ) {
     }
 
