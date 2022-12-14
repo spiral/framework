@@ -24,7 +24,7 @@ abstract class Kernel extends AbstractKernel
     /**
      * Application specific bootloaders
      *
-     * @deprecated since v4.0
+     * @deprecated since v4.0. Use {@see defineAppBootloaders()} method instead.
      */
     protected const APP = [];
 
