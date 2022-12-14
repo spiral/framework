@@ -35,6 +35,8 @@ final class VerbosityTest extends TestCase
             ['invalid', Verbosity::VERBOSE],
             ['', Verbosity::VERBOSE],
             [null, Verbosity::VERBOSE],
+            [true, Verbosity::VERBOSE],
+            [false, Verbosity::VERBOSE],
         ];
     }
 }
