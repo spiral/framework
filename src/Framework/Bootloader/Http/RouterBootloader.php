@@ -23,6 +23,8 @@ use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\Loader\LoaderRegistry;
 use Spiral\Router\Loader\LoaderRegistryInterface;
 use Spiral\Router\Loader\PhpFileLoader;
+use Spiral\Router\Registry\DefaultPatternRegistry;
+use Spiral\Router\Registry\RoutePatternRegistryInterface;
 use Spiral\Router\RouteInterface;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
@@ -46,6 +48,7 @@ final class RouterBootloader extends Bootloader
         LoaderRegistryInterface::class => [self::class, 'initRegistry'],
         GroupRegistry::class => GroupRegistry::class,
         RoutingConfigurator::class => RoutingConfigurator::class,
+        RoutePatternRegistryInterface::class => DefaultPatternRegistry::class,
     ];
 
     public function __construct(

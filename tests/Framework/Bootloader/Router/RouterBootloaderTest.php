@@ -13,6 +13,8 @@ use Spiral\Router\Loader\DelegatingLoader;
 use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\Loader\LoaderRegistry;
 use Spiral\Router\Loader\LoaderRegistryInterface;
+use Spiral\Router\Registry\DefaultPatternRegistry;
+use Spiral\Router\Registry\RoutePatternRegistryInterface;
 use Spiral\Router\RouteInterface;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
@@ -53,6 +55,11 @@ final class RouterBootloaderTest extends BaseTest
     public function testRoutingConfiguratorBinding(): void
     {
         $this->assertContainerBoundAsSingleton(RoutingConfigurator::class, RoutingConfigurator::class);
+    }
+
+    public function testRoutePatternRegistryBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(RoutePatternRegistryInterface::class, DefaultPatternRegistry::class);
     }
 
     public function testRouteInterfaceBinding(): void
