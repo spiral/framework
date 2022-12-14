@@ -41,7 +41,7 @@ abstract class AbstractKernel implements KernelInterface
      * List of bootloaders to be called on application initialization (before `serve` method).
      * This constant must be redefined in child application.
      *
-     * @deprecated since v4.0
+     * @deprecated since v4.0. Use {@see defineBootloaders()} method instead.
      */
     protected const LOAD = [];
 
