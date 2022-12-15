@@ -23,7 +23,7 @@ final class Elements extends Aggregator
             ClassDeclaration::class,
             InterfaceDeclaration::class,
             TraitDeclaration::class,
-            EnumDeclaration::class
+            EnumDeclaration::class,
         ], $elements);
     }
 }
