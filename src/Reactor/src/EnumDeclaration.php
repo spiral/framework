@@ -13,7 +13,7 @@ use Spiral\Reactor\Partial\Method;
 use Spiral\Reactor\Partial\TraitUse;
 use Spiral\Reactor\Traits;
 
-class EnumDeclaration extends AbstractDeclaration
+class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
 {
     use Traits\ConstantsAware;
     use Traits\MethodsAware;

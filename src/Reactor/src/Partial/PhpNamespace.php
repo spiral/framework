@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor\Partial;
 
+use Nette\PhpGenerator\ClassLike;
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\EnumType;
+use Nette\PhpGenerator\InterfaceType;
 use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
+use Nette\PhpGenerator\TraitType;
 use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\Aggregator\Classes;
+use Spiral\Reactor\Aggregator\Elements;
+use Spiral\Reactor\Aggregator\Enums;
+use Spiral\Reactor\Aggregator\Interfaces;
+use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\EnumDeclaration;
 use Spiral\Reactor\InterfaceDeclaration;
@@ -88,18 +96,16 @@ final class PhpNamespace implements NamedInterface, AggregableInterface, \String
         return ClassDeclaration::fromElement($this->element->addClass($name));
     }
 
-    public function removeClass(string $name): self
-    {
-        $this->element->removeClass($name);
-
-        return $this;
-    }
-
     public function getClasses(): Classes
     {
+        $classes = \array_filter(
+            $this->element->getClasses(),
+            static fn (ClassLike $element): bool => $element instanceof ClassType
+        );
+
         return new Classes(\array_map(
-            static fn (ClassType $class) => ClassDeclaration::fromElement($class),
-            $this->element->getClasses()
+            static fn (ClassType $class): ClassDeclaration => ClassDeclaration::fromElement($class),
+            $classes
         ));
     }
 
@@ -108,14 +114,82 @@ final class PhpNamespace implements NamedInterface, AggregableInterface, \String
         return InterfaceDeclaration::fromElement($this->element->addInterface($name));
     }
 
+    public function getInterfaces(): Interfaces
+    {
+        $interfaces = \array_filter(
+            $this->element->getClasses(),
+            static fn (ClassLike $element): bool => $element instanceof InterfaceType
+        );
+
+        return new Interfaces(\array_map(
+            static fn (InterfaceType $interface): InterfaceDeclaration => InterfaceDeclaration::fromElement($interface),
+            $interfaces
+        ));
+    }
+
     public function addTrait(string $name): TraitDeclaration
     {
         return TraitDeclaration::fromElement($this->element->addTrait($name));
     }
 
+    public function getTraits(): Traits
+    {
+        $traits = \array_filter(
+            $this->element->getClasses(),
+            static fn (ClassLike $element): bool => $element instanceof TraitType
+        );
+
+        return new Traits(\array_map(
+            static fn (TraitType $trait): TraitDeclaration => TraitDeclaration::fromElement($trait),
+            $traits
+        ));
+    }
+
     public function addEnum(string $name): EnumDeclaration
     {
         return EnumDeclaration::fromElement($this->element->addEnum($name));
+    }
+
+    public function getEnums(): Enums
+    {
+        $enums = \array_filter(
+            $this->element->getClasses(),
+            static fn (ClassLike $element): bool => $element instanceof EnumType
+        );
+
+        return new Enums(\array_map(
+            static fn (EnumType $enum): EnumDeclaration => EnumDeclaration::fromElement($enum),
+            $enums
+        ));
+    }
+
+    public function getElements(): Elements
+    {
+        return new Elements(\array_map(
+            static fn (ClassLike $element) => match (true) {
+                $element instanceof ClassType => ClassDeclaration::fromElement($element),
+                $element instanceof InterfaceType => InterfaceDeclaration::fromElement($element),
+                $element instanceof TraitType => TraitDeclaration::fromElement($element),
+                $element instanceof EnumType => EnumDeclaration::fromElement($element)
+            },
+            $this->element->getClasses()
+        ));
+    }
+
+    /**
+     * @deprecated since v3.5.
+     * @see PhpNamespace::removeElement
+     */
+    public function removeClass(string $name): self
+    {
+        return $this->removeElement($name);
+    }
+
+    public function removeElement(string $name): self
+    {
+        $this->element->removeClass($name);
+
+        return $this;
     }
 
     /**
