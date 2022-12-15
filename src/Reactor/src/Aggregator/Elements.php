@@ -11,7 +11,7 @@ use Spiral\Reactor\InterfaceDeclaration;
 use Spiral\Reactor\TraitDeclaration;
 
 /**
- * Enums aggregation.
+ * Classes, interfaces, traits, enums aggregation.
  *
  * @extends Aggregator<ClassDeclaration|InterfaceDeclaration|TraitDeclaration|EnumDeclaration>
  */
