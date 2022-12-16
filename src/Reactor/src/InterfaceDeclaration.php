@@ -9,7 +9,7 @@ use Spiral\Reactor\Partial\Constant;
 use Spiral\Reactor\Partial\Method;
 use Spiral\Reactor\Traits;
 
-class InterfaceDeclaration extends AbstractDeclaration
+class InterfaceDeclaration extends AbstractDeclaration implements AggregableInterface
 {
     use Traits\ConstantsAware;
     use Traits\MethodsAware;

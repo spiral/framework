@@ -11,7 +11,7 @@ use Spiral\Reactor\Partial\Property;
 use Spiral\Reactor\Partial\TraitUse;
 use Spiral\Reactor\Traits;
 
-class TraitDeclaration extends AbstractDeclaration
+class TraitDeclaration extends AbstractDeclaration implements AggregableInterface
 {
     use Traits\ConstantsAware;
     use Traits\MethodsAware;

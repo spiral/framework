@@ -8,17 +8,24 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Reactor\Aggregator;
 use Spiral\Reactor\Aggregator\Classes;
 use Spiral\Reactor\Aggregator\Constants;
+use Spiral\Reactor\Aggregator\Elements;
 use Spiral\Reactor\Aggregator\EnumCases;
+use Spiral\Reactor\Aggregator\Enums;
 use Spiral\Reactor\Aggregator\Functions;
+use Spiral\Reactor\Aggregator\Interfaces;
 use Spiral\Reactor\Aggregator\Methods;
 use Spiral\Reactor\Aggregator\Namespaces;
 use Spiral\Reactor\Aggregator\Parameters;
 use Spiral\Reactor\Aggregator\Properties;
+use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\Aggregator\TraitUses;
 use Spiral\Reactor\ClassDeclaration;
+use Spiral\Reactor\EnumDeclaration;
 use Spiral\Reactor\Exception\ReactorException;
 use Spiral\Reactor\FunctionDeclaration;
+use Spiral\Reactor\InterfaceDeclaration;
 use Spiral\Reactor\Partial;
+use Spiral\Reactor\TraitDeclaration;
 
 final class AggregatorsTest extends TestCase
 {
@@ -128,6 +135,70 @@ final class AggregatorsTest extends TestCase
         $aggr->add($uses);
         $this->assertTrue($aggr->has('test'));
         $this->assertSame($uses, $aggr->get('test'));
+    }
+
+    public function testElements(): void
+    {
+        $aggr = new Elements([]);
+        $this->assertFalse($aggr->has('c'));
+        $this->assertFalse($aggr->has('i'));
+        $this->assertFalse($aggr->has('t'));
+        $this->assertFalse($aggr->has('e'));
+
+        $class = new ClassDeclaration('c');
+        $interface = new InterfaceDeclaration('i');
+        $trait = new TraitDeclaration('t');
+        $enum = new EnumDeclaration('e');
+
+        $aggr->add($class);
+        $aggr->add($interface);
+        $aggr->add($trait);
+        $aggr->add($enum);
+
+        $this->assertTrue($aggr->has('c'));
+        $this->assertSame($class, $aggr->get('c'));
+        $this->assertTrue($aggr->has('i'));
+        $this->assertSame($interface, $aggr->get('i'));
+        $this->assertTrue($aggr->has('t'));
+        $this->assertSame($trait, $aggr->get('t'));
+        $this->assertTrue($aggr->has('e'));
+        $this->assertSame($enum, $aggr->get('e'));
+    }
+
+    public function testEnums(): void
+    {
+        $aggr = new Enums([]);
+        $this->assertFalse($aggr->has('test'));
+
+        $enum = new EnumDeclaration('test');
+
+        $aggr->add($enum);
+        $this->assertTrue($aggr->has('test'));
+        $this->assertSame($enum, $aggr->get('test'));
+    }
+
+    public function testInterfaces(): void
+    {
+        $aggr = new Interfaces([]);
+        $this->assertFalse($aggr->has('test'));
+
+        $interface = new InterfaceDeclaration('test');
+
+        $aggr->add($interface);
+        $this->assertTrue($aggr->has('test'));
+        $this->assertSame($interface, $aggr->get('test'));
+    }
+
+    public function testTraits(): void
+    {
+        $aggr = new Traits([]);
+        $this->assertFalse($aggr->has('test'));
+
+        $trait = new TraitDeclaration('test');
+
+        $aggr->add($trait);
+        $this->assertTrue($aggr->has('test'));
+        $this->assertSame($trait, $aggr->get('test'));
     }
 
     public function testAggregator(): void

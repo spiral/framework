@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased
+- **Medium Impact Changes**
+  - [spiral/reactor] Method `removeClass` of `Spiral\Reactor\Partial\PhpNamespace` class is deprecated.
+    Use method `removeElement` instead.
+- **Other Features**
+  - [spiral/reactor] Added methods `removeElement`, `getElements`, `getEnums`, `getTraits`, `getInterfaces`, 
+    in the class `Spiral\Reactor\Partial\PhpNamespace`.
+
 ## 3.4.0 - 2022-12-08
 - **Medium Impact Changes**
   - [spiral/boot] Class `Spiral\Boot\BootloadManager\BootloadManager` is deprecated. Will be removed in version v4.0.
