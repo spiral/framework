@@ -11,21 +11,21 @@ use Nette\PhpGenerator\InterfaceType;
 use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
 use Nette\PhpGenerator\TraitType;
 use Spiral\Reactor\AggregableInterface;
-use Spiral\Reactor\Aggregator\Classes;
 use Spiral\Reactor\Aggregator\Elements;
-use Spiral\Reactor\Aggregator\Enums;
-use Spiral\Reactor\Aggregator\Interfaces;
-use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\EnumDeclaration;
 use Spiral\Reactor\InterfaceDeclaration;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\TraitDeclaration;
-use Spiral\Reactor\Traits\NameAware;
+use Spiral\Reactor\Traits;
 
 final class PhpNamespace implements NamedInterface, AggregableInterface, \Stringable
 {
-    use NameAware;
+    use Traits\ClassAware;
+    use Traits\EnumAware;
+    use Traits\InterfaceAware;
+    use Traits\NameAware;
+    use Traits\TraitAware;
 
     private NettePhpNamespace $element;
 
@@ -89,78 +89,6 @@ final class PhpNamespace implements NamedInterface, AggregableInterface, \String
     public function simplifyName(string $name, string $of = NettePhpNamespace::NameNormal): string
     {
         return $this->element->simplifyName($name, $of);
-    }
-
-    public function addClass(string $name): ClassDeclaration
-    {
-        return ClassDeclaration::fromElement($this->element->addClass($name));
-    }
-
-    public function getClasses(): Classes
-    {
-        $classes = \array_filter(
-            $this->element->getClasses(),
-            static fn (ClassLike $element): bool => $element instanceof ClassType
-        );
-
-        return new Classes(\array_map(
-            static fn (ClassType $class): ClassDeclaration => ClassDeclaration::fromElement($class),
-            $classes
-        ));
-    }
-
-    public function addInterface(string $name): InterfaceDeclaration
-    {
-        return InterfaceDeclaration::fromElement($this->element->addInterface($name));
-    }
-
-    public function getInterfaces(): Interfaces
-    {
-        $interfaces = \array_filter(
-            $this->element->getClasses(),
-            static fn (ClassLike $element): bool => $element instanceof InterfaceType
-        );
-
-        return new Interfaces(\array_map(
-            static fn (InterfaceType $interface): InterfaceDeclaration => InterfaceDeclaration::fromElement($interface),
-            $interfaces
-        ));
-    }
-
-    public function addTrait(string $name): TraitDeclaration
-    {
-        return TraitDeclaration::fromElement($this->element->addTrait($name));
-    }
-
-    public function getTraits(): Traits
-    {
-        $traits = \array_filter(
-            $this->element->getClasses(),
-            static fn (ClassLike $element): bool => $element instanceof TraitType
-        );
-
-        return new Traits(\array_map(
-            static fn (TraitType $trait): TraitDeclaration => TraitDeclaration::fromElement($trait),
-            $traits
-        ));
-    }
-
-    public function addEnum(string $name): EnumDeclaration
-    {
-        return EnumDeclaration::fromElement($this->element->addEnum($name));
-    }
-
-    public function getEnums(): Enums
-    {
-        $enums = \array_filter(
-            $this->element->getClasses(),
-            static fn (ClassLike $element): bool => $element instanceof EnumType
-        );
-
-        return new Enums(\array_map(
-            static fn (EnumType $enum): EnumDeclaration => EnumDeclaration::fromElement($enum),
-            $enums
-        ));
     }
 
     public function getElements(): Elements
