@@ -12,9 +12,8 @@ use Spiral\Reactor\Aggregator\Interfaces;
 use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\FileDeclaration;
-use Spiral\Reactor\Partial\PhpNamespace;
 
-final class FileDeclarationTest extends BaseTest
+final class FileDeclarationTest extends BaseWithElementsTest
 {
     public function testFromCode(): void
     {
@@ -162,40 +161,45 @@ final class FileDeclarationTest extends BaseTest
     /**
      * @dataProvider classesDataProvider
      */
-    public function testGetClasses(PhpNamespace $namespace, Classes $expected): void
+    public function testGetClasses(FileDeclaration $file, Classes $expected): void
     {
-        $this->assertEquals($namespace->getClasses(), $expected);
+        $this->assertEquals($file->getClasses(), $expected);
     }
 
     /**
      * @dataProvider interfacesDataProvider
      */
-    public function testGetInterfaces(PhpNamespace $namespace, Interfaces $expected): void
+    public function testGetInterfaces(FileDeclaration $file, Interfaces $expected): void
     {
-        $this->assertEquals($namespace->getInterfaces(), $expected);
+        $this->assertEquals($file->getInterfaces(), $expected);
     }
 
     /**
      * @dataProvider traitsDataProvider
      */
-    public function testGetTraits(PhpNamespace $namespace, Traits $expected): void
+    public function testGetTraits(FileDeclaration $file, Traits $expected): void
     {
-        $this->assertEquals($namespace->getTraits(), $expected);
+        $this->assertEquals($file->getTraits(), $expected);
     }
 
     /**
      * @dataProvider enumsDataProvider
      */
-    public function testGetEnums(PhpNamespace $namespace, Enums $expected): void
+    public function testGetEnums(FileDeclaration $file, Enums $expected): void
     {
-        $this->assertEquals($namespace->getEnums(), $expected);
+        $this->assertEquals($file->getEnums(), $expected);
     }
 
     /**
      * @dataProvider elementsDataProvider
      */
-    public function testGetElements(PhpNamespace $namespace, Elements $expected): void
+    public function testGetElements(FileDeclaration $file, Elements $expected): void
     {
-        $this->assertEquals($namespace->getElements(), $expected);
+        $this->assertEquals($file->getElements(), $expected);
+    }
+
+    protected function getTestedClass(): string
+    {
+        return FileDeclaration::class;
     }
 }

@@ -12,9 +12,9 @@ use Spiral\Reactor\Aggregator\Interfaces;
 use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\FileDeclaration;
 use Spiral\Reactor\Partial\PhpNamespace;
-use Spiral\Tests\Reactor\BaseTest;
+use Spiral\Tests\Reactor\BaseWithElementsTest;
 
-final class PhpNamespaceTest extends BaseTest
+final class PhpNamespaceTest extends BaseWithElementsTest
 {
     public function testGetName(): void
     {
@@ -232,5 +232,10 @@ final class PhpNamespaceTest extends BaseTest
     public function testGetElements(PhpNamespace $namespace, Elements $expected): void
     {
         $this->assertEquals($namespace->getElements(), $expected);
+    }
+
+    protected function getTestedClass(): string
+    {
+        return PhpNamespace::class;
     }
 }
