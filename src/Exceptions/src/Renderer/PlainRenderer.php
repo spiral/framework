@@ -50,7 +50,7 @@ final class PlainRenderer extends AbstractRenderer
 
         $this->lines = [];
 
-        return \implode("", \array_reverse($result));
+        return \implode('', \array_reverse($result));
     }
 
     /**
@@ -93,10 +93,10 @@ final class PlainRenderer extends AbstractRenderer
 
             if ($h !== null && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
-                        \file_get_contents($trace['file']),
-                        $trace['line'],
-                        self::SHOW_LINES
-                    ) . "\n";
+                    \file_get_contents($trace['file']),
+                    $trace['line'],
+                    self::SHOW_LINES
+                ) . "\n";
             }
         }
 
