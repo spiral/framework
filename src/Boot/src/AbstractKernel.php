@@ -30,12 +30,18 @@ use Spiral\Exceptions\ExceptionReporterInterface;
  */
 abstract class AbstractKernel implements KernelInterface
 {
-    /** Defines list of bootloaders to be used for core initialisation and all system components. */
+    /**
+     * Defines list of bootloaders to be used for core initialisation and all system components.
+     *
+     * @deprecated since v4.0. Use {@see defineSystemBootloaders()} method instead.
+     */
     protected const SYSTEM = [CoreBootloader::class];
 
     /**
      * List of bootloaders to be called on application initialization (before `serve` method).
      * This constant must be redefined in child application.
+     *
+     * @deprecated since v4.0. Use {@see defineBootloaders()} method instead.
      */
     protected const LOAD = [];
 
@@ -82,7 +88,7 @@ abstract class AbstractKernel implements KernelInterface
         $this->finalizer = new Finalizer();
         $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
 
-        $this->bootloader->bootload(static::SYSTEM);
+        $this->bootloader->bootload($this->defineSystemBootloaders());
     }
 
     /**
@@ -290,6 +296,16 @@ abstract class AbstractKernel implements KernelInterface
      * Normalizes directory list and adds all required aliases.
      */
     abstract protected function mapDirectories(array $directories): array;
+
+    /**
+     * Get list of defined system bootloaders
+     *
+     * @return array<int, class-string>|array<class-string, array<non-empty-string, mixed>>
+     */
+    protected function defineSystemBootloaders(): array
+    {
+        return static::SYSTEM;
+    }
 
     /**
      * Get list of defined kernel bootloaders
