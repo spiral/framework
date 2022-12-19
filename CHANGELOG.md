@@ -5,8 +5,10 @@
   - [spiral/reactor] Method `removeClass` of `Spiral\Reactor\Partial\PhpNamespace` class is deprecated.
     Use method `removeElement` instead.
 - **Other Features**
-  - [spiral/reactor] Added methods `removeElement`, `getElements`, `getEnums`, `getTraits`, `getInterfaces`, 
-    in the class `Spiral\Reactor\Partial\PhpNamespace`.
+  - [spiral/reactor] Added methods `removeElement`, `getClass`, `getElements`, `getEnum`, `getEnums`, `getTrait`, 
+    `getTraits`, `getInterface`, `getInterfaces` in the class `Spiral\Reactor\Partial\PhpNamespace`.
+  - [spiral/reactor] Added methods `getElements`, `getEnum`, `getEnums`, `getTrait`,
+    `getTraits`, `getInterface`, `getInterfaces` in the class `Spiral\Reactor\FileDeclaration`.
 
 ## 3.4.0 - 2022-12-08
 - **Medium Impact Changes**

@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace Spiral\Tests\Reactor;
 
 use Nette\PhpGenerator\PhpFile;
-use PHPUnit\Framework\TestCase;
 use Spiral\Reactor\Aggregator\Classes;
-use Spiral\Reactor\Aggregator\Functions;
-use Spiral\Reactor\Aggregator\Namespaces;
+use Spiral\Reactor\Aggregator\Elements;
+use Spiral\Reactor\Aggregator\Enums;
+use Spiral\Reactor\Aggregator\Interfaces;
+use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\ClassDeclaration;
-use Spiral\Reactor\EnumDeclaration;
 use Spiral\Reactor\FileDeclaration;
-use Spiral\Reactor\FunctionDeclaration;
-use Spiral\Reactor\InterfaceDeclaration;
-use Spiral\Reactor\Partial\PhpNamespace;
-use Spiral\Reactor\TraitDeclaration;
 
-final class FileDeclarationTest extends TestCase
+final class FileDeclarationTest extends BaseWithElementsTest
 {
     public function testFromCode(): void
     {
@@ -37,46 +33,75 @@ final class FileDeclarationTest extends TestCase
         $this->assertSame([\Countable::class], $class->getImplements());
     }
 
-    public function testClass(): void
+    public function testGetClass(): void
     {
         $file = new FileDeclaration();
-        $file->addClass('Test');
+        $class = $file->addClass('Test');
 
-        $this->assertInstanceOf(ClassDeclaration::class, $file->getClass('Test'));
-
-        $this->assertSame('Test', $file->getClass('Test')->getName());
-        $this->assertCount(1, $file->getClasses());
-        $this->assertInstanceOf(Classes::class, $file->getClasses());
+        $this->assertEquals($class, $file->getClass('Test'));
     }
 
-    public function testInterface(): void
+    public function testAddClass(): void
+    {
+        $file = new FileDeclaration();
+        $class = $file->addClass('Test');
+
+        $this->assertCount(1, $file->getClasses());
+        $this->assertEquals($class, $file->getClasses()->getIterator()->current());
+    }
+
+    public function testGetInterface(): void
     {
         $file = new FileDeclaration();
         $interface = $file->addInterface('Test');
 
-        $this->assertInstanceOf(InterfaceDeclaration::class, $interface);
-        $this->assertSame('Test', $interface->getName());
+        $this->assertEquals($interface, $file->getInterface('Test'));
     }
 
-    public function testTrait(): void
+    public function testAddInterface(): void
+    {
+        $file = new FileDeclaration();
+        $interface = $file->addInterface('Test');
+
+        $this->assertCount(1, $file->getInterfaces());
+        $this->assertEquals($interface, $file->getInterfaces()->getIterator()->current());
+    }
+
+    public function testGetTrait(): void
     {
         $file = new FileDeclaration();
         $trait = $file->addTrait('Test');
 
-        $this->assertInstanceOf(TraitDeclaration::class, $trait);
-        $this->assertSame('Test', $trait->getName());
+        $this->assertEquals($trait, $file->getTrait('Test'));
     }
 
-    public function testEnum(): void
+    public function testAddTrait(): void
+    {
+        $file = new FileDeclaration();
+        $trait = $file->addTrait('Test');
+
+        $this->assertCount(1, $file->getTraits());
+        $this->assertEquals($trait, $file->getTraits()->getIterator()->current());
+    }
+
+    public function testGetEnum(): void
     {
         $file = new FileDeclaration();
         $enum = $file->addEnum('Test');
 
-        $this->assertInstanceOf(EnumDeclaration::class, $enum);
-        $this->assertSame('Test', $enum->getName());
+        $this->assertEquals($enum, $file->getEnum('Test'));
     }
 
-    public function testNamespace(): void
+    public function testAddEnum(): void
+    {
+        $file = new FileDeclaration();
+        $enum = $file->addEnum('Test');
+
+        $this->assertCount(1, $file->getEnums());
+        $this->assertEquals($enum, $file->getEnums()->getIterator()->current());
+    }
+
+    public function testAddNamespace(): void
     {
         $file = new FileDeclaration();
 
@@ -84,14 +109,11 @@ final class FileDeclarationTest extends TestCase
 
         $namespace = $file->addNamespace('Foo\\Bar');
 
-        $this->assertInstanceOf(PhpNamespace::class, $namespace);
-        $this->assertSame('Foo\\Bar', $namespace->getName());
-
         $this->assertCount(1, $file->getNamespaces());
-        $this->assertInstanceOf(Namespaces::class, $file->getNamespaces());
+        $this->assertEquals($namespace, $file->getNamespaces()->getIterator()->current());
     }
 
-    public function testFunction(): void
+    public function testAddFunction(): void
     {
         $file = new FileDeclaration();
 
@@ -99,14 +121,11 @@ final class FileDeclarationTest extends TestCase
 
         $function = $file->addFunction('test');
 
-        $this->assertInstanceOf(FunctionDeclaration::class, $function);
-        $this->assertSame('test', $function->getName());
-
         $this->assertCount(1, $file->getFunctions());
-        $this->assertInstanceOf(Functions::class, $file->getFunctions());
+        $this->assertEquals($function, $file->getFunctions()->getIterator()->current());
     }
 
-    public function testUse(): void
+    public function testAddUse(): void
     {
         $file = new FileDeclaration();
         $file->addUse('Foo\\Bar');
@@ -137,5 +156,50 @@ final class FileDeclarationTest extends TestCase
         $element = (new FileDeclaration())->getElement();
 
         $this->assertInstanceOf(PhpFile::class, $element);
+    }
+
+    /**
+     * @dataProvider classesDataProvider
+     */
+    public function testGetClasses(FileDeclaration $file, Classes $expected): void
+    {
+        $this->assertEquals($file->getClasses(), $expected);
+    }
+
+    /**
+     * @dataProvider interfacesDataProvider
+     */
+    public function testGetInterfaces(FileDeclaration $file, Interfaces $expected): void
+    {
+        $this->assertEquals($file->getInterfaces(), $expected);
+    }
+
+    /**
+     * @dataProvider traitsDataProvider
+     */
+    public function testGetTraits(FileDeclaration $file, Traits $expected): void
+    {
+        $this->assertEquals($file->getTraits(), $expected);
+    }
+
+    /**
+     * @dataProvider enumsDataProvider
+     */
+    public function testGetEnums(FileDeclaration $file, Enums $expected): void
+    {
+        $this->assertEquals($file->getEnums(), $expected);
+    }
+
+    /**
+     * @dataProvider elementsDataProvider
+     */
+    public function testGetElements(FileDeclaration $file, Elements $expected): void
+    {
+        $this->assertEquals($file->getElements(), $expected);
+    }
+
+    protected function getTestedClass(): string
+    {
+        return FileDeclaration::class;
     }
 }

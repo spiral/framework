@@ -4,24 +4,31 @@ declare(strict_types=1);
 
 namespace Spiral\Reactor;
 
+use Nette\PhpGenerator\ClassLike;
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\EnumType;
 use Nette\PhpGenerator\GlobalFunction;
-use Nette\PhpGenerator\Helpers;
+use Nette\PhpGenerator\InterfaceType;
 use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
 use Nette\PhpGenerator\Factory;
 use Nette\PhpGenerator\PhpFile;
-use Spiral\Reactor\Aggregator\Classes;
+use Nette\PhpGenerator\TraitType;
+use Spiral\Reactor\Aggregator\Elements;
 use Spiral\Reactor\Aggregator\Functions;
 use Spiral\Reactor\Aggregator\Namespaces;
 use Spiral\Reactor\Partial\PhpNamespace;
-use Spiral\Reactor\Traits\CommentAware;
+use Spiral\Reactor\Traits;
 
 /**
  * Provides ability to render file content.
  */
 class FileDeclaration implements \Stringable, DeclarationInterface
 {
-    use CommentAware;
+    use Traits\CommentAware;
+    use Traits\EnumAware;
+    use Traits\ClassAware;
+    use Traits\InterfaceAware;
+    use Traits\TraitAware;
 
     private PhpFile $element;
 
@@ -39,26 +46,6 @@ class FileDeclaration implements \Stringable, DeclarationInterface
     public static function fromCode(string $code): static
     {
         return self::fromElement((new Factory())->fromCode($code));
-    }
-
-    public function addClass(string $name): ClassDeclaration
-    {
-        return ClassDeclaration::fromElement($this->element->addClass($name));
-    }
-
-    public function addInterface(string $name): InterfaceDeclaration
-    {
-        return InterfaceDeclaration::fromElement($this->element->addInterface($name));
-    }
-
-    public function addTrait(string $name): TraitDeclaration
-    {
-        return TraitDeclaration::fromElement($this->element->addTrait($name));
-    }
-
-    public function addEnum(string $name): EnumDeclaration
-    {
-        return EnumDeclaration::fromElement($this->element->addEnum($name));
     }
 
     public function addNamespace(string|PhpNamespace $namespace): PhpNamespace
@@ -83,23 +70,6 @@ class FileDeclaration implements \Stringable, DeclarationInterface
             static fn (NettePhpNamespace $namespace) => PhpNamespace::fromElement($namespace),
             $this->element->getNamespaces()
         ));
-    }
-
-    public function getClasses(): Classes
-    {
-        return new Classes(\array_map(
-            static fn (ClassType $class) => ClassDeclaration::fromElement($class),
-            $this->element->getClasses()
-        ));
-    }
-
-    public function getClass(string $name): ClassDeclaration
-    {
-        /**
-         * @psalm-suppress InternalClass
-         * @psalm-suppress InternalMethod
-         */
-        return $this->getClasses()->get(Helpers::extractShortName($name));
     }
 
     public function getFunctions(): Functions
@@ -130,6 +100,19 @@ class FileDeclaration implements \Stringable, DeclarationInterface
     public function hasStrictTypes(): bool
     {
         return $this->element->hasStrictTypes();
+    }
+
+    public function getElements(): Elements
+    {
+        return new Elements(\array_map(
+            static fn (ClassLike $element) => match (true) {
+                $element instanceof ClassType => ClassDeclaration::fromElement($element),
+                $element instanceof InterfaceType => InterfaceDeclaration::fromElement($element),
+                $element instanceof TraitType => TraitDeclaration::fromElement($element),
+                $element instanceof EnumType => EnumDeclaration::fromElement($element)
+            },
+            $this->element->getClasses()
+        ));
     }
 
     /**

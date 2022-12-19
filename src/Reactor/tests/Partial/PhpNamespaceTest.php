@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Reactor\Partial;
 
-use PHPUnit\Framework\TestCase;
 use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
 use Spiral\Reactor\Aggregator\Classes;
 use Spiral\Reactor\Aggregator\Elements;
 use Spiral\Reactor\Aggregator\Enums;
 use Spiral\Reactor\Aggregator\Interfaces;
 use Spiral\Reactor\Aggregator\Traits;
-use Spiral\Reactor\ClassDeclaration;
-use Spiral\Reactor\EnumDeclaration;
 use Spiral\Reactor\FileDeclaration;
-use Spiral\Reactor\InterfaceDeclaration;
 use Spiral\Reactor\Partial\PhpNamespace;
-use Spiral\Reactor\TraitDeclaration;
+use Spiral\Tests\Reactor\BaseWithElementsTest;
 
-final class PhpNamespaceTest extends TestCase
+final class PhpNamespaceTest extends BaseWithElementsTest
 {
     public function testGetName(): void
     {
@@ -41,7 +37,7 @@ final class PhpNamespaceTest extends TestCase
         $this->assertTrue($namespace->hasBracketedSyntax());
     }
 
-    public function testUse(): void
+    public function testAddUse(): void
     {
         $namespace = new PhpNamespace('Foo\\Bar');
 
@@ -89,20 +85,42 @@ final class PhpNamespaceTest extends TestCase
         $this->assertSame(['foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameConstant));
     }
 
-    public function testClass(): void
+    public function testRemoveElement(): void
+    {
+        $namespace = new PhpNamespace('Foo\\Bar');
+        $namespace->addClass('Test');
+        $this->assertCount(1, $namespace->getClasses());
+
+        $namespace->removeElement('Test');
+        $this->assertCount(0, $namespace->getClasses());
+    }
+
+    public function testGetClass(): void
     {
         $namespace = new PhpNamespace('Foo\\Bar');
 
         $class = $namespace->addClass('Test');
 
-        $this->assertInstanceOf(ClassDeclaration::class, $class);
-        $this->assertSame('Test', $class->getName());
-        $this->assertCount(1, $namespace->getClasses());
-        $this->assertTrue($namespace->getClasses()->has('Test'));
+        $this->assertEquals($class, $namespace->getClass('Test'));
+    }
 
-        $namespace->removeElement('Test');
-        $this->assertCount(0, $namespace->getClasses());
-        $this->assertFalse($namespace->getClasses()->has('Test'));
+    public function testAddClass(): void
+    {
+        $namespace = new PhpNamespace('Foo\\Bar');
+
+        $class = $namespace->addClass('Test');
+
+        $this->assertCount(1, $namespace->getClasses());
+        $this->assertEquals($class, $namespace->getClasses()->getIterator()->current());
+    }
+
+    public function testGetInterface(): void
+    {
+        $namespace = new PhpNamespace('Foo\\Bar');
+
+        $interface = $namespace->addInterface('Test');
+
+        $this->assertEquals($interface, $namespace->getInterface('Test'));
     }
 
     public function testAddInterface(): void
@@ -111,8 +129,17 @@ final class PhpNamespaceTest extends TestCase
 
         $interface = $namespace->addInterface('Test');
 
-        $this->assertInstanceOf(InterfaceDeclaration::class, $interface);
-        $this->assertSame('Test', $interface->getName());
+        $this->assertCount(1, $namespace->getInterfaces());
+        $this->assertEquals($interface, $namespace->getInterfaces()->getIterator()->current());
+    }
+
+    public function testGetTrait(): void
+    {
+        $namespace = new PhpNamespace('Foo\\Bar');
+
+        $trait = $namespace->addTrait('Test');
+
+        $this->assertEquals($trait, $namespace->getTrait('Test'));
     }
 
     public function testAddTrait(): void
@@ -121,8 +148,17 @@ final class PhpNamespaceTest extends TestCase
 
         $trait = $namespace->addTrait('Test');
 
-        $this->assertInstanceOf(TraitDeclaration::class, $trait);
-        $this->assertSame('Test', $trait->getName());
+        $this->assertCount(1, $namespace->getTraits());
+        $this->assertEquals($trait, $namespace->getTraits()->getIterator()->current());
+    }
+
+    public function testGetEnum(): void
+    {
+        $namespace = new PhpNamespace('Foo\\Bar');
+
+        $enum = $namespace->addEnum('Test');
+
+        $this->assertEquals($enum, $namespace->getEnum('Test'));
     }
 
     public function testAddEnum(): void
@@ -131,8 +167,8 @@ final class PhpNamespaceTest extends TestCase
 
         $enum = $namespace->addEnum('Test');
 
-        $this->assertInstanceOf(EnumDeclaration::class, $enum);
-        $this->assertSame('Test', $enum->getName());
+        $this->assertCount(1, $namespace->getEnums());
+        $this->assertEquals($enum, $namespace->getEnums()->getIterator()->current());
     }
 
     public function testRender(): void
@@ -198,144 +234,8 @@ final class PhpNamespaceTest extends TestCase
         $this->assertEquals($namespace->getElements(), $expected);
     }
 
-    public function classesDataProvider(): \Traversable
+    protected function getTestedClass(): string
     {
-        $withoutClasses = new PhpNamespace('a');
-        $withoutClasses->addInterface('b');
-        $withoutClasses->addTrait('c');
-        $withoutClasses->addEnum('d');
-
-        $onlyOneClass = new PhpNamespace('b');
-        $a = $onlyOneClass->addClass('a');
-
-        $onlyClasses = new PhpNamespace('c');
-        $b = $onlyClasses->addClass('b');
-        $c = $onlyClasses->addClass('c');
-
-        $withOtherElements = new PhpNamespace('d');
-        $d = $withOtherElements->addClass('d');
-        $withOtherElements->addInterface('b');
-        $withOtherElements->addTrait('c');
-        $withOtherElements->addEnum('l');
-
-        yield [new PhpNamespace('a'), new Classes([])];
-        yield [$withoutClasses, new Classes([])];
-        yield [$onlyOneClass, new Classes(['a' => $a])];
-        yield [$onlyClasses, new Classes(['b' => $b, 'c' => $c])];
-        yield [$withOtherElements, new Classes(['d' => $d])];
-    }
-
-    public function interfacesDataProvider(): \Traversable
-    {
-        $withoutInterfaces = new PhpNamespace('a');
-        $withoutInterfaces->addClass('b');
-        $withoutInterfaces->addTrait('c');
-        $withoutInterfaces->addEnum('d');
-
-        $onlyOneInterface = new PhpNamespace('b');
-        $a = $onlyOneInterface->addInterface('a');
-
-        $onlyInterfaces = new PhpNamespace('c');
-        $b = $onlyInterfaces->addInterface('b');
-        $c = $onlyInterfaces->addInterface('c');
-
-        $withOtherElements = new PhpNamespace('d');
-        $withOtherElements->addClass('j');
-        $d = $withOtherElements->addInterface('d');
-        $withOtherElements->addTrait('l');
-        $withOtherElements->addEnum('k');
-
-        yield [new PhpNamespace('a'), new Interfaces([])];
-        yield [$withoutInterfaces, new Interfaces([])];
-        yield [$onlyOneInterface, new Interfaces(['a' => $a])];
-        yield [$onlyInterfaces, new Interfaces(['b' => $b, 'c' => $c])];
-        yield [$withOtherElements, new Interfaces(['d' => $d])];
-    }
-
-    public function traitsDataProvider(): \Traversable
-    {
-        $withoutTraits = new PhpNamespace('a');
-        $withoutTraits->addClass('b');
-        $withoutTraits->addInterface('c');
-        $withoutTraits->addEnum('d');
-
-        $onlyOneTrait = new PhpNamespace('b');
-        $a = $onlyOneTrait->addTrait('a');
-
-        $onlyTraits = new PhpNamespace('c');
-        $b = $onlyTraits->addTrait('b');
-        $c = $onlyTraits->addTrait('c');
-
-        $withOtherElements = new PhpNamespace('d');
-        $withOtherElements->addClass('a');
-        $withOtherElements->addInterface('f');
-        $d = $withOtherElements->addTrait('d');
-        $withOtherElements->addEnum('l');
-
-        yield [new PhpNamespace('a'), new Traits([])];
-        yield [$withoutTraits, new Traits([])];
-        yield [$onlyOneTrait, new Traits(['a' => $a])];
-        yield [$onlyTraits, new Traits(['b' => $b, 'c' => $c])];
-        yield [$withOtherElements, new Traits(['d' => $d])];
-    }
-
-    public function enumsDataProvider(): \Traversable
-    {
-        $withoutEnums = new PhpNamespace('a');
-        $withoutEnums->addClass('b');
-        $withoutEnums->addInterface('c');
-        $withoutEnums->addTrait('d');
-
-        $onlyOneEnum = new PhpNamespace('b');
-        $a = $onlyOneEnum->addEnum('a');
-
-        $onlyEnums = new PhpNamespace('c');
-        $b = $onlyEnums->addEnum('b');
-        $c = $onlyEnums->addEnum('c');
-
-        $withOtherElements = new PhpNamespace('d');
-        $withOtherElements->addClass('a');
-        $withOtherElements->addInterface('b');
-        $withOtherElements->addTrait('c');
-        $d = $withOtherElements->addEnum('d');
-
-        yield [new PhpNamespace('a'), new Enums([])];
-        yield [$withoutEnums, new Enums([])];
-        yield [$onlyOneEnum, new Enums(['a' => $a])];
-        yield [$onlyEnums, new Enums(['b' => $b, 'c' => $c])];
-        yield [$withOtherElements, new Enums(['d' => $d])];
-    }
-
-    public function elementsDataProvider(): \Traversable
-    {
-        $class = new PhpNamespace('a');
-        $a = $class->addClass('a');
-
-        $interface = new PhpNamespace('a');
-        $b = $interface->addInterface('b');
-
-        $trait = new PhpNamespace('a');
-        $c = $trait->addTrait('c');
-
-        $enum = new PhpNamespace('a');
-        $d = $enum->addEnum('d');
-
-        $all = new PhpNamespace('a');
-        $e = $all->addEnum('e');
-        $f = $all->addClass('f');
-        $g = $all->addInterface('g');
-        $h = $all->addTrait('h');
-
-        yield [new PhpNamespace('a'), new Elements([])];
-        yield [$class, new Elements(['a' => $a])];
-        yield [$interface, new Elements(['b' => $b])];
-        yield [$trait, new Elements(['c' => $c])];
-        yield [$enum, new Elements(['d' => $d])];
-        yield [$all, new Elements([
-            'e' => $e,
-            'f' => $f,
-            'g' => $g,
-            'h' => $h
-        ])];
+        return PhpNamespace::class;
     }
 }
