@@ -10,28 +10,25 @@ use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Router\Exception\ConstrainException;
 use Spiral\Router\Exception\UriHandlerException;
+use Spiral\Router\Registry\DefaultPatternRegistry;
+use Spiral\Router\Registry\RoutePatternRegistryInterface;
 
 /**
  * UriMatcher provides ability to match and generate uris based on given parameters.
  */
 final class UriHandler
 {
-    private const HOST_PREFIX      = '//';
-    private const DEFAULT_SEGMENT  = '[^\/]+';
+    private const HOST_PREFIX = '//';
+    private const DEFAULT_SEGMENT = '[^\/]+';
     private const PATTERN_REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
     private const SEGMENT_REPLACES = ['/' => '\\/', '.' => '\.'];
-    private const SEGMENT_TYPES    = [
-        'int'     => '\d+',
-        'integer' => '\d+',
-        'uuid'    => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}',
-    ];
-    private const URI_FIXERS       = [
-        '[]'  => '',
+    private const URI_FIXERS = [
+        '[]' => '',
         '[/]' => '',
-        '['   => '',
-        ']'   => '',
+        '[' => '',
+        ']' => '',
         '://' => '://',
-        '//'  => '/',
+        '//' => '/',
     ];
 
     private ?string $pattern = null;
@@ -49,7 +46,8 @@ final class UriHandler
 
     public function __construct(
         private readonly UriFactoryInterface $uriFactory,
-        SlugifyInterface $slugify = null
+        SlugifyInterface $slugify = null,
+        private readonly ?RoutePatternRegistryInterface $patternRegistry = new DefaultPatternRegistry(),
     ) {
         $this->slugify = $slugify ?? new Slugify();
     }
@@ -177,7 +175,7 @@ final class UriHandler
     /**
      * Fetch uri segments and query parameters.
      *
-     * @param array|null         $query Query parameters.
+     * @param array|null $query Query parameters.
      */
     private function fetchOptions(iterable $parameters, ?array &$query): array
     {
@@ -290,7 +288,7 @@ final class UriHandler
         $replaces = [];
         foreach ($values as $key => $value) {
             $replaces[\sprintf('<%s>', $key)] = match (true) {
-                $value instanceof \Stringable || \is_scalar($value) => (string) $value,
+                $value instanceof \Stringable || \is_scalar($value) => (string)$value,
                 default => '',
             };
         }
@@ -304,7 +302,7 @@ final class UriHandler
     private function prepareSegment(string $name, string $segment): string
     {
         return match (true) {
-            $segment !== '' => self::SEGMENT_TYPES[$segment] ?? $segment,
+            $segment !== '' => $this->patternRegistry->all()[$segment] ?? $segment,
             !isset($this->constrains[$name]) => self::DEFAULT_SEGMENT,
             \is_array($this->constrains[$name]) => \implode(
                 '|',
