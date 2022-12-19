@@ -13,27 +13,44 @@ final class PlainRenderer extends AbstractRenderer
     // Lines to show around targeted line.
     private const SHOW_LINES = 2;
 
+    private array $lines = [];
+
     public function render(
         \Throwable $exception,
         ?Verbosity $verbosity = null,
         string $format = null
     ): string {
         $verbosity ??= $this->defaultVerbosity;
-        $result = \sprintf(
-            "[%s]\n%s in %s:%s\n",
-            $exception::class,
-            $exception->getMessage(),
-            $exception->getFile(),
-            $exception->getLine()
-        );
-
-        if ($verbosity->value >= Verbosity::DEBUG->value) {
-            $result .= $this->renderTrace($exception, new Highlighter(new PlainStyle()));
-        } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
-            $result .= $this->renderTrace($exception);
+        $exceptions = [$exception];
+        while ($exception = $exception->getPrevious()) {
+            $exceptions[] = $exception;
         }
 
-        return $result;
+        $exceptions = \array_reverse($exceptions);
+
+        $result = [];
+
+        foreach ($exceptions as $exception) {
+            $row = \sprintf(
+                "[%s]\n%s in %s:%s\n",
+                $exception::class,
+                $exception->getMessage(),
+                $exception->getFile(),
+                $exception->getLine()
+            );
+
+            if ($verbosity->value >= Verbosity::DEBUG->value) {
+                $row .= $this->renderTrace($exception, new Highlighter(new PlainStyle()));
+            } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
+                $row .= $this->renderTrace($exception);
+            }
+
+            $result[] = $row;
+        }
+
+        $this->lines = [];
+
+        return \implode("", \array_reverse($result));
     }
 
     /**
@@ -66,17 +83,23 @@ final class PlainRenderer extends AbstractRenderer
                 $line .= \sprintf(' at %s:%s', 'n/a', 'n/a');
             }
 
+            if (\in_array($line, $this->lines, true)) {
+                continue;
+            }
+
+            $this->lines[] = $line;
+
             $result .= $line . "\n";
 
             if ($h !== null && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
-                    \file_get_contents($trace['file']),
-                    $trace['line'],
-                    self::SHOW_LINES
-                ) . "\n";
+                        \file_get_contents($trace['file']),
+                        $trace['line'],
+                        self::SHOW_LINES
+                    ) . "\n";
             }
         }
 
-        return $result;
+        return $result . "\n";
     }
 }
