@@ -70,7 +70,13 @@ final class Method implements NamedInterface, AggregableInterface, \Stringable
      */
     public function addPromotedParameter(string $name, mixed $defaultValue = null): PromotedParameter
     {
-        return PromotedParameter::fromElement($this->element->addPromotedParameter($name, $defaultValue));
+        $param = PromotedParameter::fromElement($this->element->addPromotedParameter($name));
+
+        if (\func_num_args() > 1) {
+            $param->setDefaultValue($defaultValue);
+        }
+
+        return $param;
     }
 
     /**

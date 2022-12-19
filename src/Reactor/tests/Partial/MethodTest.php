@@ -226,11 +226,38 @@ final class MethodTest extends TestCase
 
     public function testAddPromotedParameter(): void
     {
-        $method = new Method('test');;
+        $method = new Method('test');
         $param = $method->addPromotedParameter('test');
 
         $this->assertInstanceOf(PromotedParameter::class, $param);
         $this->assertSame('test', $param->getName());
+    }
+
+    public function testAddPromotedParameterWithoutDefaultValue(): void
+    {
+        $method = new Method('test');
+        $param = $method->addPromotedParameter('test');
+
+        $this->assertFalse($param->hasDefaultValue());
+    }
+
+    public function testAddPromotedParameterWithDefaultNullValue(): void
+    {
+        $method = new Method('test');
+        $param = $method->addPromotedParameter('test', null);
+        $param->setNullable();
+
+        $this->assertTrue($param->hasDefaultValue());
+        $this->assertNull($param->getDefaultValue());
+    }
+
+    public function testAddPromotedParameterWithDefaultValue(): void
+    {
+        $method = new Method('test');
+        $param = $method->addPromotedParameter('test', 'foo');
+
+        $this->assertTrue($param->hasDefaultValue());
+        $this->assertSame('foo', $param->getDefaultValue());
     }
 
     public function testRender(): void
