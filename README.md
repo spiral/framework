@@ -1,6 +1,3 @@
-<p align="center">
-<img src="https://user-images.githubusercontent.com/2461257/112313394-d926c580-8cb8-11eb-84ea-717df4e4d167.png" width="400" alt="Spiral Framework">
-</p>
 
 <p align="center">
 <a href="https://packagist.org/packages/spiral/framework"><img src="https://poser.pugx.org/spiral/framework/require/php"></a>
@@ -13,6 +10,10 @@
 <a href="https://shepherd.dev/github/spiral/framework"><img src="https://shepherd.dev/github/spiral/framework/level.svg"></a>
 <a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 </p>
+
+<hr />
+
+![Github cover spiral application](https://user-images.githubusercontent.com/773481/208930590-af74898e-327b-405a-830d-dafba7afa5d9.png)
 
 <hr />
 
@@ -31,10 +32,8 @@ PSR-compatible components. The Framework execution model based on a hybrid runti
 (GRPC, Queue, WebSockets, etc.) handled by [RoadRunner](https://github.com/spiral/roadrunner) application server and 
 the PHP code of your application stays in memory permanently (anti-memory leak tools included).
 
-- [Simple Application](https://github.com/spiral/app)
-- [CLI Application](https://github.com/spiral/app-cli)
-- [GRPC Application](https://github.com/spiral/app-grpc)
-- [Admin Panel](https://github.com/spiral/app-keeper)
+- [Simple Application example](https://github.com/spiral/app)
+- [Application installer](https://github.com/spiral/installer)
 
 ## Features
 
@@ -57,14 +56,6 @@ the PHP code of your application stays in memory permanently (anti-memory leak t
 - Dynamic template engine to create your own HTML tags (or just use Twig)
 - MVC, HMVC, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps
 
-## Skeletons
-| App Type          | Current Status                                                                                                                 | Install                              |
-|-------------------|--------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
-| spiral/app        | [![Latest Stable Version](https://poser.pugx.org/spiral/app/version)](https://packagist.org/packages/spiral/app)               | https://github.com/spiral/app        |
-| spiral/app-cli    | [![Latest Stable Version](https://poser.pugx.org/spiral/app-cli/version)](https://packagist.org/packages/spiral/app-cli)       | https://github.com/spiral/app-cli    |
-| spiral/app-grpc   | [![Latest Stable Version](https://poser.pugx.org/spiral/app-grpc/version)](https://packagist.org/packages/spiral/app-grpc)     | https://github.com/spiral/app-grpc   |
-| spiral/app-keeper | [![Latest Stable Version](https://poser.pugx.org/spiral/app-keeper/version)](https://packagist.org/packages/spiral/app-keeper) | https://github.com/spiral/app-keeper |
-
 
 ## Bridges
 | App Type                 | Current Status                                                                                                                               |
@@ -76,7 +67,7 @@ the PHP code of your application stays in memory permanently (anti-memory leak t
 | spiral/sapi-bridge       | [![Latest Stable Version](https://poser.pugx.org/spiral/sapi-bridge/version)](https://packagist.org/packages/spiral/sapi-bridge)             |
 | spiral/nyholm-bridge     | [![Latest Stable Version](https://poser.pugx.org/spiral/nyholm-bridge/version)](https://packagist.org/packages/spiral/nyholm-bridge)         |
 
-> **Note**
+> **Note**:
 > You can find more community packages in [spiral-packages](https://github.com/spiral-packages/) organization.
 
 License:
