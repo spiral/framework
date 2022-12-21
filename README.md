@@ -11,11 +11,11 @@
 <a href="https://discord.gg/8bZsjYhVVk"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 </p>
 
-<hr />
+<br />
 
 ![Github cover spiral application](https://user-images.githubusercontent.com/773481/208930590-af74898e-327b-405a-830d-dafba7afa5d9.png)
 
-<hr />
+<br />
 
 <p align="center">
 <a href="https://spiral.dev/docs">Documentation</a>
