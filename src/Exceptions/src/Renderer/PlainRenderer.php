@@ -13,27 +13,49 @@ final class PlainRenderer extends AbstractRenderer
     // Lines to show around targeted line.
     private const SHOW_LINES = 2;
 
+    private array $lines = [];
+
     public function render(
         \Throwable $exception,
         ?Verbosity $verbosity = null,
         string $format = null
     ): string {
         $verbosity ??= $this->defaultVerbosity;
-        $result = \sprintf(
-            "[%s]\n%s in %s:%s\n",
-            $exception::class,
-            $exception->getMessage(),
-            $exception->getFile(),
-            $exception->getLine()
-        );
-
-        if ($verbosity->value >= Verbosity::DEBUG->value) {
-            $result .= $this->renderTrace($exception, new Highlighter(new PlainStyle()));
-        } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
-            $result .= $this->renderTrace($exception);
+        $exceptions = [$exception];
+        while ($exception = $exception->getPrevious()) {
+            $exceptions[] = $exception;
         }
 
-        return $result;
+        $exceptions = \array_reverse($exceptions);
+
+        $result = [];
+        $rootDir = \getcwd();
+
+        foreach ($exceptions as $exception) {
+            $file = \str_starts_with($exception->getFile(), $rootDir)
+                ? \substr($exception->getFile(), \strlen($rootDir) + 1)
+                : $exception->getFile();
+
+            $row = \sprintf(
+                "[%s]\n%s in %s:%s\n",
+                $exception::class,
+                $exception->getMessage(),
+                $file,
+                $exception->getLine(),
+            );
+
+            if ($verbosity->value >= Verbosity::DEBUG->value) {
+                $row .= $this->renderTrace($exception, new Highlighter(new PlainStyle()));
+            } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
+                $row .= $this->renderTrace($exception);
+            }
+
+            $result[] = $row;
+        }
+
+        $this->lines = [];
+
+        return \implode('', \array_reverse($result));
     }
 
     /**
@@ -42,16 +64,20 @@ final class PlainRenderer extends AbstractRenderer
     private function renderTrace(\Throwable $e, Highlighter $h = null): string
     {
         $stacktrace = $this->getStacktrace($e);
-        if (empty($stacktrace)) {
+        if ($stacktrace === []) {
             return '';
         }
 
-        $result = "\nException Trace:\n";
+        $result = "\n";
+        $rootDir = \getcwd();
 
-        foreach ($stacktrace as $trace) {
+        $pad = \strlen((string)\count($stacktrace));
+
+        foreach ($stacktrace as $i => $trace) {
             if (isset($trace['type'], $trace['class'])) {
                 $line = \sprintf(
-                    ' %s%s%s()',
+                    '%s. %s%s%s()',
+                    \str_pad((string)((int) $i + 1), $pad, ' ', \STR_PAD_LEFT),
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
@@ -61,10 +87,18 @@ final class PlainRenderer extends AbstractRenderer
             }
 
             if (isset($trace['file'])) {
-                $line .= \sprintf(' at %s:%s', $trace['file'], $trace['line']);
-            } else {
-                $line .= \sprintf(' at %s:%s', 'n/a', 'n/a');
+                $file = \str_starts_with($trace['file'], $rootDir)
+                    ? \substr($trace['file'], \strlen($rootDir) + 1)
+                    : $trace['file'];
+
+                $line .= \sprintf(' at %s:%s', $file, $trace['line']);
             }
+
+            if (\in_array($line, $this->lines, true)) {
+                continue;
+            }
+
+            $this->lines[] = $line;
 
             $result .= $line . "\n";
 
@@ -77,6 +111,6 @@ final class PlainRenderer extends AbstractRenderer
             }
         }
 
-        return $result;
+        return $result . "\n";
     }
 }

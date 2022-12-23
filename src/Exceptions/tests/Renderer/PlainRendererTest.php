@@ -16,7 +16,7 @@ class PlainRendererTest extends TestCase
         $result = $plainHandler->render(new Exception('Undefined variable $undefined'));
 
         $this->assertStringContainsString(
-            sprintf('Undefined variable $undefined in %s', __FILE__),
+            sprintf('Undefined variable $undefined in src/Exceptions/tests/Renderer/PlainRendererTest.php:16'),
             $result
         );
     }

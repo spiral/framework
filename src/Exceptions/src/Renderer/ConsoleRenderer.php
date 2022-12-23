@@ -23,17 +23,20 @@ class ConsoleRenderer extends AbstractRenderer
     protected const FORMATS = ['console', 'cli'];
 
     protected const COLORS = [
-        'bg:red'     => Color::BG_RED,
-        'bg:cyan'    => Color::BG_CYAN,
+        'bg:red' => Color::BG_RED,
+        'bg:cyan' => Color::BG_CYAN,
         'bg:magenta' => Color::BG_MAGENTA,
-        'bg:white'   => Color::BG_WHITE,
-        'white'      => Color::LIGHT_WHITE,
-        'green'      => Color::GREEN,
-        'black'      => Color::BLACK,
-        'red'        => Color::RED,
-        'yellow'     => Color::YELLOW,
-        'reset'      => Color::RESET,
+        'bg:white' => Color::BG_WHITE,
+        'white' => Color::LIGHT_WHITE,
+        'green' => Color::GREEN,
+        'gray' => Color::GRAY,
+        'black' => Color::BLACK,
+        'red' => Color::RED,
+        'yellow' => Color::YELLOW,
+        'reset' => Color::RESET,
     ];
+
+    private array $lines = [];
 
     private bool $colorsSupport;
 
@@ -42,7 +45,8 @@ class ConsoleRenderer extends AbstractRenderer
      */
     public function __construct(mixed $stream = null)
     {
-        $stream ??= \defined('\STDOUT') ? '\STDOUT' : \fopen('php://stdout', 'wb');
+        $stream ??= \defined('\STDOUT') ? \STDOUT : \fopen('php://stdout', 'wb');
+
         $this->colorsSupport = $this->isColorsSupported($stream);
     }
 
@@ -61,26 +65,52 @@ class ConsoleRenderer extends AbstractRenderer
     ): string {
         $verbosity ??= $this->defaultVerbosity;
 
-        $result = $this->renderHeader(
-            \sprintf("[%s]\n%s", $exception::class, $exception->getMessage()),
-            $exception instanceof \Error ? 'bg:magenta,white' : 'bg:red,white'
-        );
+        $exceptions = [$exception];
+        $currentE = $exception;
 
-        $result .= $this->format(
-            "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>\n",
-            $exception->getFile(),
-            $exception->getLine()
-        );
-
-        if ($verbosity->value >= Verbosity::DEBUG->value) {
-            $result .= $this->renderTrace($exception, new Highlighter(
-                $this->colorsSupport ? new ConsoleStyle() : new PlainStyle()
-            ));
-        } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
-            $result .= $this->renderTrace($exception);
+        while ($exception = $exception->getPrevious()) {
+            $exceptions[] = $exception;
         }
 
-        return $result;
+        $exceptions = \array_reverse($exceptions);
+
+        $result = [];
+        $rootDir = \getcwd();
+
+        foreach ($exceptions as $exception) {
+            $prefix = $currentE === $exception ? '' : 'Previous: ';
+            $row = $this->renderHeader(
+                \sprintf("%s[%s]\n%s", $prefix, $exception::class, $exception->getMessage()),
+                $exception instanceof \Error ? 'bg:magenta,white' : 'bg:red,white'
+            );
+
+            $file = \str_starts_with($exception->getFile(), $rootDir)
+                ? \substr($exception->getFile(), \strlen($rootDir) + 1)
+                : $exception->getFile();
+
+            $row .= $this->format(
+                "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>\n",
+                $file,
+                $exception->getLine()
+            );
+
+            if ($verbosity->value >= Verbosity::DEBUG->value) {
+                $row .= $this->renderTrace(
+                    $exception,
+                    new Highlighter(
+                        $this->colorsSupport ? new ConsoleStyle() : new PlainStyle()
+                    )
+                );
+            } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
+                $row .= $this->renderTrace($exception);
+            }
+
+            $result[] = $row;
+        }
+
+        $this->lines = [];
+
+        return \implode("\n", \array_reverse($result));
     }
 
     /**
@@ -105,9 +135,9 @@ class ConsoleRenderer extends AbstractRenderer
         foreach ($lines as $line) {
             $result .= $this->format(
                 "<{$style}>%s%s%s</reset>\n",
-                \str_repeat(' ', $padding + 1),
+                \str_repeat('', $padding + 1),
                 $line,
-                \str_repeat(' ', $length - \mb_strlen($line) + 1)
+                \str_repeat('', $length - \mb_strlen($line) + 1)
             );
         }
 
@@ -124,12 +154,27 @@ class ConsoleRenderer extends AbstractRenderer
             return '';
         }
 
-        $result = $this->format("\n<red>Exception Trace:</reset>\n");
+        $result = "\n";
+        $rootDir = \getcwd();
 
-        foreach ($stacktrace as $trace) {
+        $pad = \strlen((string)\count($stacktrace));
+
+        foreach ($stacktrace as $i => $trace) {
+            $file = null;
+            $classColor = 'while';
+
+            if (isset($trace['file'])) {
+                $file = \str_starts_with($trace['file'], $rootDir)
+                    ? \substr($trace['file'], \strlen($rootDir) + 1)
+                    : $trace['file'];
+
+                $classColor = \str_starts_with($file, 'vendor/') ? 'gray' : 'white';
+            }
+
             if (isset($trace['type'], $trace['class'])) {
                 $line = $this->format(
-                    ' <white>%s%s%s()</reset>',
+                    "<$classColor>%s.</reset> <white>%s%s%s()</reset>",
+                    \str_pad((string)((int)$i + 1), $pad, ' ', \STR_PAD_LEFT),
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
@@ -140,20 +185,19 @@ class ConsoleRenderer extends AbstractRenderer
                     $trace['function']
                 );
             }
-
-            if (isset($trace['file'])) {
+            if ($file !== null) {
                 $line .= $this->format(
                     ' <yellow>at</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>',
-                    $trace['file'],
+                    $file,
                     $trace['line']
                 );
-            } else {
-                $line .= $this->format(
-                    ' <yellow>at</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>',
-                    'n/a',
-                    'n/a'
-                );
             }
+
+            if (\in_array($line, $this->lines, true)) {
+                continue;
+            }
+
+            $this->lines[] = $line;
 
             $result .= $line . "\n";
 
