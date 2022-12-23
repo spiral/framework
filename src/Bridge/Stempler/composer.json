@@ -28,15 +28,15 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/stempler": "^3.5",
-        "spiral/files": "^3.5",
-        "spiral/config": "^3.5",
-        "spiral/router": "^3.5",
-        "spiral/views": "^3.5",
-        "spiral/core": "^3.5"
+        "spiral/stempler": "^3.6",
+        "spiral/files": "^3.6",
+        "spiral/config": "^3.6",
+        "spiral/router": "^3.6",
+        "spiral/views": "^3.6",
+        "spiral/core": "^3.6"
     },
     "require-dev": {
-        "spiral/boot": "^3.5",
+        "spiral/boot": "^3.6",
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^4.27"
@@ -53,7 +53,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.5.x-dev"
+            "dev-master": "3.6.x-dev"
         }
     },
     "config": {

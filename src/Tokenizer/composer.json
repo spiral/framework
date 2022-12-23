@@ -29,12 +29,12 @@
     "require": {
         "php": ">=8.1",
         "ext-tokenizer": "*",
-        "spiral/core": "^3.5",
-        "spiral/logger": "^3.5",
+        "spiral/core": "^3.6",
+        "spiral/logger": "^3.6",
         "symfony/finder": "^5.3.7|^6.0"
     },
     "require-dev": {
-        "spiral/boot": "^3.5",
+        "spiral/boot": "^3.6",
         "phpunit/phpunit": "^9.5.20",
         "vimeo/psalm": "^4.27"
     },
@@ -50,7 +50,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.5.x-dev"
+            "dev-master": "3.6.x-dev"
         }
     },
     "config": {
