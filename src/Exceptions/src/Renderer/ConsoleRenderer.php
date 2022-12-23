@@ -22,8 +22,6 @@ class ConsoleRenderer extends AbstractRenderer
     public const SHOW_LINES = 2;
     protected const FORMATS = ['console', 'cli'];
 
-    private array $lines = [];
-
     protected const COLORS = [
         'bg:red' => Color::BG_RED,
         'bg:cyan' => Color::BG_CYAN,
@@ -37,6 +35,8 @@ class ConsoleRenderer extends AbstractRenderer
         'yellow' => Color::YELLOW,
         'reset' => Color::RESET,
     ];
+
+    private array $lines = [];
 
     private bool $colorsSupport;
 
@@ -187,7 +187,7 @@ class ConsoleRenderer extends AbstractRenderer
             }
             if ($file !== null) {
                 $line .= $this->format(
-                    " <yellow>at</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>",
+                    ' <yellow>at</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>',
                     $file,
                     $trace['line']
                 );
@@ -203,10 +203,10 @@ class ConsoleRenderer extends AbstractRenderer
 
             if ($h !== null && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
-                        \file_get_contents($trace['file']),
-                        $trace['line'],
-                        static::SHOW_LINES
-                    ) . "\n";
+                    \file_get_contents($trace['file']),
+                    $trace['line'],
+                    static::SHOW_LINES
+                ) . "\n";
             }
         }
 
