@@ -31,7 +31,7 @@ final class PlainRenderer extends AbstractRenderer
         $result = [];
         $rootDir = \getcwd();
 
-        foreach ($exceptions as $i => $exception) {
+        foreach ($exceptions as $exception) {
             $file = \str_starts_with($exception->getFile(), $rootDir)
                 ? \substr($exception->getFile(), \strlen($rootDir) + 1)
                 : $exception->getFile();
