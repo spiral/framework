@@ -30,7 +30,7 @@ class RendererTest extends TestCase
             __LINE__
         )));
 
-        $this->assertStringContainsString(__FILE__, $handler->render(new Error(
+        $this->assertStringContainsString('RendererTest.php', $handler->render(new Error(
             'message',
             100,
             __FILE__,
@@ -59,7 +59,7 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
+        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
     }
 
     public function testConsoleRendererErrorBasic(): void
@@ -70,7 +70,7 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
+        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
     }
 
     public function testConsoleRendererErrorVerbose(): void
@@ -81,7 +81,7 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
+        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
     }
 
     public function testConsoleRendererWithColorsBasic(): void
@@ -98,7 +98,7 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
+        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
     }
 
     public function testConsoleRendererWithColorsDebug(): void
@@ -115,7 +115,7 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString(__FILE__, $result);
+        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
     }
 
     public function testConsoleRendererStacktrace(): void
