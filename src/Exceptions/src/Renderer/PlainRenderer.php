@@ -26,8 +26,6 @@ final class PlainRenderer extends AbstractRenderer
             $exceptions[] = $exception;
         }
 
-        $exceptions = \array_reverse($exceptions);
-
         $result = [];
 
         foreach ($exceptions as $exception) {
@@ -50,7 +48,7 @@ final class PlainRenderer extends AbstractRenderer
 
         $this->lines = [];
 
-        return \implode("", \array_reverse($result));
+        return \implode('', \array_reverse($result));
     }
 
     /**
@@ -63,12 +61,13 @@ final class PlainRenderer extends AbstractRenderer
             return '';
         }
 
-        $result = "\nException Trace:\n";
+        $result = "\n";
 
-        foreach ($stacktrace as $trace) {
+        foreach ($stacktrace as $i => $trace) {
             if (isset($trace['type'], $trace['class'])) {
                 $line = \sprintf(
-                    ' %s%s%s()',
+                    '%s %s%s%s()',
+                    '#'.$i,
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
