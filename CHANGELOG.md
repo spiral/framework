@@ -1,14 +1,17 @@
 # CHANGELOG
 
-## Unreleased
+## 3.5.0 - 2022-12-23
 - **Medium Impact Changes**
-  - [spiral/reactor] Method `removeClass` of `Spiral\Reactor\Partial\PhpNamespace` class is deprecated.
-    Use method `removeElement` instead.
+  - [spiral/reactor] Method `removeClass` of `Spiral\Reactor\Partial\PhpNamespace` class is deprecated. Use method `removeElement` instead.
+  - [spiral/boot] Deprecated Kernel constants and add new function `defineSystemBootloaders` to allow for more flexibility in defining system bootloaders.
 - **Other Features**
+  - [spiral/router] Added named route patterns registry `Spiral\Router\Registry\RoutePatternRegistryInterface` to allow for easier management of route patterns.
+  - [spiral/exceptions] Improved the exception trace output for both the plain and console renderers to provide more detailed information about previous exceptions.
+  - [spiral/exceptions] Made the Verbosity enum injectable to allow for easier customization and management of verbosity levels from env variable `VERBOSITY_LEVEL`.
   - [spiral/reactor] Added methods `removeElement`, `getClass`, `getElements`, `getEnum`, `getEnums`, `getTrait`, 
-    `getTraits`, `getInterface`, `getInterfaces` in the class `Spiral\Reactor\Partial\PhpNamespace`.
+  `getTraits`, `getInterface`, `getInterfaces` in the class `Spiral\Reactor\Partial\PhpNamespace`.
   - [spiral/reactor] Added methods `getElements`, `getEnum`, `getEnums`, `getTrait`,
-    `getTraits`, `getInterface`, `getInterfaces` in the class `Spiral\Reactor\FileDeclaration`.
+  `getTraits`, `getInterface`, `getInterfaces` in the class `Spiral\Reactor\FileDeclaration`.
 
 ## 3.4.0 - 2022-12-08
 - **Medium Impact Changes**
@@ -24,7 +27,7 @@
   - [spiral/boot] Added the ability to register application bootloaders via object instance or anonymous object.
   - [spiral/boot] Removed `final` from the `Spiral\Boot\BootloadManager\Initializer` class.
 - **Bug Fixes**
-  - [spiral/views] Fixes problem with using view context with default value.
+  - [spiral/views] Fixed problem with using view context with default value.
   - [spiral/queue] Added `Spiral\Telemetry\Bootloader\TelemetryBootloader` dependency to QueueBootloader.
   - [spiral/core] (PHP 8.2 support) Fixed problem with dynamic properties in `Spiral\Core\Container`.
 
