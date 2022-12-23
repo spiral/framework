@@ -26,15 +26,22 @@ final class PlainRenderer extends AbstractRenderer
             $exceptions[] = $exception;
         }
 
-        $result = [];
+        $exceptions = \array_reverse($exceptions);
 
-        foreach ($exceptions as $exception) {
+        $result = [];
+        $rootDir = \getcwd();
+
+        foreach ($exceptions as $i => $exception) {
+            $file = \str_starts_with($exception->getFile(), $rootDir)
+                ? \substr($exception->getFile(), \strlen($rootDir) + 1)
+                : $exception->getFile();
+
             $row = \sprintf(
                 "[%s]\n%s in %s:%s\n",
                 $exception::class,
                 $exception->getMessage(),
-                $exception->getFile(),
-                $exception->getLine()
+                $file,
+                $exception->getLine(),
             );
 
             if ($verbosity->value >= Verbosity::DEBUG->value) {
@@ -57,17 +64,20 @@ final class PlainRenderer extends AbstractRenderer
     private function renderTrace(\Throwable $e, Highlighter $h = null): string
     {
         $stacktrace = $this->getStacktrace($e);
-        if (empty($stacktrace)) {
+        if ($stacktrace === []) {
             return '';
         }
 
         $result = "\n";
+        $rootDir = \getcwd();
+
+        $pad = \strlen((string)\count($stacktrace)) + 1;
 
         foreach ($stacktrace as $i => $trace) {
             if (isset($trace['type'], $trace['class'])) {
                 $line = \sprintf(
                     '%s %s%s%s()',
-                    '#'.$i,
+                    \str_pad(($i + 1) . '.', $pad, ' ', \STR_PAD_LEFT),
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
@@ -77,9 +87,11 @@ final class PlainRenderer extends AbstractRenderer
             }
 
             if (isset($trace['file'])) {
-                $line .= \sprintf(' at %s:%s', $trace['file'], $trace['line']);
-            } else {
-                $line .= \sprintf(' at %s:%s', 'n/a', 'n/a');
+                $file = \str_starts_with($trace['file'], $rootDir)
+                    ? \substr($trace['file'], \strlen($rootDir) + 1)
+                    : $trace['file'];
+
+                $line .= \sprintf(' at %s:%s', $file, $trace['line']);
             }
 
             if (\in_array($line, $this->lines, true)) {
