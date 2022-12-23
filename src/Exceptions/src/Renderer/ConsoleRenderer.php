@@ -77,8 +77,7 @@ class ConsoleRenderer extends AbstractRenderer
         $result = [];
         $rootDir = \getcwd();
 
-        foreach ($exceptions as $i => $exception)
-        {
+        foreach ($exceptions as $exception) {
             $prefix = $currentE === $exception ? '' : 'Previous: ';
             $row = $this->renderHeader(
                 \sprintf("%s[%s]\n%s", $prefix, $exception::class, $exception->getMessage()),
@@ -175,7 +174,7 @@ class ConsoleRenderer extends AbstractRenderer
             if (isset($trace['type'], $trace['class'])) {
                 $line = $this->format(
                     "<$classColor>%s.</reset> <white>%s%s%s()</reset>",
-                    \str_pad((string)($i + 1), $pad, ' ', \STR_PAD_LEFT),
+                    \str_pad((string)((int)$i + 1), $pad, ' ', \STR_PAD_LEFT),
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
