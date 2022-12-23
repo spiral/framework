@@ -184,6 +184,8 @@ class ConsoleRenderer extends AbstractRenderer
                 continue;
             }
 
+            $this->lines[] = $line;
+
             $result .= $line . "\n";
 
             if ($h !== null && !empty($trace['file'])) {
