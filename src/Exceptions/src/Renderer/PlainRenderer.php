@@ -71,13 +71,13 @@ final class PlainRenderer extends AbstractRenderer
         $result = "\n";
         $rootDir = \getcwd();
 
-        $pad = \strlen((string)\count($stacktrace)) + 1;
+        $pad = \strlen((string)\count($stacktrace));
 
         foreach ($stacktrace as $i => $trace) {
             if (isset($trace['type'], $trace['class'])) {
                 $line = \sprintf(
-                    '%s %s%s%s()',
-                    \str_pad((string)($i + 1) . '.', $pad, ' ', \STR_PAD_LEFT),
+                    '%s. %s%s%s()',
+                    \str_pad((string)($i + 1), $pad, ' ', \STR_PAD_LEFT),
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
