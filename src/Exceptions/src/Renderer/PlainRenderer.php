@@ -77,7 +77,7 @@ final class PlainRenderer extends AbstractRenderer
             if (isset($trace['type'], $trace['class'])) {
                 $line = \sprintf(
                     '%s %s%s%s()',
-                    \str_pad(($i + 1) . '.', $pad, ' ', \STR_PAD_LEFT),
+                    \str_pad((string)($i + 1) . '.', $pad, ' ', \STR_PAD_LEFT),
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
