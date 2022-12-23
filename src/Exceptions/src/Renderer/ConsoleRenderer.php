@@ -22,20 +22,21 @@ class ConsoleRenderer extends AbstractRenderer
     public const SHOW_LINES = 2;
     protected const FORMATS = ['console', 'cli'];
 
-    protected const COLORS = [
-        'bg:red'     => Color::BG_RED,
-        'bg:cyan'    => Color::BG_CYAN,
-        'bg:magenta' => Color::BG_MAGENTA,
-        'bg:white'   => Color::BG_WHITE,
-        'white'      => Color::LIGHT_WHITE,
-        'green'      => Color::GREEN,
-        'black'      => Color::BLACK,
-        'red'        => Color::RED,
-        'yellow'     => Color::YELLOW,
-        'reset'      => Color::RESET,
-    ];
-
     private array $lines = [];
+
+    protected const COLORS = [
+        'bg:red' => Color::BG_RED,
+        'bg:cyan' => Color::BG_CYAN,
+        'bg:magenta' => Color::BG_MAGENTA,
+        'bg:white' => Color::BG_WHITE,
+        'white' => Color::LIGHT_WHITE,
+        'green' => Color::GREEN,
+        'gray' => Color::GRAY,
+        'black' => Color::BLACK,
+        'red' => Color::RED,
+        'yellow' => Color::YELLOW,
+        'reset' => Color::RESET,
+    ];
 
     private bool $colorsSupport;
 
@@ -65,6 +66,8 @@ class ConsoleRenderer extends AbstractRenderer
         $verbosity ??= $this->defaultVerbosity;
 
         $exceptions = [$exception];
+        $currentE = $exception;
+
         while ($exception = $exception->getPrevious()) {
             $exceptions[] = $exception;
         }
@@ -74,9 +77,11 @@ class ConsoleRenderer extends AbstractRenderer
         $result = [];
         $rootDir = \getcwd();
 
-        foreach ($exceptions as $exception) {
+        foreach ($exceptions as $i => $exception)
+        {
+            $prefix = $currentE === $exception ? '' : 'Previous: ';
             $row = $this->renderHeader(
-                \sprintf("[%s]\n%s", $exception::class, $exception->getMessage()),
+                \sprintf("%s[%s]\n%s", $prefix, $exception::class, $exception->getMessage()),
                 $exception instanceof \Error ? 'bg:magenta,white' : 'bg:red,white'
             );
 
@@ -91,9 +96,12 @@ class ConsoleRenderer extends AbstractRenderer
             );
 
             if ($verbosity->value >= Verbosity::DEBUG->value) {
-                $row .= $this->renderTrace($exception, new Highlighter(
-                    $this->colorsSupport ? new ConsoleStyle() : new PlainStyle()
-                ));
+                $row .= $this->renderTrace(
+                    $exception,
+                    new Highlighter(
+                        $this->colorsSupport ? new ConsoleStyle() : new PlainStyle()
+                    )
+                );
             } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
                 $row .= $this->renderTrace($exception);
             }
@@ -153,10 +161,21 @@ class ConsoleRenderer extends AbstractRenderer
         $pad = \strlen((string)\count($stacktrace));
 
         foreach ($stacktrace as $i => $trace) {
+            $file = null;
+            $classColor = 'while';
+
+            if (isset($trace['file'])) {
+                $file = \str_starts_with($trace['file'], $rootDir)
+                    ? \substr($trace['file'], \strlen($rootDir) + 1)
+                    : $trace['file'];
+
+                $classColor = \str_starts_with($file, 'vendor/') ? 'gray' : 'white';
+            }
+
             if (isset($trace['type'], $trace['class'])) {
                 $line = $this->format(
-                    ' <white>%s. %s%s%s()</reset>',
-                    \str_pad((string)((int) $i + 1), $pad, ' ', \STR_PAD_LEFT),
+                    "<$classColor>%s.</reset> <white>%s%s%s()</reset>",
+                    \str_pad((string)($i + 1), $pad, ' ', \STR_PAD_LEFT),
                     $trace['class'],
                     $trace['type'],
                     $trace['function']
@@ -167,14 +186,9 @@ class ConsoleRenderer extends AbstractRenderer
                     $trace['function']
                 );
             }
-
-            if (isset($trace['file'])) {
-                $file = \str_starts_with($trace['file'], $rootDir)
-                    ? \substr($trace['file'], \strlen($rootDir) + 1)
-                    : $trace['file'];
-
+            if ($file !== null) {
                 $line .= $this->format(
-                    ' <yellow>at</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>',
+                    " <yellow>at</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>",
                     $file,
                     $trace['line']
                 );
@@ -190,10 +204,10 @@ class ConsoleRenderer extends AbstractRenderer
 
             if ($h !== null && !empty($trace['file'])) {
                 $result .= $h->highlightLines(
-                    \file_get_contents($trace['file']),
-                    $trace['line'],
-                    static::SHOW_LINES
-                ) . "\n";
+                        \file_get_contents($trace['file']),
+                        $trace['line'],
+                        static::SHOW_LINES
+                    ) . "\n";
             }
         }
 
