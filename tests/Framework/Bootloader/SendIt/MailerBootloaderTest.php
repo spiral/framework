@@ -82,6 +82,7 @@ final class MailerBootloaderTest extends BaseTest
         $this->updateConfig(MailerConfig::CONFIG.'.transportFactories', [
             NativeTransportFactory::class,
         ]);
+        $this->getContainer()->get(TransportInterface::class);
     }
 
     /**
@@ -131,5 +132,29 @@ final class MailerBootloaderTest extends BaseTest
         $prop = $class->getProperty('logger');
         $prop->setAccessible(true);
         $this->assertSame($logger, $prop->getValue($transport));
+    }
+
+    public function testCustomTransportHasNotDI(): void
+    {
+        $this->assertContainerMissed(PsrEventDispatcherInterface::class);
+        $this->assertContainerMissed(PsrLoggerInterface::class);
+
+        $this->updateConfig(MailerConfig::CONFIG.'.transportFactories', [
+            EsmtpTransportFactory::class,
+        ]);
+        $this->assertContainerBoundAsSingleton(TransportInterface::class, SmtpTransport::class);
+
+        $transport = $this->getContainer()->get(TransportInterface::class);
+        $this->assertInstanceOf(SmtpTransport::class, $transport);
+
+        $class = new \ReflectionClass(AbstractTransport::class);
+        // dispatcher
+        $prop = $class->getProperty('dispatcher');
+        $prop->setAccessible(true);
+        $this->assertSame(null, $prop->getValue($transport));
+        // logger
+        $prop = $class->getProperty('logger');
+        $prop->setAccessible(true);
+        $this->assertInstanceOf(\Psr\Log\NullLogger::class, $prop->getValue($transport));
     }
 }
