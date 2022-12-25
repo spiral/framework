@@ -4,14 +4,22 @@ declare(strict_types=1);
 
 namespace Framework\Bootloader\SendIt;
 
+use Psr\EventDispatcher\EventDispatcherInterface as PsrEventDispatcherInterface;
+use Psr\Log\LoggerInterface as PsrLoggerInterface;
 use Spiral\Mailer\MailerInterface;
 use Spiral\SendIt\Bootloader\MailerBootloader;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
 use Spiral\Tests\Framework\BaseTest;
+use Symfony\Component\Mailer\Exception\UnsupportedSchemeException;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Symfony\Component\Mailer\Transport\NativeTransportFactory;
+use Symfony\Component\Mailer\Transport\NullTransport;
+use Symfony\Component\Mailer\Transport\NullTransportFactory;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransportFactory;
 use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 
@@ -61,6 +69,67 @@ final class MailerBootloaderTest extends BaseTest
             'queue' => 'testing',
             'from' => 'Testing <testing@local.host>',
             'queueConnection' => 'sync',
+            'transportFactories' => [],
         ]);
+    }
+
+    /**
+     * Only NativeTransportFactory is supported.
+     */
+    public function testCustomTransportFactoriesForSmtpNotFount(): void
+    {
+        $this->expectException(UnsupportedSchemeException::class);
+        $this->updateConfig(MailerConfig::CONFIG.'.transportFactories', [
+            NativeTransportFactory::class,
+        ]);
+    }
+
+    /**
+     * Only EsmtpTransportFactory is supported.
+     */
+    public function testCustomTransportFactoriesSmtpOnly(): void
+    {
+        $this->updateConfig(MailerConfig::CONFIG.'.transportFactories', [
+            EsmtpTransportFactory::class,
+        ]);
+        $this->assertContainerBoundAsSingleton(TransportInterface::class, SmtpTransport::class);
+    }
+
+    public function testCustomTransportFactoriesNullSupported(): void
+    {
+        $this->updateConfig(MailerConfig::CONFIG.'.transportFactories', [
+            NullTransportFactory::class,
+        ]);
+        $this->updateConfig(MailerConfig::CONFIG.'.dsn', 'null://default');
+        $this->assertContainerBoundAsSingleton(TransportInterface::class, NullTransport::class);
+    }
+
+    public function testCustomTransportHasDI(): void
+    {
+        $this->assertContainerMissed(PsrEventDispatcherInterface::class);
+        $this->assertContainerMissed(PsrLoggerInterface::class);
+
+        $dispatcher = $this->createMock(PsrEventDispatcherInterface::class);
+        $logger = $this->createMock(PsrLoggerInterface::class);
+        $this->getContainer()->bind(PsrEventDispatcherInterface::class, $dispatcher);
+        $this->getContainer()->bind(PsrLoggerInterface::class, $logger);
+
+        $this->updateConfig(MailerConfig::CONFIG.'.transportFactories', [
+            EsmtpTransportFactory::class,
+        ]);
+        $this->assertContainerBoundAsSingleton(TransportInterface::class, SmtpTransport::class);
+
+        $transport = $this->getContainer()->get(TransportInterface::class);
+        $this->assertInstanceOf(SmtpTransport::class, $transport);
+
+        $class = new \ReflectionClass(AbstractTransport::class);
+        // dispatcher
+        $prop = $class->getProperty('dispatcher');
+        $prop->setAccessible(true);
+        $this->assertSame($dispatcher, $prop->getValue($transport));
+        // logger
+        $prop = $class->getProperty('logger');
+        $prop->setAccessible(true);
+        $this->assertSame($logger, $prop->getValue($transport));
     }
 }

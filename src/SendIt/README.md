@@ -15,3 +15,54 @@
 ## License:
 
 MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).
+
+
+## Config example
+
+```php
+// config/mailer.php
+
+return [
+    /**
+     * The default mailer that is used to send any email messages sent by your application.
+     * @see https://symfony.com/doc/current/mailer.html#using-built-in-transports
+     */
+    'dsn' => env('MAILER_DSN', 'smtp://user:pass@mailhog:25'),
+
+    /**
+     * Global "From" Address
+     */
+    'from' => env('MAILER_FROM', 'Spiral <sendit@local.host>'),
+
+    /**
+     * A queue connection in that any email messages will be pushed.
+     */
+    'queueConnection' => env('MAILER_QUEUE_CONNECTION', 'sync'),
+    'queue' => env('MAILER_QUEUE', 'local'),
+    
+    /**
+     * List of class-string implementations of \Symfony\Component\Mailer\Transport\TransportFactoryInterface.
+     * If empty, values will be taken from \Symfony\Component\Mailer\Transport::getDefaultFactories()
+     */
+    'transportFactories' => [
+        // buildin
+        NullTransportFactory::class,
+        SendmailTransportFactory::class,
+        EsmtpTransportFactory::class,
+        NativeTransportFactory::class,
+        // extension
+        GmailTransportFactory::class,
+        InfobipTransportFactory::class,
+        MailgunTransportFactory::class,
+        MailjetTransportFactory::class,
+        MandrillTransportFactory::class,
+        OhMySmtpTransportFactory::class,
+        PostmarkTransportFactory::class,
+        SendgridTransportFactory::class,
+        SendinblueTransportFactory::class,
+        SesTransportFactory::class,
+        // custom
+        MyTransportFactory::class
+    ]
+];
+```

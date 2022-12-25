@@ -50,6 +50,7 @@ class MailerBootloader extends Bootloader
             'queue' => $env->get('MAILER_QUEUE', 'local'),
             'from' => $env->get('MAILER_FROM', 'Spiral <sendit@local.host>'),
             'queueConnection' => $env->get('MAILER_QUEUE_CONNECTION'),
+            'transportFactories' => [],
         ]);
     }
 
@@ -68,8 +69,19 @@ class MailerBootloader extends Bootloader
         $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
     }
 
-    public function initTransport(MailerConfig $config): TransportInterface
+    public function initTransport(MailerConfig $config, ContainerInterface $container): TransportInterface
     {
+        if ($config->getTransportFactories()) {
+            $transport = new Transport(
+                array_map(
+                // create factory with DI
+                    fn (string $class) => $container->get($class),
+                    $config->getTransportFactories()
+                )
+            );
+            return $transport->fromString($config->getDSN());
+        }
+
         return Transport::fromDsn($config->getDSN());
     }
 

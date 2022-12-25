@@ -16,6 +16,7 @@ final class MailerConfig extends InjectableConfig
             'from' => '',
             'queue' => null,
             'queueConnection' => null,
+            'transportFactories' => []
         ]
     ) {
         parent::__construct($config);
@@ -39,5 +40,13 @@ final class MailerConfig extends InjectableConfig
     public function getQueueConnection(): ?string
     {
         return $this->config['queueConnection'] ?? null;
+    }
+
+    /**
+     * @return list<class-string<\Symfony\Component\Mailer\Transport\TransportFactoryInterface>>
+     */
+    public function getTransportFactories(): array
+    {
+        return $this->config['transportFactories'] ?? [];
     }
 }
