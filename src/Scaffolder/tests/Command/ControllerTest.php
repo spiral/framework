@@ -63,7 +63,10 @@ class ControllerTest extends AbstractCommandTest
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('App\Custom\Controller\SampleController.php', $reflection->getFileName());
+        $this->assertStringContainsString(
+            'App/Custom/Controller/SampleController.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
         $this->assertStringContainsString('App\Custom\Controller', $content);
 
         $this->deleteDeclaration($class);

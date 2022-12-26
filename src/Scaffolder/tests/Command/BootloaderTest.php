@@ -66,7 +66,10 @@ class BootloaderTest extends AbstractCommandTest
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('App\Custom\Bootloader\SampleBootloader.php', $reflection->getFileName());
+        $this->assertStringContainsString(
+            'App/Custom/Bootloader/SampleBootloader.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
         $this->assertStringContainsString('App\Custom\Bootloader', $content);
 
         $this->deleteDeclaration($class);

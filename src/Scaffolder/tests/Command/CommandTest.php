@@ -68,7 +68,10 @@ class CommandTest extends AbstractCommandTest
         $reflection = new ReflectionClass($className);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('App\Custom\Command\SampleCommand.php', $reflection->getFileName());
+        $this->assertStringContainsString(
+            'App/Custom/Command/SampleCommand.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
         $this->assertStringContainsString('App\Custom\Command', $content);
 
         $this->deleteDeclaration($className);

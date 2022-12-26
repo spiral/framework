@@ -57,7 +57,10 @@ class MiddlewareTest extends AbstractCommandTest
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('App\Custom\Middleware\SampleMiddleware.php', $reflection->getFileName());
+        $this->assertStringContainsString(
+            'App/Custom/Middleware/SampleMiddleware.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
         $this->assertStringContainsString('App\Custom\Middleware', $content);
 
         $this->deleteDeclaration($class);

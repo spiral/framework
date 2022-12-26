@@ -57,7 +57,10 @@ class JobHandlerTest extends AbstractCommandTest
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('App\Custom\Job\SampleJob.php', $reflection->getFileName());
+        $this->assertStringContainsString(
+            'App/Custom/Job/SampleJob.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
         $this->assertStringContainsString('App\Custom\Job', $content);
 
         $this->deleteDeclaration($class);

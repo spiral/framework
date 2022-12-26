@@ -63,7 +63,10 @@ class ConfigTest extends AbstractCommandTest
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('App\Custom\Config\SampleConfig.php', $reflection->getFileName());
+        $this->assertStringContainsString(
+            'App/Custom/Config/SampleConfig.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
         $this->assertStringContainsString('App\Custom\Config', $content);
 
         $this->deleteDeclaration($class);

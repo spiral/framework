@@ -101,9 +101,6 @@ class ConfigDeclaration extends AbstractDeclaration
         return \sprintf('@see \%s\%s', $namespace, $this->class->getName());
     }
 
-    /**
-     * @return double[]|float[]
-     */
     private function declareGetters(array $defaults): void
     {
         $getters = [];
