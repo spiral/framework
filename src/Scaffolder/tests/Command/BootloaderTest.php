@@ -56,7 +56,6 @@ class BootloaderTest extends AbstractCommandTest
 
         $this->console()->run('create:bootloader', [
             'name' => 'sample',
-            '--comment' => 'Sample Bootloader',
             '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Bootloader'
         ]);
 
