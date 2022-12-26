@@ -22,6 +22,12 @@ class BootloaderCommand extends AbstractCommand
             InputOption::VALUE_OPTIONAL,
             'Optional comment to add as class header',
         ],
+        [
+            'namespace',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Optional, specify a custom namespace',
+        ],
     ];
 
     /**

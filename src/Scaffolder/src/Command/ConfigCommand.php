@@ -33,6 +33,12 @@ class ConfigCommand extends AbstractCommand
             InputOption::VALUE_NONE,
             'Create config class based on a given config filename',
         ],
+        [
+            'namespace',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Optional, specify a custom namespace',
+        ],
     ];
 
     /**

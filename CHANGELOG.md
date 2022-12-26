@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+- **Other Features**
+  - [spiral/scaffolder] Added the ability to specify a custom `namespace` in the 
+    `Spiral\Scaffolder\Command\BootloaderCommand`, `Spiral\Scaffolder\Command\CommandCommand`, 
+    `Spiral\Scaffolder\Command\ConfigCommand`, `Spiral\Scaffolder\Command\ControllerCommand`,
+    `Spiral\Scaffolder\Command\JobHandlerCommand`, `Spiral\Scaffolder\Command\MiddlewareCommand` console commands.
+
 ## 3.5.0 - 2022-12-23
 - **Medium Impact Changes**
   - [spiral/reactor] Method `removeClass` of `Spiral\Reactor\Partial\PhpNamespace` class is deprecated. Use method `removeElement` instead.

@@ -36,8 +36,9 @@ abstract class AbstractCommand extends Command
         return $this->factory->make(
             $class,
             [
-                'name'    => (string) $this->argument('name'),
+                'name' => (string) $this->argument('name'),
                 'comment' => $this->option('comment'),
+                'namespace' => $this->option('namespace'),
             ] + $this->config->declarationOptions($class::TYPE)
         );
     }
@@ -47,7 +48,11 @@ abstract class AbstractCommand extends Command
      */
     protected function writeDeclaration(DeclarationInterface $declaration): void
     {
-        $filename = $this->config->classFilename($declaration::TYPE, (string) $this->argument('name'));
+        $filename = $this->config->classFilename(
+            $declaration::TYPE,
+            (string) $this->argument('name'),
+            $this->option('namespace')
+        );
         $filename = $this->files->normalizePath($filename);
         $className = $declaration->getClass()->getName();
 

@@ -18,9 +18,10 @@ abstract class AbstractDeclaration implements DeclarationInterface
     public function __construct(
         protected readonly ScaffolderConfig $config,
         string $name,
-        ?string $comment = null
+        ?string $comment = null,
+        ?string $namespace = null
     ) {
-        $this->namespace = new PhpNamespace($this->config->classNamespace(static::TYPE, $name));
+        $this->namespace = new PhpNamespace($namespace ?? $this->config->classNamespace(static::TYPE, $name));
 
         $this->class = $this->namespace
             ->addClass($this->config->className(static::TYPE, $name))
