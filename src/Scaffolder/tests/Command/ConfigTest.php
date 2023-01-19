@@ -11,28 +11,23 @@ use Throwable;
 
 class ConfigTest extends AbstractCommandTest
 {
-    private const CLASS_NAME = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig';
-
-    public function tearDown(): void
-    {
-        $this->deleteDeclaration(self::CLASS_NAME);
-    }
-
     /**
      * @throws ReflectionException
      * @throws Throwable
      */
     public function testScaffold(): void
     {
+        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig';
+
         $this->console()->run('create:config', [
             'name'      => 'sample',
             '--comment' => 'Sample Config'
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists(self::CLASS_NAME));
+        $this->assertTrue(class_exists($class));
 
-        $reflection = new ReflectionClass(self::CLASS_NAME);
+        $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         $this->assertStringContainsString('strict_types=1', $content);
@@ -45,6 +40,36 @@ class ConfigTest extends AbstractCommandTest
 
         $this->assertIsString($reflection->getReflectionConstant('CONFIG')->getValue());
         $this->assertEquals([], $reflection->getDefaultProperties()['config']);
+
+        $this->deleteDeclaration($class);
+    }
+
+    /**
+     * @throws ReflectionException
+     * @throws Throwable
+     */
+    public function testScaffoldWithCustomNamespace(): void
+    {
+        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Config\\SampleConfig';
+
+        $this->console()->run('create:config', [
+            'name' => 'sample',
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Config'
+        ]);
+
+        clearstatcache();
+        $this->assertTrue(class_exists($class));
+
+        $reflection = new ReflectionClass($class);
+        $content = $this->files()->read($reflection->getFileName());
+
+        $this->assertStringContainsString(
+            'App/Custom/Config/SampleConfig.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
+        $this->assertStringContainsString('App\Custom\Config', $content);
+
+        $this->deleteDeclaration($class);
     }
 
     /**

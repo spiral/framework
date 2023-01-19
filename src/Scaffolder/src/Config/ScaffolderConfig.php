@@ -58,14 +58,14 @@ class ScaffolderConfig extends InjectableConfig
         return \trim($this->baseNamespace($element) . '\\' . $localNamespace, '\\');
     }
 
-    public function classFilename(string $element, string $name): string
+    public function classFilename(string $element, string $name, ?string $namespace = null): string
     {
-        $namespace = $this->classNamespace($element, $name);
-        $namespace = \substr($namespace, \strlen($this->baseNamespace($element)));
+        $elementNamespace = $namespace ?? $this->classNamespace($element, $name);
+        $elementNamespace = \substr($elementNamespace, \strlen($this->baseNamespace($element)));
 
         return $this->joinPathChunks([
             $this->baseDirectory(),
-            \str_replace('\\', '/', $namespace),
+            \str_replace('\\', '/', $elementNamespace),
             $this->className($element, $name) . '.php',
         ], '/');
     }

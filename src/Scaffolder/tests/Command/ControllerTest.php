@@ -49,6 +49,33 @@ class ControllerTest extends AbstractCommandTest
      * @throws ReflectionException
      * @throws Throwable
      */
+    public function testScaffoldWithCustomNamespace(): void
+    {
+        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller\\SampleController';
+        $this->console()->run('create:controller', [
+            'name' => 'sample',
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller'
+        ]);
+
+        clearstatcache();
+        $this->assertTrue(class_exists($class));
+
+        $reflection = new ReflectionClass($class);
+        $content = $this->files()->read($reflection->getFileName());
+
+        $this->assertStringContainsString(
+            'App/Custom/Controller/SampleController.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
+        $this->assertStringContainsString('App\Custom\Controller', $content);
+
+        $this->deleteDeclaration($class);
+    }
+
+    /**
+     * @throws ReflectionException
+     * @throws Throwable
+     */
     public function testPrototypeTrait(): void
     {
         $class = '\\Spiral\\Tests\\Scaffolder\\App\\Controller\\Sample2Controller';

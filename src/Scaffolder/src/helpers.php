@@ -16,29 +16,6 @@ if (!\function_exists('trimPostfix')) {
     }
 }
 
-if (!\function_exists('isAssociativeArray')) {
-    /**
-     * @internal
-     */
-    function isAssociativeArray(array $array): bool
-    {
-        $keys = [];
-        foreach ($array as $key => $_) {
-            if (!\is_int($key)) {
-                return true;
-            }
-
-            if ($key !== \count($keys)) {
-                return true;
-            }
-
-            $keys[] = $key;
-        }
-
-        return false;
-    }
-}
-
 if (!\function_exists('defineArrayType')) {
     /**
      * @internal

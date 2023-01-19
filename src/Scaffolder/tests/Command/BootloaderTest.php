@@ -10,28 +10,23 @@ use Throwable;
 
 class BootloaderTest extends AbstractCommandTest
 {
-    private const CLASS_NAME = '\\Spiral\\Tests\\Scaffolder\\App\\Bootloader\\SampleBootloader';
-
-    public function tearDown(): void
-    {
-        $this->deleteDeclaration(self::CLASS_NAME);
-    }
-
     /**
      * @throws ReflectionException
      * @throws Throwable
      */
     public function testScaffold(): void
     {
+        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Bootloader\\SampleBootloader';
+
         $this->console()->run('create:bootloader', [
-            'name'      => 'sample',
+            'name' => 'sample',
             '--comment' => 'Sample Bootloader'
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists(self::CLASS_NAME));
+        $this->assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass(self::CLASS_NAME);
+        $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         $this->assertStringContainsString('strict_types=1', $content);
@@ -47,5 +42,35 @@ class BootloaderTest extends AbstractCommandTest
         $this->assertEquals([], $reflection->getReflectionConstant('BINDINGS')->getValue());
         $this->assertEquals([], $reflection->getReflectionConstant('SINGLETONS')->getValue());
         $this->assertEquals([], $reflection->getReflectionConstant('DEPENDENCIES')->getValue());
+
+        $this->deleteDeclaration($class);
+    }
+
+    /**
+     * @throws ReflectionException
+     * @throws Throwable
+     */
+    public function testScaffoldWithCustomNamespace(): void
+    {
+        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Bootloader\\SampleBootloader';
+
+        $this->console()->run('create:bootloader', [
+            'name' => 'sample',
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Bootloader'
+        ]);
+
+        clearstatcache();
+        $this->assertTrue(\class_exists($class));
+
+        $reflection = new ReflectionClass($class);
+        $content = $this->files()->read($reflection->getFileName());
+
+        $this->assertStringContainsString(
+            'App/Custom/Bootloader/SampleBootloader.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
+        $this->assertStringContainsString('App\Custom\Bootloader', $content);
+
+        $this->deleteDeclaration($class);
     }
 }

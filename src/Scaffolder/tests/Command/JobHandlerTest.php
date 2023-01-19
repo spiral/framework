@@ -10,28 +10,23 @@ use Throwable;
 
 class JobHandlerTest extends AbstractCommandTest
 {
-    private const CLASS_NAME = '\\Spiral\\Tests\\Scaffolder\\App\\Job\\SampleJob';
-
-    public function tearDown(): void
-    {
-        $this->deleteDeclaration(self::CLASS_NAME);
-    }
-
     /**
      * @throws ReflectionException
      * @throws Throwable
      */
     public function testScaffold(): void
     {
+        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Job\\SampleJob';
+
         $this->console()->run('create:jobHandler', [
             'name'      => 'sample',
             '--comment' => 'Sample Job Handler'
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists(self::CLASS_NAME));
+        $this->assertTrue(class_exists($class));
 
-        $reflection = new ReflectionClass(self::CLASS_NAME);
+        $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         $this->assertStringContainsString('strict_types=1', $content);
@@ -39,5 +34,35 @@ class JobHandlerTest extends AbstractCommandTest
         $this->assertStringContainsString('@author {author-name}', $content);
         $this->assertStringContainsString('Sample Job Handler', $reflection->getDocComment());
         $this->assertTrue($reflection->hasMethod('invoke'));
+
+        $this->deleteDeclaration($class);
+    }
+
+    /**
+     * @throws ReflectionException
+     * @throws Throwable
+     */
+    public function testScaffoldWithCustomNamespace(): void
+    {
+        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Job\\SampleJob';
+
+        $this->console()->run('create:jobHandler', [
+            'name' => 'sample',
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Job'
+        ]);
+
+        clearstatcache();
+        $this->assertTrue(\class_exists($class));
+
+        $reflection = new ReflectionClass($class);
+        $content = $this->files()->read($reflection->getFileName());
+
+        $this->assertStringContainsString(
+            'App/Custom/Job/SampleJob.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
+        $this->assertStringContainsString('App\Custom\Job', $content);
+
+        $this->deleteDeclaration($class);
     }
 }

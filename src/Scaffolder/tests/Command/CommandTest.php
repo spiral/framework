@@ -53,6 +53,30 @@ class CommandTest extends AbstractCommandTest
         $this->deleteDeclaration($className);
     }
 
+    public function testScaffoldWithCustomNamespace(): void
+    {
+        $className = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Command\\SampleCommand';
+
+        $this->console()->run('create:command', [
+            'name' => 'sample',
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Command',
+        ]);
+
+        clearstatcache();
+        $this->assertTrue(class_exists($className));
+
+        $reflection = new ReflectionClass($className);
+        $content = $this->files()->read($reflection->getFileName());
+
+        $this->assertStringContainsString(
+            'App/Custom/Command/SampleCommand.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
+        $this->assertStringContainsString('App\Custom\Command', $content);
+
+        $this->deleteDeclaration($className);
+    }
+
     public function commandDataProvider(): array
     {
         return [

@@ -16,7 +16,6 @@ use Spiral\Scaffolder\Config\ScaffolderConfig;
 use Spiral\Scaffolder\Exception\ScaffolderException;
 
 use function Spiral\Scaffolder\defineArrayType;
-use function Spiral\Scaffolder\isAssociativeArray;
 
 class ConfigDeclaration extends AbstractDeclaration
 {
@@ -24,16 +23,17 @@ class ConfigDeclaration extends AbstractDeclaration
 
     public function __construct(
         ScaffolderConfig $config,
-        private readonly FilesInterface $files,
-        private readonly SlugifyInterface $slugify,
-        private readonly ConfigDeclaration\TypeAnnotations $typeAnnotations,
-        private readonly ConfigDeclaration\TypeHints $typeHints,
-        private readonly ConfigDeclaration\Defaults $defaultValues,
-        string $name,
-        ?string $comment = null,
-        private readonly string $directory = ''
+        protected readonly FilesInterface $files,
+        protected readonly SlugifyInterface $slugify,
+        protected readonly ConfigDeclaration\TypeAnnotations $typeAnnotations,
+        protected readonly ConfigDeclaration\TypeHints $typeHints,
+        protected readonly ConfigDeclaration\Defaults $defaultValues,
+        protected string $name,
+        protected ?string $comment = null,
+        private readonly string $directory = '',
+        ?string $namespace = null
     ) {
-        parent::__construct($config, $name, $comment);
+        parent::__construct($config, $name, $comment, $namespace);
     }
 
     public function create(bool $reverse, string $configName): void
@@ -101,12 +101,8 @@ class ConfigDeclaration extends AbstractDeclaration
         return \sprintf('@see \%s\%s', $namespace, $this->class->getName());
     }
 
-    /**
-     * @return double[]|float[]
-     */
-    private function declareGetters(array $defaults): array
+    private function declareGetters(array $defaults): void
     {
-        $output = [];
         $getters = [];
         $gettersByKey = [];
 
@@ -135,8 +131,6 @@ class ConfigDeclaration extends AbstractDeclaration
                 $getters[] = $method->getName();
             }
         }
-
-        return $output;
     }
 
     private function declareGettersByKey(array $methodNames, string $key, array $value): ?Method
@@ -165,7 +159,7 @@ class ConfigDeclaration extends AbstractDeclaration
         }
 
         //Won't create for associated arrays
-        if ($this->typeAnnotations->mapType($keyType) === 'int' && !isAssociativeArray($value)) {
+        if ($this->typeAnnotations->mapType($keyType) === 'int' && \array_is_list($value)) {
             return null;
         }
 

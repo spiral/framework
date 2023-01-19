@@ -10,28 +10,23 @@ use Throwable;
 
 class MiddlewareTest extends AbstractCommandTest
 {
-    private const CLASS_NAME = '\\Spiral\\Tests\\Scaffolder\\App\\Middleware\\SampleMiddleware';
-
-    public function tearDown(): void
-    {
-        $this->deleteDeclaration(self::CLASS_NAME);
-    }
-
     /**
      * @throws ReflectionException
      * @throws Throwable
      */
     public function testScaffold(): void
     {
+        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Middleware\\SampleMiddleware';
+
         $this->console()->run('create:middleware', [
             'name'      => 'sample-middleware',
             '--comment' => 'Sample Middleware'
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists(self::CLASS_NAME));
+        $this->assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass(self::CLASS_NAME);
+        $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         $this->assertStringContainsString('strict_types=1', $content);
@@ -39,5 +34,35 @@ class MiddlewareTest extends AbstractCommandTest
         $this->assertStringContainsString('@author {author-name}', $content);
         $this->assertStringContainsString('Sample Middleware', $reflection->getDocComment());
         $this->assertTrue($reflection->hasMethod('process'));
+
+        $this->deleteDeclaration($class);
+    }
+
+    /**
+     * @throws ReflectionException
+     * @throws Throwable
+     */
+    public function testScaffoldWithCustomNamespace(): void
+    {
+        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Middleware\\SampleMiddleware';
+
+        $this->console()->run('create:middleware', [
+            'name' => 'sample-middleware',
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Middleware'
+        ]);
+
+        clearstatcache();
+        $this->assertTrue(\class_exists($class));
+
+        $reflection = new ReflectionClass($class);
+        $content = $this->files()->read($reflection->getFileName());
+
+        $this->assertStringContainsString(
+            'App/Custom/Middleware/SampleMiddleware.php',
+            \str_replace('\\', '/', $reflection->getFileName())
+        );
+        $this->assertStringContainsString('App\Custom\Middleware', $content);
+
+        $this->deleteDeclaration($class);
     }
 }
