@@ -118,11 +118,11 @@ class SingletonsTest extends TestCase
     public function testMakeResultWithCustomArgsWontBeStored(): void
     {
         $container = new Container();
-        $instance = $container->make(stdClass::class, ['foo' => 'bar']);
+        $instance = $container->make(DeclarativeSingleton::class, ['foo' => 'bar']);
 
-        $this->assertFalse($container->hasInstance(stdClass::class));
+        $this->assertFalse($container->hasInstance(DeclarativeSingleton::class));
 
-        $this->assertNotSame($instance, $container->get(stdClass::class));
+        $this->assertNotSame($instance, $container->get(DeclarativeSingleton::class));
     }
 
     public function testDelayedSingleton(): void

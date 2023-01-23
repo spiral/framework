@@ -64,17 +64,27 @@ final class Factory implements FactoryInterface
             }
         }
 
+        $avoidCache = $parameters !== [];
         $binding = $this->state->bindings[$alias];
         try {
-            $this->tracer->push(false, action: 'resolve from binding', alias: $alias, context: $context, binding: $binding);
+            $this->tracer->push(
+                false,
+                action: 'resolve from binding',
+                alias: $alias,
+                context: $context,
+                binding: $binding,
+            );
             $this->tracer->push(true);
 
             if (\is_object($binding)) {
                 if ($binding::class === WeakReference::class) {
-                    if ($binding->get() === null && \class_exists($alias)) {
+                    if (($avoidCache || $binding->get() === null) && \class_exists($alias)) {
                         try {
                             $this->tracer->push(false, alias: $alias, source: WeakReference::class, context: $context);
                             $object = $this->createInstance($alias, $parameters, $context);
+                            if ($avoidCache) {
+                                return $object;
+                            }
                             $binding = $this->state->bindings[$alias] = WeakReference::create($object);
                         } catch (\Throwable) {
                             throw new ContainerException($this->tracer->combineTraceMessage(\sprintf(
@@ -89,7 +99,9 @@ final class Factory implements FactoryInterface
                     return $binding->get();
                 }
                 //When binding is instance, assuming singleton
-                return $binding;
+                return $avoidCache
+                    ? $this->createInstance($binding::class, $parameters, $context)
+                    : $binding;
             }
 
             if (\is_string($binding)) {
@@ -122,13 +134,14 @@ final class Factory implements FactoryInterface
 
     /**
      * Automatically create class.
+     * Object will be cached if the $arguments list is empty.
      *
      * @param class-string $class
      *
      * @throws AutowireException
      * @throws \Throwable
      */
-    private function autowire(string $class, array $parameters, string $context = null): object
+    private function autowire(string $class, array $arguments, string $context = null): object
     {
         if (!(\class_exists($class) || (
             \interface_exists($class)
@@ -144,14 +157,16 @@ final class Factory implements FactoryInterface
         }
 
         // automatically create instance
-        $instance = $this->createInstance($class, $parameters, $context);
+        $instance = $this->createInstance($class, $arguments, $context);
 
         // apply registration functions to created instance
-        return $this->registerInstance($instance, $parameters);
+        return $arguments === []
+            ? $this->registerInstance($instance)
+            : $instance;
     }
 
     /**
-     * @param mixed $target Value binded by user.
+     * @param mixed $target Value that was bound by user.
      *
      * @throws ContainerException
      * @throws \Throwable
@@ -290,22 +305,24 @@ final class Factory implements FactoryInterface
 
     /**
      * Register instance in container, might perform methods like auto-singletons, log populations
-     * and etc. Can be extended.
+     * and etc.
      *
-     * @param object $instance  Created object.
-     * @param array $parameters Parameters which been passed with created instance.
+     * @template TObject of object
+     *
+     * @param TObject $instance Created object.
+     *
+     * @return TObject
      */
-    private function registerInstance(object $instance, array $parameters): object
+    private function registerInstance(object $instance): object
     {
-        //Declarative singletons (only when class received via direct get)
-        if ($parameters === [] && $instance instanceof SingletonInterface) {
+        //Declarative singletons
+        if ($instance instanceof SingletonInterface) {
             $alias = $instance::class;
             if (!isset($this->state->bindings[$alias])) {
                 $this->state->bindings[$alias] = $instance;
             }
         }
 
-        // Your code can go here (for example LoggerAwareInterface, custom hydration and etc)
         return $instance;
     }
 }
