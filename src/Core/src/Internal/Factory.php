@@ -130,7 +130,12 @@ final class Factory implements FactoryInterface
      */
     private function autowire(string $class, array $parameters, string $context = null): object
     {
-        if (!\class_exists($class) && !isset($this->state->injectors[$class])) {
+        if (!(\class_exists($class) || (
+            \interface_exists($class)
+                &&
+                (isset($this->state->injectors[$class]) || $this->binder->hasInjector($class))
+        ))
+        ) {
             throw new NotFoundException($this->tracer->combineTraceMessage(\sprintf(
                 'Can\'t resolve `%s`: undefined class or binding `%s`.',
                 $this->tracer->getRootAlias(),

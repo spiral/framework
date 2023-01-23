@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Fixtures;
 
-class InjectableClassRealization implements InjectableClassInterface
+class InjectableClassImplementation implements InjectableClassInterface
 {
-
 }

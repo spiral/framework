@@ -12,8 +12,10 @@ use Spiral\Core\ConfigsInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\InjectionException;
+use Spiral\Tests\Core\Fixtures\InjectableClassChildImplementation;
+use Spiral\Tests\Core\Fixtures\InjectableClassChildInterface;
 use Spiral\Tests\Core\Fixtures\InjectableClassInterface;
-use Spiral\Tests\Core\Fixtures\InjectableClassRealization;
+use Spiral\Tests\Core\Fixtures\InjectableClassImplementation;
 use Spiral\Tests\Core\Fixtures\InvalidInjector;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\TestConfig;
@@ -167,7 +169,40 @@ class InjectableTest extends TestCase
 
         $this->assertTrue($container->hasInjector(TestConfig::class));
         $this->assertTrue($container->hasInjector(InjectableClassInterface::class));
-        $this->assertTrue($container->hasInjector(InjectableClassRealization::class));
+        $this->assertTrue($container->hasInjector(InjectableClassImplementation::class));
+    }
+
+    public function inheritanceDataProvider(): iterable
+    {
+        yield 'parent' => [InjectableClassInterface::class];
+        yield 'child' => [InjectableClassChildInterface::class];
+        yield 'parent-impl' => [InjectableClassImplementation::class];
+        yield 'child-impl' => [InjectableClassChildImplementation::class];
+    }
+
+    /**
+     * @dataProvider inheritanceDataProvider
+     */
+    public function testInjectableInheritance(string $class): void
+    {
+        $mock = $this->createMock(Container\InjectorInterface::class);
+        $mock->expects($this->once())
+            ->method('createInjection')
+            ->with(
+                // Class
+                $this->callback(
+                    static fn(ReflectionClass $r) => $r->getName() === $class
+                ),
+                // Context
+                null,
+            )
+            ->willReturn($this->createMock($class));
+
+        $container = new Container();
+        $container->bind('injector', $mock);
+        $container->bindInjector(InjectableClassInterface::class, 'injector');
+
+        $container->get($class);
     }
 
     /**
