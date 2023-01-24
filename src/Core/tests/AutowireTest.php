@@ -9,7 +9,6 @@ use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
-use Spiral\Core\Exception\Resolver\InvalidArgumentException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\DependedClass;
 use Spiral\Tests\Core\Fixtures\ExtendedSample;
@@ -45,6 +44,14 @@ class AutowireTest extends TestCase
 
         $container->bind(SampleClass::class, ExtendedSample::class);
         $this->assertInstanceOf(ExtendedSample::class, $container->make(SampleClass::class, []));
+    }
+
+    public function testMakeFromClassNameBinding(): void
+    {
+        $container = new Container();
+
+        $container->bind(SampleClass::class, SampleClass::class);
+        $this->assertInstanceOf(SampleClass::class, $container->make(SampleClass::class, []));
     }
 
     public function testArgumentException(): void
