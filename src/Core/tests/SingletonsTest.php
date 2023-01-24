@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Tests\Core\Fixtures\DeclarativeSingleton;
 use Spiral\Tests\Core\Fixtures\SampleClass;
+use stdClass;
+
+use function PHPUnit\Framework\assertFalse;
 
 class SingletonsTest extends TestCase
 {
@@ -84,6 +87,42 @@ class SingletonsTest extends TestCase
 
         $this->assertInstanceOf(SampleClass::class, $instance);
         $this->assertSame($instance, $container->get('sampleClass'));
+    }
+
+    /**
+     * @dataProvider SingletonWithCustomArgsProvider
+     */
+    public function testSingletonWithCustomArgs(string $alias, mixed $definition): void
+    {
+        $container = new Container();
+        $container->bindSingleton($alias, $definition);
+        $instance = $container->make($alias);
+
+        $this->assertSame($instance, $container->make($alias));
+        $this->assertSame($instance, $container->make($alias, []));
+        $this->assertNotSame($instance, $bar = $container->make($alias, ['bar']));
+        $this->assertNotSame($bar, $container->make($alias, ['bar']));
+        // The binding mustn't be rebound
+        $this->assertSame($instance, $container->make($alias));
+    }
+
+    public function SingletonWithCustomArgsProvider(): iterable
+    {
+        static $obj = new \stdClass();
+        yield 'array-factory' => ['sampleClass', [self::class, 'sampleClass']];
+        yield 'object' => ['sampleClass', self::class::sampleClass()];
+        yield 'class-name' => ['sampleClass', SampleClass::class];
+        yield 'reference-existing' => ['stdClass', \WeakReference::create($obj)];
+    }
+
+    public function testMakeResultWithCustomArgsWontBeStored(): void
+    {
+        $container = new Container();
+        $instance = $container->make(DeclarativeSingleton::class, ['foo' => 'bar']);
+
+        $this->assertFalse($container->hasInstance(DeclarativeSingleton::class));
+
+        $this->assertNotSame($instance, $container->get(DeclarativeSingleton::class));
     }
 
     public function testDelayedSingleton(): void
