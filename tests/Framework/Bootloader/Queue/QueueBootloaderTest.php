@@ -14,7 +14,6 @@ use Spiral\Queue\Failed\LogFailedJobHandler;
 use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor;
 use Spiral\Queue\Interceptor\Consume\Handler;
-use Spiral\Queue\Queue;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
@@ -62,7 +61,7 @@ final class QueueBootloaderTest extends BaseTest
         $mock = $this->mockContainer(QueueConnectionProviderInterface::class);
         $mock->shouldReceive('getConnection')->andReturn($queue = $this->createMock(QueueInterface::class));
 
-        $this->assertContainerBoundAsSingleton(QueueInterface::class, $queue::class);
+        $this->assertSame($queue, $this->getContainer()->get(QueueInterface::class));
     }
 
     public function testConfig(): void
