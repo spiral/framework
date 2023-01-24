@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Core;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InterceptableCore;
 
 /**
@@ -27,10 +28,21 @@ abstract class DomainBootloader extends Bootloader
     ): InterceptableCore {
         $interceptableCore = new InterceptableCore($core, $dispatcher);
 
-        foreach (static::INTERCEPTORS as $interceptor) {
-            $interceptableCore->addInterceptor($container->get($interceptor));
+        foreach (static::defineInterceptors() as $interceptor) {
+            if (!$interceptor instanceof CoreInterceptorInterface) {
+                $interceptor = $container->get($interceptor);
+            }
+            $interceptableCore->addInterceptor($interceptor);
         }
 
         return $interceptableCore;
+    }
+
+    /**
+     * Defines list of interceptors.
+     */
+    protected static function defineInterceptors(): array
+    {
+        return static::INTERCEPTORS;
     }
 }

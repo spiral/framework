@@ -6,7 +6,6 @@ namespace Spiral\App\Bootloader;
 
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
-use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Bootloader\Http\JsonPayloadsBootloader;
 use Spiral\Core\CoreInterface;
 use Spiral\Domain\GuardInterceptor;
