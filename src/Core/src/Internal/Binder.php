@@ -46,8 +46,7 @@ final class Binder implements BinderInterface
 
             return;
         }
-        // array{class-string, non-empty-string}|callable
-        // array{0: class-string|object, 1: string}|callable|Closure|Autowire
+
         $this->state->bindings[$alias] = $resolver;
     }
 
