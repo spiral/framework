@@ -10,6 +10,7 @@ use Spiral\Core\Internal\Binder;
 use Spiral\Core\Internal\Factory;
 use Spiral\Core\Internal\Invoker;
 use Spiral\Core\Internal\Resolver;
+use Spiral\Core\Internal\Scope;
 use Spiral\Core\Internal\State;
 use Spiral\Core\Internal\Container;
 use Spiral\Core\Internal\Tracer;
@@ -31,6 +32,7 @@ class Config implements IteratorAggregate
      * @param class-string<BinderInterface> $binder
      * @param class-string<InvokerInterface> $invoker
      * @param class-string<Tracer> $tracer
+     * @param class-string<Scope> $scope
      */
     public function __construct(
         public readonly string $state = State::class,
@@ -40,6 +42,7 @@ class Config implements IteratorAggregate
         public readonly string $binder = Binder::class,
         public readonly string $invoker = Invoker::class,
         public readonly string $tracer = Tracer::class,
+        public readonly string $scope = Scope::class,
     ) {
     }
 
@@ -52,5 +55,6 @@ class Config implements IteratorAggregate
         yield 'binder' => $this->binder;
         yield 'invoker' => $this->invoker;
         yield 'tracer' => $this->tracer;
+        yield 'scope' => $this->scope;
     }
 }

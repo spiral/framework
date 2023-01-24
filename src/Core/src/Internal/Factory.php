@@ -34,6 +34,7 @@ final class Factory implements FactoryInterface
     private ContainerInterface $container;
     private ResolverInterface $resolver;
     private Tracer $tracer;
+    private Scope $scope;
 
     public function __construct(Registry $constructor)
     {
@@ -45,6 +46,7 @@ final class Factory implements FactoryInterface
         $this->container = $constructor->get('container', ContainerInterface::class);
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
         $this->tracer = $constructor->get('tracer', Tracer::class);
+        $this->scope = $constructor->get('scope', Scope::class);
     }
 
     /**

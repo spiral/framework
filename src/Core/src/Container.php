@@ -8,7 +8,6 @@ use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectableInterface;
-use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
@@ -25,8 +24,6 @@ use Spiral\Core\Internal\DestructorTrait;
  *
  * You can use injectors to delegate class resolution to external container.
  *
- * @see \Spiral\Core\Container::registerInstance() to add your own behaviours.
- *
  * @see InjectableInterface
  * @see SingletonInterface
  *
@@ -42,7 +39,9 @@ final class Container implements
     InvokerInterface,
     ScopeInterface
 {
-    use DestructorTrait;
+    use DestructorTrait {
+        destruct as private destructInternal;
+    }
 
     private Internal\State $state;
     private ResolverInterface|Internal\Resolver $resolver;
@@ -50,12 +49,15 @@ final class Container implements
     private ContainerInterface|Internal\Container $container;
     private BinderInterface|Internal\Binder $binder;
     private InvokerInterface|Internal\Invoker $invoker;
+    private Internal\Scope $scope;
+    private ?Container $parent = null;
 
     /**
      * Container constructor.
      */
-    public function __construct(Config $config = new Config())
-    {
+    public function __construct(
+        private Config $config = new Config(),
+    ) {
         $constructor = new Internal\Registry($config, [
             'state' => new Internal\State(),
         ]);
@@ -141,6 +143,9 @@ final class Container implements
         return $this->container->has($id);
     }
 
+    /**
+     * @deprecated
+     */
     public function runScope(array $bindings, callable $scope): mixed
     {
         $binds = &$this->state->bindings;
@@ -167,6 +172,26 @@ final class Container implements
             foreach ($cleanup as $alias) {
                 unset($binds[$alias]);
             }
+        }
+    }
+
+    public function scope(callable $closure, array $bindings = [], ?string $name = null): mixed
+    {
+        $container = new self($this->config);
+        $container->setParent($this);
+
+        try {
+            $container->scope->setUpScope($bindings, $name);
+
+            // todo replace
+            // return ContainerScope::runScope($container, $closure);
+            return $container->invoke($closure);
+        } finally {
+            // todo finalizer?
+            $container->destruct();
+            $link = \WeakReference::create($container);
+            unset($container);
+            \assert($link->get() === null);
         }
     }
 
@@ -231,5 +256,17 @@ final class Container implements
     public function hasInjector(string $class): bool
     {
         return $this->binder->hasInjector($class);
+    }
+
+    public function destruct(): void
+    {
+        $this->parent = null;
+        $this->destructInternal();
+    }
+
+    private function setParent(self $parent): void
+    {
+        $this->parent = $parent;
+        $this->scope->setParent($parent);
     }
 }

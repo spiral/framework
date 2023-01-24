@@ -8,7 +8,6 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectableInterface;
-use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 
 /**
