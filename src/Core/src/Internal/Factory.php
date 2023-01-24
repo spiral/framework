@@ -71,7 +71,7 @@ final class Factory implements FactoryInterface
             try {
                 $this->tracer->push(false, action: 'jump to parent scope');
                 return $parent->make($alias, $parameters, $context);
-            // } catch (\Throwable $e) {
+                // } catch (\Throwable $e) {
             //     $this->tracer->pop(false);
             //     throw $e;
             } finally {
