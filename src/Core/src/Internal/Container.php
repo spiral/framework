@@ -40,8 +40,7 @@ final class Container implements ContainerInterface
      * @param class-string<T>|string|Autowire $id
      * @param string|null $context Call context.
      *
-     * @return T
-     * @psalm-return ($id is class-string ? T : mixed)
+     * @return ($id is class-string ? T : mixed)
      *
      * @throws ContainerException
      * @throws \Throwable

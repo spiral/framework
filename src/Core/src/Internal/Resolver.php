@@ -91,6 +91,7 @@ final class Resolver implements ResolverInterface
             $name = $parameter->getName();
 
             if (($positional || $variadic) && $key !== null) {
+                /** @psalm-suppress ReferenceReusedFromConfusingScope */
                 $value = \array_shift($arguments);
             } elseif ($key === null || !\array_key_exists($name, $arguments)) {
                 if ($parameter->isOptional()) {

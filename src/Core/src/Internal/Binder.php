@@ -54,7 +54,7 @@ final class Binder implements BinderInterface
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
      * (will be constructed only once), function array or Closure (executed only once call).
      *
-     * @psalm-param TResolver|object $resolver
+     * @param TResolver|object $resolver
      */
     public function bindSingleton(string $alias, string|array|callable|object $resolver): void
     {
@@ -68,9 +68,6 @@ final class Binder implements BinderInterface
         $this->state->bindings[$alias] = [$resolver, true];
     }
 
-    /**
-     * Check if alias points to constructed instance (singleton).
-     */
     public function hasInstance(string $alias): bool
     {
         if (!$this->container->has($alias)) {
@@ -78,7 +75,7 @@ final class Binder implements BinderInterface
         }
         $bindings = &$this->state->bindings;
 
-        while (isset($bindings[$alias]) && \is_string($bindings[$alias])) {
+        while (\is_string($bindings[$alias] ?? null)) {
             //Checking alias tree
             $alias = $bindings[$alias];
         }
@@ -91,14 +88,6 @@ final class Binder implements BinderInterface
         unset($this->state->bindings[$alias]);
     }
 
-    /**
-     * Bind class or class interface to the injector source (InjectorInterface).
-     *
-     * @template TClass
-     *
-     * @param class-string<TClass> $class
-     * @param class-string<InjectorInterface<TClass>> $injector
-     */
     public function bindInjector(string $class, string $injector): void
     {
         $this->state->injectors[$class] = $injector;

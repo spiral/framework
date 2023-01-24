@@ -136,7 +136,7 @@ final class Factory implements FactoryInterface
      * Automatically create class.
      * Object will be cached if the $arguments list is empty.
      *
-     * @param class-string $class
+     * @psalm-assert class-string $class
      *
      * @throws AutowireException
      * @throws \Throwable
@@ -235,7 +235,10 @@ final class Factory implements FactoryInterface
                     );
                 }
 
-                /** @var InjectorInterface<TObject> $injectorInstance */
+                /**
+                 * @var InjectorInterface<TObject> $injectorInstance
+                 * @psalm-suppress RedundantCondition
+                 */
                 $instance = $injectorInstance->createInjection($reflection, $context);
                 if (!$reflection->isInstance($instance)) {
                     throw new InjectionException(

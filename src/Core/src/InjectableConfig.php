@@ -9,11 +9,14 @@ use Spiral\Core\Exception\ConfigException;
 
 /**
  * Generic implementation of array based configuration.
+ *
+ * @implements \IteratorAggregate<array-key, mixed>
+ * @implements \ArrayAccess<array-key, mixed>
  */
 abstract class InjectableConfig implements InjectableInterface, \IteratorAggregate, \ArrayAccess
 {
     /**
-     * @var class-string<\Spiral\Core\ConfigsInterface>
+     * @var class-string<ConfigsInterface>
      */
     public const INJECTOR = ConfigsInterface::class;
 

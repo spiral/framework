@@ -124,13 +124,12 @@ final class Container implements
      * @param class-string<T>|string|Autowire $id
      * @param string|null $context Call context.
      *
-     * @return T
-     * @psalm-return ($id is class-string ? T : mixed)
+     * @return ($id is class-string ? T : mixed)
      *
      * @throws ContainerException
      * @throws \Throwable
      *
-     * @psalm-suppress PossiblyInvalidArgument, PossiblyInvalidCast
+     * @psalm-suppress InvalidArgument, InvalidCast
      */
     public function get(string|Autowire $id, string $context = null): mixed
     {
@@ -215,6 +214,9 @@ final class Container implements
 
     /**
      * Bind class or class interface to the injector source (InjectorInterface).
+     *
+     * Todo: remove suppression after {@link https://github.com/vimeo/psalm/issues/8298} fixing.
+     * @psalm-suppress InvalidArgument,InvalidCast
      */
     public function bindInjector(string $class, string $injector): void
     {

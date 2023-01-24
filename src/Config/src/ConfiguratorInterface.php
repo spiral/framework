@@ -10,6 +10,9 @@ use Spiral\Core\Exception\ConfiguratorException;
 
 /**
  * Provides ability to modify configs values in runtime.
+ *
+ * @template TClass of object
+ * @extends ConfigsInterface<TClass>
  */
 interface ConfiguratorInterface extends ConfigsInterface
 {
