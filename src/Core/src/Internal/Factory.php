@@ -57,10 +57,23 @@ final class Factory implements FactoryInterface
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
         if (!isset($this->state->bindings[$alias])) {
-            $this->tracer->push(false, action: 'autowire', alias: $alias, context: $context);
+            $parent = $this->scope->getParent();
+            if ($parent === null) {
+                $this->tracer->push(false, action: 'autowire', alias: $alias, context: $context);
+                try {
+                    //No direct instructions how to construct class, make is automatically
+                    return $this->autowire($alias, $parameters, $context);
+                } finally {
+                    $this->tracer->pop(false);
+                }
+            }
+
             try {
-                //No direct instructions how to construct class, make is automatically
-                return $this->autowire($alias, $parameters, $context);
+                $this->tracer->push(false, action: 'jump to parent scope');
+                return $parent->make($alias, $parameters, $context);
+            // } catch (\Throwable $e) {
+            //     $this->tracer->pop(false);
+            //     throw $e;
             } finally {
                 $this->tracer->pop(false);
             }
