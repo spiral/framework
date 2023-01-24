@@ -6,6 +6,7 @@
     `Spiral\Scaffolder\Command\BootloaderCommand`, `Spiral\Scaffolder\Command\CommandCommand`, 
     `Spiral\Scaffolder\Command\ConfigCommand`, `Spiral\Scaffolder\Command\ControllerCommand`,
     `Spiral\Scaffolder\Command\JobHandlerCommand`, `Spiral\Scaffolder\Command\MiddlewareCommand` console commands.
+  - Added `defineInterceptors` method in `Spiral\Bootloader\DomainBootloader` class.  
 
 ## 3.5.0 - 2022-12-23
 - **Medium Impact Changes**
