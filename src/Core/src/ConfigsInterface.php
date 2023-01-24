@@ -10,6 +10,9 @@ use Spiral\Core\Exception\ConfiguratorException;
 /**
  * Provides array based configuration for specified config section. In addition configurator
  * interface is responsible for contextual config injections.
+ *
+ * @template TClass of object
+ * @extends InjectorInterface<TClass>
  */
 interface ConfigsInterface extends InjectorInterface
 {

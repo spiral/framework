@@ -2,15 +2,17 @@
 
 namespace Spiral\Core\Internal;
 
+use Spiral\Core\Container\Autowire;
+
 /**
- * @psalm-type TResolver = class-string|non-empty-string|callable|array{class-string, non-empty-string}
+ * @psalm-type TResolver = class-string|non-empty-string|callable|array{class-string, non-empty-string}|Autowire
  *
  * @internal
  */
 final class State
 {
     /**
-     * @var array<non-empty-string, string|object|array{TResolver, bool}>
+     * @var array<string, string|object|array{TResolver, bool}>
      */
     public array $bindings = [];
 
