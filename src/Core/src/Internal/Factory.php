@@ -105,8 +105,10 @@ final class Factory implements FactoryInterface
             }
 
             if (\is_string($binding)) {
-                //Binding is pointing to something else
-                return $this->make($binding, $parameters, $context);
+                return $binding === $alias
+                    ? $this->autowire($alias, $parameters, $context)
+                    //Binding is pointing to something else
+                    : $this->make($binding, $parameters, $context);
             }
 
             unset($this->state->bindings[$alias]);
