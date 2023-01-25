@@ -39,9 +39,7 @@ final class Container implements
     InvokerInterface,
     ScopeInterface
 {
-    use DestructorTrait {
-        destruct as private destructInternal;
-    }
+    use DestructorTrait;
 
     private Internal\State $state;
     private ResolverInterface|Internal\Resolver $resolver;
@@ -50,7 +48,6 @@ final class Container implements
     private BinderInterface|Internal\Binder $binder;
     private InvokerInterface|Internal\Invoker $invoker;
     private Internal\Scope $scope;
-    private ?Container $parent = null;
 
     /**
      * Container constructor.
@@ -258,15 +255,8 @@ final class Container implements
         return $this->binder->hasInjector($class);
     }
 
-    public function destruct(): void
-    {
-        $this->parent = null;
-        $this->destructInternal();
-    }
-
     private function setParent(self $parent): void
     {
-        $this->parent = $parent;
         $this->scope->setParent($parent);
     }
 }
