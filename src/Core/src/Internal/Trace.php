@@ -43,7 +43,7 @@ final class Trace implements \Stringable
             $item instanceof \UnitEnum => $item::class . "::$item->name",
             \is_object($item) => 'instance of ' . $item::class,
             \is_array($item) => $this->renderArray($item),
-            default => \gettype($item),
+            default => \get_debug_type($item),
         };
     }
 

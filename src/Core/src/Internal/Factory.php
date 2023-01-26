@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
@@ -69,11 +70,20 @@ final class Factory implements FactoryInterface
             }
 
             try {
-                $this->tracer->push(false, action: 'jump to parent scope');
+                $this->tracer->push(false, ...[
+                    'current scope' => $this->scope->getScopeName(),
+                    'jump to parent scope' => $this->scope->getParentScope()->getScopeName(),
+                ]);
                 return $parent->make($alias, $parameters, $context);
-                // } catch (\Throwable $e) {
-            //     $this->tracer->pop(false);
-            //     throw $e;
+            } catch (ContainerExceptionInterface $e) {
+                $className = match (true) {
+                    $e instanceof NotFoundException => NotFoundException::class,
+                    default => ContainerException::class,
+                };
+                throw new $className($this->tracer->combineTraceMessage(\sprintf(
+                    'Can\'t resolve `%s`.',
+                    $alias,
+                )), previous: $e);
             } finally {
                 $this->tracer->pop(false);
             }
@@ -86,6 +96,7 @@ final class Factory implements FactoryInterface
                 false,
                 action: 'resolve from binding',
                 alias: $alias,
+                scope: $this->scope->getScopeName(),
                 context: $context,
                 binding: $binding,
             );

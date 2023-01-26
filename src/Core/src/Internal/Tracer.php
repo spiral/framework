@@ -23,10 +23,8 @@ final class Tracer implements \Stringable
 
     /**
      * @param string $header Message before stack list
-     * @param bool $lastBlock Generate trace list only for last block
-     * @param bool $clear Remove touched trace list
      */
-    public function combineTraceMessage(string $header, bool $lastBlock = false, bool $clear = false): string
+    public function combineTraceMessage(string $header): string
     {
         return "$header\n$this";
     }

@@ -24,8 +24,11 @@ final class Scope
     private ContainerInterface $container;
     private ResolverInterface $resolver;
     private Tracer $tracer;
+
     private ?string $name = null;
+
     private ?\Spiral\Core\Container $parent = null;
+    private ?self $parentScope = null;
 
     public function __construct(Registry $constructor)
     {
@@ -53,9 +56,10 @@ final class Scope
         return $this->name;
     }
 
-    public function setParent(\Spiral\Core\Container $parent)
+    public function setParent(\Spiral\Core\Container $parent, self $parentScope): void
     {
         $this->parent = $parent;
+        $this->parentScope = $parentScope;
     }
 
     public function getParent(): ?\Spiral\Core\Container
@@ -63,9 +67,15 @@ final class Scope
         return $this->parent;
     }
 
+    public function getParentScope(): ?self
+    {
+        return $this->parentScope;
+    }
+
     public function destruct(): void
     {
         $this->parent = null;
+        $this->parentScope = null;
         $this->destructInternal();
     }
 }

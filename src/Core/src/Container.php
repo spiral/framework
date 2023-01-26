@@ -257,6 +257,6 @@ final class Container implements
 
     private function setParent(self $parent): void
     {
-        $this->scope->setParent($parent);
+        $this->scope->setParent($parent, $parent->scope);
     }
 }
