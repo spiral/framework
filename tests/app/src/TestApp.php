@@ -29,6 +29,7 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         // Validation, filtration, security
         Bootloader\Security\EncrypterBootloader::class,
         \Spiral\Validation\Bootloader\ValidationBootloader::class,
+        \Spiral\Validator\Bootloader\ValidatorBootloader::class,
         Bootloader\Security\FiltersBootloader::class,
         Bootloader\Security\GuardBootloader::class,
 

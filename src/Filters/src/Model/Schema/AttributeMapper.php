@@ -42,21 +42,16 @@ final class AttributeMapper
                     $this->setValue($filter, $property, $attribute->getValue($input, $property));
                     $schema[$property->getName()] = $attribute->getSchema($property);
                 } elseif ($attribute instanceof NestedFilter) {
+                    $prefix = $attribute->prefix ?? $property->name;
                     try {
                         $value = $this->provider->createFilter(
                             $attribute->class,
-                            $attribute->prefix ?
-                                $input->withPrefix($attribute->prefix) :
-                                $input->withPrefix($property->name)
+                            $input->withPrefix($prefix)
                         );
 
                         $this->setValue($filter, $property, $value);
                     } catch (ValidationException $e) {
-                        if ($attribute->prefix) {
-                            $errors[$attribute->prefix] = $e->errors;
-                        } else {
-                            $errors = \array_merge($errors, $e->errors);
-                        }
+                        $errors[$prefix] = $e->errors;
                     }
 
                     $schema[$property->getName()] = $attribute->getSchema($property);
