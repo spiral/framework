@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core\Scope;
 
 use Spiral\Core\Container;
+use Spiral\Tests\Core\Scope\Stub\Factory;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerCarrier;
@@ -30,6 +31,21 @@ final class SideEffectTest extends BaseTest
                 // from the $c1 container
                 self::assertInstanceOf(FileLogger::class, $logger);
             });
+        });
+    }
+
+    public function testFactory(): void
+    {
+        $root = new Container();
+        $root->bind(LoggerInterface::class, KVLogger::class);
+
+        $root->scope(static function (Container $c1) {
+            $c1->bind(LoggerInterface::class, FileLogger::class);
+
+            self::assertInstanceOf(
+                LoggerInterface::class,
+                $c1->get(Factory::class)->make(LoggerInterface::class),
+            );
         });
     }
 }

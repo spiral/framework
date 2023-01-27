@@ -217,7 +217,7 @@ class ExceptionsTest extends TestCase
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                scope: null
+                scope: 'root'
                 context: 'class'
                 binding: [
                   0: [
@@ -239,7 +239,7 @@ class ExceptionsTest extends TestCase
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                scope: null
+                scope: 'root'
                 context: 'class'
                 binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
                 - action: 'autowire'
@@ -271,7 +271,7 @@ class ExceptionsTest extends TestCase
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                scope: null
+                scope: 'root'
                 context: 'class'
                 binding: [
                   0: static function (Psr\Container\ContainerInterface $container),

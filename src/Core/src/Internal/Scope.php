@@ -25,7 +25,7 @@ final class Scope
     private ResolverInterface $resolver;
     private Tracer $tracer;
 
-    private ?string $name = null;
+    private ?string $name = 'root';
 
     private ?\Spiral\Core\Container $parent = null;
     private ?self $parentScope = null;

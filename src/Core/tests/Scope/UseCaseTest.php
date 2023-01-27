@@ -89,9 +89,6 @@ final class UseCaseTest extends BaseTest
      * If a nested scope does not have its own bindings, it will resolve dependencies from the parent.
      * When a component that cannot be resolved in the current scope, Container looks to the parent scope to see
      * if the dependency can be resolved there.
-     * todo next test:
-     * When the resolve operation has moved from a child scope to the parent, any further dependencies will be resolved
-     * in the parent scope.
      */
     public function testChildContainerResolvesDepsFromParent(): void
     {
