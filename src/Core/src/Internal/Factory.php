@@ -254,7 +254,6 @@ final class Factory implements FactoryInterface
         array $parameters,
         \ReflectionClass &$reflection = null,
     ): object {
-
         $class = $ctx->class;
         try {
             $ctx->reflection = $reflection = new \ReflectionClass($class);
