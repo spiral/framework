@@ -6,6 +6,7 @@ namespace Spiral\Core\Internal;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectorInterface;
@@ -18,6 +19,7 @@ use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\FactoryInterface;
+use Spiral\Core\Internal\Factory\Ctx;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
 use WeakReference;
@@ -63,7 +65,10 @@ final class Factory implements FactoryInterface
                 $this->tracer->push(false, action: 'autowire', alias: $alias, context: $context);
                 try {
                     //No direct instructions how to construct class, make is automatically
-                    return $this->autowire($alias, $parameters, $context);
+                    return $this->autowire(
+                        new Ctx(alias: $alias, class: $alias, parameter: $context),
+                        $parameters,
+                    );
                 } finally {
                     $this->tracer->pop(false);
                 }
@@ -101,13 +106,14 @@ final class Factory implements FactoryInterface
                 binding: $binding,
             );
             $this->tracer->push(true);
+            $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context);
 
             if (\is_object($binding)) {
                 if ($binding::class === WeakReference::class) {
                     if (($avoidCache || $binding->get() === null) && \class_exists($alias)) {
                         try {
                             $this->tracer->push(false, alias: $alias, source: WeakReference::class, context: $context);
-                            $object = $this->createInstance($alias, $parameters, $context);
+                            $object = $this->createInstance($ctx, $parameters);
                             if ($avoidCache) {
                                 return $object;
                             }
@@ -124,40 +130,38 @@ final class Factory implements FactoryInterface
                     }
                     return $binding->get();
                 }
-                //When binding is instance, assuming singleton
+
+                // When binding is instance, assuming singleton
+                $ctx->class = $binding::class;
                 return $avoidCache
-                    ? $this->createInstance($binding::class, $parameters, $context)
+                    ? $this->createInstance($ctx, $parameters)
                     : $binding;
             }
 
             if (\is_string($binding)) {
+                $ctx->class = $binding;
                 return $binding === $alias
-                    ? $this->autowire($alias, $parameters, $context)
+                    ? $this->autowire($ctx, $parameters)
                     //Binding is pointing to something else
                     : $this->make($binding, $parameters, $context);
             }
 
+            if ($binding[1] === true) {
+                $ctx->singleton = true;
+            }
             unset($this->state->bindings[$alias]);
             try {
-                $instance = $binding[0] === $alias
-                    ? $this->autowire($alias, $parameters, $context)
-                    : $this->evaluateBinding($alias, $binding[0], $parameters, $context);
+                return $binding[0] === $alias
+                    ? $this->autowire($ctx, $parameters)
+                    : $this->evaluateBinding($ctx, $binding[0], $parameters);
             } finally {
                 /** @psalm-var class-string $alias */
-                $this->state->bindings[$alias] = $binding;
+                $this->state->bindings[$alias] ??= $binding;
             }
         } finally {
             $this->tracer->pop(true);
             $this->tracer->pop(false);
         }
-
-        if ($binding[1]) {
-            // Indicates singleton
-            /** @psalm-var class-string $alias */
-            $this->state->bindings[$alias] = $instance;
-        }
-
-        return $instance;
     }
 
     /**
@@ -169,27 +173,27 @@ final class Factory implements FactoryInterface
      * @throws AutowireException
      * @throws \Throwable
      */
-    private function autowire(string $class, array $arguments, string $context = null): object
+    private function autowire(Ctx $ctx, array $arguments): object
     {
-        if (!(\class_exists($class) || (
-            \interface_exists($class)
+        if (!(\class_exists($ctx->class) || (
+            \interface_exists($ctx->class)
                 &&
-                (isset($this->state->injectors[$class]) || $this->binder->hasInjector($class))
+                (isset($this->state->injectors[$ctx->class]) || $this->binder->hasInjector($ctx->class))
         ))
         ) {
             throw new NotFoundException($this->tracer->combineTraceMessage(\sprintf(
                 'Can\'t resolve `%s`: undefined class or binding `%s`.',
                 $this->tracer->getRootAlias(),
-                $class
+                $ctx->class,
             )));
         }
 
         // automatically create instance
-        $instance = $this->createInstance($class, $arguments, $context);
+        $instance = $this->createInstance($ctx, $arguments);
 
         // apply registration functions to created instance
         return $arguments === []
-            ? $this->registerInstance($instance)
+            ? $this->registerInstance($ctx, $instance)
             : $instance;
     }
 
@@ -200,29 +204,36 @@ final class Factory implements FactoryInterface
      * @throws \Throwable
      */
     private function evaluateBinding(
-        string $alias,
+        Ctx $ctx,
         mixed $target,
-        array $parameters,
-        string $context = null
+        array $arguments,
     ): mixed {
         if (\is_string($target)) {
             // Reference
-            return $this->make($target, $parameters, $context);
+            $instance = $this->make($target, $arguments, $ctx->parameter);
+        } elseif ($target instanceof Autowire) {
+            $instance = $target->resolve($this, $arguments);
+        } else {
+            try {
+                $instance = $this->invoker->invoke($target, $arguments);
+            } catch (NotCallableException $e) {
+                throw new ContainerException(
+                    $this->tracer->combineTraceMessage(\sprintf('Invalid binding for `%s`.', $ctx->alias)),
+                    $e->getCode(),
+                    $e,
+                );
+            }
         }
 
-        if ($target instanceof Autowire) {
-            return $target->resolve($this, $parameters);
-        }
-
-        try {
-            return $this->invoker->invoke($target, $parameters);
-        } catch (NotCallableException $e) {
-            throw new ContainerException(
-                $this->tracer->combineTraceMessage(\sprintf('Invalid binding for `%s`.', $alias)),
-                $e->getCode(),
-                $e,
-            );
-        }
+        return \is_object($instance) && $arguments === []
+            ? $this->registerInstance($ctx, $instance)
+            : $instance;
+        // if ($binding[1] || (\is_object($instance) && $this->isSingleton($instance, new ReflectionClass($instance)))) {
+        //     // Indicates singleton
+        //     /** @psalm-var class-string $alias */
+        //     $this->state->bindings[$alias] = $instance;
+        // }
+        // return $instance;
     }
 
     /**
@@ -238,10 +249,15 @@ final class Factory implements FactoryInterface
      * @throws ContainerException
      * @throws \Throwable
      */
-    private function createInstance(string $class, array $parameters, string $context = null): object
-    {
+    private function createInstance(
+        Ctx $ctx,
+        array $parameters,
+        \ReflectionClass &$reflection = null,
+    ): object {
+
+        $class = $ctx->class;
         try {
-            $reflection = new \ReflectionClass($class);
+            $ctx->reflection = $reflection = new \ReflectionClass($class);
         } catch (\ReflectionException $e) {
             throw new ContainerException($e->getMessage(), $e->getCode(), $e);
         }
@@ -267,7 +283,7 @@ final class Factory implements FactoryInterface
                  * @var InjectorInterface<TObject> $injectorInstance
                  * @psalm-suppress RedundantCondition
                  */
-                $instance = $injectorInstance->createInjection($reflection, $context);
+                $instance = $injectorInstance->createInjection($reflection, $ctx->parameter);
                 if (!$reflection->isInstance($instance)) {
                     throw new InjectionException(
                         \sprintf(
@@ -341,19 +357,34 @@ final class Factory implements FactoryInterface
      * @template TObject of object
      *
      * @param TObject $instance Created object.
+     * @param \ReflectionClass<TObject> $reflection
      *
      * @return TObject
      */
-    private function registerInstance(object $instance): object
+    private function registerInstance(Ctx $ctx, object $instance): object
     {
         //Declarative singletons
-        if ($instance instanceof SingletonInterface) {
-            $alias = $instance::class;
-            if (!isset($this->state->bindings[$alias])) {
-                $this->state->bindings[$alias] = $instance;
-            }
+        if ($this->isSingleton($ctx, $instance)) {
+            $this->state->bindings[$ctx->alias] = $instance;
         }
 
         return $instance;
+    }
+
+    /**
+     * Check the class was configured as a singleton.
+     */
+    private function isSingleton(Ctx $ctx, object $instance): bool
+    {
+        if ($ctx->singleton === true) {
+            return true;
+        }
+
+        $ctx->reflection ??= new \ReflectionClass($instance);
+        if ($ctx->reflection->implementsInterface(SingletonInterface::class)) {
+            return true;
+        }
+
+        return $ctx->reflection->getAttributes(Singleton::class) !== [];
     }
 }
