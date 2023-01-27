@@ -55,7 +55,7 @@ class ScopesTest extends TestCase
         $this->assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
             'other'  => new SampleClass()
-        ], function () use ($c) {
+        ], function ($c) {
             $this->assertSame('b', $c->get('bucket')->getName());
             $this->assertTrue($c->has('other'));
 
@@ -77,7 +77,7 @@ class ScopesTest extends TestCase
         $this->assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
             'other'  => new SampleClass()
-        ], function () use ($c) {
+        ], function ($c) {
             $this->assertSame('b', $c->get('bucket')->getName());
             $this->assertTrue($c->has('other'));
 
@@ -100,17 +100,17 @@ class ScopesTest extends TestCase
 
     public function testContainerInScope(): void
     {
-        $container = new Container();
+        $root = new Container();
 
-        $this->assertSame(
-            $container,
-            ContainerScope::runScope($container, static fn (ContainerInterface $container) => $container)
-        );
+        ContainerScope::runScope($root, static function (Container $parent) use ($root) {
+            // ::runScope() passes the same container into closure as the first argument
+            self::assertSame($parent, $root);
 
-        $result = ContainerScope::runScope($container, static function (Container $container) {
-            return $container->runScope([], static fn (Container $container) => $container);
+            return $parent->runScope([], static function (Container $c) use ($root, $parent) {
+                // Nested container isn't the same as the parent container
+                self::assertNotSame($root, $c);
+                self::assertNotSame($parent, $c);
+            });
         });
-
-        $this->assertSame($container, $result);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
+use Fiber;
 use Psr\Container\ContainerInterface;
 use Throwable;
 
@@ -34,7 +35,20 @@ final class ContainerScope
         [$previous, self::$container] = [self::$container, $container];
 
         try {
-            return $scope(self::$container);
+            if (Fiber::getCurrent() === null) {
+                return $scope(self::$container);
+            }
+
+            // Wrap scope into fiber
+            $fiber = new Fiber(static fn () => $scope(self::$container));
+            $value = $fiber->start();
+            while (!$fiber->isTerminated()) {
+                self::$container = $previous;
+                $resume = Fiber::suspend($value);
+                self::$container = $container;
+                $value = $fiber->resume($resume);
+            }
+            return $fiber->getReturn();
         } finally {
             self::$container = $previous;
         }
