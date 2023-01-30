@@ -6,6 +6,7 @@ namespace Spiral\Core\Internal;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Exception\Scope\NamedScopeDuplicationException;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
 
@@ -44,6 +45,15 @@ final class Scope
 
     public function setUpScope(array $bindings, ?string $name = null)
     {
+        // Check a scope with the same name is not already registered
+        if ($name !== null) {
+            $parent = $this;
+            while ($parent->parentScope !== null) {
+                $parent = $parent->parentScope;
+                $parent->name !== $name ?: throw new NamedScopeDuplicationException($name);
+            }
+        }
+
         $this->name = $name;
         // todo: more bindings from named scope?
         foreach ($bindings as $alias => $resolver) {
