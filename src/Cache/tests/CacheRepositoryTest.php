@@ -6,6 +6,7 @@ namespace Spiral\Tests\Cache;
 
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\SimpleCache\CacheInterface;
 use Spiral\Cache\CacheRepository;
 use Spiral\Cache\Event\CacheHit;
 use Spiral\Cache\Event\CacheMissed;
@@ -116,5 +117,132 @@ final class CacheRepositoryTest extends TestCase
 
         $repository->setMultiple(['test' => [], 'test2' => []]);
         $repository->deleteMultiple(['test', 'test2']);
+    }
+
+    /**
+     * @dataProvider keysDataProvider
+     */
+    public function testGet(string $expectedKey, ?string $prefix = null): void
+    {
+        $storage = $this->createMock(CacheInterface::class);
+        $storage
+            ->expects($this->once())
+            ->method('get')
+            ->with($expectedKey)
+            ->willReturn(null);
+
+        $repository = new CacheRepository(storage: $storage, prefix: $prefix);
+
+        $repository->get('data');
+    }
+
+    /**
+     * @dataProvider keysDataProvider
+     */
+    public function testSet(string $expectedKey, ?string $prefix = null): void
+    {
+        $storage = $this->createMock(CacheInterface::class);
+        $storage
+            ->expects($this->once())
+            ->method('set')
+            ->with($expectedKey, 'foo')
+            ->willReturn(true);
+
+        $repository = new CacheRepository(storage: $storage, prefix: $prefix);
+
+        $repository->set('data', 'foo');
+    }
+
+    /**
+     * @dataProvider keysDataProvider
+     */
+    public function testDelete(string $expectedKey, ?string $prefix = null): void
+    {
+        $storage = $this->createMock(CacheInterface::class);
+        $storage
+            ->expects($this->once())
+            ->method('delete')
+            ->with($expectedKey)
+            ->willReturn(true);
+
+        $repository = new CacheRepository(storage: $storage, prefix: $prefix);
+
+        $repository->delete('data');
+    }
+
+    /**
+     * @dataProvider keysDataProvider
+     */
+    public function testGetMultiple(string $expectedKey, ?string $prefix = null): void
+    {
+        $storage = $this->createMock(CacheInterface::class);
+        $storage
+            ->expects($this->once())
+            ->method('get')
+            ->with($expectedKey)
+            ->willReturn(null);
+
+        $repository = new CacheRepository(storage: $storage, prefix: $prefix);
+
+        $repository->getMultiple(['data']);
+    }
+
+    /**
+     * @dataProvider keysDataProvider
+     */
+    public function testSetMultiple(string $expectedKey, ?string $prefix = null): void
+    {
+        $storage = $this->createMock(CacheInterface::class);
+        $storage
+            ->expects($this->once())
+            ->method('set')
+            ->with($expectedKey, 'foo')
+            ->willReturn(true);
+
+        $repository = new CacheRepository(storage: $storage, prefix: $prefix);
+
+        $repository->setMultiple(['data' => 'foo']);
+    }
+
+    /**
+     * @dataProvider keysDataProvider
+     */
+    public function testDeleteMultiple(string $expectedKey, ?string $prefix = null): void
+    {
+        $storage = $this->createMock(CacheInterface::class);
+        $storage
+            ->expects($this->once())
+            ->method('delete')
+            ->with($expectedKey)
+            ->willReturn(true);
+
+        $repository = new CacheRepository(storage: $storage, prefix: $prefix);
+
+        $repository->deleteMultiple(['data']);
+    }
+
+    /**
+     * @dataProvider keysDataProvider
+     */
+    public function testHas(string $expectedKey, ?string $prefix = null): void
+    {
+        $storage = $this->createMock(CacheInterface::class);
+        $storage
+            ->expects($this->once())
+            ->method('has')
+            ->with($expectedKey)
+            ->willReturn(true);
+
+        $repository = new CacheRepository(storage: $storage, prefix: $prefix);
+
+        $repository->has('data');
+    }
+
+    public function keysDataProvider(): \Traversable
+    {
+        yield ['data'];
+        yield ['data', ''];
+        yield ['data', null];
+        yield ['user_data', 'user_'];
     }
 }

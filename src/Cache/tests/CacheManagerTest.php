@@ -7,6 +7,7 @@ namespace Spiral\Tests\Cache;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Cache\CacheManager;
 use Spiral\Cache\Config\CacheConfig;
@@ -30,6 +31,11 @@ final class CacheManagerTest extends TestCase
             'default' => 'local',
             'aliases' => [
                 'user-data' => 'local',
+                'blog-data' => ['storage' => 'file', 'prefix' => 'blog_'],
+                'news-data' => ['storage' => 'file', 'prefix' => 'news_'],
+                'store-data' => ['storage' => 'file', 'prefix' => ''],
+                'order-data' => ['storage' => 'file', 'prefix' => null],
+                'delivery-data' => ['storage' => 'file']
             ],
             'typeAliases' => [
                 'array' => 'array-storage-class',
@@ -122,5 +128,95 @@ final class CacheManagerTest extends TestCase
 
         $this->assertSame($storage2, $this->manager->storage('file')->getStorage());
         $this->assertSame($storage2, $this->manager->storage('file')->getStorage());
+    }
+
+    public function testStorageShouldBeCreatedOnlyOnceWithDifferentPrefixes(): void
+    {
+        $storage = m::mock(CacheInterface::class);
+
+        $this->factory->shouldReceive('make')->once()->with('file-storage-class', [
+            'type' => 'file-storage-class',
+            'foo' => 'baz',
+        ])->andReturn($storage);
+
+        $blog = $this->manager->storage('blog-data');
+        $news = $this->manager->storage('news-data');
+
+        $this->assertSame($storage, $blog->getStorage());
+        $this->assertSame($storage, $news->getStorage());
+
+        $this->assertSame('blog_', (new \ReflectionProperty($blog, 'prefix'))->getValue($blog));
+        $this->assertSame('news_', (new \ReflectionProperty($news, 'prefix'))->getValue($news));
+    }
+
+    /**
+     * @dataProvider prefixesDataProvider
+     */
+    public function testGetStorageByAliasWithPrefix(string $alias, ?string $expectedPrefix): void
+    {
+        $storage = m::mock(CacheInterface::class);
+
+        $this->factory->shouldReceive('make')->once()->with('file-storage-class', [
+            'type' => 'file-storage-class',
+            'foo' => 'baz',
+        ])->andReturn($storage);
+
+        $repo = $this->manager->storage($alias);
+
+        $this->assertSame($storage, $repo->getStorage());
+        $this->assertSame($expectedPrefix, (new \ReflectionProperty($repo, 'prefix'))->getValue($repo));
+    }
+
+    public function testCacheRepositoryWithoutEventDispatcher(): void
+    {
+        $this->factory->shouldReceive('make')->once()->with('array-storage-class', [
+            'type' => 'array-storage-class',
+            'foo' => 'bar',
+        ])->andReturn(m::mock(CacheInterface::class));
+
+        $manager = new CacheManager(new CacheConfig([
+            'storages' => [
+                'test' => [
+                    'type' => 'array-storage-class',
+                    'foo' => 'bar',
+                ],
+            ],
+        ]), $this->factory);
+        $repository = $manager->storage('test');
+
+        $this->assertNull((new \ReflectionProperty($repository, 'dispatcher'))->getValue($repository));
+    }
+
+    public function testCacheRepositoryWithEventDispatcher(): void
+    {
+        $dispatcher = m::mock(EventDispatcherInterface::class);
+
+        $this->factory->shouldReceive('make')->once()->with('array-storage-class', [
+            'type' => 'array-storage-class',
+            'foo' => 'bar',
+        ])->andReturn(m::mock(CacheInterface::class));
+
+        $manager = new CacheManager(new CacheConfig([
+            'storages' => [
+                'test' => [
+                    'type' => 'array-storage-class',
+                    'foo' => 'bar',
+                ],
+            ],
+        ]), $this->factory, $dispatcher);
+        $repository = $manager->storage('test');
+
+        $this->assertSame(
+            $dispatcher,
+            (new \ReflectionProperty($repository, 'dispatcher'))->getValue($repository)
+        );
+    }
+
+    public function prefixesDataProvider(): \Traversable
+    {
+        yield ['blog-data', 'blog_'];
+        yield ['store-data', null];
+        yield ['order-data', null];
+        yield ['delivery-data', null];
     }
 }
