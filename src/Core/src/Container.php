@@ -11,6 +11,7 @@ use Spiral\Core\Container\InjectableInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
+use Spiral\Core\Exception\Scope\FinalizersException;
 use Spiral\Core\Internal\Common\DestructorTrait;
 
 /**
@@ -141,7 +142,7 @@ final class Container implements
     }
 
     /**
-     * @deprecated
+     * @deprecated use {@see scope()} instead.
      */
     public function runScope(array $bindings, callable $scope): mixed
     {
@@ -162,26 +163,29 @@ final class Container implements
      */
     public function scope(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
     {
+        // Open scope
         $container = new self($this->config);
-        $container->setParent($this);
-
         try {
+            $container->setParent($this);
             $container->scope->setUpScope($bindings, $name);
 
             return ContainerScope::runScope(
                 $container,
-                $autowire
-                    ? static fn (self $container): mixed => $container->invoke($closure)
-                    : $closure,
+                static function (self $container) use ($autowire, $closure): mixed {
+                    try {
+                        return $autowire
+                            ? $container->invoke($closure)
+                            : $closure($container);
+                    } finally {
+                        $container->closeScope();
+                    }
+                }
             );
         } finally {
-            // todo finalizer?
-            $container->destruct();
-
-            // Check the container has not been leaked.
+            // Check the container has not been leaked
             $link = \WeakReference::create($container);
             unset($container);
-            \assert($link->get() === null);
+            \assert($link->get() === null, "Scope Container shouldn't be leaked.");
         }
     }
 
@@ -251,5 +255,33 @@ final class Container implements
     private function setParent(self $parent): void
     {
         $this->scope->setParent($parent, $parent->scope);
+    }
+
+    /**
+     * Execute finalizers and destruct the container.
+     *
+     * @throws FinalizersException
+     */
+    private function closeScope(): void
+    {
+        $scopeName = $this->scope->getScopeName();
+
+        // Run finalizers
+        $errors = [];
+        foreach ($this->state->finalizers as $finalizer) {
+            try {
+                $this->invoker->invoke($finalizer);
+            } catch (\Throwable $e) {
+                $errors[] = $e;
+            }
+        }
+
+        // Destroy the container
+        $this->destruct();
+
+        // Throw collected errors
+        if ($errors !== []) {
+            throw new FinalizersException($scopeName, $errors);
+        }
     }
 }

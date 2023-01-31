@@ -6,6 +6,7 @@ namespace Spiral\Core\Internal;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Attribute\Finalize;
 use Spiral\Core\Attribute\Scope as ScopeAttribute;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
@@ -407,9 +408,17 @@ final class Factory implements FactoryInterface
      */
     private function registerInstance(Ctx $ctx, object $instance): object
     {
+        $ctx->reflection ??= new \ReflectionClass($instance);
+
         //Declarative singletons
         if ($this->isSingleton($ctx, $instance)) {
             $this->state->bindings[$ctx->alias] = $instance;
+        }
+
+        // Register finalizer
+        $finalizer = $this->getFinalizer($ctx, $instance);
+        if ($finalizer !== null) {
+            $this->state->finalizers[] = $finalizer;
         }
 
         return $instance;
@@ -424,11 +433,21 @@ final class Factory implements FactoryInterface
             return true;
         }
 
-        $ctx->reflection ??= new \ReflectionClass($instance);
         if ($ctx->reflection->implementsInterface(SingletonInterface::class)) {
             return true;
         }
 
         return $ctx->reflection->getAttributes(Singleton::class) !== [];
+    }
+
+    private function getFinalizer(Ctx $ctx, object $instance): ?callable
+    {
+        /** @var Finalize|null $attribute */
+        $attribute = ($ctx->reflection->getAttributes(Finalize::class)[0] ?? null)?->newInstance();
+        if ($attribute === null) {
+            return null;
+        }
+
+        return [$instance, $attribute->method];
     }
 }

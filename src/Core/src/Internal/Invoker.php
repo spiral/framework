@@ -55,7 +55,7 @@ final class Invoker implements InvokerInterface
             // Invoking factory method with resolved arguments
             return $method->invokeArgs(
                 $resolver,
-                $this->resolver->resolveArguments($method, $parameters)
+                $this->resolver->resolveArguments($method, $parameters),
             );
         }
 
