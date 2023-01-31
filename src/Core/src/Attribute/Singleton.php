@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Attribute;
 
+/**
+ * Mark class as singleton.
+ */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Singleton
+final class Singleton
 {
 }

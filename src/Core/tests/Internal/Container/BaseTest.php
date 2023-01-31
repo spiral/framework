@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Config;
+use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Container;
-use Spiral\Core\Internal\Registry;
 use Spiral\Core\Internal\State;
 
 abstract class BaseTest extends TestCase

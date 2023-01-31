@@ -127,7 +127,7 @@ final class ContainerScopeFibersTest extends BaseTest
                             self::assertSame($c3, ContainerScope::getContainer());
                         }
                         return $resource;
-                    }
+                    },
                 );
             });
             self::assertFalse($c1->has('foo'));

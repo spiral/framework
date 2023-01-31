@@ -16,7 +16,7 @@ use Spiral\Core\Exception\Resolver\MissingRequiredArgumentException;
 use Spiral\Core\Exception\Resolver\PositionalArgumentException;
 use Spiral\Core\Exception\Resolver\UnknownParameterException;
 use Spiral\Core\Exception\Resolver\ValidationException;
-use Spiral\Core\Internal\Registry;
+use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\State;
 use Spiral\Core\ResolverInterface;

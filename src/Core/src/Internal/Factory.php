@@ -21,6 +21,8 @@ use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\Exception\Scope\BadScopeException;
 use Spiral\Core\FactoryInterface;
+use Spiral\Core\Internal\Common\DestructorTrait;
+use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Factory\Ctx;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;

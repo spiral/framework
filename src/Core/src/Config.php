@@ -24,6 +24,9 @@ use Traversable;
  */
 class Config implements IteratorAggregate
 {
+    /** @var class-string<Scope> */
+    public readonly string $scope;
+
     /**
      * @param class-string<State> $state
      * @param class-string<ResolverInterface> $resolver
@@ -32,7 +35,6 @@ class Config implements IteratorAggregate
      * @param class-string<BinderInterface> $binder
      * @param class-string<InvokerInterface> $invoker
      * @param class-string<Tracer> $tracer
-     * @param class-string<Scope> $scope
      */
     public function __construct(
         public readonly string $state = State::class,
@@ -42,8 +44,8 @@ class Config implements IteratorAggregate
         public readonly string $binder = Binder::class,
         public readonly string $invoker = Invoker::class,
         public readonly string $tracer = Tracer::class,
-        public readonly string $scope = Scope::class,
     ) {
+        $this->scope = Scope::class;
     }
 
     public function getIterator(): Traversable

@@ -9,6 +9,8 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectableInterface;
 use Spiral\Core\Exception\Container\ContainerException;
+use Spiral\Core\Internal\Common\DestructorTrait;
+use Spiral\Core\Internal\Common\Registry;
 
 /**
  * @psalm-type TResolver = class-string|non-empty-string|callable|array{class-string, non-empty-string}

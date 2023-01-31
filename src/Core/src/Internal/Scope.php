@@ -7,6 +7,8 @@ namespace Spiral\Core\Internal;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Exception\Scope\NamedScopeDuplicationException;
+use Spiral\Core\Internal\Common\DestructorTrait;
+use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
 
@@ -43,7 +45,7 @@ final class Scope
         $this->tracer = $constructor->get('tracer', Tracer::class);
     }
 
-    public function setUpScope(array $bindings, ?string $name = null)
+    public function setUpScope(array $bindings, ?string $name = null): void
     {
         // Check a scope with the same name is not already registered
         if ($name !== null) {

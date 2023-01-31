@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
+use Spiral\Core\Internal\Tracer\Trace;
+
 /**
  * @internal
  */

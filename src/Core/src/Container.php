@@ -11,7 +11,7 @@ use Spiral\Core\Container\InjectableInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
-use Spiral\Core\Internal\DestructorTrait;
+use Spiral\Core\Internal\Common\DestructorTrait;
 
 /**
  * Auto-wiring container: declarative singletons, contextual injections, parent container
@@ -55,7 +55,7 @@ final class Container implements
     public function __construct(
         private Config $config = new Config(),
     ) {
-        $constructor = new Internal\Registry($config, [
+        $constructor = new Internal\Common\Registry($config, [
             'state' => new Internal\State(),
         ]);
         foreach ($config as $property => $class) {
@@ -140,37 +140,12 @@ final class Container implements
         return $this->container->has($id);
     }
 
+    /**
+     * @deprecated
+     */
     public function runScope(array $bindings, callable $scope): mixed
     {
-        // /*
         return $this->scope($scope, $bindings, autowire: false);
-        /*/
-        $binds = &$this->state->bindings;
-        $cleanup = $previous = [];
-        foreach ($bindings as $alias => $resolver) {
-            if (isset($binds[$alias])) {
-                $previous[$alias] = $binds[$alias];
-            } else {
-                $cleanup[] = $alias;
-            }
-
-            $this->binder->bind($alias, $resolver);
-        }
-
-        try {
-            return ContainerScope::getContainer() !== $this
-                ? ContainerScope::runScope($this, $scope)
-                : $scope($this);
-        } finally {
-            foreach ($previous as $alias => $resolver) {
-                $binds[$alias] = $resolver;
-            }
-
-            foreach ($cleanup as $alias) {
-                unset($binds[$alias]);
-            }
-        }
-        // */
     }
 
     /**
