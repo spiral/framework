@@ -35,7 +35,7 @@ class CacheManager implements CacheStorageProviderInterface, SingletonInterface
             $storage = $storage['storage'];
         }
 
-        if(!isset($this->storages[$storage])) {
+        if (!isset($this->storages[$storage])) {
             $this->storages[$storage] = $this->resolve($storage);
         }
 
