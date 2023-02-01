@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Cache;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Cache\Config\CacheConfig;
 use Spiral\Core\Container\SingletonInterface;
@@ -16,7 +17,8 @@ class CacheManager implements CacheStorageProviderInterface, SingletonInterface
 
     public function __construct(
         private readonly CacheConfig $config,
-        private readonly FactoryInterface $factory
+        private readonly FactoryInterface $factory,
+        private readonly ?EventDispatcherInterface $dispatcher = null,
     ) {
     }
 
@@ -25,19 +27,25 @@ class CacheManager implements CacheStorageProviderInterface, SingletonInterface
         $name ??= $this->config->getDefaultStorage();
 
         // Replaces alias with real storage name
-        $name = $this->config->getAliases()[$name] ?? $name;
+        $storage = $this->config->getAliases()[$name] ?? $name;
 
-        if (isset($this->storages[$name])) {
-            return $this->storages[$name];
+        $prefix = null;
+        if (\is_array($storage)) {
+            $prefix = !empty($storage['prefix']) ? $storage['prefix'] : null;
+            $storage = $storage['storage'];
         }
 
-        return $this->storages[$name] = $this->resolve($name);
+        if (!isset($this->storages[$storage])) {
+            $this->storages[$storage] = $this->resolve($storage);
+        }
+
+        return new CacheRepository($this->storages[$storage], $this->dispatcher, $prefix);
     }
 
     private function resolve(?string $name): CacheInterface
     {
         $config = $this->config->getStorageConfig($name);
 
-        return new CacheRepository($this->factory->make($config['type'], $config));
+        return $this->factory->make($config['type'], $config);
     }
 }
