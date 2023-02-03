@@ -106,13 +106,12 @@ final class ContainerScopeFibersTest extends BaseTest
             $c1 = $container ?? new Container();
             $c1->bindSingleton('resource', new stdClass());
 
-            $result = $c1->runScope(['foo' => new DateTime()], static function (Container $c2) use ($load) {
+            $result = $c1->scope(static function (Container $c2) use ($load) {
                 // check local binding
                 self::assertTrue($c2->has('foo'));
                 self::assertInstanceOf(DateTime::class, $c2->get('foo'));
 
-                return $c2->runScope(
-                    ['bar' => new DateTimeImmutable()],
+                return $c2->scope(
                     static function (ContainerInterface $c3) use ($load) {
                         // check local binding
                         self::assertTrue($c3->has('bar'));
@@ -128,8 +127,9 @@ final class ContainerScopeFibersTest extends BaseTest
                         }
                         return $resource;
                     },
+                    ['bar' => new DateTimeImmutable()],
                 );
-            });
+            }, ['foo' => new DateTime()]);
             self::assertFalse($c1->has('foo'));
 
             self::assertSame(self::TEST_DATA, (array) $result);

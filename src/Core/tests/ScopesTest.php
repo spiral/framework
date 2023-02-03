@@ -98,6 +98,7 @@ class ScopesTest extends TestCase
         $this->assertFalse($c->has('other'));
     }
 
+    /* // If runScope() uses scope()
     public function testContainerInScope(): void
     {
         $root = new Container();
@@ -113,4 +114,21 @@ class ScopesTest extends TestCase
             });
         });
     }
+    /*/ // Old test
+    public function testContainerInScope(): void
+    {
+        $container = new Container();
+
+        $this->assertSame(
+            $container,
+            ContainerScope::runScope($container, static fn (ContainerInterface $container) => $container)
+        );
+
+        $result = ContainerScope::runScope($container, static function (Container $container) {
+            return $container->runScope([], static fn (Container $container) => $container);
+        });
+
+        $this->assertSame($container, $result);
+    }
+    // */
 }

@@ -153,7 +153,33 @@ final class Container implements
      */
     public function runScope(array $bindings, callable $scope): mixed
     {
-        return $this->scope($scope, $bindings, autowire: false);
+        // return $this->scope($scope, $bindings, autowire: false);
+
+        $binds = &$this->state->bindings;
+        $cleanup = $previous = [];
+        foreach ($bindings as $alias => $resolver) {
+            if (isset($binds[$alias])) {
+                $previous[$alias] = $binds[$alias];
+            } else {
+                $cleanup[] = $alias;
+            }
+
+            $this->binder->bind($alias, $resolver);
+        }
+
+        try {
+            return ContainerScope::getContainer() !== $this
+                ? ContainerScope::runScope($this, $scope)
+                : $scope($this);
+        } finally {
+            foreach ($previous as $alias => $resolver) {
+                $binds[$alias] = $resolver;
+            }
+
+            foreach ($cleanup as $alias) {
+                unset($binds[$alias]);
+            }
+        }
     }
 
     /**
@@ -168,6 +194,7 @@ final class Container implements
      * @return TReturn
      * @throws \Throwable
      */
+    // todo: openScope
     public function scope(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
     {
         // Open scope
