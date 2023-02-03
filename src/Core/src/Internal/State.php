@@ -32,5 +32,6 @@ final class State
     {
         $this->injectors = [];
         $this->bindings = [];
+        $this->finalizers = [];
     }
 }

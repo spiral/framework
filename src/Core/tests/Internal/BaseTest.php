@@ -12,6 +12,7 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Factory;
 use Spiral\Core\Internal\Resolver;
+use Spiral\Core\Internal\Scope;
 use Spiral\Core\Internal\State;
 use Spiral\Core\ResolverInterface;
 
@@ -25,6 +26,7 @@ abstract class BaseTest extends TestCase
         $this->config = new Config();
         $this->constructor = new Registry($this->config, [
             'state' => new State(),
+            'scope' => new Scope(),
         ]);
         parent::setUp();
     }

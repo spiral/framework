@@ -411,7 +411,7 @@ final class Factory implements FactoryInterface
         $ctx->reflection ??= new \ReflectionClass($instance);
 
         //Declarative singletons
-        if ($this->isSingleton($ctx, $instance)) {
+        if ($this->isSingleton($ctx)) {
             $this->state->bindings[$ctx->alias] = $instance;
         }
 
@@ -427,7 +427,7 @@ final class Factory implements FactoryInterface
     /**
      * Check the class was configured as a singleton.
      */
-    private function isSingleton(Ctx $ctx, object $instance): bool
+    private function isSingleton(Ctx $ctx): bool
     {
         if ($ctx->singleton === true) {
             return true;

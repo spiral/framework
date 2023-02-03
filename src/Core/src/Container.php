@@ -13,6 +13,7 @@ use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Core\Exception\Scope\FinalizersException;
 use Spiral\Core\Internal\Common\DestructorTrait;
+use Spiral\Core\Internal\Config\StateBinder;
 
 /**
  * Auto-wiring container: declarative singletons, contextual injections, parent container
@@ -42,6 +43,8 @@ final class Container implements
 {
     use DestructorTrait;
 
+    public const DEFAULT_ROOT_SCOPE_NAME = 'root';
+
     private Internal\State $state;
     private ResolverInterface|Internal\Resolver $resolver;
     private FactoryInterface|Internal\Factory $factory;
@@ -55,18 +58,13 @@ final class Container implements
      */
     public function __construct(
         private Config $config = new Config(),
+        ?string $scopeName = self::DEFAULT_ROOT_SCOPE_NAME,
     ) {
-        $constructor = new Internal\Common\Registry($config, [
-            'state' => new Internal\State(),
-        ]);
-        foreach ($config as $property => $class) {
-            if (\property_exists($this, $property)) {
-                $this->$property = $constructor->get($property, $class);
-            }
-        }
+        $this->initServices($this, $scopeName);
 
+        // Bind himself
         /** @psalm-suppress PossiblyNullPropertyAssignment */
-        $this->state->bindings = [
+        $this->state->bindings = \array_merge($this->state->bindings, [
             self::class               => \WeakReference::create($this),
             ContainerInterface::class => self::class,
             BinderInterface::class    => self::class,
@@ -74,7 +72,7 @@ final class Container implements
             ScopeInterface::class     => self::class,
             ResolverInterface::class  => self::class,
             InvokerInterface::class   => self::class,
-        ];
+        ]);
     }
 
     public function __destruct()
@@ -142,6 +140,15 @@ final class Container implements
     }
 
     /**
+     * Make a Binder proxy to configure default bindings for a specific scope.
+     * Default bindings won't affect already created Container instances except the case with the root one.
+     */
+    public function getBinder(string $scope): BinderInterface
+    {
+        return new StateBinder($this->config->scopedBindings->getState($scope));
+    }
+
+    /**
      * @deprecated use {@see scope()} instead.
      */
     public function runScope(array $bindings, callable $scope): mixed
@@ -164,10 +171,16 @@ final class Container implements
     public function scope(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
     {
         // Open scope
-        $container = new self($this->config);
+        $container = new self($this->config, $name);
+
         try {
-            $container->setParent($this);
-            $container->scope->setUpScope($bindings, $name);
+            // Configure scope
+            $container->scope->setParent($this, $this->scope);
+
+            // Add specific bindings
+            foreach ($bindings as $alias => $resolver) {
+                $container->binder->bind($alias, $resolver);
+            }
 
             return ContainerScope::runScope(
                 $container,
@@ -252,9 +265,34 @@ final class Container implements
         return $this->binder->hasInjector($class);
     }
 
-    private function setParent(self $parent): void
-    {
-        $this->scope->setParent($parent, $parent->scope);
+    /**
+     * Init internal container services.
+     */
+    private function initServices(
+        self $container,
+        ?string $scopeName,
+    ): void {
+        $isRoot = $container->config->lockRoot();
+
+        // Get named scope or create anonymous one
+        $state = match (true) {
+            $scopeName === null => new Internal\State(),
+            // Only root container can make default bindings directly
+            $isRoot => $container->config->scopedBindings->getState($scopeName),
+            default => clone $container->config->scopedBindings->getState($scopeName),
+        };
+
+        $constructor = new Internal\Common\Registry($container->config, [
+            'state' => $state,
+            'scope' => new Internal\Scope($scopeName),
+        ]);
+
+        // Create container services
+        foreach ($container->config as $property => $class) {
+            if (\property_exists($container, $property)) {
+                $container->$property = $constructor->get($property, $class);
+            }
+        }
     }
 
     /**

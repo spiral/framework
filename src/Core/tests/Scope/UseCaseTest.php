@@ -15,7 +15,7 @@ final class UseCaseTest extends BaseTest
      * Parent container won't be destroyed when child container is destroyed.
      * @see Container::destruct()
      */
-    public function testChildContainerDestruction(): void
+    public function testChildContainerDestructionDoesntDestroyParent(): void
     {
         $root = new Container();
         $root->bind('foo', SampleClass::class);
@@ -25,6 +25,28 @@ final class UseCaseTest extends BaseTest
         }, bindings: ['foo' => SampleClass::class]);
 
         self::assertInstanceOf(SampleClass::class, $root->get('foo'));
+    }
+
+    /**
+     * Child container must be destroyed after scope completion and mustn't be leaked
+     */
+    public function testChildContainerDestruction(): void
+    {
+        $root = new Container();
+        $root->bind('foo', SampleClass::class);
+
+        try {
+            $leak = $root->scope(function (ContainerInterface $c1): callable {
+                return fn() => $c1->get('foo');
+            });
+            $leak();
+        } catch (\AssertionError $e) {
+            // Assertions are enabled
+            self::assertStringContainsString("Scope Container shouldn't be leaked", $e->getMessage());
+        }catch (\Error $e) {
+            // Call to destroyed container
+            self::assertStringContainsString('must not be accessed before initialization', $e->getMessage());
+        }
     }
 
     /**
@@ -118,5 +140,73 @@ final class UseCaseTest extends BaseTest
                 );
             });
         }, bindings: ['foo' => [self::class, 'makeStdClass']]);
+    }
+
+    /**
+     * Test ability to preconfigure different scopes.
+     */
+    public function testBindingScopes(): void
+    {
+        $root = new Container();
+        // Configure Scope 1
+        $root->getBinder('scope1')->bindSingleton('foo', (object)['scope' => 'scope1']);
+        // Configure Scope 2
+        self::assertFalse($root->getBinder('scope2')->hasInstance('foo'));
+        $root->getBinder('scope2')->bindSingleton('foo', (object)['scope' => 'scope2']);
+        $root->getBinder('scope2')->bindSingleton('bar', (object)['from' => 'default']);
+
+        self::assertFalse($root->has('foo'));
+
+        $root->scope(static function (ContainerInterface $c1): void {
+            self::assertTrue($c1->has('foo'));
+            self::assertFalse($c1->has('bar'));
+            self::assertSame('scope1', $c1->get('foo')->scope);
+
+            $c1->scope(static function (ContainerInterface $c2): void {
+                self::assertTrue($c2->has('foo'));
+                self::assertTrue($c2->has('bar'));
+                self::assertSame('scope2', $c2->get('foo')->scope);
+                self::assertSame('custom', $c2->get('bar')->from);
+            }, bindings: ['bar' => (object)['from' => 'custom']], name: 'scope2');
+        }, name: 'scope1');
+    }
+
+    /**
+     * Test binding resolving in different scopes with the same name.
+     */
+    public function testBindingInFewSameScopes(): void
+    {
+        $root = new Container();
+        $root->getBinder('scope1')->bindSingleton('foo', $this->makeStdClass(...));
+
+        $getter = fn () => $root->scope(function (Container $c1): mixed {
+            self::assertFalse($c1->has('bar'));
+            $c1->bindSingleton('bar', $this->makeStdClass(...));
+
+            return $c1->get('foo');
+        }, name: 'scope1');
+
+        $obj1 = $getter();
+        $obj2 = $getter();
+
+        self::assertNotSame($obj1, $obj2);
+    }
+
+    /**
+     * Test the {@see Container::getBinder()} affects default scope bindings only.
+     */
+    public function testScopeBinderAffectsDefaultBindingsOnly(): void
+    {
+        $root = new Container();
+
+        $root->scope(function (Container $c1): void {
+            $c1->getBinder('scope1')->bindSingleton('bar', $this->makeStdClass(...));
+            self::assertFalse($c1->has('bar'));
+        }, name: 'scope1');
+
+        $root->scope(function (Container $c1): void {
+            self::assertTrue($c1->has('bar'));
+            self::assertInstanceOf(stdClass::class, $c1->get('bar'));
+        }, name: 'scope1');
     }
 }

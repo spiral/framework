@@ -18,6 +18,7 @@ use Spiral\Core\Exception\Resolver\UnknownParameterException;
 use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Resolver;
+use Spiral\Core\Internal\Scope;
 use Spiral\Core\Internal\State;
 use Spiral\Core\ResolverInterface;
 use Spiral\Tests\Core\Stub\EngineInterface;
@@ -319,6 +320,7 @@ final class TypeValidationTest extends TestCase
         $this->config = new Config();
         $this->constructor = new Registry($this->config, [
             'state' => new State(),
+            'scope' => new Scope(),
         ]);
         parent::setUp();
     }
