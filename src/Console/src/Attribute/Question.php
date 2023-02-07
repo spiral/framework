@@ -6,7 +6,7 @@ namespace Spiral\Console\Attribute;
 
 use Spiral\Attributes\NamedArgumentConstructor;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 #[NamedArgumentConstructor]
 final class Question
 {
