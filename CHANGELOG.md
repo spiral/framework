@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## Unreleased
+- **Medium Impact Changes**
+  - A minimal version of `symfony/console` increased to `^6.1`. 
 - **Other Features**
   - [spiral/console] Added the ability to configure console commands via attributes.
   - [spiral/console] Added the ability to prompt for missing required arguments.
