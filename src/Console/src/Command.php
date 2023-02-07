@@ -134,7 +134,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
     {
         $configurator = new Configurator([
             new SignatureConfigurator(new SignatureParser()),
-            new AttributeConfigurator(new AttributeParser((new Factory())->create()))
+            new AttributeConfigurator(new AttributeParser((new Factory())->create())),
         ]);
         $configurator->configure($this, new \ReflectionClass($this));
     }

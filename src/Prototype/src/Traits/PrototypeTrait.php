@@ -11,41 +11,6 @@ use Spiral\Prototype\PrototypeRegistry;
 
 /**
  * This DocComment is auto-generated, do not edit or commit this file to repository.
- * 
- * @property \Spiral\App\TestApp $app
- * @property \Spiral\Tokenizer\ClassesInterface $classLocator
- * @property \Spiral\Console\Console $console
- * @property \Spiral\Broadcasting\BroadcastInterface $broadcast
- * @property \Psr\Container\ContainerInterface $container
- * @property \Spiral\Encrypter\EncrypterInterface $encrypter
- * @property \Spiral\Boot\EnvironmentInterface $env
- * @property \Spiral\Files\FilesInterface $files
- * @property \Spiral\Security\GuardInterface $guard
- * @property \Spiral\Http\Http $http
- * @property \Spiral\Translator\TranslatorInterface $i18n
- * @property \Spiral\Http\Request\InputManager $input
- * @property \Spiral\Session\SessionScope $session
- * @property \Spiral\Cookies\CookieManager $cookies
- * @property \Psr\Log\LoggerInterface $logger
- * @property \Spiral\Logger\LogsInterface $logs
- * @property \Spiral\Boot\MemoryInterface $memory
- * @property \Spiral\Pagination\PaginationProviderInterface $paginators
- * @property \Spiral\Queue\QueueInterface $queue
- * @property \Spiral\Queue\QueueConnectionProviderInterface $queueManager
- * @property \Spiral\Http\Request\InputManager $request
- * @property \Spiral\Http\ResponseWrapper $response
- * @property \Spiral\Router\RouterInterface $router
- * @property \Spiral\Snapshots\SnapshotterInterface $snapshots
- * @property \Spiral\Storage\BucketInterface $storage
- * @property \Spiral\Serializer\SerializerManager $serializer
- * @property \Spiral\Validation\ValidationInterface $validator
- * @property \Spiral\Views\ViewsInterface $views
- * @property \Spiral\Auth\AuthScope $auth
- * @property \Spiral\Auth\TokenStorageInterface $authTokens
- * @property \Psr\SimpleCache\CacheInterface $cache
- * @property \Spiral\Cache\CacheStorageProviderInterface $cacheManager
- * @property \Spiral\Exceptions\ExceptionHandlerInterface $exceptionHandler
- * @property \Spiral\App\SomeService\Client $service.client
  */
 trait PrototypeTrait
 {
