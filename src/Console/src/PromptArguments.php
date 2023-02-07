@@ -60,6 +60,6 @@ class PromptArguments
             }
         }
 
-        return \sprintf('Please provide a value for the `%s` argument.', $argument->getName());
+        return \sprintf('Please provide a value for the `%s` argument', $argument->getName());
     }
 }
