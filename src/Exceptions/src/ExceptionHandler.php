@@ -129,17 +129,23 @@ class ExceptionHandler implements ExceptionHandlerInterface
      */
     protected function handleShutdown(): void
     {
-        if (!empty($error = \error_get_last())) {
-            $this->handleGlobalException(
-                new FatalException(
-                    $error['message'],
-                    $error['type'],
-                    0,
-                    $error['file'],
-                    $error['line']
-                )
-            );
+        if (empty($error = \error_get_last())) {
+            return;
         }
+
+        if ($error['type'] &~ \error_reporting()) {
+            return;
+        }
+
+        $this->handleGlobalException(
+            new FatalException(
+                $error['message'],
+                $error['type'],
+                0,
+                $error['file'],
+                $error['line']
+            )
+        );
     }
 
     /**
