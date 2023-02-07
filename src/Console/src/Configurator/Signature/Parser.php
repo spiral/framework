@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Console\Signature;
+namespace Spiral\Console\Configurator\Signature;
 
 use InvalidArgumentException;
+use Spiral\Console\Configurator\Result;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

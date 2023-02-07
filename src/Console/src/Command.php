@@ -6,9 +6,15 @@ namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Attributes\Factory;
+use Spiral\Console\Configurator\Attribute\Parser as AttributeParser;
+use Spiral\Console\Configurator\AttributeConfigurator;
+use Spiral\Console\Configurator\Configurator;
+use Spiral\Console\Configurator\Signature\Parser as SignatureParser;
+use Spiral\Console\Configurator\SignatureConfigurator;
 use Spiral\Console\Event\CommandFinished;
 use Spiral\Console\Event\CommandStarting;
-use Spiral\Console\Signature\Parser;
+use Spiral\Console\Interceptor\AttributeInterceptor;
 use Spiral\Console\Traits\HelpersTrait;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
@@ -106,6 +112,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
         foreach ($this->interceptors as $interceptor) {
             $interceptableCore->addInterceptor($this->container->get($interceptor));
         }
+        $interceptableCore->addInterceptor($this->container->get(AttributeInterceptor::class));
 
         return $interceptableCore;
     }
@@ -125,36 +132,11 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
      */
     protected function configure(): void
     {
-        if (static::SIGNATURE !== null) {
-            $this->configureViaSignature((string)static::SIGNATURE);
-        } else {
-            $this->setName(static::NAME);
-        }
-
-        $this->setDescription((string)static::DESCRIPTION);
-
-        foreach ($this->defineOptions() as $option) {
-            \call_user_func_array([$this, 'addOption'], $option);
-        }
-
-        foreach ($this->defineArguments() as $argument) {
-            \call_user_func_array([$this, 'addArgument'], $argument);
-        }
-    }
-
-    protected function configureViaSignature(string $signature): void
-    {
-        $result = (new Parser())->parse($signature);
-
-        $this->setName($result->name);
-
-        foreach ($result->options as $option) {
-            $this->getDefinition()->addOption($option);
-        }
-
-        foreach ($result->arguments as $argument) {
-            $this->getDefinition()->addArgument($argument);
-        }
+        $configurator = new Configurator([
+            new SignatureConfigurator(new SignatureParser()),
+            new AttributeConfigurator(new AttributeParser((new Factory())->create()))
+        ]);
+        $configurator->configure($this, new \ReflectionClass($this));
     }
 
     /**
