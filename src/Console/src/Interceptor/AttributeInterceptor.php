@@ -9,7 +9,6 @@ use Spiral\Console\Configurator\Attribute\Parser;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 final class AttributeInterceptor implements CoreInterceptorInterface
 {
@@ -18,13 +17,6 @@ final class AttributeInterceptor implements CoreInterceptorInterface
     ) {
     }
 
-    /**
-     * @param array{
-     *     input: InputInterface,
-     *     output: OutputInterface,
-     *     command: Command
-     * } $parameters
-     */
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): int
     {
         \assert($parameters['input'] instanceof InputInterface);

@@ -154,4 +154,11 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
     {
         return static::ARGUMENTS;
     }
+
+    protected function interact(InputInterface $input, OutputInterface $output): void
+    {
+        parent::interact($input, $output);
+
+        $this->container->get(PromptArguments::class)->promptMissedArguments($this, $input, $output);
+    }
 }

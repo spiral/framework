@@ -162,11 +162,13 @@ final class Parser
 
     private function typecast(mixed $value, \ReflectionProperty $property): mixed
     {
-        if (!$property->hasType() || !$property->getType()?->isBuiltin()) {
+        $type = $property->hasType() ? $property->getType() : null;
+
+        if (!$type instanceof \ReflectionNamedType) {
             return $value;
         }
 
-        return match ($property->getType()?->getName()) {
+        return match ($type->getName()) {
             'int' => (int) $value,
             'string' => (string) $value,
             'bool' => (bool) $value,
@@ -198,10 +200,10 @@ final class Parser
             }
         }
 
-        if (!$type?->isBuiltin()) {
-            throw new ConfiguratorException(\sprintf('Invalid type for the `%s` property.', $property->getName()));
+        if ($type instanceof \ReflectionNamedType && $type->isBuiltin()) {
+            return $type;
         }
 
-        return $type;
+        throw new ConfiguratorException(\sprintf('Invalid type for the `%s` property.', $property->getName()));
     }
 }

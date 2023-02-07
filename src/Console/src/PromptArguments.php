@@ -2,48 +2,41 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Console\Interceptor;
+namespace Spiral\Console;
 
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Console\Attribute\Question;
-use Spiral\Console\Command;
 use Spiral\Console\Exception\ConsoleException;
-use Spiral\Core\CoreInterceptorInterface;
-use Spiral\Core\CoreInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class PromptArgumentsInterceptor implements CoreInterceptorInterface
+class PromptArguments
 {
     public function __construct(
-        private readonly ReaderInterface $reader
+        protected readonly ReaderInterface $reader
     ) {
     }
 
-    /**
-     * @param array{
-     *     input: InputInterface,
-     *     output: OutputInterface,
-     *     command: Command
-     * } $parameters
-     */
-    public function process(string $controller, string $action, array $parameters, CoreInterface $core): int
+    public function promptMissedArguments(Command $command, InputInterface $input, OutputInterface $output): void
     {
-        foreach ($parameters['command']->getDefinition()->getArguments() as $argument) {
-            if ($argument->isRequired() && $parameters['input']->getArgument($argument->getName()) === null) {
-                $parameters['command']->ask($this->getQuestion($parameters['command'], $argument));
+        $io = new SymfonyStyle($input, $output);
+
+        foreach ($command->getDefinition()->getArguments() as $argument) {
+            if ($argument->isRequired() && $input->getArgument($argument->getName()) === null) {
+                $input->setArgument(
+                    $argument->getName(),
+                    $io->ask($this->getQuestion($command, $argument))
+                );
             }
         }
-
-        return $core->callAction($controller, $action, $parameters);
     }
 
     private function getQuestion(Command $command, InputArgument $argument): string
     {
         $reflection = new \ReflectionClass($command);
 
-        /** @var Question $question */
         foreach ($this->reader->getClassMetadata($reflection, Question::class) as $question) {
             if ($question->argument === null) {
                 throw new ConsoleException(
