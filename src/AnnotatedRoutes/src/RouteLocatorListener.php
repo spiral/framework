@@ -9,11 +9,13 @@ use ReflectionMethod;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Router\Annotation\Route;
 use Spiral\Router\Target\Action;
+use Spiral\Tokenizer\Attribute\ListenAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
+#[ListenAttribute(class: Route::class)]
 final class RouteLocatorListener implements TokenizationListenerInterface
 {
-    /** @var array<array-key, array{0: ReflectionMethod, 1: Route}>  */
+    /** @var array<array-key, array{0: ReflectionMethod, 1: Route}> */
     private array $attributes = [];
 
     public function __construct(
@@ -57,7 +59,7 @@ final class RouteLocatorListener implements TokenizationListenerInterface
         }
 
         // Sort routes by priority
-        \uasort($routes, static fn (array $route1, array $route2) => $route1['priority'] <=> $route2['priority']);
+        \uasort($routes, static fn(array $route1, array $route2) => $route1['priority'] <=> $route2['priority']);
 
         $this->configureRoutes($routes);
     }
