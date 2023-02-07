@@ -2,6 +2,8 @@
 
 ## Unreleased
 - **Other Features**
+  - [spiral/console] Added the ability to configure console commands via attributes.
+  - [spiral/console] Added the ability to prompt for missing required arguments.
   - [spiral/scaffolder] Added the ability to specify a custom `namespace` in the 
     `Spiral\Scaffolder\Command\BootloaderCommand`, `Spiral\Scaffolder\Command\CommandCommand`, 
     `Spiral\Scaffolder\Command\ConfigCommand`, `Spiral\Scaffolder\Command\ControllerCommand`,
