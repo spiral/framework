@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Spiral\Core\Exception\Scope;
 
 use Exception;
-use Spiral\Core\Exception\Container\ContainerException;
 use Throwable;
 
-class FinalizersException extends ContainerException
+final class FinalizersException extends ScopeException
 {
     /**
      * @param Throwable[] $exceptions
      */
     public function __construct(
-        protected ?string $scope,
+        ?string $scope,
         protected array $exceptions,
     ) {
         $count = \count($exceptions);
         parent::__construct(
+            $scope,
             \sprintf(
                 "%s thrown during finalization of %s:\n%s",
                 $count === 1 ? 'An exception has been' : "$count exceptions have been",
@@ -33,11 +33,6 @@ class FinalizersException extends ContainerException
                 )),
             ),
         );
-    }
-
-    public function getScope(): ?string
-    {
-        return $this->scope;
     }
 
     /**

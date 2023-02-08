@@ -6,6 +6,7 @@ namespace Spiral\Tests\Core\Scope;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
+use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use stdClass;
 
@@ -35,18 +36,12 @@ final class UseCaseTest extends BaseTest
         $root = new Container();
         $root->bind('foo', SampleClass::class);
 
-        try {
-            $leak = $root->scope(function (ContainerInterface $c1): callable {
-                return fn() => $c1->get('foo');
-            });
-            $leak();
-        } catch (\AssertionError $e) {
-            // Assertions are enabled
-            self::assertStringContainsString("Scope Container shouldn't be leaked", $e->getMessage());
-        }catch (\Error $e) {
-            // Call to destroyed container
-            self::assertStringContainsString('must not be accessed before initialization', $e->getMessage());
-        }
+        self::expectException(ScopeContainerLeakedException::class);
+        self::expectExceptionMessage('Scoped container has been leaked. Scope: "root"->null.');
+
+        $root->scope(function (ContainerInterface $c1): callable {
+            return fn() => $c1->get('foo');
+        });
     }
 
     /**

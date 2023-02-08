@@ -49,6 +49,25 @@ final class Scope
         return $this->parent;
     }
 
+    /**
+     * Return list of parent scope names.
+     * The first element is the current scope name, and the next is the closest parent scope name...
+     *
+     * @return array<int<0, max>, string|null>
+     */
+    public function getParentScopeNames(): array
+    {
+        $result = [$this->scopeName];
+
+        $parent = $this;
+        while ($parent->parentScope !== null) {
+            $parent = $parent->parentScope;
+            $result[] = $parent->scopeName;
+        }
+
+        return $result;
+    }
+
     public function getParentScope(): ?self
     {
         return $this->parentScope;

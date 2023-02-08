@@ -17,6 +17,10 @@ use Spiral\Core\Internal\Tracer;
 use Traversable;
 
 /**
+ * Container configuration that will be used not only in the root container but also in all child containers.
+ * The {@see self::$scopedBindings} property is internal and common for all containers.
+ * By the reason you can access to bindings for any scope from any container.
+ *
  * @implements IteratorAggregate<
  *     non-empty-string,
  *     class-string<State>|class-string<ResolverInterface>|class-string<FactoryInterface>|class-string<ContainerInterface>|class-string<BinderInterface>|class-string<InvokerInterface>|class-string<Tracer>
@@ -63,6 +67,11 @@ class Config implements IteratorAggregate
         yield 'scope' => $this->scope;
     }
 
+    /**
+     * Mutex lock for root container.
+     * First run of the method will return {@see true}, all subsequent calls will return {@see false}.
+     * The parent container must call the method once and before any child container.
+     */
     public function lockRoot(): bool
     {
         try {

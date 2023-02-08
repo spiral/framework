@@ -12,6 +12,7 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Core\Exception\Scope\FinalizersException;
+use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
 use Spiral\Core\Internal\Common\DestructorTrait;
 use Spiral\Core\Internal\Config\StateBinder;
 
@@ -142,6 +143,8 @@ final class Container implements
     /**
      * Make a Binder proxy to configure default bindings for a specific scope.
      * Default bindings won't affect already created Container instances except the case with the root one.
+     *
+     * @internal We are testing this feature, it may be changed in the future.
      */
     public function getBinder(string $scope): BinderInterface
     {
@@ -153,8 +156,6 @@ final class Container implements
      */
     public function runScope(array $bindings, callable $scope): mixed
     {
-        // return $this->scope($scope, $bindings, autowire: false);
-
         $binds = &$this->state->bindings;
         $cleanup = $previous = [];
         foreach ($bindings as $alias => $resolver) {
@@ -193,8 +194,9 @@ final class Container implements
      *
      * @return TReturn
      * @throws \Throwable
+     *
+     * @internal We are testing this feature, it may be changed in the future.
      */
-    // todo: openScope
     public function scope(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
     {
         // Open scope
@@ -225,7 +227,9 @@ final class Container implements
             // Check the container has not been leaked
             $link = \WeakReference::create($container);
             unset($container);
-            \assert($link->get() === null, "Scope Container shouldn't be leaked.");
+            if ($link->get() !== null) {
+                throw new ScopeContainerLeakedException($name, $this->scope->getParentScopeNames());
+            }
         }
     }
 

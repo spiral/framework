@@ -79,13 +79,18 @@ final class ScopeAttributeTest extends BaseTest
 
         $root = new Container();
 
-        $root->scope(static function (Container $c1) {
-            $c1->scope(static function (Container $c2) {
-                $c2->scope(static function (Container $c3) {
-                    // do nothing
-                }, name: 'root');
+        try {
+            $root->scope(static function (Container $c1) {
+                $c1->scope(static function (Container $c2) {
+                    $c2->scope(static function (Container $c3) {
+                        // do nothing
+                    }, name: 'root');
+                });
             });
-        });
+        } catch (NamedScopeDuplicationException $e) {
+            self::assertSame('root', $e->getScope());
+            throw $e;
+        }
     }
 
     /**
