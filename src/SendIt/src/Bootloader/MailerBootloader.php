@@ -89,13 +89,14 @@ class MailerBootloader extends Bootloader
         );
     }
 
-    private function initTransportResolver(
+    protected function initTransportResolver(
         ?EventDispatcherInterface $dispatcher = null,
         ?LogsInterface $logs = null,
     ): TransportResolver {
         $defaultTransports = \iterator_to_array(Transport::getDefaultFactories(
-            dispatcher: $dispatcher,
-            logger: $logs?->getLogger('mailer')
+            $dispatcher,
+            null,
+            $logs?->getLogger('mailer')
         ));
 
         return new TransportResolver(
