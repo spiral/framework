@@ -137,6 +137,7 @@
         "spiral/code-style": "^1.1",
         "spiral/nyholm-bridge": "^1.2",
         "spiral/testing": "^2.2",
+        "spiral/validator": "^1.2",
         "symplify/monorepo-builder": "^10.2.7",
         "vimeo/psalm": "^4.27"
     },

@@ -185,7 +185,9 @@ final class AttributeMapperTest extends BaseTest
         ], $schema);
 
         $this->assertSame([
-            'fooFilter' => 'Error',
+            'fooFilter' => [
+                'fooFilter' => 'Error'
+            ],
             'bazFilter' => [
                 'second' => [
                     'field' => 'Error',

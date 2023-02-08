@@ -11,7 +11,7 @@ abstract class BaseTest extends \Spiral\Testing\TestCase
 {
     public function rootDirectory(): string
     {
-        return __DIR__.'/../';
+        return \realpath(__DIR__.'/../');
     }
 
     public function createAppInstance(Container $container = new Container()): TestApp

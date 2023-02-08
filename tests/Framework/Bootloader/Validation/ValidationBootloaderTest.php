@@ -36,6 +36,9 @@ final class ValidationBootloaderTest extends BaseTest
 
     public function testValidatorIsNotConfigured(): void
     {
+        $this->getConfigurator()
+            ->modify(ValidationConfig::CONFIG, new Set('defaultValidator', null));
+
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Default Validator is not configured.');
         $this->getContainer()->get(ValidationInterface::class);
@@ -43,6 +46,10 @@ final class ValidationBootloaderTest extends BaseTest
 
     public function testSetDefaultValidator(): void
     {
+        // Clear state from previous tests
+        $this->getConfigurator()
+            ->modify(ValidationConfig::CONFIG, new Set('defaultValidator', null));
+
         $validator = $this->createValidator();
         $this->getContainer()
             ->get(ValidationProviderInterface::class)
@@ -51,7 +58,7 @@ final class ValidationBootloaderTest extends BaseTest
         $bootloader = $this->getContainer()->get(ValidationBootloader::class);
         $bootloader->setDefaultValidator('bar');
 
-        $this->assertContainerBoundAsSingleton(ValidationInterface::class, $validator::class);
+        $this->assertConfigHasFragments(ValidationConfig::CONFIG, ['defaultValidator' => 'bar']);
     }
 
     public function testSetDefaultValidatorNotOverrideValueInConfig(): void

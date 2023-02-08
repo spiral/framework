@@ -55,6 +55,7 @@ final class TokenizerBootloaderTest extends BaseTest
                 'debug' => false,
                 'directories' => [
                     $this->getDirectoryByAlias('app'),
+                    \realpath($this->getDirectoryByAlias('root') . '../vendor/spiral/validator/src'),
                 ],
                 'exclude' => [
                     $this->getDirectoryByAlias('resources'),

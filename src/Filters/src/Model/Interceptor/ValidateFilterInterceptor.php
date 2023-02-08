@@ -66,6 +66,8 @@ final class ValidateFilterInterceptor implements CoreInterceptorInterface
                     $errorMapper->mapErrors(\array_merge($errors, $validator->getErrors())),
                     $context
                 );
+            } elseif ($errors !== []) {
+                throw new ValidationException($errorMapper->mapErrors($errors), $context);
             }
         }
     }
