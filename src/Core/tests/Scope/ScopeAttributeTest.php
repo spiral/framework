@@ -15,6 +15,17 @@ use Spiral\Tests\Core\Scope\Stub\AttrScopeFooSingleton;
 final class ScopeAttributeTest extends BaseTest
 {
     /**
+     * Just try to make a dependency with a wrong scope.
+     */
+    public function testBadScope(): void
+    {
+        self::expectException(BadScopeException::class);
+
+        $root = new Container();
+        $root->make(AttrScopeFooSingleton::class);
+    }
+
+    /**
      * Test that a dependency are resolved in the scope specified in the {@see Scope} attribute.
      */
     public function testNamedScopeResolveFromRootInNullScope(): void

@@ -7,7 +7,6 @@ namespace Spiral\Core\Exception\Scope;
 final class ScopeContainerLeakedException extends ScopeException
 {
     /**
-     * @param null|string $scope
      * @param array<int<0, max>, string|null> $parents
      */
     public function __construct(

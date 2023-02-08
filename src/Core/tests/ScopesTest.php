@@ -98,23 +98,6 @@ class ScopesTest extends TestCase
         $this->assertFalse($c->has('other'));
     }
 
-    /* // If runScope() uses scope()
-    public function testContainerInScope(): void
-    {
-        $root = new Container();
-
-        ContainerScope::runScope($root, static function (Container $parent) use ($root) {
-            // ::runScope() passes the same container into closure as the first argument
-            self::assertSame($parent, $root);
-
-            return $parent->runScope([], static function (Container $c) use ($root, $parent) {
-                // Nested container isn't the same as the parent container
-                self::assertNotSame($root, $c);
-                self::assertNotSame($parent, $c);
-            });
-        });
-    }
-    /*/ // Old test
     public function testContainerInScope(): void
     {
         $container = new Container();
@@ -130,5 +113,4 @@ class ScopesTest extends TestCase
 
         $this->assertSame($container, $result);
     }
-    // */
 }
