@@ -6,6 +6,8 @@ namespace Spiral\Core;
 
 /**
  * Provides ability to run code withing isolated IoC scope.
+ *
+ * @deprecated
  */
 interface ScopeInterface
 {

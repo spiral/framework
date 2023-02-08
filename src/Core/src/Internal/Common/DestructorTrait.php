@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core\Internal;
+namespace Spiral\Core\Internal\Common;
 
 /**
  * @internal

@@ -21,6 +21,9 @@ use Spiral\Core\Exception\Resolver\ResolvingException;
 use Spiral\Core\Exception\Resolver\UnknownParameterException;
 use Spiral\Core\Exception\Resolver\UnsupportedTypeException;
 use Spiral\Core\FactoryInterface;
+use Spiral\Core\Internal\Common\DestructorTrait;
+use Spiral\Core\Internal\Common\Registry;
+use Spiral\Core\Internal\Resolver\ResolvingState;
 use Spiral\Core\ResolverInterface;
 use Throwable;
 

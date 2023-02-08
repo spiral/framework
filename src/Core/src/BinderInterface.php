@@ -18,7 +18,7 @@ interface BinderInterface
      * every method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
      *
-     * @psalm-param TResolver $resolver
+     * @param TResolver $resolver
      */
     public function bind(string $alias, string|array|callable|object $resolver): void;
 

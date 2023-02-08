@@ -55,7 +55,7 @@ class ScopesTest extends TestCase
         $this->assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
             'other'  => new SampleClass()
-        ], function () use ($c) {
+        ], function ($c) {
             $this->assertSame('b', $c->get('bucket')->getName());
             $this->assertTrue($c->has('other'));
 
@@ -77,7 +77,7 @@ class ScopesTest extends TestCase
         $this->assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
             'other'  => new SampleClass()
-        ], function () use ($c) {
+        ], function ($c) {
             $this->assertSame('b', $c->get('bucket')->getName());
             $this->assertTrue($c->has('other'));
 

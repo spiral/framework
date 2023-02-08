@@ -22,9 +22,16 @@ final class State
      */
     public array $injectors = [];
 
+    /**
+     * List of finalizers to be called on container scope destruction.
+     * @var callable[]
+     */
+    public array $finalizers = [];
+
     public function destruct(): void
     {
         $this->injectors = [];
         $this->bindings = [];
+        $this->finalizers = [];
     }
 }

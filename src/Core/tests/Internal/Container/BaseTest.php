@@ -8,8 +8,9 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Config;
+use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Container;
-use Spiral\Core\Internal\Registry;
+use Spiral\Core\Internal\Scope;
 use Spiral\Core\Internal\State;
 
 abstract class BaseTest extends TestCase
@@ -22,6 +23,7 @@ abstract class BaseTest extends TestCase
         $this->config = new Config();
         $this->constructor = new Registry($this->config, [
             'state' => new State(),
+            'scope' => new Scope(),
         ]);
         parent::setUp();
     }

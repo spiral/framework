@@ -59,7 +59,10 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
+        $this->assertStringContainsString(
+            'src/Exceptions/tests/Renderer/RendererTest.php',
+            \str_replace('\\', '/', $result),
+        );
     }
 
     public function testConsoleRendererErrorBasic(): void
@@ -70,7 +73,10 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
+        $this->assertStringContainsString(
+            'src/Exceptions/tests/Renderer/RendererTest.php',
+            \str_replace('\\', '/', $result),
+        );
     }
 
     public function testConsoleRendererErrorVerbose(): void
@@ -81,7 +87,10 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
+        $this->assertStringContainsString(
+            'src/Exceptions/tests/Renderer/RendererTest.php',
+            \str_replace('\\', '/', $result),
+        );
     }
 
     public function testConsoleRendererWithColorsBasic(): void
@@ -98,7 +107,10 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
+        $this->assertStringContainsString(
+            'src/Exceptions/tests/Renderer/RendererTest.php',
+            \str_replace('\\', '/', $result),
+        );
     }
 
     public function testConsoleRendererWithColorsDebug(): void
@@ -115,7 +127,10 @@ class RendererTest extends TestCase
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
-        $this->assertStringContainsString('src/Exceptions/tests/Renderer/RendererTest.php', $result);
+        $this->assertStringContainsString(
+            'src/Exceptions/tests/Renderer/RendererTest.php',
+            \str_replace('\\', '/', $result),
+        );
     }
 
     public function testConsoleRendererStacktrace(): void

@@ -12,6 +12,7 @@ use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
 use Spiral\Cookies\Middleware\CookiesMiddleware;
 use Spiral\Core\Container;
+use Spiral\Core\ContainerScope;
 use Spiral\Encrypter\Config\EncrypterConfig;
 use Spiral\Encrypter\Encrypter;
 use Spiral\Encrypter\EncrypterFactory;
@@ -55,12 +56,12 @@ class CookiesTest extends TestCase
         $core->setHandler(function ($r) {
             $this->assertInstanceOf(
                 CookieQueue::class,
-                $this->container->get(ServerRequestInterface::class)
+                ContainerScope::getContainer()->get(ServerRequestInterface::class)
                     ->getAttribute(CookieQueue::ATTRIBUTE)
             );
 
             $this->assertSame(
-                $this->container->get(ServerRequestInterface::class)
+                ContainerScope::getContainer()->get(ServerRequestInterface::class)
                     ->getAttribute(CookieQueue::ATTRIBUTE),
                 $r->getAttribute(CookieQueue::ATTRIBUTE)
             );
@@ -77,7 +78,7 @@ class CookiesTest extends TestCase
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            $this->container->get(ServerRequestInterface::class)
+            ContainerScope::getContainer()->get(ServerRequestInterface::class)
                 ->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
@@ -99,7 +100,7 @@ class CookiesTest extends TestCase
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            $this->container->get(ServerRequestInterface::class)
+            ContainerScope::getContainer()->get(ServerRequestInterface::class)
                 ->getAttribute(CookieQueue::ATTRIBUTE)->set('PHPSESSID', 'value');
 
             return 'all good';
@@ -172,10 +173,10 @@ class CookiesTest extends TestCase
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            $this->container->get(ServerRequestInterface::class)
+            ContainerScope::getContainer()->get(ServerRequestInterface::class)
                 ->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
-            $this->container->get(ServerRequestInterface::class)
+            ContainerScope::getContainer()->get(ServerRequestInterface::class)
                 ->getAttribute(CookieQueue::ATTRIBUTE)->delete('name');
 
             return 'all good';
@@ -200,7 +201,7 @@ class CookiesTest extends TestCase
 
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            $this->container->get(ServerRequestInterface::class)
+            ContainerScope::getContainer()->get(ServerRequestInterface::class)
                 ->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
@@ -249,7 +250,7 @@ class CookiesTest extends TestCase
 
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            $this->container->get(ServerRequestInterface::class)
+            ContainerScope::getContainer()->get(ServerRequestInterface::class)
                 ->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';

@@ -7,6 +7,8 @@ namespace Spiral\Core\Internal;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\NotCallableException;
+use Spiral\Core\Internal\Common\DestructorTrait;
+use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
 
@@ -53,7 +55,7 @@ final class Invoker implements InvokerInterface
             // Invoking factory method with resolved arguments
             return $method->invokeArgs(
                 $resolver,
-                $this->resolver->resolveArguments($method, $parameters)
+                $this->resolver->resolveArguments($method, $parameters),
             );
         }
 

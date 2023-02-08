@@ -8,6 +8,8 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
+use Spiral\Core\Internal\Common\DestructorTrait;
+use Spiral\Core\Internal\Common\Registry;
 
 /**
  * @internal

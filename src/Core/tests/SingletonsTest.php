@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container;
 use Spiral\Tests\Core\Fixtures\DeclarativeSingleton;
 use Spiral\Tests\Core\Fixtures\SampleClass;
-use stdClass;
 
-use function PHPUnit\Framework\assertFalse;
+use Spiral\Tests\Core\Fixtures\SingletonAttribute;
 
 class SingletonsTest extends TestCase
 {
@@ -149,6 +149,35 @@ class SingletonsTest extends TestCase
 
         $this->assertInstanceOf(DeclarativeSingleton::class, $instance);
         $this->assertSame($instance, $container->get(DeclarativeSingleton::class));
+    }
+
+    public function testAttribute(): void
+    {
+        $container = new Container();
+
+        $first = $container->get(SingletonAttribute::class);
+        $second = $container->get(SingletonAttribute::class);
+
+        self::assertSame($first, $second);
+    }
+
+    public function testAttributeAnonClass(): void
+    {
+        $container = new Container();
+        $container->bind('foo', $this->makeAttributedClass(...));
+        $first = $container->get('foo');
+        $second = $container->get('foo');
+
+        self::assertSame($first, $second);
+    }
+
+    private function makeAttributedClass(): object
+    {
+        return new
+        #[Singleton]
+        class {
+            public string $baz = 'baz';
+        };
     }
 
     /**

@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core\Internal;
+namespace Spiral\Core\Internal\Tracer;
 
-use ReflectionFunction;
 use Spiral\Core\Exception\Traits\ClosureRendererTrait;
 
 /**
@@ -43,7 +42,7 @@ final class Trace implements \Stringable
             $item instanceof \UnitEnum => $item::class . "::$item->name",
             \is_object($item) => 'instance of ' . $item::class,
             \is_array($item) => $this->renderArray($item),
-            default => \gettype($item),
+            default => \get_debug_type($item),
         };
     }
 

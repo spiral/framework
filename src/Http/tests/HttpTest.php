@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container;
+use Spiral\Core\ContainerScope;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\RequestHandled;
@@ -227,7 +228,7 @@ class HttpTest extends TestCase
         $core = $this->getCore();
 
         $core->setHandler(function () {
-            $this->assertTrue($this->container->has(ServerRequestInterface::class));
+            $this->assertTrue(ContainerScope::getContainer()->has(ServerRequestInterface::class));
 
             return 'OK';
         });

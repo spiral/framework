@@ -89,7 +89,7 @@ class ExceptionsTest extends TestCase
             Container trace list:
             - action: 'autowire'
               alias: 'Spiral\Tests\Core\Fixtures\InvalidWithContainerInside'
-              context: NULL
+              context: null
             - action: 'resolve arguments'
               signature: function (Psr\Container\ContainerInterface $container, Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'autowire'
@@ -115,14 +115,14 @@ class ExceptionsTest extends TestCase
             Container trace list:
             - action: 'autowire'
               alias: 'Spiral\Tests\Core\Fixtures\WithContainerInside'
-              context: NULL
+              context: null
             - call: 'Spiral\Tests\Core\Fixtures\WithContainerInside::__construct'
               arguments: [
                 0: instance of Spiral\Core\Container
               ]
               - action: 'autowire'
                 alias: 'invalid'
-                context: NULL
+                context: null
             MARKDOWN,
         );
 
@@ -142,7 +142,7 @@ class ExceptionsTest extends TestCase
                 Container trace list:
                 - action: 'autowire'
                   alias: 'invalid'
-                  context: NULL
+                  context: null
                 MARKDOWN,
                 $e->getMessage(),
             );
@@ -155,7 +155,7 @@ class ExceptionsTest extends TestCase
             Container trace list:
             - action: 'autowire'
               alias: 'invalid-other'
-              context: NULL
+              context: null
             MARKDOWN
         );
 
@@ -197,7 +197,7 @@ class ExceptionsTest extends TestCase
             Container trace list:
             - action: 'autowire'
               alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: NULL
+              context: null
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'autowire'
@@ -212,11 +212,12 @@ class ExceptionsTest extends TestCase
             Container trace list:
             - action: 'autowire'
               alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: NULL
+              context: null
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
+                scope: 'root'
                 context: 'class'
                 binding: [
                   0: [
@@ -233,11 +234,12 @@ class ExceptionsTest extends TestCase
             Container trace list:
             - action: 'autowire'
               alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: NULL
+              context: null
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
+                scope: 'root'
                 context: 'class'
                 binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
                 - action: 'autowire'
@@ -252,7 +254,7 @@ class ExceptionsTest extends TestCase
             Container trace list:
             - action: 'autowire'
               alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: NULL
+              context: null
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
             MARKDOWN
@@ -264,11 +266,12 @@ class ExceptionsTest extends TestCase
             Container trace list:
             - action: 'autowire'
               alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: NULL
+              context: null
             - action: 'resolve arguments'
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
+                scope: 'root'
                 context: 'class'
                 binding: [
                   0: static function (Psr\Container\ContainerInterface $container),
@@ -276,7 +279,7 @@ class ExceptionsTest extends TestCase
                 ]
                 - action: 'autowire'
                   alias: 'invalid'
-                  context: NULL
+                  context: null
             MARKDOWN
         ];
     }

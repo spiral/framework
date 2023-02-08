@@ -8,11 +8,13 @@ use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectableInterface;
-use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
-use Spiral\Core\Internal\DestructorTrait;
+use Spiral\Core\Exception\Scope\FinalizersException;
+use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
+use Spiral\Core\Internal\Common\DestructorTrait;
+use Spiral\Core\Internal\Config\StateBinder;
 
 /**
  * Auto-wiring container: declarative singletons, contextual injections, parent container
@@ -24,8 +26,6 @@ use Spiral\Core\Internal\DestructorTrait;
  * factory.
  *
  * You can use injectors to delegate class resolution to external container.
- *
- * @see \Spiral\Core\Container::registerInstance() to add your own behaviours.
  *
  * @see InjectableInterface
  * @see SingletonInterface
@@ -44,29 +44,28 @@ final class Container implements
 {
     use DestructorTrait;
 
+    public const DEFAULT_ROOT_SCOPE_NAME = 'root';
+
     private Internal\State $state;
     private ResolverInterface|Internal\Resolver $resolver;
     private FactoryInterface|Internal\Factory $factory;
     private ContainerInterface|Internal\Container $container;
     private BinderInterface|Internal\Binder $binder;
     private InvokerInterface|Internal\Invoker $invoker;
+    private Internal\Scope $scope;
 
     /**
      * Container constructor.
      */
-    public function __construct(Config $config = new Config())
-    {
-        $constructor = new Internal\Registry($config, [
-            'state' => new Internal\State(),
-        ]);
-        foreach ($config as $property => $class) {
-            if (\property_exists($this, $property)) {
-                $this->$property = $constructor->get($property, $class);
-            }
-        }
+    public function __construct(
+        private Config $config = new Config(),
+        ?string $scopeName = self::DEFAULT_ROOT_SCOPE_NAME,
+    ) {
+        $this->initServices($this, $scopeName);
 
+        // Bind himself
         /** @psalm-suppress PossiblyNullPropertyAssignment */
-        $this->state->bindings = [
+        $this->state->bindings = \array_merge($this->state->bindings, [
             self::class               => \WeakReference::create($this),
             ContainerInterface::class => self::class,
             BinderInterface::class    => self::class,
@@ -74,12 +73,12 @@ final class Container implements
             ScopeInterface::class     => self::class,
             ResolverInterface::class  => self::class,
             InvokerInterface::class   => self::class,
-        ];
+        ]);
     }
 
     public function __destruct()
     {
-        $this->destruct();
+        $this->closeScope();
     }
 
     /**
@@ -141,6 +140,20 @@ final class Container implements
         return $this->container->has($id);
     }
 
+    /**
+     * Make a Binder proxy to configure default bindings for a specific scope.
+     * Default bindings won't affect already created Container instances except the case with the root one.
+     *
+     * @internal We are testing this feature, it may be changed in the future.
+     */
+    public function getBinder(string $scope): BinderInterface
+    {
+        return new StateBinder($this->config->scopedBindings->getState($scope));
+    }
+
+    /**
+     * @deprecated use {@see scope()} instead.
+     */
     public function runScope(array $bindings, callable $scope): mixed
     {
         $binds = &$this->state->bindings;
@@ -166,6 +179,56 @@ final class Container implements
 
             foreach ($cleanup as $alias) {
                 unset($binds[$alias]);
+            }
+        }
+    }
+
+    /**
+     * @template TReturn
+     *
+     * @param callable(mixed ...$params): TReturn $closure
+     * @param array<non-empty-string, TResolver> $bindings Custom bindings for the new scope.
+     * @param null|string $name Scope name. Named scopes can have individual bindings and constrains.
+     * @param bool $autowire If {@see false}, closure will be invoked with just only the passed Container as an
+     *        argument. Otherwise, {@see InvokerInterface::invoke()} will be used to invoke the closure.
+     *
+     * @return TReturn
+     * @throws \Throwable
+     *
+     * @internal We are testing this feature, it may be changed in the future.
+     */
+    public function scope(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
+    {
+        // Open scope
+        $container = new self($this->config, $name);
+
+        try {
+            // Configure scope
+            $container->scope->setParent($this, $this->scope);
+
+            // Add specific bindings
+            foreach ($bindings as $alias => $resolver) {
+                $container->binder->bind($alias, $resolver);
+            }
+
+            return ContainerScope::runScope(
+                $container,
+                static function (self $container) use ($autowire, $closure): mixed {
+                    try {
+                        return $autowire
+                            ? $container->invoke($closure)
+                            : $closure($container);
+                    } finally {
+                        $container->closeScope();
+                    }
+                }
+            );
+        } finally {
+            // Check the container has not been leaked
+            $link = \WeakReference::create($container);
+            unset($container);
+            if ($link->get() !== null) {
+                throw new ScopeContainerLeakedException($name, $this->scope->getParentScopeNames());
             }
         }
     }
@@ -231,5 +294,69 @@ final class Container implements
     public function hasInjector(string $class): bool
     {
         return $this->binder->hasInjector($class);
+    }
+
+    /**
+     * Init internal container services.
+     */
+    private function initServices(
+        self $container,
+        ?string $scopeName,
+    ): void {
+        $isRoot = $container->config->lockRoot();
+
+        // Get named scope or create anonymous one
+        $state = match (true) {
+            $scopeName === null => new Internal\State(),
+            // Only root container can make default bindings directly
+            $isRoot => $container->config->scopedBindings->getState($scopeName),
+            default => clone $container->config->scopedBindings->getState($scopeName),
+        };
+
+        $constructor = new Internal\Common\Registry($container->config, [
+            'state' => $state,
+            'scope' => new Internal\Scope($scopeName),
+        ]);
+
+        // Create container services
+        foreach ($container->config as $property => $class) {
+            if (\property_exists($container, $property)) {
+                $container->$property = $constructor->get($property, $class);
+            }
+        }
+    }
+
+    /**
+     * Execute finalizers and destruct the container.
+     *
+     * @throws FinalizersException
+     */
+    private function closeScope(): void
+    {
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
+        if (!isset($this->scope)) {
+            $this->destruct();
+            return;
+        }
+
+        $scopeName = $this->scope->getScopeName();
+
+        // Run finalizers
+        $errors = [];
+        foreach ($this->state->finalizers as $finalizer) {
+            try {
+                $this->invoker->invoke($finalizer);
+            } catch (\Throwable $e) {
+                $errors[] = $e;
+            }
+        }
+
+        // Destroy the container
+        $this->destruct();
+
+        // Throw collected errors
+        if ($errors !== []) {
+            throw new FinalizersException($scopeName, $errors);
+        }
     }
 }

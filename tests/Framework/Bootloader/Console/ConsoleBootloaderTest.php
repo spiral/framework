@@ -77,9 +77,7 @@ final class ConsoleBootloaderTest extends BaseTest
         $this->assertInstanceOf(CommandSequence::class, $sequences['foo']);
         $sequences['foo']->writeHeader($output);
         $sequences['foo']->writeFooter($output);
-        $this->assertSame('header
-footer
-', $output->fetch());
+        $this->assertSame("header\nfooter\n", \str_replace(PHP_EOL, "\n", $output->fetch()));
     }
 
     public function testAddUpdateSequence(): void
@@ -96,9 +94,7 @@ footer
         $this->assertInstanceOf(CommandSequence::class, $sequences['foo']);
         $sequences['foo']->writeHeader($output);
         $sequences['foo']->writeFooter($output);
-        $this->assertSame('header
-footer
-', $output->fetch());
+        $this->assertSame("header\nfooter\n", \str_replace(PHP_EOL, "\n", $output->fetch()));
     }
 
     public function testAddCustomSequence(): void
@@ -115,9 +111,7 @@ footer
         $this->assertInstanceOf(CommandSequence::class, $sequences['foo']);
         $sequences['foo']->writeHeader($output);
         $sequences['foo']->writeFooter($output);
-        $this->assertSame('header
-footer
-', $output->fetch());
+        $this->assertSame("header\nfooter\n", \str_replace(PHP_EOL, "\n", $output->fetch()));
     }
 
     public function testSequencesIsNotDuplicated(): void
