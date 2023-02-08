@@ -113,7 +113,6 @@ final class Factory implements FactoryInterface
                     ? $this->autowire($ctx, $parameters)
                     : $this->evaluateBinding($ctx, $binding[0], $parameters);
             } finally {
-                /** @psalm-var class-string $alias */
                 $this->state->bindings[$alias] ??= $binding;
             }
         } finally {
@@ -133,6 +132,7 @@ final class Factory implements FactoryInterface
         if (($avoidCache || $binding->get() === null) && \class_exists($alias)) {
             try {
                 $this->tracer->push(false, alias: $alias, source: WeakReference::class, context: $context);
+                /** @psalm-suppress NoValue */
                 $object = $this->createInstance(
                     new Ctx(alias: $alias, class: $alias, parameter: $context),
                     $parameters,
@@ -280,9 +280,9 @@ final class Factory implements FactoryInterface
     /**
      * Create instance of desired class.
      *
-     * @template TObject
+     * @template TObject of object
      *
-     * @param class-string<TObject> $class
+     * @param Ctx<TObject> $ctx
      * @param array $parameters Constructor parameters.
      *
      * @return TObject

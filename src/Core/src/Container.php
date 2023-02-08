@@ -78,7 +78,7 @@ final class Container implements
 
     public function __destruct()
     {
-        $this->destruct();
+        $this->closeScope();
     }
 
     /**
@@ -333,6 +333,12 @@ final class Container implements
      */
     private function closeScope(): void
     {
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
+        if (!isset($this->scope)) {
+            $this->destruct();
+            return;
+        }
+
         $scopeName = $this->scope->getScopeName();
 
         // Run finalizers
