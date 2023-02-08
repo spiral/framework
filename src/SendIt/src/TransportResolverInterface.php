@@ -12,7 +12,7 @@ interface TransportResolverInterface
     /**
      * Resolve a mail transport from a DSN string.
      *
-     * @param string $dsn The DSN string to resolve, in the format of smtp://user:pass@smtp.example.com:25.
+     * @param string $dsn The DSN string to resolve, in the format of `smtp://user:pass@smtp.example.com:25`.
      * @throws UnsupportedSchemeException If the DSN string is not supported.
      */
     public function resolve(string $dsn): TransportInterface;
