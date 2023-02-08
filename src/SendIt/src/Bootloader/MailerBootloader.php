@@ -81,6 +81,14 @@ class MailerBootloader extends Bootloader
         return $transports->resolve($config->getDSN());
     }
 
+    public function mailer(TransportInterface $transport, ?EventDispatcherInterface $dispatcher = null): SymfonyMailer
+    {
+        return new Mailer(
+            transport: $transport,
+            dispatcher: $dispatcher
+        );
+    }
+
     private function initTransportResolver(
         ?EventDispatcherInterface $dispatcher = null,
         ?LogsInterface $logs = null,
@@ -92,14 +100,6 @@ class MailerBootloader extends Bootloader
 
         return new TransportResolver(
             new Transport($defaultTransports)
-        );
-    }
-
-    public function mailer(TransportInterface $transport, ?EventDispatcherInterface $dispatcher = null): SymfonyMailer
-    {
-        return new Mailer(
-            transport: $transport,
-            dispatcher: $dispatcher
         );
     }
 }
