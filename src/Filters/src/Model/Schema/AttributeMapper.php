@@ -85,13 +85,13 @@ final class AttributeMapper
 
     private function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
     {
-        $setter = $this->reader->firstPropertyMetadata($property, Setter::class);
-
         if ($value === null) {
             return;
         }
 
-        if ($setter) {
+        $setters = $this->reader->getPropertyMetadata($property, Setter::class);
+
+        foreach ($setters as $setter) {
             $value = $setter->updateValue($value);
         }
 

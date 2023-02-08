@@ -16,18 +16,20 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * Example 2:
  * #[\Spiral\Filters\Attribute\Setter(filter: [Foo::class, 'bar'])]
  */
-#[Attribute(Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE), NamedArgumentConstructor]
 final class Setter
 {
     public readonly \Closure $filter;
+    private array $args;
 
-    public function __construct(callable $filter)
+    public function __construct(callable $filter, mixed ...$args)
     {
         $this->filter = $filter(...);
+        $this->args = $args;
     }
 
     public function updateValue(mixed $value): mixed
     {
-        return ($this->filter)($value);
+        return ($this->filter)($value, ...$this->args);
     }
 }
