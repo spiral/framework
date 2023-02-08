@@ -53,7 +53,6 @@ final class TokenizerListenerBootloader extends Bootloader implements
     public function boot(AbstractKernel $kernel): void
     {
         $kernel->booted(function (ClassesInterface $classes, ReaderInterface $reader): void {
-
             $classes = $classes->getClasses();
 
             foreach ($this->listeners as $listener) {
@@ -61,7 +60,6 @@ final class TokenizerListenerBootloader extends Bootloader implements
 
                 if ($attribute = $reader->firstClassMetadata($listener, ListenAttribute::class)) {
                     $ref = new \ReflectionClass($attribute);
-
                 }
             }
 
