@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Exceptions;
 
 use Closure;
-use Spiral\Exceptions\Exception\FatalException;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 
 /**
@@ -129,16 +128,14 @@ class ExceptionHandler implements ExceptionHandlerInterface
      */
     protected function handleShutdown(): void
     {
-        if (!empty($error = \error_get_last())) {
-            $this->handleGlobalException(
-                new FatalException(
-                    $error['message'],
-                    $error['type'],
-                    0,
-                    $error['file'],
-                    $error['line']
-                )
-            );
+        if (empty($error = \error_get_last())) {
+            return;
+        }
+
+        try {
+            $this->handleError($error['type'], $error['message'], $error['file'], $error['line']);
+        } catch (\Throwable $e) {
+            $this->handleGlobalException($e);
         }
     }
 
