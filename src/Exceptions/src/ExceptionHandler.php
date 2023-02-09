@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Exceptions;
 
 use Closure;
-use Spiral\Exceptions\Exception\FatalException;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 
 /**
@@ -133,19 +132,11 @@ class ExceptionHandler implements ExceptionHandlerInterface
             return;
         }
 
-        if ($error['type'] &~ \error_reporting()) {
-            return;
+        try {
+            $this->handleError($error['type'], $error['message'], $error['file'], $error['line']);
+        } catch (\Throwable $e) {
+            $this->handleGlobalException($e);
         }
-
-        $this->handleGlobalException(
-            new FatalException(
-                $error['message'],
-                $error['type'],
-                0,
-                $error['file'],
-                $error['line']
-            )
-        );
     }
 
     /**
