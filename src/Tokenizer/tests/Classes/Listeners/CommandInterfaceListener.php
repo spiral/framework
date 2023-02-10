@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Tokenizer\Classes\Listeners;
 
-use Spiral\Tests\Tokenizer\Fixtures\Attributes\WithTargetClass;
+use Spiral\Tests\Tokenizer\Classes\Targets\ConsoleCommandInterface;
 use Spiral\Tokenizer\Attribute\ListenForClasses;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-#[ListenForClasses(target: WithTargetClass::class)]
-class ControllerListener implements TokenizationListenerInterface
+#[ListenForClasses(target: ConsoleCommandInterface::class)]
+class CommandInterfaceListener implements TokenizationListenerInterface
 {
     public function listen(\ReflectionClass $class): void
     {
@@ -21,3 +21,4 @@ class ControllerListener implements TokenizationListenerInterface
         // TODO: Implement finalize() method.
     }
 }
+

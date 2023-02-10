@@ -7,12 +7,12 @@ namespace Spiral\Tokenizer;
 interface TokenizationListenerInterface
 {
     /**
-     * The method will be fired for every found class by a class locator.
+     * The method will be fired for each class that was found by Tokenizer.
      */
     public function listen(\ReflectionClass $class): void;
 
     /**
-     * The method will be fired after a class locator will finish iterating of found classes.
+     * The method will be fired after all classes were processed by listen method.
      */
     public function finalize(): void;
 }
