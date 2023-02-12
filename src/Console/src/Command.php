@@ -8,10 +8,10 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Attributes\Factory;
 use Spiral\Console\Configurator\Attribute\Parser as AttributeParser;
-use Spiral\Console\Configurator\AttributeConfigurator;
+use Spiral\Console\Configurator\AttributeBasedConfigurator;
 use Spiral\Console\Configurator\Configurator;
 use Spiral\Console\Configurator\Signature\Parser as SignatureParser;
-use Spiral\Console\Configurator\SignatureConfigurator;
+use Spiral\Console\Configurator\SignatureBasedConfigurator;
 use Spiral\Console\Event\CommandFinished;
 use Spiral\Console\Event\CommandStarting;
 use Spiral\Console\Interceptor\AttributeInterceptor;
@@ -133,8 +133,8 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
     protected function configure(): void
     {
         $configurator = new Configurator([
-            new SignatureConfigurator(new SignatureParser()),
-            new AttributeConfigurator(new AttributeParser((new Factory())->create())),
+            new SignatureBasedConfigurator(new SignatureParser()),
+            new AttributeBasedConfigurator(new AttributeParser((new Factory())->create())),
         ]);
         $configurator->configure($this, new \ReflectionClass($this));
     }

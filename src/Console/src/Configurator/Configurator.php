@@ -28,6 +28,6 @@ final class Configurator
             }
         }
 
-        (new DefaultConfigurator())->configure($command, $reflection);
+        (new ConstantBasedConfigurator())->configure($command, $reflection);
     }
 }

@@ -9,7 +9,7 @@ use Spiral\Console\Command;
 /**
  * @internal
  */
-final class DefaultConfigurator implements ConfiguratorInterface
+final class ConstantBasedConfigurator implements ConfiguratorInterface
 {
     public function configure(Command $command, \ReflectionClass $reflection): void
     {

@@ -13,10 +13,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class PromptArguments
+/**
+ * @internal
+ */
+final class PromptArguments
 {
     public function __construct(
-        protected readonly ReaderInterface $reader = new AttributeReader()
+        private readonly ReaderInterface $reader = new AttributeReader()
     ) {
     }
 
