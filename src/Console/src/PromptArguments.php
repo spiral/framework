@@ -24,6 +24,11 @@ class PromptArguments
         $io = new SymfonyStyle($input, $output);
 
         foreach ($command->getDefinition()->getArguments() as $argument) {
+            // Skip default argument "the command to execute"
+            if ($argument->getName() === 'command') {
+                continue;
+            }
+
             if ($argument->isRequired() && $input->getArgument($argument->getName()) === null) {
                 $input->setArgument(
                     $argument->getName(),

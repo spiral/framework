@@ -12,6 +12,7 @@ use Spiral\Console\Attribute\Option;
 use Spiral\Console\Command;
 use Spiral\Console\Configurator\Result;
 use Spiral\Console\Exception\ConfiguratorException;
+use Symfony\Component\Console\Attribute\AsCommand as SymfonyAsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -28,20 +29,26 @@ final class Parser
 
     public function hasCommandAttribute(\ReflectionClass $reflection): bool
     {
-        return $this->reader->firstClassMetadata($reflection, AsCommand::class) !== null;
+        return $this->reader->firstClassMetadata($reflection, AsCommand::class) !== null ||
+            $reflection->getAttributes(SymfonyAsCommand::class) !== [];
     }
 
     public function parse(\ReflectionClass $reflection): Result
     {
-        /** @var AsCommand $attribute */
+        /** @var ?AsCommand $attribute */
         $attribute = $this->reader->firstClassMetadata($reflection, AsCommand::class);
+
+        if ($attribute === null) {
+            /** @var SymfonyAsCommand $attribute */
+            $attribute = $reflection->getAttributes(SymfonyAsCommand::class)[0]->newInstance();
+        }
 
         return new Result(
             name: $attribute->name,
             arguments: $this->parseArguments($reflection),
             options: $this->parseOptions($reflection),
             description: $attribute->description,
-            help: $attribute->help
+            help: $attribute instanceof AsCommand ? $attribute->help : null
         );
     }
 
