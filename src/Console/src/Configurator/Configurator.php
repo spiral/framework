@@ -9,7 +9,7 @@ use Spiral\Console\Command;
 /**
  * @internal
  */
-final class Configurator implements ConfiguratorInterface
+final class Configurator
 {
     /**
      * @param ConfiguratorInterface[] $configurators
@@ -29,10 +29,5 @@ final class Configurator implements ConfiguratorInterface
         }
 
         (new DefaultConfigurator())->configure($command, $reflection);
-    }
-
-    public function canConfigure(Command $command, \ReflectionClass $reflection): bool
-    {
-        return true;
     }
 }

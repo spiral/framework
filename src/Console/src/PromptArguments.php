@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Console;
 
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Console\Attribute\Question;
 use Spiral\Console\Exception\ConsoleException;
@@ -15,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class PromptArguments
 {
     public function __construct(
-        protected readonly ReaderInterface $reader
+        protected readonly ReaderInterface $reader = new AttributeReader()
     ) {
     }
 

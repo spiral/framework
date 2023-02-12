@@ -11,7 +11,17 @@ use Spiral\Console\Command;
  */
 interface ConfiguratorInterface
 {
+    /**
+     * Check if a given command can be configured by the configurator.
+     *
+     * @param \ReflectionClass<Command> $reflection
+     */
     public function canConfigure(Command $command, \ReflectionClass $reflection): bool;
 
+    /**
+     * Configure a given command.
+     *
+     * @param \ReflectionClass<Command> $reflection
+     */
     public function configure(Command $command, \ReflectionClass $reflection): void;
 }
