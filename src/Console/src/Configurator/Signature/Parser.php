@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Console\Configurator\Signature;
 
 use InvalidArgumentException;
-use Spiral\Console\Configurator\Result;
+use Spiral\Console\Configurator\CommandDefinition;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -20,17 +20,17 @@ final class Parser
      *
      * @throws InvalidArgumentException
      */
-    public function parse(string $signature): Result
+    public function parse(string $signature): CommandDefinition
     {
         $name = $this->parseName($signature);
 
         if (\preg_match_all('/\{\s*(.*?)\s*\}/', $signature, $matches)) {
             if (\count($matches[1])) {
-                return new Result($name, ...$this->parseParameters($matches[1]));
+                return new CommandDefinition($name, ...$this->parseParameters($matches[1]));
             }
         }
 
-        return new Result($name);
+        return new CommandDefinition($name);
     }
 
     /**

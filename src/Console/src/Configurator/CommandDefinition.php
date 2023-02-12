@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * @internal
  */
-final class Result
+final class CommandDefinition
 {
     public function __construct(
         /** @var non-empty-string */

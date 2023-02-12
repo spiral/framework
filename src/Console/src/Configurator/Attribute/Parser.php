@@ -10,7 +10,7 @@ use Spiral\Console\Attribute\Argument;
 use Spiral\Console\Attribute\AsCommand;
 use Spiral\Console\Attribute\Option;
 use Spiral\Console\Command;
-use Spiral\Console\Configurator\Result;
+use Spiral\Console\Configurator\CommandDefinition;
 use Spiral\Console\Exception\ConfiguratorException;
 use Symfony\Component\Console\Attribute\AsCommand as SymfonyAsCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -33,7 +33,7 @@ final class Parser
             $reflection->getAttributes(SymfonyAsCommand::class) !== [];
     }
 
-    public function parse(\ReflectionClass $reflection): Result
+    public function parse(\ReflectionClass $reflection): CommandDefinition
     {
         $attribute = $this->reader->firstClassMetadata($reflection, AsCommand::class);
 
@@ -41,7 +41,7 @@ final class Parser
             $attribute = $reflection->getAttributes(SymfonyAsCommand::class)[0]->newInstance();
         }
 
-        return new Result(
+        return new CommandDefinition(
             name: $attribute->name,
             arguments: $this->parseArguments($reflection),
             options: $this->parseOptions($reflection),
