@@ -35,11 +35,9 @@ final class Parser
 
     public function parse(\ReflectionClass $reflection): Result
     {
-        /** @var ?AsCommand $attribute */
         $attribute = $this->reader->firstClassMetadata($reflection, AsCommand::class);
 
         if ($attribute === null) {
-            /** @var SymfonyAsCommand $attribute */
             $attribute = $reflection->getAttributes(SymfonyAsCommand::class)[0]->newInstance();
         }
 
