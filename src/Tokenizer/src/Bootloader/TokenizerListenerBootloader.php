@@ -10,6 +10,7 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Memory;
 use Spiral\Boot\NullMemory;
+use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\FilesInterface;
@@ -30,6 +31,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
     TokenizerListenerRegistryInterface
 {
     protected const DEPENDENCIES = [
+        AttributesBootloader::class,
         TokenizerBootloader::class,
     ];
 
@@ -88,7 +90,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
     ): CachedClassesLoader {
         // We will use a file memory to cache the classes. Because it's available in the runtime.
         // If you want to disable the cache, you can use the TOKENIZER_WARMUP environment variable.
-        $memory = $env->get('TOKENIZER_WARMUP', true)
+        $memory = $env->get('TOKENIZER_WARMUP', false)
             ? new Memory($dirs->get('runtime') . 'cache/listeners', $files)
             : new NullMemory();
 
