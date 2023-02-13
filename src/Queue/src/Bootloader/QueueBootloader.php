@@ -49,7 +49,6 @@ final class QueueBootloader extends Bootloader
         QueueManager::class => [self::class, 'initQueueManager'],
         QueueRegistry::class => [self::class, 'initRegistry'],
         Handler::class => [self::class, 'initHandler'],
-        QueueInterface::class => [self::class, 'initQueue'],
     ];
 
     public function __construct(
@@ -147,11 +146,6 @@ final class QueueBootloader extends Bootloader
         }
 
         return new Handler($core, $tracerFactory);
-    }
-
-    protected function initQueue(QueueConnectionProviderInterface $manager): QueueInterface
-    {
-        return $manager->getConnection();
     }
 
     private function initQueueConfig(EnvironmentInterface $env): void
