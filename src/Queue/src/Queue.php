@@ -13,10 +13,6 @@ final class Queue implements QueueInterface
     ) {
     }
 
-    /**
-     * @param class-string<HandlerInterface> $name
-     * @param OptionsInterface|null $options
-     */
     public function push(string $name, array $payload = [], OptionsInterface $options = null): string
     {
         return $this->core->callAction($name, 'push', [
