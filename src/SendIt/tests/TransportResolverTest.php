@@ -25,7 +25,7 @@ final class TransportResolverTest extends TestCase
         $this->assertCount(1, $transportResolver->getTransports());
     }
 
-    public function testCanResolveRegisteredTransport()
+    public function testCanResolveRegisteredTransport(): void
     {
         $transportFactory = m::mock(TransportFactoryInterface::class);
         $arg = fn(Transport\Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
