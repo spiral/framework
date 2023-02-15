@@ -9,6 +9,9 @@ use Spiral\SendIt\Bootloader\MailerBootloader;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
+use Spiral\SendIt\TransportRegistryInterface;
+use Spiral\SendIt\TransportResolver;
+use Spiral\SendIt\TransportResolverInterface;
 use Spiral\Tests\Framework\BaseTest;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
@@ -32,6 +35,13 @@ final class MailerBootloaderTest extends BaseTest
          * {@see https://github.com/spiral/framework/pull/683}
          */
         $this->assertFalse($class->isFinal(), 'MailerBootloader should not be final.');
+    }
+
+    public function testTransportResolverBindings(): void
+    {
+        $this->assertContainerBoundAsSingleton(TransportResolver::class, TransportResolver::class);
+        $this->assertContainerBoundAsSingleton(TransportResolverInterface::class, TransportResolver::class);
+        $this->assertContainerBoundAsSingleton(TransportRegistryInterface::class, TransportResolver::class);
     }
 
     public function testMailJobBinding(): void

@@ -6,10 +6,12 @@ namespace Spiral\SendIt\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\BinderInterface;
+use Spiral\Logger\LogsInterface;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Queue\Bootloader\QueueBootloader;
 use Spiral\Queue\QueueConnectionProviderInterface;
@@ -17,6 +19,9 @@ use Spiral\Queue\QueueRegistry;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
+use Spiral\SendIt\TransportRegistryInterface;
+use Spiral\SendIt\TransportResolver;
+use Spiral\SendIt\TransportResolverInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mailer\Transport;
@@ -35,6 +40,9 @@ class MailerBootloader extends Bootloader
     protected const SINGLETONS = [
         MailJob::class => MailJob::class,
         SymfonyMailer::class => [self::class, 'mailer'],
+        TransportResolver::class => [self::class, 'initTransportResolver'],
+        TransportResolverInterface::class => TransportResolver::class,
+        TransportRegistryInterface::class => TransportResolver::class,
         TransportInterface::class => [self::class, 'initTransport'],
     ];
 
@@ -68,9 +76,9 @@ class MailerBootloader extends Bootloader
         $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
     }
 
-    public function initTransport(MailerConfig $config): TransportInterface
+    public function initTransport(MailerConfig $config, TransportResolverInterface $transports): TransportInterface
     {
-        return Transport::fromDsn($config->getDSN());
+        return $transports->resolve($config->getDSN());
     }
 
     public function mailer(TransportInterface $transport, ?EventDispatcherInterface $dispatcher = null): SymfonyMailer
@@ -78,6 +86,21 @@ class MailerBootloader extends Bootloader
         return new Mailer(
             transport: $transport,
             dispatcher: $dispatcher
+        );
+    }
+
+    protected function initTransportResolver(
+        ?EventDispatcherInterface $dispatcher = null,
+        ?LogsInterface $logs = null,
+    ): TransportResolver {
+        $defaultTransports = \iterator_to_array(Transport::getDefaultFactories(
+            $dispatcher,
+            null,
+            $logs?->getLogger('mailer')
+        ));
+
+        return new TransportResolver(
+            new Transport($defaultTransports)
         );
     }
 }
