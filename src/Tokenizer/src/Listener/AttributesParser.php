@@ -26,7 +26,6 @@ final class AttributesParser
     {
         $listener = new \ReflectionClass($listener);
 
-        /** @var TargetClass $attribute */
         foreach ($this->reader->getClassMetadata($listener, TargetClass::class) as $attribute) {
             // Analyze the target class from TargetClass attribute.
             yield new ListenerDefinition(
@@ -36,7 +35,6 @@ final class AttributesParser
             );
         }
 
-        /** @var TargetAttribute $attribute */
         foreach ($this->reader->getClassMetadata($listener, TargetAttribute::class) as $attribute) {
             // Analyze the target class from TargetAttribute attribute.
             $refl = new \ReflectionClass($attribute->class);
