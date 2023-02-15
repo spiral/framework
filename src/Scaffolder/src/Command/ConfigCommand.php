@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
 
+use Spiral\Console\Attribute\Question;
 use Spiral\Scaffolder\Declaration\ConfigDeclaration;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+#[Question(
+    question: 'Please provide the name of the Config class, or the filename of an existing config file',
+    argument: 'name'
+)]
 class ConfigCommand extends AbstractCommand
 {
     protected const NAME        = 'create:config';

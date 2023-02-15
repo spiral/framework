@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Console\Signature;
+namespace Spiral\Tests\Console\Configurator\Signature;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Console\Signature\Parser;
+use Spiral\Console\Configurator\Signature\Parser;
 
 final class ParserTest extends TestCase
 {

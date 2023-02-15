@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Command;
 
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Console\Attribute\Question;
 use Spiral\Console\Command;
 use Spiral\Files\FilesInterface;
 use Spiral\Module\Exception\PublishException;
@@ -15,6 +16,14 @@ use Symfony\Component\Console\Input\InputArgument;
 /**
  * Target path can be in form "@cache/path".
  */
+#[Question(
+    question: 'What type of operation would you like to perform? You can choose from `replace`, `follow`, or `ensure`.',
+    argument: 'type'
+)]
+#[Question(
+    question: 'What is the path to the directory where you want to publish resources?',
+    argument: 'target'
+)]
 final class PublishCommand extends Command
 {
     protected const NAME        = 'publish';
