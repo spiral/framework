@@ -7,12 +7,12 @@ namespace Spiral\Console;
 use Psr\Container\ContainerInterface;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Console\Traits\LazyTrait;
-use Spiral\Tokenizer\Attribute\ListenForClasses;
+use Spiral\Tokenizer\Attribute\TargetClass;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 use Spiral\Tokenizer\Traits\TargetTrait;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
-#[ListenForClasses(target: SymfonyCommand::class)]
+#[TargetClass(class: SymfonyCommand::class)]
 final class CommandLocatorListener implements TokenizationListenerInterface
 {
     use LazyTrait;

@@ -9,10 +9,10 @@ use ReflectionMethod;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Router\Annotation\Route;
 use Spiral\Router\Target\Action;
-use Spiral\Tokenizer\Attribute\ListenForClasses;
+use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-#[ListenForClasses(target: Route::class)]
+#[TargetAttribute(class: Route::class)]
 final class RouteLocatorListener implements TokenizationListenerInterface
 {
     /** @var array<array-key, array{0: ReflectionMethod, 1: Route}> */

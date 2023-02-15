@@ -7,11 +7,11 @@ namespace Spiral\Prototype;
 use ReflectionClass;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Prototype\Annotation\Prototyped;
-use Spiral\Tokenizer\Attribute\ListenForClasses;
+use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 use Spiral\Tokenizer\Traits\TargetTrait;
 
-#[ListenForClasses(target: Prototyped::class)]
+#[TargetAttribute(class: Prototyped::class)]
 final class PrototypeLocatorListener implements TokenizationListenerInterface
 {
     use TargetTrait;

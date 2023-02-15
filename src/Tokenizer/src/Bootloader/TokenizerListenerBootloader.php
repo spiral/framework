@@ -71,7 +71,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
 
             // If there are listeners left, we will use static analysis to find the classes.
             // Please note that this is a very expensive operation and should be avoided if possible.
-            // Use #[ListenForClasses] attribute in your listeners to cache the classes.
+            // Use #[TargetClass] or #[TargetAttribute] attributes in your listeners to cache the classes.
             $classes = $classes->getClasses();
             foreach ($this->listeners as $listener) {
                 $invoker->invoke($listener, $classes);

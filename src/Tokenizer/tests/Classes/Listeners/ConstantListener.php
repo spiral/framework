@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Tests\Tokenizer\Classes\Listeners;
 
 use Spiral\Tests\Tokenizer\Fixtures\Attributes\WithTargetConstant;
-use Spiral\Tokenizer\Attribute\ListenForClasses;
+use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-#[ListenForClasses(target: WithTargetConstant::class)]
+#[TargetAttribute(class: WithTargetConstant::class)]
 class ConstantListener implements TokenizationListenerInterface
 {
     public function listen(\ReflectionClass $class): void

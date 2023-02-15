@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Tokenizer\Listener;
 
 use Spiral\Attributes\ReaderInterface;
-use Spiral\Tokenizer\Attribute\ListenForClasses;
+use Spiral\Tokenizer\Attribute\TargetAttribute;
+use Spiral\Tokenizer\Attribute\TargetClass;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
 /**
@@ -25,25 +26,28 @@ final class AttributesParser
     {
         $listener = new \ReflectionClass($listener);
 
-        foreach ($this->reader->getClassMetadata($listener, ListenForClasses::class) as $attribute) {
-            // Analyze the target class from ListenForClasses attribute.
-            $refl = new \ReflectionClass($attribute->target);
+        /** @var TargetClass $attribute */
+        foreach ($this->reader->getClassMetadata($listener, TargetClass::class) as $attribute) {
+            // Analyze the target class from TargetClass attribute.
+            yield new ListenerDefinition(
+                listenerClass: $listener->getName(),
+                target: new \ReflectionClass($attribute->class),
+                scope: $attribute->scope,
+            );
+        }
+
+        /** @var TargetAttribute $attribute */
+        foreach ($this->reader->getClassMetadata($listener, TargetAttribute::class) as $attribute) {
+            // Analyze the target class from TargetAttribute attribute.
+            $refl = new \ReflectionClass($attribute->class);
 
             // Check if the target class has an attribute
             $attr = $refl->getAttributes(\Attribute::class)[0] ?? null;
 
-            // If the target class has no attribute, then it's a normal class or interface.
             if ($attr === null) {
-                yield new ListenerDefinition(
-                    listenerClass: $listener->getName(),
-                    target: $refl,
-                    scope: $attribute->scope,
-                );
-
                 continue;
             }
 
-            // Otherwise, it's an attribute class nad we need to pass the attribute instance to the listener.
             // It helps to understand where the target attribute class is used (class, method, property, ...).
             yield new ListenerDefinition(
                 listenerClass: $listener->getName(),
