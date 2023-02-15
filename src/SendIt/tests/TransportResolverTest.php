@@ -55,7 +55,7 @@ final class TransportResolverTest extends TestCase
         $this->assertSame($transport, $transportResolver->resolve('smtp://localhost'));
     }
 
-    public function testNotRegisteredTransportShouldTrowAnException()
+    public function testNotRegisteredTransportShouldTrowAnException(): void
     {
         $this->expectException(UnsupportedSchemeException::class);
         $this->expectErrorMessage('The "smtp" scheme is not supported.');
