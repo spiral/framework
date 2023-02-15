@@ -16,7 +16,7 @@ final class TransportResolverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testCanRegisterTransport()
+    public function testCanRegisterTransport(): void
     {
         $transportFactory = m::mock(TransportFactoryInterface::class);
         $transportResolver = new TransportResolver(new Transport([]));
