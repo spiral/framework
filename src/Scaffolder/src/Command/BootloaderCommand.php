@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
 
+use Spiral\Console\Attribute\Question;
 use Spiral\Scaffolder\Declaration\BootloaderDeclaration;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+#[Question(
+    question: 'What would you like to name the Bootloader?',
+    argument: 'name'
+)]
 class BootloaderCommand extends AbstractCommand
 {
     protected const NAME        = 'create:bootloader';

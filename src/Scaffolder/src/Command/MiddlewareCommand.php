@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
 
+use Spiral\Console\Attribute\Question;
 use Spiral\Scaffolder\Declaration\MiddlewareDeclaration;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+#[Question(
+    question: 'What would you like to name the Middleware?',
+    argument: 'name'
+)]
 class MiddlewareCommand extends AbstractCommand
 {
     protected const NAME        = 'create:middleware';

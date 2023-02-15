@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Command\Translator;
 
+use Spiral\Console\Attribute\Question;
 use Spiral\Console\Command;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Translator\Catalogue\CatalogueManager;
@@ -13,6 +14,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Translation\MessageCatalogue;
 
+#[Question(
+    question: 'What is the locale that you would like to export translations for?',
+    argument: 'locale'
+)]
+#[Question(
+    question: 'What is the path to where you would like to export the translations?',
+    argument: 'path'
+)]
 final class ExportCommand extends Command implements SingletonInterface
 {
     protected const NAME        = 'i18n:export';

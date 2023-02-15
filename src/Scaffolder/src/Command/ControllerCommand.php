@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
 
+use Spiral\Console\Attribute\Question;
 use Spiral\Scaffolder\Declaration\ControllerDeclaration;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+#[Question(
+    question: 'What would you like to name the Controller?',
+    argument: 'name'
+)]
 class ControllerCommand extends AbstractCommand
 {
     protected const NAME        = 'create:controller';
