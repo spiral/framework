@@ -41,7 +41,7 @@ final class TransportResolverTest extends TestCase
         $this->assertSame($transport, $transportResolver->resolve('smtp://localhost'));
     }
 
-    public function testCanResolveRegisteredDefaultTransport()
+    public function testCanResolveRegisteredDefaultTransport(): void
     {
         $transportFactory = m::mock(TransportFactoryInterface::class);
         $arg = fn(Transport\Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
