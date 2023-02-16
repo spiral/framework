@@ -15,7 +15,7 @@ use Spiral\Tokenizer\TokenizationListenerInterface;
 #[TargetAttribute(Route::class, useAnnotations: true)]
 final class RouteLocatorListener implements TokenizationListenerInterface
 {
-    /** @var array<array-key, array{0: ReflectionMethod, 1: Route}> */
+    /** @var array<array-key, array{ReflectionMethod, Route}> */
     private array $attributes = [];
 
     public function __construct(
