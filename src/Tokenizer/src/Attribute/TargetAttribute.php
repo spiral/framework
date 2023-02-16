@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Attribute;
 
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Factory;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Tokenizer\TokenizationListenerInterface;
@@ -23,6 +24,7 @@ final class TargetAttribute implements ListenerDefinitionInterface
     public function __construct(
         public readonly string $class,
         public readonly ?string $scope = null,
+        public readonly bool $useAnnotations = false,
     ) {
     }
 
@@ -30,7 +32,12 @@ final class TargetAttribute implements ListenerDefinitionInterface
     {
         $target = new \ReflectionClass($this->class);
         $attribute = $target->getAttributes(\Attribute::class)[0] ?? null;
-        $reader = (new Factory())->create();
+
+        // If annotations are used, we need to use the annotation reader also
+        // It will slow down the process a bit, but it will allow us to use annotations
+        $reader = $this->useAnnotations
+            ? (new Factory())->create()
+            : new AttributeReader();
 
         if ($attribute === null) {
             return;
