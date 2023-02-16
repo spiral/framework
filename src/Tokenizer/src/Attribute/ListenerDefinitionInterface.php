@@ -15,9 +15,9 @@ interface ListenerDefinitionInterface
     /**
      * Filter given classes and return only those that should be listened.
      * @param \ReflectionClass[] $classes
-     * @return \Generator<class-string>
+     * @return iterable<class-string>
      */
-    public function filter(array $classes): \Generator;
+    public function filter(array $classes): iterable;
 
     /**
      * Get hash for cache key.
