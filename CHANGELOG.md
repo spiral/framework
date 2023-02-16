@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Other Features**
+- **Bug Fixes**
+
 ## 3.6.0 - 2023-02-17
 - **High Impact Changes**
   - [spiral/tokenizer] Added the ability to cache tokenizer listeners.
