@@ -1,9 +1,13 @@
 # CHANGELOG
 
-## Unreleased
+## 3.6.0 - 2023-02-17
+- **High Impact Changes**
+  - [spiral/tokenizer] Added the ability to cache tokenizer listeners.
+  - [spiral/core] Container with isolated memory scopes.
 - **Medium Impact Changes**
   - A minimal version of `symfony/console` increased to `^6.1`. 
 - **Other Features**
+  - [spiral/core] Added container `Singleton` attribute to replace `Spiral\Core\SingletonInterface`.
   - [spiral/console] Added the ability to configure console commands via attributes.
   - [spiral/console] Added the ability to prompt for missing required arguments.
   - [spiral/scaffolder] Added the ability to specify a custom `namespace` in the 
@@ -12,6 +16,13 @@
     `Spiral\Scaffolder\Command\JobHandlerCommand`, `Spiral\Scaffolder\Command\MiddlewareCommand` console commands.
   - [spiral/cache] Added the ability to configure the prefix in the storage alias.
   - Added `defineInterceptors` method in `Spiral\Bootloader\DomainBootloader` class.  
+  - [spiral/filter] Makes Setter attribute for the spiral/filters component repeatable.
+  - [spiral/sendit] Adds custom transports registrar for SendIt component.
+- **Bug Fixes**
+  - [spiral/filters] Fixed problem with validation nested filters.
+  - [spiral/core] Fixed infinite recursion on using for class name binding to the same class name.
+  - [spiral/queue] Removing the `QueueInterface` binding as a singleton.
+  - [spiral/core] Fixed the problem with singleton objects creation with custom arguments.
 
 ## 3.5.0 - 2022-12-23
 - **Medium Impact Changes**
