@@ -32,7 +32,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
         $dirs = m::mock(DirectoriesInterface::class);
 
         $env = m::mock(EnvironmentInterface::class);
-        $env->shouldReceive('get')->with('TOKENIZER_WARMUP', false)->andReturnFalse();
+        $env->shouldReceive('get')->with('TOKENIZER_CACHE_TARGETS', false)->andReturnFalse();
         $config = new TokenizerConfig();
 
         $this->assertSame(
@@ -57,7 +57,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
         $dirs = m::mock(DirectoriesInterface::class);
 
         $env = m::mock(EnvironmentInterface::class);
-        $env->shouldReceive('get')->with('TOKENIZER_WARMUP', false)->andReturnTrue();
+        $env->shouldReceive('get')->with('TOKENIZER_CACHE_TARGETS', false)->andReturnTrue();
 
         $config = new TokenizerConfig(['cache' => ['directory' => 'cache',]]);
 
@@ -83,7 +83,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
         $dirs = m::mock(DirectoriesInterface::class);
 
         $env = m::mock(EnvironmentInterface::class);
-        $env->shouldReceive('get')->with('TOKENIZER_WARMUP', true)->andReturnTrue();
+        $env->shouldReceive('get')->with('TOKENIZER_CACHE_TARGETS', true)->andReturnTrue();
 
         $config = new TokenizerConfig(['cache' => ['directory' => 'cache', 'enabled' => true]]);
 
@@ -110,7 +110,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
         $dirs->shouldReceive('get')->with('runtime')->andReturn('runtime/');
 
         $env = m::mock(EnvironmentInterface::class);
-        $env->shouldReceive('get')->with('TOKENIZER_WARMUP', false)->andReturnTrue();
+        $env->shouldReceive('get')->with('TOKENIZER_CACHE_TARGETS', false)->andReturnTrue();
 
         $config = new TokenizerConfig();
 

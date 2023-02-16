@@ -90,8 +90,8 @@ final class TokenizerListenerBootloader extends Bootloader implements
         TokenizerConfig $config,
     ): ClassesLoaderInterface {
         // We will use a file memory to cache the classes. Because it's available in the runtime.
-        // If you want to disable the cache, you can use the TOKENIZER_WARMUP environment variable.
-        $memory = $env->get('TOKENIZER_WARMUP', $config->isCacheEnabled())
+        // If you want to disable the cache, you can use the TOKENIZER_CACHE_TARGETS environment variable.
+        $memory = $env->get('TOKENIZER_CACHE_TARGETS', $config->isCacheEnabled())
             ? $factory->make(Memory::class, [
                 'directory' => $config->getCacheDirectory() ?? $dirs->get('runtime') . 'cache/listeners',
             ])
