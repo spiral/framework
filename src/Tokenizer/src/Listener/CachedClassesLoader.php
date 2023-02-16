@@ -47,7 +47,7 @@ final class CachedClassesLoader implements ClassesLoaderInterface
 
         $this->invoker->invoke(
             $listener,
-            \array_map(static fn(string $class) => new \ReflectionClass($class), \array_unique($listenerClasses)),
+            \array_map(static fn (string $class) => new \ReflectionClass($class), \array_unique($listenerClasses)),
         );
 
         return true;
