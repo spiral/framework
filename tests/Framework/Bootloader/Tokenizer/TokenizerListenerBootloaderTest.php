@@ -9,6 +9,7 @@ use Spiral\Tests\Framework\BaseTest;
 use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\Listener\CachedClassesLoader;
+use Spiral\Tokenizer\Listener\ClassesLoaderInterface;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
@@ -63,7 +64,7 @@ final class TokenizerListenerBootloaderTest extends BaseTest
     public function testCachedClassesLoaderBinding(): void
     {
         $this->assertContainerBoundAsSingleton(
-            CachedClassesLoader::class,
+            ClassesLoaderInterface::class,
             CachedClassesLoader::class
         );
     }
