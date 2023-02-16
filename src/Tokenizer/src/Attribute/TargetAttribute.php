@@ -30,7 +30,7 @@ final class TargetAttribute implements ListenerDefinitionInterface
     {
         $target = new \ReflectionClass($this->class);
         $attribute = $target->getAttributes(\Attribute::class)[0] ?? null;
-        $reader = (new Factory)->create();
+        $reader = (new Factory())->create();
 
         if ($attribute === null) {
             return;
