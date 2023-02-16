@@ -15,6 +15,15 @@ abstract class AbstractTarget implements \Stringable
     }
 
     /**
+     * Generates a unique string for this target to be used as cache key.
+     * @return non-empty-string
+     */
+    public function __toString(): string
+    {
+        return \md5(\print_r($this, return: true));
+    }
+
+    /**
      * Filter given classes and return only those that should be listened.
      * @param \ReflectionClass[] $classes
      * @return \Iterator<class-string>
@@ -28,14 +37,5 @@ abstract class AbstractTarget implements \Stringable
     public function getScope(): ?string
     {
         return $this->scope;
-    }
-
-    /**
-     * Generates a unique string for this target to be used as cache key.
-     * @return non-empty-string
-     */
-    public function __toString(): string
-    {
-        return \md5(\print_r($this, return: true));
     }
 }
