@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/distribution": "^3.6",
+        "spiral/distribution": "^3.7",
         "league/flysystem": "^2.3.1"
     },
     "autoload": {
@@ -29,7 +29,7 @@
         }
     },
     "require-dev": {
-        "spiral/boot": "^3.6",
+        "spiral/boot": "^3.7",
         "phpunit/phpunit": "^9.5.20",
         "vimeo/psalm": "^4.27",
         "jetbrains/phpstorm-attributes": "^1.0"
@@ -51,7 +51,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.6.x-dev"
+            "dev-master": "3.7.x-dev"
         }
     },
     "config": {
