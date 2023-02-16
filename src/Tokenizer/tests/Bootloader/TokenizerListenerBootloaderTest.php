@@ -24,16 +24,21 @@ final class TokenizerListenerBootloaderTest extends TestCase
         $bootloader = new TokenizerListenerBootloader();
 
         $factory = m::mock(FactoryInterface::class);
+        $factory->shouldReceive('make')->once()->withSomeOfArgs(Memory::class)
+            ->andReturn($memory = m::mock(MemoryInterface::class));
 
         $factory->shouldReceive('make')->once()->with(CachedClassesLoader::class, [
-            'memory' => new NullMemory(),
+            'memory' => $memory,
+            'readCache' => false
         ])->andReturn($loader = m::mock(ClassesLoaderInterface::class));
 
         $dirs = m::mock(DirectoriesInterface::class);
 
         $env = m::mock(EnvironmentInterface::class);
         $env->shouldReceive('get')->with('TOKENIZER_CACHE_TARGETS', false)->andReturnFalse();
-        $config = new TokenizerConfig();
+        $config = new TokenizerConfig([
+            'cache' => ['directory' => 'cache',],
+        ]);
 
         $this->assertSame(
             $loader,
@@ -52,6 +57,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
 
         $factory->shouldReceive('make')->once()->with(CachedClassesLoader::class, [
             'memory' => $memory,
+            'readCache' => true
         ])->andReturn($loader = m::mock(ClassesLoaderInterface::class));
 
         $dirs = m::mock(DirectoriesInterface::class);
@@ -78,6 +84,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
 
         $factory->shouldReceive('make')->once()->with(CachedClassesLoader::class, [
             'memory' => $memory,
+            'readCache' => true
         ])->andReturn($loader = m::mock(ClassesLoaderInterface::class));
 
         $dirs = m::mock(DirectoriesInterface::class);
@@ -104,6 +111,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
 
         $factory->shouldReceive('make')->once()->with(CachedClassesLoader::class, [
             'memory' => $memory,
+            'readCache' => true
         ])->andReturn($loader = m::mock(ClassesLoaderInterface::class));
 
         $dirs = m::mock(DirectoriesInterface::class);

@@ -16,6 +16,7 @@ final class CachedClassesLoader implements ClassesLoaderInterface
         private readonly MemoryInterface $memory,
         private readonly ClassLocatorByTarget $locator,
         private readonly ListenerInvoker $invoker,
+        private readonly bool $readCache = true,
     ) {
     }
 
@@ -36,7 +37,7 @@ final class CachedClassesLoader implements ClassesLoaderInterface
         foreach ($targets as $target) {
             $cacheKey = (string)$target;
 
-            $classes = $this->memory->loadData($cacheKey);
+            $classes = $this->readCache ? $this->memory->loadData($cacheKey) : null;
             if ($classes === null) {
                 $this->memory->saveData(
                     $cacheKey,

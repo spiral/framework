@@ -90,15 +90,13 @@ final class TokenizerListenerBootloader extends Bootloader implements
         TokenizerConfig $config,
     ): ClassesLoaderInterface {
         // We will use a file memory to cache the classes. Because it's available in the runtime.
-        // If you want to disable the cache, you can use the TOKENIZER_CACHE_TARGETS environment variable.
-        $memory = $env->get('TOKENIZER_CACHE_TARGETS', $config->isCacheEnabled())
-            ? $factory->make(Memory::class, [
-                'directory' => $config->getCacheDirectory() ?? $dirs->get('runtime') . 'cache/listeners',
-            ])
-            : new NullMemory();
-
+        // If you want to disable the read cache, you can use the TOKENIZER_CACHE_TARGETS environment variable.
+        // In this case the classes will be stored in a cache on every bootstrap, but not read from there.
         return $factory->make(CachedClassesLoader::class, [
-            'memory' => $memory,
+            'memory' => $factory->make(Memory::class, [
+                'directory' => $config->getCacheDirectory() ?? $dirs->get('runtime') . 'cache/listeners',
+            ]),
+            'readCache' => $env->get('TOKENIZER_CACHE_TARGETS', $config->isCacheEnabled())
         ]);
     }
 }

@@ -12,9 +12,9 @@ final class TargetAttributeTest extends TestCase
     public function testToString(): void
     {
         $attribute = new TargetAttribute('foo');
-        $this->assertSame('9100b0ad85d53cbd664bd25829f4a91a', (string) $attribute);
+        $this->assertSame('86c8823f14c6ebe7e7a801ce4050f8a4', (string) $attribute);
 
         $attribute = new TargetAttribute('foo', 'bar');
-        $this->assertSame('c53a8e8717d2ffec906b861df6bbfad0', (string) $attribute);
+        $this->assertSame('11dd26b3b753e5ad457331d7699250d8', (string) $attribute);
     }
 }
