@@ -23,7 +23,7 @@ final class TargetAttribute extends AbstractTarget
     public function __construct(
         private readonly string $attribute,
         ?string $scope = null,
-        public readonly bool $useAnnotations = false,
+        private readonly bool $useAnnotations = false,
     ) {
         parent::__construct($scope);
     }
