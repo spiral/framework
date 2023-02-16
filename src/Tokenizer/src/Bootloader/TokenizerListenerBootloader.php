@@ -96,7 +96,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
             'memory' => $factory->make(Memory::class, [
                 'directory' => $config->getCacheDirectory() ?? $dirs->get('runtime') . 'cache/listeners',
             ]),
-            'readCache' => $env->get('TOKENIZER_CACHE_TARGETS', $config->isCacheEnabled())
+            'readCache' => $env->get('TOKENIZER_CACHE_TARGETS', $config->isCacheEnabled()),
         ]);
     }
 }
