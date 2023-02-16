@@ -14,19 +14,9 @@ use Spiral\Tokenizer\Traits\TargetTrait;
  * @see TokenizationListenerInterface
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE), NamedArgumentConstructor]
-final class TargetClass implements ListenerDefinitionInterface
+final class TargetClass extends AbstractTarget
 {
     use TargetTrait;
-
-    /**
-     * @param class-string $class
-     * @param non-empty-string|null $scope
-     */
-    public function __construct(
-        public readonly string $class,
-        public readonly ?string $scope = null,
-    ) {
-    }
 
     public function filter(array $classes): \Generator
     {
@@ -46,15 +36,5 @@ final class TargetClass implements ListenerDefinitionInterface
                 yield $class->getName();
             }
         }
-    }
-
-    public function getCacheKey(): string
-    {
-        return \md5($this->class . $this->scope);
-    }
-
-    public function getScope(): ?string
-    {
-        return $this->scope;
     }
 }

@@ -8,6 +8,8 @@ use Spiral\Tests\Tokenizer\Fixtures\Attributes\WithTargetConstant;
 
 class ClassWithAttributeOnConstant
 {
+    use SomeTrait;
+
     #[WithTargetConstant]
     private const NAME = 'test';
 }

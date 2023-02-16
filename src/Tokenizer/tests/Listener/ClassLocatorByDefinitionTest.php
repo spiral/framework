@@ -7,20 +7,17 @@ namespace Spiral\Tests\Tokenizer\Listener;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Spiral\Attributes\AttributeReader;
 use Spiral\Tests\Tokenizer\Classes\Listeners;
 use Spiral\Tests\Tokenizer\Classes\Targets;
-use Spiral\Tokenizer\Attribute\ListenerDefinitionInterface;
 use Spiral\Tokenizer\ClassesInterface;
-use Spiral\Tokenizer\Listener\AttributesParser;
-use Spiral\Tokenizer\Listener\ClassLocatorByDefinition;
+use Spiral\Tokenizer\Listener\ClassLocatorByTarget;
 use Spiral\Tokenizer\ScopedClassesInterface;
 
 final class ClassLocatorByDefinitionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private ClassLocatorByDefinition $locator;
+    private ClassLocatorByTarget $locator;
     private ClassesInterface|m\LegacyMockInterface|m\MockInterface $classes;
     private ScopedClassesInterface|m\LegacyMockInterface|m\MockInterface $scopedClasses;
 
@@ -28,7 +25,7 @@ final class ClassLocatorByDefinitionTest extends TestCase
     {
         parent::setUp();
 
-        $this->locator = new ClassLocatorByDefinition(
+        $this->locator = new ClassLocatorByTarget(
             $this->classes = m::mock(ClassesInterface::class),
             $this->scopedClasses = m::mock(ScopedClassesInterface::class),
         );
@@ -42,6 +39,14 @@ final class ClassLocatorByDefinitionTest extends TestCase
                 Targets\ConsoleCommand::class,
                 Targets\ConsoleCommandInterface::class,
                 Targets\ConsoleCommandWithExtend::class,
+            ],
+        ];
+
+        yield 'trait' => [
+            Listeners\TraitListener::class,
+            [
+                Targets\ClassWithAttributeOnConstant::class,
+                Targets\ClassWithTrait::class,
             ],
         ];
 
@@ -68,8 +73,6 @@ final class ClassLocatorByDefinitionTest extends TestCase
                 Targets\ClassWithAttributeOnConstant::class,
             ],
         ];
-
-
 
         yield 'attribute-on-parameter' => [
             Listeners\ParameterListener::class,
@@ -99,12 +102,13 @@ final class ClassLocatorByDefinitionTest extends TestCase
                 Targets\ClassWithAttributeOnProperty::class,
                 Targets\ClassWithAttributeOnParameter::class,
                 Targets\ClassWithAttributeOnConstant::class,
+                Targets\ClassWithTrait::class,
             ],
         );
 
-        /** @var ListenerDefinitionInterface $definition */
-        $definition = \iterator_to_array((new AttributesParser(new AttributeReader()))
-            ->parse(new $listener))[0];
+        $attr = new \ReflectionClass($listener);
+        $attr = $attr->getAttributes()[0];
+        $definition = $attr->newInstance();
 
         if ($definition->getScope() === null) {
             $this->classes

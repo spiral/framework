@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Listener;
 
-use Spiral\Tokenizer\Attribute\ListenerDefinitionInterface;
+use Spiral\Tokenizer\Attribute\AbstractTarget;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\Traits\TargetTrait;
@@ -12,7 +12,7 @@ use Spiral\Tokenizer\Traits\TargetTrait;
 /**
  * @internal
  */
-final class ClassLocatorByDefinition
+final class ClassLocatorByTarget
 {
     use TargetTrait;
 
@@ -25,11 +25,11 @@ final class ClassLocatorByDefinition
     /**
      * @return class-string[]
      */
-    public function getClasses(ListenerDefinitionInterface $definition): array
+    public function getClasses(AbstractTarget $target): array
     {
         return \iterator_to_array(
-            $definition->filter(
-                $this->findClasses($definition),
+            $target->filter(
+                $this->findClasses($target),
             ),
         );
     }
@@ -37,9 +37,9 @@ final class ClassLocatorByDefinition
     /**
      * @return \ReflectionClass[]
      */
-    private function findClasses(ListenerDefinitionInterface $definition): array
+    private function findClasses(AbstractTarget $target): array
     {
-        $scope = $definition->getScope();
+        $scope = $target->getScope();
 
         // If scope for listener attribute is defined, we should use scoped class locator
         return $scope !== null

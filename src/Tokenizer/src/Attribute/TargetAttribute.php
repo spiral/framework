@@ -15,17 +15,18 @@ use Spiral\Tokenizer\TokenizationListenerInterface;
  * @see TokenizationListenerInterface
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE), NamedArgumentConstructor]
-final class TargetAttribute implements ListenerDefinitionInterface
+final class TargetAttribute extends AbstractTarget
 {
     /**
      * @param class-string $class
      * @param non-empty-string|null $scope
      */
     public function __construct(
-        public readonly string $class,
-        public readonly ?string $scope = null,
+        string $class,
+        ?string $scope = null,
         public readonly bool $useAnnotations = false,
     ) {
+        parent::__construct($class, $scope);
     }
 
     public function filter(array $classes): \Generator
@@ -103,15 +104,5 @@ final class TargetAttribute implements ListenerDefinitionInterface
                 }
             }
         }
-    }
-
-    public function getScope(): ?string
-    {
-        return $this->scope;
-    }
-
-    public function getCacheKey(): string
-    {
-        return \md5($this->class . $this->scope);
     }
 }

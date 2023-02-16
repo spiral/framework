@@ -4,25 +4,27 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Listener;
 
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\MemoryInterface;
+use Spiral\Tokenizer\Attribute\AbstractTarget;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
 final class CachedClassesLoader implements ClassesLoaderInterface
 {
     public function __construct(
-        private readonly AttributesParser $parser,
+        private readonly ReaderInterface $reader,
         private readonly MemoryInterface $memory,
-        private readonly ClassLocatorByDefinition $cacheBuilder,
+        private readonly ClassLocatorByTarget $locator,
         private readonly ListenerInvoker $invoker,
     ) {
     }
 
     public function loadClasses(TokenizationListenerInterface $listener): bool
     {
-        $definitions = \iterator_to_array($this->parser->parse($listener));
+        $targets = \iterator_to_array($this->parseAttributes($listener));
 
         // If there are no definitions, then listener can't be cached.
-        if ($definitions === []) {
+        if ($targets === []) {
             return false;
         }
 
@@ -31,14 +33,14 @@ final class CachedClassesLoader implements ClassesLoaderInterface
         // We decided to load classes for each definition separately.
         // It allows us to cache classes for each definition separately and if we reuse the
         // same target in multiple listeners, we will not have to load classes for the same target.
-        foreach ($definitions as $definition) {
-            $cacheKey = $definition->getCacheKey();
+        foreach ($targets as $target) {
+            $cacheKey = (string)$target;
 
             $classes = $this->memory->loadData($cacheKey);
             if ($classes === null) {
                 $this->memory->saveData(
                     $cacheKey,
-                    $classes = $this->cacheBuilder->getClasses($definition),
+                    $classes = $this->locator->getClasses($target),
                 );
             }
 
@@ -47,9 +49,20 @@ final class CachedClassesLoader implements ClassesLoaderInterface
 
         $this->invoker->invoke(
             $listener,
-            \array_map(static fn (string $class) => new \ReflectionClass($class), \array_unique($listenerClasses)),
+            \array_map(static fn(string $class) => new \ReflectionClass($class), \array_unique($listenerClasses)),
         );
 
         return true;
+    }
+
+    private function parseAttributes(TokenizationListenerInterface $listener): \Generator
+    {
+        $listener = new \ReflectionClass($listener);
+
+        foreach ($this->reader->getClassMetadata($listener) as $attribute) {
+            if ($attribute instanceof AbstractTarget) {
+                yield $attribute;
+            }
+        }
     }
 }
