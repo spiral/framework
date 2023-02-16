@@ -11,6 +11,9 @@ use Spiral\Tokenizer\TokenizationListenerInterface;
  */
 final class ListenerInvoker
 {
+    /**
+     * @param iterable<\ReflectionClass> $classes
+     */
     public function invoke(TokenizationListenerInterface $listener, iterable $classes): void
     {
         foreach ($classes as $class) {
