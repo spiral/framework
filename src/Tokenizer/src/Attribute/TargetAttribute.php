@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer\Attribute;
 
-use Spiral\Attributes\AttributeReader;
+use Spiral\Attributes\Factory;
 use Spiral\Attributes\NamedArgumentConstructor;
+use Spiral\Tokenizer\TokenizationListenerInterface;
 
 /**
  * When applied to a listener, this attribute will instruct the tokenizer to listen for classes that use attributes of
  * the given class.
+ * @see TokenizationListenerInterface
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE), NamedArgumentConstructor]
 final class TargetAttribute implements ListenerDefinitionInterface
@@ -28,7 +30,7 @@ final class TargetAttribute implements ListenerDefinitionInterface
     {
         $target = new \ReflectionClass($this->class);
         $attribute = $target->getAttributes(\Attribute::class)[0] ?? null;
-        $reader = new AttributeReader();
+        $reader = (new Factory)->create();
 
         if ($attribute === null) {
             return;
