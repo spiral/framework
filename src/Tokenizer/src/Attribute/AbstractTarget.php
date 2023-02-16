@@ -7,11 +7,9 @@ namespace Spiral\Tokenizer\Attribute;
 abstract class AbstractTarget implements \Stringable
 {
     /**
-     * @param class-string $class
      * @param non-empty-string|null $scope
      */
     public function __construct(
-        public readonly string $class,
         public readonly ?string $scope = null,
     ) {
     }
@@ -38,6 +36,6 @@ abstract class AbstractTarget implements \Stringable
      */
     public function __toString(): string
     {
-        return \md5(\print_r(\get_object_vars($this), return: true));
+        return \md5(\print_r($this, return: true));
     }
 }

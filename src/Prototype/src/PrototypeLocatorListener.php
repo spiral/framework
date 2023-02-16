@@ -11,7 +11,7 @@ use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 use Spiral\Tokenizer\Traits\TargetTrait;
 
-#[TargetAttribute(class: Prototyped::class)]
+#[TargetAttribute(Prototyped::class)]
 final class PrototypeLocatorListener implements TokenizationListenerInterface
 {
     use TargetTrait;

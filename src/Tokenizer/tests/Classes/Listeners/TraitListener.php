@@ -8,7 +8,7 @@ use Spiral\Tests\Tokenizer\Classes\Targets\SomeTrait;
 use Spiral\Tokenizer\Attribute\TargetClass;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-#[TargetClass(class: SomeTrait::class)]
+#[TargetClass(SomeTrait::class)]
 class TraitListener implements TokenizationListenerInterface
 {
     public function listen(\ReflectionClass $class): void

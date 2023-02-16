@@ -23,15 +23,15 @@ final class CachedClassesLoader implements ClassesLoaderInterface
     {
         $targets = \iterator_to_array($this->parseAttributes($listener));
 
-        // If there are no definitions, then listener can't be cached.
+        // If there are no targets, then listener can't be cached.
         if ($targets === []) {
             return false;
         }
 
         $listenerClasses = [];
 
-        // We decided to load classes for each definition separately.
-        // It allows us to cache classes for each definition separately and if we reuse the
+        // We decided to load classes for each target separately.
+        // It allows us to cache classes for each target separately and if we reuse the
         // same target in multiple listeners, we will not have to load classes for the same target.
         foreach ($targets as $target) {
             $cacheKey = (string)$target;

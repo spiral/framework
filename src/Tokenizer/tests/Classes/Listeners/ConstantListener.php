@@ -8,7 +8,7 @@ use Spiral\Tests\Tokenizer\Fixtures\Attributes\WithTargetConstant;
 use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-#[TargetAttribute(class: WithTargetConstant::class)]
+#[TargetAttribute(WithTargetConstant::class)]
 class ConstantListener implements TokenizationListenerInterface
 {
     public function listen(\ReflectionClass $class): void

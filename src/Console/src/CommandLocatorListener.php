@@ -12,7 +12,7 @@ use Spiral\Tokenizer\TokenizationListenerInterface;
 use Spiral\Tokenizer\Traits\TargetTrait;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
-#[TargetClass(class: SymfonyCommand::class)]
+#[TargetClass(SymfonyCommand::class)]
 final class CommandLocatorListener implements TokenizationListenerInterface
 {
     use LazyTrait;

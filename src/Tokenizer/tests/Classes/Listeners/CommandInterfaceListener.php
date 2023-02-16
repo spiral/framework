@@ -8,7 +8,7 @@ use Spiral\Tests\Tokenizer\Classes\Targets\ConsoleCommandInterface;
 use Spiral\Tokenizer\Attribute\TargetClass;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-#[TargetClass(class: ConsoleCommandInterface::class)]
+#[TargetClass(ConsoleCommandInterface::class)]
 class CommandInterfaceListener implements TokenizationListenerInterface
 {
     public function listen(\ReflectionClass $class): void

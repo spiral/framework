@@ -9,8 +9,8 @@ use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\Attribute\TargetClass;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-#[TargetAttribute(class: WithTargetMethod::class)]
-#[TargetClass(class: WithTargetMethod::class, scope: 'routes')]
+#[TargetAttribute(WithTargetMethod::class)]
+#[TargetClass(WithTargetMethod::class, scope: 'routes')]
 final class RouteListener implements TokenizationListenerInterface
 {
     public function listen(\ReflectionClass $class): void

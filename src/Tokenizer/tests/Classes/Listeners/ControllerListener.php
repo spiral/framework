@@ -8,7 +8,7 @@ use Spiral\Tests\Tokenizer\Fixtures\Attributes\WithTargetClass;
 use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-#[TargetAttribute(class:WithTargetClass::class)]
+#[TargetAttribute(WithTargetClass::class)]
 class ControllerListener implements TokenizationListenerInterface
 {
     public function listen(\ReflectionClass $class): void

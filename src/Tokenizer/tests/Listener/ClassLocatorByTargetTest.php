@@ -13,7 +13,7 @@ use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Listener\ClassLocatorByTarget;
 use Spiral\Tokenizer\ScopedClassesInterface;
 
-final class ClassLocatorByDefinitionTest extends TestCase
+final class ClassLocatorByTargetTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -108,21 +108,21 @@ final class ClassLocatorByDefinitionTest extends TestCase
 
         $attr = new \ReflectionClass($listener);
         $attr = $attr->getAttributes()[0];
-        $definition = $attr->newInstance();
+        $attribute = $attr->newInstance();
 
-        if ($definition->getScope() === null) {
+        if ($attribute->getScope() === null) {
             $this->classes
                 ->shouldReceive('getClasses')
                 ->andReturn($classes);
         } else {
             $this->scopedClasses
                 ->shouldReceive('getScopedClasses')
-                ->with($definition->getScope())
+                ->with($attribute->getScope())
                 ->andReturn($classes);
         }
 
         $classes = $this->locator->getClasses(
-            $definition
+            $attribute
         );
 
         $this->assertSame($expected, $classes);

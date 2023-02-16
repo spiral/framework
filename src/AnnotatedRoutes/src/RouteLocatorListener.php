@@ -12,7 +12,7 @@ use Spiral\Router\Target\Action;
 use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-#[TargetAttribute(class: Route::class, useAnnotations: true)]
+#[TargetAttribute(Route::class, useAnnotations: true)]
 final class RouteLocatorListener implements TokenizationListenerInterface
 {
     /** @var array<array-key, array{0: ReflectionMethod, 1: Route}> */

@@ -10,28 +10,27 @@ use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
 /**
- * When applied to a listener, this attribute will instruct the tokenizer to listen for classes that use attributes of
- * the given class.
- * @see TokenizationListenerInterface
+ * When applied to {@see TokenizationListenerInterface}, this attribute will instruct the tokenizer to listen for
+ * classes that use attributes of the given class.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE), NamedArgumentConstructor]
 final class TargetAttribute extends AbstractTarget
 {
     /**
-     * @param class-string $class
+     * @param class-string $attribute
      * @param non-empty-string|null $scope
      */
     public function __construct(
-        string $class,
+        private readonly string $attribute,
         ?string $scope = null,
         public readonly bool $useAnnotations = false,
     ) {
-        parent::__construct($class, $scope);
+        parent::__construct($scope);
     }
 
     public function filter(array $classes): \Generator
     {
-        $target = new \ReflectionClass($this->class);
+        $target = new \ReflectionClass($this->attribute);
         $attribute = $target->getAttributes(\Attribute::class)[0] ?? null;
 
         // If annotations are used, we need to use the annotation reader also
