@@ -23,8 +23,9 @@ final class CleanTest extends ConsoleTest
         ]);
     }
 
-    public function testClean2(): void
+    public function testCleanWhenRuntimeDirectoryNotExists(): void
     {
+        $this->cleanUpRuntimeDirectory();
         $this->assertConsoleCommandOutputContainsStrings('cache:clean', strings: [
             'directory is missing'
         ]);
