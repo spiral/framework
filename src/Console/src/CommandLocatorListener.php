@@ -7,10 +7,12 @@ namespace Spiral\Console;
 use Psr\Container\ContainerInterface;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Console\Traits\LazyTrait;
+use Spiral\Tokenizer\Attribute\TargetClass;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 use Spiral\Tokenizer\Traits\TargetTrait;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
+#[TargetClass(SymfonyCommand::class)]
 final class CommandLocatorListener implements TokenizationListenerInterface
 {
     use LazyTrait;
@@ -54,11 +56,11 @@ final class CommandLocatorListener implements TokenizationListenerInterface
     protected function isTargeted(\ReflectionClass $class, \ReflectionClass $target): bool
     {
         if (!$target->isTrait()) {
-            //Target is interface or class
+            // Target is interface or class
             return $class->isSubclassOf($target) || $class->getName() === $target->getName();
         }
 
         // Checking using traits
-        return \in_array($target->getName(), $this->fetchTraits($class->getName()));
+        return \in_array($target->getName(), $this->fetchTraits($class->getName()), true);
     }
 }

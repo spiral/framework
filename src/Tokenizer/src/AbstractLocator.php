@@ -24,7 +24,7 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
 
     public function __construct(
         protected Finder $finder,
-        protected readonly bool $debug = false
+        protected readonly bool $debug = false,
     ) {
     }
 

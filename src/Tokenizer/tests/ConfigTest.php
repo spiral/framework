@@ -29,7 +29,7 @@ class ConfigTest extends TestCase
     public function testDirectories()
     {
         $config = new TokenizerConfig([
-            'directories' => ['a', 'b', 'c']
+            'directories' => ['a', 'b', 'c'],
         ]);
         $this->assertSame(['a', 'b', 'c'], $config->getDirectories());
     }
@@ -37,7 +37,7 @@ class ConfigTest extends TestCase
     public function testExcluded()
     {
         $config = new TokenizerConfig([
-            'exclude' => ['a', 'b', 'c']
+            'exclude' => ['a', 'b', 'c'],
         ]);
         $this->assertSame(['a', 'b', 'c'], $config->getExcludes());
     }
@@ -51,8 +51,8 @@ class ConfigTest extends TestCase
                 'foo' => [
                     'directories' => ['c'],
                     'exclude' => ['d'],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $this->assertSame([
@@ -76,8 +76,8 @@ class ConfigTest extends TestCase
                 ],
                 'baz' => [
                     'exclude' => ['d'],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $this->assertSame([
@@ -94,5 +94,32 @@ class ConfigTest extends TestCase
             'directories' => ['a'],
             'exclude' => ['d'],
         ], $config->getScope('baz'));
+    }
+
+    public function testGetsCacheDirectory(): void
+    {
+        $config = new TokenizerConfig();
+        $this->assertNull($config->getCacheDirectory());
+
+        $config = new TokenizerConfig([
+            'cache' => [
+                'directory' => 'foo',
+            ],
+        ]);
+
+        $this->assertSame('foo', $config->getCacheDirectory());
+    }
+
+    public function testCacheEnabled(): void
+    {
+        $config = new TokenizerConfig();
+        $this->assertFalse($config->isCacheEnabled());
+
+        $config = new TokenizerConfig([
+            'cache' => [
+                'enabled' => true,
+            ],
+        ]);
+        $this->assertTrue($config->isCacheEnabled());
     }
 }

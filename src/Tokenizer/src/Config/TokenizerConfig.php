@@ -22,6 +22,7 @@ final class TokenizerConfig extends InjectableConfig
 
     /**
      * @psalm-var array{
+     *     "cache": array{"directory": null, "enabled": bool},
      *     "directories": TDirectories,
      *     "exclude": TDirectories,
      *     "scopes": array<non-empty-string, TScope>
@@ -29,6 +30,10 @@ final class TokenizerConfig extends InjectableConfig
      * @var array
      */
     protected array $config = [
+        'cache' => [
+            'directory' => null,
+            'enabled' => false,
+        ],
         'debug' => false,
         'directories' => [],
         'exclude' => [],
@@ -37,7 +42,7 @@ final class TokenizerConfig extends InjectableConfig
 
     public function isDebug(): bool
     {
-        return (bool) ($this->config['debug'] ?? false);
+        return (bool)($this->config['debug'] ?? false);
     }
 
     /**
@@ -45,7 +50,7 @@ final class TokenizerConfig extends InjectableConfig
      */
     public function getDirectories(): array
     {
-        return $this->config['directories'] ?? [(string) \getcwd()];
+        return $this->config['directories'] ?? [(string)\getcwd()];
     }
 
     /**
@@ -68,5 +73,24 @@ final class TokenizerConfig extends InjectableConfig
             'directories' => $directories,
             'exclude' => $excludes,
         ];
+    }
+
+    /**
+     * Check if tokenizer listeners cache is enabled.
+     */
+    public function isCacheEnabled(): bool
+    {
+        return (bool)($this->config['cache']['enabled'] ?? false);
+    }
+
+    /**
+     * Get tokenizer listeners cache directory.
+     */
+    public function getCacheDirectory(): ?string
+    {
+        $dir = $this->config['cache']['directory'] ?? null;
+        \assert(\is_string($dir) || $dir === null, 'Invalid cache directory.');
+
+        return $dir;
     }
 }

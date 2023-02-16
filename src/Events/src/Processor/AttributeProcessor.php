@@ -8,9 +8,11 @@ use Spiral\Attributes\ReaderInterface;
 use Spiral\Events\Attribute\Listener;
 use Spiral\Events\ListenerFactoryInterface;
 use Spiral\Events\ListenerRegistryInterface;
+use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
+#[TargetAttribute(Listener::class)]
 final class AttributeProcessor extends AbstractProcessor implements TokenizationListenerInterface
 {
     /** @var array<class-string, Listener[]> */
