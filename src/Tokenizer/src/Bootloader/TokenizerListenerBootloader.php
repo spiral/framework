@@ -13,9 +13,10 @@ use Spiral\Boot\NullMemory;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
-use Spiral\Files\FilesInterface;
 use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Listener\CachedClassesLoader;
+use Spiral\Tokenizer\Listener\ClassesLoaderInterface;
 use Spiral\Tokenizer\Listener\ListenerInvoker;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
@@ -37,7 +38,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
 
     protected const SINGLETONS = [
         TokenizerListenerRegistryInterface::class => self::class,
-        CachedClassesLoader::class => [self::class, 'initCachedClassesLoader'],
+        ClassesLoaderInterface::class => [self::class, 'initCachedClassesLoader'],
     ];
 
     /** @var TokenizationListenerInterface[] */
@@ -52,13 +53,13 @@ final class TokenizerListenerBootloader extends Bootloader implements
     {
         $kernel->booted(function (
             ClassesInterface $classes,
-            CachedClassesLoader $cachedClassesLoader,
+            ClassesLoaderInterface $loader,
             ListenerInvoker $invoker,
         ): void {
             // First, we check if the listener has been cached. If it has, we will load the classes
             // from the cache.
             foreach ($this->listeners as $i => $listener) {
-                if ($cachedClassesLoader->loadClasses($listener)) {
+                if ($loader->loadClasses($listener)) {
                     unset($this->listeners[$i]);
                 }
             }
@@ -82,16 +83,18 @@ final class TokenizerListenerBootloader extends Bootloader implements
         });
     }
 
-    private function initCachedClassesLoader(
+    public function initCachedClassesLoader(
         FactoryInterface $factory,
-        FilesInterface $files,
         DirectoriesInterface $dirs,
-        EnvironmentInterface $env
-    ): CachedClassesLoader {
+        EnvironmentInterface $env,
+        TokenizerConfig $config,
+    ): ClassesLoaderInterface {
         // We will use a file memory to cache the classes. Because it's available in the runtime.
         // If you want to disable the cache, you can use the TOKENIZER_WARMUP environment variable.
-        $memory = $env->get('TOKENIZER_WARMUP', false)
-            ? new Memory($dirs->get('runtime') . 'cache/listeners', $files)
+        $memory = $env->get('TOKENIZER_WARMUP', $config->isCacheEnabled())
+            ? $factory->make(Memory::class, [
+                'directory' => $config->getCacheDirectory() ?? $dirs->get('runtime') . 'cache/listeners',
+            ])
             : new NullMemory();
 
         return $factory->make(CachedClassesLoader::class, [

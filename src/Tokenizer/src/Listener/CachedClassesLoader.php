@@ -7,7 +7,7 @@ namespace Spiral\Tokenizer\Listener;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-final class CachedClassesLoader
+final class CachedClassesLoader implements ClassesLoaderInterface
 {
     public function __construct(
         private readonly AttributesParser $parser,
@@ -32,11 +32,13 @@ final class CachedClassesLoader
         // It allows us to cache classes for each definition separately and if we reuse the
         // same target in multiple listeners, we will not have to load classes for the same target.
         foreach ($definitions as $definition) {
-            $classes = $this->memory->loadData($definition->getHash());
+            $cacheKey = $definition->getCacheKey();
+
+            $classes = $this->memory->loadData($cacheKey);
             if ($classes === null) {
                 $this->memory->saveData(
-                    $definition->getHash(),
-                    $classes = $this->cacheBuilder->getClasses($definition)
+                    $cacheKey,
+                    $classes = $this->cacheBuilder->getClasses($definition),
                 );
             }
 
@@ -45,7 +47,7 @@ final class CachedClassesLoader
 
         $this->invoker->invoke(
             $listener,
-            \array_map(static fn (string $class) => new \ReflectionClass($class), \array_unique($listenerClasses))
+            \array_map(static fn(string $class) => new \ReflectionClass($class), \array_unique($listenerClasses)),
         );
 
         return true;

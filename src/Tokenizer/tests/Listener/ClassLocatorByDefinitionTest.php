@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Tests\Tokenizer\Classes\Listeners;
 use Spiral\Tests\Tokenizer\Classes\Targets;
+use Spiral\Tokenizer\Attribute\ListenerDefinitionInterface;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Listener\AttributesParser;
 use Spiral\Tokenizer\Listener\ClassLocatorByDefinition;
@@ -28,7 +29,6 @@ final class ClassLocatorByDefinitionTest extends TestCase
         parent::setUp();
 
         $this->locator = new ClassLocatorByDefinition(
-            new AttributeReader(),
             $this->classes = m::mock(ClassesInterface::class),
             $this->scopedClasses = m::mock(ScopedClassesInterface::class),
         );
@@ -102,17 +102,18 @@ final class ClassLocatorByDefinitionTest extends TestCase
             ],
         );
 
+        /** @var ListenerDefinitionInterface $definition */
         $definition = \iterator_to_array((new AttributesParser(new AttributeReader()))
             ->parse(new $listener))[0];
 
-        if ($definition->scope === null) {
+        if ($definition->getScope() === null) {
             $this->classes
                 ->shouldReceive('getClasses')
                 ->andReturn($classes);
         } else {
             $this->scopedClasses
                 ->shouldReceive('getScopedClasses')
-                ->with($definition->scope)
+                ->with($definition->getScope())
                 ->andReturn($classes);
         }
 

@@ -6,10 +6,11 @@ namespace Spiral\Tests\Tokenizer\Classes\Listeners;
 
 use Spiral\Tests\Tokenizer\Fixtures\Attributes\WithTargetMethod;
 use Spiral\Tokenizer\Attribute\TargetAttribute;
+use Spiral\Tokenizer\Attribute\TargetClass;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
 #[TargetAttribute(class: WithTargetMethod::class)]
-#[TargetAttribute(class: WithTargetMethod::class, scope: 'routes')]
+#[TargetClass(class: WithTargetMethod::class, scope: 'routes')]
 final class RouteListener implements TokenizationListenerInterface
 {
     public function listen(\ReflectionClass $class): void
