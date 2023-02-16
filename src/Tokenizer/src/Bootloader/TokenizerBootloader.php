@@ -29,7 +29,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
     ];
 
     public function __construct(
-        private readonly ConfiguratorInterface $config
+        private readonly ConfiguratorInterface $config,
     ) {
     }
 
