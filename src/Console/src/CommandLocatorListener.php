@@ -56,11 +56,11 @@ final class CommandLocatorListener implements TokenizationListenerInterface
     protected function isTargeted(\ReflectionClass $class, \ReflectionClass $target): bool
     {
         if (!$target->isTrait()) {
-            //Target is interface or class
+            // Target is interface or class
             return $class->isSubclassOf($target) || $class->getName() === $target->getName();
         }
 
         // Checking using traits
-        return \in_array($target->getName(), $this->fetchTraits($class->getName()));
+        return \in_array($target->getName(), $this->fetchTraits($class->getName()), true);
     }
 }
