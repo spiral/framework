@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Scaffolder\App;
 
 use Spiral\Boot;
+use Spiral\Core\Container;
 use Spiral\Scaffolder;
 use Throwable;
 
@@ -22,6 +23,11 @@ class TestApp extends Boot\AbstractKernel
     public function get(string $target)
     {
         return $this->container->get($target);
+    }
+
+    public function getContainer(): Container
+    {
+        return $this->container;
     }
 
     /**

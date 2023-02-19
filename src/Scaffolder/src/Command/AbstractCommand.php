@@ -37,7 +37,7 @@ abstract class AbstractCommand extends Command
             $class,
             [
                 'name' => (string)$this->argument('name'),
-                'comment' => $this->option('comment'),
+                'comment' => $this->getComment(),
                 'namespace' => $this->getNamespace(),
             ] + $this->config->declarationOptions($class::TYPE),
         );
@@ -77,5 +77,10 @@ abstract class AbstractCommand extends Command
     protected function getNamespace(): ?string
     {
         return $this->hasOption('namespace') ? $this->option('namespace') : null;
+    }
+
+    protected function getComment(): ?string
+    {
+        return $this->hasOption('comment') ? $this->option('comment') : null;
     }
 }
