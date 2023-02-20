@@ -29,11 +29,11 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "spiral/core": "^3.6.1",
-        "spiral/hmvc": "^3.6.1",
-        "spiral/http": "^3.6.1",
+        "spiral/core": "^3.7",
+        "spiral/hmvc": "^3.7",
+        "spiral/http": "^3.7",
         "cocur/slugify": "^3.2",
-        "spiral/telemetry": "^3.6.1",
+        "spiral/telemetry": "^3.7",
         "doctrine/inflector": "^1.4|^2.0",
         "psr/event-dispatcher": "^1.0"
     },

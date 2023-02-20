@@ -29,11 +29,11 @@
     "require": {
         "php": ">=8.1",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/tokenizer": "^3.6.1",
+        "spiral/tokenizer": "^3.7",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
-        "spiral/boot": "^3.6.1",
+        "spiral/boot": "^3.7",
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^4.27"
