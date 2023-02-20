@@ -24,7 +24,7 @@
         }
     },
     "require-dev": {
-        "spiral/boot": "^3.7",
+        "spiral/boot": "^3.6.1",
         "aws/aws-sdk-php": "^3.0",
         "guzzlehttp/psr7": "^1.7",
         "jetbrains/phpstorm-attributes": "^1.0",

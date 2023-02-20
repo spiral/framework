@@ -1,10 +1,8 @@
 # CHANGELOG
 
-## Unreleased
-- **High Impact Changes**
-- **Medium Impact Changes**
-- **Other Features**
+## 3.6.1 - 2023-02-20
 - **Bug Fixes**
+  - [spiral/scaffolder] Fixed the problem with namespace option in some scaffolder commands.
 
 ## 3.6.0 - 2023-02-17
 - **High Impact Changes**
