@@ -18,7 +18,7 @@ abstract class AbstractCommand extends Command
         protected ScaffolderConfig $config,
         protected FilesInterface $files,
         ContainerInterface $container,
-        private readonly FactoryInterface $factory
+        private readonly FactoryInterface $factory,
     ) {
         $this->setContainer($container);
 
@@ -36,10 +36,10 @@ abstract class AbstractCommand extends Command
         return $this->factory->make(
             $class,
             [
-                'name' => (string) $this->argument('name'),
-                'comment' => $this->option('comment'),
-                'namespace' => $this->option('namespace'),
-            ] + $this->config->declarationOptions($class::TYPE)
+                'name' => (string)$this->argument('name'),
+                'comment' => $this->getComment(),
+                'namespace' => $this->getNamespace(),
+            ] + $this->config->declarationOptions($class::TYPE),
         );
     }
 
@@ -50,8 +50,8 @@ abstract class AbstractCommand extends Command
     {
         $filename = $this->config->classFilename(
             $declaration::TYPE,
-            (string) $this->argument('name'),
-            $this->option('namespace')
+            (string)$this->argument('name'),
+            $this->getNamespace(),
         );
         $filename = $this->files->normalizePath($filename);
         $className = $declaration->getClass()->getName();
@@ -59,7 +59,7 @@ abstract class AbstractCommand extends Command
         if ($this->files->exists($filename)) {
             $this->writeln(
                 \sprintf("<fg=red>Unable to create '<comment>%s</comment>' declaration, ", $className)
-                . \sprintf("file '<comment>%s</comment>' already exists.</fg=red>", $filename)
+                . \sprintf("file '<comment>%s</comment>' already exists.</fg=red>", $filename),
             );
 
             return;
@@ -70,7 +70,17 @@ abstract class AbstractCommand extends Command
 
         $this->writeln(
             \sprintf("Declaration of '<info>%s</info>' ", $className)
-            . \sprintf("has been successfully written into '<comment>%s</comment>'.", $filename)
+            . \sprintf("has been successfully written into '<comment>%s</comment>'.", $filename),
         );
+    }
+
+    protected function getNamespace(): ?string
+    {
+        return $this->hasOption('namespace') ? $this->option('namespace') : null;
+    }
+
+    protected function getComment(): ?string
+    {
+        return $this->hasOption('comment') ? $this->option('comment') : null;
     }
 }
