@@ -11,6 +11,7 @@ use Spiral\Queue\Event\JobProcessing;
 use Spiral\Queue\HandlerRegistryInterface;
 
 /**
+ * @internal
  * @psalm-type TParameters = array{
  *     driver: non-empty-string,
  *     queue: non-empty-string,

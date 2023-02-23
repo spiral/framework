@@ -13,6 +13,7 @@ use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerInterface;
 
 /**
+ * @internal
  * @psalm-type TParameters = array{options: ?OptionsInterface, payload: array}
  */
 final class Core implements CoreInterface
