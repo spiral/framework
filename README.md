@@ -32,8 +32,7 @@ PSR-compatible components. The Framework execution model based on a hybrid runti
 (GRPC, Queue, WebSockets, etc.) handled by [RoadRunner](https://github.com/spiral/roadrunner) application server and 
 the PHP code of your application stays in memory permanently (anti-memory leak tools included).
 
-- [Simple Application example](https://github.com/spiral/app)
-- [Application installer](https://github.com/spiral/installer)
+- [Application installer](https://github.com/spiral/app)
 
 ## Features
 
