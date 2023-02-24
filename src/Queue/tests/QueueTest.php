@@ -11,23 +11,31 @@ use Spiral\Queue\Queue;
 
 final class QueueTest extends TestCase
 {
-    public function testPush(): void
+    /**
+     * @dataProvider pushDataProvider
+     */
+    public function testPush(mixed $payload, mixed $options): void
     {
         $queue = new Queue(
             $core = m::mock(CoreInterface::class)
         );
 
-        $options = new Options();
-
         $core->shouldReceive('callAction')->once()
             ->with('foo', 'push', [
-                'payload' => ['baz' => 'baf'],
+                'payload' => $payload,
                 'options' => $options
             ])
             ->andReturn('task-id');
 
-        $id = $queue->push('foo', ['baz' => 'baf'], $options);
+        $id = $queue->push('foo', $payload, $options);
 
         $this->assertSame('task-id', $id);
+    }
+
+    public function pushDataProvider(): \Traversable
+    {
+        yield [['baz' => 'baf'], new Options()];
+        yield [new \stdClass(), new Options()];
+        yield [new \stdClass(), new \stdClass()];
     }
 }
