@@ -119,10 +119,10 @@ final class SignatureTest extends BaseTest
         $core = $this->getCore(
             $this->getStaticLocator([
                 new class extends Command {
-                    protected const SIGNATURE = 'foo:bar 
-                                    {foo : Foo arg description. }  
-                                    {bar=default : Bar arg description. } 
-                                    {baz[]? : Baz arg description. } 
+                    protected const SIGNATURE = 'foo:bar
+                                    {foo : Foo arg description. }
+                                    {bar=default : Bar arg description. }
+                                    {baz[]? : Baz arg description. }
                                     {--o|id[]= : Id option description. }
                                     {--Q|quit : Quit option description. }
                                     {--naf=default : Naf option description. }
@@ -160,6 +160,30 @@ Options:
 HELP
             ,
             $core->run(command: 'help', input: ['command_name' => 'foo:bar'])->getOutput()->fetch()
+        );
+    }
+
+    public function testDescriptionFromConstant(): void
+    {
+        $core = $this->getCore(
+            $this->getStaticLocator([
+                new class extends Command {
+                    protected const SIGNATURE = 'foo:bar';
+                    protected const DESCRIPTION = 'baz';
+
+                    public function perform(): int
+                    {
+                        $this->write($this->getDescription());
+
+                        return self::SUCCESS;
+                    }
+                },
+            ])
+        );
+
+        $this->assertSame(
+            'baz',
+            $core->run(command: 'foo:bar')->getOutput()->fetch()
         );
     }
 }

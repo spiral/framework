@@ -27,6 +27,7 @@ final class SignatureBasedConfigurator implements ConfiguratorInterface
         $result = $this->parser->parse((string) $reflection->getConstant('SIGNATURE'));
 
         $command->setName($result->name);
+        $command->setDescription($result->description ?? (string) $reflection->getConstant('DESCRIPTION'));
 
         foreach ($result->options as $option) {
             $command->getDefinition()->addOption($option);
