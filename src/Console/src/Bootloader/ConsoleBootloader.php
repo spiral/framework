@@ -13,16 +13,20 @@ use Spiral\Console\CommandLocatorListener;
 use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Console;
 use Spiral\Console\ConsoleDispatcher;
+use Spiral\Console\LocatorInterface;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
+use Spiral\Console\StaticLocator;
+use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
+use Spiral\Filters\InputInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
 /**
- * Bootloads console and provides ability to register custom bootload commands.
+ * Bootloads console and provides ability to register custom commands.
  */
 final class ConsoleBootloader extends Bootloader implements SingletonInterface
 {
@@ -32,11 +36,11 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
 
     protected const SINGLETONS = [
         Console::class => Console::class,
-        // LocatorInterface::class => CommandLocator::class,
+        LocatorInterface::class => [self::class, 'initLocator'],
     ];
 
     public function __construct(
-        private readonly ConfiguratorInterface $config
+        private readonly ConfiguratorInterface $config,
     ) {
     }
 
@@ -52,12 +56,16 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
             [
                 'commands' => [],
                 'sequences' => [],
-            ]
+                'interceptors' => [],
+            ],
         );
     }
 
-    public function boot(TokenizerListenerRegistryInterface $listenerRegistry, CommandLocatorListener $listener): void
-    {
+    public function boot(
+        Container $container,
+        TokenizerListenerRegistryInterface $listenerRegistry,
+        CommandLocatorListener $listener
+    ): void {
         $listenerRegistry->addListener($listener);
     }
 
@@ -68,7 +76,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     {
         $this->config->modify(
             ConsoleConfig::CONFIG,
-            new Append('interceptors', null, $interceptor)
+            new Append('interceptors', null, $interceptor),
         );
     }
 
@@ -83,7 +91,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
             ConsoleConfig::CONFIG,
             $lowPriority
                 ? new Prepend('commands', null, $command)
-                : new Append('commands', null, $command)
+                : new Append('commands', null, $command),
         );
     }
 
@@ -91,7 +99,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string|array|\Closure $sequence,
         string $header,
         string $footer = '',
-        array $options = []
+        array $options = [],
     ): void {
         $this->addSequence('configure', $sequence, $header, $footer, $options);
     }
@@ -100,7 +108,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string|array|\Closure $sequence,
         string $header,
         string $footer = '',
-        array $options = []
+        array $options = [],
     ): void {
         $this->addSequence('update', $sequence, $header, $footer, $options);
     }
@@ -110,18 +118,18 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string|array|\Closure $sequence,
         string $header,
         string $footer = '',
-        array $options = []
+        array $options = [],
     ): void {
         if (!isset($this->config->getConfig(ConsoleConfig::CONFIG)['sequences'][$name])) {
             $this->config->modify(
                 ConsoleConfig::CONFIG,
-                new Append('sequences', $name, [])
+                new Append('sequences', $name, []),
             );
         }
 
         $this->config->modify(
             ConsoleConfig::CONFIG,
-            $this->sequence('sequences.' . $name, $sequence, $header, $footer, $options)
+            $this->sequence('sequences.' . $name, $sequence, $header, $footer, $options),
         );
     }
 
@@ -130,7 +138,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string|array|callable $sequence,
         string $header,
         string $footer,
-        array $options
+        array $options,
     ): Append {
         return new Append(
             $target,
@@ -138,6 +146,15 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
             \is_array($sequence) || \is_callable($sequence)
                 ? new CallableSequence($sequence, $header, $footer)
                 : new CommandSequence($sequence, $options, $header, $footer)
+        );
+    }
+
+    private function initLocator(ConsoleConfig $config, Container $container): LocatorInterface
+    {
+        return new StaticLocator(
+            $config->getCommands(),
+            $config->getInterceptors(),
+            $container
         );
     }
 }

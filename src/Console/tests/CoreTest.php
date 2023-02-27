@@ -40,6 +40,5 @@ class CoreTest extends BaseTest
 
         $this->assertStringContainsString('Spiral Framework', $output);
         $this->assertStringContainsString('Test Command', $output);
-        $this->assertStringContainsString('test:user', $output);
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Console;
 
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Exception\LocatorException;
@@ -32,9 +31,9 @@ final class Console
     public function __construct(
         private readonly ConsoleConfig $config,
         private readonly ?LocatorInterface $locator = null,
-        private readonly ContainerInterface $container = new Container(),
+        private readonly Container $container = new Container(),
         private readonly ScopeInterface $scope = new Container(),
-        private readonly ?EventDispatcherInterface $dispatcher = null
+        private readonly ?EventDispatcherInterface $dispatcher = null,
     ) {
     }
 
@@ -45,14 +44,11 @@ final class Console
      */
     public function start(InputInterface $input = new ArgvInput(), OutputInterface $output = new ConsoleOutput()): int
     {
-        return $this->scope->runScope(
-            [],
-            fn () => $this->run(
-                $input->getFirstArgument() ?? 'list',
-                $input,
-                $output
-            )->getCode()
-        );
+        return $this->run(
+            $input->getFirstArgument() ?? 'list',
+            $input,
+            $output,
+        )->getCode();
     }
 
     /**
@@ -64,7 +60,7 @@ final class Console
     public function run(
         ?string $command,
         array|InputInterface $input = [],
-        OutputInterface $output = new BufferedOutput()
+        OutputInterface $output = new BufferedOutput(),
     ): CommandOutput {
         $input = \is_array($input) ? new ArrayInput($input) : $input;
 
@@ -74,10 +70,14 @@ final class Console
             $input = new InputProxy($input, ['firstArgument' => $command]);
         }
 
-        $code = $this->scope->runScope([
-            InputInterface::class => $input,
-            OutputInterface::class => $output,
-        ], fn () => $this->getApplication()->doRun($input, $output));
+        $code = $this->container->scope(
+            fn () => $this->getApplication()->doRun($input, $output),
+            [
+                InputInterface::class => $input,
+                OutputInterface::class => $output,
+            ],
+            'console',
+        );
 
         return new CommandOutput($code ?? self::CODE_NONE, $output);
     }
@@ -101,17 +101,9 @@ final class Console
         }
 
         if ($this->locator !== null) {
+            // Register user defined commands
             $this->addCommands($this->locator->locateCommands());
         }
-
-        // Register user defined commands
-        $static = new StaticLocator(
-            $this->config->getCommands(),
-            $this->config->getInterceptors(),
-            $this->container
-        );
-
-        $this->addCommands($static->locateCommands());
 
         return $this->application;
     }
@@ -161,7 +153,7 @@ final class Console
             }
         }
 
-        match ($shellVerbosity = (int) getenv('SHELL_VERBOSITY')) {
+        match ($shellVerbosity = (int)getenv('SHELL_VERBOSITY')) {
             -1 => $output->setVerbosity(OutputInterface::VERBOSITY_QUIET),
             1 => $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE),
             2 => $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE),
