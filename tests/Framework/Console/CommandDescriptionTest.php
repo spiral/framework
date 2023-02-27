@@ -33,6 +33,8 @@ final class CommandDescriptionTest extends ConsoleTest
             'List application routes',
             'Warm-up view cache',
             'Clear view cache',
+            'Description from constant. Command configured via attribute',
+            'Description from constant. Command configured via signature',
         ]);
     }
 }
