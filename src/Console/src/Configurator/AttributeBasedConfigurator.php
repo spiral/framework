@@ -27,7 +27,7 @@ final class AttributeBasedConfigurator implements ConfiguratorInterface
         $result = $this->parser->parse($reflection);
 
         $command->setName($result->name);
-        $command->setDescription((string) $result->description);
+        $command->setDescription($result->description ?? (string) $reflection->getConstant('DESCRIPTION'));
         $command->setHelp((string) $result->help);
 
         foreach ($result->options as $option) {
