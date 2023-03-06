@@ -28,12 +28,13 @@ final class AttributeMapper
     /**
      * Map input data into filter properties with attributes
      *
-     * @return array{0: array, 1: array}
+     * @return array{0: array, 1: array, 2: array}
      */
     public function map(FilterInterface $filter, InputInterface $input): array
     {
         $errors = [];
         $schema = [];
+        $setters = [];
         $class = new \ReflectionClass($filter);
 
         foreach ($class->getProperties() as $property) {
@@ -76,11 +77,13 @@ final class AttributeMapper
 
                     $this->setValue($filter, $property, $propertyValues);
                     $schema[$property->getName()] = [$attribute->class, $prefix . '.*'];
+                } elseif ($attribute instanceof Setter) {
+                    $setters[$property->getName()][] = $attribute;
                 }
             }
         }
 
-        return [$schema, $errors];
+        return [$schema, $errors, $setters];
     }
 
     private function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
