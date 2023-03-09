@@ -228,4 +228,15 @@ final class ArgumentsTest extends TestCase
             }
         ));
     }
+
+    public function testArgumentWithObjectType(): void
+    {
+        $this->expectException(ConfiguratorException::class);
+        $this->parser->parse(new \ReflectionClass(
+            new #[AsCommand(name: 'foo')] class {
+                #[Argument]
+                private object $arg;
+            }
+        ));
+    }
 }

@@ -141,8 +141,13 @@ final class Parser
             }
 
             $type = $this->getPropertyType($property);
+            $mode = $attribute->mode;
 
-            if ($attribute->mode === InputOption::VALUE_NONE || $attribute->mode === InputOption::VALUE_NEGATABLE) {
+            if ($mode === null) {
+                $mode = $this->guessOptionMode($type, $property);
+            }
+
+            if ($mode === InputOption::VALUE_NONE || $attribute->mode === InputOption::VALUE_NEGATABLE) {
                 if ($type->getName() !== 'bool') {
                     throw new ConfiguratorException(
                         'Options properties with mode `VALUE_NONE` or `VALUE_NEGATABLE` must be bool!'
@@ -155,7 +160,7 @@ final class Parser
             $result[] = new InputOption(
                 name: $attribute->name ?? $property->getName(),
                 shortcut: $attribute->shortcut,
-                mode: $attribute->mode,
+                mode: $mode,
                 description: (string) $attribute->description,
                 default: $hasDefaultValue ? $property->getDefaultValue() : null,
                 suggestedValues: $attribute->suggestedValues
@@ -205,10 +210,26 @@ final class Parser
             }
         }
 
-        if ($type instanceof \ReflectionNamedType && $type->isBuiltin()) {
+        if ($type instanceof \ReflectionNamedType && $type->isBuiltin() && $type->getName() !== 'object') {
             return $type;
         }
 
         throw new ConfiguratorException(\sprintf('Invalid type for the `%s` property.', $property->getName()));
+    }
+
+    /**
+     * @return positive-int
+     */
+    private function guessOptionMode(\ReflectionNamedType $type, \ReflectionProperty $property): int
+    {
+        $isOptional = $type->allowsNull() || $property->hasDefaultValue();
+
+        return match (true) {
+            $type->getName() === 'bool' => InputOption::VALUE_NEGATABLE,
+            $type->getName() === 'array' && $isOptional => InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+            $type->getName() === 'array' && !$isOptional => InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+            $type->allowsNull() || $property->hasDefaultValue() => InputOption::VALUE_OPTIONAL,
+            default => InputOption::VALUE_REQUIRED
+        };
     }
 }
