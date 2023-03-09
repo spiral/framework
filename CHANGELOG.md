@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased
+- **High Impact Changes**
+- **Medium Impact Changes**
+- **Other Features**
+  - [spiral/console] Added the ability to guess **option mode**, unless it is explicitly passed in the 
+    `Spiral\Console\Attribute\Option` attribute.
+- **Bug Fixes**
+
 ## 3.6.1 - 2023-02-20
 - **Bug Fixes**
   - [spiral/scaffolder] Fixed the problem with namespace option in some scaffolder commands.
