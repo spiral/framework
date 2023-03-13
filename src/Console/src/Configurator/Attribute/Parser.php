@@ -148,7 +148,7 @@ final class Parser
                 $mode = $this->guessOptionMode($type, $property);
             }
 
-            if ($mode === InputOption::VALUE_NONE || $attribute->mode === InputOption::VALUE_NEGATABLE) {
+            if ($mode === InputOption::VALUE_NONE || $mode === InputOption::VALUE_NEGATABLE) {
                 if ($type->getName() !== 'bool') {
                     throw new ConfiguratorException(
                         'Options properties with mode `VALUE_NONE` or `VALUE_NEGATABLE` must be bool!'
