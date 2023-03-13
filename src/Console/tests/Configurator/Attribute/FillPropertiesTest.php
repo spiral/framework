@@ -128,7 +128,7 @@ final class FillPropertiesTest extends TestCase
         $this->assertTrue($command->otherBoolVal);
     }
 
-    public function testSkipPropertyIfOptionNotPassed(): void
+    public function testSkipPropertyIfOptionNotDefined(): void
     {
         $input = $this->createMock(InputInterface::class);
         $input
@@ -149,5 +149,52 @@ final class FillPropertiesTest extends TestCase
         $this->parser->fillProperties($command, $input);
 
         $this->assertFalse((new \ReflectionProperty($command, 'option'))->isInitialized($command));
+    }
+
+    public function testSkipPropertyIfOptionNotPassed(): void
+    {
+        $input = $this->createMock(InputInterface::class);
+        $input
+            ->expects($this->once())
+            ->method('hasOption')
+            ->with('option')
+            ->willReturn(true);
+
+        $input
+            ->expects($this->once())
+            ->method('getOption')
+            ->willReturn(null);
+
+        $command = new #[AsCommand('foo')] class extends Command {
+            #[Option(mode: InputOption::VALUE_REQUIRED)]
+            public int $option;
+        };
+
+        $this->parser->fillProperties($command, $input);
+
+        $this->assertFalse((new \ReflectionProperty($command, 'option'))->isInitialized($command));
+    }
+
+    public function testNullShouldPassWithoutTypecasting(): void
+    {
+        $input = $this->createMock(InputInterface::class);
+        $input
+            ->expects($this->once())
+            ->method('hasOption')
+            ->willReturn(true);
+
+        $input
+            ->expects($this->once())
+            ->method('getOption')
+            ->willReturn(null);
+
+        $command = new #[AsCommand('foo')] class extends Command {
+            #[Option(mode: InputOption::VALUE_REQUIRED)]
+            public ?int $intVal;
+        };
+
+        $this->parser->fillProperties($command, $input);
+
+        $this->assertNull($command->intVal);
     }
 }

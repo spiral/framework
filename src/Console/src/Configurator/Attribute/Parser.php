@@ -75,10 +75,11 @@ final class Parser
             }
 
             if ($input->hasOption($attribute->name ?? $property->getName())) {
-                $property->setValue(
-                    $command,
-                    $this->typecast($input->getOption($attribute->name ?? $property->getName()), $property)
-                );
+                $value = $this->typecast($input->getOption($attribute->name ?? $property->getName()), $property);
+
+                if ($value !== null || $this->getPropertyType($property)->allowsNull()) {
+                    $property->setValue($command, $value);
+                }
             }
         }
     }
@@ -174,7 +175,7 @@ final class Parser
     {
         $type = $property->hasType() ? $property->getType() : null;
 
-        if (!$type instanceof \ReflectionNamedType) {
+        if (!$type instanceof \ReflectionNamedType || $value === null) {
             return $value;
         }
 
