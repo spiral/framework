@@ -250,6 +250,11 @@ final class ReflectionFile
                         continue 2;
                     }
 
+                    if($this->isNamedParameter($tokenID)) {
+                        //PHP8.0 Named parameters
+                        continue 2;
+                    }
+
                     $this->registerDeclaration($tokenID, $token[self::TOKEN_TYPE]);
                     break;
 
@@ -395,14 +400,23 @@ final class ReflectionFile
 
     /**
      * Check if token ID represents `ClassName::class` constant statement.
-     *
-     *
      */
     private function isClassNameConst(int $tokenID): bool
     {
         return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
             && isset($this->tokens[$tokenID - 1])
             && $this->tokens[$tokenID - 1][self::TOKEN_TYPE] === T_PAAMAYIM_NEKUDOTAYIM;
+    }
+
+
+    /**
+     * Check if token ID represents named parameter with name `class`, e.g. `foo(class: SomeClass::name)`.
+     */
+    private function isNamedParameter(int|string $tokenID): bool
+    {
+        return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
+            && isset($this->tokens[$tokenID + 1])
+            && $this->tokens[$tokenID + 1][self::TOKEN_TYPE] === ':';
     }
 
     /**

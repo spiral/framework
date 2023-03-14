@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+- **Medium Impact Changes**
+  - [spiral/queue] Added the ability to use mixed types as job payload.
+- **Bug Fixes**
+  - [spiral/console] Fixed the problem with commands description with signature definition.
+  - [spiral/tokenizer] Fixed the problem with using named parameters in class located by a tokenizer.
+
 ## 3.6.1 - 2023-02-20
 - **Bug Fixes**
   - [spiral/scaffolder] Fixed the problem with namespace option in some scaffolder commands.

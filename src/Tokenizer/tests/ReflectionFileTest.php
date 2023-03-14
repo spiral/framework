@@ -51,6 +51,15 @@ class ReflectionFileTest extends TestCase
         $this->assertSame('123', $functionB->getArgument(1)->getValue());
     }
 
+    public function testReflectionFileWithNamedParameters(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassWithNamedParameter.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Classes\ClassWithNamedParameter',
+        ], $reflection->getClasses());
+    }
+
     private function deadend()
     {
         $a = $b = null;
@@ -62,6 +71,7 @@ class ReflectionFileTest extends TestCase
 function hello()
 {
 }
+
 // phpcs:disable
 trait TestTrait
 {
