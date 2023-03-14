@@ -250,7 +250,7 @@ final class ReflectionFile
                         continue 2;
                     }
 
-                    if($this->isNamedParameter($tokenID)) {
+                    if ($this->isNamedParameter($tokenID)) {
                         //PHP8.0 Named parameters
                         continue 2;
                     }
