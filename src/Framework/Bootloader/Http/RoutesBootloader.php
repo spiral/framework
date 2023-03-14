@@ -7,6 +7,7 @@ namespace Spiral\Bootloader\Http;
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Container\Autowire;
 use Spiral\Http\Pipeline;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
@@ -52,7 +53,7 @@ abstract class RoutesBootloader extends Bootloader
     abstract protected function globalMiddleware(): array;
 
     /**
-     * @return array<string,array<MiddlewareInterface|class-string<MiddlewareInterface>>>
+     * @return array<string,array<MiddlewareInterface|class-string<MiddlewareInterface>|Autowire>>
      */
     abstract protected function middlewareGroups(): array;
 
