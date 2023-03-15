@@ -413,6 +413,15 @@ final class ReflectionFile
             && $this->tokens[$tokenID - 1][self::TOKEN_TYPE] === T_PAAMAYIM_NEKUDOTAYIM;
     }
 
+    /**
+     * Check if token ID represents anonymous class creation, e.g. `new class ('foo', 'bar')`.
+     */
+    private function isAnonymousClass(int|string $tokenID): bool
+    {
+        return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
+            && isset($this->tokens[$tokenID - 2])
+            && $this->tokens[$tokenID - 2][self::TOKEN_TYPE] === T_NEW;
+    }
 
     /**
      * Check if token ID represents named parameter with name `class`, e.g. `foo(class: SomeClass::name)`.
