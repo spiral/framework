@@ -246,7 +246,7 @@ final class ReflectionFile
                 case T_TRAIT:
                 case T_INTERFACE:
                     if ($this->isClassNameConst($tokenID)) {
-                        //PHP5.5 ClassName::class constant
+                        // PHP5.5 ClassName::class constant
                         continue 2;
                     }
 
@@ -256,7 +256,7 @@ final class ReflectionFile
                     }
 
                     if ($this->isNamedParameter($tokenID)) {
-                        //PHP8.0 Named parameters
+                        // PHP8.0 Named parameters
                         continue 2;
                     }
 
@@ -413,6 +413,7 @@ final class ReflectionFile
             && $this->tokens[$tokenID - 1][self::TOKEN_TYPE] === T_PAAMAYIM_NEKUDOTAYIM;
     }
 
+
     /**
      * Check if token ID represents named parameter with name `class`, e.g. `foo(class: SomeClass::name)`.
      */
@@ -421,16 +422,6 @@ final class ReflectionFile
         return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
             && isset($this->tokens[$tokenID + 1])
             && $this->tokens[$tokenID + 1][self::TOKEN_TYPE] === ':';
-    }
-
-    /**
-     * Check if token ID represents anonymous class creation, e.g. `new class ('foo', 'bar')`.
-     */
-    private function isAnonymousClass(int|string $tokenID): bool
-    {
-        return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
-            && isset($this->tokens[$tokenID - 2])
-            && $this->tokens[$tokenID - 2][self::TOKEN_TYPE] === T_NEW;
     }
 
     /**
