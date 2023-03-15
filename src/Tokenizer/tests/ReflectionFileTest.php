@@ -60,6 +60,15 @@ class ReflectionFileTest extends TestCase
         ], $reflection->getClasses());
     }
 
+    public function testReflectionFileAnonymousClass(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassWithAnonymousClass.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Classes\ClassWithAnonymousClass',
+        ], $reflection->getClasses());
+    }
+
     private function deadend()
     {
         $a = $b = null;
