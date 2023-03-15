@@ -50,7 +50,7 @@
         }
     },
     "require-dev": {
-        "doctrine/annotations": "^1.12",
+        "doctrine/annotations": "^1.12 || ^2.0",
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "spiral/boot": "^3.7",
