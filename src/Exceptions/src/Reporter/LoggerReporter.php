@@ -17,7 +17,7 @@ class LoggerReporter implements ExceptionReporterInterface
 
     public function report(\Throwable $exception): void
     {
-        $this->logger->error(\sprintf(
+        $this->logger->critical(\sprintf(
             '%s: %s in %s at line %s',
             $exception::class,
             $exception->getMessage(),
