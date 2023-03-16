@@ -22,7 +22,7 @@ final class LoggerReporterTest extends TestCase
         $exception = new \Exception();
 
         $logger = m::mock(LoggerInterface::class);
-        $logger->shouldReceive('error')->withArgs([\sprintf(
+        $logger->shouldReceive('critical')->withArgs([\sprintf(
             '%s: %s in %s at line %s',
             $exception::class,
             $exception->getMessage(),
