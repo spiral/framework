@@ -50,6 +50,7 @@ final class ReflectionFile
         T_CLASS,
         T_INTERFACE,
         T_TRAIT,
+        T_ENUM,
         T_FUNCTION,
         T_NS_SEPARATOR,
         T_INCLUDE,
@@ -149,6 +150,18 @@ final class ReflectionFile
     }
 
     /**
+     * List of declared enums names
+     */
+    public function getEnums(): array
+    {
+        if (!isset($this->declarations['T_ENUM'])) {
+            return [];
+        }
+
+        return \array_keys($this->declarations['T_ENUM']);
+    }
+
+    /**
      * List of declared trait names
      */
     public function getTraits(): array
@@ -245,6 +258,7 @@ final class ReflectionFile
                 case T_CLASS:
                 case T_TRAIT:
                 case T_INTERFACE:
+                case T_ENUM:
                     if ($this->isClassNameConst($tokenID)) {
                         // PHP5.5 ClassName::class constant
                         continue 2;
@@ -428,7 +442,7 @@ final class ReflectionFile
      */
     private function isCorrectDeclaration(int|string $tokenID): bool
     {
-        return \in_array($this->tokens[$tokenID][self::TOKEN_TYPE], [T_CLASS, T_TRAIT, T_INTERFACE], true)
+        return \in_array($this->tokens[$tokenID][self::TOKEN_TYPE], [T_CLASS, T_TRAIT, T_INTERFACE, T_ENUM], true)
             && isset($this->tokens[$tokenID + 2])
             && $this->tokens[$tokenID + 1][self::TOKEN_TYPE] === T_WHITESPACE
             && $this->tokens[$tokenID + 2][self::TOKEN_TYPE] === T_STRING;

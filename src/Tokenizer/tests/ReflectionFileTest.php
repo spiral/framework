@@ -78,6 +78,24 @@ class ReflectionFileTest extends TestCase
         ], $reflection->getClasses());
     }
 
+    public function testReflectionEnum(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassD.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Classes\ClassD',
+        ], $reflection->getEnums());
+    }
+
+    public function testReflectionTypedEnum(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassE.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Classes\ClassE',
+        ], $reflection->getEnums());
+    }
+
     private function deadend()
     {
         $a = $b = null;
