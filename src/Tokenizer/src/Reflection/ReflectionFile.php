@@ -255,8 +255,8 @@ final class ReflectionFile
                         continue 2;
                     }
 
-                    if ($this->isNamedParameter($tokenID)) {
-                        // PHP8.0 Named parameters
+                    if (!$this->isCorrectDeclaration($tokenID)) {
+                        // PHP8.0 Named parameters ->foo(class: 'bar')
                         continue 2;
                     }
 
@@ -426,11 +426,12 @@ final class ReflectionFile
     /**
      * Check if token ID represents named parameter with name `class`, e.g. `foo(class: SomeClass::name)`.
      */
-    private function isNamedParameter(int|string $tokenID): bool
+    private function isCorrectDeclaration(int|string $tokenID): bool
     {
-        return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
-            && isset($this->tokens[$tokenID + 1])
-            && $this->tokens[$tokenID + 1][self::TOKEN_TYPE] === ':';
+        return \in_array($this->tokens[$tokenID][self::TOKEN_TYPE], [T_CLASS, T_TRAIT, T_INTERFACE], true)
+            && isset($this->tokens[$tokenID + 2])
+            && $this->tokens[$tokenID + 1][self::TOKEN_TYPE] === T_WHITESPACE
+            && $this->tokens[$tokenID + 2][self::TOKEN_TYPE] === T_STRING;
     }
 
     /**
