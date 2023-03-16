@@ -246,7 +246,17 @@ final class ReflectionFile
                 case T_TRAIT:
                 case T_INTERFACE:
                     if ($this->isClassNameConst($tokenID)) {
-                        //PHP5.5 ClassName::class constant
+                        // PHP5.5 ClassName::class constant
+                        continue 2;
+                    }
+
+                    if ($this->isAnonymousClass($tokenID)) {
+                        // PHP7.0 Anonymous classes new class ('foo', 'bar')
+                        continue 2;
+                    }
+
+                    if (!$this->isCorrectDeclaration($tokenID)) {
+                        // PHP8.0 Named parameters ->foo(class: 'bar')
                         continue 2;
                     }
 
@@ -395,14 +405,33 @@ final class ReflectionFile
 
     /**
      * Check if token ID represents `ClassName::class` constant statement.
-     *
-     *
      */
     private function isClassNameConst(int $tokenID): bool
     {
         return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
             && isset($this->tokens[$tokenID - 1])
             && $this->tokens[$tokenID - 1][self::TOKEN_TYPE] === T_PAAMAYIM_NEKUDOTAYIM;
+    }
+
+    /**
+     * Check if token ID represents anonymous class creation, e.g. `new class ('foo', 'bar')`.
+     */
+    private function isAnonymousClass(int|string $tokenID): bool
+    {
+        return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
+            && isset($this->tokens[$tokenID - 2])
+            && $this->tokens[$tokenID - 2][self::TOKEN_TYPE] === T_NEW;
+    }
+
+    /**
+     * Check if token ID represents named parameter with name `class`, e.g. `foo(class: SomeClass::name)`.
+     */
+    private function isCorrectDeclaration(int|string $tokenID): bool
+    {
+        return \in_array($this->tokens[$tokenID][self::TOKEN_TYPE], [T_CLASS, T_TRAIT, T_INTERFACE], true)
+            && isset($this->tokens[$tokenID + 2])
+            && $this->tokens[$tokenID + 1][self::TOKEN_TYPE] === T_WHITESPACE
+            && $this->tokens[$tokenID + 2][self::TOKEN_TYPE] === T_STRING;
     }
 
     /**
