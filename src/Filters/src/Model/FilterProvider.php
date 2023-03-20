@@ -33,7 +33,7 @@ final class FilterProvider implements FilterProviderInterface
         \assert($attributeMapper instanceof AttributeMapper);
 
         $filter = $this->createFilterInstance($name);
-        [$mappingSchema, $errors] = $attributeMapper->map($filter, $input);
+        [$mappingSchema, $errors, $setters] = $attributeMapper->map($filter, $input);
 
         if ($filter instanceof HasFilterDefinition) {
             $mappingSchema = \array_merge(
@@ -50,7 +50,7 @@ final class FilterProvider implements FilterProviderInterface
 
         $schema = $schemaBuilder->makeSchema($name, $mappingSchema);
 
-        [$data, $inputErrors] = $inputMapper->map($schema, $input);
+        [$data, $inputErrors] = $inputMapper->map($schema, $input, $setters);
         $errors = \array_merge($errors, $inputErrors);
 
         $entity = new SchematicEntity($data, $schema);

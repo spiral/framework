@@ -51,6 +51,51 @@ class ReflectionFileTest extends TestCase
         $this->assertSame('123', $functionB->getArgument(1)->getValue());
     }
 
+    public function testReflectionFileWithNamedParameters(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassWithNamedParameter.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Classes\ClassWithNamedParameter',
+        ], $reflection->getClasses());
+    }
+
+    public function testReflectionFileAnonymousClass(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassWithAnonymousClass.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Classes\ClassWithAnonymousClass',
+        ], $reflection->getClasses());
+    }
+
+    public function testReflectionFileWithHeredoc(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassWithHeredoc.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Classes\ClassWithHeredoc',
+        ], $reflection->getClasses());
+    }
+
+    public function testReflectionEnum(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassD.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Classes\ClassD',
+        ], $reflection->getEnums());
+    }
+
+    public function testReflectionTypedEnum(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassE.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Classes\ClassE',
+        ], $reflection->getEnums());
+    }
+
     private function deadend()
     {
         $a = $b = null;
@@ -62,6 +107,7 @@ class ReflectionFileTest extends TestCase
 function hello()
 {
 }
+
 // phpcs:disable
 trait TestTrait
 {

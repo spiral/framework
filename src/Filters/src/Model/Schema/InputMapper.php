@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Model\Schema;
 
+use Spiral\Filters\Attribute\Setter;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
@@ -15,7 +16,7 @@ final class InputMapper
     ) {
     }
 
-    public function map(array $mappingSchema, InputInterface $input): array
+    public function map(array $mappingSchema, InputInterface $input, array $setters = []): array
     {
         $errors = [];
         $result = [];
@@ -25,6 +26,11 @@ final class InputMapper
                 $value = $input->getValue($map[Builder::SCHEMA_SOURCE], $map[Builder::SCHEMA_ORIGIN]);
 
                 if ($value !== null) {
+                    /** @var Setter $setter */
+                    foreach ($setters[$field] ?? [] as $setter) {
+                        $value = $setter->updateValue($value);
+                    }
+
                     $result[$field] = $value;
                 }
                 continue;

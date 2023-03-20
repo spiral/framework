@@ -50,6 +50,7 @@ final class ReflectionFile
         T_CLASS,
         T_INTERFACE,
         T_TRAIT,
+        T_ENUM,
         T_FUNCTION,
         T_NS_SEPARATOR,
         T_INCLUDE,
@@ -149,6 +150,18 @@ final class ReflectionFile
     }
 
     /**
+     * List of declared enums names
+     */
+    public function getEnums(): array
+    {
+        if (!isset($this->declarations['T_ENUM'])) {
+            return [];
+        }
+
+        return \array_keys($this->declarations['T_ENUM']);
+    }
+
+    /**
      * List of declared trait names
      */
     public function getTraits(): array
@@ -245,8 +258,19 @@ final class ReflectionFile
                 case T_CLASS:
                 case T_TRAIT:
                 case T_INTERFACE:
+                case T_ENUM:
                     if ($this->isClassNameConst($tokenID)) {
-                        //PHP5.5 ClassName::class constant
+                        // PHP5.5 ClassName::class constant
+                        continue 2;
+                    }
+
+                    if ($this->isAnonymousClass($tokenID)) {
+                        // PHP7.0 Anonymous classes new class ('foo', 'bar')
+                        continue 2;
+                    }
+
+                    if (!$this->isCorrectDeclaration($tokenID)) {
+                        // PHP8.0 Named parameters ->foo(class: 'bar')
                         continue 2;
                     }
 
@@ -395,14 +419,33 @@ final class ReflectionFile
 
     /**
      * Check if token ID represents `ClassName::class` constant statement.
-     *
-     *
      */
     private function isClassNameConst(int $tokenID): bool
     {
         return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
             && isset($this->tokens[$tokenID - 1])
             && $this->tokens[$tokenID - 1][self::TOKEN_TYPE] === T_PAAMAYIM_NEKUDOTAYIM;
+    }
+
+    /**
+     * Check if token ID represents anonymous class creation, e.g. `new class ('foo', 'bar')`.
+     */
+    private function isAnonymousClass(int|string $tokenID): bool
+    {
+        return $this->tokens[$tokenID][self::TOKEN_TYPE] === T_CLASS
+            && isset($this->tokens[$tokenID - 2])
+            && $this->tokens[$tokenID - 2][self::TOKEN_TYPE] === T_NEW;
+    }
+
+    /**
+     * Check if token ID represents named parameter with name `class`, e.g. `foo(class: SomeClass::name)`.
+     */
+    private function isCorrectDeclaration(int|string $tokenID): bool
+    {
+        return \in_array($this->tokens[$tokenID][self::TOKEN_TYPE], [T_CLASS, T_TRAIT, T_INTERFACE, T_ENUM], true)
+            && isset($this->tokens[$tokenID + 2])
+            && $this->tokens[$tokenID + 1][self::TOKEN_TYPE] === T_WHITESPACE
+            && $this->tokens[$tokenID + 2][self::TOKEN_TYPE] === T_STRING;
     }
 
     /**
