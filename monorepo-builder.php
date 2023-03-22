@@ -102,7 +102,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'mockery/mockery'           => '^1.5',
             'spiral/code-style'         => '^1.1',
             'symplify/monorepo-builder' => '^10.2.7',
-            'vimeo/psalm'               => '^4.27',
+            'vimeo/psalm'               => '^5.8',
         ],
     ]);
 
