@@ -22,6 +22,7 @@ abstract class AbstractCommandTest extends BaseTest
                 $reflection = new ReflectionClass($class);
                 $this->files()->delete($reflection->getFileName());
             } catch (Throwable $exception) {
+                var_dump($exception->getMessage());
             }
         }
     }

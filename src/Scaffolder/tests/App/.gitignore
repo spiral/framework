@@ -1,0 +1,11 @@
+Command/*
+!Command/CommandWithNamespace.php
+!Command/CommandWithoutNamespace.php
+Bootloader
+Config
+Custom
+Job
+Middleware
+Controller/*
+!Controller/DefaultController.php
+runtime

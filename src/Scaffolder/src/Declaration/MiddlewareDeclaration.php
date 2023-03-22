@@ -27,7 +27,6 @@ class MiddlewareDeclaration extends AbstractDeclaration
             ->addMethod('process')
             ->setPublic()
             ->setReturnType(ResponseInterface::class)
-            ->addComment('{@inheritdoc}')
             ->addBody('return $handler->handle($request);');
 
         $this->class->getMethod('process')
