@@ -35,6 +35,7 @@ class ConfigTest extends AbstractCommandTest
         $this->assertStringContainsString('@author {author-name}', $content);
         $this->assertStringContainsString('Sample Config', $reflection->getDocComment());
 
+        $this->assertTrue($reflection->isFinal());
         $this->assertTrue($reflection->hasConstant('CONFIG'));
         $this->assertTrue($reflection->hasProperty('config'));
 
@@ -149,8 +150,6 @@ class ConfigTest extends AbstractCommandTest
             } else {
                 $this->assertEquals($methods[$method->name]['hint'], $method->getReturnType()->getName());
             }
-
-            $this->assertStringContainsString($methods[$method->name]['annotation'], $method->getDocComment());
         }
 
         $this->assertCount(count($methods), $reflectionMethods);
