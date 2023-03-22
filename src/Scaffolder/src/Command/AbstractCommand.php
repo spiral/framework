@@ -31,7 +31,7 @@ abstract class AbstractCommand extends Command
      * @param class-string<TClass> $class
      * @return TClass
      */
-    protected function createDeclaration(string $class): DeclarationInterface
+    protected function createDeclaration(string $class, array $params = []): DeclarationInterface
     {
         return $this->factory->make(
             $class,
@@ -39,7 +39,7 @@ abstract class AbstractCommand extends Command
                 'name' => (string)$this->argument('name'),
                 'comment' => $this->getComment(),
                 'namespace' => $this->getNamespace(),
-            ] + $this->config->declarationOptions($class::TYPE),
+            ] + $params + $this->config->declarationOptions($class::TYPE),
         );
     }
 
