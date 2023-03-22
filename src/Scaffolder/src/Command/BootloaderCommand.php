@@ -26,9 +26,6 @@ class BootloaderCommand extends AbstractCommand
     #[Option(description: 'Optional, specify a custom namespace')]
     private ?string $namespace = null;
 
-    /**
-     * Create bootloader declaration.
-     */
     public function perform(): int
     {
         $declaration = $this->createDeclaration(BootloaderDeclaration::class, [

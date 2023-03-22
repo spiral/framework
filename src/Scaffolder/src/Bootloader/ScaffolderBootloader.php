@@ -25,7 +25,7 @@ class ScaffolderBootloader extends Bootloader
 
     public function __construct(
         private readonly ConfiguratorInterface $config,
-        private readonly KernelInterface $kernel
+        private readonly KernelInterface $kernel,
     ) {
     }
 
@@ -37,6 +37,7 @@ class ScaffolderBootloader extends Bootloader
         $console->addCommand(Command\ControllerCommand::class);
         $console->addCommand(Command\JobHandlerCommand::class);
         $console->addCommand(Command\MiddlewareCommand::class);
+        $console->addCommand(Command\FilterCommand::class);
 
         try {
             $defaultNamespace = (new ReflectionClass($this->kernel))->getNamespaceName();
@@ -49,13 +50,13 @@ class ScaffolderBootloader extends Bootloader
              * This is set of comment lines to be applied to every scaffolded file, you can use env() function
              * to make it developer specific or set one universal pattern per project.
              */
-            'header'       => [],
+            'header' => [],
 
             /*
              * Base directory for generated classes, class will be automatically localed into sub directory
              * using given namespace.
              */
-            'directory'    => directory('app') . 'src/',
+            'directory' => directory('app') . 'src/',
 
             /*
              * Default namespace to be applied for every generated class. By default uses Kernel namespace
@@ -63,7 +64,7 @@ class ScaffolderBootloader extends Bootloader
              * Example: 'namespace' => 'MyApplication'
              * Controllers: MyApplication\Controllers\SampleController
              */
-            'namespace'    => $defaultNamespace,
+            'namespace' => $defaultNamespace,
 
             /*
              * This is set of default settings to be used for your scaffolding commands.
@@ -71,36 +72,41 @@ class ScaffolderBootloader extends Bootloader
             'declarations' => [
                 Declaration\BootloaderDeclaration::TYPE => [
                     'namespace' => 'Bootloader',
-                    'postfix'   => 'Bootloader',
-                    'class'     => Declaration\BootloaderDeclaration::class,
+                    'postfix' => 'Bootloader',
+                    'class' => Declaration\BootloaderDeclaration::class,
                 ],
                 Declaration\ConfigDeclaration::TYPE => [
                     'namespace' => 'Config',
-                    'postfix'   => 'Config',
-                    'class'     => Declaration\ConfigDeclaration::class,
-                    'options'   => [
+                    'postfix' => 'Config',
+                    'class' => Declaration\ConfigDeclaration::class,
+                    'options' => [
                         'directory' => directory('config'),
                     ],
                 ],
                 Declaration\ControllerDeclaration::TYPE => [
                     'namespace' => 'Controller',
-                    'postfix'   => 'Controller',
-                    'class'     => Declaration\ControllerDeclaration::class,
+                    'postfix' => 'Controller',
+                    'class' => Declaration\ControllerDeclaration::class,
+                ],
+                Declaration\FilterDeclaration::TYPE => [
+                    'namespace' => 'Filter',
+                    'postfix' => 'Filter',
+                    'class' => Declaration\FilterDeclaration::class,
                 ],
                 Declaration\MiddlewareDeclaration::TYPE => [
                     'namespace' => 'Middleware',
-                    'postfix'   => '',
-                    'class'     => Declaration\MiddlewareDeclaration::class,
+                    'postfix' => '',
+                    'class' => Declaration\MiddlewareDeclaration::class,
                 ],
                 Declaration\CommandDeclaration::TYPE => [
                     'namespace' => 'Command',
-                    'postfix'   => 'Command',
-                    'class'     => Declaration\CommandDeclaration::class,
+                    'postfix' => 'Command',
+                    'class' => Declaration\CommandDeclaration::class,
                 ],
                 Declaration\JobHandlerDeclaration::TYPE => [
                     'namespace' => 'Job',
-                    'postfix'   => 'Job',
-                    'class'     => Declaration\JobHandlerDeclaration::class,
+                    'postfix' => 'Job',
+                    'class' => Declaration\JobHandlerDeclaration::class,
                 ],
             ],
         ]);
@@ -113,7 +119,7 @@ class ScaffolderBootloader extends Bootloader
     {
         $this->config->modify(
             ScaffolderConfig::CONFIG,
-            new Append('declarations', $name, $declaration)
+            new Append('declarations', $name, $declaration),
         );
     }
 }

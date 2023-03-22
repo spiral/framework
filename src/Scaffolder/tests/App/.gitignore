@@ -5,6 +5,7 @@ Bootloader
 Config
 Custom
 Job
+Filter
 Middleware
 Controller/*
 !Controller/DefaultController.php
