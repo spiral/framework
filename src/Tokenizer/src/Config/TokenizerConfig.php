@@ -22,10 +22,11 @@ final class TokenizerConfig extends InjectableConfig
 
     /**
      * @psalm-var array{
-     *     "cache": array{"directory": null, "enabled": bool},
-     *     "directories": TDirectories,
-     *     "exclude": TDirectories,
-     *     "scopes": array<non-empty-string, TScope>
+     *     cache: array{directory: null, enabled: bool},
+     *     debug: bool,
+     *     directories: TDirectories,
+     *     exclude: TDirectories,
+     *     scopes: array<non-empty-string, TScope>
      * }
      * @var array
      */

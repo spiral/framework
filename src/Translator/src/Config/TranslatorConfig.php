@@ -21,6 +21,8 @@ final class TranslatorConfig extends InjectableConfig
      *     locale: string,
      *     fallbackLocale?: string,
      *     directory: string,
+     *     localesDirectory?: string,
+     *     registerMessages?: bool,
      *     cacheLocales: bool,
      *     autoRegister: bool,
      *     domains: array<non-empty-string, array<string>>,
