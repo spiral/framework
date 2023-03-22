@@ -45,7 +45,7 @@ class BootloaderDeclaration extends AbstractDeclaration
             $this->class->addConstant('INTERCEPTORS', [])->setProtected();
             $this->namespace->addUse(CoreInterface::class);
             $this->class->getConstant('SINGLETONS')->setValue([
-                new Literal('CoreInterface::class => [self::class, \'domainCore\']')
+                new Literal('CoreInterface::class => [self::class, \'domainCore\']'),
             ]);
         }
 
