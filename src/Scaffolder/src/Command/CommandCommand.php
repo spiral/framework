@@ -9,13 +9,7 @@ use Spiral\Console\Attribute\AsCommand;
 use Spiral\Console\Attribute\Option;
 use Spiral\Console\Attribute\Question;
 use Spiral\Scaffolder\Declaration\CommandDeclaration;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
-#[Question(
-    question: 'What would you like to name the console Command?',
-    argument: 'name'
-)]
 #[AsCommand(name: 'create:command', description: 'Create console command declaration')]
 class CommandCommand extends AbstractCommand
 {
