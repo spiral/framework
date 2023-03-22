@@ -203,6 +203,140 @@ final class OptionsTest extends TestCase
         $this->assertFalse($result->options[0]->getDefault());
     }
 
+    public function testGuessedRequiredOption(): void
+    {
+        $result = $this->parser->parse(new \ReflectionClass(
+            new #[AsCommand(name: 'foo')] class {
+                #[Option]
+                private int $int;
+
+                #[Option]
+                private float $float;
+
+                #[Option]
+                private string $string;
+            }
+        ));
+
+        $this->assertTrue($result->options[0]->isValueRequired());
+        $this->assertFalse($result->options[0]->isArray());
+        $this->assertTrue($result->options[0]->acceptValue());
+
+        $this->assertTrue($result->options[1]->isValueRequired());
+        $this->assertFalse($result->options[1]->isArray());
+        $this->assertTrue($result->options[1]->acceptValue());
+
+        $this->assertTrue($result->options[2]->isValueRequired());
+        $this->assertFalse($result->options[2]->isArray());
+        $this->assertTrue($result->options[2]->acceptValue());
+    }
+
+    public function testGuessedOptionalOption(): void
+    {
+        $result = $this->parser->parse(new \ReflectionClass(
+            new #[AsCommand(name: 'foo')] class {
+                #[Option]
+                private ?int $int;
+
+                #[Option]
+                private ?float $float;
+
+                #[Option]
+                private ?string $string;
+            }
+        ));
+
+        $this->assertFalse($result->options[0]->isValueRequired());
+        $this->assertFalse($result->options[0]->isArray());
+        $this->assertTrue($result->options[0]->acceptValue());
+        $this->assertNull($result->options[0]->getDefault());
+
+        $this->assertFalse($result->options[1]->isValueRequired());
+        $this->assertFalse($result->options[1]->isArray());
+        $this->assertTrue($result->options[1]->acceptValue());
+        $this->assertNull($result->options[1]->getDefault());
+
+        $this->assertFalse($result->options[2]->isValueRequired());
+        $this->assertFalse($result->options[2]->isArray());
+        $this->assertTrue($result->options[2]->acceptValue());
+        $this->assertNull($result->options[2]->getDefault());
+    }
+
+    public function testGuessedOptionalOptionFromPropertiesWithDefaultValue(): void
+    {
+        $result = $this->parser->parse(new \ReflectionClass(
+            new #[AsCommand(name: 'foo')] class {
+                #[Option]
+                private int $int = 1;
+
+                #[Option]
+                private float $float = 2.0;
+
+                #[Option]
+                private string $string = 'foo';
+            }
+        ));
+
+        $this->assertFalse($result->options[0]->isValueRequired());
+        $this->assertFalse($result->options[0]->isArray());
+        $this->assertTrue($result->options[0]->acceptValue());
+        $this->assertSame(1, $result->options[0]->getDefault());
+
+        $this->assertFalse($result->options[1]->isValueRequired());
+        $this->assertFalse($result->options[1]->isArray());
+        $this->assertTrue($result->options[1]->acceptValue());
+        $this->assertSame(2.0, $result->options[1]->getDefault());
+
+        $this->assertFalse($result->options[2]->isValueRequired());
+        $this->assertFalse($result->options[2]->isArray());
+        $this->assertTrue($result->options[2]->acceptValue());
+        $this->assertSame('foo', $result->options[2]->getDefault());
+    }
+
+    public function testGuessedArrayOption(): void
+    {
+        $result = $this->parser->parse(new \ReflectionClass(
+            new #[AsCommand(name: 'foo')] class {
+                #[Option]
+                private array $array;
+            }
+        ));
+
+        $this->assertTrue($result->options[0]->isValueRequired());
+        $this->assertTrue($result->options[0]->isArray());
+        $this->assertTrue($result->options[0]->acceptValue());
+    }
+
+    public function testGuessedOptionalArrayOption(): void
+    {
+        $result = $this->parser->parse(new \ReflectionClass(
+            new #[AsCommand(name: 'foo')] class {
+                #[Option]
+                private ?array $array;
+            }
+        ));
+
+        $this->assertFalse($result->options[0]->isValueRequired());
+        $this->assertTrue($result->options[0]->isArray());
+        $this->assertTrue($result->options[0]->acceptValue());
+        $this->assertSame([], $result->options[0]->getDefault());
+    }
+
+    public function testGuessedOptionalArrayOptionFromPropertyWithDefaultValue(): void
+    {
+        $result = $this->parser->parse(new \ReflectionClass(
+            new #[AsCommand(name: 'foo')] class {
+                #[Option]
+                private array $array = [];
+            }
+        ));
+
+        $this->assertFalse($result->options[0]->isValueRequired());
+        $this->assertTrue($result->options[0]->isArray());
+        $this->assertTrue($result->options[0]->acceptValue());
+        $this->assertSame([], $result->options[0]->getDefault());
+    }
+
     public function testWithSuggestedValue(): void
     {
         $result = $this->parser->parse(new \ReflectionClass(
@@ -265,6 +399,17 @@ final class OptionsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Option]
                 private \stdClass&\Traversable $option;
+            }
+        ));
+    }
+
+    public function testOptionWithObjectType(): void
+    {
+        $this->expectException(ConfiguratorException::class);
+        $this->parser->parse(new \ReflectionClass(
+            new #[AsCommand(name: 'foo')] class {
+                #[Option]
+                private object $object;
             }
         ));
     }
