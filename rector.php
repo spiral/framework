@@ -24,6 +24,13 @@ return static function (RectorConfig $config): void {
             __DIR__ . '/src/Cache/src/Bootloader/CacheBootloader.php',
             __DIR__ . '/src/Serializer/src/Bootloader/SerializerBootloader.php',
             __DIR__ . '/src/Validation/src/Bootloader/ValidationBootloader.php',
+            __DIR__ . '/src/Scaffolder/src/Command/BootloaderCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/CommandCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/ConfigCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/ControllerCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/FilterCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/JobHandlerCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/MiddlewareCommand.php',
         ],
         RemoveUselessVarTagRector::class => [
             __DIR__ . '/src/Console/src/Traits/HelpersTrait.php',
