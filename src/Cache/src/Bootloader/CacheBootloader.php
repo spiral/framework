@@ -46,9 +46,6 @@ final class CacheBootloader extends Bootloader
         $binder->bindInjector(CacheInterface::class, CacheInjector::class);
     }
 
-    /**
-     * @noRector RemoveUnusedPrivateMethodRector
-     */
     private function initCacheManager(
         BinderInterface $binder,
         FactoryInterface $factory,
