@@ -10,7 +10,7 @@ final class FilterCommandTest extends AbstractCommandTest
 {
     public function testScaffold(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Filter\\SampleFilter';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Filter\\SampleFilter';
 
         $this->console()->run('create:filter', [
             'name' => 'sample',
@@ -26,8 +26,6 @@ final class FilterCommandTest extends AbstractCommandTest
         $this->assertStringContainsString('strict_types=1', $content);
         $this->assertTrue($reflection->isFinal());
         $this->assertTrue($reflection->isSubclassOf(Filter::class));
-
-        $this->deleteDeclaration($class);
     }
 
     /**
@@ -36,7 +34,7 @@ final class FilterCommandTest extends AbstractCommandTest
      */
     public function testScaffoldWithCustomNamespace(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Filter\\SampleFilter';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Filter\\SampleFilter';
 
         $this->console()->run('create:filter', [
             'name' => 'sample',
@@ -54,13 +52,11 @@ final class FilterCommandTest extends AbstractCommandTest
             \str_replace('\\', '/', $reflection->getFileName()),
         );
         $this->assertStringContainsString('App\Custom\Filter', $content);
-
-        $this->deleteDeclaration($class);
     }
 
     public function testCreateProperty(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Filter\\SampleWithPropertyFilter';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Filter\\SampleWithPropertyFilter';
         $this->console()->run('create:filter', [
             'name' => 'SampleWithProperty',
             '--property' => [
@@ -107,7 +103,5 @@ final class FilterCommandTest extends AbstractCommandTest
         $this->assertStringContainsString('use Spiral\Filters\Attribute\Input\BearerToken;', $content);
         $this->assertStringContainsString('#[BearerToken(key: \'token\')]', $content);
         $this->assertStringContainsString('public string $token;', $content);
-
-        $this->deleteDeclaration($class);
     }
 }

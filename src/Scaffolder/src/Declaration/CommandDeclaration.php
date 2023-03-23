@@ -76,7 +76,7 @@ class CommandDeclaration extends AbstractDeclaration
         $this->class->addAttribute(AsCommand::class, $commandDefinition);
 
         $this->class
-            ->addMethod('perform')
+            ->addMethod('__invoke')
             ->setReturnType('int')
             ->setBody(
                 <<<'PHP'

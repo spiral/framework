@@ -16,7 +16,7 @@ class JobHandlerTest extends AbstractCommandTest
      */
     public function testScaffold(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Job\\SampleJob';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Job\\SampleJob';
 
         $this->console()->run('create:jobHandler', [
             'name'      => 'sample',
@@ -34,8 +34,6 @@ class JobHandlerTest extends AbstractCommandTest
         $this->assertStringContainsString('@author {author-name}', $content);
         $this->assertStringContainsString('Sample Job Handler', $reflection->getDocComment());
         $this->assertTrue($reflection->hasMethod('invoke'));
-
-        $this->deleteDeclaration($class);
     }
 
     /**
@@ -44,7 +42,7 @@ class JobHandlerTest extends AbstractCommandTest
      */
     public function testScaffoldWithCustomNamespace(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Job\\SampleJob';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Job\\SampleJob';
 
         $this->console()->run('create:jobHandler', [
             'name' => 'sample',
@@ -62,7 +60,5 @@ class JobHandlerTest extends AbstractCommandTest
             \str_replace('\\', '/', $reflection->getFileName())
         );
         $this->assertStringContainsString('App\Custom\Job', $content);
-
-        $this->deleteDeclaration($class);
     }
 }

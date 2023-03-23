@@ -17,7 +17,7 @@ class ConfigTest extends AbstractCommandTest
      */
     public function testScaffold(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig';
 
         $this->console()->run('create:config', [
             'name'      => 'sample',
@@ -41,8 +41,6 @@ class ConfigTest extends AbstractCommandTest
 
         $this->assertIsString($reflection->getReflectionConstant('CONFIG')->getValue());
         $this->assertEquals([], $reflection->getDefaultProperties()['config']);
-
-        $this->deleteDeclaration($class);
     }
 
     /**
@@ -51,7 +49,7 @@ class ConfigTest extends AbstractCommandTest
      */
     public function testScaffoldWithCustomNamespace(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Config\\SampleConfig';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Config\\SampleConfig';
 
         $this->console()->run('create:config', [
             'name' => 'sample',
@@ -69,8 +67,6 @@ class ConfigTest extends AbstractCommandTest
             \str_replace('\\', '/', $reflection->getFileName())
         );
         $this->assertStringContainsString('App\Custom\Config', $content);
-
-        $this->deleteDeclaration($class);
     }
 
     /**
@@ -78,7 +74,7 @@ class ConfigTest extends AbstractCommandTest
      */
     public function testReverse(): void
     {
-        $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\ReversedConfig';
+        $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\ReversedConfig';
         $this->console()->run(null, new StringInput('create:config reversed -r'));
 
         clearstatcache();
@@ -90,7 +86,7 @@ class ConfigTest extends AbstractCommandTest
      */
     public function testReverseDefinition(): void
     {
-        $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\ReversedConfig';
+        $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\ReversedConfig';
         $this->console()->run('create:config', [
             'name'      => 'reversed',
             '--comment' => 'Reversed Config',
@@ -153,8 +149,6 @@ class ConfigTest extends AbstractCommandTest
         }
 
         $this->assertCount(count($methods), $reflectionMethods);
-
-        $this->deleteDeclaration($className);
     }
 
     /**
@@ -162,7 +156,7 @@ class ConfigTest extends AbstractCommandTest
      */
     public function testReverseWeirdKeys(): void
     {
-        $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\WeirdConfig';
+        $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\WeirdConfig';
         $this->console()->run('create:config', [
             'name'      => 'weird',
             '--comment' => 'Weird Config',
@@ -199,8 +193,6 @@ class ConfigTest extends AbstractCommandTest
         }
 
         $this->assertCount(count($methods), $reflectionMethods);
-
-        $this->deleteDeclaration($className);
     }
 
     /**
@@ -223,6 +215,8 @@ class ConfigTest extends AbstractCommandTest
      */
     public function testConfigFileExists(): void
     {
+        $this->className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\Sample2Config';
+
         $filename = $this->createConfig('sample2', 'Sample2 Config');
         $this->files()->append($filename, '//sample comment');
 
@@ -235,7 +229,7 @@ class ConfigTest extends AbstractCommandTest
         $this->assertStringContainsString('//sample comment', $source);
 
         $this->deleteConfigFile($filename);
-        $this->deleteDeclaration('\\Spiral\\Tests\\Scaffolder\\App\\Config\\Sample2Config');
+
     }
 
     /**

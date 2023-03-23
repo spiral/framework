@@ -17,7 +17,7 @@ class BootloaderTest extends AbstractCommandTest
      */
     public function testScaffold(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Bootloader\\SampleBootloader';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Bootloader\\SampleBootloader';
 
         $this->console()->run('create:bootloader', [
             'name' => 'sample',
@@ -44,8 +44,6 @@ class BootloaderTest extends AbstractCommandTest
         $this->assertEquals([], $reflection->getReflectionConstant('BINDINGS')->getValue());
         $this->assertEquals([], $reflection->getReflectionConstant('SINGLETONS')->getValue());
         $this->assertEquals([], $reflection->getReflectionConstant('DEPENDENCIES')->getValue());
-
-        $this->deleteDeclaration($class);
     }
 
     /**
@@ -54,7 +52,7 @@ class BootloaderTest extends AbstractCommandTest
      */
     public function testScaffoldWithCustomNamespace(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Bootloader\\SampleBootloader';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Bootloader\\SampleBootloader';
 
         $this->console()->run('create:bootloader', [
             'name' => 'sample',
@@ -72,13 +70,11 @@ class BootloaderTest extends AbstractCommandTest
             \str_replace('\\', '/', $reflection->getFileName())
         );
         $this->assertStringContainsString('App\Custom\Bootloader', $content);
-
-        $this->deleteDeclaration($class);
     }
 
     public function testScaffoldForDomainBootloader(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Bootloader\\SampleDomainBootloader';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Bootloader\\SampleDomainBootloader';
 
         $this->console()->run('create:bootloader', [
             'name' => 'SampleDomain',
@@ -102,7 +98,5 @@ class BootloaderTest extends AbstractCommandTest
         $this->assertEquals([
             CoreInterface::class => ['Spiral\Tests\Scaffolder\App\Bootloader\SampleDomainBootloader', 'domainCore'],
         ], $reflection->getConstant('SINGLETONS'));
-
-        $this->deleteDeclaration($class);
     }
 }

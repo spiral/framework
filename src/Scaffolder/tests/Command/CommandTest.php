@@ -14,11 +14,14 @@ use Throwable;
 
 final class CommandTest extends AbstractCommandTest
 {
+
     /**
      * @dataProvider commandDataProvider
      */
     public function testScaffold(string $className, string $name, ?string $alias, $commandName): void
     {
+        $this->className = $className;
+
         $input = [
             'name' => $name,
             'alias' => $alias,
@@ -48,16 +51,14 @@ final class CommandTest extends AbstractCommandTest
         $this->assertEquals($commandName, $definition->name);
         $this->assertEquals('My sample command description', $definition->description);
         $this->assertSame($classNameParts[\array_key_last($classNameParts)], $reflection->getShortName());
-
-        $this->deleteDeclaration($className);
     }
 
     public function testAddArgument(): void
     {
-        $className = '\\Spiral\\Tests\\Scaffolder\\App\\Command\\UserRegisterCommand';
+        $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Command\\ArgumentCommand';
 
         $this->console()->run('create:command', [
-            'name' => 'UserRegister',
+            'name' => 'Argument',
             '--argument' => ['username', 'password'],
         ]);
 
@@ -77,16 +78,14 @@ final class CommandTest extends AbstractCommandTest
         $this->assertEquals('string', $password->getType());
         $this->assertInstanceOf(Argument::class, $password->getAttributes()[0]->newInstance());
         $this->assertInstanceOf(Question::class, $password->getAttributes()[1]->newInstance());
-
-        $this->deleteDeclaration($className);
     }
 
     public function testAddOption(): void
     {
-        $className = '\\Spiral\\Tests\\Scaffolder\\App\\Command\\UserRegisterCommand';
+        $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Command\\OptionCommand';
 
         $this->console()->run('create:command', [
-            'name' => 'UserRegister',
+            'name' => 'Option',
             '--option' => ['isAdmin'],
         ]);
 
@@ -99,13 +98,11 @@ final class CommandTest extends AbstractCommandTest
         $isAdmin = $reflection->getProperty('isAdmin');
         $this->assertEquals('bool', $isAdmin->getType());
         $this->assertInstanceOf(Option::class, $isAdmin->getAttributes()[0]->newInstance());
-
-        $this->deleteDeclaration($className);
     }
 
     public function testScaffoldWithCustomNamespace(): void
     {
-        $className = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Command\\SampleCommand';
+        $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Command\\SampleCommand';
 
         $this->console()->run('create:command', [
             'name' => 'sample',
@@ -123,8 +120,6 @@ final class CommandTest extends AbstractCommandTest
             \str_replace('\\', '/', $reflection->getFileName()),
         );
         $this->assertStringContainsString('App\Custom\Command', $content);
-
-        $this->deleteDeclaration($className);
     }
 
     public function commandDataProvider(): array
@@ -132,7 +127,12 @@ final class CommandTest extends AbstractCommandTest
         return [
             ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleCommand', 'sample', null, 'sample'],
             ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SomeCommand', 'SomeCommand', null, 'some:command'],
-            ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleAliasCommand', 'sampleAlias', 'my-sample-command-alias', 'my-sample-command-alias'],
+            [
+                '\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleAliasCommand',
+                'sampleAlias',
+                'my-sample-command-alias',
+                'my-sample-command-alias',
+            ],
         ];
     }
 }
