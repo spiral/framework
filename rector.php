@@ -34,7 +34,7 @@ return static function (RectorConfig $config): void {
             __DIR__ . '/src/Prototype/src/NodeVisitors/LocateProperties.php',
             __DIR__ . '/src/Prototype/src/NodeVisitors/RemoveTrait.php',
             __DIR__ . '/src/Logger/src/ListenerRegistry.php',
-        ]
+        ],
     ]);
 
     $config->import(LevelSetList::UP_TO_PHP_72);
