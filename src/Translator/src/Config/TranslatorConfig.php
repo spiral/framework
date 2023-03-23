@@ -17,7 +17,7 @@ final class TranslatorConfig extends InjectableConfig
     public const CONFIG = 'translator';
 
     /**
-     * @psalm-var array{
+     * @var array{
      *     locale: string,
      *     fallbackLocale?: string,
      *     directory: string,
@@ -27,7 +27,6 @@ final class TranslatorConfig extends InjectableConfig
      *     loaders: class-string<LoaderInterface>[],
      *     dumpers: class-string<DumperInterface>[]
      * }
-     * @var array
      */
     protected array $config = [
         'locale'         => '',

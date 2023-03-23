@@ -101,6 +101,7 @@ final class ConsoleConfig extends InjectableConfig
 
     /**
      * @param SequenceInterface|string|array{
+     *     invoke: array|callable|string,
      *     command: string,
      *     options?: array,
      *     header?: string,
