@@ -115,7 +115,7 @@ jobs:
       - name: Static Analysis
         run: |
           vendor/bin/psalm --no-cache --shepherd --stats --output-format=checkstyle --php-version=${{ matrix.php }}
-          vendor/bin/rector --dry-run -c rector.php
+          vendor/bin/rector --dry-run
 
 
   coding-standards:
