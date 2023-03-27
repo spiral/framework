@@ -16,7 +16,7 @@ class MiddlewareTest extends AbstractCommandTest
      */
     public function testScaffold(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Middleware\\SampleMiddleware';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Middleware\\SampleMiddleware';
 
         $this->console()->run('create:middleware', [
             'name'      => 'sample-middleware',
@@ -34,8 +34,6 @@ class MiddlewareTest extends AbstractCommandTest
         $this->assertStringContainsString('@author {author-name}', $content);
         $this->assertStringContainsString('Sample Middleware', $reflection->getDocComment());
         $this->assertTrue($reflection->hasMethod('process'));
-
-        $this->deleteDeclaration($class);
     }
 
     /**
@@ -44,7 +42,7 @@ class MiddlewareTest extends AbstractCommandTest
      */
     public function testScaffoldWithCustomNamespace(): void
     {
-        $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Middleware\\SampleMiddleware';
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Middleware\\SampleMiddleware';
 
         $this->console()->run('create:middleware', [
             'name' => 'sample-middleware',
@@ -62,7 +60,5 @@ class MiddlewareTest extends AbstractCommandTest
             \str_replace('\\', '/', $reflection->getFileName())
         );
         $this->assertStringContainsString('App\Custom\Middleware', $content);
-
-        $this->deleteDeclaration($class);
     }
 }

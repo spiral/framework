@@ -4,40 +4,25 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
 
+use Spiral\Console\Attribute\Argument;
+use Spiral\Console\Attribute\AsCommand;
+use Spiral\Console\Attribute\Option;
 use Spiral\Console\Attribute\Question;
 use Spiral\Scaffolder\Declaration\JobHandlerDeclaration;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
-#[Question(
-    question: 'What would you like to name the Job handler?',
-    argument: 'name'
-)]
+#[AsCommand(name: 'create:jobHandler', description: 'Create job handler declaration')]
 class JobHandlerCommand extends AbstractCommand
 {
-    protected const NAME        = 'create:jobHandler';
-    protected const DESCRIPTION = 'Create job handler declaration';
-    protected const ARGUMENTS   = [
-        ['name', InputArgument::REQUIRED, 'job handler name'],
-    ];
-    protected const OPTIONS     = [
-        [
-            'comment',
-            'c',
-            InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header',
-        ],
-        [
-            'namespace',
-            null,
-            InputOption::VALUE_OPTIONAL,
-            'Optional, specify a custom namespace',
-        ],
-    ];
+    #[Argument(description: 'Job handler name')]
+    #[Question(question: 'What would you like to name the Job handler?')]
+    private string $name;
 
-    /**
-     * Create jobHandler declaration.
-     */
+    #[Option(shortcut: 'c', description: 'Optional comment to add as class header')]
+    private ?string $comment = null;
+
+    #[Option(description: 'Optional, specify a custom namespace')]
+    private ?string $namespace = null;
+
     public function perform(): int
     {
         $declaration = $this->createDeclaration(JobHandlerDeclaration::class);

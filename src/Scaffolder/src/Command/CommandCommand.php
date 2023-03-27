@@ -4,53 +4,51 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
 
+use Spiral\Console\Attribute\Argument;
+use Spiral\Console\Attribute\AsCommand;
+use Spiral\Console\Attribute\Option;
 use Spiral\Console\Attribute\Question;
 use Spiral\Scaffolder\Declaration\CommandDeclaration;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
-#[Question(
-    question: 'What would you like to name the console Command?',
-    argument: 'name'
-)]
+#[AsCommand(name: 'create:command', description: 'Create console command declaration')]
 class CommandCommand extends AbstractCommand
 {
-    protected const NAME        = 'create:command';
-    protected const DESCRIPTION = 'Create command declaration';
-    protected const ARGUMENTS   = [
-        ['name', InputArgument::REQUIRED, 'Command name'],
-        ['alias', InputArgument::OPTIONAL, 'Command id/alias'],
-    ];
-    protected const OPTIONS     = [
-        [
-            'description',
-            'd',
-            InputOption::VALUE_OPTIONAL,
-            'Command description',
-        ],
-        [
-            'comment',
-            'c',
-            InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header',
-        ],
-        [
-            'namespace',
-            null,
-            InputOption::VALUE_OPTIONAL,
-            'Optional, specify a custom namespace',
-        ],
-    ];
+    #[Argument(description: 'Command name')]
+    #[Question(question: 'What would you like to name the console Command?')]
+    private string $name;
 
-    /**
-     * Create command declaration.
-     */
+    #[Argument(description: 'Command id/alias')]
+    private ?string $alias = null;
+
+    #[Option(shortcut: 'd', description: 'Command description')]
+    private ?string $description = null;
+
+    #[Option(shortcut: 'c', description: 'Optional comment to add as class header')]
+    private ?string $comment = null;
+
+    #[Option(description: 'Optional, specify a custom namespace')]
+    private ?string $namespace = null;
+
+    #[Option(name: 'argument', shortcut: 'a', description: 'Command arguments')]
+    private array $arguments = [];
+
+    #[Option(name: 'option', shortcut: 'o', description: 'Command options')]
+    private array $options = [];
+
     public function perform(): int
     {
-        $declaration = $this->createDeclaration(CommandDeclaration::class);
+        $declaration = $this->createDeclaration(CommandDeclaration::class, [
+            'description' => $this->description,
+            'alias' => $this->alias ?? \strtolower(\preg_replace('/(?<!^)[A-Z]/', ':$0', $this->name)),
+        ]);
 
-        $declaration->setAlias((string) ($this->argument('alias') ?? $this->argument('name')));
-        $declaration->setDescription((string) $this->option('description'));
+        foreach ($this->arguments as $argument) {
+            $declaration->addArgument($argument);
+        }
+
+        foreach ($this->options as $option) {
+            $declaration->addOption($option);
+        }
 
         $this->writeDeclaration($declaration);
 

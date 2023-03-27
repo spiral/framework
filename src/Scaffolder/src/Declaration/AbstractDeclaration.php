@@ -19,7 +19,7 @@ abstract class AbstractDeclaration implements DeclarationInterface
         protected readonly ScaffolderConfig $config,
         string $name,
         ?string $comment = null,
-        ?string $namespace = null
+        ?string $namespace = null,
     ) {
         $this->namespace = new PhpNamespace($namespace ?? $this->config->classNamespace(static::TYPE, $name));
 

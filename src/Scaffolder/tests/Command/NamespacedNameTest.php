@@ -12,21 +12,17 @@ class NamespacedNameTest extends AbstractCommandTest
 {
     private const CLASS_NAME = '\\Spiral\\Tests\\Scaffolder\\App\\Controller\\Namespaced\\SampleController';
 
-    public function tearDown(): void
-    {
-        $this->deleteDeclaration(self::CLASS_NAME);
-    }
-
     /**
      * @throws ReflectionException
      * @throws Throwable
      */
     public function testScaffold(): void
     {
+        $this->className = self::CLASS_NAME;
         $this->console()->run('create:controller', [
-            'name'      => 'namespaced/sample',
+            'name' => 'namespaced/sample',
             '--comment' => 'Sample Controller',
-            '-a'        => ['index', 'save']
+            '-a' => ['index', 'save'],
         ]);
 
         clearstatcache();
