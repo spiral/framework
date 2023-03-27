@@ -74,9 +74,9 @@ class ConfigDeclaration extends AbstractDeclaration
             ->setValue([])
             ->setComment(
                 <<<'DOC'
-Default values for the config. 
-Will be merged with application config in runtime.
-DOC,
+                Default values for the config. 
+                Will be merged with application config in runtime.
+                DOC,
             );
     }
 
