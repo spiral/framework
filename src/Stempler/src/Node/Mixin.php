@@ -18,7 +18,7 @@ final class Mixin implements NodeInterface
     use ContextTrait;
 
     /**
-     * @param TNode[] $nodes
+     * @param array<array-key, TNode|string> $nodes
      */
     public function __construct(
         public array $nodes = [],

@@ -11,6 +11,8 @@ use Spiral\Reactor\Exception\ReactorException;
  * apply set of operations.
  *
  * @template TElement of AggregableInterface
+ * @template-implements \IteratorAggregate<array-key, TElement>
+ * @template-implements \ArrayAccess<mixed, mixed>
  */
 class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
 {
@@ -26,10 +28,12 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Get element by it's name.
      *
+     * @param non-empty-string $name
+     *
      * @return TElement
      * @throws ReactorException
      */
-    public function __get($name): AggregableInterface
+    public function __get(string $name): AggregableInterface
     {
         return $this->get($name);
     }
@@ -39,6 +43,9 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
         return empty($this->elements);
     }
 
+    /**
+     * @return int<0, max>
+     */
     public function count(): int
     {
         return \count($this->elements);
@@ -46,6 +53,8 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
 
     /**
      * Check if aggregation has named element with given name.
+     *
+     * @param non-empty-string $name
      */
     public function has(string $name): bool
     {
@@ -88,6 +97,8 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Get named element by it's name.
      *
+     * @param non-empty-string $name
+     *
      * @return TElement
      * @throws ReactorException
      */
@@ -98,6 +109,8 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
 
     /**
      * Remove element by it's name.
+     *
+     * @param non-empty-string $name
      */
     public function remove(string $name): self
     {
@@ -146,6 +159,8 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
 
     /**
      * Find element by it's name (NamedDeclarations only).
+     *
+     * @param non-empty-string $name
      *
      * @return TElement
      * @throws ReactorException When unable to find.

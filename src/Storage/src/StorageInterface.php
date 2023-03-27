@@ -10,7 +10,7 @@ use Spiral\Storage\Storage\ReadableInterface;
 use Spiral\Storage\Storage\WritableInterface;
 
 /**
- * @template-implements \IteratorAggregate<string, StorageInterface>
+ * @template-extends \IteratorAggregate<string, BucketInterface>
  *
  * @see UriInterface
  */

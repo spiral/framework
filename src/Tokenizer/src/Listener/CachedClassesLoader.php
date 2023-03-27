@@ -60,10 +60,6 @@ final class CachedClassesLoader implements ClassesLoaderInterface
     {
         $listener = new \ReflectionClass($listener);
 
-        foreach ($this->reader->getClassMetadata($listener) as $attribute) {
-            if ($attribute instanceof AbstractTarget) {
-                yield $attribute;
-            }
-        }
+        yield from $this->reader->getClassMetadata($listener, AbstractTarget::class);
     }
 }

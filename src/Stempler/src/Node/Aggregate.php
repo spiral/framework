@@ -81,9 +81,6 @@ final class Aggregate implements NodeInterface
         return null;
     }
 
-    /**
-     * @return \Generator<string, TNode[]>
-     */
     public function getIterator(): \Generator
     {
         yield 'nodes' => $this->nodes;

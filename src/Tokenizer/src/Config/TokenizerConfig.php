@@ -21,14 +21,13 @@ final class TokenizerConfig extends InjectableConfig
     public const CONFIG = 'tokenizer';
 
     /**
-     * @psalm-var array{
+     * @var array{
      *     cache: array{directory: null, enabled: bool},
      *     debug: bool,
      *     directories: TDirectories,
      *     exclude: TDirectories,
      *     scopes: array<non-empty-string, TScope>
      * }
-     * @var array
      */
     protected array $config = [
         'cache' => [

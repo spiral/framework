@@ -211,6 +211,7 @@ final class Factory implements FactoryInterface
      */
     private function autowire(Ctx $ctx, array $arguments): object
     {
+        /** @psalm-suppress NoValue, InvalidArrayOffset */
         if (!(\class_exists($ctx->class) || (
             \interface_exists($ctx->class)
                 &&

@@ -6,9 +6,12 @@ namespace Spiral\Router;
 
 use Spiral\Router\Loader\Configurator\RouteConfigurator;
 
+/**
+ * @template-implements \IteratorAggregate<non-empty-string, RouteConfigurator>
+ */
 class RouteCollection implements \IteratorAggregate, \Countable
 {
-    /** @var array<string, RouteConfigurator> */
+    /** @var array<non-empty-string, RouteConfigurator> */
     private array $routes = [];
 
     public function __clone()
@@ -21,7 +24,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * Gets the current RouteCollection as an Iterator that includes all routes.
      *
-     * @return \ArrayIterator<string, RouteConfigurator>
+     * @return \ArrayIterator<non-empty-string, RouteConfigurator>
      */
     public function getIterator(): \ArrayIterator
     {
@@ -36,7 +39,10 @@ class RouteCollection implements \IteratorAggregate, \Countable
         return \count($this->routes);
     }
 
-    public function add(string $name, RouteConfigurator $route)
+    /**
+     * @param non-empty-string $name
+     */
+    public function add(string $name, RouteConfigurator $route): void
     {
         $this->routes[$name] = $route;
     }
@@ -44,7 +50,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * Returns all routes in this collection.
      *
-     * @return array<string, RouteConfigurator>
+     * @return array<non-empty-string, RouteConfigurator>
      */
     public function all(): array
     {
@@ -53,6 +59,8 @@ class RouteCollection implements \IteratorAggregate, \Countable
 
     /**
      * Gets a route by name.
+     *
+     * @param non-empty-string $name
      */
     public function get(string $name): ?RouteConfigurator
     {
@@ -61,6 +69,8 @@ class RouteCollection implements \IteratorAggregate, \Countable
 
     /**
      * Check a route by name.
+     *
+     * @param non-empty-string $name
      */
     public function has(string $name): bool
     {
@@ -70,16 +80,16 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * Removes a route or an array of routes by name from the collection.
      *
-     * @param string|string[] $name The route name or an array of route names
+     * @param non-empty-string|non-empty-string[] $name The route name or an array of route names
      */
-    public function remove(string|array $name)
+    public function remove(string|array $name): void
     {
         foreach ((array) $name as $n) {
             unset($this->routes[$n]);
         }
     }
 
-    public function addCollection(self $collection)
+    public function addCollection(self $collection): void
     {
         foreach ($collection->all() as $name => $route) {
             $this->routes[$name] = $route;
@@ -88,8 +98,10 @@ class RouteCollection implements \IteratorAggregate, \Countable
 
     /**
      * Adds a specific group to a route.
+     *
+     * @param non-empty-string $group
      */
-    public function group(string $group)
+    public function group(string $group): void
     {
         foreach ($this->routes as $route) {
             $route->group($group);

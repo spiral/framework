@@ -38,6 +38,7 @@ final class AttributeMapper
         $class = new \ReflectionClass($filter);
 
         foreach ($class->getProperties() as $property) {
+            /** @var object $attribute */
             foreach ($this->reader->getPropertyMetadata($property) as $attribute) {
                 if ($attribute instanceof AbstractInput) {
                     $this->setValue($filter, $property, $attribute->getValue($input, $property));

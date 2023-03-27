@@ -10,6 +10,7 @@ use Spiral\Stempler\Parser\Context;
  * Defines an ability to represent AST node.
  *
  * @template TNode
+ * @template-extends \IteratorAggregate<array-key, TNode[]>
  */
 interface NodeInterface extends \IteratorAggregate
 {

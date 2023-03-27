@@ -149,9 +149,9 @@ final class Traverser
     {
         $ctx = clone $context;
         foreach ($node as $name => $_) {
-            $child = &$node->$name;
-            if (is_array($child)) {
-                $child = $this->traverse($child, $ctx);
+            $_ = &$node->$name;
+            if (is_array($_)) {
+                $_ = $this->traverse($_, $ctx);
                 if ($this->stopTraversal) {
                     break;
                 }
@@ -159,23 +159,23 @@ final class Traverser
                 continue;
             }
 
-            if (!$child instanceof NodeInterface) {
+            if (!$_ instanceof NodeInterface) {
                 continue;
             }
 
-            $ctx = $context->withNode($child);
+            $ctx = $context->withNode($_);
 
             $traverseChildren = true;
             $breakVisitorID = null;
 
             foreach ($this->visitors as $visitorID => $visitor) {
-                $result = $visitor->enterNode($child, $ctx);
+                $result = $visitor->enterNode($_, $ctx);
                 switch (true) {
                     case $result === null:
                         break;
 
                     case $result instanceof NodeInterface:
-                        $child = $result;
+                        $_ = $result;
                         break;
 
                     case VisitorInterface::DONT_TRAVERSE_CHILDREN:
@@ -199,21 +199,21 @@ final class Traverser
             }
 
             if ($traverseChildren) {
-                $child = $this->traverseNode($child, $ctx);
+                $_ = $this->traverseNode($_, $ctx);
                 if ($this->stopTraversal) {
                     break;
                 }
             }
 
             foreach ($this->visitors as $visitorID => $visitor) {
-                $result = $visitor->leaveNode($child, $ctx);
+                $result = $visitor->leaveNode($_, $ctx);
 
                 switch (true) {
                     case $result === null:
                         break;
 
                     case $result instanceof NodeInterface:
-                        $child = $result;
+                        $_ = $result;
                         break;
 
                     case $result === VisitorInterface::STOP_TRAVERSAL:

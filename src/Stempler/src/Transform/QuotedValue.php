@@ -25,17 +25,13 @@ final class QuotedValue
     }
 
     /**
-     * @return NodeInterface[]
+     * @return array<NodeInterface|string>
      */
     public function trimValue(): array
     {
         $value = $this->value;
         if ($value instanceof Nil) {
             return [];
-        }
-
-        if (\is_string($value)) {
-            return [new Raw(\trim($value, '\'"'))];
         }
 
         if (!$value instanceof Mixin) {
