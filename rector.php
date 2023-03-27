@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
@@ -18,12 +19,7 @@ return static function (RectorConfig $config): void {
     $config->parallel();
     $config->skip([
         CountOnNullRector::class,
-        RemoveUnusedPrivateMethodRector::class => [
-            __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
-            __DIR__ . '/src/Broadcasting/src/Bootloader/BroadcastingBootloader.php',
-            __DIR__ . '/src/Cache/src/Bootloader/CacheBootloader.php',
-            __DIR__ . '/src/Serializer/src/Bootloader/SerializerBootloader.php',
-            __DIR__ . '/src/Validation/src/Bootloader/ValidationBootloader.php',
+        RemoveUnusedPrivatePropertyRector::class => [
             __DIR__ . '/src/Scaffolder/src/Command/BootloaderCommand.php',
             __DIR__ . '/src/Scaffolder/src/Command/CommandCommand.php',
             __DIR__ . '/src/Scaffolder/src/Command/ConfigCommand.php',
@@ -31,6 +27,13 @@ return static function (RectorConfig $config): void {
             __DIR__ . '/src/Scaffolder/src/Command/FilterCommand.php',
             __DIR__ . '/src/Scaffolder/src/Command/JobHandlerCommand.php',
             __DIR__ . '/src/Scaffolder/src/Command/MiddlewareCommand.php',
+        ],
+        RemoveUnusedPrivateMethodRector::class => [
+            __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
+            __DIR__ . '/src/Broadcasting/src/Bootloader/BroadcastingBootloader.php',
+            __DIR__ . '/src/Cache/src/Bootloader/CacheBootloader.php',
+            __DIR__ . '/src/Serializer/src/Bootloader/SerializerBootloader.php',
+            __DIR__ . '/src/Validation/src/Bootloader/ValidationBootloader.php',
         ],
         RemoveUselessVarTagRector::class => [
             __DIR__ . '/src/Console/src/Traits/HelpersTrait.php',
