@@ -80,11 +80,11 @@ class CommandDeclaration extends AbstractDeclaration
             ->setReturnType('int')
             ->setBody(
                 <<<'PHP'
-// Put your command logic here
-$this->info('Command logic is not implemented yet');
+                // Put your command logic here
+                $this->info('Command logic is not implemented yet');
 
-return self::SUCCESS;
-PHP,
+                return self::SUCCESS;
+                PHP,
             );
     }
 }
