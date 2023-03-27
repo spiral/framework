@@ -4,59 +4,32 @@ declare(strict_types=1);
 
 namespace Spiral\Scaffolder\Command;
 
+use Spiral\Console\Attribute\Argument;
+use Spiral\Console\Attribute\AsCommand;
+use Spiral\Console\Attribute\Option;
 use Spiral\Console\Attribute\Question;
 use Spiral\Scaffolder\Declaration\ConfigDeclaration;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
-#[Question(
-    question: 'Please provide the name of the Config class, or the filename of an existing config file',
-    argument: 'name'
-)]
+#[AsCommand(name: 'create:config', description: 'Create config declaration')]
 class ConfigCommand extends AbstractCommand
 {
-    protected const NAME        = 'create:config';
-    protected const DESCRIPTION = 'Create config declaration';
-    protected const ARGUMENTS   = [
-        [
-            'name',
-            InputArgument::REQUIRED,
-            'config name, or a config filename if "-r" flag is set ({path/to/configs/directory/}{config/filename}.php)',
-        ],
-    ];
+    #[Argument(description: 'Сonfig name, or a config filename if "-r" flag is set ({path/to/configs/directory/}{config/filename}.php)')]
+    #[Question(question: 'Please provide the name of the Config class, or the filename of an existing config file')]
+    private string $name;
 
-    protected const OPTIONS = [
-        [
-            'comment',
-            'c',
-            InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header',
-        ],
-        [
-            'reverse',
-            'r',
-            InputOption::VALUE_NONE,
-            'Create config class based on a given config filename',
-        ],
-        [
-            'namespace',
-            null,
-            InputOption::VALUE_OPTIONAL,
-            'Optional, specify a custom namespace',
-        ],
-    ];
+    #[Option(shortcut: 'r', description: 'Create config class based on a given config filename')]
+    private bool $reverse = false;
 
-    /**
-     * Create config declaration.
-     */
+    #[Option(shortcut: 'c', description: 'Optional comment to add as class header')]
+    private ?string $comment = null;
+
+    #[Option(description: 'Optional, specify a custom namespace')]
+    private ?string $namespace = null;
+
     public function perform(): int
     {
         $declaration = $this->createDeclaration(ConfigDeclaration::class);
-
-        $declaration->create(
-            (bool) $this->option('reverse'),
-            (string) $this->argument('name')
-        );
+        $declaration->create($this->reverse, $this->name);
 
         $this->writeDeclaration($declaration);
 

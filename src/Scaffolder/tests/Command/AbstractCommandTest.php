@@ -12,6 +12,8 @@ use Throwable;
 
 abstract class AbstractCommandTest extends BaseTest
 {
+    protected ?string $className = null;
+
     /**
      * @param string $class
      */
@@ -22,6 +24,7 @@ abstract class AbstractCommandTest extends BaseTest
                 $reflection = new ReflectionClass($class);
                 $this->files()->delete($reflection->getFileName());
             } catch (Throwable $exception) {
+                var_dump($exception->getMessage());
             }
         }
     }
@@ -42,5 +45,14 @@ abstract class AbstractCommandTest extends BaseTest
     protected function files(): FilesInterface
     {
         return $this->app->get(FilesInterface::class);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        if ($this->className) {
+            $this->deleteDeclaration($this->className);
+        }
     }
 }

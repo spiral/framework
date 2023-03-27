@@ -12,11 +12,22 @@ class JobHandlerDeclaration extends AbstractDeclaration
 
     public function declare(): void
     {
+        $this->namespace->addUse(JobHandler::class);
         $this->class->setExtends(JobHandler::class);
+        $this->class->setFinal();
 
-        $this->class
+        $method = $this->class
             ->addMethod('invoke')
             ->setPublic()
             ->setReturnType('void');
+
+        $method->addParameter('id')
+            ->setType('string');
+
+        $method->addParameter('payload')
+            ->setType('array');
+
+        $method->addParameter('headers')
+            ->setType('array');
     }
 }

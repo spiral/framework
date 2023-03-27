@@ -6,16 +6,19 @@ namespace Spiral\Tests\Tokenizer\Bootloader;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Memory;
 use Spiral\Boot\MemoryInterface;
-use Spiral\Boot\NullMemory;
+use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
+use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Listener\CachedClassesLoader;
 use Spiral\Tokenizer\Listener\ClassesLoaderInterface;
+use Spiral\Tokenizer\ScopedClassesInterface;
 
 final class TokenizerListenerBootloaderTest extends TestCase
 {
@@ -126,5 +129,46 @@ final class TokenizerListenerBootloaderTest extends TestCase
             $loader,
             $bootloader->initCachedClassesLoader($factory, $dirs, $env, $config),
         );
+    }
+
+    /**
+     * @dataProvider readCacheDataProvider
+     */
+    public function testCastingReadCacheEnvVariable(mixed $readCache, bool $expected): void
+    {
+        $factory = new Container();
+        $factory->bind(Memory::class, $this->createMock(MemoryInterface::class));
+        $factory->bind(ReaderInterface::class, $this->createMock(ReaderInterface::class));
+        $factory->bind(ClassesInterface::class, $this->createMock(ClassesInterface::class));
+        $factory->bind(ScopedClassesInterface::class, $this->createMock(ScopedClassesInterface::class));
+
+        $env = $this->createMock(EnvironmentInterface::class);
+        $env
+            ->expects($this->once())
+            ->method('get')
+            ->with('TOKENIZER_CACHE_TARGETS')
+            ->willReturn($readCache);
+
+        $bootloader = new TokenizerListenerBootloader();
+        $loader = $bootloader->initCachedClassesLoader(
+            $factory,
+            $this->createMock(DirectoriesInterface::class),
+            $env,
+            new TokenizerConfig()
+        );
+
+        $this->assertSame($expected, (new \ReflectionProperty($loader, 'readCache'))->getValue($loader));
+    }
+
+    public function readCacheDataProvider(): \Traversable
+    {
+        yield [true, true];
+        yield [false, false];
+        yield [1, true];
+        yield [0, false];
+        yield ['1', true];
+        yield ['0', false];
+        yield ['true', true];
+        yield ['false', false];
     }
 }

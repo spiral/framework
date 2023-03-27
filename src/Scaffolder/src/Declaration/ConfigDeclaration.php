@@ -31,7 +31,7 @@ class ConfigDeclaration extends AbstractDeclaration
         protected string $name,
         protected ?string $comment = null,
         private readonly string $directory = '',
-        ?string $namespace = null
+        ?string $namespace = null,
     ) {
         parent::__construct($config, $name, $comment, $namespace);
     }
@@ -65,13 +65,19 @@ class ConfigDeclaration extends AbstractDeclaration
         $this->namespace->addUse(InjectableConfig::class);
 
         $this->class->setExtends(InjectableConfig::class);
+        $this->class->setFinal();
 
         $this->class
             ->addProperty('config')
             ->setProtected()
             ->setType('array')
             ->setValue([])
-            ->setComment('@internal For internal usage. Will be hydrated in the constructor.');
+            ->setComment(
+                <<<'DOC'
+                Default values for the config. 
+                Will be merged with application config in runtime.
+                DOC,
+            );
     }
 
     private function makeConfigFilename(string $filename): string
@@ -90,7 +96,7 @@ class ConfigDeclaration extends AbstractDeclaration
             $filename,
             $file->render() . PHP_EOL . (new Dumper())->dump(new Literal('return [];')),
             FilesInterface::READONLY,
-            true
+            true,
         );
     }
 
@@ -113,7 +119,6 @@ class ConfigDeclaration extends AbstractDeclaration
 
             $method = $this->class->addMethod($getter)->setPublic();
             $method->setBody(\sprintf('return $this->config[\'%s\'];', $key));
-            $method->setComment(\sprintf('@return %s', $this->typeAnnotations->getAnnotation($value)));
 
             if (\is_array($value)) {
                 $gettersByKey[] = ['key' => $key, 'value' => $value];
@@ -166,10 +171,6 @@ class ConfigDeclaration extends AbstractDeclaration
         $method = $this->class->addMethod($name)->setPublic();
         $method->setBody(\sprintf('return $this->config[\'%s\'][$%s];', $key, $singularKey));
         $method->setReturnType($valueType);
-        $method->setComment([
-            \sprintf('@param %s %s', $this->typeAnnotations->mapType($keyType), $singularKey),
-            \sprintf('@return %s', $this->typeAnnotations->getAnnotation(array_values($value)[0])),
-        ]);
 
         $param = $method->addParameter($singularKey);
         $paramTypeHint = $this->typeHints->getHint($keyType);
@@ -198,14 +199,14 @@ class ConfigDeclaration extends AbstractDeclaration
 
     private function classify(string $name): string
     {
-        return ( new InflectorFactory() )
+        return (new InflectorFactory())
             ->build()
             ->classify($name);
     }
 
     private function singularize(string $name): string
     {
-        return ( new InflectorFactory() )
+        return (new InflectorFactory())
             ->build()
             ->singularize($name);
     }

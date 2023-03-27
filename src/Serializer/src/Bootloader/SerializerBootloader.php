@@ -38,9 +38,6 @@ final class SerializerBootloader extends Bootloader
         $this->initConfig($env);
     }
 
-    /**
-     * @noRector RemoveUnusedPrivateMethodRector
-     */
     private function initSerializerManager(
         SerializerRegistryInterface $serializers,
         SerializerConfig $config
@@ -48,9 +45,6 @@ final class SerializerBootloader extends Bootloader
         return new SerializerManager($serializers, $config->getDefault());
     }
 
-    /**
-     * @noRector RemoveUnusedPrivateMethodRector
-     */
     private function initSerializerRegistry(SerializerConfig $config): SerializerRegistryInterface
     {
         return new SerializerRegistry(\array_map([$this, 'wire'], $config->getSerializers()));

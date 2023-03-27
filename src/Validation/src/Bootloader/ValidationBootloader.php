@@ -43,9 +43,6 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
         }
     }
 
-    /**
-     * @noRector RemoveUnusedPrivateMethodRector
-     */
     private function initDefaultValidator(
         ValidationConfig $config,
         ValidationProviderInterface $provider

@@ -7,12 +7,14 @@ namespace Spiral\Tests\Scaffolder\App;
 use Spiral\Boot;
 use Spiral\Core\Container;
 use Spiral\Scaffolder;
+use Spiral\Validation\Bootloader\ValidationBootloader;
 use Throwable;
 
 class TestApp extends Boot\AbstractKernel
 {
     protected const LOAD = [
-        Scaffolder\Bootloader\ScaffolderBootloader::class
+        Scaffolder\Bootloader\ScaffolderBootloader::class,
+        ValidationBootloader::class,
     ];
 
     /**

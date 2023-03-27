@@ -2,33 +2,51 @@
 
 declare(strict_types=1);
 
-use Rector\Core\Configuration\Option;
-use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
-use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPromotedPropertyRector;
+use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
+use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
+use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php71\Rector\FuncCall\CountOnNullRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [
+return static function (RectorConfig $config): void {
+    $config->paths([
         __DIR__ . '/src/*/src',
     ]);
 
-    $parameters->set(Option::PARALLEL, true);
-    $parameters->set(Option::SKIP, [
+    $config->parallel();
+    $config->skip([
         CountOnNullRector::class,
-
-        // for PHP 8
-        RemoveUnusedPromotedPropertyRector::class,
-
+        RemoveUnusedPrivatePropertyRector::class => [
+            __DIR__ . '/src/Scaffolder/src/Command/BootloaderCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/CommandCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/ConfigCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/ControllerCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/FilterCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/JobHandlerCommand.php',
+            __DIR__ . '/src/Scaffolder/src/Command/MiddlewareCommand.php',
+        ],
         RemoveUnusedPrivateMethodRector::class => [
             __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
+            __DIR__ . '/src/Broadcasting/src/Bootloader/BroadcastingBootloader.php',
+            __DIR__ . '/src/Cache/src/Bootloader/CacheBootloader.php',
+            __DIR__ . '/src/Serializer/src/Bootloader/SerializerBootloader.php',
+            __DIR__ . '/src/Validation/src/Bootloader/ValidationBootloader.php',
+        ],
+        RemoveUselessVarTagRector::class => [
+            __DIR__ . '/src/Console/src/Traits/HelpersTrait.php',
+        ],
+        RemoveAlwaysTrueIfConditionRector::class => [
+            __DIR__ . '/src/Boot/src/BootloadManager/Initializer.php',
+            __DIR__ . '/src/Stempler/src/Traverser.php',
+            __DIR__ . '/src/Prototype/src/NodeVisitors/LocateProperties.php',
+            __DIR__ . '/src/Prototype/src/NodeVisitors/RemoveTrait.php',
+            __DIR__ . '/src/Logger/src/ListenerRegistry.php',
         ],
     ]);
 
-    $containerConfigurator->import(LevelSetList::UP_TO_PHP_72);
-    $containerConfigurator->import(SetList::DEAD_CODE);
+    $config->import(LevelSetList::UP_TO_PHP_72);
+    $config->import(SetList::DEAD_CODE);
 };
