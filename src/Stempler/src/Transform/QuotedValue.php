@@ -34,6 +34,10 @@ final class QuotedValue
             return [];
         }
 
+        if (\is_string($value)) {
+            return [new Raw(\trim($value, '\'"'))];
+        }
+
         if (!$value instanceof Mixin) {
             return [$value];
         }
