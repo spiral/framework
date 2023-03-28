@@ -41,8 +41,10 @@ class RouteCollection implements \IteratorAggregate, \Countable
 
     /**
      * @param non-empty-string $name
+     *
+     * @return void
      */
-    public function add(string $name, RouteConfigurator $route): void
+    public function add(string $name, RouteConfigurator $route)
     {
         $this->routes[$name] = $route;
     }
@@ -81,15 +83,20 @@ class RouteCollection implements \IteratorAggregate, \Countable
      * Removes a route or an array of routes by name from the collection.
      *
      * @param non-empty-string|non-empty-string[] $name The route name or an array of route names
+     *
+     * @return void
      */
-    public function remove(string|array $name): void
+    public function remove(string|array $name)
     {
         foreach ((array) $name as $n) {
             unset($this->routes[$n]);
         }
     }
 
-    public function addCollection(self $collection): void
+    /**
+     * @return void
+     */
+    public function addCollection(self $collection)
     {
         foreach ($collection->all() as $name => $route) {
             $this->routes[$name] = $route;
@@ -100,8 +107,10 @@ class RouteCollection implements \IteratorAggregate, \Countable
      * Adds a specific group to a route.
      *
      * @param non-empty-string $group
+     *
+     * @return void
      */
-    public function group(string $group): void
+    public function group(string $group)
     {
         foreach ($this->routes as $route) {
             $route->group($group);

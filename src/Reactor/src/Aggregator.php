@@ -33,7 +33,7 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
      * @return TElement
      * @throws ReactorException
      */
-    public function __get(string $name): AggregableInterface
+    public function __get($name): AggregableInterface
     {
         return $this->get($name);
     }
