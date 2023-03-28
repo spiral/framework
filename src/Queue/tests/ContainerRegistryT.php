@@ -11,15 +11,10 @@ use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Exception\JobException;
 use Spiral\Queue\HandlerInterface;
 
-/**
- * TODO: This test brokes some tests without no reason.
- */
-class ContainerRegistryT extends TestCase
+final class ContainerRegistryT extends TestCase
 {
-    /** @var ContainerRegistry */
-    private $registry;
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface|m\MockInterface $container;
+    private ContainerRegistry $registry;
 
     protected function setUp(): void
     {

@@ -12,7 +12,6 @@ use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Interceptor\Consume\Handler;
-use Spiral\Queue\Job\ObjectJob;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerInterface;
@@ -41,7 +40,10 @@ final class SyncDriverTest extends TestCase
         );
     }
 
-    public function testJobShouldBePushed(): void
+    /**
+     * @dataProvider PayloadDataProvider
+     */
+    public function testJobShouldBePushed(mixed $payload): void
     {
         $this->factory->shouldReceive('uuid4')
             ->andReturn($uuid = (new UuidFactory())->uuid4());
@@ -51,36 +53,22 @@ final class SyncDriverTest extends TestCase
                 'driver' => 'sync',
                 'queue' => 'default',
                 'id' => $uuid->toString(),
-                'payload' => ['foo' => 'bar'],
+                'payload' => $payload,
                 'headers' => []
             ])
             ->once();
 
-        $id = $this->queue->push('foo', ['foo' => 'bar']);
+        $id = $this->queue->push('foo', $payload);
 
         $this->assertSame($uuid->toString(), $id);
     }
 
-    public function testJobObjectShouldBePushed(): void
+    public function PayloadDataProvider(): \Traversable
     {
-        $object = new \stdClass();
-        $object->foo = 'bar';
-
-        $this->factory->shouldReceive('uuid4')
-            ->andReturn($uuid = (new UuidFactory())->uuid4());
-
-        $this->core->shouldReceive('callAction')
-            ->withSomeOfArgs(ObjectJob::class, [
-                'driver' => 'sync',
-                'queue' => 'default',
-                'id' => $uuid->toString(),
-                'payload' => ['object' => $object],
-                'headers' => []
-            ])
-            ->once();
-
-        $id = $this->queue->pushObject($object);
-
-        $this->assertSame($uuid->toString(), $id);
+        yield [['baz' => 'baf']];
+        yield [new \stdClass()];
+        yield ['some string'];
+        yield [123];
+        yield [null];
     }
 }

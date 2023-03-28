@@ -16,7 +16,7 @@ use Spiral\Queue\HandlerRegistryInterface;
  *     driver: non-empty-string,
  *     queue: non-empty-string,
  *     id: non-empty-string,
- *     payload: array,
+ *     payload: mixed,
  *     headers: array
  * }
  */
@@ -36,7 +36,6 @@ final class Core implements CoreInterface
         \assert(\is_string($parameters['driver']));
         \assert(\is_string($parameters['queue']));
         \assert(\is_string($parameters['id']));
-        \assert(\is_array($parameters['payload']));
 
         $this->dispatchEvent(JobProcessing::class, $controller, $parameters);
 

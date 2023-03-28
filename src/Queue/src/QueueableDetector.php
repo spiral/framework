@@ -7,7 +7,7 @@ namespace Spiral\Queue;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Queue\Attribute\Queueable;
 
-class QueueableDetector
+final class QueueableDetector
 {
     private ReaderInterface $reader;
 

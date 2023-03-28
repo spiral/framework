@@ -6,17 +6,21 @@ namespace Spiral\Queue\Interceptor\Consume;
 
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
-use Spiral\Telemetry\TraceKind;
 use Spiral\Telemetry\NullTracerFactory;
+use Spiral\Telemetry\TraceKind;
 use Spiral\Telemetry\TracerFactoryInterface;
 
+/**
+ * Handler is used to invoke pass incoming job through the interceptor chain and invoke the job handler after that.
+ * {@see \Spiral\Queue\Interceptor\Consume\Core}.
+ */
 final class Handler
 {
     private readonly TracerFactoryInterface $tracerFactory;
 
     public function __construct(
         private readonly CoreInterface $core,
-        ?TracerFactoryInterface $tracerFactory = null
+        ?TracerFactoryInterface $tracerFactory = null,
     ) {
         $this->tracerFactory = $tracerFactory ?? new NullTracerFactory(new Container());
     }
@@ -26,8 +30,8 @@ final class Handler
         string $driver,
         string $queue,
         string $id,
-        array $payload,
-        array $headers = []
+        mixed $payload,
+        array $headers = [],
     ): mixed {
         $tracer = $this->tracerFactory->make($headers);
 
@@ -47,7 +51,7 @@ final class Handler
                 'queue.headers' => $headers,
             ],
             scoped: true,
-            traceKind: TraceKind::CONSUMER
+            traceKind: TraceKind::CONSUMER,
         );
     }
 }

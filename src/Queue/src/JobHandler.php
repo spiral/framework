@@ -18,17 +18,20 @@ abstract class JobHandler implements HandlerInterface
     protected const HANDLE_FUNCTION = 'invoke';
 
     public function __construct(
-        protected InvokerInterface $invoker
+        protected InvokerInterface $invoker,
     ) {
     }
 
-    public function handle(string $name, string $id, array $payload, array $headers = []): void
+    public function handle(string $name, string $id, mixed $payload, array $headers = []): void
     {
         try {
-            $this->invoker->invoke(
-                [$this, $this->getHandlerMethod()],
-                \array_merge(['payload' => $payload, 'id' => $id, 'headers' => $headers], $payload)
-            );
+            $params = ['payload' => $payload, 'id' => $id, 'headers' => $headers];
+
+            if (\is_array($payload)) {
+                $params = \array_merge($params, $payload);
+            }
+
+            $this->invoker->invoke([$this, $this->getHandlerMethod()], $params);
         } catch (\Throwable $e) {
             $message = \sprintf('[%s] %s', $this::class, $e->getMessage());
             throw new JobException($message, (int)$e->getCode(), $e);

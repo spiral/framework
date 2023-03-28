@@ -12,21 +12,12 @@ use Spiral\Tests\Queue\TestCase;
 
 final class CallableJobTest extends TestCase
 {
-    /** @var Container */
-    private $container;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->container = new Container();
-    }
-
     public function testPayloadCallbackKeyIsRequired(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectErrorMessage('Payload `callback` key is required.');
 
-        $job = new CallableJob($this->container);
+        $job = new CallableJob(new Container());
         $job->handle('foo', 'foo-id', []);
     }
 
@@ -35,7 +26,7 @@ final class CallableJobTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectErrorMessage('Payload `callback` key value type should be a closure.');
 
-        $job = new CallableJob($this->container);
+        $job = new CallableJob(new Container());
         $job->handle('foo', 'foo-id', ['callback' => 'test']);
     }
 
@@ -47,7 +38,7 @@ final class CallableJobTest extends TestCase
             $this->assertInstanceOf(Container::class, $container);
         };
 
-        $job = new CallableJob($this->container);
+        $job = new CallableJob(new Container());
 
         $job->handle('foo', 'foo-id', ['callback' => $callback]);
     }
