@@ -32,6 +32,8 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
      *
      * @return TElement
      * @throws ReactorException
+     *
+     * TODO add parameter type
      */
     public function __get($name): AggregableInterface
     {

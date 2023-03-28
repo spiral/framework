@@ -43,6 +43,8 @@ class RouteCollection implements \IteratorAggregate, \Countable
      * @param non-empty-string $name
      *
      * @return void
+     *
+     * TODO add return type
      */
     public function add(string $name, RouteConfigurator $route)
     {
@@ -85,6 +87,8 @@ class RouteCollection implements \IteratorAggregate, \Countable
      * @param non-empty-string|non-empty-string[] $name The route name or an array of route names
      *
      * @return void
+     *
+     * TODO add return type
      */
     public function remove(string|array $name)
     {
@@ -95,6 +99,8 @@ class RouteCollection implements \IteratorAggregate, \Countable
 
     /**
      * @return void
+     *
+     * TODO add return type
      */
     public function addCollection(self $collection)
     {
@@ -109,6 +115,8 @@ class RouteCollection implements \IteratorAggregate, \Countable
      * @param non-empty-string $group
      *
      * @return void
+     *
+     * TODO add return type
      */
     public function group(string $group)
     {

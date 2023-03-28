@@ -26,12 +26,12 @@ final class Prepend implements PatchInterface
     public function patch(array $config): array
     {
         try {
-            $_ = &$this->dotGet($config, $this->position);
+            $_target = &$this->dotGet($config, $this->position);
 
             if ($this->key !== null) {
-                $_ = \array_merge([$this->key => $this->value], $_);
+                $_target = \array_merge([$this->key => $this->value], $_target);
             } else {
-                \array_unshift($_, $this->value);
+                \array_unshift($_target, $this->value);
             }
         } catch (DotNotFoundException $e) {
             throw new PatchException($e->getMessage(), $e->getCode(), $e);
