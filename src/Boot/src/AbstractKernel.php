@@ -33,7 +33,7 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Defines list of bootloaders to be used for core initialisation and all system components.
      *
-     * @deprecated since v4.0. Use {@see defineSystemBootloaders()} method instead.
+     * @deprecated Use {@see defineSystemBootloaders()} method instead. Will be removed in v4.0
      */
     protected const SYSTEM = [CoreBootloader::class];
 
@@ -41,7 +41,7 @@ abstract class AbstractKernel implements KernelInterface
      * List of bootloaders to be called on application initialization (before `serve` method).
      * This constant must be redefined in child application.
      *
-     * @deprecated since v4.0. Use {@see defineBootloaders()} method instead.
+     * @deprecated Use {@see defineBootloaders()} method instead. Will be removed in v4.0
      */
     protected const LOAD = [];
 

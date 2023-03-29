@@ -105,7 +105,7 @@ final class PhpNamespace implements NamedInterface, AggregableInterface, \String
     }
 
     /**
-     * @deprecated since v3.5.
+     * @deprecated since v3.5. Will be removed in v4.0
      * @see PhpNamespace::removeElement
      */
     public function removeClass(string $name): self

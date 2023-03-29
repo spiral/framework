@@ -9,7 +9,7 @@ use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Queue\HandlerInterface;
 
 /**
- * @deprecated since v4.0
+ * @deprecated Will be removed in v4.0
  */
 final class CallableJob implements HandlerInterface
 {
