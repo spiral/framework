@@ -10,7 +10,6 @@ We use GitHub issues only to discuss Spiral bugs and new features. In the
 case that you have a general question, please use the chat:
 
 - Discord: https://discord.gg/kmmfk7M
-- Telegram: https://t.me/spiralphp
 
 Thanks!
 -->
