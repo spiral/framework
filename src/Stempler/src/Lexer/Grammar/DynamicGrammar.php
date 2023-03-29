@@ -63,7 +63,6 @@ final class DynamicGrammar implements GrammarInterface
     }
 
     /**
-     * @psalm-suppress InvalidReturnType
      * @return \Generator<int, Byte|Token|null>
      */
     public function parse(Buffer $src): \Generator

@@ -12,7 +12,7 @@ use Spiral\Stempler\Lexer\Grammar\Traits\TokenTrait;
 use Spiral\Stempler\Lexer\Token;
 
 /**
- * @template-implements \IteratorAggregate<int, Token[]>
+ * @template-implements \IteratorAggregate<int, Token>
  */
 final class DirectiveGrammar implements \IteratorAggregate
 {

@@ -144,7 +144,6 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
         /** @var TClass $class */
         $class = $type->getName();
 
-        /** @psalm-suppress InvalidArgument */
         return $this->isBootloader($class)
             && !$this->bootloaders->isBooted($class);
     }

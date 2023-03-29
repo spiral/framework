@@ -32,7 +32,6 @@ use Spiral\Core\Internal\Config\StateBinder;
  *
  * @psalm-import-type TResolver from BinderInterface
  * @psalm-import-type TInvokable from InvokerInterface
- * @psalm-suppress PropertyNotSetInConstructor
  */
 final class Container implements
     ContainerInterface,
@@ -64,7 +63,6 @@ final class Container implements
         $this->initServices($this, $scopeName);
 
         // Bind himself
-        /** @psalm-suppress PossiblyNullPropertyAssignment */
         $this->state->bindings = \array_merge($this->state->bindings, [
             self::class               => \WeakReference::create($this),
             ContainerInterface::class => self::class,

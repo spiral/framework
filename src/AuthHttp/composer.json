@@ -39,7 +39,7 @@
         "spiral/http": "^3.7",
         "spiral/debug": "^3.7",
         "nyholm/psr7": "^1.5",
-        "vimeo/psalm": "^5.8"
+        "vimeo/psalm": "^5.3"
     },
     "autoload": {
         "psr-4": {

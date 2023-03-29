@@ -132,7 +132,7 @@ final class Factory implements FactoryInterface
         if (($avoidCache || $binding->get() === null) && \class_exists($alias)) {
             try {
                 $this->tracer->push(false, alias: $alias, source: WeakReference::class, context: $context);
-                /** @psalm-suppress NoValue */
+
                 $object = $this->createInstance(
                     new Ctx(alias: $alias, class: $alias, parameter: $context),
                     $parameters,

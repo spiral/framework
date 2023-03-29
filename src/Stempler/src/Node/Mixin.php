@@ -27,6 +27,9 @@ final class Mixin implements NodeInterface
         $this->context = $context;
     }
 
+    /**
+     * @return \Generator
+     */
     public function getIterator(): \Generator
     {
         yield 'nodes' => $this->nodes;
