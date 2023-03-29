@@ -14,7 +14,7 @@ abstract class Kernel extends AbstractKernel
     /**
      * Framework specific bootloaders
      *
-     * @deprecated since v4.0. Use {@see defineSystemBootloaders()} method instead.
+     * @deprecated Use {@see defineSystemBootloaders()} method instead. Will be removed in v4.0
      */
     protected const SYSTEM = [
         CoreBootloader::class,
@@ -24,7 +24,7 @@ abstract class Kernel extends AbstractKernel
     /**
      * Application specific bootloaders
      *
-     * @deprecated since v4.0. Use {@see defineAppBootloaders()} method instead.
+     * @deprecated Use {@see defineAppBootloaders()} method instead. Will be removed in v4.0
      */
     protected const APP = [];
 

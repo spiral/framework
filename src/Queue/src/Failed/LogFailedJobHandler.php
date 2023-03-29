@@ -13,7 +13,7 @@ final class LogFailedJobHandler implements FailedJobHandlerInterface
     ) {
     }
 
-    public function handle(string $driver, string $queue, string $job, array $payload, \Throwable $e): void
+    public function handle(string $driver, string $queue, string $job, mixed $payload, \Throwable $e): void
     {
         $this->reporter->report($e);
     }

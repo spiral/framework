@@ -34,6 +34,8 @@ final class QueueTest extends TestCase
 
     public function pushDataProvider(): \Traversable
     {
+        yield ['some string', new Options()];
+        yield [123, new Options()];
         yield [['baz' => 'baf'], new Options()];
         yield [new \stdClass(), new Options()];
         yield [new \stdClass(), new \stdClass()];

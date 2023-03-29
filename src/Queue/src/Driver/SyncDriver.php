@@ -23,7 +23,7 @@ final class SyncDriver implements QueueInterface
     }
 
     /** @inheritdoc */
-    public function push(string $name, array $payload = [], OptionsInterface $options = null): string
+    public function push(string $name, mixed $payload = [], OptionsInterface $options = null): string
     {
         if ($options !== null && $options->getDelay()) {
             \sleep($options->getDelay());

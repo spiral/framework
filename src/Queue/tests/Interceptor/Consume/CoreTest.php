@@ -8,24 +8,28 @@ use Mockery as m;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Queue\Event\JobProcessed;
 use Spiral\Queue\Event\JobProcessing;
-use Spiral\Queue\HandlerInterface;
 use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\Interceptor\Consume\Core;
+use Spiral\Queue\JobHandler;
 use Spiral\Tests\Queue\TestCase;
 
 final class CoreTest extends TestCase
 {
-    public function testCallAction(): void
+    /**
+     * @dataProvider PayloadDataProvider
+     */
+    public function testCallAction(mixed $payload): void
     {
         $core = new Core(
             $registry = m::mock(HandlerRegistryInterface::class)
         );
 
         $registry->shouldReceive('getHandler')->with('foo')->once()
-            ->andReturn($handler = m::mock(HandlerInterface::class));
+            ->andReturn($handler = m::mock(JobHandler::class));
 
-        $handler->shouldReceive('handle')->once()
-            ->with('foo', 'job-id', ['baz' => 'baf'], ['foo']);
+        $handler->shouldReceive('handle')
+            ->once()
+            ->with('foo', 'job-id', $payload, ['foo']);
 
         $core->callAction(
             controller: 'foo',
@@ -34,13 +38,16 @@ final class CoreTest extends TestCase
                 'driver' => 'array',
                 'queue' => 'default',
                 'id' => 'job-id',
-                'payload' => ['baz' => 'baf'],
-                'headers' => ['foo']
-            ]
+                'payload' => $payload,
+                'headers' => ['foo'],
+            ],
         );
     }
 
-    public function testEventsShouldBeDispatched(): void
+    /**
+     * @dataProvider PayloadDataProvider
+     */
+    public function testEventsShouldBeDispatched(mixed $payload): void
     {
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
@@ -48,9 +55,9 @@ final class CoreTest extends TestCase
             ->method('dispatch')
             ->with(
                 $this->logicalOr(
-                    new JobProcessing('foo', 'bar', 'other', 'id', [], []),
-                    new JobProcessed('foo', 'bar', 'other', 'id', [], [])
-                )
+                    new JobProcessing('foo', 'bar', 'other', 'id', $payload, []),
+                    new JobProcessed('foo', 'bar', 'other', 'id', $payload, []),
+                ),
             );
 
         $core = new Core(
@@ -59,15 +66,25 @@ final class CoreTest extends TestCase
         );
 
         $registry->shouldReceive('getHandler')->with('foo')->once()
-            ->andReturn($handler = m::mock(HandlerInterface::class));
-        $handler->shouldReceive('handle')->once()
-            ->with('foo', 'id', [], []);
+            ->andReturn($handler = m::mock(JobHandler::class));
+        $handler->shouldReceive('handle')
+            ->once()
+            ->with('foo', 'id', $payload, []);
 
         $core->callAction('foo', 'bar', [
             'driver' => 'bar',
             'queue' => 'other',
             'id' => 'id',
-            'payload' => [],
+            'payload' => $payload,
         ]);
+    }
+
+    public function PayloadDataProvider(): \Traversable
+    {
+        yield [['baz' => 'baf']];
+        yield [new \stdClass()];
+        yield ['some string'];
+        yield [123];
+        yield [null];
     }
 }

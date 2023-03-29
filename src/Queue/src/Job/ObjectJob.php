@@ -8,6 +8,9 @@ use Spiral\Core\InvokerInterface;
 use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Queue\HandlerInterface;
 
+/**
+ * @deprecated Will be removed in v4.0
+ */
 final class ObjectJob implements HandlerInterface
 {
     public function __construct(

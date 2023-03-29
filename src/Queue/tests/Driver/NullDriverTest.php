@@ -16,18 +16,21 @@ final class NullDriverTest extends TestCase
         $this->queue = new NullDriver();
     }
 
-    public function testJobShouldBePushed(): void
+    /**
+     * @dataProvider PayloadDataProvider
+     */
+    public function testJobShouldBePushed(mixed $payload): void
     {
-        $id = $this->queue->push('foo', ['foo' => 'bar']);
+        $id = $this->queue->push('foo', $payload);
         $this->assertNotNull($id);
     }
 
-    public function testJobObjectShouldBePushed(): void
+    public function PayloadDataProvider(): \Traversable
     {
-        $object = new \stdClass();
-        $object->foo = 'bar';
-
-        $id = $this->queue->pushObject($object);
-        $this->assertNotNull($id);
+        yield [['baz' => 'baf']];
+        yield [new \stdClass()];
+        yield ['some string'];
+        yield [123];
+        yield [null];
     }
 }

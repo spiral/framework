@@ -13,7 +13,7 @@ final class NullDriver implements QueueInterface
 {
     use QueueTrait;
 
-    public function push(string $name, array $payload = [], OptionsInterface $options = null): string
+    public function push(string $name, mixed $payload = [], OptionsInterface $options = null): string
     {
         // Do nothing
 

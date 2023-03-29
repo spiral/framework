@@ -16,37 +16,54 @@ use Spiral\Tests\Queue\TestCase;
 
 final class CoreTest extends TestCase
 {
-    public function testCallActionWithNullOptions(): void
+    /**
+     * @dataProvider PayloadDataProvider
+     */
+    public function testCallActionWithNullOptions(mixed $payload): void
     {
         $core = new Core(
             $queue = m::mock(QueueInterface::class)
         );
+
+        if (!\is_array($payload)) {
+            $this->markTestIncomplete('QueueInterface does not support non-array payloads');
+            return;
+        }
+
         $queue->shouldReceive('push')->once()
-            ->withArgs(function (string $name, array $payload = [], OptionsInterface $options = null) {
-                return $name === 'foo' && $payload === ['baz' => 'baf'] && $options instanceof Options;
+            ->withArgs(function (string $name, mixed $p = [], OptionsInterface $options = null) use($payload) {
+                return $name === 'foo' && $payload === $p && $options instanceof Options;
             });
 
         $core->callAction('foo', 'bar', [
             'id' => 'job-id',
-            'payload' => ['baz' => 'baf'],
+            'payload' => $payload,
             'options' => null,
         ]);
     }
 
-    public function testCallActionWithOptions(): void
+    /**
+     * @dataProvider PayloadDataProvider
+     */
+    public function testCallActionWithOptions(mixed $payload): void
     {
         $core = new Core(
             $queue = m::mock(QueueInterface::class)
         );
 
+        if (!\is_array($payload)) {
+            $this->markTestIncomplete('QueueInterface does not support non-array payloads');
+            return;
+        }
+
         $options = new Options();
 
         $queue->shouldReceive('push')->once()
-            ->with('foo', ['baz' => 'baf'], $options);
+            ->with('foo', $payload, $options);
 
         $core->callAction('foo', 'bar', [
             'id' => 'job-id',
-            'payload' => ['baz' => 'baf'],
+            'payload' => $payload,
             'options' => $options,
         ]);
     }
@@ -103,5 +120,14 @@ final class CoreTest extends TestCase
             'payload' => ['baz' => 'baf'],
             'options' => m::mock(OptionsInterface::class),
         ]);
+    }
+
+    public function PayloadDataProvider(): \Traversable
+    {
+        yield [['baz' => 'baf']];
+        yield [new \stdClass()];
+        yield ['some string'];
+        yield [123];
+        yield [null];
     }
 }

@@ -6,16 +6,17 @@ namespace Spiral\Tests\Queue\Interceptor;
 
 use Mockery as m;
 use Spiral\Core\CoreInterface;
-use Spiral\Core\ScopeInterface;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerFactoryInterface;
-use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Queue\TestCase;
 
 final class HandlerTest extends TestCase
 {
-    public function testHandle(): void
+    /**
+     * @dataProvider PayloadDataProvider
+     */
+    public function testHandle(mixed $payload): void
     {
         $tracerFactory = m::mock(TracerFactoryInterface::class);
 
@@ -35,10 +36,19 @@ final class HandlerTest extends TestCase
                 'driver' => 'sync',
                 'queue' => 'default',
                 'id' => 'job-id',
-                'payload' => ['baz' => 'bar'],
+                'payload' => $payload,
                 'headers' => ['some' => 'data'],
             ]);
 
-        $handler->handle('foo', 'sync', 'default', 'job-id', ['baz' => 'bar'], ['some' => 'data']);
+        $handler->handle('foo', 'sync', 'default', 'job-id', $payload, ['some' => 'data']);
+    }
+
+    public function PayloadDataProvider(): \Traversable
+    {
+        yield [['baz' => 'baf']];
+        yield [new \stdClass()];
+        yield ['some string'];
+        yield [123];
+        yield [null];
     }
 }
