@@ -32,7 +32,8 @@ final class Verbatim implements NodeInterface, AttributedInterface
     }
 
     /**
-     * @return \Generator
+     * @psalm-suppress ImplementedReturnTypeMismatch
+     * @return \Generator<'nodes', array<array-key, TNode|non-empty-string>, mixed, void>
      */
     public function getIterator(): \Generator
     {

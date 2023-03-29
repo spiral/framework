@@ -28,7 +28,8 @@ final class Mixin implements NodeInterface
     }
 
     /**
-     * @return \Generator
+     * @psalm-suppress ImplementedReturnTypeMismatch
+     * @return \Generator<'nodes', array<array-key, TNode|string>, mixed, void>
      */
     public function getIterator(): \Generator
     {
