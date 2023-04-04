@@ -14,12 +14,12 @@ use Spiral\Telemetry\TracerInterface;
 
 /**
  * @internal
- * @psalm-type TParameters = array{options: ?OptionsInterface, payload: array}
+ * @psalm-type TParameters = array{options: ?OptionsInterface, payload: mixed}
  */
 final class Core implements CoreInterface
 {
     public function __construct(
-        private readonly QueueInterface $connection
+        private readonly QueueInterface $connection,
     ) {
     }
 
@@ -29,10 +29,8 @@ final class Core implements CoreInterface
     public function callAction(
         string $controller,
         string $action,
-        array $parameters = ['options' => null, 'payload' => []]
+        array $parameters = ['options' => null, 'payload' => []],
     ): string {
-        \assert(\is_array($parameters['payload']));
-
         if ($parameters['options'] === null) {
             $parameters['options'] = new Options();
         }
@@ -50,11 +48,11 @@ final class Core implements CoreInterface
             callback: fn (): string => $this->connection->push(
                 name: $controller,
                 payload: $parameters['payload'],
-                options: $parameters['options']
+                options: $parameters['options'],
             ),
             attributes: [
                 'queue.handler' => $controller,
-            ]
+            ],
         );
     }
 

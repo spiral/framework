@@ -6,32 +6,26 @@ namespace Spiral\Queue\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Spiral\Boot\AbstractKernel;
+use Spiral\Boot\{AbstractKernel, EnvironmentInterface};
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Core\BinderInterface;
+use Spiral\Core\{BinderInterface, FactoryInterface, InterceptableCore};
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
-use Spiral\Core\FactoryInterface;
-use Spiral\Core\InterceptableCore;
+use Spiral\Queue\{QueueConnectionProviderInterface,
+    QueueInterface,
+    QueueManager,
+    QueueRegistry,
+    SerializerRegistryInterface
+};
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Core\QueueInjector;
-use Spiral\Queue\Driver\NullDriver;
-use Spiral\Queue\Driver\SyncDriver;
-use Spiral\Queue\Failed\FailedJobHandlerInterface;
-use Spiral\Queue\Failed\LogFailedJobHandler;
+use Spiral\Queue\Driver\{NullDriver, SyncDriver};
+use Spiral\Queue\Failed\{FailedJobHandlerInterface, LogFailedJobHandler};
 use Spiral\Queue\HandlerRegistryInterface;
-use Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor;
-use Spiral\Queue\Interceptor\Consume\Handler;
-use Spiral\Queue\Interceptor\Consume\Core as ConsumeCore;
-use Spiral\Queue\QueueConnectionProviderInterface;
-use Spiral\Queue\QueueInterface;
-use Spiral\Queue\QueueManager;
-use Spiral\Queue\QueueRegistry;
-use Spiral\Queue\SerializerRegistryInterface;
+use Spiral\Queue\Interceptor\Consume\{Core as ConsumeCore, ErrorHandlerInterceptor, Handler};
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
 use Spiral\Telemetry\TracerFactoryInterface;
 
@@ -52,7 +46,7 @@ final class QueueBootloader extends Bootloader
     ];
 
     public function __construct(
-        private readonly ConfiguratorInterface $config
+        private readonly ConfiguratorInterface $config,
     ) {
     }
 
@@ -60,7 +54,7 @@ final class QueueBootloader extends Bootloader
         ContainerInterface $container,
         BinderInterface $binder,
         EnvironmentInterface $env,
-        AbstractKernel $kernel
+        AbstractKernel $kernel,
     ): void {
         $this->initQueueConfig($env);
 
@@ -88,7 +82,7 @@ final class QueueBootloader extends Bootloader
     {
         $this->config->modify(
             QueueConfig::CONFIG,
-            new Append('interceptors.consume', null, $interceptor)
+            new Append('interceptors.consume', null, $interceptor),
         );
     }
 
@@ -99,7 +93,7 @@ final class QueueBootloader extends Bootloader
     {
         $this->config->modify(
             QueueConfig::CONFIG,
-            new Append('interceptors.push', null, $interceptor)
+            new Append('interceptors.push', null, $interceptor),
         );
     }
 
@@ -107,7 +101,7 @@ final class QueueBootloader extends Bootloader
     {
         $this->config->modify(
             QueueConfig::CONFIG,
-            new Append('driverAliases', $alias, $driverClass)
+            new Append('driverAliases', $alias, $driverClass),
         );
     }
 
@@ -119,7 +113,7 @@ final class QueueBootloader extends Bootloader
     protected function initRegistry(
         ContainerInterface $container,
         FactoryInterface $factory,
-        ContainerRegistry $registry
+        ContainerRegistry $registry,
     ) {
         return new QueueRegistry($container, $factory, $registry);
     }
@@ -130,7 +124,7 @@ final class QueueBootloader extends Bootloader
         ContainerInterface $container,
         FactoryInterface $factory,
         TracerFactoryInterface $tracerFactory,
-        ?EventDispatcherInterface $dispatcher = null
+        ?EventDispatcherInterface $dispatcher = null,
     ): Handler {
         $core = new InterceptableCore($core, $dispatcher);
 
@@ -173,7 +167,7 @@ final class QueueBootloader extends Bootloader
                     ],
                     'push' => [],
                 ],
-            ]
+            ],
         );
     }
 }
