@@ -42,6 +42,10 @@ final class AttributeMapperTest extends BaseTest
         $bazInputFirst = m::mock(InputInterface::class);
         $bazInputSecond = m::mock(InputInterface::class);
 
+        $input->shouldReceive('getValue')->once()->with('input', 'fooFilter')->andReturn([]);
+        $input->shouldReceive('getValue')->once()->with('input', 'bar')->andReturn([]);
+        $input->shouldReceive('getValue')->once()->with('input', 'nullableFilter')->andReturnNull();
+
         $input->shouldReceive('withPrefix')->once()->with('bar')->andReturn($barInput);
         $input->shouldReceive('withPrefix')->once()->with('bazFilter.first')->andReturn($bazInputFirst);
         $input->shouldReceive('withPrefix')->once()->with('bazFilter.second')->andReturn($bazInputSecond);
@@ -100,6 +104,9 @@ final class AttributeMapperTest extends BaseTest
                 #[NestedFilter(class: 'barFilter', prefix: 'bar')]
                 public FilterInterface $barFilter;
 
+                #[NestedFilter(class: 'nullableFilter')]
+                public ?FilterInterface $nullableFilter = null;
+
                 #[NestedArray(class: 'bazFilter', input: new Post())]
                 public array $bazFilter;
 
@@ -126,6 +133,8 @@ final class AttributeMapperTest extends BaseTest
             'second' => $bazFilterSecond,
         ], $filter->bazFilter);
 
+        $this->assertNull($filter->nullableFilter);
+
         $this->assertSame([
             'username' => 'post:username',
             'name' => 'post:first_name',
@@ -148,6 +157,9 @@ final class AttributeMapperTest extends BaseTest
         $input = m::mock(InputInterface::class);
         $bazInputFirst = m::mock(InputInterface::class);
         $bazInputSecond = m::mock(InputInterface::class);
+
+        $input->shouldReceive('getValue')->once()->with('input', 'fooFilter')->andReturn([]);
+
         $input->shouldReceive('withPrefix')->once()->with('baz.first')->andReturn($bazInputFirst);
         $input->shouldReceive('withPrefix')->once()->with('baz.second')->andReturn($bazInputSecond);
         $input->shouldReceive('withPrefix')->once()->with('fooFilter')->andReturn($input);

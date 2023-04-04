@@ -9,10 +9,10 @@ use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
 use Spiral\Filters\Attribute\Setter;
-use Spiral\Filters\Model\FilterInterface;
-use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Model\FilterInterface;
+use Spiral\Filters\Model\FilterProviderInterface;
 
 /**
  * @internal
@@ -21,7 +21,7 @@ final class AttributeMapper
 {
     public function __construct(
         private readonly FilterProviderInterface $provider,
-        private readonly ReaderInterface $reader
+        private readonly ReaderInterface $reader,
     ) {
     }
 
@@ -44,10 +44,15 @@ final class AttributeMapper
                     $schema[$property->getName()] = $attribute->getSchema($property);
                 } elseif ($attribute instanceof NestedFilter) {
                     $prefix = $attribute->prefix ?? $property->name;
+
+                    if (!\is_array($input->getValue('input', $prefix))) {
+                        continue;
+                    }
+
                     try {
                         $value = $this->provider->createFilter(
                             $attribute->class,
-                            $input->withPrefix($prefix)
+                            $input->withPrefix($prefix),
                         );
 
                         $this->setValue($filter, $property, $value);
@@ -67,7 +72,7 @@ final class AttributeMapper
                             try {
                                 $propertyValues[$key] = $this->provider->createFilter(
                                     $attribute->class,
-                                    $input->withPrefix($prefix . '.' . $key)
+                                    $input->withPrefix($prefix . '.' . $key),
                                 );
                             } catch (ValidationException $e) {
                                 $errors[$property->getName()][$key] = $e->errors;

@@ -69,11 +69,8 @@ final class NestedFilterTest extends FilterTestCase
         yield 'empty' => [
             [],
             [
-                'address' => [
-                    'city' => 'This value is required.',
-                    'address' => 'This value is required.',
-                ],
                 'name' => 'This value is required.',
+                'address' => 'This value is required.',
             ],
         ];
 
@@ -94,10 +91,7 @@ final class NestedFilterTest extends FilterTestCase
                 'name' => 'John Doe',
             ],
             [
-                'address' => [
-                    'city' => 'This value is required.',
-                    'address' => 'This value is required.',
-                ],
+                'address' => 'This value is required.',
             ],
         ];
 

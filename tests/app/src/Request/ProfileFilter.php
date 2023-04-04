@@ -23,6 +23,7 @@ class ProfileFilter extends Filter implements HasFilterDefinition
     {
         return new FilterDefinition(validationRules: [
             'name' => ['required', 'string'],
+            'address' => ['required'],
         ]);
     }
 }
