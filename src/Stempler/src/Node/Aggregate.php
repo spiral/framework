@@ -79,7 +79,9 @@ final class Aggregate implements NodeInterface
         }
 
         return null;
-    }/**
+    }
+
+    /**
      * @psalm-suppress LessSpecificImplementedReturnType
      * @return \Generator<'nodes', array<array-key, TNode>, mixed, void>
      */
