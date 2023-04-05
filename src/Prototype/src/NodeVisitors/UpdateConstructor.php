@@ -64,6 +64,9 @@ final class UpdateConstructor extends NodeVisitorAbstract
     private function buildConstructorParam(Dependency $dependency): Node
     {
         $param = new Param($dependency->var);
+
+        $param->makePrivate();
+
         return $param->setType(new Node\Name($this->getPropertyType($dependency)))->getNode();
     }
 

@@ -43,52 +43,20 @@ class InjectorTest extends TestCase
     }
 
     /**
-     * @dataProvider typedProvider
-     * @param bool $useTypedProperties
-     * @param bool $noPhpDoc
-     * @param bool $expectedTypedProperty
-     * @param bool $expectedPhpDoc
      * @throws \ReflectionException
      * @throws ClassNotDeclaredException
      */
-    public function testTypedInjection(
-        bool $useTypedProperties,
-        bool $noPhpDoc,
-        bool $expectedTypedProperty,
-        bool $expectedPhpDoc
-    ): void {
+    public function testTypedInjection(): void
+    {
         $i = new Injector();
 
         $filename = __DIR__ . '/Fixtures/TestClass.php';
         $printed = $i->injectDependencies(
             file_get_contents($filename),
-            $this->getDefinition($filename, ['testClass' => TestClass::class]),
-            false,
-            $useTypedProperties,
-            $noPhpDoc
+            $this->getDefinition($filename, ['testClass' => TestClass::class])
         );
 
-        if ($expectedTypedProperty) {
-            $this->assertStringContainsString('private TestClass $testClass;', $printed);
-        } else {
-            $this->assertStringNotContainsString('private TestClass $testClass;', $printed);
-        }
-
-        if ($expectedPhpDoc) {
-            $this->assertRegExp('/@var TestClass[\s|\r\n]/', $printed);
-        } else {
-            $this->assertNotRegExp('/@var TestClass[\s|\r\n]/', $printed);
-        }
-    }
-
-    public function typedProvider(): iterable
-    {
-        return [
-            [true, true, true, false],
-            [true, false, true, true],
-            [false, false, false, true],
-            [false, true, false, true],
-        ];
+        $this->assertStringContainsString('private TestClass $testClass;', $printed);
     }
 
     /**
