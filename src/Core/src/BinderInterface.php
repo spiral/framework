@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
+use Spiral\Core\Container\InjectorInterface;
+
 /**
  * Manages container bindings.
  *
@@ -42,7 +44,7 @@ interface BinderInterface
      * @template TClass of object
      *
      * @param class-string<TClass> $class
-     * @param class-string $injector
+     * @param class-string<InjectorInterface<TClass>> $injector
      */
     public function bindInjector(string $class, string $injector): void;
 

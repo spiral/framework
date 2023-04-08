@@ -105,6 +105,7 @@ final class Container implements
      */
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
+        /** @psalm-suppress TooManyArguments */
         return $this->factory->make($alias, $parameters, $context);
     }
 
@@ -130,6 +131,7 @@ final class Container implements
      */
     public function get(string|Autowire $id, string $context = null): mixed
     {
+        /** @psalm-suppress TooManyArguments */
         return $this->container->get($id, $context);
     }
 

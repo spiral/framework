@@ -40,7 +40,7 @@
         "spiral/console": "^3.7",
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
-        "vimeo/psalm": "^5.3"
+        "vimeo/psalm": "^5.9"
     },
     "autoload-dev": {
         "psr-4": {

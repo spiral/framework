@@ -35,7 +35,9 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
 
     public function init(BinderInterface $binder, DirectoriesInterface $dirs): void
     {
+        /** @psalm-suppress InvalidCast https://github.com/vimeo/psalm/issues/8810 */
         $binder->bindInjector(ClassLocator::class, ClassLocatorInjector::class);
+        /** @psalm-suppress InvalidCast https://github.com/vimeo/psalm/issues/8810 */
         $binder->bindInjector(InvocationLocator::class, InvocationLocatorInjector::class);
 
         $this->config->setDefaults(

@@ -139,7 +139,7 @@
         "spiral/testing": "^2.2",
         "spiral/validator": "^1.2",
         "symplify/monorepo-builder": "^10.2.7",
-        "vimeo/psalm": "5.3"
+        "vimeo/psalm": "^5.9"
     },
     "autoload-dev": {
         "psr-4": {
