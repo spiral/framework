@@ -80,6 +80,7 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
 
         $allowed = false;
         foreach ($this->allowed as $class) {
+            /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/9489 */
             if ($reflector->isSubclassOf($class) || $element::class === $class) {
                 $allowed = true;
                 break;
