@@ -19,7 +19,7 @@ trait HelpersTrait
     /**
      * OutputInterface is the interface implemented by all Output classes. Only exists when command
      * are being executed.
-     * @var ?SymfonyStyle
+     * @var SymfonyStyle|null
      */
     protected ?OutputInterface $output = null;
 

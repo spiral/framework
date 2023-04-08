@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Distribution;
 
 /**
- * @template-extends \IteratorAggregate<string, UriResolverInterface>
+ * @extends \IteratorAggregate<string, UriResolverInterface>
  */
 interface DistributionInterface extends \IteratorAggregate, \Countable
 {

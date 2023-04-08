@@ -11,8 +11,8 @@ use Spiral\Reactor\Exception\ReactorException;
  * apply set of operations.
  *
  * @template TElement of AggregableInterface
- * @template-implements \IteratorAggregate<array-key, TElement>
- * @template-implements \ArrayAccess<mixed, mixed>
+ * @implements \IteratorAggregate<array-key, TElement>
+ * @implements \ArrayAccess<array-key, TElement>
  */
 class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
 {

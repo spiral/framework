@@ -7,7 +7,7 @@ namespace Spiral\Router;
 use Spiral\Router\Loader\Configurator\RouteConfigurator;
 
 /**
- * @template-implements \IteratorAggregate<non-empty-string, RouteConfigurator>
+ * @implements \IteratorAggregate<non-empty-string, RouteConfigurator>
  */
 class RouteCollection implements \IteratorAggregate, \Countable
 {

@@ -7,7 +7,7 @@ namespace Spiral\Stempler\Lexer;
 /**
  * Creates local buffers over byte/token stream. Able to replay some tokens.
  *
- * @template-implements \IteratorAggregate<array-key, Byte|Token|null>
+ * @implements \IteratorAggregate<array-key, Byte|Token|null>
  */
 final class Buffer implements \IteratorAggregate
 {

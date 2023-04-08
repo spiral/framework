@@ -9,7 +9,7 @@ use Spiral\Core\FactoryInterface;
 /**
  * Manages the presets for various route groups.
  *
- * @template-implements \IteratorAggregate<non-empty-string, RouteGroup>
+ * @implements \IteratorAggregate<non-empty-string, RouteGroup>
  */
 final class GroupRegistry implements \IteratorAggregate
 {

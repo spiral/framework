@@ -9,7 +9,7 @@ use Spiral\Models\Exception\EntityExceptionInterface;
 /**
  * Generic data entity instance.
  *
- * @template-extends \ArrayAccess<string, mixed>
+ * @extends \ArrayAccess<string, mixed>
  */
 interface EntityInterface extends \ArrayAccess
 {
