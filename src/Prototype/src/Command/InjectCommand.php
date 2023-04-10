@@ -16,7 +16,7 @@ final class InjectCommand extends AbstractCommand
     public const NAME = 'prototype:inject';
     public const DESCRIPTION = 'Inject all prototype dependencies';
     public const OPTIONS = [
-        ['remove', 'r', InputOption::VALUE_NONE, 'Remove PrototypeTrait']
+        ['remove', 'r', InputOption::VALUE_NONE, 'Remove PrototypeTrait'],
     ];
 
     private readonly Injector $injector;
