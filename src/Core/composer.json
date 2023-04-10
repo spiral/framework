@@ -33,7 +33,7 @@
     "require-dev": {
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^9.5.20",
-        "vimeo/psalm": "^5.6"
+        "vimeo/psalm": "^5.9"
     },
     "autoload": {
         "psr-4": {

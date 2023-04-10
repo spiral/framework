@@ -10,6 +10,11 @@ final class EventListener
 
     public string $method;
 
+    /**
+     * @param class-string $listener
+     * @param ?non-empty-string $method
+     * @param int<0, max> $priority
+     */
     public function __construct(
         public string $listener,
         ?string $method = null,

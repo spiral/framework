@@ -11,6 +11,8 @@
     findUnusedVariablesAndParams="true"
     ensureArrayStringOffsetsExist="true"
     addParamDefaultToDocblockType="true"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
 >
     <projectFiles>
         <directory name="src" />

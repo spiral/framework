@@ -29,7 +29,7 @@
         "guzzlehttp/psr7": "^1.7",
         "jetbrains/phpstorm-attributes": "^1.0",
         "phpunit/phpunit": "^9.5.20",
-        "vimeo/psalm": "^4.27"
+        "vimeo/psalm": "^5.9"
     },
     "autoload-dev": {
         "psr-4": {

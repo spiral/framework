@@ -39,6 +39,10 @@ final class Tag implements NodeInterface, AttributedInterface
         $this->context = $context;
     }
 
+    /**
+     * @psalm-suppress ImplementedReturnTypeMismatch
+     * @return \Generator<'attrs'|'name'|'nodes', Mixin|null|string|array<array-key, Attr>|array<array-key, TNode>, mixed, void>
+     */
     public function getIterator(): \Generator
     {
         yield 'name' => $this->name;

@@ -25,9 +25,9 @@ use Spiral\Http\Header\AcceptHeader;
  * such functionality may be replaces with simple container request routing.
  *
  * @psalm-type InputBagStructure = array{
- *     "class": class-string<InputBag>,
- *     "source": non-empty-string,
- *     "alias": non-empty-string
+ *     class: class-string<InputBag>,
+ *     source: non-empty-string,
+ *     alias?: non-empty-string
  * }
  *
  * @property-read HeadersBag $headers

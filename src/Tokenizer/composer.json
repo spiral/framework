@@ -38,7 +38,7 @@
         "spiral/boot": "^3.7",
         "spiral/files": "^3.7",
         "phpunit/phpunit": "^9.5.20",
-        "vimeo/psalm": "^4.27"
+        "vimeo/psalm": "^5.9"
     },
     "autoload": {
         "psr-4": {

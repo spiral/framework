@@ -18,7 +18,7 @@ final class Mixin implements NodeInterface
     use ContextTrait;
 
     /**
-     * @param TNode[] $nodes
+     * @param array<array-key, TNode|string> $nodes
      */
     public function __construct(
         public array $nodes = [],
@@ -27,6 +27,10 @@ final class Mixin implements NodeInterface
         $this->context = $context;
     }
 
+    /**
+     * @psalm-suppress ImplementedReturnTypeMismatch
+     * @return \Generator<'nodes', array<array-key, TNode|string>, mixed, void>
+     */
     public function getIterator(): \Generator
     {
         yield 'nodes' => $this->nodes;

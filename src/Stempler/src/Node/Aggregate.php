@@ -82,7 +82,8 @@ final class Aggregate implements NodeInterface
     }
 
     /**
-     * @return \Generator<string, TNode[]>
+     * @psalm-suppress LessSpecificImplementedReturnType
+     * @return \Generator<'nodes', array<array-key, TNode>, mixed, void>
      */
     public function getIterator(): \Generator
     {

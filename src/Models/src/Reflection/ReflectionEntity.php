@@ -188,6 +188,7 @@ class ReflectionEntity
             }
         }
 
+        /** @psalm-suppress TypeDoesNotContainType https://github.com/vimeo/psalm/issues/9489 */
         if (!$this->reflection->isSubclassOf(SchematicEntity::class)) {
             return $value;
         }

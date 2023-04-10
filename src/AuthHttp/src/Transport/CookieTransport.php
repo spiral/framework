@@ -79,6 +79,9 @@ final class CookieTransport implements HttpTransportInterface
         return $this->commitToken($request, $response, null, null);
     }
 
+    /**
+     * @return int<0, max>|null
+     */
     private function getLifetime(\DateTimeInterface $expiresAt = null): ?int
     {
         if ($expiresAt === null) {

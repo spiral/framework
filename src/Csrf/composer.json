@@ -37,7 +37,7 @@
         "mockery/mockery": "^1.5",
         "spiral/http": "^3.7",
         "nyholm/psr7": "^1.5",
-        "vimeo/psalm": "^4.27"
+        "vimeo/psalm": "^5.9"
     },
     "autoload": {
         "psr-4": {

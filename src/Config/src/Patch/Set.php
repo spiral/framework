@@ -25,8 +25,8 @@ final class Set implements PatchInterface
     public function patch(array $config): array
     {
         try {
-            $target = &$this->dotGet($config, $this->key);
-            $target = $this->value;
+            $_target = &$this->dotGet($config, $this->key);
+            $_target = $this->value;
         } catch (DotNotFoundException $e) {
             throw new PatchException($e->getMessage(), $e->getCode(), $e);
         }

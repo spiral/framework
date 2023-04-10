@@ -25,7 +25,7 @@ final class QuotedValue
     }
 
     /**
-     * @return NodeInterface[]
+     * @return array<NodeInterface|string>
      */
     public function trimValue(): array
     {

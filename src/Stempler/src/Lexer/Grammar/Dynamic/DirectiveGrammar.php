@@ -11,6 +11,9 @@ use Spiral\Stempler\Lexer\Grammar\DynamicGrammar;
 use Spiral\Stempler\Lexer\Grammar\Traits\TokenTrait;
 use Spiral\Stempler\Lexer\Token;
 
+/**
+ * @implements \IteratorAggregate<int, Token>
+ */
 final class DirectiveGrammar implements \IteratorAggregate
 {
     use TokenTrait;

@@ -54,7 +54,7 @@
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "spiral/boot": "^3.7",
-        "vimeo/psalm": "^4.27"
+        "vimeo/psalm": "^5.9"
     },
     "extra": {
         "branch-alias": {

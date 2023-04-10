@@ -10,6 +10,9 @@ use Spiral\Http\Exception\InputException;
 /**
  * Generic data accessor, used to read properties of active request. Input bags provide ability to
  * isolate request parts using given prefix.
+ *
+ * @implements \IteratorAggregate<mixed, mixed>
+ * @implements \ArrayAccess<mixed, mixed>
  */
 class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 {

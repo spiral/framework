@@ -13,7 +13,8 @@ use Spiral\Streams\StreamWrapper;
  * @method UploadedFileInterface|null get(int|string $name, $default = null)
  * @method UploadedFileInterface[] all()
  * @method UploadedFileInterface[] fetch(array $keys, bool $fill = false, $filler = null)
- * @method \Traversable<array-key, UploadedFileInterface> getIterator()
+ *
+ * @inplements \IteratorAggregate<array-key, UploadedFileInterface>
  */
 final class FilesBag extends InputBag
 {

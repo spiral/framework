@@ -13,6 +13,8 @@ use Spiral\Encrypter\Exception\EncrypterException;
 
 /**
  * Only manages encrypter injections (factory).
+ *
+ * @implements InjectorInterface<EncrypterInterface>
  */
 final class EncrypterFactory implements InjectorInterface, EncryptionInterface, SingletonInterface
 {

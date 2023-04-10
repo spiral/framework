@@ -36,7 +36,7 @@
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "psr/container": "^1.1|^2.0",
-        "vimeo/psalm": "^4.27"
+        "vimeo/psalm": "^5.9"
     },
     "autoload": {
         "psr-4": {

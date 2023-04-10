@@ -201,7 +201,6 @@ final class StemplerEngine implements EngineInterface
      */
     private function className(ViewSource $source, ContextInterface $context): string
     {
-        /** @psalm-suppress LessSpecificReturnStatement */
         return $this->classPrefix . $this->cacheKey($source, $context);
     }
 

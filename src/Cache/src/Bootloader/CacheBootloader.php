@@ -43,6 +43,7 @@ final class CacheBootloader extends Bootloader
     {
         $this->initConfig($env, $dirs);
 
+        /** @psalm-suppress InvalidCast https://github.com/vimeo/psalm/issues/8810 */
         $binder->bindInjector(CacheInterface::class, CacheInjector::class);
     }
 

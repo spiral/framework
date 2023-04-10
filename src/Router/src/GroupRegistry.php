@@ -8,6 +8,8 @@ use Spiral\Core\FactoryInterface;
 
 /**
  * Manages the presets for various route groups.
+ *
+ * @implements \IteratorAggregate<non-empty-string, RouteGroup>
  */
 final class GroupRegistry implements \IteratorAggregate
 {
@@ -21,6 +23,9 @@ final class GroupRegistry implements \IteratorAggregate
     ) {
     }
 
+    /**
+     * @param non-empty-string $name
+     */
     public function getGroup(string $name): RouteGroup
     {
         if (!isset($this->groups[$name])) {
@@ -30,6 +35,9 @@ final class GroupRegistry implements \IteratorAggregate
         return $this->groups[$name];
     }
 
+    /**
+     * @param non-empty-string $group
+     */
     public function setDefaultGroup(string $group): self
     {
         $this->defaultGroup = $group;
@@ -37,6 +45,9 @@ final class GroupRegistry implements \IteratorAggregate
         return $this;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getDefaultGroup(): string
     {
         return $this->defaultGroup;
@@ -55,7 +66,7 @@ final class GroupRegistry implements \IteratorAggregate
     }
 
     /**
-     * @return \ArrayIterator<array-key, RouteGroup>
+     * @return \ArrayIterator<non-empty-string, RouteGroup>
      */
     public function getIterator(): \Traversable
     {

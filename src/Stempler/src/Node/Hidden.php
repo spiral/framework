@@ -20,9 +20,6 @@ final class Hidden implements NodeInterface
     ) {
     }
 
-    /**
-     * @return \Generator<string, TNode[]>
-     */
     public function getIterator(): \Generator
     {
         yield 'nodes' => $this->nodes;
