@@ -12,8 +12,8 @@ use Spiral\Prototype\Injector;
 use Spiral\Prototype\NodeExtractor;
 use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures as ResolverFixtures;
 use Spiral\Tests\Prototype\Fixtures\Dependencies;
+use Spiral\Tests\Prototype\Fixtures\InheritedInjection\InjectionTwo;
 use Spiral\Tests\Prototype\Fixtures\TestClass;
-use Spiral\Tests\Prototype\Fixtures\TestEmptyClass;
 
 class InjectorTest extends TestCase
 {
@@ -50,10 +50,13 @@ class InjectorTest extends TestCase
         $filename = __DIR__ . '/Fixtures/WithPromotedProperty.php';
         $printed = $i->injectDependencies(
             file_get_contents($filename),
-            $this->getDefinition($filename, ['emptyClass' => TestEmptyClass::class])
+            $this->getDefinition($filename, ['two' => InjectionTwo::class])
         );
 
-        $this->assertStringContainsString('private TestEmptyClass $emptyClass', $printed);
+        $this->assertStringContainsString(
+            '__construct(private InjectionTwo $two, string $foo, private InjectionOne $one)',
+            $printed
+        );
     }
 
     /**

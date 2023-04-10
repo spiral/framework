@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
 
+use PhpParser\Modifiers;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
@@ -49,5 +50,20 @@ final class LocateProperties extends NodeVisitorAbstract
                 }
             }
         }
+
+        if ($this->isPromotedProperty($node)) {
+            $this->properties[$node->var->name] = $node->var->name;
+        }
+    }
+
+    private function isPromotedProperty(Node $node): bool
+    {
+        if (!$node instanceof Node\Param) {
+            return false;
+        }
+
+        return $node->flags === Modifiers::PUBLIC
+            || $node->flags === Modifiers::PROTECTED
+            || $node->flags === Modifiers::PRIVATE;
     }
 }

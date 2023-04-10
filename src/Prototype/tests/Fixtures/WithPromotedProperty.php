@@ -4,26 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\Fixtures;
 
-use Spiral\Prototype\Traits\PrototypeTrait;
+use Spiral\Tests\Prototype\Fixtures\InheritedInjection\InjectionOne;
 
-final class WithPromotedProperty extends WithConstructor
+class WithPromotedProperty extends AbstractPromotedProperty
 {
-    use PrototypeTrait;
-
-    public function __construct(
-        string $foo,
-        private readonly HydratedClass $hydrated
-    ) {
-        parent::__construct($this->hydrated);
-    }
-
-    public function some(): TestClass
+    public function __construct(string $foo, private InjectionOne $one)
     {
-        return $this->hydrated->getTestClass();
-    }
-
-    public function other(): void
-    {
-        $this->emptyClass->method();
+        parent::__construct($foo);
     }
 }
