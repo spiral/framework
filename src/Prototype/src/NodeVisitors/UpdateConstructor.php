@@ -35,10 +35,6 @@ final class UpdateConstructor extends NodeVisitorAbstract
             $this->addParentConstructorCall($constructor);
         }
 
-        $constructor->setDocComment(
-            $this->addComments($constructor->getDocComment())
-        );
-
         return $node;
     }
 
@@ -49,15 +45,6 @@ final class UpdateConstructor extends NodeVisitorAbstract
     {
         foreach ($this->definition->dependencies as $dependency) {
             \array_unshift($constructor->params, $this->buildConstructorParam($dependency));
-            \array_unshift(
-                $constructor->stmts,
-                new Node\Stmt\Expression(
-                    new Node\Expr\Assign(
-                        new Node\Expr\PropertyFetch(new Node\Expr\Variable('this'), $dependency->property),
-                        new Node\Expr\Variable($dependency->var)
-                    )
-                )
-            );
         }
     }
 

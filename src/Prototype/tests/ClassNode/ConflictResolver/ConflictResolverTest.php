@@ -38,17 +38,14 @@ class ConflictResolverTest extends TestCase
         );
 
         $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test $test', $r);
+        $this->assertStringContainsString('private Test $test', $r);
 
         $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as Test2;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test2[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test2 $test2', $r);
+        $this->assertStringContainsString('private Test2 $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ';', $r);
-        $this->assertRegExp('/@var ATest3[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param ATest3 $test3', $r);
+        $this->assertStringContainsString('private ATest3 $test3', $r);
     }
 
     /**
@@ -73,18 +70,15 @@ class ConflictResolverTest extends TestCase
 
         $this->assertStringContainsString(Fixtures\Test::class . ' as FTest;', $r);
         $this->assertStringNotContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertRegExp('/@var FTest[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param FTest $test', $r);
+        $this->assertStringContainsString('private FTest $test', $r);
 
         $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as TestAlias;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertRegExp('/@var TestAlias[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param TestAlias $test2', $r);
+        $this->assertStringContainsString('private TestAlias $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATest;', $r);
         $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
-        $this->assertRegExp('/@var ATest[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param ATest $test3', $r);
+        $this->assertStringContainsString('private ATest $test3', $r);
     }
 
     /**
@@ -108,18 +102,15 @@ class ConflictResolverTest extends TestCase
         );
 
         $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test $test', $r);
+        $this->assertStringContainsString('private Test $test', $r);
 
         $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as Test2;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test2[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test2 $test2', $r);
+        $this->assertStringContainsString('private Test2 $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATestAlias;', $r);
         $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
-        $this->assertRegExp('/@var ATestAlias[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param ATestAlias $test3', $r);
+        $this->assertStringContainsString('private ATestAlias $test3', $r);
     }
 
     public function testDuplicateProperty(): void
@@ -138,9 +129,7 @@ class ConflictResolverTest extends TestCase
         );
 
         $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test $test', $r);
-        $this->assertStringContainsString('__construct(Test $test)', $r);
+        $this->assertStringContainsString('__construct(private Test $test)', $r);
     }
 
     /**

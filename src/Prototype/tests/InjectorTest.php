@@ -13,6 +13,7 @@ use Spiral\Prototype\NodeExtractor;
 use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures as ResolverFixtures;
 use Spiral\Tests\Prototype\Fixtures\Dependencies;
 use Spiral\Tests\Prototype\Fixtures\TestClass;
+use Spiral\Tests\Prototype\Fixtures\TestEmptyClass;
 
 class InjectorTest extends TestCase
 {
@@ -39,24 +40,20 @@ class InjectorTest extends TestCase
             $this->getDefinition($filename, ['testClass' => TestClass::class])
         );
 
-        $this->assertStringContainsString(TestClass::class, $printed);
+        $this->assertStringContainsString('private TestClass $testClass', $printed);
     }
 
-    /**
-     * @throws \ReflectionException
-     * @throws ClassNotDeclaredException
-     */
-    public function testTypedInjection(): void
+    public function testPromotedParamInjection(): void
     {
         $i = new Injector();
 
-        $filename = __DIR__ . '/Fixtures/TestClass.php';
+        $filename = __DIR__ . '/Fixtures/WithPromotedProperty.php';
         $printed = $i->injectDependencies(
             file_get_contents($filename),
-            $this->getDefinition($filename, ['testClass' => TestClass::class])
+            $this->getDefinition($filename, ['emptyClass' => TestEmptyClass::class])
         );
 
-        $this->assertStringContainsString('private TestClass $testClass;', $printed);
+        $this->assertStringContainsString('private TestEmptyClass $emptyClass', $printed);
     }
 
     /**
@@ -158,7 +155,7 @@ class InjectorTest extends TestCase
         );
 
         $this->assertStringContainsString('@param HydratedClass $h', $printed);
-        $this->assertStringContainsString('@param TestClass $testClass', $printed);
+        $this->assertStringContainsString('private TestClass $testClass', $printed);
 
         $parameters = $extractor->extractFromString($printed);
         $this->assertArrayHasKey('testClass', $parameters);
@@ -219,24 +216,20 @@ class InjectorTest extends TestCase
 
         $this->assertArrayHasKey('str1', $parameters);
         $this->assertEquals('string', $parameters['str1']['type']);
-        $this->assertStringContainsString('* @param string $str', $printed);
         $this->assertFalse($parameters['str1']['optional']);
         $this->assertFalse($parameters['str1']['byRef']);
         $this->assertFalse($parameters['str1']['variadic']);
 
         $this->assertArrayHasKey('var', $parameters);
         $this->assertNull($parameters['var']['type']);
-        $this->assertStringContainsString(' * @param $var', $printed);
         $this->assertFalse($parameters['var']['optional']);
 
         $this->assertArrayHasKey('untypedVarWithDefault', $parameters);
         $this->assertNull($parameters['untypedVarWithDefault']['type']);
-        $this->assertStringContainsString('* @param $untypedVarWithDefault', $printed);
         $this->assertTrue($parameters['untypedVarWithDefault']['optional']);
 
         $this->assertArrayHasKey('refVar', $parameters);
         $this->assertNull($parameters['refVar']['type']);
-        $this->assertStringContainsString('* @param $refVar', $printed);
         $this->assertFalse($parameters['refVar']['optional']);
         $this->assertTrue($parameters['refVar']['byRef']);
         $this->assertFalse($parameters['refVar']['variadic']);
@@ -244,44 +237,35 @@ class InjectorTest extends TestCase
         //Parameter type ATest3 has an alias in a child class
         $this->assertArrayHasKey('testApp', $parameters);
         $this->assertEquals('ATestAlias', $parameters['testApp']['type']);
-        $this->assertStringContainsString('@param ATestAlias $testApp', $printed);
-        $this->assertStringNotContainsString('@param ATest3 $testApp', $printed);
         $this->assertFalse($parameters['testApp']['optional']);
 
         $this->assertArrayHasKey('str2', $parameters);
         $this->assertEquals('?string', $parameters['str2']['type']);
-        $this->assertStringContainsString('* @param string|null $str2', $printed);
         $this->assertFalse($parameters['str2']['optional']);
 
         //We do not track leading "\" in the class name here
         $this->assertArrayHasKey('nullableClass1', $parameters);
         $this->assertEquals('?StdClass', $parameters['nullableClass1']['type']);
-        $this->assertStringContainsString('* @param \StdClass|null $nullableClass1', $printed);
         $this->assertFalse($parameters['nullableClass1']['optional']);
 
         $this->assertArrayHasKey('test1', $parameters);
         $this->assertEquals('?Test', $parameters['test1']['type']);
-        $this->assertStringContainsString('* @param Test|null $test1', $printed);
         $this->assertTrue($parameters['test1']['optional']);
 
         $this->assertArrayHasKey('str3', $parameters);
         $this->assertEquals('?string', $parameters['str3']['type']);
-        $this->assertStringContainsString('* @param string|null $str3', $printed);
         $this->assertTrue($parameters['str3']['optional']);
 
         $this->assertArrayHasKey('int', $parameters);
         $this->assertEquals('?int', $parameters['int']['type']);
-        $this->assertStringContainsString('* @param int|null $int', $printed);
         $this->assertTrue($parameters['int']['optional']);
 
         $this->assertArrayHasKey('nullableClass2', $parameters);
         $this->assertEquals('?StdClass', $parameters['nullableClass2']['type']);
-        $this->assertStringContainsString('* @param \StdClass|null $nullableClass2', $printed);
         $this->assertTrue($parameters['nullableClass2']['optional']);
 
         $this->assertArrayHasKey('variadicVar', $parameters);
         $this->assertEquals('string', $parameters['variadicVar']['type']);
-        $this->assertStringContainsString('* @param string ...$variadicVar', $printed);
         $this->assertFalse($parameters['variadicVar']['optional']);
         $this->assertFalse($parameters['variadicVar']['byRef']);
         $this->assertTrue($parameters['variadicVar']['variadic']);
