@@ -20,6 +20,9 @@ class ScaffolderConfig extends InjectableConfig
         'directory'    => '',
         'namespace'    => '',
         'declarations' => [],
+        'defaults'     => [
+            'declarations' => [],
+        ],
     ];
 
     public function headerLines(): array
@@ -32,6 +35,9 @@ class ScaffolderConfig extends InjectableConfig
         return $this->config['directory'];
     }
 
+    /**
+     * @param non-empty-string $element
+     */
     public function className(string $element, string $name): string
     {
         ['name' => $name] = $this->parseName($name);
@@ -42,6 +48,9 @@ class ScaffolderConfig extends InjectableConfig
         return \str_ends_with($class, $postfix) ? $class : $class . $postfix;
     }
 
+    /**
+     * @param non-empty-string $element
+     */
     public function classNamespace(string $element, string $name = ''): string
     {
         $localNamespace = \trim($this->getOption($element, 'namespace', ''), '\\');
@@ -58,6 +67,12 @@ class ScaffolderConfig extends InjectableConfig
         return \trim($this->baseNamespace($element) . '\\' . $localNamespace, '\\');
     }
 
+    /**
+     * @param non-empty-string $element
+     * @param non-empty-string $name
+     *
+     * @return non-empty-string
+     */
     public function classFilename(string $element, string $name, ?string $namespace = null): string
     {
         $elementNamespace = $namespace ?? $this->classNamespace($element, $name);
@@ -71,6 +86,8 @@ class ScaffolderConfig extends InjectableConfig
     }
 
     /**
+     * @param non-empty-string $element
+     *
      * @throws ScaffolderException
      */
     public function declarationClass(string $element): string
@@ -88,25 +105,36 @@ class ScaffolderConfig extends InjectableConfig
 
     /**
      * Declaration options.
+     *
+     * @param non-empty-string $element
      */
     public function declarationOptions(string $element): array
     {
         return $this->getOption($element, 'options', []);
     }
 
+    /**
+     * @param non-empty-string $element
+     */
     private function elementPostfix(string $element): string
     {
         return $this->getOption($element, 'postfix', '');
     }
 
+    /**
+     * @param non-empty-string $element
+     * @param non-empty-string $section
+     */
     private function getOption(string $element, string $section, mixed $default = null): mixed
     {
-        if (!isset($this->config['declarations'][$element])) {
+        $declaration = $this->getDeclaration($element);
+
+        if ($declaration === []) {
             throw new ScaffolderException(\sprintf("Undefined declaration '%s'.", $element));
         }
 
-        if (\array_key_exists($section, $this->config['declarations'][$element])) {
-            return $this->config['declarations'][$element][$section];
+        if (\array_key_exists($section, $declaration)) {
+            return $declaration[$section];
         }
 
         return $default;
@@ -115,7 +143,9 @@ class ScaffolderConfig extends InjectableConfig
     /**
      * Split user name into namespace and class name.
      *
-     * @return array [namespace, name]
+     * @param non-empty-string $name
+     *
+     * @return array{namespace: string, name: non-empty-string}
      */
     private function parseName(string $name): array
     {
@@ -132,9 +162,14 @@ class ScaffolderConfig extends InjectableConfig
         return ['namespace' => '', 'name' => $name];
     }
 
+    /**
+     * @param non-empty-string $element
+     */
     private function baseNamespace(string $element): string
     {
-        if (\array_key_exists('baseNamespace', $this->config['declarations'][$element])) {
+        $declaration = $this->getDeclaration($element);
+
+        if (\array_key_exists('baseNamespace', $declaration)) {
             return \trim((string) $this->getOption($element, 'baseNamespace', ''), '\\');
         }
 
@@ -162,5 +197,16 @@ class ScaffolderConfig extends InjectableConfig
         return ( new InflectorFactory() )
             ->build()
             ->classify($name);
+    }
+
+    /**
+     * @param non-empty-string $element
+     */
+    private function getDeclaration(string $element): array
+    {
+        $default = $this->config['defaults']['declarations'][$element] ?? [];
+        $declaration = $this->config['declarations'][$element] ?? [];
+
+        return $declaration + $default;
     }
 }
