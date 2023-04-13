@@ -1,14 +1,18 @@
 # CHANGELOG
 
-## Unreleased
+## 3.7.0 - 2023-04-13
 - **Medium Impact Changes**
   - [spiral/queue] Added the ability to use mixed types as job payload.
 - **Bug Fixes**
+  - [spiral/scaffolder] Fixed the problem with redefined command types.
   - [spiral/console] Fixed the problem with commands description with signature definition.
   - [spiral/tokenizer] Fixed the problem with using named parameters in class located by a tokenizer.
+  - [spiral/telemetry] Fixed LogTracer elapsed time log.
 - **Other Features**
   - [spiral/console] Added the ability to guess **option mode**, unless it is explicitly passed in the 
     `Spiral\Console\Attribute\Option` attribute.
+  - Updated psalm version to 5.0.
+  - Added support doctrine/annotations 2.x
 
 ## 3.6.1 - 2023-02-20
 - **Bug Fixes**
