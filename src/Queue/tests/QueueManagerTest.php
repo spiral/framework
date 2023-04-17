@@ -16,6 +16,7 @@ use Spiral\Queue\Driver\SyncDriver;
 final class QueueManagerTest extends TestCase
 {
     private m\MockInterface|FactoryInterface $factory;
+    private QueueManager $manager;
 
     protected function setUp(): void
     {
