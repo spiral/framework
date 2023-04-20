@@ -97,8 +97,8 @@ final class ClassDeclarationTest extends TestCase
             ->setBody('return count($items ?: $this->items);');
 
         $method->addParameter('items', [])
-        ->setReference()
-        ->setType('array');
+            ->setReference()
+            ->setType('array');
 
         $this->assertSame(preg_replace('/\s+/', '', '
         class MyClass extends Spiral\Tests\Reactor\ClassDeclarationTest implements Countable
@@ -249,6 +249,39 @@ final class ClassDeclarationTest extends TestCase
 
         $this->assertSame($expect, preg_replace('/\s+/', '', $class->render()));
         $this->assertSame($expect, preg_replace('/\s+/', '', $class->__toString()));
+    }
+
+    public function testRenderWithPromotedProperty(): void
+    {
+        $expect = \preg_replace('/\s+/', '', '/**
+            * Description of class.
+            * Second line
+            *
+            * @property-read $form
+            */
+            final class MyClass extends Spiral\Tests\Reactor\ClassDeclarationTest implements Countable
+            {
+                public function __construct(
+		            private readonly string $foo,
+	            ) {
+	            }
+            }');
+
+        $class = new ClassDeclaration('MyClass');
+        $class->setFinal()
+            ->setExtends(self::class)
+            ->addImplement(\Countable::class)
+            ->addComment("Description of class.\nSecond line\n")
+            ->addComment('@property-read $form');
+
+        $class->addMethod('__construct')
+            ->addPromotedParameter('foo')
+            ->setType('string')
+            ->setPrivate()
+            ->setReadOnly();
+
+        $this->assertSame($expect, \preg_replace('/\s+/', '', $class->render()));
+        $this->assertSame($expect, \preg_replace('/\s+/', '', $class->__toString()));
     }
 
     public function testFromElement(): void
