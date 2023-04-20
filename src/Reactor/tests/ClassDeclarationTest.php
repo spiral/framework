@@ -251,7 +251,7 @@ final class ClassDeclarationTest extends TestCase
         $this->assertSame($expect, preg_replace('/\s+/', '', $class->__toString()));
     }
 
-    public function testRenderPromotedProperty(): void
+    public function testRenderPromotedParameter(): void
     {
         $class = new ClassDeclaration('MyClass');
 
