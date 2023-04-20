@@ -16,14 +16,14 @@ class Parameter implements NamedInterface, AggregableInterface
     use Traits\AttributeAware;
     use Traits\NameAware;
 
-    private NetteParameter $element;
+    protected NettePromotedParameter|NetteParameter $element;
 
     public function __construct(string $name)
     {
         $this->element = new NetteParameter((new InflectorFactory())->build()->camelize($name));
     }
 
-    public function setReference(bool $state = true): self
+    public function setReference(bool $state = true): static
     {
         $this->element->setReference($state);
 
@@ -35,7 +35,7 @@ class Parameter implements NamedInterface, AggregableInterface
         return $this->element->isReference();
     }
 
-    public function setType(?string $type): self
+    public function setType(?string $type): static
     {
         $this->element->setType($type);
 
@@ -49,7 +49,7 @@ class Parameter implements NamedInterface, AggregableInterface
         return $type === null ? null : (string) $type;
     }
 
-    public function setNullable(bool $state = true): self
+    public function setNullable(bool $state = true): static
     {
         $this->element->setNullable($state);
 
@@ -61,7 +61,7 @@ class Parameter implements NamedInterface, AggregableInterface
         return $this->element->isNullable();
     }
 
-    public function setDefaultValue(mixed $value): self
+    public function setDefaultValue(mixed $value): static
     {
         $this->element->setDefaultValue($value);
 

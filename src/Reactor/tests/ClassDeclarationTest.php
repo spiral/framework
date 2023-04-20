@@ -97,8 +97,8 @@ final class ClassDeclarationTest extends TestCase
             ->setBody('return count($items ?: $this->items);');
 
         $method->addParameter('items', [])
-        ->setReference()
-        ->setType('array');
+            ->setReference()
+            ->setType('array');
 
         $this->assertSame(preg_replace('/\s+/', '', '
         class MyClass extends Spiral\Tests\Reactor\ClassDeclarationTest implements Countable
@@ -249,6 +249,19 @@ final class ClassDeclarationTest extends TestCase
 
         $this->assertSame($expect, preg_replace('/\s+/', '', $class->render()));
         $this->assertSame($expect, preg_replace('/\s+/', '', $class->__toString()));
+    }
+
+    public function testRenderPromotedParameter(): void
+    {
+        $class = new ClassDeclaration('MyClass');
+
+        $class->addMethod('__construct')
+            ->addPromotedParameter('foo')
+            ->setType('string')
+            ->setPrivate()
+            ->setReadOnly();
+
+        $this->assertStringContainsString('private readonly string $foo', $class->render());
     }
 
     public function testFromElement(): void
