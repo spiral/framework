@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+- **Bug Fixes**
+  - [spiral/filters] Fixed InputScope to allow retrieval of non-bag input sources
+
 ## 3.7.0 - 2023-04-13
 - **Medium Impact Changes**
   - [spiral/queue] Added the ability to use mixed types as job payload.
