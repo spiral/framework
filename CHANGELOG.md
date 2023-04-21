@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.7.1 - 2023-04-21
 - **Bug Fixes**
   - [spiral/filters] Fixed InputScope to allow retrieval of non-bag input sources
 

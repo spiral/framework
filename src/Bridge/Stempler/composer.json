@@ -28,15 +28,15 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/stempler": "^3.8",
-        "spiral/files": "^3.8",
-        "spiral/config": "^3.8",
-        "spiral/router": "^3.8",
-        "spiral/views": "^3.8",
-        "spiral/core": "^3.8"
+        "spiral/stempler": "^3.7.1",
+        "spiral/files": "^3.7.1",
+        "spiral/config": "^3.7.1",
+        "spiral/router": "^3.7.1",
+        "spiral/views": "^3.7.1",
+        "spiral/core": "^3.7.1"
     },
     "require-dev": {
-        "spiral/boot": "^3.8",
+        "spiral/boot": "^3.7.1",
         "phpunit/phpunit": "^9.5.20",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^5.9"
