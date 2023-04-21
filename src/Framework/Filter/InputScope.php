@@ -14,7 +14,7 @@ use Spiral\Http\Request\InputManager;
 final class InputScope implements InputInterface
 {
     public function __construct(
-        private InputManager $input
+        private InputManager $input,
     ) {
     }
 
@@ -28,7 +28,7 @@ final class InputScope implements InputInterface
 
     public function getValue(string $source, mixed $name = null): mixed
     {
-        if ($source !== 'input' && !$this->input->hasBag($source)) {
+        if (!$this->input->hasBag($source) && !\method_exists($this->input, $source)) {
             throw new InputException(\sprintf('Undefined input source %s', $source));
         }
 
