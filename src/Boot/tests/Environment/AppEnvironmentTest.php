@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Boot\Environment;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Environment\AppEnvironment;
 use Spiral\Boot\EnvironmentInterface;
@@ -22,7 +23,7 @@ final class AppEnvironmentTest extends TestCase
         $this->assertSame(AppEnvironment::Local, $enum);
     }
 
-    /** @dataProvider envVariablesDataProvider */
+    #[DataProvider('envVariablesDataProvider')]
     public function testDetectWithWrongEnvironmentVariable($name, AppEnvironment $expected): void
     {
         $env = m::mock(EnvironmentInterface::class);
@@ -34,15 +35,13 @@ final class AppEnvironmentTest extends TestCase
         $this->assertSame($expected, $enum);
     }
 
-    public function envVariablesDataProvider()
+    public static function envVariablesDataProvider(): \Traversable
     {
-        return [
-            ['wrong', AppEnvironment::Local],
-            ['prod', AppEnvironment::Production],
-            ['stage', AppEnvironment::Stage],
-            ['local', AppEnvironment::Local],
-            ['testing', AppEnvironment::Testing]
-        ];
+        yield ['wrong', AppEnvironment::Local];
+        yield ['prod', AppEnvironment::Production];
+        yield ['stage', AppEnvironment::Stage];
+        yield ['local', AppEnvironment::Local];
+        yield ['testing', AppEnvironment::Testing];
     }
 
     public function testClassMethods(): void

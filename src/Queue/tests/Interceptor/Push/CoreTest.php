@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Interceptor\Push;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 use Spiral\Queue\Interceptor\Push\Core;
@@ -16,9 +17,7 @@ use Spiral\Tests\Queue\TestCase;
 
 final class CoreTest extends TestCase
 {
-    /**
-     * @dataProvider PayloadDataProvider
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testCallActionWithNullOptions(mixed $payload): void
     {
         $core = new Core(
@@ -42,9 +41,7 @@ final class CoreTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider PayloadDataProvider
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testCallActionWithOptions(mixed $payload): void
     {
         $core = new Core(
@@ -122,7 +119,7 @@ final class CoreTest extends TestCase
         ]);
     }
 
-    public function PayloadDataProvider(): \Traversable
+    public static function payloadDataProvider(): \Traversable
     {
         yield [['baz' => 'baf']];
         yield [new \stdClass()];

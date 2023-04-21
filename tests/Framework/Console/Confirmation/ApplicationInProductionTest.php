@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Framework\Console\Confirmation;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Environment\AppEnvironment;
 use Spiral\Console\Confirmation\ApplicationInProduction;
@@ -13,9 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ApplicationInProductionTest extends TestCase
 {
-    /**
-     * @dataProvider notProductionEnvs
-     */
+    #[DataProvider('notProductionEnvs')]
     public function testNotProductionEnvironmentShouldBeConfirmed(AppEnvironment $env): void
     {
         $confirmation = new ApplicationInProduction(
@@ -79,12 +78,10 @@ final class ApplicationInProductionTest extends TestCase
         $this->assertFalse($confirmation->confirmToProceed());
     }
 
-    public function notProductionEnvs(): array
+    public static function notProductionEnvs(): \Traversable
     {
-        return [
-            'Local' => [AppEnvironment::Local],
-            'Testing' => [AppEnvironment::Testing],
-            'Stage' => [AppEnvironment::Stage],
-        ];
+        yield 'Local' => [AppEnvironment::Local];
+        yield 'Testing' => [AppEnvironment::Testing];
+        yield 'Stage' => [AppEnvironment::Stage];
     }
 }

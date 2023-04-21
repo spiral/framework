@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Auth\Middleware\Firewall;
 
 use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\Exception\AuthException;
@@ -13,9 +14,7 @@ use Spiral\Auth\Transport\HeaderTransport;
 
 final class ExceptionFirewallTest extends BaseFirewallTest
 {
-    /**
-     * @dataProvider successTokensDataProvider
-     */
+    #[DataProvider('successTokensDataProvider')]
     public function testExceptionFirewallNotThrowException(string $token): void
     {
         $http = $this->getCore(
@@ -35,9 +34,7 @@ final class ExceptionFirewallTest extends BaseFirewallTest
         $this->assertSame('OK', (string) $response->getBody());
     }
 
-    /**
-     * @dataProvider failTokensDataProvider
-     */
+    #[DataProvider('failTokensDataProvider')]
     public function testExceptionFirewallThrowException(string $token): void
     {
         $http = $this->getCore(

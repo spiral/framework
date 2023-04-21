@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Queue\Config;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Exception\InvalidArgumentException;
@@ -267,7 +268,7 @@ final class QueueConfigTest extends TestCase
         $this->assertSame([], $config->getRegistrySerializers());
     }
 
-    /** @dataProvider defaultSerializerDataProvider */
+    #[DataProvider('defaultSerializerDataProvider')]
     public function testGetDefaultSerializer(array $config, mixed $expected): void
     {
         $config = new QueueConfig($config);
@@ -275,7 +276,7 @@ final class QueueConfigTest extends TestCase
         $this->assertEquals($expected, $config->getDefaultSerializer());
     }
 
-    public function defaultSerializerDataProvider(): \Generator
+    public static function defaultSerializerDataProvider(): \Generator
     {
         yield [[], null];
         yield [['defaultSerializer' => null], null];

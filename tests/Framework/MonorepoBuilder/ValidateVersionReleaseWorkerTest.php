@@ -7,6 +7,7 @@ namespace Spiral\Tests\Framework\MonorepoBuilder;
 use MonorepoBuilder\TagParserInterface;
 use MonorepoBuilder\ValidateVersionReleaseWorker;
 use PharIo\Version\Version;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 // Monorepo builder doesn't have autoloading
@@ -39,7 +40,7 @@ final class ValidateVersionReleaseWorkerTest extends TestCase
         $this->worker = new ValidateVersionReleaseWorker($this->initTagParser(self::TAGS), '');
     }
 
-    /** @dataProvider dataVersions */
+    #[DataProvider('dataVersions')]
     public function testFindMostRecentVersion(string $version, string $exceptMaxVersion): void
     {
         $method = new \ReflectionMethod($this->worker, 'findMostRecentVersion');
@@ -47,7 +48,7 @@ final class ValidateVersionReleaseWorkerTest extends TestCase
         $this->assertSame($method->invoke($this->worker, new Version(\strtolower($version))), $exceptMaxVersion);
     }
 
-    public function dataVersions(): \Traversable
+    public static function dataVersions(): \Traversable
     {
         yield ['0.1.1', '0.1.11'];
         yield ['0.1.11', '0.1.11'];

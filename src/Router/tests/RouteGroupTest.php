@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Router;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\UriFactoryInterface;
 use Spiral\Core\Container;
 use Spiral\Router\Loader\LoaderInterface;
@@ -74,7 +75,7 @@ final class RouteGroupTest extends BaseTest
         $this->assertFalse($group->hasRoute('bar'));
     }
 
-    /** @dataProvider middlewaresDataProvider */
+    #[DataProvider('middlewaresDataProvider')]
     public function testMiddleware(mixed $middleware): void
     {
         $group = new RouteGroup();

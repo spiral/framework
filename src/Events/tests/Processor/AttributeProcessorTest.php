@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Events\Processor;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Events\Attribute\Listener;
@@ -71,8 +72,8 @@ final class AttributeProcessorTest extends TestCase
 
     /**
      * @param class-string $class
-     * @dataProvider listenersDataProvider
      */
+    #[DataProvider('listenersDataProvider')]
     public function testProcess(string $class, Listener $listener, array $args, int $listeners = 1): void
     {
         $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
@@ -99,7 +100,7 @@ final class AttributeProcessorTest extends TestCase
         $this->assertSame($listeners, $registry->listeners);
     }
 
-    public function listenersDataProvider(): \Traversable
+    public static function listenersDataProvider(): \Traversable
     {
         yield [
             ClassAndMethodAttribute::class,

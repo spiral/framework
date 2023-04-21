@@ -64,7 +64,7 @@ abstract class BaseTest extends TestCase
         return $r->getProperty($property)->getValue($object);
     }
 
-    protected function middlewaresDataProvider(): \Traversable
+    public static function middlewaresDataProvider(): \Traversable
     {
         yield [TestMiddleware::class];
         yield [new TestMiddleware()];

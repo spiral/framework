@@ -50,13 +50,13 @@ abstract class BaseFirewallTest extends BaseTest
         return $http;
     }
 
-    public function successTokensDataProvider(): \Traversable
+    public static function successTokensDataProvider(): \Traversable
     {
         // ok
         yield ['ok'];
     }
 
-    public function failTokensDataProvider(): \Traversable
+    public static function failTokensDataProvider(): \Traversable
     {
         // Actor not found
         yield ['no-actor'];

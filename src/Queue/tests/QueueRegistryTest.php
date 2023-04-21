@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Config\QueueConfig;
@@ -77,7 +78,7 @@ final class QueueRegistryTest extends TestCase
         $this->assertInstanceOf(JsonSerializer::class, $this->registry->getSerializer());
     }
 
-    /** @dataProvider serializersDataProvider */
+    #[DataProvider('serializersDataProvider')]
     public function testDefaultSerializer(
         SerializerRegistry $registry,
         string|SerializerInterface|Autowire $serializer
@@ -88,7 +89,7 @@ final class QueueRegistryTest extends TestCase
         $this->assertInstanceOf(JsonSerializer::class, $this->registry->getSerializer());
     }
 
-    /** @dataProvider serializersDataProvider */
+    #[DataProvider('serializersDataProvider')]
     public function testSerializer(SerializerRegistry $registry, string|SerializerInterface|Autowire $serializer): void
     {
         $this->mockContainer->bind(SerializerRegistryInterface::class, $registry);
@@ -101,7 +102,7 @@ final class QueueRegistryTest extends TestCase
         $this->assertInstanceOf(SerializerInterface::class, $this->registry->getSerializer('foo'));
     }
 
-    public function serializersDataProvider(): \Traversable
+    public static function serializersDataProvider(): \Traversable
     {
         // serializer name
         yield [new SerializerRegistry(['some' => new JsonSerializer()]), 'some'];

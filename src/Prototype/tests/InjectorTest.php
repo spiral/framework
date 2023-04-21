@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Prototype\ClassNode;
@@ -42,15 +43,7 @@ class InjectorTest extends TestCase
         $this->assertStringContainsString(TestClass::class, $printed);
     }
 
-    /**
-     * @dataProvider typedProvider
-     * @param bool $useTypedProperties
-     * @param bool $noPhpDoc
-     * @param bool $expectedTypedProperty
-     * @param bool $expectedPhpDoc
-     * @throws \ReflectionException
-     * @throws ClassNotDeclaredException
-     */
+    #[DataProvider('typedProvider')]
     public function testTypedInjection(
         bool $useTypedProperties,
         bool $noPhpDoc,
@@ -81,14 +74,12 @@ class InjectorTest extends TestCase
         }
     }
 
-    public function typedProvider(): iterable
+    public static function typedProvider(): \Traversable
     {
-        return [
-            [true, true, true, false],
-            [true, false, true, true],
-            [false, false, false, true],
-            [false, true, false, true],
-        ];
+        yield [true, true, true, false];
+        yield [true, false, true, true];
+        yield [false, false, false, true];
+        yield [false, true, false, true];
     }
 
     /**

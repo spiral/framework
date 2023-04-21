@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Route;
 use Spiral\Tests\Router\Diactoros\UriFactory;
@@ -21,9 +22,7 @@ class RouteTest extends BaseTest
         $this->assertSame('', $route->getUriHandler()->getPrefix());
     }
 
-    /**
-     * @dataProvider prefixesDataProvider
-     */
+    #[DataProvider('prefixesDataProvider')]
     public function testPrefix(string $prefix, string $expected): void
     {
         $route = new Route('/action', Call::class);
@@ -40,7 +39,7 @@ class RouteTest extends BaseTest
         $route->handle(new ServerRequest('GET', ''));
     }
 
-    /** @dataProvider middlewaresDataProvider */
+    #[DataProvider('middlewaresDataProvider')]
     public function testWithMiddleware(mixed $middleware): void
     {
         $route = new Route('/action', Call::class);
@@ -55,7 +54,7 @@ class RouteTest extends BaseTest
         $this->assertInstanceOf(TestMiddleware::class, $m[0]);
     }
 
-    public function prefixesDataProvider(): \Traversable
+    public static function prefixesDataProvider(): \Traversable
     {
         yield ['something', 'something'];
         yield ['/something/', 'something'];

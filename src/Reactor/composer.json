@@ -33,7 +33,7 @@
         "nette/php-generator": "^4.0.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.20",
+        "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
         "psr/container": "^1.1|^2.0",
         "vimeo/psalm": "^5.9"

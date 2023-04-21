@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Exception;
 use Spiral\Http\Exception\ClientException;
@@ -12,7 +13,6 @@ use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Http\Exception\ClientException\ServerErrorException;
 use Spiral\Http\Exception\ClientException\UnauthorizedException;
-use Spiral\Http\Exception\HttpException;
 
 class ExceptionsTest extends TestCase
 {
@@ -52,15 +52,13 @@ class ExceptionsTest extends TestCase
         $this->assertSame(500, $e->getCode());
     }
 
-    /**
-     * @dataProvider allExceptionsWithPreviousSet
-     */
+    #[DataProvider('allExceptionsWithPreviousSet')]
     public function testPreviousSetter(\Throwable $exception): void
     {
         $this->assertInstanceOf(\Throwable::class, $exception->getPrevious());
     }
 
-    public function allExceptionsWithPreviousSet(): \Generator
+    public static function allExceptionsWithPreviousSet(): \Generator
     {
         yield [new Exception\ClientException\BadRequestException('', new \Exception())];
         yield [new Exception\ClientException\ForbiddenException('', new \Exception())];

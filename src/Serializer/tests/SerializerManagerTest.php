@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Serializer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Serializer\Exception\SerializerNotFoundException;
 use Spiral\Serializer\Serializer\JsonSerializer;
@@ -35,7 +36,7 @@ final class SerializerManagerTest extends TestCase
         $this->serializer->getSerializer('bad');
     }
 
-    /** @dataProvider serializeDataProvider */
+    #[DataProvider('serializeDataProvider')]
     public function testSerialize(mixed $payload, string $expected, ?string $format = null): void
     {
         $this->assertSame($expected, $this->serializer->serialize($payload, $format));
@@ -50,20 +51,20 @@ final class SerializerManagerTest extends TestCase
         $this->serializer->unserialize('payload', 'bad');
     }
 
-    /** @dataProvider unserializeDataProvider */
+    #[DataProvider('unserializeDataProvider')]
     public function testUnserialize(string|\Stringable $payload, mixed $expected, ?string $format = null): void
     {
         $this->assertSame($expected, $this->serializer->unserialize($payload, format: $format));
     }
 
-    public function serializeDataProvider(): \Traversable
+    public static function serializeDataProvider(): \Traversable
     {
         yield [['some', 'elements'], '["some","elements"]', 'json'];
         yield [['some', 'elements'], 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', 'serializer'];
         yield [['some', 'elements'], '["some","elements"]'];
     }
 
-    public function unserializeDataProvider(): \Traversable
+    public static function unserializeDataProvider(): \Traversable
     {
         yield ['["some","elements"]', ['some', 'elements'], 'json'];
         yield [new class() implements \Stringable {

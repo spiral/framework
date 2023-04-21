@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
@@ -172,7 +173,7 @@ class InjectableTest extends TestCase
         $this->assertTrue($container->hasInjector(InjectableClassImplementation::class));
     }
 
-    public function inheritanceDataProvider(): iterable
+    public static function inheritanceDataProvider(): iterable
     {
         yield 'parent' => [InjectableClassInterface::class];
         yield 'child' => [InjectableClassChildInterface::class];
@@ -180,9 +181,7 @@ class InjectableTest extends TestCase
         yield 'child-impl' => [InjectableClassChildImplementation::class];
     }
 
-    /**
-     * @dataProvider inheritanceDataProvider
-     */
+    #[DataProvider('inheritanceDataProvider')]
     public function testInjectableInheritance(string $class): void
     {
         $mock = $this->createMock(Container\InjectorInterface::class);

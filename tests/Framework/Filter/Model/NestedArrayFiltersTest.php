@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Filter\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\App\Request\AddressFilter;
 use Spiral\App\Request\MultipleAddressesFilter;
 use Spiral\Filters\Exception\ValidationException;
@@ -40,9 +41,7 @@ final class NestedArrayFiltersTest extends FilterTestCase
         $this->assertSame('Hollywood', $filter->addresses[1]->address);
     }
 
-    /**
-     * @dataProvider provideInvalidData
-     */
+    #[DataProvider('provideInvalidData')]
     public function testDataShouldBeValidated(array $data, array $expectedErrors): void
     {
         if ($expectedErrors !== []) {
@@ -59,7 +58,7 @@ final class NestedArrayFiltersTest extends FilterTestCase
         }
     }
 
-    public function provideInvalidData(): \Generator
+    public static function provideInvalidData(): \Generator
     {
         yield 'empty' => [
             [],

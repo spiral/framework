@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
@@ -46,9 +47,8 @@ final class UseCaseTest extends BaseTest
 
     /**
      * A child scope bindings are not singleton.
-     *
-     * @dataProvider provideScopeBindingsAsNotSingletons
      */
+    #[DataProvider('provideScopeBindingsAsNotSingletons')]
     public function testScopeBindingsAsNotSingletons(bool $theSame, string $alias, mixed $definition): void
     {
         $root = new Container();
@@ -63,7 +63,8 @@ final class UseCaseTest extends BaseTest
         }, bindings: [$alias => $definition]);
     }
 
-    public function provideScopeBindingsAsNotSingletons(): iterable {
+    public static function provideScopeBindingsAsNotSingletons(): iterable
+    {
         yield 'array-factory' => [false, 'foo', [self::class, 'makeStdClass']];
         yield 'class-name' => [false, SampleClass::class, SampleClass::class];
         yield 'object' => [true, stdClass::class, new stdClass()];

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http\Request;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container;
@@ -165,11 +166,7 @@ class InputManagerTest extends TestCase
         $this->assertTrue($this->input->isXmlHttpRequest());
     }
 
-    /**
-     * @dataProvider isJsonExpectedProvider
-     * @param bool        $expected
-     * @param string|null $acceptHeader
-     */
+    #[DataProvider('isJsonExpectedProvider')]
     public function testIsJsonExpected(bool $expected, ?string $acceptHeader): void
     {
         $input = $this->input->withJsonType('application/vnd.api+json');
@@ -185,24 +182,15 @@ class InputManagerTest extends TestCase
         $this->assertSame($expected, $input->isJsonExpected());
     }
 
-    /**
-     * @return iterable
-     */
-    public function isJsonExpectedProvider(): iterable
+    public static function isJsonExpectedProvider(): \Traversable
     {
-        return [
-            [false, null],
-            [false, 'text/html'],
-            [true, 'application/json'],
-            [true, 'application/vnd.api+json'],
-        ];
+        yield [false, null];
+        yield [false, 'text/html'];
+        yield [true, 'application/json'];
+        yield [true, 'application/vnd.api+json'];
     }
 
-    /**
-     * @dataProvider isJsonExpectedOnSoftMatchProvider
-     * @param bool        $expected
-     * @param string|null $acceptHeader
-     */
+    #[DataProvider('isJsonExpectedOnSoftMatchProvider')]
     public function testIsJsonExpectedOnSoftMatch(bool $expected, ?string $acceptHeader): void
     {
         $request = new ServerRequest(
@@ -217,17 +205,12 @@ class InputManagerTest extends TestCase
         $this->assertSame($expected, $this->input->isJsonExpected(true));
     }
 
-    /**
-     * @return iterable
-     */
-    public function isJsonExpectedOnSoftMatchProvider(): iterable
+    public static function isJsonExpectedOnSoftMatchProvider(): \Traversable
     {
-        return [
-            [false, null],
-            [false, 'text/html'],
-            [true, 'text/json'],
-            [true, 'application/vnd.api+json'],
-        ];
+        yield [false, null];
+        yield [false, 'text/html'];
+        yield [true, 'text/json'];
+        yield [true, 'application/vnd.api+json'];
     }
 
     public function testRemoteIP(): void

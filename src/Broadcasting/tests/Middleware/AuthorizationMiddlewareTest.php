@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Broadcasting\Middleware;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -143,7 +144,7 @@ final class AuthorizationMiddlewareTest extends TestCase
         $this->assertSame($response, $middleware->process($request, $handler));
     }
 
-    /** @dataProvider eventsDataProvider */
+    #[DataProvider('eventsDataProvider')]
     public function testAuthorizationEventsShouldBeDispatched(string $event, bool $authStatus, int $code): void
     {
         $request = m::mock(ServerRequestInterface::class);
@@ -199,7 +200,7 @@ final class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function eventsDataProvider(): \Traversable
+    public static function eventsDataProvider(): \Traversable
     {
         yield [Authorized::class, true, 200];
         yield [Authorized::class, false, 403];

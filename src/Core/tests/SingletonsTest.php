@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container;
@@ -89,9 +90,7 @@ class SingletonsTest extends TestCase
         $this->assertSame($instance, $container->get('sampleClass'));
     }
 
-    /**
-     * @dataProvider SingletonWithCustomArgsProvider
-     */
+    #[DataProvider('singletonWithCustomArgsProvider')]
     public function testSingletonWithCustomArgs(string $alias, mixed $definition): void
     {
         $container = new Container();
@@ -106,11 +105,24 @@ class SingletonsTest extends TestCase
         $this->assertSame($instance, $container->make($alias));
     }
 
-    public function SingletonWithCustomArgsProvider(): iterable
+    public function testSingletonWithCustomArgsObject(): void
+    {
+        $container = new Container();
+        $container->bindSingleton('sampleClass', self::class::sampleClass());
+        $instance = $container->make('sampleClass');
+
+        $this->assertSame($instance, $container->make('sampleClass'));
+        $this->assertSame($instance, $container->make('sampleClass', []));
+        $this->assertNotSame($instance, $bar = $container->make('sampleClass', ['bar']));
+        $this->assertNotSame($bar, $container->make('sampleClass', ['bar']));
+        // The binding mustn't be rebound
+        $this->assertSame($instance, $container->make('sampleClass'));
+    }
+
+    public static function SingletonWithCustomArgsProvider(): iterable
     {
         static $obj = new \stdClass();
         yield 'array-factory' => ['sampleClass', [self::class, 'sampleClass']];
-        yield 'object' => ['sampleClass', self::class::sampleClass()];
         yield 'class-name' => ['sampleClass', SampleClass::class];
         yield 'reference-existing' => ['stdClass', \WeakReference::create($obj)];
     }

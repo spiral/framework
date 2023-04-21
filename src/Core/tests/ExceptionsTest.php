@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -162,9 +163,7 @@ class ExceptionsTest extends TestCase
         $container->get('invalid-other');
     }
 
-    /**
-     * @dataProvider exceptionTraceDataProvider
-     */
+    #[DataProvider('exceptionTraceDataProvider')]
     public function testExceptionTrace(Container $container, string $message): void
     {
         $this->expectException(ContainerException::class);
@@ -173,7 +172,7 @@ class ExceptionsTest extends TestCase
         $container->get(ClassWithUndefinedDependency::class);
     }
 
-    public function exceptionTraceDataProvider(): \Traversable
+    public static function exceptionTraceDataProvider(): \Traversable
     {
         $binding = new Container();
         $binding->bind('Spiral\Tests\Core\Fixtures\InvalidClass', ['invalid']);

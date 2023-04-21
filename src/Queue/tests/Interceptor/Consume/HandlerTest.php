@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Interceptor;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Core\CoreInterface;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Telemetry\NullTracer;
@@ -13,9 +14,7 @@ use Spiral\Tests\Queue\TestCase;
 
 final class HandlerTest extends TestCase
 {
-    /**
-     * @dataProvider PayloadDataProvider
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testHandle(mixed $payload): void
     {
         $tracerFactory = m::mock(TracerFactoryInterface::class);
@@ -43,7 +42,7 @@ final class HandlerTest extends TestCase
         $handler->handle('foo', 'sync', 'default', 'job-id', $payload, ['some' => 'data']);
     }
 
-    public function PayloadDataProvider(): \Traversable
+    public static function payloadDataProvider(): \Traversable
     {
         yield [['baz' => 'baf']];
         yield [new \stdClass()];

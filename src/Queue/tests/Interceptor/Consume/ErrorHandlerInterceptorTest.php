@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Interceptor\Consume;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Core\CoreInterface;
 use Spiral\Queue\Failed\FailedJobHandlerInterface;
 use Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor;
@@ -12,9 +13,7 @@ use Spiral\Tests\Queue\TestCase;
 
 final class ErrorHandlerInterceptorTest extends TestCase
 {
-    /**
-     * @dataProvider PayloadDataProvider
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testProcessError(mixed $payload): void
     {
         $this->expectException(\Exception::class);
@@ -60,7 +59,7 @@ final class ErrorHandlerInterceptorTest extends TestCase
         $interceptor->process('foo', 'bar', $parameters, $core);
     }
 
-    public function PayloadDataProvider(): \Traversable
+    public static function payloadDataProvider(): \Traversable
     {
         yield [['baz' => 'baf']];
         yield [new \stdClass()];
