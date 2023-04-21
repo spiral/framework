@@ -14,15 +14,18 @@ use Spiral\Tests\Framework\BaseTest;
 abstract class FilterTestCase extends BaseTest
 {
     /**
-     * @param class-string<FilterInterface> $filter
+     * @template T of FilterInterface
+     * @param class-string<T> $filter
+     * @return T
      */
     public function getFilter(
         string $filter,
         array $post = [],
         array $query = [],
-        array $headers = []
+        array $headers = [],
+        string $method = 'POST'
     ): FilterInterface {
-        $request = new ServerRequest('POST', '/');
+        $request = new ServerRequest($method, '/');
 
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
