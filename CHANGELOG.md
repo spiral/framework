@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+- **Other Features**
+  - [spiral/scaffolder] Added a `directory` option for declarations defaults and declarations in configuration.
+
 ## 3.7.0 - 2023-04-13
 - **Medium Impact Changes**
   - [spiral/queue] Added the ability to use mixed types as job payload.
