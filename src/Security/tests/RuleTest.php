@@ -42,7 +42,7 @@ class RuleTest extends TestCase
         $this->resolver = $this->createMock(ResolverInterface::class);
         $this->rule = $this->getMockBuilder(Rule::class)
             ->setConstructorArgs([$this->resolver])
-            ->setMethods(['check'])->getMock();
+            ->addMethods(['check'])->getMock();
     }
 
     #[DataProvider('allowsProvider')]
