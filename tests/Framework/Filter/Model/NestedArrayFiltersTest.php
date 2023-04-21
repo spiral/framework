@@ -46,7 +46,7 @@ final class NestedArrayFiltersTest extends FilterTestCase
     {
         if ($expectedErrors !== []) {
             $this->expectException(ValidationException::class);
-            $this->expectErrorMessage('The given data was invalid.');
+            $this->expectExceptionMessage('The given data was invalid.');
         }
 
         try {

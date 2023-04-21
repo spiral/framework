@@ -53,7 +53,7 @@ final class NestedFilterTest extends FilterTestCase
     public function testDataShouldBeValidated(array $data, array $expectedErrors): void
     {
         $this->expectException(ValidationException::class);
-        $this->expectErrorMessage('The given data was invalid.');
+        $this->expectExceptionMessage('The given data was invalid.');
 
         try {
             $this->getFilter(ProfileFilter::class, $data);

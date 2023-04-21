@@ -17,7 +17,7 @@ final class ErrorHandlerInterceptorTest extends TestCase
     public function testProcessError(mixed $payload): void
     {
         $this->expectException(\Exception::class);
-        $this->expectErrorMessage('Something went wrong');
+        $this->expectExceptionMessage('Something went wrong');
 
         $interceptor = new ErrorHandlerInterceptor(
             $handler = m::mock(FailedJobHandlerInterface::class)

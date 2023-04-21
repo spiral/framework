@@ -78,7 +78,7 @@ final class BroadcastConfigTest extends TestCase
     public function testNotDefinedConnectionShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Config for connection `foo` is not defined.');
+        $this->expectExceptionMessage('Config for connection `foo` is not defined.');
 
         $this->config->getConnectionConfig('foo');
     }
@@ -86,7 +86,7 @@ final class BroadcastConfigTest extends TestCase
     public function testConnectionWithoutDefinedDriverShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Driver for `memory` connection is not defined.');
+        $this->expectExceptionMessage('Driver for `memory` connection is not defined.');
 
         $this->config->getConnectionConfig('memory');
     }

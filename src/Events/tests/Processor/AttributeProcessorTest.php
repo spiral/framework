@@ -57,7 +57,7 @@ final class AttributeProcessorTest extends TestCase
     public function testEventListenerShouldThrowAnExceptionWhenListenerNotFinalized(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectErrorMessage('Tokenizer did not finalize Spiral\Events\Processor\AttributeProcessor listener.');
+        $this->expectExceptionMessage('Tokenizer did not finalize Spiral\Events\Processor\AttributeProcessor listener.');
 
         $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
         $reader = m::mock(ReaderInterface::class);

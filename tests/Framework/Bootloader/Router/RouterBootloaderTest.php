@@ -75,7 +75,7 @@ final class RouterBootloaderTest extends BaseTest
 
     public function testRouteInterfaceShouldThrowAnExceptionWhenRequestDoesNotContainIt(): void
     {
-        $this->expectErrorMessage('Unable to resolve Route, invalid request scope');
+        $this->expectExceptionMessage('Unable to resolve Route, invalid request scope');
 
         $request = $this->mockContainer(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')

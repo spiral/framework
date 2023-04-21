@@ -27,7 +27,7 @@ final class CookiesBootloaderTest extends BaseTest
 
     public function testCookieQueueBindingShouldThrowAndExceptionWhenAttributeIsEmpty(): void
     {
-        $this->expectErrorMessage('Unable to resolve CookieQueue, invalid request scope');
+        $this->expectExceptionMessage('Unable to resolve CookieQueue, invalid request scope');
         $request = $this->mockContainer(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')
             ->once()

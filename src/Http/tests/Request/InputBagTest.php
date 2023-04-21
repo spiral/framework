@@ -126,7 +126,7 @@ final class InputBagTest extends TestCase
     public function testSet(): void
     {
         $this->expectException(InputException::class);
-        $this->expectErrorMessage('InputBag is immutable');
+        $this->expectExceptionMessage('InputBag is immutable');
         $bag = new InputBag([1 => 'bar']);
         $bag[1] = 'foo';
     }
@@ -134,7 +134,7 @@ final class InputBagTest extends TestCase
     public function testUnset(): void
     {
         $this->expectException(InputException::class);
-        $this->expectErrorMessage('InputBag is immutable');
+        $this->expectExceptionMessage('InputBag is immutable');
         $bag = new InputBag([1 => 'bar']);
         unset($bag[1]);
     }

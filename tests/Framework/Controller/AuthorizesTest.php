@@ -21,7 +21,7 @@ final class AuthorizesTest extends BaseTest
     public function testAuthException(): void
     {
         $this->expectException(ControllerException::class);
-        $this->expectDeprecationMessage("Unauthorized permission 'do'");
+        $this->expectExceptionMessage("Unauthorized permission 'do'");
 
         $this->getContainer()
             ->bind(ActorInterface::class, new Guest());

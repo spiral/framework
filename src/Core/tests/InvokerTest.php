@@ -65,7 +65,7 @@ class InvokerTest extends TestCase
     public function testCallValidCallableArrayWithNotResolvableDependencies(): void
     {
         $this->expectException(ArgumentResolvingException::class);
-        $this->expectErrorMessage('Unable to resolve required argument `name` when resolving');
+        $this->expectExceptionMessage('Unable to resolve required argument `name` when resolving');
 
         $this->container->invoke([new Storage(), 'makeBucket'], ['name' => 'bar']);
     }
@@ -85,7 +85,7 @@ class InvokerTest extends TestCase
     public function testCallValidCallableStringWithNotResolvableDependencies(): void
     {
         $this->expectException(ArgumentResolvingException::class);
-        $this->expectErrorMessage('Unable to resolve required argument `name` when resolving');
+        $this->expectExceptionMessage('Unable to resolve required argument `name` when resolving');
 
         $this->container->invoke(Storage::class.'::createBucket', ['name' => 'bar']);
     }
@@ -110,7 +110,7 @@ class InvokerTest extends TestCase
     public function testCallValidClosureWithNotResolvableDependencies(): void
     {
         $this->expectException(ArgumentResolvingException::class);
-        $this->expectErrorMessage('Unable to resolve required argument `name` when resolving');
+        $this->expectExceptionMessage('Unable to resolve required argument `name` when resolving');
 
         $this->container->invoke(
             static function (Bucket $bucket, SampleClass $class, string $name, string $path = 'baz') {
@@ -123,7 +123,7 @@ class InvokerTest extends TestCase
     public function testInvalidCallableStringShouldThrowAnException(): void
     {
         $this->expectException(NotCallableException::class);
-        $this->expectErrorMessage('Unsupported callable');
+        $this->expectExceptionMessage('Unsupported callable');
 
         $this->container->invoke('foobar');
     }
@@ -131,7 +131,7 @@ class InvokerTest extends TestCase
     public function testInvalidCallableArrayShouldThrowAnException(): void
     {
         $this->expectException(NotCallableException::class);
-        $this->expectErrorMessage('Unsupported callable');
+        $this->expectExceptionMessage('Unsupported callable');
 
         $object = new Storage();
 

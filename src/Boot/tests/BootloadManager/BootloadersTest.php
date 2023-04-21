@@ -116,7 +116,7 @@ class BootloadersTest extends TestCase
     public function testException(): void
     {
         $this->expectException(\Spiral\Boot\Exception\ClassNotFoundException::class);
-        $this->expectErrorMessage('Bootloader class `Foo\Bar\Invalid` is not exist.');
+        $this->expectExceptionMessage('Bootloader class `Foo\Bar\Invalid` is not exist.');
 
         $bootloader = $this->getBootloadManager();
         $bootloader->bootload(['Foo\Bar\Invalid']);

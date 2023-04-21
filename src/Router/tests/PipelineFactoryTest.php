@@ -113,7 +113,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->andReturn(new Pipeline(m::mock(ScopeInterface::class)));
 
         $this->expectException(RouteException::class);
-        $this->expectErrorMessage(\sprintf('Invalid middleware `%s`', $type));
+        $this->expectExceptionMessage(\sprintf('Invalid middleware `%s`', $type));
         $this->pipeline->createWithMiddleware([$value]);
     }
 
