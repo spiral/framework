@@ -28,8 +28,8 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/exceptions": "^3.7.1",
-        "spiral/files": "^3.7.1",
+        "spiral/exceptions": "^3.8",
+        "spiral/files": "^3.8",
         "symfony/finder": "^5.3.7|^6.0"
     },
     "require-dev": {
