@@ -116,13 +116,13 @@ class ScaffolderConfigTest extends BaseTest
     }
 
     /**
-     * @dataProvider baseDirectoryDataProvider
+     * @dataProvider declarationDirectoryDataProvider
      */
-    public function testBaseDirectory(array $config, string $expected, ?string $element = null): void
+    public function testDeclarationDirectory(array $config, string $expected): void
     {
         $config = new ScaffolderConfig($config);
 
-        $this->assertSame($expected, $config->baseDirectory($element));
+        $this->assertSame($expected, $config->declarationDirectory('some'));
     }
 
     /**
@@ -135,10 +135,9 @@ class ScaffolderConfigTest extends BaseTest
         $this->assertSame($expected, $config->classFilename('foo', 'Test', $namespace));
     }
 
-    public static function baseDirectoryDataProvider(): \Traversable
+    public static function declarationDirectoryDataProvider(): \Traversable
     {
         yield [['directory' => 'foo'], 'foo'];
-        yield [['directory' => 'foo'], 'foo', 'some'];
         yield [
             [
                 'directory' => 'foo',
@@ -146,8 +145,7 @@ class ScaffolderConfigTest extends BaseTest
                     'declarations' => ['some' => []]
                 ]
             ],
-            'foo',
-            'some'
+            'foo'
         ];
         yield [
             [
@@ -156,8 +154,7 @@ class ScaffolderConfigTest extends BaseTest
                     'declarations' => ['some' => ['directory' => null]]
                 ]
             ],
-            'foo',
-            'some'
+            'foo'
         ];
         yield [
             [
@@ -166,8 +163,7 @@ class ScaffolderConfigTest extends BaseTest
                     'declarations' => ['some' => ['directory' => '']]
                 ]
             ],
-            'foo',
-            'some'
+            'foo'
         ];
         yield [
             [
@@ -176,40 +172,35 @@ class ScaffolderConfigTest extends BaseTest
                     'declarations' => ['some' => ['directory' => 'bar']]
                 ]
             ],
-            'bar',
-            'some'
+            'bar'
         ];
         yield [
             [
                 'directory' => 'foo',
                 'declarations' => ['some' => []]
             ],
-            'foo',
-            'some'
+            'foo'
         ];
         yield [
             [
                 'directory' => 'foo',
                 'declarations' => ['some' => ['directory' => null]]
             ],
-            'foo',
-            'some'
+            'foo'
         ];
         yield [
             [
                 'directory' => 'foo',
                 'declarations' => ['some' => ['directory' => '']]
             ],
-            'foo',
-            'some'
+            'foo'
         ];
         yield [
             [
                 'directory' => 'foo',
                 'declarations' => ['some' => ['directory' => 'bar']]
             ],
-            'bar',
-            'some'
+            'bar'
         ];
         yield [
             [
@@ -219,8 +210,7 @@ class ScaffolderConfigTest extends BaseTest
                     'declarations' => ['some' => ['directory' => 'bar']]
                 ]
             ],
-            'baz',
-            'some'
+            'baz'
         ];
     }
 

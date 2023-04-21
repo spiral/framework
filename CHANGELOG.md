@@ -2,7 +2,10 @@
 
 ## Unreleased
 - **Other Features**
-  - [spiral/scaffolder] Added a `directory` option for declarations defaults and declarations in configuration.
+  - [spiral/scaffolder] Added new public method `declarationDirectory` to the `Spiral\Scaffolder\Config\ScaffolderConfig` 
+    class that returns the directory path of the specified declaration, or default directory path if not specified.
+- **Medium Impact Changes**
+  - [spiral/scaffolder] Method `baseDirectory` of `Spiral\Scaffolder\Config\ScaffolderConfig` class is deprecated.
 
 ## 3.7.0 - 2023-04-13
 - **Medium Impact Changes**

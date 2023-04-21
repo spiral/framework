@@ -30,11 +30,20 @@ class ScaffolderConfig extends InjectableConfig
         return $this->config['header'];
     }
 
-    public function baseDirectory(?string $element = null): string
+    /**
+     * @deprecated since v3.8.0.
+     */
+    public function baseDirectory(): string
     {
-        if ($element === null || ($declaration = $this->getDeclaration($element)) === []) {
-            return $this->config['directory'];
-        }
+        return $this->config['directory'];
+    }
+
+    /**
+     * @param non-empty-string $element
+     */
+    public function declarationDirectory(string $element): string
+    {
+        $declaration = $this->getDeclaration($element);
 
         return !empty($declaration['directory']) ? $declaration['directory'] : $this->config['directory'];
     }
@@ -83,7 +92,7 @@ class ScaffolderConfig extends InjectableConfig
         $elementNamespace = \substr($elementNamespace, \strlen($this->baseNamespace($element)));
 
         return $this->joinPathChunks([
-            $this->baseDirectory($element),
+            $this->declarationDirectory($element),
             \str_replace('\\', '/', $elementNamespace),
             $this->className($element, $name) . '.php',
         ], '/');
