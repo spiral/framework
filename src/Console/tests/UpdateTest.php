@@ -155,8 +155,3 @@ text;
         return $core;
     }
 }
-
-function ok(OutputInterface $output): void
-{
-    $output->write('OK2');
-}
