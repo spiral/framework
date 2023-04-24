@@ -11,6 +11,7 @@ use Spiral\Tests\Console\Fixtures\AnotherFailedCommand;
 use Spiral\Tests\Console\Fixtures\FailedCommand;
 use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Spiral\Tests\Console\Fixtures\TestCommand;
+use Spiral\Tests\Console\Fixtures\UpdateClass;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
@@ -27,10 +28,10 @@ class ConfigureTest extends BaseTest
             'configure' => [
                 ['command' => 'test', 'header' => 'Test Command'],
                 ['command' => 'helper', 'options' => ['helper' => 'writeln'], 'footer' => 'Good!'],
-                ['invoke' => [self::class, 'do']],
-                ['invoke' => self::class.'::do'],
+                ['invoke' => [UpdateClass::class, 'do']],
+                ['invoke' => UpdateClass::class.'::do'],
                 'Spiral\Tests\Console\ok',
-                ['invoke' => self::class.'::err'],
+                ['invoke' => UpdateClass::class.'::err'],
             ],
         ],
     ];
@@ -122,16 +123,6 @@ class ConfigureTest extends BaseTest
         $this->assertStringNotContainsString('Aborting.', $result);
         $this->assertStringContainsString('Unhandled another failed command error at', $result);
         $this->assertEquals(1, $output->getCode());
-    }
-
-    public function do(OutputInterface $output): void
-    {
-        $output->write('OK');
-    }
-
-    public function err(OutputInterface $output): void
-    {
-        throw new ShortException('Failed configure command');
     }
 
     /**

@@ -11,6 +11,7 @@ use Spiral\Tests\Console\Fixtures\AnotherFailedCommand;
 use Spiral\Tests\Console\Fixtures\FailedCommand;
 use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Spiral\Tests\Console\Fixtures\TestCommand;
+use Spiral\Tests\Console\Fixtures\UpdateClass;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
@@ -28,10 +29,10 @@ class UpdateTest extends BaseTest
             'update' => [
                 ['command' => 'test', 'header' => 'Test Command'],
                 ['command' => 'helper', 'options' => ['helper' => 'writeln'], 'footer' => 'Good!'],
-                ['invoke' => [self::class, 'do']],
-                ['invoke' => self::class.'::do'],
+                ['invoke' => [UpdateClass::class, 'do']],
+                ['invoke' => UpdateClass::class.'::do'],
                 'Spiral\Tests\Console\ok',
-                ['invoke' => self::class.'::err'],
+                ['invoke' => UpdateClass::class.'::err'],
             ],
         ],
     ];
@@ -122,16 +123,6 @@ text;
         $this->assertEquals(1, $output->getCode());
     }
 
-    public function do(OutputInterface $output): void
-    {
-        $output->write('OK');
-    }
-
-    public function err(OutputInterface $output): void
-    {
-        throw new ShortException('Failed update command');
-    }
-
     /**
      * @return Console
      */
@@ -163,4 +154,9 @@ text;
 
         return $core;
     }
+}
+
+function ok(OutputInterface $output): void
+{
+    $output->write('OK2');
 }
