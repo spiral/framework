@@ -10,7 +10,16 @@
          stderr="true"
          cacheDirectory=".phpunit.cache"
          backupStaticProperties="false">
-    <coverage/>
+    <coverage>
+        <report>
+            <html outputDirectory="build/coverage"/>
+            <text outputFile="build/coverage.txt"/>
+            <clover outputFile="build/logs/clover.xml"/>
+        </report>
+    </coverage>
+    <logging>
+        <junit outputFile="build/report.junit.xml"/>
+    </logging>
     <testsuites>
         <testsuite name="Components Test Suite">
             <directory>src/*/tests</directory>
