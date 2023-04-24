@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Framework\Console;
 
-use Spiral\Tests\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTestCase;
 
-final class CommandDescriptionTest extends ConsoleTest
+final class CommandDescriptionTest extends ConsoleTestCase
 {
     public function testAllCommandsShouldHaveDescription(): void
     {

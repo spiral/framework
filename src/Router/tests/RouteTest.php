@@ -12,7 +12,7 @@ use Spiral\Router\UriHandler;
 use Nyholm\Psr7\ServerRequest;
 use Spiral\Tests\Router\Stub\TestMiddleware;
 
-class RouteTest extends BaseTest
+class RouteTest extends BaseTestCase
 {
     public function testEmptyPrefix(): void
     {

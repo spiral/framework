@@ -6,7 +6,7 @@ namespace Framework\Bootloader\Tokenizer;
 
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
@@ -16,7 +16,7 @@ use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\ScopedClassLocator;
 
-final class TokenizerBootloaderTest extends BaseTest
+final class TokenizerBootloaderTest extends BaseTestCase
 {
     public function testScopedClassesInterfaceBinding(): void
     {

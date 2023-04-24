@@ -29,7 +29,7 @@ use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Stub\TestLoader;
 use Spiral\Tests\Router\Stub\TestMiddleware;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     protected Container $container;
     protected Router $router;

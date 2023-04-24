@@ -15,9 +15,9 @@ use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Interceptor\PopulateDataFromEntityInterceptor;
 use Spiral\Filters\Model\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class FiltersBootloaderTest extends BaseTest
+final class FiltersBootloaderTest extends BaseTestCase
 {
     public function testFilterProviderInterfaceBinding(): void
     {

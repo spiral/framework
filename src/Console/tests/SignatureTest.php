@@ -7,7 +7,7 @@ namespace Spiral\Tests\Console;
 use Spiral\Console\Command;
 use Symfony\Component\Console\Input\StringInput;
 
-final class SignatureTest extends BaseTest
+final class SignatureTest extends BaseTestCase
 {
     public function testOptions(): void
     {

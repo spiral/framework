@@ -14,9 +14,9 @@ use Spiral\Cache\Storage\ArrayStorage;
 use Spiral\Cache\Storage\FileStorage;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class CacheBootloaderTest extends BaseTest
+final class CacheBootloaderTest extends BaseTestCase
 {
     public function testBindings()
     {

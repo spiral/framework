@@ -11,7 +11,7 @@ use Spiral\Tests\Core\Scope\Stub\AttrScopeFooFinalize;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 
-final class FinalizeAttributeTest extends BaseTest
+final class FinalizeAttributeTest extends BaseTestCase
 {
     /**
      * Finalizer from a attribute should be registered and called when a related scope is destroyed.

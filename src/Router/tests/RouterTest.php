@@ -13,7 +13,7 @@ use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 
-class RouterTest extends BaseTest
+class RouterTest extends BaseTestCase
 {
     public function testGetRoutes(): void
     {

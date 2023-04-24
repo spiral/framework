@@ -7,7 +7,7 @@ namespace Spiral\Tests\Stempler\Grammar;
 use Spiral\Stempler\Lexer\Grammar\PHPGrammar;
 use Spiral\Stempler\Lexer\Token;
 
-class PHPTest extends BaseTest
+class PHPTest extends BaseTestCase
 {
     protected const GRAMMARS = [PHPGrammar::class];
 

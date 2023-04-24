@@ -9,9 +9,9 @@ use Spiral\Filters\Model\FilterBag;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\Interceptor\Core;
 use Spiral\Models\AbstractEntity;
-use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\BaseTestCase;
 
-final class CoreTest extends BaseTest
+final class CoreTest extends BaseTestCase
 {
     public function testCall(): void
     {

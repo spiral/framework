@@ -15,9 +15,9 @@ use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class HttpBootloaderTest extends BaseTest
+final class HttpBootloaderTest extends BaseTestCase
 {
     public function testHttpBinding(): void
     {

@@ -11,12 +11,12 @@ use Spiral\Auth\TransportRegistry;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
-use Spiral\Tests\Auth\BaseTest;
+use Spiral\Tests\Auth\BaseTestCase;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
-abstract class BaseFirewallTest extends BaseTest
+abstract class BaseFirewallTestCase extends BaseTestCase
 {
     protected function getCore(AbstractFirewall $firewall, HttpTransportInterface $transport): Http
     {

@@ -7,7 +7,7 @@ namespace Spiral\Tests\Translator;
 use PHPUnit\Framework\TestCase;
 use Spiral\Translator\Matcher;
 
-class PatternizerTest extends TestCase
+class MatcherTest extends TestCase
 {
     public function testIsPattern(): void
     {

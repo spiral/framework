@@ -13,7 +13,7 @@ use DateTimeInterface;
  * @see NullableParameterTest::testNullableUnionDefaultScalar()
  * @see VariadicParameterTest::testVariadicUnionParameterAndUnnamedArguments()
  */
-final class UnionTypeParameterTest extends BaseTest
+final class UnionTypeParameterTest extends BaseTestCase
 {
     public function testScalarOrClassFromContainer(): void
     {

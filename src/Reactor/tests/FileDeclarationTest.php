@@ -14,7 +14,7 @@ use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\FileDeclaration;
 
-final class FileDeclarationTest extends BaseWithElementsTest
+final class FileDeclarationTest extends BaseWithElementsTestCase
 {
     public function testFromCode(): void
     {

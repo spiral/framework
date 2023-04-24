@@ -17,7 +17,7 @@ use Spiral\Tests\Router\Stub\AnotherMiddleware;
 use Spiral\Tests\Router\Stub\RoutesTestCore;
 use Spiral\Tests\Router\Stub\TestMiddleware;
 
-final class RouteGroupTest extends BaseTest
+final class RouteGroupTest extends BaseTestCase
 {
     protected function setUp(): void
     {

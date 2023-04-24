@@ -10,9 +10,9 @@ use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class CookiesBootloaderTest extends BaseTest
+final class CookiesBootloaderTest extends BaseTestCase
 {
     public function testCookieQueueBinding(): void
     {

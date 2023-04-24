@@ -9,7 +9,7 @@ use Spiral\Framework\Kernel;
 use Spiral\Tests\Prototype\Fixtures\TestApp;
 use Spiral\Tests\Prototype\Storage;
 
-abstract class AbstractCommandsTest extends TestCase
+abstract class AbstractCommandsTestCase extends TestCase
 {
     protected const STORE = [
         'TestClass.php',

@@ -9,7 +9,7 @@ use Spiral\Stempler\Node\Inline;
 use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Parser\Syntax\InlineSyntax;
 
-class InlineTest extends BaseTest
+class InlineTest extends BaseTestCase
 {
     protected const GRAMMARS = [
         InlineGrammar::class => InlineSyntax::class,

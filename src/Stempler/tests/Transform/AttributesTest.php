@@ -12,7 +12,7 @@ use Spiral\Stempler\Transform\Merge\ResolveImports;
 use Spiral\Stempler\Transform\Visitor\DefineAttributes;
 use Spiral\Stempler\Transform\Visitor\DefineBlocks;
 
-class AttributesTest extends BaseTest
+class AttributesTest extends BaseTestCase
 {
     public function testAggregatedAttribute(): void
     {

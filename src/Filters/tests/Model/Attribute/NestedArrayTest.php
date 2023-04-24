@@ -8,7 +8,7 @@ use Mockery as m;
 use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 
-final class NestedArrayTest extends \Spiral\Tests\Filters\Model\AttributeTest
+final class NestedArrayTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
 {
     public function testGetsValue(): void
     {

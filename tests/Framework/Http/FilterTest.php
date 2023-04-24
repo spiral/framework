@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
-use Spiral\Tests\Framework\HttpTest;
+use Spiral\Tests\Framework\HttpTestCase;
 
-final class FilterTest extends HttpTest
+final class FilterTest extends HttpTestCase
 {
     public function testValid(): void
     {

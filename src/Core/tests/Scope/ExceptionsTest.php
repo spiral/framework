@@ -9,7 +9,7 @@ use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Scope\Stub\DatetimeCarrier;
 use Spiral\Tests\Core\Scope\Stub\ExceptionConstructor;
 
-final class ExceptionsTest extends BaseTest
+final class ExceptionsTest extends BaseTestCase
 {
     public function testParentScopeResolvingCustomException(): void
     {

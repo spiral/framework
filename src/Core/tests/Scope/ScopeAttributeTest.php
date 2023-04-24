@@ -12,7 +12,7 @@ use Spiral\Core\Exception\Scope\NamedScopeDuplicationException;
 use Spiral\Tests\Core\Scope\Stub\AttrScopeFoo;
 use Spiral\Tests\Core\Scope\Stub\AttrScopeFooSingleton;
 
-final class ScopeAttributeTest extends BaseTest
+final class ScopeAttributeTest extends BaseTestCase
 {
     /**
      * Just try to make a dependency with a wrong scope.

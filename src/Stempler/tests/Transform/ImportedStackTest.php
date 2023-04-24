@@ -19,7 +19,7 @@ use Spiral\Stempler\Transform\Visitor\DefineBlocks;
 use Spiral\Stempler\Transform\Visitor\DefineHidden;
 use Spiral\Stempler\Transform\Visitor\DefineStacks;
 
-class ImportedStackTest extends BaseTest
+class ImportedStackTest extends BaseTestCase
 {
     public function testEmptyStack(): void
     {

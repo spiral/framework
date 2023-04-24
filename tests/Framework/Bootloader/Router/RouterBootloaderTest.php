@@ -18,9 +18,9 @@ use Spiral\Router\Registry\RoutePatternRegistryInterface;
 use Spiral\Router\RouteInterface;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class RouterBootloaderTest extends BaseTest
+final class RouterBootloaderTest extends BaseTestCase
 {
     public function testCoreInterfaceBinding(): void
     {

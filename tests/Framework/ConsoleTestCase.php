@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework;
 
-abstract class ConsoleTest extends BaseTest
+abstract class ConsoleTestCase extends BaseTestCase
 {
     public function tearDown(): void
     {

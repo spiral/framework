@@ -15,7 +15,7 @@ use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Stub\EnumService;
 use Spiral\Tests\Core\Stub\LightEngineDecorator;
 
-final class CommonCasesTest extends BaseTest
+final class CommonCasesTest extends BaseTestCase
 {
     public function testNotInstantiableEnum(): void
     {

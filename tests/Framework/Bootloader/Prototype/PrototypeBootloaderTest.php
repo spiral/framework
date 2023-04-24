@@ -10,10 +10,10 @@ use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Prototype\Bootloader\PrototypeBootloader;
 use Spiral\Prototype\PrototypeRegistry;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
-final class PrototypeBootloaderTest extends BaseTest
+final class PrototypeBootloaderTest extends BaseTestCase
 {
     protected function setUp(): void
     {

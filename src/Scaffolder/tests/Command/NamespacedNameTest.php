@@ -8,7 +8,7 @@ use ReflectionClass;
 use ReflectionException;
 use Throwable;
 
-class NamespacedNameTest extends AbstractCommandTest
+class NamespacedNameTest extends AbstractCommandTestCase
 {
     private const CLASS_NAME = '\\Spiral\\Tests\\Scaffolder\\App\\Controller\\Namespaced\\SampleController';
 

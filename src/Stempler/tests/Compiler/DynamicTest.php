@@ -12,7 +12,7 @@ use Spiral\Stempler\Lexer\Grammar\HTMLGrammar;
 use Spiral\Stempler\Parser\Syntax\DynamicSyntax;
 use Spiral\Stempler\Parser\Syntax\HTMLSyntax;
 
-class DynamicTest extends BaseTest
+class DynamicTest extends BaseTestCase
 {
     protected const RENDERS = [
         CoreRenderer::class,

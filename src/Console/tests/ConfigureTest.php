@@ -15,7 +15,7 @@ use Spiral\Tests\Console\Fixtures\UpdateClass;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
-class ConfigureTest extends BaseTest
+class ConfigureTest extends BaseTestCase
 {
     public const TOKENIZER_CONFIG = [
         'directories' => [__DIR__.'/../src/Command', __DIR__.'/Fixtures/'],

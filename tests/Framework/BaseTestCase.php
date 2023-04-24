@@ -7,7 +7,7 @@ namespace Spiral\Tests\Framework;
 use Spiral\App\TestApp;
 use Spiral\Core\Container;
 
-abstract class BaseTest extends \Spiral\Testing\TestCase
+abstract class BaseTestCase extends \Spiral\Testing\TestCase
 {
     public function rootDirectory(): string
     {

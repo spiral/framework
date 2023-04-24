@@ -12,7 +12,7 @@ use Spiral\Auth\Exception\AuthException;
 use Spiral\Auth\Middleware\Firewall\ExceptionFirewall;
 use Spiral\Auth\Transport\HeaderTransport;
 
-final class ExceptionFirewallTest extends BaseFirewallTest
+final class ExceptionFirewallTest extends BaseFirewallTestCase
 {
     #[DataProvider('successTokensDataProvider')]
     public function testExceptionFirewallNotThrowException(string $token): void

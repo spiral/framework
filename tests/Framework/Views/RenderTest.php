@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Views;
 
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Spiral\Views\GlobalVariablesInterface;
 use Spiral\Views\ViewsInterface;
 
-final class RenderTest extends BaseTest
+final class RenderTest extends BaseTestCase
 {
     public function testWithNullVariable(): void
     {

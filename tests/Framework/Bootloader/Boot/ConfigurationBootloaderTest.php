@@ -7,9 +7,9 @@ namespace Framework\Bootloader\Boot;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\ConfigsInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class ConfigurationBootloaderTest extends BaseTest
+final class ConfigurationBootloaderTest extends BaseTestCase
 {
     public function testConfigsInterfaceBinding(): void
     {

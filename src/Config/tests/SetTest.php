@@ -6,7 +6,7 @@ namespace Spiral\Tests\Config;
 
 use Spiral\Config\Patch\Set;
 
-class SetTest extends BaseTest
+class SetTest extends BaseTestCase
 {
     public function testPatch(): void
     {

@@ -11,7 +11,7 @@ use Spiral\Reactor\Aggregator\Enums;
 use Spiral\Reactor\Aggregator\Interfaces;
 use Spiral\Reactor\Aggregator\Traits;
 
-abstract class BaseWithElementsTest extends TestCase
+abstract class BaseWithElementsTestCase extends TestCase
 {
     public static function classesDataProvider(): \Traversable
     {

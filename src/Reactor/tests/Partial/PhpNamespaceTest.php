@@ -13,9 +13,9 @@ use Spiral\Reactor\Aggregator\Interfaces;
 use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\FileDeclaration;
 use Spiral\Reactor\Partial\PhpNamespace;
-use Spiral\Tests\Reactor\BaseWithElementsTest;
+use Spiral\Tests\Reactor\BaseWithElementsTestCase;
 
-final class PhpNamespaceTest extends BaseWithElementsTest
+final class PhpNamespaceTest extends BaseWithElementsTestCase
 {
     public function testGetName(): void
     {

@@ -12,7 +12,7 @@ use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use stdClass;
 
-final class UseCaseTest extends BaseTest
+final class UseCaseTest extends BaseTestCase
 {
     /**
      * Parent container won't be destroyed when child container is destroyed.

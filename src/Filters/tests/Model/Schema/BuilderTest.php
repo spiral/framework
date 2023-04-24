@@ -6,10 +6,10 @@ namespace Spiral\Tests\Filters\Model\Schema;
 
 use Spiral\Filters\Model\Schema\Builder;
 use Spiral\Filters\Exception\SchemaException;
-use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\NestedFilter;
 
-final class BuilderTest extends BaseTest
+final class BuilderTest extends BaseTestCase
 {
     private Builder $builder;
 

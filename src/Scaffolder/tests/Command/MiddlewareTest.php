@@ -8,7 +8,7 @@ use ReflectionClass;
 use ReflectionException;
 use Throwable;
 
-class MiddlewareTest extends AbstractCommandTest
+class MiddlewareTest extends AbstractCommandTestCase
 {
     /**
      * @throws ReflectionException

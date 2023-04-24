@@ -8,7 +8,7 @@ use Spiral\Stempler\Node\HTML\Attr;
 use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Transform\Finalizer\TrimRaw;
 
-class TrimRawTest extends BaseTest
+class TrimRawTest extends BaseTestCase
 {
     public function testNotEmpty(): void
     {

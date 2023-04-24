@@ -9,7 +9,7 @@ use ReflectionException;
 use Spiral\Prototype\Traits\PrototypeTrait;
 use Throwable;
 
-class ControllerTest extends AbstractCommandTest
+class ControllerTest extends AbstractCommandTestCase
 {
     /**
      * @throws ReflectionException

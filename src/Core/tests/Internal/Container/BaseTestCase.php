@@ -2,21 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Core\Internal;
+namespace Spiral\Tests\Core\Internal\Container;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Config;
-use Spiral\Core\Container\InjectorInterface;
-use Spiral\Core\FactoryInterface;
 use Spiral\Core\Internal\Common\Registry;
-use Spiral\Core\Internal\Factory;
-use Spiral\Core\Internal\Resolver;
+use Spiral\Core\Internal\Container;
 use Spiral\Core\Internal\Scope;
 use Spiral\Core\Internal\State;
-use Spiral\Core\ResolverInterface;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     protected Registry $constructor;
     protected Config $config;
@@ -45,26 +42,8 @@ abstract class BaseTest extends TestCase
         $binder->bindSingleton($alias, $resolver);
     }
 
-    /**
-     * @template TClass
-     *
-     * @param class-string<TClass> $class
-     * @param class-string<InjectorInterface<TClass>> $injector
-     */
-    protected function bindInjector(string $class, string $injector): void
+    protected function createContainer(): ContainerInterface
     {
-        $binder = $this->constructor->get('binder', BinderInterface::class);
-        \assert($binder instanceof BinderInterface);
-        $binder->bindInjector($class, $injector);
-    }
-
-    protected function createResolver(): ResolverInterface
-    {
-        return new Resolver($this->constructor);
-    }
-
-    protected function createFactory(): FactoryInterface
-    {
-        return new Factory($this->constructor);
+        return new Container($this->constructor);
     }
 }

@@ -11,7 +11,7 @@ use Spiral\Console\Attribute\AsCommand;
 use Spiral\Console\Attribute\Option;
 use Spiral\Console\Attribute\Question;
 
-final class CommandTest extends AbstractCommandTest
+final class CommandTest extends AbstractCommandTestCase
 {
     #[DataProvider('commandDataProvider')]
     public function testScaffold(string $className, string $name, ?string $alias, $commandName): void

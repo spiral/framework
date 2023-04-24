@@ -15,7 +15,7 @@ use Spiral\Tests\Core\Stub\EngineMarkTwo;
  * @see VariadicParameterTest::testNullableVariadicArgument()
  * @see ReferenceParameterTest::testInvokeReferencedArguments()
  */
-final class NullableParameterTest extends BaseTest
+final class NullableParameterTest extends BaseTestCase
 {
     public function testNullableDefaultNull(): void
     {

@@ -13,7 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\Middleware\Firewall\RedirectFirewall;
 use Spiral\Auth\Transport\HeaderTransport;
 
-final class RedirectFirewallTest extends BaseFirewallTest
+final class RedirectFirewallTest extends BaseFirewallTestCase
 {
     #[DataProvider('successTokensDataProvider')]
     public function testRedirectFirewallWithoutRedirect(string $token): void

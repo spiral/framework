@@ -10,7 +10,7 @@ use Spiral\Console\Event\CommandStarting;
 use Spiral\Core\Event\InterceptorCalling;
 use Spiral\Tests\Console\Fixtures\TestCommand;
 
-final class EventsTest extends BaseTest
+final class EventsTest extends BaseTestCase
 {
     public function testEventsShouldBeDispatched(): void
     {

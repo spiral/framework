@@ -12,10 +12,9 @@ use Spiral\Tests\Console\Fixtures\FailedCommand;
 use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Spiral\Tests\Console\Fixtures\TestCommand;
 use Spiral\Tests\Console\Fixtures\UpdateClass;
-use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
-class UpdateTest extends BaseTest
+class UpdateTest extends BaseTestCase
 {
     public const TOKENIZER_CONFIG = [
         'directories' => [__DIR__.'/../src/Command', __DIR__.'/Fixtures/'],

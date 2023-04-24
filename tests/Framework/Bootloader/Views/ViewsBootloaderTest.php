@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Framework\Bootloader\Views;
 
 use Spiral\Config\ConfigManager;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Spiral\Views\Bootloader\ViewsBootloader;
 use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\DependencyInterface;
@@ -17,7 +17,7 @@ use Spiral\Views\ViewLoader;
 use Spiral\Views\ViewManager;
 use Spiral\Views\ViewsInterface;
 
-final class ViewsBootloaderTest extends BaseTest
+final class ViewsBootloaderTest extends BaseTestCase
 {
     public function testViewsInterfaceBinding(): void
     {

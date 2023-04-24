@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\Middleware\Firewall\OverwriteFirewall;
 use Spiral\Auth\Transport\HeaderTransport;
 
-final class OverwriteFirewallTest extends BaseFirewallTest
+final class OverwriteFirewallTest extends BaseFirewallTestCase
 {
     #[DataProvider('successTokensDataProvider')]
     #[DataProvider('failTokensDataProvider')]
