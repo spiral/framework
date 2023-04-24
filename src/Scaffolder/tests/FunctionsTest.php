@@ -12,7 +12,7 @@ use function Spiral\Scaffolder\defineArrayType;
 class FunctionsTest extends TestCase
 {
     #[DataProvider('defineProvider')]
-    public function testDefineArrayType(array $expected, array $array, ?string $failureType): void
+    public function testDefineArrayType(?string $expected, array $array, ?string $failureType): void
     {
         $this->assertEquals($expected, defineArrayType($array, $failureType));
     }

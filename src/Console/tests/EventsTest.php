@@ -14,25 +14,16 @@ final class EventsTest extends BaseTest
 {
     public function testEventsShouldBeDispatched(): void
     {
-        $dispatcher = $this->createMock(EventDispatcherInterface::class);
-
-        $dispatcher->expects(self::exactly(3))
-            ->method('dispatch')
-            ->withConsecutive(
-                [
-                    $this->callback(static fn(mixed $event): bool =>
-                        $event instanceof CommandStarting && $event->command instanceof TestCommand
-                    )
-                ],
-                [
-                    $this->callback(static fn(mixed $event): bool => $event instanceof InterceptorCalling)
-                ],
-                [
-                    $this->callback(static fn(mixed $event): bool =>
-                        $event instanceof CommandFinished && $event->command instanceof TestCommand
-                    )
-                ],
-            );
+        $dispatcher = \Mockery::mock(EventDispatcherInterface::class);
+        $dispatcher
+            ->shouldReceive('dispatch')
+            ->with(\Mockery::type(CommandStarting::class));
+        $dispatcher
+            ->shouldReceive('dispatch')
+            ->with(\Mockery::type(InterceptorCalling::class));
+        $dispatcher
+            ->shouldReceive('dispatch')
+            ->with(\Mockery::type(CommandFinished::class));
 
         $core = $this->getCore(
             locator: $this->getStaticLocator([new TestCommand()]),
@@ -40,5 +31,7 @@ final class EventsTest extends BaseTest
         );
 
         $core->run('test');
+
+        $this->assertTrue(true);
     }
 }

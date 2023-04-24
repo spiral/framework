@@ -173,12 +173,13 @@ final class UseCaseTest extends BaseTest
      */
     public function testBindingInFewSameScopes(): void
     {
+        $factory = new Factory();
         $root = new Container();
-        $root->getBinder('scope1')->bindSingleton('foo', $this->makeStdClass(...));
+        $root->getBinder('scope1')->bindSingleton('foo', $factory->makeStdClass(...));
 
-        $getter = fn () => $root->scope(function (Container $c1): mixed {
+        $getter = fn () => $root->scope(function (Container $c1) use ($factory): mixed {
             self::assertFalse($c1->has('bar'));
-            $c1->bindSingleton('bar', $this->makeStdClass(...));
+            $c1->bindSingleton('bar', $factory->makeStdClass(...));
 
             return $c1->get('foo');
         }, name: 'scope1');
@@ -194,10 +195,11 @@ final class UseCaseTest extends BaseTest
      */
     public function testScopeBinderAffectsDefaultBindingsOnly(): void
     {
+        $factory = new Factory();
         $root = new Container();
 
-        $root->scope(function (Container $c1): void {
-            $c1->getBinder('scope1')->bindSingleton('bar', $this->makeStdClass(...));
+        $root->scope(function (Container $c1) use ($factory): void {
+            $c1->getBinder('scope1')->bindSingleton('bar', $factory->makeStdClass(...));
             self::assertFalse($c1->has('bar'));
         }, name: 'scope1');
 
