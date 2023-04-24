@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container;
 use Spiral\Tests\Core\Fixtures\DeclarativeSingleton;
+use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 
 use Spiral\Tests\Core\Fixtures\SingletonAttribute;
@@ -82,7 +83,7 @@ class SingletonsTest extends TestCase
     {
         $container = new Container();
 
-        $container->bindSingleton('sampleClass', [self::class, 'sampleClass']);
+        $container->bindSingleton('sampleClass', [Factory::class, 'sampleClass']);
 
         $instance = $container->get('sampleClass');
 
@@ -119,10 +120,10 @@ class SingletonsTest extends TestCase
         $this->assertSame($instance, $container->make('sampleClass'));
     }
 
-    public static function SingletonWithCustomArgsProvider(): iterable
+    public static function singletonWithCustomArgsProvider(): iterable
     {
         static $obj = new \stdClass();
-        yield 'array-factory' => ['sampleClass', [self::class, 'sampleClass']];
+        yield 'array-factory' => ['sampleClass', [Factory::class, 'sampleClass']];
         yield 'class-name' => ['sampleClass', SampleClass::class];
         yield 'reference-existing' => ['stdClass', \WeakReference::create($obj)];
     }

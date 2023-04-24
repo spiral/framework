@@ -22,9 +22,4 @@ abstract class BaseTest extends TestCase
         self::assertEmpty($this->weakMap, 'Weak map is not empty.');
         parent::tearDown();
     }
-
-    public function makeStdClass(array $params = []): \stdClass
-    {
-        return (object)$params;
-    }
 }

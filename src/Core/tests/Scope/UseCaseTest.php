@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
+use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use stdClass;
 
@@ -65,7 +66,7 @@ final class UseCaseTest extends BaseTest
 
     public static function provideScopeBindingsAsNotSingletons(): iterable
     {
-        yield 'array-factory' => [false, 'foo', [self::class, 'makeStdClass']];
+        yield 'array-factory' => [false, 'foo', [Factory::class, 'makeStdClass']];
         yield 'class-name' => [false, SampleClass::class, SampleClass::class];
         yield 'object' => [true, stdClass::class, new stdClass()];
     }
@@ -93,11 +94,11 @@ final class UseCaseTest extends BaseTest
                 self::assertNotSame($c1, $c2);
                 self::assertInstanceOf(stdClass::class, $obj2);
                 self::assertNotSame($obj1, $obj2);
-            }, bindings: ['foo' => [self::class, 'makeStdClass']]);
+            }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
 
             // $obj2 should be garbage collected
             self::assertCount(1, $this->weakMap);
-        }, bindings: ['foo' => [self::class, 'makeStdClass']]);
+        }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
 
         // $obj1 should be garbage collected
         self::assertEmpty($this->weakMap);
@@ -111,7 +112,7 @@ final class UseCaseTest extends BaseTest
     public function testChildContainerResolvesDepsFromParent(): void
     {
         $root = new Container();
-        $root->bindSingleton('bar', [self::class, 'makeStdClass']);
+        $root->bindSingleton('bar', [Factory::class, 'makeStdClass']);
         $root->bind(stdClass::class, new stdClass());
 
         $root->scope(function (ContainerInterface $c1) use ($root) {
@@ -135,7 +136,7 @@ final class UseCaseTest extends BaseTest
                     "Nested container mustn't create new instance using class name as key without definition."
                 );
             });
-        }, bindings: ['foo' => [self::class, 'makeStdClass']]);
+        }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
     }
 
     /**
