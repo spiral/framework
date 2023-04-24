@@ -22,7 +22,6 @@
     </logging>
     <testsuites>
         <testsuite name="Components Test Suite">
-            <directory>src/*/tests</directory>
             <directory suffix="Test.php">src/*/tests</directory>
         </testsuite>
         <testsuite name="Framework Test Suite">

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Translator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Translator\Matcher;
 
