@@ -1,29 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
          bootstrap="vendor/autoload.php"
-         backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         verbose="false"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
+         backupGlobals="false" colors="true"
          processIsolation="false"
          failOnRisky="false"
          stopOnFailure="false"
          stopOnError="false"
-         stderr="true">
-    <coverage>
-        <include>
-            <directory>src</directory>
-            <directory>src/*/src</directory>
-        </include>
-        <exclude>
-            <directory>src/*/tests</directory>
-            <directory>tests</directory>
-        </exclude>
-    </coverage>
+         stderr="true"
+         cacheDirectory=".phpunit.cache"
+         backupStaticProperties="false">
+    <coverage/>
     <testsuites>
         <testsuite name="Components Test Suite">
             <directory>src/*/tests</directory>
@@ -37,4 +24,14 @@
         <ini name="error_reporting" value="-1"/>
         <ini name="memory_limit" value="-1"/>
     </php>
+    <source>
+        <include>
+            <directory>src</directory>
+            <directory>src/*/src</directory>
+        </include>
+        <exclude>
+            <directory>src/*/tests</directory>
+            <directory>tests</directory>
+        </exclude>
+    </source>
 </phpunit>
