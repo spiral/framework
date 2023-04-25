@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Http;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
-use Spiral\Tests\Framework\HttpTest;
+use Spiral\Tests\Framework\HttpTestCase;
 
-final class ControllerTest extends HttpTest
+final class ControllerTest extends HttpTestCase
 {
     public function testIndexAction(): void
     {

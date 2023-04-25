@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Exceptions\Renderer;
 
-use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\TestCase;
 use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\JsonRenderer;
@@ -16,32 +15,19 @@ class RendererTest extends TestCase
     {
         $handler = new ConsoleRenderer();
 
-        $this->assertStringContainsString('Error', $handler->render(new Error(
+        $this->assertStringContainsString('Error', $handler->render(new \Error(
             'message',
             100,
-            __FILE__,
-            __LINE__
         )));
 
-        $this->assertStringContainsString('message', $handler->render(new Error(
+        $this->assertStringContainsString('message', $handler->render(new \Error(
             'message',
             100,
-            __FILE__,
-            __LINE__
         )));
 
-        $this->assertStringContainsString('RendererTest.php', $handler->render(new Error(
+        $this->assertStringContainsString('RendererTest.php', $handler->render(new \Error(
             'message',
             100,
-            __FILE__,
-            __LINE__
-        )));
-
-        $this->assertStringContainsString('100', $handler->render(new Error(
-            'message',
-            100,
-            __FILE__,
-            100
         )));
     }
 
@@ -50,11 +36,9 @@ class RendererTest extends TestCase
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(false);
 
-        $result = $handler->render(new Error(
+        $result = $handler->render(new \Error(
             'message',
             100,
-            __FILE__,
-            __LINE__
         ), \Spiral\Exceptions\Verbosity::BASIC);
 
         $this->assertStringContainsString('Error', $result);
@@ -98,11 +82,9 @@ class RendererTest extends TestCase
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
 
-        $result = $handler->render(new Error(
+        $result = $handler->render(new \Error(
             'message',
             100,
-            __FILE__,
-            __LINE__
         ), \Spiral\Exceptions\Verbosity::BASIC);
 
         $this->assertStringContainsString('Error', $result);
@@ -118,11 +100,9 @@ class RendererTest extends TestCase
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
 
-        $result = $handler->render(new Error(
+        $result = $handler->render(new \Error(
             'message',
             100,
-            __FILE__,
-            __LINE__
         ), \Spiral\Exceptions\Verbosity::DEBUG);
 
         $this->assertStringContainsString('Error', $result);

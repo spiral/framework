@@ -10,7 +10,7 @@ use Spiral\Core\Container;
 use Spiral\Validation\ValidationInterface;
 use Spiral\Validation\ValidationProvider;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     protected ContainerInterface $container;
 

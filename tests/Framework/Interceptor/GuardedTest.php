@@ -12,9 +12,9 @@ use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\InterceptorException;
 use Spiral\Security\Actor\Actor;
 use Spiral\Security\ActorInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class GuardedTest extends BaseTest
+final class GuardedTest extends BaseTestCase
 {
     private function getCore(): CoreInterface
     {

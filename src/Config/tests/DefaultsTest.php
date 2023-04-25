@@ -7,7 +7,7 @@ namespace Spiral\Tests\Config;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\ConfiguratorException;
 
-class DefaultsTest extends BaseTest
+class DefaultsTest extends BaseTestCase
 {
     public function testGetNonExistedByDefaultConfig(): void
     {

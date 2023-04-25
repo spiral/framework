@@ -7,7 +7,7 @@ namespace Spiral\Tests\Stempler\Grammar;
 use Spiral\Stempler\Lexer\Grammar\HTMLGrammar;
 use Spiral\Stempler\Lexer\Token;
 
-class HTMLTest extends BaseTest
+class HTMLTest extends BaseTestCase
 {
     protected const GRAMMARS = [HTMLGrammar::class];
 

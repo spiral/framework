@@ -38,7 +38,7 @@ final class ContainerRegistryT extends TestCase
     public function testGetsHandlerWithWrongInterface(): void
     {
         $this->expectException(JobException::class);
-        $this->expectErrorMessage('Unable to resolve job handler for `mail.job`');
+        $this->expectExceptionMessage('Unable to resolve job handler for `mail.job`');
 
         $this->container->shouldReceive('get')
             ->with('Mail\Job')
@@ -50,7 +50,7 @@ final class ContainerRegistryT extends TestCase
     public function testGetsNotExistsHandler(): void
     {
         $this->expectException(JobException::class);
-        $this->expectErrorMessage("Undefined class or binding 'Mail\Job'");
+        $this->expectExceptionMessage("Undefined class or binding 'Mail\Job'");
 
         $this->container->shouldReceive('get')
             ->with('Mail\Job')

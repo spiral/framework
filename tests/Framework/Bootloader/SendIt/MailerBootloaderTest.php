@@ -12,13 +12,13 @@ use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\TransportRegistryInterface;
 use Spiral\SendIt\TransportResolver;
 use Spiral\SendIt\TransportResolverInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mailer\Transport\Smtp\SmtpTransport;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 
-final class MailerBootloaderTest extends BaseTest
+final class MailerBootloaderTest extends BaseTestCase
 {
     public const ENV = [
         'MAILER_DSN' => 'smtp://user:pass@smtp.example.com:25',

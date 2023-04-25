@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Reactor;
 
 use Nette\PhpGenerator\PhpFile;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Reactor\Aggregator\Classes;
 use Spiral\Reactor\Aggregator\Elements;
 use Spiral\Reactor\Aggregator\Enums;
@@ -13,7 +14,7 @@ use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\ClassDeclaration;
 use Spiral\Reactor\FileDeclaration;
 
-final class FileDeclarationTest extends BaseWithElementsTest
+final class FileDeclarationTest extends BaseWithElementsTestCase
 {
     public function testFromCode(): void
     {
@@ -158,47 +159,37 @@ final class FileDeclarationTest extends BaseWithElementsTest
         $this->assertInstanceOf(PhpFile::class, $element);
     }
 
-    /**
-     * @dataProvider classesDataProvider
-     */
+    #[DataProvider('classesDataProvider')]
     public function testGetClasses(FileDeclaration $file, Classes $expected): void
     {
         $this->assertEquals($file->getClasses(), $expected);
     }
 
-    /**
-     * @dataProvider interfacesDataProvider
-     */
+    #[DataProvider('interfacesDataProvider')]
     public function testGetInterfaces(FileDeclaration $file, Interfaces $expected): void
     {
         $this->assertEquals($file->getInterfaces(), $expected);
     }
 
-    /**
-     * @dataProvider traitsDataProvider
-     */
+    #[DataProvider('traitsDataProvider')]
     public function testGetTraits(FileDeclaration $file, Traits $expected): void
     {
         $this->assertEquals($file->getTraits(), $expected);
     }
 
-    /**
-     * @dataProvider enumsDataProvider
-     */
+    #[DataProvider('enumsDataProvider')]
     public function testGetEnums(FileDeclaration $file, Enums $expected): void
     {
         $this->assertEquals($file->getEnums(), $expected);
     }
 
-    /**
-     * @dataProvider elementsDataProvider
-     */
+    #[DataProvider('elementsDataProvider')]
     public function testGetElements(FileDeclaration $file, Elements $expected): void
     {
         $this->assertEquals($file->getElements(), $expected);
     }
 
-    protected function getTestedClass(): string
+    protected static function getTestedClass(): string
     {
         return FileDeclaration::class;
     }

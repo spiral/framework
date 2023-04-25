@@ -13,7 +13,7 @@ use Spiral\Tests\Core\Stub\NewObjectInParam;
 use Spiral\Tests\Core\Stub\TestTrait;
 use stdClass;
 
-final class CommonCasesTest extends BaseTest
+final class CommonCasesTest extends BaseTestCase
 {
     public function testEmptySignature(): void
     {

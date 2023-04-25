@@ -11,9 +11,9 @@ use Spiral\Filters\Model\FilterBag;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\Interceptor\PopulateDataFromEntityInterceptor;
 use Spiral\Models\AbstractEntity;
-use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\BaseTestCase;
 
-final class PopulateDataFromEntityInterceptorTest extends BaseTest
+final class PopulateDataFromEntityInterceptorTest extends BaseTestCase
 {
     private PopulateDataFromEntityInterceptor $interceptor;
 

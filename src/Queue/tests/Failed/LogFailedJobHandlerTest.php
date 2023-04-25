@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Failed;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Exceptions\ExceptionReporterInterface;
 use Spiral\Queue\Failed\LogFailedJobHandler;
 use Spiral\Tests\Queue\TestCase;
 
 final class LogFailedJobHandlerTest extends TestCase
 {
-    /**
-     * @dataProvider PayloadDataProvider
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testHandle(mixed $payload): void
     {
         $handler = new LogFailedJobHandler(
@@ -27,7 +26,7 @@ final class LogFailedJobHandlerTest extends TestCase
         $handler->handle('foo', 'bar', 'baz', $payload, $e);
     }
 
-    public function PayloadDataProvider(): \Traversable
+    public static function payloadDataProvider(): \Traversable
     {
         yield [['baz' => 'baf']];
         yield [new \stdClass()];

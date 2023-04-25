@@ -34,7 +34,7 @@
     },
     "require-dev": {
         "spiral/boot": "^3.8",
-        "phpunit/phpunit": "^9.5.20",
+        "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^5.9"
     },

@@ -8,9 +8,9 @@ use Spiral\Scaffolder\Bootloader\ScaffolderBootloader;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
 use Spiral\Scaffolder\Declaration\BootloaderDeclaration;
 use Spiral\Scaffolder\Exception\ScaffolderException;
-use Spiral\Tests\Scaffolder\BaseTest;
+use Spiral\Tests\Scaffolder\BaseTestCase;
 
-class ScaffolderConfigTest extends BaseTest
+class ScaffolderConfigTest extends BaseTestCase
 {
     public function testDefaultBaseNamespace(): void
     {

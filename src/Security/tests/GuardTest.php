@@ -40,8 +40,17 @@ class GuardTest extends TestCase
     public function testAllows(): void
     {
         $this->permission->method('hasRole')
-            ->withConsecutive(['user'], ['admin'])
-            ->willReturnOnConsecutiveCalls(false, true);
+            ->willReturnCallback(function (...$args) {
+                static $series = [
+                    [['user'], false],
+                    [['admin'], true],
+                ];
+
+                [$expectedArgs, $return] = \array_shift($series);
+                self::assertSame($expectedArgs, $args);
+
+                return $return;
+            });
 
         $rule = $this->createMock(RuleInterface::class);
         $rule->expects($this->once())

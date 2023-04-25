@@ -15,7 +15,7 @@ final class CallableJobTest extends TestCase
     public function testPayloadCallbackKeyIsRequired(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Payload `callback` key is required.');
+        $this->expectExceptionMessage('Payload `callback` key is required.');
 
         $job = new CallableJob(new Container());
         $job->handle('foo', 'foo-id', []);
@@ -24,7 +24,7 @@ final class CallableJobTest extends TestCase
     public function testPayloadCallbackValueShouldBeClosure(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Payload `callback` key value type should be a closure.');
+        $this->expectExceptionMessage('Payload `callback` key value type should be a closure.');
 
         $job = new CallableJob(new Container());
         $job->handle('foo', 'foo-id', ['callback' => 'test']);

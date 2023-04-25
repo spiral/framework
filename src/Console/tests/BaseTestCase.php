@@ -15,7 +15,7 @@ use Spiral\Tests\Console\Fixtures\User\UserCommand;
 use Spiral\Core\Container;
 use Spiral\Tokenizer\ScopedClassesInterface;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     public const TOKENIZER_CONFIG = [
         'directories' => [__DIR__ . '/Fixtures/'],

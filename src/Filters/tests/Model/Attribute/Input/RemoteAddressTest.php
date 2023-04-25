@@ -6,7 +6,7 @@ namespace Spiral\Tests\Filters\Model\Attribute\Input;
 
 use Spiral\Filters\Attribute\Input\RemoteAddress;
 
-final class RemoteAddressTest extends \Spiral\Tests\Filters\Model\AttributeTest
+final class RemoteAddressTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
 {
     public function testGetsValue(): void
     {

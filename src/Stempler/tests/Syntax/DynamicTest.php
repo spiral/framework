@@ -10,7 +10,7 @@ use Spiral\Stempler\Node\Dynamic\Output;
 use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Parser\Syntax\DynamicSyntax;
 
-class DynamicTest extends BaseTest
+class DynamicTest extends BaseTestCase
 {
     protected const GRAMMARS = [
         DynamicGrammar::class => DynamicSyntax::class,

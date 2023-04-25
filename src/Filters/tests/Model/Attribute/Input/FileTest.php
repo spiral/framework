@@ -8,7 +8,7 @@ use Mockery as m;
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Filters\Attribute\Input\File;
 
-final class FileTest extends \Spiral\Tests\Filters\Model\AttributeTest
+final class FileTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
 {
     public function testGetsValueForDefinedKey(): void
     {

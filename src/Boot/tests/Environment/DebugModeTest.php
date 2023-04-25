@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Boot\Environment;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Environment\DebugMode;
 use Spiral\Boot\EnvironmentInterface;
@@ -22,7 +23,7 @@ final class DebugModeTest extends TestCase
         $this->assertSame(DebugMode::Disabled, $enum);
     }
 
-    /** @dataProvider envVariablesDataProvider */
+    #[DataProvider('envVariablesDataProvider')]
     public function testDetectWithWrongEnvironmentVariable($name, DebugMode $expected): void
     {
         $env = m::mock(EnvironmentInterface::class);
@@ -40,17 +41,15 @@ final class DebugModeTest extends TestCase
         }
     }
 
-    public function envVariablesDataProvider()
+    public static function envVariablesDataProvider(): \Traversable
     {
-        return [
-            [true, DebugMode::Enabled],
-            ['true', DebugMode::Enabled],
-            ['1', DebugMode::Enabled],
-            ['on', DebugMode::Enabled],
-            ['false', DebugMode::Disabled],
-            ['0', DebugMode::Disabled],
-            ['off', DebugMode::Disabled],
-            [false, DebugMode::Disabled],
-        ];
+        yield [true, DebugMode::Enabled];
+        yield ['true', DebugMode::Enabled];
+        yield ['1', DebugMode::Enabled];
+        yield ['on', DebugMode::Enabled];
+        yield ['false', DebugMode::Disabled];
+        yield ['0', DebugMode::Disabled];
+        yield ['off', DebugMode::Disabled];
+        yield [false, DebugMode::Disabled];
     }
 }

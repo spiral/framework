@@ -12,7 +12,7 @@ use Spiral\Stempler\Node\HTML\Verbatim;
 use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Parser\Syntax\HTMLSyntax;
 
-class HTMLTest extends BaseTest
+class HTMLTest extends BaseTestCase
 {
     protected const GRAMMARS = [
         HTMLGrammar::class => HTMLSyntax::class,

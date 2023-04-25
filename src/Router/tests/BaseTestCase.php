@@ -29,7 +29,7 @@ use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Stub\TestLoader;
 use Spiral\Tests\Router\Stub\TestMiddleware;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     protected Container $container;
     protected Router $router;
@@ -64,7 +64,7 @@ abstract class BaseTest extends TestCase
         return $r->getProperty($property)->getValue($object);
     }
 
-    protected function middlewaresDataProvider(): \Traversable
+    public static function middlewaresDataProvider(): \Traversable
     {
         yield [TestMiddleware::class];
         yield [new TestMiddleware()];

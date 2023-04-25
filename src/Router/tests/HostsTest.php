@@ -10,7 +10,7 @@ use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Nyholm\Psr7\ServerRequest;
 
-class HostsTest extends BaseTest
+class HostsTest extends BaseTestCase
 {
     public function testRouteException(): void
     {

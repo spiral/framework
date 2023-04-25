@@ -20,7 +20,7 @@ use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 use Spiral\Tests\Auth\Stub\TestAuthHttpToken;
 
-class CookieTransportTest extends BaseTest
+class CookieTransportTest extends BaseTestCase
 {
     public function testCookieToken(): void
     {

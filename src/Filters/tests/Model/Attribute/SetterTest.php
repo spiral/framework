@@ -6,7 +6,7 @@ namespace Spiral\Tests\Filters\Model\Attribute;
 
 use Spiral\Filters\Attribute\Setter;
 
-final class SetterTest extends \Spiral\Tests\Filters\Model\AttributeTest
+final class SetterTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
 {
     public function testFilter(): void
     {

@@ -6,7 +6,7 @@ namespace Spiral\Tests\Stempler\Compiler;
 
 use Spiral\Stempler\Compiler\Renderer\CoreRenderer;
 
-class RawTest extends BaseTest
+class RawTest extends BaseTestCase
 {
     protected const RENDERS = [
         CoreRenderer::class,

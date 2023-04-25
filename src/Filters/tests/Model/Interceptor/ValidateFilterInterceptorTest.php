@@ -15,12 +15,12 @@ use Spiral\Filters\Model\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\Model\ShouldBeValidated;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Models\AbstractEntity;
-use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Validation\ValidationInterface;
 use Spiral\Validation\ValidationProviderInterface;
 use Spiral\Validation\ValidatorInterface;
 
-final class ValidateFilterInterceptorTest extends BaseTest
+final class ValidateFilterInterceptorTest extends BaseTestCase
 {
     private ValidateFilterInterceptor $interceptor;
     private m\MockInterface $validationProvider;

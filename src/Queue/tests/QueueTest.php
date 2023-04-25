@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Core\CoreInterface;
 use Spiral\Queue\Options;
 use Spiral\Queue\Queue;
 
 final class QueueTest extends TestCase
 {
-    /**
-     * @dataProvider pushDataProvider
-     */
+    #[DataProvider('pushDataProvider')]
     public function testPush(mixed $payload, mixed $options): void
     {
         $queue = new Queue(
@@ -32,7 +31,7 @@ final class QueueTest extends TestCase
         $this->assertSame('task-id', $id);
     }
 
-    public function pushDataProvider(): \Traversable
+    public static function pushDataProvider(): \Traversable
     {
         yield ['some string', new Options()];
         yield [123, new Options()];

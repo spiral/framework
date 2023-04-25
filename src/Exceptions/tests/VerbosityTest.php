@@ -2,6 +2,7 @@
 
 namespace Spiral\Tests\Exceptions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Exceptions\Verbosity;
@@ -9,7 +10,7 @@ use Mockery as m;
 
 final class VerbosityTest extends TestCase
 {
-    /** @dataProvider envVariablesDataProvider */
+    #[DataProvider('envVariablesDataProvider')]
     public function testDetectEnvironmentVariable($name, Verbosity $expected): void
     {
         $env = m::mock(EnvironmentInterface::class);
@@ -24,19 +25,17 @@ final class VerbosityTest extends TestCase
         $this->assertSame($expected, $enum);
     }
 
-    public function envVariablesDataProvider(): array
+    public static function envVariablesDataProvider(): \Traversable
     {
-        return [
-            ['basic', Verbosity::BASIC],
-            [0, Verbosity::BASIC],
-            ['Basic', Verbosity::BASIC],
-            ['debug', Verbosity::DEBUG],
-            [2, Verbosity::DEBUG],
-            ['invalid', Verbosity::VERBOSE],
-            ['', Verbosity::VERBOSE],
-            [null, Verbosity::VERBOSE],
-            [true, Verbosity::VERBOSE],
-            [false, Verbosity::VERBOSE],
-        ];
+        yield ['basic', Verbosity::BASIC];
+        yield [0, Verbosity::BASIC];
+        yield ['Basic', Verbosity::BASIC];
+        yield ['debug', Verbosity::DEBUG];
+        yield [2, Verbosity::DEBUG];
+        yield ['invalid', Verbosity::VERBOSE];
+        yield ['', Verbosity::VERBOSE];
+        yield [null, Verbosity::VERBOSE];
+        yield [true, Verbosity::VERBOSE];
+        yield [false, Verbosity::VERBOSE];
     }
 }

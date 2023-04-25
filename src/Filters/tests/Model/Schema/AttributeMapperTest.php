@@ -18,9 +18,9 @@ use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Schema\AttributeMapper;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
-use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\BaseTestCase;
 
-final class AttributeMapperTest extends BaseTest
+final class AttributeMapperTest extends BaseTestCase
 {
     private m\LegacyMockInterface|m\MockInterface|FilterProviderInterface $provider;
     private AttributeMapper $mapper;

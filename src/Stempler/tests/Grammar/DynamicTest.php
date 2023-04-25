@@ -8,7 +8,7 @@ use Spiral\Stempler\Lexer\Grammar\Dynamic\DeclareGrammar;
 use Spiral\Stempler\Lexer\Grammar\DynamicGrammar;
 use Spiral\Stempler\Lexer\Token;
 
-class DynamicTest extends BaseTest
+class DynamicTest extends BaseTestCase
 {
     protected const GRAMMARS = [DynamicGrammar::class];
 

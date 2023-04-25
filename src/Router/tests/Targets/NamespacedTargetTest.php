@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router\Targets;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Router\Exception\ConstrainException;
 use Spiral\Router\Route;
@@ -74,13 +75,7 @@ class NamespacedTargetTest extends TestCase
         $this->assertSame(['controller' => 'other', 'action' => 'action'], $match->getMatches());
     }
 
-    /**
-     * @dataProvider defaultProvider
-     *
-     * @param string $pattern
-     * @param string $uri
-     * @param array $defaults
-     */
+    #[DataProvider('defaultProvider')]
     public function testDefaults(string $pattern, string $uri, array $defaults): void
     {
         $route = new Route($pattern, new Namespaced('Spiral\Router\Fixtures'), $defaults);
@@ -96,23 +91,21 @@ class NamespacedTargetTest extends TestCase
         $this->assertNotNull($values['action']);
     }
 
-    public function defaultProvider(): array
+    public static function defaultProvider(): \Traversable
     {
-        return [
-            ['<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']],
-            ['<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']],
-            ['/<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']],
-            ['/<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']],
+        yield ['<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']];
+        yield ['<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']];
+        yield ['/<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']];
+        yield ['/<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']];
 
-            ['[<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']],
-            ['[<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']],
-            ['[<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']],
-            ['[<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']],
+        yield ['[<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']];
+        yield ['[<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']];
+        yield ['[<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']];
+        yield ['[<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']];
 
-            ['[/<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']],
-            ['[/<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']],
-            ['[/<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']],
-            ['[/<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']],
-        ];
+        yield ['[/<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']];
+        yield ['[/<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']];
+        yield ['[/<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']];
+        yield ['[/<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']];
     }
 }

@@ -7,7 +7,7 @@ namespace Spiral\Tests\Core\Scope;
 use PHPUnit\Framework\TestCase;
 use WeakMap;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     public WeakMap $weakMap;
 
@@ -21,10 +21,5 @@ abstract class BaseTest extends TestCase
     {
         self::assertEmpty($this->weakMap, 'Weak map is not empty.');
         parent::tearDown();
-    }
-
-    public function makeStdClass(array $params = []): \stdClass
-    {
-        return (object)$params;
     }
 }

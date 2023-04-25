@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Security;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\ResolverInterface;
 use Spiral\Security\ActorInterface;
@@ -41,17 +42,11 @@ class RuleTest extends TestCase
         $this->resolver = $this->createMock(ResolverInterface::class);
         $this->rule = $this->getMockBuilder(Rule::class)
             ->setConstructorArgs([$this->resolver])
-            ->setMethods(['check'])->getMock();
+            ->addMethods(['check'])->getMock();
     }
 
-    /**
-     * @param $permission
-     * @param $context
-     * @param $allowed
-     *
-     * @dataProvider allowsProvider
-     */
-    public function testAllows($permission, $context, $allowed): void
+    #[DataProvider('allowsProvider')]
+    public function testAllows(string $permission, array $context, bool $allowed): void
     {
         $parameters = [
                 'actor'      => $this->actor,
@@ -82,16 +77,11 @@ class RuleTest extends TestCase
         $this->rule->allows($this->actor, static::OPERATION, static::CONTEXT);
     }
 
-    /**
-     * @return array
-     */
-    public function allowsProvider()
+    public static function allowsProvider(): \Traversable
     {
-        return [
-            ['test.create', [], false],
-            ['test.create', [], true],
-            ['test.create', ['a' => 'b'], false],
-            ['test.create', ['a' => 'b'], true],
-        ];
+        yield ['test.create', [], false];
+        yield ['test.create', [], true];
+        yield ['test.create', ['a' => 'b'], false];
+        yield ['test.create', ['a' => 'b'], true];
     }
 }

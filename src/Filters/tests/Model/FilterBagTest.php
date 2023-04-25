@@ -8,9 +8,9 @@ use Mockery as m;
 use Spiral\Filters\Model\FilterBag;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Models\AbstractEntity;
-use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\BaseTestCase;
 
-final class FilterBagTest extends BaseTest
+final class FilterBagTest extends BaseTestCase
 {
     public function testBagShouldBeCreated(): void
     {

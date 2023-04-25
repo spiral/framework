@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
+use PHPUnit\Framework\Attributes\Group;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\FinalizersException;
 use Spiral\Tests\Core\Scope\Stub\AttrFinalize;
@@ -11,7 +12,7 @@ use Spiral\Tests\Core\Scope\Stub\AttrScopeFooFinalize;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 
-final class FinalizeAttributeTest extends BaseTest
+final class FinalizeAttributeTest extends BaseTestCase
 {
     /**
      * Finalizer from a attribute should be registered and called when a related scope is destroyed.
@@ -115,6 +116,7 @@ final class FinalizeAttributeTest extends BaseTest
         self::assertInstanceOf(LoggerInterface::class, $obj->logger);
     }
 
+    #[Group('scrutinizer-ignore')]
     public function testExceptionOnDestroy()
     {
         $root = new Container();
@@ -143,6 +145,7 @@ final class FinalizeAttributeTest extends BaseTest
         }
     }
 
+    #[Group('scrutinizer-ignore')]
     public function testManyExceptionsOnDestroy()
     {
         $root = new Container();

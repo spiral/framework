@@ -24,24 +24,24 @@ class Params
     }
 
     private function paramsSource(
-        Test $t1,
-        Test $t4,
+        Some $t1,
+        Some $t4,
         ?TestAlias $a1,
-        SubFolder\Test $st = null,
+        SubFolder\Some $st = null,
         string $str = 'value'
     ): void {
     }
 
     private function paramsSource2(
-        Test $t1,
-        Test $t4,
+        Some $t1,
+        Some $t4,
         ?TestAlias $a1,
-        SubFolder\Test $st = null,
+        SubFolder\Some $st = null,
         string $t2 = 'value'
     ): void {
     }
 
-    private function paramsSource3(Test $t, Test $t4, ?TestAlias $a1, SubFolder\Test $st = null): void
+    private function paramsSource3(Some $t, Some $t4, ?TestAlias $a1, SubFolder\Some $st = null): void
     {
     }
 }

@@ -6,9 +6,9 @@ namespace Framework\Filter;
 
 use Spiral\Filter\JsonErrorsRenderer;
 use Spiral\Http\ResponseWrapper;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class JsonErrorsRendererTest extends BaseTest
+final class JsonErrorsRendererTest extends BaseTestCase
 {
     public function testRender(): void
     {

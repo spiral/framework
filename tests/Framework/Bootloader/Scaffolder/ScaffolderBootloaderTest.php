@@ -13,9 +13,9 @@ use Spiral\Config\LoaderInterface;
 use Spiral\Scaffolder\Bootloader\ScaffolderBootloader;
 use Spiral\Scaffolder\Declaration;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class ScaffolderBootloaderTest extends BaseTest
+final class ScaffolderBootloaderTest extends BaseTestCase
 {
     public function testSlugifyInterfaceBinding(): void
     {

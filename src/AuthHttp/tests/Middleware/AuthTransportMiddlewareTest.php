@@ -12,11 +12,11 @@ use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\ScopeInterface;
-use Spiral\Tests\Auth\BaseTest;
+use Spiral\Tests\Auth\BaseTestCase;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
-final class AuthTransportMiddlewareTest extends BaseTest
+final class AuthTransportMiddlewareTest extends BaseTestCase
 {
     protected function setUp(): void
     {

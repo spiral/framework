@@ -19,7 +19,7 @@ use stdClass;
  * @see ReferenceParameterTest::testInvokeReferencedArguments()
  * @see TypeIntersectionParameterTest::testVariadicTypeIntersectionParameterAndUnnamedArguments()
  */
-final class VariadicParameterTest extends BaseTest
+final class VariadicParameterTest extends BaseTestCase
 {
     /**
      * A values collection for a variadic parameter can be passed as an array in a named argument.

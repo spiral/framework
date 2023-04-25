@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Http;
 
 use Spiral\Session\SessionInterface;
-use Spiral\Tests\Framework\HttpTest;
+use Spiral\Tests\Framework\HttpTestCase;
 
-final class SessionTest extends HttpTest
+final class SessionTest extends HttpTestCase
 {
     public function setUp(): void
     {

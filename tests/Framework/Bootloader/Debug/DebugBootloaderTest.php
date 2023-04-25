@@ -7,9 +7,9 @@ namespace Framework\Bootloader\Debug;
 use Spiral\Debug\State;
 use Spiral\Debug\StateCollector\EnvironmentCollector;
 use Spiral\Debug\StateInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class DebugBootloaderTest extends BaseTest
+final class DebugBootloaderTest extends BaseTestCase
 {
     public function testEnvironmentCollectorBinding(): void
     {

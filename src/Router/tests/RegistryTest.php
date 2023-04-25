@@ -10,7 +10,7 @@ use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\UriHandler;
 
-final class RegistryTest extends BaseTest
+final class RegistryTest extends BaseTestCase
 {
     public function testSameGroup(): void
     {

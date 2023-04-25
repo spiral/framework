@@ -6,14 +6,14 @@ namespace Spiral\Tests\Framework\Views;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\Tests\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTestCase;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @covers \Spiral\Command\Views\ResetCommand
  * @covers \Spiral\Command\Views\CompileCommand
  */
-final class CompileTest extends ConsoleTest
+final class CompileTest extends ConsoleTestCase
 {
     public int $defaultVerbosityLevel = OutputInterface::VERBOSITY_DEBUG;
 

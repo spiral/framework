@@ -9,9 +9,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-abstract class FilterTestCase extends BaseTest
+abstract class FilterTestCase extends BaseTestCase
 {
     /**
      * @template T of FilterInterface

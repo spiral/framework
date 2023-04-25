@@ -6,6 +6,7 @@ namespace Spiral\Tests\Cache;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
@@ -149,9 +150,7 @@ final class CacheManagerTest extends TestCase
         $this->assertSame('news_', (new \ReflectionProperty($news, 'prefix'))->getValue($news));
     }
 
-    /**
-     * @dataProvider prefixesDataProvider
-     */
+    #[DataProvider('prefixesDataProvider')]
     public function testGetStorageByAliasWithPrefix(string $alias, ?string $expectedPrefix): void
     {
         $storage = m::mock(CacheInterface::class);
@@ -212,7 +211,7 @@ final class CacheManagerTest extends TestCase
         );
     }
 
-    public function prefixesDataProvider(): \Traversable
+    public static function prefixesDataProvider(): \Traversable
     {
         yield ['blog-data', 'blog_'];
         yield ['store-data', null];

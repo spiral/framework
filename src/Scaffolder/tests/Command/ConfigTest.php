@@ -9,7 +9,7 @@ use ReflectionException;
 use Symfony\Component\Console\Input\StringInput;
 use Throwable;
 
-class ConfigTest extends AbstractCommandTest
+class ConfigTest extends AbstractCommandTestCase
 {
     /**
      * @throws ReflectionException

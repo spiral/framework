@@ -6,7 +6,7 @@ namespace Spiral\Tests\Stempler\Directive;
 
 use Spiral\Stempler\Directive\ConditionalDirective;
 
-class ConditionalTest extends BaseTest
+class ConditionalTest extends BaseTestCase
 {
     protected const DIRECTIVES = [
         ConditionalDirective::class

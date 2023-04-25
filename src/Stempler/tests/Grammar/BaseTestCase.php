@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Stempler\Lexer\Lexer;
 use Spiral\Stempler\Lexer\StringStream;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     protected const GRAMMARS = [];
 

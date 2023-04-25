@@ -7,9 +7,9 @@ namespace Spiral\Tests\Router\Loader\Configurator;
 use Spiral\Router\Loader\Configurator\RouteConfigurator;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 use Spiral\Router\RouteCollection;
-use Spiral\Tests\Router\BaseTest;
+use Spiral\Tests\Router\BaseTestCase;
 
-final class RoutingConfiguratorTest extends BaseTest
+final class RoutingConfiguratorTest extends BaseTestCase
 {
     public function testImportWithoutConcreteLoader(): void
     {

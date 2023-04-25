@@ -15,7 +15,7 @@ use Spiral\Stempler\Transform\Merge\ResolveImports;
 use Spiral\Stempler\Transform\Visitor\DefineAttributes;
 use Spiral\Stempler\Transform\Visitor\DefineBlocks;
 
-class ImportElementTest extends BaseTest
+class ImportElementTest extends BaseTestCase
 {
     public function testNoImport(): void
     {

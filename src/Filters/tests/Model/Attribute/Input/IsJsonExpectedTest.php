@@ -6,7 +6,7 @@ namespace Spiral\Tests\Filters\Model\Attribute\Input;
 
 use Spiral\Filters\Attribute\Input\IsJsonExpected;
 
-final class IsJsonExpectedTest extends \Spiral\Tests\Filters\Model\AttributeTest
+final class IsJsonExpectedTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
 {
     public function testGetsValue(): void
     {

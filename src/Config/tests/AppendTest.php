@@ -7,7 +7,7 @@ namespace Spiral\Tests\Config;
 use Spiral\Config\Exception\PatchException;
 use Spiral\Config\Patch\Append;
 
-class AppendTest extends BaseTest
+class AppendTest extends BaseTestCase
 {
     public function testPatch(): void
     {

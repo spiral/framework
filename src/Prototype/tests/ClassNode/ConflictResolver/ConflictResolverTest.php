@@ -30,21 +30,21 @@ class ConflictResolverTest extends TestCase
             $this->getDefinition(
                 $filename,
                 [
-                    'test'  => Fixtures\Test::class,
-                    'test2' => Fixtures\SubFolder\Test::class,
+                    'test'  => Fixtures\Some::class,
+                    'test2' => Fixtures\SubFolder\Some::class,
                     'test3' => Fixtures\ATest3::class,
                 ]
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test $test', $r);
+        $this->assertStringContainsString(Fixtures\Some::class . ';', $r);
+        $this->assertRegExp('/@var Some[\s|\r\n]/', $r);
+        $this->assertStringContainsString('@param Some $test', $r);
 
-        $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as Test2;', $r);
-        $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test2[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test2 $test2', $r);
+        $this->assertStringContainsString(Fixtures\SubFolder\Some::class . ' as Some2;', $r);
+        $this->assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
+        $this->assertRegExp('/@var Some2[\s|\r\n]/', $r);
+        $this->assertStringContainsString('@param Some2 $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ';', $r);
         $this->assertRegExp('/@var ATest3[\s|\r\n]/', $r);
@@ -64,20 +64,20 @@ class ConflictResolverTest extends TestCase
             $this->getDefinition(
                 $filename,
                 [
-                    'test'  => Fixtures\Test::class,
-                    'test2' => Fixtures\SubFolder\Test::class,
+                    'test'  => Fixtures\Some::class,
+                    'test2' => Fixtures\SubFolder\Some::class,
                     'test3' => Fixtures\ATest3::class,
                 ]
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Test::class . ' as FTest;', $r);
-        $this->assertStringNotContainsString(Fixtures\Test::class . ';', $r);
+        $this->assertStringContainsString(Fixtures\Some::class . ' as FTest;', $r);
+        $this->assertStringNotContainsString(Fixtures\Some::class . ';', $r);
         $this->assertRegExp('/@var FTest[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param FTest $test', $r);
 
-        $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as TestAlias;', $r);
-        $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
+        $this->assertStringContainsString(Fixtures\SubFolder\Some::class . ' as TestAlias;', $r);
+        $this->assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
         $this->assertRegExp('/@var TestAlias[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param TestAlias $test2', $r);
 
@@ -100,21 +100,21 @@ class ConflictResolverTest extends TestCase
             $this->getDefinition(
                 $filename,
                 [
-                    'test'  => Fixtures\Test::class,
-                    'test2' => Fixtures\SubFolder\Test::class,
+                    'test'  => Fixtures\Some::class,
+                    'test2' => Fixtures\SubFolder\Some::class,
                     'test3' => Fixtures\ATest3::class,
                 ]
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test $test', $r);
+        $this->assertStringContainsString(Fixtures\Some::class . ';', $r);
+        $this->assertRegExp('/@var Some[\s|\r\n]/', $r);
+        $this->assertStringContainsString('@param Some $test', $r);
 
-        $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as Test2;', $r);
-        $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test2[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test2 $test2', $r);
+        $this->assertStringContainsString(Fixtures\SubFolder\Some::class . ' as Some2;', $r);
+        $this->assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
+        $this->assertRegExp('/@var Some2[\s|\r\n]/', $r);
+        $this->assertStringContainsString('@param Some2 $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATestAlias;', $r);
         $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
@@ -132,15 +132,15 @@ class ConflictResolverTest extends TestCase
             $this->getDefinition(
                 $filename,
                 [
-                    'test' => Fixtures\Test::class,
+                    'test' => Fixtures\Some::class,
                 ]
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertRegExp('/@var Test[\s|\r\n]/', $r);
-        $this->assertStringContainsString('@param Test $test', $r);
-        $this->assertStringContainsString('__construct(Test $test)', $r);
+        $this->assertStringContainsString(Fixtures\Some::class . ';', $r);
+        $this->assertRegExp('/@var Some[\s|\r\n]/', $r);
+        $this->assertStringContainsString('@param Some $test', $r);
+        $this->assertStringContainsString('__construct(Some $test)', $r);
     }
 
     /**

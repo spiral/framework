@@ -16,7 +16,7 @@ use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Nyholm\Psr7\ServerRequest;
 
-class CoreTest extends BaseTest
+class CoreTest extends BaseTestCase
 {
     public function testMissingBinding(): void
     {

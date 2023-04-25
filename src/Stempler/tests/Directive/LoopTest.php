@@ -6,7 +6,7 @@ namespace Spiral\Tests\Stempler\Directive;
 
 use Spiral\Stempler\Directive\LoopDirective;
 
-class LoopTest extends BaseTest
+class LoopTest extends BaseTestCase
 {
     protected const DIRECTIVES = [
         LoopDirective::class

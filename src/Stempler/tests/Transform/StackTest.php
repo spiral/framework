@@ -12,7 +12,7 @@ use Spiral\Stempler\Transform\Finalizer\StackCollector;
 use Spiral\Stempler\Transform\Finalizer\TrimRaw;
 use Spiral\Stempler\Transform\Visitor\DefineStacks;
 
-class StackTest extends BaseTest
+class StackTest extends BaseTestCase
 {
     public function testEmptyStack(): void
     {

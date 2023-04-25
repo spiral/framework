@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Queue\Driver;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Queue\Driver\NullDriver;
 use Spiral\Tests\Queue\TestCase;
 
@@ -16,16 +17,14 @@ final class NullDriverTest extends TestCase
         $this->queue = new NullDriver();
     }
 
-    /**
-     * @dataProvider PayloadDataProvider
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testJobShouldBePushed(mixed $payload): void
     {
         $id = $this->queue->push('foo', $payload);
         $this->assertNotNull($id);
     }
 
-    public function PayloadDataProvider(): \Traversable
+    public static function payloadDataProvider(): \Traversable
     {
         yield [['baz' => 'baf']];
         yield [new \stdClass()];

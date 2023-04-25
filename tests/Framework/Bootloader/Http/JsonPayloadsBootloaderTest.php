@@ -8,9 +8,9 @@ use Spiral\Bootloader\Http\JsonPayloadConfig;
 use Spiral\Bootloader\Http\JsonPayloadsBootloader;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class JsonPayloadsBootloaderTest extends BaseTest
+final class JsonPayloadsBootloaderTest extends BaseTestCase
 {
     public function testConfig(): void
     {

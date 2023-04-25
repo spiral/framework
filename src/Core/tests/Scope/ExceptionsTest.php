@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
+use PHPUnit\Framework\Attributes\Group;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Scope\Stub\DatetimeCarrier;
 use Spiral\Tests\Core\Scope\Stub\ExceptionConstructor;
 
-final class ExceptionsTest extends BaseTest
+#[Group('scrutinizer-ignore')]
+final class ExceptionsTest extends BaseTestCase
 {
     public function testParentScopeResolvingCustomException(): void
     {

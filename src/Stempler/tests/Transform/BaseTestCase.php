@@ -23,7 +23,7 @@ use Spiral\Stempler\Parser\Syntax\HTMLSyntax;
 use Spiral\Stempler\Parser\Syntax\InlineSyntax;
 use Spiral\Stempler\Parser\Syntax\PHPSyntax;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     protected function compile(string $source, array $visitors = [], LoaderInterface $loader = null)
     {

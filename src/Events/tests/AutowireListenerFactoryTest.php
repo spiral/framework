@@ -102,7 +102,7 @@ final class AutowireListenerFactoryTest extends TestCase
     public function testListenerWithoutMethodShouldThrowAnException(): void
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectErrorMessage(
+        $this->expectExceptionMessage(
             'Listener `Spiral\Tests\Events\Fixtures\Listener\ClassAndMethodAttribute` does not contain `test` method.'
         );
 

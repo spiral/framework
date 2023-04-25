@@ -9,7 +9,7 @@ use Spiral\Router\Route;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-class CallableTest extends BaseTest
+class CallableTest extends BaseTestCase
 {
     public function testFunctionRoute(): void
     {
