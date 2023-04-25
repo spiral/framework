@@ -2,10 +2,14 @@
 
 ## Unreleased
 - **Other Features**
-  - [spiral/auth] Added `Spiral\Auth\TokenStorageScope`, this class can be used to bind concrete implementation of 
+  - [spiral/auth] Added `Spiral\Auth\TokenStorageScope`, this class can be used to bind concrete implementation of
     the token storage in a request scope.
-  - [spiral/auth-http] Added a **TokenStorageScope** binding in the `Spiral\Auth\Middleware\AuthMiddleware` with the 
+  - [spiral/auth-http] Added a **TokenStorageScope** binding in the `Spiral\Auth\Middleware\AuthMiddleware` with the
     used TokenStorage.
+
+## 3.7.1 - 2023-04-21
+- **Bug Fixes**
+  - [spiral/filters] Fixed InputScope to allow retrieval of non-bag input sources
 
 ## 3.7.0 - 2023-04-13
 - **Medium Impact Changes**
