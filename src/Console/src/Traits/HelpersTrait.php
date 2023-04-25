@@ -8,6 +8,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -83,6 +84,23 @@ trait HelpersTrait
     protected function ask(string $question, string $default = null): mixed
     {
         return $this->output->ask($question, $default);
+    }
+
+    /**
+     * Asks a multiple choice question.
+     */
+    protected function choiceQuestion(
+        string $question,
+        array $choices,
+        mixed $default = null,
+        int $attempts = null,
+        bool $multiselect = false
+    ): mixed {
+        $question = new ChoiceQuestion($question, $choices, $default);
+
+        $question->setMaxAttempts($attempts)->setMultiselect($multiselect);
+
+        return $this->output->askQuestion($question);
     }
 
     /**
