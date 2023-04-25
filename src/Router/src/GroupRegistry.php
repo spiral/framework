@@ -13,6 +13,7 @@ use Spiral\Core\FactoryInterface;
  */
 final class GroupRegistry implements \IteratorAggregate
 {
+    /** @var non-empty-string */
     private string $defaultGroup = 'web';
 
     /** @var array<non-empty-string, RouteGroup> */

@@ -9,12 +9,23 @@ use Psr\Http\Message\UriInterface;
 use Spiral\Router\Traits\DefaultsTrait;
 use Spiral\Router\Traits\VerbsTrait;
 
+/**
+ * @psalm-import-type Matches from UriHandler
+ */
 abstract class AbstractRoute implements RouteInterface
 {
     use VerbsTrait;
     use DefaultsTrait;
 
+    /**
+     * @readonly
+     */
     protected UriHandler $uriHandler;
+
+    /**
+     * @var null|Matches
+     * @readonly
+     */
     protected ?array $matches = null;
 
     public function __construct(
@@ -24,6 +35,9 @@ abstract class AbstractRoute implements RouteInterface
         $this->defaults = $defaults;
     }
 
+    /**
+     * @mutation-free
+     */
     public function withUriHandler(UriHandler $uriHandler): static
     {
         $route = clone $this;
@@ -37,6 +51,9 @@ abstract class AbstractRoute implements RouteInterface
         return $this->uriHandler;
     }
 
+    /**
+     * @mutation-free
+     */
     public function match(Request $request): ?static
     {
         if (!\in_array(\strtoupper($request->getMethod()), $this->getVerbs(), true)) {

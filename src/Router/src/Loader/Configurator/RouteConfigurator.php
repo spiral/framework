@@ -24,9 +24,13 @@ final class RouteConfigurator
     private ?CoreInterface $core = null;
     private ?array $middleware = null;
 
-    /** @var string|callable|RequestHandlerInterface|TargetInterface */
+    /** @var null|string|callable|RequestHandlerInterface|TargetInterface */
     private mixed $target = null;
 
+    /**
+     * @param non-empty-string $name
+     * @param non-empty-string $pattern
+     */
     public function __construct(
         private readonly string $name,
         private readonly string $pattern,
@@ -38,7 +42,7 @@ final class RouteConfigurator
     {
         if ($this->target === null) {
             throw new TargetException(
-                \sprintf('The [%s] route has no defined target. Call one of: `controller`, `action`, 
+                \sprintf('The [%s] route has no defined target. Call one of: `controller`, `action`,
                     `namespaced`, `groupControllers`, `callable`, `handler` methods.', $this->name)
             );
         }

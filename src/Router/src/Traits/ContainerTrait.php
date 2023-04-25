@@ -12,6 +12,9 @@ trait ContainerTrait
 
     /**
      * Indicates that route has associated container.
+     *
+     * @psalm-assert-if-true ContainerInterface $this->container
+     * @psalm-assert-if-false null $this->container
      */
     public function hasContainer(): bool
     {

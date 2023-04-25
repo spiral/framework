@@ -28,9 +28,13 @@ final class CoreHandler implements RequestHandlerInterface
 
     private readonly TracerInterface $tracer;
 
+    /** @readonly */
     private ?string $controller = null;
-    private string $action;
+    /** @readonly */
+    private ?string $action = null;
+    /** @readonly */
     private ?bool $verbActions = null;
+    /** @readonly */
     private ?array $parameters = null;
 
     public function __construct(
@@ -42,6 +46,9 @@ final class CoreHandler implements RequestHandlerInterface
         $this->tracer = $tracer ?? new NullTracer($scope);
     }
 
+    /**
+     * @mutation-free
+     */
     public function withContext(string $controller, string $action, array $parameters): CoreHandler
     {
         $handler = clone $this;
@@ -54,6 +61,8 @@ final class CoreHandler implements RequestHandlerInterface
 
     /**
      * Disable or enable HTTP prefix for actions.
+     *
+     * @mutation-free
      */
     public function withVerbActions(bool $verbActions): CoreHandler
     {
@@ -69,18 +78,21 @@ final class CoreHandler implements RequestHandlerInterface
      */
     public function handle(Request $request): Response
     {
-        if ($this->controller === null) {
-            throw new HandlerException('Controller and action pair is not set');
-        }
+        $this->checkValues();
+        $controller = $this->controller;
+        $parameters = $this->parameters;
 
         $outputLevel = \ob_get_level();
         \ob_start();
 
-        $output = $result = null;
+        $result = null;
+        $output = '';
 
         $response = $this->responseFactory->createResponse(200);
         try {
-            $action = $this->getAction($request);
+            $action = $this->verbActions
+                ? \strtolower($request->getMethod()) . \ucfirst($this->action)
+                : $this->action;
 
             // run the core withing PSR-7 Request/Response scope
             $result = $this->scope->runScope(
@@ -88,17 +100,17 @@ final class CoreHandler implements RequestHandlerInterface
                     Request::class  => $request,
                     Response::class => $response,
                 ],
-                fn () => $this->tracer->trace(
-                    name: \sprintf('Controller [%s:%s]', $this->controller, $action),
-                    callback: fn () => $this->core->callAction(
-                        controller: $this->controller,
+                fn (): mixed => $this->tracer->trace(
+                    name: 'Controller [' . $controller . ':' . $action . ']',
+                    callback: fn (): mixed => $this->core->callAction(
+                        controller: $controller,
                         action: $action,
-                        parameters: $this->parameters
+                        parameters: $parameters,
                     ),
                     attributes: [
                         'route.controller' => $this->controller,
                         'route.action' => $action,
-                        'route.parameters' => \array_keys($this->parameters),
+                        'route.parameters' => \array_keys($parameters),
                     ]
                 )
             );
@@ -117,17 +129,8 @@ final class CoreHandler implements RequestHandlerInterface
         return $this->wrapResponse(
             $response,
             $result,
-            \ob_get_clean() . $output
+            \ob_get_clean() . $output,
         );
-    }
-
-    private function getAction(Request $request): string
-    {
-        if ($this->verbActions) {
-            return \strtolower($request->getMethod()) . \ucfirst($this->action);
-        }
-
-        return $this->action;
     }
 
     /**
@@ -175,5 +178,18 @@ final class CoreHandler implements RequestHandlerInterface
             ControllerException::UNAUTHORIZED => new UnauthorizedException('Unauthorized', $exception),
             default => new BadRequestException('Bad request', $exception),
         };
+    }
+
+    /**
+     * @psalm-assert !null $this->controller
+     * @psalm-assert !null $this->action
+     * @psalm-assert !null $this->parameters
+     * @mutation-free
+     */
+    private function checkValues(): void
+    {
+        if ($this->controller === null) {
+            throw new HandlerException('Controller and action pair are not set.');
+        }
     }
 }
