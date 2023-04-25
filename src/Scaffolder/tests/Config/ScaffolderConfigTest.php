@@ -114,4 +114,148 @@ class ScaffolderConfigTest extends BaseTest
         $this->assertSame('Bootloader', $ref->invoke($config, BootloaderDeclaration::TYPE, 'postfix'));
         $this->assertSame(BootloaderDeclaration::class, $ref->invoke($config, BootloaderDeclaration::TYPE, 'class'));
     }
+
+    /**
+     * @dataProvider declarationDirectoryDataProvider
+     */
+    public function testDeclarationDirectory(array $config, string $expected): void
+    {
+        $config = new ScaffolderConfig($config);
+
+        $this->assertSame($expected, $config->declarationDirectory('some'));
+    }
+
+    /**
+     * @dataProvider classFilenameDataProvider
+     */
+    public function testClassFilename(array $config, string $expected, string $namespace): void
+    {
+        $config = new ScaffolderConfig($config);
+
+        $this->assertSame($expected, $config->classFilename('foo', 'Test', $namespace));
+    }
+
+    public static function declarationDirectoryDataProvider(): \Traversable
+    {
+        yield [['directory' => 'foo'], 'foo'];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['some' => []]
+                ]
+            ],
+            'foo'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['some' => ['directory' => null]]
+                ]
+            ],
+            'foo'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['some' => ['directory' => '']]
+                ]
+            ],
+            'foo'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['some' => ['directory' => 'bar']]
+                ]
+            ],
+            'bar'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => []]
+            ],
+            'foo'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => ['directory' => null]]
+            ],
+            'foo'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => ['directory' => '']]
+            ],
+            'foo'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => ['directory' => 'bar']]
+            ],
+            'bar'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => ['directory' => 'baz']],
+                'defaults' => [
+                    'declarations' => ['some' => ['directory' => 'bar']]
+                ]
+            ],
+            'baz'
+        ];
+    }
+
+    public static function classFilenameDataProvider(): \Traversable
+    {
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['foo' => ['class' => 'bar']]
+                ]
+            ],
+            'foo/App/Test/Test.php',
+            'App\\Test'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['foo' => ['postfix' => 'Controller']]
+                ]
+            ],
+            'foo/App/Test/TestController.php',
+            'App\\Test'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['foo' => ['postfix' => 'Controller', 'directory' => 'baz']]
+                ]
+            ],
+            'baz/App/Test/TestController.php',
+            'App\\Test'
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['foo' => ['postfix' => 'Controller', 'directory' => 'changed']],
+                'defaults' => [
+                    'declarations' => ['foo' => ['postfix' => 'Controller', 'directory' => 'baz']]
+                ]
+            ],
+            'changed/App/Test/TestController.php',
+            'App\\Test'
+        ];
+    }
 }

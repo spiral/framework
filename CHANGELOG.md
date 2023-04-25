@@ -1,15 +1,20 @@
 # CHANGELOG
 
 ## Unreleased
+- **Medium Impact Changes**
+  - [spiral/scaffolder] Method `baseDirectory` of `Spiral\Scaffolder\Config\ScaffolderConfig` class is deprecated.
 - **Other Features**
   - [spiral/auth] Added `Spiral\Auth\TokenStorageScope`, this class can be used to bind concrete implementation of
     the token storage in a request scope.
   - [spiral/auth-http] Added a **TokenStorageScope** binding in the `Spiral\Auth\Middleware\AuthMiddleware` with the
     used TokenStorage.
+  - [spiral/scaffolder] Added new public method `declarationDirectory` to the `Spiral\Scaffolder\Config\ScaffolderConfig` 
+    class that returns the directory path of the specified declaration, or default directory path if not specified.
 
 ## 3.7.1 - 2023-04-21
 - **Bug Fixes**
   - [spiral/filters] Fixed InputScope to allow retrieval of non-bag input sources
+  - [spiral/pagination] Fixed problem when paginator doesn't calculate `countPages` correctly in constructor
 
 ## 3.7.0 - 2023-04-13
 - **Medium Impact Changes**
