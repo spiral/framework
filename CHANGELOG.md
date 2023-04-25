@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+- **Other Features**
+  - [spiral/scaffolder] Added new public method `declarationDirectory` to the `Spiral\Scaffolder\Config\ScaffolderConfig` 
+    class that returns the directory path of the specified declaration, or default directory path if not specified.
+- **Medium Impact Changes**
+  - [spiral/scaffolder] Method `baseDirectory` of `Spiral\Scaffolder\Config\ScaffolderConfig` class is deprecated.
+
 ## 3.7.1 - 2023-04-21
 - **Bug Fixes**
   - [spiral/filters] Fixed InputScope to allow retrieval of non-bag input sources
