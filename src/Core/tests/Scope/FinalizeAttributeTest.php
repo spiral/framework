@@ -115,6 +115,9 @@ final class FinalizeAttributeTest extends BaseTestCase
         self::assertInstanceOf(LoggerInterface::class, $obj->logger);
     }
 
+    /**
+     * @group scrutinizer-ignore
+     */
     public function testExceptionOnDestroy()
     {
         $root = new Container();
@@ -143,6 +146,9 @@ final class FinalizeAttributeTest extends BaseTestCase
         }
     }
 
+    /**
+     * @group scrutinizer-ignore
+     */
     public function testManyExceptionsOnDestroy()
     {
         $root = new Container();

@@ -45,6 +45,8 @@ final class ScopeAttributeTest extends BaseTestCase
     /**
      * Request a dependency from a correct scope using alias but there is no any binding for this alias in the scope.
      * The binding can be in the parent scope, but it doesn't matter.
+     *
+     * @group scrutinizer-ignore
      */
     public function testRequestObjectFromValidScopeUsingFactoryFromWrongScope(): void
     {
@@ -63,6 +65,8 @@ final class ScopeAttributeTest extends BaseTestCase
 
     /**
      * Request a dependency from an unnamed scope using alias and there is no any binding in valid scope for this alias.
+     *
+     * @group scrutinizer-ignore
      */
     public function testNamedScopeUseFactoryInWrongParentScope(): void
     {
@@ -82,6 +86,8 @@ final class ScopeAttributeTest extends BaseTestCase
     /**
      * In the parent hierarchy, the needed scope specified twice.
      * You can't create nested scopes with the same name.
+     *
+     * @group scrutinizer-ignore
      */
     public function testNamedScopeDuplication(): void
     {
@@ -107,6 +113,8 @@ final class ScopeAttributeTest extends BaseTestCase
     /**
      * The {@see BasScopeException} must be thrown when trying to resolve a class with the {@see Scope} attribute
      * in a scope that is not specified in the attribute.
+     *
+     * @group scrutinizer-ignore
      */
     public function testBadScopeException(): void
     {
