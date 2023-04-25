@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+- **Other Features**
+  - [spiral/auth] Added `Spiral\Auth\TokenStorageScope`, this class can be used to bind concrete implementation of 
+    the token storage in a request scope.
+  - [spiral/auth-http] Added a **TokenStorageScope** binding in the `Spiral\Auth\Middleware\AuthMiddleware` with the 
+    used TokenStorage.
+
 ## 3.7.0 - 2023-04-13
 - **Medium Impact Changes**
   - [spiral/queue] Added the ability to use mixed types as job payload.

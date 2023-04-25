@@ -13,6 +13,7 @@ use Spiral\Auth\ActorProviderInterface;
 use Spiral\Auth\AuthContext;
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Auth\TokenStorageInterface;
+use Spiral\Auth\TokenStorageScope;
 use Spiral\Auth\TransportRegistry;
 use Spiral\Core\ScopeInterface;
 
@@ -40,7 +41,10 @@ final class AuthMiddleware implements MiddlewareInterface
         $authContext = $this->initContext($request, new AuthContext($this->actorProvider, $this->eventDispatcher));
 
         $response = $this->scope->runScope(
-            [AuthContextInterface::class => $authContext],
+            [
+                AuthContextInterface::class => $authContext,
+                TokenStorageScope::class => new TokenStorageScope($this->tokenStorage)
+            ],
             static fn () => $handler->handle($request->withAttribute(self::ATTRIBUTE, $authContext))
         );
 

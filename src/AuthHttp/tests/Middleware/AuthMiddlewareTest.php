@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\AuthContext;
 use Spiral\Auth\Middleware\AuthMiddleware;
+use Spiral\Auth\TokenStorageScope;
 use Spiral\Auth\TransportRegistry;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
@@ -44,6 +45,38 @@ class AuthMiddlewareTest extends BaseTest
 
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         self::assertSame(AuthContext::class, (string)$response->getBody());
+    }
+
+    public function testTokenStorageScopeShouldBeBound(): void
+    {
+        $storage = new TestAuthHttpStorage();
+
+        $http = $this->getCore([]);
+        $http->getPipeline()->pushMiddleware(
+            new AuthMiddleware(
+                $this->container,
+                new TestAuthHttpProvider(),
+                $storage,
+                new TransportRegistry()
+            )
+        );
+
+        $http->setHandler(
+            function () use ($storage): void {
+                $this->assertTrue($this->container->has(TokenStorageScope::class));
+
+                $scope = $this->container->get(TokenStorageScope::class);
+                $ref = new \ReflectionProperty($scope, 'tokenStorage');
+
+                $this->assertSame($storage, $ref->getValue($scope));
+            }
+        );
+
+        $this->assertFalse($this->container->has(TokenStorageScope::class));
+
+        $http->handle(new ServerRequest('GET', ''));
+
+        $this->assertFalse($this->container->has(TokenStorageScope::class));
     }
 
     public function testNoToken(): void
