@@ -10,22 +10,22 @@ use Spiral\Pagination\PaginatorInterface;
 
 class PaginatorTest extends TestCase
 {
-    public function testInterfaces()
+    public function testInterfaces(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25);
 
         $this->assertInstanceOf(PaginatorInterface::class, $paginator);
     }
 
-    public function testParameterTracking()
+    public function testParameterTracking(): void
     {
-        $paginator = new Paginator(25, 0, 'request:page');
+        $paginator = new Paginator(limit: 25, count: 0, parameter: 'request:page');
         $this->assertSame('request:page', $paginator->getParameter());
     }
 
-    public function testLimit()
+    public function testLimit(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25);
 
         $this->assertSame(25, $paginator->getLimit());
         $newPaginator = $paginator->withLimit(50);
@@ -33,9 +33,17 @@ class PaginatorTest extends TestCase
         $this->assertSame(50, $newPaginator->getLimit());
     }
 
-    public function testCountsAndPages()
+    public function testLimitWithCounts(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25, count: 100);
+
+        $this->assertSame(100, $paginator->count());
+        $this->assertSame(4, $paginator->countPages());
+    }
+
+    public function testCountsAndPages(): void
+    {
+        $paginator = new Paginator(limit: 25);
 
         $this->assertSame(0, $paginator->count());
         $this->assertSame($paginator->count(), $paginator->count());
@@ -47,9 +55,9 @@ class PaginatorTest extends TestCase
         $this->assertSame(0, $paginator->countDisplayed());
     }
 
-    public function testFirstPage()
+    public function testFirstPage(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25);
         $paginator = $paginator->withCount(100);
 
         $this->assertSame(1, $paginator->getPage());
@@ -66,10 +74,9 @@ class PaginatorTest extends TestCase
         $this->assertSame(25, $paginator->countDisplayed());
     }
 
-
-    public function testSecondPage()
+    public function testSecondPage(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25);
         $paginator = $paginator->withCount(110);
 
         $this->assertSame(110, $paginator->count());
@@ -89,9 +96,9 @@ class PaginatorTest extends TestCase
         $this->assertSame(25, $paginator->countDisplayed());
     }
 
-    public function testLastPage()
+    public function testLastPage(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25);
         $paginator = $paginator->withCount(100);
 
         $this->assertSame(1, $paginator->getPage());
@@ -114,9 +121,9 @@ class PaginatorTest extends TestCase
         $this->assertSame(25, $paginator->countDisplayed());
     }
 
-    public function testNegativePage()
+    public function testNegativePage(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25);
         $paginator = $paginator->withCount(100);
         $paginator = $paginator->withPage(-1);
 
@@ -127,9 +134,9 @@ class PaginatorTest extends TestCase
         $this->assertSame($paginator->count(), count($paginator));
     }
 
-    public function testNegativeCount()
+    public function testNegativeCount(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25);
         $paginator = $paginator->withCount(-100);
 
         $paginator = $paginator->withPage(-10);
@@ -144,9 +151,9 @@ class PaginatorTest extends TestCase
         $this->assertSame(0, $paginator->countDisplayed());
     }
 
-    public function testLastPageNumber()
+    public function testLastPageNumber(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25);
         $paginator = $paginator->withCount(110);
 
         $this->assertSame(110, $paginator->count());
@@ -164,9 +171,9 @@ class PaginatorTest extends TestCase
         $this->assertSame(10, $paginator->countDisplayed());
     }
 
-    public function testIsRequired()
+    public function testIsRequired(): void
     {
-        $paginator = new Paginator(25);
+        $paginator = new Paginator(limit: 25);
 
         $paginator = $paginator->withCount(24);
         $this->assertFalse($paginator->isRequired());

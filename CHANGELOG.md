@@ -7,6 +7,11 @@
 - **Medium Impact Changes**
   - [spiral/scaffolder] Method `baseDirectory` of `Spiral\Scaffolder\Config\ScaffolderConfig` class is deprecated.
 
+## 3.7.1 - 2023-04-21
+- **Bug Fixes**
+  - [spiral/filters] Fixed InputScope to allow retrieval of non-bag input sources
+  - [spiral/pagination] Fixed problem when paginator doesn't calculate `countPages` correctly in constructor
+
 ## 3.7.0 - 2023-04-13
 - **Medium Impact Changes**
   - [spiral/queue] Added the ability to use mixed types as job payload.

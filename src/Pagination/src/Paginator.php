@@ -11,12 +11,14 @@ final class Paginator implements PaginatorInterface, \Countable
 {
     private int $pageNumber = 1;
     private int $countPages = 1;
+    private int $count;
 
     public function __construct(
         private int $limit = 25,
-        private int $count = 0,
-        private readonly ?string $parameter = null
+        int $count = 0,
+        private readonly ?string $parameter = null,
     ) {
+        $this->setCount($count);
     }
 
     /**
@@ -129,7 +131,7 @@ final class Paginator implements PaginatorInterface, \Countable
     private function setCount(int $count): self
     {
         $this->count = \max($count, 0);
-        $this->countPages = $this->count > 0 ? (int) \ceil($this->count / $this->limit) : 1;
+        $this->countPages = $this->count > 0 ? (int)\ceil($this->count / $this->limit) : 1;
 
         return $this;
     }
