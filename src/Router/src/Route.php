@@ -63,17 +63,19 @@ final class Route extends AbstractRoute implements ContainerizedInterface
         $this->target = $target;
     }
 
+    /**
+     * @mutation-free
+     */
     public function withUriHandler(UriHandler $uriHandler): static
     {
-        $route = parent::withUriHandler($uriHandler);
         if ($this->target instanceof TargetInterface) {
-            $route->uriHandler = $route->uriHandler->withConstrains(
+            $uriHandler = $uriHandler->withConstrains(
                 $this->target->getConstrains(),
-                $this->defaults
+                $this->defaults,
             );
         }
 
-        return $route;
+        return parent::withUriHandler($uriHandler);
     }
 
     /**
@@ -115,6 +117,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
             $this->requestHandler = $this->requestHandler();
         }
 
+        \assert($this->pipeline !== null);
         return $this->pipeline->process(
             $request->withAttribute(self::ROUTE_ATTRIBUTE, $this),
             $this->requestHandler
@@ -132,6 +135,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
 
         if ($this->target instanceof TargetInterface) {
             try {
+                \assert($this->matches !== null);
                 return $this->target->getHandler($this->container, $this->matches);
             } catch (TargetException $e) {
                 throw new RouteException('Invalid target resolution', $e->getCode(), $e);

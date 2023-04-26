@@ -6,13 +6,14 @@ namespace Spiral\Router\Traits;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Spiral\Core\Container\Autowire;
 use Spiral\Http\Pipeline;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\PipelineFactory;
 use Spiral\Router\RouteInterface;
 
 /**
- * @psalm-type MiddlewareType = MiddlewareInterface|class-string<MiddlewareInterface>|non-empty-string
+ * @psalm-type MiddlewareType = MiddlewareInterface|class-string<MiddlewareInterface>|non-empty-string|Autowire
  */
 trait PipelineTrait
 {
@@ -75,6 +76,7 @@ trait PipelineTrait
      */
     protected function makePipeline(): Pipeline
     {
+        \assert($this->container !== null);
         try {
             return $this->container
                 ->get(PipelineFactory::class)

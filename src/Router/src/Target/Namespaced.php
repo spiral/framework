@@ -7,11 +7,14 @@ namespace Spiral\Router\Target;
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Spiral\Router\Exception\TargetException;
+use Spiral\Router\UriHandler;
 
 /**
  * Provides ability to invoke any controller from given namespace.
  *
  * Example: new Namespaced("App\Controllers");
+ *
+ * @psalm-import-type Matches from UriHandler
  */
 final class Namespaced extends AbstractTarget
 {
@@ -36,6 +39,9 @@ final class Namespaced extends AbstractTarget
         $this->inflector = (new InflectorFactory())->build();
     }
 
+    /**
+     * @param Matches $matches
+     */
     protected function resolveController(array $matches): string
     {
         if (\preg_match('/[^a-z_0-9\-]/i', $matches['controller'])) {
@@ -50,6 +56,9 @@ final class Namespaced extends AbstractTarget
         );
     }
 
+    /**
+     * @param Matches $matches
+     */
     protected function resolveAction(array $matches): ?string
     {
         return $matches['action'];

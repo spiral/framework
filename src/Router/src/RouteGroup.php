@@ -13,6 +13,8 @@ use Spiral\Router\Target\AbstractTarget;
 
 /**
  * RouteGroup provides the ability to configure multiple routes to controller/actions using same presets.
+ *
+ * @psalm-type MiddlewareType = MiddlewareInterface|class-string<MiddlewareInterface>|non-empty-string|Autowire
  */
 final class RouteGroup
 {
@@ -22,7 +24,7 @@ final class RouteGroup
     /** @var array<non-empty-string, Route> */
     private array $routes = [];
 
-    /** @var array<class-string<MiddlewareInterface>|MiddlewareInterface|Autowire> */
+    /** @var array<MiddlewareType> */
     private array $middleware = [];
 
     private Autowire|CoreInterface|string|null $core = null;
@@ -73,7 +75,7 @@ final class RouteGroup
     }
 
     /**
-     * @param MiddlewareInterface|Autowire|class-string<MiddlewareInterface>|non-empty-string $middleware
+     * @param MiddlewareType $middleware
      */
     public function addMiddleware(MiddlewareInterface|Autowire|string $middleware): self
     {
@@ -109,16 +111,24 @@ final class RouteGroup
 
             $router->setRoute(
                 $name,
-                $route->withUriHandler($uriHandler->withPrefix($this->prefix))->withMiddleware(...$this->middleware)
+                $route
+                    ->withUriHandler($uriHandler->withPrefix($this->prefix))
+                    ->withMiddleware(...$this->middleware)
             );
         }
     }
 
     /**
      * Add a route to a route group.
+     *
+     * @param non-empty-string $name
+     *
+     * @psalm-assert Route $route
      */
-    public function addRoute(string $name, Route $route): self
+    public function addRoute(string $name, RouteInterface $route): self
     {
+        \assert($route instanceof Route);
+
         $this->routes[$this->namePrefix . $name] = $route;
 
         return $this;

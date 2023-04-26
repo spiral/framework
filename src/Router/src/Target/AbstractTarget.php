@@ -13,8 +13,12 @@ use Spiral\Core\ScopeInterface;
 use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\TargetInterface;
+use Spiral\Router\UriHandler;
 use Spiral\Telemetry\TracerInterface;
 
+/**
+ * @psalm-import-type Matches from UriHandler
+ */
 abstract class AbstractTarget implements TargetInterface
 {
     // Automatically prepend HTTP verb to all action names.
@@ -43,6 +47,9 @@ abstract class AbstractTarget implements TargetInterface
         return $this->constrains;
     }
 
+    /**
+     * @mutation-free
+     */
     public function withCore(CoreInterface $core): TargetInterface
     {
         $target = clone $this;
@@ -85,12 +92,16 @@ abstract class AbstractTarget implements TargetInterface
     /**
      * Return controller class name.
      *
+     * @param Matches $matches
+     *
      * @throws TargetException
      */
     abstract protected function resolveController(array $matches): string;
 
     /**
      * Return target controller action.
+     *
+     * @param Matches $matches
      *
      * @throws TargetException
      */
