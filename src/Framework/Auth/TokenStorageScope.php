@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Spiral\Auth;
 
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Auth\Exception\TokenStorageException;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Exception\ScopeException;
 
 final class TokenStorageScope implements TokenStorageInterface, SingletonInterface
 {
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage
+        private readonly ContainerInterface $container
     ) {
     }
 
@@ -21,7 +24,7 @@ final class TokenStorageScope implements TokenStorageInterface, SingletonInterfa
      */
     public function load(string $id): ?TokenInterface
     {
-        return $this->tokenStorage->load($id);
+        return $this->getTokenStorage()->load($id);
     }
 
     /**
@@ -31,7 +34,7 @@ final class TokenStorageScope implements TokenStorageInterface, SingletonInterfa
      */
     public function create(array $payload, \DateTimeInterface $expiresAt = null): TokenInterface
     {
-        return $this->tokenStorage->create($payload, $expiresAt);
+        return $this->getTokenStorage()->create($payload, $expiresAt);
     }
 
     /**
@@ -41,6 +44,18 @@ final class TokenStorageScope implements TokenStorageInterface, SingletonInterfa
      */
     public function delete(TokenInterface $token): void
     {
-        $this->tokenStorage->delete($token);
+        $this->getTokenStorage()->delete($token);
+    }
+
+    /**
+     * @throws ScopeException
+     */
+    private function getTokenStorage(): TokenStorageInterface
+    {
+        try {
+            return $this->container->get(TokenStorageInterface::class);
+        } catch (NotFoundExceptionInterface $e) {
+            throw new ScopeException('Unable to resolve token storage, invalid scope', $e->getCode(), $e);
+        }
     }
 }

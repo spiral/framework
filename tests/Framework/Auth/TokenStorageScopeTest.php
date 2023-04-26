@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Auth\TokenInterface;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageScope;
+use Spiral\Core\Container;
 
 final class TokenStorageScopeTest extends TestCase
 {
@@ -20,7 +21,10 @@ final class TokenStorageScopeTest extends TestCase
             ->with('foo')
             ->willReturn($token = $this->createMock(TokenInterface::class));
 
-        $scope = new TokenStorageScope($storage);
+        $container = new Container();
+        $container->bind(TokenStorageInterface::class, $storage);
+
+        $scope = new TokenStorageScope($container);
 
         $this->assertSame($token, $scope->load('foo'));
     }
@@ -36,7 +40,10 @@ final class TokenStorageScopeTest extends TestCase
             ->with(['foo' => 'bar'], $expiresAt)
             ->willReturn($token = $this->createMock(TokenInterface::class));
 
-        $scope = new TokenStorageScope($storage);
+        $container = new Container();
+        $container->bind(TokenStorageInterface::class, $storage);
+
+        $scope = new TokenStorageScope($container);
 
         $this->assertSame($token, $scope->create(['foo' => 'bar'], $expiresAt));
     }
@@ -51,7 +58,10 @@ final class TokenStorageScopeTest extends TestCase
             ->method('delete')
             ->with($token);
 
-        $scope = new TokenStorageScope($storage);
+        $container = new Container();
+        $container->bind(TokenStorageInterface::class, $storage);
+
+        $scope = new TokenStorageScope($container);
 
         $scope->delete($token);
     }

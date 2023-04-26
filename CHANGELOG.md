@@ -4,10 +4,10 @@
 - **Medium Impact Changes**
   - [spiral/scaffolder] Method `baseDirectory` of `Spiral\Scaffolder\Config\ScaffolderConfig` class is deprecated.
 - **Other Features**
-  - [spiral/auth] Added `Spiral\Auth\TokenStorageScope`, this class can be used to bind concrete implementation of
-    the token storage in a request scope.
-  - [spiral/auth-http] Added a **TokenStorageScope** binding in the `Spiral\Auth\Middleware\AuthMiddleware` with the
-    used TokenStorage.
+  - Added `Spiral\Auth\TokenStorageScope`, this class can be used to get the concrete implementation of
+    the token storage in a current container scope.
+  - [spiral/auth-http] Added a `Spiral\Auth\TokenStorageInterface` binding in the `Spiral\Auth\Middleware\AuthMiddleware` 
+    with the used TokenStorage.
   - [spiral/scaffolder] Added new public method `declarationDirectory` to the `Spiral\Scaffolder\Config\ScaffolderConfig` 
     class that returns the directory path of the specified declaration, or default directory path if not specified.
 

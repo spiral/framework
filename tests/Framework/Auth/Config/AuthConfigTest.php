@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Auth;
+namespace Framework\Auth\Config;
 
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\TokenStorageInterface as SessionTokenStorageInterface;

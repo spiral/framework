@@ -47,38 +47,6 @@ class AuthMiddlewareTest extends BaseTestCase
         self::assertSame(AuthContext::class, (string)$response->getBody());
     }
 
-    public function testTokenStorageScopeShouldBeBound(): void
-    {
-        $storage = new TestAuthHttpStorage();
-
-        $http = $this->getCore([]);
-        $http->getPipeline()->pushMiddleware(
-            new AuthMiddleware(
-                $this->container,
-                new TestAuthHttpProvider(),
-                $storage,
-                new TransportRegistry()
-            )
-        );
-
-        $http->setHandler(
-            function () use ($storage): void {
-                $this->assertTrue($this->container->has(TokenStorageScope::class));
-
-                $scope = $this->container->get(TokenStorageScope::class);
-                $ref = new \ReflectionProperty($scope, 'tokenStorage');
-
-                $this->assertSame($storage, $ref->getValue($scope));
-            }
-        );
-
-        $this->assertFalse($this->container->has(TokenStorageScope::class));
-
-        $http->handle(new ServerRequest('GET', ''));
-
-        $this->assertFalse($this->container->has(TokenStorageScope::class));
-    }
-
     public function testNoToken(): void
     {
         $http = $this->getCore([]);
