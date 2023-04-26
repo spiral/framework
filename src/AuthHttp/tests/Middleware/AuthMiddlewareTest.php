@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\AuthContext;
 use Spiral\Auth\Middleware\AuthMiddleware;
-use Spiral\Auth\TokenStorageScope;
 use Spiral\Auth\TransportRegistry;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
