@@ -8,7 +8,7 @@ use ReflectionClass;
 use ReflectionException;
 use Throwable;
 
-class JobHandlerTest extends AbstractCommandTest
+class JobHandlerTest extends AbstractCommandTestCase
 {
     /**
      * @throws ReflectionException

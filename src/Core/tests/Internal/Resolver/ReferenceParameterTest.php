@@ -12,7 +12,7 @@ use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 use stdClass;
 
-final class ReferenceParameterTest extends BaseTest
+final class ReferenceParameterTest extends BaseTestCase
 {
     public function testReferencedVariadicParameterAndUnnamedArguments(): void
     {

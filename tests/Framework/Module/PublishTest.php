@@ -6,9 +6,9 @@ namespace Spiral\Tests\Framework\Module;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Module\Exception\PublishException;
-use Spiral\Tests\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTestCase;
 
-final class PublishTest extends ConsoleTest
+final class PublishTest extends ConsoleTestCase
 {
     protected const TEST_FILE   = __DIR__ . '/test.txt';
     protected const TEST_FILE_2 = __DIR__ . '/PublishTest.php';

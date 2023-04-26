@@ -21,7 +21,7 @@ final class EnumInjectorTest extends TestCase
     public function testCreateInjectionForClassWithoutAttribute(): void
     {
         $this->expectException(InjectionException::class);
-        $this->expectErrorMessage(
+        $this->expectExceptionMessage(
             "Class `Spiral\Tests\Boot\Fixtures\SampleClass` should contain ".
             "`Spiral\Boot\Injector\ProvideFrom` attribute with defined detector method."
         );
@@ -40,7 +40,7 @@ final class EnumInjectorTest extends TestCase
         $ref = new \ReflectionClass($class);
 
         $this->expectException(InjectionException::class);
-        $this->expectErrorMessage(\sprintf('Class `%s` should be an enum.', $ref->getName()));
+        $this->expectExceptionMessage(\sprintf('Class `%s` should be an enum.', $ref->getName()));
 
         $container = new Container();
         $injector = new EnumInjector($container, $container, new AttributeReader());
@@ -58,7 +58,7 @@ final class EnumInjectorTest extends TestCase
     public function testCreateInjectionForClassWithoutMethod(): void
     {
         $this->expectException(InjectionException::class);
-        $this->expectErrorMessage(
+        $this->expectExceptionMessage(
             "Class `Spiral\Tests\Boot\Fixtures\InjectableEnumWithoutMethod` does not contain `detect` method."
         );
 
@@ -69,7 +69,7 @@ final class EnumInjectorTest extends TestCase
     public function testCreateInjectionForClassWithoutStaticMethod(): void
     {
         $this->expectException(InjectionException::class);
-        $this->expectErrorMessage(
+        $this->expectExceptionMessage(
             "Spiral\Tests\Boot\Fixtures\InjectableEnumWithNonStaticMethod::detect` should be static."
         );
 

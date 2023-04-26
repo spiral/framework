@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
-use Spiral\Tests\Framework\HttpTest;
+use Spiral\Tests\Framework\HttpTestCase;
 
-final class AuthSessionTest extends HttpTest
+final class AuthSessionTest extends HttpTestCase
 {
     public const ENV = [
         'ENCRYPTER_KEY' => self::ENCRYPTER_KEY,

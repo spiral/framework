@@ -14,14 +14,14 @@ use Spiral\Security\ActorInterface;
 use Spiral\Security\GuardInterface;
 use Spiral\Security\GuardScope;
 use Spiral\App\Controller\AuthController;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class AuthorizesTest extends BaseTest
+final class AuthorizesTest extends BaseTestCase
 {
     public function testAuthException(): void
     {
         $this->expectException(ControllerException::class);
-        $this->expectDeprecationMessage("Unauthorized permission 'do'");
+        $this->expectExceptionMessage("Unauthorized permission 'do'");
 
         $this->getContainer()
             ->bind(ActorInterface::class, new Guest());

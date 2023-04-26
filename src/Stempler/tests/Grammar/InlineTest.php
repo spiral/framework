@@ -7,7 +7,7 @@ namespace Spiral\Tests\Stempler\Grammar;
 use Spiral\Stempler\Lexer\Grammar\InlineGrammar;
 use Spiral\Stempler\Lexer\Token;
 
-class InlineTest extends BaseTest
+class InlineTest extends BaseTestCase
 {
     protected const GRAMMARS = [InlineGrammar::class];
 

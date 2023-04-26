@@ -7,7 +7,7 @@ namespace Spiral\Tests\Filters\Model;
 use Mockery as m;
 use Spiral\Filters\InputInterface;
 
-abstract class AttributeTest extends m\Adapter\Phpunit\MockeryTestCase
+abstract class AttributeTestCase extends m\Adapter\Phpunit\MockeryTestCase
 {
     protected m\LegacyMockInterface|m\MockInterface|InputInterface $input;
     protected string $baz;

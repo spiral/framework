@@ -8,7 +8,7 @@ use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class HelpersTest extends BaseTest
+class HelpersTest extends BaseTestCase
 {
     private \Spiral\Console\Console $core;
 
@@ -26,7 +26,7 @@ class HelpersTest extends BaseTest
         $actual = $this->core->run('helper', ['helper' => 'verbose'])
             ->getOutput()
             ->fetch();
-        
+
         $this->assertSame('false', $actual);
 
         $output = new BufferedOutput();

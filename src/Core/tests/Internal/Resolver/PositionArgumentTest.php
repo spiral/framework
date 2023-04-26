@@ -13,7 +13,7 @@ use Spiral\Tests\Core\Stub\EngineZIL130;
 /**
  * @see VariadicParameterTest::testVariadicObjectParameterAndPositionArguments()
  */
-final class PositionArgumentTest extends BaseTest
+final class PositionArgumentTest extends BaseTestCase
 {
     /**
      * In this case, first argument will be pulled from container, second - from args list.

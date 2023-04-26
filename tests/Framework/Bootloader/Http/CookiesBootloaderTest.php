@@ -10,9 +10,9 @@ use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class CookiesBootloaderTest extends BaseTest
+final class CookiesBootloaderTest extends BaseTestCase
 {
     public function testCookieQueueBinding(): void
     {
@@ -27,7 +27,7 @@ final class CookiesBootloaderTest extends BaseTest
 
     public function testCookieQueueBindingShouldThrowAndExceptionWhenAttributeIsEmpty(): void
     {
-        $this->expectErrorMessage('Unable to resolve CookieQueue, invalid request scope');
+        $this->expectExceptionMessage('Unable to resolve CookieQueue, invalid request scope');
         $request = $this->mockContainer(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')
             ->once()

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Router;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -102,9 +103,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->handle(m::mock(ServerRequestInterface::class));
     }
 
-    /**
-     * @dataProvider invalidTypeDataProvider
-     */
+    #[DataProvider('invalidTypeDataProvider')]
     public function testInvalidTypeShouldThrowAnException(mixed $value, string $type): void
     {
         $this->factory
@@ -114,11 +113,11 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->andReturn(new Pipeline(m::mock(ScopeInterface::class)));
 
         $this->expectException(RouteException::class);
-        $this->expectErrorMessage(\sprintf('Invalid middleware `%s`', $type));
+        $this->expectExceptionMessage(\sprintf('Invalid middleware `%s`', $type));
         $this->pipeline->createWithMiddleware([$value]);
     }
 
-    public function invalidTypeDataProvider(): \Generator
+    public static function invalidTypeDataProvider(): \Generator
     {
         yield 'true' => [true, 'bool'];
         yield 'false' => [false, 'bool'];

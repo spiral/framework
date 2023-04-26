@@ -11,11 +11,11 @@ use Spiral\Reactor\Aggregator\Enums;
 use Spiral\Reactor\Aggregator\Interfaces;
 use Spiral\Reactor\Aggregator\Traits;
 
-abstract class BaseWithElementsTest extends TestCase
+abstract class BaseWithElementsTestCase extends TestCase
 {
-    public function classesDataProvider(): \Traversable
+    public static function classesDataProvider(): \Traversable
     {
-        $testedClass = $this->getTestedClass();
+        $testedClass = static::getTestedClass();
 
         $withoutClasses = new $testedClass('a');
         $withoutClasses->addInterface('b');
@@ -42,9 +42,9 @@ abstract class BaseWithElementsTest extends TestCase
         yield [$withOtherElements, new Classes(['d' => $d])];
     }
 
-    public function interfacesDataProvider(): \Traversable
+    public static function interfacesDataProvider(): \Traversable
     {
-        $testedClass = $this->getTestedClass();
+        $testedClass = static::getTestedClass();
 
         $withoutInterfaces = new $testedClass('a');
         $withoutInterfaces->addClass('b');
@@ -71,9 +71,9 @@ abstract class BaseWithElementsTest extends TestCase
         yield [$withOtherElements, new Interfaces(['d' => $d])];
     }
 
-    public function traitsDataProvider(): \Traversable
+    public static function traitsDataProvider(): \Traversable
     {
-        $testedClass = $this->getTestedClass();
+        $testedClass = static::getTestedClass();
 
         $withoutTraits = new $testedClass('a');
         $withoutTraits->addClass('b');
@@ -100,9 +100,9 @@ abstract class BaseWithElementsTest extends TestCase
         yield [$withOtherElements, new Traits(['d' => $d])];
     }
 
-    public function enumsDataProvider(): \Traversable
+    public static function enumsDataProvider(): \Traversable
     {
-        $testedClass = $this->getTestedClass();
+        $testedClass = static::getTestedClass();
 
         $withoutEnums = new $testedClass('a');
         $withoutEnums->addClass('b');
@@ -129,9 +129,9 @@ abstract class BaseWithElementsTest extends TestCase
         yield [$withOtherElements, new Enums(['d' => $d])];
     }
 
-    public function elementsDataProvider(): \Traversable
+    public static function elementsDataProvider(): \Traversable
     {
-        $testedClass = $this->getTestedClass();
+        $testedClass = static::getTestedClass();
 
         $class = new $testedClass('a');
         $a = $class->addClass('a');
@@ -164,5 +164,5 @@ abstract class BaseWithElementsTest extends TestCase
         ])];
     }
 
-    abstract protected function getTestedClass(): string;
+    abstract protected static function getTestedClass(): string;
 }

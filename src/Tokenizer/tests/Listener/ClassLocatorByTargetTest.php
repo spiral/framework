@@ -6,6 +6,7 @@ namespace Spiral\Tests\Tokenizer\Listener;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Tests\Tokenizer\Classes\Listeners;
 use Spiral\Tests\Tokenizer\Classes\Targets;
@@ -31,7 +32,7 @@ final class ClassLocatorByTargetTest extends TestCase
         );
     }
 
-    public function provideGetClasses(): \Generator
+    public static function provideGetClasses(): \Generator
     {
         yield 'class' => [
             Listeners\CommandInterfaceListener::class,
@@ -83,9 +84,7 @@ final class ClassLocatorByTargetTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideGetClasses
-     */
+    #[DataProvider('provideGetClasses')]
     public function testGetClasses(
         string $listener,
         array $expected,

@@ -28,7 +28,7 @@
         "aws/aws-sdk-php": "^3.0",
         "guzzlehttp/psr7": "^1.7",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "phpunit/phpunit": "^9.5.20",
+        "phpunit/phpunit": "^10.1",
         "vimeo/psalm": "^5.9"
     },
     "autoload-dev": {

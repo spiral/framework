@@ -7,7 +7,7 @@ namespace Spiral\Tests\Config;
 use Spiral\Config\Exception\LoaderException;
 use Spiral\Core\Container\Autowire;
 
-class PhpLoaderTest extends BaseTest
+class PhpLoaderTest extends BaseTestCase
 {
     public function testGetConfig(): void
     {

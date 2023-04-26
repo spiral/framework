@@ -7,9 +7,9 @@ namespace Spiral\Tests\Framework\Router\Loader\Configurator;
 use Spiral\App\Bootloader\RoutesBootloader;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\RouterInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class ImportConfiguratorTest extends BaseTest
+final class ImportConfiguratorTest extends BaseTestCase
 {
     public function testImport(): void
     {

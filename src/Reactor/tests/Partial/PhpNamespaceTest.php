@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Reactor\Partial;
 
 use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Reactor\Aggregator\Classes;
 use Spiral\Reactor\Aggregator\Elements;
 use Spiral\Reactor\Aggregator\Enums;
@@ -12,9 +13,9 @@ use Spiral\Reactor\Aggregator\Interfaces;
 use Spiral\Reactor\Aggregator\Traits;
 use Spiral\Reactor\FileDeclaration;
 use Spiral\Reactor\Partial\PhpNamespace;
-use Spiral\Tests\Reactor\BaseWithElementsTest;
+use Spiral\Tests\Reactor\BaseWithElementsTestCase;
 
-final class PhpNamespaceTest extends BaseWithElementsTest
+final class PhpNamespaceTest extends BaseWithElementsTestCase
 {
     public function testGetName(): void
     {
@@ -194,47 +195,37 @@ final class PhpNamespaceTest extends BaseWithElementsTest
         $this->assertSame('Foo\\Bar', $element->getName());
     }
 
-    /**
-     * @dataProvider classesDataProvider
-     */
+    #[DataProvider('classesDataProvider')]
     public function testGetClasses(PhpNamespace $namespace, Classes $expected): void
     {
         $this->assertEquals($namespace->getClasses(), $expected);
     }
 
-    /**
-     * @dataProvider interfacesDataProvider
-     */
+    #[DataProvider('interfacesDataProvider')]
     public function testGetInterfaces(PhpNamespace $namespace, Interfaces $expected): void
     {
         $this->assertEquals($namespace->getInterfaces(), $expected);
     }
 
-    /**
-     * @dataProvider traitsDataProvider
-     */
+    #[DataProvider('traitsDataProvider')]
     public function testGetTraits(PhpNamespace $namespace, Traits $expected): void
     {
         $this->assertEquals($namespace->getTraits(), $expected);
     }
 
-    /**
-     * @dataProvider enumsDataProvider
-     */
+    #[DataProvider('enumsDataProvider')]
     public function testGetEnums(PhpNamespace $namespace, Enums $expected): void
     {
         $this->assertEquals($namespace->getEnums(), $expected);
     }
 
-    /**
-     * @dataProvider elementsDataProvider
-     */
+    #[DataProvider('elementsDataProvider')]
     public function testGetElements(PhpNamespace $namespace, Elements $expected): void
     {
         $this->assertEquals($namespace->getElements(), $expected);
     }
 
-    protected function getTestedClass(): string
+    protected static function getTestedClass(): string
     {
         return PhpNamespace::class;
     }

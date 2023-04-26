@@ -9,7 +9,7 @@ use Spiral\Core\Exception\Resolver\InvalidArgumentException;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use stdClass;
 
-final class ResolvingValidationTest extends BaseTest
+final class ResolvingValidationTest extends BaseTestCase
 {
     public function testNullInsteadOfClass(): void
     {

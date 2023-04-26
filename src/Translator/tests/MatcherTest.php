@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Translator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Translator\Matcher;
 
-class PatternizerTest extends TestCase
+class MatcherTest extends TestCase
 {
     public function testIsPattern(): void
     {
@@ -17,33 +18,22 @@ class PatternizerTest extends TestCase
         $this->assertTrue($patternizer->isPattern('ab(d|e)'));
     }
 
-    /**
-     * @dataProvider patternProvider
-     *
-     * @param array $string
-     * @param array $pattern
-     * @param bool  $result
-     */
-    public function testMatch($string, $pattern, $result): void
+    #[DataProvider('patternProvider')]
+    public function testMatch(string $string, string $pattern, bool $result): void
     {
         $matcher = new Matcher();
         $this->assertEquals($result, $matcher->matches($string, $pattern));
     }
 
-    /**
-     * @return array
-     */
-    public function patternProvider()
+    public static function patternProvider(): \Traversable
     {
-        return [
-            ['string', 'string', true],
-            ['string', 'st*', true],
-            ['abc', 'dce', false],
-            ['abc', 'a(bc|de)', true],
-            ['ade', 'a(bc|de)', true],
-            ['string', '*ring', true],
-            ['ring', '*ring', false],
-            ['strings', '*ri(ng|ngs)', true],
-        ];
+        yield ['string', 'string', true];
+        yield ['string', 'st*', true];
+        yield ['abc', 'dce', false];
+        yield ['abc', 'a(bc|de)', true];
+        yield ['ade', 'a(bc|de)', true];
+        yield ['string', '*ring', true];
+        yield ['ring', '*ring', false];
+        yield ['strings', '*ri(ng|ngs)', true];
     }
 }

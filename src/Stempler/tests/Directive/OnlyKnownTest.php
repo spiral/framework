@@ -13,7 +13,7 @@ use Spiral\Stempler\Node\Template;
 use Spiral\Stempler\Parser;
 use Spiral\Stempler\Parser\Syntax\HTMLSyntax;
 
-class OnlyKnownTest extends BaseTest
+class OnlyKnownTest extends BaseTestCase
 {
     protected const DIRECTIVES = [
         LoopDirective::class

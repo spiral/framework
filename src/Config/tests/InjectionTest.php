@@ -8,9 +8,8 @@ use Spiral\Config\Exception\ConfigDeliveredException;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\ConfigsInterface;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\InjectableConfig;
 
-class InjectionTest extends BaseTest
+class InjectionTest extends BaseTestCase
 {
     public function testInjection(): void
     {

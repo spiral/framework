@@ -6,7 +6,7 @@ namespace Spiral\Tests\Stempler\Directive;
 
 use Spiral\Stempler\Directive\JsonDirective;
 
-class JsonTest extends BaseTest
+class JsonTest extends BaseTestCase
 {
     protected const DIRECTIVES = [
         JsonDirective::class

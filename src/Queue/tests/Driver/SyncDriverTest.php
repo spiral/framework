@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Driver;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidFactoryInterface;
@@ -40,9 +41,7 @@ final class SyncDriverTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider PayloadDataProvider
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testJobShouldBePushed(mixed $payload): void
     {
         $this->factory->shouldReceive('uuid4')
@@ -63,7 +62,7 @@ final class SyncDriverTest extends TestCase
         $this->assertSame($uuid->toString(), $id);
     }
 
-    public function PayloadDataProvider(): \Traversable
+    public static function payloadDataProvider(): \Traversable
     {
         yield [['baz' => 'baf']];
         yield [new \stdClass()];

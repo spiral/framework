@@ -21,9 +21,9 @@ use Spiral\Events\EventDispatcherAwareInterface;
 use Spiral\Events\ListenerFactoryInterface;
 use Spiral\Events\ListenerProcessorRegistry;
 use Spiral\Events\Processor\ProcessorInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class EventsBootloaderTest extends BaseTest
+final class EventsBootloaderTest extends BaseTestCase
 {
     public function testListenerFactoryInterfaceBinding(): void
     {

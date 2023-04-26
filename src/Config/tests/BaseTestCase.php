@@ -11,7 +11,7 @@ use Spiral\Config\Loader\JsonLoader;
 use Spiral\Config\Loader\PhpLoader;
 use Spiral\Core\Container;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     /**
      * @var Container

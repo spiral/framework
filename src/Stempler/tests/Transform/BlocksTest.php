@@ -7,7 +7,7 @@ namespace Spiral\Tests\Stempler\Transform;
 use Spiral\Stempler\Node\Block;
 use Spiral\Stempler\Transform\Visitor\DefineBlocks;
 
-class BlocksTest extends BaseTest
+class BlocksTest extends BaseTestCase
 {
     public function testDefineBlock(): void
     {

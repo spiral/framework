@@ -14,9 +14,9 @@ use Spiral\Security\PermissionManager;
 use Spiral\Security\PermissionsInterface;
 use Spiral\Security\RuleManager;
 use Spiral\Security\RulesInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class GuardBootloaderTest extends BaseTest
+final class GuardBootloaderTest extends BaseTestCase
 {
     public function testPermissionsInterfaceBinding(): void
     {

@@ -18,9 +18,9 @@ use Spiral\Router\Registry\RoutePatternRegistryInterface;
 use Spiral\Router\RouteInterface;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class RouterBootloaderTest extends BaseTest
+final class RouterBootloaderTest extends BaseTestCase
 {
     public function testCoreInterfaceBinding(): void
     {
@@ -75,7 +75,7 @@ final class RouterBootloaderTest extends BaseTest
 
     public function testRouteInterfaceShouldThrowAnExceptionWhenRequestDoesNotContainIt(): void
     {
-        $this->expectErrorMessage('Unable to resolve Route, invalid request scope');
+        $this->expectExceptionMessage('Unable to resolve Route, invalid request scope');
 
         $request = $this->mockContainer(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')

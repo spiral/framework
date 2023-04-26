@@ -7,7 +7,7 @@ namespace Spiral\Tests\Framework;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
-final class SnapshotTest extends BaseTest
+final class SnapshotTest extends BaseTestCase
 {
     public function testStringConfigParams()
     {

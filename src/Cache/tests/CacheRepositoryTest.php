@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Cache;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
@@ -119,9 +120,7 @@ final class CacheRepositoryTest extends TestCase
         $repository->deleteMultiple(['test', 'test2']);
     }
 
-    /**
-     * @dataProvider keysDataProvider
-     */
+    #[DataProvider('keysDataProvider')]
     public function testGet(string $expectedKey, ?string $prefix = null): void
     {
         $storage = $this->createMock(CacheInterface::class);
@@ -136,9 +135,7 @@ final class CacheRepositoryTest extends TestCase
         $repository->get('data');
     }
 
-    /**
-     * @dataProvider keysDataProvider
-     */
+    #[DataProvider('keysDataProvider')]
     public function testSet(string $expectedKey, ?string $prefix = null): void
     {
         $storage = $this->createMock(CacheInterface::class);
@@ -153,9 +150,7 @@ final class CacheRepositoryTest extends TestCase
         $repository->set('data', 'foo');
     }
 
-    /**
-     * @dataProvider keysDataProvider
-     */
+    #[DataProvider('keysDataProvider')]
     public function testDelete(string $expectedKey, ?string $prefix = null): void
     {
         $storage = $this->createMock(CacheInterface::class);
@@ -170,9 +165,7 @@ final class CacheRepositoryTest extends TestCase
         $repository->delete('data');
     }
 
-    /**
-     * @dataProvider keysDataProvider
-     */
+    #[DataProvider('keysDataProvider')]
     public function testGetMultiple(string $expectedKey, ?string $prefix = null): void
     {
         $storage = $this->createMock(CacheInterface::class);
@@ -187,9 +180,7 @@ final class CacheRepositoryTest extends TestCase
         $repository->getMultiple(['data']);
     }
 
-    /**
-     * @dataProvider keysDataProvider
-     */
+    #[DataProvider('keysDataProvider')]
     public function testSetMultiple(string $expectedKey, ?string $prefix = null): void
     {
         $storage = $this->createMock(CacheInterface::class);
@@ -204,9 +195,7 @@ final class CacheRepositoryTest extends TestCase
         $repository->setMultiple(['data' => 'foo']);
     }
 
-    /**
-     * @dataProvider keysDataProvider
-     */
+    #[DataProvider('keysDataProvider')]
     public function testDeleteMultiple(string $expectedKey, ?string $prefix = null): void
     {
         $storage = $this->createMock(CacheInterface::class);
@@ -221,9 +210,7 @@ final class CacheRepositoryTest extends TestCase
         $repository->deleteMultiple(['data']);
     }
 
-    /**
-     * @dataProvider keysDataProvider
-     */
+    #[DataProvider('keysDataProvider')]
     public function testHas(string $expectedKey, ?string $prefix = null): void
     {
         $storage = $this->createMock(CacheInterface::class);
@@ -238,7 +225,7 @@ final class CacheRepositoryTest extends TestCase
         $repository->has('data');
     }
 
-    public function keysDataProvider(): \Traversable
+    public static function keysDataProvider(): \Traversable
     {
         yield ['data'];
         yield ['data', ''];

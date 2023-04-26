@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Dispatcher;
 
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-final class ConsoleDispatcherTest extends BaseTest
+final class ConsoleDispatcherTest extends BaseTestCase
 {
     public const MAKE_APP_ON_STARTUP = false;
 

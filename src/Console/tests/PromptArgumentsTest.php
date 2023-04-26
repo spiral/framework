@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class PromptArgumentsTest extends BaseTest
+final class PromptArgumentsTest extends BaseTestCase
 {
     public function testCommandArgumentShouldBeSkipped(): void
     {

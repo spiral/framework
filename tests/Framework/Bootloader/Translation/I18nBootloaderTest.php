@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Bootloader\Translation;
 
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Spiral\Translator\Catalogue\CacheInterface;
 use Spiral\Translator\Catalogue\CatalogueLoader;
 use Spiral\Translator\Catalogue\CatalogueManager;
@@ -15,7 +15,7 @@ use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
 use Symfony\Component\Translation\IdentityTranslator;
 
-class I18nBootloaderTest extends BaseTest
+class I18nBootloaderTest extends BaseTestCase
 {
     public function testTranslatorInterfaceBinding(): void
     {

@@ -4,10 +4,10 @@ namespace Framework\Auth;
 
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\TokenStorageInterface as SessionTokenStorageInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Mockery as m;
 
-class AuthConfigTest extends BaseTest
+class AuthConfigTest extends BaseTestCase
 {
     public function testGetStorage(): void
     {

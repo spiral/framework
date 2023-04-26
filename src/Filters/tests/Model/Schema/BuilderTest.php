@@ -6,10 +6,10 @@ namespace Spiral\Tests\Filters\Model\Schema;
 
 use Spiral\Filters\Model\Schema\Builder;
 use Spiral\Filters\Exception\SchemaException;
-use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\NestedFilter;
 
-final class BuilderTest extends BaseTest
+final class BuilderTest extends BaseTestCase
 {
     private Builder $builder;
 
@@ -87,7 +87,7 @@ final class BuilderTest extends BaseTest
     public function testUndefinedSchema(): void
     {
         $this->expectException(SchemaException::class);
-        $this->expectErrorMessage('Filter `foo` does not define any schema');
+        $this->expectExceptionMessage('Filter `foo` does not define any schema');
 
         $this->builder->makeSchema('foo', []);
     }
@@ -95,7 +95,7 @@ final class BuilderTest extends BaseTest
     public function testEmptySchema(): void
     {
         $this->expectException(SchemaException::class);
-        $this->expectErrorMessage('Invalid schema definition at `foo`->`id`');
+        $this->expectExceptionMessage('Invalid schema definition at `foo`->`id`');
 
         $this->builder->makeSchema('foo', ['id' => []]);
     }

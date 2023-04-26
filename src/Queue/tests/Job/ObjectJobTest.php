@@ -24,7 +24,7 @@ final class ObjectJobTest extends TestCase
     public function testPayloadObjectKeyIsRequired(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Payload `object` key is required.');
+        $this->expectExceptionMessage('Payload `object` key is required.');
 
         $job = new ObjectJob($this->container);
         $job->handle('foo', 'foo-id', []);
@@ -33,7 +33,7 @@ final class ObjectJobTest extends TestCase
     public function testPayloadObjectValueShouldBeObject(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Payload `object` key value type should be an object.');
+        $this->expectExceptionMessage('Payload `object` key value type should be an object.');
 
         $job = new ObjectJob($this->container);
         $job->handle('foo', 'foo-id', ['object' => 'test']);

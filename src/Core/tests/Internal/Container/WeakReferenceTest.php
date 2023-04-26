@@ -7,7 +7,7 @@ namespace Spiral\Tests\Core\Internal\Container;
 use stdClass;
 use WeakReference;
 
-final class WeakReferenceTest extends BaseTest
+final class WeakReferenceTest extends BaseTestCase
 {
     public function testAliasNotClassName(): void
     {

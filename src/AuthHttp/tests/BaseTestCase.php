@@ -9,7 +9,7 @@ use Spiral\Core\Container;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerInterface;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     protected Container $container;
 

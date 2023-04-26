@@ -73,7 +73,7 @@ final class CacheConfigTest extends TestCase
     public function testNotDefinedStorageShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Config for storage `foo` is not defined.');
+        $this->expectExceptionMessage('Config for storage `foo` is not defined.');
 
         $this->config->getStorageConfig('foo');
     }
@@ -81,7 +81,7 @@ final class CacheConfigTest extends TestCase
     public function testStorageWithoutDefinedTypeShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Storage type for `memory` is not defined.');
+        $this->expectExceptionMessage('Storage type for `memory` is not defined.');
 
         $this->config->getStorageConfig('memory');
     }

@@ -18,9 +18,9 @@ use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
 use Spiral\Queue\QueueRegistry;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class QueueBootloaderTest extends BaseTest
+final class QueueBootloaderTest extends BaseTestCase
 {
     public const ENV = [
         'QUEUE_CONNECTION' => 'foo',

@@ -9,7 +9,7 @@ use Spiral\Stempler\Lexer;
 use Spiral\Stempler\Node\Template;
 use Spiral\Stempler\Parser;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     protected const GRAMMARS = [
         /* GRAMMAR => SYNTAX */

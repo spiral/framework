@@ -9,7 +9,7 @@ use ReflectionException;
 use Spiral\Core\CoreInterface;
 use Throwable;
 
-class BootloaderTest extends AbstractCommandTest
+class BootloaderTest extends AbstractCommandTestCase
 {
     /**
      * @throws ReflectionException

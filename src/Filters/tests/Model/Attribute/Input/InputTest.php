@@ -6,7 +6,7 @@ namespace Spiral\Tests\Filters\Model\Attribute\Input;
 
 use Spiral\Filters\Attribute\Input\Input;
 
-final class InputTest extends \Spiral\Tests\Filters\Model\AttributeTest
+final class InputTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
 {
     public function testGetsValueForDefinedKey(): void
     {

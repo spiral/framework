@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Interceptor;
 
-use Spiral\Tests\Framework\HttpTest;
+use Spiral\Tests\Framework\HttpTestCase;
 
-final class PipelineInterceptorTest extends HttpTest
+final class PipelineInterceptorTest extends HttpTestCase
 {
     public function testWithoutPipeline(): void
     {

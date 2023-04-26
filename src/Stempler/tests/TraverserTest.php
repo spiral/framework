@@ -11,12 +11,12 @@ use Spiral\Stempler\Node\HTML\Attr;
 use Spiral\Stempler\Node\HTML\Tag;
 use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Parser\Syntax\HTMLSyntax;
-use Spiral\Tests\Stempler\Compiler\BaseTest;
+use Spiral\Tests\Stempler\Compiler\BaseTestCase;
 use Spiral\Stempler\Traverser;
 use Spiral\Stempler\VisitorContext;
 use Spiral\Stempler\VisitorInterface;
 
-class TraverserTest extends BaseTest implements VisitorInterface
+class TraverserTest extends BaseTestCase implements VisitorInterface
 {
     protected const RENDERS = [
         CoreRenderer::class,

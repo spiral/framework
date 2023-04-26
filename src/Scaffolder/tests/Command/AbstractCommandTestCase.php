@@ -7,10 +7,10 @@ namespace Spiral\Tests\Scaffolder\Command;
 use ReflectionClass;
 use Spiral\Console\Console;
 use Spiral\Files\FilesInterface;
-use Spiral\Tests\Scaffolder\BaseTest;
+use Spiral\Tests\Scaffolder\BaseTestCase;
 use Throwable;
 
-abstract class AbstractCommandTest extends BaseTest
+abstract class AbstractCommandTestCase extends BaseTestCase
 {
     protected ?string $className = null;
 

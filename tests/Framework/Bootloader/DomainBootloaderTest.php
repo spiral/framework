@@ -11,9 +11,9 @@ use Spiral\Bootloader\DomainBootloader;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Core;
 use Spiral\Core\InterceptableCore;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class DomainBootloaderTest extends BaseTest
+final class DomainBootloaderTest extends BaseTestCase
 {
     public function testDefineInterceptors(): void
     {

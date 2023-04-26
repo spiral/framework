@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Interceptor\Consume;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Queue\Event\JobProcessed;
 use Spiral\Queue\Event\JobProcessing;
@@ -15,9 +16,7 @@ use Spiral\Tests\Queue\TestCase;
 
 final class CoreTest extends TestCase
 {
-    /**
-     * @dataProvider PayloadDataProvider
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testCallAction(mixed $payload): void
     {
         $core = new Core(
@@ -44,9 +43,7 @@ final class CoreTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider PayloadDataProvider
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testEventsShouldBeDispatched(mixed $payload): void
     {
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
@@ -79,7 +76,7 @@ final class CoreTest extends TestCase
         ]);
     }
 
-    public function PayloadDataProvider(): \Traversable
+    public static function payloadDataProvider(): \Traversable
     {
         yield [['baz' => 'baf']];
         yield [new \stdClass()];

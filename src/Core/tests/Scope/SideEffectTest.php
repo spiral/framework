@@ -11,7 +11,7 @@ use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerCarrier;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 
-final class SideEffectTest extends BaseTest
+final class SideEffectTest extends BaseTestCase
 {
     /**
      * When a dependency is resolving from parent then all its dependencies are resolved from parent too.

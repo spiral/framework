@@ -1,4 +1,3 @@
-
 <p align="center">
 <a href="https://packagist.org/packages/spiral/framework"><img src="https://poser.pugx.org/spiral/framework/require/php"></a>
 <a href="https://packagist.org/packages/spiral/framework"><img src="https://poser.pugx.org/spiral/framework/version"></a>
@@ -69,6 +68,6 @@ the PHP code of your application stays in memory permanently (anti-memory leak t
 > **Note**:
 > You can find more community packages in [spiral-packages](https://github.com/spiral-packages/) organization.
 
-License:
---------
+## License:
+
 MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).

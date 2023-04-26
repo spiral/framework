@@ -4,95 +4,72 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Prototype\Utils;
 
 class UtilsTest extends TestCase
 {
-    /**
-     * @dataProvider trailingProvider
-     *
-     * @param string $name
-     * @param int    $sequence
-     * @param string $expected
-     */
+    #[DataProvider('trailingProvider')]
     public function testTrimTrailingDigits(string $name, int $sequence, string $expected): void
     {
         $this->assertEquals($expected, Utils::trimTrailingDigits($name, $sequence));
     }
 
-    public function trailingProvider(): array
+    public static function trailingProvider(): \Traversable
     {
-        return [
-            ['name7', 7, 'name',],
-            ['name', 0, 'name',],
-            ['name0', 0, 'name',],
-            ['name1', 1, 'name'],
-            ['name-1', 1, 'name-'],
-            ['name-1', -1, 'name'],
-        ];
+        yield ['name7', 7, 'name',];
+        yield ['name', 0, 'name',];
+        yield ['name0', 0, 'name',];
+        yield ['name1', 1, 'name'];
+        yield ['name-1', 1, 'name-'];
+        yield ['name-1', -1, 'name'];
     }
 
-    /**
-     * @dataProvider injectValuesProvider
-     *
-     * @param array $array
-     * @param int   $index
-     * @param array $child
-     * @param array $expected
-     */
+    #[DataProvider('injectValuesProvider')]
     public function testInjectValues(array $array, int $index, array $child, array $expected): void
     {
         $this->assertEquals($expected, Utils::injectValues($array, $index, $child));
     }
 
-    public function injectValuesProvider(): array
+    public static function injectValuesProvider(): \Traversable
     {
-        return [
-            [
-                ['a', 'b', 'c', 'd', 'e'],
-                0,
-                ['aa', 'bb'],
-                ['aa', 'bb', 'a', 'b', 'c', 'd', 'e'],
-            ],
-            [
-                ['a', 'b', 'c', 'd', 'e'],
-                -2,
-                ['aa', 'bb'],
-                ['a', 'b', 'c', 'aa', 'bb', 'd', 'e'],
-            ],
-            [
-                ['a', 'b', 'c', 'd', 'e'],
-                2,
-                ['aa', 'bb'],
-                ['a', 'b', 'aa', 'bb', 'c', 'd', 'e'],
-            ],
-            [
-                ['a', 'b', 'c', 'd', 'e'],
-                5,
-                ['aa', 'bb'],
-                ['a', 'b', 'c', 'd', 'e', 'aa', 'bb'],
-            ],
+        yield [
+            ['a', 'b', 'c', 'd', 'e'],
+            0,
+            ['aa', 'bb'],
+            ['aa', 'bb', 'a', 'b', 'c', 'd', 'e'],
+        ];
+        yield [
+            ['a', 'b', 'c', 'd', 'e'],
+            -2,
+            ['aa', 'bb'],
+            ['a', 'b', 'c', 'aa', 'bb', 'd', 'e'],
+        ];
+        yield [
+            ['a', 'b', 'c', 'd', 'e'],
+            2,
+            ['aa', 'bb'],
+            ['a', 'b', 'aa', 'bb', 'c', 'd', 'e'],
+        ];
+        yield [
+            ['a', 'b', 'c', 'd', 'e'],
+            5,
+            ['aa', 'bb'],
+            ['a', 'b', 'c', 'd', 'e', 'aa', 'bb'],
         ];
     }
 
-    /**
-     * @dataProvider shortNameProvider
-     *
-     * @param string $name
-     * @param string $expected
-     */
+    #[DataProvider('shortNameProvider')]
     public function testShortName(string $name, string $expected): void
     {
         $this->assertEquals($expected, Utils::shortName($name));
     }
 
-    public function shortNameProvider(): array
+    public static function shortNameProvider(): \Traversable
     {
-        return [
-            ['a\b\cdef', 'cdef'],
-            ['abcdef', 'abcdef'],
-            ['abcdef\\', ''],
-        ];
+        yield ['a\b\cdef', 'cdef'];
+        yield ['abcdef', 'abcdef'];
+        yield ['abcdef\\', ''];
     }
 }

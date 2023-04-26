@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Events\Processor;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Spiral\Core\Container;
 use Spiral\Events\Config\EventListener;
 use Spiral\Events\Config\EventsConfig;
 use Spiral\Events\AutowireListenerFactory;
@@ -18,10 +18,8 @@ use Spiral\Tests\Events\Fixtures\Listener\ClassAttribute;
 
 final class ConfigProcessorTest extends TestCase
 {
-    /**
-     * @dataProvider listenersDataProvider
-     */
-    public function testProcess(string $class, array $listener, array $args): void
+    #[DataProvider('listenersDataProvider')]
+    public function testProcess(array $listener, array $args): void
     {
         $registry = new class() implements ListenerRegistryInterface {
 
@@ -49,10 +47,9 @@ final class ConfigProcessorTest extends TestCase
         $this->assertSame($args[2], $registry->priority);
     }
 
-    public function listenersDataProvider(): \Traversable
+    public static function listenersDataProvider(): \Traversable
     {
         yield [
-            ClassAndMethodAttribute::class,
             [
                 FooEvent::class => [new EventListener(ClassAndMethodAttribute::class, 'onFooEvent', 1)]
             ],
@@ -63,7 +60,6 @@ final class ConfigProcessorTest extends TestCase
             ]
         ];
         yield [
-            ClassAndMethodAttribute::class,
             [
                 BarEvent::class => [new EventListener(ClassAndMethodAttribute::class, 'onBarEvent', 1)]
             ],
@@ -74,7 +70,6 @@ final class ConfigProcessorTest extends TestCase
             ]
         ];
         yield [
-            ClassAttribute::class,
             [BarEvent::class => [ClassAttribute::class]],
             [
                 BarEvent::class,

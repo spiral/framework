@@ -14,7 +14,7 @@ use Spiral\Stempler\Transform\Merge\ResolveImports;
 use Spiral\Stempler\Transform\Visitor\DefineAttributes;
 use Spiral\Stempler\Transform\Visitor\DefineBlocks;
 
-class ExtendsTest extends BaseTest
+class ExtendsTest extends BaseTestCase
 {
     public function testNoExtends(): void
     {

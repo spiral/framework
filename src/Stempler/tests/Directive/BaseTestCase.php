@@ -14,7 +14,7 @@ use Spiral\Stempler\Node\Template;
 use Spiral\Stempler\Parser\Syntax\DynamicSyntax;
 use Spiral\Stempler\Parser\Syntax\HTMLSyntax;
 
-abstract class BaseTest extends \Spiral\Tests\Stempler\Compiler\BaseTest
+abstract class BaseTestCase extends \Spiral\Tests\Stempler\Compiler\BaseTestCase
 {
     protected const RENDERS = [
         CoreRenderer::class,

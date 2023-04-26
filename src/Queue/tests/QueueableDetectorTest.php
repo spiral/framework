@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Queue;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Attributes\Factory;
 use Spiral\Queue\QueueableDetector;
 use Spiral\Tests\Queue\Attribute\Stub\NotQueueable;
@@ -16,9 +17,7 @@ use Spiral\Tests\Queue\Attribute\Stub\QueueableWithQueue;
 
 final class QueueableDetectorTest extends TestCase
 {
-    /**
-     * @dataProvider queueableProvider
-     */
+    #[DataProvider('queueableProvider')]
     public function testQueueable($object, bool $queueable, ?string $queue): void
     {
         $detector = new QueueableDetector((new Factory())->create());
@@ -27,7 +26,7 @@ final class QueueableDetectorTest extends TestCase
         $this->assertSame($queue, $detector->getQueue($object));
     }
 
-    public function queueableProvider(): \Traversable
+    public static function queueableProvider(): \Traversable
     {
         yield [Queueable::class, true, null];
         yield [QueueableWithQueue::class, true, 'test'];

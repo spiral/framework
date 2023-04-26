@@ -15,7 +15,7 @@ class WithComplexConstructor
         ?string $str2,
         ?\StdClass $nullableClass1,
         $untypedVarWithDefault = 3,
-        ?Test $test1 = null,
+        ?Some $test1 = null,
         ?string $str3 = null,
         ?int $int = 123,
         \StdClass $nullableClass2 = null,

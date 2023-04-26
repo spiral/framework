@@ -13,7 +13,7 @@ use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 use stdClass;
 
-final class FibersTest extends BaseTest
+final class FibersTest extends BaseTestCase
 {
     public const TEST_DATA = [
         'foo' => 1,

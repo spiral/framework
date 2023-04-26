@@ -8,7 +8,7 @@ use Spiral\Stempler\Lexer\Lexer;
 use Spiral\Stempler\Lexer\StringStream;
 use Spiral\Stempler\Lexer\Token;
 
-class RawTest extends BaseTest
+class RawTest extends BaseTestCase
 {
     protected const GRAMMARS = [];
 
