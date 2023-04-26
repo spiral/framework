@@ -86,6 +86,60 @@ final class FibersTest extends BaseTestCase
         }
     }
 
+    public function testExceptionProxy(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('test');
+
+        self::runInFiber(
+            static function () {
+                return (new Container())->scope(
+                    function (): string {
+                        $result = '';
+                        $result .= Fiber::suspend('foo');
+                        $result .= Fiber::suspend('bar');
+                        $result .= Fiber::suspend('error');
+                        return $result;
+                    }
+                );
+            },
+            static function (string $suspendValue): string {
+                return $suspendValue !== 'error'
+                    ? $suspendValue
+                    : throw new \RuntimeException('test');
+            },
+        );
+    }
+
+    public function testCatchThrownException(): void
+    {
+        $result = self::runInFiber(
+            static function () {
+                return (new Container())->scope(
+                    function (): string {
+                        $result = '';
+                        $result .= Fiber::suspend('foo');
+                        $result .= Fiber::suspend('bar');
+                        try {
+                            $result .= Fiber::suspend('error');
+                        } catch (\Throwable $e) {
+                            $result .= $e->getMessage();
+                        }
+                        $result .= Fiber::suspend('baz');
+                        return $result;
+                    }
+                );
+            },
+            static function (string $suspendValue): string {
+                return $suspendValue !== 'error'
+                    ? $suspendValue
+                    : throw new \RuntimeException('test');
+            },
+        );
+
+        self::assertSame('foobartestbaz', $result);
+    }
+
     /**
      * Builds a function that creates a container, runs few nested scopes and iterates over test data.
      * The function uses {@see Fiber} and {@see ContainerScope}. It has a lot of self assertions.
@@ -152,7 +206,12 @@ final class FibersTest extends BaseTestCase
         $value = $fiber->start();
         while (!$fiber->isTerminated()) {
             if ($check !== null) {
-                $check($value);
+                try {
+                    $value = $check($value);
+                } catch (\Throwable $e) {
+                    $value = $fiber->throw($e);
+                    continue;
+                }
             }
             $value = $fiber->resume($value);
         }
