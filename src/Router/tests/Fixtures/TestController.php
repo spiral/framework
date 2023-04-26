@@ -9,19 +9,31 @@ use Nyholm\Psr7\Response;
 
 class TestController
 {
-    public function index()
+    public function index(): string
     {
         return 'hello world';
     }
 
-    public function test()
+    public function test(): string
     {
         return 'hello world';
     }
 
-    public function id(string $id)
+    public function id(string $id): string
     {
         return $id;
+    }
+
+    public function default(string $id = 'default'): string
+    {
+        return $id;
+    }
+
+    public function defaultInt(string|int $id = 1): string
+    {
+        $result = \is_int($id) ? 'int: ' : 'string: ';
+
+        return $result . $id;
     }
 
     public function echo(): void
@@ -35,7 +47,7 @@ class TestController
         throw new \Error('error.controller');
     }
 
-    public function rsp()
+    public function rsp(): Response
     {
         $r = new Response();
         $r->getBody()->write('rsp');
@@ -45,7 +57,7 @@ class TestController
         return $r;
     }
 
-    public function json()
+    public function json(): array
     {
         return [
             'status' => 301,
@@ -68,12 +80,12 @@ class TestController
         throw new ControllerException('', 99);
     }
 
-    public function postTarget()
+    public function postTarget(): string
     {
         return 'POST';
     }
 
-    public function deleteTarget()
+    public function deleteTarget(): string
     {
         return 'DELETE';
     }

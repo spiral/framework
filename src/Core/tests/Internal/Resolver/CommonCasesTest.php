@@ -32,7 +32,7 @@ final class CommonCasesTest extends BaseTestCase
         $this->assertInstanceOf(EngineMarkTwo::class, $result[0]);
     }
 
-    public function testAutowreArgumentByPosition(): void
+    public function testAutowireArgumentByPosition(): void
     {
         $result = $this->resolveClosure(
             static fn(string $foo = 'foo', ?EngineInterface $engine = null) => null,

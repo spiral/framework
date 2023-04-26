@@ -49,6 +49,12 @@ abstract class AbstractCore implements CoreInterface
         }
 
         try {
+            foreach ($method->getParameters() as $parameter) {
+                if (($parameters[$parameter->getName()] ?? null) === null && $parameter->isDefaultValueAvailable()) {
+                    $parameters[$parameter->getName()] = $parameter->getDefaultValue();
+                }
+            }
+
             // getting the set of arguments should be sent to requested method
             $args = $this->resolver->resolveArguments($method, $parameters, validate: true);
         } catch (ArgumentResolvingException|InvalidArgumentException $e) {
