@@ -49,8 +49,7 @@ abstract class AbstractCore implements CoreInterface
         }
 
         try {
-            // getting the set of arguments should be sent to requested method
-            $args = $this->resolver->resolveArguments($method, $parameters, validate: true);
+            $args = $this->resolveArguments($method, $parameters);
         } catch (ArgumentResolvingException|InvalidArgumentException $e) {
             throw new ControllerException(
                 \sprintf('Missing/invalid parameter %s of `%s`->`%s`', $e->getParameter(), $controller, $action),
@@ -70,5 +69,22 @@ abstract class AbstractCore implements CoreInterface
             $container,
             static fn () => $method->invokeArgs($container->get($controller), $args)
         );
+    }
+
+    protected function resolveArguments(\ReflectionMethod $method, array $parameters): array
+    {
+        foreach ($method->getParameters() as $parameter) {
+            $name = $parameter->getName();
+            if (
+                \array_key_exists($name, $parameters) &&
+                $parameters[$name] === null &&
+                $parameter->isDefaultValueAvailable()
+            ) {
+                $parameters[$name] = $parameter->getDefaultValue();
+            }
+        }
+
+        // getting the set of arguments should be sent to requested method
+        return $this->resolver->resolveArguments($method, $parameters, validate: true);
     }
 }
