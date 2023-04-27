@@ -10,6 +10,8 @@ use Spiral\Tests\Queue\TestCase;
 
 final class NullDriverTest extends TestCase
 {
+    private NullDriver $queue;
+
     protected function setUp(): void
     {
         parent::setUp();
