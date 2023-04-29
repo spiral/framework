@@ -20,7 +20,7 @@ use Spiral\Core\Internal\Config\StateBinder;
  * Auto-wiring container: declarative singletons, contextual injections, parent container
  * delegation and ability to lazy wire.
  *
- * Container does not support setter injections, private properties and etc. Normally it will work
+ * Container does not support setter injections, private properties, etc. Normally it will work
  * with classes only to be as much invisible as possible. Attention, this is hungry implementation
  * of container, meaning it WILL try to resolve dependency unless you specified custom lazy
  * factory.
@@ -62,6 +62,9 @@ final class Container implements
     ) {
         $this->initServices($this, $scopeName);
 
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
+        \assert(isset($this->state));
+
         // Bind himself
         $this->state->bindings = \array_merge($this->state->bindings, [
             self::class               => \WeakReference::create($this),
@@ -84,7 +87,7 @@ final class Container implements
      */
     public function __clone()
     {
-        throw new LogicException('Container is not clonable.');
+        throw new LogicException('Container is not cloneable.');
     }
 
     public function resolveArguments(
@@ -102,6 +105,9 @@ final class Container implements
 
     /**
      * @param string|null $context Related to parameter caused injection if any.
+     *
+     * @throws ContainerException
+     * @throws \Throwable
      */
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
