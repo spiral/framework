@@ -44,7 +44,13 @@ final class ContainerScope
             $value = $fiber->start();
             while (!$fiber->isTerminated()) {
                 self::$container = $previous;
-                $resume = Fiber::suspend($value);
+                try {
+                    $resume = Fiber::suspend($value);
+                } catch (Throwable $e) {
+                    self::$container = $container;
+                    $value = $fiber->throw($e);
+                    continue;
+                }
                 self::$container = $container;
                 $value = $fiber->resume($resume);
             }
