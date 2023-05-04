@@ -40,13 +40,14 @@ the PHP code of your application stays in memory permanently (anti-memory leak t
 - PSR-{3,4,7,11,12,14,15,16,17} compliant
 - Powerful [application server](https://roadrunner.dev/) and resident memory application kernel
 - Native support of queue (AMQP, SQS, Beanstalk, Kafka) and background PHP workers
+- Queue supervision
 - GRPC server and client via [RoadRunner bridge](https://github.com/spiral/roadrunner-bridge)
 - Pub/Sub, event broadcasting
 - HTTPS, HTTP/2+Push, FastCGI
 - PCI DSS compliant
 - Encrypted cookies, signed sessions, CSRF-guard
 - MySQL, MariaDB, SQLite, PostgreSQL, SQLServer support, auto-migrations
-- The [ORM](https://github.com/cycle/orm) via [Cycle Bridge](https://github.com/spiral/cycle-bridge) you will use for the next 25 years
+- The [ORM](https://github.com/cycle/orm) you will use for the next 25 years
 - The [Temporalio](https://github.com/spiral/temporal-bridge) is the simple, scalable open source way to write and run reliable workflows
 - Intuitive scaffolding and prototyping (it literally writes code for you)
 - Helpful class discovery via static analysis
