@@ -93,7 +93,7 @@ final class FibersTest extends BaseTestCase
 
         self::runInFiber(
             static function () {
-                return (new Container())->scope(
+                return (new Container())->runScoped(
                     function (): string {
                         $result = '';
                         $result .= Fiber::suspend('foo');
@@ -115,7 +115,7 @@ final class FibersTest extends BaseTestCase
     {
         $result = self::runInFiber(
             static function () {
-                return (new Container())->scope(
+                return (new Container())->runScoped(
                     function (): string {
                         $result = '';
                         $result .= Fiber::suspend('foo');
@@ -160,12 +160,12 @@ final class FibersTest extends BaseTestCase
             $c1 = $container ?? new Container();
             $c1->bindSingleton('resource', new stdClass());
 
-            $result = $c1->scope(static function (Container $c2) use ($load) {
+            $result = $c1->runScoped(static function (Container $c2) use ($load) {
                 // check local binding
                 self::assertTrue($c2->has('foo'));
                 self::assertInstanceOf(DateTime::class, $c2->get('foo'));
 
-                return $c2->scope(
+                return $c2->runScoped(
                     static function (ContainerInterface $c3) use ($load) {
                         // check local binding
                         self::assertTrue($c3->has('bar'));

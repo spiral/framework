@@ -33,8 +33,8 @@ final class ScopeAttributeTest extends BaseTestCase
     {
         $root = new Container();
 
-        $root->scope(static function (Container $c1) {
-            $c1->scope(static function (Container $c2) use ($c1) {
+        $root->runScoped(static function (Container $c1) {
+            $c1->runScoped(static function (Container $c2) use ($c1) {
                 $obj1 = $c1->get(AttrScopeFooSingleton::class);
                 $obj2 = $c2->get(AttrScopeFooSingleton::class);
 
@@ -56,8 +56,8 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = new Container();
         $root->bind('foo', self::makeFooScopeObject(...));
 
-        $root->scope(static function (Container $c1) {
-            $c1->scope(static function (Container $c2) {
+        $root->runScoped(static function (Container $c1) {
+            $c1->runScoped(static function (Container $c2) {
                 $c2->get('foo');
             }, name: 'foo');
         });
@@ -75,8 +75,8 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = new Container();
         $root->bind('foo', self::makeFooScopeObject(...));
 
-        $root->scope(static function (Container $c1) {
-            $c1->scope(static function (Container $c2) {
+        $root->runScoped(static function (Container $c1) {
+            $c1->runScoped(static function (Container $c2) {
                 $c2->get('foo');
             });
         });
@@ -95,9 +95,9 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = new Container();
 
         try {
-            $root->scope(static function (Container $c1) {
-                $c1->scope(static function (Container $c2) {
-                    $c2->scope(static function (Container $c3) {
+            $root->runScoped(static function (Container $c1) {
+                $c1->runScoped(static function (Container $c2) {
+                    $c2->runScoped(static function (Container $c3) {
                         // do nothing
                     }, name: 'root');
                 });
@@ -119,8 +119,8 @@ final class ScopeAttributeTest extends BaseTestCase
 
         try {
             $root = new Container();
-            $root->scope(static function (Container $c1) {
-                $c1->scope(static function (Container $c2) {
+            $root->runScoped(static function (Container $c1) {
+                $c1->runScoped(static function (Container $c2) {
                     $c2->get(AttrScopeFoo::class);
                 });
             }, name: 'bar');
