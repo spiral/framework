@@ -228,6 +228,11 @@ final class Container implements
         }
     }
 
+    /**
+     * Get current scope container.
+     *
+     * @internal it might be removed in the future.
+     */
     public function getCurrentContainer(): ContainerInterface
     {
         return ContainerScope::getContainer() ?? $this;
