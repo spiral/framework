@@ -20,7 +20,7 @@ use Spiral\Core\Internal\Config\StateBinder;
  * Auto-wiring container: declarative singletons, contextual injections, parent container
  * delegation and ability to lazy wire.
  *
- * Container does not support setter injections, private properties and etc. Normally it will work
+ * Container does not support setter injections, private properties, etc. Normally it will work
  * with classes only to be as much invisible as possible. Attention, this is hungry implementation
  * of container, meaning it WILL try to resolve dependency unless you specified custom lazy
  * factory.
@@ -39,6 +39,7 @@ final class Container implements
     FactoryInterface,
     ResolverInterface,
     InvokerInterface,
+    ContainerScopeInterface,
     ScopeInterface
 {
     use DestructorTrait;
@@ -62,15 +63,19 @@ final class Container implements
     ) {
         $this->initServices($this, $scopeName);
 
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
+        \assert(isset($this->state));
+
         // Bind himself
         $this->state->bindings = \array_merge($this->state->bindings, [
-            self::class               => \WeakReference::create($this),
+            self::class => \WeakReference::create($this),
             ContainerInterface::class => self::class,
-            BinderInterface::class    => self::class,
-            FactoryInterface::class   => self::class,
-            ScopeInterface::class     => self::class,
-            ResolverInterface::class  => self::class,
-            InvokerInterface::class   => self::class,
+            BinderInterface::class => self::class,
+            FactoryInterface::class => self::class,
+            ContainerScopeInterface::class => self::class,
+            ScopeInterface::class => self::class,
+            ResolverInterface::class => self::class,
+            InvokerInterface::class => self::class,
         ]);
     }
 
@@ -84,7 +89,7 @@ final class Container implements
      */
     public function __clone()
     {
-        throw new LogicException('Container is not clonable.');
+        throw new LogicException('Container is not cloneable.');
     }
 
     public function resolveArguments(
@@ -102,6 +107,9 @@ final class Container implements
 
     /**
      * @param string|null $context Related to parameter caused injection if any.
+     *
+     * @throws ContainerException
+     * @throws \Throwable
      */
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
@@ -140,19 +148,17 @@ final class Container implements
         return $this->container->has($id);
     }
 
-    /**
-     * Make a Binder proxy to configure default bindings for a specific scope.
-     * Default bindings won't affect already created Container instances except the case with the root one.
-     *
-     * @internal We are testing this feature, it may be changed in the future.
-     */
-    public function getBinder(string $scope): BinderInterface
+    public function getBinder(?string $scope = null): BinderInterface
     {
-        return new StateBinder($this->config->scopedBindings->getState($scope));
+        return $scope === null
+            ? $this->binder
+            : new StateBinder($this->config->scopedBindings->getState($scope));
     }
 
     /**
-     * @deprecated use {@see scope()} instead.
+     * @throws \Throwable
+     *
+     * @deprecated use {@see runScoped()} instead.
      */
     public function runScope(array $bindings, callable $scope): mixed
     {
@@ -184,20 +190,9 @@ final class Container implements
     }
 
     /**
-     * @template TReturn
-     *
-     * @param callable(mixed ...$params): TReturn $closure
-     * @param array<non-empty-string, TResolver> $bindings Custom bindings for the new scope.
-     * @param null|string $name Scope name. Named scopes can have individual bindings and constrains.
-     * @param bool $autowire If {@see false}, closure will be invoked with just only the passed Container as an
-     *        argument. Otherwise, {@see InvokerInterface::invoke()} will be used to invoke the closure.
-     *
-     * @return TReturn
-     * @throws \Throwable
-     *
-     * @internal We are testing this feature, it may be changed in the future.
+     * Invoke given closure or function withing specific IoC scope.
      */
-    public function scope(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
+    public function runScoped(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
     {
         // Open scope
         $container = new self($this->config, $name);
@@ -231,6 +226,16 @@ final class Container implements
                 throw new ScopeContainerLeakedException($name, $this->scope->getParentScopeNames());
             }
         }
+    }
+
+    /**
+     * Get current scope container.
+     *
+     * @internal it might be removed in the future.
+     */
+    public function getCurrentContainer(): ContainerInterface
+    {
+        return ContainerScope::getContainer() ?? $this;
     }
 
     /**
