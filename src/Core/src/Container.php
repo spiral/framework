@@ -6,6 +6,8 @@ namespace Spiral\Core;
 
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
+use Spiral\Core\Config\Alias;
+use Spiral\Core\Config\WeakReference;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectableInterface;
 use Spiral\Core\Container\SingletonInterface;
@@ -67,15 +69,16 @@ final class Container implements
         \assert(isset($this->state));
 
         // Bind himself
+        $shared = new Alias(self::class);
         $this->state->bindings = \array_merge($this->state->bindings, [
-            self::class => \WeakReference::create($this),
-            ContainerInterface::class => self::class,
-            BinderInterface::class => self::class,
-            FactoryInterface::class => self::class,
-            ContainerScopeInterface::class => self::class,
-            ScopeInterface::class => self::class,
-            ResolverInterface::class => self::class,
-            InvokerInterface::class => self::class,
+            self::class => new WeakReference(\WeakReference::create($this)),
+            ContainerInterface::class => $shared,
+            BinderInterface::class => $shared,
+            FactoryInterface::class => $shared,
+            ContainerScopeInterface::class => $shared,
+            ScopeInterface::class => $shared,
+            ResolverInterface::class => $shared,
+            InvokerInterface::class => $shared,
         ]);
     }
 
@@ -243,7 +246,7 @@ final class Container implements
      * for each method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
      */
-    public function bind(string $alias, string|array|callable|object $resolver): void
+    public function bind(string $alias, mixed $resolver): void
     {
         $this->binder->bind($alias, $resolver);
     }

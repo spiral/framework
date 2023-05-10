@@ -6,6 +6,7 @@ namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\ConfigsInterface;
 use Spiral\Core\Container;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
@@ -72,5 +73,13 @@ class BindingsTest extends TestCase
 
         $this->assertInstanceOf(SampleClass::class, $instance);
         $this->assertSame($instance, $container->get('sampleClass'));
+    }
+
+    public function testAutoScalarBinding(): void
+    {
+        $container = new Container();
+        $container->bind(ConfigsInterface::class, 42.69);
+
+        self::assertSame(42.69, $container->get(ConfigsInterface::class));
     }
 }

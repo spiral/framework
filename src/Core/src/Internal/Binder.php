@@ -31,6 +31,7 @@ final class Binder extends StateBinder
         if (!$this->container->has($alias)) {
             return false;
         }
+
         return parent::hasInstance($alias);
     }
 

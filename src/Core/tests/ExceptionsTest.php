@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
+use Spiral\Core\Exception\ConfiguratorException;
 use Spiral\Core\Exception\Container\ArgumentException;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\ContainerException;
@@ -24,10 +25,10 @@ class ExceptionsTest extends TestCase
     public function testInvalidBinding(): void
     {
         $this->expectExceptionMessage('Invalid binding for `invalid`');
-        $this->expectException(ContainerException::class);
+        $this->expectException(ConfiguratorException::class);
+
         $container = new Container();
-        $container->bind('invalid', ['invalid']);
-        $container->get('invalid');
+        $container->bind('invalid', null);
     }
 
     public function testClone(): void
@@ -167,15 +168,20 @@ class ExceptionsTest extends TestCase
     public function testExceptionTrace(Container $container, string $message): void
     {
         $this->expectException(ContainerException::class);
-        $this->expectExceptionMessage($message);
 
-        $container->get(ClassWithUndefinedDependency::class);
+        try {
+            $container->get(ClassWithUndefinedDependency::class);
+        } catch (ContainerException $e) {
+            self::assertSame($message, $e->getMessage());
+
+            throw $e;
+        }
     }
 
     public static function exceptionTraceDataProvider(): \Traversable
     {
         $binding = new Container();
-        $binding->bind('Spiral\Tests\Core\Fixtures\InvalidClass', ['invalid']);
+        $binding->bind('Spiral\Tests\Core\Fixtures\InvalidClass', ['invalid', 'invalid']);
 
         $notConstructed = new Container();
         $notConstructed->bind('Spiral\Tests\Core\Fixtures\InvalidClass', WithPrivateConstructor::class);

@@ -249,7 +249,7 @@ final class Resolver implements ResolverInterface
         ResolvingState $state,
         ReflectionParameter $parameter,
         ReflectionNamedType $typeRef,
-        bool $validate
+        bool $validate,
     ) {
         return !$typeRef->isBuiltin() && $this->resolveObjectParameter(
             $state,

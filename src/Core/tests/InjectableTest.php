@@ -75,18 +75,6 @@ class InjectableTest extends TestCase
         $container->get(TestConfig::class);
     }
 
-    public function testInjectorOuterBinding(): void
-    {
-        $this->expectException(AutowireException::class);
-        $this->expectExceptionMessage(
-            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `invalid-configurator`."
-        );
-        $container = new Container();
-        $container->bind(ConfigsInterface::class, 'invalid-configurator');
-
-        $container->get(TestConfig::class);
-    }
-
     public function testInvalidInjection(): void
     {
         $this->expectException(InjectionException::class);
@@ -114,8 +102,7 @@ class InjectableTest extends TestCase
             ->with(m::on(static function (ReflectionClass $r) {
                 return $r->getName() === TestConfig::class;
             }), null)
-            ->andReturn($expected)
-        ;
+            ->andReturn($expected);
 
         $this->assertSame($expected, $container->get(TestConfig::class));
     }
@@ -132,8 +119,7 @@ class InjectableTest extends TestCase
             ->with(m::on(static function (ReflectionClass $r) {
                 return $r->getName() === TestConfig::class;
             }), 'context')
-            ->andReturn($expected)
-        ;
+            ->andReturn($expected);
 
         $this->assertSame($expected, $container->get(TestConfig::class, 'context'));
     }
