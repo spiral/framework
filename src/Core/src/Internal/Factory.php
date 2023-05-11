@@ -500,6 +500,20 @@ final class Factory implements FactoryInterface
         return $ctx->reflection->getAttributes(Singleton::class) !== [];
     }
 
+    private function getFinalizer(Ctx $ctx, object $instance): ?callable
+    {
+        /**
+         * @psalm-suppress UnnecessaryVarAnnotation
+         * @var Finalize|null $attribute
+         */
+        $attribute = ($ctx->reflection->getAttributes(Finalize::class)[0] ?? null)?->newInstance();
+        if ($attribute === null) {
+            return null;
+        }
+
+        return [$instance, $attribute->method];
+    }
+
     /**
      * Find and run inflector
      */
