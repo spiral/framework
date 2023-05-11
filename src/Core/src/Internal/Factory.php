@@ -218,7 +218,7 @@ final class Factory implements FactoryInterface
     ): mixed {
         $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context, singleton: $binding->singleton);
         try {
-            $instance = $binding::class === \Spiral\Core\Config\Factory::class && !$binding->hasParameters()
+            $instance = $binding::class === \Spiral\Core\Config\Factory::class && $binding->getParametersCount() === 0
                 ? ($binding->factory)()
                 : $this->invoker->invoke($binding->factory, $arguments);
         } catch (NotCallableException $e) {
@@ -511,7 +511,9 @@ final class Factory implements FactoryInterface
             foreach ($this->state->inflectors as $class => $inflectors) {
                 if ($instance instanceof $class) {
                     foreach ($inflectors as $inflector) {
-                        $instance = $this->invoker->invoke($inflector->inflector, [$instance]);
+                        $instance = $inflector->getParametersCount() > 1
+                            ? $this->invoker->invoke($inflector->inflector, [$instance])
+                            : ($inflector->inflector)($instance);
                     }
                 }
             }

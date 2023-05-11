@@ -18,11 +18,8 @@ final class Factory extends Binding
         $this->parametersCount = (new \ReflectionFunction($factory))->getNumberOfParameters();
     }
 
-    /**
-     * @return bool Returns {@see false} if the {@see self::$factory} doesn't require arguments.
-     */
-    public function hasParameters(): bool
+    public function getParametersCount(): int
     {
-        return $this->parametersCount > 0;
+        return $this->parametersCount;
     }
 }

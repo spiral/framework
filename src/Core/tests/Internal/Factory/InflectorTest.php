@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Factory;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use Spiral\Core\Config\Inflector;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 use Spiral\Tests\Core\Stub\EngineVAZ2101;
@@ -32,6 +34,27 @@ final class InflectorTest extends BaseTestCase
         $this->assertInstanceOf(stdClass::class, $object);
         $this->assertObjectHasProperty('foo', $object);
         $this->assertSame($object->foo, 'bar');
+    }
+
+    public function testInflectAutowiring(): void
+    {
+        $this->bind(DateTimeInterface::class, $time = new DateTimeImmutable());
+        $this->bind(
+            stdClass::class,
+            new Inflector(
+                static function (stdClass $object, DateTimeInterface $time): stdClass {
+                    $object->time = $time;
+
+                    return $object;
+                }
+            ),
+        );
+
+        $object = $this->make(stdClass::class);
+
+        $this->assertInstanceOf(stdClass::class, $object);
+        $this->assertObjectHasProperty('time', $object);
+        $this->assertSame($time, $object->time);
     }
 
     public function testFewObjectsUsingAbstractParent(): void
