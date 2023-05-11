@@ -16,4 +16,9 @@ final class Autowire extends Binding
         public readonly bool $singleton = false,
     ) {
     }
+
+    public function __toString(): string
+    {
+        return 'Autowire object';
+    }
 }

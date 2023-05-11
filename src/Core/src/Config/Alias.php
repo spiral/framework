@@ -14,4 +14,9 @@ final class Alias extends Binding
         public readonly bool $singleton = false,
     ) {
     }
+
+    public function __toString(): string
+    {
+        return sprintf('Alias to `%s`', $this->alias);
+    }
 }

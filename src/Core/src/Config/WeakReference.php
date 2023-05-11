@@ -13,4 +13,9 @@ final class WeakReference extends Binding
         public \WeakReference $reference,
     ) {
     }
+
+    public function __toString(): string
+    {
+        return 'Weak reference';
+    }
 }

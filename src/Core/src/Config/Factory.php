@@ -9,13 +9,38 @@ namespace Spiral\Core\Config;
  */
 final class Factory extends Binding
 {
-    private int $parametersCount;
+    use \Spiral\Core\Exception\Traits\ClosureRendererTrait;
+
+    public readonly \Closure $factory;
+    private readonly int $parametersCount;
+    private ?string $definition;
 
     public function __construct(
-        public readonly \Closure $factory,
+        callable $callable,
         public readonly bool $singleton = false,
     ) {
-        $this->parametersCount = (new \ReflectionFunction($factory))->getNumberOfParameters();
+        $this->factory = $callable(...);
+        $this->parametersCount = (new \ReflectionFunction($this->factory))->getNumberOfParameters();
+        $this->definition = match (true) {
+            \is_string($callable) => $callable,
+            \is_array($callable) => \sprintf(
+                '%s::%s()',
+                \is_object($callable[0]) ? $callable[0]::class : $callable[0],
+                $callable[1]
+            ),
+            \is_object($callable) && $callable::class !== \Closure::class => 'object ' . $callable::class,
+            default => null,
+        };
+    }
+
+    public function __toString(): string
+    {
+        $this->definition ??= $this->renderClosureSignature(new \ReflectionFunction($this->factory));
+
+        return \sprintf(
+            'Factory from %s',
+            $this->definition,
+        );
     }
 
     public function getParametersCount(): int

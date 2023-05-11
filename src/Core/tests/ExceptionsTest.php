@@ -213,7 +213,7 @@ class ExceptionsTest extends TestCase
         yield 'binding' => [
             $binding,
             <<<'MARKDOWN'
-            Invalid binding for `Spiral\Tests\Core\Fixtures\InvalidClass`.
+            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `invalid`.
             Container trace list:
             - action: 'autowire'
               alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
@@ -224,12 +224,10 @@ class ExceptionsTest extends TestCase
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 scope: 'root'
                 context: 'class'
-                binding: [
-                  0: [
-                    0: 'invalid'
-                  ],
-                  1: false
-                ]
+                binding: Deferred factory 'invalid'->invalid()
+                - action: 'autowire'
+                  alias: 'invalid'
+                  context: null
             MARKDOWN
         ];
         yield 'notConstructed' => [
@@ -246,7 +244,7 @@ class ExceptionsTest extends TestCase
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 scope: 'root'
                 context: 'class'
-                binding: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
+                binding: Alias to `Spiral\Tests\Core\Fixtures\WithPrivateConstructor`
                 - action: 'autowire'
                   alias: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
                   context: 'class'
@@ -278,10 +276,7 @@ class ExceptionsTest extends TestCase
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 scope: 'root'
                 context: 'class'
-                binding: [
-                  0: static function (Psr\Container\ContainerInterface $container),
-                  1: false
-                ]
+                binding: Factory from static function (Psr\Container\ContainerInterface $container)
                 - action: 'autowire'
                   alias: 'invalid'
                   context: null

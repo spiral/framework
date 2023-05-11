@@ -22,6 +22,11 @@ final class Inflector extends Binding
         $this->parametersCount = (new \ReflectionFunction($inflector))->getNumberOfParameters();
     }
 
+    public function __toString(): string
+    {
+        return 'Inflector';
+    }
+
     public function getParametersCount(): int
     {
         return $this->parametersCount;

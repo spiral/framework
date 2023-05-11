@@ -161,7 +161,7 @@ class StateBinder implements BinderInterface
     private function makeConfigFromArray(array $resolver, bool $singleton): Binding
     {
         if (\is_callable($resolver)) {
-            return new Factory($resolver(...), $singleton);
+            return new Factory($resolver, $singleton);
         }
 
         // Validate lazy invokable array

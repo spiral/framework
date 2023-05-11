@@ -13,4 +13,9 @@ final class Shared extends Binding
         public readonly object $value,
     ) {
     }
+
+    public function __toString(): string
+    {
+        return 'Shared object of class ' . $this->value::class;
+    }
 }
