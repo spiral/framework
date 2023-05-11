@@ -10,6 +10,7 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\Config\Alias;
 use Spiral\Core\Config\Binding;
 use Spiral\Core\Config\Factory;
+use Spiral\Core\Config\Inflector;
 use Spiral\Core\Config\Injectable;
 use Spiral\Core\Config\Scalar;
 use Spiral\Core\Config\Shared;
@@ -38,6 +39,11 @@ class StateBinder implements BinderInterface
      */
     public function bind(string $alias, mixed $resolver): void
     {
+        if ($resolver instanceof Inflector && (\interface_exists($alias) || \class_exists($alias))) {
+            $this->state->inflectors[$alias][] = $resolver;
+            return;
+        }
+
         try {
             $config = $this->makeConfig($resolver, false);
         } catch (\Throwable $e) {

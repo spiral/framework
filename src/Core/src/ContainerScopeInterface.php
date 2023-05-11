@@ -13,7 +13,7 @@ use Psr\Container\ContainerInterface;
  *
  * @internal We are testing this feature, it may be changed in the future.
  */
-interface ContainerScopeInterface
+interface ContainerScopeInterface extends ContainerInterface
 {
     /**
      * Make a Binder proxy to configure bindings for a specific scope.

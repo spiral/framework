@@ -467,6 +467,8 @@ final class Factory implements FactoryInterface
     {
         $ctx->reflection ??= new \ReflectionClass($instance);
 
+        $instance = $this->runInflector($instance);
+
         //Declarative singletons
         if ($this->isSingleton($ctx)) {
             $this->state->singletons[$ctx->alias] = $instance;
@@ -498,17 +500,25 @@ final class Factory implements FactoryInterface
         return $ctx->reflection->getAttributes(Singleton::class) !== [];
     }
 
-    private function getFinalizer(Ctx $ctx, object $instance): ?callable
+    /**
+     * Find and run inflector
+     */
+    private function runInflector(object $instance): object
     {
-        /**
-         * @psalm-suppress UnnecessaryVarAnnotation
-         * @var Finalize|null $attribute
-         */
-        $attribute = ($ctx->reflection->getAttributes(Finalize::class)[0] ?? null)?->newInstance();
-        if ($attribute === null) {
-            return null;
+        $scope = $this->scope;
+
+        while ($scope !== null) {
+            foreach ($this->state->inflectors as $class => $inflectors) {
+                if ($instance instanceof $class) {
+                    foreach ($inflectors as $inflector) {
+                        $instance = $this->invoker->invoke($inflector->inflector, [$instance]);
+                    }
+                }
+            }
+
+            $scope = $scope->getParentScope();
         }
 
-        return [$instance, $attribute->method];
+        return $instance;
     }
 }

@@ -6,10 +6,15 @@ namespace Spiral\Tests\Core\Scope;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Config\Shared;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
+use Spiral\Tests\Core\Scope\Stub\FileLogger;
+use Spiral\Tests\Core\Scope\Stub\KVLogger;
+use Spiral\Tests\Core\Scope\Stub\LoggerInjector;
+use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 use stdClass;
 
 final class UseCaseTest extends BaseTestCase
@@ -206,6 +211,30 @@ final class UseCaseTest extends BaseTestCase
         $root->runScoped(function (Container $c1): void {
             self::assertTrue($c1->has('bar'));
             self::assertInstanceOf(stdClass::class, $c1->get('bar'));
+        }, name: 'scope1');
+    }
+
+    public function testInjectorsFromParentScope(): void
+    {
+        $root = new Container();
+
+        $loggerRoot = new KVLogger();
+        $logger1 = new FileLogger();
+
+        $root->bindInjector(LoggerInterface::class, LoggerInjector::class);
+        $root->bind(LoggerInjector::class, new Shared(new LoggerInjector($loggerRoot)));
+        // Configure Scope 1
+        $root->bindInjector(LoggerInterface::class, LoggerInjector::class);
+        $root->bind(LoggerInjector::class, new Shared(new LoggerInjector($logger1)));
+
+        self::assertSame($logger1, $root->get(LoggerInterface::class));
+
+        $root->runScoped(static function (ContainerInterface $c1) use ($logger1): void {
+            self::assertSame($logger1, $c1->get(LoggerInterface::class));
+
+            $c1->runScoped(static function (ContainerInterface $c2) use ($logger1): void {
+                self::assertSame($logger1, $c2->get(LoggerInterface::class));
+            }, name: 'scope2');
         }, name: 'scope1');
     }
 }
