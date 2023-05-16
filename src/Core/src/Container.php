@@ -166,12 +166,20 @@ final class Container implements
     public function runScope(array $bindings, callable $scope): mixed
     {
         $binds = &$this->state->bindings;
-        $cleanup = $previous = [];
+        $singletons = &$this->state->singletons;
+        $cleanup = $previous = $prevSin = [];
         foreach ($bindings as $alias => $resolver) {
+            // Store previous bindings
             if (isset($binds[$alias])) {
                 $previous[$alias] = $binds[$alias];
             } else {
+                // Store bindings to be removed
                 $cleanup[] = $alias;
+            }
+            // Store previous singletons
+            if (isset($singletons[$alias])) {
+                $prevSin[$alias] = $singletons[$alias];
+                unset($singletons[$alias]);
             }
 
             $this->binder->bind($alias, $resolver);
@@ -182,12 +190,17 @@ final class Container implements
                 ? ContainerScope::runScope($this, $scope)
                 : $scope($this);
         } finally {
+            // Remove new bindings
+            foreach ($cleanup as $alias) {
+                unset($binds[$alias], $singletons[$alias]);
+            }
+            // Restore previous bindings
             foreach ($previous as $alias => $resolver) {
                 $binds[$alias] = $resolver;
             }
-
-            foreach ($cleanup as $alias) {
-                unset($binds[$alias]);
+            // Restore singletons
+            foreach ($prevSin as $alias => $instance) {
+                $singletons[$alias] = $instance;
             }
         }
     }

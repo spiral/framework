@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Config\Shared;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
+use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
@@ -237,4 +238,23 @@ final class UseCaseTest extends BaseTestCase
             }, name: 'scope2');
         }, name: 'scope1');
     }
+
+    public function testSingletonRebindingInScope(): void
+    {
+        $c = new Container();
+        $c->bindSingleton('bucket', new Container\Autowire(Bucket::class, ['a']));
+
+        $this->assertSame('a', $c->get('bucket')->getName());
+
+        $this->assertTrue($c->runScoped(function (ContainerInterface $c): bool {
+            $this->assertSame('b', $c->get('bucket')->getName());
+
+            return $c->get('bucket')->getName() === 'b';
+        }, bindings: [
+            'bucket' => new Bucket('b'),
+        ]));
+
+        $this->assertSame('a', $c->get('bucket')->getName());
+    }
+
 }
