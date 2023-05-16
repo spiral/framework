@@ -111,7 +111,7 @@ final class Factory implements FactoryInterface
         Injectable $binding,
         string $alias,
         ?string $context,
-        array $arguments
+        array $arguments,
     ) {
         $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context);
 
@@ -143,7 +143,6 @@ final class Factory implements FactoryInterface
             }
 
             /**
-             * @var InjectorInterface<TObject> $injectorInstance
              * @psalm-suppress RedundantCondition
              */
             $instance = $injectorInstance->createInjection($reflection, $ctx->parameter);
@@ -453,15 +452,7 @@ final class Factory implements FactoryInterface
     }
 
     /**
-     * Register instance in container, might perform methods like auto-singletons, log populations
-     * and etc.
-     *
-     * @template TObject of object
-     *
-     * @param TObject $instance Created object.
-     * @param \ReflectionClass<TObject> $reflection
-     *
-     * @return TObject
+     * Register instance in container, might perform methods like auto-singletons, log populations, etc.
      */
     private function registerInstance(Ctx $ctx, object $instance): object
     {

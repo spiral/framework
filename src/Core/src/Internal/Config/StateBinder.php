@@ -47,7 +47,7 @@ class StateBinder implements BinderInterface
         try {
             $config = $this->makeConfig($resolver, false);
         } catch (\Throwable $e) {
-            throw $this->invalidBindingException($alias, $resolver, $e);
+            throw $this->invalidBindingException($alias, $e);
         }
 
         $this->state->bindings[$alias] = $config;
@@ -61,7 +61,7 @@ class StateBinder implements BinderInterface
         try {
             $config = $this->makeConfig($resolver, true);
         } catch (\Throwable $e) {
-            throw $this->invalidBindingException($alias, $resolver, $e);
+            throw $this->invalidBindingException($alias, $e);
         }
 
         $this->state->bindings[$alias] = $config;
@@ -175,7 +175,7 @@ class StateBinder implements BinderInterface
         return new DeferredFactory($resolver, $singleton);
     }
 
-    private function invalidBindingException(string $alias, mixed $resolver, Throwable $previous): Throwable
+    private function invalidBindingException(string $alias, Throwable $previous): Throwable
     {
         return new ConfiguratorException(\sprintf(
             'Invalid binding for `%s`. %s',

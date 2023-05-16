@@ -21,12 +21,13 @@ final class Factory extends Binding
     ) {
         $this->factory = $callable(...);
         $this->parametersCount = (new \ReflectionFunction($this->factory))->getNumberOfParameters();
+        /** @psalm-suppress TypeDoesNotContainType */
         $this->definition = match (true) {
             \is_string($callable) => $callable,
             \is_array($callable) => \sprintf(
                 '%s::%s()',
                 \is_object($callable[0]) ? $callable[0]::class : $callable[0],
-                $callable[1]
+                $callable[1],
             ),
             \is_object($callable) && $callable::class !== \Closure::class => 'object ' . $callable::class,
             default => null,
