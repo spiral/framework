@@ -38,14 +38,14 @@ class ConflictResolverTest extends TestCase
         );
 
         $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertStringContainsString('private Test $test', $r);
+        $this->assertStringContainsString('private readonly Test $test', $r);
 
         $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as Test2;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertStringContainsString('private Test2 $test2', $r);
+        $this->assertStringContainsString('private readonly Test2 $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ';', $r);
-        $this->assertStringContainsString('private ATest3 $test3', $r);
+        $this->assertStringContainsString('private readonly ATest3 $test3', $r);
     }
 
     /**
@@ -70,15 +70,15 @@ class ConflictResolverTest extends TestCase
 
         $this->assertStringContainsString(Fixtures\Test::class . ' as FTest;', $r);
         $this->assertStringNotContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertStringContainsString('private FTest $test', $r);
+        $this->assertStringContainsString('private readonly FTest $tes', $r);
 
         $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as TestAlias;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertStringContainsString('private TestAlias $test2', $r);
+        $this->assertStringContainsString('private readonly TestAlias $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATest;', $r);
         $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
-        $this->assertStringContainsString('private ATest $test3', $r);
+        $this->assertStringContainsString('private readonly ATest $test3', $r);
     }
 
     /**
@@ -102,15 +102,15 @@ class ConflictResolverTest extends TestCase
         );
 
         $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertStringContainsString('private Test $test', $r);
+        $this->assertStringContainsString('private readonly Test $test', $r);
 
         $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as Test2;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertStringContainsString('private Test2 $test2', $r);
+        $this->assertStringContainsString('private readonly Test2 $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATestAlias;', $r);
         $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
-        $this->assertStringContainsString('private ATestAlias $test3', $r);
+        $this->assertStringContainsString('private readonly ATestAlias $test3', $r);
     }
 
     public function testDuplicateProperty(): void
@@ -129,7 +129,7 @@ class ConflictResolverTest extends TestCase
         );
 
         $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertStringContainsString('__construct(private Test $test)', $r);
+        $this->assertStringContainsString('__construct(private readonly Test $test)', $r);
     }
 
     /**

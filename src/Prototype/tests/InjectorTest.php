@@ -40,7 +40,7 @@ class InjectorTest extends TestCase
             $this->getDefinition($filename, ['testClass' => TestClass::class])
         );
 
-        $this->assertStringContainsString('private TestClass $testClass', $printed);
+        $this->assertStringContainsString('private readonly TestClass $testClass', $printed);
     }
 
     public function testPromotedParamInjection(): void
@@ -54,7 +54,7 @@ class InjectorTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            '__construct(private InjectionTwo $two, string $foo, private InjectionOne $one)',
+            '__construct(private readonly InjectionTwo $two, string $foo, private InjectionOne $one)',
             $printed
         );
     }
@@ -158,7 +158,7 @@ class InjectorTest extends TestCase
         );
 
         $this->assertStringContainsString('@param HydratedClass $h', $printed);
-        $this->assertStringContainsString('private TestClass $testClass', $printed);
+        $this->assertStringContainsString('private readonly TestClass $testClass', $printed);
 
         $parameters = $extractor->extractFromString($printed);
         $this->assertArrayHasKey('testClass', $parameters);

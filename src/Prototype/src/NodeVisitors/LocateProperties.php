@@ -51,19 +51,21 @@ final class LocateProperties extends NodeVisitorAbstract
             }
         }
 
-        if ($this->isPromotedProperty($node)) {
-            $this->properties[$node->var->name] = $node->var->name;
-        }
+        $this->promotedProperties($node);
     }
 
-    private function isPromotedProperty(Node $node): bool
+    private function promotedProperties(Node $node): void
     {
-        if (!$node instanceof Node\Param) {
-            return false;
+        if (!$node instanceof Node\Param || !$node->var instanceof Node\Expr\Variable) {
+            return;
         }
 
-        return $node->flags === Modifiers::PUBLIC
-            || $node->flags === Modifiers::PROTECTED
-            || $node->flags === Modifiers::PRIVATE;
+        if (
+            $node->flags === Node\Stmt\Class_::MODIFIER_PUBLIC ||
+            $node->flags === Node\Stmt\Class_::MODIFIER_PROTECTED ||
+            $node->flags === Node\Stmt\Class_::MODIFIER_PRIVATE
+        ) {
+            $this->properties[$node->var->name] = $node->var->name;
+        }
     }
 }
