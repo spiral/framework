@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\NodeVisitors;
 
-use PhpParser\Modifiers;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
