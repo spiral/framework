@@ -19,7 +19,7 @@ interface InvokerInterface
      * @param callable|non-empty-string|array{class-string, non-empty-string} $target
      *        string - class name or container definition
      *        array - lazy callable where first element can be class name or container definition
-     * @param array<non-empty-string, mixed> $parameters Predefined named arguments
+     * @param array $parameters Predefined named arguments
      *
      * @throws NotCallableException
      */

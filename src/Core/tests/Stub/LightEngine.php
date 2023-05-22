@@ -13,6 +13,14 @@ abstract class LightEngine implements EngineInterface
         return $this->power;
     }
 
+    public function withPower(int $value): static
+    {
+        $clone = clone $this;
+        $clone->power = $value;
+
+        return $clone;
+    }
+
     public static function isWroomWroom(): bool
     {
         return true;

@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spiral\Core\Internal;
 
+use Spiral\Core\Config\Binding;
+use Spiral\Core\Config\Inflector;
 use Spiral\Core\Container\Autowire;
 
 /**
@@ -12,15 +16,24 @@ use Spiral\Core\Container\Autowire;
 final class State
 {
     /**
-     * @var array<string, string|object|array{TResolver, bool}>
+     * @var array<string, Binding>
      */
     public array $bindings = [];
 
     /**
-     * List of classes responsible for handling specific instance or interface. Provides ability to
-     * delegate container functionality.
+     * @var array<string, mixed> Cache for singletons
+     */
+    public array $singletons = [];
+
+    /**
+     * @var array<class-string, string>
      */
     public array $injectors = [];
+
+    /**
+     * @var array<class-string, Inflector[]>
+     */
+    public array $inflectors = [];
 
     /**
      * List of finalizers to be called on container scope destruction.
@@ -30,6 +43,7 @@ final class State
 
     public function destruct(): void
     {
+        $this->singletons = [];
         $this->injectors = [];
         $this->bindings = [];
         $this->finalizers = [];

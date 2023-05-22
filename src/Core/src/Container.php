@@ -6,6 +6,8 @@ namespace Spiral\Core;
 
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
+use Spiral\Core\Config\Alias;
+use Spiral\Core\Config\WeakReference;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectableInterface;
 use Spiral\Core\Container\SingletonInterface;
@@ -67,15 +69,16 @@ final class Container implements
         \assert(isset($this->state));
 
         // Bind himself
+        $shared = new Alias(self::class);
         $this->state->bindings = \array_merge($this->state->bindings, [
-            self::class => \WeakReference::create($this),
-            ContainerInterface::class => self::class,
-            BinderInterface::class => self::class,
-            FactoryInterface::class => self::class,
-            ContainerScopeInterface::class => self::class,
-            ScopeInterface::class => self::class,
-            ResolverInterface::class => self::class,
-            InvokerInterface::class => self::class,
+            self::class => new WeakReference(\WeakReference::create($this)),
+            ContainerInterface::class => $shared,
+            BinderInterface::class => $shared,
+            FactoryInterface::class => $shared,
+            ContainerScopeInterface::class => $shared,
+            ScopeInterface::class => $shared,
+            ResolverInterface::class => $shared,
+            InvokerInterface::class => $shared,
         ]);
     }
 
@@ -163,12 +166,20 @@ final class Container implements
     public function runScope(array $bindings, callable $scope): mixed
     {
         $binds = &$this->state->bindings;
-        $cleanup = $previous = [];
+        $singletons = &$this->state->singletons;
+        $cleanup = $previous = $prevSin = [];
         foreach ($bindings as $alias => $resolver) {
+            // Store previous bindings
             if (isset($binds[$alias])) {
                 $previous[$alias] = $binds[$alias];
             } else {
+                // Store bindings to be removed
                 $cleanup[] = $alias;
+            }
+            // Store previous singletons
+            if (isset($singletons[$alias])) {
+                $prevSin[$alias] = $singletons[$alias];
+                unset($singletons[$alias]);
             }
 
             $this->binder->bind($alias, $resolver);
@@ -179,12 +190,17 @@ final class Container implements
                 ? ContainerScope::runScope($this, $scope)
                 : $scope($this);
         } finally {
+            // Remove new bindings
+            foreach ($cleanup as $alias) {
+                unset($binds[$alias], $singletons[$alias]);
+            }
+            // Restore previous bindings
             foreach ($previous as $alias => $resolver) {
                 $binds[$alias] = $resolver;
             }
-
-            foreach ($cleanup as $alias) {
-                unset($binds[$alias]);
+            // Restore singletons
+            foreach ($prevSin as $alias => $instance) {
+                $singletons[$alias] = $instance;
             }
         }
     }
@@ -243,7 +259,7 @@ final class Container implements
      * for each method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
      */
-    public function bind(string $alias, string|array|callable|object $resolver): void
+    public function bind(string $alias, mixed $resolver): void
     {
         $this->binder->bind($alias, $resolver);
     }

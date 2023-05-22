@@ -7,9 +7,8 @@ namespace Spiral\Core\Container;
 use Spiral\Core\Exception\Container\ContainerException;
 
 /**
- * Magic spiral interface used to resolve dependencies based on their context . Container may
- * execute such method if INJECTOR constant found in requested class. Potentially changed to
- * lazy binding in spiral container (deprecated).
+ * Magic spiral interface used to resolve dependencies based on their context. Container may
+ * execute such method if INJECTOR constant found in requested class.
  *
  * @template TClass of object
  */
@@ -31,5 +30,5 @@ interface InjectorInterface
      *
      * @throws ContainerException
      */
-    public function createInjection(\ReflectionClass $class, string $context = null): object;
+    public function createInjection(\ReflectionClass $class, ?string $context = null): object;
 }

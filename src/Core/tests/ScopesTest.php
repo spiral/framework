@@ -113,4 +113,22 @@ class ScopesTest extends TestCase
 
         $this->assertSame($container, $result);
     }
+
+    public function testSingletonRebindingInScope(): void
+    {
+        $c = new Container();
+        $c->bindSingleton('bucket', new Container\Autowire(Bucket::class, ['a']));
+
+        $this->assertSame('a', $c->get('bucket')->getName());
+
+        $this->assertTrue($c->runScope([
+            'bucket' => new Bucket('b'),
+        ], function ($c): bool {
+            $this->assertSame('b', $c->get('bucket')->getName());
+
+            return $c->get('bucket')->getName() === 'b';
+        }));
+
+        $this->assertSame('a', $c->get('bucket')->getName());
+    }
 }

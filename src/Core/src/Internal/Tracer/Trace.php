@@ -40,7 +40,7 @@ final class Trace implements \Stringable
             $item instanceof \Closure => $this->renderClosureSignature(new \ReflectionFunction($item)),
             $item instanceof \ReflectionFunctionAbstract => $this->renderClosureSignature($item),
             $item instanceof \UnitEnum => $item::class . "::$item->name",
-            \is_object($item) => 'instance of ' . $item::class,
+            \is_object($item) => $item instanceof \Stringable ? (string) $item : 'instance of ' . $item::class,
             \is_array($item) => $this->renderArray($item),
             default => \get_debug_type($item),
         };

@@ -10,6 +10,8 @@ use Spiral\Core\Attribute\Finalize;
 use Spiral\Core\Attribute\Scope as ScopeAttribute;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Config\Injectable;
+use Spiral\Core\Config\DeferredFactory;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
@@ -64,12 +66,16 @@ final class Factory implements FactoryInterface
      */
     public function make(string $alias, array $parameters = [], string $context = null): mixed
     {
-        if (!isset($this->state->bindings[$alias])) {
+        if ($parameters === [] && \array_key_exists($alias, $this->state->singletons)) {
+            return $this->state->singletons[$alias];
+        }
+
+        $binding = $this->state->bindings[$alias] ?? null;
+
+        if ($binding === null) {
             return $this->resolveWithoutBinding($alias, $parameters, $context);
         }
 
-        $avoidCache = $parameters !== [];
-        $binding = $this->state->bindings[$alias];
         try {
             $this->tracer->push(
                 false,
@@ -81,66 +87,170 @@ final class Factory implements FactoryInterface
             );
             $this->tracer->push(true);
 
-            if (\is_object($binding)) {
-                if ($binding::class === WeakReference::class) {
-                    return $this->resolveWeakReference($binding, $alias, $context, $parameters);
-                }
-
-                // When binding is instance, assuming singleton
-                return $avoidCache
-                    ? $this->createInstance(
-                        new Ctx(alias: $alias, class: $binding::class, parameter: $context),
-                        $parameters,
-                    )
-                    : $binding;
-            }
-
-            $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context);
-            if (\is_string($binding)) {
-                $ctx->class = $binding;
-                return $binding === $alias
-                    ? $this->autowire($ctx, $parameters)
-                    //Binding is pointing to something else
-                    : $this->make($binding, $parameters, $context);
-            }
-
-            if ($binding[1] === true) {
-                $ctx->singleton = true;
-            }
             unset($this->state->bindings[$alias]);
-            try {
-                return $binding[0] === $alias
-                    ? $this->autowire($ctx, $parameters)
-                    : $this->evaluateBinding($ctx, $binding[0], $parameters);
-            } finally {
-                $this->state->bindings[$alias] ??= $binding;
-            }
+            return match ($binding::class) {
+                \Spiral\Core\Config\Alias::class => $this->resolveAlias($binding, $alias, $context, $parameters),
+                \Spiral\Core\Config\Autowire::class => $this->resolveAutowire($binding, $alias, $context, $parameters),
+                DeferredFactory::class,
+                \Spiral\Core\Config\Factory::class => $this->resolveFactory($binding, $alias, $context, $parameters),
+                \Spiral\Core\Config\Shared::class => $this->resolveShared($binding, $alias, $context, $parameters),
+                Injectable::class => $this->resolveInjector($binding, $alias, $context, $parameters),
+                \Spiral\Core\Config\Scalar::class => $binding->value,
+                \Spiral\Core\Config\WeakReference::class => $this
+                    ->resolveWeakReference($binding, $alias, $context, $parameters),
+                default => $binding,
+            };
         } finally {
+            $this->state->bindings[$alias] ??= $binding;
             $this->tracer->pop(true);
             $this->tracer->pop(false);
         }
     }
 
-    private function resolveWeakReference(
-        WeakReference $binding,
+    private function resolveInjector(
+        Injectable $binding,
         string $alias,
         ?string $context,
-        array $parameters
-    ): ?object {
-        $avoidCache = $parameters !== [];
+        array $arguments,
+    ) {
+        $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context);
 
-        if (($avoidCache || $binding->get() === null) && \class_exists($alias)) {
+        // We have to construct class using external injector when we know exact context
+        if ($arguments !== []) {
+            // todo factory?
+        }
+
+        $class = $ctx->class;
+        try {
+            $ctx->reflection = $reflection = new \ReflectionClass($class);
+        } catch (\ReflectionException $e) {
+            throw new ContainerException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        $injector = $binding->injector;
+
+        try {
+            $injectorInstance = \is_object($injector) ? $injector : $this->container->get($injector);
+
+            if (!$injectorInstance instanceof InjectorInterface) {
+                throw new InjectionException(
+                    \sprintf(
+                        "Class '%s' must be an instance of InjectorInterface for '%s'.",
+                        $injectorInstance::class,
+                        $reflection->getName()
+                    )
+                );
+            }
+
+            /**
+             * @psalm-suppress RedundantCondition
+             */
+            $instance = $injectorInstance->createInjection($reflection, $ctx->parameter);
+            if (!$reflection->isInstance($instance)) {
+                throw new InjectionException(
+                    \sprintf(
+                        "Invalid injection response for '%s'.",
+                        $reflection->getName()
+                    )
+                );
+            }
+
+            return $instance;
+        } finally {
+            $this->state->bindings[$reflection->getName()] ??= $binding; //new Injector($injector);
+        }
+    }
+
+    private function resolveAlias(
+        \Spiral\Core\Config\Alias $binding,
+        string $alias,
+        ?string $context,
+        array $arguments,
+    ): mixed {
+        $result = $binding->alias === $alias
+            ? $this->autowire(
+                new Ctx(alias: $alias, class: $binding->alias, parameter: $context, singleton: $binding->singleton),
+                $arguments,
+            )
+            //Binding is pointing to something else
+            : $this->make($binding->alias, $arguments, $context);
+
+        if ($binding->singleton && $arguments === []) {
+            $this->state->singletons[$alias] = $result;
+        }
+
+        return $result;
+    }
+
+    private function resolveShared(
+        \Spiral\Core\Config\Shared $binding,
+        string $alias,
+        ?string $context,
+        array $arguments,
+    ): object {
+        $avoidCache = $arguments !== [];
+        return $avoidCache
+            ? $this->createInstance(
+                new Ctx(alias: $alias, class: $binding->value::class, parameter: $context),
+                $arguments,
+            )
+            : $binding->value;
+    }
+
+    private function resolveAutowire(
+        \Spiral\Core\Config\Autowire $binding,
+        string $alias,
+        ?string $context,
+        array $arguments,
+    ): mixed {
+        $instance = $binding->autowire->resolve($this, $arguments);
+
+        $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context, singleton: $binding->singleton);
+        return $this->validateNewInstance($instance, $ctx, $arguments);
+    }
+
+    private function resolveFactory(
+        \Spiral\Core\Config\Factory|DeferredFactory $binding,
+        string $alias,
+        ?string $context,
+        array $arguments,
+    ): mixed {
+        $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context, singleton: $binding->singleton);
+        try {
+            $instance = $binding::class === \Spiral\Core\Config\Factory::class && $binding->getParametersCount() === 0
+                ? ($binding->factory)()
+                : $this->invoker->invoke($binding->factory, $arguments);
+        } catch (NotCallableException $e) {
+            throw new ContainerException(
+                $this->tracer->combineTraceMessage(\sprintf('Invalid binding for `%s`.', $ctx->alias)),
+                $e->getCode(),
+                $e,
+            );
+        }
+
+        return \is_object($instance) ? $this->validateNewInstance($instance, $ctx, $arguments) : $instance;
+    }
+
+    private function resolveWeakReference(
+        \Spiral\Core\Config\WeakReference $binding,
+        string $alias,
+        ?string $context,
+        array $arguments,
+    ): ?object {
+        $avoidCache = $arguments !== [];
+
+        if (($avoidCache || $binding->reference->get() === null) && \class_exists($alias)) {
             try {
                 $this->tracer->push(false, alias: $alias, source: WeakReference::class, context: $context);
 
                 $object = $this->createInstance(
                     new Ctx(alias: $alias, class: $alias, parameter: $context),
-                    $parameters,
+                    $arguments,
                 );
                 if ($avoidCache) {
                     return $object;
                 }
-                $binding = $this->state->bindings[$alias] = WeakReference::create($object);
+                $binding->reference = WeakReference::create($object);
             } catch (\Throwable) {
                 throw new ContainerException(
                     $this->tracer->combineTraceMessage(
@@ -156,7 +266,7 @@ final class Factory implements FactoryInterface
             }
         }
 
-        return $binding->get();
+        return $binding->reference->get();
     }
 
     private function resolveWithoutBinding(string $alias, array $parameters = [], string $context = null): mixed
@@ -235,45 +345,22 @@ final class Factory implements FactoryInterface
     }
 
     /**
-     * @param mixed $target Value that was bound by user.
-     *
-     * @throws ContainerException
+     * @throws BadScopeException
      * @throws \Throwable
      */
-    private function evaluateBinding(
+    private function validateNewInstance(
+        object $instance,
         Ctx $ctx,
-        mixed $target,
         array $arguments,
-    ): mixed {
-        if (\is_string($target)) {
-            // Reference
-            $instance = $this->make($target, $arguments, $ctx->parameter);
-        } else {
-            if ($target instanceof Autowire) {
-                $instance = $target->resolve($this, $arguments);
-            } else {
-                try {
-                    $instance = $this->invoker->invoke($target, $arguments);
-                } catch (NotCallableException $e) {
-                    throw new ContainerException(
-                        $this->tracer->combineTraceMessage(\sprintf('Invalid binding for `%s`.', $ctx->alias)),
-                        $e->getCode(),
-                        $e,
-                    );
-                }
-            }
-
-            // Check scope name
-            if (\is_object($instance)) {
-                $ctx->reflection = new \ReflectionClass($instance);
-                $scopeName = ($ctx->reflection->getAttributes(ScopeAttribute::class)[0] ?? null)?->newInstance()->name;
-                if ($scopeName !== null && $scopeName !== $this->scope->getScopeName()) {
-                    throw new BadScopeException($scopeName, $instance::class);
-                }
-            }
+    ): object {
+        // Check scope name
+        $ctx->reflection = new \ReflectionClass($instance);
+        $scopeName = ($ctx->reflection->getAttributes(ScopeAttribute::class)[0] ?? null)?->newInstance()->name;
+        if ($scopeName !== null && $scopeName !== $this->scope->getScopeName()) {
+            throw new BadScopeException($scopeName, $instance::class);
         }
 
-        return \is_object($instance) && $arguments === []
+        return $arguments === []
             ? $this->registerInstance($ctx, $instance)
             : $instance;
     }
@@ -310,39 +397,7 @@ final class Factory implements FactoryInterface
 
         //We have to construct class using external injector when we know exact context
         if ($parameters === [] && $this->binder->hasInjector($class)) {
-            $injector = $this->state->injectors[$reflection->getName()];
-
-            try {
-                $injectorInstance = $this->container->get($injector);
-
-                if (!$injectorInstance instanceof InjectorInterface) {
-                    throw new InjectionException(
-                        \sprintf(
-                            "Class '%s' must be an instance of InjectorInterface for '%s'.",
-                            $injectorInstance::class,
-                            $reflection->getName()
-                        )
-                    );
-                }
-
-                /**
-                 * @var InjectorInterface<TObject> $injectorInstance
-                 * @psalm-suppress RedundantCondition
-                 */
-                $instance = $injectorInstance->createInjection($reflection, $ctx->parameter);
-                if (!$reflection->isInstance($instance)) {
-                    throw new InjectionException(
-                        \sprintf(
-                            "Invalid injection response for '%s'.",
-                            $reflection->getName()
-                        )
-                    );
-                }
-
-                return $instance;
-            } finally {
-                $this->state->injectors[$reflection->getName()] = $injector;
-            }
+            return $this->resolveInjector($this->state->bindings[$ctx->class], $ctx->class, $ctx->parameter, $parameters);
         }
 
         if (!$reflection->isInstantiable()) {
@@ -397,23 +452,17 @@ final class Factory implements FactoryInterface
     }
 
     /**
-     * Register instance in container, might perform methods like auto-singletons, log populations
-     * and etc.
-     *
-     * @template TObject of object
-     *
-     * @param TObject $instance Created object.
-     * @param \ReflectionClass<TObject> $reflection
-     *
-     * @return TObject
+     * Register instance in container, might perform methods like auto-singletons, log populations, etc.
      */
     private function registerInstance(Ctx $ctx, object $instance): object
     {
         $ctx->reflection ??= new \ReflectionClass($instance);
 
+        $instance = $this->runInflector($instance);
+
         //Declarative singletons
         if ($this->isSingleton($ctx)) {
-            $this->state->bindings[$ctx->alias] = $instance;
+            $this->state->singletons[$ctx->alias] = $instance;
         }
 
         // Register finalizer
@@ -454,5 +503,29 @@ final class Factory implements FactoryInterface
         }
 
         return [$instance, $attribute->method];
+    }
+
+    /**
+     * Find and run inflector
+     */
+    private function runInflector(object $instance): object
+    {
+        $scope = $this->scope;
+
+        while ($scope !== null) {
+            foreach ($this->state->inflectors as $class => $inflectors) {
+                if ($instance instanceof $class) {
+                    foreach ($inflectors as $inflector) {
+                        $instance = $inflector->getParametersCount() > 1
+                            ? $this->invoker->invoke($inflector->inflector, [$instance])
+                            : ($inflector->inflector)($instance);
+                    }
+                }
+            }
+
+            $scope = $scope->getParentScope();
+        }
+
+        return $instance;
     }
 }
