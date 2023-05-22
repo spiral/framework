@@ -17,8 +17,6 @@ use Spiral\Tests\Prototype\Fixtures\TestClass;
 
 class InjectorTest extends TestCase
 {
-    use BackwardCompatibilityTrait;
-
     public function setUp(): void
     {
         if ((string)ini_get('zend.assertions') === 1) {
