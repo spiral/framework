@@ -60,9 +60,9 @@ final class LocateProperties extends NodeVisitorAbstract
         }
 
         if (
-            $node->flags === Node\Stmt\Class_::MODIFIER_PUBLIC ||
-            $node->flags === Node\Stmt\Class_::MODIFIER_PROTECTED ||
-            $node->flags === Node\Stmt\Class_::MODIFIER_PRIVATE
+            $node->flags & Node\Stmt\Class_::MODIFIER_PUBLIC ||
+            $node->flags & Node\Stmt\Class_::MODIFIER_PROTECTED ||
+            $node->flags & Node\Stmt\Class_::MODIFIER_PRIVATE
         ) {
             $this->properties[$node->var->name] = $node->var->name;
         }
