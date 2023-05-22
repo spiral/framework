@@ -207,8 +207,8 @@ class InjectorTest extends TestCase
             $this->getDefinition(
                 $filename,
                 [
-                    'test'  => ResolverFixtures\Test::class,
-                    'test2' => ResolverFixtures\SubFolder\Test::class,
+                    'test'  => ResolverFixtures\Some::class,
+                    'test2' => ResolverFixtures\SubFolder\Some::class,
                     'test3' => ResolverFixtures\ATest3::class,
                 ]
             )
@@ -252,7 +252,7 @@ class InjectorTest extends TestCase
         $this->assertFalse($parameters['nullableClass1']['optional']);
 
         $this->assertArrayHasKey('test1', $parameters);
-        $this->assertEquals('?Test', $parameters['test1']['type']);
+        $this->assertEquals('?Some', $parameters['test1']['type']);
         $this->assertTrue($parameters['test1']['optional']);
 
         $this->assertArrayHasKey('str3', $parameters);

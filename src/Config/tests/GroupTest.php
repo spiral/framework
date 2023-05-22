@@ -9,7 +9,7 @@ use Spiral\Config\Patch\Delete;
 use Spiral\Config\Patch\Group;
 use Spiral\Config\Patch\Prepend;
 
-class GroupTest extends BaseTest
+class GroupTest extends BaseTestCase
 {
     public function testPatch(): void
     {

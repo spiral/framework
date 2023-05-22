@@ -10,7 +10,7 @@ use Spiral\Tests\Core\Stub\ColorInterface;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 
-final class ExceptionsTest extends BaseTest
+final class ExceptionsTest extends BaseTestCase
 {
     public function testMissingRequiredTypedParameter(): void
     {

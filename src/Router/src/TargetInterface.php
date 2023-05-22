@@ -9,6 +9,8 @@ use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 /**
  * Targets provide logical and constrained bridge between route and specific function or controller.
+ *
+ * @psalm-import-type Matches from UriHandler
  */
 interface TargetInterface
 {
@@ -29,6 +31,7 @@ interface TargetInterface
     /**
      * Generates target handler.
      *
+     * @param Matches $matches
      *
      * @throws \Spiral\Router\Exception\TargetException
      */

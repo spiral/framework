@@ -39,7 +39,7 @@ class InterpolateTest extends TestCase
     {
         $this->assertSame(
             'Bye, {1}!',
-            $this->translator()->trans('Bye, {1}!', [new self()])
+            $this->translator()->trans('Bye, {1}!', [new self('foo')])
         );
     }
 

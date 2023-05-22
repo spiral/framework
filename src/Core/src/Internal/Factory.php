@@ -132,7 +132,7 @@ final class Factory implements FactoryInterface
         if (($avoidCache || $binding->get() === null) && \class_exists($alias)) {
             try {
                 $this->tracer->push(false, alias: $alias, source: WeakReference::class, context: $context);
-                /** @psalm-suppress NoValue */
+
                 $object = $this->createInstance(
                     new Ctx(alias: $alias, class: $alias, parameter: $context),
                     $parameters,
@@ -211,6 +211,7 @@ final class Factory implements FactoryInterface
      */
     private function autowire(Ctx $ctx, array $arguments): object
     {
+        /** @psalm-suppress NoValue, InvalidArrayOffset */
         if (!(\class_exists($ctx->class) || (
             \interface_exists($ctx->class)
                 &&
@@ -433,6 +434,7 @@ final class Factory implements FactoryInterface
             return true;
         }
 
+        /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/9489 */
         if ($ctx->reflection->implementsInterface(SingletonInterface::class)) {
             return true;
         }

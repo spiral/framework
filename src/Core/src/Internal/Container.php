@@ -53,6 +53,7 @@ final class Container implements ContainerInterface
             return $id->resolve($this->factory);
         }
 
+        /** @psalm-suppress TooManyArguments */
         return $this->factory->make($id, [], $context);
     }
 

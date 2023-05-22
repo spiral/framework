@@ -14,7 +14,6 @@ interface TokenStorageInterface
     /**
      * Load token by id, must return null if token not found.
      *
-     *
      * @throws TokenStorageException
      */
     public function load(string $id): ?TokenInterface;
@@ -30,7 +29,6 @@ interface TokenStorageInterface
 
     /**
      * Delete token from the persistent storage.
-     *
      *
      * @throws TokenStorageException
      */

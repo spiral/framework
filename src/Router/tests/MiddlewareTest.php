@@ -13,7 +13,7 @@ use Spiral\Router\UriHandler;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-class MiddlewareTest extends BaseTest
+class MiddlewareTest extends BaseTestCase
 {
     public function testRoute(): void
     {

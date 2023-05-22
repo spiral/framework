@@ -13,7 +13,7 @@ use Spiral\Tests\Core\Stub\NewObjectInParam;
 use Spiral\Tests\Core\Stub\TestTrait;
 use stdClass;
 
-final class CommonCasesTest extends BaseTest
+final class CommonCasesTest extends BaseTestCase
 {
     public function testEmptySignature(): void
     {
@@ -32,7 +32,7 @@ final class CommonCasesTest extends BaseTest
         $this->assertInstanceOf(EngineMarkTwo::class, $result[0]);
     }
 
-    public function testAutowreArgumentByPosition(): void
+    public function testAutowireArgumentByPosition(): void
     {
         $result = $this->resolveClosure(
             static fn(string $foo = 'foo', ?EngineInterface $engine = null) => null,

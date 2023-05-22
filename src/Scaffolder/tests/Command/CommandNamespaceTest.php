@@ -10,7 +10,7 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Scaffolder\Declaration\CommandDeclaration;
 use Spiral\Scaffolder\Declaration\DeclarationInterface;
 
-final class CommandNamespaceTest extends AbstractCommandTest
+final class CommandNamespaceTest extends AbstractCommandTestCase
 {
     public function testCommandWithoutNamespaceOption(): void
     {

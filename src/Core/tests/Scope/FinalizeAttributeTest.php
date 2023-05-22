@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
+use PHPUnit\Framework\Attributes\Group;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\FinalizersException;
 use Spiral\Tests\Core\Scope\Stub\AttrFinalize;
@@ -11,7 +12,7 @@ use Spiral\Tests\Core\Scope\Stub\AttrScopeFooFinalize;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 
-final class FinalizeAttributeTest extends BaseTest
+final class FinalizeAttributeTest extends BaseTestCase
 {
     /**
      * Finalizer from a attribute should be registered and called when a related scope is destroyed.
@@ -20,8 +21,8 @@ final class FinalizeAttributeTest extends BaseTest
     {
         $root = new Container();
 
-        $obj = $root->scope(static function (Container $c1) {
-            $obj = $c1->scope(static function (Container $c2) {
+        $obj = $root->runScoped(static function (Container $c1) {
+            $obj = $c1->runScoped(static function (Container $c2) {
                 $obj = $c2->get(AttrScopeFooFinalize::class);
 
                 self::assertFalse($obj->finalized);
@@ -45,8 +46,8 @@ final class FinalizeAttributeTest extends BaseTest
         $root->bindSingleton(LoggerInterface::class, FileLogger::class);
 
         $obj2 = null;
-        $obj = $root->scope(static function (Container $c1) use (&$obj2) {
-            $obj = $c1->scope(static function (Container $c2) use (&$obj2) {
+        $obj = $root->runScoped(static function (Container $c1) use (&$obj2) {
+            $obj = $c1->runScoped(static function (Container $c2) use (&$obj2) {
                 $obj = $c2->get(AttrScopeFooFinalize::class);
                 $obj2 = $c2->get(AttrScopeFooFinalize::class);
 
@@ -76,8 +77,8 @@ final class FinalizeAttributeTest extends BaseTest
         $root->bindSingleton(LoggerInterface::class, FileLogger::class);
 
         $obj2 = null;
-        $obj = $root->scope(static function (Container $c1) use (&$obj2) {
-            $obj = $c1->scope(static function (Container $c2) use (&$obj2) {
+        $obj = $root->runScoped(static function (Container $c1) use (&$obj2) {
+            $obj = $c1->runScoped(static function (Container $c2) use (&$obj2) {
                 $obj = $c2->get(AttrFinalize::class);
                 $obj2 = $c2->get(AttrFinalize::class);
 
@@ -115,6 +116,7 @@ final class FinalizeAttributeTest extends BaseTest
         self::assertInstanceOf(LoggerInterface::class, $obj->logger);
     }
 
+    #[Group('scrutinizer-ignore')]
     public function testExceptionOnDestroy()
     {
         $root = new Container();
@@ -123,7 +125,7 @@ final class FinalizeAttributeTest extends BaseTest
         self::expectExceptionMessage('An exception has been thrown during finalization of the scope `foo`');
 
         try {
-            $root->scope(static function (Container $c1) {
+            $root->runScoped(static function (Container $c1) {
                 $obj = $c1->get(AttrScopeFooFinalize::class);
                 $obj->throwException = true;
             }, name: 'foo');
@@ -143,6 +145,7 @@ final class FinalizeAttributeTest extends BaseTest
         }
     }
 
+    #[Group('scrutinizer-ignore')]
     public function testManyExceptionsOnDestroy()
     {
         $root = new Container();
@@ -151,7 +154,7 @@ final class FinalizeAttributeTest extends BaseTest
         self::expectExceptionMessage('3 exceptions have been thrown during finalization of the scope `foo`');
 
         try {
-            $root->scope(static function (Container $c1) {
+            $root->runScoped(static function (Container $c1) {
                 $c1->get(AttrScopeFooFinalize::class)->throwException = true;
                 $c1->get(AttrScopeFooFinalize::class)->throwException = true;
                 $c1->get(AttrScopeFooFinalize::class)->throwException = true;

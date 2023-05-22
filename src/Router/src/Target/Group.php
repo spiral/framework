@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Router\Target;
 
+use Spiral\Router\UriHandler;
+
 /**
  * Provides ability to invoke from a given controller set:
  *
  * Example: new Group(['signup' => SignUpController::class]);
+ *
+ * @psalm-import-type Matches from UriHandler
  */
 final class Group extends AbstractTarget
 {
@@ -24,11 +28,17 @@ final class Group extends AbstractTarget
         );
     }
 
+    /**
+     * @param Matches $matches
+     */
     protected function resolveController(array $matches): string
     {
         return $this->controllers[$matches['controller']];
     }
 
+    /**
+     * @param Matches $matches
+     */
     protected function resolveAction(array $matches): ?string
     {
         return $matches['action'];

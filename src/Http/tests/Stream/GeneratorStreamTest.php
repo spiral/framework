@@ -126,7 +126,7 @@ final class GeneratorStreamTest extends TestCase
         $this->assertSame('', (string) $stream);
 
         $this->expectException(RuntimeException::class);
-        $this->expectErrorMessage('Unable to read stream contents.');
+        $this->expectExceptionMessage('Unable to read stream contents.');
 
         $stream->getContents();
     }
@@ -137,7 +137,7 @@ final class GeneratorStreamTest extends TestCase
         $stream->close();
 
         $this->expectException(RuntimeException::class);
-        $this->expectErrorMessage('Cannot read from non-readable stream.');
+        $this->expectExceptionMessage('Cannot read from non-readable stream.');
 
         $stream->read(1);
 

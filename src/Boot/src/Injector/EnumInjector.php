@@ -39,6 +39,7 @@ final class EnumInjector implements InjectorInterface
         }
 
         $this->validateClass($class, $attribute);
+        /** @var ?\Closure $closure */
         $closure = $class->getMethod($attribute->method)->getClosure();
         \assert($closure !== null);
 

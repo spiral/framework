@@ -28,8 +28,8 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.7",
-        "spiral/hmvc": "^3.7"
+        "spiral/core": "^3.8",
+        "spiral/hmvc": "^3.8"
     },
     "autoload": {
         "psr-4": {
@@ -37,10 +37,10 @@
         }
     },
     "require-dev": {
-        "spiral/console": "^3.7",
-        "phpunit/phpunit": "^9.5.20",
+        "spiral/console": "^3.8",
+        "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
-        "vimeo/psalm": "^4.27"
+        "vimeo/psalm": "^5.9"
     },
     "autoload-dev": {
         "psr-4": {
@@ -49,7 +49,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.7.x-dev"
+            "dev-master": "3.8.x-dev"
         }
     },
     "config": {

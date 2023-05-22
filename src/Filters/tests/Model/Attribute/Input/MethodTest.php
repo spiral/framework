@@ -6,7 +6,7 @@ namespace Spiral\Tests\Filters\Model\Attribute\Input;
 
 use Spiral\Filters\Attribute\Input\Method;
 
-final class MethodTest extends \Spiral\Tests\Filters\Model\AttributeTest
+final class MethodTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
 {
     public function testGetsValue(): void
     {

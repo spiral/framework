@@ -46,6 +46,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
      */
     public function init(): void
     {
+        /** @psalm-suppress InvalidCast https://github.com/vimeo/psalm/issues/8810 */
         $this->binder->bindInjector(FilterInterface::class, self::class);
 
         $this->config->setDefaults(

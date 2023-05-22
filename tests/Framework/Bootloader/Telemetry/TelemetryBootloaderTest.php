@@ -19,9 +19,9 @@ use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerFactoryInterface;
 use Spiral\Telemetry\TracerInterface;
 use Spiral\Telemetry\TracerFactoryProviderInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class TelemetryBootloaderTest extends BaseTest
+final class TelemetryBootloaderTest extends BaseTestCase
 {
     public function testTracerFactoryInterfaceBinding(): void
     {

@@ -11,10 +11,10 @@ use Spiral\Filters\Model\Schema\Builder;
 use Spiral\Filters\Model\Schema\InputMapper;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
-use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\NestedFilter;
 
-final class InputMapperTest extends BaseTest
+final class InputMapperTest extends BaseTestCase
 {
     private m\LegacyMockInterface|m\MockInterface|FilterProviderInterface $provider;
     private InputMapper $mapper;

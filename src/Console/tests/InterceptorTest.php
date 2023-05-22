@@ -11,7 +11,7 @@ use Spiral\Tests\Console\Fixtures\TestCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class InterceptorTest extends BaseTest
+final class InterceptorTest extends BaseTestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -6,6 +6,7 @@ namespace Spiral\Core\Internal\Factory;
 
 /**
  * @template TClass of object
+ * @internal
  */
 final class Ctx
 {

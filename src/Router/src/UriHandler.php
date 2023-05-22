@@ -15,6 +15,8 @@ use Spiral\Router\Registry\RoutePatternRegistryInterface;
 
 /**
  * UriMatcher provides ability to match and generate uris based on given parameters.
+ *
+ * @psalm-type Matches = array{controller: non-empty-string, action: non-empty-string, ...}
  */
 final class UriHandler
 {
@@ -35,10 +37,13 @@ final class UriHandler
 
     /** @internal */
     private readonly SlugifyInterface $slugify;
+    private readonly RoutePatternRegistryInterface $patternRegistry;
     private array $constrains = [];
     private array $defaults = [];
     private bool $matchHost = false;
+    /** @readonly */
     private string $prefix = '';
+    /** @readonly */
     private string $basePath = '/';
     private ?string $compiled = null;
     private ?string $template = null;
@@ -47,8 +52,9 @@ final class UriHandler
     public function __construct(
         private readonly UriFactoryInterface $uriFactory,
         SlugifyInterface $slugify = null,
-        private readonly ?RoutePatternRegistryInterface $patternRegistry = new DefaultPatternRegistry(),
+        ?RoutePatternRegistryInterface $patternRegistry = null,
     ) {
+        $this->patternRegistry = $patternRegistry ?? new DefaultPatternRegistry();
         $this->slugify = $slugify ?? new Slugify();
     }
 
@@ -57,6 +63,9 @@ final class UriHandler
         return $this->pattern;
     }
 
+    /**
+     * @mutation-free
+     */
     public function withConstrains(array $constrains, array $defaults = []): self
     {
         $uriHandler = clone $this;
@@ -72,6 +81,9 @@ final class UriHandler
         return $this->constrains;
     }
 
+    /**
+     * @mutation-free
+     */
     public function withPrefix(string $prefix): self
     {
         $uriHandler = clone $this;
@@ -86,6 +98,9 @@ final class UriHandler
         return $this->prefix;
     }
 
+    /**
+     * @mutation-free
+     */
     public function withBasePath(string $basePath): self
     {
         if (!\str_ends_with($basePath, '/')) {
@@ -104,6 +119,9 @@ final class UriHandler
         return $this->basePath;
     }
 
+    /**
+     * @mutation-free
+     */
     public function withPattern(string $pattern): self
     {
         $uriHandler = clone $this;
@@ -114,6 +132,12 @@ final class UriHandler
         return $uriHandler;
     }
 
+    /**
+     * @psalm-assert-if-false null $this->compiled
+     * @psalm-assert-if-true !null $this->compiled
+     * @psalm-assert-if-true !null $this->pattern
+     * @psalm-assert-if-true !null $this->template
+     */
     public function isCompiled(): bool
     {
         return $this->compiled !== null;
@@ -122,6 +146,11 @@ final class UriHandler
     /**
      * Match given url against compiled template and return matches array or null if pattern does
      * not match.
+     *
+     * @return Matches|null
+     *
+     * @psalm-external-mutation-free
+     * @psalm-suppress MoreSpecificReturnType, LessSpecificReturnStatement
      */
     public function match(UriInterface $uri, array $defaults): ?array
     {
@@ -229,6 +258,9 @@ final class UriHandler
 
     /**
      * Compile route matcher into regexp.
+     * @psalm-assert !null $this->pattern
+     * @psalm-assert !null $this->template
+     * @psalm-assert !null $this->compiled
      */
     private function compile(): void
     {

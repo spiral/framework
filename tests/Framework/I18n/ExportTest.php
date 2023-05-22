@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\I18n;
 
-use Spiral\Tests\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTestCase;
 
-final class ExportTest extends ConsoleTest
+final class ExportTest extends ConsoleTestCase
 {
     public function tearDown(): void
     {

@@ -98,11 +98,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ],
         'require-dev'  => [
-            'phpunit/phpunit'           => '^9.5.20',
+            'phpunit/phpunit'           => '^10.1',
             'mockery/mockery'           => '^1.5',
             'spiral/code-style'         => '^1.1',
             'symplify/monorepo-builder' => '^10.2.7',
-            'vimeo/psalm'               => '^4.27',
+            'vimeo/psalm'               => '^5.9',
         ],
     ]);
 

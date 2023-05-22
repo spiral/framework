@@ -7,9 +7,9 @@ namespace Framework\Bootloader\Exceptions;
 use Spiral\Snapshots\FileSnapshooter;
 use Spiral\Snapshots\FileSnapshot;
 use Spiral\Snapshots\SnapshotterInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class SnapshotsBootloaderTest extends BaseTest
+final class SnapshotsBootloaderTest extends BaseTestCase
 {
     public function testSnapshotterInterfaceBinding(): void
     {

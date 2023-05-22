@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\InputInterface;
 
-final class InputScopeTest extends BaseTest
+final class InputScopeTest extends BaseTestCase
 {
     public function setUp(): void
     {

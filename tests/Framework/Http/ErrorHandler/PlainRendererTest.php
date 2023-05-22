@@ -6,6 +6,7 @@ namespace Spiral\Tests\Framework\Http\ErrorHandler;
 
 use GuzzleHttp\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Spiral\Http\ErrorHandler\PlainRenderer;
@@ -42,9 +43,7 @@ final class PlainRendererTest extends TestCase
         self::assertEquals('Error code: 400', $stream->getContents());
     }
 
-    /**
-     * @dataProvider dataResponseIsJson
-     */
+    #[DataProvider('dataResponseIsJson')]
     public function testResponseIsJson(): void
     {
         $renderer = new PlainRenderer($this->mockResponseFactory());
@@ -64,7 +63,7 @@ final class PlainRendererTest extends TestCase
         self::assertJsonStringEqualsJsonString('{"status": 400}', $stream->getContents());
     }
 
-    public function dataResponseIsJson(): iterable
+    public static function dataResponseIsJson(): iterable
     {
         yield [
             'application/json',
@@ -87,9 +86,7 @@ final class PlainRendererTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataResponseIsPlain
-     */
+    #[DataProvider('dataResponseIsPlain')]
     public function testResponseIsPlain($acceptHeader): void
     {
         $renderer = new PlainRenderer($this->mockResponseFactory());
@@ -101,7 +98,7 @@ final class PlainRendererTest extends TestCase
         self::assertEquals('Error code: 400', $stream->getContents());
     }
 
-    public function dataResponseIsPlain(): iterable
+    public static function dataResponseIsPlain(): iterable
     {
         //Accept header contains several mime types with `q` values. JSON is not prioritized
         yield [

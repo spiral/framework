@@ -70,10 +70,20 @@ class PermissionManagerTest extends TestCase
         $allowRule = new AllowRule();
         $forbidRule = new ForbidRule();
 
+        $series = [
+            [[AllowRule::class], $allowRule],
+            [[AllowRule::class], $allowRule],
+            [[ForbidRule::class], $forbidRule],
+        ];
+
         $this->rules->method('has')->willReturn(true);
         $this->rules->method('get')
-            ->withConsecutive([AllowRule::class], [AllowRule::class], [ForbidRule::class])
-            ->willReturn($allowRule, $allowRule, $forbidRule);
+            ->willReturnCallback(function (...$args) use (&$series) {
+                [$expectedArgs, $return] = \array_shift($series);
+                self::assertSame($expectedArgs, $args);
+
+                return $return;
+            });
 
         $manager = new PermissionManager($this->rules);
         $manager->addRole(static::ROLE);
@@ -127,7 +137,7 @@ class PermissionManagerTest extends TestCase
         $manager->addRole(static::ROLE);
 
         $this->rules->method('get')
-            ->withConsecutive([ForbidRule::class])
+            ->with(ForbidRule::class)
             ->willReturn(new ForbidRule());
 
         $this->assertInstanceOf(

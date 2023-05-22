@@ -6,17 +6,16 @@ namespace Spiral\Tests\Auth\Middleware\Firewall;
 
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\Middleware\Firewall\OverwriteFirewall;
 use Spiral\Auth\Transport\HeaderTransport;
 
-final class OverwriteFirewallTest extends BaseFirewallTest
+final class OverwriteFirewallTest extends BaseFirewallTestCase
 {
-    /**
-     * @dataProvider successTokensDataProvider
-     * @dataProvider failTokensDataProvider
-     */
+    #[DataProvider('successTokensDataProvider')]
+    #[DataProvider('failTokensDataProvider')]
     public function testOverwriteFirewall(string $token): void
     {
         $http = $this->getCore(

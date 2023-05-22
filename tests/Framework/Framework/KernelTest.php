@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Framework\Framework;
 
 use Spiral\App\TestApp;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class KernelTest extends BaseTest
+final class KernelTest extends BaseTestCase
 {
     public function testAppBootingCallbacks()
     {

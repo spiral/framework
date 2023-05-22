@@ -11,7 +11,7 @@ use Spiral\Tests\Console\Fixtures\Attribute\WithHelpCommand;
 use Spiral\Tests\Console\Fixtures\Attribute\WithNameCommand;
 use Spiral\Tests\Console\Fixtures\Attribute\WithSymfonyAttributeCommand;
 
-final class AttributeTest extends BaseTest
+final class AttributeTest extends BaseTestCase
 {
     public function setUp(): void
     {

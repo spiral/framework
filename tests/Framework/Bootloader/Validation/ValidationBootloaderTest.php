@@ -6,7 +6,7 @@ namespace Framework\Bootloader\Validation;
 
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Set;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Spiral\Validation\Bootloader\ValidationBootloader;
 use Spiral\Validation\Config\ValidationConfig;
 use Spiral\Validation\Exception\ValidationException;
@@ -15,7 +15,7 @@ use Spiral\Validation\ValidationProvider;
 use Spiral\Validation\ValidationProviderInterface;
 use Spiral\Validation\ValidatorInterface;
 
-final class ValidationBootloaderTest extends BaseTest
+final class ValidationBootloaderTest extends BaseTestCase
 {
     public function testValidationProviderInterfaceBinding(): void
     {

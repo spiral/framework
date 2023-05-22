@@ -13,10 +13,10 @@ use Spiral\Console\Console;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Console\LocatorInterface;
 use Spiral\Console\Sequence\CommandSequence;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-final class ConsoleBootloaderTest extends BaseTest
+final class ConsoleBootloaderTest extends BaseTestCase
 {
     public function testConsoleBinding(): void
     {

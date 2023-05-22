@@ -10,6 +10,8 @@ use Spiral\Models\Exception\EntityException;
 
 /**
  * AbstractEntity with ability to define field mutators and access
+ *
+ * @implements \IteratorAggregate<string, mixed>
  */
 abstract class AbstractEntity implements EntityInterface, ValueInterface, \IteratorAggregate
 {

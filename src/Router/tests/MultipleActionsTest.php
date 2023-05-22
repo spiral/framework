@@ -11,7 +11,7 @@ use Spiral\Tests\Router\Fixtures\TestController;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-class MultipleActionsTest extends BaseTest
+class MultipleActionsTest extends BaseTestCase
 {
     public function testRouteException(): void
     {

@@ -51,7 +51,7 @@ final class DefineBlocks implements VisitorInterface
         $name = null;
         foreach ($this->prefix as $prefix) {
             if (\str_starts_with($node->name, $prefix)) {
-                $name = \substr($node->name, \strlen((string) $prefix));
+                $name = \substr($node->name, \strlen($prefix));
                 break;
             }
         }

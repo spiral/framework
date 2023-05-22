@@ -18,9 +18,9 @@ use Spiral\Router\Target\Action;
 use Spiral\Router\Target\Controller;
 use Spiral\Router\Target\Group;
 use Spiral\Router\Target\Namespaced;
-use Spiral\Tests\Router\BaseTest;
+use Spiral\Tests\Router\BaseTestCase;
 
-final class RouteConfiguratorTest extends BaseTest
+final class RouteConfiguratorTest extends BaseTestCase
 {
     public function testDestructException(): void
     {

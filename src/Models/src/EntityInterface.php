@@ -8,6 +8,8 @@ use Spiral\Models\Exception\EntityExceptionInterface;
 
 /**
  * Generic data entity instance.
+ *
+ * @extends \ArrayAccess<string, mixed>
  */
 interface EntityInterface extends \ArrayAccess
 {

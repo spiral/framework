@@ -9,7 +9,7 @@ use Spiral\Stempler\Compiler\Renderer\HTMLRenderer;
 use Spiral\Stempler\Lexer\Grammar\HTMLGrammar;
 use Spiral\Stempler\Parser\Syntax\HTMLSyntax;
 
-class HTMLTest extends BaseTest
+class HTMLTest extends BaseTestCase
 {
     protected const RENDERS = [
         CoreRenderer::class,

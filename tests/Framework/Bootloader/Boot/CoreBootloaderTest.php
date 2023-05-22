@@ -12,9 +12,9 @@ use Spiral\Logger\ListenerRegistry;
 use Spiral\Logger\ListenerRegistryInterface;
 use Spiral\Logger\LogFactory;
 use Spiral\Logger\LogsInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class CoreBootloaderTest extends BaseTest
+final class CoreBootloaderTest extends BaseTestCase
 {
     public function testFilesInterfaceBinding(): void
     {

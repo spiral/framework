@@ -3,31 +3,27 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          backupGlobals="false"
-         backupStaticAttributes="false"
          colors="true"
-         verbose="false"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
          processIsolation="false"
          failOnRisky="false"
          stopOnFailure="false"
          stopOnError="false"
-         stderr="true">
+         stderr="true"
+         cacheDirectory=".phpunit.cache"
+         backupStaticProperties="false">
     <coverage>
-        <include>
-            <directory>src</directory>
-            <directory>src/*/src</directory>
-        </include>
-        <exclude>
-            <directory>src/*/tests</directory>
-            <directory>tests</directory>
-        </exclude>
+        <report>
+            <html outputDirectory="build/coverage"/>
+            <text outputFile="build/coverage.txt"/>
+            <clover outputFile="build/logs/clover.xml"/>
+        </report>
     </coverage>
+    <logging>
+        <junit outputFile="build/report.junit.xml"/>
+    </logging>
     <testsuites>
         <testsuite name="Components Test Suite">
-            <directory>src/*/tests</directory>
-            <directory suffix="TestCase.php">src/*/tests</directory>
+            <directory suffix="Test.php">src/*/tests</directory>
         </testsuite>
         <testsuite name="Framework Test Suite">
             <directory>tests</directory>
@@ -37,4 +33,14 @@
         <ini name="error_reporting" value="-1"/>
         <ini name="memory_limit" value="-1"/>
     </php>
+    <source>
+        <include>
+            <directory>src</directory>
+            <directory>src/*/src</directory>
+        </include>
+        <exclude>
+            <directory>src/*/tests</directory>
+            <directory>tests</directory>
+        </exclude>
+    </source>
 </phpunit>

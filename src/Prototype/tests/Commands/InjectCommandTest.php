@@ -14,7 +14,7 @@ use Spiral\Tests\Prototype\Traverse\Extractor;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class InjectCommandTest extends AbstractCommandsTest
+class InjectCommandTest extends AbstractCommandsTestCase
 {
     public function testEmptyInjection(): void
     {

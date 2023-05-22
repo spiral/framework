@@ -6,9 +6,9 @@ namespace Framework\Bootloader\Http;
 
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionFactoryInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class SessionBootloaderTest extends BaseTest
+final class SessionBootloaderTest extends BaseTestCase
 {
     public function testSessionFactoryInterfaceBinding(): void
     {

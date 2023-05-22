@@ -11,7 +11,7 @@ use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerCarrier;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 
-final class SideEffectTest extends BaseTest
+final class SideEffectTest extends BaseTestCase
 {
     /**
      * When a dependency is resolving from parent then all its dependencies are resolved from parent too.
@@ -22,10 +22,10 @@ final class SideEffectTest extends BaseTest
         $root = new Container();
         $root->bind(LoggerInterface::class, KVLogger::class);
 
-        $root->scope(static function (Container $c1) {
+        $root->runScoped(static function (Container $c1) {
             $c1->bind(LoggerInterface::class, FileLogger::class);
 
-            $c1->scope(static function (LoggerCarrier $carrier, LoggerInterface $logger) {
+            $c1->runScoped(static function (LoggerCarrier $carrier, LoggerInterface $logger) {
                 // from the $root container
                 self::assertInstanceOf(KVLogger::class, $carrier->logger);
                 // from the $c1 container
@@ -39,7 +39,7 @@ final class SideEffectTest extends BaseTest
         $root = new Container();
         $root->bind(LoggerInterface::class, KVLogger::class);
 
-        $root->scope(static function (Container $c1) {
+        $root->runScoped(static function (Container $c1) {
             $c1->bind(LoggerInterface::class, FileLogger::class);
 
             self::assertInstanceOf(

@@ -4,26 +4,21 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Header\AcceptHeader;
 use Spiral\Http\Header\AcceptHeaderItem;
 
 class AcceptHeaderItemTest extends TestCase
 {
-    /**
-     * @dataProvider emptyItemProvider
-     * @param AcceptHeaderItem $item
-     */
+    #[DataProvider('emptyItemProvider')]
     public function testEmptyItem(AcceptHeaderItem $item): void
     {
         $this->assertEmpty($item->getValue());
         $this->assertEquals('', (string)$item);
     }
 
-    /**
-     * @return iterable
-     */
-    public function emptyItemProvider(): iterable
+    public static function emptyItemProvider(): iterable
     {
         $values = ['', ' '];
         foreach ($values as $value) {
@@ -35,10 +30,7 @@ class AcceptHeaderItemTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider valueProvider
-     * @param string $value
-     */
+    #[DataProvider('valueProvider')]
     public function testValue(string $value): void
     {
         $item = AcceptHeaderItem::fromString($value);
@@ -55,24 +47,15 @@ class AcceptHeaderItemTest extends TestCase
         $this->assertEquals($value, (string)$acceptHeader->getAll()[0]);
     }
 
-    /**
-     * @return iterable
-     */
-    public function valueProvider(): iterable
+    public static function valueProvider(): \Traversable
     {
-        return [
-            ['text/html'],
-            ['text/*'],
-            ['*/*'],
-            ['*'],
-        ];
+        yield ['text/html'];
+        yield ['text/*'];
+        yield ['*/*'];
+        yield ['*'];
     }
 
-    /**
-     * @dataProvider qualityBoundariesProvider
-     * @param float            $quality
-     * @param AcceptHeaderItem $item
-     */
+    #[DataProvider('qualityBoundariesProvider')]
     public function testItemQualityBoundaries(float $quality, AcceptHeaderItem $item): void
     {
         if ($quality > 1) {
@@ -87,10 +70,7 @@ class AcceptHeaderItemTest extends TestCase
         $this->assertLessThanOrEqual(1, $item->getQuality());
     }
 
-    /**
-     * @return iterable
-     */
-    public function qualityBoundariesProvider(): iterable
+    public static function qualityBoundariesProvider(): iterable
     {
         $qualities = [-1, 0, 0.5, 1, 2];
         foreach ($qualities as $quality) {
@@ -103,20 +83,13 @@ class AcceptHeaderItemTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider paramsProvider
-     * @param array            $params
-     * @param AcceptHeaderItem $item
-     */
+    #[DataProvider('paramsProvider')]
     public function testParams(array $params, AcceptHeaderItem $item): void
     {
         $this->assertSame($params, $item->getParams());
     }
 
-    /**
-     * @return iterable
-     */
-    public function paramsProvider(): iterable
+    public static function paramsProvider(): iterable
     {
         $set = [
             [
@@ -156,20 +129,13 @@ class AcceptHeaderItemTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider itemProvider
-     * @param string           $expected
-     * @param AcceptHeaderItem $item
-     */
+    #[DataProvider('itemProvider')]
     public function testItem(string $expected, AcceptHeaderItem $item): void
     {
         $this->assertSame($expected, (string)$item);
     }
 
-    /**
-     * @return iterable
-     */
-    public function itemProvider(): iterable
+    public static function itemProvider(): iterable
     {
         $value = '*/*';
 

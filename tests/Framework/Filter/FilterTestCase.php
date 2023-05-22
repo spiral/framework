@@ -9,20 +9,23 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-abstract class FilterTestCase extends BaseTest
+abstract class FilterTestCase extends BaseTestCase
 {
     /**
-     * @param class-string<FilterInterface> $filter
+     * @template T of FilterInterface
+     * @param class-string<T> $filter
+     * @return T
      */
     public function getFilter(
         string $filter,
         array $post = [],
         array $query = [],
-        array $headers = []
+        array $headers = [],
+        string $method = 'POST'
     ): FilterInterface {
-        $request = new ServerRequest('POST', '/');
+        $request = new ServerRequest($method, '/');
 
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);

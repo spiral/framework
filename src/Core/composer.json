@@ -32,8 +32,8 @@
     },
     "require-dev": {
         "mockery/mockery": "^1.5",
-        "phpunit/phpunit": "^9.5.20",
-        "vimeo/psalm": "^5.6"
+        "phpunit/phpunit": "^10.1",
+        "vimeo/psalm": "^5.9"
     },
     "autoload": {
         "psr-4": {
@@ -50,7 +50,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.7.x-dev"
+            "dev-master": "3.8.x-dev"
         }
     },
     "config": {

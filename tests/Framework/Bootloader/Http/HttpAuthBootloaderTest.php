@@ -13,9 +13,9 @@ use Spiral\Auth\TokenStorageProviderInterface;
 use Spiral\Bootloader\Auth\HttpAuthBootloader;
 use Spiral\Config\LoaderInterface;
 use Spiral\Config\ConfigManager;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class HttpAuthBootloaderTest extends BaseTest
+final class HttpAuthBootloaderTest extends BaseTestCase
 {
     public function testTokenStorageProviderInterfaceBinding(): void
     {

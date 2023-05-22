@@ -10,9 +10,9 @@ use Spiral\Distribution\DistributionInterface;
 use Spiral\Distribution\Manager;
 use Spiral\Distribution\MutableDistributionInterface;
 use Spiral\Distribution\UriResolverInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class DistributionBootloaderTest extends BaseTest
+final class DistributionBootloaderTest extends BaseTestCase
 {
     public function testUriResolverInterfaceBinding(): void
     {

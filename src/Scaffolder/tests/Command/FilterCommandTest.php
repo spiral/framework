@@ -6,7 +6,7 @@ namespace Spiral\Tests\Scaffolder\Command;
 
 use Spiral\Filters\Model\Filter;
 
-final class FilterCommandTest extends AbstractCommandTest
+final class FilterCommandTest extends AbstractCommandTestCase
 {
     public function testScaffold(): void
     {

@@ -9,7 +9,7 @@ use Spiral\Stempler\Lexer\Grammar\InlineGrammar;
 use Spiral\Stempler\Lexer\Grammar\PHPGrammar;
 use Spiral\Stempler\Lexer\Token;
 
-class MixedTest extends BaseTest
+class MixedTest extends BaseTestCase
 {
     protected const GRAMMARS = [PHPGrammar::class, InlineGrammar::class, HTMLGrammar::class];
 

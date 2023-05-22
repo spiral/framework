@@ -9,7 +9,7 @@ use Spiral\Router\Route;
 use Spiral\Router\Target\Group;
 use Spiral\Tests\Router\Fixtures\TestController;
 
-class UriTest extends BaseTest
+class UriTest extends BaseTestCase
 {
     public function testCastRoute(): void
     {

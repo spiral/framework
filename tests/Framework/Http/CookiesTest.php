@@ -8,9 +8,9 @@ use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Encrypter\EncrypterInterface;
-use Spiral\Tests\Framework\HttpTest;
+use Spiral\Tests\Framework\HttpTestCase;
 
-final class CookiesTest extends HttpTest
+final class CookiesTest extends HttpTestCase
 {
     public const ENV = [
         'ENCRYPTER_KEY' => self::ENCRYPTER_KEY,

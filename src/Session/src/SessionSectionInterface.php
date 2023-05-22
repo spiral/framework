@@ -8,6 +8,9 @@ use Spiral\Session\Exception\SessionException;
 
 /**
  * Singular session section (session data isolator).
+ *
+ * @extends \IteratorAggregate<array-key, mixed>
+ * @extends \ArrayAccess<mixed, mixed>
  */
 interface SessionSectionInterface extends \IteratorAggregate, \ArrayAccess
 {

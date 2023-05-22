@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Security\Rules;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
 use PHPUnit\Framework\TestCase;
 use Spiral\Security\ActorInterface;
@@ -27,14 +28,8 @@ class CompositeRuleTest extends TestCase
         $this->actor = $this->createMock(ActorInterface::class);
     }
 
-    /**
-     * @param $expected
-     * @param $compositeRuleClass
-     * @param $rules
-     *
-     * @dataProvider allowsProvider
-     */
-    public function testAllow($expected, $compositeRuleClass, $rules): void
+    #[DataProvider('allowsProvider')]
+    public function testAllow(bool $expected, string $compositeRuleClass, array $rules): void
     {
         $repository = $this->createRepository($rules);
 
@@ -46,18 +41,16 @@ class CompositeRuleTest extends TestCase
         );
     }
 
-    public function allowsProvider()
+    public static function allowsProvider(): \Traversable
     {
-        $allowRule = $this->allowRule();
-        $forbidRule = $this->forbidRule();
+        $allowRule = self::allowRule();
+        $forbidRule = self::forbidRule();
 
-        return [
-            [true, AllCompositeRule::class, [$allowRule, $allowRule, $allowRule]],
-            [false, AllCompositeRule::class, [$allowRule, $allowRule, $forbidRule]],
-            [true, OneCompositeRule::class, [$allowRule, $forbidRule, $forbidRule]],
-            [true, OneCompositeRule::class, [$allowRule, $allowRule, $allowRule]],
-            [false, OneCompositeRule::class, [$forbidRule, $forbidRule, $forbidRule]],
-        ];
+        yield [true, AllCompositeRule::class, [$allowRule, $allowRule, $allowRule]];
+        yield [false, AllCompositeRule::class, [$allowRule, $allowRule, $forbidRule]];
+        yield [true, OneCompositeRule::class, [$allowRule, $forbidRule, $forbidRule]];
+        yield [true, OneCompositeRule::class, [$allowRule, $allowRule, $allowRule]];
+        yield [false, OneCompositeRule::class, [$forbidRule, $forbidRule, $forbidRule]];
     }
 
     /**
@@ -76,26 +69,18 @@ class CompositeRuleTest extends TestCase
         return $repository;
     }
 
-    /**
-     * @return RuleInterface
-     */
-    private function allowRule(): RuleInterface
+    private static function allowRule(): RuleInterface
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|RuleInterface $rule */
-        $rule = $this->createMock(RuleInterface::class);
-        $rule->method('allows')->willReturn(true);
+        $rule = \Mockery::mock(RuleInterface::class);
+        $rule->shouldReceive('allows')->andReturnTrue();
 
         return $rule;
     }
 
-    /**
-     * @return RuleInterface
-     */
-    private function forbidRule(): RuleInterface
+    private static function forbidRule(): RuleInterface
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|RuleInterface $rule */
-        $rule = $this->createMock(RuleInterface::class);
-        $rule->method('allows')->willReturn(false);
+        $rule = \Mockery::mock(RuleInterface::class);
+        $rule->shouldReceive('allows')->andReturnFalse();
 
         return $rule;
     }

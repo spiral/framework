@@ -6,7 +6,7 @@ namespace Spiral\Tests\Filters\Model\Attribute;
 
 use Spiral\Filters\Attribute\NestedFilter;
 
-final class NestedFilterTest extends \Spiral\Tests\Filters\Model\AttributeTest
+final class NestedFilterTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
 {
     public function testGetsSchemaWithPrefix(): void
     {

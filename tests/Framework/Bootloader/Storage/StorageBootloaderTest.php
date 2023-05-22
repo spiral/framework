@@ -15,9 +15,9 @@ use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Config\StorageConfig;
 use Spiral\Storage\Storage;
 use Spiral\Storage\StorageInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class StorageBootloaderTest extends BaseTest
+final class StorageBootloaderTest extends BaseTestCase
 {
     public const ENV = ['STORAGE_DEFAULT' => 'foo'];
 

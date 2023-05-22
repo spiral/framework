@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Views;
 
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 use Spiral\Translator\Views\LocaleDependency;
 
-final class LocaleTest extends BaseTest
+final class LocaleTest extends BaseTestCase
 {
     public function testRenderEn(): void
     {

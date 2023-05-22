@@ -24,12 +24,12 @@
         }
     },
     "require-dev": {
-        "spiral/boot": "^3.7",
+        "spiral/boot": "^3.8",
         "aws/aws-sdk-php": "^3.0",
         "guzzlehttp/psr7": "^1.7",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "phpunit/phpunit": "^9.5.20",
-        "vimeo/psalm": "^4.27"
+        "phpunit/phpunit": "^10.1",
+        "vimeo/psalm": "^5.9"
     },
     "autoload-dev": {
         "psr-4": {
@@ -41,7 +41,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.7.x-dev"
+            "dev-master": "3.8.x-dev"
         }
     },
     "scripts": {

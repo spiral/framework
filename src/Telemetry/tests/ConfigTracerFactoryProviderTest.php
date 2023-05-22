@@ -52,7 +52,7 @@ final class ConfigTracerFactoryProviderTest extends TestCase
     public function testGetsTraceeFactoryWithNonExistName(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Config for telemetry driver `bar` is not defined.');
+        $this->expectExceptionMessage('Config for telemetry driver `bar` is not defined.');
 
         $provider = new ConfigTracerFactoryProvider(
             new TelemetryConfig([

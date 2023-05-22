@@ -8,7 +8,7 @@ use Spiral\Stempler\Directive\LoopDirective;
 use Spiral\Stempler\Node\PHP;
 use Spiral\Stempler\Transform\Finalizer\DynamicToPHP;
 
-class DynamicToPHPTest extends BaseTest
+class DynamicToPHPTest extends BaseTestCase
 {
     public function testOutput(): void
     {

@@ -11,7 +11,7 @@ use Spiral\Router\Target\Namespaced;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-class NamespacedTest extends BaseTest
+class NamespacedTest extends BaseTestCase
 {
     public function testRouteException(): void
     {

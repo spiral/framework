@@ -45,11 +45,18 @@ final class RoutingConfigurator
             $this->collection->get(self::DEFAULT_ROUTE_NAME) : null;
     }
 
+    /**
+     * @param non-empty-string $name
+     * @param non-empty-string $pattern
+     */
     public function add(string $name, string $pattern): RouteConfigurator
     {
         return new RouteConfigurator($name, $pattern, $this->collection);
     }
 
+    /**
+     * @param non-empty-string $pattern
+     */
     public function default(string $pattern): RouteConfigurator
     {
         return new RouteConfigurator(self::DEFAULT_ROUTE_NAME, $pattern, $this->collection);

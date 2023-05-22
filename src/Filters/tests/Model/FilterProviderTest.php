@@ -13,11 +13,11 @@ use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Interceptor\Core;
 use Spiral\Filters\Model\Schema\AttributeMapper;
 use Spiral\Http\Request\InputManager;
-use Spiral\Tests\Filters\BaseTest;
+use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\LogoutFilter;
 use Spiral\Tests\Filters\Fixtures\SomeFilter;
 
-final class FilterProviderTest extends BaseTest
+final class FilterProviderTest extends BaseTestCase
 {
     public function testCreateNestedFilterWithIdenticalPropertyNames(): void
     {

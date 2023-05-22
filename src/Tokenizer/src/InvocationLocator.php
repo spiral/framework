@@ -79,6 +79,7 @@ final class InvocationLocator extends AbstractLocator implements InvocationsInte
             return \in_array($target->getName(), $this->fetchTraits($invocation->getClass()));
         }
 
+        /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/9489 */
         return $reflection->getName() == $target->getName() || $reflection->isSubclassOf($target);
     }
 }

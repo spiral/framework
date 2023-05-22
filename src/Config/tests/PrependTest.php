@@ -7,7 +7,7 @@ namespace Spiral\Tests\Config;
 use Spiral\Config\Exception\PatchException;
 use Spiral\Config\Patch\Prepend;
 
-class PrependTest extends BaseTest
+class PrependTest extends BaseTestCase
 {
     public function testPatch(): void
     {

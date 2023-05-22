@@ -40,7 +40,10 @@ final class AuthMiddleware implements MiddlewareInterface
         $authContext = $this->initContext($request, new AuthContext($this->actorProvider, $this->eventDispatcher));
 
         $response = $this->scope->runScope(
-            [AuthContextInterface::class => $authContext],
+            [
+                AuthContextInterface::class => $authContext,
+                TokenStorageInterface::class => $this->tokenStorage,
+            ],
             static fn () => $handler->handle($request->withAttribute(self::ATTRIBUTE, $authContext))
         );
 

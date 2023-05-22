@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Queue\Config;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Core\Container\Autowire;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Exception\InvalidArgumentException;
@@ -61,7 +62,7 @@ final class QueueConfigTest extends TestCase
     public function testGetsNonStringDefaultDriverShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Default queue connection config value must be a string');
+        $this->expectExceptionMessage('Default queue connection config value must be a string');
 
         $config = new QueueConfig(['default' => ['foo']]);
 
@@ -176,7 +177,7 @@ final class QueueConfigTest extends TestCase
     public function testGetsNonExistConnectionShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Queue connection with given name `foo` is not defined.');
+        $this->expectExceptionMessage('Queue connection with given name `foo` is not defined.');
 
         $config = new QueueConfig();
         $config->getConnection('foo');
@@ -185,7 +186,7 @@ final class QueueConfigTest extends TestCase
     public function testGetsConnectionWithoutDriverShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Driver for queue connection `foo` is not defined.');
+        $this->expectExceptionMessage('Driver for queue connection `foo` is not defined.');
 
         $config = new QueueConfig([
             'connections' => [
@@ -199,7 +200,7 @@ final class QueueConfigTest extends TestCase
     public function testGetsConnectionWithWrongDriverValueTypeShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Driver for queue connection `foo` value must be a string');
+        $this->expectExceptionMessage('Driver for queue connection `foo` value must be a string');
 
         $config = new QueueConfig([
             'connections' => [
@@ -215,7 +216,7 @@ final class QueueConfigTest extends TestCase
     public function testGetsConnectionWithWrongDriverAliasValueTypeShouldThrowAnException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectErrorMessage('Driver alias for queue connection `foo` value must be a string');
+        $this->expectExceptionMessage('Driver alias for queue connection `foo` value must be a string');
 
         $config = new QueueConfig([
             'connections' => [
@@ -267,7 +268,7 @@ final class QueueConfigTest extends TestCase
         $this->assertSame([], $config->getRegistrySerializers());
     }
 
-    /** @dataProvider defaultSerializerDataProvider */
+    #[DataProvider('defaultSerializerDataProvider')]
     public function testGetDefaultSerializer(array $config, mixed $expected): void
     {
         $config = new QueueConfig($config);
@@ -275,7 +276,7 @@ final class QueueConfigTest extends TestCase
         $this->assertEquals($expected, $config->getDefaultSerializer());
     }
 
-    public function defaultSerializerDataProvider(): \Generator
+    public static function defaultSerializerDataProvider(): \Generator
     {
         yield [[], null];
         yield [['defaultSerializer' => null], null];

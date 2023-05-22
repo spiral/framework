@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Filter\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\App\Request\AddressFilter;
 use Spiral\App\Request\ProfileFilter;
 use Spiral\App\Request\ProfileFilterWithPrefix;
@@ -48,13 +49,11 @@ final class NestedFilterTest extends FilterTestCase
         $this->assertSame('Wall Street', $filter->address->address);
     }
 
-    /**
-     * @dataProvider provideInvalidData
-     */
+    #[DataProvider('provideInvalidData')]
     public function testDataShouldBeValidated(array $data, array $expectedErrors): void
     {
         $this->expectException(ValidationException::class);
-        $this->expectErrorMessage('The given data was invalid.');
+        $this->expectExceptionMessage('The given data was invalid.');
 
         try {
             $this->getFilter(ProfileFilter::class, $data);
@@ -64,7 +63,7 @@ final class NestedFilterTest extends FilterTestCase
         }
     }
 
-    public function provideInvalidData(): \Generator
+    public static function provideInvalidData(): \Generator
     {
         yield 'empty' => [
             [],

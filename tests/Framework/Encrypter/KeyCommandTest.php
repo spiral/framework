@@ -6,9 +6,9 @@ namespace Spiral\Tests\Framework\Encrypter;
 
 use Spiral\Console\Console;
 use Spiral\Encrypter\EncrypterFactory;
-use Spiral\Tests\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTestCase;
 
-final class KeyCommandTest extends ConsoleTest
+final class KeyCommandTest extends ConsoleTestCase
 {
     public function testKey(): void
     {

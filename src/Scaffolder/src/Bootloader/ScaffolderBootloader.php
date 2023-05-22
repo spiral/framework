@@ -66,47 +66,51 @@ class ScaffolderBootloader extends Bootloader
              */
             'namespace' => $defaultNamespace,
 
+            'declarations' => [],
+
             /*
              * This is set of default settings to be used for your scaffolding commands.
              */
-            'declarations' => [
-                Declaration\BootloaderDeclaration::TYPE => [
-                    'namespace' => 'Bootloader',
-                    'postfix' => 'Bootloader',
-                    'class' => Declaration\BootloaderDeclaration::class,
-                ],
-                Declaration\ConfigDeclaration::TYPE => [
-                    'namespace' => 'Config',
-                    'postfix' => 'Config',
-                    'class' => Declaration\ConfigDeclaration::class,
-                    'options' => [
-                        'directory' => directory('config'),
+            'defaults' => [
+                'declarations' => [
+                    Declaration\BootloaderDeclaration::TYPE => [
+                        'namespace' => 'Bootloader',
+                        'postfix' => 'Bootloader',
+                        'class' => Declaration\BootloaderDeclaration::class,
                     ],
-                ],
-                Declaration\ControllerDeclaration::TYPE => [
-                    'namespace' => 'Controller',
-                    'postfix' => 'Controller',
-                    'class' => Declaration\ControllerDeclaration::class,
-                ],
-                Declaration\FilterDeclaration::TYPE => [
-                    'namespace' => 'Filter',
-                    'postfix' => 'Filter',
-                    'class' => Declaration\FilterDeclaration::class,
-                ],
-                Declaration\MiddlewareDeclaration::TYPE => [
-                    'namespace' => 'Middleware',
-                    'postfix' => '',
-                    'class' => Declaration\MiddlewareDeclaration::class,
-                ],
-                Declaration\CommandDeclaration::TYPE => [
-                    'namespace' => 'Command',
-                    'postfix' => 'Command',
-                    'class' => Declaration\CommandDeclaration::class,
-                ],
-                Declaration\JobHandlerDeclaration::TYPE => [
-                    'namespace' => 'Job',
-                    'postfix' => 'Job',
-                    'class' => Declaration\JobHandlerDeclaration::class,
+                    Declaration\ConfigDeclaration::TYPE => [
+                        'namespace' => 'Config',
+                        'postfix' => 'Config',
+                        'class' => Declaration\ConfigDeclaration::class,
+                        'options' => [
+                            'directory' => directory('config'),
+                        ],
+                    ],
+                    Declaration\ControllerDeclaration::TYPE => [
+                        'namespace' => 'Controller',
+                        'postfix' => 'Controller',
+                        'class' => Declaration\ControllerDeclaration::class,
+                    ],
+                    Declaration\FilterDeclaration::TYPE => [
+                        'namespace' => 'Filter',
+                        'postfix' => 'Filter',
+                        'class' => Declaration\FilterDeclaration::class,
+                    ],
+                    Declaration\MiddlewareDeclaration::TYPE => [
+                        'namespace' => 'Middleware',
+                        'postfix' => '',
+                        'class' => Declaration\MiddlewareDeclaration::class,
+                    ],
+                    Declaration\CommandDeclaration::TYPE => [
+                        'namespace' => 'Command',
+                        'postfix' => 'Command',
+                        'class' => Declaration\CommandDeclaration::class,
+                    ],
+                    Declaration\JobHandlerDeclaration::TYPE => [
+                        'namespace' => 'Job',
+                        'postfix' => 'Job',
+                        'class' => Declaration\JobHandlerDeclaration::class,
+                    ],
                 ],
             ],
         ]);
@@ -114,12 +118,14 @@ class ScaffolderBootloader extends Bootloader
 
     /**
      * Register new Scaffolder declaration.
+     *
+     * @param non-empty-string $name
      */
     public function addDeclaration(string $name, array $declaration): void
     {
         $this->config->modify(
             ScaffolderConfig::CONFIG,
-            new Append('declarations', $name, $declaration),
+            new Append('defaults.declarations', $name, $declaration),
         );
     }
 }

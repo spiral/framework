@@ -10,11 +10,12 @@ use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\CorruptedClass;
 use Spiral\Tests\Core\Fixtures\DatetimeInjector;
+use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Stub\EnumService;
 use Spiral\Tests\Core\Stub\LightEngineDecorator;
 
-final class CommonCasesTest extends BaseTest
+final class CommonCasesTest extends BaseTestCase
 {
     public function testNotInstantiableEnum(): void
     {
@@ -111,7 +112,7 @@ final class CommonCasesTest extends BaseTest
 
     public function testPrivateMethodFactory(): void
     {
-        $this->bind(Bucket::class, [self::class, 'makeBucket']);
+        $this->bind(Bucket::class, [Factory::class, 'makeBucket']);
 
         $bucket = $this->make(Bucket::class, [
             'data' => 'some data',
@@ -126,7 +127,7 @@ final class CommonCasesTest extends BaseTest
     {
         $sample = new SampleClass();
 
-        $this->bind(Bucket::class, [self::class, 'makeBucketWithSample']);
+        $this->bind(Bucket::class, [Factory::class, 'makeBucketWithSample']);
         $this->bind(SampleClass::class, function () use ($sample) {
             return $sample;
         });
@@ -136,25 +137,5 @@ final class CommonCasesTest extends BaseTest
         $this->assertInstanceOf(Bucket::class, $bucket);
         $this->assertSame('via-method-with-sample', $bucket->getName());
         $this->assertSame($sample, $bucket->getData());
-    }
-
-    /**
-     * @param mixed $data
-     *
-     * @return Bucket
-     */
-    private function makeBucket($data)
-    {
-        return new Bucket('via-method', $data);
-    }
-
-    /**
-     * @param SampleClass $sample
-     *
-     * @return Bucket
-     */
-    private function makeBucketWithSample(SampleClass $sample)
-    {
-        return new Bucket('via-method-with-sample', $sample);
     }
 }

@@ -6,6 +6,7 @@ namespace Spiral\Tests\Http\Middleware;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -37,9 +38,7 @@ final class ErrorHandlerMiddlewareTest extends TestCase
         $this->renderer = $this->createMock(RendererInterface::class);
     }
 
-    /**
-     * @dataProvider exceptionsDataProvider
-     */
+    #[DataProvider('exceptionsDataProvider')]
     public function testHandleExceptionWithDebugFalse(\Throwable $e, int $code): void
     {
         $this->handler
@@ -78,9 +77,7 @@ final class ErrorHandlerMiddlewareTest extends TestCase
         $middleware->process($this->request, $this->handler);
     }
 
-    /**
-     * @dataProvider exceptionsDataProvider
-     */
+    #[DataProvider('exceptionsDataProvider')]
     public function testHandleExceptionWithDebugTrue(\Throwable $e, int $code): void
     {
         $renderer = $this->createMock(ExceptionRendererInterface::class);
@@ -127,9 +124,7 @@ final class ErrorHandlerMiddlewareTest extends TestCase
         $this->assertSame($code, $response->getStatusCode());
     }
 
-    /**
-     * @dataProvider exceptionsDataProvider
-     */
+    #[DataProvider('exceptionsDataProvider')]
     public function testHandleExceptionWithDefaultVerbosity(\Throwable $e, int $code): void
     {
         $renderer = $this->createMock(ExceptionRendererInterface::class);
@@ -175,7 +170,7 @@ final class ErrorHandlerMiddlewareTest extends TestCase
         $this->assertSame($code, $response->getStatusCode());
     }
 
-    public function exceptionsDataProvider(): \Traversable
+    public static function exceptionsDataProvider(): \Traversable
     {
         yield [new ClientException(message: 'some error'), 400];
         yield [new RouterException(message: 'some error'), 404];

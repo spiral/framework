@@ -7,6 +7,7 @@ namespace Spiral\Tests\Core;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
+use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 
 class BindingsTest extends TestCase
@@ -57,7 +58,7 @@ class BindingsTest extends TestCase
     {
         $container = new Container();
 
-        $container->bindSingleton('sampleClass', [self::class, 'sampleClass']);
+        $container->bindSingleton('sampleClass', [Factory::class, 'sampleClass']);
         $this->assertInstanceOf(SampleClass::class, $container->get('sampleClass'));
     }
 
@@ -71,13 +72,5 @@ class BindingsTest extends TestCase
 
         $this->assertInstanceOf(SampleClass::class, $instance);
         $this->assertSame($instance, $container->get('sampleClass'));
-    }
-
-    /**
-     * @return SampleClass
-     */
-    public function sampleClass()
-    {
-        return new SampleClass();
     }
 }

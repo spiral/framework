@@ -31,6 +31,10 @@ final class Verbatim implements NodeInterface, AttributedInterface
         $this->context = $context;
     }
 
+    /**
+     * @psalm-suppress ImplementedReturnTypeMismatch
+     * @return \Generator<'nodes', array<array-key, TNode|non-empty-string>, mixed, void>
+     */
     public function getIterator(): \Generator
     {
         yield 'nodes' => $this->nodes;

@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
-use ReflectionException;
 use Spiral\Console\Attribute\Argument;
 use Spiral\Console\Attribute\AsCommand;
 use Spiral\Console\Attribute\Option;
 use Spiral\Console\Attribute\Question;
-use Throwable;
 
-final class CommandTest extends AbstractCommandTest
+final class CommandTest extends AbstractCommandTestCase
 {
-
-    /**
-     * @dataProvider commandDataProvider
-     */
+    #[DataProvider('commandDataProvider')]
     public function testScaffold(string $className, string $name, ?string $alias, $commandName): void
     {
         $this->className = $className;
@@ -122,17 +118,15 @@ final class CommandTest extends AbstractCommandTest
         $this->assertStringContainsString('App\Custom\Command', $content);
     }
 
-    public function commandDataProvider(): array
+    public static function commandDataProvider(): \Traversable
     {
-        return [
-            ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleCommand', 'sample', null, 'sample'],
-            ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SomeCommand', 'SomeCommand', null, 'some:command'],
-            [
-                '\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleAliasCommand',
-                'sampleAlias',
-                'my-sample-command-alias',
-                'my-sample-command-alias',
-            ],
+        yield ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleCommand', 'sample', null, 'sample'];
+        yield ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SomeCommand', 'SomeCommand', null, 'some:command'];
+        yield [
+            '\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleAliasCommand',
+            'sampleAlias',
+            'my-sample-command-alias',
+            'my-sample-command-alias',
         ];
     }
 }

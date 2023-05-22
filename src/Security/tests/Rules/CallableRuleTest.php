@@ -22,7 +22,7 @@ class CallableRuleTest extends TestCase
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|callable $callable */
         $callable = $this->getMockBuilder(\stdClass::class)
-            ->setMethods(['__invoke'])
+            ->addMethods(['__invoke'])
             ->getMock();
 
         $callable->method('__invoke')

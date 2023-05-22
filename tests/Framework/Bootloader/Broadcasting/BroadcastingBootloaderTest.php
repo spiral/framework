@@ -14,9 +14,9 @@ use Spiral\Broadcasting\TopicRegistry;
 use Spiral\Broadcasting\TopicRegistryInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class BroadcastingBootloaderTest extends BaseTest
+final class BroadcastingBootloaderTest extends BaseTestCase
 {
     public const ENV = [
         'BROADCAST_CONNECTION' => 'null',

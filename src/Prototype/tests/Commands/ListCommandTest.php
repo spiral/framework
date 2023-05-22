@@ -9,7 +9,7 @@ use Spiral\Tests\Prototype\Fixtures\TestApp;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class ListCommandTest extends AbstractCommandsTest
+class ListCommandTest extends AbstractCommandsTestCase
 {
     public function testList(): void
     {

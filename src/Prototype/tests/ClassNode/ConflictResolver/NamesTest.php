@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\ClassNode\ConflictResolver;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Prototype\ClassNode;
@@ -13,15 +14,7 @@ use Spiral\Tests\Prototype\Fixtures\Dependencies;
 
 class NamesTest extends TestCase
 {
-    /**
-     * @dataProvider cdProvider
-     *
-     * @param string $method
-     * @param array $vars
-     * @param array $dependencies
-     * @param array $expected
-     * @throws \ReflectionException
-     */
+    #[DataProvider('cdProvider')]
     public function testFind(string $method, array $vars, array $dependencies, array $expected): void
     {
         $cd = ClassNode::create('class\name');
@@ -42,35 +35,33 @@ class NamesTest extends TestCase
         $this->assertEquals($expected, $resolved);
     }
 
-    public function cdProvider(): array
+    public static function cdProvider(): \Traversable
     {
-        return [
+        yield [
+            'paramsSource',
+            [],
+            ['v2' => 'type1', 'v' => 'type2', 'vv' => 'type3',],
+            ['v2', 'v', 'vv']
+        ];
+        yield [
+            'paramsSource',
+            ['v', 'v2'],
             [
-                'paramsSource',
-                [],
-                ['v2' => 'type1', 'v' => 'type2', 'vv' => 'type3',],
-                ['v2', 'v', 'vv']
+                'v2' => 'type1',
+                'v' => 'type2',
+                'vv' => 'type3',
+                't1' => 'type4',
+                't2' => 'type4',
+                't4' => 'type4',
+                't6' => 'type4'
             ],
-            [
-                'paramsSource',
-                ['v', 'v2'],
-                [
-                    'v2' => 'type1',
-                    'v' => 'type2',
-                    'vv' => 'type3',
-                    't1' => 'type4',
-                    't2' => 'type4',
-                    't4' => 'type4',
-                    't6' => 'type4'
-                ],
-                ['v3', 'v4', 'vv', 't', 't2', 't3', 't6']
-            ],
-            [
-                'paramsSource3',
-                [],
-                ['t' => 'type', 't3' => 'type3'],
-                ['t2', 't3']
-            ],
+            ['v3', 'v4', 'vv', 't', 't2', 't3', 't6']
+        ];
+        yield [
+            'paramsSource3',
+            [],
+            ['t' => 'type', 't3' => 'type3'],
+            ['t2', 't3']
         ];
     }
 

@@ -7,7 +7,7 @@ namespace Spiral\Tests\Config;
 use Spiral\Config\Patch\Append;
 use Spiral\Config\Patch\Delete;
 
-class DeleteTest extends BaseTest
+class DeleteTest extends BaseTestCase
 {
     public function testPatch(): void
     {

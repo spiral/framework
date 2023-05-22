@@ -12,7 +12,7 @@ use Spiral\Tests\Core\Stub\EngineZIL130;
  * @see NullableParameterTest::testNullableDefaultScalarAndNamedArgumentNull()
  * @see ReferenceParameterTest::testInvokeReferencedArguments
  */
-final class NamedArgumentsTest extends BaseTest
+final class NamedArgumentsTest extends BaseTestCase
 {
     /**
      * In this case, second argument will be set from parameters by name, and first argument from container.

@@ -8,7 +8,7 @@ use Spiral\Tests\Console\Fixtures\TestCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class CoreTest extends BaseTest
+class CoreTest extends BaseTestCase
 {
     public function testWelcome(): void
     {

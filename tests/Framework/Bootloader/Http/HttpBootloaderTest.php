@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Bootloader\Http;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -14,9 +15,9 @@ use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class HttpBootloaderTest extends BaseTest
+final class HttpBootloaderTest extends BaseTestCase
 {
     public function testHttpBinding(): void
     {
@@ -41,7 +42,7 @@ final class HttpBootloaderTest extends BaseTest
         ], $configs->getConfig(HttpConfig::CONFIG)['inputBags']);
     }
 
-    /** @dataProvider middlewaresDataProvider */
+    #[DataProvider('middlewaresDataProvider')]
     public function testAddMiddleware(mixed $middleware): void
     {
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
@@ -53,7 +54,7 @@ final class HttpBootloaderTest extends BaseTest
         $this->assertSame([$middleware], $configs->getConfig(HttpConfig::CONFIG)['middleware']);
     }
 
-    public function middlewaresDataProvider(): \Traversable
+    public static function middlewaresDataProvider(): \Traversable
     {
         yield ['class-string'];
         yield [new class () implements MiddlewareInterface

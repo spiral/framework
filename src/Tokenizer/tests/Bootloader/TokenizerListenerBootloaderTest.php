@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Tokenizer\Bootloader;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\DirectoriesInterface;
@@ -131,9 +132,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider readCacheDataProvider
-     */
+    #[DataProvider('readCacheDataProvider')]
     public function testCastingReadCacheEnvVariable(mixed $readCache, bool $expected): void
     {
         $factory = new Container();
@@ -160,7 +159,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
         $this->assertSame($expected, (new \ReflectionProperty($loader, 'readCache'))->getValue($loader));
     }
 
-    public function readCacheDataProvider(): \Traversable
+    public static function readCacheDataProvider(): \Traversable
     {
         yield [true, true];
         yield [false, false];

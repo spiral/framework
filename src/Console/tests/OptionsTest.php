@@ -6,7 +6,7 @@ namespace Spiral\Tests\Console;
 
 use Spiral\Tests\Console\Fixtures\OptionalCommand;
 
-class OptionsTest extends BaseTest
+class OptionsTest extends BaseTestCase
 {
     public function testOptions(): void
     {

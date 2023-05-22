@@ -6,9 +6,9 @@ namespace Framework\Bootloader\Http;
 
 use Spiral\Http\PaginationFactory;
 use Spiral\Pagination\PaginationProviderInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class PaginationBootloaderTest extends BaseTest
+final class PaginationBootloaderTest extends BaseTestCase
 {
     public function testPaginationProviderInterfaceBinding(): void
     {

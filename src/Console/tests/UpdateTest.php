@@ -11,10 +11,10 @@ use Spiral\Tests\Console\Fixtures\AnotherFailedCommand;
 use Spiral\Tests\Console\Fixtures\FailedCommand;
 use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Spiral\Tests\Console\Fixtures\TestCommand;
-use Symfony\Component\Console\Output\OutputInterface;
+use Spiral\Tests\Console\Fixtures\UpdateClass;
 use Throwable;
 
-class UpdateTest extends BaseTest
+class UpdateTest extends BaseTestCase
 {
     public const TOKENIZER_CONFIG = [
         'directories' => [__DIR__.'/../src/Command', __DIR__.'/Fixtures/'],
@@ -28,10 +28,10 @@ class UpdateTest extends BaseTest
             'update' => [
                 ['command' => 'test', 'header' => 'Test Command'],
                 ['command' => 'helper', 'options' => ['helper' => 'writeln'], 'footer' => 'Good!'],
-                ['invoke' => [self::class, 'do']],
-                ['invoke' => self::class.'::do'],
+                ['invoke' => [UpdateClass::class, 'do']],
+                ['invoke' => UpdateClass::class.'::do'],
                 'Spiral\Tests\Console\ok',
-                ['invoke' => self::class.'::err'],
+                ['invoke' => UpdateClass::class.'::err'],
             ],
         ],
     ];
@@ -120,16 +120,6 @@ text;
         $this->assertStringNotContainsString('Aborting.', $result);
         $this->assertStringContainsString('Unhandled another failed command error at', $result);
         $this->assertEquals(1, $output->getCode());
-    }
-
-    public function do(OutputInterface $output): void
-    {
-        $output->write('OK');
-    }
-
-    public function err(OutputInterface $output): void
-    {
-        throw new ShortException('Failed update command');
     }
 
     /**

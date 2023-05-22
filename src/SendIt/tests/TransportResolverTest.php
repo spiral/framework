@@ -58,7 +58,7 @@ final class TransportResolverTest extends TestCase
     public function testNotRegisteredTransportShouldTrowAnException(): void
     {
         $this->expectException(UnsupportedSchemeException::class);
-        $this->expectErrorMessage('The "smtp" scheme is not supported.');
+        $this->expectExceptionMessage('The "smtp" scheme is not supported.');
         $transportFactory = m::mock(TransportFactoryInterface::class);
 
         $transportFactory->shouldReceive('supports')->once()->andReturn(false);

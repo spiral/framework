@@ -6,9 +6,9 @@ namespace Framework\Bootloader\Auth;
 
 use Spiral\Auth\ActorProviderInterface;
 use Spiral\Auth\AuthScope;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class AuthBootloaderTest extends BaseTest
+final class AuthBootloaderTest extends BaseTestCase
 {
     public function testAuthScopeBinding(): void
     {

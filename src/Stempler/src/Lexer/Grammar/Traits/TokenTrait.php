@@ -9,7 +9,7 @@ use Spiral\Stempler\Lexer\Token;
 
 trait TokenTrait
 {
-    /** @var Token[] */
+    /** @var array<int<0, max>, Token> */
     private array $tokens = [];
 
     private function packToken(array $inner, int $type): Token

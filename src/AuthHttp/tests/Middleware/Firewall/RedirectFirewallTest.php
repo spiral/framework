@@ -7,16 +7,15 @@ namespace Spiral\Tests\Auth\Middleware\Firewall;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\Middleware\Firewall\RedirectFirewall;
 use Spiral\Auth\Transport\HeaderTransport;
 
-final class RedirectFirewallTest extends BaseFirewallTest
+final class RedirectFirewallTest extends BaseFirewallTestCase
 {
-    /**
-     * @dataProvider successTokensDataProvider
-     */
+    #[DataProvider('successTokensDataProvider')]
     public function testRedirectFirewallWithoutRedirect(string $token): void
     {
         $http = $this->getCore(
@@ -38,9 +37,7 @@ final class RedirectFirewallTest extends BaseFirewallTest
         $this->assertSame('success login', (string)$response->getBody());
     }
 
-    /**
-     * @dataProvider failTokensDataProvider
-     */
+    #[DataProvider('failTokensDataProvider')]
     public function testRedirectFirewallWithRedirect(string $token): void
     {
         $http = $this->getCore(
@@ -63,9 +60,7 @@ final class RedirectFirewallTest extends BaseFirewallTest
         $this->assertSame('', (string) $response->getBody());
     }
 
-    /**
-     * @dataProvider failTokensDataProvider
-     */
+    #[DataProvider('failTokensDataProvider')]
     public function testRedirectFirewallWithRedirectAndCode(string $token): void
     {
         $http = $this->getCore(

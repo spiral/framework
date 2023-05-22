@@ -6,6 +6,8 @@ namespace Spiral\Stempler\Lexer;
 
 /**
  * Creates local buffers over byte/token stream. Able to replay some tokens.
+ *
+ * @implements \IteratorAggregate<array-key, Byte|Token|null>
  */
 final class Buffer implements \IteratorAggregate
 {
@@ -97,7 +99,7 @@ final class Buffer implements \IteratorAggregate
     /**
      * Get next byte(s) value if any.
      *
-     * @param positive-int $size Size of lookup string.
+     * @param int $size Size of lookup string.
      */
     public function lookaheadByte(int $size = 1): string
     {

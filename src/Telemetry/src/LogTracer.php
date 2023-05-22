@@ -35,7 +35,7 @@ final class LogTracer extends AbstractTracer
         ?TraceKind $traceKind = null,
         ?int $startTime = null
     ): mixed {
-        $span = new Span($name);
+        $span = new Span($name, $attributes);
 
         $this->context['telemetry'] = $this->uuidFactory->uuid4()->toString();
 
@@ -45,7 +45,7 @@ final class LogTracer extends AbstractTracer
 
         $elapsed = $this->clock->now() - $startTime;
 
-        $this->logger->debug(\sprintf('Trace [%s] - [%01.4f ms.]', $name, $elapsed / 1_000_000_000), [
+        $this->logger->debug(\sprintf('Trace [%s] - [%01.4f ms.]', $name, $elapsed / 1_000_000), [
             'attributes' => $span->getAttributes(),
             'status' => $span->getStatus(),
             'scoped' => $scoped,

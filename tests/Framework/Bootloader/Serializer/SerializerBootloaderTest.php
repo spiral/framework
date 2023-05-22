@@ -9,9 +9,9 @@ use Spiral\Serializer\SerializerInterface;
 use Spiral\Serializer\SerializerManager;
 use Spiral\Serializer\SerializerRegistry;
 use Spiral\Serializer\SerializerRegistryInterface;
-use Spiral\Tests\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTestCase;
 
-final class SerializerBootloaderTest extends BaseTest
+final class SerializerBootloaderTest extends BaseTestCase
 {
     public const ENV = [
         'DEFAULT_SERIALIZER_FORMAT' => 'test',

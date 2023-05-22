@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
+use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use stdClass;
 
-final class UseCaseTest extends BaseTest
+final class UseCaseTest extends BaseTestCase
 {
     /**
      * Parent container won't be destroyed when child container is destroyed.
@@ -21,7 +23,7 @@ final class UseCaseTest extends BaseTest
         $root = new Container();
         $root->bind('foo', SampleClass::class);
 
-        $root->scope(function (ContainerInterface $c1) {
+        $root->runScoped(function (ContainerInterface $c1) {
             $c1->get('foo');
         }, bindings: ['foo' => SampleClass::class]);
 
@@ -39,21 +41,20 @@ final class UseCaseTest extends BaseTest
         self::expectException(ScopeContainerLeakedException::class);
         self::expectExceptionMessage('Scoped container has been leaked. Scope: "root"->null.');
 
-        $root->scope(function (ContainerInterface $c1): callable {
+        $root->runScoped(function (ContainerInterface $c1): callable {
             return fn() => $c1->get('foo');
         });
     }
 
     /**
      * A child scope bindings are not singleton.
-     *
-     * @dataProvider provideScopeBindingsAsNotSingletons
      */
+    #[DataProvider('provideScopeBindingsAsNotSingletons')]
     public function testScopeBindingsAsNotSingletons(bool $theSame, string $alias, mixed $definition): void
     {
         $root = new Container();
 
-        $root->scope(function (ContainerInterface $c1) use ($theSame, $alias) {
+        $root->runScoped(function (ContainerInterface $c1) use ($theSame, $alias) {
             $obj1 = $c1->get($alias);
             $obj2 = $c1->get($alias);
 
@@ -63,8 +64,9 @@ final class UseCaseTest extends BaseTest
         }, bindings: [$alias => $definition]);
     }
 
-    public function provideScopeBindingsAsNotSingletons(): iterable {
-        yield 'array-factory' => [false, 'foo', [self::class, 'makeStdClass']];
+    public static function provideScopeBindingsAsNotSingletons(): iterable
+    {
+        yield 'array-factory' => [false, 'foo', [Factory::class, 'makeStdClass']];
         yield 'class-name' => [false, SampleClass::class, SampleClass::class];
         yield 'object' => [true, stdClass::class, new stdClass()];
     }
@@ -77,14 +79,14 @@ final class UseCaseTest extends BaseTest
     {
         $root = new Container();
 
-        $root->scope(function (ContainerInterface $c1) use ($root) {
+        $root->runScoped(function (ContainerInterface $c1) use ($root) {
             $obj1 = $c1->get('foo');
             $this->weakMap->offsetSet($obj1, true);
 
             self::assertNotSame($root, $c1);
             self::assertInstanceOf(stdClass::class, $obj1);
 
-            $c1->scope(function (ContainerInterface $c2) use ($root, $c1, $obj1) {
+            $c1->runScoped(function (ContainerInterface $c2) use ($root, $c1, $obj1) {
                 $obj2 = $c2->get('foo');
                 $this->weakMap->offsetSet($obj2, true);
 
@@ -92,11 +94,11 @@ final class UseCaseTest extends BaseTest
                 self::assertNotSame($c1, $c2);
                 self::assertInstanceOf(stdClass::class, $obj2);
                 self::assertNotSame($obj1, $obj2);
-            }, bindings: ['foo' => [self::class, 'makeStdClass']]);
+            }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
 
             // $obj2 should be garbage collected
             self::assertCount(1, $this->weakMap);
-        }, bindings: ['foo' => [self::class, 'makeStdClass']]);
+        }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
 
         // $obj1 should be garbage collected
         self::assertEmpty($this->weakMap);
@@ -110,17 +112,17 @@ final class UseCaseTest extends BaseTest
     public function testChildContainerResolvesDepsFromParent(): void
     {
         $root = new Container();
-        $root->bindSingleton('bar', [self::class, 'makeStdClass']);
+        $root->bindSingleton('bar', [Factory::class, 'makeStdClass']);
         $root->bind(stdClass::class, new stdClass());
 
-        $root->scope(function (ContainerInterface $c1) use ($root) {
+        $root->runScoped(function (ContainerInterface $c1) use ($root) {
             $obj1 = $c1->get('foo');
             $this->weakMap->offsetSet($obj1, true);
 
             self::assertInstanceOf(stdClass::class, $obj1);
             // Singleton must be the same
             self::assertSame($c1->get('bar'), $root->get('bar'));
-            $c1->scope(function (ContainerInterface $c2) use ($root, $obj1) {
+            $c1->runScoped(function (ContainerInterface $c2) use ($root, $obj1) {
                 $obj2 = $c2->get('foo');
 
                 self::assertInstanceOf(stdClass::class, $obj2);
@@ -134,7 +136,7 @@ final class UseCaseTest extends BaseTest
                     "Nested container mustn't create new instance using class name as key without definition."
                 );
             });
-        }, bindings: ['foo' => [self::class, 'makeStdClass']]);
+        }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
     }
 
     /**
@@ -152,12 +154,12 @@ final class UseCaseTest extends BaseTest
 
         self::assertFalse($root->has('foo'));
 
-        $root->scope(static function (ContainerInterface $c1): void {
+        $root->runScoped(static function (ContainerInterface $c1): void {
             self::assertTrue($c1->has('foo'));
             self::assertFalse($c1->has('bar'));
             self::assertSame('scope1', $c1->get('foo')->scope);
 
-            $c1->scope(static function (ContainerInterface $c2): void {
+            $c1->runScoped(static function (ContainerInterface $c2): void {
                 self::assertTrue($c2->has('foo'));
                 self::assertTrue($c2->has('bar'));
                 self::assertSame('scope2', $c2->get('foo')->scope);
@@ -171,12 +173,13 @@ final class UseCaseTest extends BaseTest
      */
     public function testBindingInFewSameScopes(): void
     {
+        $factory = new Factory();
         $root = new Container();
-        $root->getBinder('scope1')->bindSingleton('foo', $this->makeStdClass(...));
+        $root->getBinder('scope1')->bindSingleton('foo', $factory->makeStdClass(...));
 
-        $getter = fn () => $root->scope(function (Container $c1): mixed {
+        $getter = fn () => $root->runScoped(function (Container $c1) use ($factory): mixed {
             self::assertFalse($c1->has('bar'));
-            $c1->bindSingleton('bar', $this->makeStdClass(...));
+            $c1->bindSingleton('bar', $factory->makeStdClass(...));
 
             return $c1->get('foo');
         }, name: 'scope1');
@@ -192,14 +195,15 @@ final class UseCaseTest extends BaseTest
      */
     public function testScopeBinderAffectsDefaultBindingsOnly(): void
     {
+        $factory = new Factory();
         $root = new Container();
 
-        $root->scope(function (Container $c1): void {
-            $c1->getBinder('scope1')->bindSingleton('bar', $this->makeStdClass(...));
+        $root->runScoped(function (Container $c1) use ($factory): void {
+            $c1->getBinder('scope1')->bindSingleton('bar', $factory->makeStdClass(...));
             self::assertFalse($c1->has('bar'));
         }, name: 'scope1');
 
-        $root->scope(function (Container $c1): void {
+        $root->runScoped(function (Container $c1): void {
             self::assertTrue($c1->has('bar'));
             self::assertInstanceOf(stdClass::class, $c1->get('bar'));
         }, name: 'scope1');

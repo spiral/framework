@@ -13,8 +13,6 @@ final class PromotedParameter extends Parameter
     use Traits\CommentAware;
     use Traits\VisibilityAware;
 
-    private NettePromotedParameter $element;
-
     public function __construct(string $name)
     {
         $this->element = new NettePromotedParameter((new InflectorFactory())->build()->camelize($name));
