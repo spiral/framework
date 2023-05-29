@@ -104,4 +104,28 @@ final class FilterCommandTest extends AbstractCommandTestCase
         $this->assertStringContainsString('#[BearerToken(key: \'token\')]', $content);
         $this->assertStringContainsString('public string $token;', $content);
     }
+
+    public function testShowInstructionAfterInstallation(): void
+    {
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Filter\\SampleFilter';
+
+        $result = $this->console()->run('create:filter', [
+            'name' => 'sample',
+            '--comment' => 'Sample Filter',
+        ]);
+
+        $output = $result->getOutput()->fetch();
+
+        $this->assertSame(
+            <<<OUTPUT
+            Declaration of 'SampleFilter' has been successfully written into 'Filter/SampleFilter.php'.
+
+            Next steps:
+            1. Read more about Filter Objects in the documentation: https://spiral.dev/docs/filters-filter
+            2. Read more about Filter validation handling here: https://spiral.dev/docs/filters-filter#handle-validation-errors
+
+            OUTPUT,
+            $output
+        );
+    }
 }

@@ -89,4 +89,26 @@ class ControllerTest extends AbstractCommandTestCase
         $this->assertNotEmpty($traits);
         $this->assertContains(PrototypeTrait::class, $traits);
     }
+
+    public function testShowInstructionAfterInstallation(): void
+    {
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller\\SampleController';
+        $result = $this->console()->run('create:controller', [
+            'name' => 'sample',
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller'
+        ]);
+
+        $output = $result->getOutput()->fetch();
+
+        $this->assertSame(
+            <<<OUTPUT
+            Declaration of 'SampleController' has been successfully written into 'Custom/Controller/SampleController.php'.
+
+            Next steps:
+            1. Read more about Controllers in the documentation: https://spiral.dev/docs/http-routing
+
+            OUTPUT,
+            $output
+        );
+    }
 }
