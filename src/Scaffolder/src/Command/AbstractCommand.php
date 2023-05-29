@@ -11,6 +11,7 @@ use Spiral\Files\FilesInterface;
 use Spiral\Reactor\Writer;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
 use Spiral\Scaffolder\Declaration\DeclarationInterface;
+use Spiral\Scaffolder\Declaration\HasInstructions;
 
 abstract class AbstractCommand extends Command
 {
@@ -72,6 +73,15 @@ abstract class AbstractCommand extends Command
             \sprintf("Declaration of '<info>%s</info>' ", $className)
             . \sprintf("has been successfully written into '<comment>%s</comment>'.", $filename),
         );
+
+        if ($declaration instanceof HasInstructions && \count($declaration->getInstructions()) > 0) {
+            $this->newLine();
+            $this->writeln('<fg=green>Next steps:</fg=green>');
+
+            foreach ($declaration->getInstructions() as $i => $instruction) {
+                $this->writeln(\sprintf('%d. <comment>%s</comment>', (string)(++$i), $instruction));
+            }
+        }
     }
 
     protected function getNamespace(): ?string
