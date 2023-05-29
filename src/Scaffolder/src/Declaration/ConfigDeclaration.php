@@ -82,6 +82,20 @@ class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
             );
     }
 
+    public function getInstructions(): array
+    {
+        $configFile = $this->makeConfigFilename(
+            $this->class->getConstant('CONFIG')->getValue()
+        );
+
+        $configFile = \str_replace($this->dirs->get('root'), '', $configFile);
+
+        return [
+            \sprintf('You can now add your config values to the \'<comment>%s</comment>\' file.', $configFile),
+            'Read more about Config Objects in the documentation: https://spiral.dev/docs/framework-config',
+        ];
+    }
+
     private function makeConfigFilename(string $filename): string
     {
         return \sprintf('%s%s.php', $this->directory, $filename);
@@ -211,19 +225,5 @@ class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
         return (new InflectorFactory())
             ->build()
             ->singularize($name);
-    }
-
-    public function getInstructions(): array
-    {
-        $configFile = $this->makeConfigFilename(
-            $this->class->getConstant('CONFIG')->getValue()
-        );
-
-        $configFile = \str_replace($this->dirs->get('root'), '', $configFile);
-
-        return [
-            \sprintf('You can now add your config values to the \'<comment>%s</comment>\' file.', $configFile),
-            'Read more about Config Objects in the documentation: https://spiral.dev/docs/framework-config',
-        ];
     }
 }
