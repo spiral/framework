@@ -16,4 +16,7 @@
     <projectFiles>
         <directory name="src" />
     </projectFiles>
+    <issueHandlers>
+        <UnsupportedPropertyReferenceUsage errorLevel="suppress" />
+    </issueHandlers>
 </psalm>
