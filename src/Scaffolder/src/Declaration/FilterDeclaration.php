@@ -95,6 +95,14 @@ PHP,
         }
     }
 
+    public function getInstructions(): array
+    {
+        return [
+            'Read more about Filter Objects in the documentation: https://spiral.dev/docs/filters-filter',
+            'Read more about Filter validation handling here: https://spiral.dev/docs/filters-filter#handle-validation-errors',
+        ];
+    }
+
     private function parseProperty(string $property): Property
     {
         $declaredType = null;
@@ -140,13 +148,5 @@ PHP,
             'token' => [Input\BearerToken::class, 'string'],
             default => [Input\Input::class, 'string']
         };
-    }
-
-    public function getInstructions(): array
-    {
-        return [
-            'Read more about Filter Objects in the documentation: https://spiral.dev/docs/filters-filter',
-            'Read more about Filter validation handling here: https://spiral.dev/docs/filters-filter#handle-validation-errors',
-        ];
     }
 }
