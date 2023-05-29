@@ -57,6 +57,9 @@
         "symfony/translation": "^5.1|^6.0",
         "vlucas/phpdotenv": "^5.4"
     },
+    "conflict": {
+        "aws/aws-sdk-php": "<3.270"
+    },
     "autoload": {
         "files": [
             "src/Boot/src/helpers.php",

@@ -18,6 +18,9 @@
         "php": ">=8.1",
         "psr/http-factory": "^1.0"
     },
+    "conflict": {
+        "aws/aws-sdk-php": "<3.270"
+    },
     "autoload": {
         "psr-4": {
             "Spiral\\Distribution\\": "src"
