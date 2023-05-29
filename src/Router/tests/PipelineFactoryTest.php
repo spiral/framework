@@ -95,7 +95,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->andReturn($response = m::mock(ResponseInterface::class));
 
         $response
-            ->shouldReceive('getHeaderLine')->with('Content-Length')->andReturn(['test'])
+            ->shouldReceive('getHeaderLine')->with('Content-Length')->andReturn('test')
             ->shouldReceive('getStatusCode')->andReturn(200);
 
         $p

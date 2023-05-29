@@ -25,8 +25,8 @@
     },
     "require-dev": {
         "spiral/boot": "^3.8",
-        "aws/aws-sdk-php": "^3.0",
-        "guzzlehttp/psr7": "^1.7",
+        "aws/aws-sdk-php": "^3.270",
+        "guzzlehttp/psr7": "^1.7|^2.0",
         "jetbrains/phpstorm-attributes": "^1.0",
         "phpunit/phpunit": "^10.1",
         "vimeo/psalm": "^5.9"
@@ -37,7 +37,7 @@
         }
     },
     "suggest": {
-        "aws/aws-sdk-php": "(^3.0) For use S3 and CloudFront URI Resolvers"
+        "aws/aws-sdk-php": "(^3.270) For use S3 and CloudFront URI Resolvers"
     },
     "extra": {
         "branch-alias": {
