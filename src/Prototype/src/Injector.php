@@ -10,7 +10,6 @@ use PhpParser\NodeVisitor\CloningVisitor;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard;
 use PhpParser\PrettyPrinterAbstract;
-use Spiral\Prototype\NodeVisitors\AddProperty;
 use Spiral\Prototype\NodeVisitors\AddUse;
 use Spiral\Prototype\NodeVisitors\DefineConstructor;
 use Spiral\Prototype\NodeVisitors\RemoveTrait;
@@ -50,13 +49,8 @@ final class Injector
      * Inject dependencies into PHP Class source code. Attention, resulted code will attempt to
      * preserve formatting but will affect it. Do not forget to add formatting fixer.
      */
-    public function injectDependencies(
-        string $code,
-        ClassNode $node,
-        bool $removeTrait = false,
-        bool $useTypedProperties = false,
-        bool $noPhpDoc = false
-    ): string {
+    public function injectDependencies(string $code, ClassNode $node, bool $removeTrait = false): string
+    {
         if (empty($node->dependencies)) {
             if ($removeTrait) {
                 $tr = new NodeTraverser();
@@ -77,7 +71,6 @@ final class Injector
             $tr->addVisitor(new RemoveTrait());
         }
 
-        $tr->addVisitor(new AddProperty($node, $useTypedProperties, $noPhpDoc));
         $tr->addVisitor(new DefineConstructor());
         $tr->addVisitor(new UpdateConstructor($node));
 
