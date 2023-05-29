@@ -60,7 +60,7 @@ class BootloaderDeclaration extends AbstractDeclaration implements HasInstructio
         $kernelClass = (new \ReflectionClass($this->kernel))->getName();
 
         return [
-            \sprintf('Don\'t forget to add your bootloader to the bootloader\'s list in %s class', $kernelClass),
+            \sprintf('Don\'t forget to add your bootloader to the bootloader\'s list in \'<comment>%s</comment>\' class', $kernelClass),
             'Read more about bootloaders in the documentation: https://spiral.dev/docs/framework-bootloaders',
         ];
     }

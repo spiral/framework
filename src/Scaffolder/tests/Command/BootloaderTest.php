@@ -110,17 +110,14 @@ final class BootloaderTest extends AbstractCommandTestCase
             '--comment' => 'Sample Bootloader'
         ]);
 
-        $reflection = new ReflectionClass($class);
-        $path = $reflection->getFileName();
-
         $output = $result->getOutput()->fetch();
 
         $this->assertSame(
             <<<OUTPUT
-            Declaration of 'SampleBootloader' has been successfully written into '$path'.
+            Declaration of 'SampleBootloader' has been successfully written into 'Bootloader/SampleBootloader.php'.
 
             Next steps:
-            1. Don't forget to add your bootloader to the bootloader's list in Spiral\Tests\Scaffolder\App\TestApp class
+            1. Don't forget to add your bootloader to the bootloader's list in 'Spiral\Tests\Scaffolder\App\TestApp' class
             2. Read more about bootloaders in the documentation: https://spiral.dev/docs/framework-bootloaders
 
             OUTPUT,

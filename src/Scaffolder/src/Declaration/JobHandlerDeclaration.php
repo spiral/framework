@@ -6,7 +6,7 @@ namespace Spiral\Scaffolder\Declaration;
 
 use Spiral\Queue\JobHandler;
 
-class JobHandlerDeclaration extends AbstractDeclaration
+class JobHandlerDeclaration extends AbstractDeclaration implements HasInstructions
 {
     public const TYPE = 'jobHandler';
 
@@ -29,5 +29,12 @@ class JobHandlerDeclaration extends AbstractDeclaration
 
         $method->addParameter('headers')
             ->setType('array');
+    }
+
+    public function getInstructions(): array
+    {
+        return [
+            'Read more about Job handlers in the documentation: https://spiral.dev/docs/queue-jobs',
+        ];
     }
 }

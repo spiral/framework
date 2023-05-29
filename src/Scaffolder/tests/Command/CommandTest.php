@@ -118,6 +118,29 @@ final class CommandTest extends AbstractCommandTestCase
         $this->assertStringContainsString('App\Custom\Command', $content);
     }
 
+    public function testShowInstructionAfterInstallation(): void
+    {
+        $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Command\\ArgumentCommand';
+
+        $result = $this->console()->run('create:command', [
+            'name' => 'Argument',
+        ]);
+
+        $output = $result->getOutput()->fetch();
+
+        $this->assertSame(
+            <<<OUTPUT
+            Declaration of 'ArgumentCommand' has been successfully written into 'Command/ArgumentCommand.php'.
+
+            Next steps:
+            1. Use the following command to run your command: 'php app.php argument'
+            2. Read more about user Commands in the documentation: https://spiral.dev/docs/console-commands
+
+            OUTPUT,
+            $output
+        );
+    }
+
     public static function commandDataProvider(): \Traversable
     {
         yield ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleCommand', 'sample', null, 'sample'];
