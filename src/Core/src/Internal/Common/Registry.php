@@ -18,6 +18,7 @@ final class Registry
         private Config $config,
         private array $objects = [],
     ) {
+        $this->objects['config'] = $config;
     }
 
     public function set(string $name, object $value): void

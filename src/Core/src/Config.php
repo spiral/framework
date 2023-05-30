@@ -28,6 +28,7 @@ use Traversable;
  */
 class Config implements IteratorAggregate
 {
+    public readonly string $config;
     /** @var class-string<Scope> */
     public readonly string $scope;
     public readonly Internal\Config\StateStorage $scopedBindings;
@@ -50,7 +51,9 @@ class Config implements IteratorAggregate
         public readonly string $binder = Binder::class,
         public readonly string $invoker = Invoker::class,
         public readonly string $tracer = Tracer::class,
+        public readonly bool $defaultSingleton = false,
     ) {
+        $this->config = self::class;
         $this->scope = Scope::class;
         $this->scopedBindings = new Internal\Config\StateStorage();
     }
@@ -71,6 +74,8 @@ class Config implements IteratorAggregate
      * Mutex lock for root container.
      * First run of the method will return {@see true}, all subsequent calls will return {@see false}.
      * The parent container must call the method once and before any child container.
+     *
+     * @internal
      */
     public function lockRoot(): bool
     {

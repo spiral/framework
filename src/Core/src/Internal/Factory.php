@@ -10,6 +10,7 @@ use Spiral\Core\Attribute\Finalize;
 use Spiral\Core\Attribute\Scope as ScopeAttribute;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Config;
 use Spiral\Core\Config\Injectable;
 use Spiral\Core\Config\DeferredFactory;
 use Spiral\Core\Container\Autowire;
@@ -43,6 +44,7 @@ final class Factory implements FactoryInterface
     private InvokerInterface $invoker;
     private ContainerInterface $container;
     private ResolverInterface $resolver;
+    private Config $config;
     private Tracer $tracer;
     private Scope $scope;
 
@@ -50,6 +52,7 @@ final class Factory implements FactoryInterface
     {
         $constructor->set('factory', $this);
 
+        $this->config = $constructor->get('config', Config::class);
         $this->state = $constructor->get('state', State::class);
         $this->binder = $constructor->get('binder', BinderInterface::class);
         $this->invoker = $constructor->get('invoker', InvokerInterface::class);
