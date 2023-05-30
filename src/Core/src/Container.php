@@ -42,6 +42,7 @@ final class Container implements
     ResolverInterface,
     InvokerInterface,
     ContainerScopeInterface,
+    ContainerTagInterface,
     ScopeInterface
 {
     use DestructorTrait;
@@ -79,6 +80,7 @@ final class Container implements
             ScopeInterface::class => $shared,
             ResolverInterface::class => $shared,
             InvokerInterface::class => $shared,
+            ContainerTagInterface::class => $shared,
         ]);
     }
 
@@ -156,6 +158,11 @@ final class Container implements
         return $scope === null
             ? $this->binder
             : new StateBinder($this->config->scopedBindings->getState($scope));
+    }
+
+    public function getTag(string $tag, bool $resolve = true): array
+    {
+        return [];
     }
 
     /**
