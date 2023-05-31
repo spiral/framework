@@ -12,7 +12,6 @@ final class Tag implements Plugin
 {
     public function __construct(
         public string $name,
-
     ) {
     }
 }
