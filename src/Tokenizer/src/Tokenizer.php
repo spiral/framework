@@ -36,13 +36,23 @@ final class Tokenizer implements SingletonInterface
     }
 
     /**
-     * Get pre-configured class locator for specific scope.
+     * Get pre-configured enum locator for specific scope.
      */
     public function scopedEnumLocator(string $scope): EnumsInterface
     {
         $dirs = $this->config->getScope($scope);
 
         return $this->enumLocator($dirs['directories'], $dirs['exclude']);
+    }
+
+    /**
+     * Get pre-configured interface locator for specific scope.
+     */
+    public function scopedInterfaceLocator(string $scope): InterfacesInterface
+    {
+        $dirs = $this->config->getScope($scope);
+
+        return $this->interfaceLocator($dirs['directories'], $dirs['exclude']);
     }
 
     /**
@@ -70,6 +80,13 @@ final class Tokenizer implements SingletonInterface
         array $exclude = []
     ): EnumLocator {
         return new EnumLocator($this->makeFinder($directories, $exclude), $this->config->isDebug());
+    }
+
+    public function interfaceLocator(
+        array $directories = [],
+        array $exclude = []
+    ): InterfaceLocator {
+        return new InterfaceLocator($this->makeFinder($directories, $exclude), $this->config->isDebug());
     }
 
     /**

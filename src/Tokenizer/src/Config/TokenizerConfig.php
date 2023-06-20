@@ -36,7 +36,7 @@ final class TokenizerConfig extends InjectableConfig
         ],
         'load' => [
             'classes' => true,
-            'enums' => true,
+            'enums' => false,
             'interfaces' => false,
         ],
         'debug' => false,
