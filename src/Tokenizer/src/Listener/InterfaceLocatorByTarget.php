@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tokenizer\Listener;
 
 use Spiral\Tokenizer\Attribute\AbstractTarget;
-use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\InterfacesInterface;
-use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\ScopedInterfacesInterface;
 
 /**

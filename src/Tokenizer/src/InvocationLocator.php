@@ -6,7 +6,6 @@ namespace Spiral\Tokenizer;
 
 use Spiral\Tokenizer\Exception\LocatorException;
 use Spiral\Tokenizer\Reflection\ReflectionInvocation;
-use Spiral\Tokenizer\Traits\TargetTrait;
 
 /**
  * Can locate invocations in a specified directory. Can only find simple invocations!

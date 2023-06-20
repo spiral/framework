@@ -9,7 +9,6 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Memory;
-use Spiral\Boot\NullMemory;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
