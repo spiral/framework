@@ -14,17 +14,24 @@ use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
 use Spiral\Tokenizer\ClassLocatorInjector;
 use Spiral\Tokenizer\Config\TokenizerConfig;
+use Spiral\Tokenizer\EnumLocator;
+use Spiral\Tokenizer\EnumLocatorInjector;
+use Spiral\Tokenizer\EnumsInterface;
 use Spiral\Tokenizer\InvocationLocator;
 use Spiral\Tokenizer\InvocationLocatorInjector;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\ScopedClassLocator;
+use Spiral\Tokenizer\ScopedEnumLocator;
+use Spiral\Tokenizer\ScopedEnumsInterface;
 
 final class TokenizerBootloader extends Bootloader implements SingletonInterface
 {
     protected const BINDINGS = [
         ScopedClassesInterface::class => ScopedClassLocator::class,
+        ScopedEnumsInterface::class => ScopedEnumLocator::class,
         ClassesInterface::class => ClassLocator::class,
+        EnumsInterface::class => EnumLocator::class,
         InvocationsInterface::class => InvocationLocator::class,
     ];
 
@@ -37,6 +44,8 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
     {
         /** @psalm-suppress InvalidCast https://github.com/vimeo/psalm/issues/8810 */
         $binder->bindInjector(ClassLocator::class, ClassLocatorInjector::class);
+        /** @psalm-suppress InvalidCast https://github.com/vimeo/psalm/issues/8810 */
+        $binder->bindInjector(EnumLocator::class, EnumLocatorInjector::class);
         /** @psalm-suppress InvalidCast https://github.com/vimeo/psalm/issues/8810 */
         $binder->bindInjector(InvocationLocator::class, InvocationLocatorInjector::class);
 

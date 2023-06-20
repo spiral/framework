@@ -7,15 +7,12 @@ namespace Spiral\Tokenizer\Listener;
 use Spiral\Tokenizer\Attribute\AbstractTarget;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ScopedClassesInterface;
-use Spiral\Tokenizer\Traits\TargetTrait;
 
 /**
  * @internal
  */
 final class ClassLocatorByTarget
 {
-    use TargetTrait;
-
     public function __construct(
         private readonly ClassesInterface $classes,
         private readonly ScopedClassesInterface $scopedClasses,
