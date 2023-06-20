@@ -67,7 +67,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
             $kernel->booted($this->loadInterfaces(...));
         }
 
-        $kernel->bootstrapped($this->clearListeners(...));
+        $kernel->booted($this->finalizeListeners(...));
     }
 
     public function initCachedClassesLoader(
@@ -175,8 +175,11 @@ final class TokenizerListenerBootloader extends Bootloader implements
 
     }
 
-    private function clearListeners(): void
+    private function finalizeListeners(): void
     {
+        foreach ($this->listeners as $listener) {
+            $listener->finalize();
+        }
         // We don't need the listeners anymore, so we will clear them from memory.
         $this->listeners = [];
     }
