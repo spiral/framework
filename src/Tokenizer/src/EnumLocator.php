@@ -11,7 +11,7 @@ use Spiral\Tokenizer\Exception\LocatorException;
  */
 final class EnumLocator extends AbstractLocator implements EnumsInterface
 {
-    public const INJECTOR = ClassLocatorInjector::class;
+    public const INJECTOR = EnumLocatorInjector::class;
 
     public function getEnums(object|string|null $target = null): array
     {
