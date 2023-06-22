@@ -79,18 +79,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
         EnvironmentInterface $env,
         TokenizerConfig $config,
     ): ClassesLoaderInterface {
-        // We will use a file memory to cache the classes. Because it's available in the runtime.
-        // If you want to disable the read cache, you can use the TOKENIZER_CACHE_TARGETS environment variable.
-        // In this case the classes will be stored in a cache on every bootstrap, but not read from there.
-        return $factory->make(CachedClassesLoader::class, [
-            'memory' => $factory->make(Memory::class, [
-                'directory' => $config->getCacheDirectory() ?? $dirs->get('runtime') . 'cache/listeners',
-            ]),
-            'readCache' => \filter_var(
-                $env->get('TOKENIZER_CACHE_TARGETS', $config->isCacheEnabled()),
-                \FILTER_VALIDATE_BOOL
-            ),
-        ]);
+        return $this->makeCachedLoader($factory, $dirs, $env, $config, CachedClassesLoader::class);
     }
 
     public function initCachedEnumsLoader(
@@ -99,18 +88,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
         EnvironmentInterface $env,
         TokenizerConfig $config,
     ): EnumsLoaderInterface {
-        // We will use a file memory to cache the enums. Because it's available in the runtime.
-        // If you want to disable the read cache, you can use the TOKENIZER_CACHE_TARGETS environment variable.
-        // In this case the enums will be stored in a cache on every bootstrap, but not read from there.
-        return $factory->make(CachedEnumsLoader::class, [
-            'memory' => $factory->make(Memory::class, [
-                'directory' => $config->getCacheDirectory() ?? $dirs->get('runtime') . 'cache/listeners',
-            ]),
-            'readCache' => \filter_var(
-                $env->get('TOKENIZER_CACHE_TARGETS', $config->isCacheEnabled()),
-                \FILTER_VALIDATE_BOOL
-            ),
-        ]);
+        return $this->makeCachedLoader($factory, $dirs, $env, $config, CachedEnumsLoader::class);
     }
 
     public function initCachedInterfacesLoader(
@@ -119,10 +97,28 @@ final class TokenizerListenerBootloader extends Bootloader implements
         EnvironmentInterface $env,
         TokenizerConfig $config,
     ): InterfacesLoaderInterface {
-        // We will use a file memory to cache the interfaces. Because it's available in the runtime.
+        return $this->makeCachedLoader($factory, $dirs, $env, $config, CachedInterfacesLoader::class);
+    }
+
+    /**
+     * @template T
+     *
+     * @param class-string<T> $classLoader
+     *
+     * @return T
+     */
+    private function makeCachedLoader(
+        FactoryInterface $factory,
+        DirectoriesInterface $dirs,
+        EnvironmentInterface $env,
+        TokenizerConfig $config,
+        string $classLoader,
+    ): mixed {
+        // We will use a file memory to cache the classes/enums/interfaces. Because it's available in the runtime.
         // If you want to disable the read cache, you can use the TOKENIZER_CACHE_TARGETS environment variable.
-        // In this case the interfaces will be stored in a cache on every bootstrap, but not read from there.
-        return $factory->make(CachedInterfacesLoader::class, [
+        // In this case the classes/enums/interfaces will be stored in a cache on every bootstrap,
+        // but not read from there.
+        return $factory->make($classLoader, [
             'memory' => $factory->make(Memory::class, [
                 'directory' => $config->getCacheDirectory() ?? $dirs->get('runtime') . 'cache/listeners',
             ]),
@@ -138,29 +134,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
         ClassesLoaderInterface $loader,
         ListenerInvoker $invoker,
     ): void {
-        $listeners = $this->listeners;
-
-        // First, we check if the listener has been cached. If it has, we will load the classes
-        // from the cache.
-        foreach ($listeners as $i => $listener) {
-            if ($loader->loadClasses($listener)) {
-                unset($listeners[$i]);
-            }
-        }
-
-        // If there are no listeners left, we don't need to use static analysis at all and save
-        // valuable time.
-        if ($listeners === []) {
-            return;
-        }
-
-        // If there are listeners left, we will use static analysis to find the classes.
-        // Please note that this is a very expensive operation and should be avoided if possible.
-        // Use #[TargetClass] or #[TargetAttribute] attributes in your listeners to cache the classes.
-        $classes = $classes->getClasses();
-        foreach ($listeners as $listener) {
-            $invoker->invoke($listener, $classes);
-        }
+        $this->loadReflections($invoker, $classes->getClasses(...), $loader->loadClasses(...));
     }
 
     private function loadEnums(
@@ -168,29 +142,7 @@ final class TokenizerListenerBootloader extends Bootloader implements
         EnumsLoaderInterface $loader,
         ListenerInvoker $invoker,
     ): void {
-        $listeners = $this->listeners;
-
-        // First, we check if the listener has been cached. If it has, we will load the enums
-        // from the cache.
-        foreach ($listeners as $i => $listener) {
-            if ($loader->loadEnums($listener)) {
-                unset($listeners[$i]);
-            }
-        }
-
-        // If there are no listeners left, we don't need to use static analysis at all and save
-        // valuable time.
-        if ($listeners === []) {
-            return;
-        }
-
-        // If there are listeners left, we will use static analysis to find the enums.
-        // Please note that this is a very expensive operation and should be avoided if possible.
-        // Use #[TargetClass] or #[TargetAttribute] attributes in your listeners to cache the enums.
-        $enums = $enums->getEnums();
-        foreach ($listeners as $listener) {
-            $invoker->invoke($listener, $enums);
-        }
+        $this->loadReflections($invoker, $enums->getEnums(...), $loader->loadEnums(...));
     }
 
     private function loadInterfaces(
@@ -198,12 +150,25 @@ final class TokenizerListenerBootloader extends Bootloader implements
         InterfacesLoaderInterface $loader,
         ListenerInvoker $invoker,
     ): void {
+        $this->loadReflections($invoker, $interfaces->getInterfaces(...), $loader->loadInterfaces(...));
+    }
+
+    /**
+     * @param ListenerInvoker $invoker
+     * @param callable(): array<class-string, \ReflectionClass> $reflections
+     * @param callable(TokenizationListenerInterface): bool $loader
+     */
+    private function loadReflections(
+        ListenerInvoker $invoker,
+        callable $reflections,
+        callable $loader,
+    ): void {
         $listeners = $this->listeners;
 
-        // First, we check if the listener has been cached. If it has, we will load the interfaces
+        // First, we check if the listener has been cached. If it has, we will load the classes/enums/interfaces
         // from the cache.
         foreach ($listeners as $i => $listener) {
-            if ($loader->loadInterfaces($listener)) {
+            if (call_user_func($loader, $listener)) {
                 unset($listeners[$i]);
             }
         }
@@ -214,12 +179,12 @@ final class TokenizerListenerBootloader extends Bootloader implements
             return;
         }
 
-        // If there are listeners left, we will use static analysis to find the interfaces.
+        // If there are listeners left, we will use static analysis to find the classes/enums/interfaces.
         // Please note that this is a very expensive operation and should be avoided if possible.
-        // Use #[TargetClass] or #[TargetAttribute] attributes in your listeners to cache the interfaces.
-        $interfaces = $interfaces->getInterfaces();
+        // Use #[TargetClass] or #[TargetAttribute] attributes in your listeners to cache the classes/enums/interfaces.
+        $classes = call_user_func($reflections);
         foreach ($listeners as $listener) {
-            $invoker->invoke($listener, $interfaces);
+            $invoker->invoke($listener, $classes);
         }
     }
 

@@ -15,7 +15,7 @@ final class EnumLocator extends AbstractLocator implements EnumsInterface
 
     public function getEnums(object|string|null $target = null): array
     {
-        if (! empty($target)) {
+        if (!empty($target)) {
             $target = new \ReflectionClass($target);
         }
 
@@ -32,7 +32,7 @@ final class EnumLocator extends AbstractLocator implements EnumsInterface
                 continue;
             }
 
-            if (! $this->isTargeted($reflection, $target) || $reflection->isInterface()) {
+            if (!$this->isTargeted($reflection, $target) || $reflection->isInterface()) {
                 continue;
             }
 
@@ -69,7 +69,7 @@ final class EnumLocator extends AbstractLocator implements EnumsInterface
             return true;
         }
 
-        if (! $target->isTrait()) {
+        if (!$target->isTrait()) {
             //Target is interface or class
             return $enum->isSubclassOf($target) || $enum->getName() === $target->getName();
         }

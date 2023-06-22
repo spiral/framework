@@ -15,7 +15,7 @@ final class InterfaceLocator extends AbstractLocator implements InterfacesInterf
 
     public function getInterfaces(string|null $target = null): array
     {
-        if (! empty($target)) {
+        if (!empty($target)) {
             $target = new \ReflectionClass($target);
         }
 
@@ -32,7 +32,7 @@ final class InterfaceLocator extends AbstractLocator implements InterfacesInterf
                 continue;
             }
 
-            if (! $this->isTargeted($reflection, $target)) {
+            if (!$this->isTargeted($reflection, $target)) {
                 continue;
             }
 
