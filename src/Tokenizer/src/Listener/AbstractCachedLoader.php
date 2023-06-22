@@ -14,10 +14,10 @@ abstract class AbstractCachedLoader
     protected string $cacheKeyPrefix = '';
 
     public function __construct(
-        private readonly ReaderInterface $reader,
-        private readonly MemoryInterface $memory,
-        private readonly ListenerInvoker $invoker,
-        private readonly bool $readCache = true,
+        protected readonly ReaderInterface $reader,
+        protected readonly MemoryInterface $memory,
+        protected readonly ListenerInvoker $invoker,
+        protected readonly bool $readCache = true,
     ) {
     }
 
