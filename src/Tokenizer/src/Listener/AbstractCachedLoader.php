@@ -60,5 +60,4 @@ abstract class AbstractCachedLoader
 
         yield from $this->reader->getClassMetadata($listener, AbstractTarget::class);
     }
-
 }
