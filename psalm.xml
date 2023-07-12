@@ -24,6 +24,7 @@
     <issueHandlers>
         <UnusedClosureParam errorLevel="suppress" />
         <UnusedPsalmSuppress errorLevel="suppress" />
+        <UnsupportedPropertyReferenceUsage errorLevel="suppress" />
         <InvalidThrow>
             <errorLevel type="suppress">
                 <referencedClass name="Psr\Container\NotFoundExceptionInterface"/>
