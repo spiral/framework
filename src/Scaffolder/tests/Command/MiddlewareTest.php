@@ -61,4 +61,27 @@ class MiddlewareTest extends AbstractCommandTestCase
         );
         $this->assertStringContainsString('App\Custom\Middleware', $content);
     }
+
+    public function testShowInstructionAfterInstallation(): void
+    {
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Middleware\\SampleMiddleware';
+
+        $result = $this->console()->run('create:middleware', [
+            'name'      => 'sample-middleware',
+        ]);
+
+        $output = $result->getOutput()->fetch();
+
+        $this->assertSame(
+            <<<OUTPUT
+            Declaration of 'SampleMiddleware' has been successfully written into 'Middleware/SampleMiddleware.php'.
+
+            Next steps:
+            1. Don't forget to activate a middleware in the 'App\Application\Bootloader\RoutesBootloader'
+            2. Read more about Middleware in the documentation: https://spiral.dev/docs/http-middleware
+
+            OUTPUT,
+            $output
+        );
+    }
 }

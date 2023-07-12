@@ -7,15 +7,17 @@ namespace Spiral\Scaffolder\Declaration;
 use Nette\PhpGenerator\Literal;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\BootloadManager\Methods;
+use Spiral\Boot\KernelInterface;
 use Spiral\Bootloader\DomainBootloader;
 use Spiral\Core\CoreInterface;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
 
-class BootloaderDeclaration extends AbstractDeclaration
+class BootloaderDeclaration extends AbstractDeclaration implements HasInstructions
 {
     public const TYPE = 'bootloader';
 
     public function __construct(
+        private readonly KernelInterface $kernel,
         ScaffolderConfig $config,
         string $name,
         ?string $comment = null,
@@ -51,5 +53,15 @@ class BootloaderDeclaration extends AbstractDeclaration
 
         $this->class->addMethod(Methods::INIT->value)->setReturnType('void');
         $this->class->addMethod(Methods::BOOT->value)->setReturnType('void');
+    }
+
+    public function getInstructions(): array
+    {
+        $kernelClass = (new \ReflectionClass($this->kernel))->getName();
+
+        return [
+            \sprintf('Don\'t forget to add your bootloader to the bootloader\'s list in \'<comment>%s</comment>\' class', $kernelClass),
+            'Read more about bootloaders in the documentation: https://spiral.dev/docs/framework-bootloaders',
+        ];
     }
 }

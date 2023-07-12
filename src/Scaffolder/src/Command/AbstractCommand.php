@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Spiral\Scaffolder\Command;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Boot\DirectoriesInterface;
 use Spiral\Console\Command;
 use Spiral\Core\FactoryInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Reactor\Writer;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
 use Spiral\Scaffolder\Declaration\DeclarationInterface;
+use Spiral\Scaffolder\Declaration\HasInstructions;
 
 abstract class AbstractCommand extends Command
 {
@@ -19,6 +21,7 @@ abstract class AbstractCommand extends Command
         protected FilesInterface $files,
         ContainerInterface $container,
         private readonly FactoryInterface $factory,
+        private readonly DirectoriesInterface $dirs,
     ) {
         $this->setContainer($container);
 
@@ -53,13 +56,16 @@ abstract class AbstractCommand extends Command
             (string)$this->argument('name'),
             $this->getNamespace(),
         );
-        $filename = $this->files->normalizePath($filename);
+
+        $rootDirectory = $this->dirs->get('root');
+
         $className = $declaration->getClass()->getName();
+        $relativeFilename = \str_replace($rootDirectory, '', $filename);
 
         if ($this->files->exists($filename)) {
             $this->writeln(
                 \sprintf("<fg=red>Unable to create '<comment>%s</comment>' declaration, ", $className)
-                . \sprintf("file '<comment>%s</comment>' already exists.</fg=red>", $filename),
+                . \sprintf("file '<comment>%s</comment>' already exists.</fg=red>", $relativeFilename),
             );
 
             return;
@@ -70,8 +76,17 @@ abstract class AbstractCommand extends Command
 
         $this->writeln(
             \sprintf("Declaration of '<info>%s</info>' ", $className)
-            . \sprintf("has been successfully written into '<comment>%s</comment>'.", $filename),
+            . \sprintf("has been successfully written into '<comment>%s</comment>'.", $relativeFilename),
         );
+
+        if ($declaration instanceof HasInstructions && \count($declaration->getInstructions()) > 0) {
+            $this->newLine();
+            $this->writeln('<fg=green>Next steps:</fg=green>');
+
+            foreach ($declaration->getInstructions() as $i => $instruction) {
+                $this->writeln(\sprintf('%d. %s', (string)(++$i), $instruction));
+            }
+        }
     }
 
     protected function getNamespace(): ?string

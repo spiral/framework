@@ -11,7 +11,7 @@ use Spiral\Console\Attribute\Question;
 use Spiral\Console\Command;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
 
-class CommandDeclaration extends AbstractDeclaration
+final class CommandDeclaration extends AbstractDeclaration implements HasInstructions
 {
     public const TYPE = 'command';
 
@@ -86,5 +86,13 @@ class CommandDeclaration extends AbstractDeclaration
                 return self::SUCCESS;
                 PHP,
             );
+    }
+
+    public function getInstructions(): array
+    {
+        return [
+            \sprintf('Use the following command to run your command: \'<comment>php app.php %s</comment>\'', $this->alias),
+            'Read more about user Commands in the documentation: https://spiral.dev/docs/console-commands',
+        ];
     }
 }

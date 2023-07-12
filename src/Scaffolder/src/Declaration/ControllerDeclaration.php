@@ -12,7 +12,7 @@ use Spiral\Router\Annotation\Route;
 /**
  * Declares controller.
  */
-class ControllerDeclaration extends AbstractDeclaration
+class ControllerDeclaration extends AbstractDeclaration implements HasInstructions
 {
     public const TYPE = 'controller';
 
@@ -38,5 +38,12 @@ class ControllerDeclaration extends AbstractDeclaration
     {
         $this->namespace->addUse(Route::class);
         $this->namespace->addUse(ResponseInterface::class);
+    }
+
+    public function getInstructions(): array
+    {
+        return [
+            'Read more about Controllers in the documentation: https://spiral.dev/docs/http-routing',
+        ];
     }
 }

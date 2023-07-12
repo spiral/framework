@@ -6,8 +6,9 @@ namespace Spiral\Scaffolder\Declaration;
 
 use Cocur\Slugify\SlugifyInterface;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
-use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\Dumper;
+use Nette\PhpGenerator\Literal;
+use Spiral\Boot\DirectoriesInterface;
 use Spiral\Core\InjectableConfig;
 use Spiral\Files\FilesInterface;
 use Spiral\Reactor\FileDeclaration;
@@ -17,13 +18,15 @@ use Spiral\Scaffolder\Exception\ScaffolderException;
 
 use function Spiral\Scaffolder\defineArrayType;
 
-class ConfigDeclaration extends AbstractDeclaration
+class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
 {
     public const TYPE = 'config';
+    private bool $reverse = false;
 
     public function __construct(
         ScaffolderConfig $config,
         protected readonly FilesInterface $files,
+        protected readonly DirectoriesInterface $dirs,
         protected readonly SlugifyInterface $slugify,
         protected readonly ConfigDeclaration\TypeAnnotations $typeAnnotations,
         protected readonly ConfigDeclaration\TypeHints $typeHints,
@@ -38,6 +41,7 @@ class ConfigDeclaration extends AbstractDeclaration
 
     public function create(bool $reverse, string $configName): void
     {
+        $this->reverse = $reverse;
         $this->class->addConstant('CONFIG', $configName)->setPublic();
 
         $filename = $this->makeConfigFilename($configName);
@@ -50,10 +54,8 @@ class ConfigDeclaration extends AbstractDeclaration
             $this->declareGetters($defaultsFromFile);
 
             $this->class->getProperty('config')->setValue($this->defaultValues->get($defaultsFromFile));
-        } else {
-            if (!$this->files->exists($filename)) {
-                $this->touchConfigFile($filename);
-            }
+        } elseif (!$this->files->exists($filename)) {
+            $this->touchConfigFile($filename);
         }
     }
 
@@ -74,10 +76,24 @@ class ConfigDeclaration extends AbstractDeclaration
             ->setValue([])
             ->setComment(
                 <<<'DOC'
-                Default values for the config. 
+                Default values for the config.
                 Will be merged with application config in runtime.
                 DOC,
             );
+    }
+
+    public function getInstructions(): array
+    {
+        $configFile = $this->makeConfigFilename(
+            $this->class->getConstant('CONFIG')->getValue()
+        );
+
+        $configFile = \str_replace($this->dirs->get('root'), '', $configFile);
+
+        return [
+            \sprintf('You can now add your config values to the \'<comment>%s</comment>\' file.', $configFile),
+            'Read more about Config Objects in the documentation: https://spiral.dev/docs/framework-config',
+        ];
     }
 
     private function makeConfigFilename(string $filename): string

@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * Middleware declaration.
  */
-class MiddlewareDeclaration extends AbstractDeclaration
+class MiddlewareDeclaration extends AbstractDeclaration implements HasInstructions
 {
     public const TYPE = 'middleware';
 
@@ -36,5 +36,13 @@ class MiddlewareDeclaration extends AbstractDeclaration
         $this->class->getMethod('process')
             ->addParameter('handler')
             ->setType(RequestHandlerInterface::class);
+    }
+
+    public function getInstructions(): array
+    {
+        return [
+            'Don\'t forget to activate a middleware in the \'<comment>App\Application\Bootloader\RoutesBootloader</comment>\'',
+            'Read more about Middleware in the documentation: https://spiral.dev/docs/http-middleware',
+        ];
     }
 }

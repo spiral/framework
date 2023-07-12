@@ -61,4 +61,27 @@ class JobHandlerTest extends AbstractCommandTestCase
         );
         $this->assertStringContainsString('App\Custom\Job', $content);
     }
+
+    public function testShowInstructionAfterInstallation(): void
+    {
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Job\\SampleJob';
+
+        $result = $this->console()->run('create:jobHandler', [
+            'name'      => 'sample',
+            '--comment' => 'Sample Job Handler'
+        ]);
+
+        $output = $result->getOutput()->fetch();
+
+        $this->assertSame(
+            <<<OUTPUT
+            Declaration of 'SampleJob' has been successfully written into 'Job/SampleJob.php'.
+
+            Next steps:
+            1. Read more about Job handlers in the documentation: https://spiral.dev/docs/queue-jobs
+
+            OUTPUT,
+            $output
+        );
+    }
 }

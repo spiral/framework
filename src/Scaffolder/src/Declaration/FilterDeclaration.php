@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Scaffolder\Declaration;
 
 use Nette\PhpGenerator\Property;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Filters\Attribute\Input;
@@ -16,18 +17,26 @@ use Spiral\Scaffolder\Config\ScaffolderConfig;
 use Spiral\Validation\Config\ValidationConfig;
 use Spiral\Validation\Exception\ValidationException;
 
-class FilterDeclaration extends AbstractDeclaration
+class FilterDeclaration extends AbstractDeclaration implements HasInstructions
 {
     public const TYPE = 'filter';
+    private readonly ?ValidationConfig $validationConfig;
 
     public function __construct(
-        private readonly ValidationConfig $validationConfig,
+        ContainerInterface $container,
         ScaffolderConfig $config,
         string $name,
         ?string $comment = null,
         ?string $namespace = null,
     ) {
         parent::__construct($config, $name, $comment, $namespace);
+
+        try {
+            $this->validationConfig = $container->get(ValidationConfig::class);
+        } catch (\Throwable $e) {
+            // Validation is not configured
+            $this->validationConfig = null;
+        }
     }
 
     public function declare(): void
@@ -40,7 +49,7 @@ class FilterDeclaration extends AbstractDeclaration
 
     public function addFilterDefinition(): void
     {
-        $validation = $this->validationConfig->getDefaultValidator();
+        $validation = $this->validationConfig?->getDefaultValidator();
         if ($validation === null) {
             throw new ValidationException(
                 'Default Validator is not configured. Read more at https://spiral.dev/docs/validation-factory'
@@ -84,6 +93,14 @@ PHP,
         foreach ($property->getAttributes() as $attribute) {
             $p->addAttribute($attribute->getName(), $attribute->getArguments());
         }
+    }
+
+    public function getInstructions(): array
+    {
+        return [
+            'Read more about Filter Objects in the documentation: https://spiral.dev/docs/filters-filter',
+            'Read more about Filter validation handling here: https://spiral.dev/docs/filters-filter#handle-validation-errors',
+        ];
     }
 
     private function parseProperty(string $property): Property

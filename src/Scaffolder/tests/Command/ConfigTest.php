@@ -20,7 +20,7 @@ class ConfigTest extends AbstractCommandTestCase
         $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig';
 
         $this->console()->run('create:config', [
-            'name'      => 'sample',
+            'name' => 'sample',
             '--comment' => 'Sample Config'
         ]);
 
@@ -88,7 +88,7 @@ class ConfigTest extends AbstractCommandTestCase
     {
         $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\ReversedConfig';
         $this->console()->run('create:config', [
-            'name'      => 'reversed',
+            'name' => 'reversed',
             '--comment' => 'Reversed Config',
             '--reverse' => true
         ]);
@@ -106,29 +106,29 @@ class ConfigTest extends AbstractCommandTestCase
         $this->assertNotEmpty($reflection->getDefaultProperties()['config']);
 
         $methods = [
-            'getStrParam'   => ['hint' => 'string', 'annotation' => 'string'],
-            'getIntParam'   => ['hint' => 'int', 'annotation' => 'int'],
+            'getStrParam' => ['hint' => 'string', 'annotation' => 'string'],
+            'getIntParam' => ['hint' => 'int', 'annotation' => 'int'],
             'getFloatParam' => ['hint' => 'float', 'annotation' => 'float'],
-            'getBoolParam'  => ['hint' => 'bool', 'annotation' => 'bool'],
-            'getNullParam'  => ['hint' => null, 'annotation' => 'null'],
+            'getBoolParam' => ['hint' => 'bool', 'annotation' => 'bool'],
+            'getNullParam' => ['hint' => null, 'annotation' => 'null'],
 
             'getArrParam' => ['hint' => 'array', 'annotation' => 'array|string[]'],
 
-            'getMapParam'   => ['hint' => 'array', 'annotation' => 'array|string[]'],
+            'getMapParam' => ['hint' => 'array', 'annotation' => 'array|string[]'],
             'getMapParamBy' => ['hint' => 'string', 'annotation' => 'string'],
 
             'getMixedArrParam' => ['hint' => 'array', 'annotation' => 'array'],
-            'getParams'        => ['hint' => 'array', 'annotation' => 'array|string[]'],
+            'getParams' => ['hint' => 'array', 'annotation' => 'array|string[]'],
 
             'getParameters' => ['hint' => 'array', 'annotation' => 'array|array[]'],
-            'getParameter'  => ['hint' => 'array', 'annotation' => 'array'],
+            'getParameter' => ['hint' => 'array', 'annotation' => 'array'],
 
-            'getConflicts'  => ['hint' => 'array', 'annotation' => 'array|array[]'],
-            'getConflict'   => ['hint' => 'string', 'annotation' => 'string'],
+            'getConflicts' => ['hint' => 'array', 'annotation' => 'array|array[]'],
+            'getConflict' => ['hint' => 'string', 'annotation' => 'string'],
             'getConflictBy' => ['hint' => 'array', 'annotation' => 'array|int[]'],
 
-            'getValues'  => ['hint' => 'array', 'annotation' => 'array|array[]'],
-            'getValue'   => ['hint' => 'string', 'annotation' => 'string'],
+            'getValues' => ['hint' => 'array', 'annotation' => 'array|array[]'],
+            'getValue' => ['hint' => 'string', 'annotation' => 'string'],
             'getValueBy' => ['hint' => 'string', 'annotation' => 'string'],
         ];
 
@@ -158,7 +158,7 @@ class ConfigTest extends AbstractCommandTestCase
     {
         $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\WeirdConfig';
         $this->console()->run('create:config', [
-            'name'      => 'weird',
+            'name' => 'weird',
             '--comment' => 'Weird Config',
             '--reverse' => true
         ]);
@@ -229,7 +229,30 @@ class ConfigTest extends AbstractCommandTestCase
         $this->assertStringContainsString('//sample comment', $source);
 
         $this->deleteConfigFile($filename);
+    }
 
+    public function testShowInstructionAfterInstallation(): void
+    {
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig';
+
+        $result = $this->console()->run('create:config', [
+            'name' => 'sample',
+            '--comment' => 'Sample Config'
+        ]);
+
+        $output = $result->getOutput()->fetch();
+
+        $this->assertSame(
+            <<<OUTPUT
+            Declaration of 'SampleConfig' has been successfully written into 'Config/SampleConfig.php'.
+
+            Next steps:
+            1. You can now add your config values to the 'config/sample.php' file.
+            2. Read more about Config Objects in the documentation: https://spiral.dev/docs/framework-config
+
+            OUTPUT,
+            $output
+        );
     }
 
     /**
@@ -250,7 +273,7 @@ class ConfigTest extends AbstractCommandTestCase
     private function createConfig(string $name, string $comment): string
     {
         $this->console()->run('create:config', [
-            'name'      => $name,
+            'name' => $name,
             '--comment' => $comment
         ]);
 

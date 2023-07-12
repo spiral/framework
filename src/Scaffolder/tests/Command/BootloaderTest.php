@@ -9,7 +9,7 @@ use ReflectionException;
 use Spiral\Core\CoreInterface;
 use Throwable;
 
-class BootloaderTest extends AbstractCommandTestCase
+final class BootloaderTest extends AbstractCommandTestCase
 {
     /**
      * @throws ReflectionException
@@ -69,6 +69,7 @@ class BootloaderTest extends AbstractCommandTestCase
             'App/Custom/Bootloader/SampleBootloader.php',
             \str_replace('\\', '/', $reflection->getFileName())
         );
+
         $this->assertStringContainsString('App\Custom\Bootloader', $content);
     }
 
@@ -98,5 +99,29 @@ class BootloaderTest extends AbstractCommandTestCase
         $this->assertEquals([
             CoreInterface::class => ['Spiral\Tests\Scaffolder\App\Bootloader\SampleDomainBootloader', 'domainCore'],
         ], $reflection->getConstant('SINGLETONS'));
+    }
+
+    public function testShowInstructionAfterInstallation(): void
+    {
+        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Bootloader\\SampleBootloader';
+
+        $result = $this->console()->run('create:bootloader', [
+            'name' => 'sample',
+            '--comment' => 'Sample Bootloader'
+        ]);
+
+        $output = $result->getOutput()->fetch();
+
+        $this->assertSame(
+            <<<OUTPUT
+            Declaration of 'SampleBootloader' has been successfully written into 'Bootloader/SampleBootloader.php'.
+
+            Next steps:
+            1. Don't forget to add your bootloader to the bootloader's list in 'Spiral\Tests\Scaffolder\App\TestApp' class
+            2. Read more about bootloaders in the documentation: https://spiral.dev/docs/framework-bootloaders
+
+            OUTPUT,
+            $output
+        );
     }
 }
