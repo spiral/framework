@@ -102,4 +102,53 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
             \spl_autoload_unregister($loader);
         }
     }
+
+    /**
+     * Safely get enum reflection, class loading errors will be blocked and reflection will be
+     * excluded from analysis.
+     *
+     * @param class-string $enum
+     *
+     * @return \ReflectionEnum
+     *
+     * @throws LocatorException
+     */
+    protected function enumReflection(string $enum): \ReflectionEnum
+    {
+        $loader = static function (string $enum): void {
+            if ($enum === LocatorException::class) {
+                return;
+            }
+
+            throw new LocatorException(\sprintf("Enum '%s' can not be loaded", $enum));
+        };
+
+        //To suspend class dependency exception
+        \spl_autoload_register($loader);
+
+        try {
+            //In some enum reflection can thrown an exception if enum invalid or can not be loaded,
+            //we are going to handle such exception and convert it soft exception
+            return new \ReflectionEnum($enum);
+        } catch (\Throwable $e) {
+            if ($e instanceof LocatorException && $e->getPrevious() != null) {
+                $e = $e->getPrevious();
+            }
+
+            $this->getLogger()->error(
+                \sprintf(
+                    '%s: %s in %s:%s',
+                    $enum,
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine()
+                ),
+                ['error' => $e]
+            );
+
+            throw new LocatorException($e->getMessage(), (int) $e->getCode(), $e);
+        } finally {
+            \spl_autoload_unregister($loader);
+        }
+    }
 }

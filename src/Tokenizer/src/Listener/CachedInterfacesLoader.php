@@ -8,23 +8,25 @@ use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
-final class CachedClassesLoader extends AbstractCachedLoader implements ClassesLoaderInterface
+final class CachedInterfacesLoader extends AbstractCachedLoader implements InterfacesLoaderInterface
 {
+    protected string $cacheKeyPrefix = 'interfaces-';
+
     public function __construct(
         ReaderInterface $reader,
         MemoryInterface $memory,
-        private readonly ClassLocatorByTarget $locator,
+        private readonly InterfaceLocatorByTarget $locator,
         ListenerInvoker $invoker,
         bool $readCache = true,
     ) {
         parent::__construct($reader, $memory, $invoker, $readCache);
     }
 
-    public function loadClasses(TokenizationListenerInterface $listener): bool
+    public function loadInterfaces(TokenizationListenerInterface $listener): bool
     {
         return $this->doLoad(
             $listener,
-            $this->locator->getClasses(...),
+            $this->locator->getInterfaces(...),
             static fn (string $class) => new \ReflectionClass($class),
         );
     }

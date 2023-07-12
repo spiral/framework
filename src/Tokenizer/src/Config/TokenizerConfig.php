@@ -23,6 +23,7 @@ final class TokenizerConfig extends InjectableConfig
     /**
      * @var array{
      *     cache: array{directory: null, enabled: bool},
+     *     load: array{classes:bool, enums: bool, interfaces: bool},
      *     debug: bool,
      *     directories: TDirectories,
      *     exclude: TDirectories,
@@ -33,6 +34,11 @@ final class TokenizerConfig extends InjectableConfig
         'cache' => [
             'directory' => null,
             'enabled' => false,
+        ],
+        'load' => [
+            'classes' => true,
+            'enums' => false,
+            'interfaces' => false,
         ],
         'debug' => false,
         'directories' => [],
@@ -92,5 +98,20 @@ final class TokenizerConfig extends InjectableConfig
         \assert(\is_string($dir) || $dir === null, 'Invalid cache directory.');
 
         return $dir;
+    }
+
+    public function isLoadClassesEnabled(): bool
+    {
+        return (bool) ($this->config['load']['classes'] ?? true);
+    }
+
+    public function isLoadEnumsEnabled(): bool
+    {
+        return (bool) ($this->config['load']['enums'] ?? false);
+    }
+
+    public function isLoadInterfacesEnabled(): bool
+    {
+        return (bool) ($this->config['load']['interfaces'] ?? false);
     }
 }

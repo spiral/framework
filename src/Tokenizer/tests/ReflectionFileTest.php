@@ -96,6 +96,15 @@ class ReflectionFileTest extends TestCase
         ], $reflection->getEnums());
     }
 
+    public function testReflectionInterface(): void
+    {
+        $reflection = new ReflectionFile(__DIR__ . '/Interfaces/InterfaceA.php');
+
+        $this->assertSame([
+            'Spiral\Tests\Tokenizer\Interfaces\InterfaceA',
+        ], $reflection->getInterfaces());
+    }
+
     private function deadend()
     {
         $a = $b = null;

@@ -122,4 +122,43 @@ class ConfigTest extends TestCase
         ]);
         $this->assertTrue($config->isCacheEnabled());
     }
+
+    public function testLoadClassesEnabled(): void
+    {
+        $config = new TokenizerConfig();
+        $this->assertTrue($config->isLoadClassesEnabled()); // by default
+
+        $config = new TokenizerConfig([
+            'load' => [
+                'classes' => false,
+            ],
+        ]);
+        $this->assertFalse($config->isLoadClassesEnabled());
+    }
+
+    public function testLoadEnumsEnabled(): void
+    {
+        $config = new TokenizerConfig();
+        $this->assertFalse($config->isLoadEnumsEnabled()); // by default
+
+        $config = new TokenizerConfig([
+            'load' => [
+                'enums' => true,
+            ],
+        ]);
+        $this->assertTrue($config->isLoadEnumsEnabled());
+    }
+
+    public function testLoadInterfacesEnabled(): void
+    {
+        $config = new TokenizerConfig();
+        $this->assertFalse($config->isLoadInterfacesEnabled()); // by default
+
+        $config = new TokenizerConfig([
+            'load' => [
+                'interfaces' => true,
+            ],
+        ]);
+        $this->assertTrue($config->isLoadInterfacesEnabled());
+    }
 }

@@ -19,7 +19,5 @@ final class ListenerInvoker
         foreach ($classes as $class) {
             $listener->listen($class);
         }
-
-        $listener->finalize();
     }
 }
