@@ -37,7 +37,6 @@ final class Core implements CoreInterface
 
         $tracer = $this->getTracer();
 
-        /** @psalm-suppress RedundantCondition */
         if (\method_exists($parameters['options'], 'withHeader')) {
             foreach ($tracer->getContext() as $key => $data) {
                 $parameters['options'] = $parameters['options']->withHeader($key, $data);

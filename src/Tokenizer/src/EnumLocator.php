@@ -65,12 +65,13 @@ final class EnumLocator extends AbstractLocator implements EnumsInterface
      */
     protected function isTargeted(\ReflectionEnum $enum, \ReflectionClass $target = null): bool
     {
-        if (empty($target)) {
+        if ($target === null) {
             return true;
         }
 
         if (!$target->isTrait()) {
             //Target is interface or class
+            /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/9489 */
             return $enum->isSubclassOf($target) || $enum->getName() === $target->getName();
         }
 

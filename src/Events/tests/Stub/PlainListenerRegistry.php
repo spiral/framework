@@ -8,7 +8,6 @@ use Spiral\Events\ListenerRegistryInterface;
 
 /**
  * @internal
- * @psalm-suppress MissingConstructor
  */
 final class PlainListenerRegistry implements ListenerRegistryInterface
 {

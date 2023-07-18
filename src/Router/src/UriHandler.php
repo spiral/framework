@@ -150,7 +150,6 @@ final class UriHandler
      * @return Matches|null
      *
      * @psalm-external-mutation-free
-     * @psalm-suppress MoreSpecificReturnType, LessSpecificReturnStatement
      */
     public function match(UriInterface $uri, array $defaults): ?array
     {

@@ -36,6 +36,12 @@ final class InputProxy implements InputInterface
         return $this->input->getParameterOption($values, $default, $onlyParams);
     }
 
+    /**
+     * Since v4.0 the return type will be changed to void {@see InputInterface::bind}.
+     *
+     * @return void
+     * @psalm-suppress InvalidReturnStatement
+     */
     public function bind(InputDefinition $definition): mixed
     {
         return $this->input->bind($definition);
