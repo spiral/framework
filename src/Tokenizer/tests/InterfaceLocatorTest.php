@@ -17,7 +17,7 @@ use Spiral\Tokenizer\Tokenizer;
 
 class InterfaceLocatorTest extends TestCase
 {
-    public function testInterfacesAll()
+    public function testInterfacesAll(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -36,7 +36,7 @@ class InterfaceLocatorTest extends TestCase
     }
 
 
-    public function testInterfacesByInterface()
+    public function testInterfacesByInterface(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -50,7 +50,7 @@ class InterfaceLocatorTest extends TestCase
         $this->assertArrayNotHasKey(InterfaceD::class, $classes);
     }
 
-    public function testLoggerErrors()
+    public function testLoggerErrors(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -84,7 +84,7 @@ class InterfaceLocatorTest extends TestCase
         );
     }
 
-    protected function getTokenizer()
+    protected function getTokenizer(): Tokenizer
     {
         $config = new TokenizerConfig([
             'directories' => [__DIR__],

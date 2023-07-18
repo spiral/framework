@@ -30,7 +30,7 @@ final class ScopedInterfaceLocatorTest extends TestCase
         $this->container->bindSingleton(ScopedInterfacesInterface::class, ScopedInterfaceLocator::class);
     }
 
-    public function testGetsInterfacesForExistsScope()
+    public function testGetsInterfacesForExistsScope(): void
     {
         $classes = $this->container->get(ScopedInterfacesInterface::class)->getScopedInterfaces('foo');
 
@@ -45,7 +45,7 @@ final class ScopedInterfaceLocatorTest extends TestCase
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Interfaces\Bad_Interface', $classes);
     }
 
-    public function testGetsInterfacesForNotExistScope()
+    public function testGetsInterfacesForNotExistScope(): void
     {
         $classes = $this->container->get(ScopedInterfacesInterface::class)->getScopedInterfaces('bar');
 

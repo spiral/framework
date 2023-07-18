@@ -28,7 +28,7 @@ final class ScopedClassLocatorTest extends TestCase
         $this->container->bindSingleton(ScopedClassesInterface::class, ScopedClassLocator::class);
     }
 
-    public function testGetsClassesForExistsScope()
+    public function testGetsClassesForExistsScope(): void
     {
         $classes = $this->container->get(ScopedClassesInterface::class)->getScopedClasses('foo');
 
@@ -43,7 +43,7 @@ final class ScopedClassLocatorTest extends TestCase
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
     }
 
-    public function testGetsClassesForNotExistScope()
+    public function testGetsClassesForNotExistScope(): void
     {
         $classes = $this->container->get(ScopedClassesInterface::class)->getScopedClasses('bar');
 

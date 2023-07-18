@@ -16,7 +16,7 @@ use Spiral\Tokenizer\Tokenizer;
 
 class ClassLocatorTest extends TestCase
 {
-    public function testClassesAll()
+    public function testClassesAll(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -34,7 +34,7 @@ class ClassLocatorTest extends TestCase
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
     }
 
-    public function testClassesByClass()
+    public function testClassesByClass(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -49,7 +49,7 @@ class ClassLocatorTest extends TestCase
         $this->assertArrayNotHasKey(ClassC::class, $classes);
     }
 
-    public function testClassesByInterface()
+    public function testClassesByInterface(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -64,7 +64,7 @@ class ClassLocatorTest extends TestCase
         $this->assertArrayNotHasKey(ClassD::class, $classes);
     }
 
-    public function testClassesByTrait()
+    public function testClassesByTrait(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -79,7 +79,7 @@ class ClassLocatorTest extends TestCase
         $this->assertArrayNotHasKey(ClassD::class, $classes);
     }
 
-    public function testClassesByClassA()
+    public function testClassesByClassA(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -94,7 +94,7 @@ class ClassLocatorTest extends TestCase
         $this->assertArrayNotHasKey(self::class, $classes);
     }
 
-    public function testClassesByClassB()
+    public function testClassesByClassB(): void
     {
         $tokenizer = $this->getTokenizer();
         $classes = $tokenizer->classLocator()->getClasses(ClassB::class);
@@ -107,7 +107,7 @@ class ClassLocatorTest extends TestCase
         $this->assertArrayNotHasKey(ClassD::class, $classes);
     }
 
-    public function testLoggerErrors()
+    public function testLoggerErrors(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -141,7 +141,7 @@ class ClassLocatorTest extends TestCase
         );
     }
 
-    protected function getTokenizer()
+    protected function getTokenizer(): Tokenizer
     {
         $config = new TokenizerConfig([
             'directories' => [__DIR__],

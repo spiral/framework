@@ -16,7 +16,7 @@ use Spiral\Tokenizer\InvocationsInterface;
 
 class InjectionsTest extends TestCase
 {
-    public function testClassLocator()
+    public function testClassLocator(): void
     {
         $container = new Container();
         $container->bind(TokenizerConfig::class, new TokenizerConfig([
@@ -32,7 +32,7 @@ class InjectionsTest extends TestCase
         );
     }
 
-    public function testInvocationsLocator()
+    public function testInvocationsLocator(): void
     {
         $container = new Container();
         $container->bind(TokenizerConfig::class, new TokenizerConfig([
@@ -48,7 +48,7 @@ class InjectionsTest extends TestCase
         );
     }
 
-    public function testEnumsLocator()
+    public function testEnumsLocator(): void
     {
         $container = new Container();
         $container->bind(TokenizerConfig::class, new TokenizerConfig([
@@ -64,7 +64,7 @@ class InjectionsTest extends TestCase
         );
     }
 
-    public function testInterfacesLocator()
+    public function testInterfacesLocator(): void
     {
         $container = new Container();
         $container->bind(TokenizerConfig::class, new TokenizerConfig([

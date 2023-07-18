@@ -7,14 +7,14 @@ use Spiral\Tokenizer\Config\TokenizerConfig;
 
 class ConfigTest extends TestCase
 {
-    public function testDebugNotSet()
+    public function testDebugNotSet(): void
     {
         $config = new TokenizerConfig([]);
 
         $this->assertFalse($config->isDebug());
     }
 
-    public function testDebug()
+    public function testDebug(): void
     {
         $config = new TokenizerConfig(['debug' => false]);
         $this->assertFalse($config->isDebug());
@@ -26,7 +26,7 @@ class ConfigTest extends TestCase
         $this->assertTrue($config->isDebug());
     }
 
-    public function testDirectories()
+    public function testDirectories(): void
     {
         $config = new TokenizerConfig([
             'directories' => ['a', 'b', 'c'],
@@ -34,7 +34,7 @@ class ConfigTest extends TestCase
         $this->assertSame(['a', 'b', 'c'], $config->getDirectories());
     }
 
-    public function testExcluded()
+    public function testExcluded(): void
     {
         $config = new TokenizerConfig([
             'exclude' => ['a', 'b', 'c'],
@@ -42,7 +42,7 @@ class ConfigTest extends TestCase
         $this->assertSame(['a', 'b', 'c'], $config->getExcludes());
     }
 
-    public function testNonExistScopeShouldReturnDefaultDirectories()
+    public function testNonExistScopeShouldReturnDefaultDirectories(): void
     {
         $config = new TokenizerConfig([
             'directories' => ['a'],
@@ -61,7 +61,7 @@ class ConfigTest extends TestCase
         ], $config->getScope('bar'));
     }
 
-    public function testExistsScopeShouldReturnDirectoriesFromIt()
+    public function testExistsScopeShouldReturnDirectoriesFromIt(): void
     {
         $config = new TokenizerConfig([
             'directories' => ['a'],

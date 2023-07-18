@@ -18,7 +18,7 @@ use Spiral\Tokenizer\Tokenizer;
 
 class EnumLocatorTest extends TestCase
 {
-    public function testEnumsAll()
+    public function testEnumsAll(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -36,7 +36,7 @@ class EnumLocatorTest extends TestCase
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Enums\Bad_Enum', $enums);
     }
 
-    public function testEnumsByEnum()
+    public function testEnumsByEnum(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -50,7 +50,7 @@ class EnumLocatorTest extends TestCase
         $this->assertArrayNotHasKey(EnumC::class, $enums);
     }
 
-    public function testEnumsByInterface()
+    public function testEnumsByInterface(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -64,7 +64,7 @@ class EnumLocatorTest extends TestCase
         $this->assertArrayNotHasKey(EnumD::class, $enums);
     }
 
-    public function testEnumsByTrait()
+    public function testEnumsByTrait(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -78,7 +78,7 @@ class EnumLocatorTest extends TestCase
         $this->assertArrayNotHasKey(EnumD::class, $enums);
     }
 
-    public function testLoggerErrors()
+    public function testLoggerErrors(): void
     {
         $tokenizer = $this->getTokenizer();
 
@@ -112,7 +112,7 @@ class EnumLocatorTest extends TestCase
         );
     }
 
-    protected function getTokenizer()
+    protected function getTokenizer(): Tokenizer
     {
         $config = new TokenizerConfig([
             'directories' => [__DIR__],
