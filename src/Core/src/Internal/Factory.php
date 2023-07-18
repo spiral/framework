@@ -483,6 +483,7 @@ final class Factory implements FactoryInterface
             return true;
         }
 
+        /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/9489 */
         if ($ctx->reflection->implementsInterface(SingletonInterface::class)) {
             return true;
         }
