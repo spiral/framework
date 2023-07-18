@@ -49,6 +49,7 @@ final class AuthTransportMiddleware implements MiddlewareInterface
     private function getTransportRegistry(TransportRegistry $registry, string $transportName): TransportRegistry
     {
         $transports = new TransportRegistry();
+        $transports->setDefaultTransport($transportName);
         $transports->setTransport($transportName, $registry->getTransport($transportName));
 
         return $transports;
