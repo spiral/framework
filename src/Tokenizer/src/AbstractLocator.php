@@ -109,8 +109,6 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
      *
      * @param class-string $enum
      *
-     * @return \ReflectionEnum
-     *
      * @throws LocatorException
      */
     protected function enumReflection(string $enum): \ReflectionEnum

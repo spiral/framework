@@ -154,7 +154,6 @@ final class TokenizerListenerBootloader extends Bootloader implements
     }
 
     /**
-     * @param ListenerInvoker $invoker
      * @param callable(): array<class-string, \ReflectionClass> $reflections
      * @param callable(TokenizationListenerInterface): bool $loader
      */

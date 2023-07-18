@@ -21,7 +21,6 @@ use function Spiral\Scaffolder\defineArrayType;
 class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
 {
     public const TYPE = 'config';
-    private bool $reverse = false;
 
     public function __construct(
         ScaffolderConfig $config,
@@ -41,7 +40,6 @@ class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
 
     public function create(bool $reverse, string $configName): void
     {
-        $this->reverse = $reverse;
         $this->class->addConstant('CONFIG', $configName)->setPublic();
 
         $filename = $this->makeConfigFilename($configName);
