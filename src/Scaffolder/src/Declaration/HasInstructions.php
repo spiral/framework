@@ -7,7 +7,7 @@ namespace Spiral\Scaffolder\Declaration;
 interface HasInstructions
 {
     /**
-     * @return non-empty-string[]
+     * @return array<int, non-empty-string>
      */
     public function getInstructions(): array;
 }
