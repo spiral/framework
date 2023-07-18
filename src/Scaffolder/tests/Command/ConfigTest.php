@@ -233,21 +233,21 @@ class ConfigTest extends AbstractCommandTestCase
 
     public function testShowInstructionAfterInstallation(): void
     {
-        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig';
+        $this->className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\InstructionConfig';
 
         $result = $this->console()->run('create:config', [
-            'name' => 'sample',
-            '--comment' => 'Sample Config'
+            'name' => 'instruction',
+            '--comment' => 'Instruction Config'
         ]);
 
         $output = $result->getOutput()->fetch();
 
         $this->assertSame(
             <<<OUTPUT
-            Declaration of 'SampleConfig' has been successfully written into 'Config/SampleConfig.php'.
+            Declaration of 'InstructionConfig' has been successfully written into 'Config/InstructionConfig.php'.
 
             Next steps:
-            1. You can now add your config values to the 'config/sample.php' file.
+            1. You can now add your config values to the 'config/instruction.php' file.
             2. Read more about Config Objects in the documentation: https://spiral.dev/docs/framework-config
 
             OUTPUT,

@@ -16,7 +16,7 @@ class InvocationsTest extends TestCase
         print_r(self::sampleMethod($result . 'plus'));
     }
 
-    public function testInstance()
+    public function testInstance(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -28,7 +28,7 @@ class InvocationsTest extends TestCase
         $this->assertInstanceOf(ReflectionInvocation::class, $invocation2);
     }
 
-    public function testClass()
+    public function testClass(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -40,7 +40,7 @@ class InvocationsTest extends TestCase
         $this->assertSame(self::class, $invocation2->getClass());
     }
 
-    public function testName()
+    public function testName(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -52,7 +52,7 @@ class InvocationsTest extends TestCase
         $this->assertSame('sampleMethod', $invocation2->getName());
     }
 
-    public function testFilename()
+    public function testFilename(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -64,7 +64,7 @@ class InvocationsTest extends TestCase
         $this->assertSame(str_replace('\\', '/', __FILE__), $invocation2->getFilename());
     }
 
-    public function testLine()
+    public function testLine(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -76,7 +76,7 @@ class InvocationsTest extends TestCase
         $this->assertSame(16, $invocation2->getLine());
     }
 
-    public function testLevel()
+    public function testLevel(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -88,7 +88,7 @@ class InvocationsTest extends TestCase
         $this->assertSame(1, $invocation2->getLevel());
     }
 
-    public function testOperator()
+    public function testOperator(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -100,7 +100,7 @@ class InvocationsTest extends TestCase
         $this->assertSame('::', $invocation2->getOperator());
     }
 
-    public function testIsMethod()
+    public function testIsMethod(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -112,7 +112,7 @@ class InvocationsTest extends TestCase
         $this->assertTrue($invocation2->isMethod());
     }
 
-    public function testCountArguments()
+    public function testCountArguments(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -124,7 +124,7 @@ class InvocationsTest extends TestCase
         $this->assertSame(1, $invocation2->countArguments());
     }
 
-    public function testSimpleArgument()
+    public function testSimpleArgument(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -140,7 +140,7 @@ class InvocationsTest extends TestCase
         $this->assertSame("hello world", $argument->stringValue());
     }
 
-    public function testVariableArgument()
+    public function testVariableArgument(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -155,7 +155,7 @@ class InvocationsTest extends TestCase
         $this->assertSame('$result.\'plus\'', $argument->getValue());
     }
 
-    public function testSource()
+    public function testSource(): void
     {
         $invocations = $this->getInvocations();
         $this->assertCount(2, $invocations);
@@ -185,7 +185,6 @@ class InvocationsTest extends TestCase
         $locator = $tokenizer->invocationLocator();
 
         $method = new \ReflectionMethod($this, 'sampleMethod');
-        $method->setAccessible(true);
 
         return $locator->getInvocations($method);
     }

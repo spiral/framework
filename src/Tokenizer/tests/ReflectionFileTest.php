@@ -8,7 +8,7 @@ use Spiral\Tokenizer\Reflection\ReflectionFile;
 
 class ReflectionFileTest extends TestCase
 {
-    public function testReflection()
+    public function testReflection(): void
     {
         $reflection = new ReflectionFile(__FILE__);
 

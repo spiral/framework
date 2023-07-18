@@ -30,7 +30,7 @@ final class ScopedEnumLocatorTest extends TestCase
         $this->container->bindSingleton(ScopedEnumsInterface::class, ScopedEnumLocator::class);
     }
 
-    public function testGetsEnumsForExistsScope()
+    public function testGetsEnumsForExistsScope(): void
     {
         $classes = $this->container->get(ScopedEnumsInterface::class)->getScopedEnums('foo');
 
@@ -45,7 +45,7 @@ final class ScopedEnumLocatorTest extends TestCase
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Enums\Bad_Enum', $classes);
     }
 
-    public function testGetsEnumsForNotExistScope()
+    public function testGetsEnumsForNotExistScope(): void
     {
         $classes = $this->container->get(ScopedEnumsInterface::class)->getScopedEnums('bar');
 
