@@ -23,7 +23,6 @@ final class QueueableDetector
     {
         $reflection = new \ReflectionClass($object);
 
-        /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/9489 */
         if ($reflection->implementsInterface(QueueableInterface::class)) {
             return true;
         }

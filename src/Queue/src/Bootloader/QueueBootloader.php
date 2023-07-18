@@ -59,7 +59,6 @@ final class QueueBootloader extends Bootloader
         $this->initQueueConfig($env);
 
         $this->registerDriverAlias(SyncDriver::class, 'sync');
-        /** @psalm-suppress InvalidCast https://github.com/vimeo/psalm/issues/8810 */
         $binder->bindInjector(QueueInterface::class, QueueInjector::class);
 
         $kernel->booted(static function () use ($container): void {

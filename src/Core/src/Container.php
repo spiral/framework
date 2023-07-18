@@ -137,8 +137,6 @@ final class Container implements
      *
      * @throws ContainerException
      * @throws \Throwable
-     *
-     * @psalm-suppress InvalidArgument, InvalidCast
      */
     public function get(string|Autowire $id, string $context = null): mixed
     {
@@ -298,9 +296,6 @@ final class Container implements
 
     /**
      * Bind class or class interface to the injector source (InjectorInterface).
-     *
-     * Todo: remove suppression after {@link https://github.com/vimeo/psalm/issues/8298} fixing.
-     * @psalm-suppress InvalidArgument,InvalidCast
      */
     public function bindInjector(string $class, string $injector): void
     {
