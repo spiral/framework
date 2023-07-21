@@ -275,7 +275,10 @@ final class TokenizerListenerBootloaderTest extends TestCase
         $kernel = TestCoreWithTokenizer::create(directories: ['root' => __DIR__], container: $container);
         $kernel->run();
 
-        $this->assertTrue(in_array('/foo', $container->get(TokenizerConfig::class)->getDirectories()));
+        $this->assertTrue(\in_array(
+            \dirname(__DIR__) . '/Fixtures/Bootloader',
+            $container->get(TokenizerConfig::class)->getDirectories()
+        ));
     }
 
     public static function readCacheDataProvider(): \Traversable

@@ -11,6 +11,6 @@ final class DirectoryBootloader extends Bootloader
 {
     public function init(TokenizerBootloader $tokenizer): void
     {
-        $tokenizer->addDirectory('/foo');
+        $tokenizer->addDirectory(\dirname(__DIR__, 2) . '/Fixtures/Bootloader');
     }
 }
