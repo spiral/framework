@@ -6,18 +6,14 @@ namespace Spiral\Tests\Tokenizer\Listener;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Spiral\Boot\BootloadManager\BootloadManager;
-use Spiral\Boot\BootloadManager\Initializer;
-use Spiral\Boot\BootloadManager\InitializerInterface;
-use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Core\Container;
-use Spiral\Tests\Boot\Fixtures\TestCore;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\Listener\ClassesLoaderInterface;
 use Spiral\Tokenizer\Listener\ListenerInvoker;
 use Spiral\Tests\Tokenizer\Classes\Targets;
+use Spiral\Tests\Tokenizer\Fixtures\TestCore;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
 final class ListenerInvokerTest extends TestCase
@@ -70,9 +66,9 @@ final class ListenerInvokerTest extends TestCase
         $container->bind(ClassesInterface::class, $classes);
         $container->bind(ClassesLoaderInterface::class, $loader);
 
-        $kernel = TestCore::create(['root' => __DIR__], true, null, $container);
+        $kernel = TestCore::create(directories: ['root' => __DIR__], container: $container);
 
-        $bootloader = new TokenizerListenerBootloader();
+        $bootloader = $container->get(TokenizerListenerBootloader::class);
         $bootloader->addListener($listener);
 
         $config = new TokenizerConfig([
