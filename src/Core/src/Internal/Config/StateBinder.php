@@ -51,7 +51,7 @@ class StateBinder implements BinderInterface
             throw $this->invalidBindingException($alias, $e);
         }
 
-        $this->state->bindings[$alias] = $config;
+        $this->setBinding($alias, $config);
     }
 
     /**
@@ -59,19 +59,13 @@ class StateBinder implements BinderInterface
      */
     public function bindSingleton(string $alias, mixed $resolver): void
     {
-        if (isset($this->state->singletons[$alias])) {
-            throw new SingletonOverloadException(
-                \sprintf('Can\'t overload the singleton `%s` because it\'s already used.', $alias)
-            );
-        }
-
         try {
             $config = $this->makeConfig($resolver, true);
         } catch (\Throwable $e) {
             throw $this->invalidBindingException($alias, $e);
         }
 
-        $this->state->bindings[$alias] = $config;
+        $this->setBinding($alias, $config);
     }
 
     public function hasInstance(string $alias): bool
@@ -189,5 +183,14 @@ class StateBinder implements BinderInterface
             $alias,
             $previous->getMessage(),
         ), previous: $previous);
+    }
+
+    private function setBinding(string $alias, Binding $config): void
+    {
+        if (isset($this->state->singletons[$alias])) {
+            throw new SingletonOverloadException($alias);
+        }
+
+        $this->state->bindings[$alias] = $config;
     }
 }

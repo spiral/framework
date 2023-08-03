@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\Fixtures;
 
-use Spiral\Files\Files;
-use Spiral\Files\FilesInterface;
 use Spiral\Framework\Kernel;
 use Spiral\Prototype\Bootloader\PrototypeBootloader;
 use Spiral\Prototype\PrototypeRegistry;
@@ -24,7 +22,6 @@ class TestApp extends Kernel
         $this->bindWithoutResolver();
         $this->container->bind(Fixtures\ATest3Interface::class, Fixtures\ATest3::class);
         $this->container->bind(ResolvedInterface::class, InterfaceResolver::class);
-        $this->container->bind(FilesInterface::class, Files::class);
     }
 
     public function bindWithoutResolver(): void

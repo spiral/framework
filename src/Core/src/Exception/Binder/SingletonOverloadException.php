@@ -12,4 +12,8 @@ use Spiral\Core\Exception\ConfiguratorException;
  */
 final class SingletonOverloadException extends ConfiguratorException
 {
+    public function __construct(string $alias)
+    {
+        parent::__construct(\sprintf('Can\'t overload the singleton `%s` because it\'s already used.', $alias));
+    }
 }
