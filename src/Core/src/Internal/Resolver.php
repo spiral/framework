@@ -173,8 +173,6 @@ final class Resolver implements ResolverInterface
     /**
      * Returns {@see true} if argument was resolved.
      *
-     * @return bool
-     *
      * @throws ResolvingException
      * @throws NotFoundExceptionInterface|ContainerExceptionInterface
      */
@@ -268,8 +266,6 @@ final class Resolver implements ResolverInterface
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     *
-     * @return bool
      */
     private function resolveObjectParameter(
         ResolvingState $state,
