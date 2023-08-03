@@ -17,7 +17,7 @@ use Spiral\Core\Config\Shared;
 use Spiral\Core\Config\DeferredFactory;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectableInterface;
-use Spiral\Core\Exception\Binder\DuplicateBindingException;
+use Spiral\Core\Exception\Binder\SingletonOverloadException;
 use Spiral\Core\Exception\ConfiguratorException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Internal\State;
@@ -59,11 +59,10 @@ class StateBinder implements BinderInterface
      */
     public function bindSingleton(string $alias, mixed $resolver): void
     {
-        if ($this->hasInstance($alias)) {
-            throw new DuplicateBindingException(\sprintf(
-                'Singleton `%s` already exists. To override a binding, call the `removeBinding` method first.',
-                $alias
-            ));
+        if (isset($this->state->singletons[$alias])) {
+            throw new SingletonOverloadException(
+                \sprintf('Can\'t overload the singleton `%s` because it\'s already used.', $alias)
+            );
         }
 
         try {

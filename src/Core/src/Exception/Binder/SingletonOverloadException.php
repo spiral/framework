@@ -6,6 +6,6 @@ namespace Spiral\Core\Exception\Binder;
 
 use Spiral\Core\Exception\ConfiguratorException;
 
-final class DuplicateBindingException extends ConfiguratorException
+final class SingletonOverloadException extends ConfiguratorException
 {
 }

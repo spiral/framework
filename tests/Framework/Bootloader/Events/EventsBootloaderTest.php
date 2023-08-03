@@ -66,7 +66,6 @@ final class EventsBootloaderTest extends BaseTestCase
         $processor1->shouldReceive('process')->once();
         $processor2->shouldReceive('process')->once();
 
-        $this->getContainer()->removeBinding(EnvironmentInterface::class);
         $kernel->run();
 
         $this->assertTrue($registry->isProcessed());
@@ -94,7 +93,6 @@ final class EventsBootloaderTest extends BaseTestCase
 
         $processor->shouldReceive('process')->once();
 
-        $this->getContainer()->removeBinding(EnvironmentInterface::class);
         $kernel->run();
     }
 
@@ -125,7 +123,6 @@ final class EventsBootloaderTest extends BaseTestCase
 
         $processor->shouldReceive('process')->once();
 
-        $this->getContainer()->removeBinding(EnvironmentInterface::class);
         $kernel->run();
     }
 

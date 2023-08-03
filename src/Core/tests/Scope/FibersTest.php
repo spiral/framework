@@ -158,7 +158,6 @@ final class FibersTest extends BaseTestCase
 
             // The function uses its own container
             $c1 = $container ?? new Container();
-            $c1->removeBinding('resource');
             $c1->bindSingleton('resource', new stdClass());
 
             $result = $c1->runScoped(static function (Container $c2) use ($load) {

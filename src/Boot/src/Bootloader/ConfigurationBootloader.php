@@ -49,8 +49,6 @@ final class ConfigurationBootloader extends Bootloader
     {
         if (!isset($this->loaders[$ext]) || $this->loaders[$ext]::class !== $loader::class) {
             $this->loaders[$ext] = $loader;
-
-            $this->binder->removeBinding(ConfigManager::class);
             $this->binder->bindSingleton(ConfigManager::class, $this->createConfigManager());
         }
     }

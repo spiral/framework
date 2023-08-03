@@ -36,10 +36,9 @@ final class PrototypeBootloaderTest extends BaseTestCase
 
     public function testPrototypeRegistryBinding(): void
     {
-        $this->assertContainerBoundAsSingleton(
-            PrototypeRegistry::class,
-            PrototypeRegistry::class
-        );
+        $this->assertSame(
+            $this->getContainer()->get(PrototypeRegistry::class),
+            $this->getContainer()->get(PrototypeRegistry::class));
     }
 
     public function testPrototypedClassesShouldBeFound(): void

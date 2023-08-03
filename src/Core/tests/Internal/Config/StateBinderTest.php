@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Config;
 
-use PHPUnit\Framework\TestCase;
-use Spiral\Core\Exception\Binder\DuplicateBindingException;
-use Spiral\Core\Internal\Config\StateBinder;
-use Spiral\Core\Internal\State;
+use Spiral\Core\BinderInterface;
+use Spiral\Core\Exception\Binder\SingletonOverloadException;
+use Spiral\Core\FactoryInterface;
+use Spiral\Tests\Core\Internal\BaseTestCase;
 
-final class StateBinderTest extends TestCase
+final class StateBinderTest extends BaseTestCase
 {
     public function testBindSingletonException(): void
     {
-        $binder = new StateBinder(new State());
+        $binder = $this->constructor->get('binder', BinderInterface::class);
+        $factory = $this->constructor->get('factory', FactoryInterface::class);
 
-        $binder->bindSingleton('test', new \stdClass());
+        $binder->bind('singleton', new \stdClass());
+        $binder->bindSingleton('test', 'singleton');
 
-        $this->expectException(DuplicateBindingException::class);
+        $factory->make('test');
+
+        $this->expectException(SingletonOverloadException::class);
         $binder->bindSingleton('test', new \stdClass());
     }
 }
