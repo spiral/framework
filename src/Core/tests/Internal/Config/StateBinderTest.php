@@ -11,7 +11,7 @@ use Spiral\Tests\Core\Internal\BaseTestCase;
 
 final class StateBinderTest extends BaseTestCase
 {
-    public function testBindSingletonException(): void
+    public function testOverrideBindSingletonException(): void
     {
         $binder = $this->constructor->get('binder', BinderInterface::class);
         $factory = $this->constructor->get('factory', FactoryInterface::class);
@@ -23,5 +23,19 @@ final class StateBinderTest extends BaseTestCase
 
         $this->expectException(SingletonOverloadException::class);
         $binder->bindSingleton('test', new \stdClass());
+    }
+
+    public function testOverrideBindException(): void
+    {
+        $binder = $this->constructor->get('binder', BinderInterface::class);
+        $factory = $this->constructor->get('factory', FactoryInterface::class);
+
+        $binder->bind('singleton', new \stdClass());
+        $binder->bindSingleton('test', 'singleton');
+
+        $factory->make('test');
+
+        $this->expectException(SingletonOverloadException::class);
+        $binder->bind('test', new \stdClass());
     }
 }
