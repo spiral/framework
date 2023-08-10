@@ -11,6 +11,7 @@ use Spiral\App\Request\PostFilter;
 use Spiral\App\Request\ProfileFilter;
 use Spiral\App\Request\ProfileFilterWithPrefix;
 use Spiral\App\Request\UserFilter;
+use Spiral\App\Request\WithNullableNestedFilter;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Tests\Framework\Filter\FilterTestCase;
 
@@ -77,6 +78,16 @@ final class NestedFilterTest extends FilterTestCase
         $this->assertSame('John Doe', $filter->name);
         $this->assertSame('New York', $filter->address->city);
         $this->assertSame('Wall Street', $filter->address->address);
+    }
+
+    public function testGetsNullableNestedFilterWithoutData(): void
+    {
+        $filter = $this->getFilter(WithNullableNestedFilter::class, [
+            'name' => 'John Doe'
+        ]);
+
+        $this->assertSame('John Doe', $filter->name);
+        $this->assertNull($filter->address);
     }
 
     #[DataProvider('provideInvalidData')]

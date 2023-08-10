@@ -23,6 +23,11 @@ final class SchemaProvider implements SchemaProviderInterface
     private array $schema = [];
 
     /**
+     * @var array<class-string, array<non-empty-string>>
+     */
+    private array $optionalFilters = [];
+
+    /**
      * @param array<ReaderInterface> $readers
      */
     public function __construct(
@@ -37,7 +42,10 @@ final class SchemaProvider implements SchemaProviderInterface
             $this->read($filter);
         }
 
-        return $this->schemaBuilder->makeSchema($filter::class, $this->schema[$filter::class]);
+        return $this->markOptionalFilters(
+            $filter,
+            $this->schemaBuilder->makeSchema($filter::class, $this->schema[$filter::class])
+        );
     }
 
     public function getSetters(FilterInterface $filter): array
@@ -58,5 +66,27 @@ final class SchemaProvider implements SchemaProviderInterface
             $this->schema[$filter::class] = \array_merge($this->schema[$filter::class], $readSchema);
             $this->setters[$filter::class] = \array_merge($this->setters[$filter::class], $readSetters);
         }
+    }
+
+    private function markOptionalFilters(FilterInterface $filter, array $schema): array
+    {
+        if (!isset($this->optionalFilters[$filter::class])) {
+            $this->optionalFilters[$filter::class] = [];
+            foreach ($schema as $field => $map) {
+                if (!empty($map[Builder::SCHEMA_FILTER])) {
+                    $property = new \ReflectionProperty($filter, $field);
+                    $type = $property->getType();
+                    if ($type instanceof \ReflectionNamedType && $type->allowsNull()) {
+                        $this->optionalFilters[$filter::class][] = $field;
+                    }
+                }
+            }
+        }
+
+        foreach ($this->optionalFilters[$filter::class] as $field) {
+            $schema[$field][Builder::SCHEMA_OPTIONAL] = true;
+        }
+
+        return $schema;
     }
 }

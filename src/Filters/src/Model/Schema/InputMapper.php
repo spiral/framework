@@ -38,6 +38,10 @@ final class InputMapper
                 try {
                     $result[$field] = $this->provider->createFilter($nested, $input->withPrefix($map[Builder::SCHEMA_ORIGIN]));
                 } catch (ValidationException $e) {
+                    if ($map[Builder::SCHEMA_OPTIONAL]) {
+                        $result[$field] = null;
+                        continue;
+                    }
                     $errors[$field] = $e->errors;
                     unset($result[$field]);
                 }
