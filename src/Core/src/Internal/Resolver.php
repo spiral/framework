@@ -171,7 +171,7 @@ final class Resolver implements ResolverInterface
     }
 
     /**
-     * @return bool {@see true} if argument was resolved.
+     * Returns {@see true} if argument was resolved.
      *
      * @throws ResolvingException
      * @throws NotFoundExceptionInterface|ContainerExceptionInterface
@@ -238,12 +238,12 @@ final class Resolver implements ResolverInterface
     }
 
     /**
-     * Resolve single named type.
+     * Resolve single named type. Returns {@see true} if argument was resolved.
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      *
-     * @return bool {@see true} if argument was resolved.
+     * @return bool
      */
     private function resolveNamedType(
         ResolvingState $state,
@@ -260,14 +260,12 @@ final class Resolver implements ResolverInterface
     }
 
     /**
-     * Resolve argument by class name and context.
+     * Resolve argument by class name and context. Returns {@see true} if argument resolved.
      *
      * @psalm-param class-string $class
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     *
-     * @return bool {@see true} if argument resolved.
      */
     private function resolveObjectParameter(
         ResolvingState $state,

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core\Internal\Factory;
 
 use DateTimeInterface;
+use Spiral\Core\BinderInterface;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Fixtures\Bucket;
@@ -137,5 +139,19 @@ final class CommonCasesTest extends BaseTestCase
         $this->assertInstanceOf(Bucket::class, $bucket);
         $this->assertSame('via-method-with-sample', $bucket->getName());
         $this->assertSame($sample, $bucket->getData());
+    }
+
+    public function testRemoveBindingAndMake(): void
+    {
+        $this->bindSingleton('foo', SampleClass::class);
+        $old = $this->make('foo');
+
+        $this->constructor->get('binder', BinderInterface::class)->removeBinding('foo');
+
+        $this->bindSingleton('foo', new Autowire(Bucket::class, ['name' => 'foo']));
+        $new = $this->make('foo');
+
+        $this->assertInstanceOf(SampleClass::class, $old);
+        $this->assertInstanceOf(Bucket::class, $new);
     }
 }

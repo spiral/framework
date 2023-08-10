@@ -14,6 +14,7 @@ use Spiral\Boot\Memory;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
+use Spiral\Tests\Tokenizer\Fixtures\TestCoreWithTokenizer;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
@@ -265,6 +266,19 @@ final class TokenizerListenerBootloaderTest extends TestCase
         $this->assertSame($expected, (new \ReflectionProperty($loader, 'readCache'))->getValue($loader));
         $this->assertSame($expected, (new \ReflectionProperty($enumLoader, 'readCache'))->getValue($enumLoader));
         $this->assertSame($expected, (new \ReflectionProperty($interfaceLoader, 'readCache'))->getValue($interfaceLoader));
+    }
+
+    public function testAddDirectoryInBootloaderInit(): void
+    {
+        $container = new Container();
+
+        $kernel = TestCoreWithTokenizer::create(directories: ['root' => __DIR__], container: $container);
+        $kernel->run();
+
+        $this->assertTrue(\in_array(
+            \dirname(__DIR__) . '/Fixtures/Bootloader',
+            $container->get(TokenizerConfig::class)->getDirectories()
+        ));
     }
 
     public static function readCacheDataProvider(): \Traversable

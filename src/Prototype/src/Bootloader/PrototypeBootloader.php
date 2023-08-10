@@ -108,14 +108,6 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         $this->registry->bindProperty($property, $type);
     }
 
-    /**
-     * @return array<class-string, PrototypeRegistry>
-     */
-    public function defineSingletons(): array
-    {
-        return [PrototypeRegistry::class => $this->registry];
-    }
-
     private function initDefaults(ContainerInterface $container): void
     {
         foreach (self::DEFAULT_SHORTCUTS as $property => $shortcut) {
