@@ -87,8 +87,6 @@ abstract class AbstractKernel implements KernelInterface
 
         $this->finalizer = new Finalizer();
         $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
-
-        $this->bootloader->bootload($this->defineSystemBootloaders());
     }
 
     /**
@@ -162,13 +160,14 @@ abstract class AbstractKernel implements KernelInterface
         $environment ??= new Environment();
         $this->container->bindSingleton(EnvironmentInterface::class, $environment);
 
-        $this->fireCallbacks($this->runningCallbacks);
-
         try {
             // will protect any against env overwrite action
             $this->container->runScope(
                 [EnvironmentInterface::class => $environment],
                 function (): void {
+                    $this->bootloader->bootload($this->defineSystemBootloaders());
+                    $this->fireCallbacks($this->runningCallbacks);
+
                     $this->bootload();
                     $this->bootstrap();
 

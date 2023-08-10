@@ -16,6 +16,8 @@ use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
 class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
 {
+    private array $disabledBootloaders = [];
+
     public const LOAD = [
         TokenizerListenerBootloader::class,
 
@@ -98,6 +100,16 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         RoutesBootloader::class,
     ];
 
+    protected function defineBootloaders(): array
+    {
+        $bootloaders = static::LOAD;
+
+        // filter out disabled bootloaders
+        return \array_filter($bootloaders, function (string $bootloader): bool {
+            return !\in_array($bootloader, $this->disabledBootloaders, true);
+        });
+    }
+
     public function getContainer(): Container
     {
         return $this->container;
@@ -111,5 +123,15 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
     public function getRegisteredBootloaders(): array
     {
         return $this->bootloader->getClasses();
+    }
+
+    /**
+     * @param class-string<\Spiral\Boot\Bootloader\Bootloader> ...$bootloader
+     */
+    public function disableBootloader(string ...$bootloader): self
+    {
+        $this->disabledBootloaders = \array_merge($this->disabledBootloaders, $bootloader);
+
+        return $this;
     }
 }

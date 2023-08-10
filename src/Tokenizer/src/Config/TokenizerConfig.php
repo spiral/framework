@@ -81,6 +81,11 @@ final class TokenizerConfig extends InjectableConfig
         ];
     }
 
+    public function getScopes(): array
+    {
+        return $this->config['scopes'] ?? [];
+    }
+
     /**
      * Check if tokenizer listeners cache is enabled.
      */
@@ -102,16 +107,16 @@ final class TokenizerConfig extends InjectableConfig
 
     public function isLoadClassesEnabled(): bool
     {
-        return (bool) ($this->config['load']['classes'] ?? true);
+        return (bool)($this->config['load']['classes'] ?? true);
     }
 
     public function isLoadEnumsEnabled(): bool
     {
-        return (bool) ($this->config['load']['enums'] ?? false);
+        return (bool)($this->config['load']['enums'] ?? false);
     }
 
     public function isLoadInterfacesEnabled(): bool
     {
-        return (bool) ($this->config['load']['interfaces'] ?? false);
+        return (bool)($this->config['load']['interfaces'] ?? false);
     }
 }

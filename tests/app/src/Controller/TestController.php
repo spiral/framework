@@ -46,7 +46,7 @@ class TestController
 
     public function error(): void
     {
-        echo $undefined;
+        throw new \InvalidArgumentException('Invalid argument');
     }
 
     public function route(RouteInterface $route)

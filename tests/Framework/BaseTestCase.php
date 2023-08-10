@@ -6,9 +6,14 @@ namespace Spiral\Tests\Framework;
 
 use Spiral\App\TestApp;
 use Spiral\Core\Container;
+use Spiral\Testing\Traits\InteractsWithCore;
 
 abstract class BaseTestCase extends \Spiral\Testing\TestCase
 {
+    use InteractsWithCore;
+
+    private array $disabledBootloaders = [];
+
     public function rootDirectory(): string
     {
         return \realpath(__DIR__.'/../');
@@ -19,7 +24,19 @@ abstract class BaseTestCase extends \Spiral\Testing\TestCase
         return TestApp::create(
             $this->defineDirectories($this->rootDirectory()),
             false
-        );
+        )->disableBootloader(...$this->disabledBootloaders);
+    }
+
+    public function withDisabledBootloaders(string ... $bootloader): self
+    {
+        $this->disabledBootloaders = $bootloader;
+
+        return $this;
+    }
+
+    public function getTestEnvVariables(): array
+    {
+        return [...static::ENV, ...$this->getEnvVariablesFromConfig()];
     }
 
     protected function tearDown(): void

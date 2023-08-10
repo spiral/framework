@@ -6,6 +6,7 @@ namespace Spiral\Tokenizer\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\BinderInterface;
@@ -47,7 +48,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
     ) {
     }
 
-    public function init(BinderInterface $binder, DirectoriesInterface $dirs): void
+    public function init(BinderInterface $binder, DirectoriesInterface $dirs, EnvironmentInterface $env): void
     {
         $binder->bindInjector(ClassLocator::class, ClassLocatorInjector::class);
         $binder->bindInjector(EnumLocator::class, EnumLocatorInjector::class);
@@ -65,7 +66,11 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
                     'tests',
                     'migrations',
                 ],
-            ]
+                'cache' => [
+                    'directory' => $dirs->get('runtime') . 'cache/listeners',
+                    'enabled' => \filter_var($env->get('TOKENIZER_CACHE_TARGETS', false), \FILTER_VALIDATE_BOOL),
+                ],
+            ],
         );
     }
 
@@ -76,7 +81,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
     {
         $this->config->modify(
             TokenizerConfig::CONFIG,
-            new Append('directories', null, $directory)
+            new Append('directories', null, $directory),
         );
     }
 
@@ -88,13 +93,13 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
         if (!isset($this->config->getConfig(TokenizerConfig::CONFIG)['scopes'][$scope])) {
             $this->config->modify(
                 TokenizerConfig::CONFIG,
-                new Append('scopes', $scope, [])
+                new Append('scopes', $scope, []),
             );
         }
 
         $this->config->modify(
             TokenizerConfig::CONFIG,
-            new Append('scopes.' . $scope, null, $directory)
+            new Append('scopes.' . $scope, null, $directory),
         );
     }
 }
