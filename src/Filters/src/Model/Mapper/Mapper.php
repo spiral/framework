@@ -32,23 +32,22 @@ final class Mapper
             }
 
             $property = $class->getProperty($field);
+            if (!empty($map[Builder::SCHEMA_FILTER])) {
+                $this->registry->getDefault()->setValue($filter, $property, $data[$field]);
+                continue;
+            }
+            $type = $property->getType();
+            if (!isset($data[$field]) && $type->allowsNull()) {
+                $this->registry->getDefault()->setValue($filter, $property, null);
+                continue;
+            }
+
+            if (!$type instanceof \ReflectionNamedType || $type->isBuiltin()) {
+                $this->registry->getDefault()->setValue($filter, $property, $data[$field]);
+                continue;
+            }
+
             foreach ($this->registry->getSetters() as $setter) {
-                if (!empty($map[Builder::SCHEMA_FILTER])) {
-                    $this->registry->getDefault()->setValue($filter, $property, $data[$field]);
-                    break;
-                }
-
-                $type = $property->getType();
-                if (!isset($data[$field]) && $type->allowsNull()) {
-                    $this->registry->getDefault()->setValue($filter, $property, null);
-                    break;
-                }
-
-                if (!$type instanceof \ReflectionNamedType || $type->isBuiltin()) {
-                    $this->registry->getDefault()->setValue($filter, $property, $data[$field]);
-                    break;
-                }
-
                 if ($setter->supports($type)) {
                     $setter->setValue($filter, $property, $data[$field]);
                 }

@@ -15,10 +15,10 @@ final class Enum implements SetterInterface
 
     public function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
     {
+        /**
+         * @var \ReflectionNamedType $type
+         */
         $type = $property->getType();
-        if ($type === null || !$type instanceof \ReflectionNamedType) {
-            return;
-        }
 
         /**
          * @var class-string<\BackedEnum> $enum

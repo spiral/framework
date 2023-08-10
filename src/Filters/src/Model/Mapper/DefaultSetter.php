@@ -6,7 +6,7 @@ namespace Spiral\Filters\Model\Mapper;
 
 use Spiral\Filters\Model\FilterInterface;
 
-final class Scalar implements SetterInterface
+final class DefaultSetter implements SetterInterface
 {
     public function supports(\ReflectionNamedType $type): bool
     {

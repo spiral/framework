@@ -31,6 +31,6 @@ final class SetterRegistry implements SetterRegistryInterface
 
     public function getDefault(): SetterInterface
     {
-        return new Scalar();
+        return new DefaultSetter();
     }
 }
