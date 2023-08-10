@@ -124,7 +124,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
             'readers' => [
                 $factory->make(AttributeReader::class),
                 $factory->make(DefaultReader::class),
-            ]
+            ],
         ]);
     }
 

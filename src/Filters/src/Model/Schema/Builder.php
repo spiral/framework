@@ -136,7 +136,7 @@ final class Builder
             'method',
             'path',
             'remoteAddress',
-            'uri'
+            'uri',
         ], true)) {
             return [$definition, $field];
         }
