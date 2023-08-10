@@ -11,7 +11,7 @@ final class FiltersConfig extends InjectableConfig
     public const CONFIG = 'filters';
 
     protected array $config = [
-        'interceptors' => []
+        'interceptors' => [],
     ];
 
     public function getInterceptors(): array
