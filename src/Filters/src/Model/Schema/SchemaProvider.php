@@ -13,12 +13,12 @@ use Spiral\Filters\Model\FilterInterface;
 final class SchemaProvider implements SchemaProviderInterface
 {
     /**
-     * @var array<class-string: array>
+     * @var array<class-string, array>
      */
     private array $setters = [];
 
     /**
-     * @var array<class-string: array>
+     * @var array<class-string, array>
      */
     private array $schema = [];
 

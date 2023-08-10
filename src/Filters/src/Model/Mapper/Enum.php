@@ -16,7 +16,7 @@ final class Enum implements SetterInterface
     public function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
     {
         $type = $property->getType();
-        if ($type === null) {
+        if ($type === null || !$type instanceof \ReflectionNamedType) {
             return;
         }
 
