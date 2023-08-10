@@ -17,6 +17,7 @@ use Spiral\Core\Config\Shared;
 use Spiral\Core\Config\DeferredFactory;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectableInterface;
+use Spiral\Core\Exception\Binder\SingletonOverloadException;
 use Spiral\Core\Exception\ConfiguratorException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Internal\State;
@@ -50,7 +51,7 @@ class StateBinder implements BinderInterface
             throw $this->invalidBindingException($alias, $e);
         }
 
-        $this->state->bindings[$alias] = $config;
+        $this->setBinding($alias, $config);
     }
 
     /**
@@ -64,7 +65,7 @@ class StateBinder implements BinderInterface
             throw $this->invalidBindingException($alias, $e);
         }
 
-        $this->state->bindings[$alias] = $config;
+        $this->setBinding($alias, $config);
     }
 
     public function hasInstance(string $alias): bool
@@ -87,7 +88,7 @@ class StateBinder implements BinderInterface
 
     public function removeBinding(string $alias): void
     {
-        unset($this->state->bindings[$alias]);
+        unset($this->state->bindings[$alias], $this->state->singletons[$alias]);
     }
 
     public function bindInjector(string $class, string $injector): void
@@ -182,5 +183,14 @@ class StateBinder implements BinderInterface
             $alias,
             $previous->getMessage(),
         ), previous: $previous);
+    }
+
+    private function setBinding(string $alias, Binding $config): void
+    {
+        if (isset($this->state->singletons[$alias])) {
+            throw new SingletonOverloadException($alias);
+        }
+
+        $this->state->bindings[$alias] = $config;
     }
 }
