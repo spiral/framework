@@ -7,7 +7,7 @@ namespace Spiral\Filters\Model\Mapper;
 use Ramsey\Uuid\UuidInterface;
 use Spiral\Filters\Model\FilterInterface;
 
-final class Uuid implements SetterInterface
+final class UuidCaster implements CasterInterface
 {
     private ?bool $interfaceExists = null;
 

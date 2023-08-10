@@ -12,7 +12,7 @@ use Spiral\Filters\Model\FilterInterface;
 final class Mapper
 {
     public function __construct(
-        private readonly SetterRegistryInterface $registry
+        private readonly CasterRegistryInterface $registry
     ) {
     }
 

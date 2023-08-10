@@ -8,7 +8,7 @@ use Ramsey\Uuid\UuidInterface;
 use Spiral\Filters\Attribute\Input\Post;
 use Spiral\Filters\Model\Filter;
 
-final class UserFilter extends Filter
+class UserFilter extends Filter
 {
     #[Post]
     public string $name;

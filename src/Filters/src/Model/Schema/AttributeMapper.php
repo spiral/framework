@@ -15,6 +15,9 @@ use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
 use Spiral\Filters\Model\Mapper\Mapper;
 
+/**
+ * @internal
+ */
 final class AttributeMapper
 {
     public function __construct(

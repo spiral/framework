@@ -128,19 +128,6 @@ final class Builder
      */
     private function parseDefinition(string $field, string $definition): array
     {
-        if (\in_array($definition, [
-            'bearerToken',
-            'isAjax',
-            'isJsonExpected',
-            'isSecure',
-            'method',
-            'path',
-            'remoteAddress',
-            'uri',
-        ], true)) {
-            return [$definition, $field];
-        }
-
         if (!\str_contains($definition, ':')) {
             return ['data', empty($definition) ? $field : $definition];
         }

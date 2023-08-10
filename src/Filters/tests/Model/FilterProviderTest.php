@@ -13,10 +13,10 @@ use Spiral\Filter\InputScope;
 use Spiral\Filters\Model\FilterProvider;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Interceptor\Core;
-use Spiral\Filters\Model\Mapper\Enum;
-use Spiral\Filters\Model\Mapper\SetterRegistry;
-use Spiral\Filters\Model\Mapper\SetterRegistryInterface;
-use Spiral\Filters\Model\Mapper\Uuid;
+use Spiral\Filters\Model\Mapper\EnumCaster;
+use Spiral\Filters\Model\Mapper\CasterRegistry;
+use Spiral\Filters\Model\Mapper\CasterRegistryInterface;
+use Spiral\Filters\Model\Mapper\UuidCaster;
 use Spiral\Http\Request\InputManager;
 use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\LogoutFilter;
@@ -32,8 +32,8 @@ final class FilterProviderTest extends BaseTestCase
 
         $this->container->bindSingleton(ReaderInterface::class, (new Factory())->create());
         $this->container->bindSingleton(
-            SetterRegistryInterface::class,
-            static fn () => new SetterRegistry([new Enum(), new Uuid()])
+            CasterRegistryInterface::class,
+            static fn () => new CasterRegistry([new EnumCaster(), new UuidCaster()])
         );
     }
 

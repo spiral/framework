@@ -6,7 +6,7 @@ namespace Spiral\Filters\Model\Mapper;
 
 use Spiral\Filters\Model\FilterInterface;
 
-final class Enum implements SetterInterface
+final class EnumCaster implements CasterInterface
 {
     public function supports(\ReflectionNamedType $type): bool
     {

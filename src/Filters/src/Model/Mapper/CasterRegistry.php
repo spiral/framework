@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Model\Mapper;
 
-final class SetterRegistry implements SetterRegistryInterface
+final class CasterRegistry implements CasterRegistryInterface
 {
-    /** @var array<class-string, SetterInterface> */
+    /** @var array<class-string, CasterInterface> */
     private array $setters = [];
 
     public function __construct(array $setters = [])
@@ -16,21 +16,21 @@ final class SetterRegistry implements SetterRegistryInterface
         }
     }
 
-    public function register(SetterInterface $setter): void
+    public function register(CasterInterface $setter): void
     {
         $this->setters[$setter::class] = $setter;
     }
 
     /**
-     * @return array<SetterInterface>
+     * @return array<CasterInterface>
      */
     public function getSetters(): array
     {
         return \array_values($this->setters);
     }
 
-    public function getDefault(): SetterInterface
+    public function getDefault(): CasterInterface
     {
-        return new DefaultSetter();
+        return new DefaultCaster();
     }
 }
