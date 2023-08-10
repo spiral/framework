@@ -17,7 +17,6 @@ use Spiral\Filters\Exception\ValidationException;
 use Spiral\Validation\ValidationProviderInterface;
 
 /**
- * @deprecated since v3.8.0.
  * @psalm-type TParameters = array{filterBag: FilterBag}
  */
 final class ValidateFilterInterceptor implements CoreInterceptorInterface

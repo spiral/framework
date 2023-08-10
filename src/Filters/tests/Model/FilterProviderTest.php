@@ -9,20 +9,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Ramsey\Uuid\UuidInterface;
 use Spiral\Attributes\Factory;
 use Spiral\Attributes\ReaderInterface;
-use Spiral\Core\FactoryInterface;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Model\FilterProvider;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Interceptor\Core;
-use Spiral\Filters\Model\Interceptor\Validation\Core as ValidationCore;
 use Spiral\Filters\Model\Mapper\Enum;
 use Spiral\Filters\Model\Mapper\SetterRegistry;
 use Spiral\Filters\Model\Mapper\SetterRegistryInterface;
 use Spiral\Filters\Model\Mapper\Uuid;
-use Spiral\Filters\Model\Schema\AttributeReader;
-use Spiral\Filters\Model\Schema\DefaultReader;
-use Spiral\Filters\Model\Schema\SchemaProvider;
-use Spiral\Filters\Model\Schema\SchemaProviderInterface;
 use Spiral\Http\Request\InputManager;
 use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\LogoutFilter;
@@ -37,14 +31,6 @@ final class FilterProviderTest extends BaseTestCase
         parent::setUp();
 
         $this->container->bindSingleton(ReaderInterface::class, (new Factory())->create());
-        $this->container->bindSingleton(SchemaProviderInterface::class, static function (FactoryInterface $factory) {
-            return $factory->make(SchemaProvider::class, [
-                'readers' => [
-                    $factory->make(AttributeReader::class),
-                    $factory->make(DefaultReader::class),
-                ]
-            ]);
-        });
         $this->container->bindSingleton(
             SetterRegistryInterface::class,
             static fn () => new SetterRegistry([new Enum(), new Uuid()])
@@ -68,7 +54,6 @@ final class FilterProviderTest extends BaseTestCase
 
         $provider = $this->container->make(FilterProvider::class, [
             'core' => new Core(),
-            'validationCore' => new ValidationCore($this->container),
         ]);
         $this->container->bind(FilterProviderInterface::class, $provider);
 
@@ -93,7 +78,6 @@ final class FilterProviderTest extends BaseTestCase
 
         $provider = $this->container->make(FilterProvider::class, [
             'core' => new Core(),
-            'validationCore' => new ValidationCore($this->container),
         ]);
         $this->container->bind(FilterProviderInterface::class, $provider);
 
@@ -118,7 +102,6 @@ final class FilterProviderTest extends BaseTestCase
 
         $provider = $this->container->make(FilterProvider::class, [
             'core' => new Core(),
-            'validationCore' => new ValidationCore($this->container),
         ]);
         $this->container->bind(FilterProviderInterface::class, $provider);
 

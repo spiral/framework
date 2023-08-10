@@ -13,7 +13,7 @@ use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProvider;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Interceptor\PopulateDataFromEntityInterceptor;
-use Spiral\Filters\Model\Interceptor\Validation\ValidateFilterInterceptor;
+use Spiral\Filters\Model\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
 use Spiral\Tests\Framework\BaseTestCase;
 
@@ -41,8 +41,6 @@ final class FiltersBootloaderTest extends BaseTestCase
         $this->assertConfigMatches(FiltersConfig::CONFIG, [
             'interceptors' => [
                 PopulateDataFromEntityInterceptor::class,
-            ],
-            'validationInterceptors' => [
                 ValidateFilterInterceptor::class,
             ],
         ]);
