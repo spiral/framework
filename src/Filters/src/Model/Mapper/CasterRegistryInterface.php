@@ -6,12 +6,12 @@ namespace Spiral\Filters\Model\Mapper;
 
 interface CasterRegistryInterface
 {
-    public function register(CasterInterface $setter): void;
+    public function register(CasterInterface $caster): void;
 
     /**
      * @return array<CasterInterface>
      */
-    public function getSetters(): array;
+    public function getCasters(): array;
 
     public function getDefault(): CasterInterface;
 }

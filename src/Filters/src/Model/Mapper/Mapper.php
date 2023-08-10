@@ -23,7 +23,7 @@ final class Mapper
     {
         $type = $property->getType();
         if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
-            foreach ($this->registry->getSetters() as $setter) {
+            foreach ($this->registry->getCasters() as $setter) {
                 if ($setter->supports($type)) {
                     $setter->setValue($filter, $property, $value);
                     return;
