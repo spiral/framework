@@ -12,10 +12,16 @@ final class FiltersConfig extends InjectableConfig
 
     protected array $config = [
         'interceptors' => [],
+        'validationInterceptors' => [],
     ];
 
     public function getInterceptors(): array
     {
         return (array)($this->config['interceptors'] ?? []);
+    }
+
+    public function getValidationInterceptors(): array
+    {
+        return (array)($this->config['validationInterceptors'] ?? []);
     }
 }

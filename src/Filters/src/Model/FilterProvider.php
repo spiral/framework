@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Filters\Model;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
-use Spiral\Core\ResolverInterface;
-use Spiral\Filters\Model\Schema\AttributeMapper;
-use Spiral\Filters\Model\Schema\Builder;
+use Spiral\Filters\Model\Factory\FilterFactory;
+use Spiral\Filters\Model\Mapper\Mapper;
 use Spiral\Filters\Model\Schema\InputMapper;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Model\Schema\SchemaProviderInterface;
 use Spiral\Models\SchematicEntity;
 
 /**
@@ -22,52 +21,42 @@ final class FilterProvider implements FilterProviderInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly ResolverInterface $resolver,
-        private readonly CoreInterface $core
+        private readonly CoreInterface $core,
+        private readonly CoreInterface $validationCore,
+        private readonly FilterFactory $filterFactory,
+        private readonly SchemaProviderInterface $schemaProvider
     ) {
     }
 
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
-        $attributeMapper = $this->container->get(AttributeMapper::class);
-        \assert($attributeMapper instanceof AttributeMapper);
-
-        $filter = $this->createFilterInstance($name);
-        [$mappingSchema, $errors, $setters] = $attributeMapper->map($filter, $input);
-
-        if ($filter instanceof HasFilterDefinition) {
-            $mappingSchema = \array_merge(
-                $mappingSchema,
-                $filter->filterDefinition()->mappingSchema()
-            );
-        }
+        $filter = $this->filterFactory->createFilterInstance($name);
+        $schema = $this->schemaProvider->getSchema($filter);
 
         $inputMapper = $this->container->get(InputMapper::class);
         \assert($inputMapper instanceof InputMapper);
 
-        $schemaBuilder = $this->container->get(Builder::class);
-        \assert($schemaBuilder instanceof Builder);
+        // data with applied setters
+        $rawData = $inputMapper->mapData($schema, $input, $this->schemaProvider->getSetters($filter));
 
-        $schema = $schemaBuilder->makeSchema($name, $mappingSchema);
+        // data with nested filters
+        [$data, $errors] = $inputMapper->map($schema, $input, $this->schemaProvider->getSetters($filter));
 
-        [$data, $inputErrors] = $inputMapper->map($schema, $input, $setters);
-        $errors = \array_merge($errors, $inputErrors);
+        // validation
+        $errors = $this->validationCore->callAction(
+            $name,
+            'validation',
+            ['filter' => $filter, 'data' => $rawData, 'schema' => $schema, 'errors' => $errors]
+        );
+
+        // map data to the filter properties
+        $mapper = $this->container->get(Mapper::class);
+        \assert($mapper instanceof Mapper);
+        $mapper->map($filter, $data);
 
         $entity = new SchematicEntity($data, $schema);
         return $this->core->callAction($name, 'handle', [
             'filterBag' => new FilterBag($filter, $entity, $schema, $errors),
         ]);
-    }
-
-    private function createFilterInstance(string $name): FilterInterface
-    {
-        $class = new \ReflectionClass($name);
-
-        $args = [];
-        if ($constructor = $class->getConstructor()) {
-            $args = $this->resolver->resolveArguments($constructor);
-        }
-
-        return $class->newInstanceArgs($args);
     }
 }

@@ -40,7 +40,8 @@
         "mockery/mockery": "^1.5",
         "nyholm/psr7": "^1.5",
         "phpunit/phpunit": "^10.1",
-        "vimeo/psalm": "^5.9"
+        "vimeo/psalm": "^5.9",
+        "ramsey/uuid": "^4.7"
     },
     "autoload": {
         "psr-4": {

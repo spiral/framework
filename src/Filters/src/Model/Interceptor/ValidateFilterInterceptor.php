@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Filters\Model\Interceptor;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Model\FilterBag;
@@ -18,6 +17,7 @@ use Spiral\Filters\Exception\ValidationException;
 use Spiral\Validation\ValidationProviderInterface;
 
 /**
+ * @deprecated since v3.8.0.
  * @psalm-type TParameters = array{filterBag: FilterBag}
  */
 final class ValidateFilterInterceptor implements CoreInterceptorInterface

@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Spiral\Tests\Filters\Model\Schema;
 
 use Mockery as m;
+use Spiral\Attributes\Factory;
+use Spiral\Attributes\ReaderInterface;
+use Spiral\Filters\Model\Factory\FilterFactory;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Schema\Builder;
 use Spiral\Filters\Model\Schema\InputMapper;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Model\Schema\SchemaProviderInterface;
 use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\NestedFilter;
 
@@ -18,25 +22,40 @@ final class InputMapperTest extends BaseTestCase
 {
     private m\LegacyMockInterface|m\MockInterface|FilterProviderInterface $provider;
     private InputMapper $mapper;
+    private m\LegacyMockInterface|m\MockInterface|SchemaProviderInterface $schemaProvider;
 
     public function setUp(): void
     {
         parent::setUp();
 
+        $this->container->bindSingleton(ReaderInterface::class, (new Factory())->create());
         $this->mapper = new InputMapper(
-            $this->provider = m::mock(FilterProviderInterface::class)
+            $this->provider = m::mock(FilterProviderInterface::class),
+            $this->schemaProvider = m::mock(SchemaProviderInterface::class),
+            $this->container->get(FilterFactory::class),
         );
     }
 
     public function testMapSchema(): void
     {
+        $this->schemaProvider
+            ->shouldReceive('getSchema')
+            ->times(3)
+            ->with(NestedFilter::class)
+            ->andReturn([]);
+        $this->schemaProvider
+            ->shouldReceive('getSetters')
+            ->times(3)
+            ->with(NestedFilter::class)
+            ->andReturn([]);
+
         $input = m::mock(InputInterface::class);
 
         $input->shouldReceive('getValue')->once()->with('data', 'id')->andReturn('id-value');
         $input->shouldReceive('getValue')->once()->with('input', 'username')->andReturn('username-value');
 
         // nested
-        $input->shouldReceive('withPrefix')->once()
+        $input->shouldReceive('withPrefix')->twice()
             ->with('nested')
             ->andReturn($nestedInput = m::mock(InputInterface::class));
 
@@ -45,7 +64,7 @@ final class InputMapperTest extends BaseTestCase
             ->andReturn($nestedFilter = m::mock(FilterInterface::class));
 
         // nested_error
-        $input->shouldReceive('withPrefix')->once()
+        $input->shouldReceive('withPrefix')->twice()
             ->with('nested_error')
             ->andReturn($nestedInput = m::mock(InputInterface::class));
 
@@ -54,7 +73,7 @@ final class InputMapperTest extends BaseTestCase
             ->andThrow(new ValidationException(['nested_error_field' => 'Error']));
 
         // nested1
-        $input->shouldReceive('withPrefix')->once()
+        $input->shouldReceive('withPrefix')->twice()
             ->with('foo')
             ->andReturn($nestedInput1 = m::mock(InputInterface::class));
 

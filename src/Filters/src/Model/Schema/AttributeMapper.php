@@ -15,7 +15,7 @@ use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
 
 /**
- * @internal
+ * @deprecated
  */
 final class AttributeMapper
 {
@@ -26,7 +26,7 @@ final class AttributeMapper
     }
 
     /**
-     * Map input data into filter properties with attributes
+     * @deprecated
      *
      * @return array{0: array, 1: array, 2: array}
      */

@@ -6,19 +6,51 @@ namespace Spiral\Tests\Filters\Model;
 
 use Nyholm\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
+use Ramsey\Uuid\UuidInterface;
 use Spiral\Attributes\Factory;
+use Spiral\Attributes\ReaderInterface;
+use Spiral\Core\FactoryInterface;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Model\FilterProvider;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Interceptor\Core;
-use Spiral\Filters\Model\Schema\AttributeMapper;
+use Spiral\Filters\Model\Interceptor\Validation\Core as ValidationCore;
+use Spiral\Filters\Model\Mapper\Enum;
+use Spiral\Filters\Model\Mapper\SetterRegistry;
+use Spiral\Filters\Model\Mapper\SetterRegistryInterface;
+use Spiral\Filters\Model\Mapper\Uuid;
+use Spiral\Filters\Model\Schema\AttributeReader;
+use Spiral\Filters\Model\Schema\DefaultReader;
+use Spiral\Filters\Model\Schema\SchemaProvider;
+use Spiral\Filters\Model\Schema\SchemaProviderInterface;
 use Spiral\Http\Request\InputManager;
 use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\LogoutFilter;
 use Spiral\Tests\Filters\Fixtures\SomeFilter;
+use Spiral\Tests\Filters\Fixtures\Status;
+use Spiral\Tests\Filters\Fixtures\UserFilter;
 
 final class FilterProviderTest extends BaseTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container->bindSingleton(ReaderInterface::class, (new Factory())->create());
+        $this->container->bindSingleton(SchemaProviderInterface::class, static function (FactoryInterface $factory) {
+            return $factory->make(SchemaProvider::class, [
+                'readers' => [
+                    $factory->make(AttributeReader::class),
+                    $factory->make(DefaultReader::class),
+                ]
+            ]);
+        });
+        $this->container->bindSingleton(
+            SetterRegistryInterface::class,
+            static fn () => new SetterRegistry([new Enum(), new Uuid()])
+        );
+    }
+
     public function testCreateNestedFilterWithIdenticalPropertyNames(): void
     {
         $request = new ServerRequest('POST', '/');
@@ -34,11 +66,11 @@ final class FilterProviderTest extends BaseTestCase
         $inputManager = new InputManager($this->container);
         $input = new InputScope($inputManager);
 
-        $provider = new FilterProvider($this->container, $this->container, new Core());
+        $provider = $this->container->make(FilterProvider::class, [
+            'core' => new Core(),
+            'validationCore' => new ValidationCore($this->container),
+        ]);
         $this->container->bind(FilterProviderInterface::class, $provider);
-
-        $mapper = new AttributeMapper($provider, (new Factory())->create());
-        $this->container->bind(AttributeMapper::class, $mapper);
 
         /** @var SomeFilter $filter */
         $filter = $provider->createFilter(SomeFilter::class, $input);
@@ -59,15 +91,44 @@ final class FilterProviderTest extends BaseTestCase
         $inputManager = new InputManager($this->container);
         $input = new InputScope($inputManager);
 
-        $provider = new FilterProvider($this->container, $this->container, new Core());
+        $provider = $this->container->make(FilterProvider::class, [
+            'core' => new Core(),
+            'validationCore' => new ValidationCore($this->container),
+        ]);
         $this->container->bind(FilterProviderInterface::class, $provider);
-
-        $mapper = new AttributeMapper($provider, (new Factory())->create());
-        $this->container->bind(AttributeMapper::class, $mapper);
 
         /** @var LogoutFilter $filter */
         $filter = $provider->createFilter(LogoutFilter::class, $input);
 
         $this->assertSame('some', $filter->token);
+    }
+
+    public function testCreateFilterWithEnumAndUuid(): void
+    {
+        $request = new ServerRequest('POST', '/');
+        $request = $request->withParsedBody([
+            'name' => 'John',
+            'status' => 'active',
+            'groupUuid' => 'f0a0b2c0-5b4b-4a5c-8d3e-6f7a8f9b0c1d',
+        ]);
+        $this->container->bind(ServerRequestInterface::class, $request);
+
+        $inputManager = new InputManager($this->container);
+        $input = new InputScope($inputManager);
+
+        $provider = $this->container->make(FilterProvider::class, [
+            'core' => new Core(),
+            'validationCore' => new ValidationCore($this->container),
+        ]);
+        $this->container->bind(FilterProviderInterface::class, $provider);
+
+        /** @var UserFilter $filter */
+        $filter = $provider->createFilter(UserFilter::class, $input);
+
+        $this->assertSame('John', $filter->name);
+        $this->assertInstanceOf(Status::class, $filter->status);
+        $this->assertEquals(Status::Active, $filter->status);
+        $this->assertInstanceOf(UuidInterface::class, $filter->groupUuid);
+        $this->assertSame('f0a0b2c0-5b4b-4a5c-8d3e-6f7a8f9b0c1d', $filter->groupUuid->toString());
     }
 }

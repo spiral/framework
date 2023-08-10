@@ -20,4 +20,10 @@ class FilterWithSetters extends Filter
     #[Setter('rtrim', ' ')]
     #[Setter('htmlspecialchars')]
     public string $string;
+
+    #[Post]
+    #[Setter('ltrim', '-')]
+    #[Setter('rtrim', ' ')]
+    #[Setter('htmlspecialchars')]
+    public ?string $nullableString = null;
 }

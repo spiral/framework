@@ -20,12 +20,14 @@ final class FilterWithSettersTest extends FilterTestCase
                     return '--<b>"test"</b>  ';
                 }
             },
+            'nullableString' => null
         ]);
 
         $this->assertInstanceOf(FilterWithSetters::class, $filter);
 
         $this->assertSame(1, $filter->integer);
         $this->assertSame('&lt;b&gt;&quot;test&quot;&lt;/b&gt;', $filter->string);
+        $this->assertNull($filter->nullableString);
     }
 
     public function testSettersWithValidation(): void
