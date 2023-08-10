@@ -56,20 +56,11 @@ final class TokenizerListenerBootloader extends Bootloader implements
         $this->listeners[] = $listener;
     }
 
-    public function boot(AbstractKernel $kernel, TokenizerConfig $config): void
+    public function boot(AbstractKernel $kernel): void
     {
-        if ($config->isLoadClassesEnabled()) {
-            $kernel->booted($this->loadClasses(...));
-        }
-
-        if ($config->isLoadEnumsEnabled()) {
-            $kernel->booted($this->loadEnums(...));
-        }
-
-        if ($config->isLoadInterfacesEnabled()) {
-            $kernel->booted($this->loadInterfaces(...));
-        }
-
+        $kernel->booted($this->loadClasses(...));
+        $kernel->booted($this->loadEnums(...));
+        $kernel->booted($this->loadInterfaces(...));
         $kernel->booted($this->finalizeListeners(...));
     }
 
@@ -130,27 +121,36 @@ final class TokenizerListenerBootloader extends Bootloader implements
     }
 
     private function loadClasses(
+        TokenizerConfig $config,
         ClassesInterface $classes,
         ClassesLoaderInterface $loader,
         ListenerInvoker $invoker,
     ): void {
-        $this->loadReflections($invoker, $classes->getClasses(...), $loader->loadClasses(...));
+        if ($config->isLoadClassesEnabled()) {
+            $this->loadReflections($invoker, $classes->getClasses(...), $loader->loadClasses(...));
+        }
     }
 
     private function loadEnums(
+        TokenizerConfig $config,
         EnumsInterface $enums,
         EnumsLoaderInterface $loader,
         ListenerInvoker $invoker,
     ): void {
-        $this->loadReflections($invoker, $enums->getEnums(...), $loader->loadEnums(...));
+        if ($config->isLoadEnumsEnabled()) {
+            $this->loadReflections($invoker, $enums->getEnums(...), $loader->loadEnums(...));
+        }
     }
 
     private function loadInterfaces(
+        TokenizerConfig $config,
         InterfacesInterface $interfaces,
         InterfacesLoaderInterface $loader,
         ListenerInvoker $invoker,
     ): void {
-        $this->loadReflections($invoker, $interfaces->getInterfaces(...), $loader->loadInterfaces(...));
+        if ($config->isLoadInterfacesEnabled()) {
+            $this->loadReflections($invoker, $interfaces->getInterfaces(...), $loader->loadInterfaces(...));
+        }
     }
 
     /**
