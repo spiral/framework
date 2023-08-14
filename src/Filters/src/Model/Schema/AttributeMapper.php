@@ -86,6 +86,7 @@ final class AttributeMapper
                                     $input->withPrefix($prefix . '.' . $key)
                                 );
                             } catch (ValidationException $e) {
+                                /** @psalm-suppress InvalidArrayOffset */
                                 $errors[$property->getName()][$key] = $e->errors;
                             }
                         }
