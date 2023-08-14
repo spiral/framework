@@ -51,48 +51,49 @@ final class ConsoleDispatcherTest extends BaseTestCase
         );
         $result = $output->fetch();
 
-        $this->assertStringContainsString('undefined', $result);
+        $this->assertStringContainsString('This command is dead', $result);
         $this->assertStringContainsString('DeadCommand.php', $result);
+        $this->assertStringNotContainsString('throw new \InvalidArgumentException(\'This command is dead\');', $result);
         $this->assertNotEquals(0, $serveResult);
     }
 
     public function testExceptionVerbose(): void
     {
-        $output = new BufferedOutput();
         $this->initApp();
 
-        $output->setVerbosity(BufferedOutput::VERBOSITY_VERBOSE);
+        $output = new BufferedOutput();
         $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)->serve(
             new ArrayInput([
                 'command' => 'dead',
+                '-vv'
             ]),
             $output
         );
         $result = $output->fetch();
 
-        $this->assertStringContainsString('undefined', $result);
+        $this->assertStringContainsString('This command is dead', $result);
         $this->assertStringContainsString('DeadCommand.php', $result);
+        $this->assertStringNotContainsString('throw new \InvalidArgumentException(\'This command is dead\');', $result);
         $this->assertNotEquals(0, $serveResult);
     }
 
     public function testExceptionDebug(): void
     {
-        $output = new BufferedOutput();
         $this->initApp();
 
-        $output->setVerbosity(BufferedOutput::VERBOSITY_DEBUG);
-
+        $output = new BufferedOutput();
         $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)->serve(
             new ArrayInput([
                 'command' => 'dead',
+                '-vvv'
             ]),
             $output
         );
         $result = $output->fetch();
 
-        $this->assertStringContainsString('undefined', $result);
+        $this->assertStringContainsString('This command is dead', $result);
         $this->assertStringContainsString('DeadCommand.php', $result);
-        $this->assertStringContainsString('$undefined', $result);
+        $this->assertStringContainsString('throw new \InvalidArgumentException(\'This command is dead\');', $result);
         $this->assertNotEquals(0, $serveResult);
     }
 }

@@ -63,6 +63,10 @@ final class TokenizerBootloaderTest extends BaseTestCase
                     'tests',
                     'migrations',
                 ],
+                'cache' => [
+                    'directory' => $this->getDirectoryByAlias('runtime') .'cache/listeners',
+                    'enabled' => false
+                ]
             ]
         );
     }

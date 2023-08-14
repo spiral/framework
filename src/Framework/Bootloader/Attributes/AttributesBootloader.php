@@ -18,6 +18,7 @@ use Spiral\Attributes\Internal\Instantiator\NamedArgumentsInstantiator;
 use Spiral\Attributes\Psr16CachedReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 
 class AttributesBootloader extends Bootloader
@@ -32,13 +33,13 @@ class AttributesBootloader extends Bootloader
     ) {
     }
 
-    public function init(): void
+    public function init(EnvironmentInterface $env): void
     {
         $this->config->setDefaults(
             AttributesConfig::CONFIG,
             [
                 'annotations' => [
-                    'support' => true,
+                    'support' => $env->get('SUPPORT_ANNOTATIONS', true),
                 ],
             ],
         );
@@ -68,7 +69,9 @@ class AttributesBootloader extends Bootloader
             $reader = new Psr16CachedReader($reader, $cache);
         }
 
-        if ($config->isAnnotationsReaderEnabled()) {
+        $supportAnnotations = $config->isAnnotationsReaderEnabled();
+
+        if ($supportAnnotations) {
             if (!\interface_exists(DoctrineReaderInterface::class)) {
                 throw new InitializationException(
                     'Doctrine annotations reader is not available, please install "doctrine/annotations" package',

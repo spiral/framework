@@ -67,6 +67,7 @@ final class ControllerTest extends HttpTestCase
 
     public function test500(): void
     {
-        $this->getHttp()->get('/error')->assertStatus(500);
+        $this->getHttp()->get('/error')
+            ->assertStatus(500);
     }
 }
