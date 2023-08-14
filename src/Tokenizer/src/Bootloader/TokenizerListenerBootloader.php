@@ -66,8 +66,6 @@ final class TokenizerListenerBootloader extends Bootloader implements
 
     public function initCachedClassesLoader(
         FactoryInterface $factory,
-        DirectoriesInterface $dirs,
-        EnvironmentInterface $env,
         TokenizerConfig $config,
     ): ClassesLoaderInterface {
         return $this->makeCachedLoader($factory, $config, CachedClassesLoader::class);
@@ -75,8 +73,6 @@ final class TokenizerListenerBootloader extends Bootloader implements
 
     public function initCachedEnumsLoader(
         FactoryInterface $factory,
-        DirectoriesInterface $dirs,
-        EnvironmentInterface $env,
         TokenizerConfig $config,
     ): EnumsLoaderInterface {
         return $this->makeCachedLoader($factory, $config, CachedEnumsLoader::class);
@@ -84,8 +80,6 @@ final class TokenizerListenerBootloader extends Bootloader implements
 
     public function initCachedInterfacesLoader(
         FactoryInterface $factory,
-        DirectoriesInterface $dirs,
-        EnvironmentInterface $env,
         TokenizerConfig $config,
     ): InterfacesLoaderInterface {
         return $this->makeCachedLoader($factory, $config, CachedInterfacesLoader::class);
