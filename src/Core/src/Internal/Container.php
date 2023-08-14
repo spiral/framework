@@ -59,6 +59,6 @@ final class Container implements ContainerInterface
 
     public function has(string $id): bool
     {
-        return \array_key_exists($id, $this->state->bindings);
+        return \array_key_exists($id, $this->state->bindings) || \array_key_exists($id, $this->state->singletons);
     }
 }
