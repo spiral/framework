@@ -29,11 +29,11 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "spiral/core": "^3.8",
-        "spiral/hmvc": "^3.8",
-        "spiral/serializer": "^3.8",
-        "spiral/snapshots": "^3.8",
-        "spiral/telemetry": "^3.8",
+        "spiral/core": "^3.9",
+        "spiral/hmvc": "^3.9",
+        "spiral/serializer": "^3.9",
+        "spiral/snapshots": "^3.9",
+        "spiral/telemetry": "^3.9",
         "spiral/attributes": "^2.8|^3.0",
         "doctrine/inflector": "^1.4|^2.0",
         "ramsey/uuid": "^4.2.3",
@@ -53,12 +53,12 @@
         "doctrine/annotations": "^1.12 || ^2.0",
         "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
-        "spiral/boot": "^3.8",
+        "spiral/boot": "^3.9",
         "vimeo/psalm": "^5.9"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.8.x-dev"
+            "dev-master": "3.9.x-dev"
         }
     },
     "config": {
