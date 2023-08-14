@@ -93,7 +93,9 @@ final class FilterProviderTest extends BaseTestCase
         $request = $request->withParsedBody([
             'name' => 'John',
             'status' => 'active',
+            'activationStatus' => 'inactive',
             'groupUuid' => 'f0a0b2c0-5b4b-4a5c-8d3e-6f7a8f9b0c1d',
+            'friendUuid' => 'f0a0b2c0-5b4b-4a5c-8d3e-6f7a8f9b0c2d',
         ]);
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -111,7 +113,11 @@ final class FilterProviderTest extends BaseTestCase
         $this->assertSame('John', $filter->name);
         $this->assertInstanceOf(Status::class, $filter->status);
         $this->assertEquals(Status::Active, $filter->status);
+        $this->assertInstanceOf(Status::class, $filter->activationStatus);
+        $this->assertEquals(Status::Inactive, $filter->activationStatus);
         $this->assertInstanceOf(UuidInterface::class, $filter->groupUuid);
         $this->assertSame('f0a0b2c0-5b4b-4a5c-8d3e-6f7a8f9b0c1d', $filter->groupUuid->toString());
+        $this->assertInstanceOf(UuidInterface::class, $filter->friendUuid);
+        $this->assertSame('f0a0b2c0-5b4b-4a5c-8d3e-6f7a8f9b0c2d', $filter->friendUuid->toString());
     }
 }

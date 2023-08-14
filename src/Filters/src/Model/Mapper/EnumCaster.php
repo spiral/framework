@@ -25,6 +25,6 @@ final class EnumCaster implements CasterInterface
          */
         $enum = $type->getName();
 
-        $property->setValue($filter, $enum::from($value));
+        $property->setValue($filter, $value instanceof $enum ? $value : $enum::from($value));
     }
 }

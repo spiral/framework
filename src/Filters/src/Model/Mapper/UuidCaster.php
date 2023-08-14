@@ -22,7 +22,10 @@ final class UuidCaster implements CasterInterface
 
     public function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
     {
-        $property->setValue($filter, \Ramsey\Uuid\Uuid::fromString($value));
+        $property->setValue(
+            $filter,
+            $value instanceof UuidInterface ? $value : \Ramsey\Uuid\Uuid::fromString($value)
+        );
     }
 
     private function implements(string $haystack, string $interface): bool
