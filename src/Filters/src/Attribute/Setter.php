@@ -6,6 +6,7 @@ namespace Spiral\Filters\Attribute;
 
 use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
+use Spiral\Filters\Exception\SetterException;
 
 /**
  * Use setters to typecast the incoming value before passing it to the property.
@@ -17,10 +18,10 @@ use Spiral\Attributes\NamedArgumentConstructor;
  * #[\Spiral\Filters\Attribute\Setter(filter: [Foo::class, 'bar'])]
  */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE), NamedArgumentConstructor]
-final class Setter
+class Setter
 {
     public readonly \Closure $filter;
-    private array $args;
+    protected array $args;
 
     public function __construct(callable $filter, mixed ...$args)
     {
@@ -30,6 +31,10 @@ final class Setter
 
     public function updateValue(mixed $value): mixed
     {
-        return ($this->filter)($value, ...$this->args);
+        try {
+            return ($this->filter)($value, ...$this->args);
+        } catch (\Throwable $e) {
+            throw new SetterException($e);
+        }
     }
 }

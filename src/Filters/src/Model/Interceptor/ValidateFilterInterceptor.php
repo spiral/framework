@@ -43,6 +43,11 @@ final class ValidateFilterInterceptor implements CoreInterceptorInterface
             );
         }
 
+        if (($bag->errors ?? []) !== []) {
+            $errorMapper = new ErrorMapper($bag->schema);
+            throw new ValidationException($errorMapper->mapErrors($bag->errors), $parameters['context'] ?? null);
+        }
+
         return $filter;
     }
 

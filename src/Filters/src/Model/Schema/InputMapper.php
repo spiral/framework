@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Filters\Model\Schema;
 
 use Spiral\Filters\Attribute\Setter;
+use Spiral\Filters\Exception\SetterException;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
@@ -28,7 +29,11 @@ final class InputMapper
                 if ($value !== null) {
                     /** @var Setter $setter */
                     foreach ($setters[$field] ?? [] as $setter) {
-                        $value = $setter->updateValue($value);
+                        try {
+                            $value = $setter->updateValue($value);
+                        } catch (SetterException $e) {
+                            $errors[$field] = $e->getMessage();
+                        }
                     }
 
                     $result[$field] = $value;

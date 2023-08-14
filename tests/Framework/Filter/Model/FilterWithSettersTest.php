@@ -6,6 +6,7 @@ namespace Framework\Filter\Model;
 
 use Spiral\App\Request\FilterWithSetters;
 use Spiral\App\Request\PostFilter;
+use Spiral\Filters\Exception\ValidationException;
 use Spiral\Tests\Framework\Filter\FilterTestCase;
 
 final class FilterWithSettersTest extends FilterTestCase
@@ -49,5 +50,25 @@ final class FilterWithSettersTest extends FilterTestCase
         $this->assertTrue($filter->active);
         $this->assertSame(0.9, $filter->postRating);
         $this->assertSame(3, $filter->author->id);
+    }
+
+    public function testExtendedSetter(): void
+    {
+        $filter = $this->getFilter(FilterWithSetters::class, [
+            'amount' => 10,
+        ]);
+
+        $this->assertSame(15, $filter->amount);
+    }
+
+    public function testSetterException(): void
+    {
+        try {
+            $this->getFilter(FilterWithSetters::class, [
+                'uuid' => 'foo',
+            ]);
+        } catch (ValidationException $e) {
+            $this->assertEquals(['uuid' => 'Unable to set value. The given data was invalid.'], $e->errors);
+        }
     }
 }

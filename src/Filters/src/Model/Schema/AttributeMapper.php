@@ -9,6 +9,7 @@ use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
 use Spiral\Filters\Attribute\Setter;
+use Spiral\Filters\Exception\SetterException;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Exception\ValidationException;
@@ -42,7 +43,11 @@ final class AttributeMapper
             /** @var object $attribute */
             foreach ($this->reader->getPropertyMetadata($property) as $attribute) {
                 if ($attribute instanceof AbstractInput) {
-                    $this->setValue($filter, $property, $attribute->getValue($input, $property));
+                    try {
+                        $this->setValue($filter, $property, $attribute->getValue($input, $property));
+                    } catch (SetterException $e) {
+                        $errors[$property->getName()] = $e->getMessage();
+                    }
                     $schema[$property->getName()] = $attribute->getSchema($property);
                 } elseif ($attribute instanceof NestedFilter) {
                     $prefix = $attribute->prefix ?? $property->name;
@@ -52,7 +57,11 @@ final class AttributeMapper
                             $input->withPrefix($prefix)
                         );
 
-                        $this->setValue($filter, $property, $value);
+                        try {
+                            $this->setValue($filter, $property, $value);
+                        } catch (SetterException $e) {
+                            $errors[$property->getName()] = $e->getMessage();
+                        }
                     } catch (ValidationException $e) {
                         if ($this->allowsNull($property)) {
                             $this->setValue($filter, $property, null);
@@ -82,7 +91,11 @@ final class AttributeMapper
                         }
                     }
 
-                    $this->setValue($filter, $property, $propertyValues);
+                    try {
+                        $this->setValue($filter, $property, $propertyValues);
+                    } catch (SetterException $e) {
+                        $errors[$property->getName()] = $e->getMessage();
+                    }
                     $schema[$property->getName()] = [$attribute->class, $prefix . '.*'];
                 } elseif ($attribute instanceof Setter) {
                     $setters[$property->getName()][] = $attribute;
