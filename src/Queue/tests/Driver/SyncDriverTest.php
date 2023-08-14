@@ -23,6 +23,7 @@ final class SyncDriverTest extends TestCase
     private SyncDriver $queue;
     private m\LegacyMockInterface|m\MockInterface|CoreInterface $core;
     private m\LegacyMockInterface|m\MockInterface|UuidFactoryInterface $factory;
+    private UuidFactoryInterface $realfactory;
 
     protected function setUp(): void
     {
@@ -31,6 +32,7 @@ final class SyncDriverTest extends TestCase
         $container = new Container();
         $container->bind(TracerInterface::class, new NullTracer($container));
 
+        $this->realfactory = Uuid::getFactory();
         Uuid::setFactory($this->factory = m::mock(UuidFactoryInterface::class));
 
         $this->queue = new SyncDriver(
@@ -69,5 +71,11 @@ final class SyncDriverTest extends TestCase
         yield ['some string'];
         yield [123];
         yield [null];
+    }
+
+    protected function tearDown(): void
+    {
+        Uuid::setFactory($this->realfactory);
+        parent::tearDown();
     }
 }

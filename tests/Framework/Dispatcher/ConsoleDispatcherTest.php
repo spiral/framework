@@ -59,13 +59,13 @@ final class ConsoleDispatcherTest extends BaseTestCase
 
     public function testExceptionVerbose(): void
     {
-        $output = new BufferedOutput();
         $this->initApp();
 
-        $output->setVerbosity(BufferedOutput::VERBOSITY_VERBOSE);
+        $output = new BufferedOutput();
         $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)->serve(
             new ArrayInput([
                 'command' => 'dead',
+                '-vv'
             ]),
             $output
         );
@@ -79,14 +79,13 @@ final class ConsoleDispatcherTest extends BaseTestCase
 
     public function testExceptionDebug(): void
     {
-        $output = new BufferedOutput();
         $this->initApp();
 
-        $output->setVerbosity(BufferedOutput::VERBOSITY_DEBUG);
-
+        $output = new BufferedOutput();
         $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)->serve(
             new ArrayInput([
                 'command' => 'dead',
+                '-vvv'
             ]),
             $output
         );
