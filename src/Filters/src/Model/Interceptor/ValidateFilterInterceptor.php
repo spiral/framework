@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Filters\Model\Interceptor;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Model\FilterBag;
@@ -42,6 +41,11 @@ final class ValidateFilterInterceptor implements CoreInterceptorInterface
                 $bag->errors ?? [],
                 $parameters['context'] ?? null
             );
+        }
+
+        if (($bag->errors ?? []) !== []) {
+            $errorMapper = new ErrorMapper($bag->schema);
+            throw new ValidationException($errorMapper->mapErrors($bag->errors), $parameters['context'] ?? null);
         }
 
         return $filter;

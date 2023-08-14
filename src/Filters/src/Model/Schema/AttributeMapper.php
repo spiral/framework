@@ -9,10 +9,12 @@ use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
 use Spiral\Filters\Attribute\Setter;
+use Spiral\Filters\Exception\SetterException;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Model\Mapper\Mapper;
 
 /**
  * @internal
@@ -21,27 +23,31 @@ final class AttributeMapper
 {
     public function __construct(
         private readonly FilterProviderInterface $provider,
-        private readonly ReaderInterface $reader
+        private readonly ReaderInterface $reader,
+        private readonly Mapper $mapper
     ) {
     }
 
     /**
-     * Map input data into filter properties with attributes
-     *
-     * @return array{0: array, 1: array, 2: array}
+     * @return array{0: array, 1: array, 2: array, 3: array}
      */
     public function map(FilterInterface $filter, InputInterface $input): array
     {
         $errors = [];
         $schema = [];
         $setters = [];
+        $optionalFilters = [];
         $class = new \ReflectionClass($filter);
 
         foreach ($class->getProperties() as $property) {
             /** @var object $attribute */
             foreach ($this->reader->getPropertyMetadata($property) as $attribute) {
                 if ($attribute instanceof AbstractInput) {
-                    $this->setValue($filter, $property, $attribute->getValue($input, $property));
+                    try {
+                        $this->setValue($filter, $property, $attribute->getValue($input, $property));
+                    } catch (SetterException $e) {
+                        $errors[$property->getName()] = $e->getMessage();
+                    }
                     $schema[$property->getName()] = $attribute->getSchema($property);
                 } elseif ($attribute instanceof NestedFilter) {
                     $prefix = $attribute->prefix ?? $property->name;
@@ -51,9 +57,18 @@ final class AttributeMapper
                             $input->withPrefix($prefix)
                         );
 
-                        $this->setValue($filter, $property, $value);
+                        try {
+                            $this->setValue($filter, $property, $value);
+                        } catch (SetterException $e) {
+                            $errors[$property->getName()] = $e->getMessage();
+                        }
                     } catch (ValidationException $e) {
-                        $errors[$prefix] = $e->errors;
+                        if ($this->allowsNull($property)) {
+                            $this->setValue($filter, $property, null);
+                            $optionalFilters[] = $property->getName();
+                        } else {
+                            $errors[$prefix] = $e->errors;
+                        }
                     }
 
                     $schema[$property->getName()] = $attribute->getSchema($property);
@@ -71,12 +86,17 @@ final class AttributeMapper
                                     $input->withPrefix($prefix . '.' . $key)
                                 );
                             } catch (ValidationException $e) {
+                                /** @psalm-suppress InvalidArrayOffset */
                                 $errors[$property->getName()][$key] = $e->errors;
                             }
                         }
                     }
 
-                    $this->setValue($filter, $property, $propertyValues);
+                    try {
+                        $this->setValue($filter, $property, $propertyValues);
+                    } catch (SetterException $e) {
+                        $errors[$property->getName()] = $e->getMessage();
+                    }
                     $schema[$property->getName()] = [$attribute->class, $prefix . '.*'];
                 } elseif ($attribute instanceof Setter) {
                     $setters[$property->getName()][] = $attribute;
@@ -84,7 +104,7 @@ final class AttributeMapper
             }
         }
 
-        return [$schema, $errors, $setters];
+        return [$schema, $errors, $setters, $optionalFilters];
     }
 
     private function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
@@ -99,6 +119,13 @@ final class AttributeMapper
             $value = $setter->updateValue($value);
         }
 
-        $property->setValue($filter, $value);
+        $this->mapper->setValue($filter, $property, $value);
+    }
+
+    private function allowsNull(\ReflectionProperty $property): bool
+    {
+        $type = $property->getType();
+
+        return $type === null || $type->allowsNull();
     }
 }

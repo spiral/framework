@@ -21,8 +21,12 @@ use Spiral\Filters\Model\FilterProvider;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Interceptor\Core;
 use Spiral\Filters\Model\Interceptor\PopulateDataFromEntityInterceptor;
-use Spiral\Filters\Model\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Model\Interceptor\ValidateFilterInterceptor;
+use Spiral\Filters\Model\Mapper\EnumCaster;
+use Spiral\Filters\Model\Mapper\CasterRegistry;
+use Spiral\Filters\Model\Mapper\CasterRegistryInterface;
+use Spiral\Filters\Model\Mapper\UuidCaster;
 
 /**
  * @implements Container\InjectorInterface<FilterInterface>
@@ -32,6 +36,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
     protected const SINGLETONS = [
         FilterProviderInterface::class => [self::class, 'initFilterProvider'],
         InputInterface::class => InputScope::class,
+        CasterRegistryInterface::class => [self::class, 'initCasterRegistry'],
     ];
 
     public function __construct(
@@ -88,11 +93,15 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         ?EventDispatcherInterface $dispatcher = null
     ): FilterProvider {
         $core = new InterceptableCore(new Core(), $dispatcher);
-
         foreach ($config->getInterceptors() as $interceptor) {
             $core->addInterceptor($container->get($interceptor));
         }
 
         return new FilterProvider($container, $container, $core);
+    }
+
+    private function initCasterRegistry(): CasterRegistryInterface
+    {
+        return new CasterRegistry([new EnumCaster(), new UuidCaster()]);
     }
 }

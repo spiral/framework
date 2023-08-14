@@ -15,6 +15,10 @@ use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
+use Spiral\Filters\Model\Mapper\EnumCaster;
+use Spiral\Filters\Model\Mapper\Mapper;
+use Spiral\Filters\Model\Mapper\CasterRegistry;
+use Spiral\Filters\Model\Mapper\UuidCaster;
 use Spiral\Filters\Model\Schema\AttributeMapper;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
@@ -31,7 +35,8 @@ final class AttributeMapperTest extends BaseTestCase
 
         $this->mapper = new AttributeMapper(
             $this->provider = m::mock(FilterProviderInterface::class),
-            new AttributeReader()
+            new AttributeReader(),
+            new Mapper(new CasterRegistry([new UuidCaster(), new EnumCaster()]))
         );
     }
 

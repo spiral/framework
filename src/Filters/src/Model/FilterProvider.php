@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Filters\Model;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\ResolverInterface;
 use Spiral\Filters\Model\Schema\AttributeMapper;
@@ -33,7 +32,7 @@ final class FilterProvider implements FilterProviderInterface
         \assert($attributeMapper instanceof AttributeMapper);
 
         $filter = $this->createFilterInstance($name);
-        [$mappingSchema, $errors, $setters] = $attributeMapper->map($filter, $input);
+        [$mappingSchema, $errors, $setters, $optionalFilters] = $attributeMapper->map($filter, $input);
 
         if ($filter instanceof HasFilterDefinition) {
             $mappingSchema = \array_merge(
@@ -49,6 +48,9 @@ final class FilterProvider implements FilterProviderInterface
         \assert($schemaBuilder instanceof Builder);
 
         $schema = $schemaBuilder->makeSchema($name, $mappingSchema);
+        foreach ($optionalFilters as $optionalFilter) {
+            $schema[$optionalFilter][Builder::SCHEMA_OPTIONAL] = true;
+        }
 
         [$data, $inputErrors] = $inputMapper->map($schema, $input, $setters);
         $errors = \array_merge($errors, $inputErrors);
