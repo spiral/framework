@@ -13,31 +13,22 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class AttributesWithoutAnnotationsBootloaderTest extends BaseTestCase
 {
-    public const MAKE_APP_ON_STARTUP = false;
-
     #[Env('SUPPORT_ANNOTATIONS', 'false')]
     public function testReaderBindingWithoutCache(): void
     {
-        $this
-            ->withDisabledBootloaders(\Spiral\Cache\Bootloader\CacheBootloader::class)
-            ->initApp($this->getTestEnvVariables());
-
         $this->assertContainerBoundAsSingleton(ReaderInterface::class, AttributeReader::class);
     }
 
     #[Env('SUPPORT_ANNOTATIONS', 'false')]
-    public function testReaderBindingWithtCache(): void
+    #[Env('ATTRIBUTES_CACHE_ENABLED', 'true')]
+    public function testReaderBindingWithCache(): void
     {
-        $this->initApp($this->getTestEnvVariables());
-
         $this->assertContainerBoundAsSingleton(ReaderInterface::class, Psr16CachedReader::class);
     }
 
     #[Env('SUPPORT_ANNOTATIONS', 'true')]
     public function testSelectiveReaderBinding(): void
     {
-        $this->initApp($this->getTestEnvVariables());
-
         $this->assertContainerBoundAsSingleton(ReaderInterface::class, SelectiveReader::class);
     }
 }

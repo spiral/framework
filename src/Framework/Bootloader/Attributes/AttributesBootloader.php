@@ -7,7 +7,6 @@ namespace Spiral\Bootloader\Attributes;
 use Doctrine\Common\Annotations\AnnotationReader as DoctrineAnnotationReader;
 use Doctrine\Common\Annotations\Reader as DoctrineReaderInterface;
 use Psr\Container\ContainerInterface;
-use Psr\SimpleCache\CacheInterface;
 use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Composite\SelectiveReader;
@@ -19,6 +18,7 @@ use Spiral\Attributes\Psr16CachedReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
+use Spiral\Cache\CacheStorageProviderInterface;
 use Spiral\Config\ConfiguratorInterface;
 
 class AttributesBootloader extends Bootloader
@@ -41,6 +41,10 @@ class AttributesBootloader extends Bootloader
                 'annotations' => [
                     'support' => $env->get('SUPPORT_ANNOTATIONS', true),
                 ],
+                'cache' => [
+                    'storage' => $env->get('ATTRIBUTES_CACHE_STORAGE', null),
+                    'enabled' => $env->get('ATTRIBUTES_CACHE_ENABLED', false),
+                ],
             ],
         );
     }
@@ -62,11 +66,11 @@ class AttributesBootloader extends Bootloader
     ): ReaderInterface {
         $reader = new AttributeReader($instantiator);
 
-        if ($container->has(CacheInterface::class)) {
-            $cache = $container->get(CacheInterface::class);
-            \assert($cache instanceof CacheInterface);
+        if ($config->isCacheEnabled()) {
+            $provider = $container->get(CacheStorageProviderInterface::class);
+            \assert($provider instanceof CacheStorageProviderInterface);
 
-            $reader = new Psr16CachedReader($reader, $cache);
+            $reader = new Psr16CachedReader($reader, $provider->storage($config->getCacheStorage()));
         }
 
         $supportAnnotations = $config->isAnnotationsReaderEnabled();
