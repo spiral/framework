@@ -269,7 +269,11 @@ final class UriHandler
 
         $options = [];
         $replaces = [];
-        $pattern = \rtrim(\ltrim($this->getPrefix() . '/' . $this->pattern, ':/'), '/');
+
+        $prefix = \rtrim($this->getPrefix(), '/ ');
+        $pattern = \ltrim($this->pattern, '/ ');
+        $pattern = $prefix . '/' . $pattern;
+        $pattern = \rtrim(\ltrim($pattern, ':/'), '/');
 
         // correct [/ first occurrence]
         if (\str_starts_with($pattern, '[/')) {

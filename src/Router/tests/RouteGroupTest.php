@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Router;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\UriFactoryInterface;
 use Spiral\Core\Container;
@@ -19,6 +20,7 @@ use Spiral\Tests\Router\Stub\TestMiddleware;
 
 final class RouteGroupTest extends BaseTestCase
 {
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -132,6 +134,36 @@ final class RouteGroupTest extends BaseTestCase
 
         $this->assertTrue($group->hasRoute('admin.name'));
         $this->assertFalse($group->hasRoute('name'));
+    }
+
+    #[DataProvider('routePrefixDataProvider')]
+    public function testWithPrefix(string $prefix, string $pattern): void
+    {
+        $route = new Route($pattern, new Action('controller', 'method'));
+        $group = new RouteGroup();
+        $group->setPrefix($prefix);
+        $group->addRoute('name', $route->withVerbs('GET'));
+        $group->register($this->router, $this->container);
+
+        $route = $this->router->getRoute('name');
+        $this->assertNotNull(
+            $route->match(new ServerRequest('GET', '/api/blog'))
+        );
+
+        $this->assertSame('/api/blog', (string) $route->uri());
+    }
+
+    public static function routePrefixDataProvider(): iterable
+    {
+        yield ['/api/', '/blog'];
+        yield ['/api', '/blog'];
+        yield ['/api', 'blog'];
+        yield ['api/', '/blog'];
+        yield ['api', '/blog'];
+        yield ['api', 'blog'];
+        yield ['api/', '/blog/'];
+        yield ['api', '/blog/'];
+        yield ['api', 'blog/'];
     }
 
     /**
