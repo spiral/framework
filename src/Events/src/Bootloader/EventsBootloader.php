@@ -113,6 +113,7 @@ final class EventsBootloader extends Bootloader
             $core->addInterceptor($interceptor);
         }
 
+        $container->removeBinding(EventDispatcherInterface::class);
         $container->bindSingleton(EventDispatcherInterface::class, new EventDispatcher($core));
     }
 
