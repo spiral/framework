@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\DotEnv\Bootloader;
 
 use Dotenv\Dotenv;
-use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -15,10 +14,10 @@ final class DotenvBootloader extends Bootloader
     private bool $init = false;
 
     public function init(
-        AbstractKernel $kernel,
-        DirectoriesInterface $dirs
+        DirectoriesInterface $dirs,
+        EnvironmentInterface $env,
     ): void {
-        $kernel->running(fn (EnvironmentInterface $env) => $this->loadEnvVariables($dirs, $env));
+        $this->loadEnvVariables($dirs, $env);
     }
 
     public function loadEnvVariables(DirectoriesInterface $dirs, EnvironmentInterface $env): void
