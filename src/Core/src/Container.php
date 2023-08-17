@@ -267,10 +267,12 @@ final class Container implements
      * (will be constructed only once), function array or Closure (executed only once call).
      *
      * @psalm-param TResolver $resolver
+     * @param bool $force If the value is false, an exception will be thrown when attempting
+     *  to bind an already constructed singleton.
      */
-    public function bindSingleton(string $alias, string|array|callable|object $resolver): void
+    public function bindSingleton(string $alias, string|array|callable|object $resolver, bool $force = true): void
     {
-        $this->binder->bindSingleton($alias, $resolver);
+        $this->binder->bindSingleton($alias, $resolver, $force);
     }
 
     /**

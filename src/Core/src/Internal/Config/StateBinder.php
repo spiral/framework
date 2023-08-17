@@ -51,13 +51,13 @@ class StateBinder implements BinderInterface
             throw $this->invalidBindingException($alias, $e);
         }
 
-        $this->setBinding($alias, $config);
+        $this->setBinding($alias, $config, true);
     }
 
     /**
      * @param TResolver|object $resolver
      */
-    public function bindSingleton(string $alias, mixed $resolver): void
+    public function bindSingleton(string $alias, mixed $resolver, bool $force = true): void
     {
         try {
             $config = $this->makeConfig($resolver, true);
@@ -65,7 +65,7 @@ class StateBinder implements BinderInterface
             throw $this->invalidBindingException($alias, $e);
         }
 
-        $this->setBinding($alias, $config);
+        $this->setBinding($alias, $config, $force);
     }
 
     public function hasInstance(string $alias): bool
@@ -185,8 +185,12 @@ class StateBinder implements BinderInterface
         ), previous: $previous);
     }
 
-    private function setBinding(string $alias, Binding $config): void
+    private function setBinding(string $alias, Binding $config, bool $force): void
     {
+        if ($force) {
+            $this->removeBinding($alias);
+        }
+
         if (isset($this->state->singletons[$alias])) {
             throw new SingletonOverloadException($alias);
         }
