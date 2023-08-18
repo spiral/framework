@@ -272,8 +272,11 @@ final class Container implements
      */
     public function bindSingleton(string $alias, string|array|callable|object $resolver, bool $force = true): void
     {
-        /** @psalm-suppress TooManyArguments */
-        $this->binder->bindSingleton($alias, $resolver, $force);
+        if ($force) {
+            $this->binder->removeBinding($alias);
+        }
+
+        $this->binder->bindSingleton($alias, $resolver);
     }
 
     /**

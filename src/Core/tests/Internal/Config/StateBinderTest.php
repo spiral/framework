@@ -11,36 +11,21 @@ use Spiral\Tests\Core\Internal\BaseTestCase;
 
 final class StateBinderTest extends BaseTestCase
 {
-    public function testOverrideBindSingletonWithDefaultForceValue(): void
-    {
-        $binder = $this->constructor->get('binder', BinderInterface::class);
-        $factory = $this->constructor->get('factory', FactoryInterface::class);
-
-        $binder->bind('singleton', new \stdClass());
-        $binder->bindSingleton('test', 'singleton');
-
-        $old = $factory->make('test');
-
-        $binder->bindSingleton('test', new \stdClass());
-
-        $this->assertNotSame($old, $factory->make('test'));
-    }
-
     public function testOverrideBindSingletonException(): void
     {
         $binder = $this->constructor->get('binder', BinderInterface::class);
         $factory = $this->constructor->get('factory', FactoryInterface::class);
 
         $binder->bind('singleton', new \stdClass());
-        $binder->bindSingleton('test', 'singleton', false);
+        $binder->bindSingleton('test', 'singleton');
 
         $factory->make('test');
 
         $this->expectException(SingletonOverloadException::class);
-        $binder->bindSingleton('test', new \stdClass(), false);
+        $binder->bindSingleton('test', new \stdClass());
     }
 
-    public function testOverrideBindWithSingleton(): void
+    public function testOverrideBindException(): void
     {
         $binder = $this->constructor->get('binder', BinderInterface::class);
         $factory = $this->constructor->get('factory', FactoryInterface::class);
@@ -48,10 +33,9 @@ final class StateBinderTest extends BaseTestCase
         $binder->bind('singleton', new \stdClass());
         $binder->bindSingleton('test', 'singleton');
 
-        $old = $factory->make('test');
+        $factory->make('test');
 
+        $this->expectException(SingletonOverloadException::class);
         $binder->bind('test', new \stdClass());
-
-        $this->assertNotSame($old, $factory->make('test'));
     }
 }
