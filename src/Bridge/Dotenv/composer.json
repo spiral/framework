@@ -33,7 +33,7 @@
     "require-dev": {
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^10.1",
-        "spiral/boot": "^3.8.2",
+        "spiral/boot": "^3.9",
         "vimeo/psalm": "^5.9"
     },
     "autoload": {
