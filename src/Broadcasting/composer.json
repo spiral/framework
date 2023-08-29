@@ -32,8 +32,8 @@
         "psr/http-server-middleware": "^1.0",
         "psr/http-factory": "^1.0",
         "psr/log": "1 - 3",
-        "spiral/core": "^3.9",
-        "spiral/config": "^3.9",
+        "spiral/core": "^3.8.3",
+        "spiral/config": "^3.8.3",
         "psr/event-dispatcher": "^1.0"
     },
     "autoload": {
@@ -44,7 +44,7 @@
     "require-dev": {
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^10.1",
-        "spiral/boot": "^3.9",
+        "spiral/boot": "^3.8.3",
         "vimeo/psalm": "^5.9"
     },
     "autoload-dev": {

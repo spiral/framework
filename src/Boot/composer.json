@@ -28,13 +28,13 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.9",
-        "spiral/files": "^3.9",
-        "spiral/config": "^3.9",
-        "spiral/debug": "^3.9",
-        "spiral/exceptions": "^3.9",
+        "spiral/core": "^3.8.3",
+        "spiral/files": "^3.8.3",
+        "spiral/config": "^3.8.3",
+        "spiral/debug": "^3.8.3",
+        "spiral/exceptions": "^3.8.3",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/events": "^3.9"
+        "spiral/events": "^3.8.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.1",
