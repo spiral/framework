@@ -79,11 +79,15 @@ class StateBinder implements BinderInterface
                 return $binding->alias === $alias ?: throw new Exception('Circular alias detected');
             }
 
+            if (\array_key_exists($alias, $this->state->singletons)) {
+                return true;
+            }
+
             $flags[$binding->alias] = true;
             $alias = $binding->alias;
         }
 
-        return isset($bindings[$alias]) && \is_object($bindings[$alias]);
+        return \array_key_exists($alias, $this->state->singletons) or isset($bindings[$alias]);
     }
 
     public function removeBinding(string $alias): void

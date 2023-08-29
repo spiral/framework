@@ -7,6 +7,7 @@ namespace Spiral\Tests\Core\Internal\Config;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Exception\Binder\SingletonOverloadException;
 use Spiral\Core\FactoryInterface;
+use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Internal\BaseTestCase;
 
 final class StateBinderTest extends BaseTestCase
@@ -37,5 +38,16 @@ final class StateBinderTest extends BaseTestCase
 
         $this->expectException(SingletonOverloadException::class);
         $binder->bind('test', new \stdClass());
+    }
+
+    public function testHasInstanceAfterMake(): void
+    {
+        $binder = $this->constructor->get('binder', BinderInterface::class);
+        $factory = $this->constructor->get('factory', FactoryInterface::class);
+
+        $this->bindSingleton('test', SampleClass::class);
+        $factory->make('test');
+
+        $this->assertTrue($binder->hasInstance('test'));
     }
 }
