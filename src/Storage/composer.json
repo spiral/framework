@@ -32,7 +32,8 @@
         "spiral/boot": "^3.9",
         "phpunit/phpunit": "^10.1",
         "vimeo/psalm": "^5.9",
-        "jetbrains/phpstorm-attributes": "^1.0"
+        "jetbrains/phpstorm-attributes": "^1.0",
+        "league/flysystem-aws-s3-v3": "^2.0"
     },
     "autoload-dev": {
         "psr-4": {
