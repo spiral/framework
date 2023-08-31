@@ -25,7 +25,6 @@ trait TranslatorTrait
      *
      * Example: $this->say("User account is invalid.");
      *
-     * @param string $string
      * @param array  $options Interpolation options.
      * @param string $bundle  Translation bundle, by default current class name.
      *

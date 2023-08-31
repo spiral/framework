@@ -19,7 +19,6 @@ interface InputInterface
      * $input->getValue('data', 'array.value')
      * $input->withPrefix('array')->getValue('data', 'value')
      *
-     * @param string $prefix
      * @param bool   $add When set to false current prefix path will be overwritten.
      */
     public function withPrefix(string $prefix, bool $add = true): InputInterface;

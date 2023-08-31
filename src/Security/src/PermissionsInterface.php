@@ -59,8 +59,6 @@ interface PermissionsInterface
      *
      * You can always create composite rules by creating decorating rule.
      *
-     * @param string $role
-     * @param string $permission
      * @param string $rule Rule name previously registered in RulesInterface.
      *
      * @throws RoleException

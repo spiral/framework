@@ -454,7 +454,6 @@ final class ReflectionFile
      * This is pretty old code, potentially to be improved using AST.
      *
      * @param array<int, mixed> $tokens
-     * @param int   $invocationLevel
      */
     private function locateInvocations(array $tokens, int $invocationLevel = 0): void
     {

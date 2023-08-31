@@ -208,7 +208,6 @@ trait WritableTrait
      * @internal This is an internal method, please do not use it in your code.
      * @psalm-internal Spiral\Storage\Storage
      *
-     * @param string $directory
      * @throws FilesystemException
      */
     private function hasFiles(string $directory): bool
