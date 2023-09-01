@@ -158,7 +158,7 @@ class StorageConfig extends InjectableConfig
         ] + ($server['options'] ?? []);
 
         $name = $bucket['bucket'] ?? $server['bucket'];
-        $visibility = $bucket['visibility'] ?? $server['bucket'] ?? Visibility::VISIBILITY_PUBLIC;
+        $visibility = $bucket['visibility'] ?? $server['visibility'] ?? Visibility::VISIBILITY_PUBLIC;
 
         if ($async) {
             if (!\class_exists(AsyncAwsS3Adapter::class)) {
