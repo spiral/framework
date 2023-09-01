@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Command\Encrypter;
 use Spiral\Command\Router;
+use Spiral\Command\Tokenizer;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
 use Spiral\Command\CleanCommand;
@@ -18,6 +19,7 @@ use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Router\RouterInterface;
+use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\ViewsInterface;
@@ -60,6 +62,10 @@ final class CommandBootloader extends Bootloader
 
         if ($container->has(RouterInterface::class)) {
             $console->addCommand(Router\ListCommand::class);
+        }
+
+        if ($container->has(ClassesInterface::class)) {
+            $console->addCommand(Tokenizer\InfoCommand::class);
         }
     }
 

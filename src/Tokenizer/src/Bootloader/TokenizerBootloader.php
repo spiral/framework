@@ -70,6 +70,11 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
                     'directory' => $dirs->get('runtime') . 'cache/listeners',
                     'enabled' => \filter_var($env->get('TOKENIZER_CACHE_TARGETS', false), \FILTER_VALIDATE_BOOL),
                 ],
+                'load' => [
+                    'classes' => \filter_var($env->get('TOKENIZER_LOAD_CLASSES', true), \FILTER_VALIDATE_BOOL),
+                    'enums' => \filter_var($env->get('TOKENIZER_LOAD_ENUMS', false), \FILTER_VALIDATE_BOOL),
+                    'interfaces' => \filter_var($env->get('TOKENIZER_LOAD_INTERFACES', false), \FILTER_VALIDATE_BOOL),
+                ],
             ],
         );
     }

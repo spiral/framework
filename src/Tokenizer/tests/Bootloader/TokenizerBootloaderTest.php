@@ -17,7 +17,7 @@ use Spiral\Tokenizer\Config\TokenizerConfig;
 
 final class TokenizerBootloaderTest extends TestCase
 {
-    #[DataProvider('readCacheDataProvider')]
+    #[DataProvider('boolValuesDataProvider')]
     public function testCastingReadCacheEnvVariable(mixed $readCache, bool $expected): void
     {
         $binder = m::spy(BinderInterface::class);
@@ -25,6 +25,9 @@ final class TokenizerBootloaderTest extends TestCase
         $env = m::mock(EnvironmentInterface::class);
 
         $env->shouldReceive('get')->once()->with('TOKENIZER_CACHE_TARGETS', false)->andReturn($readCache);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_CLASSES', true)->andReturn(true);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_ENUMS', false)->andReturn(false);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_INTERFACES', false)->andReturn(false);
 
         $dirs->shouldReceive('get')->once()->with('app')->andReturn('app/');
         $dirs->shouldReceive('get')->once()->with('resources')->andReturn('resources/');
@@ -40,7 +43,73 @@ final class TokenizerBootloaderTest extends TestCase
         $this->assertSame($expected, $initConfig['cache']['enabled']);
     }
 
-    public static function readCacheDataProvider(): \Traversable
+    #[DataProvider('boolValuesDataProvider')]
+    public function testCastingLoadClassesEnvVariable(mixed $classes, bool $expected): void
+    {
+        $dirs = m::mock(DirectoriesInterface::class);
+        $env = m::mock(EnvironmentInterface::class);
+
+        $env->shouldReceive('get')->once()->with('TOKENIZER_CACHE_TARGETS', false)->andReturn(false);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_CLASSES', true)->andReturn($classes);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_ENUMS', false)->andReturn(false);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_INTERFACES', false)->andReturn(false);
+
+        $dirs->shouldReceive('get')->once()->with('app')->andReturn('app/');
+        $dirs->shouldReceive('get')->once()->with('resources')->andReturn('resources/');
+        $dirs->shouldReceive('get')->once()->with('config')->andReturn('config/');
+        $dirs->shouldReceive('get')->once()->with('runtime')->andReturn('runtime/');
+
+        $bootloader = new TokenizerBootloader($config = new ConfigManager(new DirectoryLoader('config')));
+        $bootloader->init(m::spy(BinderInterface::class), $dirs, $env);
+
+        $this->assertSame($expected, $config->getConfig(TokenizerConfig::CONFIG)['load']['classes']);
+    }
+
+    #[DataProvider('boolValuesDataProvider')]
+    public function testCastingLoadEnumsEnvVariable(mixed $enums, bool $expected): void
+    {
+        $dirs = m::mock(DirectoriesInterface::class);
+        $env = m::mock(EnvironmentInterface::class);
+
+        $env->shouldReceive('get')->once()->with('TOKENIZER_CACHE_TARGETS', false)->andReturn(false);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_CLASSES', true)->andReturn(false);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_ENUMS', false)->andReturn($enums);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_INTERFACES', false)->andReturn(false);
+
+        $dirs->shouldReceive('get')->once()->with('app')->andReturn('app/');
+        $dirs->shouldReceive('get')->once()->with('resources')->andReturn('resources/');
+        $dirs->shouldReceive('get')->once()->with('config')->andReturn('config/');
+        $dirs->shouldReceive('get')->once()->with('runtime')->andReturn('runtime/');
+
+        $bootloader = new TokenizerBootloader($config = new ConfigManager(new DirectoryLoader('config')));
+        $bootloader->init(m::spy(BinderInterface::class), $dirs, $env);
+
+        $this->assertSame($expected, $config->getConfig(TokenizerConfig::CONFIG)['load']['enums']);
+    }
+
+    #[DataProvider('boolValuesDataProvider')]
+    public function testCastingLoadInterfacesEnvVariable(mixed $interfaces, bool $expected): void
+    {
+        $dirs = m::mock(DirectoriesInterface::class);
+        $env = m::mock(EnvironmentInterface::class);
+
+        $env->shouldReceive('get')->once()->with('TOKENIZER_CACHE_TARGETS', false)->andReturn(false);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_CLASSES', true)->andReturn(false);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_ENUMS', false)->andReturn(false);
+        $env->shouldReceive('get')->once()->with('TOKENIZER_LOAD_INTERFACES', false)->andReturn($interfaces);
+
+        $dirs->shouldReceive('get')->once()->with('app')->andReturn('app/');
+        $dirs->shouldReceive('get')->once()->with('resources')->andReturn('resources/');
+        $dirs->shouldReceive('get')->once()->with('config')->andReturn('config/');
+        $dirs->shouldReceive('get')->once()->with('runtime')->andReturn('runtime/');
+
+        $bootloader = new TokenizerBootloader($config = new ConfigManager(new DirectoryLoader('config')));
+        $bootloader->init(m::spy(BinderInterface::class), $dirs, $env);
+
+        $this->assertSame($expected, $config->getConfig(TokenizerConfig::CONFIG)['load']['interfaces']);
+    }
+
+    public static function boolValuesDataProvider(): \Traversable
     {
         yield [true, true];
         yield [false, false];
