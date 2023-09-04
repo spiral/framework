@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+- **Other Features**
+  - [spiral/queue] Added `Spiral\Queue\Interceptor\Consume\RetryPolicyInterceptor` to enable automatic job retries 
+    with a configurable retry policy.
+
 ## 3.8.0 - 2023-08-14
 - **Medium Impact Changes**
   - [spiral/scaffolder] Method `baseDirectory` of `Spiral\Scaffolder\Config\ScaffolderConfig` class is deprecated.
