@@ -23,9 +23,6 @@ final class RetryPolicy implements RetryPolicyInterface
     private float $multiplier;
 
     /**
-     * @param positive-int|0 $maxAttempts
-     * @param positive-int|0 $delay
-     *
      * @throws InvalidArgumentException
      */
     public function __construct(int $maxAttempts, int $delay, float $multiplier = 1)
