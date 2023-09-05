@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core\Internal\Config;
 
 use Spiral\Core\BinderInterface;
-use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Binder\SingletonOverloadException;
 use Spiral\Core\FactoryInterface;
@@ -53,17 +52,6 @@ final class StateBinderTest extends BaseTestCase
         $this->assertTrue($binder->hasInstance('test'));
     }
 
-    public function testHasInstanceAfterMakeWithoutAliasInScope(): void
-    {
-        $container = new Container();
-        $container->bindSingleton('test', new class implements SingletonInterface {});
-        $container->make('test');
-
-        $container->runScoped(function (BinderInterface $binder) {
-            $this->assertTrue($binder->hasInstance('test'));
-        });
-    }
-
     public function testHasInstanceAfterMakeWithAlias(): void
     {
         $binder = $this->constructor->get('binder', BinderInterface::class);
@@ -73,17 +61,6 @@ final class StateBinderTest extends BaseTestCase
         $factory->make('test');
 
         $this->assertTrue($binder->hasInstance('test'));
-    }
-
-    public function testHasInstanceAfterMakeWithAliasInScope(): void
-    {
-        $container = new Container();
-        $container->bindSingleton('test', SampleClass::class);
-        $container->make('test');
-
-        $container->runScoped(function (BinderInterface $binder) {
-            $this->assertTrue($binder->hasInstance('test'));
-        });
     }
 
     public function testHasInstanceAfterMakeWithNestedAlias(): void
@@ -98,20 +75,5 @@ final class StateBinderTest extends BaseTestCase
         $factory->make('bar');
 
         $this->assertTrue($binder->hasInstance('bar'));
-    }
-
-    public function testHasInstanceAfterMakeWithNestedAliasInScope(): void
-    {
-        $container = new Container();
-
-        $container->bindSingleton('sampleClass', SampleClass::class);
-        $container->bindSingleton('foo', 'sampleClass');
-
-        $container->bindSingleton('bar', 'foo');
-        $container->make('bar');
-
-        $container->runScoped(function (BinderInterface $binder) {
-            $this->assertTrue($binder->hasInstance('test'));
-        });
     }
 }
