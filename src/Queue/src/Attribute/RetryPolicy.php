@@ -22,16 +22,16 @@ use Spiral\Queue\RetryPolicy as Policy;
  * })
  */
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
-final class RetryPolicy
+class RetryPolicy
 {
     /**
      * @param 0|positive-int $maxAttempts
      * @param positive-int $delay in seconds.
      */
     public function __construct(
-        private readonly int $maxAttempts = 3,
-        private readonly int $delay = 1,
-        private readonly float $multiplier = 1
+        protected readonly int $maxAttempts = 3,
+        protected readonly int $delay = 1,
+        protected readonly float $multiplier = 1
     ) {
     }
 
