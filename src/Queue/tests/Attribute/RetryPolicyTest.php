@@ -20,7 +20,7 @@ use Spiral\Tests\Queue\Attribute\Stub\WithRetryPolicyAttribute;
 final class RetryPolicyTest extends TestCase
 {
     #[DataProvider('classesProvider')]
-    public function testQueueable(string $class, ?RetryPolicy $expected): void
+    public function testRetryPolicy(string $class, ?RetryPolicy $expected): void
     {
         $reader = (new Factory())->create();
 
