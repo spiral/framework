@@ -17,17 +17,25 @@ final class Binder extends StateBinder
     use DestructorTrait;
 
     private ContainerInterface $container;
+    private Scope $scope;
 
     public function __construct(Registry $constructor)
     {
         $constructor->set('binder', $this);
 
         $this->container = $constructor->get('container', ContainerInterface::class);
+        $this->scope = $constructor->get('scope', Scope::class);
+
         parent::__construct($constructor->get('state', State::class));
     }
 
     public function hasInstance(string $alias): bool
     {
+        $parent = $this->scope->getParent();
+        if ($parent !== null && $parent->hasInstance($alias)) {
+            return true;
+        }
+
         if (!$this->container->has($alias)) {
             return false;
         }

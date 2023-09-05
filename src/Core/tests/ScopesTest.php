@@ -166,7 +166,7 @@ class ScopesTest extends TestCase
         $container->make('bar');
 
         $container->runScoped(function (Container $container) {
-            $this->assertTrue($container->hasInstance('test'));
+            $this->assertTrue($container->hasInstance('bar'));
         });
     }
 }
