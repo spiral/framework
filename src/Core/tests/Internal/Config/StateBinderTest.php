@@ -81,7 +81,7 @@ final class StateBinderTest extends BaseTestCase
         $container->bindSingleton('test', SampleClass::class);
         $container->make('test');
 
-        $container->runScoped(function (BinderInterface $binder, Container $container) {
+        $container->runScoped(function (BinderInterface $binder) {
             $this->assertTrue($binder->hasInstance('test'));
         });
     }
