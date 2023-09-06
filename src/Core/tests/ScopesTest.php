@@ -7,6 +7,7 @@ namespace Spiral\Tests\Core;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\RuntimeException;
 use Spiral\Tests\Core\Fixtures\Bucket;
@@ -130,5 +131,42 @@ class ScopesTest extends TestCase
         }));
 
         $this->assertSame('a', $c->get('bucket')->getName());
+    }
+
+    public function testHasInstanceAfterMakeWithoutAliasInScope(): void
+    {
+        $container = new Container();
+        $container->bindSingleton('test', new class implements SingletonInterface {});
+        $container->make('test');
+
+        $container->runScoped(function (Container $container) {
+            $this->assertTrue($container->hasInstance('test'));
+        });
+    }
+
+    public function testHasInstanceAfterMakeWithAliasInScope(): void
+    {
+        $container = new Container();
+        $container->bindSingleton('test', SampleClass::class);
+        $container->make('test');
+
+        $container->runScoped(function (Container $container) {
+            $this->assertTrue($container->hasInstance('test'));
+        });
+    }
+
+    public function testHasInstanceAfterMakeWithNestedAliasInScope(): void
+    {
+        $container = new Container();
+
+        $container->bindSingleton('sampleClass', SampleClass::class);
+        $container->bindSingleton('foo', 'sampleClass');
+
+        $container->bindSingleton('bar', 'foo');
+        $container->make('bar');
+
+        $container->runScoped(function (Container $container) {
+            $this->assertTrue($container->hasInstance('bar'));
+        });
     }
 }
