@@ -46,6 +46,6 @@ final class HttpCollector implements MiddlewareInterface, StateCollectorInterfac
      */
     public function reset(): void
     {
-        unset($this->request);
+        $this->request = null;
     }
 }
