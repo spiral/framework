@@ -21,8 +21,6 @@
 &middot;
 <a href="https://discord.gg/TFeEmCs">Discord</a>
 &middot;
-<a href="https://t.me/spiralphp">Telegram</a>
-&middot;
 <a href="https://twitter.com/spiralphp">Twitter</a>
 </p>
 
