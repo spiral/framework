@@ -31,7 +31,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "codedungeon/php-cli-colors": "^1.11",
-        "spiral/debug": "^3.9",
+        "spiral/debug": "^3.8.4",
         "psr/container": "^1.1|^2.0",
         "psr/log": "1 - 3"
     },
