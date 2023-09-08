@@ -30,11 +30,11 @@
         "php": ">=8.1",
         "psr/http-message": "^1.0|^2.0",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/auth": "^3.8.4",
-        "spiral/core": "^3.8.4",
-        "spiral/hmvc": "^3.8.4",
-        "spiral/models": "^3.8.4",
-        "spiral/validation": "^3.8.4"
+        "spiral/auth": "^3.9",
+        "spiral/core": "^3.9",
+        "spiral/hmvc": "^3.9",
+        "spiral/models": "^3.9",
+        "spiral/validation": "^3.9"
     },
     "require-dev": {
         "mockery/mockery": "^1.5",

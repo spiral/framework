@@ -29,14 +29,14 @@
     "require": {
         "php": ">=8.1",
         "ext-tokenizer": "*",
-        "spiral/core": "^3.8.4",
-        "spiral/logger": "^3.8.4",
+        "spiral/core": "^3.9",
+        "spiral/logger": "^3.9",
         "symfony/finder": "^5.3.7|^6.0"
     },
     "require-dev": {
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/boot": "^3.8.4",
-        "spiral/files": "^3.8.4",
+        "spiral/boot": "^3.9",
+        "spiral/files": "^3.9",
         "phpunit/phpunit": "^10.1",
         "vimeo/psalm": "^5.9"
     },
