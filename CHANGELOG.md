@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## 3.8.4 - Unreleased
+## Unreleased
+
+- **Other Features**
+    - [spiral/queue] Added `Spiral\Queue\Interceptor\Consume\RetryPolicyInterceptor` to enable automatic job retries 
+      with a configurable retry policy.
+
+## 3.8.4 - 2023-09-08
 
 - **Bug Fixes**
     - [spiral/storage] Fixed `visibility` in the Storage configuration

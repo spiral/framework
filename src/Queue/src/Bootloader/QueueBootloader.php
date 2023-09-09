@@ -25,7 +25,7 @@ use Spiral\Queue\Core\QueueInjector;
 use Spiral\Queue\Driver\{NullDriver, SyncDriver};
 use Spiral\Queue\Failed\{FailedJobHandlerInterface, LogFailedJobHandler};
 use Spiral\Queue\HandlerRegistryInterface;
-use Spiral\Queue\Interceptor\Consume\{Core as ConsumeCore, ErrorHandlerInterceptor, Handler};
+use Spiral\Queue\Interceptor\Consume\{Core as ConsumeCore, ErrorHandlerInterceptor, Handler, RetryPolicyInterceptor};
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
 use Spiral\Telemetry\TracerFactoryInterface;
 
@@ -164,6 +164,7 @@ final class QueueBootloader extends Bootloader
                 'interceptors' => [
                     'consume' => [
                         ErrorHandlerInterceptor::class,
+                        RetryPolicyInterceptor::class,
                     ],
                     'push' => [],
                 ],
