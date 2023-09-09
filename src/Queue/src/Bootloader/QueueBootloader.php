@@ -13,12 +13,13 @@ use Spiral\Config\Patch\Append;
 use Spiral\Core\{BinderInterface, FactoryInterface, InterceptableCore};
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
-use Spiral\Queue\{QueueConnectionProviderInterface,
+use Spiral\Queue\{JobHandlerLocatorListener,
+    QueueConnectionProviderInterface,
     QueueInterface,
     QueueManager,
     QueueRegistry,
-    SerializerRegistryInterface
-};
+    SerializerLocatorListener,
+    SerializerRegistryInterface};
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Core\QueueInjector;
@@ -28,10 +29,13 @@ use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\Interceptor\Consume\{Core as ConsumeCore, ErrorHandlerInterceptor, Handler, RetryPolicyInterceptor};
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
 use Spiral\Telemetry\TracerFactoryInterface;
+use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
+use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
 final class QueueBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
+        TokenizerListenerBootloader::class,
         TelemetryBootloader::class,
     ];
 
@@ -73,6 +77,15 @@ final class QueueBootloader extends Bootloader
                 $registry->setSerializer($jobType, $serializer);
             }
         });
+    }
+
+    public function boot(
+        TokenizerListenerRegistryInterface $listenerRegistry,
+        JobHandlerLocatorListener $jobHandlerLocator,
+        SerializerLocatorListener $serializerLocator
+    ): void {
+        $listenerRegistry->addListener($jobHandlerLocator);
+        $listenerRegistry->addListener($serializerLocator);
     }
 
     /**
