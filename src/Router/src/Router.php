@@ -147,7 +147,10 @@ final class Router implements RouterInterface
                 $target = $target->withCore($configurator->core);
             }
 
-            $route = new Route(\ltrim($configurator->pattern, '/'), $target, $configurator->defaults);
+            $pattern = \str_starts_with($configurator->pattern, '//')
+                ? $configurator->pattern
+                : \ltrim($configurator->pattern, '/');
+            $route = new Route($pattern, $target, $configurator->defaults);
 
             if ($configurator->middleware !== null) {
                 $route = $route->withMiddleware(...$configurator->middleware);
