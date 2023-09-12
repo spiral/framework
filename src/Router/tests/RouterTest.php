@@ -11,7 +11,11 @@ use Spiral\Router\Event\RouteNotFound;
 use Spiral\Router\Event\Routing;
 use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\UndefinedRouteException;
+use Spiral\Router\GroupRegistry;
+use Spiral\Router\Loader\Configurator\RoutingConfigurator;
+use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\Route;
+use Spiral\Router\RouteCollection;
 
 class RouterTest extends BaseTestCase
 {
@@ -74,5 +78,20 @@ class RouterTest extends BaseTestCase
 
         $this->expectException(RouteNotFoundException::class);
         $router->handle($request);
+    }
+
+    public function testImportWithHost(): void
+    {
+        $router = $this->makeRouter('https://host.com', $this->createMock(EventDispatcherInterface::class));
+
+        $configurator = new RoutingConfigurator(new RouteCollection(), $this->createMock(LoaderInterface::class));
+        $configurator->add('foo', '//<host>/register')->callable(fn () => null);
+
+        $router->import($configurator);
+        $this->container->get(GroupRegistry::class)->registerRoutes($router);
+
+        $uri = (string) $router->uri('foo', ['host' => 'some']);
+        $this->assertSame('some/register', $uri);
+        $this->assertFalse(\str_contains('https://host.com', $uri));
     }
 }
