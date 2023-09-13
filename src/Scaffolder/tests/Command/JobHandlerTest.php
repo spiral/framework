@@ -32,6 +32,7 @@ class JobHandlerTest extends AbstractCommandTestCase
         $this->assertStringContainsString('strict_types=1', $content);
         $this->assertStringContainsString('{project-name}', $content);
         $this->assertStringContainsString('@author {author-name}', $content);
+        $this->assertStringContainsString('function invoke(string $id, mixed $payload, array $headers)', $content);
         $this->assertStringContainsString('Sample Job Handler', $reflection->getDocComment());
         $this->assertTrue($reflection->hasMethod('invoke'));
     }
