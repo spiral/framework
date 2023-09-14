@@ -26,8 +26,8 @@ final class MonologConfigTest extends TestCase
         $config = new MonologConfig();
         $this->assertSame(Logger::DEBUG, $config->getEventLevel());
 
-        $config = new MonologConfig(['globalLevel' => 'foo']);
-        $this->assertSame('foo', $config->getEventLevel());
+        $config = new MonologConfig(['globalLevel' => Logger::INFO]);
+        $this->assertSame(Logger::INFO, $config->getEventLevel());
     }
 
     public function testGetHandlers(): void
@@ -44,7 +44,7 @@ final class MonologConfigTest extends TestCase
         ]);
         $this->assertInstanceOf(
             HandlerInterface::class,
-            \iterator_to_array($config->getHandlers('foo')[0])
+            \iterator_to_array($config->getHandlers('foo'))[0]
         );
     }
 
@@ -62,7 +62,7 @@ final class MonologConfigTest extends TestCase
         ]);
         $this->assertInstanceOf(
             ProcessorInterface::class,
-            \iterator_to_array($config->getProcessors('foo')[0])
+            \iterator_to_array($config->getProcessors('foo'))[0]
         );
     }
 

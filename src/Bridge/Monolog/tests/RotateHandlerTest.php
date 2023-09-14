@@ -6,6 +6,10 @@ namespace Spiral\Tests\Monolog;
 
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
+use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
+use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Boot\BootloadManager\InitializerInterface;
+use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
@@ -13,9 +17,18 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container;
 use Spiral\Monolog\Bootloader\MonologBootloader;
+use Spiral\Monolog\Config\MonologConfig;
 
 class RotateHandlerTest extends BaseTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container->bind(InvokerStrategyInterface::class, DefaultInvokerStrategy::class);
+        $this->container->bind(InitializerInterface::class, Initializer::class);
+    }
+
     public function testRotateHandler(): void
     {
         $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
@@ -45,5 +58,30 @@ class RotateHandlerTest extends BaseTest
         $this->assertInstanceOf(RotatingFileHandler::class, $handler);
 
         $this->assertSame(Logger::DEBUG, $handler->getLevel());
+    }
+
+    public function testChangeFormat(): void
+    {
+        $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
+        $finalizer->shouldReceive('addFinalizer')->once();
+
+        $this->container->bind(MonologConfig::class, new MonologConfig([
+            'format' => 'foo'
+        ]));
+        $this->container->bind(ConfiguratorInterface::class, $this->createMock(ConfiguratorInterface::class));
+        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
+
+        $autowire = new Container\Autowire('log.rotate', [
+            'filename' => 'monolog.log'
+        ]);
+
+        /** @var RotatingFileHandler $handler */
+        $handler = $autowire->resolve($this->container);
+        $this->assertInstanceOf(RotatingFileHandler::class, $handler);
+
+        $this->assertSame(Logger::DEBUG, $handler->getLevel());
+
+        $formatter = $handler->getFormatter();
+        $this->assertSame('foo', (new \ReflectionProperty($formatter, 'format'))->getValue($formatter));
     }
 }
