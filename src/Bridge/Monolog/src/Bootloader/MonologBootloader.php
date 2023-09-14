@@ -31,12 +31,15 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
         'log.rotate' => [self::class, 'logRotate'],
     ];
 
+    private const DEFAULT_FORMAT = "[%datetime%] %level_name%: %message% %context%\n";
+
     public function __construct(
-        private readonly ConfiguratorInterface $config
+        private readonly ConfiguratorInterface $config,
+        private readonly EnvironmentInterface $env,
     ) {
     }
 
-    public function init(Container $container, FinalizerInterface $finalizer, EnvironmentInterface $env): void
+    public function init(Container $container, FinalizerInterface $finalizer): void
     {
         $finalizer->addFinalizer(static function (bool $terminate) use ($container): void {
             if ($terminate) {
@@ -61,7 +64,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
         });
 
         $this->config->setDefaults(MonologConfig::CONFIG, [
-            'default' => $env->get('MONOLOG_DEFAULT_CHANNEL', MonologConfig::DEFAULT_CHANNEL),
+            'default' => $this->env->get('MONOLOG_DEFAULT_CHANNEL', MonologConfig::DEFAULT_CHANNEL),
             'globalLevel' => Logger::DEBUG,
             'handlers' => [],
         ]);
@@ -101,7 +104,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
         );
 
         return $handler->setFormatter(
-            new LineFormatter("[%datetime%] %level_name%: %message% %context%\n")
+            new LineFormatter($this->env->get('MONOLOG_FORMAT', self::DEFAULT_FORMAT))
         );
     }
 }
