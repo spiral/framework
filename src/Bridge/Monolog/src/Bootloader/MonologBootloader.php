@@ -22,8 +22,6 @@ use Spiral\Monolog\LogFactory;
 
 final class MonologBootloader extends Bootloader implements Container\SingletonInterface
 {
-    private const DEFAULT_FORMAT = "[%datetime%] %level_name%: %message% %context%\n";
-
     protected const SINGLETONS = [
         LogsInterface::class => LogFactory::class,
         LoggerInterface::class => Logger::class,
@@ -32,6 +30,8 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
     protected const BINDINGS = [
         'log.rotate' => [self::class, 'logRotate'],
     ];
+
+    private const DEFAULT_FORMAT = "[%datetime%] %level_name%: %message% %context%\n";
 
     public function __construct(
         private readonly ConfiguratorInterface $config,
