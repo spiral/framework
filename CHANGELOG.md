@@ -5,6 +5,8 @@
 - **Other Features**
     - [spiral/queue] Added `Spiral\Queue\Interceptor\Consume\RetryPolicyInterceptor` to enable automatic job retries 
       with a configurable retry policy.
+    - [spiral/monolog-bridge] Added the ability to configure the **Monolog** messages format via environment variable 
+      `MONOLOG_FORMAT`.
 
 ## 3.8.4 - 2023-09-08
 
