@@ -25,7 +25,7 @@ use Spiral\Stempler\StemplerEngine;
 use Spiral\Views\ViewManager;
 use Spiral\Views\ViewsInterface;
 
-abstract class BaseTest extends TestCase
+abstract class BaseTestCase extends TestCase
 {
     public const BOOTLOADERS = [
         StemplerBootloader::class,

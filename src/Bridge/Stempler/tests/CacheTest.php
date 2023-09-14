@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Spiral\Tests\Stempler;
 
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Config\PatchInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\ViewContext;
 
-class CacheTest extends BaseTest
+class CacheTest extends BaseTestCase
 {
     /** @var FilesInterface */
     protected $files;

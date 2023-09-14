@@ -6,6 +6,10 @@ namespace Spiral\Tests\Monolog;
 
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
+use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
+use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Boot\BootloadManager\InitializerInterface;
+use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
@@ -19,7 +23,7 @@ use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
-class HandlersTest extends BaseTest
+class HandlersTest extends BaseTestCase
 {
     public function setUp(): void
     {
@@ -42,6 +46,8 @@ class HandlersTest extends BaseTest
             }
         ));
         $this->container->bindSingleton(ListenerRegistryInterface::class, new ListenerRegistry());
+        $this->container->bind(InvokerStrategyInterface::class, DefaultInvokerStrategy::class);
+        $this->container->bind(InitializerInterface::class, Initializer::class);
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
     }
 

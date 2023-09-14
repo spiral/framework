@@ -8,7 +8,7 @@ use Spiral\Views\Exception\CompileException;
 use Spiral\Views\Exception\RenderException;
 use Spiral\Views\ViewContext;
 
-class DirectiveTest extends BaseTest
+class DirectiveTest extends BaseTestCase
 {
     public function testRenderDirectiveEx(): void
     {

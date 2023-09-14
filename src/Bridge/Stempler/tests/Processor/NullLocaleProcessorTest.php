@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler\Processor;
 
-use Spiral\Tests\Stempler\BaseTest;
+use Spiral\Tests\Stempler\BaseTestCase;
 use Spiral\Views\ViewContext;
 
-final class NullLocaleProcessorTest extends BaseTest
+final class NullLocaleProcessorTest extends BaseTestCase
 {
     public function testProcess(): void
     {

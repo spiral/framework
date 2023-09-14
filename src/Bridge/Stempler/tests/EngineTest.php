@@ -9,7 +9,7 @@ use Spiral\Views\Exception\CompileException;
 use Spiral\Views\Exception\RenderException;
 use Spiral\Views\ViewContext;
 
-class EngineTest extends BaseTest
+class EngineTest extends BaseTestCase
 {
     public function testList(): void
     {

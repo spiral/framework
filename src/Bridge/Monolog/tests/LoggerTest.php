@@ -8,6 +8,10 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
+use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Boot\BootloadManager\InitializerInterface;
+use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\Finalizer;
 use Spiral\Boot\FinalizerInterface;
@@ -18,7 +22,7 @@ use Spiral\Core\Container;
 use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\LogFactory;
 
-class LoggerTest extends BaseTest
+class LoggerTest extends BaseTestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -46,6 +50,8 @@ class LoggerTest extends BaseTest
 
         $injector->shouldReceive('createInjection')->once()->andReturn($logger);
 
+        $this->container->bind(InvokerStrategyInterface::class, DefaultInvokerStrategy::class);
+        $this->container->bind(InitializerInterface::class, Initializer::class);
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->get(LoggerInterface::class);
 
