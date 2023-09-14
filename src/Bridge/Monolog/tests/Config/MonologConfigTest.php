@@ -65,13 +65,4 @@ final class MonologConfigTest extends TestCase
             \iterator_to_array($config->getProcessors('foo'))[0]
         );
     }
-
-    public function testGetFormat(): void
-    {
-        $config = new MonologConfig();
-        $this->assertSame(MonologConfig::DEFAULT_FORMAT, $config->getFormat());
-
-        $config = new MonologConfig(['format' => 'foo']);
-        $this->assertSame('foo', $config->getFormat());
-    }
 }

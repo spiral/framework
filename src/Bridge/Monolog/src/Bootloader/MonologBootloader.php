@@ -9,7 +9,6 @@ use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
 use Monolog\ResettableInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
@@ -23,6 +22,8 @@ use Spiral\Monolog\LogFactory;
 
 final class MonologBootloader extends Bootloader implements Container\SingletonInterface
 {
+    private const DEFAULT_FORMAT = "[%datetime%] %level_name%: %message% %context%\n";
+
     protected const SINGLETONS = [
         LogsInterface::class => LogFactory::class,
         LoggerInterface::class => Logger::class,
@@ -34,11 +35,11 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
 
     public function __construct(
         private readonly ConfiguratorInterface $config,
-        private readonly ContainerInterface $container
+        private readonly EnvironmentInterface $env,
     ) {
     }
 
-    public function init(Container $container, FinalizerInterface $finalizer, EnvironmentInterface $env): void
+    public function init(Container $container, FinalizerInterface $finalizer): void
     {
         $finalizer->addFinalizer(static function (bool $terminate) use ($container): void {
             if ($terminate) {
@@ -63,10 +64,9 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
         });
 
         $this->config->setDefaults(MonologConfig::CONFIG, [
-            'default' => $env->get('MONOLOG_DEFAULT_CHANNEL', MonologConfig::DEFAULT_CHANNEL),
+            'default' => $this->env->get('MONOLOG_DEFAULT_CHANNEL', MonologConfig::DEFAULT_CHANNEL),
             'globalLevel' => Logger::DEBUG,
             'handlers' => [],
-            'format' => $env->get('MONOLOG_FORMAT', MonologConfig::DEFAULT_FORMAT),
         ]);
 
         $container->bindInjector(Logger::class, LogFactory::class);
@@ -104,7 +104,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
         );
 
         return $handler->setFormatter(
-            new LineFormatter($this->container->get(MonologConfig::class)->getFormat())
+            new LineFormatter($this->env->get('MONOLOG_FORMAT', self::DEFAULT_FORMAT))
         );
     }
 }

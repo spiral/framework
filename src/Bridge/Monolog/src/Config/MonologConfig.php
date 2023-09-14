@@ -13,13 +13,11 @@ final class MonologConfig extends InjectableConfig
 {
     public const CONFIG = 'monolog';
     public const DEFAULT_CHANNEL = 'default';
-    public const DEFAULT_FORMAT = "[%datetime%] %level_name%: %message% %context%\n";
 
     protected array $config = [
-        'default' => self::DEFAULT_CHANNEL,
+        'default'     => self::DEFAULT_CHANNEL,
         'globalLevel' => Logger::DEBUG,
-        'handlers' => [],
-        'format' => self::DEFAULT_FORMAT,
+        'handlers'    => [],
     ];
 
     public function getDefault(): string
@@ -75,11 +73,6 @@ final class MonologConfig extends InjectableConfig
 
             yield $wire;
         }
-    }
-
-    public function getFormat(): string
-    {
-        return $this->config['format'] ?? self::DEFAULT_FORMAT;
     }
 
     private function wire(Autowire|string|array $definition): ?Autowire

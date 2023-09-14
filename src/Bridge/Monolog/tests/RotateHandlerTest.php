@@ -11,13 +11,14 @@ use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\BootloadManager\InitializerInterface;
 use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
+use Spiral\Boot\Environment;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container;
 use Spiral\Monolog\Bootloader\MonologBootloader;
-use Spiral\Monolog\Config\MonologConfig;
 
 class RotateHandlerTest extends BaseTest
 {
@@ -65,9 +66,7 @@ class RotateHandlerTest extends BaseTest
         $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
         $finalizer->shouldReceive('addFinalizer')->once();
 
-        $this->container->bind(MonologConfig::class, new MonologConfig([
-            'format' => 'foo'
-        ]));
+        $this->container->bind(EnvironmentInterface::class, new Environment(['MONOLOG_FORMAT' => 'foo']));
         $this->container->bind(ConfiguratorInterface::class, $this->createMock(ConfiguratorInterface::class));
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
 
