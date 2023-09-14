@@ -6,10 +6,6 @@ namespace Spiral\Tests\Monolog;
 
 use Monolog\Logger;
 use Psr\Log\NullLogger;
-use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
-use Spiral\Boot\BootloadManager\Initializer;
-use Spiral\Boot\BootloadManager\InitializerInterface;
-use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
@@ -65,8 +61,6 @@ class TraitTest extends BaseTestCase
                 }
             }
         ));
-        $this->container->bind(InvokerStrategyInterface::class, DefaultInvokerStrategy::class);
-        $this->container->bind(InitializerInterface::class, Initializer::class);
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->bind(MonologConfig::class, new MonologConfig());
         $this->container->bind(ListenerRegistryInterface::class, new ListenerRegistry());
