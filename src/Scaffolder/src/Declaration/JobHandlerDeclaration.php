@@ -25,7 +25,7 @@ class JobHandlerDeclaration extends AbstractDeclaration implements HasInstructio
             ->setType('string');
 
         $method->addParameter('payload')
-            ->setType('array');
+            ->setType('mixed');
 
         $method->addParameter('headers')
             ->setType('array');
