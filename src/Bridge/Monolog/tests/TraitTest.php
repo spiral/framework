@@ -18,7 +18,7 @@ use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 
-class TraitTest extends BaseTest
+class TraitTest extends BaseTestCase
 {
     use LoggerTrait;
 

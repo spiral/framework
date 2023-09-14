@@ -18,7 +18,7 @@ use Spiral\Core\Container;
 use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\LogFactory;
 
-class LoggerTest extends BaseTest
+class LoggerTest extends BaseTestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -23,7 +23,7 @@ use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\LogFactory;
 
-class FactoryTest extends BaseTest
+class FactoryTest extends BaseTestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -108,8 +108,8 @@ class FactoryTest extends BaseTest
             ]
         ]), new ListenerRegistry(), $this->container);
 
-        $handler->shouldReceive('reset')->once();
-        $processor->shouldReceive('reset')->once();
+        $handler->shouldReceive('reset')->twice();
+        $processor->shouldReceive('reset')->twice();
 
         $this->container->bind(LogFactory::class, $factory);
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);

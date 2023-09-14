@@ -14,7 +14,7 @@ use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container;
 use Spiral\Monolog\Bootloader\MonologBootloader;
 
-class RotateHandlerTest extends BaseTest
+class RotateHandlerTest extends BaseTestCase
 {
     public function testRotateHandler(): void
     {

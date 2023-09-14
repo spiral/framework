@@ -17,7 +17,7 @@ use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
-class ProcessorsTest extends BaseTest
+class ProcessorsTest extends BaseTestCase
 {
     public function setUp(): void
     {

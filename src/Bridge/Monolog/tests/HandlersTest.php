@@ -19,7 +19,7 @@ use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
-class HandlersTest extends BaseTest
+class HandlersTest extends BaseTestCase
 {
     public function setUp(): void
     {

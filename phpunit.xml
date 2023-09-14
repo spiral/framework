@@ -25,6 +25,9 @@
         <testsuite name="Components Test Suite">
             <directory suffix="Test.php">src/*/tests</directory>
         </testsuite>
+        <testsuite name="Bridges Test Suite">
+            <directory suffix="Test.php">src/Bridge/*/tests</directory>
+        </testsuite>
         <testsuite name="Framework Test Suite">
             <directory>tests</directory>
         </testsuite>
