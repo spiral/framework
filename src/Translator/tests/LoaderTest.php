@@ -70,7 +70,6 @@ class LoaderTest extends TestCase
     {
         $loader = new CatalogueLoader(new TranslatorConfig([
             'directory' => __DIR__ . '/fixtures/locales/',
-            'directories' => [__DIR__ . '/fixtures/additional'],
             'loaders'   => [
                 'php' => PhpFileLoader::class,
                 'po'  => PoFileLoader::class,
