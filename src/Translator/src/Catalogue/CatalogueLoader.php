@@ -23,25 +23,29 @@ final class CatalogueLoader implements LoaderInterface
     {
         $locale = \preg_replace('/[^a-zA-Z_]/', '', \mb_strtolower($locale));
 
-        return \is_dir($this->config->getLocaleDirectory($locale));
+        foreach ($this->getDirectories() as $directory) {
+            if (\is_dir($this->config->getLocaleDirectory($locale, $directory))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getLocales(): array
     {
-        if (!\is_dir($this->config->getLocalesDirectory())) {
+        $directories = $this->getDirectories();
+        if ($directories === []) {
             return [];
         }
 
         $finder = new Finder();
-        $finder->in($this->config->getLocalesDirectory())->directories();
-
         $locales = [];
-
-        foreach ($finder->directories() as $directory) {
+        foreach ($finder->in($directories)->directories() as $directory) {
             $locales[] = $directory->getFilename();
         }
 
-        return $locales;
+        return \array_unique($locales);
     }
 
     public function loadCatalogue(string $locale): CatalogueInterface
@@ -53,10 +57,15 @@ final class CatalogueLoader implements LoaderInterface
             return $catalogue;
         }
 
-        $finder = new Finder();
-        $finder->in($this->config->getLocaleDirectory($locale));
+        $directories = [];
+        foreach ($this->getDirectories() as $directory) {
+            if (\is_dir($this->config->getLocaleDirectory($locale, $directory))) {
+                $directories[] = $this->config->getLocaleDirectory($locale, $directory);
+            }
+        }
 
-        foreach ($finder->getIterator() as $file) {
+        $finder = new Finder();
+        foreach ($finder->in($directories)->files() as $file) {
             $this->getLogger()->info(
                 \sprintf(
                     "found locale domain file '%s'",
@@ -90,5 +99,24 @@ final class CatalogueLoader implements LoaderInterface
         }
 
         return $catalogue;
+    }
+
+    /**
+     * @return array<array-key, non-empty-string>
+     */
+    private function getDirectories(): array
+    {
+        $directories = [];
+        if (\is_dir($this->config->getLocalesDirectory())) {
+            $directories[] = $this->config->getLocalesDirectory();
+        }
+
+        foreach ($this->config->getDirectories() as $directory) {
+            if (\is_dir($directory)) {
+                $directories[] = $directory;
+            }
+        }
+
+        return $directories;
     }
 }
