@@ -20,8 +20,9 @@ final class TranslatorConfig extends InjectableConfig
      * @var array{
      *     locale: string,
      *     fallbackLocale?: string,
-     *     directory: string,
-     *     localesDirectory?: string,
+     *     directory: non-empty-string,
+     *     directories: array<array-key, non-empty-string>,
+     *     localesDirectory?: non-empty-string,
      *     registerMessages?: bool,
      *     cacheLocales: bool,
      *     autoRegister: bool,
@@ -33,6 +34,7 @@ final class TranslatorConfig extends InjectableConfig
     protected array $config = [
         'locale'         => '',
         'directory'      => '',
+        'directories'    => [],
         'cacheLocales'   => true,
         'autoRegister'   => true,
         'domains'        => [],
@@ -71,14 +73,39 @@ final class TranslatorConfig extends InjectableConfig
         return !empty($this->config['autoRegister']) || !empty($this->config['registerMessages']);
     }
 
+    /**
+     * Returns application locales directory.
+     *
+     * @return non-empty-string
+     */
     public function getLocalesDirectory(): string
     {
         return $this->config['localesDirectory'] ?? $this->config['directory'] ?? '';
     }
 
-    public function getLocaleDirectory(string $locale): string
+    /**
+     * Returns additional locales directories.
+     *
+     * @return array<array-key, non-empty-string>
+     */
+    public function getDirectories(): array
     {
-        return $this->getLocalesDirectory() . $locale . '/';
+        return $this->config['directories'] ?? [];
+    }
+
+    /**
+     * @param non-empty-string $locale
+     * @param non-empty-string|null $directory
+     *
+     * @return non-empty-string
+     */
+    public function getLocaleDirectory(string $locale, ?string $directory = null): string
+    {
+        if ($directory !== null) {
+            return \rtrim($directory, '/') . '/' . $locale . '/';
+        }
+
+        return \trim($this->getLocalesDirectory(), '/') . '/' . $locale . '/';
     }
 
     /**

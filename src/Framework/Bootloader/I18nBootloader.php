@@ -9,6 +9,7 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Environment\DebugMode;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Translator\Catalogue\CacheInterface;
 use Spiral\Translator\Catalogue\CatalogueLoader;
@@ -55,6 +56,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
                 'locale' => $env->get('LOCALE', 'en'),
                 'fallbackLocale' => $env->get('LOCALE', 'en'),
                 'directory' => $dirs->get('locale'),
+                'directories' => [],
                 'autoRegister' => $debugMode->isEnabled(),
                 'loaders' => [
                     'php' => Loader\PhpFileLoader::class,
@@ -77,8 +79,13 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @noRector RemoveUnusedPrivateMethodRector
+     * @param non-empty-string $directory
      */
+    public function addDirectory(string $directory): void
+    {
+        $this->config->modify(TranslatorConfig::CONFIG, new Append('directories', null, $directory));
+    }
+
     private function identityTranslator(): IdentityTranslator
     {
         return new IdentityTranslator();

@@ -78,7 +78,8 @@ class ManagerTest extends TestCase
             'ru',
             [
                 'messages' => [
-                    'message' => 'translation'
+                    'message' => 'translation',
+                    'should_be_override' => 'changed by application translation'
                 ],
                 'views'    => [
                     'Welcome To Spiral' => 'Добро пожаловать в Spiral Framework',
@@ -91,7 +92,8 @@ class ManagerTest extends TestCase
             'ru',
             [
                 'messages' => [
-                    'message' => 'new message'
+                    'message' => 'new message',
+                    'should_be_override' => 'changed by application translation'
                 ],
                 'views'    => [
                     'Welcome To Spiral' => 'Добро пожаловать в Spiral Framework',

@@ -23,6 +23,18 @@ class LoaderTest extends TestCase
 
         $this->assertTrue($loader->hasLocale('ru'));
         $this->assertTrue($loader->hasLocale('RU'));
+        $this->assertFalse($loader->hasLocale('fr'));
+        $this->assertFalse($loader->hasLocale('FR'));
+
+        $loader = new CatalogueLoader(new TranslatorConfig([
+            'directory' => __DIR__ . '/fixtures/locales/',
+            'directories' => [__DIR__ . '/fixtures/additional'],
+        ]));
+
+        $this->assertTrue($loader->hasLocale('ru'));
+        $this->assertTrue($loader->hasLocale('RU'));
+        $this->assertTrue($loader->hasLocale('fr'));
+        $this->assertTrue($loader->hasLocale('FR'));
     }
 
     public function testGetLocales(): void
@@ -33,6 +45,21 @@ class LoaderTest extends TestCase
 
         $compared = $loader->getLocales();
         $shouldBe = ['en', 'ru'];
+        sort($shouldBe);
+        sort($compared);
+
+        $this->assertSame($shouldBe, $compared);
+    }
+
+    public function testGetLocalesWithAdditionalDirectories(): void
+    {
+        $loader = new CatalogueLoader(new TranslatorConfig([
+            'directory' => __DIR__ . '/fixtures/locales/',
+            'directories' => [__DIR__ . '/fixtures/additional'],
+        ]));
+
+        $compared = $loader->getLocales();
+        $shouldBe = ['en', 'ru', 'fr'];
         sort($shouldBe);
         sort($compared);
 
@@ -77,6 +104,51 @@ class LoaderTest extends TestCase
             'Twig версия',
             $mc->get('Twig Version', 'views')
         );
+
+        $this->assertFalse($loader->hasLocale('fr'));
+    }
+
+    public function testLoadCatalogueWithAdditionalDirectories(): void
+    {
+        $loader = new CatalogueLoader(new TranslatorConfig([
+            'directory' => __DIR__ . '/fixtures/locales/',
+            'directories' => [__DIR__ . '/fixtures/additional'],
+            'loaders'   => [
+                'php' => PhpFileLoader::class,
+                'po'  => PoFileLoader::class,
+            ],
+        ]));
+
+        $catalogue = $loader->loadCatalogue('fr');
+        $mc = $catalogue->toMessageCatalogue();
+        $this->assertTrue($mc->has('Welcome To Spiral', 'views'));
+        $this->assertSame(
+            'Bienvenue à Spirale',
+            $mc->get('Welcome To Spiral', 'views')
+        );
+
+        $this->assertTrue($loader->hasLocale('fr'));
+        $this->assertTrue($loader->hasLocale('FR'));
+        $this->assertTrue($loader->hasLocale('ru'));
+        $this->assertTrue($loader->hasLocale('RU'));
+    }
+
+    public function testApplicationTranslationShouldOverrideAdditionalTranslations(): void
+    {
+        $loader = new CatalogueLoader(new TranslatorConfig([
+            'directory' => __DIR__ . '/fixtures/locales/',
+            'directories' => [__DIR__ . '/fixtures/additional'],
+            'loaders'   => [
+                'php' => PhpFileLoader::class,
+                'po'  => PoFileLoader::class,
+            ],
+        ]));
+
+        $catalogue = $loader->loadCatalogue('ru');
+        $mc = $catalogue->toMessageCatalogue();
+
+        $this->assertTrue($mc->has('should_be_override'));
+        $this->assertSame('changed by application translation', $mc->get('should_be_override'));
     }
 
     public function testLoadCatalogueNoLoader(): void

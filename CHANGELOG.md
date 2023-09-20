@@ -7,6 +7,7 @@
       with a configurable retry policy.
     - [spiral/monolog-bridge] Added the ability to configure the **Monolog** messages format via environment variable 
       `MONOLOG_FORMAT`.
+    - [spiral/translator] Added the ability to register additional locales directories.
 
 ## 3.8.4 - 2023-09-08
 

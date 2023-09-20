@@ -80,6 +80,27 @@ class ConfigTest extends TestCase
         $this->assertSame('directory/ru/', $config->getLocaleDirectory('ru'));
     }
 
+    public function testLocaleDirectoryWithoutSlash(): void
+    {
+        $config = new TranslatorConfig([
+            'localesDirectory' => 'directory'
+        ]);
+        $this->assertSame('directory/en/', $config->getLocaleDirectory('en'));
+
+        $config = new TranslatorConfig([
+            'directory' => 'directory'
+        ]);
+        $this->assertSame('directory/en/', $config->getLocaleDirectory('en'));
+    }
+
+    public function testLocaleDirectoryWithDirectoryParam(): void
+    {
+        $config = new TranslatorConfig();
+
+        $this->assertSame('directory/en/', $config->getLocaleDirectory('en', 'directory'));
+        $this->assertSame('directory/en/', $config->getLocaleDirectory('en', 'directory/'));
+    }
+
     public function testDomains(): void
     {
         $config = new TranslatorConfig([
@@ -144,5 +165,19 @@ class ConfigTest extends TestCase
         ]);
 
         $this->assertInstanceOf(DumperInterface::class, $config->getDumper('po'));
+    }
+
+    public function testGetDirectories(): void
+    {
+        $config = new TranslatorConfig();
+        $this->assertSame([], $config->getDirectories());
+
+        $config = new TranslatorConfig([
+            'directories' => [
+                'foo',
+                'bar/'
+            ]
+        ]);
+        $this->assertSame(['foo', 'bar/'], $config->getDirectories());
     }
 }
