@@ -59,6 +59,7 @@ class RotateHandlerTest extends BaseTestCase
         $this->assertInstanceOf(RotatingFileHandler::class, $handler);
 
         $this->assertSame(Logger::DEBUG, $handler->getLevel());
+        $this->assertTrue($handler->getBubble());
     }
 
     public function testChangeFormat(): void

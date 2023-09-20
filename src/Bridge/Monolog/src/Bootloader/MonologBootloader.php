@@ -92,7 +92,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
         string $filename,
         int $level = Logger::DEBUG,
         int $maxFiles = 0,
-        bool $bubble = false
+        bool $bubble = true
     ): HandlerInterface {
         $handler = new RotatingFileHandler(
             $filename,

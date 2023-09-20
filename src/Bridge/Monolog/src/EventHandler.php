@@ -33,6 +33,6 @@ final class EventHandler extends AbstractHandler
             $listener($e);
         }
 
-        return true;
+        return false === $this->bubble;
     }
 }
