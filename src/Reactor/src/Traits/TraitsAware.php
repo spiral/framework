@@ -36,9 +36,9 @@ trait TraitsAware
         return $this->getTraits()->get($name);
     }
 
-    public function addTrait(string $name, array|bool|null $deprecatedParam = null): TraitUse
+    public function addTrait(string $name): TraitUse
     {
-        return TraitUse::fromElement($this->element->addTrait($name, $deprecatedParam));
+        return TraitUse::fromElement($this->element->addTrait($name));
     }
 
     public function removeTrait(string $name): static
