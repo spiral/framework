@@ -44,14 +44,17 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $this->assertEmpty($namespace->getUses());
 
-        $namespace->addUse('foo');
-        $namespace->addUse('bar', 'baz');
-        $this->assertSame(['baz' => 'bar', 'foo' => 'foo'], $namespace->getUses());
-        $this->assertStringContainsString('use bar as baz;', $namespace->__toString());
-        $this->assertStringContainsString('use foo;', $namespace->__toString());
+        $namespace->addUse('Some\\Other');
+        $namespace->addUse('Other\\Some', 'Baz');
+        $namespace->addClass('Test')->setExtends('Some\\Other')->addImplement('Baz');
 
-        $namespace->removeUse('bar');
-        $this->assertSame(['foo' => 'foo'], $namespace->getUses());
+        $this->assertSame(['Baz' => 'Other\\Some', 'Other' => 'Some\\Other'], $namespace->getUses());
+
+        $this->assertStringContainsString('use Other\\Some as Baz;', $namespace->__toString());
+        $this->assertStringContainsString('use Some\\Other;', $namespace->__toString());
+
+        $namespace->removeUse('Other\\Some');
+        $this->assertSame(['Other' => 'Some\\Other'], $namespace->getUses());
     }
 
     public function testUseFunction(): void
@@ -62,6 +65,8 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $namespace->addUseFunction('foo');
         $namespace->addUseFunction('bar', 'baz');
+        $namespace->addClass('Test')->addMethod('test')->addBody('foo();baz();');
+
         $this->assertSame(['baz' => 'bar', 'foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameFunction));
         $this->assertStringContainsString('use function bar as baz;', $namespace->__toString());
         $this->assertStringContainsString('use function foo;', $namespace->__toString());
@@ -78,6 +83,8 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $namespace->addUseConstant('foo');
         $namespace->addUseConstant('bar', 'baz');
+        $namespace->addClass('Test')->addMethod('test')->addBody('foo::some;baz::some;');
+
         $this->assertSame(['baz' => 'bar', 'foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameConstant));
         $this->assertStringContainsString('use const bar as baz;', $namespace->__toString());
         $this->assertStringContainsString('use const foo;', $namespace->__toString());
@@ -175,6 +182,7 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
     public function testRender(): void
     {
         $namespace = new PhpNamespace('Foo\\Bar');
+        $namespace->addClass('Test');
 
         $this->assertStringContainsString('namespace Foo\\Bar;', $namespace->__toString());
     }
