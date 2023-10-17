@@ -9,7 +9,7 @@ use Spiral\Tests\Prototype\Fixtures\TestApp;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class ListCommandTest extends AbstractCommandsTestCase
+class UsageCommandTest extends AbstractCommandsTestCase
 {
     public function testList(): void
     {
@@ -19,7 +19,7 @@ class ListCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        $this->assertStringContainsString('prototype:list', $result);
+        $this->assertStringContainsString('prototype:usage', $result);
         $this->assertStringContainsString('prototype:inject', $result);
     }
 
@@ -27,7 +27,7 @@ class ListCommandTest extends AbstractCommandsTestCase
     {
         $inp = new ArrayInput([]);
         $out = new BufferedOutput();
-        $this->app->get(Console::class)->run('prototype:list', $inp, $out);
+        $this->app->get(Console::class)->run('prototype:usage', $inp, $out);
 
         $result = $out->fetch();
 
@@ -41,7 +41,7 @@ class ListCommandTest extends AbstractCommandsTestCase
 
         $inp = new ArrayInput([]);
         $out = new BufferedOutput();
-        $this->app->get(Console::class)->run('prototype:list', $inp, $out);
+        $this->app->get(Console::class)->run('prototype:usage', $inp, $out);
 
         $result = $out->fetch();
 
@@ -57,7 +57,7 @@ class ListCommandTest extends AbstractCommandsTestCase
 
         $inp = new ArrayInput([]);
         $out = new BufferedOutput();
-        $this->app->get(Console::class)->run('prototype:list', $inp, $out);
+        $this->app->get(Console::class)->run('prototype:usage', $inp, $out);
 
         $result = $out->fetch();
 

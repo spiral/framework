@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Command;
 
-final class ListCommand extends AbstractCommand
+final class UsageCommand extends AbstractCommand
 {
-    public const NAME        = 'prototype:list';
+    public const NAME = 'prototype:usage';
     public const DESCRIPTION = 'List all prototyped classes';
 
     /**
