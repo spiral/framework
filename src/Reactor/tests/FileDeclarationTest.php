@@ -130,6 +130,7 @@ final class FileDeclarationTest extends BaseWithElementsTestCase
     {
         $file = new FileDeclaration();
         $file->addUse('Foo\\Bar');
+        $file->addClass('Test')->addImplement('Foo\\Bar');
 
         $this->assertStringContainsString('use Foo\\Bar;', (string) $file);
     }

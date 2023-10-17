@@ -8,6 +8,9 @@ use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Nette\PhpGenerator\PromotedParameter as NettePromotedParameter;
 use Spiral\Reactor\Traits;
 
+/**
+ * @property NettePromotedParameter $element
+ */
 final class PromotedParameter extends Parameter
 {
     use Traits\CommentAware;
