@@ -13,6 +13,9 @@ use Spiral\Reactor\Partial\Method;
 use Spiral\Reactor\Partial\TraitUse;
 use Spiral\Reactor\Traits;
 
+/**
+ * @extends AbstractDeclaration<EnumType>
+ */
 class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
 {
     use Traits\ConstantsAware;

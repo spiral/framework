@@ -11,6 +11,9 @@ use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\Traits;
 
+/**
+ * @property NetteParameter $element
+ */
 class Parameter implements NamedInterface, AggregableInterface
 {
     use Traits\AttributeAware;

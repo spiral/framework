@@ -10,6 +10,8 @@ use Spiral\Reactor\Traits;
 
 /**
  * Generic element declaration.
+ *
+ * @template T of ClassLike
  */
 abstract class AbstractDeclaration implements DeclarationInterface, NamedInterface, \Stringable
 {
@@ -17,6 +19,9 @@ abstract class AbstractDeclaration implements DeclarationInterface, NamedInterfa
     use Traits\NameAware;
     use Traits\AttributeAware;
 
+    /**
+     * @var T
+     */
     protected ClassLike $element;
 
     public function __toString(): string
