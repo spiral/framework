@@ -11,16 +11,14 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class UsageCommandTest extends AbstractCommandsTestCase
 {
-    public function testList(): void
+    public function testCommandRegistered(): void
     {
-        $inp = new ArrayInput([]);
         $out = new BufferedOutput();
-        $this->app->get(Console::class)->run('list', $inp, $out);
+        $this->app->get(Console::class)->run('list', new ArrayInput([]), $out);
 
         $result = $out->fetch();
 
         $this->assertStringContainsString('prototype:usage', $result);
-        $this->assertStringContainsString('prototype:inject', $result);
     }
 
     public function testPrototypes(): void

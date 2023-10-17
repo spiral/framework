@@ -16,6 +16,16 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class InjectCommandTest extends AbstractCommandsTestCase
 {
+    public function testCommandRegistered(): void
+    {
+        $out = new BufferedOutput();
+        $this->app->get(Console::class)->run('list', new ArrayInput([]), $out);
+
+        $result = $out->fetch();
+
+        $this->assertStringContainsString('prototype:inject', $result);
+    }
+
     public function testEmptyInjection(): void
     {
         $target = EmptyInjectionClass::class;

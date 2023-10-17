@@ -79,6 +79,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     public function init(ConsoleBootloader $console): void
     {
         $console->addCommand(Command\DumpCommand::class);
+        $console->addCommand(Command\ListCommand::class);
         $console->addCommand(Command\UsageCommand::class);
         $console->addCommand(Command\InjectCommand::class);
 
