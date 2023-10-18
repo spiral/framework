@@ -7,6 +7,7 @@ namespace Spiral\Prototype;
 use ReflectionClass;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Prototype\Annotation\Prototyped;
+use Spiral\Prototype\Bootloader\PrototypeBootloader;
 use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 use Spiral\Tokenizer\Traits\TargetTrait;
@@ -21,7 +22,7 @@ final class PrototypeLocatorListener implements TokenizationListenerInterface
 
     public function __construct(
         private readonly ReaderInterface $reader,
-        private readonly PrototypeRegistry $registry
+        private readonly PrototypeBootloader $prototype
     ) {
     }
 
@@ -38,7 +39,7 @@ final class PrototypeLocatorListener implements TokenizationListenerInterface
     public function finalize(): void
     {
         foreach ($this->attributes as $property => $class) {
-            $this->registry->bindProperty($property, $class);
+            $this->prototype->bindProperty($property, $class);
         }
     }
 }

@@ -19,9 +19,9 @@ final class DumpCommand extends AbstractCommand
      *
      * @throws \ReflectionException
      */
-    public function perform(PrototypeBootloader $prototypeBootloader): int
+    public function perform(): int
     {
-        $dependencies = $this->registry->getPropertyBindings();
+        $dependencies = $this->getRegistry()->getPropertyBindings();
         if ($dependencies === []) {
             $this->writeln('<comment>No prototyped shortcuts found.</comment>');
 
