@@ -6,27 +6,22 @@ namespace Spiral\Prototype\Command;
 
 final class ListCommand extends AbstractCommand
 {
-    public const NAME        = 'prototype:list';
-    public const DESCRIPTION = 'List all prototyped classes';
+    public const NAME = 'prototype:list';
+    public const DESCRIPTION = 'List all declared prototype dependencies';
 
-    /**
-     * List all prototype classes.
-     */
     public function perform(): int
     {
-        $prototyped = $this->locator->getTargetClasses();
-        if ($prototyped === []) {
-            $this->writeln('<comment>No prototyped classes found.</comment>');
+        $bindings = $this->registry->getPropertyBindings();
+        if ($bindings === []) {
+            $this->comment('No prototype dependencies found.');
 
             return self::SUCCESS;
         }
 
-        $grid = $this->table(['Class:', 'Property:', 'Target:']);
+        $grid = $this->table(['Name:', 'Target:']);
 
-        foreach ($prototyped as $class) {
-            $proto = $this->getPrototypeProperties($class, $prototyped);
-
-            $grid->addRow([$class->getName(), $this->mergeNames($proto), $this->mergeTargets($proto)]);
+        foreach ($bindings as $binding) {
+            $grid->addRow([$binding->property, $binding->type->name()]);
         }
 
         $grid->render();

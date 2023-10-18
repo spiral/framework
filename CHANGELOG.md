@@ -8,6 +8,7 @@
     - [spiral/monolog-bridge] Added the ability to configure the **Monolog** messages format via environment variable 
       `MONOLOG_FORMAT`.
     - [spiral/translator] Added the ability to register additional locales directories.
+    - [spiral/prototype] Added console command `Spiral\Prototype\Command\ListCommand` for listing prototype dependencies.
 
 ## 3.8.4 - 2023-09-08
 
