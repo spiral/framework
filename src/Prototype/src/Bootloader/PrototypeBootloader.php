@@ -32,7 +32,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     ];
 
     protected const SINGLETONS = [
-        PrototypeRegistry::class => [self::class, 'initRegistry']
+        PrototypeRegistry::class => [self::class, 'initRegistry'],
     ];
 
     // Default spiral specific shortcuts, automatically checked on existence.
