@@ -26,12 +26,11 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
         try {
             return $core->callAction($controller, $action, $parameters);
         } catch (\Throwable $e) {
-            $attribute = $this->reader->firstClassMetadata(new \ReflectionClass($controller), Attribute::class);
-            if ($attribute === null) {
+            $policy = $this->getRetryPolicy($e, new \ReflectionClass($controller));
+
+            if ($policy === null) {
                 throw $e;
             }
-
-            $policy = $this->getRetryPolicy($e, $attribute);
 
             $headers = $parameters['headers'] ?? [];
             $attempts = (int)($headers['attempts'][0] ?? 0);
@@ -49,14 +48,16 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
         }
     }
 
-    private function getRetryPolicy(\Throwable $exception, Attribute $attribute): RetryPolicy
+    private function getRetryPolicy(\Throwable $exception, \ReflectionClass $handler): ?RetryPolicy
     {
+        $attribute = $this->reader->firstClassMetadata($handler, Attribute::class);
+
         if ($exception instanceof JobException && $exception->getPrevious() !== null) {
             $exception = $exception->getPrevious();
         }
 
         $policy = $exception instanceof RetryableExceptionInterface ? $exception->getRetryPolicy() : null;
 
-        return $policy ?? $attribute->getRetryPolicy();
+        return $policy ?? $attribute?->getRetryPolicy() ?? null;
     }
 }

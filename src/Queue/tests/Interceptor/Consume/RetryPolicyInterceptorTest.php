@@ -87,6 +87,26 @@ final class RetryPolicyInterceptorTest extends TestCase
         }
     }
 
+    public function testWithoutRetryPolicyAttribute(): void
+    {
+        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(null);
+
+        $this->core
+            ->expects($this->once())
+            ->method('callAction')
+            ->with(self::class, 'bar', [])
+            ->willThrowException(new TestRetryException(
+                retryPolicy: new \Spiral\Queue\RetryPolicy(maxAttempts: 2, delay: 4)
+            ));
+
+        try {
+            $this->interceptor->process(self::class, 'bar', [], $this->core);
+        } catch (RetryException $e) {
+            $this->assertSame(4, $e->getOptions()->getDelay());
+            $this->assertSame(['attempts' => ['1']], $e->getOptions()->getHeaders());
+        }
+    }
+
     public function testWithRetryPolicyInAttribute(): void
     {
         $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
