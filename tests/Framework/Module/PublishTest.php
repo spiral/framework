@@ -44,8 +44,6 @@ final class PublishTest extends ConsoleTestCase
 
     public function testReplace(): void
     {
-        $this->runCommand('conf');
-
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -62,7 +60,6 @@ final class PublishTest extends ConsoleTestCase
 
     public function testFollow(): void
     {
-        $this->runCommand('conf');
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -81,7 +78,6 @@ final class PublishTest extends ConsoleTestCase
     {
         $this->expectException(PublishException::class);
 
-        $this->runCommand('conf');
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -96,7 +92,6 @@ final class PublishTest extends ConsoleTestCase
 
     public function testReadonly(): void
     {
-        $this->runCommand('conf');
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -128,7 +123,6 @@ final class PublishTest extends ConsoleTestCase
 
     public function testPublishDirectoryReplace(): void
     {
-        $this->runCommand('conf');
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -146,7 +140,6 @@ final class PublishTest extends ConsoleTestCase
 
     public function testPublishDirectoryFollow(): void
     {
-        $this->runCommand('conf');
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -164,7 +157,6 @@ final class PublishTest extends ConsoleTestCase
 
     public function testPublishDirectoryReplaceStar(): void
     {
-        $this->runCommand('conf');
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -182,7 +174,6 @@ final class PublishTest extends ConsoleTestCase
 
     public function testPublishDirectoryFollowStar(): void
     {
-        $this->runCommand('conf');
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -202,8 +193,6 @@ final class PublishTest extends ConsoleTestCase
     {
         $this->expectException(PublishException::class);
 
-        $this->runCommand('conf');
-
         $this->runCommand('publish', [
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
@@ -215,8 +204,6 @@ final class PublishTest extends ConsoleTestCase
     public function testInvalidDir(): void
     {
         $this->expectException(PublishException::class);
-
-        $this->runCommand('conf');
 
         $this->runCommand('publish', [
             'type'   => 'follow',

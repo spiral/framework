@@ -6,6 +6,8 @@ namespace Spiral\Prototype\Annotation;
 
 /**
  * Singular annotation line.
+ *
+ * @deprecated since v3.9.0
  */
 final class Line
 {

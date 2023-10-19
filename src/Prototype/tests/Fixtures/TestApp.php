@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\Fixtures;
 
+use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
 use Spiral\Prototype\Bootloader\PrototypeBootloader;
 use Spiral\Prototype\PrototypeRegistry;
@@ -37,8 +38,13 @@ class TestApp extends Kernel
         $registry->bindProperty('two', InheritedInjection\InjectionTwo::class);
     }
 
-    public function get(string $target)
+    public function get(string $target): mixed
     {
         return $this->container->get($target);
+    }
+
+    public function getContainer(): Container
+    {
+        return $this->container;
     }
 }

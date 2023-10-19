@@ -22,7 +22,6 @@ final class ExportTest extends ConsoleTestCase
         $this->assertFalse(is_file(sys_get_temp_dir().'/messages.ru.php'));
 
         $this->runCommand('i18n:index');
-        $this->runCommand('configure');
 
         $this->runCommand(
             'i18n:export',

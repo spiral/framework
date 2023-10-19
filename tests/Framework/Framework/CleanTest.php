@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Framework;
 
+use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Tests\Framework\ConsoleTestCase;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -14,10 +16,15 @@ final class CleanTest extends ConsoleTestCase
 {
     public int $defaultVerbosityLevel = OutputInterface::VERBOSITY_DEBUG;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->getContainer()->get(RuntimeDirectory::class)->ensure(new NullOutput());
+    }
+
     public function testClean(): void
     {
-        $this->runCommand('configure');
-
         $this->assertConsoleCommandOutputContainsStrings('cache:clean', strings: [
             'Runtime cache has been cleared'
         ]);
@@ -33,7 +40,7 @@ final class CleanTest extends ConsoleTestCase
 
     public function testCleanVerbose(): void
     {
-        $this->runCommand('configure');
+        $this->runCommand('i18n:index');
 
         $this->assertConsoleCommandOutputContainsStrings('cache:clean', strings: [
             'i18n'
