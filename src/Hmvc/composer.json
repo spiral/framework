@@ -28,7 +28,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.9",
+        "spiral/core": "^3.10",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
@@ -47,7 +47,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.9.x-dev"
+            "dev-master": "3.10.x-dev"
         }
     },
     "config": {
