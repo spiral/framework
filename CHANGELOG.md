@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.9.0 - 2023-10-19
 
 - **Other Features**
     - [spiral/queue] Added `Spiral\Queue\Interceptor\Consume\RetryPolicyInterceptor` to enable automatic job retries 
