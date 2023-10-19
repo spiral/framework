@@ -18,8 +18,7 @@ abstract class AbstractCommand extends Command
 
     public function __construct(
         protected readonly PrototypeLocator $locator,
-        protected readonly NodeExtractor $extractor,
-        protected readonly PrototypeRegistry $registry
+        protected readonly NodeExtractor $extractor
     ) {
         parent::__construct();
     }
@@ -46,6 +45,11 @@ abstract class AbstractCommand extends Command
     protected function getExtractor(): PropertyExtractor
     {
         return $this->container->get(PropertyExtractor::class);
+    }
+
+    protected function getRegistry(): PrototypeRegistry
+    {
+        return $this->container->get(PrototypeRegistry::class);
     }
 
     /**
@@ -100,7 +104,7 @@ abstract class AbstractCommand extends Command
         $result = [];
         foreach ($proto as $name) {
             if (!isset($result[$name])) {
-                $result[$name] = $this->registry->resolveProperty($name);
+                $result[$name] = $this->getRegistry()->resolveProperty($name);
             }
         }
 

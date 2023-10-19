@@ -9,9 +9,6 @@ use Spiral\Core\Exception\ScopeException;
 use Spiral\Prototype\Exception\PrototypeException;
 use Spiral\Prototype\PrototypeRegistry;
 
-/**
- * This DocComment is auto-generated, do not edit or commit this file to repository.
- */
 trait PrototypeTrait
 {
     /**

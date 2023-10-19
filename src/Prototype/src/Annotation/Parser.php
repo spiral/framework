@@ -6,6 +6,8 @@ namespace Spiral\Prototype\Annotation;
 
 /**
  * Simple annotation parser and compiler.
+ *
+ * @deprecated since v3.9.0
  */
 final class Parser
 {

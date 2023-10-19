@@ -9,6 +9,7 @@ use Spiral\App\SomeService\HttpClient;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Prototype\Bootloader\PrototypeBootloader;
+use Spiral\Prototype\Config\PrototypeConfig;
 use Spiral\Prototype\PrototypeRegistry;
 use Spiral\Tests\Framework\BaseTestCase;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
@@ -47,5 +48,31 @@ final class PrototypeBootloaderTest extends BaseTestCase
 
         $this->assertSame(Client::class, $registry->resolveProperty('service.client')->type->fullName);
         $this->assertSame(HttpClient::class, $registry->resolveProperty('service.client.http')->type->fullName);
+    }
+
+    public function testDefaultConfig(): void
+    {
+        $bindings = (new \ReflectionClassConstant(PrototypeBootloader::class, 'DEFAULT_SHORTCUTS'))
+            ->getValue();
+
+        // extra bindings from test
+        $bindings['service.client.http'] = HttpClient::class;
+        $bindings['service.client'] = Client::class;
+
+        $this->assertSame(['bindings' => $bindings], $this->getConfig(PrototypeConfig::CONFIG));
+    }
+
+    public function testPrototypeRegistryShouldBeCreatedLazy(): void
+    {
+        $stateRef = new \ReflectionProperty($this->getContainer(), 'state');
+
+        $this->assertFalse(isset($stateRef->getValue($this->getContainer())->singletons[PrototypeRegistry::class]));
+
+        $this->getContainer()->get(PrototypeRegistry::class);
+
+        $this->assertInstanceOf(
+            PrototypeRegistry::class,
+            $stateRef->getValue($this->getContainer())->singletons[PrototypeRegistry::class]
+        );
     }
 }

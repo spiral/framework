@@ -9,9 +9,12 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
+use Spiral\Config\ConfiguratorInterface;
+use Spiral\Config\Patch\Append;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Core\Container;
 use Spiral\Prototype\Command;
+use Spiral\Prototype\Config\PrototypeConfig;
 use Spiral\Prototype\PrototypeLocatorListener;
 use Spiral\Prototype\PrototypeRegistry;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
@@ -26,6 +29,10 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         Bootloader\CoreBootloader::class,
         TokenizerListenerBootloader::class,
         AttributesBootloader::class,
+    ];
+
+    protected const SINGLETONS = [
+        PrototypeRegistry::class => [self::class, 'initRegistry'],
     ];
 
     // Default spiral specific shortcuts, automatically checked on existence.
@@ -72,7 +79,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
     ];
 
     public function __construct(
-        private readonly PrototypeRegistry $registry
+        private readonly ConfiguratorInterface $config
     ) {
     }
 
@@ -92,26 +99,32 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
             'prototype:dump',
             '<fg=magenta>[prototype]</fg=magenta> <fg=cyan>actualizing prototype injections...</fg=cyan>'
         );
+
+        $this->config->setDefaults(
+            PrototypeConfig::CONFIG,
+            [
+                'bindings' => self::DEFAULT_SHORTCUTS,
+            ]
+        );
     }
 
     public function boot(
-        ContainerInterface $container,
         TokenizerListenerRegistryInterface $listenerRegistry,
         PrototypeLocatorListener $listener
     ): void {
-        $this->initDefaults($container);
-
         $listenerRegistry->addListener($listener);
     }
 
     public function bindProperty(string $property, string $type): void
     {
-        $this->registry->bindProperty($property, $type);
+        $this->config->modify(PrototypeConfig::CONFIG, new Append('bindings', $property, $type));
     }
 
-    private function initDefaults(ContainerInterface $container): void
+    private function initRegistry(PrototypeConfig $config, ContainerInterface $container): PrototypeRegistry
     {
-        foreach (self::DEFAULT_SHORTCUTS as $property => $shortcut) {
+        $registry = new PrototypeRegistry($container);
+
+        foreach ($config->getBindings() as $property => $shortcut) {
             if (\is_array($shortcut) && isset($shortcut['resolve'])) {
                 if (isset($shortcut['with'])) {
                     // check dependencies
@@ -125,7 +138,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
                 try {
                     $target = $container->get($shortcut['resolve']);
                     if (\is_object($target)) {
-                        $this->bindProperty($property, $target::class);
+                        $registry->bindProperty($property, $target::class);
                     }
                 } catch (ContainerExceptionInterface) {
                     continue;
@@ -135,8 +148,10 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
             }
 
             if (\is_string($shortcut) && (\class_exists($shortcut, true) || \interface_exists($shortcut, true))) {
-                $this->bindProperty($property, $shortcut);
+                $registry->bindProperty($property, $shortcut);
             }
         }
+
+        return $registry;
     }
 }

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\Command;
 
-use Spiral\Prototype\Annotation;
-use Spiral\Prototype\Bootloader\PrototypeBootloader;
 use Spiral\Prototype\Traits\PrototypeTrait;
+use Spiral\Reactor\FileDeclaration;
+use Spiral\Reactor\TraitDeclaration;
+use Spiral\Reactor\Writer;
 
 final class DumpCommand extends AbstractCommand
 {
@@ -19,36 +20,25 @@ final class DumpCommand extends AbstractCommand
      *
      * @throws \ReflectionException
      */
-    public function perform(PrototypeBootloader $prototypeBootloader): int
+    public function perform(Writer $writer): int
     {
-        $dependencies = $this->registry->getPropertyBindings();
+        $dependencies = $this->getRegistry()->getPropertyBindings();
         if ($dependencies === []) {
-            $this->writeln('<comment>No prototyped shortcuts found.</comment>');
+            $this->comment('No prototyped shortcuts found.');
 
             return self::SUCCESS;
         }
 
         $this->write('Updating <fg=yellow>PrototypeTrait</fg=yellow> DOCComment... ');
 
-        $trait = new \ReflectionClass(PrototypeTrait::class);
-        $docComment = $trait->getDocComment();
-        if ($docComment === false) {
-            $this->write('<fg=red>DOCComment is missing</fg=red>');
-
-            return self::FAILURE;
-        }
-
-        $filename = $trait->getFileName();
+        $ref = new \ReflectionClass(PrototypeTrait::class);
+        $file = FileDeclaration::fromReflection($ref);
+        $trait = $file->getTrait(PrototypeTrait::class);
 
         try {
-            \file_put_contents(
-                $filename,
-                \str_replace(
-                    $docComment,
-                    $this->buildAnnotation($dependencies),
-                    \file_get_contents($filename)
-                )
-            );
+            $this->buildAnnotation($trait, $dependencies);
+
+            $writer->write($ref->getFileName(), $file);
         } catch (\Throwable $e) {
             $this->write('<fg=red>' . $e->getMessage() . "</fg=red>\n");
 
@@ -70,21 +60,14 @@ final class DumpCommand extends AbstractCommand
         return self::SUCCESS;
     }
 
-    private function buildAnnotation(array $dependencies): string
+    private function buildAnnotation(TraitDeclaration $trait, array $dependencies): void
     {
-        $an = new Annotation\Parser('');
-        $an->lines[] = new Annotation\Line(
-            'This DocComment is auto-generated, do not edit or commit this file to repository.'
-        );
-        $an->lines[] = new Annotation\Line('');
+        $trait->setComment(null);
+        $trait->addComment('This DocComment is auto-generated, do not edit or commit this file to repository.');
+        $trait->addComment('');
 
         foreach ($dependencies as $dependency) {
-            $an->lines[] = new Annotation\Line(
-                \sprintf('\\%s $%s', $dependency->type->fullName, $dependency->var),
-                'property'
-            );
+            $trait->addComment(\sprintf('@property \\%s $%s', $dependency->type->fullName, $dependency->var));
         }
-
-        return $an->compile();
     }
 }

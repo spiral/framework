@@ -48,6 +48,11 @@ class FileDeclaration implements \Stringable, DeclarationInterface
         return self::fromElement((new Factory())->fromCode($code));
     }
 
+    public static function fromReflection(\ReflectionClass $reflection): static
+    {
+        return self::fromElement((new Factory())->fromCode(\file_get_contents($reflection->getFileName())));
+    }
+
     public function addNamespace(string|PhpNamespace $namespace): PhpNamespace
     {
         if ($namespace instanceof PhpNamespace) {

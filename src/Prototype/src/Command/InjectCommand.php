@@ -8,7 +8,6 @@ use Spiral\Prototype\Exception\ClassNotDeclaredException;
 use Spiral\Prototype\Injector;
 use Spiral\Prototype\NodeExtractor;
 use Spiral\Prototype\PrototypeLocator;
-use Spiral\Prototype\PrototypeRegistry;
 use Symfony\Component\Console\Input\InputOption;
 
 final class InjectCommand extends AbstractCommand
@@ -21,12 +20,9 @@ final class InjectCommand extends AbstractCommand
 
     private readonly Injector $injector;
 
-    public function __construct(
-        PrototypeLocator $locator,
-        NodeExtractor $extractor,
-        PrototypeRegistry $registry
-    ) {
-        parent::__construct($locator, $extractor, $registry);
+    public function __construct(PrototypeLocator $locator, NodeExtractor $extractor)
+    {
+        parent::__construct($locator, $extractor);
         $this->injector = new Injector();
     }
 

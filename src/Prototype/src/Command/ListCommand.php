@@ -11,7 +11,7 @@ final class ListCommand extends AbstractCommand
 
     public function perform(): int
     {
-        $bindings = $this->registry->getPropertyBindings();
+        $bindings = $this->getRegistry()->getPropertyBindings();
         if ($bindings === []) {
             $this->comment('No prototype dependencies found.');
 
