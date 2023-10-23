@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Reactor;
 
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Reactor\Aggregator\Classes;
@@ -19,8 +20,16 @@ final class FileDeclarationTest extends BaseWithElementsTestCase
     public function testFromCode(): void
     {
         $file = FileDeclaration::fromCode('<?php
-             final class MyClass implements Countable
+             namespace Foo\Bar;
+
+             use Baz\Bar\ClassA;
+             use Baz\Bar\ClassB;
+
+             final class MyClass implements \Countable
              {
+                 public const TEST = [
+                     ClassA::class => ClassB::class,
+                 ];
              }'
         );
 
@@ -31,6 +40,7 @@ final class FileDeclarationTest extends BaseWithElementsTestCase
 
         $this->assertSame('MyClass', $class->getName());
         $this->assertTrue($class->isFinal());
+        $this->assertInstanceOf(Literal::class, $class->getConstant('TEST')->getValue());
         $this->assertSame([\Countable::class], $class->getImplements());
     }
 
