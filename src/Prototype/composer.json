@@ -32,8 +32,8 @@
         "nikic/php-parser": "^4.15.5",
         "doctrine/inflector": "^1.4|^2.0",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/config": "^3.10",
-        "spiral/reactor": "^3.10"
+        "spiral/config": "^3.9.1",
+        "spiral/reactor": "^3.9.1"
     },
     "autoload": {
         "psr-4": {
