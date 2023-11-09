@@ -12,7 +12,7 @@ use Spiral\Queue\Exception\JobException;
 use Spiral\Queue\Exception\RetryableExceptionInterface;
 use Spiral\Queue\Exception\RetryException;
 use Spiral\Queue\Options;
-use Spiral\Queue\RetryPolicy;
+use Spiral\Queue\RetryPolicyInterface;
 
 final class RetryPolicyInterceptor implements CoreInterceptorInterface
 {
@@ -48,7 +48,7 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
         }
     }
 
-    private function getRetryPolicy(\Throwable $exception, \ReflectionClass $handler): ?RetryPolicy
+    private function getRetryPolicy(\Throwable $exception, \ReflectionClass $handler): ?RetryPolicyInterface
     {
         $attribute = $this->reader->firstClassMetadata($handler, Attribute::class);
 

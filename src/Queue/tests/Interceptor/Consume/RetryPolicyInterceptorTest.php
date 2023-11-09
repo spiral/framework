@@ -10,6 +10,7 @@ use Spiral\Queue\Attribute\RetryPolicy;
 use Spiral\Queue\Exception\JobException;
 use Spiral\Queue\Exception\RetryException;
 use Spiral\Queue\Interceptor\Consume\RetryPolicyInterceptor;
+use Spiral\Queue\RetryPolicyInterface;
 use Spiral\Tests\Queue\Exception\TestRetryException;
 use Spiral\Tests\Queue\TestCase;
 
@@ -155,6 +156,43 @@ final class RetryPolicyInterceptorTest extends TestCase
             );
         } catch (RetryException $e) {
             $this->assertSame(8, $e->getOptions()->getDelay());
+            $this->assertSame(['attempts' => ['2']], $e->getOptions()->getHeaders());
+        }
+    }
+
+    public function testWithCustomRetryPolicyInException(): void
+    {
+        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
+            new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25)
+        );
+
+        $this->core
+            ->expects($this->once())
+            ->method('callAction')
+            ->with(self::class, 'bar', ['headers' => ['attempts' => ['1']]])
+            ->willThrowException(new TestRetryException(
+                retryPolicy: new class implements RetryPolicyInterface {
+                    public function isRetryable(\Throwable $exception, int $attempts = 0): bool
+                    {
+                        return true;
+                    }
+
+                    public function getDelay(int $attempts = 0): int
+                    {
+                        return 5;
+                    }
+                }
+            ));
+
+        try {
+            $this->interceptor->process(
+                self::class,
+                'bar',
+                ['headers' => ['attempts' => ['1']]],
+                $this->core
+            );
+        } catch (RetryException $e) {
+            $this->assertSame(5, $e->getOptions()->getDelay());
             $this->assertSame(['attempts' => ['2']], $e->getOptions()->getHeaders());
         }
     }
