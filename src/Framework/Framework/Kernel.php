@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Framework;
 
 use Spiral\Boot\AbstractKernel;
+use Spiral\Boot\Bootloader\BootloaderRegistryInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
@@ -79,9 +80,14 @@ abstract class Kernel extends AbstractKernel
      */
     protected function bootstrap(): void
     {
+        $registry = $this->container->get(BootloaderRegistryInterface::class);
+        foreach ($this->defineAppBootloaders() as $bootloader) {
+            $registry->addApplicationBootloader($bootloader);
+        }
+
         $self = $this;
         $this->bootloader->bootload(
-            $this->defineAppBootloaders(),
+            $registry->getApplicationBootloaders(),
             [
                 static function () use ($self): void {
                     $self->fireCallbacks($self->bootingCallbacks);
