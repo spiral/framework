@@ -79,10 +79,28 @@ final class BootloaderRegistry implements BootloaderRegistryInterface
      */
     private function addBootloader(string|array $bootloader, string $section): void
     {
-        if (\is_string($bootloader) && \in_array($bootloader, $this->{$section}, true)) {
+        if ($this->hasBootloader($bootloader)) {
             return;
         }
 
-        $this->{$section}[] = $bootloader;
+        \is_string($bootloader)
+            ? $this->{$section}[] = $bootloader
+            : $this->{$section}[\array_key_first($bootloader)] = $bootloader[\array_key_first($bootloader)]
+        ;
+    }
+
+    /**
+     * @param TClass|array<TClass, array<string, mixed>> $bootloader
+     */
+    private function hasBootloader(string|array $bootloader): bool
+    {
+        if (\is_array($bootloader)) {
+            return false;
+        }
+
+        return
+            \in_array($bootloader, $this->system, true) ||
+            \in_array($bootloader, $this->load, true) ||
+            \in_array($bootloader, $this->application, true);
     }
 }
