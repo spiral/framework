@@ -30,7 +30,7 @@
         "php": ">=8.1",
         "spiral/files": "^3.10",
         "doctrine/inflector": "^1.4|^2.0",
-        "nette/php-generator": "4.0.9"
+        "nette/php-generator": "^4.1.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.1",
