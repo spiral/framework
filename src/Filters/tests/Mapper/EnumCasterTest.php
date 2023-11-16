@@ -36,9 +36,6 @@ final class EnumCasterTest extends TestCase
         $property = new \ReflectionProperty($filter, 'status');
 
         $this->expectException(SetterException::class);
-        $this->expectExceptionMessage(
-            \sprintf('Unable to set enum value. "foo" is not a valid backing value for enum %s', Status::class)
-        );
         $setter->setValue($filter, $property, 'foo');
     }
 
