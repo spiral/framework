@@ -134,6 +134,10 @@ final class AttributeMapper
     ): string {
         $attribute = $this->reader->firstPropertyMetadata($property, CastingErrorMessage::class);
 
-        return $attribute !== null ? $attribute->getMessage($exception, $value) : $exception->getMessage();
+        if ($attribute === null) {
+            return $exception->getMessage();
+        }
+
+        return $attribute->getMessage($exception, $value) ?? $exception->getMessage();
     }
 }
