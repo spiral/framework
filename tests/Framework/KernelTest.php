@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework;
 
+use Spiral\Boot\Bootloader\BootloaderRegistry;
+use Spiral\Boot\Bootloader\BootloaderRegistryInterface;
 use Spiral\Boot\Exception\BootException;
 use Spiral\App\TestApp;
 use Spiral\Core\Container;
@@ -77,5 +79,21 @@ class KernelTest extends BaseTestCase
 
         $this->assertTrue($callback1);
         $this->assertTrue($callback2);
+    }
+
+    public function testBootloaderRegistryShouldBeBoundAsSingleton(): void
+    {
+        $this->assertContainerBoundAsSingleton(BootloaderRegistryInterface::class, BootloaderRegistry::class);
+    }
+
+    public function testCustomBootloaderRegistry(): void
+    {
+        $registry = $this->createMock(BootloaderRegistryInterface::class);
+        $container = new Container();
+        $container->bindSingleton(BootloaderRegistryInterface::class, $registry);
+
+        $kernel = TestApp::create(directories: ['root' => __DIR__. '/../'], container: $container);
+
+        $this->assertSame($registry, $kernel->getContainer()->get(BootloaderRegistryInterface::class));
     }
 }
