@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Model\Mapper;
 
+use Spiral\Filters\Exception\SetterException;
 use Spiral\Filters\Model\FilterInterface;
 
 final class EnumCaster implements CasterInterface
@@ -25,6 +26,13 @@ final class EnumCaster implements CasterInterface
          */
         $enum = $type->getName();
 
-        $property->setValue($filter, $value instanceof $enum ? $value : $enum::from($value));
+        try {
+            $property->setValue($filter, $value instanceof $enum ? $value : $enum::from($value));
+        } catch (\Throwable $e) {
+            throw new SetterException(
+                previous: $e,
+                message: \sprintf('Unable to set enum value. %s', $e->getMessage()),
+            );
+        }
     }
 }

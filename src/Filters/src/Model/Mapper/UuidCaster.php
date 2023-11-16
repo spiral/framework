@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Model\Mapper;
 
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use Spiral\Filters\Exception\SetterException;
 use Spiral\Filters\Model\FilterInterface;
 
 final class UuidCaster implements CasterInterface
@@ -22,10 +24,14 @@ final class UuidCaster implements CasterInterface
 
     public function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
     {
-        $property->setValue(
-            $filter,
-            $value instanceof UuidInterface ? $value : \Ramsey\Uuid\Uuid::fromString($value)
-        );
+        try {
+            $property->setValue($filter, $value instanceof UuidInterface ? $value : Uuid::fromString($value));
+        } catch (\Throwable $e) {
+            throw new SetterException(
+                previous: $e,
+                message: \sprintf('Unable to set UUID value. %s', $e->getMessage()),
+            );
+        }
     }
 
     private function implements(string $haystack, string $interface): bool
