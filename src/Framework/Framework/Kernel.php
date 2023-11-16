@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Framework;
 
 use Spiral\Boot\AbstractKernel;
-use Spiral\Boot\Bootloader\BootloaderRegistryInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
@@ -69,6 +68,8 @@ abstract class Kernel extends AbstractKernel
      * Get list of defined application bootloaders
      *
      * @return array<int, class-string>|array<class-string, array<non-empty-string, mixed>>
+     *
+     * @deprecated since v3.10 Use {@see defineBootloaders()} instead. Will be removed in v4.0
      */
     protected function defineAppBootloaders(): array
     {
@@ -80,14 +81,9 @@ abstract class Kernel extends AbstractKernel
      */
     protected function bootstrap(): void
     {
-        $registry = $this->container->get(BootloaderRegistryInterface::class);
-        foreach ($this->defineAppBootloaders() as $bootloader) {
-            $registry->addApplicationBootloader($bootloader);
-        }
-
         $self = $this;
         $this->bootloader->bootload(
-            $registry->getApplicationBootloaders(),
+            $this->defineAppBootloaders(),
             [
                 static function () use ($self): void {
                     $self->fireCallbacks($self->bootingCallbacks);

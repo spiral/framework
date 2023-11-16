@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Boot\Bootloader;
 
 /**
- * @psalm-type TClass = class-string<BootloaderInterface>
+ * @psalm-import-type TClass from \Spiral\Boot\BootloadManagerInterface
  */
 interface BootloaderRegistryInterface
 {
@@ -16,7 +16,7 @@ interface BootloaderRegistryInterface
      *  1. SimpleBootloader::class,
      *  2. [SimpleBootloader::class => ['option' => 'value']]
      */
-    public function addSystemBootloader(string|array $bootloader): void;
+    public function registerSystem(string|array $bootloader): void;
 
     /**
      * @param TClass|array<TClass, array<string, mixed>> $bootloader
@@ -25,16 +25,7 @@ interface BootloaderRegistryInterface
      *  1. SimpleBootloader::class,
      *  2. [SimpleBootloader::class => ['option' => 'value']]
      */
-    public function addLoadBootloader(string|array $bootloader): void;
-
-    /**
-     * @param TClass|array<TClass, array<string, mixed>> $bootloader
-     *
-     * Examples:
-     *  1. SimpleBootloader::class,
-     *  2. [SimpleBootloader::class => ['option' => 'value']]
-     */
-    public function addApplicationBootloader(string|array $bootloader): void;
+    public function register(string|array $bootloader): void;
 
     /**
      * @return array<TClass>|array<TClass, array<string, mixed>>
@@ -44,10 +35,5 @@ interface BootloaderRegistryInterface
     /**
      * @return array<TClass>|array<TClass, array<string, mixed>>
      */
-    public function getLoadBootloaders(): array;
-
-    /**
-     * @return array<TClass>|array<TClass, array<string, mixed>>
-     */
-    public function getApplicationBootloaders(): array;
+    public function getBootloaders(): array;
 }

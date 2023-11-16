@@ -5,48 +5,48 @@ declare(strict_types=1);
 namespace Spiral\Boot\Bootloader;
 
 /**
- * @psalm-import-type TClass from BootloaderRegistryInterface
+ * @psalm-import-type TClass from \Spiral\Boot\BootloadManagerInterface
  */
 final class BootloaderRegistry implements BootloaderRegistryInterface
 {
-    private const SYSTEM = 'system';
-    private const LOAD = 'load';
-    private const APPLICATION = 'application';
-
     /**
-     * @param array<TClass>|array<TClass, array<string, mixed>> $system
-     * @param array<TClass>|array<TClass, array<string, mixed>> $load
-     * @param array<TClass>|array<TClass, array<string, mixed>> $application
+     * @param array<TClass>|array<TClass, array<string, mixed>> $systemBootloaders
+     * @param array<TClass>|array<TClass, array<string, mixed>> $bootloaders
      */
     public function __construct(
-        private array $system = [],
-        private array $load = [],
-        private array $application = [],
+        private array $systemBootloaders = [],
+        private array $bootloaders = [],
     ) {
     }
 
     /**
      * @param TClass|array<TClass, array<string, mixed>> $bootloader
      */
-    public function addSystemBootloader(string|array $bootloader): void
+    public function registerSystem(string|array $bootloader): void
     {
-        $this->addBootloader($bootloader, self::SYSTEM);
+        if ($this->hasBootloader($bootloader)) {
+            return;
+        }
+
+        \is_string($bootloader)
+            ? $this->systemBootloaders[] = $bootloader
+            : $this->systemBootloaders[\array_key_first($bootloader)] = $bootloader[\array_key_first($bootloader)]
+        ;
     }
 
     /**
      * @param TClass|array<TClass, array<string, mixed>> $bootloader
      */
-    public function addLoadBootloader(string|array $bootloader): void
+    public function register(string|array $bootloader): void
     {
-        $this->addBootloader($bootloader, self::LOAD);
-    }
+        if ($this->hasBootloader($bootloader)) {
+            return;
+        }
 
-    /**
-     * @param TClass|array<TClass, array<string, mixed>> $bootloader
-     */
-    public function addApplicationBootloader(string|array $bootloader): void
-    {
-        $this->addBootloader($bootloader, self::APPLICATION);
+        \is_string($bootloader)
+            ? $this->bootloaders[] = $bootloader
+            : $this->bootloaders[\array_key_first($bootloader)] = $bootloader[\array_key_first($bootloader)]
+        ;
     }
 
     /**
@@ -54,39 +54,15 @@ final class BootloaderRegistry implements BootloaderRegistryInterface
      */
     public function getSystemBootloaders(): array
     {
-        return $this->system;
+        return $this->systemBootloaders;
     }
 
     /**
      * @return array<TClass>|array<TClass, array<string, mixed>>
      */
-    public function getLoadBootloaders(): array
+    public function getBootloaders(): array
     {
-        return $this->load;
-    }
-
-    /**
-     * @return array<TClass>|array<TClass, array<string, mixed>>
-     */
-    public function getApplicationBootloaders(): array
-    {
-        return $this->application;
-    }
-
-    /**
-     * @param TClass|array<TClass, array<string, mixed>> $bootloader
-     * @param 'system'|'load'|'application' $section
-     */
-    private function addBootloader(string|array $bootloader, string $section): void
-    {
-        if ($this->hasBootloader($bootloader)) {
-            return;
-        }
-
-        \is_string($bootloader)
-            ? $this->{$section}[] = $bootloader
-            : $this->{$section}[\array_key_first($bootloader)] = $bootloader[\array_key_first($bootloader)]
-        ;
+        return $this->bootloaders;
     }
 
     /**
@@ -99,8 +75,7 @@ final class BootloaderRegistry implements BootloaderRegistryInterface
         }
 
         return
-            \in_array($bootloader, $this->system, true) ||
-            \in_array($bootloader, $this->load, true) ||
-            \in_array($bootloader, $this->application, true);
+            \in_array($bootloader, $this->systemBootloaders, true) ||
+            \in_array($bootloader, $this->bootloaders, true);
     }
 }

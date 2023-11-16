@@ -176,7 +176,7 @@ abstract class AbstractKernel implements KernelInterface
                     $this->bootloader->bootload($registry->getSystemBootloaders());
                     $this->fireCallbacks($this->runningCallbacks);
 
-                    $this->bootload($registry->getLoadBootloaders());
+                    $this->bootload($registry->getBootloaders());
                     $this->bootstrap();
 
                     $this->fireCallbacks($this->bootstrappedCallbacks);
@@ -367,9 +367,6 @@ abstract class AbstractKernel implements KernelInterface
 
     private function initBootloaderRegistry(): BootloaderRegistryInterface
     {
-        return new BootloaderRegistry(
-            $this->defineSystemBootloaders(),
-            $this->defineBootloaders(),
-        );
+        return new BootloaderRegistry($this->defineSystemBootloaders(), $this->defineBootloaders());
     }
 }
