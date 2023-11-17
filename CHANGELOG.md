@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+- **Other Features**
+    - [spiral/boot] Added `Spiral\Boot\Bootloader\BootloaderRegistryInterface` and `Spiral\Boot\Bootloader\BootloaderRegistry`
+      to allow for easier management of bootloaders.
+
 ## 3.9.0 - 2023-10-19
 
 - **Other Features**

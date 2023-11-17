@@ -6,6 +6,8 @@ namespace Spiral\Boot;
 
 use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Boot\Bootloader\BootloaderRegistry;
+use Spiral\Boot\Bootloader\BootloaderRegistryInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
@@ -135,6 +137,10 @@ abstract class AbstractKernel implements KernelInterface
         \assert($bootloadManager instanceof BootloadManagerInterface);
         $container->bind(BootloadManagerInterface::class, $bootloadManager);
 
+        if (!$container->has(BootloaderRegistryInterface::class)) {
+            $container->bindSingleton(BootloaderRegistryInterface::class, [self::class, 'initBootloaderRegistry']);
+        }
+
         return new static(
             $container,
             $exceptionHandler,
@@ -164,11 +170,13 @@ abstract class AbstractKernel implements KernelInterface
             // will protect any against env overwrite action
             $this->container->runScope(
                 [EnvironmentInterface::class => $environment],
-                function (): void {
-                    $this->bootloader->bootload($this->defineSystemBootloaders());
+                function (Container $container): void {
+                    $registry = $container->get(BootloaderRegistryInterface::class);
+
+                    $this->bootloader->bootload($registry->getSystemBootloaders());
                     $this->fireCallbacks($this->runningCallbacks);
 
-                    $this->bootload();
+                    $this->bootload($registry->getBootloaders());
                     $this->bootstrap();
 
                     $this->fireCallbacks($this->bootstrappedCallbacks);
@@ -335,11 +343,11 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Bootload all registered classes using BootloadManager.
      */
-    private function bootload(): void
+    private function bootload(array $bootloaders = []): void
     {
         $self = $this;
         $this->bootloader->bootload(
-            $this->defineBootloaders(),
+            $bootloaders,
             [
                 static function () use ($self): void {
                     $self->fireCallbacks($self->bootingCallbacks);
@@ -355,5 +363,10 @@ abstract class AbstractKernel implements KernelInterface
         return $this->container->has(EventDispatcherInterface::class)
             ? $this->container->get(EventDispatcherInterface::class)
             : null;
+    }
+
+    private function initBootloaderRegistry(): BootloaderRegistryInterface
+    {
+        return new BootloaderRegistry($this->defineSystemBootloaders(), $this->defineBootloaders());
     }
 }
