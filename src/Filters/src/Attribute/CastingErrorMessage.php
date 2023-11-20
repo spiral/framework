@@ -12,6 +12,9 @@ class CastingErrorMessage
 {
     protected ?\Closure $callback = null;
 
+    /**
+     * @param callable(SetterException $exception, mixed $value): string $callback
+     */
     public function __construct(
         protected ?string $message = null,
         ?callable $callback = null
