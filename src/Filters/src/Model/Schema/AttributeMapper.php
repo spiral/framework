@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Filters\Model\Schema;
 
 use Spiral\Attributes\ReaderInterface;
+use Spiral\Filters\Attribute\CastingErrorMessage;
 use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
@@ -43,10 +44,11 @@ final class AttributeMapper
             /** @var object $attribute */
             foreach ($this->reader->getPropertyMetadata($property) as $attribute) {
                 if ($attribute instanceof AbstractInput) {
+                    $value = $attribute->getValue($input, $property);
                     try {
-                        $this->setValue($filter, $property, $attribute->getValue($input, $property));
+                        $this->setValue($filter, $property, $value);
                     } catch (SetterException $e) {
-                        $errors[$property->getName()] = $e->getMessage();
+                        $errors[$property->getName()] = $this->createErrorMessage($e, $property, $value);
                     }
                     $schema[$property->getName()] = $attribute->getSchema($property);
                 } elseif ($attribute instanceof NestedFilter) {
@@ -60,7 +62,7 @@ final class AttributeMapper
                         try {
                             $this->setValue($filter, $property, $value);
                         } catch (SetterException $e) {
-                            $errors[$property->getName()] = $e->getMessage();
+                            $errors[$property->getName()] = $this->createErrorMessage($e, $property, $value);
                         }
                     } catch (ValidationException $e) {
                         if ($this->allowsNull($property)) {
@@ -92,11 +94,7 @@ final class AttributeMapper
                         }
                     }
 
-                    try {
-                        $this->setValue($filter, $property, $propertyValues);
-                    } catch (SetterException $e) {
-                        $errors[$property->getName()] = $e->getMessage();
-                    }
+                    $this->setValue($filter, $property, $propertyValues);
                     $schema[$property->getName()] = [$attribute->class, $prefix . '.*'];
                 } elseif ($attribute instanceof Setter) {
                     $setters[$property->getName()][] = $attribute;
@@ -127,5 +125,19 @@ final class AttributeMapper
         $type = $property->getType();
 
         return $type === null || $type->allowsNull();
+    }
+
+    private function createErrorMessage(
+        SetterException $exception,
+        \ReflectionProperty $property,
+        mixed $value = null
+    ): string {
+        $attribute = $this->reader->firstPropertyMetadata($property, CastingErrorMessage::class);
+
+        if ($attribute === null) {
+            return $exception->getMessage();
+        }
+
+        return $attribute->getMessage($exception, $value) ?? $exception->getMessage();
     }
 }
