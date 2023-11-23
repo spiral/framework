@@ -19,14 +19,13 @@ final class BootloadManagerTest extends TestCase
 {
     public function testWithoutInvokerStrategy(): void
     {
-        $container = new Container();
-        $container->bind(InitializerInterface::class, new Initializer($container, $container));
+        $this->container->bind(InitializerInterface::class, new Initializer($this->container, $this->container));
 
         $bootloader = new BootloadManager(
-            $container,
-            $container,
-            $container,
-            $container->get(InitializerInterface::class)
+            $this->container,
+            $this->container,
+            $this->container,
+            $this->container->get(InitializerInterface::class)
         );
 
         $bootloader->bootload($classes = [
@@ -43,15 +42,16 @@ final class BootloadManagerTest extends TestCase
             }
         ]);
 
-        $this->assertTrue($container->has('abc'));
-        $this->assertTrue($container->hasInstance('cde'));
-        $this->assertTrue($container->hasInstance('def'));
-        $this->assertTrue($container->hasInstance('efg'));
-        $this->assertTrue($container->has('single'));
-        $this->assertTrue($container->has('ghi'));
-        $this->assertNotInstanceOf(SampleBoot::class, $container->get('efg'));
-        $this->assertInstanceOf(SampleBoot::class, $container->get('ghi'));
+        $this->assertTrue($this->container->has('abc'));
+        $this->assertTrue($this->container->hasInstance('cde'));
+        $this->assertTrue($this->container->hasInstance('def'));
+        $this->assertTrue($this->container->hasInstance('efg'));
+        $this->assertTrue($this->container->has('single'));
+        $this->assertTrue($this->container->has('ghi'));
+        $this->assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
+        $this->assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
 
+        $classes = \array_filter($classes, static fn(string $class): bool => $class !== SampleClass::class);
         $this->assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class,
