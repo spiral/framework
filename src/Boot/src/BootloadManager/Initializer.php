@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Boot\BootloadManager;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Boot\Attribute\BootloaderRules;
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\BootloadManager\Checker\BootloaderChecker;
@@ -13,7 +13,7 @@ use Spiral\Boot\BootloadManager\Checker\BootloaderCheckerInterface;
 use Spiral\Boot\BootloadManager\Checker\CanBootedChecker;
 use Spiral\Boot\BootloadManager\Checker\CheckerRegistry;
 use Spiral\Boot\BootloadManager\Checker\ClassExistsChecker;
-use Spiral\Boot\BootloadManager\Checker\RulesChecker;
+use Spiral\Boot\BootloadManager\Checker\ConfigChecker;
 use Spiral\Boot\BootloadManagerInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
@@ -41,7 +41,7 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
      *
      * @param TClass[]|array<TClass, array<string,mixed>> $classes
      */
-    public function init(array $classes, bool $useRules = true): \Generator
+    public function init(array $classes, bool $useConfig = true): \Generator
     {
         $this->checker ??= $this->initDefaultChecker();
 
@@ -51,9 +51,9 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
                 $bootloader = $options;
                 $options = [];
             }
-            $options = $useRules ? $this->getBootloaderRules($bootloader, $options) : [];
+            $options = $useConfig ? $this->getBootloadConfig($bootloader, $options) : [];
 
-            if (!$this->checker->canInitialize($bootloader, $useRules ? $options : null)) {
+            if (!$this->checker->canInitialize($bootloader, $useConfig ? $options : null)) {
                 continue;
             }
 
@@ -67,7 +67,7 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
             yield from $this->initBootloader($bootloader);
             yield $bootloader::class => [
                 'bootloader' => $bootloader,
-                'options' => $options instanceof BootloaderRules ? $options->args : $options,
+                'options' => $options instanceof BootloadConfig ? $options->args : $options,
             ];
         }
     }
@@ -162,7 +162,7 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
     protected function initDefaultChecker(): BootloaderCheckerInterface
     {
         $registry = new CheckerRegistry();
-        $registry->register($this->container->get(RulesChecker::class));
+        $registry->register($this->container->get(ConfigChecker::class));
         $registry->register(new ClassExistsChecker());
         $registry->register(new CanBootedChecker($this->bootloaders));
 
@@ -170,35 +170,35 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
     }
 
     /**
-     * Returns merged rules. Attribute rules have lower priority.
+     * Returns merged config. Attribute config have lower priority.
      *
      * @param class-string<BootloaderInterface>|BootloaderInterface $bootloader
      */
-    private function getBootloaderRules(
+    private function getBootloadConfig(
         string|BootloaderInterface $bootloader,
-        array|callable|BootloaderRules $rules
-    ): BootloaderRules {
-        if ($rules instanceof \Closure) {
-            $rules = $this->container instanceof ResolverInterface
-                ? $rules(...$this->container->resolveArguments(new \ReflectionFunction($rules)))
-                : $rules();
+        array|callable|BootloadConfig $config
+    ): BootloadConfig {
+        if ($config instanceof \Closure) {
+            $config = $this->container instanceof ResolverInterface
+                ? $config(...$this->container->resolveArguments(new \ReflectionFunction($config)))
+                : $config();
         }
-        $attr = $this->getBootloaderRulesAttribute($bootloader);
+        $attr = $this->getBootloadConfigAttribute($bootloader);
 
-        $getArgument = static function (string $key, bool $override, mixed $default = []) use ($rules, $attr): mixed {
+        $getArgument = static function (string $key, bool $override, mixed $default = []) use ($config, $attr): mixed {
             return match (true) {
-                $rules instanceof BootloaderRules && $override => $rules->{$key},
-                $rules instanceof BootloaderRules && !$override && \is_array($default) =>
-                    $rules->{$key} + ($attr->{$key} ?? []),
-                $rules instanceof BootloaderRules && !$override && \is_bool($default) => $rules->{$key},
-                \is_array($rules) && $rules !== [] && $key === 'args' => $rules,
+                $config instanceof BootloadConfig && $override => $config->{$key},
+                $config instanceof BootloadConfig && !$override && \is_array($default) =>
+                    $config->{$key} + ($attr->{$key} ?? []),
+                $config instanceof BootloadConfig && !$override && \is_bool($default) => $config->{$key},
+                \is_array($config) && $config !== [] && $key === 'args' => $config,
                 default => $attr->{$key} ?? $default,
             };
         };
 
-        $override = $rules instanceof BootloaderRules ? $rules->override : true;
+        $override = $config instanceof BootloadConfig ? $config->override : true;
 
-        return new BootloaderRules(
+        return new BootloadConfig(
             args: $getArgument('args', $override),
             enabled: $getArgument('enabled', $override, true),
             allowEnv: $getArgument('allowEnv', $override),
@@ -209,12 +209,12 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
     /**
      * @param class-string<BootloaderInterface>|BootloaderInterface $bootloader
      */
-    private function getBootloaderRulesAttribute(string|BootloaderInterface $bootloader): ?BootloaderRules
+    private function getBootloadConfigAttribute(string|BootloaderInterface $bootloader): ?BootloadConfig
     {
         $attribute = null;
         if ($bootloader instanceof BootloaderInterface || \class_exists($bootloader)) {
             $ref = new \ReflectionClass($bootloader);
-            $attribute = $ref->getAttributes(BootloaderRules::class)[0] ?? null;
+            $attribute = $ref->getAttributes(BootloadConfig::class)[0] ?? null;
         }
 
         if ($attribute === null) {

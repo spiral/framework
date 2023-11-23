@@ -16,9 +16,9 @@ use Spiral\Tests\Boot\Fixtures\BootloaderI;
 use Spiral\Tests\Boot\Fixtures\BootloaderJ;
 use Spiral\Tests\Boot\Fixtures\BootloaderK;
 
-final class AttributeBootloaderRulesTest extends InitializerTestCase
+final class AttributeBootloadConfigTest extends InitializerTestCase
 {
-    public function testDefaultBootloaderRules(): void
+    public function testDefaultBootloadConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderE::class, BootloaderD::class]));
 
@@ -46,7 +46,7 @@ final class AttributeBootloaderRulesTest extends InitializerTestCase
         ], $result);
     }
 
-    public function testDisabledRules(): void
+    public function testDisabledConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderF::class, BootloaderD::class], false));
 

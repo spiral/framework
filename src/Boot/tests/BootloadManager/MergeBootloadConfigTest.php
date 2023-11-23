@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\BootloadManager;
 
-use Spiral\Boot\Attribute\BootloaderRules;
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Tests\Boot\Fixtures\BootloaderD;
 use Spiral\Tests\Boot\Fixtures\BootloaderF;
 use Spiral\Tests\Boot\Fixtures\BootloaderG;
 use Spiral\Tests\Boot\Fixtures\BootloaderH;
 use Spiral\Tests\Boot\Fixtures\BootloaderI;
 
-final class MergeBootloaderRulesTest extends InitializerTestCase
+final class MergeBootloadConfigTest extends InitializerTestCase
 {
     public function testOverrideEnabled(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderF::class => new BootloaderRules(enabled: true),
+            BootloaderF::class => new BootloadConfig(enabled: true),
             BootloaderD::class
         ]));
 
@@ -29,7 +29,7 @@ final class MergeBootloaderRulesTest extends InitializerTestCase
     public function testOverrideArgs(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderG::class => new BootloaderRules(args: ['foo' => 'bar']),
+            BootloaderG::class => new BootloadConfig(args: ['foo' => 'bar']),
         ]));
 
         $this->assertEquals([
@@ -40,7 +40,7 @@ final class MergeBootloaderRulesTest extends InitializerTestCase
     public function testMergeArgs(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderG::class => new BootloaderRules(args: ['foo' => 'bar', 'a' => 'baz'], override: false),
+            BootloaderG::class => new BootloadConfig(args: ['foo' => 'bar', 'a' => 'baz'], override: false),
         ]));
 
         $this->assertEquals([
@@ -54,23 +54,23 @@ final class MergeBootloaderRulesTest extends InitializerTestCase
 
     public function testOverrideAllowEnv(): void
     {
-        $ref = new \ReflectionMethod($this->initializer, 'getBootloaderRules');
-        $rules = $ref->invoke(
+        $ref = new \ReflectionMethod($this->initializer, 'getBootloadConfig');
+        $config = $ref->invoke(
             $this->initializer,
             BootloaderH::class,
-            new BootloaderRules(allowEnv: ['foo' => 'bar'])
+            new BootloadConfig(allowEnv: ['foo' => 'bar'])
         );
 
-        $this->assertEquals(['foo' => 'bar'], $rules->allowEnv);
+        $this->assertEquals(['foo' => 'bar'], $config->allowEnv);
     }
 
     public function testMergeAllowEnv(): void
     {
-        $ref = new \ReflectionMethod($this->initializer, 'getBootloaderRules');
-        $rules = $ref->invoke(
+        $ref = new \ReflectionMethod($this->initializer, 'getBootloadConfig');
+        $config = $ref->invoke(
             $this->initializer,
             BootloaderH::class,
-            new BootloaderRules(allowEnv: ['APP_ENV' => 'dev', 'foo' => 'bar'], override: false)
+            new BootloadConfig(allowEnv: ['APP_ENV' => 'dev', 'foo' => 'bar'], override: false)
         );
 
         $this->assertEquals([
@@ -78,28 +78,28 @@ final class MergeBootloaderRulesTest extends InitializerTestCase
             'APP_ENV' => 'dev',
             'APP_DEBUG' => false,
             'RR_MODE' => ['http']
-        ], $rules->allowEnv);
+        ], $config->allowEnv);
     }
 
     public function testOverrideDenyEnv(): void
     {
-        $ref = new \ReflectionMethod($this->initializer, 'getBootloaderRules');
-        $rules = $ref->invoke(
+        $ref = new \ReflectionMethod($this->initializer, 'getBootloadConfig');
+        $config = $ref->invoke(
             $this->initializer,
             BootloaderI::class,
-            new BootloaderRules(denyEnv: ['foo' => 'bar'])
+            new BootloadConfig(denyEnv: ['foo' => 'bar'])
         );
 
-        $this->assertEquals(['foo' => 'bar'], $rules->denyEnv);
+        $this->assertEquals(['foo' => 'bar'], $config->denyEnv);
     }
 
     public function testMergeDenyEnv(): void
     {
-        $ref = new \ReflectionMethod($this->initializer, 'getBootloaderRules');
-        $rules = $ref->invoke(
+        $ref = new \ReflectionMethod($this->initializer, 'getBootloadConfig');
+        $config = $ref->invoke(
             $this->initializer,
             BootloaderI::class,
-            new BootloaderRules(denyEnv: ['DB_HOST' => 'localhost', 'foo' => 'bar'], override: false)
+            new BootloadConfig(denyEnv: ['DB_HOST' => 'localhost', 'foo' => 'bar'], override: false)
         );
 
         $this->assertEquals([
@@ -107,6 +107,6 @@ final class MergeBootloaderRulesTest extends InitializerTestCase
             'RR_MODE' => 'http',
             'APP_ENV' => ['production', 'prod'],
             'DB_HOST' => 'localhost',
-        ], $rules->denyEnv);
+        ], $config->denyEnv);
     }
 }

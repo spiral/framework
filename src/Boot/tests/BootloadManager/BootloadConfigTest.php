@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace Spiral\Tests\Boot\BootloadManager;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Spiral\Boot\Attribute\BootloaderRules;
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Boot\Environment;
 use Spiral\Boot\Environment\AppEnvironment;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Tests\Boot\Fixtures\BootloaderA;
 use Spiral\Tests\Boot\Fixtures\BootloaderD;
 
-final class BootloaderRulesTest extends InitializerTestCase
+final class BootloadConfigTest extends InitializerTestCase
 {
-    public function testDefaultBootloaderRules(): void
+    public function testDefaultBootloadConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => new BootloaderRules(),
+            BootloaderA::class => new BootloadConfig(),
             BootloaderD::class
         ]));
 
@@ -30,7 +30,7 @@ final class BootloaderRulesTest extends InitializerTestCase
     public function testDisabledBootloader(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => new BootloaderRules(enabled: false),
+            BootloaderA::class => new BootloadConfig(enabled: false),
             BootloaderD::class
         ]));
 
@@ -42,7 +42,7 @@ final class BootloaderRulesTest extends InitializerTestCase
     public function testArguments(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => new BootloaderRules(args: ['a' => 'b'])
+            BootloaderA::class => new BootloadConfig(args: ['a' => 'b'])
         ]));
 
         $this->assertEquals([
@@ -50,10 +50,10 @@ final class BootloaderRulesTest extends InitializerTestCase
         ], $result);
     }
 
-    public function testDisabledRules(): void
+    public function testDisabledConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => new BootloaderRules(enabled: false),
+            BootloaderA::class => new BootloadConfig(enabled: false),
             BootloaderD::class
         ], false));
 
@@ -63,10 +63,10 @@ final class BootloaderRulesTest extends InitializerTestCase
         ], $result);
     }
 
-    public function testCallableRules(): void
+    public function testCallableConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn () => new BootloaderRules(args: ['a' => 'b']),
+            BootloaderA::class => static fn () => new BootloadConfig(args: ['a' => 'b']),
         ]));
 
         $this->assertEquals([
@@ -74,17 +74,17 @@ final class BootloaderRulesTest extends InitializerTestCase
         ], $result);
     }
 
-    public function testCallableRulesWithArguments(): void
+    public function testCallableConfigWithArguments(): void
     {
         $this->container->bind(AppEnvironment::class, AppEnvironment::Production);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn (AppEnvironment $env) => new BootloaderRules(enabled: $env->isLocal()),
+            BootloaderA::class => static fn (AppEnvironment $env) => new BootloadConfig(enabled: $env->isLocal()),
         ]));
         $this->assertEquals([], $result);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn (AppEnvironment $env) => new BootloaderRules(enabled: $env->isProduction()),
+            BootloaderA::class => static fn (AppEnvironment $env) => new BootloadConfig(enabled: $env->isProduction()),
         ]));
         $this->assertEquals([BootloaderA::class => ['bootloader' => new BootloaderA(), 'options' => []]], $result);
     }
@@ -95,7 +95,7 @@ final class BootloaderRulesTest extends InitializerTestCase
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment($env), true);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => new BootloaderRules(allowEnv: [
+            BootloaderA::class => new BootloadConfig(allowEnv: [
                 'APP_ENV' => 'prod',
                 'APP_DEBUG' => false,
                 'RR_MODE' => ['http']
@@ -111,7 +111,7 @@ final class BootloaderRulesTest extends InitializerTestCase
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment($env), true);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => new BootloaderRules(denyEnv: [
+            BootloaderA::class => new BootloadConfig(denyEnv: [
                 'RR_MODE' => 'http',
                 'APP_ENV' => ['production', 'prod'],
                 'DB_HOST' => 'db.example.com',
@@ -126,14 +126,7 @@ final class BootloaderRulesTest extends InitializerTestCase
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment(['APP_DEBUG' => true]), true);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => new BootloaderRules(
-                allowEnv: [
-                    'APP_DEBUG' => true,
-                ],
-                denyEnv: [
-                    'APP_DEBUG' => true,
-                ]
-            ),
+            BootloaderA::class => new BootloadConfig(allowEnv: ['APP_DEBUG' => true], denyEnv: ['APP_DEBUG' => true]),
         ]));
 
         $this->assertEquals([], $result);

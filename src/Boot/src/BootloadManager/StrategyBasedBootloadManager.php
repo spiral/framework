@@ -27,9 +27,9 @@ final class StrategyBasedBootloadManager extends AbstractBootloadManager
         array $classes,
         array $bootingCallbacks,
         array $bootedCallbacks,
-        bool $useRules = true
+        bool $useConfig = true
     ): void {
         /** @psalm-suppress TooManyArguments */
-        $this->invoker->invokeBootloaders($classes, $bootingCallbacks, $bootedCallbacks, $useRules);
+        $this->invoker->invokeBootloaders($classes, $bootingCallbacks, $bootedCallbacks, $useConfig);
     }
 }

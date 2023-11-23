@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\Fixtures;
 
-use Spiral\Boot\Attribute\BootloaderRules;
+use Spiral\Boot\Attribute\BootloadConfig;
 
-#[BootloaderRules(allowEnv: ['APP_DEBUG' => true], denyEnv: ['APP_DEBUG' => true])]
+#[BootloadConfig(allowEnv: ['APP_DEBUG' => true], denyEnv: ['APP_DEBUG' => true])]
 class BootloaderJ extends AbstractBootloader
 {
 }

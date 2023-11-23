@@ -7,7 +7,7 @@ namespace Spiral\Boot\Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
 
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
-class BootloaderRules
+class BootloadConfig
 {
     public function __construct(
         public array $args = [],

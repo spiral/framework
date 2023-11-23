@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\Fixtures;
 
-use Spiral\Boot\Attribute\BootloaderRules;
+use Spiral\Boot\Attribute\BootloadConfig;
 
-#[BootloaderRules(denyEnv: [
+#[BootloadConfig(denyEnv: [
     'RR_MODE' => 'http',
     'APP_ENV' => ['production', 'prod'],
     'DB_HOST' => 'db.example.com',

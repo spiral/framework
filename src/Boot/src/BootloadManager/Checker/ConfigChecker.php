@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\BootloadManager\Checker;
 
-use Spiral\Boot\Attribute\BootloaderRules;
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\EnvironmentInterface;
 
-final class RulesChecker implements BootloaderCheckerInterface
+final class ConfigChecker implements BootloaderCheckerInterface
 {
     public function __construct(
         private readonly EnvironmentInterface $environment,
     ) {
     }
 
-    public function canInitialize(BootloaderInterface|string $bootloader, ?BootloaderRules $rules = null): bool
+    public function canInitialize(BootloaderInterface|string $bootloader, ?BootloadConfig $config = null): bool
     {
-        if ($rules === null) {
+        if ($config === null) {
             return true;
         }
 
-        if (!$rules->enabled) {
+        if (!$config->enabled) {
             return false;
         }
 
-        foreach ($rules->denyEnv as $env => $denyValues) {
+        foreach ($config->denyEnv as $env => $denyValues) {
             $value = $this->environment->get($env);
             if ($value !== null && \in_array($value, (array) $denyValues, true)) {
                 return false;
             }
         }
 
-        foreach ($rules->allowEnv as $env => $allowValues) {
+        foreach ($config->allowEnv as $env => $allowValues) {
             $value = $this->environment->get($env);
             if ($value === null || !\in_array($value, (array) $allowValues, true)) {
                 return false;

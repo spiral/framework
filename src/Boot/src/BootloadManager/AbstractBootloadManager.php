@@ -28,13 +28,13 @@ abstract class AbstractBootloadManager implements BootloadManagerInterface, Cont
         array $classes,
         array $bootingCallbacks = [],
         array $bootedCallbacks = [],
-        bool $useRules = true
+        bool $useConfig = true
     ): void {
         $this->scope->runScope(
             [self::class => $this],
-            function () use ($classes, $bootingCallbacks, $bootedCallbacks, $useRules): void {
+            function () use ($classes, $bootingCallbacks, $bootedCallbacks, $useConfig): void {
                 /** @psalm-suppress TooManyArguments */
-                $this->boot($classes, $bootingCallbacks, $bootedCallbacks, $useRules);
+                $this->boot($classes, $bootingCallbacks, $bootedCallbacks, $useConfig);
             }
         );
     }

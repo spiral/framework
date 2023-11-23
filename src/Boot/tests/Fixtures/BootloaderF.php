@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\Fixtures;
 
-use Spiral\Boot\Attribute\BootloaderRules;
+use Spiral\Boot\Attribute\BootloadConfig;
 
-#[BootloaderRules(enabled: false)]
+#[BootloadConfig(enabled: false)]
 class BootloaderF extends AbstractBootloader
 {
 }

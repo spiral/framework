@@ -21,10 +21,10 @@ final class DefaultInvokerStrategy implements InvokerStrategyInterface
         array $classes,
         array $bootingCallbacks,
         array $bootedCallbacks,
-        bool $useRules = true
+        bool $useConfig = true
     ): void {
         /** @psalm-suppress TooManyArguments */
-        $bootloaders = \iterator_to_array($this->initializer->init($classes, $useRules));
+        $bootloaders = \iterator_to_array($this->initializer->init($classes, $useConfig));
 
         foreach ($bootloaders as $data) {
             $this->invokeBootloader($data['bootloader'], Methods::INIT, $data['options']);

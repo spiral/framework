@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\BootloadManager\Checker;
 
-use Spiral\Boot\Attribute\BootloaderRules;
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 
 final class BootloaderChecker implements BootloaderCheckerInterface
@@ -14,10 +14,10 @@ final class BootloaderChecker implements BootloaderCheckerInterface
     ) {
     }
 
-    public function canInitialize(BootloaderInterface|string $bootloader, ?BootloaderRules $rules = null): bool
+    public function canInitialize(BootloaderInterface|string $bootloader, ?BootloadConfig $config = null): bool
     {
         foreach ($this->registry->getCheckers() as $checker) {
-            if (!$checker->canInitialize($bootloader, $rules)) {
+            if (!$checker->canInitialize($bootloader, $config)) {
                 return false;
             }
         }
