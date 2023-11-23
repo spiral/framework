@@ -5,12 +5,19 @@ declare(strict_types=1);
 namespace Spiral\Boot\BootloadManager;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\Bootloader\DependedInterface;
+use Spiral\Boot\BootloadManager\Checker\BootloaderChecker;
+use Spiral\Boot\BootloadManager\Checker\BootloaderCheckerInterface;
+use Spiral\Boot\BootloadManager\Checker\CanBootedChecker;
+use Spiral\Boot\BootloadManager\Checker\CheckerRegistry;
+use Spiral\Boot\BootloadManager\Checker\ClassExistsChecker;
+use Spiral\Boot\BootloadManager\Checker\ConfigChecker;
 use Spiral\Boot\BootloadManagerInterface;
-use Spiral\Boot\Exception\ClassNotFoundException;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
+use Spiral\Core\ResolverInterface;
 
 /**
  * @internal
@@ -19,10 +26,13 @@ use Spiral\Core\Container;
  */
 class Initializer implements InitializerInterface, Container\SingletonInterface
 {
+    protected ?BootloaderCheckerInterface $checker = null;
+
     public function __construct(
         protected readonly ContainerInterface $container,
         protected readonly BinderInterface $binder,
-        protected readonly ClassesRegistry $bootloaders = new ClassesRegistry()
+        protected readonly ClassesRegistry $bootloaders = new ClassesRegistry(),
+        ?BootloaderCheckerInterface $checker = null,
     ) {
     }
 
@@ -31,42 +41,34 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
      *
      * @param TClass[]|array<TClass, array<string,mixed>> $classes
      */
-    public function init(array $classes): \Generator
+    public function init(array $classes, bool $useConfig = true): \Generator
     {
+        $this->checker ??= $this->initDefaultChecker();
+
         foreach ($classes as $bootloader => $options) {
             // default bootload syntax as simple array
             if (\is_string($options) || $options instanceof BootloaderInterface) {
                 $bootloader = $options;
                 $options = [];
             }
+            $options = $useConfig ? $this->getBootloadConfig($bootloader, $options) : [];
 
-            // Replace class aliases with source classes
-            try {
-                $ref = (new \ReflectionClass($bootloader));
-                $className = $ref->getName();
-            } catch (\ReflectionException) {
-                throw new ClassNotFoundException(
-                    \sprintf('Bootloader class `%s` is not exist.', $bootloader)
-                );
-            }
-
-            if ($this->bootloaders->isBooted($className) || $ref->isAbstract()) {
+            if (!$this->checker->canInitialize($bootloader, $useConfig ? $options : null)) {
                 continue;
             }
 
-            $this->bootloaders->register($className);
+            $this->bootloaders->register($bootloader instanceof BootloaderInterface ? $bootloader::class : $bootloader);
 
             if (!$bootloader instanceof BootloaderInterface) {
                 $bootloader = $this->container->get($bootloader);
             }
 
-            if (!$this->isBootloader($bootloader)) {
-                continue;
-            }
-
             /** @var BootloaderInterface $bootloader */
             yield from $this->initBootloader($bootloader);
-            yield $className => \compact('bootloader', 'options');
+            yield $bootloader::class => [
+                'bootloader' => $bootloader,
+                'options' => $options instanceof BootloadConfig ? $options->args : $options,
+            ];
         }
     }
 
@@ -155,5 +157,70 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
     protected function isBootloader(string|object $class): bool
     {
         return \is_subclass_of($class, BootloaderInterface::class);
+    }
+
+    protected function initDefaultChecker(): BootloaderCheckerInterface
+    {
+        $registry = new CheckerRegistry();
+        $registry->register($this->container->get(ConfigChecker::class));
+        $registry->register(new ClassExistsChecker());
+        $registry->register(new CanBootedChecker($this->bootloaders));
+
+        return new BootloaderChecker($registry);
+    }
+
+    /**
+     * Returns merged config. Attribute config have lower priority.
+     *
+     * @param class-string<BootloaderInterface>|BootloaderInterface $bootloader
+     */
+    private function getBootloadConfig(
+        string|BootloaderInterface $bootloader,
+        array|callable|BootloadConfig $config
+    ): BootloadConfig {
+        if ($config instanceof \Closure) {
+            $config = $this->container instanceof ResolverInterface
+                ? $config(...$this->container->resolveArguments(new \ReflectionFunction($config)))
+                : $config();
+        }
+        $attr = $this->getBootloadConfigAttribute($bootloader);
+
+        $getArgument = static function (string $key, bool $override, mixed $default = []) use ($config, $attr): mixed {
+            return match (true) {
+                $config instanceof BootloadConfig && $override => $config->{$key},
+                $config instanceof BootloadConfig && !$override && \is_array($default) =>
+                    $config->{$key} + ($attr->{$key} ?? []),
+                $config instanceof BootloadConfig && !$override && \is_bool($default) => $config->{$key},
+                \is_array($config) && $config !== [] && $key === 'args' => $config,
+                default => $attr->{$key} ?? $default,
+            };
+        };
+
+        $override = $config instanceof BootloadConfig ? $config->override : true;
+
+        return new BootloadConfig(
+            args: $getArgument('args', $override),
+            enabled: $getArgument('enabled', $override, true),
+            allowEnv: $getArgument('allowEnv', $override),
+            denyEnv: $getArgument('denyEnv', $override),
+        );
+    }
+
+    /**
+     * @param class-string<BootloaderInterface>|BootloaderInterface $bootloader
+     */
+    private function getBootloadConfigAttribute(string|BootloaderInterface $bootloader): ?BootloadConfig
+    {
+        $attribute = null;
+        if ($bootloader instanceof BootloaderInterface || \class_exists($bootloader)) {
+            $ref = new \ReflectionClass($bootloader);
+            $attribute = $ref->getAttributes(BootloadConfig::class)[0] ?? null;
+        }
+
+        if ($attribute === null) {
+            return null;
+        }
+
+        return $attribute->newInstance();
     }
 }

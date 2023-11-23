@@ -23,8 +23,13 @@ final class StrategyBasedBootloadManager extends AbstractBootloadManager
      *
      * @throws \Throwable
      */
-    protected function boot(array $classes, array $bootingCallbacks, array $bootedCallbacks): void
-    {
-        $this->invoker->invokeBootloaders($classes, $bootingCallbacks, $bootedCallbacks);
+    protected function boot(
+        array $classes,
+        array $bootingCallbacks,
+        array $bootedCallbacks,
+        bool $useConfig = true
+    ): void {
+        /** @psalm-suppress TooManyArguments */
+        $this->invoker->invokeBootloaders($classes, $bootingCallbacks, $bootedCallbacks, $useConfig);
     }
 }

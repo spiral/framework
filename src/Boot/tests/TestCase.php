@@ -7,17 +7,27 @@ namespace Spiral\Tests\Boot;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
 use Spiral\Boot\BootloadManager\Initializer;
+use Spiral\Boot\Environment;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Core\Container;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    public function getBootloadManager(Container $container = new Container()): StrategyBasedBootloadManager
+    protected Container $container;
+
+    protected function setUp(): void
     {
-        $initializer = new Initializer($container, $container);
+        $this->container = new Container();
+        $this->container->bindSingleton(EnvironmentInterface::class, Environment::class, true);
+    }
+
+    public function getBootloadManager(): StrategyBasedBootloadManager
+    {
+        $initializer = new Initializer($this->container, $this->container);
 
         return new StrategyBasedBootloadManager(
-            new DefaultInvokerStrategy($initializer, $container, $container),
-            $container,
+            new DefaultInvokerStrategy($initializer, $this->container, $this->container),
+            $this->container,
             $initializer
         );
     }

@@ -173,7 +173,8 @@ abstract class AbstractKernel implements KernelInterface
                 function (Container $container): void {
                     $registry = $container->get(BootloaderRegistryInterface::class);
 
-                    $this->bootloader->bootload($registry->getSystemBootloaders());
+                    /** @psalm-suppress TooManyArguments */
+                    $this->bootloader->bootload($registry->getSystemBootloaders(), [], [], false);
                     $this->fireCallbacks($this->runningCallbacks);
 
                     $this->bootload($registry->getBootloaders());

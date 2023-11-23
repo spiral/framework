@@ -24,12 +24,17 @@ abstract class AbstractBootloadManager implements BootloadManagerInterface, Cont
         return $this->initializer->getRegistry()->getClasses();
     }
 
-    public function bootload(array $classes, array $bootingCallbacks = [], array $bootedCallbacks = []): void
-    {
+    public function bootload(
+        array $classes,
+        array $bootingCallbacks = [],
+        array $bootedCallbacks = [],
+        bool $useConfig = true
+    ): void {
         $this->scope->runScope(
             [self::class => $this],
-            function () use ($classes, $bootingCallbacks, $bootedCallbacks): void {
-                $this->boot($classes, $bootingCallbacks, $bootedCallbacks);
+            function () use ($classes, $bootingCallbacks, $bootedCallbacks, $useConfig): void {
+                /** @psalm-suppress TooManyArguments */
+                $this->boot($classes, $bootingCallbacks, $bootedCallbacks, $useConfig);
             }
         );
     }

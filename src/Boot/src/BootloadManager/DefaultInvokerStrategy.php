@@ -17,9 +17,14 @@ final class DefaultInvokerStrategy implements InvokerStrategyInterface
     ) {
     }
 
-    public function invokeBootloaders(array $classes, array $bootingCallbacks, array $bootedCallbacks): void
-    {
-        $bootloaders = \iterator_to_array($this->initializer->init($classes));
+    public function invokeBootloaders(
+        array $classes,
+        array $bootingCallbacks,
+        array $bootedCallbacks,
+        bool $useConfig = true
+    ): void {
+        /** @psalm-suppress TooManyArguments */
+        $bootloaders = \iterator_to_array($this->initializer->init($classes, $useConfig));
 
         foreach ($bootloaders as $data) {
             $this->invokeBootloader($data['bootloader'], Methods::INIT, $data['options']);
