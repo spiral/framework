@@ -29,12 +29,12 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "spiral/core": "^3.10",
-        "spiral/hmvc": "^3.10",
-        "spiral/serializer": "^3.10",
-        "spiral/snapshots": "^3.10",
-        "spiral/telemetry": "^3.10",
-        "spiral/tokenizer": "^3.10",
+        "spiral/core": "^3.11",
+        "spiral/hmvc": "^3.11",
+        "spiral/serializer": "^3.11",
+        "spiral/snapshots": "^3.11",
+        "spiral/telemetry": "^3.11",
+        "spiral/tokenizer": "^3.11",
         "spiral/attributes": "^2.8|^3.0",
         "doctrine/inflector": "^1.4|^2.0",
         "ramsey/uuid": "^4.2.3",
@@ -54,12 +54,12 @@
         "doctrine/annotations": "^1.12 || ^2.0",
         "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
-        "spiral/boot": "^3.10",
+        "spiral/boot": "^3.11",
         "vimeo/psalm": "^5.9"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.10.x-dev"
+            "dev-master": "3.11.x-dev"
         }
     },
     "config": {

@@ -29,11 +29,11 @@
     "require": {
         "php": ">=8.1",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/tokenizer": "^3.10",
+        "spiral/tokenizer": "^3.11",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
-        "spiral/boot": "^3.10",
+        "spiral/boot": "^3.11",
         "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^5.9"
@@ -50,7 +50,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.10.x-dev"
+            "dev-master": "3.11.x-dev"
         }
     },
     "config": {
