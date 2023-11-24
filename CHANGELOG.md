@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.10.0 - 2023-11-24
 
 - **Other Features**
     - [spiral/boot] Added `Spiral\Boot\Bootloader\BootloaderRegistryInterface` and `Spiral\Boot\Bootloader\BootloaderRegistry`
