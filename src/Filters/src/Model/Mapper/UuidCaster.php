@@ -19,7 +19,9 @@ final class UuidCaster implements CasterInterface
             $this->interfaceExists = \interface_exists(UuidInterface::class);
         }
 
-        return $this->interfaceExists && $this->implements($type->getName(), UuidInterface::class);
+        return $this->interfaceExists &&
+            !$type->isBuiltin() &&
+            $this->implements($type->getName(), UuidInterface::class);
     }
 
     public function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
