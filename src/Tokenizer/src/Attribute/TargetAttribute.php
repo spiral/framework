@@ -6,6 +6,7 @@ namespace Spiral\Tokenizer\Attribute;
 
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Factory;
+use Spiral\Attributes\Internal\Instantiator\NamedArgumentsInstantiator;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
@@ -24,6 +25,7 @@ final class TargetAttribute extends AbstractTarget
         private readonly string $attribute,
         ?string $scope = null,
         private readonly bool $useAnnotations = false,
+        private readonly bool $namedArguments = true,
     ) {
         parent::__construct($scope);
     }
@@ -37,7 +39,7 @@ final class TargetAttribute extends AbstractTarget
         // It will slow down the process a bit, but it will allow us to use annotations
         $reader = $this->useAnnotations
             ? (new Factory())->create()
-            : new AttributeReader();
+            : new AttributeReader($this->namedArguments ? new NamedArgumentsInstantiator() : null);
 
         if ($attribute === null) {
             return;
