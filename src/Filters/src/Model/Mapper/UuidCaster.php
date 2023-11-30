@@ -40,6 +40,10 @@ final class UuidCaster implements CasterInterface
             return true;
         }
 
+        if (!\class_exists($haystack)) {
+            return false;
+        }
+
         foreach ((array)\class_implements($haystack) as $implements) {
             if ($implements === $interface) {
                 return true;
