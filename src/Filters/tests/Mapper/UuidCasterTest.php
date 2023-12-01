@@ -43,6 +43,7 @@ final class UuidCasterTest extends TestCase
     {
         $ref = new \ReflectionClass(UserFilter::class);
 
+        yield 'string' => [$ref->getProperty('name'), false];
         yield 'enum' => [$ref->getProperty('status'), false];
         yield 'uuid' => [$ref->getProperty('groupUuid'), true];
     }

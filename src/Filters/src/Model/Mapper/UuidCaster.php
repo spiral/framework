@@ -19,7 +19,9 @@ final class UuidCaster implements CasterInterface
             $this->interfaceExists = \interface_exists(UuidInterface::class);
         }
 
-        return $this->interfaceExists && $this->implements($type->getName(), UuidInterface::class);
+        return $this->interfaceExists &&
+            !$type->isBuiltin() &&
+            $this->implements($type->getName(), UuidInterface::class);
     }
 
     public function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void
@@ -38,6 +40,10 @@ final class UuidCaster implements CasterInterface
     {
         if ($haystack === $interface) {
             return true;
+        }
+
+        if (!\class_exists($haystack)) {
+            return false;
         }
 
         foreach ((array)\class_implements($haystack) as $implements) {
