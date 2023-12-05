@@ -31,7 +31,7 @@
         "ext-tokenizer": "*",
         "spiral/core": "^3.11",
         "spiral/logger": "^3.11",
-        "symfony/finder": "^5.3.7|^6.0"
+        "symfony/finder": "^5.3.7 || ^6.0 || ^7.0"
     },
     "require-dev": {
         "spiral/attributes": "^2.8|^3.0",

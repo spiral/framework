@@ -36,20 +36,14 @@ final class InputProxy implements InputInterface
         return $this->input->getParameterOption($values, $default, $onlyParams);
     }
 
-    /**
-     * Since v4.0 the return type will be changed to void {@see InputInterface::bind}.
-     *
-     * @return void
-     * @psalm-suppress InvalidReturnStatement
-     */
-    public function bind(InputDefinition $definition): mixed
+    public function bind(InputDefinition $definition): void
     {
-        return $this->input->bind($definition);
+        $this->input->bind($definition);
     }
 
-    public function validate(): ?bool
+    public function validate(): void
     {
-        return $this->input->validate();
+        $this->input->validate();
     }
 
     public function getArguments(): array
@@ -100,5 +94,10 @@ final class InputProxy implements InputInterface
     public function setInteractive(bool $interactive): void
     {
         $this->input->setInteractive($interactive);
+    }
+
+    public function __toString(): string
+    {
+        return $this->input->__toString();
     }
 }
