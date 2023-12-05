@@ -71,6 +71,7 @@ final class EnumLocator extends AbstractLocator implements EnumsInterface
 
         if (!$target->isTrait()) {
             //Target is interface or class
+            /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/9489 */
             return $enum->isSubclassOf($target) || $enum->getName() === $target->getName();
         }
 
