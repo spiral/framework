@@ -9,6 +9,7 @@ use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php71\Rector\FuncCall\CountOnNullRector;
+use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 
@@ -46,6 +47,9 @@ return static function (RectorConfig $config): void {
             __DIR__ . '/src/Prototype/src/NodeVisitors/LocateProperties.php',
             __DIR__ . '/src/Prototype/src/NodeVisitors/RemoveTrait.php',
             __DIR__ . '/src/Logger/src/ListenerRegistry.php',
+        ],
+        RemoveExtraParametersRector::class => [
+            __DIR__ . '/src/Boot/src/BootloadManager/AbstractBootloadManager.php',
         ],
     ]);
 

@@ -27,6 +27,9 @@ final class LogCollectorBootloader extends Bootloader
     ): void {
         $listenerRegistry->addListener($logCollector);
 
+        /**
+         * @psalm-suppress InvalidArgument
+         */
         $debug->addStateCollector($logCollector);
         $finalizer->addFinalizer([$logCollector, 'reset']);
     }

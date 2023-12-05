@@ -69,6 +69,7 @@ final class DebugListener
 
     /**
      * Enable logging in console mode.
+     * @psalm-suppress InvalidReturnType, InvalidReturnStatement
      */
     public function enable(): self
     {
@@ -81,6 +82,7 @@ final class DebugListener
 
     /**
      * Disable displaying logs in console.
+     * @psalm-suppress InvalidReturnType, InvalidReturnStatement
      */
     public function disable(): self
     {

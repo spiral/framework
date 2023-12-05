@@ -37,6 +37,7 @@ final class TargetAttribute extends AbstractTarget
 
         // If annotations are used, we need to use the annotation reader also
         // It will slow down the process a bit, but it will allow us to use annotations
+        /** @psalm-suppress InternalClass */
         $reader = $this->useAnnotations
             ? (new Factory())->create()
             : new AttributeReader($this->namedArguments ? new NamedArgumentsInstantiator() : null);

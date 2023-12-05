@@ -32,6 +32,7 @@ final class FileHandler implements \SessionHandlerInterface
 
     /**
      * @codeCoverageIgnore
+     * @psalm-suppress ParamNameMismatch
      */
     public function gc(int $maxlifetime): int
     {
@@ -44,6 +45,9 @@ final class FileHandler implements \SessionHandlerInterface
         return $maxlifetime;
     }
 
+    /**
+     * @psalm-suppress ParamNameMismatch
+     */
     public function open(string $path, string $id): bool
     {
         return true;
