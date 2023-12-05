@@ -5,8 +5,6 @@ declare(strict_types=1);
 if (!\function_exists('inject')) {
     /**
      * Macro function to be replaced by the injected value.
-     *
-     * @psalm-suppress UnusedParam
      */
     function inject(string $name, mixed $default = null): mixed
     {

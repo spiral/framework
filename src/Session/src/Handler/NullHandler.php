@@ -19,11 +19,17 @@ final class NullHandler implements \SessionHandlerInterface
         return true;
     }
 
+    /**
+     * @psalm-suppress ParamNameMismatch
+     */
     public function gc(int $maxlifetime): int
     {
         return $maxlifetime;
     }
 
+    /**
+     * @psalm-suppress ParamNameMismatch
+     */
     public function open(string $path, string $id): bool
     {
         return true;

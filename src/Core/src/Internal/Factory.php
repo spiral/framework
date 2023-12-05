@@ -321,7 +321,6 @@ final class Factory implements FactoryInterface
      */
     private function autowire(Ctx $ctx, array $arguments): object
     {
-        /** @psalm-suppress NoValue, InvalidArrayOffset */
         if (!(\class_exists($ctx->class) || (
             \interface_exists($ctx->class)
                 &&
@@ -483,7 +482,6 @@ final class Factory implements FactoryInterface
             return true;
         }
 
-        /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/9489 */
         if ($ctx->reflection->implementsInterface(SingletonInterface::class)) {
             return true;
         }
