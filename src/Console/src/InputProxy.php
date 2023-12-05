@@ -18,6 +18,11 @@ final class InputProxy implements InputInterface
     ) {
     }
 
+    public function __toString(): string
+    {
+        return $this->input->__toString();
+    }
+
     public function getFirstArgument(): ?string
     {
         return $this->overwrite['firstArgument'] ?? $this->input->getFirstArgument();
@@ -94,10 +99,5 @@ final class InputProxy implements InputInterface
     public function setInteractive(bool $interactive): void
     {
         $this->input->setInteractive($interactive);
-    }
-
-    public function __toString(): string
-    {
-        return $this->input->__toString();
     }
 }
