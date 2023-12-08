@@ -17,7 +17,7 @@ use Spiral\Queue\RetryPolicyInterface;
 final class RetryPolicyInterceptor implements CoreInterceptorInterface
 {
     public function __construct(
-        private readonly ReaderInterface $reader
+        private readonly ReaderInterface $reader,
     ) {
     }
 
@@ -26,7 +26,10 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
         try {
             return $core->callAction($controller, $action, $parameters);
         } catch (\Throwable $e) {
-            $policy = $this->getRetryPolicy($e, new \ReflectionClass($controller));
+            // In some cases job handler class may not exist or be just a string.
+            // In this case we can't get retry policy from it.
+            $class = \class_exists($controller) ? new \ReflectionClass($controller) : null;
+            $policy = $this->getRetryPolicy($e, $class);
 
             if ($policy === null) {
                 throw $e;
@@ -43,14 +46,16 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
                 reason: $e->getMessage(),
                 options: (new Options())
                     ->withDelay($policy->getDelay($attempts))
-                    ->withHeader('attempts', (string)($attempts + 1))
+                    ->withHeader('attempts', (string)($attempts + 1)),
             );
         }
     }
 
-    private function getRetryPolicy(\Throwable $exception, \ReflectionClass $handler): ?RetryPolicyInterface
+    private function getRetryPolicy(\Throwable $exception, ?\ReflectionClass $handler): ?RetryPolicyInterface
     {
-        $attribute = $this->reader->firstClassMetadata($handler, Attribute::class);
+        $attribute = $handler !== null
+            ? $this->reader->firstClassMetadata($handler, Attribute::class)
+            : null;
 
         if ($exception instanceof JobException && $exception->getPrevious() !== null) {
             $exception = $exception->getPrevious();

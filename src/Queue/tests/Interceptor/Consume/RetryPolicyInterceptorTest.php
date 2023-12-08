@@ -55,6 +55,37 @@ final class RetryPolicyInterceptorTest extends TestCase
         $this->interceptor->process(self::class, 'bar', [], $this->core);
     }
 
+    public function testWithoutJobHandlerClass(): void
+    {
+        $this->core
+            ->expects($this->once())
+            ->method('callAction')
+            ->with('foo-job', 'bar', [])
+            ->willThrowException(new \Exception('Something went wrong'));
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Something went wrong');
+        $this->interceptor->process('foo-job', 'bar', [], $this->core);
+    }
+
+    public function testWithoutJobHandlerWithDefaultRetryPolicy(): void
+    {
+        $this->core
+            ->expects($this->once())
+            ->method('callAction')
+            ->with('foo-job', 'bar', [])
+            ->willThrowException(new TestRetryException(
+                retryPolicy: new \Spiral\Queue\RetryPolicy(maxAttempts: 2, delay: 4)
+            ));
+
+        try {
+            $this->interceptor->process('foo-job', 'bar', [], $this->core);
+        } catch (RetryException $e) {
+            $this->assertSame(4, $e->getOptions()->getDelay());
+            $this->assertSame(['attempts' => ['1']], $e->getOptions()->getHeaders());
+        }
+    }
+
     public function testNotRetryableException(): void
     {
         $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(new RetryPolicy());
