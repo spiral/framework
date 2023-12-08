@@ -11,13 +11,15 @@ use Spiral\Queue\Attribute\RetryPolicy as Attribute;
 use Spiral\Queue\Exception\JobException;
 use Spiral\Queue\Exception\RetryableExceptionInterface;
 use Spiral\Queue\Exception\RetryException;
+use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\Options;
 use Spiral\Queue\RetryPolicyInterface;
 
 final class RetryPolicyInterceptor implements CoreInterceptorInterface
 {
     public function __construct(
-        private readonly ReaderInterface $reader
+        private readonly ReaderInterface $reader,
+        private readonly HandlerRegistryInterface $registry,
     ) {
     }
 
@@ -26,6 +28,10 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
         try {
             return $core->callAction($controller, $action, $parameters);
         } catch (\Throwable $e) {
+            if (!\class_exists($controller)) {
+                $controller = $this->registry->getHandler($controller)::class;
+            }
+
             $policy = $this->getRetryPolicy($e, new \ReflectionClass($controller));
 
             if ($policy === null) {
