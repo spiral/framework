@@ -8,7 +8,6 @@ use Spiral\Attributes\ReaderInterface;
 use Spiral\Queue\Attribute\JobHandler as JobHandlerAttribute;
 use Spiral\Queue\Attribute\Serializer;
 use Spiral\Queue\Config\QueueConfig;
-use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Tokenizer\Attribute\TargetAttribute;
 use Spiral\Tokenizer\TokenizationListenerInterface;
 
@@ -18,13 +17,10 @@ final class SerializerLocatorListener implements TokenizationListenerInterface
     public function __construct(
         private readonly ReaderInterface $reader,
         private readonly QueueRegistry $registry,
-        private readonly QueueConfig $config
+        private readonly QueueConfig $config,
     ) {
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     public function listen(\ReflectionClass $class): void
     {
         $attribute = $this->reader->firstClassMetadata($class, Serializer::class);
@@ -39,9 +35,6 @@ final class SerializerLocatorListener implements TokenizationListenerInterface
     {
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     private function getJobType(\ReflectionClass $class): string
     {
         $attribute = $this->reader->firstClassMetadata($class, JobHandlerAttribute::class);
@@ -59,6 +52,6 @@ final class SerializerLocatorListener implements TokenizationListenerInterface
             }
         }
 
-        throw new InvalidArgumentException(\sprintf('Unable to locate job type for `%s`.', $class->getName()));
+        return $class->getName();
     }
 }
