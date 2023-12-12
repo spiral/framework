@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Framework\Bootloader\Debug;
 
+use Spiral\Boot\Environment\AppEnvironment;
 use Spiral\Bootloader\DebugBootloader;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Debug\Config\DebugConfig;
+use Spiral\Debug\Exception\StateException;
 use Spiral\Debug\State;
 use Spiral\Debug\StateCollector\EnvironmentCollector;
 use Spiral\Debug\StateCollector\HttpCollector;
@@ -79,6 +81,13 @@ final class DebugBootloaderTest extends BaseTestCase
         );
     }
 
+    #[Config('debug.tags', ['foo' => new HttpCollector()])]
+    public function testInvalidTagFromConfig(): void
+    {
+        $this->expectException(StateException::class);
+        $this->getContainer()->get(StateInterface::class)->getTags();
+    }
+
     #[Config('debug.collectors', ['foo'])]
     public function testGetCollectorsFromConfig(): void
     {
@@ -88,6 +97,22 @@ final class DebugBootloaderTest extends BaseTestCase
         $this->getContainer()->bindSingleton('foo', $collector);
 
         $this->getContainer()->get(StateInterface::class);
+    }
+
+    public function testResolveTagCallableDeps(): void
+    {
+        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs->setDefaults(DebugConfig::CONFIG, ['tags' => []]);
+
+        $bootloader = new DebugBootloader($this->getContainer(), $this->getContainer(), $configs);
+        $ref = new \ReflectionMethod($bootloader, 'state');
+        $state = $ref->invoke($bootloader, new DebugConfig([
+            'tags' => [
+                'env' => static fn (AppEnvironment $env): string => $env->isProduction() ? 'prod' : 'dev'
+            ],
+        ]));
+
+        $this->assertSame('dev', $state->getTags()['env']);
     }
 
     public function testDefaultConfig(): void
