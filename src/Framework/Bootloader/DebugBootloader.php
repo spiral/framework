@@ -114,7 +114,7 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
             'collectors' => [
                 EnvironmentCollector::class,
             ],
-            'tags' => []
+            'tags' => [],
         ]);
     }
 }
