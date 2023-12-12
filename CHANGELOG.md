@@ -3,7 +3,7 @@
 ## Unreleased
 
 - **Other Features**
-    - Added `Spiral\Debug\Config\DebugConfig` has been added for easy addition of tags and collectors.
+    - The `Spiral\Debug\Config\DebugConfig` has been added for easy addition of **tags** and **collectors**.
 
 ## 3.10.0 - 2023-11-24
 
