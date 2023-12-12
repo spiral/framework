@@ -45,6 +45,7 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
     public function init(): void
     {
         $this->initDefaultConfig();
+        $this->addStateCollector(EnvironmentCollector::class);
     }
 
     /**
@@ -111,9 +112,7 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
     private function initDefaultConfig(): void
     {
         $this->config->setDefaults(DebugConfig::CONFIG, [
-            'collectors' => [
-                EnvironmentCollector::class,
-            ],
+            'collectors' => [],
             'tags' => [],
         ]);
     }
