@@ -207,7 +207,7 @@ class ScaffolderConfig extends InjectableConfig
 
     private function classify(string $name): string
     {
-        return ( new InflectorFactory() )
+        return (new InflectorFactory())
             ->build()
             ->classify($name);
     }
