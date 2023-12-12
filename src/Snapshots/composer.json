@@ -28,12 +28,12 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/exceptions": "^3.10.1",
-        "spiral/files": "^3.10.1",
+        "spiral/exceptions": "^3.11",
+        "spiral/files": "^3.11",
         "symfony/finder": "^5.3.7 || ^6.0 || ^7.0"
     },
     "require-dev": {
-        "spiral/storage": "^3.10.1",
+        "spiral/storage": "^3.11",
         "phpunit/phpunit": "^10.1",
         "vimeo/psalm": "^5.9"
     },
