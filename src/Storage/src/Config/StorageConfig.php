@@ -138,24 +138,12 @@ class StorageConfig extends InjectableConfig
 
     private function createS3Adapter(string $serverName, array $bucket, array $server, bool $async): FilesystemAdapter
     {
-        if (!\class_exists(Credentials::class)) {
+        if (!$async && !\class_exists(Credentials::class)) {
             throw new ConfigException(
                 'Can not create AWS credentials while creating "' . $serverName . '" server. '
                 . 'Perhaps you forgot to install the "league/flysystem-aws-s3-v3" package?'
             );
         }
-
-        $config = [
-            'version'     => $server['version'] ?? 'latest',
-            'region'      => $bucket['region'] ?? $server['region'] ?? null,
-            'endpoint'    => $server['endpoint'] ?? null,
-            'credentials' => new Credentials(
-                $server['key'] ?? null,
-                $server['secret'] ?? null,
-                $server['token'] ?? null,
-                $server['expires'] ?? null
-            ),
-        ] + ($server['options'] ?? []);
 
         $name = $bucket['bucket'] ?? $server['bucket'];
         $visibility = $bucket['visibility'] ?? $server['visibility'] ?? Visibility::VISIBILITY_PUBLIC;
@@ -168,12 +156,10 @@ class StorageConfig extends InjectableConfig
             }
 
             return new AsyncAwsS3Adapter(
-                new S3AsyncClient($config),
+                new S3AsyncClient($this->createAwsConfig($bucket, $server, true)),
                 $name,
                 $bucket['prefix'] ?? $server['prefix'] ?? '',
-                new AsyncAwsS3PortableVisibilityConverter(
-                    $visibility
-                )
+                new AsyncAwsS3PortableVisibilityConverter($visibility)
             );
         }
 
@@ -184,12 +170,10 @@ class StorageConfig extends InjectableConfig
         }
 
         return new AwsS3V3Adapter(
-            new S3Client($config),
+            new S3Client($this->createAwsConfig($bucket, $server)),
             $name,
             $bucket['prefix'] ?? $server['prefix'] ?? '',
-            new AwsS3PortableVisibilityConverter(
-                $visibility
-            )
+            new AwsS3PortableVisibilityConverter($visibility)
         );
     }
 
@@ -241,5 +225,31 @@ class StorageConfig extends InjectableConfig
             $message = 'An error occurred while server `%s` initializing: %s';
             throw new InvalidArgumentException(\sprintf($message, $serverName, $e->getMessage()), 0, $e);
         }
+    }
+
+    private function createAwsConfig(array $bucket, array $server, bool $async = false): array
+    {
+        $config = [
+            'region' => $bucket['region'] ?? $server['region'] ?? null,
+            'endpoint' => $server['endpoint'] ?? null,
+        ] + ($server['options'] ?? []);
+
+        if (!$async) {
+            $config['version'] = $server['version'] ?? 'latest';
+            $config['credentials'] = new Credentials(
+                $server['key'] ?? null,
+                $server['secret'] ?? null,
+                $server['token'] ?? null,
+                $server['expires'] ?? null
+            );
+
+            return $config;
+        }
+
+        $config['accessKeyId'] = $server['key'] ?? null;
+        $config['accessKeySecret'] = $server['secret'] ?? null;
+        $config['sessionToken'] = $server['token'] ?? null;
+
+        return $config;
     }
 }
