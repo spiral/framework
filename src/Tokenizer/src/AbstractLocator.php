@@ -42,10 +42,12 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
 
             if ($reflection->hasIncludes()) {
                 // We are not analyzing files which has includes, it's not safe to require such reflections
-                $this->getLogger()->warning(
-                    \sprintf('File `%s` has includes and excluded from analysis', (string) $file),
-                    ['file' => $file]
-                );
+                if ($this->debug) {
+                    $this->getLogger()->warning(
+                        \sprintf('File `%s` has includes and excluded from analysis', (string) $file),
+                        ['file' => $file]
+                    );
+                }
 
                 continue;
             }
@@ -86,16 +88,12 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
                 $e = $e->getPrevious();
             }
 
-            $this->getLogger()->error(
-                \sprintf(
-                    '%s: %s in %s:%s',
-                    $class,
-                    $e->getMessage(),
-                    $e->getFile(),
-                    $e->getLine()
-                ),
-                ['error' => $e]
-            );
+            if ($this->debug) {
+                $this->getLogger()->error(
+                    \sprintf('%s: %s in %s:%s', $class, $e->getMessage(), $e->getFile(), $e->getLine()),
+                    ['error' => $e]
+                );
+            }
 
             throw new LocatorException($e->getMessage(), (int) $e->getCode(), $e);
         } finally {
@@ -133,16 +131,12 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
                 $e = $e->getPrevious();
             }
 
-            $this->getLogger()->error(
-                \sprintf(
-                    '%s: %s in %s:%s',
-                    $enum,
-                    $e->getMessage(),
-                    $e->getFile(),
-                    $e->getLine()
-                ),
-                ['error' => $e]
-            );
+            if ($this->debug) {
+                $this->getLogger()->error(
+                    \sprintf('%s: %s in %s:%s', $enum, $e->getMessage(), $e->getFile(), $e->getLine()),
+                    ['error' => $e]
+                );
+            }
 
             throw new LocatorException($e->getMessage(), (int) $e->getCode(), $e);
         } finally {

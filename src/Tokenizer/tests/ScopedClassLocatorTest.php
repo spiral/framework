@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Tokenizer;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Tests\Tokenizer\Classes\ClassA;
 use Spiral\Tests\Tokenizer\Classes\ClassB;
 use Spiral\Tests\Tokenizer\Classes\ClassC;
 use Spiral\Tests\Tokenizer\Classes\Inner\ClassD;
-use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\ScopedClassLocator;
 use Spiral\Tokenizer\Tokenizer;
@@ -24,7 +22,9 @@ final class ScopedClassLocatorTest extends TestCase
         parent::setUp();
 
         $this->container = new Container();
-        $this->container->bind(Tokenizer::class, $this->getTokenizer());
+        $this->container->bind(Tokenizer::class, $this->getTokenizer(['scopes' => [
+            'foo' => ['directories' => [__DIR__ . '/Classes/Inner'], 'exclude' => []],
+        ]]));
         $this->container->bindSingleton(ScopedClassesInterface::class, ScopedClassLocator::class);
     }
 
@@ -56,21 +56,5 @@ final class ScopedClassLocatorTest extends TestCase
         // Excluded
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX', $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
-    }
-
-    protected function getTokenizer(): Tokenizer
-    {
-        $config = new TokenizerConfig([
-            'directories' => [__DIR__],
-            'exclude' => ['Excluded'],
-            'scopes' => [
-                'foo' => [
-                    'directories' => [__DIR__.'/Classes/Inner'],
-                    'exclude' => [],
-                ],
-            ],
-        ]);
-
-        return new Tokenizer($config);
     }
 }
