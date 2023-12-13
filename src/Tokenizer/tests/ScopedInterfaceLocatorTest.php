@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Tokenizer;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Tests\Tokenizer\Interfaces\BadInterface;
 use Spiral\Tests\Tokenizer\Interfaces\InterfaceA;
@@ -12,7 +11,6 @@ use Spiral\Tests\Tokenizer\Interfaces\InterfaceB;
 use Spiral\Tests\Tokenizer\Interfaces\InterfaceC;
 use Spiral\Tests\Tokenizer\Interfaces\Excluded\InterfaceXX;
 use Spiral\Tests\Tokenizer\Interfaces\Inner\InterfaceD;
-use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\ScopedInterfaceLocator;
 use Spiral\Tokenizer\ScopedInterfacesInterface;
 use Spiral\Tokenizer\Tokenizer;
@@ -26,7 +24,9 @@ final class ScopedInterfaceLocatorTest extends TestCase
         parent::setUp();
 
         $this->container = new Container();
-        $this->container->bind(Tokenizer::class, $this->getTokenizer());
+        $this->container->bind(Tokenizer::class, $this->getTokenizer(['scopes' => [
+            'foo' => ['directories' => [__DIR__ . '/Interfaces/Inner'], 'exclude' => []],
+        ]]));
         $this->container->bindSingleton(ScopedInterfacesInterface::class, ScopedInterfaceLocator::class);
     }
 
@@ -58,21 +58,5 @@ final class ScopedInterfaceLocatorTest extends TestCase
         $this->assertArrayNotHasKey(InterfaceXX::class, $classes);
         $this->assertArrayNotHasKey(BadInterface::class, $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Interfaces\Bad_Interface', $classes);
-    }
-
-    protected function getTokenizer(): Tokenizer
-    {
-        $config = new TokenizerConfig([
-            'directories' => [__DIR__],
-            'exclude' => ['Excluded'],
-            'scopes' => [
-                'foo' => [
-                    'directories' => [__DIR__.'/Interfaces/Inner'],
-                    'exclude' => [],
-                ],
-            ],
-        ]);
-
-        return new Tokenizer($config);
     }
 }

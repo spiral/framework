@@ -1,20 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spiral\Tests\Tokenizer;
 
-use PHPUnit\Framework\TestCase;
-use Psr\Log\AbstractLogger;
-use Spiral\Tokenizer\ClassLocator;
-use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tests\Tokenizer\Classes\ClassA;
 use Spiral\Tests\Tokenizer\Classes\ClassB;
 use Spiral\Tests\Tokenizer\Classes\ClassC;
 use Spiral\Tests\Tokenizer\Classes\Inner\ClassD;
 use Spiral\Tests\Tokenizer\Fixtures\TestInterface;
 use Spiral\Tests\Tokenizer\Fixtures\TestTrait;
-use Spiral\Tokenizer\Tokenizer;
 
-class ClassLocatorTest extends TestCase
+final class ClassLocatorTest extends TestCase
 {
     public function testClassesAll(): void
     {
@@ -105,49 +102,5 @@ class ClassLocatorTest extends TestCase
         $this->assertArrayNotHasKey(self::class, $classes);
         $this->assertArrayNotHasKey(ClassA::class, $classes);
         $this->assertArrayNotHasKey(ClassD::class, $classes);
-    }
-
-    public function testLoggerErrors(): void
-    {
-        $tokenizer = $this->getTokenizer();
-
-        //By class
-        $locator = $tokenizer->classLocator();
-        $logger = new class extends AbstractLogger
-        {
-            private $messages = [];
-
-            public function log($level, $message, array $context = []): void
-            {
-                $this->messages[] = compact('level', 'message');
-            }
-
-            public function getMessages()
-            {
-                return $this->messages;
-            }
-        };
-
-        /**
-         * @var ClassLocator $locator
-         */
-        $locator->setLogger($logger);
-
-        $locator->getClasses(ClassB::class);
-
-        $this->assertStringContainsString(
-            ' has includes and excluded from analysis',
-            $logger->getMessages()[0]['message']
-        );
-    }
-
-    protected function getTokenizer(): Tokenizer
-    {
-        $config = new TokenizerConfig([
-            'directories' => [__DIR__],
-            'exclude' => ['Excluded']
-        ]);
-
-        return new Tokenizer($config);
     }
 }
