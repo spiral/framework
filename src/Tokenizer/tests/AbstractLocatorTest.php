@@ -77,7 +77,6 @@ final class AbstractLocatorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-
     public function testEnumReflectionMessage(): void
     {
         $class = $this->getLocator(true);
