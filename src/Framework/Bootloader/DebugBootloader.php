@@ -10,7 +10,7 @@ use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
-use Spiral\Core\ResolverInterface;
+use Spiral\Core\InvokerInterface;
 use Spiral\Debug\Config\DebugConfig;
 use Spiral\Debug\Exception\StateException;
 use Spiral\Debug\State;
@@ -34,7 +34,7 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
 
     public function __construct(
         private readonly FactoryInterface $factory,
-        private readonly ResolverInterface $resolver,
+        private readonly InvokerInterface $invoker,
         private readonly ConfiguratorInterface $config,
     ) {
     }
@@ -74,7 +74,7 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
 
         foreach ($config->getTags() as $key => $value) {
             if ($value instanceof \Closure) {
-                $value = $value(...$this->resolver->resolveArguments(new \ReflectionFunction($value)));
+                $value = $this->invoker->invoke($value);
             }
 
             if (!\is_string($value) && !$value instanceof \Stringable) {
