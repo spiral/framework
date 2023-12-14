@@ -6,51 +6,60 @@ namespace Spiral\Tests\Files;
 
 use Spiral\Files\Files;
 
-class ConversionTest extends TestCase
+final class ConversionTest extends TestCase
 {
+    private Files $files;
+
+    protected function setUp(): void
+    {
+        $this->files = new Files();
+    }
+
     public function testNormalizeFilePath(): void
     {
-        $files = new Files();
-
-        $this->assertSame('/abc/file.name', $files->normalizePath('/abc\\file.name'));
-        $this->assertSame('/abc/file.name', $files->normalizePath('\\abc//file.name'));
+        $this->assertSame('/abc/file.name', $this->files->normalizePath('/abc\\file.name'));
+        $this->assertSame('/abc/file.name', $this->files->normalizePath('\\abc//file.name'));
     }
 
     public function testNormalizeDirectoryPath(): void
     {
-        $files = new Files();
+        $this->assertSame('/abc/dir/', $this->files->normalizePath('\\abc/dir', true));
+        $this->assertSame('/abc/dir/', $this->files->normalizePath('\\abc//dir', true));
+    }
 
-        $this->assertSame('/abc/dir/', $files->normalizePath('\\abc/dir', true));
-        $this->assertSame('/abc/dir/', $files->normalizePath('\\abc//dir', true));
+    public function testNormalizeUniversalNamingConventionPath(): void
+    {
+        $this->assertSame('//host/path/resource', $this->files->normalizePath('//host/path/resource'));
+        $this->assertSame('//host/path/resource', $this->files->normalizePath('//host/path//resource'));
+        $this->assertSame('\\\\host/path/resource', $this->files->normalizePath('\\\\host/path/resource'));
+        $this->assertSame('\\\\host/path/resource', $this->files->normalizePath('\\\\host/path//resource'));
     }
 
     public function testRelativePath(): void
     {
-        $files = new Files();
-
         $this->assertSame(
             'some-filename.txt',
-            $files->relativePath('/abc/some-filename.txt', '/abc')
+            $this->files->relativePath('/abc/some-filename.txt', '/abc')
         );
 
         $this->assertSame(
             '../some-filename.txt',
-            $files->relativePath('/abc/../some-filename.txt', '/abc')
+            $this->files->relativePath('/abc/../some-filename.txt', '/abc')
         );
 
         $this->assertSame(
             '../../some-filename.txt',
-            $files->relativePath('/abc/../../some-filename.txt', '/abc')
+            $this->files->relativePath('/abc/../../some-filename.txt', '/abc')
         );
 
         $this->assertSame(
             './some-filename.txt',
-            $files->relativePath('/abc/some-filename.txt', '/abc/..')
+            $this->files->relativePath('/abc/some-filename.txt', '/abc/..')
         );
 
         $this->assertSame(
             '../some-filename.txt',
-            $files->relativePath('/abc/some-filename.txt', '/abc/../..')
+            $this->files->relativePath('/abc/some-filename.txt', '/abc/../..')
         );
     }
 }
