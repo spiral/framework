@@ -313,10 +313,16 @@ final class Files implements FilesInterface
 
     public function normalizePath(string $path, bool $asDirectory = false): string
     {
+        $isUnc = \str_starts_with($path, '\\\\') || \str_starts_with($path, '//');
+        if ($isUnc) {
+            $leadingSlashes = \substr($path, 0, 2);
+            $path = \substr($path, 2);
+        }
+
         $path = \str_replace(['//', '\\'], '/', $path);
 
         //Potentially open links and ../ type directories?
-        return \rtrim($path, '/') . ($asDirectory ? '/' : '');
+        return ($isUnc ? $leadingSlashes : '') . \rtrim($path, '/') . ($asDirectory ? '/' : '');
     }
 
     /**
