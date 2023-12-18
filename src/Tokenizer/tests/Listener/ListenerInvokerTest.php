@@ -99,7 +99,7 @@ final class ListenerInvokerTest extends TestCase
         $bootloader->addListener($listener);
 
         $container->invoke(
-            [$bootloader, 'boot'],
+            [$bootloader, 'init'],
             ['kernel' => $kernel, 'config' => $container->get(TokenizerConfig::class)]
         );
 

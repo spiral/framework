@@ -6,8 +6,6 @@ namespace Spiral\Tokenizer\Bootloader;
 
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Memory;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Core\Container\SingletonInterface;
@@ -56,12 +54,15 @@ final class TokenizerListenerBootloader extends Bootloader implements
         $this->listeners[] = $listener;
     }
 
-    public function boot(AbstractKernel $kernel): void
+    public function init(AbstractKernel $kernel): void
     {
+        $kernel->booting($this->loadClasses(...));
+        $kernel->booting($this->loadEnums(...));
+        $kernel->booting($this->loadInterfaces(...));
+
         $kernel->booted($this->loadClasses(...));
         $kernel->booted($this->loadEnums(...));
         $kernel->booted($this->loadInterfaces(...));
-        $kernel->booted($this->finalizeListeners(...));
     }
 
     public function initCachedClassesLoader(
@@ -151,37 +152,29 @@ final class TokenizerListenerBootloader extends Bootloader implements
         callable $reflections,
         callable $loader,
     ): void {
-        $listeners = $this->listeners;
-
         // First, we check if the listener has been cached. If it has, we will load the classes/enums/interfaces
         // from the cache.
-        foreach ($listeners as $i => $listener) {
-            if (call_user_func($loader, $listener)) {
-                unset($listeners[$i]);
+        foreach ($this->listeners as $i => $listener) {
+            if ($loader($listener)) {
+                $listener->finalize();
+                unset($this->listeners[$i]);
             }
         }
 
         // If there are no listeners left, we don't need to use static analysis at all and save
         // valuable time.
-        if ($listeners === []) {
+        if ($this->listeners === []) {
             return;
         }
 
         // If there are listeners left, we will use static analysis to find the classes/enums/interfaces.
         // Please note that this is a very expensive operation and should be avoided if possible.
         // Use #[TargetClass] or #[TargetAttribute] attributes in your listeners to cache the classes/enums/interfaces.
-        $classes = call_user_func($reflections);
-        foreach ($listeners as $listener) {
+        $classes = $reflections();
+        foreach ($this->listeners as $i => $listener) {
             $invoker->invoke($listener, $classes);
-        }
-    }
-
-    private function finalizeListeners(): void
-    {
-        foreach ($this->listeners as $listener) {
             $listener->finalize();
+            unset($this->listeners[$i]);
         }
-        // We don't need the listeners anymore, so we will clear them from memory.
-        $this->listeners = [];
     }
 }
