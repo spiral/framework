@@ -26,7 +26,7 @@ final class ProtoSerializer implements SerializerInterface
     {
         if (!$payload instanceof Message) {
             throw new InvalidArgumentException(\sprintf(
-                'Payload must be of type: `%s`, received `%s`.',
+                'Payload must be of type `%s`, received `%s`.',
                 Message::class,
                 \get_debug_type($payload)
             ));
