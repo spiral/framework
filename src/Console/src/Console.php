@@ -156,7 +156,7 @@ final class Console
                 $inputStream = $input->getStream();
             }
 
-            if (!@posix_isatty($inputStream) && false === getenv('SHELL_INTERACTIVE')) {
+            if ($inputStream !== null && !@posix_isatty($inputStream) && false === getenv('SHELL_INTERACTIVE')) {
                 $input->setInteractive(false);
             }
         }
