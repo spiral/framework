@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Framework\Bootloader\Serializer;
 
 use Spiral\Serializer\Config\SerializerConfig;
+use Spiral\Serializer\Serializer\JsonSerializer;
+use Spiral\Serializer\Serializer\PhpSerializer;
+use Spiral\Serializer\Serializer\ProtoSerializer;
 use Spiral\Serializer\SerializerInterface;
 use Spiral\Serializer\SerializerManager;
 use Spiral\Serializer\SerializerRegistry;
@@ -30,6 +33,20 @@ final class SerializerBootloaderTest extends BaseTestCase
     public function testSerializerInterface(): void
     {
         $this->assertContainerBoundAsSingleton(SerializerInterface::class, SerializerManager::class);
+    }
+
+    public function testDefaultConfig(): void
+    {
+        $config = $this->getConfig(SerializerConfig::CONFIG);
+
+        $this->assertEquals([
+            'default' => 'test',
+            'serializers' => [
+                'json' => new JsonSerializer(),
+                'serializer' => new PhpSerializer(),
+                'proto' => new ProtoSerializer(),
+            ],
+        ], $config);
     }
 
     public function testConfig(): void

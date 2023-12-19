@@ -13,10 +13,12 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Serializer\Config\SerializerConfig;
 use Spiral\Serializer\Serializer\JsonSerializer;
 use Spiral\Serializer\Serializer\PhpSerializer;
+use Spiral\Serializer\Serializer\ProtoSerializer;
 use Spiral\Serializer\SerializerInterface;
 use Spiral\Serializer\SerializerRegistry;
 use Spiral\Serializer\SerializerManager;
 use Spiral\Serializer\SerializerRegistryInterface;
+use Google\Protobuf\Internal\Message;
 
 final class SerializerBootloader extends Bootloader
 {
@@ -52,12 +54,17 @@ final class SerializerBootloader extends Bootloader
 
     private function initConfig(EnvironmentInterface $env): void
     {
+        $serializers = [
+            'json' => new JsonSerializer(),
+            'serializer' => new PhpSerializer(),
+        ];
+        if (\class_exists(Message::class)) {
+            $serializers['proto'] = new ProtoSerializer();
+        }
+
         $this->config->setDefaults(SerializerConfig::CONFIG, [
             'default' => $env->get('DEFAULT_SERIALIZER_FORMAT', SerializerConfig::DEFAULT_SERIALIZER),
-            'serializers' => [
-                'json' => new JsonSerializer(),
-                'serializer' => new PhpSerializer(),
-            ],
+            'serializers' => $serializers,
         ]);
     }
 

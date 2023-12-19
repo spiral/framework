@@ -19,6 +19,7 @@
     },
     "require-dev": {
         "spiral/boot": "^3.11",
+        "google/protobuf": "^3.25",
         "phpunit/phpunit": "^10.1",
         "vimeo/psalm": "^5.9"
     },
