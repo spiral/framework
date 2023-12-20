@@ -179,12 +179,15 @@ final class Parser
             return $value;
         }
 
-        return match ($type->getName()) {
-            'int' => (int) $value,
-            'string' => (string) $value,
-            'bool' => (bool) $value,
-            'float' => (float) $value,
-            'array' => (array) $value,
+        $typeName = $type->getName();
+
+        return match (true) {
+            $typeName === 'int' => (int) $value,
+            $typeName === 'string' => (string) $value,
+            $typeName === 'bool' => (bool) $value,
+            $typeName === 'float' => (float) $value,
+            $typeName === 'array' => (array) $value,
+            \enum_exists($typeName) => $typeName::from($value),
             default => $value
         };
     }
@@ -209,6 +212,10 @@ final class Parser
                     return $type;
                 }
             }
+        }
+
+        if (!$type->isBuiltin() && \enum_exists($type->getName())) {
+            return $type;
         }
 
         if ($type instanceof \ReflectionNamedType && $type->isBuiltin() && $type->getName() !== 'object') {
