@@ -160,6 +160,21 @@ final class FillPropertiesTest extends TestCase
         $this->assertEquals(Status::Inactive, $command->nullableFilled);
     }
 
+    public function testInvalidEnum(): void
+    {
+        $input = $this->createMock(InputInterface::class);
+        $input->expects($this->once())->method('hasOption')->willReturn(true);
+        $input->expects($this->once())->method('getOption')->willReturn('foo');
+
+        $command = new #[AsCommand('foo')] class extends Command {
+            #[Option]
+            public Status $status;
+        };
+
+        $this->expectExceptionMessage('Wrong option value. Allowed options: `1`, `0`.');
+        $this->parser->fillProperties($command, $input);
+    }
+
     public function testSkipPropertyIfOptionNotDefined(): void
     {
         $input = $this->createMock(InputInterface::class);

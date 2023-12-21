@@ -179,15 +179,26 @@ final class Parser
             return $value;
         }
 
-        $typeName = $type->getName();
+        if (!$type->isBuiltin() && \enum_exists($type->getName())) {
+            try {
+                /** @var class-string<\BackedEnum> $enum */
+                $enum = $type->getName();
 
-        return match (true) {
-            $typeName === 'int' => (int) $value,
-            $typeName === 'string' => (string) $value,
-            $typeName === 'bool' => (bool) $value,
-            $typeName === 'float' => (float) $value,
-            $typeName === 'array' => (array) $value,
-            \enum_exists($typeName) => $typeName::from($value),
+                return $enum::from($value);
+            } catch (\Throwable) {
+                throw new ConfiguratorException(\sprintf('Wrong option value. Allowed options: `%s`.', \implode(
+                    '`, `',
+                    \array_map(static fn (\BackedEnum $item): string => (string) $item->value, $enum::cases())
+                )));
+            }
+        }
+
+        return match ($type->getName()) {
+            'int' => (int) $value,
+            'string' => (string) $value,
+            'bool' => (bool) $value,
+            'float' => (float) $value,
+            'array' => (array) $value,
             default => $value
         };
     }
