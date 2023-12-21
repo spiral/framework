@@ -6,13 +6,14 @@ namespace Spiral\Core\Internal;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use ReflectionFunctionAbstract as ContextFunction;
+use ReflectionParameter;
 use Spiral\Core\Attribute\Finalize;
 use Spiral\Core\Attribute\Scope as ScopeAttribute;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Config\Injectable;
 use Spiral\Core\Config\DeferredFactory;
-use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\AutowireException;
@@ -29,6 +30,7 @@ use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Factory\Ctx;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
+use Stringable;
 use WeakReference;
 
 /**
@@ -64,7 +66,7 @@ final class Factory implements FactoryInterface
      *
      * @throws \Throwable
      */
-    public function make(string $alias, array $parameters = [], string $context = null): mixed
+    public function make(string $alias, array $parameters = [], string|Stringable $context = null): mixed
     {
         if ($parameters === [] && \array_key_exists($alias, $this->state->singletons)) {
             return $this->state->singletons[$alias];
@@ -110,7 +112,7 @@ final class Factory implements FactoryInterface
     private function resolveInjector(
         Injectable $binding,
         string $alias,
-        ?string $context,
+        Stringable|string|null $context,
         array $arguments,
     ) {
         $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context);
@@ -142,10 +144,34 @@ final class Factory implements FactoryInterface
                 );
             }
 
-            /**
-             * @psalm-suppress RedundantCondition
-             */
-            $instance = $injectorInstance->createInjection($reflection, $ctx->parameter);
+            // todo test with anonymous classes
+            /** @var array<class-string<InjectorInterface>, \ReflectionMethod|false> $cache True means extended injector */
+            static $cache = [];
+            $extended = $cache[$injectorInstance::class] ??= (static function (\ReflectionType $type) {
+                if ($type::class === \ReflectionUnionType::class) {
+                    foreach ($type->getTypes() as $t) {
+                        if (!$t->isBuiltin()) {
+                            return true;
+                        }
+                        // if (\in_array($t->getName(), [ReflectionParameter::class, Stringable::class, 'object'], true)) {
+                        //     return true;
+                        // }
+                    }
+                }
+
+                return (string)$type === 'mixed';
+            })(
+                ($refMethod = new \ReflectionMethod($injectorInstance, 'createInjection'))
+                    ->getParameters()[1]->getType()
+            ) ? $refMethod : false;
+
+            $asIs = $extended && (\is_string($context) || $this->validateArguments($extended, [$reflection, $context]));
+            $instance = $injectorInstance->createInjection($reflection, match(true) {
+                $asIs => $context,
+                $context instanceof ReflectionParameter => $context->getName(),
+                default => (string)$context,
+            });
+
             if (!$reflection->isInstance($instance)) {
                 throw new InjectionException(
                     \sprintf(
@@ -164,7 +190,7 @@ final class Factory implements FactoryInterface
     private function resolveAlias(
         \Spiral\Core\Config\Alias $binding,
         string $alias,
-        ?string $context,
+        Stringable|string|null $context,
         array $arguments,
     ): mixed {
         $result = $binding->alias === $alias
@@ -185,7 +211,7 @@ final class Factory implements FactoryInterface
     private function resolveShared(
         \Spiral\Core\Config\Shared $binding,
         string $alias,
-        ?string $context,
+        Stringable|string|null $context,
         array $arguments,
     ): object {
         $avoidCache = $arguments !== [];
@@ -200,7 +226,7 @@ final class Factory implements FactoryInterface
     private function resolveAutowire(
         \Spiral\Core\Config\Autowire $binding,
         string $alias,
-        ?string $context,
+        Stringable|string|null $context,
         array $arguments,
     ): mixed {
         $instance = $binding->autowire->resolve($this, $arguments);
@@ -212,7 +238,7 @@ final class Factory implements FactoryInterface
     private function resolveFactory(
         \Spiral\Core\Config\Factory|DeferredFactory $binding,
         string $alias,
-        ?string $context,
+        Stringable|string|null $context,
         array $arguments,
     ): mixed {
         $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context, singleton: $binding->singleton);
@@ -234,7 +260,7 @@ final class Factory implements FactoryInterface
     private function resolveWeakReference(
         \Spiral\Core\Config\WeakReference $binding,
         string $alias,
-        ?string $context,
+        Stringable|string|null $context,
         array $arguments,
     ): ?object {
         $avoidCache = $arguments !== [];
@@ -269,8 +295,11 @@ final class Factory implements FactoryInterface
         return $binding->reference->get();
     }
 
-    private function resolveWithoutBinding(string $alias, array $parameters = [], string $context = null): mixed
-    {
+    private function resolveWithoutBinding(
+        string $alias,
+        array $parameters = [],
+        Stringable|string|null $context = null
+    ): mixed {
         $parent = $this->scope->getParent();
 
         if ($parent !== null) {
@@ -302,7 +331,7 @@ final class Factory implements FactoryInterface
         try {
             //No direct instructions how to construct class, make is automatically
             return $this->autowire(
-                new Ctx(alias: $alias, class: $alias, parameter: $context),
+                new Ctx(alias: $alias, class: $alias, parameter: (string)$context),
                 $parameters,
             );
         } finally {
@@ -526,5 +555,16 @@ final class Factory implements FactoryInterface
         }
 
         return $instance;
+    }
+
+    private function validateArguments(ContextFunction $reflection, array $arguments = []): bool
+    {
+        try {
+            $this->resolver->validateArguments($reflection, $arguments);
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return true;
     }
 }

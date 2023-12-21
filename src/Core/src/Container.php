@@ -114,7 +114,7 @@ final class Container implements
      * @throws ContainerException
      * @throws \Throwable
      */
-    public function make(string $alias, array $parameters = [], string $context = null): mixed
+    public function make(string $alias, array $parameters = [], \Stringable|string|null $context = null): mixed
     {
         /** @psalm-suppress TooManyArguments */
         return $this->factory->make($alias, $parameters, $context);

@@ -17,7 +17,7 @@ final class Ctx
     public function __construct(
         public readonly string $alias,
         public string $class,
-        public ?string $parameter = null,
+        public \Stringable|string|null $parameter = null,
         public ?bool $singleton = null,
         public ?\ReflectionClass $reflection = null,
     ) {

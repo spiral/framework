@@ -47,7 +47,7 @@ final class Container implements ContainerInterface
      * @throws ContainerException
      * @throws \Throwable
      */
-    public function get(string|Autowire $id, string $context = null): mixed
+    public function get(string|Autowire $id, \Stringable|string|null $context = null): mixed
     {
         if ($id instanceof Autowire) {
             return $id->resolve($this->factory);

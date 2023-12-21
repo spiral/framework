@@ -13,6 +13,7 @@ use Spiral\Core\ConfigsInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\InjectionException;
+use Spiral\Tests\Core\Fixtures\ExtendedContextInjector;
 use Spiral\Tests\Core\Fixtures\InjectableClassChildImplementation;
 use Spiral\Tests\Core\Fixtures\InjectableClassChildInterface;
 use Spiral\Tests\Core\Fixtures\InjectableClassInterface;
@@ -20,6 +21,7 @@ use Spiral\Tests\Core\Fixtures\InjectableClassImplementation;
 use Spiral\Tests\Core\Fixtures\InvalidInjector;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\TestConfig;
+use stdClass;
 
 class InjectableTest extends TestCase
 {
@@ -188,6 +190,17 @@ class InjectableTest extends TestCase
         $container->bindInjector(InjectableClassInterface::class, 'injector');
 
         $container->get($class);
+    }
+
+    public function testExtendedInjector(): void
+    {
+        $container = new Container();
+        $container->bindInjector(stdClass::class, ExtendedContextInjector::class);
+
+        $result = $container->invoke(fn(stdClass $dt) => $dt);
+
+        $this->assertInstanceOf(stdClass::class, $result);
+        $this->assertInstanceOf(\ReflectionParameter::class, $result->context);
     }
 
     /**
