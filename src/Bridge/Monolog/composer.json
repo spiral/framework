@@ -31,7 +31,7 @@
         "monolog/monolog": "^2.2"
     },
     "require-dev": {
-        "spiral/boot": "^3.11",
+        "spiral/boot": "^3.12",
         "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^5.9"
@@ -48,7 +48,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.11.x-dev"
+            "dev-master": "3.12.x-dev"
         }
     },
     "config": {
