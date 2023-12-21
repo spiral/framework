@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.11.0 - 2023-12-21
 
 - **Other Features**
     - The `Spiral\Debug\Config\DebugConfig` has been added for easy addition of **tags** and **collectors**.
