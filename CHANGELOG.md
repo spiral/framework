@@ -4,6 +4,7 @@
 
 - **Other Features**
     - The `Spiral\Debug\Config\DebugConfig` has been added for easy addition of **tags** and **collectors**.
+    - [spiral/console] The ability to use **enum** as an option in a console command when configuring it with attributes has been added.
 
 ## 3.10.0 - 2023-11-24
 

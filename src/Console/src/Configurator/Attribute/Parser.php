@@ -179,6 +179,20 @@ final class Parser
             return $value;
         }
 
+        if (!$type->isBuiltin() && \enum_exists($type->getName())) {
+            try {
+                /** @var class-string<\BackedEnum> $enum */
+                $enum = $type->getName();
+
+                return $enum::from($value);
+            } catch (\Throwable) {
+                throw new ConfiguratorException(\sprintf('Wrong option value. Allowed options: `%s`.', \implode(
+                    '`, `',
+                    \array_map(static fn (\BackedEnum $item): string => (string) $item->value, $enum::cases())
+                )));
+            }
+        }
+
         return match ($type->getName()) {
             'int' => (int) $value,
             'string' => (string) $value,
@@ -209,6 +223,10 @@ final class Parser
                     return $type;
                 }
             }
+        }
+
+        if (!$type->isBuiltin() && \enum_exists($type->getName())) {
+            return $type;
         }
 
         if ($type instanceof \ReflectionNamedType && $type->isBuiltin() && $type->getName() !== 'object') {

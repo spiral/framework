@@ -11,6 +11,7 @@ use Spiral\Console\Attribute\AsCommand;
 use Spiral\Console\Attribute\Option;
 use Spiral\Console\Command;
 use Spiral\Console\Configurator\Attribute\Parser;
+use Spiral\Tests\Console\Fixtures\Status;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -126,6 +127,52 @@ final class FillPropertiesTest extends TestCase
         $this->assertSame(0.5, $command->floatVal);
         $this->assertTrue($command->boolVal);
         $this->assertTrue($command->otherBoolVal);
+    }
+
+    public function testEnumOption(): void
+    {
+        $input = $this->createMock(InputInterface::class);
+        $input
+            ->expects($this->exactly(3))
+            ->method('hasOption')
+            ->willReturn(true);
+
+        $input
+            ->expects($this->exactly(3))
+            ->method('getOption')
+            ->willReturnOnConsecutiveCalls(1, null, 0);
+
+        $command = new #[AsCommand('foo')] class extends Command {
+            #[Option(mode: InputOption::VALUE_REQUIRED)]
+            public Status $required;
+
+            #[Option(mode: InputOption::VALUE_OPTIONAL)]
+            public ?Status $nullable = null;
+
+            #[Option(mode: InputOption::VALUE_OPTIONAL)]
+            public ?Status $nullableFilled = null;
+        };
+
+        $this->parser->fillProperties($command, $input);
+
+        $this->assertEquals(Status::Active, $command->required);
+        $this->assertNull($command->nullable);
+        $this->assertEquals(Status::Inactive, $command->nullableFilled);
+    }
+
+    public function testInvalidEnum(): void
+    {
+        $input = $this->createMock(InputInterface::class);
+        $input->expects($this->once())->method('hasOption')->willReturn(true);
+        $input->expects($this->once())->method('getOption')->willReturn('foo');
+
+        $command = new #[AsCommand('foo')] class extends Command {
+            #[Option]
+            public Status $status;
+        };
+
+        $this->expectExceptionMessage('Wrong option value. Allowed options: `1`, `0`.');
+        $this->parser->fillProperties($command, $input);
     }
 
     public function testSkipPropertyIfOptionNotDefined(): void
