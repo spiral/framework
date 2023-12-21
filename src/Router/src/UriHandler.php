@@ -35,8 +35,6 @@ final class UriHandler
 
     private ?string $pattern = null;
 
-    /** @internal */
-    private readonly SlugifyInterface $slugify;
     private readonly RoutePatternRegistryInterface $patternRegistry;
     private array $constrains = [];
     private array $defaults = [];
@@ -49,13 +47,34 @@ final class UriHandler
     private ?string $template = null;
     private array $options = [];
 
+    private \Closure $pathSegmentEncoder;
+
+    /**
+     * Note: SlugifyInterface will be removed in next major release.
+     * @see UriHandler::withPathSegmentEncoder() for more details.
+     */
     public function __construct(
         private readonly UriFactoryInterface $uriFactory,
         SlugifyInterface $slugify = null,
         ?RoutePatternRegistryInterface $patternRegistry = null,
     ) {
         $this->patternRegistry = $patternRegistry ?? new DefaultPatternRegistry();
-        $this->slugify = $slugify ?? new Slugify();
+
+        $slugify ??= new Slugify();
+        $this->pathSegmentEncoder = static fn(string $segment): string => $slugify->slugify($segment);
+    }
+
+    /**
+     * Set custom path segment encoder.
+     *
+     * @param \Closure(non-empty-string): non-empty-string $callable Callable must accept string and return string.
+     */
+    public function withPathSegmentEncoder(\Closure $callable): self
+    {
+        $uriHandler = clone $this;
+        $uriHandler->pathSegmentEncoder = $callable;
+
+        return $uriHandler;
     }
 
     public function getPattern(): ?string
@@ -220,9 +239,9 @@ final class UriHandler
                 continue;
             }
 
-            //String must be normalized here
+            // String must be normalized here
             if (\is_string($parameter) && !\preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
-                $result[$key] = $this->slugify->slugify($parameter);
+                $result[$key] = ($this->pathSegmentEncoder)($parameter);
                 continue;
             }
 
