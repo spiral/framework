@@ -158,8 +158,6 @@ final class Container implements
 
     /**
      * @throws \Throwable
-     *
-     * @deprecated use {@see runScoped()} instead.
      */
     public function runScope(array $bindings, callable $scope): mixed
     {
@@ -211,35 +209,26 @@ final class Container implements
         // Open scope
         $container = new self($this->config, $name);
 
-        try {
-            // Configure scope
-            $container->scope->setParent($this, $this->scope);
+        // Configure scope
+        $container->scope->setParent($this, $this->scope);
 
-            // Add specific bindings
-            foreach ($bindings as $alias => $resolver) {
-                $container->binder->bind($alias, $resolver);
-            }
-
-            return ContainerScope::runScope(
-                $container,
-                static function (self $container) use ($autowire, $closure): mixed {
-                    try {
-                        return $autowire
-                            ? $container->invoke($closure)
-                            : $closure($container);
-                    } finally {
-                        $container->closeScope();
-                    }
-                }
-            );
-        } finally {
-            // Check the container has not been leaked
-            $link = \WeakReference::create($container);
-            unset($container);
-            if ($link->get() !== null) {
-                throw new ScopeContainerLeakedException($name, $this->scope->getParentScopeNames());
-            }
+        // Add specific bindings
+        foreach ($bindings as $alias => $resolver) {
+            $container->binder->bind($alias, $resolver);
         }
+
+        return ContainerScope::runScope(
+            $container,
+            static function (self $container) use ($autowire, $closure): mixed {
+                try {
+                    return $autowire
+                        ? $container->invoke($closure)
+                        : $closure($container);
+                } finally {
+                    $container->closeScope();
+                }
+            }
+        );
     }
 
     /**
