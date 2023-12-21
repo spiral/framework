@@ -24,7 +24,8 @@ final class ValidateCommand extends Command
             }
             $attribute = $reader->firstClassMetadata($class, AbstractTarget::class);
             if ($attribute === null) {
-                $invalid[$class->getName()] = 'Add #[TargetClass] or #[TargetAttribute] attribute to the listener';
+                $invalid[$class->getName()] = 'Add <comment>#[TargetClass]</comment> or ' .
+                    '<comment>#[TargetAttribute]</comment> attribute to the listener';
             }
         }
 
