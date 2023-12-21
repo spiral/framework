@@ -61,7 +61,7 @@ final class UriHandler
         $this->patternRegistry = $patternRegistry ?? new DefaultPatternRegistry();
 
         $slugify ??= new Slugify();
-        $this->pathSegmentEncoder = static fn(string $segment): string => $slugify->slugify($segment);
+        $this->pathSegmentEncoder = static fn (string $segment): string => $slugify->slugify($segment);
     }
 
     /**
