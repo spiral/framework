@@ -208,7 +208,7 @@ final class Resolver implements ResolverInterface
             $types = $reflectionType instanceof ReflectionNamedType ? [$reflectionType] : $reflectionType->getTypes();
             foreach ($types as $namedType) {
                 try {
-                    if (!$namedType->isBuiltin() && $this->resolveObject($state, $namedType, $parameter, $validate,)) {
+                    if (!$namedType->isBuiltin() && $this->resolveObject($state, $namedType, $parameter, $validate)) {
                         return true;
                     }
                 } catch (Throwable $e) {

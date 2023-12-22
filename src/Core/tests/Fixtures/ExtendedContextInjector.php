@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Fixtures;
 
-use DateTimeInterface;
 use Spiral\Core\Container\InjectorInterface;
+use stdClass;
 
 /**
- * @implements InjectorInterface<DateTimeInterface>
+ * @implements InjectorInterface<stdClass>
  */
 class ExtendedContextInjector implements InjectorInterface
 {

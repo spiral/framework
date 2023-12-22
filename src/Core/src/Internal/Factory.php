@@ -62,11 +62,11 @@ final class Factory implements FactoryInterface
     }
 
     /**
-     * @param string|null $context Related to parameter caused injection if any.
+     * @param Stringable|string|null $context Related to parameter caused injection if any.
      *
      * @throws \Throwable
      */
-    public function make(string $alias, array $parameters = [], string|Stringable $context = null): mixed
+    public function make(string $alias, array $parameters = [], Stringable|string|null $context = null): mixed
     {
         if ($parameters === [] && \array_key_exists($alias, $this->state->singletons)) {
             return $this->state->singletons[$alias];
@@ -96,7 +96,11 @@ final class Factory implements FactoryInterface
                 DeferredFactory::class,
                 \Spiral\Core\Config\Factory::class => $this->resolveFactory($binding, $alias, $context, $parameters),
                 \Spiral\Core\Config\Shared::class => $this->resolveShared($binding, $alias, $context, $parameters),
-                Injectable::class => $this->resolveInjector($binding, $alias, $context, $parameters),
+                Injectable::class => $this->resolveInjector(
+                    $binding,
+                    new Ctx(alias: $alias, class: $alias, context: $context),
+                    $parameters,
+                ),
                 \Spiral\Core\Config\Scalar::class => $binding->value,
                 \Spiral\Core\Config\WeakReference::class => $this
                     ->resolveWeakReference($binding, $alias, $context, $parameters),
@@ -109,22 +113,11 @@ final class Factory implements FactoryInterface
         }
     }
 
-    private function resolveInjector(
-        Injectable $binding,
-        string $alias,
-        Stringable|string|null $context,
-        array $arguments,
-    ) {
-        $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context);
-
-        // We have to construct class using external injector when we know exact context
-        if ($arguments !== []) {
-            // todo factory?
-        }
-
-        $class = $ctx->class;
+    private function resolveInjector(Injectable $binding, Ctx $ctx, array $arguments)
+    {
+        $context = $ctx->context;
         try {
-            $ctx->reflection = $reflection = new \ReflectionClass($class);
+            $reflection = $ctx->reflection ??= new \ReflectionClass($ctx->class);
         } catch (\ReflectionException $e) {
             throw new ContainerException($e->getMessage(), $e->getCode(), $e);
         }
@@ -144,29 +137,18 @@ final class Factory implements FactoryInterface
                 );
             }
 
-            // todo test with anonymous classes
-            /** @var array<class-string<InjectorInterface>, \ReflectionMethod|false> $cache True means extended injector */
+            // todo wat should we do with arguments?
+            /** @var array<class-string<InjectorInterface>, \ReflectionMethod|false> $cache reflection for extended injectors */
             static $cache = [];
-            $extended = $cache[$injectorInstance::class] ??= (static function (\ReflectionType $type) {
-                if ($type::class === \ReflectionUnionType::class) {
-                    foreach ($type->getTypes() as $t) {
-                        if (!$t->isBuiltin()) {
-                            return true;
-                        }
-                        // if (\in_array($t->getName(), [ReflectionParameter::class, Stringable::class, 'object'], true)) {
-                        //     return true;
-                        // }
-                    }
-                }
-
-                return (string)$type === 'mixed';
-            })(
+            $extended = $cache[$injectorInstance::class] ??= (static fn(\ReflectionType $type): bool =>
+                $type::class === \ReflectionUnionType::class || (string)$type === 'mixed'
+            )(
                 ($refMethod = new \ReflectionMethod($injectorInstance, 'createInjection'))
                     ->getParameters()[1]->getType()
             ) ? $refMethod : false;
 
             $asIs = $extended && (\is_string($context) || $this->validateArguments($extended, [$reflection, $context]));
-            $instance = $injectorInstance->createInjection($reflection, match(true) {
+            $instance = $injectorInstance->createInjection($reflection, match (true) {
                 $asIs => $context,
                 $context instanceof ReflectionParameter => $context->getName(),
                 default => (string)$context,
@@ -183,7 +165,7 @@ final class Factory implements FactoryInterface
 
             return $instance;
         } finally {
-            $this->state->bindings[$reflection->getName()] ??= $binding; //new Injector($injector);
+            $this->state->bindings[$reflection->getName()] ??= $binding;
         }
     }
 
@@ -195,7 +177,7 @@ final class Factory implements FactoryInterface
     ): mixed {
         $result = $binding->alias === $alias
             ? $this->autowire(
-                new Ctx(alias: $alias, class: $binding->alias, parameter: $context, singleton: $binding->singleton),
+                new Ctx(alias: $alias, class: $binding->alias, context: $context, singleton: $binding->singleton),
                 $arguments,
             )
             //Binding is pointing to something else
@@ -217,7 +199,7 @@ final class Factory implements FactoryInterface
         $avoidCache = $arguments !== [];
         return $avoidCache
             ? $this->createInstance(
-                new Ctx(alias: $alias, class: $binding->value::class, parameter: $context),
+                new Ctx(alias: $alias, class: $binding->value::class, context: $context),
                 $arguments,
             )
             : $binding->value;
@@ -231,7 +213,7 @@ final class Factory implements FactoryInterface
     ): mixed {
         $instance = $binding->autowire->resolve($this, $arguments);
 
-        $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context, singleton: $binding->singleton);
+        $ctx = new Ctx(alias: $alias, class: $alias, context: $context, singleton: $binding->singleton);
         return $this->validateNewInstance($instance, $ctx, $arguments);
     }
 
@@ -241,7 +223,7 @@ final class Factory implements FactoryInterface
         Stringable|string|null $context,
         array $arguments,
     ): mixed {
-        $ctx = new Ctx(alias: $alias, class: $alias, parameter: $context, singleton: $binding->singleton);
+        $ctx = new Ctx(alias: $alias, class: $alias, context: $context, singleton: $binding->singleton);
         try {
             $instance = $binding::class === \Spiral\Core\Config\Factory::class && $binding->getParametersCount() === 0
                 ? ($binding->factory)()
@@ -270,7 +252,7 @@ final class Factory implements FactoryInterface
                 $this->tracer->push(false, alias: $alias, source: WeakReference::class, context: $context);
 
                 $object = $this->createInstance(
-                    new Ctx(alias: $alias, class: $alias, parameter: $context),
+                    new Ctx(alias: $alias, class: $alias, context: $context),
                     $arguments,
                 );
                 if ($avoidCache) {
@@ -331,7 +313,7 @@ final class Factory implements FactoryInterface
         try {
             //No direct instructions how to construct class, make is automatically
             return $this->autowire(
-                new Ctx(alias: $alias, class: $alias, parameter: (string)$context),
+                new Ctx(alias: $alias, class: $alias, context: $context),
                 $parameters,
             );
         } finally {
@@ -424,8 +406,8 @@ final class Factory implements FactoryInterface
         }
 
         //We have to construct class using external injector when we know exact context
-        if ($parameters === [] && $this->binder->hasInjector($class)) {
-            return $this->resolveInjector($this->state->bindings[$ctx->class], $ctx->class, $ctx->parameter, $parameters);
+        if ($this->binder->hasInjector($class)) {
+            return $this->resolveInjector($this->state->bindings[$ctx->class], $ctx, $parameters);
         }
 
         if (!$reflection->isInstantiable()) {

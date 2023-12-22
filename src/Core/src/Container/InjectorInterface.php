@@ -24,10 +24,10 @@ interface InjectorInterface
      *
      * @param \ReflectionClass $class Request class type.
      * @param string|null $context Parameter or alias name.
-     * @psalm-assert \ReflectionClass<TClass> $class
      *
      * @return TClass
      *
+     * @psalm-assert \ReflectionClass<TClass> $class
      * @throws ContainerException
      */
     public function createInjection(\ReflectionClass $class, ?string $context = null): object;
