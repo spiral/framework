@@ -140,7 +140,8 @@ final class Factory implements FactoryInterface
             // todo wat should we do with arguments?
             /** @var array<class-string<InjectorInterface>, \ReflectionMethod|false> $cache reflection for extended injectors */
             static $cache = [];
-            $extended = $cache[$injectorInstance::class] ??= (static fn(\ReflectionType $type): bool =>
+            $extended = $cache[$injectorInstance::class] ??= (
+                static fn (\ReflectionType $type): bool =>
                 $type::class === \ReflectionUnionType::class || (string)$type === 'mixed'
             )(
                 ($refMethod = new \ReflectionMethod($injectorInstance, 'createInjection'))
