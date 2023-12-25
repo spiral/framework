@@ -6,4 +6,5 @@ namespace Spiral\Tests\Core\Scope\Stub;
 
 interface LoggerInterface
 {
+    public function getName(): string;
 }
