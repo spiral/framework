@@ -11,8 +11,6 @@ use Spiral\Tests\Core\Scope\Stub\ScopedProxyLoggerCarrier;
 
 final class ProxyTest extends BaseTestCase
 {
-    /**
-     */
     public function testResolveSameDependencyFromDifferentScopes(): void
     {
         $root = new Container();

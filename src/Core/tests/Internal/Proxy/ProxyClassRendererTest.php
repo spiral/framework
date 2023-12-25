@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spiral\Tests\Core\Internal\Proxy;
 
 use ArrayAccess;
 use Countable;
 use PHPUnit\Framework\TestCase;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Internal\Proxy\ProxyClassRenderer;
-use stdClass;
+use Spiral\Tests\Core\Fixtures\SimpleEnum;
 
 /**
  * @coversDefaultClass \Spiral\Core\Internal\Proxy\ProxyClassRenderer
@@ -24,7 +27,8 @@ final class ProxyClassRendererTest extends TestCase
     {
         $from = static fn(\Closure $closure): \ReflectionParameter => new \ReflectionParameter($closure, 0);
 
-        yield [$from(fn(string $string = '') => 0), 'string $string = \'\''];
+        yield [$from(fn($string) => 0), '$string'];
+        yield [$from(fn($string = '') => 0), '$string = \'\''];
         yield [$from(fn(string $string = "\n\\'\"") => 0), "string \$string = '\n\\\\\\'\"'"];
         yield [$from(fn(string $string = '123') => 0), 'string $string = \'123\''];
         yield [$from(fn(string $string = self::STRING_CONST) => 0), 'string $string = self::STRING_CONST'];
@@ -38,12 +42,20 @@ final class ProxyClassRendererTest extends TestCase
         yield [$from(fn(?bool $string = false) => 0), '?bool $string = false'];
         yield [$from(fn(bool|null $string = true) => 0), '?bool $string = true'];
         yield [$from(fn(object $string = null) => 0), '?object $string = NULL'];
-        yield [$from(fn(Countable&ArrayAccess $val) => 0), 'Countable&ArrayAccess $val'];
+        yield [$from(fn(Countable&ArrayAccess $val) => 0), '\Countable&\ArrayAccess $val'];
         yield [$from(fn(string ...$val) => 0), 'string ...$val'];
         yield [$from(fn(string|int ...$val) => 0), 'string|int ...$val'];
         yield [$from(fn(string|int &$link) => 0), 'string|int &$link'];
-        // yield [$from(self::withSelf(...)), 'object $link = new self()'];
-        // yield [$from(fn(object $link = new stdClass()) => 0), 'object $link = new stdClass()'];
+        yield [$from(self::withSelf(...)), \sprintf('\%s $self = new self()', self::class)];
+        yield [$from(fn(object $link = new \stdClass()) => 0), 'object $link = new \stdClass()'];
+        yield [
+            $from(fn(#[Proxy] float|int|\stdClass|null $string = new \stdClass(1, 2, bar: "\n'zero")) => 0),
+            "\stdClass|int|float|null \$string = new \stdClass(1, 2, bar: '\n\'zero')",
+        ];
+        yield [
+            $from(fn(SimpleEnum $val = SimpleEnum::B) => 0),
+            \sprintf('\%s $val = \%s::B', SimpleEnum::class, SimpleEnum::class),
+        ];
     }
 
     private static function withSelf(self $self = new self()): void

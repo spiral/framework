@@ -54,19 +54,44 @@ final class ProxyClassRenderer
 
     public static function renderParameter(\ReflectionParameter $param): string
     {
-        return \sprintf(
+        return \ltrim(\sprintf(
             '%s %s%s%s%s',
             self::renderParameterTypes($param),
             $param->isPassedByReference() ? '&' : '',
             $param->isVariadic() ? '...' : '',
             '$' . $param->getName(),
             $param->isOptional() && !$param->isVariadic() ? ' = ' . self::renderDefaultValue($param) : '',
-        );
+        ), ' ');
     }
 
     public static function renderParameterTypes(\ReflectionParameter $param): string
     {
-        return $param->hasType() ? (string)$param->getType() : '';
+        if (!$param->hasType()) {
+            return '';
+        }
+
+        $types = $param->getType();
+
+        if ($types instanceof \ReflectionNamedType) {
+            return ($types->allowsNull() ? '?' : '') . ($types->isBuiltin()
+                ? $types->getName()
+                : self::normalizeClassType($types, $param));
+        }
+
+        [$separator, $types] = match (true) {
+            $types instanceof \ReflectionUnionType => ['|', $types->getTypes()],
+            $types instanceof \ReflectionIntersectionType => ['&', $types->getTypes()],
+            default => throw new \Exception('Unknown type.'),
+        };
+
+        $result = [];
+        foreach ($types as $type) {
+            $result[] = $type->isBuiltin()
+                ? $type->getName()
+                : self::normalizeClassType($type, $param);
+        }
+
+        return \implode($separator, $result);
     }
 
     public static function renderDefaultValue(\ReflectionParameter $param): string
@@ -79,11 +104,22 @@ final class ProxyClassRenderer
                 : '\\' . $result;
         }
 
-        $default = $param->getDefaultValue();
-        // if (\is_object($default)) {
-        //     throw new \Exception('Object default values are not supported');
-        // }
+        $cut = self::cutDefaultValue($param);
 
-        return \var_export($default, true);
+        return \str_starts_with($cut, 'new ')
+            ? $cut
+            : \var_export($param->getDefaultValue(), true);
+    }
+
+    public static function normalizeClassType(\ReflectionNamedType $type, \ReflectionParameter $param): string
+    {
+        return '\\' . ($type->getName() === 'self' ? $param->getDeclaringClass()->getName() : $type->getName());
+    }
+
+    private static function cutDefaultValue(\ReflectionParameter $param): string
+    {
+        $string = (string)$param;
+
+        return \trim(\substr($string, \strpos($string, '=') + 1, -1));
     }
 }
