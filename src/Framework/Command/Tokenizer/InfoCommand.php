@@ -77,7 +77,7 @@ final class InfoCommand extends Command
         foreach ($listeners as $listener) {
             $grid->addRow([
                 $listener,
-                \str_replace($dirs->get('root'), '', (new \ReflectionClass($listener))->getFileName())
+                \str_replace($dirs->get('root'), '', (new \ReflectionClass($listener))->getFileName()),
             ]);
         }
 
