@@ -9,9 +9,10 @@ use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 use Spiral\Tests\Core\Scope\Stub\ScopedProxyLoggerCarrier;
 
+// todo: add test with proxy and injector
 final class ProxyTest extends BaseTestCase
 {
-    public function testResolveSameDependencyFromDifferentScopes(): void
+    public function testResolveSameDependencyFromDifferentScopesSingleton(): void
     {
         $root = new Container();
         $root->getBinder('http')->bindSingleton(LoggerInterface::class, KVLogger::class);
@@ -31,7 +32,7 @@ final class ProxyTest extends BaseTestCase
         });
     }
 
-    public function testResolveSameDependencyFromDifferentScopes2(): void
+    public function testResolveSameDependencyFromDifferentScopesNotSingleton(): void
     {
         $root = new Container();
         $root->getBinder('foo')->bind(LoggerInterface::class, KVLogger::class);

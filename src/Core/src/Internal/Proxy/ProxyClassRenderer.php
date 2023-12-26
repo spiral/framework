@@ -47,7 +47,9 @@ final class ProxyClassRenderer
             $m->isStatic() ? ' static' : '',
             $m->getName(),
             \implode(', ', \array_map([self::class, 'renderParameter'], $m->getParameters())),
-            $m->getReturnType() ? ': ' . $m->getReturnType() : '',
+            $m->hasReturnType()
+                ? ': ' . self::renderParameterTypes($m->getReturnType(), $m->getDeclaringClass())
+                : '',
             $body,
         );
     }
@@ -56,7 +58,7 @@ final class ProxyClassRenderer
     {
         return \ltrim(\sprintf(
             '%s %s%s%s%s',
-            self::renderParameterTypes($param),
+            $param->hasType() ? self::renderParameterTypes($param->getType(), $param->getDeclaringClass()) : '',
             $param->isPassedByReference() ? '&' : '',
             $param->isVariadic() ? '...' : '',
             '$' . $param->getName(),
@@ -64,18 +66,12 @@ final class ProxyClassRenderer
         ), ' ');
     }
 
-    public static function renderParameterTypes(\ReflectionParameter $param): string
+    public static function renderParameterTypes(\ReflectionType $types, \ReflectionClass $class): string
     {
-        if (!$param->hasType()) {
-            return '';
-        }
-
-        $types = $param->getType();
-
         if ($types instanceof \ReflectionNamedType) {
             return ($types->allowsNull() ? '?' : '') . ($types->isBuiltin()
                 ? $types->getName()
-                : self::normalizeClassType($types, $param));
+                : self::normalizeClassType($types, $class));
         }
 
         [$separator, $types] = match (true) {
@@ -88,7 +84,7 @@ final class ProxyClassRenderer
         foreach ($types as $type) {
             $result[] = $type->isBuiltin()
                 ? $type->getName()
-                : self::normalizeClassType($type, $param);
+                : self::normalizeClassType($type, $class);
         }
 
         return \implode($separator, $result);
@@ -111,9 +107,9 @@ final class ProxyClassRenderer
             : \var_export($param->getDefaultValue(), true);
     }
 
-    public static function normalizeClassType(\ReflectionNamedType $type, \ReflectionParameter $param): string
+    public static function normalizeClassType(\ReflectionNamedType $type, \ReflectionClass $class): string
     {
-        return '\\' . ($type->getName() === 'self' ? $param->getDeclaringClass()->getName() : $type->getName());
+        return '\\' . ($type->getName() === 'self' ? $class->getName() : $type->getName());
     }
 
     private static function cutDefaultValue(\ReflectionParameter $param): string

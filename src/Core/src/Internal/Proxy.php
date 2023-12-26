@@ -29,17 +29,16 @@ final class Proxy
 
         $className = "{$type->getNamespaceName()}\\{$type->getShortName()} SCOPED PROXY";
 
-        $classString = ProxyClassRenderer::renderClass($type, $className);
+        try {
+            $classString = ProxyClassRenderer::renderClass($type, $className);
 
-        eval($classString);
+            eval($classString);
+        } catch (\Throwable $e) {
+            throw new \Error("Unable to create proxy for `{$interface}`: {$e->getMessage()}", 0, $e);
+        }
         $instance = new $className();
         $instance::$__container_proxy_alias = $interface;
 
         return self::$cache[$interface] = $instance;
-    }
-
-    public static function isProxy(object $instance): bool
-    {
-        return \in_array($instance::class, self::$cache, true);
     }
 }

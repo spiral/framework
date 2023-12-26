@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Internal\Proxy\ProxyClassRenderer;
 use Spiral\Tests\Core\Fixtures\SimpleEnum;
+use stdClass;
 
 /**
  * @coversDefaultClass \Spiral\Core\Internal\Proxy\ProxyClassRenderer
@@ -18,12 +19,11 @@ final class ProxyClassRendererTest extends TestCase
 {
     public const STRING_CONST = 'foo';
     public const INT_CONST = 42;
-    // public const ENUM_CONST =
 
     /**
      * @psalm-suppress UnusedClosureParam
      */
-    public static function provideRenderType(): iterable
+    public static function provideRenderParameter(): iterable
     {
         $from = static fn(\Closure $closure): \ReflectionParameter => new \ReflectionParameter($closure, 0);
 
@@ -58,17 +58,61 @@ final class ProxyClassRendererTest extends TestCase
         ];
     }
 
-    private static function withSelf(self $self = new self()): void
-    {
-    }
-
     /**
-     * @dataProvider provideRenderType
+     * @dataProvider provideRenderParameter
      * @covers ::renderParameter
      * @covers ::renderParameterTypes
      */
     public function testRenderParameter(\ReflectionParameter $param, $expected): void
     {
         self::assertSame($expected, ProxyClassRenderer::renderParameter($param));
+    }
+
+    public static function provideRenderMethod(): iterable
+    {
+        $class = new class {
+            public const INT_CONST = 42;
+
+            #[ExpectedAttribute('public function test1(...$variadic)')]
+            public function test1(...$variadic) {}
+            #[ExpectedAttribute('public function test2(string|int $string = self::INT_CONST): string|int')]
+            public function test2(string|int $string = self::INT_CONST): string|int {}
+            #[ExpectedAttribute('public function test3(object $obj = new \stdClass(new \stdClass(), new \stdClass()))')]
+            public function test3(object $obj = new stdClass(new stdClass(), new stdClass())) {}
+            #[ExpectedAttribute('public function test4(): \\' . ProxyClassRendererTest::class)]
+            public function test4(): ProxyClassRendererTest {}
+        };
+
+        foreach ((new \ReflectionClass($class))->getMethods() as $method) {
+            $expected = $method->getAttributes(ExpectedAttribute::class)[0]->newInstance();
+
+            yield [$method, $expected->value];
+        }
+    }
+
+    /**
+     * @dataProvider provideRenderMethod
+     * @covers ::renderMethod
+     * @covers ::renderParameter
+     * @covers ::renderParameterTypes
+     */
+    public function testRenderMethod(\ReflectionMethod $param, $expected): void
+    {
+        $rendered = ProxyClassRenderer::renderMethod($param);
+        $signature = \trim(\substr($rendered, 0, \strrpos($rendered, '{') - 1));
+        self::assertSame($expected, $signature);
+    }
+
+    private static function withSelf(self $self = new self()): void
+    {
+    }
+}
+
+#[\Attribute(\Attribute::TARGET_METHOD)]
+final class ExpectedAttribute
+{
+    public function __construct(
+        public readonly string $value,
+    ) {
     }
 }
