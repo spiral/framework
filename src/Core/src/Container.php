@@ -14,7 +14,6 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Core\Exception\Scope\FinalizersException;
-use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
 use Spiral\Core\Internal\Common\DestructorTrait;
 use Spiral\Core\Internal\Config\StateBinder;
 
@@ -159,8 +158,12 @@ final class Container implements
     /**
      * @throws \Throwable
      */
-    public function runScope(array $bindings, callable $scope): mixed
+    public function runScope(Scope|array $bindings, callable $scope): mixed
     {
+        if (!\is_array($bindings)) {
+            return $this->runIsolatedScope($bindings, $scope);
+        }
+
         $binds = &$this->state->bindings;
         $singletons = &$this->state->singletons;
         $cleanup = $previous = $prevSin = [];
@@ -203,32 +206,12 @@ final class Container implements
 
     /**
      * Invoke given closure or function withing specific IoC scope.
+     *
+     * @deprecated Use {@see runScoped()} with the {@see Scope} as the first argument.
      */
     public function runScoped(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
     {
-        // Open scope
-        $container = new self($this->config, $name);
-
-        // Configure scope
-        $container->scope->setParent($this, $this->scope);
-
-        // Add specific bindings
-        foreach ($bindings as $alias => $resolver) {
-            $container->binder->bind($alias, $resolver);
-        }
-
-        return ContainerScope::runScope(
-            $container,
-            static function (self $container) use ($autowire, $closure): mixed {
-                try {
-                    return $autowire
-                        ? $container->invoke($closure)
-                        : $closure($container);
-                } finally {
-                    $container->closeScope();
-                }
-            }
-        );
+        return $this->runIsolatedScope(new Scope($name, $bindings, $autowire), $closure);
     }
 
     /**
@@ -369,5 +352,40 @@ final class Container implements
         if ($errors !== []) {
             throw new FinalizersException($scopeName, $errors);
         }
+    }
+
+    /**
+     * @template TReturn
+     *
+     * @param callable(mixed ...$params): TReturn $closure
+     *
+     * @return TReturn
+     * @throws \Throwable
+     */
+    private function runIsolatedScope(Scope $config, callable $closure): mixed
+    {
+        // Open scope
+        $container = new self($this->config, $config->name);
+
+        // Configure scope
+        $container->scope->setParent($this, $this->scope);
+
+        // Add specific bindings
+        foreach ($config->bindings as $alias => $resolver) {
+            $container->binder->bind($alias, $resolver);
+        }
+
+        return ContainerScope::runScope(
+            $container,
+            static function (self $container) use ($config, $closure): mixed {
+                try {
+                    return $config->autowire
+                        ? $container->invoke($closure)
+                        : $closure($container);
+                } finally {
+                    $container->closeScope();
+                }
+            }
+        );
     }
 }
