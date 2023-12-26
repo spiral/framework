@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- **Other Features**
+    - Added Tokenizer Listeners to the `Spiral\Command\Tokenizer\InfoCommand` console command.
+
 ## 3.11.0 - 2023-12-21
 
 - **Other Features**

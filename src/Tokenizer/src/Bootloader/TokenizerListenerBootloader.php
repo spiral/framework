@@ -49,9 +49,13 @@ final class TokenizerListenerBootloader extends Bootloader implements
     /** @var TokenizationListenerInterface[] */
     private array $listeners = [];
 
+    /** @var array<class-string<TokenizationListenerInterface>> */
+    private array $listenerClasses = [];
+
     public function addListener(TokenizationListenerInterface $listener): void
     {
         $this->listeners[] = $listener;
+        $this->listenerClasses[] = $listener::class;
     }
 
     public function init(AbstractKernel $kernel): void
@@ -84,6 +88,14 @@ final class TokenizerListenerBootloader extends Bootloader implements
         TokenizerConfig $config,
     ): InterfacesLoaderInterface {
         return $this->makeCachedLoader($factory, $config, CachedInterfacesLoader::class);
+    }
+
+    /**
+     * @return array<class-string<TokenizationListenerInterface>>
+     */
+    public function getListenerClasses(): array
+    {
+        return $this->listenerClasses;
     }
 
     /**
