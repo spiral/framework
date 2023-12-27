@@ -267,4 +267,26 @@ final class UseCaseTest extends BaseTestCase
             self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
         });
     }
+
+    public function testRegisterContainerOnGet(): void
+    {
+        $root = new Container();
+        $root->bind('foo', function () use ($root) {
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+        });
+
+        $root->get('foo');
+    }
+
+    public function testRegisterContainerOnMake(): void
+    {
+        $root = new Container();
+        $root->bind('foo', function () use ($root) {
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+        });
+
+        $root->make('foo');
+    }
 }

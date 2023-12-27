@@ -112,11 +112,13 @@ final class Container implements
      *
      * @throws ContainerException
      * @throws \Throwable
+     * @psalm-suppress TooManyArguments
      */
     public function make(string $alias, array $parameters = [], \Stringable|string|null $context = null): mixed
     {
-        /** @psalm-suppress TooManyArguments */
-        return $this->factory->make($alias, $parameters, $context);
+        return ContainerScope::getContainer() === $this
+            ? $this->factory->make($alias, $parameters, $context)
+            : ContainerScope::runScope($this, fn () => $this->factory->make($alias, $parameters, $context));
     }
 
     /**
@@ -136,11 +138,13 @@ final class Container implements
      *
      * @throws ContainerException
      * @throws \Throwable
+     * @psalm-suppress TooManyArguments
      */
     public function get(string|Autowire $id, string $context = null): mixed
     {
-        /** @psalm-suppress TooManyArguments */
-        return $this->container->get($id, $context);
+        return ContainerScope::getContainer() === $this
+            ? $this->container->get($id, $context)
+            : ContainerScope::runScope($this, fn () => $this->container->get($id, $context));
     }
 
     public function has(string $id): bool
@@ -269,7 +273,9 @@ final class Container implements
      */
     public function invoke(mixed $target, array $parameters = []): mixed
     {
-        return ContainerScope::runScope($this, fn () => $this->invoker->invoke($target, $parameters),);
+        return ContainerScope::getContainer() === $this
+            ? $this->invoker->invoke($target, $parameters)
+            : ContainerScope::runScope($this, fn () => $this->invoker->invoke($target, $parameters));
     }
 
     /**
