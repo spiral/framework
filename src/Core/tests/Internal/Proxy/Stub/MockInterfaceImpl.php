@@ -32,7 +32,7 @@ final class MockInterfaceImpl implements MockInterface, EmptyInterface
 
     public function extraVariadic(mixed ...$foo): array
     {
-        return \func_get_args();
+        return $foo;
     }
 
     public function concat(string $prefix, string &$byLink): void

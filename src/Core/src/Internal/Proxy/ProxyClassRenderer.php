@@ -32,7 +32,7 @@ final class ProxyClassRenderer
                 $args[] = ($param->isVariadic() ? '...' : '') . '$'. $param->getName();
             }
 
-            if (!$hasRefs) {
+            if (!$hasRefs && !$method->isVariadic()) {
                 $classBody[] = self::renderMethod($method, <<<PHP
                     {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve('{$interface}')
                         {$call}(...\\func_get_args());
