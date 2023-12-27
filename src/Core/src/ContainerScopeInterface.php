@@ -12,6 +12,7 @@ use Psr\Container\ContainerInterface;
  * @psalm-import-type TResolver from BinderInterface
  *
  * @internal We are testing this feature, it may be changed in the future.
+ * @deprecated Will be removed in the future.
  */
 interface ContainerScopeInterface extends ContainerInterface
 {

@@ -51,6 +51,7 @@ final class ContainerScope
                     $value = $fiber->throw($e);
                     continue;
                 }
+
                 self::$container = $container;
                 $value = $fiber->resume($resume);
             }
