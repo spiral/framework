@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Bug Fixes**
+  - [spiral/tokenizer] Fixed finalize for listeners
 - **Other Features**
     - Added Tokenizer Listeners to the `Spiral\Command\Tokenizer\InfoCommand` console command.
 
