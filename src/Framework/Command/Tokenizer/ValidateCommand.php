@@ -5,40 +5,36 @@ declare(strict_types=1);
 namespace Spiral\Command\Tokenizer;
 
 use Spiral\Attributes\ReaderInterface;
+use Spiral\Boot\DirectoriesInterface;
 use Spiral\Console\Command;
 use Spiral\Tokenizer\Attribute\AbstractTarget;
-use Spiral\Tokenizer\ClassesInterface;
-use Spiral\Tokenizer\TokenizationListenerInterface;
+use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
 final class ValidateCommand extends Command
 {
     protected const NAME = 'tokenizer:validate';
     protected const DESCRIPTION = 'Checks all listeners in the application to ensure they are correctly configured';
 
-    public function perform(ClassesInterface $classes, ReaderInterface $reader): int
-    {
-        $invalid = [];
-        foreach ($classes->getClasses() as $class) {
-            if (!$class->implementsInterface(TokenizationListenerInterface::class)) {
-                continue;
-            }
-            $attribute = $reader->firstClassMetadata($class, AbstractTarget::class);
-            if ($attribute === null) {
-                $invalid[$class->getName()] = 'Add <comment>#[TargetClass]</comment> or ' .
-                    '<comment>#[TargetAttribute]</comment> attribute to the listener';
-            }
-        }
-
-        if ($invalid === []) {
-            $this->info('All listeners are correctly configured.');
-
-            return self::SUCCESS;
-        }
+    public function perform(
+        TokenizerListenerRegistryInterface $registry,
+        DirectoriesInterface $dirs,
+        ReaderInterface $reader
+    ): int {
+        $listeners = \method_exists($registry, 'getListenerClasses') ? $registry->getListenerClasses() : [];
 
         $grid = $this->table(['Listener', 'Suggestion']);
-
-        foreach ($invalid as $listener => $message) {
-            $grid->addRow([$listener, $message]);
+        foreach ($listeners as $class) {
+            $ref = new \ReflectionClass($class);
+            $attribute = $reader->firstClassMetadata($ref, AbstractTarget::class);
+            $suggestion = match (true) {
+                $attribute === null => 'Add <comment>#[TargetClass]</comment> or ' .
+                    '<comment>#[TargetAttribute]</comment> attribute to the listener',
+                default => '<info>Listener is configured correctly</info>',
+            };
+            $grid->addRow([
+                $class . "\n" . \sprintf('<fg=blue>%s</>', \str_replace($dirs->get('root'), '', $ref->getFileName())),
+                $suggestion
+            ]);
         }
 
         $grid->render();
