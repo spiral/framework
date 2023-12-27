@@ -33,7 +33,7 @@ final class ValidateCommand extends Command
             };
             $grid->addRow([
                 $class . "\n" . \sprintf('<fg=blue>%s</>', \str_replace($dirs->get('root'), '', $ref->getFileName())),
-                $suggestion
+                $suggestion,
             ]);
         }
 
