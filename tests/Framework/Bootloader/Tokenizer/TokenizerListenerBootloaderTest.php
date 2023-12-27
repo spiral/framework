@@ -71,10 +71,12 @@ final class TokenizerListenerBootloaderTest extends BaseTestCase
 
     public function testListenerShouldBeListen(): void
     {
-        $this->assertCount(2, $this->classes);
+        $this->assertCount(4, $this->classes);
 
         $this->assertTrue(\in_array(\Spiral\App\Tokenizer\A::class, $this->classes));
         $this->assertTrue(\in_array(\Spiral\App\Tokenizer\B::class, $this->classes));
+        $this->assertTrue(\in_array(\Spiral\App\Tokenizer\TestEnum::class, $this->classes));
+        $this->assertTrue(\in_array(\Spiral\App\Tokenizer\ChildTestInterface::class, $this->classes));
         $this->assertTrue($this->finalized);
     }
 }
