@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Proxy\Stub;
 
+use Spiral\Core\Internal\Proxy\ProxyTrait;
+
 interface MockInterface
 {
     public function bar(string $name): void;
@@ -21,4 +23,9 @@ interface MockInterface
     public function concat(string $prefix, string &$byLink): void;
 
     public function concatMultiple(string $prefix, string &...$byLink): array;
+
+    /**
+     * Mustn't be a part of the {@see ProxyTrait}
+     */
+    public static function resolve(): void;
 }

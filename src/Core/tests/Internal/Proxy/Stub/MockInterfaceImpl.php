@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Proxy\Stub;
 
-final class MockInterfaceImpl implements MockInterface
+final class MockInterfaceImpl implements MockInterface, EmptyInterface
 {
     public function bar(string $name): void
     {
@@ -48,5 +48,9 @@ final class MockInterfaceImpl implements MockInterface
         }
 
         return $byLink;
+    }
+
+    public static function resolve(): void
+    {
     }
 }

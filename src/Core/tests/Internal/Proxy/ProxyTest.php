@@ -7,15 +7,28 @@ namespace Spiral\Tests\Core\Internal\Proxy;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Container;
+use Spiral\Tests\Core\Internal\Proxy\Stub\EmptyInterface;
+use Spiral\Tests\Core\Internal\Proxy\Stub\MockInterface;
 
 final class ProxyTest extends TestCase
 {
-    public function testSimpleCases(): void
+    public static function interfacesProvider(): iterable
+    {
+        yield [MockInterface::class, 'mock'];
+        yield [EmptyInterface::class, 'empty'];
+    }
+
+    /**
+     * @dataProvider interfacesProvider
+     */
+    public function testSimpleCases(string $interface, string $var): void
     {
         $root = new Container();
-        $root->bindSingleton(Stub\MockInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
-        $root->invoke(static function (#[Proxy] Stub\MockInterface $proxy) {
+        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+            $proxy = $$var;
             $proxy->bar(name: 'foo'); // Possible to run
             self::assertSame('foo', $proxy->baz('foo', 42));
             self::assertSame(123, $proxy->qux(age: 123));
@@ -23,35 +36,58 @@ final class ProxyTest extends TestCase
         });
     }
 
-    public function testExtraArguments(): void
+    /**
+     * @dataProvider interfacesProvider
+     */
+    public function testExtraArguments(string $interface, string $var): void
     {
         $root = new Container();
-        $root->bindSingleton(Stub\MockInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
-        $root->invoke(static function (#[Proxy] Stub\MockInterface $proxy) {
+        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+            $proxy = $$var;
             self::assertSame(['foo', 'bar', 'baz', 69], $proxy->extra('foo', 'bar', 'baz', 69));
             self::assertSame(['foo', 'bar', 'baz', 69], $proxy->extraVariadic('foo', 'bar', 'baz', 69));
         });
     }
 
-    public function testReference(): void
+    /**
+     * @dataProvider interfacesProvider
+     */
+    public function testReference(string $interface, string $var): void
     {
-        $root = new Container();
-        $root->bindSingleton(Stub\MockInterface::class, Stub\MockInterfaceImpl::class);
+        $interface === EmptyInterface::class && self::markTestSkipped(
+            'Impossible to pass reference using magic __call method'
+        );
 
-        $root->invoke(static function (#[Proxy] Stub\MockInterface $proxy) {
+        $root = new Container();
+        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+
+        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+            $proxy = $$var;
             $str = 'bar';
             $proxy->concat('foo', $str);
             self::assertSame('foobar', $str);
         });
     }
 
-    public function testReferenceVariadic(): void
+    /**
+     * @dataProvider interfacesProvider
+     */
+    public function testReferenceVariadic(string $interface, string $var): void
     {
-        $root = new Container();
-        $root->bindSingleton(Stub\MockInterface::class, Stub\MockInterfaceImpl::class);
+        $interface === EmptyInterface::class && self::markTestSkipped(
+            'Impossible to pass reference using magic __call method'
+        );
 
-        $root->invoke(static function (#[Proxy] Stub\MockInterface $proxy) {
+        $root = new Container();
+        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+
+        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+            $proxy = $$var;
             $str1 = 'bar';
             $str2 = 'baz';
             $res = $proxy->concatMultiple('foo', $str1, $str2);

@@ -34,7 +34,7 @@ final class ProxyClassRenderer
 
             if (!$hasRefs) {
                 $classBody[] = self::renderMethod($method, <<<PHP
-                    {$return}self::resolve('{$interface}')
+                    {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve('{$interface}')
                         {$call}(...\\func_get_args());
                 PHP);
                 continue;
@@ -44,20 +44,18 @@ final class ProxyClassRenderer
 
             if ($method->isVariadic()) {
                 $classBody[] = self::renderMethod($method, <<<PHP
-                    {$return}self::resolve('{$interface}')
+                    {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve('{$interface}')
                         {$call}($argsStr);
                 PHP);
                 continue;
             }
 
             $classBody[] = self::renderMethod($method, <<<PHP
-                {$return}self::resolve('{$interface}')
+                {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve('{$interface}')
                     {$call}($argsStr, ...\\array_slice(\\func_get_args(), {$method->getNumberOfParameters()}));
             PHP);
         }
         $bodyStr = \implode("\n\n", $classBody);
-
-        echo $bodyStr;
 
         return <<<PHP
             namespace $classNamespace;
