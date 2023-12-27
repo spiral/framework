@@ -269,7 +269,7 @@ final class Container implements
      */
     public function invoke(mixed $target, array $parameters = []): mixed
     {
-        return $this->invoker->invoke($target, $parameters);
+        return ContainerScope::runScope($this, fn () => $this->invoker->invoke($target, $parameters),);
     }
 
     /**
