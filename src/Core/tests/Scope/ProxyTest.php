@@ -24,7 +24,6 @@ final class ProxyTest extends BaseTestCase
 
         $root->getBinder('http')->bindSingleton(LoggerInterface::class, KVLogger::class);
 
-        // todo add fibers
         FiberHelper::runFiberSequence(
             static fn() => $root->runScope(new Scope(
                 name: 'http',

@@ -15,19 +15,49 @@ final class ProxyClassRenderer
         $classNamespace = \substr($className, 0, \strrpos($className, '\\'));
 
         $interface = $type->getName();
-        $body = [];
+        $classBody = [];
         foreach ($type->getMethods() as $method) {
             if ($method->isConstructor()) {
                 continue;
             }
 
+
+            $hasRefs = false;
+            $return = $method->hasReturnType() && (string)$method->getReturnType() === 'void' ? '' : 'return ';
             $call = ($method->isStatic() ? '::' : '->') . $method->getName();
-            $body[] = self::renderMethod($method, <<<PHP
-                    return self::resolve('{$interface}')
+
+            $args = [];
+            foreach ($method->getParameters() as $param) {
+                $hasRefs = $hasRefs || $param->isPassedByReference();
+                $args[] = ($param->isVariadic() ? '...' : '') . '$'. $param->getName();
+            }
+
+            if (!$hasRefs) {
+                $classBody[] = self::renderMethod($method, <<<PHP
+                    {$return}self::resolve('{$interface}')
                         {$call}(...\\func_get_args());
                 PHP);
+                continue;
+            }
+
+            $argsStr = \implode(', ', $args);
+
+            if ($method->isVariadic()) {
+                $classBody[] = self::renderMethod($method, <<<PHP
+                    {$return}self::resolve('{$interface}')
+                        {$call}($argsStr);
+                PHP);
+                continue;
+            }
+
+            $classBody[] = self::renderMethod($method, <<<PHP
+                {$return}self::resolve('{$interface}')
+                    {$call}($argsStr, ...\\array_slice(\\func_get_args(), {$method->getNumberOfParameters()}));
+            PHP);
         }
-        $bodyStr = \implode("\n\n", $body);
+        $bodyStr = \implode("\n\n", $classBody);
+
+        echo $bodyStr;
 
         return <<<PHP
             namespace $classNamespace;
@@ -69,7 +99,7 @@ final class ProxyClassRenderer
     public static function renderParameterTypes(\ReflectionType $types, \ReflectionClass $class): string
     {
         if ($types instanceof \ReflectionNamedType) {
-            return ($types->allowsNull() ? '?' : '') . ($types->isBuiltin()
+            return ($types->allowsNull() && $types->getName() !== 'mixed' ? '?' : '') . ($types->isBuiltin()
                 ? $types->getName()
                 : self::normalizeClassType($types, $class));
         }

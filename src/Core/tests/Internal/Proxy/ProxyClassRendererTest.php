@@ -37,11 +37,13 @@ final class ProxyClassRendererTest extends TestCase
             'string $string = \\' . self::class . '::STRING_CONST',
         ];
         yield [$from(fn(string|int $string = self::INT_CONST) => 0), 'string|int $string = self::INT_CONST'];
+        yield [$from(fn(mixed $string = 42) => 0), 'mixed $string = 42'];
         yield [$from(fn(int $string = 42) => 0), 'int $string = 42'];
         yield [$from(fn(float $string = 42) => 0), 'float $string = 42.0'];
         yield [$from(fn(?bool $string = false) => 0), '?bool $string = false'];
         yield [$from(fn(bool|null $string = true) => 0), '?bool $string = true'];
         yield [$from(fn(object $string = null) => 0), '?object $string = NULL'];
+        yield [$from(fn(iterable $string = null) => 0), '?iterable $string = NULL'];
         yield [$from(fn(Countable&ArrayAccess $val) => 0), '\Countable&\ArrayAccess $val'];
         yield [$from(fn(string ...$val) => 0), 'string ...$val'];
         yield [$from(fn(string|int ...$val) => 0), 'string|int ...$val'];
