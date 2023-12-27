@@ -113,6 +113,10 @@ final class Factory implements FactoryInterface
         }
     }
 
+    /**
+     * @psalm-suppress UnusedParam
+     * todo wat should we do with $arguments?
+     */
     private function resolveInjector(Injectable $binding, Ctx $ctx, array $arguments)
     {
         $context = $ctx->context;
@@ -137,7 +141,6 @@ final class Factory implements FactoryInterface
                 );
             }
 
-            // todo wat should we do with arguments?
             /** @var array<class-string<InjectorInterface>, \ReflectionMethod|false> $cache reflection for extended injectors */
             static $cache = [];
             $extended = $cache[$injectorInstance::class] ??= (
