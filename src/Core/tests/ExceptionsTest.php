@@ -96,7 +96,7 @@ class ExceptionsTest extends TestCase
               signature: function (Psr\Container\ContainerInterface $container, Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'autowire'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                context: 'class'
+                context: Parameter #1 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
             MARKDOWN,
         );
 
@@ -207,7 +207,7 @@ class ExceptionsTest extends TestCase
               signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
               - action: 'autowire'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                context: 'class'
+                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
             MARKDOWN
         ];
         yield 'binding' => [
@@ -223,7 +223,7 @@ class ExceptionsTest extends TestCase
               - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 scope: 'root'
-                context: 'class'
+                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
                 binding: Deferred factory 'invalid'->invalid()
                 - action: 'autowire'
                   alias: 'invalid'
@@ -243,11 +243,11 @@ class ExceptionsTest extends TestCase
               - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 scope: 'root'
-                context: 'class'
+                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
                 binding: Alias to `Spiral\Tests\Core\Fixtures\WithPrivateConstructor`
                 - action: 'autowire'
                   alias: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
-                  context: 'class'
+                  context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
             MARKDOWN
         ];
         yield 'withClosure' => [
@@ -275,7 +275,7 @@ class ExceptionsTest extends TestCase
               - action: 'resolve from binding'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 scope: 'root'
-                context: 'class'
+                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
                 binding: Factory from static function (Psr\Container\ContainerInterface $container)
                 - action: 'autowire'
                   alias: 'invalid'
