@@ -229,20 +229,11 @@ final class Container implements
      * @throws \Throwable
      *
      * @deprecated Use {@see runScope()} with the {@see Scope} as the first argument.
+     * @internal Used in tests only
      */
     public function runScoped(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
     {
         return $this->runIsolatedScope(new Scope($name, $bindings, $autowire), $closure);
-    }
-
-    /**
-     * Get current scope container.
-     *
-     * @internal it might be removed in the future.
-     */
-    public function getCurrentContainer(): ContainerInterface
-    {
-        return ContainerScope::getContainer() ?? $this;
     }
 
     /**

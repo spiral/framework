@@ -50,4 +50,3 @@ interface ScopeInterface
      */
     public function runScope(array $bindings, callable $scope): mixed;
 }
-

@@ -56,8 +56,6 @@ final class ProxyClassRenderer
         }
         $bodyStr = \implode("\n\n", $classBody);
 
-        echo $bodyStr;
-
         return <<<PHP
             namespace $classNamespace;
 
