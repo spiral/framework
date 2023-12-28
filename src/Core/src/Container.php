@@ -138,7 +138,7 @@ final class Container implements
      * @throws \Throwable
      * @psalm-suppress TooManyArguments
      */
-    public function get(string|Autowire $id, string $context = null): mixed
+    public function get(string|Autowire $id, \Stringable|string|null $context = null): mixed
     {
         return ContainerScope::getContainer() === $this
             ? $this->container->get($id, $context)

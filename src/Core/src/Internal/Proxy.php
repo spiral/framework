@@ -19,26 +19,37 @@ final class Proxy
      * @param \ReflectionClass<TClass> $type
      * @return TClass
      */
-    public static function create(\ReflectionClass $type): object
+    public static function create(\ReflectionClass $type, \Stringable|string|null $context): object
     {
         $interface = $type->getName();
 
-        if (\array_key_exists($interface, self::$cache)) {
-            return self::$cache[$interface];
+        if (!\array_key_exists($interface, self::$cache)) {
+            /** @var class-string<TClass> $className */
+            $className = "{$type->getNamespaceName()}\\{$type->getShortName()} SCOPED PROXY";
+
+            try {
+                $classString = ProxyClassRenderer::renderClass($type, $className);
+
+                eval($classString);
+            } catch (\Throwable $e) {
+                throw new \Error("Unable to create proxy for `{$interface}`: {$e->getMessage()}", 0, $e);
+            }
+
+            $instance = new $className();
+            (static fn() => $instance::$__container_proxy_alias = $interface)->bindTo(null, $instance::class)();
+
+            // Store in cache without context
+            self::$cache[$interface] = $instance;
+        } else {
+            /** @var TClass $instance */
+            $instance = self::$cache[$interface];
         }
 
-        $className = "{$type->getNamespaceName()}\\{$type->getShortName()} SCOPED PROXY";
-
-        try {
-            $classString = ProxyClassRenderer::renderClass($type, $className);
-
-            eval($classString);
-        } catch (\Throwable $e) {
-            throw new \Error("Unable to create proxy for `{$interface}`: {$e->getMessage()}", 0, $e);
+        if ($context !== null) {
+            $instance = clone $instance;
+            (static fn() => $instance->__container_proxy_context = $context)->bindTo(null, $instance::class)();
         }
-        $instance = new $className();
-        $instance::$__container_proxy_alias = $interface;
 
-        return self::$cache[$interface] = $instance;
+        return $instance;
     }
 }

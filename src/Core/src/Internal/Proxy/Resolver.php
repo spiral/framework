@@ -12,12 +12,12 @@ use Spiral\Core\Exception\Container\ContainerException;
  */
 final class Resolver
 {
-    public static function resolve(string $alias): object
+    public static function resolve(string $alias, \Stringable|string|null $context = null): object
     {
         $c = ContainerScope::getContainer() ?? throw new ContainerException('Proxy is out of scope.');
 
         try {
-            $result = $c->get($alias) ?? throw new ContainerException(
+            $result = $c->get($alias, $context) ?? throw new ContainerException(
                 'Resolved `null` from the container.',
             );
         } catch (ContainerException $e) {

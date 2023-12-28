@@ -208,7 +208,7 @@ final class Resolver implements ResolverInterface
                 }
 
                 if (\interface_exists($refType->getName()) && !empty($param->getAttributes(ProxyAttribute::class))) {
-                    $proxy = Proxy::create(new \ReflectionClass($refType->getName()));
+                    $proxy = Proxy::create(new \ReflectionClass($refType->getName()), $param);
                     $this->processArgument($state, $proxy);
                     return true;
                 }

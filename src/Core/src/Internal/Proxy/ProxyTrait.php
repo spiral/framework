@@ -12,15 +12,18 @@ use Spiral\Core\Exception\Container\ContainerException;
  */
 trait ProxyTrait
 {
-    public static string $__container_proxy_alias;
+    private static string $__container_proxy_alias;
+    private \Stringable|string|null $__container_proxy_context = null;
 
     public function __call(string $name, array $arguments)
     {
-        return Resolver::resolve(static::$__container_proxy_alias)->$name(...$arguments);
+        return Resolver::resolve(static::$__container_proxy_alias, $this->__container_proxy_context)
+            ->$name(...$arguments);
     }
 
     public static function __callStatic(string $name, array $arguments)
     {
-        return Resolver::resolve(static::$__container_proxy_alias)->$name(...$arguments);
+        return Resolver::resolve(static::$__container_proxy_alias)
+            ->$name(...$arguments);
     }
 }

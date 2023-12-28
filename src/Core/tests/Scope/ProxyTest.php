@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
+use Psr\Container\ContainerInterface;
+use ReflectionParameter;
 use Spiral\Core\Container;
+use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Scope;
+use Spiral\Tests\Core\Scope\Stub\Context;
+use Spiral\Tests\Core\Scope\Stub\ContextInterface;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 use Spiral\Tests\Core\Scope\Stub\ScopedProxyLoggerCarrier;
+use Spiral\Tests\Core\Scope\Stub\ScopedProxyStdClass;
+use stdClass;
 
-// todo: add test with proxy and injector
 final class ProxyTest extends BaseTestCase
 {
     public function testDifferentBindingsParallelScopes(): void
@@ -78,7 +84,7 @@ final class ProxyTest extends BaseTestCase
 
                 // because of proxy
                 self::assertSame('kv', $carrier->logger->getName());
-                self::assertSame($carrier2->logger, $carrier->logger);
+                self::assertNotSame($carrier2->logger, $carrier->logger, 'Different contexts');
             }, name: 'http');
         });
     }
@@ -100,5 +106,70 @@ final class ProxyTest extends BaseTestCase
                 self::assertSame('kv', $carrier->logger->getName());
             }, name: 'foo');
         });
+    }
+
+    public function testInjectorContext(): void
+    {
+        $root = new Container();
+        $root->getBinder('foo')
+            ->bind(ContextInterface::class, new \Spiral\Core\Config\Injectable(
+                new class implements InjectorInterface {
+                    public function createInjection(\ReflectionClass $class, mixed $context = null): Context
+                    {
+                        return new Context($context);
+                    }
+                }
+            ));
+
+        $root->runScoped(static function (Container $c1) {
+            $c1->runScoped(static function (Container $c, ContextInterface $param) {
+                self::assertInstanceOf(ReflectionParameter::class, $param->value);
+                self::assertSame('param', $param->value->getName());
+
+                $get = $c->get(ContextInterface::class);
+                self::assertNull($get->value);
+
+                $get = $c->get(ContextInterface::class, 'custom');
+                self::assertSame('custom', $get->value);
+
+                /** @var ScopedProxyStdClass $proxy */
+                $proxy = $c->get(ScopedProxyStdClass::class);
+                self::assertInstanceOf(ContextInterface::class, $proxy->getContext(), 'Context was resolved');
+                self::assertInstanceOf(ReflectionParameter::class, $proxy->getContext()->getValue(), 'Context was injected');
+                /** @see ScopedProxyStdClass::$context */
+                self::assertSame('context', $proxy->getContext()->getValue()->getName());
+            }, name: 'foo');
+        });
+    }
+
+    public function testInjectorContextParallelScopes(): void
+    {
+        $root = new Container();
+        $root->getBinder('foo')
+            ->bind(ContextInterface::class, new \Spiral\Core\Config\Injectable(
+                new class implements InjectorInterface {
+                    public function createInjection(\ReflectionClass $class, mixed $context = null): Context
+                    {
+                        return new Context($context);
+                    }
+                }
+            ));
+
+        FiberHelper::runFiberSequence(
+            static fn () => $root->runScoped(static function (ContextInterface $ctx) {
+                for ($i = 0; $i < 10; $i++) {
+                    self::assertInstanceOf(ReflectionParameter::class, $ctx->getValue(), 'Context injected');
+                    self::assertSame('ctx', $ctx->getValue()->getName());
+                    \Fiber::suspend();
+                }
+            }, name: 'foo'),
+            static fn () => $root->runScoped(static function (ContextInterface $context) {
+                for ($i = 0; $i < 10; $i++) {
+                    self::assertInstanceOf(ReflectionParameter::class, $context->getValue(), 'Context injected');
+                    self::assertSame('context', $context->getValue()->getName());
+                    \Fiber::suspend();
+                }
+            }, name: 'foo'),
+        );
     }
 }

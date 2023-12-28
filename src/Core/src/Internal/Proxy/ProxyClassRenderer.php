@@ -24,6 +24,7 @@ final class ProxyClassRenderer
             $hasRefs = false;
             $return = $method->hasReturnType() && (string)$method->getReturnType() === 'void' ? '' : 'return ';
             $call = ($method->isStatic() ? '::' : '->') . $method->getName();
+            $context = $method->isStatic() ? 'null' : '$this->__container_proxy_context';
 
             $args = [];
             foreach ($method->getParameters() as $param) {
@@ -33,8 +34,10 @@ final class ProxyClassRenderer
 
             if (!$hasRefs && !$method->isVariadic()) {
                 $classBody[] = self::renderMethod($method, <<<PHP
-                    {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve('{$interface}')
-                        {$call}(...\\func_get_args());
+                    {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve(
+                        '{$interface}',
+                        $context,
+                    ){$call}(...\\func_get_args());
                 PHP);
                 continue;
             }
@@ -43,15 +46,19 @@ final class ProxyClassRenderer
 
             if ($method->isVariadic()) {
                 $classBody[] = self::renderMethod($method, <<<PHP
-                    {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve('{$interface}')
-                        {$call}($argsStr);
+                    {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve(
+                        '{$interface}',
+                        $context,
+                    ){$call}($argsStr);
                 PHP);
                 continue;
             }
 
             $classBody[] = self::renderMethod($method, <<<PHP
-                {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve('{$interface}')
-                    {$call}($argsStr, ...\\array_slice(\\func_get_args(), {$method->getNumberOfParameters()}));
+                {$return}\\Spiral\\Core\\Internal\\Proxy\\Resolver::resolve(
+                        '{$interface}',
+                        $context,
+                    ){$call}($argsStr, ...\\array_slice(\\func_get_args(), {$method->getNumberOfParameters()}));
             PHP);
         }
         $bodyStr = \implode("\n\n", $classBody);
