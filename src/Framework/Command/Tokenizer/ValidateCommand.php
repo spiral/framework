@@ -29,10 +29,10 @@ final class ValidateCommand extends Command
             $suggestion = match (true) {
                 $attribute === null => 'Add <comment>#[TargetClass]</comment> or ' .
                     '<comment>#[TargetAttribute]</comment> attribute to the listener',
-                default => '<info>Listener is configured correctly</info>',
+                default => '<fg=green> ✓ </>',
             };
             $grid->addRow([
-                $class . "\n" . \sprintf('<fg=blue>%s</>', \str_replace($dirs->get('root'), '', $ref->getFileName())),
+                $class . "\n" . \sprintf('<fg=gray>%s</>', \str_replace($dirs->get('root'), '', $ref->getFileName())),
                 $suggestion,
             ]);
         }

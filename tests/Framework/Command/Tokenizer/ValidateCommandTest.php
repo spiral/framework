@@ -27,16 +27,16 @@ final class ValidateCommandTest extends ConsoleTestCase
             'Add #[TargetClass] or #[TargetAttribute] attribute to the listener',
             CommandLocatorListener::class,
             'Console/src/CommandLocatorListener.php',
-            'Listener is configured correctly',
+            '✓',
             JobHandlerLocatorListener::class,
             'Queue/src/JobHandlerLocatorListener.php',
-            'Listener is configured correctly',
+            '✓',
             SerializerLocatorListener::class,
             'Queue/src/SerializerLocatorListener.php',
-            'Listener is configured correctly',
+            '✓',
             PrototypeLocatorListener::class,
             'Prototype/src/PrototypeLocatorListener.php',
-            'Listener is configured correctly',
+            '✓',
         ]);
     }
 }
