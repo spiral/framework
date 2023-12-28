@@ -11,7 +11,6 @@ use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
-use Spiral\Http\Exception\ClientException\ServerErrorException;
 use Spiral\Http\Exception\ClientException\UnauthorizedException;
 
 class ExceptionsTest extends TestCase
@@ -46,12 +45,6 @@ class ExceptionsTest extends TestCase
         $this->assertSame(401, $e->getCode());
     }
 
-    public function testServerError(): void
-    {
-        $e = new ServerErrorException();
-        $this->assertSame(500, $e->getCode());
-    }
-
     #[DataProvider('allExceptionsWithPreviousSet')]
     public function testPreviousSetter(\Throwable $exception): void
     {
@@ -63,7 +56,6 @@ class ExceptionsTest extends TestCase
         yield [new Exception\ClientException\BadRequestException('', new \Exception())];
         yield [new Exception\ClientException\ForbiddenException('', new \Exception())];
         yield [new Exception\ClientException\NotFoundException('', new \Exception())];
-        yield [new Exception\ClientException\ServerErrorException('', new \Exception())];
         yield [new Exception\ClientException\UnauthorizedException('', new \Exception())];
         yield [new Exception\ClientException(0, '', new \Exception())];
         yield [new Exception\DotNotFoundException('', 0, new \Exception())];
