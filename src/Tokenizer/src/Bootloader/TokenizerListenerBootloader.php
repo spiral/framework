@@ -63,10 +63,12 @@ final class TokenizerListenerBootloader extends Bootloader implements
         $kernel->booting($this->loadClasses(...));
         $kernel->booting($this->loadEnums(...));
         $kernel->booting($this->loadInterfaces(...));
+        $kernel->booting($this->finalizeListeners(...));
 
         $kernel->booted($this->loadClasses(...));
         $kernel->booted($this->loadEnums(...));
         $kernel->booted($this->loadInterfaces(...));
+        $kernel->booted($this->finalizeListeners(...));
     }
 
     public function initCachedClassesLoader(
@@ -164,18 +166,19 @@ final class TokenizerListenerBootloader extends Bootloader implements
         callable $reflections,
         callable $loader,
     ): void {
+        $listeners = $this->listeners;
+
         // First, we check if the listener has been cached. If it has, we will load the classes/enums/interfaces
         // from the cache.
-        foreach ($this->listeners as $i => $listener) {
+        foreach ($listeners as $i => $listener) {
             if ($loader($listener)) {
-                $listener->finalize();
-                unset($this->listeners[$i]);
+                unset($listeners[$i]);
             }
         }
 
         // If there are no listeners left, we don't need to use static analysis at all and save
         // valuable time.
-        if ($this->listeners === []) {
+        if ($listeners === []) {
             return;
         }
 
@@ -183,10 +186,17 @@ final class TokenizerListenerBootloader extends Bootloader implements
         // Please note that this is a very expensive operation and should be avoided if possible.
         // Use #[TargetClass] or #[TargetAttribute] attributes in your listeners to cache the classes/enums/interfaces.
         $classes = $reflections();
-        foreach ($this->listeners as $i => $listener) {
+        foreach ($listeners as $listener) {
             $invoker->invoke($listener, $classes);
-            $listener->finalize();
-            unset($this->listeners[$i]);
         }
+    }
+
+    private function finalizeListeners(): void
+    {
+        foreach ($this->listeners as $listener) {
+            $listener->finalize();
+        }
+        // We don't need the listeners anymore, so we will clear them from memory.
+        $this->listeners = [];
     }
 }
