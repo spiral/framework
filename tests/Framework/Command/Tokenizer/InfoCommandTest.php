@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Console\Command\Tokenizer;
+namespace Spiral\Tests\Framework\Command\Tokenizer;
 
 use Spiral\Console\CommandLocatorListener;
 use Spiral\Prototype\PrototypeLocatorListener;

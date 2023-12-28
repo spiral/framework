@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Framework\I18n;
+namespace Spiral\Tests\Framework\Command\Translator;
 
 use Spiral\Tests\Framework\ConsoleTestCase;
 
-final class ExportTest extends ConsoleTestCase
+final class ExportCommandTest extends ConsoleTestCase
 {
     public function tearDown(): void
     {

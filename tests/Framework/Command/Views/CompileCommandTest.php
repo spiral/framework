@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Framework\Views;
+namespace Spiral\Tests\Framework\Command\Views;
 
-use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Tests\Framework\ConsoleTestCase;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @covers \Spiral\Command\Views\ResetCommand
  * @covers \Spiral\Command\Views\CompileCommand
  */
-final class CompileTest extends ConsoleTestCase
+final class CompileCommandTest extends ConsoleTestCase
 {
     public int $defaultVerbosityLevel = OutputInterface::VERBOSITY_DEBUG;
 
