@@ -20,9 +20,11 @@ interface MockInterface
 
     public function extraVariadic(mixed ...$foo): array;
 
-    public function concat(string $prefix, string &$byLink): void;
+    public function concat(string $prefix, string &$byLink): array;
 
     public function concatMultiple(string $prefix, string &...$byLink): array;
+
+    public function &same(string &$byLink): string;
 
     /**
      * Mustn't be a part of the {@see ProxyTrait}

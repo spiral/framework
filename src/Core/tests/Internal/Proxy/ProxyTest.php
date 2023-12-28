@@ -51,6 +51,9 @@ final class ProxyTest extends TestCase
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             self::assertSame(['foo', 'bar', 'baz', 69], $proxy->extra('foo', 'bar', 'baz', 69));
+            // With reference
+            $str = 'bar';
+            self::assertSame(['foo', 'foobar', 'baz'], $proxy->concat('foo', $str, 'baz'));
         });
     }
 
@@ -80,7 +83,7 @@ final class ProxyTest extends TestCase
     public function testReference(string $interface, string $var): void
     {
         $interface === EmptyInterface::class && self::markTestSkipped(
-            'Impossible to pass reference using magic __call method'
+            'Impossible to pass reference using magic method __call()'
         );
 
         $root = new Container();
@@ -99,10 +102,35 @@ final class ProxyTest extends TestCase
     /**
      * @dataProvider interfacesProvider
      */
+    public function testReturnReference(string $interface, string $var): void
+    {
+        $interface === EmptyInterface::class && self::markTestSkipped(
+            'Impossible to return reference using magic method __call()'
+        );
+
+        $root = new Container();
+        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+
+        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+            /** @var MockInterfaceImpl $proxy */
+            $proxy = $$var;
+
+            $x = 'foo';
+            $y = &$proxy->same($x);
+            self::assertSame($x, $y);
+            $y .= 'test';
+            self::assertSame($x, $y);
+        });
+    }
+
+    /**
+     * @dataProvider interfacesProvider
+     */
     public function testReferenceVariadic(string $interface, string $var): void
     {
         $interface === EmptyInterface::class && self::markTestSkipped(
-            'Impossible to pass reference using magic __call method'
+            'Impossible to pass reference using magic method __call()'
         );
 
         $root = new Container();

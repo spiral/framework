@@ -35,9 +35,15 @@ final class MockInterfaceImpl implements MockInterface, EmptyInterface
         return $foo;
     }
 
-    public function concat(string $prefix, string &$byLink): void
+    public function concat(string $prefix, string &$byLink): array
     {
         $byLink = $prefix . $byLink;
+        return \func_get_args();
+    }
+
+    public function &same(string &$byLink): string
+    {
+        return $byLink;
     }
 
     public function concatMultiple(string $prefix, string &...$byLink): array

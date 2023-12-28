@@ -21,7 +21,6 @@ final class ProxyClassRenderer
                 continue;
             }
 
-
             $hasRefs = false;
             $return = $method->hasReturnType() && (string)$method->getReturnType() === 'void' ? '' : 'return ';
             $call = ($method->isStatic() ? '::' : '->') . $method->getName();
@@ -57,6 +56,8 @@ final class ProxyClassRenderer
         }
         $bodyStr = \implode("\n\n", $classBody);
 
+        echo $bodyStr;
+
         return <<<PHP
             namespace $classNamespace;
 
@@ -71,8 +72,9 @@ final class ProxyClassRenderer
     public static function renderMethod(\ReflectionMethod $m, string $body = ''): string
     {
         return \sprintf(
-            "public%s function %s(%s)%s {\n%s\n}",
+            "public%s function %s%s(%s)%s {\n%s\n}",
             $m->isStatic() ? ' static' : '',
+            $m->returnsReference() ? '&' : '',
             $m->getName(),
             \implode(', ', \array_map([self::class, 'renderParameter'], $m->getParameters())),
             $m->hasReturnType()

@@ -83,6 +83,8 @@ final class ProxyClassRendererTest extends TestCase
             public function test3(object $obj = new stdClass(new stdClass(), new stdClass())) {}
             #[ExpectedAttribute('public function test4(): \\' . ProxyClassRendererTest::class)]
             public function test4(): ProxyClassRendererTest {}
+            #[ExpectedAttribute('public function &test5(): string')]
+            public function &test5(): string {}
         };
 
         foreach ((new \ReflectionClass($class))->getMethods() as $method) {
