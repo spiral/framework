@@ -130,7 +130,7 @@
         "league/flysystem-aws-s3-v3": "^2.0",
         "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.5",
-        "phpunit/phpunit": "^10.1",
+        "phpunit/phpunit": "10.5.3",
         "ramsey/collection": "^1.2",
         "ramsey/uuid": "^4.2.3",
         "rector/rector": "0.18.1",
