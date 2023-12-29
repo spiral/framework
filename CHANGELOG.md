@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.11.1 - 2023-12-29
 
 - **Bug Fixes**
   - [spiral/tokenizer] Fixed finalize for listeners
