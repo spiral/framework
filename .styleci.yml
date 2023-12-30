@@ -9,7 +9,6 @@ enabled:
   - linebreak_after_opening_tag
   - single_quote
   - no_blank_lines_after_phpdoc
-  - unary_operator_spaces
   - no_useless_else
   - no_useless_return
   - trailing_comma_in_multiline_array

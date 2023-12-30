@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Framework\Bootloader\Tokenizer;
 
 use Spiral\App\Tokenizer\TestInterface;
+use Spiral\Testing\Attribute\Env;
 use Spiral\Tests\Framework\BaseTestCase;
 use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
@@ -71,10 +72,23 @@ final class TokenizerListenerBootloaderTest extends BaseTestCase
 
     public function testListenerShouldBeListen(): void
     {
-        $this->assertCount(2, $this->classes);
+        self::assertCount(2, $this->classes);
 
-        $this->assertTrue(\in_array(\Spiral\App\Tokenizer\A::class, $this->classes));
-        $this->assertTrue(\in_array(\Spiral\App\Tokenizer\B::class, $this->classes));
-        $this->assertTrue($this->finalized);
+        self::assertContains(\Spiral\App\Tokenizer\A::class, $this->classes);
+        self::assertContains(\Spiral\App\Tokenizer\B::class, $this->classes);
+        self::assertTrue($this->finalized);
+    }
+
+    #[Env('TOKENIZER_LOAD_ENUMS', true)]
+    #[Env('TOKENIZER_LOAD_INTERFACES', true)]
+    public function testListenerShouldBeListenWithEnumsAndInterfaces(): void
+    {
+        self::assertCount(4, $this->classes);
+
+        self::assertContains(\Spiral\App\Tokenizer\A::class, $this->classes);
+        self::assertContains(\Spiral\App\Tokenizer\B::class, $this->classes);
+        self::assertContains(\Spiral\App\Tokenizer\TestEnum::class, $this->classes);
+        self::assertContains(\Spiral\App\Tokenizer\TestInterface::class, $this->classes);
+        self::assertTrue($this->finalized);
     }
 }

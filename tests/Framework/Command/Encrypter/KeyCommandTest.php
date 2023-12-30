@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Framework\Encrypter;
+namespace Spiral\Tests\Framework\Command\Encrypter;
 
 use Spiral\Console\Console;
 use Spiral\Encrypter\EncrypterFactory;

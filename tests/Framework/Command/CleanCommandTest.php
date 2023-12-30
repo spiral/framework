@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Framework\Framework;
+namespace Spiral\Tests\Framework\Command;
 
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Tests\Framework\ConsoleTestCase;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @covers \Spiral\Command\CleanCommand
  */
-final class CleanTest extends ConsoleTestCase
+final class CleanCommandTest extends ConsoleTestCase
 {
     public int $defaultVerbosityLevel = OutputInterface::VERBOSITY_DEBUG;
 
