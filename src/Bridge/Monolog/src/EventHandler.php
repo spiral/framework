@@ -22,10 +22,6 @@ final class EventHandler extends AbstractHandler
 
     public function handle(array|LogRecord $record): bool
     {
-        if ($record instanceof LogRecord) {
-            $record = $record->toArray();
-        }
-
         $e = new LogEvent(
             $record['datetime'],
             $record['channel'],
