@@ -29,7 +29,7 @@ final class EventHandler extends AbstractHandler
         $e = new LogEvent(
             $record['datetime'],
             $record['channel'],
-            \strtolower(Logger::toMonologLevel($record['level'])->getName()),
+            \strtolower(Logger::getLevelName($record['level'])),
             $record['message'],
             $record['context']
         );

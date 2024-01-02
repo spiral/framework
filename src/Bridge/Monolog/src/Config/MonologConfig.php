@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Monolog\Config;
 
 use Monolog\Level;
+use Monolog\Logger;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\InjectableConfig;
 use Spiral\Monolog\Exception\ConfigException;
@@ -16,7 +17,7 @@ final class MonologConfig extends InjectableConfig
 
     protected array $config = [
         'default'     => self::DEFAULT_CHANNEL,
-        'globalLevel' => Level::Debug,
+        'globalLevel' => Logger::DEBUG,
         'handlers'    => [],
     ];
 
@@ -27,7 +28,7 @@ final class MonologConfig extends InjectableConfig
 
     public function getEventLevel(): int
     {
-        $level = $this->config['globalLevel'] ?? Level::Debug;
+        $level = $this->config['globalLevel'] ?? Logger::DEBUG;
 
         return $level instanceof Level ? $level->value : $level;
     }

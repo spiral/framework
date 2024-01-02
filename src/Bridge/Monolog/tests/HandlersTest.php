@@ -59,7 +59,7 @@ class HandlersTest extends BaseTestCase
     public function testDefaultHandler(): void
     {
         $this->container->bind(MonologConfig::class, new MonologConfig([
-            'globalHandler' => Level::Debug
+            'globalHandler' => Logger::DEBUG
         ]));
 
         $logger = $this->getLogger();
@@ -72,7 +72,7 @@ class HandlersTest extends BaseTestCase
         $this->expectException(ConfigException::class);
 
         $this->container->bind(MonologConfig::class, new MonologConfig([
-            'globalHandler' => Level::Debug,
+            'globalHandler' => Logger::DEBUG,
             'handlers'      => [
                 'test' => [
                     ['what?']
@@ -143,7 +143,7 @@ class HandlersTest extends BaseTestCase
                     [
                         'class'   => NullHandler::class,
                         'options' => [
-                            'level' => Level::Critical
+                            'level' => Logger::CRITICAL
                         ]
                     ]
                 ]
@@ -154,16 +154,21 @@ class HandlersTest extends BaseTestCase
 
         $this->assertCount(2, $logger->getHandlers());
         $this->assertInstanceOf(NullHandler::class, $logger->getHandlers()[0]);
-        $this->assertFalse($logger->getHandlers()[0]->isHandling(
-            new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'test')
-        ));
-        $this->assertTrue($logger->getHandlers()[0]->isHandling(
-            new LogRecord(new \DateTimeImmutable(), 'test', Level::Critical, 'test')
-        ));
+
+
+        $this->assertFalse($logger->getHandlers()[0]->isHandling($this->createLogRecord(Logger::DEBUG)));
+        $this->assertTrue($logger->getHandlers()[0]->isHandling($this->createLogRecord(Logger::CRITICAL)));
     }
 
     protected function getLogger(): Logger
     {
         return $this->container->get(LogsInterface::class)->getLogger('test');
+    }
+
+    protected function createLogRecord(int $level): array|LogRecord
+    {
+        return Logger::API === 2
+            ? ['level' => $level]
+            : new LogRecord(new \DateTimeImmutable(), 'test', Level::from($level), 'test');
     }
 }
