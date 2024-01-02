@@ -32,7 +32,7 @@
         "spiral/core": "^3.12",
         "spiral/hmvc": "^3.12",
         "spiral/http": "^3.12",
-        "cocur/slugify": "^3.2",
+        "cocur/slugify": "^3.2 || ^4.0",
         "spiral/telemetry": "^3.12",
         "doctrine/inflector": "^1.4|^2.0",
         "psr/event-dispatcher": "^1.0"
