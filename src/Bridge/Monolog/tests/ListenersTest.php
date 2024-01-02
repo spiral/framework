@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Monolog;
 
-use Monolog\Logger;
+use Monolog\Level;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use Spiral\Core\Container;
@@ -18,7 +18,7 @@ class ListenersTest extends TestCase
     public function testListenDebug(): void
     {
         $factory = new LogFactory(new MonologConfig([
-            'globalLevel' => Logger::DEBUG
+            'globalLevel' => Level::Debug
         ]), $l = new ListenerRegistry(), new Container());
 
         $logger = $factory->getLogger();
@@ -49,7 +49,7 @@ class ListenersTest extends TestCase
     public function testListenError(): void
     {
         $factory = new LogFactory(new MonologConfig([
-            'globalLevel' => Logger::ERROR
+            'globalLevel' => Level::Error
         ]), $ll = new ListenerRegistry(), new Container());
 
         $logger = $factory->getLogger();

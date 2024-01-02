@@ -37,7 +37,7 @@
         "doctrine/annotations": "^1.12 || ^2.0",
         "doctrine/inflector": "^1.4|^2.0",
         "league/flysystem": "^2.3.1",
-        "monolog/monolog": "^2.2",
+        "monolog/monolog": "^3.5",
         "myclabs/deep-copy": "^1.9",
         "nette/php-generator": "^4.1.2",
         "nikic/php-parser": "^4.15.5",

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Tests\Monolog;
 
 use Monolog\Handler\NullHandler;
+use Monolog\Level;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
@@ -57,7 +59,7 @@ class HandlersTest extends BaseTestCase
     public function testDefaultHandler(): void
     {
         $this->container->bind(MonologConfig::class, new MonologConfig([
-            'globalHandler' => Logger::DEBUG
+            'globalHandler' => Level::Debug
         ]));
 
         $logger = $this->getLogger();
@@ -70,7 +72,7 @@ class HandlersTest extends BaseTestCase
         $this->expectException(ConfigException::class);
 
         $this->container->bind(MonologConfig::class, new MonologConfig([
-            'globalHandler' => Logger::DEBUG,
+            'globalHandler' => Level::Debug,
             'handlers'      => [
                 'test' => [
                     ['what?']
@@ -141,7 +143,7 @@ class HandlersTest extends BaseTestCase
                     [
                         'class'   => NullHandler::class,
                         'options' => [
-                            'level' => Logger::CRITICAL
+                            'level' => Level::Critical
                         ]
                     ]
                 ]
@@ -152,8 +154,12 @@ class HandlersTest extends BaseTestCase
 
         $this->assertCount(2, $logger->getHandlers());
         $this->assertInstanceOf(NullHandler::class, $logger->getHandlers()[0]);
-        $this->assertFalse($logger->getHandlers()[0]->isHandling(['level' => Logger::DEBUG]));
-        $this->assertTrue($logger->getHandlers()[0]->isHandling(['level' => Logger::CRITICAL]));
+        $this->assertFalse($logger->getHandlers()[0]->isHandling(
+            new LogRecord(new \DateTimeImmutable(), 'test', Level::Debug, 'test')
+        ));
+        $this->assertTrue($logger->getHandlers()[0]->isHandling(
+            new LogRecord(new \DateTimeImmutable(), 'test', Level::Critical, 'test')
+        ));
     }
 
     protected function getLogger(): Logger
