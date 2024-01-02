@@ -17,6 +17,7 @@ use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Http\Exception\ClientException\UnauthorizedException;
+use Spiral\Tests\Exceptions\Fixtures\TestException;
 
 class ExceptionHandlerTest extends TestCase
 {
@@ -157,5 +158,6 @@ class ExceptionHandlerTest extends TestCase
         yield [new class extends AuthorizationException {}];
         yield [new ValidationException([])];
         yield [new class([]) extends ValidationException {}];
+        yield [new TestException()];
     }
 }

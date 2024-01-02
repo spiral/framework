@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Exceptions;
 
 use Closure;
+use Spiral\Exceptions\Attribute\NonReportable;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 use Spiral\Filters\Exception\AuthorizationException;
 use Spiral\Filters\Exception\ValidationException;
@@ -189,6 +190,8 @@ class ExceptionHandler implements ExceptionHandlerInterface
             }
         }
 
-        return false;
+        $attribute = (new \ReflectionClass($exception))->getAttributes(NonReportable::class)[0] ?? null;
+
+        return $attribute !== null;
     }
 }
