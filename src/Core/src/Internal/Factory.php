@@ -169,7 +169,7 @@ final class Factory implements FactoryInterface
 
             return $instance;
         } finally {
-            $this->state->bindings[$reflection->getName()] ??= $binding;
+            $this->state->bindings[$ctx->class] ??= $binding;
         }
     }
 
@@ -385,7 +385,7 @@ final class Factory implements FactoryInterface
      * @template TObject of object
      *
      * @param Ctx<TObject> $ctx
-     * @param array $parameters Constructor parameters.
+     * @param array $arguments Constructor arguments.
      *
      * @return TObject
      *
@@ -394,7 +394,7 @@ final class Factory implements FactoryInterface
      */
     private function createInstance(
         Ctx $ctx,
-        array $parameters,
+        array $arguments,
     ): object {
         $class = $ctx->class;
         try {
@@ -409,9 +409,9 @@ final class Factory implements FactoryInterface
             throw new BadScopeException($scope, $class);
         }
 
-        //We have to construct class using external injector when we know exact context
-        if ($this->binder->hasInjector($class)) {
-            return $this->resolveInjector($this->state->bindings[$ctx->class], $ctx, $parameters);
+        // We have to construct class using external injector when we know the exact context
+        if ($arguments === [] && $this->binder->hasInjector($class)) {
+            return $this->resolveInjector($this->state->bindings[$ctx->class], $ctx, $arguments);
         }
 
         if (!$reflection->isInstantiable()) {
@@ -431,7 +431,7 @@ final class Factory implements FactoryInterface
             try {
                 $this->tracer->push(false, action: 'resolve arguments', signature: $constructor);
                 $this->tracer->push(true);
-                $arguments = $this->resolver->resolveArguments($constructor, $parameters);
+                $args = $this->resolver->resolveArguments($constructor, $arguments);
             } catch (ValidationException $e) {
                 throw new ContainerException(
                     $this->tracer->combineTraceMessage(
@@ -448,9 +448,9 @@ final class Factory implements FactoryInterface
             }
             try {
                 // Using constructor with resolved arguments
-                $this->tracer->push(false, call: "$class::__construct", arguments: $arguments);
+                $this->tracer->push(false, call: "$class::__construct", arguments: $args);
                 $this->tracer->push(true);
-                $instance = new $class(...$arguments);
+                $instance = new $class(...$args);
             } catch (\TypeError $e) {
                 throw new WrongTypeException($constructor, $e);
             } finally {

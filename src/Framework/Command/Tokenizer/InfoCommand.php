@@ -7,14 +7,18 @@ namespace Spiral\Command\Tokenizer;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Console\Command;
 use Spiral\Tokenizer\Config\TokenizerConfig;
+use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
 final class InfoCommand extends Command
 {
     protected const NAME = 'tokenizer:info';
     protected const DESCRIPTION = 'Get information about tokenizer directories to scan';
 
-    public function perform(TokenizerConfig $config, DirectoriesInterface $dirs): int
-    {
+    public function perform(
+        TokenizerConfig $config,
+        DirectoriesInterface $dirs,
+        TokenizerListenerRegistryInterface $listenerRegistry
+    ): int {
         $this->info('Included directories:');
         $grid = $this->table(['Directory', 'Scope']);
         foreach ($config->getDirectories() as $directory) {
@@ -61,6 +65,25 @@ final class InfoCommand extends Command
         );
 
         $grid->render();
+
+        $listeners = \method_exists($listenerRegistry, 'getListenerClasses')
+            ? $listenerRegistry->getListenerClasses()
+            : [];
+
+        $this->newLine();
+
+        $this->info('Listeners:');
+        $grid = $this->table(['Registered Listener', 'File']);
+        foreach ($listeners as $listener) {
+            $grid->addRow([
+                $listener,
+                \str_replace($dirs->get('root'), '', (new \ReflectionClass($listener))->getFileName()),
+            ]);
+        }
+
+        $grid->render();
+
+        $this->newLine();
 
         $this->newLine();
         $this->info(

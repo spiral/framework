@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 3.11.1 - 2023-12-29
+
+- **Bug Fixes**
+  - [spiral/tokenizer] Fixed finalize for listeners
+- **Other Features**
+    - Added Tokenizer Listeners to the `Spiral\Command\Tokenizer\InfoCommand` console command.
+    - Added `Spiral\Command\Tokenizer\ValidateCommand` console command for validating Tokenizer listeners.
+
 ## 3.11.0 - 2023-12-21
 
 - **Other Features**

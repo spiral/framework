@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Framework\I18n;
+namespace Spiral\Tests\Framework\Command\Translator;
 
 use Spiral\Tests\Framework\ConsoleTestCase;
 
-final class ResetTest extends ConsoleTestCase
+final class ResetCommandTest extends ConsoleTestCase
 {
     public function testReset(): void
     {

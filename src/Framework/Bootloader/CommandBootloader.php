@@ -66,6 +66,7 @@ final class CommandBootloader extends Bootloader
 
         if ($container->has(ClassesInterface::class)) {
             $console->addCommand(Tokenizer\InfoCommand::class);
+            $console->addCommand(Tokenizer\ValidateCommand::class);
         }
     }
 
