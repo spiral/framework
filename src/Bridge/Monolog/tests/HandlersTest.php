@@ -155,7 +155,6 @@ class HandlersTest extends BaseTestCase
         $this->assertCount(2, $logger->getHandlers());
         $this->assertInstanceOf(NullHandler::class, $logger->getHandlers()[0]);
 
-
         $this->assertFalse($logger->getHandlers()[0]->isHandling($this->createLogRecord(Logger::DEBUG)));
         $this->assertTrue($logger->getHandlers()[0]->isHandling($this->createLogRecord(Logger::CRITICAL)));
     }
