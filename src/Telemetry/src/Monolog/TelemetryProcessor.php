@@ -18,6 +18,10 @@ final class TelemetryProcessor implements ProcessorInterface
 
     public function __invoke(LogRecord|array $record): array
     {
+        if ($record instanceof LogRecord) {
+            $record = $record->toArray();
+        }
+
         $tracer = $this->container->get(TracerInterface::class);
         \assert($tracer instanceof TracerInterface);
 
