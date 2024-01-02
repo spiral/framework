@@ -11,8 +11,13 @@ final class ProxyClassRenderer
 {
     public static function renderClass(\ReflectionClass $type, $className): string
     {
-        $classShortName = \substr($className, \strrpos($className, '\\') + 1);
-        $classNamespace = \substr($className, 0, \strrpos($className, '\\'));
+        if (\str_contains($className, '\\')) {
+            $classShortName = \substr($className, \strrpos($className, '\\') + 1);
+            $classNamespaceStr = 'namespace ' . \substr($className, 0, \strrpos($className, '\\')) . ';';
+        } else {
+            $classShortName = $className;
+            $classNamespaceStr = '';
+        }
 
         $interface = $type->getName();
         $classBody = [];
@@ -64,7 +69,7 @@ final class ProxyClassRenderer
         $bodyStr = \implode("\n\n", $classBody);
 
         return <<<PHP
-            namespace $classNamespace;
+            $classNamespaceStr
 
             final class $classShortName implements \\$interface {
                 use \Spiral\Core\Internal\Proxy\ProxyTrait;

@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Internal\Proxy\ProxyClassRenderer;
 use Spiral\Tests\Core\Fixtures\SimpleEnum;
+use Spiral\Tests\Core\Internal\Proxy\Stub\StrangeInterface;
 use stdClass;
 
 /**
@@ -19,6 +20,18 @@ final class ProxyClassRendererTest extends TestCase
 {
     public const STRING_CONST = 'foo';
     public const INT_CONST = 42;
+
+    public function testInterfaceWithConstructor(): void
+    {
+        $result = ProxyClassRenderer::renderClass(new \ReflectionClass(StrangeInterface::class), 'StrangeImpl');
+        self::assertStringNotContainsString('__construct', $result);
+    }
+
+    public function testRenderClassInGlobalNamespace(): void
+    {
+        $result = ProxyClassRenderer::renderClass(new \ReflectionClass(StrangeInterface::class), 'TestImpl');
+        self::assertStringNotContainsString('namespace', $result);
+    }
 
     /**
      * @psalm-suppress UnusedClosureParam

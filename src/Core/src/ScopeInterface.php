@@ -25,7 +25,7 @@ interface ScopeInterface
      *    Note that this mode will be removed in the future.
      *
      *    ```php
-     *    $container->run(['actor' => new Actor()], function() use($container) {
+     *    $container->runScope(['actor' => new Actor()], function() use($container) {
      *        dump($container->get('actor'));
      *    });
      *    ```
@@ -38,7 +38,7 @@ interface ScopeInterface
      *    This mode is safe when working in an asynchronous application.
      *
      *    ```php
-     *    $container->run(
+     *    $container->runScope(
      *        new Scope(bindings: ['actor' => new Actor()]),
      *        function(ContainerInterface $container) {
      *            dump($container->get('actor'));
