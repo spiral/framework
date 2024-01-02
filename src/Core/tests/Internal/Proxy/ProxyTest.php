@@ -28,7 +28,7 @@ final class ProxyTest extends TestCase
         $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
         $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
-        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy(magicCall: true)] EmptyInterface $empty) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             $proxy->bar(name: 'foo'); // Possible to run

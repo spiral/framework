@@ -9,7 +9,7 @@ namespace Spiral\Core\Internal\Proxy;
  */
 final class ProxyClassRenderer
 {
-    public static function renderClass(\ReflectionClass $type, $className): string
+    public static function renderClass(\ReflectionClass $type, string $className, array $traits = []): string
     {
         if (\str_contains($className, '\\')) {
             $classShortName = \substr($className, \strrpos($className, '\\') + 1);
@@ -68,11 +68,14 @@ final class ProxyClassRenderer
         }
         $bodyStr = \implode("\n\n", $classBody);
 
+        $traitsStr = $traits === [] ? '' : \implode("\n    ", \array_map(fn(string $trait): string =>
+            'use \\' . \ltrim($trait, '\\') . ';', $traits));
         return <<<PHP
             $classNamespaceStr
 
             final class $classShortName implements \\$interface {
                 use \Spiral\Core\Internal\Proxy\ProxyTrait;
+                $traitsStr
 
             $bodyStr
             }

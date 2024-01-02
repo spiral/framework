@@ -19,8 +19,11 @@ final class Proxy
      * @param \ReflectionClass<TClass> $type
      * @return TClass
      */
-    public static function create(\ReflectionClass $type, \Stringable|string|null $context): object
-    {
+    public static function create(
+        \ReflectionClass $type,
+        \Stringable|string|null $context,
+        \Spiral\Core\Attribute\Proxy $attribute,
+    ): object {
         $interface = $type->getName();
 
         if (!\array_key_exists($interface, self::$cache)) {
@@ -28,7 +31,9 @@ final class Proxy
             $className = "{$type->getNamespaceName()}\\{$type->getShortName()} SCOPED PROXY";
 
             try {
-                $classString = ProxyClassRenderer::renderClass($type, $className);
+                $classString = ProxyClassRenderer::renderClass($type, $className, $attribute->magicCall ? [
+                    Proxy\MagicCallTrait::class,
+                ] : []);
 
                 eval($classString);
             } catch (\Throwable $e) {

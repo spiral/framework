@@ -12,4 +12,11 @@ namespace Spiral\Core\Attribute;
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
 final class Proxy implements Plugin
 {
+    /**
+     * @param bool $magicCall Generate `__call` and `__callStatic` methods in proxy.
+     */
+    public function __construct(
+        public bool $magicCall = false,
+    ) {
+    }
 }
