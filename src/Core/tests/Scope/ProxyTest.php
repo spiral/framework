@@ -203,22 +203,43 @@ final class ProxyTest extends BaseTestCase
         $root = new Container();
         $root->getBinder('http')->bindSingleton(LoggerInterface::class, KVLogger::class);
 
-        $root->runScope(new Scope(), static function (#[Proxy] ContainerInterface $cp) use ($root) {
-            $root->runScope(new Scope(name: 'http'), static function (ContainerInterface $c) use ($cp) {
-                self::assertNotSame($c, $cp);
-                self::assertSame($c, $cp->get(ContainerInterface::class));
-                self::assertInstanceOf(KVLogger::class, $cp->get(LoggerInterface::class));
-                self::assertSame($cp->get(LoggerInterface::class), $cp->get(LoggerInterface::class));
-            });
-        });
+        $root->runScope(
+            new Scope(),
+            static function (#[Proxy] ContainerInterface $cp) use ($root) {
+                $root->runScope(new Scope(name: 'http'), static function (ContainerInterface $c) use ($cp) {
+                    self::assertNotSame($c, $cp);
+                    self::assertSame($c, $cp->get(ContainerInterface::class));
+                    self::assertInstanceOf(KVLogger::class, $cp->get(LoggerInterface::class));
+                    self::assertSame($cp->get(LoggerInterface::class), $cp->get(LoggerInterface::class));
+                });
+            }
+        );
     }
 
-    public function testProxyOutsideOfScope(): void
+    public function testProxyDynamicScopeRunOutsideOfScope(): void
     {
         $root = new Container();
         $root->getBinder('http')->bindSingleton(LoggerInterface::class, KVLogger::class);
 
-        $proxy = $root->runScope(new Scope(), static fn(#[Proxy] ContainerInterface $cp): ContainerInterface => $cp);
+        $proxy = $root->runScope(
+            new Scope(),
+            static fn(#[Proxy] ContainerInterface $cp): ContainerInterface => $cp,
+        );
+
+        self::expectExceptionMessage('Proxy is out of scope.');
+
+        $proxy->get(LoggerInterface::class);
+    }
+
+    public function testProxyDynamicScopeCreatedInNeededScopeRunOutsideOfScope(): void
+    {
+        $root = new Container();
+        $root->getBinder('http')->bindSingleton(LoggerInterface::class, KVLogger::class);
+
+        $proxy = $root->runScope(
+            new Scope(name: 'http'),
+            static fn(#[Proxy] ContainerInterface $cp): ContainerInterface => $cp,
+        );
 
         self::expectExceptionMessage('Proxy is out of scope.');
 

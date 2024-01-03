@@ -25,10 +25,24 @@ final class Proxy
         \Spiral\Core\Attribute\Proxy $attribute,
     ): object {
         $interface = $type->getName();
+        $cacheKey = \sprintf(
+            '%s%s%s',
+            $interface,
+            $attribute->dynamicScope ? '[scoped]' : '',
+            $attribute->magicCall ? '[magic-call]' : '',
+        );
 
-        if (!\array_key_exists($interface, self::$cache)) {
-            /** @var class-string<TClass> $className */
-            $className = "{$type->getNamespaceName()}\\{$type->getShortName()} SCOPED PROXY";
+        if (!\array_key_exists($cacheKey, self::$cache)) {
+            $n = 0;
+            do {
+                /** @var class-string<TClass> $className */
+                $className = \sprintf(
+                    '%s\%s SCOPED PROXY%s',
+                    $type->getNamespaceName(),
+                    $type->getShortName(),
+                    $n++ > 0 ? " {$n}" : ''
+                );
+            } while (\class_exists($className));
 
             try {
                 $classString = ProxyClassRenderer::renderClass($type, $className, $attribute->magicCall ? [
@@ -44,10 +58,10 @@ final class Proxy
             (static fn() => $instance::$__container_proxy_alias = $interface)->bindTo(null, $instance::class)();
 
             // Store in cache without context
-            self::$cache[$interface] = $instance;
+            self::$cache[$cacheKey] = $instance;
         } else {
             /** @var TClass $instance */
-            $instance = self::$cache[$interface];
+            $instance = self::$cache[$cacheKey];
         }
 
         if ($context !== null) {

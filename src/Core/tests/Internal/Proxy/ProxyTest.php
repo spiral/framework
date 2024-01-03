@@ -28,13 +28,28 @@ final class ProxyTest extends TestCase
         $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
         $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
-        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy(magicCall: true)] EmptyInterface $empty) use ($var) {
+        $root->invoke(static function (
+            #[Proxy] MockInterface $mock,
+            #[Proxy(magicCall: true)] EmptyInterface $empty,
+        ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             $proxy->bar(name: 'foo'); // Possible to run
             self::assertSame('foo', $proxy->baz('foo', 42));
             self::assertSame(123, $proxy->qux(age: 123));
             self::assertSame(69, $proxy->space(test age: 69));
+        });
+    }
+
+    public function testMagicCallsOnNonMagicProxy(): void
+    {
+        $root = new Container();
+        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+
+        self::expectExceptionMessageMatches('/Call to undefined method/i');
+
+        $root->invoke(static function (#[Proxy(magicCall: false)] EmptyInterface $proxy) {
+            $proxy->bar(name: 'foo'); // Possible to run
         });
     }
 
@@ -47,7 +62,10 @@ final class ProxyTest extends TestCase
         $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
         $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
-        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+        $root->invoke(static function (
+            #[Proxy] MockInterface $mock,
+            #[Proxy(magicCall: true)] EmptyInterface $empty,
+        ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             self::assertSame(['foo', 'bar', 'baz', 69], $proxy->extra('foo', 'bar', 'baz', 69));
@@ -66,7 +84,10 @@ final class ProxyTest extends TestCase
         $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
         $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
-        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+        $root->invoke(static function (
+            #[Proxy] MockInterface $mock,
+            #[Proxy(magicCall: true)] EmptyInterface $empty,
+        ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             self::assertSame(['foo', 'bar', 'baz', 69], $proxy->extraVariadic('foo', 'bar', 'baz', 69));
