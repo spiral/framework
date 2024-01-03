@@ -31,7 +31,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-tokenizer": "*",
-        "cocur/slugify": "^3.2",
+        "cocur/slugify": "^3.2 || ^4.0",
         "codedungeon/php-cli-colors": "^1.11",
         "defuse/php-encryption": "^2.2",
         "doctrine/annotations": "^1.12 || ^2.0",
