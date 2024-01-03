@@ -22,9 +22,8 @@ interface InjectorInterface
      * Parameter reflection can be used for dynamic class constructing, for example it can define
      * database name or config section to be used to construct requested instance.
      *
-     * @param \ReflectionClass $class Request class type.
+     * @param \ReflectionClass<TClass> $class Request class type.
      * @param string|null $context Parameter or alias name.
-     * @psalm-assert \ReflectionClass<TClass> $class
      *
      * @return TClass
      *

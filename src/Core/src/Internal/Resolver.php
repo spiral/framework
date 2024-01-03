@@ -208,7 +208,7 @@ final class Resolver implements ResolverInterface
             $types = $reflectionType instanceof ReflectionNamedType ? [$reflectionType] : $reflectionType->getTypes();
             foreach ($types as $namedType) {
                 try {
-                    if ($this->resolveNamedType($state, $parameter, $namedType, $validate)) {
+                    if (!$namedType->isBuiltin() && $this->resolveObject($state, $namedType, $parameter, $validate)) {
                         return true;
                     }
                 } catch (Throwable $e) {
@@ -238,44 +238,20 @@ final class Resolver implements ResolverInterface
     }
 
     /**
-     * Resolve single named type. Returns {@see true} if argument was resolved.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     *
-     * @return bool
-     */
-    private function resolveNamedType(
-        ResolvingState $state,
-        ReflectionParameter $parameter,
-        ReflectionNamedType $typeRef,
-        bool $validate,
-    ) {
-        return !$typeRef->isBuiltin() && $this->resolveObjectParameter(
-            $state,
-            $typeRef->getName(),
-            $parameter->getName(),
-            $validate ? $parameter : null,
-        );
-    }
-
-    /**
      * Resolve argument by class name and context. Returns {@see true} if argument resolved.
      *
-     * @psalm-param class-string $class
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    private function resolveObjectParameter(
+    private function resolveObject(
         ResolvingState $state,
-        string $class,
-        string $context,
-        ReflectionParameter $validateWith = null,
+        ReflectionNamedType $type,
+        ReflectionParameter $parameter,
+        bool $validateWith = false,
     ): bool {
         /** @psalm-suppress TooManyArguments */
-        $argument = $this->container->get($class, $context);
-        $this->processArgument($state, $argument, $validateWith);
+        $argument = $this->container->get($type->getName(), $parameter);
+        $this->processArgument($state, $argument, $validateWith ? $parameter : null);
         return true;
     }
 
