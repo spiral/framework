@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Monolog;
 
 use Monolog\Handler\RotatingFileHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
 use Spiral\Boot\BootloadManager\Initializer;
@@ -58,7 +59,8 @@ class RotateHandlerTest extends BaseTestCase
         $handler = $autowire->resolve($this->container);
         $this->assertInstanceOf(RotatingFileHandler::class, $handler);
 
-        $this->assertSame(Logger::DEBUG, $handler->getLevel());
+        $level = $handler->getLevel();
+        $this->assertSame(Logger::DEBUG, $level instanceof Level ? $level->value : $level);
         $this->assertTrue($handler->getBubble());
     }
 
@@ -79,7 +81,8 @@ class RotateHandlerTest extends BaseTestCase
         $handler = $autowire->resolve($this->container);
         $this->assertInstanceOf(RotatingFileHandler::class, $handler);
 
-        $this->assertSame(Logger::DEBUG, $handler->getLevel());
+        $level = $handler->getLevel();
+        $this->assertSame(Logger::DEBUG, $level instanceof Level ? $level->value : $level);
 
         $formatter = $handler->getFormatter();
         $this->assertSame('foo', (new \ReflectionProperty($formatter, 'format'))->getValue($formatter));

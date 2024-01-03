@@ -28,7 +28,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "monolog/monolog": "^2.2"
+        "monolog/monolog": "^2.9.2 || ^3.5"
     },
     "require-dev": {
         "spiral/boot": "^3.12",

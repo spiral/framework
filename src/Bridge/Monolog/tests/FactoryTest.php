@@ -29,7 +29,7 @@ class FactoryTest extends BaseTestCase
 
     public function testDefaultLogger(): void
     {
-        $factory = new LogFactory(new MonologConfig([]), new ListenerRegistry(),$this->container);
+        $factory = new LogFactory(new MonologConfig([]), new ListenerRegistry(), $this->container);
         $logger = $factory->getLogger();
 
         $this->assertNotEmpty($logger);

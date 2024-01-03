@@ -7,6 +7,7 @@ namespace Spiral\Monolog\Bootloader;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\RotatingFileHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Psr\Log\LoggerInterface;
@@ -90,7 +91,7 @@ final class MonologBootloader extends Bootloader implements Container\SingletonI
 
     public function logRotate(
         string $filename,
-        int $level = Logger::DEBUG,
+        int|Level $level = Logger::DEBUG,
         int $maxFiles = 0,
         bool $bubble = true
     ): HandlerInterface {

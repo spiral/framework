@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Tests\Monolog;
 
 use Monolog\Handler\NullHandler;
+use Monolog\Level;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
@@ -152,12 +154,20 @@ class HandlersTest extends BaseTestCase
 
         $this->assertCount(2, $logger->getHandlers());
         $this->assertInstanceOf(NullHandler::class, $logger->getHandlers()[0]);
-        $this->assertFalse($logger->getHandlers()[0]->isHandling(['level' => Logger::DEBUG]));
-        $this->assertTrue($logger->getHandlers()[0]->isHandling(['level' => Logger::CRITICAL]));
+
+        $this->assertFalse($logger->getHandlers()[0]->isHandling($this->createLogRecord(Logger::DEBUG)));
+        $this->assertTrue($logger->getHandlers()[0]->isHandling($this->createLogRecord(Logger::CRITICAL)));
     }
 
     protected function getLogger(): Logger
     {
         return $this->container->get(LogsInterface::class)->getLogger('test');
+    }
+
+    protected function createLogRecord(int $level): array|LogRecord
+    {
+        return Logger::API === 2
+            ? ['level' => $level]
+            : new LogRecord(new \DateTimeImmutable(), 'test', Level::from($level), 'test');
     }
 }

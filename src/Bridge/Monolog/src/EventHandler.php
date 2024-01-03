@@ -6,6 +6,7 @@ namespace Spiral\Monolog;
 
 use Monolog\Handler\AbstractHandler;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Spiral\Logger\Event\LogEvent;
 use Spiral\Logger\ListenerRegistryInterface;
 
@@ -19,7 +20,7 @@ final class EventHandler extends AbstractHandler
         parent::__construct($level, $bubble);
     }
 
-    public function handle(array $record): bool
+    public function handle(array|LogRecord $record): bool
     {
         $e = new LogEvent(
             $record['datetime'],
