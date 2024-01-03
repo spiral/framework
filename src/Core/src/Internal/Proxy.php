@@ -28,7 +28,7 @@ final class Proxy
         $interface = $type->getName();
 
         // Use the container where the proxy was created
-        $attachContainer = $attribute->attach;
+        $attachContainer = $attribute->attachContainer;
 
         $cacheKey = \sprintf(
             '%s%s%s',

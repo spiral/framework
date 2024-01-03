@@ -205,7 +205,7 @@ final class ProxyTest extends BaseTestCase
 
         $root->runScope(
             new Scope(),
-            static function (#[Proxy(attach: false)] ContainerInterface $cp) use ($root) {
+            static function (#[Proxy] ContainerInterface $cp) use ($root) {
                 $root->runScope(new Scope(name: 'http'), static function (ContainerInterface $c) use ($cp) {
                     self::assertNotSame($c, $cp);
                     self::assertSame($c, $cp->get(ContainerInterface::class));
@@ -223,7 +223,7 @@ final class ProxyTest extends BaseTestCase
 
         $proxy = $root->runScope(
             new Scope(),
-            static fn(#[Proxy(attach: false)] ContainerInterface $cp): ContainerInterface => $cp,
+            static fn(#[Proxy] ContainerInterface $cp): ContainerInterface => $cp,
         );
 
         self::expectExceptionMessage('Proxy is out of scope.');
@@ -238,7 +238,7 @@ final class ProxyTest extends BaseTestCase
 
         $proxy = $root->runScope(
             new Scope(name: 'http'),
-            static fn(#[Proxy(attach: false)] ContainerInterface $cp): ContainerInterface => $cp,
+            static fn(#[Proxy] ContainerInterface $cp): ContainerInterface => $cp,
         );
 
         self::expectExceptionMessage('Proxy is out of scope.');
@@ -254,7 +254,7 @@ final class ProxyTest extends BaseTestCase
 
         $proxy = $root->runScope(
             new Scope(),
-            static fn(#[Proxy(attach: true)] ContainerInterface $cp): ContainerInterface => $cp,
+            static fn(#[Proxy(attachContainer: true)] ContainerInterface $cp): ContainerInterface => $cp,
         );
 
         // Because:
@@ -273,7 +273,7 @@ final class ProxyTest extends BaseTestCase
 
         $proxy = $root->runScope(
             new Scope(name: 'http'),
-            static fn(#[Proxy(attach: true)] ContainerInterface $cp): ContainerInterface => $cp,
+            static fn(#[Proxy(attachContainer: true)] ContainerInterface $cp): ContainerInterface => $cp,
         );
 
         // Because of the `http` scope has been destroyed
@@ -290,10 +290,10 @@ final class ProxyTest extends BaseTestCase
 
         $root->runScope(
             new Scope(name: 'foo'),
-            static function (#[Proxy(attach: true)] LoggerInterface $fooProxy, ContainerInterface $c) {
+            static function (#[Proxy(attachContainer: true)] LoggerInterface $fooProxy, ContainerInterface $c) {
                 $c->runScope(
                     new Scope(name: 'bar'),
-                    static function (#[Proxy(attach: true)] LoggerInterface $barProxy, ContainerInterface $c) use ($fooProxy) {
+                    static function (#[Proxy(attachContainer: true)] LoggerInterface $barProxy, ContainerInterface $c) use ($fooProxy) {
                         $c->runScope(
                             new Scope(),
                             static function (ContainerInterface $c) use ($fooProxy, $barProxy) {

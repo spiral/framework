@@ -16,7 +16,8 @@ final class ProxyTest extends TestCase
     public static function interfacesProvider(): iterable
     {
         yield [MockInterface::class, 'mock'];
-        yield [EmptyInterface::class, 'empty'];
+        /** Need to set {@see Proxy::$proxyOverloads} to TRUE */
+        // yield [EmptyInterface::class, 'empty'];
     }
 
     /**
@@ -29,8 +30,8 @@ final class ProxyTest extends TestCase
         $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
         $root->invoke(static function (
-            #[Proxy(attach: false)] MockInterface $mock,
-            #[Proxy(attach: false, proxyOverloads: true)] EmptyInterface $empty,
+            #[Proxy] MockInterface $mock,
+            #[Proxy(/*proxyOverloads: true*/)] EmptyInterface $empty,
         ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
@@ -48,7 +49,7 @@ final class ProxyTest extends TestCase
 
         self::expectExceptionMessageMatches('/Call to undefined method/i');
 
-        $root->invoke(static function (#[Proxy(attach: false, proxyOverloads: false)] EmptyInterface $proxy) {
+        $root->invoke(static function (#[Proxy] EmptyInterface $proxy) {
             $proxy->bar(name: 'foo'); // Possible to run
         });
     }
@@ -64,7 +65,7 @@ final class ProxyTest extends TestCase
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
-            #[Proxy(attach: false, proxyOverloads: true)] EmptyInterface $empty,
+            #[Proxy(/*proxyOverloads: true*/)] EmptyInterface $empty,
         ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
@@ -86,7 +87,7 @@ final class ProxyTest extends TestCase
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
-            #[Proxy(attach: false, proxyOverloads: true)] EmptyInterface $empty,
+            #[Proxy(/*proxyOverloads: true*/)] EmptyInterface $empty,
         ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
