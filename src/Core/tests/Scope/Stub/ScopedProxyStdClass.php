@@ -9,7 +9,7 @@ use Spiral\Core\Attribute\Proxy;
 final class ScopedProxyStdClass
 {
     public function __construct(
-        #[Proxy] public ContextInterface $context,
+        #[Proxy(attach: false)] public ContextInterface $context,
     ) {
     }
 

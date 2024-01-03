@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
+use Spiral\Core\ContainerScope;
 use Spiral\Core\Internal\Proxy\ProxyClassRenderer;
 
 /**
@@ -25,11 +26,15 @@ final class Proxy
         \Spiral\Core\Attribute\Proxy $attribute,
     ): object {
         $interface = $type->getName();
+
+        // Use the container where the proxy was created
+        $attachContainer = $attribute->attach;
+
         $cacheKey = \sprintf(
             '%s%s%s',
             $interface,
-            $attribute->dynamicScope ? '[scoped]' : '',
-            $attribute->magicCall ? '[magic-call]' : '',
+            $attachContainer ? '[attached]' : '',
+            $attribute->proxyOverloads ? '[magic-calls]' : '',
         );
 
         if (!\array_key_exists($cacheKey, self::$cache)) {
@@ -45,9 +50,12 @@ final class Proxy
             } while (\class_exists($className));
 
             try {
-                $classString = ProxyClassRenderer::renderClass($type, $className, $attribute->magicCall ? [
-                    Proxy\MagicCallTrait::class,
-                ] : []);
+                $classString = ProxyClassRenderer::renderClass(
+                    $type,
+                    $className,
+                    $attribute->proxyOverloads,
+                    $attachContainer,
+                );
 
                 eval($classString);
             } catch (\Throwable $e) {
@@ -64,9 +72,17 @@ final class Proxy
             $instance = self::$cache[$cacheKey];
         }
 
-        if ($context !== null) {
+        if ($context !== null || $attachContainer) {
             $instance = clone $instance;
-            (static fn() => $instance->__container_proxy_context = $context)->bindTo(null, $instance::class)();
+            (static function () use ($instance, $context, $attachContainer): void {
+                // Set the Current Context
+                /** @see \Spiral\Core\Internal\Proxy\ProxyTrait::$__container_proxy_context */
+                $context === null or $instance->__container_proxy_context = $context;
+
+                // Set the Current Scope Container
+                /** @see \Spiral\Core\Internal\Proxy\ProxyTrait::__container_proxy_container */
+                $attachContainer and $instance->__container_proxy_container = ContainerScope::getContainer();
+            })->bindTo(null, $instance::class)();
         }
 
         return $instance;

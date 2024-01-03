@@ -18,10 +18,15 @@ namespace Spiral\Core\Attribute;
 final class Proxy implements Plugin
 {
     /**
-     * @param bool $magicCall Generate `__call` and `__callStatic` methods in proxy.
+     * @param bool $attach Attach the container to the proxy object.
+     *        If TRUE, the same container that created the proxy object will be used when accessing the proxy object.
+     *        If FALSE, the container of the current executing context (scope) will be used.
+     * @param bool $proxyOverloads Include `__call` and `__callStatic` methods in proxy to redirect method calls that
+     *        are not defined in the interface.
      */
     public function __construct(
-        public bool $magicCall = false,
+        public bool $attach = true,
+        public bool $proxyOverloads = false,
     ) {
     }
 }

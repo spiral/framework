@@ -205,7 +205,7 @@ final class ProxyTest extends BaseTestCase
 
         $root->runScope(
             new Scope(),
-            static function (#[Proxy] ContainerInterface $cp) use ($root) {
+            static function (#[Proxy(attach: false)] ContainerInterface $cp) use ($root) {
                 $root->runScope(new Scope(name: 'http'), static function (ContainerInterface $c) use ($cp) {
                     self::assertNotSame($c, $cp);
                     self::assertSame($c, $cp->get(ContainerInterface::class));
@@ -223,7 +223,7 @@ final class ProxyTest extends BaseTestCase
 
         $proxy = $root->runScope(
             new Scope(),
-            static fn(#[Proxy] ContainerInterface $cp): ContainerInterface => $cp,
+            static fn(#[Proxy(attach: false)] ContainerInterface $cp): ContainerInterface => $cp,
         );
 
         self::expectExceptionMessage('Proxy is out of scope.');
@@ -238,11 +238,72 @@ final class ProxyTest extends BaseTestCase
 
         $proxy = $root->runScope(
             new Scope(name: 'http'),
-            static fn(#[Proxy] ContainerInterface $cp): ContainerInterface => $cp,
+            static fn(#[Proxy(attach: false)] ContainerInterface $cp): ContainerInterface => $cp,
         );
 
         self::expectExceptionMessage('Proxy is out of scope.');
 
         $proxy->get(LoggerInterface::class);
     }
+
+    /*
+    public function testProxyStaticScopeRunOutsideOfScope(): void
+    {
+        $root = new Container();
+        $root->getBinder('http')->bindSingleton(LoggerInterface::class, KVLogger::class);
+
+        $proxy = $root->runScope(
+            new Scope(),
+            static fn(#[Proxy(attach: true)] ContainerInterface $cp): ContainerInterface => $cp,
+        );
+
+        // Because:
+        // 1. Proxy created in a wrong scope (`http` needed)
+        // 2. The scope where the Proxy has been created was destroyed
+        self::expectException(\Spiral\Core\Exception\Container\ContainerException::class);
+        self::expectExceptionMessageMatches('/Unable to resolve/i');
+
+        $proxy->get(LoggerInterface::class);
+    }
+
+    public function testProxyStaticScopeCreatedInNeededScopeRunOutsideOfScope(): void
+    {
+        $root = new Container();
+        $root->getBinder('http')->bindSingleton(LoggerInterface::class, KVLogger::class);
+
+        $proxy = $root->runScope(
+            new Scope(name: 'http'),
+            static fn(#[Proxy(attach: true)] ContainerInterface $cp): ContainerInterface => $cp,
+        );
+
+        // Because of the `http` scope has been destroyed
+        self::expectException(\Spiral\Core\Exception\Container\ContainerException::class);
+        self::expectExceptionMessageMatches('/Unable to resolve/i');
+        self::assertInstanceOf(KVLogger::class, $proxy->get(LoggerInterface::class));
+    }
+
+    public function testStaticScopeProxyInsideAnotherScope(): void
+    {
+        $root = new Container();
+        $root->getBinder('foo')->bindSingleton(LoggerInterface::class, KVLogger::class);
+        $root->getBinder('bar')->bindSingleton(LoggerInterface::class, FileLogger::class);
+
+        $root->runScope(
+            new Scope(name: 'foo'),
+            static function (#[Proxy(attach: true)] LoggerInterface $fooProxy, ContainerInterface $c) {
+                $c->runScope(
+                    new Scope(name: 'bar'),
+                    static function (#[Proxy(attach: true)] LoggerInterface $barProxy, ContainerInterface $c) use ($fooProxy) {
+                        $c->runScope(
+                            new Scope(),
+                            static function (ContainerInterface $c) use ($fooProxy, $barProxy) {
+                                self::assertSame('kv', $fooProxy->getName());
+                                self::assertSame('file', $barProxy->getName());
+                            },
+                        );
+                    },
+                );
+            },
+        );
+    } */
 }

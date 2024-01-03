@@ -23,13 +23,19 @@ final class ProxyClassRendererTest extends TestCase
 
     public function testInterfaceWithConstructor(): void
     {
-        $result = ProxyClassRenderer::renderClass(new \ReflectionClass(StrangeInterface::class), 'StrangeImpl');
+        $result = ProxyClassRenderer::renderClass(
+            new \ReflectionClass(StrangeInterface::class),
+            'StrangeImpl',
+        );
         self::assertStringNotContainsString('__construct', $result);
     }
 
     public function testRenderClassInGlobalNamespace(): void
     {
-        $result = ProxyClassRenderer::renderClass(new \ReflectionClass(StrangeInterface::class), 'TestImpl');
+        $result = ProxyClassRenderer::renderClass(
+            new \ReflectionClass(StrangeInterface::class),
+            'TestImpl',
+        );
         self::assertStringNotContainsString('namespace', $result);
     }
 

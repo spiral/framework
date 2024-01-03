@@ -9,7 +9,7 @@ use Spiral\Core\Attribute\Proxy;
 final class ScopedProxyLoggerCarrier
 {
     public function __construct(
-        #[Proxy] public LoggerInterface $logger,
+        #[Proxy(attach: false)] public LoggerInterface $logger,
     ) {
     }
 

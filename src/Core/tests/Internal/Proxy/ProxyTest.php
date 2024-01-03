@@ -29,8 +29,8 @@ final class ProxyTest extends TestCase
         $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
         $root->invoke(static function (
-            #[Proxy] MockInterface $mock,
-            #[Proxy(magicCall: true)] EmptyInterface $empty,
+            #[Proxy(attach: false)] MockInterface $mock,
+            #[Proxy(attach: false, proxyOverloads: true)] EmptyInterface $empty,
         ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
@@ -48,7 +48,7 @@ final class ProxyTest extends TestCase
 
         self::expectExceptionMessageMatches('/Call to undefined method/i');
 
-        $root->invoke(static function (#[Proxy(magicCall: false)] EmptyInterface $proxy) {
+        $root->invoke(static function (#[Proxy(attach: false, proxyOverloads: false)] EmptyInterface $proxy) {
             $proxy->bar(name: 'foo'); // Possible to run
         });
     }
@@ -64,7 +64,7 @@ final class ProxyTest extends TestCase
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
-            #[Proxy(magicCall: true)] EmptyInterface $empty,
+            #[Proxy(attach: false, proxyOverloads: true)] EmptyInterface $empty,
         ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
@@ -86,7 +86,7 @@ final class ProxyTest extends TestCase
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
-            #[Proxy(magicCall: true)] EmptyInterface $empty,
+            #[Proxy(attach: false, proxyOverloads: true)] EmptyInterface $empty,
         ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
