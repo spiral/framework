@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace Spiral\Exceptions;
 
 use Closure;
+use Spiral\Exceptions\Attribute\NonReportable;
 use Spiral\Exceptions\Renderer\PlainRenderer;
+use Spiral\Filters\Exception\AuthorizationException;
+use Spiral\Filters\Exception\ValidationException;
+use Spiral\Http\Exception\ClientException;
 
 /**
  * The class is responsible for:
@@ -24,6 +28,11 @@ class ExceptionHandler implements ExceptionHandlerInterface
     /** @var array<int, ExceptionReporterInterface|Closure> */
     protected array $reporters = [];
     protected mixed $output = null;
+    protected array $nonReportableExceptions = [
+        ClientException::class,
+        AuthorizationException::class,
+        ValidationException::class,
+    ];
 
     public function __construct()
     {
@@ -64,6 +73,10 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     public function report(\Throwable $exception): void
     {
+        if ($this->shouldNotReport($exception)) {
+            return;
+        }
+
         foreach ($this->reporters as $reporter) {
             try {
                 if ($reporter instanceof ExceptionReporterInterface) {
@@ -104,6 +117,14 @@ class ExceptionHandler implements ExceptionHandlerInterface
     public function addRenderer(ExceptionRendererInterface $renderer): void
     {
         \array_unshift($this->renderers, $renderer);
+    }
+
+    /**
+     * @param class-string<\Throwable> $exception
+     */
+    public function dontReport(string $exception): void
+    {
+        $this->nonReportableExceptions[] = $exception;
     }
 
     /**
@@ -159,5 +180,18 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected function bootBasicHandlers(): void
     {
         $this->addRenderer(new PlainRenderer());
+    }
+
+    protected function shouldNotReport(\Throwable $exception): bool
+    {
+        foreach ($this->nonReportableExceptions as $nonReportableException) {
+            if ($exception instanceof $nonReportableException) {
+                return true;
+            }
+        }
+
+        $attribute = (new \ReflectionClass($exception))->getAttributes(NonReportable::class)[0] ?? null;
+
+        return $attribute !== null;
     }
 }

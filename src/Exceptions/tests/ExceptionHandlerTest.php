@@ -5,11 +5,19 @@ declare(strict_types=1);
 namespace Spiral\Tests\Exceptions;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Exceptions\ExceptionReporterInterface;
+use Spiral\Filters\Exception\AuthorizationException;
+use Spiral\Filters\Exception\ValidationException;
+use Spiral\Http\Exception\ClientException;
+use Spiral\Http\Exception\ClientException\ForbiddenException;
+use Spiral\Http\Exception\ClientException\NotFoundException;
+use Spiral\Http\Exception\ClientException\UnauthorizedException;
+use Spiral\Tests\Exceptions\Fixtures\TestException;
 
 class ExceptionHandlerTest extends TestCase
 {
@@ -91,6 +99,38 @@ class ExceptionHandlerTest extends TestCase
         $this->assertTrue(true);
     }
 
+    #[DataProvider('nonReportableExceptionsDataProvider')]
+    public function testNonReportableExceptions(\Throwable $exception): void
+    {
+        $reporter = $this->createMock(ExceptionReporterInterface::class);
+        $reporter->expects($this->never())->method('report');
+
+        $handler = $this->makeEmptyErrorHandler();
+        $handler->addReporter($reporter);
+
+        $handler->report($exception);
+    }
+
+    public function testAddNonReportableExceptions(): void
+    {
+        $handler = $this->makeEmptyErrorHandler();
+        $ref = new \ReflectionProperty($handler, 'nonReportableExceptions');
+        $this->assertSame([
+            ClientException::class,
+            AuthorizationException::class,
+            ValidationException::class,
+        ], $ref->getValue($handler));
+
+        $handler->dontReport(\DomainException::class);
+
+        $this->assertSame([
+            ClientException::class,
+            AuthorizationException::class,
+            ValidationException::class,
+            \DomainException::class
+        ], $ref->getValue($handler));
+    }
+
     private function makeEmptyErrorHandler(): ExceptionHandler
     {
         return new class extends ExceptionHandler {
@@ -103,5 +143,21 @@ class ExceptionHandlerTest extends TestCase
     private function makeErrorHandler(): ExceptionHandler
     {
         return new ExceptionHandler();
+    }
+
+    public static function nonReportableExceptionsDataProvider(): \Traversable
+    {
+        yield [new class extends ClientException {}];
+        yield [new NotFoundException()];
+        yield [new class extends NotFoundException {}];
+        yield [new ForbiddenException()];
+        yield [new class extends ForbiddenException {}];
+        yield [new UnauthorizedException()];
+        yield [new class extends UnauthorizedException {}];
+        yield [new AuthorizationException()];
+        yield [new class extends AuthorizationException {}];
+        yield [new ValidationException([])];
+        yield [new class([]) extends ValidationException {}];
+        yield [new TestException()];
     }
 }
