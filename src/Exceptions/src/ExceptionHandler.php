@@ -9,7 +9,10 @@ use Spiral\Exceptions\Attribute\NonReportable;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 use Spiral\Filters\Exception\AuthorizationException;
 use Spiral\Filters\Exception\ValidationException;
-use Spiral\Http\Exception\ClientException;
+use Spiral\Http\Exception\ClientException\BadRequestException;
+use Spiral\Http\Exception\ClientException\ForbiddenException;
+use Spiral\Http\Exception\ClientException\NotFoundException;
+use Spiral\Http\Exception\ClientException\UnauthorizedException;
 
 /**
  * The class is responsible for:
@@ -29,7 +32,10 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected array $reporters = [];
     protected mixed $output = null;
     protected array $nonReportableExceptions = [
-        ClientException::class,
+        BadRequestException::class,
+        ForbiddenException::class,
+        NotFoundException::class,
+        UnauthorizedException::class,
         AuthorizationException::class,
         ValidationException::class,
     ];

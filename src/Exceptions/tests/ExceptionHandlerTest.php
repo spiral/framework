@@ -13,7 +13,7 @@ use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Exceptions\ExceptionReporterInterface;
 use Spiral\Filters\Exception\AuthorizationException;
 use Spiral\Filters\Exception\ValidationException;
-use Spiral\Http\Exception\ClientException;
+use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Http\Exception\ClientException\UnauthorizedException;
@@ -116,7 +116,10 @@ class ExceptionHandlerTest extends TestCase
         $handler = $this->makeEmptyErrorHandler();
         $ref = new \ReflectionProperty($handler, 'nonReportableExceptions');
         $this->assertSame([
-            ClientException::class,
+            BadRequestException::class,
+            ForbiddenException::class,
+            NotFoundException::class,
+            UnauthorizedException::class,
             AuthorizationException::class,
             ValidationException::class,
         ], $ref->getValue($handler));
@@ -124,7 +127,10 @@ class ExceptionHandlerTest extends TestCase
         $handler->dontReport(\DomainException::class);
 
         $this->assertSame([
-            ClientException::class,
+            BadRequestException::class,
+            ForbiddenException::class,
+            NotFoundException::class,
+            UnauthorizedException::class,
             AuthorizationException::class,
             ValidationException::class,
             \DomainException::class
@@ -147,7 +153,8 @@ class ExceptionHandlerTest extends TestCase
 
     public static function nonReportableExceptionsDataProvider(): \Traversable
     {
-        yield [new class extends ClientException {}];
+        yield [new BadRequestException()];
+        yield [new class extends BadRequestException {}];
         yield [new NotFoundException()];
         yield [new class extends NotFoundException {}];
         yield [new ForbiddenException()];

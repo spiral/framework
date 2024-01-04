@@ -45,6 +45,12 @@ class ExceptionsTest extends TestCase
         $this->assertSame(401, $e->getCode());
     }
 
+    public function testServerError(): void
+    {
+        $e = new ClientException\ServerErrorException();
+        $this->assertSame(500, $e->getCode());
+    }
+
     #[DataProvider('allExceptionsWithPreviousSet')]
     public function testPreviousSetter(\Throwable $exception): void
     {
@@ -57,6 +63,7 @@ class ExceptionsTest extends TestCase
         yield [new Exception\ClientException\ForbiddenException('', new \Exception())];
         yield [new Exception\ClientException\NotFoundException('', new \Exception())];
         yield [new Exception\ClientException\UnauthorizedException('', new \Exception())];
+        yield [new Exception\ClientException\ServerErrorException('', new \Exception())];
         yield [new Exception\ClientException(0, '', new \Exception())];
         yield [new Exception\DotNotFoundException('', 0, new \Exception())];
         yield [new Exception\HttpException('', 0, new \Exception())];
