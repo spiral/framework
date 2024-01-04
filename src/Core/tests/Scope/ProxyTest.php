@@ -12,11 +12,13 @@ use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Scope;
 use Spiral\Tests\Core\Scope\Stub\Context;
 use Spiral\Tests\Core\Scope\Stub\ContextInterface;
+use Spiral\Tests\Core\Scope\Stub\DestroyableInterface;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 use Spiral\Tests\Core\Scope\Stub\ScopedProxyLoggerCarrier;
 use Spiral\Tests\Core\Scope\Stub\ScopedProxyStdClass;
+use WeakReference;
 
 final class ProxyTest extends BaseTestCase
 {
@@ -245,6 +247,32 @@ final class ProxyTest extends BaseTestCase
 
         $proxy->get(LoggerInterface::class);
     }
+
+    public function testDestroyMethod(): void
+    {
+        $root = new Container();
+        $context = (object)['destroyed' => false];
+        $class = new class($context) implements DestroyableInterface {
+            public function __construct(
+                private readonly \stdClass $context,
+            ) {
+            }
+
+            public function __destruct()
+            {
+                $this->context->destroyed = true;
+            }
+        };
+        $root->bindSingleton(DestroyableInterface::class, $class);
+
+        $proxy = $root->runScope(new Scope(), static fn(#[Proxy] DestroyableInterface $proxy) => $proxy);
+        $weak = WeakReference::create($proxy);
+        unset($proxy);
+
+        self::assertNull($weak->get());
+        self::assertFalse($context->destroyed);
+    }
+
 
     /*
     // Proxy::$attachContainer=true tests

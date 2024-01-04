@@ -42,6 +42,11 @@ final class ProxyClassRenderer
                 throw new \LogicException('Constructor is not allowed in a proxy.');
             }
 
+            if ($method->isDestructor()) {
+                $classBody[] = self::renderMethod($method);
+                continue;
+            }
+
             $hasRefs = false;
             $return = $method->hasReturnType() && (string)$method->getReturnType() === 'void' ? '' : 'return ';
             $call = ($method->isStatic() ? '::' : '->') . $method->getName();
