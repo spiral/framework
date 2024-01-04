@@ -12,8 +12,8 @@ use Spiral\Core\Internal\Proxy\ProxyClassRenderer;
  */
 final class Proxy
 {
-    /** @var array<class-string, object> */
-    private static array $cache = [];
+    /** @var array<class-string, class-string> */
+    private static array $classes = [];
 
     /**
      * @template TClass of object
@@ -37,7 +37,7 @@ final class Proxy
             $attribute->proxyOverloads ? '[magic-calls]' : '',
         );
 
-        if (!\array_key_exists($cacheKey, self::$cache)) {
+        if (!\array_key_exists($cacheKey, self::$classes)) {
             $n = 0;
             do {
                 $className = \sprintf(
@@ -66,14 +66,13 @@ final class Proxy
             (static fn () => $instance::$__container_proxy_alias = $interface)->bindTo(null, $instance::class)();
 
             // Store in cache without context
-            self::$cache[$cacheKey] = $instance;
+            self::$classes[$cacheKey] = $className;
         } else {
             /** @var TClass $instance */
-            $instance = self::$cache[$cacheKey];
+            $instance = new (self::$classes[$cacheKey])();
         }
 
         if ($context !== null || $attachContainer) {
-            $instance = clone $instance;
             (static function () use ($instance, $context, $attachContainer): void {
                 // Set the Current Context
                 /** @see \Spiral\Core\Internal\Proxy\ProxyTrait::$__container_proxy_context */
