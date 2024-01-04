@@ -8,7 +8,6 @@ use Spiral\Http\Exception\ClientException;
 
 /**
  * HTTP 500 exception.
- * @deprecated since v3.12
  */
 class ServerErrorException extends ClientException
 {
