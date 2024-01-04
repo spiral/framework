@@ -21,6 +21,7 @@ final class Resolver
         $c ??= ContainerScope::getContainer() ?? throw new ContainerException('Proxy is out of scope.');
 
         try {
+            /** @psalm-suppress TooManyArguments */
             $result = $c->get($alias, $context) ?? throw new ContainerException(
                 'Resolved `null` from the container.',
             );

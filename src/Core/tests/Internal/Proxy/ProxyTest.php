@@ -177,4 +177,15 @@ final class ProxyTest extends TestCase
             self::assertSame(['foo' => 'foobar', 'bar' => 'foobaz'], $res);
         });
     }
+
+    public function testProxyToUnionType(): void
+    {
+        $root = new Container();
+        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+
+        $mock = $root->invoke(static fn(#[Proxy] MockInterface|EmptyInterface $mock) => $mock);
+
+        self::assertInstanceOf(MockInterfaceImpl::class, $mock);
+    }
 }

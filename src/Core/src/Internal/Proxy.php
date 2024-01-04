@@ -40,7 +40,6 @@ final class Proxy
         if (!\array_key_exists($cacheKey, self::$cache)) {
             $n = 0;
             do {
-                /** @var class-string<TClass> $className */
                 $className = \sprintf(
                     '%s\%s SCOPED PROXY%s',
                     $type->getNamespaceName(),
@@ -49,6 +48,7 @@ final class Proxy
                 );
             } while (\class_exists($className));
 
+            /** @var class-string<TClass> $className */
             try {
                 $classString = ProxyClassRenderer::renderClass(
                     $type,
