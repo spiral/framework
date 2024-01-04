@@ -247,6 +247,8 @@ final class ProxyTest extends BaseTestCase
     }
 
     /*
+    // Proxy::$attachContainer=true tests
+
     public function testProxyStaticScopeRunOutsideOfScope(): void
     {
         $root = new Container();

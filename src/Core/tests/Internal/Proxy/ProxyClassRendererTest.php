@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Internal\Proxy\ProxyClassRenderer;
 use Spiral\Tests\Core\Fixtures\SimpleEnum;
+use Spiral\Tests\Core\Internal\Proxy\Stub\EmptyInterface;
 use Spiral\Tests\Core\Internal\Proxy\Stub\StrangeInterface;
 use stdClass;
 
@@ -23,17 +24,18 @@ final class ProxyClassRendererTest extends TestCase
 
     public function testInterfaceWithConstructor(): void
     {
-        $result = ProxyClassRenderer::renderClass(
+        self::expectExceptionMessage('Constructor is not allowed in a proxy.');
+
+        ProxyClassRenderer::renderClass(
             new \ReflectionClass(StrangeInterface::class),
             'StrangeImpl',
         );
-        self::assertStringNotContainsString('__construct', $result);
     }
 
     public function testRenderClassInGlobalNamespace(): void
     {
         $result = ProxyClassRenderer::renderClass(
-            new \ReflectionClass(StrangeInterface::class),
+            new \ReflectionClass(EmptyInterface::class),
             'TestImpl',
         );
         self::assertStringNotContainsString('namespace', $result);

@@ -39,7 +39,7 @@ final class ProxyClassRenderer
         $classBody = [];
         foreach ($type->getMethods() as $method) {
             if ($method->isConstructor()) {
-                continue;
+                throw new \LogicException('Constructor is not allowed in a proxy.');
             }
 
             $hasRefs = false;
@@ -103,7 +103,7 @@ final class ProxyClassRenderer
 
         $traitsStr = $traits === [] ? '' : \implode(
             "\n    ",
-            \array_map(fn(string $trait): string => 'use \\' . \ltrim($trait, '\\') . ';', $traits)
+            \array_map(fn (string $trait): string => 'use \\' . \ltrim($trait, '\\') . ';', $traits)
         );
         return <<<PHP
             $classNamespaceStr

@@ -211,7 +211,10 @@ final class Resolver implements ResolverInterface
                     $attrs = $param->getAttributes(ProxyAttribute::class)
                 )) {
                     $proxy = Proxy::create(
-                        new \ReflectionClass($refType->getName()), $param, $attrs[0]->newInstance());
+                        new \ReflectionClass($refType->getName()),
+                        $param,
+                        $attrs[0]->newInstance()
+                    );
                     $this->processArgument($state, $proxy);
                     return true;
                 }
