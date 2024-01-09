@@ -12,6 +12,7 @@ use ReflectionIntersectionType;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionUnionType;
+use Spiral\Core\Attribute\Proxy as ProxyAttribute;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
@@ -176,54 +177,81 @@ final class Resolver implements ResolverInterface
      * @throws ResolvingException
      * @throws NotFoundExceptionInterface|ContainerExceptionInterface
      */
-    private function resolveParameter(ReflectionParameter $parameter, ResolvingState $state, bool $validate): bool
+    private function resolveParameter(ReflectionParameter $param, ResolvingState $state, bool $validate): bool
     {
-        $isVariadic = $parameter->isVariadic();
-        $hasType = $parameter->hasType();
+        $isVariadic = $param->isVariadic();
+        $hasType = $param->hasType();
 
         // Try to resolve parameter by name
-        $res = $state->resolveParameterByNameOrPosition($parameter, $isVariadic);
+        $res = $state->resolveParameterByNameOrPosition($param, $isVariadic);
         if ($res !== [] || $isVariadic) {
             // validate
             if ($isVariadic) {
                 foreach ($res as $k => &$v) {
-                    $this->processArgument($state, $v, validateWith: $validate ? $parameter : null, key: $k);
+                    $this->processArgument($state, $v, validateWith: $validate ? $param : null, key: $k);
                 }
             } else {
-                $this->processArgument($state, $res[0], validateWith: $validate ? $parameter : null);
+                $this->processArgument($state, $res[0], validateWith: $validate ? $param : null);
             }
 
             return true;
         }
 
         $error = null;
-        if ($hasType) {
-            /** @var ReflectionIntersectionType|ReflectionUnionType|ReflectionNamedType $reflectionType */
-            $reflectionType = $parameter->getType();
+        while ($hasType) {
+            /** @var ReflectionIntersectionType|ReflectionUnionType|ReflectionNamedType $refType */
+            $refType = $param->getType();
 
-            if ($reflectionType instanceof ReflectionIntersectionType) {
-                throw new UnsupportedTypeException($parameter->getDeclaringFunction(), $parameter->getName());
-            }
+            if ($refType::class === ReflectionNamedType::class) {
+                if ($refType->isBuiltin()) {
+                    break;
+                }
 
-            $types = $reflectionType instanceof ReflectionNamedType ? [$reflectionType] : $reflectionType->getTypes();
-            foreach ($types as $namedType) {
+                if (\interface_exists($refType->getName()) && !empty(
+                    $attrs = $param->getAttributes(ProxyAttribute::class)
+                )) {
+                    $proxy = Proxy::create(
+                        new \ReflectionClass($refType->getName()),
+                        $param,
+                        $attrs[0]->newInstance()
+                    );
+                    $this->processArgument($state, $proxy);
+                    return true;
+                }
+
                 try {
-                    if (!$namedType->isBuiltin() && $this->resolveObject($state, $namedType, $parameter, $validate)) {
+                    if ($this->resolveObject($state, $refType, $param, $validate)) {
                         return true;
                     }
                 } catch (Throwable $e) {
                     $error = $e;
                 }
+                break;
             }
+
+            if ($refType::class === ReflectionUnionType::class) {
+                foreach ($refType->getTypes() as $namedType) {
+                    try {
+                        if (!$namedType->isBuiltin() && $this->resolveObject($state, $namedType, $param, $validate)) {
+                            return true;
+                        }
+                    } catch (Throwable $e) {
+                        $error = $e;
+                    }
+                }
+                break;
+            }
+
+            throw new UnsupportedTypeException($param->getDeclaringFunction(), $param->getName());
         }
 
-        if ($parameter->isDefaultValueAvailable()) {
-            $argument = $parameter->getDefaultValue();
+        if ($param->isDefaultValueAvailable()) {
+            $argument = $param->getDefaultValue();
             $this->processArgument($state, $argument);
             return true;
         }
 
-        if ($hasType && $parameter->allowsNull()) {
+        if ($hasType && $param->allowsNull()) {
             $argument = null;
             $this->processArgument($state, $argument);
             return true;

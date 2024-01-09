@@ -14,7 +14,6 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Core\Exception\Scope\FinalizersException;
-use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
 use Spiral\Core\Internal\Common\DestructorTrait;
 use Spiral\Core\Internal\Config\StateBinder;
 
@@ -41,7 +40,6 @@ final class Container implements
     FactoryInterface,
     ResolverInterface,
     InvokerInterface,
-    ContainerScopeInterface,
     ScopeInterface
 {
     use DestructorTrait;
@@ -75,7 +73,6 @@ final class Container implements
             ContainerInterface::class => $shared,
             BinderInterface::class => $shared,
             FactoryInterface::class => $shared,
-            ContainerScopeInterface::class => $shared,
             ScopeInterface::class => $shared,
             ResolverInterface::class => $shared,
             InvokerInterface::class => $shared,
@@ -113,11 +110,13 @@ final class Container implements
      *
      * @throws ContainerException
      * @throws \Throwable
+     * @psalm-suppress TooManyArguments
      */
     public function make(string $alias, array $parameters = [], \Stringable|string|null $context = null): mixed
     {
-        /** @psalm-suppress TooManyArguments */
-        return $this->factory->make($alias, $parameters, $context);
+        return ContainerScope::getContainer() === $this
+            ? $this->factory->make($alias, $parameters, $context)
+            : ContainerScope::runScope($this, fn () => $this->factory->make($alias, $parameters, $context));
     }
 
     /**
@@ -137,11 +136,13 @@ final class Container implements
      *
      * @throws ContainerException
      * @throws \Throwable
+     * @psalm-suppress TooManyArguments
      */
-    public function get(string|Autowire $id, string $context = null): mixed
+    public function get(string|Autowire $id, \Stringable|string|null $context = null): mixed
     {
-        /** @psalm-suppress TooManyArguments */
-        return $this->container->get($id, $context);
+        return ContainerScope::getContainer() === $this
+            ? $this->container->get($id, $context)
+            : ContainerScope::runScope($this, fn () => $this->container->get($id, $context));
     }
 
     public function has(string $id): bool
@@ -149,6 +150,14 @@ final class Container implements
         return $this->container->has($id);
     }
 
+    /**
+     * Make a Binder proxy to configure bindings for a specific scope.
+     *
+     * @param null|string $scope Scope name.
+     *        If {@see null}, binder for the current working scope will be returned.
+     *        If {@see string}, the default binder for the given scope will be returned. Default bindings won't affect
+     *        already created Container instances except the case with the root one.
+     */
     public function getBinder(?string $scope = null): BinderInterface
     {
         return $scope === null
@@ -159,8 +168,12 @@ final class Container implements
     /**
      * @throws \Throwable
      */
-    public function runScope(array $bindings, callable $scope): mixed
+    public function runScope(Scope|array $bindings, callable $scope): mixed
     {
+        if (!\is_array($bindings)) {
+            return $this->runIsolatedScope($bindings, $scope);
+        }
+
         $binds = &$this->state->bindings;
         $singletons = &$this->state->singletons;
         $cleanup = $previous = $prevSin = [];
@@ -203,42 +216,24 @@ final class Container implements
 
     /**
      * Invoke given closure or function withing specific IoC scope.
+     *
+     * @template TReturn
+     *
+     * @param callable(mixed ...$params): TReturn $closure
+     * @param array<non-empty-string, TResolver> $bindings Custom bindings for the new scope.
+     * @param null|string $name Scope name. Named scopes can have individual bindings and constrains.
+     * @param bool $autowire If {@see false}, closure will be invoked with just only the passed Container as an
+     *        argument. Otherwise, {@see InvokerInterface::invoke()} will be used to invoke the closure.
+     *
+     * @return TReturn
+     * @throws \Throwable
+     *
+     * @deprecated Use {@see runScope()} with the {@see Scope} as the first argument.
+     * @internal Used in tests only
      */
     public function runScoped(callable $closure, array $bindings = [], ?string $name = null, bool $autowire = true): mixed
     {
-        // Open scope
-        $container = new self($this->config, $name);
-
-        // Configure scope
-        $container->scope->setParent($this, $this->scope);
-
-        // Add specific bindings
-        foreach ($bindings as $alias => $resolver) {
-            $container->binder->bind($alias, $resolver);
-        }
-
-        return ContainerScope::runScope(
-            $container,
-            static function (self $container) use ($autowire, $closure): mixed {
-                try {
-                    return $autowire
-                        ? $container->invoke($closure)
-                        : $closure($container);
-                } finally {
-                    $container->closeScope();
-                }
-            }
-        );
-    }
-
-    /**
-     * Get current scope container.
-     *
-     * @internal it might be removed in the future.
-     */
-    public function getCurrentContainer(): ContainerInterface
-    {
-        return ContainerScope::getContainer() ?? $this;
+        return $this->runIsolatedScope(new Scope($name, $bindings, $autowire), $closure);
     }
 
     /**
@@ -286,7 +281,9 @@ final class Container implements
      */
     public function invoke(mixed $target, array $parameters = []): mixed
     {
-        return $this->invoker->invoke($target, $parameters);
+        return ContainerScope::getContainer() === $this
+            ? $this->invoker->invoke($target, $parameters)
+            : ContainerScope::runScope($this, fn () => $this->invoker->invoke($target, $parameters));
     }
 
     /**
@@ -369,5 +366,40 @@ final class Container implements
         if ($errors !== []) {
             throw new FinalizersException($scopeName, $errors);
         }
+    }
+
+    /**
+     * @template TReturn
+     *
+     * @param callable(mixed ...$params): TReturn $closure
+     *
+     * @return TReturn
+     * @throws \Throwable
+     */
+    private function runIsolatedScope(Scope $config, callable $closure): mixed
+    {
+        // Open scope
+        $container = new self($this->config, $config->name);
+
+        // Configure scope
+        $container->scope->setParent($this, $this->scope);
+
+        // Add specific bindings
+        foreach ($config->bindings as $alias => $resolver) {
+            $container->binder->bind($alias, $resolver);
+        }
+
+        return ContainerScope::runScope(
+            $container,
+            static function (self $container) use ($config, $closure): mixed {
+                try {
+                    return $config->autowire
+                        ? $container->invoke($closure)
+                        : $closure($container);
+                } finally {
+                    $container->closeScope();
+                }
+            }
+        );
     }
 }

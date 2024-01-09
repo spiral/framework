@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope\Stub;
 
-interface LoggerInterface
+interface DestroyableInterface
 {
-    public function getName(): string;
+    public function __destruct();
 }

@@ -8,7 +8,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Config\Shared;
 use Spiral\Core\Container;
-use Spiral\Core\Exception\Scope\ScopeContainerLeakedException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
@@ -259,4 +258,35 @@ final class UseCaseTest extends BaseTestCase
         $this->assertSame('a', $c->get('bucket')->getName());
     }
 
+    public function testRegisterContainerOnInvoke(): void
+    {
+        $root = new Container();
+
+        $root->invoke(static function () use ($root) {
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+        });
+    }
+
+    public function testRegisterContainerOnGet(): void
+    {
+        $root = new Container();
+        $root->bind('foo', function () use ($root) {
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+        });
+
+        $root->get('foo');
+    }
+
+    public function testRegisterContainerOnMake(): void
+    {
+        $root = new Container();
+        $root->bind('foo', function () use ($root) {
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+        });
+
+        $root->make('foo');
+    }
 }

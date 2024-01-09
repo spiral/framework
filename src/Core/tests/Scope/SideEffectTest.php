@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core\Scope;
 
 use Spiral\Core\Container;
+use Spiral\Core\Scope;
 use Spiral\Tests\Core\Scope\Stub\Factory;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\KVLogger;
@@ -22,10 +23,10 @@ final class SideEffectTest extends BaseTestCase
         $root = new Container();
         $root->bind(LoggerInterface::class, KVLogger::class);
 
-        $root->runScoped(static function (Container $c1) {
+        $root->runScope(new Scope(), static function (Container $c1) {
             $c1->bind(LoggerInterface::class, FileLogger::class);
 
-            $c1->runScoped(static function (LoggerCarrier $carrier, LoggerInterface $logger) {
+            $c1->runScope(new Scope(), static function (LoggerCarrier $carrier, LoggerInterface $logger) {
                 // from the $root container
                 self::assertInstanceOf(KVLogger::class, $carrier->logger);
                 // from the $c1 container
@@ -39,7 +40,7 @@ final class SideEffectTest extends BaseTestCase
         $root = new Container();
         $root->bind(LoggerInterface::class, KVLogger::class);
 
-        $root->runScoped(static function (Container $c1) {
+        $root->runScope(new Scope(), static function (Container $c1) {
             $c1->bind(LoggerInterface::class, FileLogger::class);
 
             self::assertInstanceOf(
