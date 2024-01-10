@@ -6,13 +6,14 @@ namespace Spiral\Session;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
 
 /**
  * Provides access to the currently active session scope.
  */
-final class SessionScope implements SessionInterface, SingletonInterface
+#[Singleton]
+final class SessionScope implements SessionInterface
 {
     /** Locations for unnamed segments i.e. default segment. */
     private const DEFAULT_SECTION = '_DEFAULT';

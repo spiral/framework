@@ -9,8 +9,8 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
 use Spiral\Tokenizer\ClassLocatorInjector;
@@ -31,7 +31,8 @@ use Spiral\Tokenizer\ScopedEnumsInterface;
 use Spiral\Tokenizer\ScopedInterfaceLocator;
 use Spiral\Tokenizer\ScopedInterfacesInterface;
 
-final class TokenizerBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class TokenizerBootloader extends Bootloader
 {
     protected const BINDINGS = [
         ScopedClassesInterface::class => ScopedClassLocator::class,

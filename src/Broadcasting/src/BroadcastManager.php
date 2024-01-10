@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Spiral\Broadcasting;
 
 use Spiral\Broadcasting\Config\BroadcastConfig;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\FactoryInterface;
 
-final class BroadcastManager implements BroadcastManagerInterface, SingletonInterface
+#[Singleton]
+final class BroadcastManager implements BroadcastManagerInterface
 {
     /** @var BroadcastInterface[] */
     private array $connections = [];

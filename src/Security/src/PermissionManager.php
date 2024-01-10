@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Security;
 
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Security\Exception\PermissionException;
 use Spiral\Security\Exception\RoleException;
 use Spiral\Security\Rule\AllowRule;
@@ -21,7 +21,8 @@ use Spiral\Security\Rule\ForbidRule;
  * $associations->associate('editor', 'posts.*', Allows::class);
  * $associations->associate('user', 'posts.*', Forbid::class);
  */
-final class PermissionManager implements PermissionsInterface, SingletonInterface
+#[Singleton]
+final class PermissionManager implements PermissionsInterface
 {
     /**
      * Roles associated with their permissions.

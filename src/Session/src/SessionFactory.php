@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Session;
 
 use Psr\Container\ContainerExceptionInterface;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\FactoryInterface;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Exception\MultipleSessionException;
@@ -14,7 +14,8 @@ use Spiral\Session\Exception\SessionException;
 /**
  * Initiates session instance and configures session handlers.
  */
-final class SessionFactory implements SessionFactoryInterface, SingletonInterface
+#[Singleton]
+final class SessionFactory implements SessionFactoryInterface
 {
     public function __construct(
         private readonly SessionConfig $config,

@@ -19,15 +19,16 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Http\Config\HttpConfig;
 
 /**
  * Enables Auth middleware and http transports to read and write tokens in PSR-7 request/response.
  */
-final class HttpAuthBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class HttpAuthBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         AuthBootloader::class,

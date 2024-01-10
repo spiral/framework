@@ -6,13 +6,14 @@ namespace Spiral\Boot\BootloadManager;
 
 use Spiral\Boot\BootloadManagerInterface;
 use Spiral\Boot\Exception\BootloaderAlreadyBootedException;
-use Spiral\Core\Container;
+use Spiral\Core\Attribute\Singleton;
 
 /**
  * @internal
  * @psalm-import-type TClass from BootloadManagerInterface
  */
-final class ClassesRegistry implements Container\SingletonInterface
+#[Singleton]
+final class ClassesRegistry
 {
     /** @var TClass[] */
     private array $classes = [];

@@ -6,7 +6,7 @@ namespace Spiral\Command\Router;
 
 use Spiral\Boot\KernelInterface;
 use Spiral\Console\Command;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Route;
 use Spiral\Router\RouterInterface;
@@ -15,7 +15,8 @@ use Spiral\Router\Target\Controller;
 use Spiral\Router\Target\Group;
 use Spiral\Router\Target\Namespaced;
 
-final class ListCommand extends Command implements SingletonInterface
+#[Singleton]
+final class ListCommand extends Command
 {
     protected const NAME = 'route:list';
     protected const DESCRIPTION = 'List application routes';

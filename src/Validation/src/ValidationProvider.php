@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Validation;
 
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\InvokerInterface;
 use Spiral\Validation\Exception\ValidationException;
 
-final class ValidationProvider implements ValidationProviderInterface, SingletonInterface
+#[Singleton]
+final class ValidationProvider implements ValidationProviderInterface
 {
     /** @var array<non-empty-string, \Closure> */
     private array $resolvers = [];

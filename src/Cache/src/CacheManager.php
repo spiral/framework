@@ -7,10 +7,11 @@ namespace Spiral\Cache;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Cache\Config\CacheConfig;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\FactoryInterface;
 
-class CacheManager implements CacheStorageProviderInterface, SingletonInterface
+#[Singleton]
+class CacheManager implements CacheStorageProviderInterface
 {
     /** @var CacheInterface[] */
     private array $storages = [];

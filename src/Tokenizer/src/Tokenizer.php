@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Tokenizer;
 
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Symfony\Component\Finder\Finder;
 
 /**
  * Manages automatic container injections of class and invocation locators.
  */
-final class Tokenizer implements SingletonInterface
+#[Singleton]
+final class Tokenizer
 {
     /**
      * Token array constants.

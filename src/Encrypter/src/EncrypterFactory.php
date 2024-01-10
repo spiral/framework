@@ -6,8 +6,8 @@ namespace Spiral\Encrypter;
 
 use Defuse\Crypto\Exception\CryptoException;
 use Defuse\Crypto\Key;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container\InjectorInterface;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Encrypter\Config\EncrypterConfig;
 use Spiral\Encrypter\Exception\EncrypterException;
 
@@ -16,7 +16,8 @@ use Spiral\Encrypter\Exception\EncrypterException;
  *
  * @implements InjectorInterface<EncrypterInterface>
  */
-final class EncrypterFactory implements InjectorInterface, EncryptionInterface, SingletonInterface
+#[Singleton]
+final class EncrypterFactory implements InjectorInterface, EncryptionInterface
 {
     public function __construct(
         private readonly EncrypterConfig $config

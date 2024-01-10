@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Spiral\Stempler\Directive;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Router\Exception\RouterException;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\RouterInterface;
 use Spiral\Stempler\Exception\DirectiveException;
 use Spiral\Stempler\Node\Dynamic\Directive;
 
-final class RouteDirective extends AbstractDirective implements SingletonInterface
+#[Singleton]
+final class RouteDirective extends AbstractDirective
 {
     public function __construct(
         private readonly ContainerInterface $container
