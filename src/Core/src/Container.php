@@ -160,7 +160,7 @@ final class Container implements
      */
     public function getBinder(string|\BackedEnum|null $scope = null): BinderInterface
     {
-        $scope = $scope instanceof \BackedEnum ? $scope->value : $scope;
+        $scope = $scope instanceof \BackedEnum ? (string) $scope->value : $scope;
 
         return $scope === null
             ? $this->binder
@@ -383,7 +383,7 @@ final class Container implements
         // Open scope
         $container = new self(
             $this->config,
-            $config->name instanceof \BackedEnum ? $config->name->value : $config->name
+            $config->name instanceof \BackedEnum ? (string) $config->name->value : $config->name
         );
 
         // Configure scope
