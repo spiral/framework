@@ -16,6 +16,6 @@ final class Scope implements Plugin
 
     public function __construct(string|\BackedEnum $name)
     {
-        $this->name = $name instanceof \BackedEnum ? (string) $name->value : $name;
+        $this->name = \is_object($name) ? (string) $name->value : $name;
     }
 }

@@ -160,7 +160,7 @@ final class Container implements
      */
     public function getBinder(string|\BackedEnum|null $scope = null): BinderInterface
     {
-        $scope = $scope instanceof \BackedEnum ? (string) $scope->value : $scope;
+        $scope = \is_object($scope) ? (string) $scope->value : $scope;
 
         return $scope === null
             ? $this->binder
@@ -381,10 +381,7 @@ final class Container implements
     private function runIsolatedScope(Scope $config, callable $closure): mixed
     {
         // Open scope
-        $container = new self(
-            $this->config,
-            $config->name instanceof \BackedEnum ? (string) $config->name->value : $config->name
-        );
+        $container = new self($this->config, \is_object($config->name) ? (string) $config->name->value : $config->name);
 
         // Configure scope
         $container->scope->setParent($this, $this->scope);
