@@ -12,8 +12,10 @@ namespace Spiral\Core\Attribute;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class Scope implements Plugin
 {
-    public function __construct(
-        public string $name,
-    ) {
+    public string $name;
+
+    public function __construct(string|\BackedEnum $name)
+    {
+        $this->name = $name instanceof \BackedEnum ? $name->value : $name;
     }
 }

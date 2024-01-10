@@ -379,7 +379,10 @@ final class Container implements
     private function runIsolatedScope(Scope $config, callable $closure): mixed
     {
         // Open scope
-        $container = new self($this->config, $config->name);
+        $container = new self(
+            $this->config,
+            $config->name instanceof \BackedEnum ? $config->name->value : $config->name
+        );
 
         // Configure scope
         $container->scope->setParent($this, $this->scope);
