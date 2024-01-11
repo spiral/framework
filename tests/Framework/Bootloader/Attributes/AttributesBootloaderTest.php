@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace Framework\Bootloader\Attributes;
 
-use Spiral\Attributes\Composite\SelectiveReader;
-use Spiral\Attributes\Internal\Instantiator\Facade;
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Internal\Instantiator\InstantiatorInterface;
+use Spiral\Attributes\Internal\Instantiator\NamedArgumentsInstantiator;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Bootloader\Attributes\AttributesConfig;
-use Spiral\Bootloader\Attributes\Factory;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class AttributesBootloaderTest extends BaseTestCase
 {
     public function testReaderBinding(): void
     {
-        $this->assertContainerBoundAsSingleton(ReaderInterface::class, SelectiveReader::class);
+        $this->assertContainerBoundAsSingleton(ReaderInterface::class, AttributeReader::class);
     }
 
     public function testInstantiatorBinding(): void
     {
-        $this->assertContainerBoundAsSingleton(InstantiatorInterface::class, Facade::class);
+        $this->assertContainerBoundAsSingleton(InstantiatorInterface::class, NamedArgumentsInstantiator::class);
     }
 
     public function testIsCacheEnabledShouldBeFalse(): void

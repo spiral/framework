@@ -47,34 +47,4 @@ final class PipelineInterceptorTest extends HttpTestCase
         $this->getHttp()->get('/intercepted/first')
             ->assertBodySame('["first","three","two","one"]');
     }
-
-    public function testWithAttribute(): void
-    {
-        $this->getHttp()->get('/intercepted/withAttribute')
-            ->assertBodySame('["withAttribute","three","two","one"]');
-    }
-
-    public function testMixAttribute(): void
-    {
-        $this->getHttp()->get('/intercepted/mixAttribute')
-            ->assertBodySame('["mixAttribute","six","three","two","one","five","four"]');
-    }
-
-    public function testDupAttribute(): void
-    {
-        $this->getHttp()->get('/intercepted/dupAttribute')
-            ->assertBodySame('["dupAttribute","three","two","one","three","two","one"]');
-    }
-
-    public function testSkipNextAttribute(): void
-    {
-        $this->getHttp()->get('/intercepted/skipAttribute')
-            ->assertBodySame('["skipAttribute","three","two","one","one"]');
-    }
-
-    public function testSkipIfFirstAttribute(): void
-    {
-        $this->getHttp()->get('/intercepted/firstAttribute')
-            ->assertBodySame('["firstAttribute","three","two","one"]');
-    }
 }

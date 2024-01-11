@@ -39,7 +39,7 @@ class AttributesBootloader extends Bootloader
             AttributesConfig::CONFIG,
             [
                 'annotations' => [
-                    'support' => $env->get('SUPPORT_ANNOTATIONS', true),
+                    'support' => $env->get('SUPPORT_ANNOTATIONS', false),
                 ],
                 'cache' => [
                     'storage' => $env->get('ATTRIBUTES_CACHE_STORAGE', null),
