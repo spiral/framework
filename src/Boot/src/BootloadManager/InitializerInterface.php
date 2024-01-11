@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\BootloadManager;
 
+use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\BootloadManagerInterface;
 
 /**
@@ -14,7 +15,7 @@ interface InitializerInterface
     /**
      * Instantiate bootloader objects and resolve dependencies
      *
-     * @param TClass[]|array<TClass, array<string,mixed>> $classes
+     * @param TClass[]|array<class-string<BootloaderInterface>, array<string,mixed>> $classes
      */
     public function init(array $classes): \Generator;
 

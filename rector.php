@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
@@ -50,6 +51,9 @@ return static function (RectorConfig $config): void {
         ],
         RemoveExtraParametersRector::class => [
             __DIR__ . '/src/Boot/src/BootloadManager/AbstractBootloadManager.php',
+        ],
+        RemoveUnusedPrivateMethodParameterRector::class => [
+            __DIR__ . '/src/Core/src/Internal/Factory.php',
         ],
     ]);
 
