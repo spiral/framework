@@ -29,8 +29,4 @@ final class Proxy implements Plugin
      * @internal
      */
     public bool $proxyOverloads = false;
-
-    public function __construct(
-    ) {
-    }
 }

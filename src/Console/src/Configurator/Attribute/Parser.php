@@ -225,7 +225,7 @@ final class Parser
             }
         }
 
-        if (!$type->isBuiltin() && \enum_exists($type->getName())) {
+        if ($type instanceof \ReflectionNamedType && !$type->isBuiltin() && \enum_exists($type->getName())) {
             return $type;
         }
 
