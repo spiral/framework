@@ -8,9 +8,12 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Config\Shared;
 use Spiral\Core\Container;
+use Spiral\Core\Scope;
+use Spiral\Framework\ScopeName;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
+use Spiral\Tests\Core\Fixtures\ScopeEnum;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerInjector;
@@ -288,5 +291,24 @@ final class UseCaseTest extends BaseTestCase
         });
 
         $root->make('foo');
+    }
+
+    #[DataProvider('scopeEnumDataProvider')]
+    public function testScopeWithEnum(\BackedEnum $scope): void
+    {
+        $root = new Container();
+        $root->getBinder($scope)->bindSingleton('foo', SampleClass::class);
+
+        $root->runScope(new Scope($scope), function (Container $container) {
+            $this->assertTrue($container->has('foo'));
+            $this->assertInstanceOf(SampleClass::class, $container->get('foo'));
+        });
+        $this->assertFalse($root->has('foo'));
+    }
+
+    public static function scopeEnumDataProvider(): \Traversable
+    {
+        yield [ScopeName::HttpRequest, 'http.request'];
+        yield [ScopeEnum::A, 'a'];
     }
 }
