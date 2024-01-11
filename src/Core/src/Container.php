@@ -59,8 +59,12 @@ final class Container implements
      */
     public function __construct(
         private Config $config = new Config(),
-        ?string $scopeName = self::DEFAULT_ROOT_SCOPE_NAME,
+        string|\BackedEnum|null $scopeName = self::DEFAULT_ROOT_SCOPE_NAME,
     ) {
+        if (\is_object($scopeName)) {
+            $scopeName = (string) $scopeName->value;
+        }
+
         $this->initServices($this, $scopeName);
 
         /** @psalm-suppress RedundantPropertyInitializationCheck */
@@ -381,7 +385,7 @@ final class Container implements
     private function runIsolatedScope(Scope $config, callable $closure): mixed
     {
         // Open scope
-        $container = new self($this->config, \is_object($config->name) ? (string) $config->name->value : $config->name);
+        $container = new self($this->config, $config->name);
 
         // Configure scope
         $container->scope->setParent($this, $this->scope);
