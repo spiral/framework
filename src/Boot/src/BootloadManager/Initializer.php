@@ -39,7 +39,7 @@ class Initializer implements InitializerInterface, Container\SingletonInterface
     /**
      * Instantiate bootloader objects and resolve dependencies
      *
-     * @param TClass[]|array<TClass, array<string,mixed>> $classes
+     * @param TClass[]|array<class-string<BootloaderInterface>, array<string,mixed>> $classes
      */
     public function init(array $classes, bool $useConfig = true): \Generator
     {
