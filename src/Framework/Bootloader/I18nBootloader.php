@@ -10,7 +10,7 @@ use Spiral\Boot\Environment\DebugMode;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Translator\Catalogue\CacheInterface;
 use Spiral\Translator\Catalogue\CatalogueLoader;
 use Spiral\Translator\Catalogue\CatalogueManager;
@@ -28,7 +28,8 @@ use Symfony\Component\Translation\Loader;
  * Attention, the default language would not be automatically reset in finalizers. Make sure to properly design your
  * middleware.
  */
-final class I18nBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class I18nBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         \Symfony\Contracts\Translation\TranslatorInterface::class => TranslatorInterface::class,

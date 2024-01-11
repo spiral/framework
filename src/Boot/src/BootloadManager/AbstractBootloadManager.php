@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Spiral\Boot\BootloadManager;
 
 use Spiral\Boot\BootloadManagerInterface;
-use Spiral\Core\Container;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\ScopeInterface;
 
 /**
  * Provides ability to bootload service providers.
  */
-abstract class AbstractBootloadManager implements BootloadManagerInterface, Container\SingletonInterface
+#[Singleton]
+abstract class AbstractBootloadManager implements BootloadManagerInterface
 {
     public function __construct(
         private readonly ScopeInterface $scope,

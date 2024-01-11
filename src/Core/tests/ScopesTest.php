@@ -6,8 +6,8 @@ namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\RuntimeException;
 use Spiral\Tests\Core\Fixtures\Bucket;
@@ -136,7 +136,7 @@ class ScopesTest extends TestCase
     public function testHasInstanceAfterMakeWithoutAliasInScope(): void
     {
         $container = new Container();
-        $container->bindSingleton('test', new class implements SingletonInterface {});
+        $container->bindSingleton('test', new #[Singleton] class {});
         $container->make('test');
 
         $container->runScoped(function (Container $container) {

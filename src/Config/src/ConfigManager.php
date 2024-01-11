@@ -6,7 +6,7 @@ namespace Spiral\Config;
 
 use Spiral\Config\Exception\ConfigDeliveredException;
 use Spiral\Config\Exception\PatchException;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ConfiguratorException;
 
 /**
@@ -15,7 +15,8 @@ use Spiral\Core\Exception\ConfiguratorException;
  *
  * @implements ConfiguratorInterface<object>
  */
-final class ConfigManager implements ConfiguratorInterface, SingletonInterface
+#[Singleton]
+final class ConfigManager implements ConfiguratorInterface
 {
     private array $data = [];
     private array $defaults = [];

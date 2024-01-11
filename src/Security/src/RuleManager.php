@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Spiral\Security;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Security\Exception\RuleException;
 use Spiral\Security\Rule\CallableRule;
 
 /**
  * Provides ability to request permissions rules based on it's name. Rules are being fetched from container.
  */
-final class RuleManager implements RulesInterface, SingletonInterface
+#[Singleton]
+final class RuleManager implements RulesInterface
 {
     private array $rules = [];
 
