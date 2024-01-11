@@ -6,6 +6,7 @@ namespace Spiral\Boot;
 
 use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Attribute\DispatcherScope;
 use Spiral\Boot\Bootloader\BootloaderRegistry;
 use Spiral\Boot\Bootloader\BootloaderRegistryInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
@@ -21,6 +22,7 @@ use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container;
+use Spiral\Core\Scope;
 use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\ExceptionRendererInterface;
@@ -281,7 +283,7 @@ abstract class AbstractKernel implements KernelInterface
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
-                    [DispatcherInterface::class => $dispatcher],
+                    new Scope($this->getDispatcherScope($dispatcher), [DispatcherInterface::class => $dispatcher]),
                     static function () use ($dispatcher, $eventDispatcher): mixed {
                         $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
                         return $dispatcher->serve();
@@ -369,5 +371,12 @@ abstract class AbstractKernel implements KernelInterface
     private function initBootloaderRegistry(): BootloaderRegistryInterface
     {
         return new BootloaderRegistry($this->defineSystemBootloaders(), $this->defineBootloaders());
+    }
+
+    private function getDispatcherScope(DispatcherInterface $dispatcher): string|\BackedEnum|null
+    {
+        $reflection = new \ReflectionObject($dispatcher);
+
+        return ($reflection->getAttributes(DispatcherScope::class)[0] ?? null)?->newInstance()->scope;
     }
 }

@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Attribute\DispatcherScope;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\Logger\DebugListener;
 use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\Verbosity;
+use Spiral\Framework\ScopeName;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -20,6 +22,7 @@ use Throwable;
 /**
  * Manages Console commands and exception. Lazy loads console service.
  */
+#[DispatcherScope(scope: ScopeName::Console)]
 final class ConsoleDispatcher implements DispatcherInterface
 {
     public function __construct(
