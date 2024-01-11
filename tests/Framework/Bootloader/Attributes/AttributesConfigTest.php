@@ -11,9 +11,9 @@ final class AttributesConfigTest extends TestCase
 {
     public function testIsAnnotationsReaderEnabled(): void
     {
-        $this->assertTrue((new AttributesConfig())->isAnnotationsReaderEnabled());
-        $this->assertFalse(
-            (new AttributesConfig(['annotations' => ['support' => false]]))->isAnnotationsReaderEnabled()
+        $this->assertFalse((new AttributesConfig())->isAnnotationsReaderEnabled());
+        $this->assertTrue(
+            (new AttributesConfig(['annotations' => ['support' => true]]))->isAnnotationsReaderEnabled()
         );
     }
 

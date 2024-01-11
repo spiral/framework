@@ -8,18 +8,14 @@ use Spiral\Router\Annotation\Route;
 
 final class PageController
 {
-    /**
-     * @Route("/page/<page>", name="page_get", methods="GET")
-     */
-    public function get($page)
+    #[Route('/page/<page>', name: 'page_get', methods: 'GET')]
+    public function get($page): string
     {
-        return 'page-'.$page;
+        return 'page-' . $page;
     }
 
-    /**
-     * @Route("/page/about", name="page_about", methods="GET", priority=-1)
-     */
-    public function about()
+    #[Route('/page/about', name: 'page_about', methods: 'GET', priority: -1)]
+    public function about(): string
     {
         return 'about';
     }

@@ -18,7 +18,7 @@ final class AttributesConfig extends InjectableConfig
      */
     protected array $config = [
         'annotations' => [
-            'support' => true,
+            'support' => false,
         ],
         'cache' => [
             'storage' => null,

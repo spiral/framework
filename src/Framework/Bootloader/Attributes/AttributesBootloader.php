@@ -39,7 +39,7 @@ class AttributesBootloader extends Bootloader
             AttributesConfig::CONFIG,
             [
                 'annotations' => [
-                    'support' => $env->get('SUPPORT_ANNOTATIONS', true),
+                    'support' => $env->get('SUPPORT_ANNOTATIONS', false),
                 ],
                 'cache' => [
                     'storage' => $env->get('ATTRIBUTES_CACHE_STORAGE', null),
@@ -76,12 +76,14 @@ class AttributesBootloader extends Bootloader
         $supportAnnotations = $config->isAnnotationsReaderEnabled();
 
         if ($supportAnnotations) {
+            /** @psalm-suppress UndefinedClass */
             if (!\interface_exists(DoctrineReaderInterface::class)) {
                 throw new InitializationException(
                     'Doctrine annotations reader is not available, please install "doctrine/annotations" package',
                 );
             }
 
+            /** @psalm-suppress UndefinedClass, InvalidArgument */
             $reader = new SelectiveReader([
                 $reader,
                 new AnnotationReader(new DoctrineAnnotationReader()),
