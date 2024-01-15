@@ -8,26 +8,20 @@ use Spiral\Router\Annotation\Route;
 
 class NamelessRoutesController
 {
-    /**
-     * @Route(route="/nameless",  methods="GET")
-     */
-    public function index()
+    #[Route('/nameless', methods: 'GET')]
+    public function index(): string
     {
         return 'index';
     }
 
-    /**
-     * @Route(route="/nameless", methods="POST")
-     */
-    public function method()
+    #[Route(route: '/nameless', methods: 'POST')]
+    public function method(): string
     {
         return 'method';
     }
 
-    /**
-     * @Route(route="/nameless/route", methods={"GET", "POST"})
-     */
-    public function route()
+    #[Route(route: '/nameless/route', methods: ['GET', 'POST'])]
+    public function route(): string
     {
         return 'route';
     }

@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Exception\InputException;
@@ -47,7 +47,8 @@ use Spiral\Http\Header\AcceptHeader;
  * @method mixed server(string $name, mixed $default = null)
  * @method mixed attribute(string $name, mixed $default = null)
  */
-final class InputManager implements SingletonInterface
+#[Singleton]
+final class InputManager
 {
     /**
      * Associations between bags and representing class/request method.

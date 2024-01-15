@@ -7,44 +7,28 @@ namespace Spiral\App\Controller;
 use Spiral\Domain\Annotation\Guarded;
 use Spiral\Domain\Annotation\GuardNamespace;
 
-/**
- * @GuardNamespace("demo")
- */
+#[GuardNamespace('demo')]
 class Demo2Controller
 {
-    /**
-     * @Guarded("do")
-     */
+    #[Guarded('do')]
     public function do1()
     {
         return 'ok';
     }
 
-    #[Guarded('do')]
-    public function do1Attribute()
-    {
-        return 'ok';
-    }
-
-    /**
-     * @Guarded("do", else="notFound")
-     */
+    #[Guarded('do', else: 'notFound')]
     public function do2()
     {
         return 'ok';
     }
 
-    /**
-     * @Guarded("do", else="error")
-     */
+    #[Guarded('do', else: 'error')]
     public function do3()
     {
         return 'ok';
     }
 
-    /**
-     * @Guarded("do", else="badAction")
-     */
+    #[Guarded('do', else: 'badAction')]
     public function do4()
     {
         return 'ok';

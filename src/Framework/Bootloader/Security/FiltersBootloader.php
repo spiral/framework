@@ -9,6 +9,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
@@ -31,7 +32,8 @@ use Spiral\Filters\Model\Mapper\UuidCaster;
 /**
  * @implements Container\InjectorInterface<FilterInterface>
  */
-final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
+#[Singleton]
+final class FiltersBootloader extends Bootloader implements Container\InjectorInterface
 {
     protected const SINGLETONS = [
         FilterProviderInterface::class => [self::class, 'initFilterProvider'],

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Security\Rule;
 
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\RuleInterface;
 
 /**
  * Always positive rule.
  */
-final class AllowRule implements RuleInterface, SingletonInterface
+#[Singleton]
+final class AllowRule implements RuleInterface
 {
     public function allows(ActorInterface $actor, string $permission, array $context): bool
     {

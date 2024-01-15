@@ -7,10 +7,11 @@ namespace Spiral\Auth;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Auth\Exception\TokenStorageException;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
 
-final class TokenStorageScope implements TokenStorageInterface, SingletonInterface
+#[Singleton]
+final class TokenStorageScope implements TokenStorageInterface
 {
     public function __construct(
         private readonly ContainerInterface $container

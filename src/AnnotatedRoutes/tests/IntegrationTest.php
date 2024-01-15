@@ -25,12 +25,6 @@ class IntegrationTest extends TestCase
         $this->assertStringContainsString('index', $r->getBody()->__toString());
     }
 
-    public function testAttributeRoute(): void
-    {
-        $r = $this->get('/attribute');
-        $this->assertStringContainsString('attribute', $r->getBody()->__toString());
-    }
-
     public function testRoute2(): void
     {
         $r = $this->post('/');

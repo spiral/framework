@@ -8,7 +8,7 @@ use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Memory;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\FactoryInterface;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\Config\TokenizerConfig;
@@ -30,9 +30,8 @@ use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
  * Secondly, it allows to cache the result of the analysis for each listener and use it in the future.
  * If you want to have better performance during the application boot, you should use this bootloader.
  */
-final class TokenizerListenerBootloader extends Bootloader implements
-    SingletonInterface,
-    TokenizerListenerRegistryInterface
+#[Singleton]
+final class TokenizerListenerBootloader extends Bootloader implements TokenizerListenerRegistryInterface
 {
     protected const DEPENDENCIES = [
         AttributesBootloader::class,

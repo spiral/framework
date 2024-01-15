@@ -15,7 +15,7 @@ use Spiral\Console\Console;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
@@ -24,7 +24,8 @@ use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 /**
  * Bootloads console and provides ability to register custom bootload commands.
  */
-final class ConsoleBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class ConsoleBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         TokenizerListenerBootloader::class,

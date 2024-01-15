@@ -16,12 +16,14 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container;
 use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\LogFactory;
 
-final class MonologBootloader extends Bootloader implements Container\SingletonInterface
+#[Singleton]
+final class MonologBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         LogsInterface::class => LogFactory::class,

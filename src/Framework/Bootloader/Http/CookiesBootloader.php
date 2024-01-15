@@ -10,10 +10,11 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
 
-final class CookiesBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class CookiesBootloader extends Bootloader
 {
     protected const BINDINGS = [
         CookieQueue::class => [self::class, 'cookieQueue'],

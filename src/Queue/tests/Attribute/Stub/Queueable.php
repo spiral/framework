@@ -6,9 +6,7 @@ namespace Spiral\Tests\Queue\Attribute\Stub;
 
 use Spiral\Queue\Attribute\Queueable as QueueableAttribute;
 
-/**
- * @QueueableAttribute
- */
+#[QueueableAttribute]
 final class Queueable
 {
 }
