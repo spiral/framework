@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Command\Translator;
 
 use Spiral\Console\Command;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Translator\Catalogue\CatalogueManager;
@@ -13,7 +13,8 @@ use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Indexer;
 use Symfony\Component\Console\Input\InputArgument;
 
-final class IndexCommand extends Command implements SingletonInterface
+#[Singleton]
+final class IndexCommand extends Command
 {
     protected const NAME        = 'i18n:index';
     protected const DESCRIPTION = 'Index all declared translation strings and usages';

@@ -7,14 +7,15 @@ namespace Spiral\Validation\Bootloader;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Set;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Validation\Config\ValidationConfig;
 use Spiral\Validation\Exception\ValidationException;
 use Spiral\Validation\ValidationInterface;
 use Spiral\Validation\ValidationProvider;
 use Spiral\Validation\ValidationProviderInterface;
 
-final class ValidationBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class ValidationBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         ValidationProviderInterface::class => ValidationProvider::class,

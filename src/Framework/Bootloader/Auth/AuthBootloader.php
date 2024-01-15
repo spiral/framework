@@ -9,14 +9,15 @@ use Spiral\Auth\AuthScope;
 use Spiral\Auth\Exception\AuthException;
 use Spiral\Auth\TokenInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
 
 /**
  * Manages the set of actor providers.
  */
-final class AuthBootloader extends Bootloader implements ActorProviderInterface, SingletonInterface
+#[Singleton]
+final class AuthBootloader extends Bootloader implements ActorProviderInterface
 {
     protected const SINGLETONS = [
         AuthScope::class => AuthScope::class,

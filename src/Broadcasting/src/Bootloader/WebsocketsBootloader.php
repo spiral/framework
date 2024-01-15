@@ -11,10 +11,11 @@ use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Broadcasting\BroadcastInterface;
 use Spiral\Broadcasting\Config\BroadcastConfig;
 use Spiral\Broadcasting\Middleware\AuthorizationMiddleware;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
-use Spiral\Core\Container\SingletonInterface;
 
-final class WebsocketsBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class WebsocketsBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         HttpBootloader::class,

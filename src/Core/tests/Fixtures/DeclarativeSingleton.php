@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Fixtures;
 
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 
-class DeclarativeSingleton implements SingletonInterface
+#[Singleton]
+class DeclarativeSingleton
 {
 }

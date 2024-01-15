@@ -7,16 +7,11 @@ namespace Spiral\App\Controller;
 use Spiral\Domain\Annotation\Guarded;
 use Spiral\Domain\Annotation\GuardNamespace;
 
-/**
- * @GuardNamespace(namespace="")
- */
+#[GuardNamespace(namespace: '')]
 class Demo3Controller
 {
-    /**
-     * @Guarded(permission="")
-     * @return string
-     */
-    public function do()
+    #[Guarded(permission: '')]
+    public function do(): string
     {
         return 'ok';
     }

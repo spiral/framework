@@ -8,38 +8,14 @@ use Spiral\Domain\Annotation\Guarded;
 
 class DemoController
 {
-    /**
-     * @Guarded()
-     * @return string
-     */
-    public function guardedButNoName()
+    #[Guarded]
+    public function guardedButNoName(): string
     {
         return 'ok';
     }
 
-    /**
-     * @return string
-     */
-    #[Guarded()]
-    public function guardedButNoNameAttribute()
-    {
-        return 'ok';
-    }
-
-    /**
-     * @Guarded("do")
-     * @return string
-     */
-    public function do()
-    {
-        return 'ok';
-    }
-
-    /**
-     * @return string
-     */
-    #[Guarded(permission: 'do')]
-    public function doAttribute()
+    #[Guarded('do')]
+    public function do(): string
     {
         return 'ok';
     }

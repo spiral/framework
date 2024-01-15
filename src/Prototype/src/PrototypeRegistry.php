@@ -6,12 +6,13 @@ namespace Spiral\Prototype;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Container;
+use Spiral\Core\Attribute\Singleton;
 
 /**
  * Contains aliases and targets for all declared prototype dependencies.
  */
-final class PrototypeRegistry implements Container\SingletonInterface
+#[Singleton]
+final class PrototypeRegistry
 {
     /** @var Dependency[] */
     private array $dependencies = [];

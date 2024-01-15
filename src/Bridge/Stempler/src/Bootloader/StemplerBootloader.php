@@ -8,8 +8,8 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Stempler\Builder;
 use Spiral\Stempler\Config\StemplerConfig;
 use Spiral\Stempler\Directive;
@@ -28,7 +28,8 @@ use Spiral\Views\ProcessorInterface;
 /**
  * Initiates stempler engine, it's cache and directives.
  */
-final class StemplerBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class StemplerBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         StemplerEngine::class => [self::class, 'stemplerEngine'],

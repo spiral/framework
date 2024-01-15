@@ -29,14 +29,6 @@ final class GuardedTest extends BaseTestCase
         $core->callAction(DemoController::class, 'guardedButNoName', []);
     }
 
-    public function testInvalidAnnotationConfigurationWithAttribute(): void
-    {
-        $core = $this->getCore();
-
-        $this->expectException(InterceptorException::class);
-        $core->callAction(DemoController::class, 'guardedButNoNameAttribute', []);
-    }
-
     public function testInvalidAnnotationConfigurationIfEmptyGuarded(): void
     {
         $core = $this->getCore();
@@ -104,15 +96,6 @@ final class GuardedTest extends BaseTestCase
         $this->assertSame('ok', $core->callAction(DemoController::class, 'do', []));
     }
 
-    public function testAllowedWithAttribute(): void
-    {
-        $core = $this->getCore();
-
-        $this->getContainer()->bind(ActorInterface::class, new Actor(['user']));
-
-        $this->assertSame('ok', $core->callAction(DemoController::class, 'doAttribute', []));
-    }
-
     public function testNotAllowed3(): void
     {
         $core = $this->getCore();
@@ -129,13 +112,5 @@ final class GuardedTest extends BaseTestCase
 
         $this->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
         $this->assertSame('ok', $core->callAction(Demo2Controller::class, 'do1', []));
-    }
-
-    public function testNotAllowed2WithAttribute(): void
-    {
-        $core = $this->getCore();
-
-        $this->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
-        $this->assertSame('ok', $core->callAction(Demo2Controller::class, 'do1Attribute', []));
     }
 }

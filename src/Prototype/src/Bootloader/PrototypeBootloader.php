@@ -12,7 +12,7 @@ use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Console\Bootloader\ConsoleBootloader;
-use Spiral\Core\Container;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Prototype\Command;
 use Spiral\Prototype\Config\PrototypeConfig;
 use Spiral\Prototype\PrototypeLocatorListener;
@@ -23,7 +23,8 @@ use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 /**
  * Manages ide-friendly container injections via PrototypeTrait.
  */
-final class PrototypeBootloader extends Bootloader\Bootloader implements Container\SingletonInterface
+#[Singleton]
+final class PrototypeBootloader extends Bootloader\Bootloader
 {
     protected const DEPENDENCIES = [
         Bootloader\CoreBootloader::class,

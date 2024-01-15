@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Tests\Console\Fixtures;
 
 use Spiral\Console\Command;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 
-class TestCommand extends Command implements SingletonInterface
+#[Singleton]
+class TestCommand extends Command
 {
     public const NAME = 'test';
     public const DESCRIPTION = 'Test Command';

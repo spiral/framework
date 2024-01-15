@@ -7,8 +7,8 @@ namespace Spiral\Bootloader;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Debug\Config\DebugConfig;
@@ -22,7 +22,8 @@ use Spiral\Debug\StateInterface;
  * @psalm-import-type TCollector from DebugConfig
  * @psalm-import-type TTag from DebugConfig
  */
-final class DebugBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class DebugBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         EnvironmentCollector::class => EnvironmentCollector::class,

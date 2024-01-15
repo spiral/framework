@@ -6,7 +6,7 @@ namespace Spiral\Command\Translator;
 
 use Spiral\Console\Attribute\Question;
 use Spiral\Console\Command;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Translator\Catalogue\CatalogueManager;
 use Spiral\Translator\CatalogueInterface;
 use Spiral\Translator\Config\TranslatorConfig;
@@ -22,7 +22,8 @@ use Symfony\Component\Translation\MessageCatalogue;
     question: 'What is the path to where you would like to export the translations?',
     argument: 'path'
 )]
-final class ExportCommand extends Command implements SingletonInterface
+#[Singleton]
+final class ExportCommand extends Command
 {
     protected const NAME        = 'i18n:export';
     protected const DESCRIPTION = 'Dump given locale using specified dumper and path';

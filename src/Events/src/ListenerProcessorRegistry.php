@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Events;
 
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Events\Processor\ProcessorInterface;
 
-final class ListenerProcessorRegistry implements ProcessorInterface, SingletonInterface
+#[Singleton]
+final class ListenerProcessorRegistry implements ProcessorInterface
 {
     /** @var ProcessorInterface[] */
     private array $processors = [];

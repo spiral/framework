@@ -8,7 +8,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tests\Core\Fixtures\DeclarativeSingleton;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
@@ -188,7 +187,7 @@ class SingletonsTest extends TestCase
     public function testHasShouldReturnTrueWhenSingletonIsAlreadyConstructed(): void
     {
         $container = new Container();
-        $class = new class implements SingletonInterface {};
+        $class = new #[Singleton] class {};
 
         $this->assertFalse($container->has($class::class));
 

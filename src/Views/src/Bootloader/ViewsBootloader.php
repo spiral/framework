@@ -10,7 +10,7 @@ use Spiral\Boot\Environment\DebugMode;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\DependencyInterface;
 use Spiral\Views\Engine\Native\NativeEngine;
@@ -22,7 +22,8 @@ use Spiral\Views\ViewLoader;
 use Spiral\Views\ViewManager;
 use Spiral\Views\ViewsInterface;
 
-final class ViewsBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class ViewsBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,

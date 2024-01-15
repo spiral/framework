@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Translator;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Event\LocaleUpdated;
 use Spiral\Translator\Exception\LocaleException;
@@ -16,7 +16,8 @@ use Symfony\Component\Translation\IdentityTranslator;
  * Implementation of Symfony\TranslatorInterface with memory caching, automatic message
  * registration and bundle/domain grouping.
  */
-final class Translator implements TranslatorInterface, SingletonInterface
+#[Singleton]
+final class Translator implements TranslatorInterface
 {
     private string $locale;
 

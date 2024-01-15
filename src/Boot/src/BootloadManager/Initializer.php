@@ -15,8 +15,8 @@ use Spiral\Boot\BootloadManager\Checker\CheckerRegistry;
 use Spiral\Boot\BootloadManager\Checker\ClassExistsChecker;
 use Spiral\Boot\BootloadManager\Checker\ConfigChecker;
 use Spiral\Boot\BootloadManagerInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
-use Spiral\Core\Container;
 use Spiral\Core\ResolverInterface;
 
 /**
@@ -24,7 +24,8 @@ use Spiral\Core\ResolverInterface;
  * @psalm-import-type TClass from BootloadManagerInterface
  * @psalm-import-type TFullBinding from BootloaderInterface
  */
-class Initializer implements InitializerInterface, Container\SingletonInterface
+#[Singleton]
+class Initializer implements InitializerInterface
 {
     protected ?BootloaderCheckerInterface $checker = null;
 

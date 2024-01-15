@@ -7,7 +7,7 @@ namespace Spiral\Router\Bootloader;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Bootloader\Http\RouterBootloader;
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Router\RouteLocatorListener;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
@@ -15,7 +15,8 @@ use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 /**
  * Configures application routes using annotations and pre-defined configuration groups.
  */
-final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInterface
+#[Singleton]
+final class AnnotatedRoutesBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         RouterBootloader::class,

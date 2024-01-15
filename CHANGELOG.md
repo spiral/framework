@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+- **Medium Impact Changes**
+  - [spiral/core] Interface `Spiral\Core\Container\SingletonInterface` is deprecated,
+    use `Spiral\Core\Attribute\Singleton` instead. Will be removed in v4.0.
+
 ## 3.11.1 - 2023-12-29
 
 - **Bug Fixes**

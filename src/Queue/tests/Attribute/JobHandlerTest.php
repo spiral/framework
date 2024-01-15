@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Attributes\Factory;
 use Spiral\Queue\Attribute\JobHandler;
 use Spiral\Tests\Queue\Attribute\Stub\ExtendedJobHandler;
-use Spiral\Tests\Queue\Attribute\Stub\JobHandlerAnnotation;
 use Spiral\Tests\Queue\Attribute\Stub\JobHandlerAttribute;
-use Spiral\Tests\Queue\Attribute\Stub\WithExtendedJobHandlerAnnotation;
 use Spiral\Tests\Queue\Attribute\Stub\WithExtendedJobHandlerAttribute;
 use Spiral\Tests\Queue\Attribute\Stub\WithoutJobHandler;
 
@@ -28,9 +26,7 @@ final class JobHandlerTest extends TestCase
     public static function classesProvider(): \Traversable
     {
         yield [WithoutJobHandler::class, null];
-        yield [JobHandlerAnnotation::class, new JobHandler('test')];
         yield [JobHandlerAttribute::class, new JobHandler('test')];
-        yield [WithExtendedJobHandlerAnnotation::class, new ExtendedJobHandler()];
         yield [WithExtendedJobHandlerAttribute::class, new ExtendedJobHandler()];
     }
 }
