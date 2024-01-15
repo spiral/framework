@@ -283,7 +283,10 @@ abstract class AbstractKernel implements KernelInterface
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
-                    new Scope($this->getDispatcherScope($dispatcher), [DispatcherInterface::class => $dispatcher]),
+                    new Scope(
+                        name: $this->getDispatcherScope($dispatcher),
+                        bindings: [DispatcherInterface::class => $dispatcher],
+                    ),
                     static function () use ($dispatcher, $eventDispatcher): mixed {
                         $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
                         return $dispatcher->serve();

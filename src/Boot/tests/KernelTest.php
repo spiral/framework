@@ -35,9 +35,7 @@ class KernelTest extends TestCase
     {
         $this->expectException(BootException::class);
 
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ])->run();
+        $kernel = TestCore::create(['root' => __DIR__])->run();
 
         $kernel->serve();
     }
@@ -47,28 +45,14 @@ class KernelTest extends TestCase
      */
     public function testDispatcher(): void
     {
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ])->run();
+        $kernel = TestCore::create(['root' => __DIR__])->run();
 
-        $d = new class() implements DispatcherInterface {
-            public $fired = false;
+        $d = $this->createMock(DispatcherInterface::class);
+        $d->expects($this->once())->method('canServe')->willReturn(true);
+        $d->expects($this->once())->method('serve');
 
-            public function canServe(): bool
-            {
-                return true;
-            }
-
-            public function serve(): void
-            {
-                $this->fired = true;
-            }
-        };
         $kernel->addDispatcher($d);
-        $this->assertFalse($d->fired);
-
         $kernel->serve();
-        $this->assertTrue($d->fired);
     }
 
     /**
@@ -76,21 +60,11 @@ class KernelTest extends TestCase
      */
     public function testDispatcherReturnCode(): void
     {
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ])->run();
+        $kernel = TestCore::create(['root' => __DIR__])->run();
 
-        $d = new class() implements DispatcherInterface {
-            public function canServe(): bool
-            {
-                return true;
-            }
-
-            public function serve(): int
-            {
-                return 1;
-            }
-        };
+        $d = $this->createMock(DispatcherInterface::class);
+        $d->expects($this->once())->method('canServe')->willReturn(true);
+        $d->expects($this->once())->method('serve')->willReturn(1);
         $kernel->addDispatcher($d);
 
         $result = $kernel->serve();
@@ -102,9 +76,7 @@ class KernelTest extends TestCase
      */
     public function testEnv(): void
     {
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ])->run();
+        $kernel = TestCore::create(['root' => __DIR__])->run();
 
         $this->assertSame(
             'VALUE',
@@ -114,9 +86,7 @@ class KernelTest extends TestCase
 
     public function testBootingCallbacks()
     {
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ]);
+        $kernel = TestCore::create(['root' => __DIR__]);
 
         $kernel->booting(static function (TestCore $core) {
             $core->getContainer()->bind('abc', 'foo');
@@ -153,16 +123,9 @@ class KernelTest extends TestCase
 
     public function testEventsShouldBeDispatched(): void
     {
-        $testDispatcher = new class implements DispatcherInterface {
-            public function canServe(): bool
-            {
-                return true;
-            }
-
-            public function serve(): void
-            {
-            }
-        };
+        $testDispatcher = $this->createMock(DispatcherInterface::class);
+        $testDispatcher->expects($this->once())->method('canServe')->willReturn(true);
+        $testDispatcher->expects($this->once())->method('serve');
 
         $container = new Container();
         $kernel = TestCore::create(directories: ['root' => __DIR__,], container: $container)
