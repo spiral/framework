@@ -6,22 +6,28 @@ namespace Spiral\App\Dispatcher;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
-use Spiral\Core\Attribute\Proxy;
+use Spiral\Boot\EnvironmentInterface;
 
 abstract class AbstractDispatcher implements DispatcherInterface
 {
     public function __construct(
-        #[Proxy] private readonly ContainerInterface $container,
+        private readonly ContainerInterface $container,
     ) {
     }
 
-    public function canServe(): bool
+    public static function canServe(EnvironmentInterface $env): bool
     {
         return true;
     }
 
     public function serve(): mixed
     {
-        return $this->container->get('foo');
+        $scope = (new \ReflectionProperty($this->container, 'scope'))->getValue($this->container);
+
+        return [
+            'dispatcher' => $this->container->get(static::class),
+            'foo' => $this->container->has('foo') ? $this->container->get('foo') : null,
+            'scope' => (new \ReflectionProperty($scope, 'scopeName'))->getValue($scope)
+        ];
     }
 }

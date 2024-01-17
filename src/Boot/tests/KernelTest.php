@@ -47,12 +47,40 @@ class KernelTest extends TestCase
     {
         $kernel = TestCore::create(['root' => __DIR__])->run();
 
-        $d = $this->createMock(DispatcherInterface::class);
-        $d->expects($this->once())->method('canServe')->willReturn(true);
-        $d->expects($this->once())->method('serve');
+        $d = new class() implements DispatcherInterface {
+            public static function canServe(EnvironmentInterface $env): bool
+            {
+                return true;
+            }
 
+            public function serve(): bool
+            {
+                return true;
+            }
+        };
         $kernel->addDispatcher($d);
-        $kernel->serve();
+
+        $this->assertTrue($kernel->serve());
+    }
+
+    public function testDispatcherNonStaticServe(): void
+    {
+        $kernel = TestCore::create(['root' => __DIR__])->run();
+
+        $d = new class() implements DispatcherInterface {
+            public function canServe(): bool
+            {
+                return true;
+            }
+
+            public function serve(): bool
+            {
+                return true;
+            }
+        };
+        $kernel->addDispatcher($d);
+
+        $this->assertTrue($kernel->serve());
     }
 
     /**
@@ -62,9 +90,17 @@ class KernelTest extends TestCase
     {
         $kernel = TestCore::create(['root' => __DIR__])->run();
 
-        $d = $this->createMock(DispatcherInterface::class);
-        $d->expects($this->once())->method('canServe')->willReturn(true);
-        $d->expects($this->once())->method('serve')->willReturn(1);
+        $d = new class() implements DispatcherInterface {
+            public static function canServe(EnvironmentInterface $env): bool
+            {
+                return true;
+            }
+
+            public function serve(): int
+            {
+                return 1;
+            }
+        };
         $kernel->addDispatcher($d);
 
         $result = $kernel->serve();
@@ -123,9 +159,16 @@ class KernelTest extends TestCase
 
     public function testEventsShouldBeDispatched(): void
     {
-        $testDispatcher = $this->createMock(DispatcherInterface::class);
-        $testDispatcher->expects($this->once())->method('canServe')->willReturn(true);
-        $testDispatcher->expects($this->once())->method('serve');
+        $testDispatcher = new class implements DispatcherInterface {
+            public static function canServe(EnvironmentInterface $env): bool
+            {
+                return true;
+            }
+
+            public function serve(): void
+            {
+            }
+        };
 
         $container = new Container();
         $kernel = TestCore::create(directories: ['root' => __DIR__,], container: $container)

@@ -20,13 +20,15 @@ final class DispatcherScopeTest extends BaseTestCase
     public function testDispatcherScope(string $dispatcher, string|\BackedEnum $scope): void
     {
         $this->beforeBooting(function (AbstractKernel $kernel, Container $container) use ($dispatcher, $scope): void {
-            $kernel->addDispatcher($container->get($dispatcher));
-            $container->getBinder($scope)->bind('foo', new \stdClass());
+            $kernel->addDispatcher($dispatcher);
+            $container->getBinder($scope)->bind('foo', \stdClass::class);
         });
 
         $app = $this->makeApp();
 
-        $this->assertInstanceOf(\stdClass::class, $app->serve());
+        $this->assertInstanceOf(\stdClass::class, $app->serve()['foo']);
+        $this->assertInstanceOf($dispatcher, $app->serve()['dispatcher']);
+        $this->assertSame(is_object($scope) ? $scope->value : $scope, $app->serve()['scope']);
     }
 
     public static function dispatchersDataProvider(): \Traversable
