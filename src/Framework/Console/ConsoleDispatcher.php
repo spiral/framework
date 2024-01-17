@@ -26,17 +26,16 @@ use Throwable;
 final class ConsoleDispatcher implements DispatcherInterface
 {
     public function __construct(
-        private readonly EnvironmentInterface $env,
         private readonly FinalizerInterface $finalizer,
         private readonly ContainerInterface $container,
         private readonly ExceptionHandlerInterface $errorHandler,
     ) {
     }
 
-    public function canServe(): bool
+    public static function canServe(EnvironmentInterface $env): bool
     {
         // only run in pure CLI more, ignore under RoadRunner
-        return (PHP_SAPI === 'cli' && $this->env->get('RR_MODE') === null);
+        return (PHP_SAPI === 'cli' && $env->get('RR_MODE') === null);
     }
 
     public function serve(InputInterface $input = null, OutputInterface $output = null): int
