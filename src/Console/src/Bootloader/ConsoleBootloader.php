@@ -17,7 +17,6 @@ use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\CoreInterceptorInterface;
-use Spiral\Core\FactoryInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 
@@ -44,8 +43,8 @@ final class ConsoleBootloader extends Bootloader
     public function init(AbstractKernel $kernel): void
     {
         // Lowest priority
-        $kernel->bootstrapped(static function (AbstractKernel $kernel, FactoryInterface $factory): void {
-            $kernel->addDispatcher($factory->make(ConsoleDispatcher::class));
+        $kernel->bootstrapped(static function (AbstractKernel $kernel): void {
+            $kernel->addDispatcher(ConsoleDispatcher::class);
         });
 
         $this->config->setDefaults(
