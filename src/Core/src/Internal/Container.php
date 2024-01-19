@@ -20,6 +20,7 @@ final class Container implements ContainerInterface
 
     private State $state;
     private FactoryInterface|Factory $factory;
+    private Scope $scope;
 
     public function __construct(Registry $constructor)
     {
@@ -27,6 +28,7 @@ final class Container implements ContainerInterface
 
         $this->state = $constructor->get('state', State::class);
         $this->factory = $constructor->get('factory', FactoryInterface::class);
+        $this->scope = $constructor->get('scope', Scope::class);
     }
 
     /**
@@ -59,6 +61,12 @@ final class Container implements ContainerInterface
 
     public function has(string $id): bool
     {
-        return \array_key_exists($id, $this->state->bindings) || \array_key_exists($id, $this->state->singletons);
+        if (\array_key_exists($id, $this->state->bindings) || \array_key_exists($id, $this->state->singletons)) {
+            return true;
+        }
+
+        $parent = $this->scope->getParent();
+
+        return $parent !== null && $parent->has($id);
     }
 }
