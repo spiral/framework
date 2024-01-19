@@ -8,9 +8,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Config\Shared;
 use Spiral\Core\Container;
+use Spiral\Core\Scope;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
+use Spiral\Tests\Core\Scope\Stub\AttrScopeFoo;
 use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerInjector;
@@ -288,5 +290,68 @@ final class UseCaseTest extends BaseTestCase
         });
 
         $root->make('foo');
+    }
+
+    public function testHasInParentScope(): void
+    {
+        $root = new Container();
+        $root->bindSingleton('sampleClass', SampleClass::class);
+
+        $root->runScope(new Scope('foo'), function (Container $container) {
+            $this->assertTrue($container->has('sampleClass'));
+        });
+
+        $root->runScope(new Scope('foo'), function (Container $container) {
+            $container->runScope(new Scope('bar'), function (Container $container) {
+                $this->assertTrue($container->has('sampleClass'));
+            });
+        });
+
+        $root->runScope(new Scope('foo'), function (Container $container) {
+            $container->bindSingleton('otherClass', SampleClass::class);
+
+            $container->runScope(new Scope('bar'), function (Container $container) {
+                $this->assertTrue($container->has('sampleClass'));
+                $this->assertTrue($container->has('otherClass'));
+            });
+        });
+    }
+
+    public function testHasInParentScopeWithScopeAttribute(): void
+    {
+        $root = new Container();
+        $root->getBinder('foo')->bindSingleton('sampleClass', AttrScopeFoo::class);
+
+        $root->runScope(new Scope('foo'), function (Container $container) {
+            $this->assertTrue($container->has('sampleClass'));
+        });
+
+        $root->runScope(new Scope('bar'), function (Container $container) {
+            $this->assertFalse($container->has('sampleClass'));
+        });
+
+        $root->runScope(new Scope('foo'), function (Container $container) {
+            $container->runScope(new Scope('bar'), function (Container $container) {
+                $this->assertTrue($container->has('sampleClass'));
+            });
+        });
+
+        $root->runScope(new Scope('foo'), function (Container $container) {
+            $container->bindSingleton('otherClass', AttrScopeFoo::class);
+
+            $container->runScope(new Scope('bar'), function (Container $container) {
+                $this->assertTrue($container->has('sampleClass'));
+                $this->assertTrue($container->has('otherClass'));
+            });
+        });
+
+        $root->runScope(new Scope('baz'), function (Container $container) {
+            $container->getBinder('foo')->bindSingleton('otherClass', AttrScopeFoo::class);
+
+            $container->runScope(new Scope('bar'), function (Container $container) {
+                $this->assertFalse($container->has('sampleClass'));
+                $this->assertFalse($container->has('otherClass'));
+            });
+        });
     }
 }
