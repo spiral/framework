@@ -44,7 +44,9 @@ final class Indexer
         }
 
         //Automatically registering
-        $this->catalogue->set($domain, $string, $string);
+        if (!$this->catalogue->has($domain, $string)) {
+            $this->catalogue->set($domain, $string, $string);
+        }
 
         $this->getLogger()->debug(
             \sprintf('[%s]: `%s`', $domain, $string),
