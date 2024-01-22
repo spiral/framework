@@ -72,6 +72,21 @@ class IndexerTest extends TestCase
         $this->assertTrue($catalogue->has('spiral', 'new-mess'));
     }
 
+    public function testRegisterMessageShouldNotOverrideMessages(): void
+    {
+        $catalogue = new Catalogue('fr');
+        $catalogue->set('messages', 'hello', 'Bonjour');
+
+        $indexer = new Indexer(new TranslatorConfig([
+            'domains' => ['spiral' => ['spiral-*'], 'messages' => ['*']]
+        ]), $catalogue);
+
+        $indexer->indexInvocations($this->tContainer()->get(InvocationsInterface::class));
+
+        $this->assertTrue($catalogue->has('messages', 'hello'));
+        $this->assertSame('Bonjour', $catalogue->get('messages', 'hello'));
+    }
+
     protected function tContainer(): Container
     {
         $container = new Container();

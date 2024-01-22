@@ -73,9 +73,7 @@ final class DebugListener
      */
     public function enable(): self
     {
-        if (!empty($this->listenerRegistry)) {
-            $this->listenerRegistry->addListener($this);
-        }
+        $this->listenerRegistry->addListener($this);
 
         return $this;
     }
@@ -86,9 +84,7 @@ final class DebugListener
      */
     public function disable(): self
     {
-        if (!empty($this->listenerRegistry)) {
-            $this->listenerRegistry->removeListener($this);
-        }
+        $this->listenerRegistry->removeListener($this);
 
         return $this;
     }
