@@ -18,7 +18,7 @@ abstract class AbstractCore implements CoreInterface
 
     public function __construct(
         /** @internal */
-        #[Proxy] protected ContainerInterface $container
+        protected ContainerInterface $container
     ) {
         // TODO: can we simplify this?
         $this->resolver = $container
@@ -61,9 +61,7 @@ abstract class AbstractCore implements CoreInterface
             );
         }
 
-        return $method->invokeArgs(new $controller(
-            ...$this->resolver->resolveArguments(new \ReflectionMethod($controller, '__construct'))
-        ), $args);
+        return $method->invokeArgs($this->container->get($controller), $args);
     }
 
     protected function resolveArguments(\ReflectionMethod $method, array $parameters): array

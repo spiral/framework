@@ -100,7 +100,7 @@ final class CoreHandler implements RequestHandlerInterface
             $result = $this->scope->runScope(
                 new Scope(
                     name: ScopeName::HttpRequest,
-                    bindings: [Request::class => $request, Response::class => $response],
+                    bindings: [Request::class => $request, Response::class => $response, $controller => $controller],
                 ),
                 fn (): mixed => $this->tracer->trace(
                     name: 'Controller [' . $controller . ':' . $action . ']',
