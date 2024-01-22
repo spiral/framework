@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\App\Controller\AuthController;
 use Spiral\App\Controller\InterceptedController;
+use Spiral\App\Controller\ScopeController;
 use Spiral\App\Controller\TestController;
 use Spiral\App\Interceptor;
 use Spiral\Auth\Middleware\AuthMiddleware;
@@ -59,6 +60,7 @@ final class RoutesBootloader extends BaseRoutesBootloader
     protected function defineRoutes(RoutingConfigurator $routes): void
     {
         $routes->add('auth', '/auth/<action>')->controller(AuthController::class);
+        $routes->add('scope', '/scope/<action>')->controller(ScopeController::class);
         $routes
             ->add('intercepted:without', '/intercepted/without')
             ->action(InterceptedController::class, 'without')
