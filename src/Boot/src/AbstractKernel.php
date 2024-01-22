@@ -6,6 +6,7 @@ namespace Spiral\Boot;
 
 use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Attribute\DispatcherScope;
 use Spiral\Boot\Bootloader\BootloaderRegistry;
 use Spiral\Boot\Bootloader\BootloaderRegistryInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
@@ -21,6 +22,7 @@ use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container;
+use Spiral\Core\Scope;
 use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\ExceptionRendererInterface;
@@ -49,7 +51,10 @@ abstract class AbstractKernel implements KernelInterface
 
     protected FinalizerInterface $finalizer;
 
-    /** @var DispatcherInterface[] */
+    /**
+     * @internal
+     * @var array<class-string<DispatcherInterface>>
+     */
     protected array $dispatchers = [];
 
     /** @var array<Closure> */
@@ -258,9 +263,16 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
+     *
+     * @param class-string<DispatcherInterface>|DispatcherInterface $dispatcher The class name or instance
+     * of the dispatcher. Since v4.0, it will only accept the class name.
      */
-    public function addDispatcher(DispatcherInterface $dispatcher): self
+    public function addDispatcher(string|DispatcherInterface $dispatcher): self
     {
+        if (\is_object($dispatcher)) {
+            $dispatcher = $dispatcher::class;
+        }
+
         $this->dispatchers[] = $dispatcher;
 
         return $this;
@@ -278,21 +290,31 @@ abstract class AbstractKernel implements KernelInterface
         $eventDispatcher = $this->getEventDispatcher();
         $eventDispatcher?->dispatch(new Serving());
 
+        $serving = $servingScope = null;
         foreach ($this->dispatchers as $dispatcher) {
-            if ($dispatcher->canServe()) {
-                return $this->container->runScope(
-                    [DispatcherInterface::class => $dispatcher],
-                    static function () use ($dispatcher, $eventDispatcher): mixed {
-                        $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
-                        return $dispatcher->serve();
-                    }
-                );
+            $reflection = new \ReflectionClass($dispatcher);
+
+            $scope = ($reflection->getAttributes(DispatcherScope::class)[0] ?? null)?->newInstance()->scope;
+            $this->container->getBinder($scope)->bind($dispatcher, $dispatcher);
+
+            if ($serving === null && $this->canServe($reflection)) {
+                $serving = $dispatcher;
+                $servingScope = $scope;
             }
         }
 
-        $eventDispatcher?->dispatch(new DispatcherNotFound());
+        if ($serving === null) {
+            $eventDispatcher?->dispatch(new DispatcherNotFound());
+            throw new BootException('Unable to locate active dispatcher.');
+        }
 
-        throw new BootException('Unable to locate active dispatcher.');
+        return $this->container->runScope(
+            new Scope(name: $servingScope, bindings: [DispatcherInterface::class => $serving]),
+            static function (DispatcherInterface $dispatcher) use ($eventDispatcher): mixed {
+                $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
+                return $dispatcher->serve();
+            }
+        );
     }
 
     /**
@@ -369,5 +391,17 @@ abstract class AbstractKernel implements KernelInterface
     private function initBootloaderRegistry(): BootloaderRegistryInterface
     {
         return new BootloaderRegistry($this->defineSystemBootloaders(), $this->defineBootloaders());
+    }
+
+    /**
+     * @throws BootException
+     */
+    private function canServe(\ReflectionClass $reflection): bool
+    {
+        if (!$reflection->hasMethod('canServe')) {
+            throw new BootException('Dispatcher must implement static `canServe` method.');
+        }
+
+        return $this->container->invoke([$reflection->getName(), 'canServe']);
     }
 }
