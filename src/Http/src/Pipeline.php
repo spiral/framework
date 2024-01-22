@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\ScopeInterface;
 use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
@@ -29,7 +30,7 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
     private ?RequestHandlerInterface $handler = null;
 
     public function __construct(
-        private readonly ScopeInterface $scope,
+        #[Proxy] private readonly ScopeInterface $scope,
         private readonly ?EventDispatcherInterface $dispatcher = null,
         ?TracerInterface $tracer = null
     ) {

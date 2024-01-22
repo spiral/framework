@@ -11,6 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container\Autowire;
 use Spiral\Http\Config\HttpConfig;
@@ -78,7 +79,7 @@ final class HttpBootloader extends Bootloader
         Pipeline $pipeline,
         RequestHandlerInterface $handler,
         ResponseFactoryInterface $responseFactory,
-        ContainerInterface $container,
+        #[Proxy] ContainerInterface $container,
         TracerFactoryInterface $tracerFactory
     ): Http {
         $core = new Http($config, $pipeline, $responseFactory, $container, $tracerFactory);

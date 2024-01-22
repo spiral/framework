@@ -18,7 +18,7 @@ abstract class AbstractCore implements CoreInterface
 
     public function __construct(
         /** @internal */
-        protected ContainerInterface $container
+        #[Proxy] protected ContainerInterface $container
     ) {
         // TODO: can we simplify this?
         $this->resolver = $container
