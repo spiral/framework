@@ -263,6 +263,9 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
+     *
+     * @param class-string<DispatcherInterface>|DispatcherInterface $dispatcher The class name or instance
+     * of the dispatcher. Since v4.0, it will only accept the class name.
      */
     public function addDispatcher(string|DispatcherInterface $dispatcher): self
     {
