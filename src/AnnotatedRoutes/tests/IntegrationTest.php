@@ -7,9 +7,11 @@ namespace Spiral\Tests\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Scope;
+use Spiral\Framework\ScopeName;
 use Spiral\Tests\Router\App\App;
 
-class IntegrationTest extends TestCase
+final class IntegrationTest extends TestCase
 {
     private App $app;
 
@@ -63,7 +65,10 @@ class IntegrationTest extends TestCase
         array $headers = [],
         array $cookies = []
     ): ResponseInterface {
-        return $this->app->getHttp()->handle($this->request($uri, 'GET', $query, $headers, $cookies));
+        return $this->app->getContainer()->runScope(
+            new Scope(ScopeName::Http),
+            fn () => $this->app->getHttp()->handle($this->request($uri, 'GET', $query, $headers, $cookies))
+        );
     }
 
     public function getWithAttributes(
@@ -85,8 +90,11 @@ class IntegrationTest extends TestCase
         array $headers = [],
         array $cookies = []
     ): ResponseInterface {
-        return $this->app->getHttp()->handle(
-            $this->request($uri, 'POST', [], $headers, $cookies)->withParsedBody($data)
+        return $this->app->getContainer()->runScope(
+            new Scope(ScopeName::Http),
+            fn () => $this->app->getHttp()->handle(
+                $this->request($uri, 'POST', [], $headers, $cookies)->withParsedBody($data)
+            )
         );
     }
 
