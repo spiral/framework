@@ -16,11 +16,11 @@ class ScaffolderConfig extends InjectableConfig
     public const CONFIG = 'scaffolder';
 
     protected array $config = [
-        'header'       => [],
-        'directory'    => '',
-        'namespace'    => '',
+        'header' => [],
+        'directory' => '',
+        'namespace' => '',
         'declarations' => [],
-        'defaults'     => [
+        'defaults' => [
             'declarations' => [],
         ],
     ];
@@ -36,6 +36,16 @@ class ScaffolderConfig extends InjectableConfig
     public function baseDirectory(): string
     {
         return $this->config['directory'];
+    }
+
+    /**
+     * @return non-empty-string[]
+     */
+    public function getDeclarations(): array
+    {
+        return \array_keys($this->config['defaults']['declarations'] ?? []) + \array_keys(
+                $this->config['declarations'],
+            );
     }
 
     /**
@@ -109,7 +119,7 @@ class ScaffolderConfig extends InjectableConfig
 
         if (empty($class)) {
             throw new ScaffolderException(
-                \sprintf("Unable to scaffold '%s', no declaration class found", $element)
+                \sprintf("Unable to scaffold '%s', no declaration class found", $element),
             );
         }
 
@@ -183,7 +193,7 @@ class ScaffolderConfig extends InjectableConfig
         $declaration = $this->getDeclaration($element);
 
         if (\array_key_exists('baseNamespace', $declaration)) {
-            return \trim((string) $this->getOption($element, 'baseNamespace', ''), '\\');
+            return \trim((string)$this->getOption($element, 'baseNamespace', ''), '\\');
         }
 
         return \trim($this->config['namespace'], '\\');
@@ -213,9 +223,11 @@ class ScaffolderConfig extends InjectableConfig
     }
 
     /**
+     * Get declaration options by element name.
+     *
      * @param non-empty-string $element
      */
-    private function getDeclaration(string $element): array
+    public function getDeclaration(string $element): array
     {
         $default = $this->config['defaults']['declarations'][$element] ?? [];
         $declaration = $this->config['declarations'][$element] ?? [];
