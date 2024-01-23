@@ -97,6 +97,7 @@ final class CoreHandler implements RequestHandlerInterface
                 : $this->action;
 
             // run the core withing PSR-7 Request/Response scope
+            /** @psalm-suppress InvalidArgument */
             $result = $this->scope->runScope(
                 new Scope(
                     name: ScopeName::HttpRequest,
