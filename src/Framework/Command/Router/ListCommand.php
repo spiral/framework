@@ -8,7 +8,7 @@ use Spiral\Boot\KernelInterface;
 use Spiral\Console\Command;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Router\GroupRegistry;
-use Spiral\Router\Route;
+use Spiral\Router\RouteInterface;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\Target\Action;
 use Spiral\Router\Target\Controller;
