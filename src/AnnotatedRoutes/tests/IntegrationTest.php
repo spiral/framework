@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Scope;
 use Spiral\Framework\ScopeName;
+use Spiral\Http\Http;
 use Spiral\Tests\Router\App\App;
 
 final class IntegrationTest extends TestCase
@@ -67,7 +68,7 @@ final class IntegrationTest extends TestCase
     ): ResponseInterface {
         return $this->app->getContainer()->runScope(
             new Scope(ScopeName::Http),
-            fn () => $this->app->getHttp()->handle($this->request($uri, 'GET', $query, $headers, $cookies))
+            fn (Http $http) => $http->handle($this->request($uri, 'GET', $query, $headers, $cookies))
         );
     }
 
@@ -92,9 +93,8 @@ final class IntegrationTest extends TestCase
     ): ResponseInterface {
         return $this->app->getContainer()->runScope(
             new Scope(ScopeName::Http),
-            fn () => $this->app->getHttp()->handle(
-                $this->request($uri, 'POST', [], $headers, $cookies)->withParsedBody($data)
-            )
+            fn (Http $http) => $http
+                ->handle($this->request($uri, 'POST', [], $headers, $cookies)->withParsedBody($data))
         );
     }
 
@@ -122,7 +122,7 @@ final class IntegrationTest extends TestCase
             ->withQueryParams($query);
     }
 
-    public function fetchCookies(array $header)
+    public function fetchCookies(array $header): array
     {
         $result = [];
         foreach ($header as $line) {

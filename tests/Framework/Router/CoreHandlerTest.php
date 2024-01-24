@@ -11,7 +11,7 @@ final class CoreHandlerTest extends HttpTestCase
 {
     public function testHttpRequestScope(): void
     {
-        $this->getHttp()->get('/scope/construct')->assertBodySame(ScopeName::HttpRequest->value);
-        $this->getHttp()->get('/scope/method')->assertBodySame(ScopeName::HttpRequest->value);
+        $this->get('/scope/construct')->assertBodySame(ScopeName::HttpRequest->value);
+        $this->get('/scope/method')->assertBodySame(ScopeName::HttpRequest->value);
     }
 }

@@ -26,19 +26,18 @@ final class AuthMiddlewareTest extends HttpTestCase
             AuthMiddleware::class,
             new Autowire(AuthMiddleware::class, ['tokenStorage' => $storage])
         );
-        $this->setHttpHandler(function () use ($storage): void {
+
+        $scope = $this->getContainer()->get(TokenStorageScope::class);
+        $ref = new \ReflectionMethod($scope, 'getTokenStorage');
+        $this->assertNotInstanceOf($storage::class, $ref->invoke($scope));
+
+        $this->get(uri: '/', handler: function () use ($storage): void {
             $scope = $this->getContainer()->get(TokenStorageScope::class);
             $ref = new \ReflectionMethod($scope, 'getTokenStorage');
 
             $this->assertInstanceOf($storage::class, $ref->invoke($scope));
             $this->assertSame($storage, $ref->invoke($scope));
         });
-
-        $scope = $this->getContainer()->get(TokenStorageScope::class);
-        $ref = new \ReflectionMethod($scope, 'getTokenStorage');
-        $this->assertNotInstanceOf($storage::class, $ref->invoke($scope));
-
-        $this->getHttp()->get('/');
 
         $scope = $this->getContainer()->get(TokenStorageScope::class);
         $ref = new \ReflectionMethod($scope, 'getTokenStorage');

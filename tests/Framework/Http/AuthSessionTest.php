@@ -14,57 +14,49 @@ final class AuthSessionTest extends HttpTestCase
 
     public function testNoToken(): void
     {
-        $this->getHttp()->get(uri: '/auth/token')
-            ->assertBodySame('none');
+        $this->get(uri: '/auth/token')->assertBodySame('none');
     }
 
     public function testLogin(): void
     {
-        $result = $this->getHttp()->get(uri: '/auth/login')
+        $result = $this->get(uri: '/auth/login')
             ->assertBodySame('OK')
             ->assertCookieExists('token')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get(uri: '/auth/token', cookies: $result->getCookies())
-            ->assertBodyNotSame('none');
+        $this->get(uri: '/auth/token', cookies: $result->getCookies())->assertBodyNotSame('none');
     }
 
     public function testLogout(): void
     {
-        $result = $this->getHttp()->get(uri: '/auth/login')
+        $result = $this->get(uri: '/auth/login')
             ->assertBodySame('OK')
             ->assertCookieExists('token')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get(uri: '/auth/token', cookies: $result->getCookies())
-            ->assertBodyNotSame('none');
-
-        $this->getHttp()->get(uri: '/auth/logout', cookies: $result->getCookies())
-            ->assertBodySame('closed');
-
-        $this->getHttp()->get(uri: '/auth/token', cookies: $result->getCookies())
-            ->assertBodySame('none');
+        $this->get(uri: '/auth/token', cookies: $result->getCookies())->assertBodyNotSame('none');
+        $this->get(uri: '/auth/token', cookies: $result->getCookies())->assertBodyNotSame('none');
+        $this->get(uri: '/auth/logout', cookies: $result->getCookies())->assertBodySame('closed');
+        $this->get(uri: '/auth/token', cookies: $result->getCookies())->assertBodySame('none');
     }
 
     public function testLoginScope(): void
     {
-        $result = $this->getHttp()->get('/auth/login2')
+        $result = $this->get('/auth/login2')
             ->assertBodySame('OK')
             ->assertCookieExists('token')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get('/auth/token2', cookies: $result->getCookies())
-            ->assertBodyNotSame('none');
+        $this->get('/auth/token2', cookies: $result->getCookies())->assertBodyNotSame('none');
     }
 
     public function testLoginPayload(): void
     {
-        $result = $this->getHttp()->get('/auth/login2')
+        $result = $this->get('/auth/login2')
             ->assertBodySame('OK')
             ->assertCookieExists('token')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get('/auth/token3', cookies: $result->getCookies())
-            ->assertBodySame('{"userID":1}');
+        $this->get('/auth/token3', cookies: $result->getCookies())->assertBodySame('{"userID":1}');
     }
 }

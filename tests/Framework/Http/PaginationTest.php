@@ -12,7 +12,7 @@ final class PaginationTest extends HttpTestCase
 {
     public function testPaginate(): void
     {
-        $this->getHttp()->get('/paginate')->assertBodySame('1');
+        $this->get('/paginate')->assertBodySame('1');
     }
 
     public function testPaginateError(): void
@@ -24,6 +24,6 @@ final class PaginationTest extends HttpTestCase
 
     public function testPaginate2(): void
     {
-        $this->getHttp()->get('/paginate', query: ['page' => 2])->assertBodySame('2');
+        $this->get('/paginate', query: ['page' => 2])->assertBodySame('2');
     }
 }

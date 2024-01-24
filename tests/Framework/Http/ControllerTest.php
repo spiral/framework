@@ -11,29 +11,25 @@ final class ControllerTest extends HttpTestCase
 {
     public function testIndexAction(): void
     {
-        $this->getHttp()->get('/index')
-            ->assertBodySame('Hello, Dave.');
-
-        $this->getHttp()->get('/index/Antony')
-            ->assertBodySame('Hello, Antony.');
+        $this->get('/index')->assertBodySame('Hello, Dave.');
+        $this->get('/index/Antony')->assertBodySame('Hello, Antony.');
     }
 
     public function testRouteJson(): void
     {
-        $this->getHttp()->get('/route')
-            ->assertBodySame('{"action":"route","name":"Dave"}');
+        $this->get('/route')->assertBodySame('{"action":"route","name":"Dave"}');
     }
 
     public function test404(): void
     {
-        $this->getHttp()->get('/undefined')->assertNotFound();
+        $this->get('/undefined')->assertNotFound();
     }
 
     public function testPayloadAction(): void
     {
         $factory = new Psr17Factory();
 
-        $this->getHttp()->post(
+        $this->post(
             uri: '/payload',
             data: $factory->createStream('{"a":"b"}'),
             headers: ['Content-Type' => 'application/json;charset=UTF-8;']
@@ -45,7 +41,7 @@ final class ControllerTest extends HttpTestCase
     {
         $factory = new Psr17Factory();
 
-        $this->getHttp()->post(
+        $this->post(
             uri: '/payload',
             data: $factory->createStream('{"a":"b"}'),
             headers: ['Content-Type' => 'application/vnd.api+json;charset=UTF-8;']
@@ -57,7 +53,7 @@ final class ControllerTest extends HttpTestCase
     {
         $factory = new Psr17Factory();
 
-        $this->getHttp()->post(
+        $this->post(
             uri: '/payload',
             data: $factory->createStream('{"a":"b"'),
             headers: ['Content-Type' => 'application/json;charset=UTF-8;']
@@ -67,7 +63,6 @@ final class ControllerTest extends HttpTestCase
 
     public function test500(): void
     {
-        $this->getHttp()->get('/error')
-            ->assertStatus(500);
+        $this->get('/error')->assertStatus(500);
     }
 }

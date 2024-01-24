@@ -13,7 +13,10 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\InvokerInterface;
+use Spiral\Framework\ScopeName;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
@@ -26,17 +29,43 @@ use Spiral\Telemetry\TracerFactoryInterface;
 #[Singleton]
 final class HttpBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        TelemetryBootloader::class,
-    ];
-
-    protected const SINGLETONS = [
-        Http::class => [self::class, 'httpCore'],
-    ];
-
     public function __construct(
-        private readonly ConfiguratorInterface $config
+        private readonly ConfiguratorInterface $config,
+        private readonly BinderInterface $binder,
     ) {
+    }
+
+    public function defineDependencies(): array
+    {
+        return [
+            TelemetryBootloader::class,
+        ];
+    }
+
+    public function defineSingletons(): array
+    {
+        $this->binder->getBinder(ScopeName::Http)->bindSingleton(
+            Http::class,
+            fn (InvokerInterface $invoker): Http => $invoker->invoke([self::class, 'httpCore'])
+        );
+
+        /**
+         * @deprecated since v3.12. Will be removed in v4.0.
+         */
+        $this->binder->bindSingleton(
+            Http::class,
+            function (InvokerInterface $invoker, #[Proxy] ContainerInterface $container): Http {
+                @trigger_error(\sprintf(
+                    'Using `%s` outside of the `%s` scope is deprecated and will be impossible in version 4.0.',
+                    Http::class,
+                    ScopeName::Http->value
+                ), \E_USER_DEPRECATED);
+
+                return $invoker->invoke([self::class, 'httpCore'], ['container' => $container]);
+            }
+        );
+
+        return [];
     }
 
     public function init(): void
@@ -74,12 +103,15 @@ final class HttpBootloader extends Bootloader
         $this->config->modify(HttpConfig::CONFIG, new Append('inputBags', $bag, $config));
     }
 
+    /**
+     * @deprecated since v3.12. Will be removed in v4.0 and replaced with callback.
+     */
     protected function httpCore(
         HttpConfig $config,
         Pipeline $pipeline,
         RequestHandlerInterface $handler,
         ResponseFactoryInterface $responseFactory,
-        #[Proxy] ContainerInterface $container,
+        ContainerInterface $container,
         TracerFactoryInterface $tracerFactory
     ): Http {
         $core = new Http($config, $pipeline, $responseFactory, $container, $tracerFactory);

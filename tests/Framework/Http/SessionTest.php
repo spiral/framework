@@ -14,15 +14,11 @@ final class SessionTest extends HttpTestCase
         parent::setUp();
 
         $this->enableMiddlewares();
-
-        $this->setHttpHandler(function () {
-            return ++$this->session()->getSection('cli')->value;
-        });
     }
 
     public function testSetSid(): void
     {
-        $this->getHttp()->get('/')
+        $this->get(uri: '/', handler: fn (): int => ++$this->session()->getSection('cli')->value)
             ->assertOk()
             ->assertBodySame('1')
             ->assertCookieExists('sid');
@@ -30,40 +26,56 @@ final class SessionTest extends HttpTestCase
 
     public function testSessionResume(): void
     {
-        $result = $this->getHttp()->get('/')
+        $result = $this->get(uri: '/', handler: fn (): int => ++$this->session()->getSection('cli')->value)
             ->assertOk()
             ->assertBodySame('1')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get('/', cookies: [
-            'sid' => $result->getCookies()['sid'],
-        ])->assertOk()->assertBodySame('2');
+        $this
+            ->get(
+                uri: '/',
+                cookies: ['sid' => $result->getCookies()['sid']],
+                handler: fn (): int => ++$this->session()->getSection('cli')->value
+            )
+            ->assertOk()
+            ->assertBodySame('2');
 
-        $this->getHttp()->get('/', cookies: [
-            'sid' => $result->getCookies()['sid'],
-        ])->assertOk()->assertBodySame('3');
+        $this
+            ->get(
+                uri: '/',
+                cookies: ['sid' => $result->getCookies()['sid']],
+                handler: fn (): int => ++$this->session()->getSection('cli')->value
+            )
+            ->assertOk()
+            ->assertBodySame('3');
     }
 
     public function testSessionRegenerateId(): void
     {
-        $result = $this->getHttp()->get('/')
+        $result = $this->get(uri: '/', handler: fn (): int => ++$this->session()->getSection('cli')->value)
             ->assertOk()
             ->assertBodySame('1')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get('/', cookies: [
-            'sid' => $result->getCookies()['sid'],
-        ])->assertOk()->assertBodySame('2');
+        $this
+            ->get(
+                uri: '/',
+                cookies: ['sid' => $result->getCookies()['sid']],
+                handler: fn (): int => ++$this->session()->getSection('cli')->value
+            )
+            ->assertOk()
+            ->assertBodySame('2');
 
-        $this->setHttpHandler(function () {
-            $this->session()->regenerateID(false);
+        $newResult = $this
+            ->get(
+                uri: '/',
+                cookies: ['sid' => $result->getCookies()['sid']],
+                handler: function () {
+                    $this->session()->regenerateID(false);
 
-            return ++$this->session()->getSection('cli')->value;
-        });
-
-        $newResult = $this->getHttp()->get('/', cookies: [
-            'sid' => $result->getCookies()['sid'],
-        ])
+                    return ++$this->session()->getSection('cli')->value;
+                }
+            )
             ->assertOk()
             ->assertBodySame('3')
             ->assertCookieExists('sid');
@@ -73,25 +85,33 @@ final class SessionTest extends HttpTestCase
 
     public function testDestroySession(): void
     {
-        $result = $this->getHttp()->get('/')
+        $result = $this->get(uri: '/', handler: fn (): int => ++$this->session()->getSection('cli')->value)
             ->assertOk()
             ->assertBodySame('1')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get('/', cookies: [
-            'sid' => $result->getCookies()['sid'],
-        ])->assertOk()->assertBodySame('2');
+        $this
+            ->get(
+                uri: '/',
+                cookies: ['sid' => $result->getCookies()['sid']],
+                handler: fn (): int => ++$this->session()->getSection('cli')->value
+            )
+            ->assertOk()
+            ->assertBodySame('2');
 
-        $this->setHttpHandler(function () {
-            $this->session()->destroy();
-            $this->assertFalse($this->session()->isStarted());
+        $this
+            ->get(
+                uri: '/',
+                cookies: ['sid' => $result->getCookies()['sid']],
+                handler: function () {
+                    $this->session()->destroy();
+                    $this->assertFalse($this->session()->isStarted());
 
-            return ++$this->session()->getSection('cli')->value;
-        });
-
-        $this->getHttp()->get('/', cookies: [
-            'sid' => $result->getCookies()['sid'],
-        ])->assertOk()->assertBodySame('1');
+                    return ++$this->session()->getSection('cli')->value;
+                }
+            )
+            ->assertOk()
+            ->assertBodySame('1');
     }
 
     private function session(): SessionInterface
