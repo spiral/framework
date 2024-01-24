@@ -44,10 +44,7 @@ final class HttpBootloader extends Bootloader
 
     public function defineSingletons(): array
     {
-        $this->binder->getBinder(ScopeName::Http)->bindSingleton(
-            Http::class,
-            fn (InvokerInterface $invoker): Http => $invoker->invoke([self::class, 'httpCore'])
-        );
+        $this->binder->getBinder(ScopeName::Http)->bindSingleton(Http::class, [self::class, 'httpCore']);
 
         /**
          * @deprecated since v3.12. Will be removed in v4.0.
