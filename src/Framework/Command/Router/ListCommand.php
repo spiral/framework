@@ -29,7 +29,7 @@ final class ListCommand extends Command
         $grid = $this->table(['Name:', 'Verbs:', 'Pattern:', 'Target:', 'Group:']);
 
         foreach ($router->getRoutes() as $name => $route) {
-            if ($route instanceof Route) {
+            if ($route instanceof RouteInterface) {
                 $grid->addRow(
                     [
                         $name,
@@ -62,9 +62,9 @@ final class ListCommand extends Command
         return $groups;
     }
 
-    private function getVerbs(Route $route): string
+    private function getVerbs(RouteInterface $route): string
     {
-        if ($route->getVerbs() === Route::VERBS) {
+        if ($route->getVerbs() === RouteInterface::VERBS) {
             return '*';
         }
 
@@ -82,7 +82,7 @@ final class ListCommand extends Command
         return \implode(', ', $result);
     }
 
-    private function getPattern(Route $route): string
+    private function getPattern(RouteInterface $route): string
     {
         $pattern = $this->getValue($route->getUriHandler(), 'pattern');
         $prefix = $this->getValue($route->getUriHandler(), 'prefix');
@@ -106,7 +106,7 @@ final class ListCommand extends Command
      *
      * @throws \ReflectionException
      */
-    private function getTarget(Route $route, KernelInterface $kernel): string
+    private function getTarget(RouteInterface $route, KernelInterface $kernel): string
     {
         $target = $this->getValue($route, 'target');
         switch (true) {
