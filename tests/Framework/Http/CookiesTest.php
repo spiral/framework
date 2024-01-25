@@ -8,8 +8,11 @@ use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Encrypter\EncrypterInterface;
+use Spiral\Framework\ScopeName;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
+#[TestScope(ScopeName::Http)]
 final class CookiesTest extends HttpTestCase
 {
     public const ENV = [
@@ -37,19 +40,20 @@ final class CookiesTest extends HttpTestCase
 
     public function testHasCookie(): void
     {
-        $this
-            ->get(uri: '/', handler: fn (): int => (int) $this->cookies()->has('a'))
-            ->assertOk()
-            ->assertBodySame('0');
+        $this->setHttpHandler(fn (): int => (int)$this->cookies()->has('a'));
+
+        $this->fakeHttp()->get('/')->assertOk()->assertBodySame('0');
     }
 
     public function testHasCookie2(): void
     {
+        $this->setHttpHandler(fn (): int => (int)$this->cookies()->has('a'));
+
         $this
+            ->fakeHttp()
             ->get(
                 uri: '/',
-                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')],
-                handler: fn (): int => (int)$this->cookies()->has('a')
+                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')]
             )
             ->assertOk()
             ->assertBodySame('1');
@@ -57,11 +61,13 @@ final class CookiesTest extends HttpTestCase
 
     public function testGetCookie2(): void
     {
+        $this->setHttpHandler(fn (): string => $this->cookies()->get('a'));
+
         $this
+            ->fakeHttp()
             ->get(
                 uri: '/',
-                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')],
-                handler: fn (): string => $this->cookies()->get('a')
+                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')]
             )
             ->assertOk()
             ->assertBodySame('hello');
@@ -69,16 +75,12 @@ final class CookiesTest extends HttpTestCase
 
     public function testSetCookie(): void
     {
-        $result = $this
-            ->get(
-                uri:'/',
-                handler: function (): string {
-                    $this->cookies()->set('a', 'value');
-                    return 'ok';
-                }
-            )
-            ->assertOk()
-            ->assertBodySame('ok');
+        $this->setHttpHandler(function (): string {
+            $this->cookies()->set('a', 'value');
+            return 'ok';
+        });
+
+        $result = $this->fakeHttp()->get('/')->assertOk()->assertBodySame('ok');
 
         $cookies = $result->getCookies();
 
@@ -90,19 +92,15 @@ final class CookiesTest extends HttpTestCase
 
     public function testSetCookie2(): void
     {
-        $result = $this
-            ->get(
-                uri: '/',
-                handler: function (): string {
-                    $this->cookies()->schedule(Cookie::create('a', 'value'));
-                    $this->assertSame([], $this->cookies()->getAll());
-                    $this->assertCount(1, $this->cookies()->getScheduled());
+        $this->setHttpHandler(function (): string {
+            $this->cookies()->schedule(Cookie::create('a', 'value'));
+            $this->assertSame([], $this->cookies()->getAll());
+            $this->assertCount(1, $this->cookies()->getScheduled());
 
-                    return 'ok';
-                }
-            )
-            ->assertOk()
-            ->assertBodySame('ok');
+            return 'ok';
+        });
+
+        $result = $this->fakeHttp()->get('/')->assertOk()->assertBodySame('ok');
 
         $cookies = $result->getCookies();
 
@@ -114,17 +112,12 @@ final class CookiesTest extends HttpTestCase
 
     public function testDeleteCookie(): void
     {
-        $this
-            ->get(
-                uri: '/',
-                handler: function (): string {
-                    $this->cookies()->delete('cookie');
-                    return 'ok';
-                }
-            )
-            ->assertOk()
-            ->assertBodySame('ok')
-            ->assertCookieSame('cookie', '');
+        $this->setHttpHandler(function (): string {
+            $this->cookies()->delete('cookie');
+            return 'ok';
+        });
+
+        $this->fakeHttp()->get('/')->assertOk()->assertBodySame('ok')->assertCookieSame('cookie', '');
     }
 
     private function cookies(): CookieManager

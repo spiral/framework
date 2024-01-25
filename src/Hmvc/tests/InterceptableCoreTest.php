@@ -13,9 +13,9 @@ use Spiral\Testing\TestCase;
 use Spiral\Tests\Core\Fixtures\DummyController;
 use Spiral\Tests\Core\Fixtures\SampleCore;
 
+#[TestScope(ScopeName::Http)]
 final class InterceptableCoreTest extends TestCase
 {
-    #[TestScope(ScopeName::Http)]
     public function testNoInterceptors(): void
     {
         $int = new InterceptableCore(new SampleCore($this->getContainer()));
@@ -27,7 +27,6 @@ final class InterceptableCoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testNoInterceptors2(): void
     {
         $int = new InterceptableCore(new SampleCore($this->getContainer()));
@@ -40,7 +39,6 @@ final class InterceptableCoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testNoInterceptors22(): void
     {
         $int = new InterceptableCore(new SampleCore($this->getContainer()));
@@ -54,7 +52,6 @@ final class InterceptableCoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testInvalidPipeline(): void
     {
         $this->expectException(InterceptorException::class);

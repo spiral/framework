@@ -12,9 +12,9 @@ use Spiral\Tests\Core\Fixtures\CleanController;
 use Spiral\Tests\Core\Fixtures\DummyController;
 use Spiral\Tests\Core\Fixtures\SampleCore;
 
+#[TestScope(ScopeName::Http)]
 final class CoreTest extends TestCase
 {
-    #[TestScope(ScopeName::Http)]
     public function testCallAction(): void
     {
         $core = new SampleCore($this->getContainer());
@@ -25,7 +25,6 @@ final class CoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCallActionDefaultParameter(): void
     {
         $core = new SampleCore($this->getContainer());
@@ -35,7 +34,6 @@ final class CoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCallActionDefaultAction(): void
     {
         $core = new SampleCore($this->getContainer());
@@ -45,7 +43,6 @@ final class CoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCallActionDefaultActionWithParameter(): void
     {
         $core = new SampleCore($this->getContainer());
@@ -56,7 +53,6 @@ final class CoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCallActionMissingParameter(): void
     {
         $this->expectException(ControllerException::class);
@@ -65,7 +61,6 @@ final class CoreTest extends TestCase
         $core->callAction(DummyController::class, 'required');
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCallActionInvalidParameter(): void
     {
         $this->expectException(ControllerException::class);
@@ -74,7 +69,6 @@ final class CoreTest extends TestCase
         $core->callAction(DummyController::class, 'required', ['id' => null]);
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCallWrongController(): void
     {
         $this->expectException(ControllerException::class);
@@ -83,7 +77,6 @@ final class CoreTest extends TestCase
         $core->callAction(BadController::class, 'index', ['name' => 'Antony']);
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCallBadAction(): void
     {
         $this->expectException(ControllerException::class);
@@ -94,7 +87,6 @@ final class CoreTest extends TestCase
         ]);
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testStaticAction(): void
     {
         $this->expectException(ControllerException::class);
@@ -103,7 +95,6 @@ final class CoreTest extends TestCase
         $core->callAction(DummyController::class, 'inner');
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testInheritedAction(): void
     {
         $this->expectException(ControllerException::class);
@@ -112,7 +103,6 @@ final class CoreTest extends TestCase
         $core->callAction(DummyController::class, 'execute');
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testInheritedActionCall(): void
     {
         $this->expectException(ControllerException::class);
@@ -121,7 +111,6 @@ final class CoreTest extends TestCase
         $core->callAction(DummyController::class, 'call');
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCallNotController(): void
     {
         $this->expectException(ControllerException::class);
@@ -132,7 +121,6 @@ final class CoreTest extends TestCase
         ]);
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCleanController(): void
     {
         $core = new SampleCore($this->getContainer());
@@ -143,7 +131,6 @@ final class CoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCleanControllerError(): void
     {
         $this->expectException(ControllerException::class);
@@ -156,7 +143,6 @@ final class CoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCleanControllerError2(): void
     {
         $this->expectException(ControllerException::class);
@@ -169,7 +155,6 @@ final class CoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCleanControllerError3(): void
     {
         $this->expectException(ControllerException::class);
@@ -182,7 +167,6 @@ final class CoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testCleanControllerError4(): void
     {
         $this->expectException(ControllerException::class);
@@ -195,7 +179,6 @@ final class CoreTest extends TestCase
         ));
     }
 
-    #[TestScope(ScopeName::Http)]
     public function testMissingDependency(): void
     {
         $this->expectException(ControllerException::class);

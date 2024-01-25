@@ -22,12 +22,13 @@ abstract class BaseTestCase extends \Spiral\Testing\TestCase
     public function createAppInstance(Container $container = new Container()): TestApp
     {
         return TestApp::create(
-            $this->defineDirectories($this->rootDirectory()),
-            false
+            directories: $this->defineDirectories($this->rootDirectory()),
+            handleErrors: false,
+            container: $container,
         )->disableBootloader(...$this->disabledBootloaders);
     }
 
-    public function withDisabledBootloaders(string ... $bootloader): self
+    public function withDisabledBootloaders(string ...$bootloader): self
     {
         $this->disabledBootloaders = $bootloader;
 
