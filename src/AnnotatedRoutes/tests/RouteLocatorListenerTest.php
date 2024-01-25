@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use PHPUnit\Framework\TestCase;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\UriFactoryInterface;
 use Spiral\Attributes\Factory;
