@@ -18,23 +18,15 @@ use Spiral\Core\Scope;
 use Spiral\Framework\ScopeName;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class HttpBootloaderTest extends BaseTestCase
 {
+    #[TestScope(ScopeName::Http)]
     public function testHttpBinding(): void
     {
-        $this->getContainer()->runScope(new Scope(ScopeName::Http), function (Container $container): void {
-            $this->assertTrue($container->has(Http::class));
-
-            $instance1 = $container->get(Http::class);
-            $instance2 = $container->get(Http::class);
-
-            $this->assertInstanceOf(Http::class, $instance1);
-            $this->assertInstanceOf(Http::class, $instance2);
-
-            $this->assertSame($instance1, $instance2);
-        });
+        $this->assertContainerBoundAsSingleton(Http::class, Http::class);
     }
 
     public function testDefaultInputBags(): void
