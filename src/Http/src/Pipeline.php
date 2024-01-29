@@ -93,6 +93,8 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
         }
 
         $handler = $this->handler;
+
+        // TODO: Can we remove this scope?
         return $this->scope->runScope(
             [Request::class => $request],
             static fn (): Response => $handler->handle($request)

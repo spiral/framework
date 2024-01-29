@@ -97,7 +97,10 @@ final class CoreHandler implements RequestHandlerInterface
                 : $this->action;
 
             // run the core withing PSR-7 Request/Response scope
-            /** @psalm-suppress InvalidArgument */
+            /**
+             * @psalm-suppress InvalidArgument
+             * TODO: Can we bind all controller classes at the bootstrap stage?
+             */
             $result = $this->scope->runScope(
                 new Scope(
                     name: ScopeName::HttpRequest,

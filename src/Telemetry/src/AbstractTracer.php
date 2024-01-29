@@ -26,6 +26,7 @@ abstract class AbstractTracer implements TracerInterface
      */
     final protected function runScope(Span $span, callable $callback): mixed
     {
+        // TODO: Can we remove this scope?
         return $this->scope->runScope([
             SpanInterface::class => $span,
             TracerInterface::class => $this,
