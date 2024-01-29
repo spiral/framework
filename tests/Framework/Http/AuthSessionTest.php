@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
+use Spiral\Framework\ScopeName;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
+#[TestScope(ScopeName::Http)]
 final class AuthSessionTest extends HttpTestCase
 {
     public const ENV = [
@@ -14,57 +17,49 @@ final class AuthSessionTest extends HttpTestCase
 
     public function testNoToken(): void
     {
-        $this->getHttp()->get(uri: '/auth/token')
-            ->assertBodySame('none');
+        $this->fakeHttp()->get(uri: '/auth/token')->assertBodySame('none');
     }
 
     public function testLogin(): void
     {
-        $result = $this->getHttp()->get(uri: '/auth/login')
+        $result = $this->fakeHttp()->get(uri: '/auth/login')
             ->assertBodySame('OK')
             ->assertCookieExists('token')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get(uri: '/auth/token', cookies: $result->getCookies())
-            ->assertBodyNotSame('none');
+        $this->fakeHttp()->get(uri: '/auth/token', cookies: $result->getCookies())->assertBodyNotSame('none');
     }
 
     public function testLogout(): void
     {
-        $result = $this->getHttp()->get(uri: '/auth/login')
+        $result = $this->fakeHttp()->get(uri: '/auth/login')
             ->assertBodySame('OK')
             ->assertCookieExists('token')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get(uri: '/auth/token', cookies: $result->getCookies())
-            ->assertBodyNotSame('none');
-
-        $this->getHttp()->get(uri: '/auth/logout', cookies: $result->getCookies())
-            ->assertBodySame('closed');
-
-        $this->getHttp()->get(uri: '/auth/token', cookies: $result->getCookies())
-            ->assertBodySame('none');
+        $this->fakeHttp()->get(uri: '/auth/token', cookies: $result->getCookies())->assertBodyNotSame('none');
+        $this->fakeHttp()->get(uri: '/auth/token', cookies: $result->getCookies())->assertBodyNotSame('none');
+        $this->fakeHttp()->get(uri: '/auth/logout', cookies: $result->getCookies())->assertBodySame('closed');
+        $this->fakeHttp()->get(uri: '/auth/token', cookies: $result->getCookies())->assertBodySame('none');
     }
 
     public function testLoginScope(): void
     {
-        $result = $this->getHttp()->get('/auth/login2')
+        $result = $this->fakeHttp()->get('/auth/login2')
             ->assertBodySame('OK')
             ->assertCookieExists('token')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get('/auth/token2', cookies: $result->getCookies())
-            ->assertBodyNotSame('none');
+        $this->fakeHttp()->get('/auth/token2', cookies: $result->getCookies())->assertBodyNotSame('none');
     }
 
     public function testLoginPayload(): void
     {
-        $result = $this->getHttp()->get('/auth/login2')
+        $result = $this->fakeHttp()->get('/auth/login2')
             ->assertBodySame('OK')
             ->assertCookieExists('token')
             ->assertCookieExists('sid');
 
-        $this->getHttp()->get('/auth/token3', cookies: $result->getCookies())
-            ->assertBodySame('{"userID":1}');
+        $this->fakeHttp()->get('/auth/token3', cookies: $result->getCookies())->assertBodySame('{"userID":1}');
     }
 }

@@ -6,16 +6,11 @@ namespace Spiral\Core;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
-use TypeError;
 
-/**
- * Provides ability to call controllers in IoC scope.
- *
- * Make sure to bind ScopeInterface in your container.
- */
 abstract class AbstractCore implements CoreInterface
 {
     /** @internal */
@@ -23,10 +18,12 @@ abstract class AbstractCore implements CoreInterface
 
     public function __construct(
         /** @internal */
-        protected ContainerInterface $container
+        #[Proxy] protected ContainerInterface $container
     ) {
-        // resolver is usually the container itself
-        $this->resolver = $container->get(ResolverInterface::class);
+        // TODO: can we simplify this?
+        $this->resolver = $container
+            ->get(InvokerInterface::class)
+            ->invoke(static fn (#[Proxy] ResolverInterface $resolver) => $resolver);
     }
 
     public function callAction(string $controller, string $action, array $parameters = []): mixed
@@ -64,11 +61,7 @@ abstract class AbstractCore implements CoreInterface
             );
         }
 
-        $container = $this->container;
-        return ContainerScope::runScope(
-            $container,
-            static fn () => $method->invokeArgs($container->get($controller), $args)
-        );
+        return $method->invokeArgs($this->container->get($controller), $args);
     }
 
     protected function resolveArguments(\ReflectionMethod $method, array $parameters): array

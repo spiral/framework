@@ -5,35 +5,34 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Http;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Spiral\Framework\ScopeName;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
+#[TestScope(ScopeName::Http)]
 final class ControllerTest extends HttpTestCase
 {
     public function testIndexAction(): void
     {
-        $this->getHttp()->get('/index')
-            ->assertBodySame('Hello, Dave.');
-
-        $this->getHttp()->get('/index/Antony')
-            ->assertBodySame('Hello, Antony.');
+        $this->fakeHttp()->get('/index')->assertBodySame('Hello, Dave.');
+        $this->fakeHttp()->get('/index/Antony')->assertBodySame('Hello, Antony.');
     }
 
     public function testRouteJson(): void
     {
-        $this->getHttp()->get('/route')
-            ->assertBodySame('{"action":"route","name":"Dave"}');
+        $this->fakeHttp()->get('/route')->assertBodySame('{"action":"route","name":"Dave"}');
     }
 
     public function test404(): void
     {
-        $this->getHttp()->get('/undefined')->assertNotFound();
+        $this->fakeHttp()->get('/undefined')->assertNotFound();
     }
 
     public function testPayloadAction(): void
     {
         $factory = new Psr17Factory();
 
-        $this->getHttp()->post(
+        $this->fakeHttp()->post(
             uri: '/payload',
             data: $factory->createStream('{"a":"b"}'),
             headers: ['Content-Type' => 'application/json;charset=UTF-8;']
@@ -45,7 +44,7 @@ final class ControllerTest extends HttpTestCase
     {
         $factory = new Psr17Factory();
 
-        $this->getHttp()->post(
+        $this->fakeHttp()->post(
             uri: '/payload',
             data: $factory->createStream('{"a":"b"}'),
             headers: ['Content-Type' => 'application/vnd.api+json;charset=UTF-8;']
@@ -57,7 +56,7 @@ final class ControllerTest extends HttpTestCase
     {
         $factory = new Psr17Factory();
 
-        $this->getHttp()->post(
+        $this->fakeHttp()->post(
             uri: '/payload',
             data: $factory->createStream('{"a":"b"'),
             headers: ['Content-Type' => 'application/json;charset=UTF-8;']
@@ -67,7 +66,6 @@ final class ControllerTest extends HttpTestCase
 
     public function test500(): void
     {
-        $this->getHttp()->get('/error')
-            ->assertStatus(500);
+        $this->fakeHttp()->get('/error')->assertStatus(500);
     }
 }

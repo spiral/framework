@@ -10,7 +10,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
+use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
+use Spiral\Framework\ScopeName;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
@@ -95,11 +97,15 @@ final class CoreHandler implements RequestHandlerInterface
                 : $this->action;
 
             // run the core withing PSR-7 Request/Response scope
+            /**
+             * @psalm-suppress InvalidArgument
+             * TODO: Can we bind all controller classes at the bootstrap stage?
+             */
             $result = $this->scope->runScope(
-                [
-                    Request::class  => $request,
-                    Response::class => $response,
-                ],
+                new Scope(
+                    name: ScopeName::HttpRequest,
+                    bindings: [Request::class => $request, Response::class => $response, $controller => $controller],
+                ),
                 fn (): mixed => $this->tracer->trace(
                     name: 'Controller [' . $controller . ':' . $action . ']',
                     callback: fn (): mixed => $this->core->callAction(

@@ -12,13 +12,18 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
+use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\Scope;
+use Spiral\Framework\ScopeName;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class HttpBootloaderTest extends BaseTestCase
 {
+    #[TestScope(ScopeName::Http)]
     public function testHttpBinding(): void
     {
         $this->assertContainerBoundAsSingleton(Http::class, Http::class);
@@ -34,7 +39,7 @@ final class HttpBootloaderTest extends BaseTestCase
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
         $configs->setDefaults(HttpConfig::CONFIG, ['inputBags' => []]);
 
-        $bootloader = new HttpBootloader($configs);
+        $bootloader = new HttpBootloader($configs, new Container());
         $bootloader->addInputBag('test', ['class' => 'foo', 'source' => 'bar']);
 
         $this->assertSame([
@@ -48,7 +53,7 @@ final class HttpBootloaderTest extends BaseTestCase
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
         $configs->setDefaults(HttpConfig::CONFIG, ['middleware' => []]);
 
-        $bootloader = new HttpBootloader($configs);
+        $bootloader = new HttpBootloader($configs, new Container());
         $bootloader->addMiddleware($middleware);
 
         $this->assertSame([$middleware], $configs->getConfig(HttpConfig::CONFIG)['middleware']);

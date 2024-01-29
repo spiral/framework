@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Telemetry;
 
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Container;
 use Spiral\Core\ScopeInterface;
 
@@ -15,7 +16,7 @@ use Spiral\Core\ScopeInterface;
 final class NullTracerFactory implements TracerFactoryInterface
 {
     public function __construct(
-        private readonly ?ScopeInterface $scope = new Container(),
+        #[Proxy] private readonly ?ScopeInterface $scope = new Container(),
     ) {
     }
 

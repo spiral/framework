@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
-use PHPUnit\Framework\TestCase;
-use Spiral\Core\Container;
 use Spiral\Core\Exception\InterceptorException;
 use Spiral\Core\InterceptableCore;
 use Spiral\Core\InterceptorPipeline;
+use Spiral\Framework\ScopeName;
+use Spiral\Testing\Attribute\TestScope;
+use Spiral\Testing\TestCase;
 use Spiral\Tests\Core\Fixtures\DummyController;
 use Spiral\Tests\Core\Fixtures\SampleCore;
 
-class InterceptableCoreTest extends TestCase
+#[TestScope(ScopeName::Http)]
+final class InterceptableCoreTest extends TestCase
 {
     public function testNoInterceptors(): void
     {
-        $core = new SampleCore(new Container());
-        $int = new InterceptableCore($core);
+        $int = new InterceptableCore(new SampleCore($this->getContainer()));
 
         $this->assertSame('Hello, Antony.', $int->callAction(
             DummyController::class,
@@ -28,8 +29,7 @@ class InterceptableCoreTest extends TestCase
 
     public function testNoInterceptors2(): void
     {
-        $core = new SampleCore(new Container());
-        $int = new InterceptableCore($core);
+        $int = new InterceptableCore(new SampleCore($this->getContainer()));
         $int->addInterceptor(new DemoInterceptor());
 
         $this->assertSame('?Hello, Antony.!', $int->callAction(
@@ -41,8 +41,7 @@ class InterceptableCoreTest extends TestCase
 
     public function testNoInterceptors22(): void
     {
-        $core = new SampleCore(new Container());
-        $int = new InterceptableCore($core);
+        $int = new InterceptableCore(new SampleCore($this->getContainer()));
         $int->addInterceptor(new DemoInterceptor());
         $int->addInterceptor(new DemoInterceptor());
 

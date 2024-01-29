@@ -11,6 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
@@ -79,7 +80,7 @@ final class RouterBootloader extends Bootloader
      */
     private function router(
         UriHandler $uriHandler,
-        ContainerInterface $container,
+        #[Proxy] ContainerInterface $container,
         TracerInterface $tracer,
         ?EventDispatcherInterface $dispatcher = null
     ): RouterInterface {

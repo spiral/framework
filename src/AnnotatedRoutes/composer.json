@@ -40,6 +40,7 @@
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^10.1",
         "spiral/framework": "^3.1",
+        "spiral/testing": "^2.8",
         "spiral/nyholm-bridge": "^1.2",
         "vimeo/psalm": "^5.9"
     },

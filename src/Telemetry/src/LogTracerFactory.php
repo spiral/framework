@@ -6,6 +6,7 @@ namespace Spiral\Telemetry;
 
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\UuidFactory;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\ScopeInterface;
 use Spiral\Logger\LogsInterface;
 
@@ -21,7 +22,7 @@ final class LogTracerFactory implements TracerFactoryInterface
     private readonly LoggerInterface $logger;
 
     public function __construct(
-        private readonly ScopeInterface $scope,
+        #[Proxy] private readonly ScopeInterface $scope,
         private readonly ClockInterface $clock,
         LogsInterface $logs,
         string $channel = self::LOG_CHANNEL

@@ -8,6 +8,8 @@ use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageScope;
 use Spiral\Core\Container\Autowire;
+use Spiral\Framework\ScopeName;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
 final class AuthMiddlewareTest extends HttpTestCase
@@ -19,6 +21,7 @@ final class AuthMiddlewareTest extends HttpTestCase
         $this->enableMiddlewares();
     }
 
+    #[TestScope(ScopeName::Http)]
     public function testTokenStorageInterfaceShouldBeBound(): void
     {
         $storage = $this->createMock(TokenStorageInterface::class);
@@ -26,6 +29,7 @@ final class AuthMiddlewareTest extends HttpTestCase
             AuthMiddleware::class,
             new Autowire(AuthMiddleware::class, ['tokenStorage' => $storage])
         );
+
         $this->setHttpHandler(function () use ($storage): void {
             $scope = $this->getContainer()->get(TokenStorageScope::class);
             $ref = new \ReflectionMethod($scope, 'getTokenStorage');
@@ -38,7 +42,7 @@ final class AuthMiddlewareTest extends HttpTestCase
         $ref = new \ReflectionMethod($scope, 'getTokenStorage');
         $this->assertNotInstanceOf($storage::class, $ref->invoke($scope));
 
-        $this->getHttp()->get('/');
+        $this->fakeHttp()->get('/');
 
         $scope = $this->getContainer()->get(TokenStorageScope::class);
         $ref = new \ReflectionMethod($scope, 'getTokenStorage');

@@ -8,8 +8,11 @@ use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Encrypter\EncrypterInterface;
+use Spiral\Framework\ScopeName;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
+#[TestScope(ScopeName::Http)]
 final class CookiesTest extends HttpTestCase
 {
     public const ENV = [
@@ -37,33 +40,35 @@ final class CookiesTest extends HttpTestCase
 
     public function testHasCookie(): void
     {
-        $this->setHttpHandler(function () {
-            return (int)$this->cookies()->has('a');
-        });
+        $this->setHttpHandler(fn (): int => (int)$this->cookies()->has('a'));
 
-        $this->getHttp()->get('/')
-            ->assertOk()
-            ->assertBodySame('0');
+        $this->fakeHttp()->get('/')->assertOk()->assertBodySame('0');
     }
 
     public function testHasCookie2(): void
     {
-        $this->setHttpHandler(fn(): int => (int)$this->cookies()->has('a'));
+        $this->setHttpHandler(fn (): int => (int)$this->cookies()->has('a'));
 
-        $this->getHttp()->get('/', cookies: [
-            'a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello'),
-        ])
+        $this
+            ->fakeHttp()
+            ->get(
+                uri: '/',
+                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')]
+            )
             ->assertOk()
             ->assertBodySame('1');
     }
 
     public function testGetCookie2(): void
     {
-        $this->setHttpHandler(fn(): string => $this->cookies()->get('a'));
+        $this->setHttpHandler(fn (): string => $this->cookies()->get('a'));
 
-        $this->getHttp()->get('/', cookies: [
-            'a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello'),
-        ])
+        $this
+            ->fakeHttp()
+            ->get(
+                uri: '/',
+                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')]
+            )
             ->assertOk()
             ->assertBodySame('hello');
     }
@@ -72,13 +77,10 @@ final class CookiesTest extends HttpTestCase
     {
         $this->setHttpHandler(function (): string {
             $this->cookies()->set('a', 'value');
-
             return 'ok';
         });
 
-        $result = $this->getHttp()->get('/')
-            ->assertOk()
-            ->assertBodySame('ok');
+        $result = $this->fakeHttp()->get('/')->assertOk()->assertBodySame('ok');
 
         $cookies = $result->getCookies();
 
@@ -98,9 +100,7 @@ final class CookiesTest extends HttpTestCase
             return 'ok';
         });
 
-        $result = $this->getHttp()->get('/')
-            ->assertOk()
-            ->assertBodySame('ok');
+        $result = $this->fakeHttp()->get('/')->assertOk()->assertBodySame('ok');
 
         $cookies = $result->getCookies();
 
@@ -114,14 +114,10 @@ final class CookiesTest extends HttpTestCase
     {
         $this->setHttpHandler(function (): string {
             $this->cookies()->delete('cookie');
-
             return 'ok';
         });
 
-        $this->getHttp()->get('/')
-            ->assertOk()
-            ->assertBodySame('ok')
-            ->assertCookieSame('cookie', '');
+        $this->fakeHttp()->get('/')->assertOk()->assertBodySame('ok')->assertCookieSame('cookie', '');
     }
 
     private function cookies(): CookieManager

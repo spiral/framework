@@ -4,25 +4,37 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
-use PHPUnit\Framework\TestCase as BaseTestCase;
-use Spiral\Boot\Environment;
-use Spiral\Tests\Router\App\App;
+use Spiral\Nyholm\Bootloader\NyholmBootloader;
+use Spiral\Router\Bootloader\AnnotatedRoutesBootloader;
+use Spiral\Testing\TestCase as BaseTestCase;
 
 /**
  * @requires function \Spiral\Framework\Kernel::init
  */
 abstract class TestCase extends BaseTestCase
 {
-    /**
-     * @throws \Throwable
-     */
-    protected function makeApp(array $env): App
+    public function defineBootloaders(): array
     {
-        $config = [
-            'root' => __DIR__ . '/App',
-            'app'  => __DIR__ . '/App',
+        return [
+            NyholmBootloader::class,
+            AnnotatedRoutesBootloader::class,
         ];
+    }
 
-        return (App::create($config, false))->run(new Environment($env));
+    public function rootDirectory(): string
+    {
+        return __DIR__;
+    }
+
+    public function defineDirectories(string $root): array
+    {
+        return \array_merge(parent::defineDirectories($root), ['app' => $root . '/App']);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->cleanUpRuntimeDirectory();
     }
 }

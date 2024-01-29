@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
-use PHPUnit\Framework\TestCase;
-use Spiral\Core\Container;
 use Spiral\Core\Exception\ControllerException;
+use Spiral\Framework\ScopeName;
+use Spiral\Testing\Attribute\TestScope;
+use Spiral\Testing\TestCase;
 use Spiral\Tests\Core\Fixtures\CleanController;
 use Spiral\Tests\Core\Fixtures\DummyController;
 use Spiral\Tests\Core\Fixtures\SampleCore;
 
-class CoreTest extends TestCase
+#[TestScope(ScopeName::Http)]
+final class CoreTest extends TestCase
 {
     public function testCallAction(): void
     {
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('Hello, Antony.', $core->callAction(
             DummyController::class,
             'index',
@@ -25,7 +27,7 @@ class CoreTest extends TestCase
 
     public function testCallActionDefaultParameter(): void
     {
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('Hello, Dave.', $core->callAction(
             DummyController::class,
             'index'
@@ -34,7 +36,7 @@ class CoreTest extends TestCase
 
     public function testCallActionDefaultAction(): void
     {
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('Hello, Dave.', $core->callAction(
             DummyController::class,
             'index'
@@ -43,7 +45,7 @@ class CoreTest extends TestCase
 
     public function testCallActionDefaultActionWithParameter(): void
     {
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('Hello, Antony.', $core->callAction(
             DummyController::class,
             'index',
@@ -55,7 +57,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $core->callAction(DummyController::class, 'required');
     }
 
@@ -63,7 +65,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $core->callAction(DummyController::class, 'required', ['id' => null]);
     }
 
@@ -71,7 +73,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $core->callAction(BadController::class, 'index', ['name' => 'Antony']);
     }
 
@@ -79,7 +81,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $core->callAction(DummyController::class, 'missing', [
             'name' => 'Antony',
         ]);
@@ -89,7 +91,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $core->callAction(DummyController::class, 'inner');
     }
 
@@ -97,7 +99,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $core->callAction(DummyController::class, 'execute');
     }
 
@@ -105,7 +107,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $core->callAction(DummyController::class, 'call');
     }
 
@@ -113,7 +115,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
+        $core = new SampleCore($this->getContainer());
         $core->callAction(SampleCore::class, 'index', [
             'name' => 'Antony',
         ]);
@@ -121,8 +123,7 @@ class CoreTest extends TestCase
 
     public function testCleanController(): void
     {
-        $core = new SampleCore(new Container());
-
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('900', $core->callAction(
             CleanController::class,
             'test',
@@ -134,8 +135,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
-
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('900', $core->callAction(
             CleanController::class,
             'test',
@@ -147,8 +147,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
-
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('900', $core->callAction(
             CleanController::class,
             'test',
@@ -160,8 +159,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
-
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('900', $core->callAction(
             CleanController::class,
             'invalid',
@@ -173,8 +171,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
-
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('900', $core->callAction(
             CleanController::class,
             'another',
@@ -186,8 +183,7 @@ class CoreTest extends TestCase
     {
         $this->expectException(ControllerException::class);
 
-        $core = new SampleCore(new Container());
-
+        $core = new SampleCore($this->getContainer());
         $this->assertSame('900', $core->callAction(
             CleanController::class,
             'missing',
