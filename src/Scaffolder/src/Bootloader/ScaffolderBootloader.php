@@ -9,6 +9,7 @@ use Cocur\Slugify\SlugifyInterface;
 use ReflectionClass;
 use ReflectionException;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\KernelInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
@@ -29,8 +30,9 @@ class ScaffolderBootloader extends Bootloader
     ) {
     }
 
-    public function init(ConsoleBootloader $console): void
+    public function init(ConsoleBootloader $console, DirectoriesInterface $dir): void
     {
+        $console->addCommand(Command\InfoCommand::class);
         $console->addCommand(Command\BootloaderCommand::class);
         $console->addCommand(Command\CommandCommand::class);
         $console->addCommand(Command\ConfigCommand::class);
@@ -56,7 +58,7 @@ class ScaffolderBootloader extends Bootloader
              * Base directory for generated classes, class will be automatically localed into sub directory
              * using given namespace.
              */
-            'directory' => directory('app') . 'src/',
+            'directory' => $dir->get('app') . 'src/',
 
             /*
              * Default namespace to be applied for every generated class. By default uses Kernel namespace
@@ -83,7 +85,7 @@ class ScaffolderBootloader extends Bootloader
                         'postfix' => 'Config',
                         'class' => Declaration\ConfigDeclaration::class,
                         'options' => [
-                            'directory' => directory('config'),
+                            'directory' => $dir->get('config'),
                         ],
                     ],
                     Declaration\ControllerDeclaration::TYPE => [
@@ -98,7 +100,7 @@ class ScaffolderBootloader extends Bootloader
                     ],
                     Declaration\MiddlewareDeclaration::TYPE => [
                         'namespace' => 'Middleware',
-                        'postfix' => '',
+                        'postfix' => 'Middleware',
                         'class' => Declaration\MiddlewareDeclaration::class,
                     ],
                     Declaration\CommandDeclaration::TYPE => [
@@ -117,7 +119,7 @@ class ScaffolderBootloader extends Bootloader
     }
 
     /**
-     * Register new Scaffolder declaration.
+     * Register a new Scaffolder declaration.
      *
      * @param non-empty-string $name
      */
