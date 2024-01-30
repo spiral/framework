@@ -286,7 +286,7 @@ final class Factory implements FactoryInterface
         array $parameters = [],
         Stringable|string|null $context = null
     ): mixed {
-        $parent = $this->scope->getParent();
+        $parent = $this->scope->getParentFactory();
 
         if ($parent !== null) {
             try {
