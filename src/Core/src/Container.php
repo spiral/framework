@@ -106,7 +106,7 @@ final class Container implements
     }
 
     /**
-     * @param string|null $context Related to parameter caused injection if any.
+     * @param \Stringable|string|null $context Related to parameter caused injection if any.
      *
      * @throws ContainerException
      * @throws \Throwable
@@ -130,7 +130,7 @@ final class Container implements
      * @template T
      *
      * @param class-string<T>|string|Autowire $id
-     * @param string|null $context Call context.
+     * @param \Stringable|string|null $context Call context.
      *
      * @return ($id is class-string ? T : mixed)
      *

@@ -294,6 +294,7 @@ final class Factory implements FactoryInterface
                     'current scope' => $this->scope->getScopeName(),
                     'jump to parent scope' => $this->scope->getParentScope()->getScopeName(),
                 ]);
+                /** @psalm-suppress TooManyArguments */
                 return $parent->make($alias, $parameters, $context);
             } catch (BadScopeException $e) {
                 if ($this->scope->getScopeName() !== $e->getScope()) {
