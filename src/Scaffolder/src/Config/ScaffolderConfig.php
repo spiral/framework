@@ -44,8 +44,8 @@ class ScaffolderConfig extends InjectableConfig
     public function getDeclarations(): array
     {
         return \array_keys($this->config['defaults']['declarations'] ?? []) + \array_keys(
-                $this->config['declarations'],
-            );
+            $this->config['declarations'],
+        );
     }
 
     /**
@@ -137,6 +137,19 @@ class ScaffolderConfig extends InjectableConfig
     }
 
     /**
+     * Get declaration options by element name.
+     *
+     * @param non-empty-string $element
+     */
+    public function getDeclaration(string $element): array
+    {
+        $default = $this->config['defaults']['declarations'][$element] ?? [];
+        $declaration = $this->config['declarations'][$element] ?? [];
+
+        return $declaration + $default;
+    }
+
+    /**
      * @param non-empty-string $element
      */
     private function elementPostfix(string $element): string
@@ -220,18 +233,5 @@ class ScaffolderConfig extends InjectableConfig
         return (new InflectorFactory())
             ->build()
             ->classify($name);
-    }
-
-    /**
-     * Get declaration options by element name.
-     *
-     * @param non-empty-string $element
-     */
-    public function getDeclaration(string $element): array
-    {
-        $default = $this->config['defaults']['declarations'][$element] ?? [];
-        $declaration = $this->config['declarations'][$element] ?? [];
-
-        return $declaration + $default;
     }
 }
