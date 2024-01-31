@@ -20,6 +20,8 @@ interface FactoryInterface
      *
      * @param class-string<T>|string $alias
      * @param array $parameters Parameters to construct new class.
+     * @psalm \Stringable|string|null $context Related to parameter caused injection if any.
+     *        Will be added in the signature {@since 4.0.0}
      *
      * @return T
      * @psalm-return ($alias is class-string ? T : mixed)

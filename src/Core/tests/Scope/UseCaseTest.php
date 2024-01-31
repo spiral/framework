@@ -6,6 +6,8 @@ namespace Spiral\Tests\Core\Scope;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Attribute\Proxy;
+use Spiral\Core\Config\Scalar;
 use Spiral\Core\Config\Shared;
 use Spiral\Core\Container;
 use Spiral\Core\Scope;
@@ -290,6 +292,38 @@ final class UseCaseTest extends BaseTestCase
         });
 
         $root->make('foo');
+    }
+
+    /**
+     * The Current scope container mustn't be changed in a resolving context (through internal calls)
+     */
+    public function testCurrentScopeInFactory(): void
+    {
+        $root = new Container();
+        // Check the current scope is `foo`
+        $root->bind('isFoo', new Scalar(false));
+        $root->getBinder('foo')->bind('isFoo', new Scalar(true));
+
+        $root->bind('foo', function (#[Proxy] ContainerInterface $c, ContainerInterface $r) use ($root) {
+            // Direct
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertNotSame($root, \Spiral\Core\ContainerScope::getContainer());
+
+            // Not a proxy
+            self::assertSame($root, $r);
+            self::assertFalse($r->get('isFoo'));
+
+            // Via proxy
+            self::assertTrue($c->get('isFoo'));
+        });
+
+        $root->runScope(
+            new Scope('foo'),
+            function (ContainerInterface $c) {
+                self::assertTrue($c->get('isFoo'));
+                $c->get('foo');
+            }
+        );
     }
 
     public function testHasInParentScope(): void

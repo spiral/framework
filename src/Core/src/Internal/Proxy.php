@@ -12,7 +12,7 @@ use Spiral\Core\Internal\Proxy\ProxyClassRenderer;
  */
 final class Proxy
 {
-    /** @var array<class-string, class-string> */
+    /** @var array<non-empty-string, class-string> */
     private static array $classes = [];
 
     /**
