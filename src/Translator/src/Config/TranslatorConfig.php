@@ -102,10 +102,17 @@ final class TranslatorConfig extends InjectableConfig
     public function getLocaleDirectory(string $locale, ?string $directory = null): string
     {
         if ($directory !== null) {
-            return \rtrim($directory, '/') . '/' . $locale . '/';
+            return \rtrim($directory, \DIRECTORY_SEPARATOR) 
+                . \DIRECTORY_SEPARATOR 
+                . $locale 
+                . \DIRECTORY_SEPARATOR;
         }
 
-        return \trim($this->getLocalesDirectory(), '/') . '/' . $locale . '/';
+        return \DIRECTORY_SEPARATOR 
+            . \trim($this->getLocalesDirectory(), \DIRECTORY_SEPARATOR)
+            . \DIRECTORY_SEPARATOR 
+            . $locale 
+            . \DIRECTORY_SEPARATOR;
     }
 
     /**
