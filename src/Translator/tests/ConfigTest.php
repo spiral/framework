@@ -101,6 +101,15 @@ class ConfigTest extends TestCase
         $this->assertSame('directory/en/', $config->getLocaleDirectory('en', 'directory/'));
     }
 
+    public function testLocaleDirectoryLeadingSlash(): void
+    {
+        $config = new TranslatorConfig([
+            'directory' => '/directory/locale'
+        ]);
+
+        $this->assertSame('/directory/locale/en/', $config->getLocaleDirectory('en'));
+    }
+
     public function testDomains(): void
     {
         $config = new TranslatorConfig([

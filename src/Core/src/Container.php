@@ -110,7 +110,7 @@ final class Container implements
     }
 
     /**
-     * @param string|null $context Related to parameter caused injection if any.
+     * @param \Stringable|string|null $context Related to parameter caused injection if any.
      *
      * @throws ContainerException
      * @throws \Throwable
@@ -134,7 +134,7 @@ final class Container implements
      * @template T
      *
      * @param class-string<T>|string|Autowire $id
-     * @param string|null $context Call context.
+     * @param \Stringable|string|null $context Call context.
      *
      * @return ($id is class-string ? T : mixed)
      *
@@ -388,7 +388,7 @@ final class Container implements
         $container = new self($this->config, $config->name);
 
         // Configure scope
-        $container->scope->setParent($this, $this->scope);
+        $container->scope->setParent($this, $this->scope, $this->factory);
 
         // Add specific bindings
         foreach ($config->bindings as $alias => $resolver) {
