@@ -90,7 +90,7 @@ final class Factory implements FactoryInterface
             return match ($binding::class) {
                 Config\Alias::class => $this->resolveAlias($binding, $alias, $context, $parameters),
                 Config\Proxy::class,
-                Config\DeprecationProxy::class => $this->resolveProxy($binding, $alias, $context, $parameters),
+                Config\DeprecationProxy::class => $this->resolveProxy($binding, $alias, $context),
                 Config\Autowire::class => $this->resolveAutowire($binding, $alias, $context, $parameters),
                 Config\DeferredFactory::class,
                 Config\Factory::class => $this->resolveFactory($binding, $alias, $context, $parameters),
@@ -193,15 +193,11 @@ final class Factory implements FactoryInterface
         return $result;
     }
 
-    private function resolveProxy(
-        Config\Proxy $binding,
-        string $alias,
-        Stringable|string|null $context,
-        array $arguments,
-    ): mixed {
+    private function resolveProxy(Config\Proxy $binding, string $alias, Stringable|string|null $context): mixed
+    {
         $result = Proxy::create(new \ReflectionClass($binding->getInterface()), $context, new Attribute\Proxy());
 
-        if ($binding->singleton && $arguments === []) {
+        if ($binding->singleton) {
             $this->state->singletons[$alias] = $result;
         }
 

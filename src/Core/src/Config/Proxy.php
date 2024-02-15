@@ -13,6 +13,9 @@ class Proxy extends Binding
         protected readonly string $interface,
         public readonly bool $singleton = false,
     ) {
+        if (!\interface_exists($interface)) {
+            throw new \InvalidArgumentException(\sprintf('Interface `%s` does not exist.', $interface));
+        }
     }
 
     public function __toString(): string

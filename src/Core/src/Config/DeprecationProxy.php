@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Config;
 
+/**
+ * @internal
+ */
 final class DeprecationProxy extends Proxy
 {
     /**
