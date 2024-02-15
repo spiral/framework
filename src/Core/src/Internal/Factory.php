@@ -372,7 +372,14 @@ final class Factory implements FactoryInterface
         $ctx->reflection = new \ReflectionClass($instance);
         $scopeName = ($ctx->reflection->getAttributes(ScopeAttribute::class)[0] ?? null)?->newInstance()->name;
         if ($scopeName !== null && $scopeName !== $this->scope->getScopeName()) {
-            throw new BadScopeException($scopeName, $instance::class);
+            $parent = $this->scope->getParentScope();
+            while ($parent !== null) {
+                if ($correctScope = $parent->getScopeName() === $scopeName) {
+                    break;
+                }
+                $parent = $parent->getParentScope();
+            }
+            ($correctScope ?? false) === true or throw new BadScopeException($scopeName, $instance::class);
         }
 
         return $arguments === []
