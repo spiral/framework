@@ -314,6 +314,21 @@ final class ProxyTest extends TestCase
         new Config\DeprecationProxy(interface: EmptyInterface::class, scope: $scope, version: $version);
     }
 
+    public function testProxyConfigToString(): void
+    {
+        $proxy = new Config\Proxy(EmptyInterface::class);
+
+        $this->assertSame(\sprintf('Proxy to `%s`', EmptyInterface::class), (string) $proxy);
+    }
+
+    public function testProxyConfigNotInterfaceException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('Interface `%s` does not exist.', \stdClass::class));
+
+        new Config\Proxy(\stdClass::class);
+    }
+
     public static function invalidDeprecationProxyArgsDataProvider(): \Traversable
     {
         yield [null, '4.0'];
