@@ -15,16 +15,16 @@ class Proxy extends Binding
     ) {
     }
 
+    public function __toString(): string
+    {
+        return \sprintf('Proxy to `%s`', $this->interface);
+    }
+
     /**
      * @return class-string
      */
     public function getInterface(): string
     {
         return $this->interface;
-    }
-
-    public function __toString(): string
-    {
-        return \sprintf('Proxy to `%s`', $this->interface);
     }
 }
