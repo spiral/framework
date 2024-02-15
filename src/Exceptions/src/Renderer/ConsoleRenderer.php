@@ -41,7 +41,7 @@ class ConsoleRenderer extends AbstractRenderer
     private bool $colorsSupport;
 
     /**
-     * @param bool|resource $stream
+     * @param bool|resource|null $stream
      */
     public function __construct(mixed $stream = null)
     {

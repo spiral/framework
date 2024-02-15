@@ -43,6 +43,33 @@ final class ScopeAttributeTest extends BaseTestCase
         }, name: 'foo');
     }
 
+    public function testNamedScopeResolveFromParentScope(): void
+    {
+        $root = new Container();
+        $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
+
+        $root->runScoped(static function (Container $fooScope) {
+            $fooScope->runScoped(static function (Container $container) {
+                self::assertInstanceOf(AttrScopeFoo::class, $container->get('binding'));
+            }, name: 'bar');
+        }, name: 'foo');
+    }
+
+    public function testBadScopeExceptionAllParentNamedScopesNotContainsNeededScope(): void
+    {
+        self::expectException(BadScopeException::class);
+        self::expectExceptionMessage('`foo`');
+
+        $root = new Container();
+        $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
+
+        $root->runScoped(static function (Container $fooScope) {
+            $fooScope->runScoped(static function (Container $container) {
+                self::assertInstanceOf(AttrScopeFoo::class, $container->get('binding'));
+            }, name: 'bar');
+        }, name: 'baz');
+    }
+
     /**
      * Request a dependency from a correct scope using alias but there is no any binding for this alias in the scope.
      * The binding can be in the parent scope, but it doesn't matter.
