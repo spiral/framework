@@ -13,7 +13,7 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class PaginationBootloaderTest extends BaseTestCase
 {
-    #[TestScope(Spiral::Http)]
+    #[TestScope(Spiral::HttpRequest)]
     public function testPaginationProviderInterfaceBinding(): void
     {
         $this->assertContainerBoundAsSingleton(PaginationProviderInterface::class, PaginationFactory::class);
@@ -24,7 +24,7 @@ final class PaginationBootloaderTest extends BaseTestCase
     {
         \set_error_handler(static function (int $errno, string $error): void {
             self::assertSame(\sprintf(
-                'Using `%s` outside of the `http` scope is deprecated and will be impossible in version 4.0.',
+                'Using `%s` outside of the `http.request` scope is deprecated and will be impossible in version 4.0.',
                 PaginationProviderInterface::class
             ), $error);
         });

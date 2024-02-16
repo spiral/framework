@@ -17,7 +17,7 @@ use Spiral\Pagination\PaginatorInterface;
 /**
  * Paginators factory binded to active request scope in order to select page number.
  */
-#[Scope(Spiral::Http)]
+#[Scope(Spiral::HttpRequest)]
 final class PaginationFactory implements PaginationProviderInterface
 {
     public function __construct(

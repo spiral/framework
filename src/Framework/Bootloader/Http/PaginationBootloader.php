@@ -28,12 +28,12 @@ final class PaginationBootloader extends Bootloader
     public function defineSingletons(): array
     {
         $this->binder
-            ->getBinder(Spiral::Http)
+            ->getBinder(Spiral::HttpRequest)
             ->bindSingleton(PaginationProviderInterface::class, PaginationFactory::class);
 
         $this->binder->bind(
             PaginationProviderInterface::class,
-            new DeprecationProxy(PaginationProviderInterface::class, true, Spiral::Http, '4.0')
+            new DeprecationProxy(PaginationProviderInterface::class, true, Spiral::HttpRequest, '4.0')
         );
 
         return [];

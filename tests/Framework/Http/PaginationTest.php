@@ -18,6 +18,7 @@ final class PaginationTest extends HttpTestCase
         $this->fakeHttp()->get('/paginate')->assertBodySame('1');
     }
 
+    #[TestScope(Spiral::HttpRequest)]
     public function testPaginateError(): void
     {
         $this->expectException(ScopeException::class);
