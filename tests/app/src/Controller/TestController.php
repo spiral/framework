@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\App\Request\BadRequest;
 use Spiral\App\Request\TestRequest;
 use Spiral\Filter\InputScope;
-use Spiral\Http\PaginationFactory;
+use Spiral\Pagination\PaginationProviderInterface;
 use Spiral\Pagination\Paginator;
 use Spiral\Router\RouteInterface;
 use Spiral\Translator\Traits\TranslatorTrait;
@@ -22,7 +22,7 @@ class TestController
         return "Hello, {$name}.";
     }
 
-    public function paginate(PaginationFactory $paginationFactory)
+    public function paginate(PaginationProviderInterface $paginationFactory): int
     {
         /** @var Paginator $p */
         $p = $paginationFactory->createPaginator('page');

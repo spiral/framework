@@ -12,6 +12,7 @@ use Spiral\Core\Config;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Scope;
+use Spiral\Tests\Core\Fixtures\ScopeEnum;
 use Spiral\Tests\Core\Internal\Proxy\Stub\EmptyInterface;
 use Spiral\Tests\Core\Internal\Proxy\Stub\MockInterface;
 use Spiral\Tests\Core\Internal\Proxy\Stub\MockInterfaceImpl;
@@ -267,6 +268,35 @@ final class ProxyTest extends TestCase
             interface: $interface,
             message: \sprintf('Using `%s` impossible', $interface),
         ));
+
+        $proxy = $root->get($interface);
+        $this->assertInstanceOf($interface, $proxy);
+
+        $root->runScope(new Scope('foo'), static function () use ($proxy) {
+            $proxy->bar(name: 'foo'); // Possible to run
+            self::assertSame('foo', $proxy->baz('foo', 42));
+            self::assertSame(123, $proxy->qux(age: 123));
+            self::assertSame(69, $proxy->space(test age: 69));
+        });
+
+        \restore_error_handler();
+    }
+
+    #[DataProvider('interfacesProvider')]
+    #[WithoutErrorHandler]
+    public function testDeprecationProxyConfigWithEnumScope(string $interface): void
+    {
+        \set_error_handler(static function (int $errno, string $error) use ($interface): void {
+            self::assertSame(
+                \sprintf('Using `%s` outside of the `a` scope is deprecated and will be ' .
+                    'impossible in version 4.0.', $interface),
+                $error
+            );
+        });
+
+        $root = new Container();
+        $root->getBinder('foo')->bindSingleton($interface, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton($interface, new Config\DeprecationProxy($interface, true, ScopeEnum::A, '4.0'));
 
         $proxy = $root->get($interface);
         $this->assertInstanceOf($interface, $proxy);
