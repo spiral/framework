@@ -6,8 +6,10 @@ namespace Spiral\Http;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Attribute\Scope;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Core\FactoryInterface;
+use Spiral\Framework\Spiral;
 use Spiral\Pagination\PaginationProviderInterface;
 use Spiral\Pagination\Paginator;
 use Spiral\Pagination\PaginatorInterface;
@@ -15,6 +17,7 @@ use Spiral\Pagination\PaginatorInterface;
 /**
  * Paginators factory binded to active request scope in order to select page number.
  */
+#[Scope(Spiral::HttpRequest)]
 final class PaginationFactory implements PaginationProviderInterface
 {
     public function __construct(

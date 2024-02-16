@@ -34,7 +34,7 @@ final class DeprecationProxy extends Proxy
         $message = $this->message ?? \sprintf(
             'Using `%s` outside of the `%s` scope is deprecated and will be impossible in version %s.',
             $this->interface,
-            $this->scope,
+            $this->scope instanceof \BackedEnum ? $this->scope->value : $this->scope,
             $this->version
         );
 
