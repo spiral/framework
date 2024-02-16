@@ -8,11 +8,11 @@ use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Encrypter\EncrypterInterface;
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
-#[TestScope(ScopeName::Http)]
+#[TestScope(Spiral::Http)]
 final class CookiesTest extends HttpTestCase
 {
     public const ENV = [

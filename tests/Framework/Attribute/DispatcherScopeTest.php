@@ -11,7 +11,7 @@ use Spiral\App\Dispatcher\DispatcherWithStringScope;
 use Spiral\App\Dispatcher\Scope;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Core\Container;
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class DispatcherScopeTest extends BaseTestCase
@@ -33,7 +33,7 @@ final class DispatcherScopeTest extends BaseTestCase
 
     public static function dispatchersDataProvider(): \Traversable
     {
-        yield [DispatcherWithScopeName::class, ScopeName::Console];
+        yield [DispatcherWithScopeName::class, Spiral::Console];
         yield [DispatcherWithCustomEnum::class, Scope::Custom];
         yield [DispatcherWithStringScope::class, 'test'];
     }

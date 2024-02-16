@@ -16,7 +16,7 @@ use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\InvokerInterface;
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
@@ -44,7 +44,7 @@ final class HttpBootloader extends Bootloader
 
     public function defineSingletons(): array
     {
-        $this->binder->getBinder(ScopeName::Http)->bindSingleton(Http::class, [self::class, 'httpCore']);
+        $this->binder->getBinder(Spiral::Http)->bindSingleton(Http::class, [self::class, 'httpCore']);
 
         /**
          * @deprecated since v3.12. Will be removed in v4.0.
@@ -55,7 +55,7 @@ final class HttpBootloader extends Bootloader
                 @trigger_error(\sprintf(
                     'Using `%s` outside of the `%s` scope is deprecated and will be impossible in version 4.0.',
                     Http::class,
-                    ScopeName::Http->value
+                    Spiral::Http->value
                 ), \E_USER_DEPRECATED);
 
                 return $invoker->invoke([self::class, 'httpCore'], ['container' => $container]);

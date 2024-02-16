@@ -14,8 +14,7 @@ use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Scope;
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Testing\Attribute\TestScope;
@@ -23,7 +22,7 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class HttpBootloaderTest extends BaseTestCase
 {
-    #[TestScope(ScopeName::Http)]
+    #[TestScope(Spiral::Http)]
     public function testHttpBinding(): void
     {
         $this->assertContainerBoundAsSingleton(Http::class, Http::class);

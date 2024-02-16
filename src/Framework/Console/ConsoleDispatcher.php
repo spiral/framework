@@ -12,7 +12,7 @@ use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\Logger\DebugListener;
 use Spiral\Exceptions\ExceptionHandlerInterface;
 use Spiral\Exceptions\Verbosity;
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -22,7 +22,7 @@ use Throwable;
 /**
  * Manages Console commands and exception. Lazy loads console service.
  */
-#[DispatcherScope(scope: ScopeName::Console)]
+#[DispatcherScope(scope: Spiral::Console)]
 final class ConsoleDispatcher implements DispatcherInterface
 {
     public function __construct(

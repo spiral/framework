@@ -11,7 +11,6 @@ use Spiral\Core\Config\Scalar;
 use Spiral\Core\Config\Shared;
 use Spiral\Core\Container;
 use Spiral\Core\Scope;
-use Spiral\Framework\ScopeName;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
@@ -328,13 +327,12 @@ final class UseCaseTest extends BaseTestCase
         );
     }
 
-    #[DataProvider('scopeEnumDataProvider')]
-    public function testScopeWithEnum(\BackedEnum $scope): void
+    public function testScopeWithEnum(): void
     {
         $root = new Container();
-        $root->getBinder($scope)->bindSingleton('foo', SampleClass::class);
+        $root->getBinder(ScopeEnum::A)->bindSingleton('foo', SampleClass::class);
 
-        $root->runScope(new Scope($scope), function (Container $container) {
+        $root->runScope(new Scope(ScopeEnum::A), function (Container $container) {
             $this->assertTrue($container->has('foo'));
             $this->assertInstanceOf(SampleClass::class, $container->get('foo'));
         });
@@ -402,11 +400,5 @@ final class UseCaseTest extends BaseTestCase
                 $this->assertFalse($container->has('otherClass'));
             });
         });
-    }
-
-    public static function scopeEnumDataProvider(): \Traversable
-    {
-        yield [ScopeName::HttpRequest, 'http.request'];
-        yield [ScopeEnum::A, 'a'];
     }
 }
