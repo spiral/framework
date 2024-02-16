@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core;
 
 use Spiral\Core\Exception\ControllerException;
-use Spiral\Framework\ScopeName;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Testing\TestCase;
 use Spiral\Tests\Core\Fixtures\CleanController;
 use Spiral\Tests\Core\Fixtures\DummyController;
 use Spiral\Tests\Core\Fixtures\SampleCore;
 
-#[TestScope(ScopeName::Http)]
+#[TestScope('http')]
 final class CoreTest extends TestCase
 {
     public function testCallAction(): void

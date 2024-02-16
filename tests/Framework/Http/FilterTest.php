@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
-#[TestScope(ScopeName::Http)]
+#[TestScope(Spiral::Http)]
 final class FilterTest extends HttpTestCase
 {
     public function testValid(): void

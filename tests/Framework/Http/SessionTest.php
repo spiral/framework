@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Spiral\Session\SessionInterface;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
-#[TestScope(ScopeName::Http)]
+#[TestScope(Spiral::Http)]
 final class SessionTest extends HttpTestCase
 {
     public function setUp(): void
