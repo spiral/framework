@@ -6,15 +6,17 @@ namespace Spiral\Auth;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Exception\ScopeException;
 
 /**
  * Provides global access to temporary authentication scope.
+ * @deprecated Use {@see AuthContextInterface} instead. Will be removed in v4.0.
  */
 final class AuthScope implements AuthContextInterface
 {
     public function __construct(
-        private readonly ContainerInterface $container
+        #[Proxy] private readonly ContainerInterface $container
     ) {
     }
 

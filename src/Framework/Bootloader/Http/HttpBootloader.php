@@ -18,6 +18,7 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\InvokerInterface;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\CurrentRequest;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
@@ -45,6 +46,7 @@ final class HttpBootloader extends Bootloader
     public function defineSingletons(): array
     {
         $this->binder->getBinder(Spiral::Http)->bindSingleton(Http::class, [self::class, 'httpCore']);
+        $this->binder->getBinder(Spiral::Http)->bindSingleton(CurrentRequest::class, CurrentRequest::class);
 
         /**
          * @deprecated since v3.12. Will be removed in v4.0.

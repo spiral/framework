@@ -12,7 +12,9 @@ use Psr\Http\Message\UriFactoryInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\Scope;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\CurrentRequest;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 use Spiral\Router\Loader\DelegatingLoader;
@@ -74,7 +76,6 @@ abstract class BaseTestCase extends TestCase
     private function initContainer(): void
     {
         $this->container = new Container();
-        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
         $this->container->bind(ResponseFactoryInterface::class, new ResponseFactory(new HttpConfig(['headers' => []])));
         $this->container->bind(UriFactoryInterface::class, new UriFactory());
         $this->container->bind(
@@ -90,11 +91,24 @@ abstract class BaseTestCase extends TestCase
         $this->container->bind(CoreInterface::class, Core::class);
         $this->container->bindSingleton(GroupRegistry::class, GroupRegistry::class);
         $this->container->bindSingleton(RoutingConfigurator::class, RoutingConfigurator::class);
+        $this->container
+            ->getBinder('http')
+            ->bindSingleton(CurrentRequest::class, CurrentRequest::class);
     }
 
     private function initRouter(): void
     {
         $this->router = $this->makeRouter();
         $this->container->bindSingleton(RouterInterface::class, $this->router);
+    }
+
+    protected function runTest(): mixed
+    {
+        return $this->container->runScope(new Scope('http'), function (Container $container): mixed {
+            $this->container = $container;
+            $this->container->bind(TracerInterface::class, new NullTracer($this->container));
+
+            return parent::runTest();
+        });
     }
 }

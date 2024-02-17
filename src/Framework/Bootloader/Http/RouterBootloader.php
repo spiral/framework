@@ -12,10 +12,12 @@ use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Attribute\Proxy;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Framework\Kernel;
+use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
@@ -35,26 +37,36 @@ use Spiral\Telemetry\TracerInterface;
 
 final class RouterBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        HttpBootloader::class,
-        TelemetryBootloader::class,
-    ];
-
-    protected const SINGLETONS = [
-        CoreInterface::class => Core::class,
-        RouterInterface::class => [self::class, 'router'],
-        RouteInterface::class => [self::class, 'route'],
-        RequestHandlerInterface::class => RouterInterface::class,
-        LoaderInterface::class => DelegatingLoader::class,
-        LoaderRegistryInterface::class => [self::class, 'initRegistry'],
-        GroupRegistry::class => GroupRegistry::class,
-        RoutingConfigurator::class => RoutingConfigurator::class,
-        RoutePatternRegistryInterface::class => DefaultPatternRegistry::class,
-    ];
-
     public function __construct(
-        private readonly ConfiguratorInterface $config
+        private readonly ConfiguratorInterface $config,
+        private readonly BinderInterface $binder,
     ) {
+    }
+
+    public function defineDependencies(): array
+    {
+        return [
+            HttpBootloader::class,
+            TelemetryBootloader::class,
+        ];
+    }
+
+    public function defineSingletons(): array
+    {
+        $this->binder
+            ->getBinder(Spiral::HttpRequest)
+            ->bindSingleton(RouteInterface::class, [self::class, 'route']);
+
+        return [
+            CoreInterface::class => Core::class,
+            RouterInterface::class => [self::class, 'router'],
+            RequestHandlerInterface::class => RouterInterface::class,
+            LoaderInterface::class => DelegatingLoader::class,
+            LoaderRegistryInterface::class => [self::class, 'initRegistry'],
+            GroupRegistry::class => GroupRegistry::class,
+            RoutingConfigurator::class => RoutingConfigurator::class,
+            RoutePatternRegistryInterface::class => DefaultPatternRegistry::class,
+        ];
     }
 
     public function boot(AbstractKernel $kernel): void

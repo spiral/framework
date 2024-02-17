@@ -7,6 +7,7 @@ namespace Spiral\Cookies;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
 
@@ -17,7 +18,7 @@ use Spiral\Core\Exception\ScopeException;
 final class CookieManager
 {
     public function __construct(
-        private readonly ContainerInterface $container
+        #[Proxy] private readonly ContainerInterface $container,
     ) {
     }
 

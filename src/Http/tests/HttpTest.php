@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Http;
 
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Core\Container;
-use Spiral\Core\ContainerScope;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\RequestHandled;
@@ -19,21 +15,12 @@ use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerFactoryInterface;
-use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 
-class HttpTest extends TestCase
+final class HttpTest extends ScopedTestCase
 {
     use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private Container $container;
-
-    public function setUp(): void
-    {
-        $this->container = new Container();
-        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
-    }
 
     public function testGetPipeline(): void
     {
@@ -223,20 +210,6 @@ class HttpTest extends TestCase
         $this->assertSame('hello?', (string)$response->getBody());
     }
 
-    public function testScope(): void
-    {
-        $core = $this->getCore();
-
-        $core->setHandler(function () {
-            $this->assertTrue(ContainerScope::getContainer()->has(ServerRequestInterface::class));
-
-            return 'OK';
-        });
-
-        $response = $core->handle(new ServerRequest('GET', ''));
-        $this->assertSame('OK', (string)$response->getBody());
-    }
-
     public function testPassException(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -280,7 +253,7 @@ class HttpTest extends TestCase
 
         $http = new Http(
             $config,
-            new Pipeline($this->container),
+            new Pipeline($this->container, $this->container),
             new ResponseFactory($config),
             $this->container,
             $tracerFactory = m::mock(TracerFactoryInterface::class),
@@ -293,7 +266,7 @@ class HttpTest extends TestCase
         $tracerFactory->shouldReceive('make')
             ->once()
             ->with(['foo' => ['bar']])
-            ->andReturn($tracer = new NullTracer());
+            ->andReturn(new NullTracer($this->container));
 
         $response = $http->handle($request);
         $this->assertSame('hello world', (string)$response->getBody());
@@ -305,7 +278,7 @@ class HttpTest extends TestCase
 
         return new Http(
             $config,
-            new Pipeline($this->container),
+            new Pipeline($this->container, $this->container),
             new ResponseFactory($config),
             $this->container
         );

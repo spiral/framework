@@ -7,7 +7,7 @@ namespace Spiral\Session;
 final class SectionScope implements SessionSectionInterface
 {
     public function __construct(
-        private readonly SessionScope $session,
+        private readonly SessionInterface $session,
         private readonly string $name
     ) {
     }

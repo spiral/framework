@@ -7,12 +7,11 @@ namespace Spiral\Tests\Cookies;
 use Defuse\Crypto\Key;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
 use Spiral\Cookies\Middleware\CookiesMiddleware;
 use Spiral\Core\Container;
-use Spiral\Core\ContainerScope;
+use Spiral\Core\Scope;
 use Spiral\Encrypter\Config\EncrypterConfig;
 use Spiral\Encrypter\Encrypter;
 use Spiral\Encrypter\EncrypterFactory;
@@ -25,14 +24,13 @@ use Nyholm\Psr7\ServerRequest;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerInterface;
 
-class CookiesTest extends TestCase
+final class CookiesTest extends TestCase
 {
-    private $container;
+    private Container $container;
 
     public function setUp(): void
     {
         $this->container = new Container();
-        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
         $this->container->bind(CookiesConfig::class, new CookiesConfig([
             'domain'   => '.%s',
             'method'   => CookiesConfig::COOKIE_ENCRYPT,
@@ -54,18 +52,7 @@ class CookiesTest extends TestCase
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            $this->assertInstanceOf(
-                CookieQueue::class,
-                ContainerScope::getContainer()->get(ServerRequestInterface::class)
-                    ->getAttribute(CookieQueue::ATTRIBUTE)
-            );
-
-            $this->assertSame(
-                ContainerScope::getContainer()->get(ServerRequestInterface::class)
-                    ->getAttribute(CookieQueue::ATTRIBUTE),
-                $r->getAttribute(CookieQueue::ATTRIBUTE)
-            );
-
+            $this->assertInstanceOf(CookieQueue::class, $r->getAttribute(CookieQueue::ATTRIBUTE));
             return 'all good';
         });
 
@@ -78,8 +65,7 @@ class CookiesTest extends TestCase
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            ContainerScope::getContainer()->get(ServerRequestInterface::class)
-                ->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
+            $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
         });
@@ -100,8 +86,7 @@ class CookiesTest extends TestCase
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            ContainerScope::getContainer()->get(ServerRequestInterface::class)
-                ->getAttribute(CookieQueue::ATTRIBUTE)->set('PHPSESSID', 'value');
+            $r->getAttribute(CookieQueue::ATTRIBUTE)->set('PHPSESSID', 'value');
 
             return 'all good';
         });
@@ -173,11 +158,9 @@ class CookiesTest extends TestCase
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            ContainerScope::getContainer()->get(ServerRequestInterface::class)
-                ->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
+            $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
-            ContainerScope::getContainer()->get(ServerRequestInterface::class)
-                ->getAttribute(CookieQueue::ATTRIBUTE)->delete('name');
+            $r->getAttribute(CookieQueue::ATTRIBUTE)->delete('name');
 
             return 'all good';
         });
@@ -193,7 +176,7 @@ class CookiesTest extends TestCase
 
     public function testUnprotected(): void
     {
-        $this->container->bind(CookiesConfig::class, new CookiesConfig([
+        $this->container->getBinder('root')->bind(CookiesConfig::class, new CookiesConfig([
             'domain'   => '.%s',
             'method'   => CookiesConfig::COOKIE_UNPROTECTED,
             'excluded' => ['PHPSESSID', 'csrf-token']
@@ -201,8 +184,7 @@ class CookiesTest extends TestCase
 
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            ContainerScope::getContainer()->get(ServerRequestInterface::class)
-                ->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
+            $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
         });
@@ -218,7 +200,7 @@ class CookiesTest extends TestCase
 
     public function testGetUnprotected(): void
     {
-        $this->container->bind(CookiesConfig::class, new CookiesConfig([
+        $this->container->getBinder('root')->bind(CookiesConfig::class, new CookiesConfig([
             'domain'   => '.%s',
             'method'   => CookiesConfig::COOKIE_UNPROTECTED,
             'excluded' => ['PHPSESSID', 'csrf-token']
@@ -250,8 +232,7 @@ class CookiesTest extends TestCase
 
         $core = $this->httpCore([CookiesMiddleware::class]);
         $core->setHandler(function ($r) {
-            ContainerScope::getContainer()->get(ServerRequestInterface::class)
-                ->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
+            $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
         });
@@ -284,7 +265,7 @@ class CookiesTest extends TestCase
 
         return new Http(
             $config,
-            new Pipeline($this->container),
+            new Pipeline($this->container, $this->container),
             new TestResponseFactory($config),
             $this->container
         );
@@ -328,5 +309,14 @@ class CookiesTest extends TestCase
         }
 
         return $result;
+    }
+
+    protected function runTest(): mixed
+    {
+        return $this->container->runScope(new Scope('http'), function (Container $container): mixed {
+            $this->container = $container;
+            $this->container->bind(TracerInterface::class, new NullTracer($this->container));
+            return parent::runTest();
+        });
     }
 }

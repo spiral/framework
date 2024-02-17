@@ -11,21 +11,27 @@ use Spiral\Config\Patch\Append;
 use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
 use Spiral\Core\Attribute\Singleton;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Exception\ScopeException;
+use Spiral\Framework\Spiral;
 
 #[Singleton]
 final class CookiesBootloader extends Bootloader
 {
-    protected const BINDINGS = [
-        CookieQueue::class => [self::class, 'cookieQueue'],
-    ];
-
     public function __construct(
-        private readonly ConfiguratorInterface $config
+        private readonly ConfiguratorInterface $config,
+        private readonly BinderInterface $binder,
     ) {
     }
 
-    public function init(HttpBootloader $http): void
+    public function defineBindings(): array
+    {
+        $this->binder->getBinder(Spiral::HttpRequest)->bind(CookieQueue::class, [self::class, 'cookieQueue']);
+
+        return [];
+    }
+
+    public function init(): void
     {
         $this->config->setDefaults(
             CookiesConfig::CONFIG,
@@ -45,9 +51,6 @@ final class CookiesBootloader extends Bootloader
         $this->config->modify(CookiesConfig::CONFIG, new Append('excluded', null, $cookie));
     }
 
-    /**
-     * @noRector RemoveUnusedPrivateMethodRector
-     */
     private function cookieQueue(ServerRequestInterface $request): CookieQueue
     {
         $cookieQueue = $request->getAttribute(CookieQueue::ATTRIBUTE, null);

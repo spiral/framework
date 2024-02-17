@@ -4,35 +4,23 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\HttpTransportInterface;
 use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
-use Spiral\Core\Container;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
-use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 use Spiral\Tests\Auth\Stub\TestAuthHttpToken;
 
-class HeaderTransportTest extends TestCase
+final class HeaderTransportTest extends ScopedTestCase
 {
-    private Container $container;
-
-    public function setUp(): void
-    {
-        $this->container = new Container();
-        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
-    }
-
     public function testHeaderToken(): void
     {
         $http = $this->getCore(new HeaderTransport());
@@ -168,7 +156,7 @@ class HeaderTransportTest extends TestCase
 
         $http = new Http(
             $config,
-            new Pipeline($this->container),
+            new Pipeline($this->container, $this->container),
             new ResponseFactory($config),
             $this->container
         );

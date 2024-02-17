@@ -20,7 +20,7 @@ use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 use Spiral\Tests\Auth\Stub\TestAuthHttpToken;
 
-class CookieTransportTest extends BaseTestCase
+final class CookieTransportTest extends ScopedTestCase
 {
     public function testCookieToken(): void
     {
@@ -175,7 +175,7 @@ class CookieTransportTest extends BaseTestCase
 
         $http = new Http(
             $config,
-            new Pipeline($this->container),
+            new Pipeline($this->container, $this->container),
             new ResponseFactory($config),
             $this->container
         );

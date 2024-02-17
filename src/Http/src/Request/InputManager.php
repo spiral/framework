@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Http\Config\HttpConfig;
@@ -115,7 +116,7 @@ final class InputManager
 
     public function __construct(
         /** @invisible */
-        private readonly ContainerInterface $container,
+        #[Proxy] private readonly ContainerInterface $container,
         /** @invisible */
         HttpConfig $config = new HttpConfig()
     ) {

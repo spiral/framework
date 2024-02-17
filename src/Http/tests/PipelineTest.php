@@ -4,28 +4,25 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Core\Container;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 
-class PipelineTest extends TestCase
+final class PipelineTest extends ScopedTestCase
 {
     public function testTarget(): void
     {
-        $pipeline = new Pipeline(new Container());
+        $pipeline = new Pipeline($this->container, $this->container);
 
         $handler = new CallableHandler(function () {
             return 'response';
@@ -40,7 +37,7 @@ class PipelineTest extends TestCase
 
     public function testHandle(): void
     {
-        $pipeline = new Pipeline(new Container());
+        $pipeline = new Pipeline($this->container, $this->container);
 
         $handler = new CallableHandler(function () {
             return 'response';
@@ -57,7 +54,7 @@ class PipelineTest extends TestCase
     {
         $this->expectException(PipelineException::class);
 
-        $pipeline = new Pipeline(new Container());
+        $pipeline = new Pipeline($this->container, $this->container);
         $pipeline->handle(new ServerRequest('GET', ''));
     }
 
@@ -80,13 +77,7 @@ class PipelineTest extends TestCase
             ->method('dispatch')
             ->with(new MiddlewareProcessing($request, $middleware));
 
-        $container = new Container();
-
-        $pipeline = new Pipeline(
-            $container,
-            $dispatcher,
-            new NullTracer($container)
-        );
+        $pipeline = new Pipeline($this->container, $this->container, $dispatcher, new NullTracer($this->container));
 
         $pipeline->pushMiddleware($middleware);
 

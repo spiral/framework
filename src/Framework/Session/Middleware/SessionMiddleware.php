@@ -25,6 +25,9 @@ final class SessionMiddleware implements MiddlewareInterface
     // Header set used to sign session
     private const SIGNATURE_HEADERS = ['User-Agent', 'Accept-Language', 'Accept-Encoding'];
 
+    /**
+     * @param ScopeInterface $scope. Deprecated, will be removed in v4.0.
+     */
     public function __construct(
         private readonly SessionConfig $config,
         private readonly HttpConfig $httpConfig,
@@ -46,10 +49,7 @@ final class SessionMiddleware implements MiddlewareInterface
         );
 
         try {
-            $response = $this->scope->runScope(
-                [SessionInterface::class => $session],
-                static fn () => $handler->handle($request->withAttribute(self::ATTRIBUTE, $session))
-            );
+            $response = $handler->handle($request->withAttribute(self::ATTRIBUTE, $session));
         } catch (\Throwable $e) {
             $session->abort();
             throw $e;

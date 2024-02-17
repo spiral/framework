@@ -7,6 +7,7 @@ namespace Framework\Bootloader\Router;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
+use Spiral\Framework\Spiral;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 use Spiral\Router\Loader\DelegatingLoader;
@@ -18,6 +19,7 @@ use Spiral\Router\Registry\RoutePatternRegistryInterface;
 use Spiral\Router\RouteInterface;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class RouterBootloaderTest extends BaseTestCase
@@ -62,6 +64,7 @@ final class RouterBootloaderTest extends BaseTestCase
         $this->assertContainerBoundAsSingleton(RoutePatternRegistryInterface::class, DefaultPatternRegistry::class);
     }
 
+    #[TestScope(Spiral::HttpRequest)]
     public function testRouteInterfaceBinding(): void
     {
         $request = $this->mockContainer(ServerRequestInterface::class);
@@ -73,6 +76,7 @@ final class RouterBootloaderTest extends BaseTestCase
         $this->assertContainerBoundAsSingleton(RouteInterface::class, RouteInterface::class);
     }
 
+    #[TestScope(Spiral::HttpRequest)]
     public function testRouteInterfaceShouldThrowAnExceptionWhenRequestDoesNotContainIt(): void
     {
         $this->expectExceptionMessage('Unable to resolve Route, invalid request scope');

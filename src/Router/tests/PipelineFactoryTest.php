@@ -15,6 +15,7 @@ use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\ScopeInterface;
+use Spiral\Http\CurrentRequest;
 use Spiral\Http\Pipeline;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\PipelineFactory;
@@ -41,7 +42,8 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
     public function testCreatesFromArrayWithPipeline(): void
     {
         $newPipeline = new Pipeline(
-            scope: m::mock(ScopeInterface::class)
+            scope: m::mock(ScopeInterface::class),
+            container: $this->createMock(ContainerInterface::class),
         );
 
         $this->assertSame(
@@ -53,6 +55,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
     public function testCreates(): void
     {
         $container = new Container();
+        $container->bindSingleton(CurrentRequest::class, new CurrentRequest());
 
         $this->factory
             ->shouldReceive('make')
@@ -60,6 +63,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->with(Pipeline::class)
             ->andReturn($p = new Pipeline(
                 $scope = m::mock(ScopeInterface::class),
+                $container,
                 tracer: new NullTracer($container)
             ));
 
@@ -90,16 +94,19 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
         $middleware4->shouldReceive('process')->once()->andReturnUsing($handle);
         $middleware5->shouldReceive('process')->once()->andReturnUsing($handle);
 
-        $scope->shouldReceive('runScope')
-            ->once()
-            ->andReturn($response = m::mock(ResponseInterface::class));
-
+        $response = m::mock(ResponseInterface::class);
         $response
             ->shouldReceive('getHeaderLine')->with('Content-Length')->andReturn('test')
             ->shouldReceive('getStatusCode')->andReturn(200);
 
+        $requestHandler = $this->createMock(RequestHandlerInterface::class);
+        $requestHandler
+            ->expects($this->once())
+            ->method('handle')
+            ->willReturn($response);
+
         $p
-            ->withHandler(m::mock(RequestHandlerInterface::class))
+            ->withHandler($requestHandler)
             ->handle(m::mock(ServerRequestInterface::class));
     }
 
@@ -110,7 +117,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->shouldReceive('make')
             ->once()
             ->with(Pipeline::class)
-            ->andReturn(new Pipeline(m::mock(ScopeInterface::class)));
+            ->andReturn(new Pipeline(m::mock(ScopeInterface::class), $this->container));
 
         $this->expectException(RouteException::class);
         $this->expectExceptionMessage(\sprintf('Invalid middleware `%s`', $type));

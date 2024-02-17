@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
 use Spiral\Core\Exception\ScopeException;
@@ -12,7 +13,7 @@ use Spiral\Framework\Spiral;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
-#[TestScope(Spiral::Http)]
+#[TestScope([Spiral::Http, Spiral::HttpRequest])]
 final class CookiesTest extends HttpTestCase
 {
     public const ENV = [
@@ -40,14 +41,22 @@ final class CookiesTest extends HttpTestCase
 
     public function testHasCookie(): void
     {
-        $this->setHttpHandler(fn (): int => (int)$this->cookies()->has('a'));
+        $this->setHttpHandler(function (ServerRequestInterface $request) {
+            $this->getContainer()->bindSingleton(ServerRequestInterface::class, $request);
+
+            return (int)$this->cookies()->has('a');
+        });
 
         $this->fakeHttp()->get('/')->assertOk()->assertBodySame('0');
     }
 
     public function testHasCookie2(): void
     {
-        $this->setHttpHandler(fn (): int => (int)$this->cookies()->has('a'));
+        $this->setHttpHandler(function (ServerRequestInterface $request) {
+            $this->getContainer()->bindSingleton(ServerRequestInterface::class, $request);
+
+            return (int)$this->cookies()->has('a');
+        });
 
         $this
             ->fakeHttp()
@@ -61,7 +70,11 @@ final class CookiesTest extends HttpTestCase
 
     public function testGetCookie2(): void
     {
-        $this->setHttpHandler(fn (): string => $this->cookies()->get('a'));
+        $this->setHttpHandler(function (ServerRequestInterface $request) {
+            $this->getContainer()->bindSingleton(ServerRequestInterface::class, $request);
+
+            return $this->cookies()->get('a');
+        });
 
         $this
             ->fakeHttp()
@@ -75,7 +88,9 @@ final class CookiesTest extends HttpTestCase
 
     public function testSetCookie(): void
     {
-        $this->setHttpHandler(function (): string {
+        $this->setHttpHandler(function (ServerRequestInterface $request) {
+            $this->getContainer()->bindSingleton(ServerRequestInterface::class, $request);
+
             $this->cookies()->set('a', 'value');
             return 'ok';
         });
@@ -92,7 +107,9 @@ final class CookiesTest extends HttpTestCase
 
     public function testSetCookie2(): void
     {
-        $this->setHttpHandler(function (): string {
+        $this->setHttpHandler(function (ServerRequestInterface $request): string {
+            $this->getContainer()->bindSingleton(ServerRequestInterface::class, $request);
+
             $this->cookies()->schedule(Cookie::create('a', 'value'));
             $this->assertSame([], $this->cookies()->getAll());
             $this->assertCount(1, $this->cookies()->getScheduled());
@@ -112,7 +129,8 @@ final class CookiesTest extends HttpTestCase
 
     public function testDeleteCookie(): void
     {
-        $this->setHttpHandler(function (): string {
+        $this->setHttpHandler(function (ServerRequestInterface $request): string {
+            $this->getContainer()->bindSingleton(ServerRequestInterface::class, $request);
             $this->cookies()->delete('cookie');
             return 'ok';
         });

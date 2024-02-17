@@ -43,7 +43,7 @@ final class HttpAuthBootloaderTest extends BaseTestCase
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
         $configs->setDefaults(AuthConfig::CONFIG, ['storages' => []]);
 
-        $bootloader = new HttpAuthBootloader($configs);
+        $bootloader = new HttpAuthBootloader($configs, $this->getContainer());
         $bootloader->addTokenStorage('foo', 'bar');
 
         $this->assertSame(['foo' => 'bar'], $configs->getConfig(AuthConfig::CONFIG)['storages']);
@@ -54,7 +54,7 @@ final class HttpAuthBootloaderTest extends BaseTestCase
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
         $configs->setDefaults(AuthConfig::CONFIG, ['transports' => []]);
 
-        $bootloader = new HttpAuthBootloader($configs);
+        $bootloader = new HttpAuthBootloader($configs, $this->getContainer());
         $bootloader->addTransport('foo', 'bar');
 
         $this->assertSame(['foo' => 'bar'], $configs->getConfig(AuthConfig::CONFIG)['transports']);

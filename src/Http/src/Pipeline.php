@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Http;
 
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -31,6 +32,7 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
     public function __construct(
         #[Proxy] private readonly ScopeInterface $scope,
+        #[Proxy] private readonly ContainerInterface $container,
         private readonly ?EventDispatcherInterface $dispatcher = null,
         ?TracerInterface $tracer = null
     ) {
@@ -69,7 +71,11 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
             return $this->tracer->trace(
                 name: \sprintf('Middleware processing [%s]', $middleware::class),
-                callback: function (SpanInterface $span) use ($request, $middleware): Response {
+                callback: function (
+                    SpanInterface $span,
+                    CurrentRequest $current
+                ) use ($request, $middleware): Response {
+                    $current->set($request);
                     $response = $middleware->process($request, $this);
 
                     $span
@@ -92,12 +98,8 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             );
         }
 
-        $handler = $this->handler;
+        $this->container->get(CurrentRequest::class)->set($request);
 
-        // TODO: Can we remove this scope?
-        return $this->scope->runScope(
-            [Request::class => $request],
-            static fn (): Response => $handler->handle($request)
-        );
+        return $this->handler->handle($request);
     }
 }

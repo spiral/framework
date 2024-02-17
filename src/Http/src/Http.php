@@ -60,7 +60,9 @@ final class Http implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $callback = function (SpanInterface $span) use ($request): ResponseInterface {
+        $callback = function (SpanInterface $span, CurrentRequest $currentRequest) use ($request): ResponseInterface {
+            $currentRequest->set($request);
+
             $dispatcher = $this->container->has(EventDispatcherInterface::class)
                 ? $this->container->get(EventDispatcherInterface::class)
                 : null;

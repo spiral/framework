@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Core\Container;
+use Spiral\Core\Scope;
 use Spiral\Csrf\Config\CsrfConfig;
 use Spiral\Csrf\Middleware\CsrfFirewall;
 use Spiral\Csrf\Middleware\CsrfMiddleware;
@@ -69,7 +70,7 @@ class CsrfTest extends TestCase
     public function testLengthException(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->container->bind(
+        $this->container->getBinder('root')->bind(
             CsrfConfig::class,
             new CsrfConfig(
                 [
@@ -228,7 +229,7 @@ class CsrfTest extends TestCase
 
         return new Http(
             $config,
-            new Pipeline($this->container),
+            new Pipeline($this->container, $this->container),
             new TestResponseFactory($config),
             $this->container
         );
@@ -285,5 +286,14 @@ class CsrfTest extends TestCase
         }
 
         return $result;
+    }
+
+    protected function runTest(): mixed
+    {
+        return $this->container->runScope(new Scope('http'), function (Container $container): mixed {
+            $this->container = $container;
+
+            return parent::runTest();
+        });
     }
 }

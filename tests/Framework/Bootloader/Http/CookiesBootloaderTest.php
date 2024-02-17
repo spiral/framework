@@ -10,10 +10,13 @@ use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
+use Spiral\Framework\Spiral;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class CookiesBootloaderTest extends BaseTestCase
 {
+    #[TestScope(Spiral::HttpRequest)]
     public function testCookieQueueBinding(): void
     {
         $request = $this->mockContainer(ServerRequestInterface::class);
@@ -25,6 +28,7 @@ final class CookiesBootloaderTest extends BaseTestCase
         $this->assertContainerBound(CookieQueue::class);
     }
 
+    #[TestScope(Spiral::HttpRequest)]
     public function testCookieQueueBindingShouldThrowAndExceptionWhenAttributeIsEmpty(): void
     {
         $this->expectExceptionMessage('Unable to resolve CookieQueue, invalid request scope');
@@ -51,7 +55,7 @@ final class CookiesBootloaderTest extends BaseTestCase
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
         $configs->setDefaults(CookiesConfig::CONFIG, ['excluded' => []]);
 
-        $bootloader = new CookiesBootloader($configs);
+        $bootloader = new CookiesBootloader($configs, $this->getContainer());
         $bootloader->whitelistCookie('foo');
 
         $this->assertSame(['foo'], $configs->getConfig(CookiesConfig::CONFIG)['excluded']);
