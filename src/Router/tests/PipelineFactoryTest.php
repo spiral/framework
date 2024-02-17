@@ -23,17 +23,15 @@ use Spiral\Telemetry\NullTracer;
 
 final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private ContainerInterface&m\MockInterface $container;
-    private FactoryInterface&m\MockInterface $factory;
+    private ContainerInterface $container;
+    private FactoryInterface $factory;
     private PipelineFactory $pipeline;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->container = m::mock(ContainerInterface::class);
+        $this->container = $this->createMock(ContainerInterface::class);
         $this->factory = m::mock(FactoryInterface::class);
 
         $this->pipeline = new PipelineFactory($this->container, $this->factory);
@@ -42,7 +40,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
     public function testCreatesFromArrayWithPipeline(): void
     {
         $newPipeline = new Pipeline(
-            scope: m::mock(ScopeInterface::class),
+            scope: $this->createMock(ScopeInterface::class),
             container: $this->createMock(ContainerInterface::class),
         );
 
@@ -62,7 +60,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->once()
             ->with(Pipeline::class)
             ->andReturn($p = new Pipeline(
-                $scope = m::mock(ScopeInterface::class),
+                $this->createMock(ScopeInterface::class),
                 $container,
                 tracer: new NullTracer($container)
             ));
@@ -71,17 +69,18 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->shouldReceive('make')
             ->once()
             ->with('bar', [])
-            ->andReturn($middleware5 = m::mock(MiddlewareInterface::class));
+            ->andReturn($middleware5 = $this->createMock(MiddlewareInterface::class));
 
-        $this->container->shouldReceive('get')
-            ->once()
+        $this->container
+            ->expects($this->once())
+            ->method('get')
             ->with('foo')
-            ->andReturn($middleware4 = m::mock(MiddlewareInterface::class));
+            ->willReturn($middleware4 = $this->createMock(MiddlewareInterface::class));
 
         $this->assertSame($p, $this->pipeline->createWithMiddleware([
             'foo',
-            $middleware1 = m::mock(MiddlewareInterface::class),
-            $middleware2 = m::mock(MiddlewareInterface::class),
+            $middleware1 = $this->createMock(MiddlewareInterface::class),
+            $middleware2 = $this->createMock(MiddlewareInterface::class),
             new Autowire('bar'),
         ]));
 
@@ -89,15 +88,15 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             return $handler->handle($request);
         };
 
-        $middleware1->shouldReceive('process')->once()->andReturnUsing($handle);
-        $middleware2->shouldReceive('process')->once()->andReturnUsing($handle);
-        $middleware4->shouldReceive('process')->once()->andReturnUsing($handle);
-        $middleware5->shouldReceive('process')->once()->andReturnUsing($handle);
+        $middleware1->expects($this->once())->method('process')->willReturnCallback($handle);
+        $middleware2->expects($this->once())->method('process')->willReturnCallback($handle);
+        $middleware4->expects($this->once())->method('process')->willReturnCallback($handle);
+        $middleware5->expects($this->once())->method('process')->willReturnCallback($handle);
 
-        $response = m::mock(ResponseInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
         $response
-            ->shouldReceive('getHeaderLine')->with('Content-Length')->andReturn('test')
-            ->shouldReceive('getStatusCode')->andReturn(200);
+            ->expects($this->exactly(4))->method('getHeaderLine')->with('Content-Length')->willReturn('test');
+        $response->expects($this->exactly(8))->method('getStatusCode')->willReturn(200);
 
         $requestHandler = $this->createMock(RequestHandlerInterface::class);
         $requestHandler
@@ -107,7 +106,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 
         $p
             ->withHandler($requestHandler)
-            ->handle(m::mock(ServerRequestInterface::class));
+            ->handle($this->createMock(ServerRequestInterface::class));
     }
 
     #[DataProvider('invalidTypeDataProvider')]
