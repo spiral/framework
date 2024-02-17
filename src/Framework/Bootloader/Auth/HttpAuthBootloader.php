@@ -56,7 +56,7 @@ final class HttpAuthBootloader extends Bootloader
             ->getBinder(Spiral::Http)
             ->bind(
                 AuthContextInterface::class,
-                static fn(CurrentRequest $request): AuthContextInterface =>
+                static fn (CurrentRequest $request): AuthContextInterface =>
                     $request->get()->getAttribute(AuthMiddleware::ATTRIBUTE) ?? throw new InvalidAuthContext()
             );
 

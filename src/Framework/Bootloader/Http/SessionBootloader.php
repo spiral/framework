@@ -31,11 +31,13 @@ final class SessionBootloader extends Bootloader
     {
         $this->binder
             ->getBinder(Spiral::Http)
-            ->bind(SessionInterface::class, static function (CurrentRequest $request): SessionInterface {
+            ->bind(
+                SessionInterface::class,
+                static function (CurrentRequest $request): SessionInterface {
                 return $request->get()
                     ->getAttribute(SessionMiddleware::ATTRIBUTE) ?? throw new InvalidSessionContext();
             }
-        );
+            );
         $this->binder->bind(SessionInterface::class, new Proxy(SessionInterface::class, false));
 
         return [];
