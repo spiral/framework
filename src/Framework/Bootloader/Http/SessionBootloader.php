@@ -34,8 +34,8 @@ final class SessionBootloader extends Bootloader
             ->bind(
                 SessionInterface::class,
                 static function (CurrentRequest $request): SessionInterface {
-                return $request->get()
-                    ->getAttribute(SessionMiddleware::ATTRIBUTE) ?? throw new InvalidSessionContext();
+                    return $request->get()
+                        ->getAttribute(SessionMiddleware::ATTRIBUTE) ?? throw new InvalidSessionContext();
             }
             );
         $this->binder->bind(SessionInterface::class, new Proxy(SessionInterface::class, false));
