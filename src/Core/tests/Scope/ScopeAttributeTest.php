@@ -10,7 +10,6 @@ use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Scope\BadScopeException;
 use Spiral\Core\Exception\Scope\NamedScopeDuplicationException;
-use Spiral\Core\Options;
 use Spiral\Tests\Core\Scope\Stub\AttrScopeFoo;
 use Spiral\Tests\Core\Scope\Stub\AttrScopeFooSingleton;
 
@@ -205,13 +204,5 @@ final class ScopeAttributeTest extends BaseTestCase
     private static function makeFooScopeObject(): AttrScopeFoo
     {
         return new AttrScopeFoo();
-    }
-
-    private static function makeContainer(bool $checkScope = true): Container
-    {
-        $options = new Options();
-        $options->checkScope = $checkScope;
-
-        return new Container(options: $options);
     }
 }
