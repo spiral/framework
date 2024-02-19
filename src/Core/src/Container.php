@@ -60,6 +60,7 @@ final class Container implements
     public function __construct(
         private Config $config = new Config(),
         ?string $scopeName = self::DEFAULT_ROOT_SCOPE_NAME,
+        private Options $options = new Options(),
     ) {
         $this->initServices($this, $scopeName);
 
@@ -324,7 +325,7 @@ final class Container implements
         $constructor = new Internal\Common\Registry($container->config, [
             'state' => $state,
             'scope' => new Internal\Scope($scopeName),
-        ]);
+        ], $this->options);
 
         // Create container services
         foreach ($container->config as $property => $class) {
@@ -379,7 +380,7 @@ final class Container implements
     private function runIsolatedScope(Scope $config, callable $closure): mixed
     {
         // Open scope
-        $container = new self($this->config, $config->name);
+        $container = new self($this->config, $config->name, $this->options);
 
         // Configure scope
         $container->scope->setParent($this, $this->scope, $this->factory);

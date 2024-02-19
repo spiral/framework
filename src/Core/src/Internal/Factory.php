@@ -26,6 +26,7 @@ use Spiral\Core\Internal\Common\DestructorTrait;
 use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Factory\Ctx;
 use Spiral\Core\InvokerInterface;
+use Spiral\Core\Options;
 use Spiral\Core\ResolverInterface;
 use Stringable;
 use WeakReference;
@@ -44,6 +45,7 @@ final class Factory implements FactoryInterface
     private ResolverInterface $resolver;
     private Tracer $tracer;
     private Scope $scope;
+    private Options $options;
 
     public function __construct(Registry $constructor)
     {
@@ -56,6 +58,7 @@ final class Factory implements FactoryInterface
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
         $this->tracer = $constructor->get('tracer', Tracer::class);
         $this->scope = $constructor->get('scope', Scope::class);
+        $this->options = $constructor->getOptions();
     }
 
     /**
@@ -381,7 +384,7 @@ final class Factory implements FactoryInterface
         // Check scope name
         $ctx->reflection = new \ReflectionClass($instance);
         $scopeName = ($ctx->reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
-        if ($scopeName !== null) {
+        if ($scopeName !== null && $this->options->checkScope) {
             $scope = $this->scope;
             while ($scope->getScopeName() !== $scopeName) {
                 $scope = $scope->getParentScope() ?? throw new BadScopeException($scopeName, $instance::class);
@@ -419,7 +422,7 @@ final class Factory implements FactoryInterface
 
         // Check scope name
         $scope = ($reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
-        if ($scope !== null && $scope !== $this->scope->getScopeName()) {
+        if ($this->options->checkScope && $scope !== null && $scope !== $this->scope->getScopeName()) {
             throw new BadScopeException($scope, $class);
         }
 

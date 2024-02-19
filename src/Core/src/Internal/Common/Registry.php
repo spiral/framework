@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Core\Internal\Common;
 
 use Spiral\Core\Config;
+use Spiral\Core\Options;
 
 /**
  * @internal
@@ -17,6 +18,7 @@ final class Registry
     public function __construct(
         private Config $config,
         private array $objects = [],
+        private Options $options = new Options(),
     ) {
     }
 
@@ -38,5 +40,10 @@ final class Registry
         $result = $this->objects[$name] ?? new $className($this);
         \assert($result instanceof $interface);
         return $result;
+    }
+
+    public function getOptions(): Options
+    {
+        return $this->options;
     }
 }
