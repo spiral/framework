@@ -28,7 +28,7 @@ final class ScopeAttributeTest extends BaseTestCase
 
     public function testBadScopeWithDisabledChecking(): void
     {
-        $root = self::makeContainer(false);
+        $root = self::makeContainer(checkScope: false);
         $this->assertInstanceOf(AttrScopeFooSingleton::class, $root->make(AttrScopeFooSingleton::class));
     }
 
@@ -78,7 +78,7 @@ final class ScopeAttributeTest extends BaseTestCase
 
     public function testAllParentNamedScopesNotContainsNeededScopeWithDisabledChecking(): void
     {
-        $root = self::makeContainer(false);
+        $root = self::makeContainer(checkScope: false);
         $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
 
         $root->runScoped(static function (Container $fooScope) {
@@ -111,7 +111,7 @@ final class ScopeAttributeTest extends BaseTestCase
     #[Group('scrutinizer-ignore')]
     public function testRequestObjectFromValidScopeUsingFactoryFromWrongScopeWithDisabledChecking(): void
     {
-        $root = self::makeContainer(false);
+        $root = self::makeContainer(checkScope: false);
         $root->bind('foo', self::makeFooScopeObject(...));
 
         $root->runScoped(static function (Container $c1) {
@@ -143,7 +143,7 @@ final class ScopeAttributeTest extends BaseTestCase
     #[Group('scrutinizer-ignore')]
     public function testNamedScopeUseFactoryInWrongParentScopeWithDisabledChecking(): void
     {
-        $root = self::makeContainer(false);
+        $root = self::makeContainer(checkScope: false);
         $root->bind('foo', self::makeFooScopeObject(...));
 
         $root->runScoped(static function (Container $c1) {

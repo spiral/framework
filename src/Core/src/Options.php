@@ -17,4 +17,11 @@ class Options
      * Will be set to true by default since version 4.0
      */
     public bool $checkScope = false;
+
+    /**
+     * Validate autowired arguments in Container services.
+     * This occurs when the {@see ResolverInterface::resolveArguments()} resolves parameters
+     * from the Container or predefined arguments.
+     */
+    public bool $validateArguments = true;
 }

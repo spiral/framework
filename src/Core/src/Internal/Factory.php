@@ -452,7 +452,7 @@ final class Factory implements FactoryInterface
             try {
                 $this->tracer->push(false, action: 'resolve arguments', signature: $constructor);
                 $this->tracer->push(true);
-                $args = $this->resolver->resolveArguments($constructor, $arguments);
+                $args = $this->resolver->resolveArguments($constructor, $arguments, $this->options->validateArguments);
             } catch (ValidationException $e) {
                 throw new ContainerException(
                     $this->tracer->combineTraceMessage(
