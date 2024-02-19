@@ -9,9 +9,12 @@ use Spiral\Core\Exception\Scope\BadScopeException;
 class Options
 {
     /**
-     * Enables checking of scopes when creating an object. If the check is enabled and the object is created outside
+     * Check that object is created in the correct scope.
+     * The scope is defined by the {@see \Spiral\Core\Attribute\Scope} attribute.
+     * If the check is enabled and the object is created outside
      * the required scope, an exception {@see BadScopeException} will be thrown.
-     * By default, checking is disabled. Will be enabled by default in version 4.0
+     *
+     * Will be set to true by default since version 4.0
      */
     public bool $checkScope = false;
 }

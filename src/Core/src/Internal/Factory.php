@@ -381,13 +381,15 @@ final class Factory implements FactoryInterface
         Ctx $ctx,
         array $arguments,
     ): object {
-        // Check scope name
-        $ctx->reflection = new \ReflectionClass($instance);
-        $scopeName = ($ctx->reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
-        if ($scopeName !== null && $this->options->checkScope) {
-            $scope = $this->scope;
-            while ($scope->getScopeName() !== $scopeName) {
-                $scope = $scope->getParentScope() ?? throw new BadScopeException($scopeName, $instance::class);
+        if ($this->options->checkScope) {
+            // Check scope name
+            $ctx->reflection = new \ReflectionClass($instance);
+            $scopeName = ($ctx->reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
+            if ($scopeName !== null) {
+                $scope = $this->scope;
+                while ($scope->getScopeName() !== $scopeName) {
+                    $scope = $scope->getParentScope() ?? throw new BadScopeException($scopeName, $instance::class);
+                }
             }
         }
 
@@ -421,9 +423,11 @@ final class Factory implements FactoryInterface
         }
 
         // Check scope name
-        $scope = ($reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
-        if ($this->options->checkScope && $scope !== null && $scope !== $this->scope->getScopeName()) {
-            throw new BadScopeException($scope, $class);
+        if ($this->options->checkScope) {
+            $scope = ($reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
+            if ($scope !== null && $scope !== $this->scope->getScopeName()) {
+                throw new BadScopeException($scope, $class);
+            }
         }
 
         // We have to construct class using external injector when we know the exact context
