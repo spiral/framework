@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
+use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Exception\Scope\BadScopeException;
 
 class Options
@@ -19,7 +20,8 @@ class Options
     public bool $checkScope = false;
 
     /**
-     * Validate autowired arguments in Container services.
+     * Validate resolved arguments in Container services, for example in {@see FactoryInterface::make()},
+     * {@see InjectorInterface::invoke()} and {@see ConfigsInterface::get()}.
      * This occurs when the {@see ResolverInterface::resolveArguments()} resolves parameters
      * from the Container or predefined arguments.
      */
