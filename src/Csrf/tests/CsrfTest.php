@@ -66,7 +66,7 @@ final class CsrfTest extends TestCase
     public function testLengthException(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->container->getBinder('root')->bind(
+        $this->container->bind(
             CsrfConfig::class,
             new CsrfConfig(
                 [
