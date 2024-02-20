@@ -10,6 +10,7 @@ use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Internal\Common\DestructorTrait;
 use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\InvokerInterface;
+use Spiral\Core\Options;
 use Spiral\Core\ResolverInterface;
 
 /**
@@ -23,6 +24,7 @@ final class Invoker implements InvokerInterface
 
     private ContainerInterface $container;
     private ResolverInterface $resolver;
+    private Options $options;
 
     public function __construct(Registry $constructor)
     {
@@ -30,6 +32,7 @@ final class Invoker implements InvokerInterface
 
         $this->container = $constructor->get('container', ContainerInterface::class);
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
+        $this->options = $constructor->getOptions();
     }
 
     /**
@@ -72,7 +75,7 @@ final class Invoker implements InvokerInterface
 
             // Invoking Closure with resolved arguments
             return $reflection->invokeArgs(
-                $this->resolver->resolveArguments($reflection, $parameters)
+                $this->resolver->resolveArguments($reflection, $parameters, $this->options->validateArguments),
             );
         }
 
