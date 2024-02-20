@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
+use Spiral\Auth\AuthContextInterface;
+use Spiral\Auth\Exception\InvalidAuthContext;
+use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Framework\Spiral;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
@@ -61,5 +65,25 @@ final class AuthSessionTest extends HttpTestCase
             ->assertCookieExists('sid');
 
         $this->fakeHttp()->get('/auth/token3', cookies: $result->getCookies())->assertBodySame('{"userID":1}');
+    }
+
+    public function testInvalidSessionContextException(): void
+    {
+        $this->getContainer()->bind(HttpConfig::class, new HttpConfig([
+            'middleware' => [],
+        ]));
+
+        $this->setHttpHandler(function (): void {
+            $this->expectException(InvalidAuthContext::class);
+            $this->expectExceptionMessage(\sprintf(
+                'The `%s` attribute was not found. To use the auth, the `%s` must be configured.',
+                AuthMiddleware::ATTRIBUTE,
+                AuthMiddleware::class
+            ));
+
+            $this->getContainer()->get(AuthContextInterface::class);
+        });
+
+        $this->fakeHttp()->get('/');
     }
 }
