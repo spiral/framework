@@ -7,13 +7,12 @@ namespace Spiral\Tests\Core;
 use Spiral\Core\Exception\InterceptorException;
 use Spiral\Core\InterceptableCore;
 use Spiral\Core\InterceptorPipeline;
-use Spiral\Framework\ScopeName;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Testing\TestCase;
 use Spiral\Tests\Core\Fixtures\DummyController;
 use Spiral\Tests\Core\Fixtures\SampleCore;
 
-#[TestScope(ScopeName::Http)]
+#[TestScope('http')]
 final class InterceptableCoreTest extends TestCase
 {
     public function testNoInterceptors(): void

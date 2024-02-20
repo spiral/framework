@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Http;
 
 use Spiral\Core\Exception\ScopeException;
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Spiral\Http\PaginationFactory;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
-#[TestScope(ScopeName::Http)]
+#[TestScope(Spiral::Http)]
 final class PaginationTest extends HttpTestCase
 {
     public function testPaginate(): void
@@ -18,6 +18,7 @@ final class PaginationTest extends HttpTestCase
         $this->fakeHttp()->get('/paginate')->assertBodySame('1');
     }
 
+    #[TestScope(Spiral::HttpRequest)]
     public function testPaginateError(): void
     {
         $this->expectException(ScopeException::class);

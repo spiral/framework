@@ -6,10 +6,11 @@ namespace Spiral\Tests\Core\Scope;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Attribute\Proxy;
+use Spiral\Core\Config\Scalar;
 use Spiral\Core\Config\Shared;
 use Spiral\Core\Container;
 use Spiral\Core\Scope;
-use Spiral\Framework\ScopeName;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
@@ -294,13 +295,44 @@ final class UseCaseTest extends BaseTestCase
         $root->make('foo');
     }
 
-    #[DataProvider('scopeEnumDataProvider')]
-    public function testScopeWithEnum(\BackedEnum $scope): void
+    /**
+     * The Current scope container mustn't be changed in a resolving context (through internal calls)
+     */
+    public function testCurrentScopeInFactory(): void
     {
         $root = new Container();
-        $root->getBinder($scope)->bindSingleton('foo', SampleClass::class);
+        // Check the current scope is `foo`
+        $root->bind('isFoo', new Scalar(false));
+        $root->getBinder('foo')->bind('isFoo', new Scalar(true));
 
-        $root->runScope(new Scope($scope), function (Container $container) {
+        $root->bind('foo', function (#[Proxy] ContainerInterface $c, ContainerInterface $r) use ($root) {
+            // Direct
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertNotSame($root, \Spiral\Core\ContainerScope::getContainer());
+
+            // Not a proxy
+            self::assertSame($root, $r);
+            self::assertFalse($r->get('isFoo'));
+
+            // Via proxy
+            self::assertTrue($c->get('isFoo'));
+        });
+
+        $root->runScope(
+            new Scope('foo'),
+            function (ContainerInterface $c) {
+                self::assertTrue($c->get('isFoo'));
+                $c->get('foo');
+            }
+        );
+    }
+
+    public function testScopeWithEnum(): void
+    {
+        $root = new Container();
+        $root->getBinder(ScopeEnum::A)->bindSingleton('foo', SampleClass::class);
+
+        $root->runScope(new Scope(ScopeEnum::A), function (Container $container) {
             $this->assertTrue($container->has('foo'));
             $this->assertInstanceOf(SampleClass::class, $container->get('foo'));
         });
@@ -368,11 +400,5 @@ final class UseCaseTest extends BaseTestCase
                 $this->assertFalse($container->has('otherClass'));
             });
         });
-    }
-
-    public static function scopeEnumDataProvider(): \Traversable
-    {
-        yield [ScopeName::HttpRequest, 'http.request'];
-        yield [ScopeEnum::A, 'a'];
     }
 }

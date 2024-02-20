@@ -19,7 +19,7 @@ final class FinalizeAttributeTest extends BaseTestCase
      */
     public function testFinalizerHasBeenRegisteredAndRun(): void
     {
-        $root = new Container();
+        $root = self::makeContainer();
 
         $obj = $root->runScoped(static function (Container $c1) {
             $obj = $c1->runScoped(static function (Container $c2) {
@@ -42,7 +42,7 @@ final class FinalizeAttributeTest extends BaseTestCase
      */
     public function testFinalizerAutowiringOnCall(): void
     {
-        $root = new Container();
+        $root = self::makeContainer();
         $root->bindSingleton(LoggerInterface::class, FileLogger::class);
 
         $obj2 = null;
@@ -73,7 +73,7 @@ final class FinalizeAttributeTest extends BaseTestCase
      */
     public function testFinalizerWithoutConcreteScope(): void
     {
-        $root = new Container();
+        $root = self::makeContainer();
         $root->bindSingleton(LoggerInterface::class, FileLogger::class);
 
         $obj2 = null;
@@ -104,7 +104,7 @@ final class FinalizeAttributeTest extends BaseTestCase
      */
     public function testFinalizerWithoutConcreteScopeInRoot(): void
     {
-        $root = new Container();
+        $root = self::makeContainer();
         $root->bindSingleton(LoggerInterface::class, FileLogger::class);
 
         $obj = $root->get(AttrFinalize::class);
@@ -119,7 +119,7 @@ final class FinalizeAttributeTest extends BaseTestCase
     #[Group('scrutinizer-ignore')]
     public function testExceptionOnDestroy()
     {
-        $root = new Container();
+        $root = self::makeContainer();
 
         self::expectException(FinalizersException::class);
         self::expectExceptionMessage('An exception has been thrown during finalization of the scope `foo`');
@@ -148,7 +148,7 @@ final class FinalizeAttributeTest extends BaseTestCase
     #[Group('scrutinizer-ignore')]
     public function testManyExceptionsOnDestroy()
     {
-        $root = new Container();
+        $root = self::makeContainer();
 
         self::expectException(FinalizersException::class);
         self::expectExceptionMessage('3 exceptions have been thrown during finalization of the scope `foo`');

@@ -12,7 +12,6 @@ use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
-use Spiral\Framework\ScopeName;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
@@ -103,7 +102,7 @@ final class CoreHandler implements RequestHandlerInterface
              */
             $result = $this->scope->runScope(
                 new Scope(
-                    name: ScopeName::HttpRequest,
+                    name: 'http.request',
                     bindings: [Request::class => $request, Response::class => $response, $controller => $controller],
                 ),
                 fn (): mixed => $this->tracer->trace(

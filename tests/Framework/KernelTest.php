@@ -16,7 +16,7 @@ use Spiral\Boot\Bootloader\BootloaderRegistryInterface;
 use Spiral\Boot\Exception\BootException;
 use Spiral\App\TestApp;
 use Spiral\Core\Container;
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use stdClass;
 
 class KernelTest extends BaseTestCase
@@ -136,7 +136,7 @@ class KernelTest extends BaseTestCase
 
     public static function dispatchersDataProvider(): \Traversable
     {
-        yield [DispatcherWithScopeName::class, ScopeName::Console->value];
+        yield [DispatcherWithScopeName::class, Spiral::Console->value];
         yield [DispatcherWithCustomEnum::class, Scope::Custom->value];
         yield [DispatcherWithStringScope::class, 'test'];
     }

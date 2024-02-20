@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
-use Spiral\Framework\ScopeName;
 use Spiral\Testing\Attribute\TestScope;
 
-#[TestScope(ScopeName::Http)]
+#[TestScope('http')]
 final class IntegrationTest extends TestCase
 {
     public function testRoute(): void

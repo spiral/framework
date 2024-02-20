@@ -105,7 +105,7 @@ final class TranslatorConfig extends InjectableConfig
             return \rtrim($directory, '/') . '/' . $locale . '/';
         }
 
-        return \trim($this->getLocalesDirectory(), '/') . '/' . $locale . '/';
+        return \rtrim($this->getLocalesDirectory(), '/') . '/' . $locale . '/';
     }
 
     /**

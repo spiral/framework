@@ -8,7 +8,7 @@ use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageScope;
 use Spiral\Core\Container\Autowire;
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
 
@@ -21,7 +21,7 @@ final class AuthMiddlewareTest extends HttpTestCase
         $this->enableMiddlewares();
     }
 
-    #[TestScope(ScopeName::Http)]
+    #[TestScope(Spiral::Http)]
     public function testTokenStorageInterfaceShouldBeBound(): void
     {
         $storage = $this->createMock(TokenStorageInterface::class);
