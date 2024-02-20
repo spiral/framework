@@ -14,12 +14,11 @@ use Spiral\Console\Configurator\Signature\Parser as SignatureParser;
 use Spiral\Console\Configurator\SignatureBasedConfigurator;
 use Spiral\Console\Event\CommandFinished;
 use Spiral\Console\Event\CommandStarting;
-use Spiral\Console\Interceptor\AttributeInterceptor;
 use Spiral\Console\Traits\HelpersTrait;
 use Spiral\Core\CoreInterceptorInterface;
-use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
-use Spiral\Core\InterceptableCore;
+use Spiral\Core\Scope;
+use Spiral\Core\ScopeInterface;
 use Spiral\Events\EventDispatcherAwareInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,6 +28,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Provides automatic command configuration and access to global container scope.
  */
+#[\Spiral\Core\Attribute\Scope('console')]
 abstract class Command extends SymfonyCommand implements EventDispatcherAwareInterface
 {
     use HelpersTrait;
@@ -73,7 +73,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
     /**
      * Pass execution to "perform" method using container to resolve method dependencies.
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($this->container === null) {
             throw new ScopeException('Container is not set');
@@ -81,19 +81,35 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
 
         $method = method_exists($this, 'perform') ? 'perform' : '__invoke';
 
-        $core = $this->buildCore();
-
         try {
             [$this->input, $this->output] = [$this->prepareInput($input), $this->prepareOutput($input, $output)];
 
             $this->eventDispatcher?->dispatch(new CommandStarting($this, $this->input, $this->output));
 
             // Executing perform method with method injection
-            $code = (int)$core->callAction(static::class, $method, [
-                'input' => $this->input,
-                'output' => $this->output,
-                'command' => $this,
-            ]);
+            $code = $this->container->get(ScopeInterface::class)
+                ->runScope(
+                    new Scope(
+                        name: 'console.command',
+                        bindings: [
+                            InputInterface::class => $input,
+                            OutputInterface::class => $output,
+                        ],
+                        autowire: true,
+                    ),
+                    fn(CommandCoreFactory $factory) => $factory->make(
+                        $this->interceptors,
+                        $this->eventDispatcher,
+                    )->callAction(
+                        static::class,
+                        $method,
+                        [
+                            'input' => $this->input,
+                            'output' => $this->output,
+                            'command' => $this,
+                        ],
+                    ),
+                );
 
             $this->eventDispatcher?->dispatch(new CommandFinished($this, $code, $this->input, $this->output));
 
@@ -101,20 +117,6 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
         } finally {
             [$this->input, $this->output] = [null, null];
         }
-    }
-
-    protected function buildCore(): CoreInterface
-    {
-        $core = $this->container->get(CommandCore::class);
-
-        $interceptableCore = new InterceptableCore($core, $this->eventDispatcher);
-
-        foreach ($this->interceptors as $interceptor) {
-            $interceptableCore->addInterceptor($this->container->get($interceptor));
-        }
-        $interceptableCore->addInterceptor($this->container->get(AttributeInterceptor::class));
-
-        return $interceptableCore;
     }
 
     protected function prepareInput(InputInterface $input): InputInterface

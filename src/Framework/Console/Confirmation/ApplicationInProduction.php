@@ -6,9 +6,11 @@ namespace Spiral\Console\Confirmation;
 
 use Spiral\Boot\Environment\AppEnvironment;
 use Spiral\Console\Traits\HelpersTrait;
+use Spiral\Core\Attribute\Scope;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[Scope('console.command')]
 final class ApplicationInProduction
 {
     use HelpersTrait;
