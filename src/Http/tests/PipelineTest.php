@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
-use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Core\Container;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\MiddlewareProcessing;
@@ -24,7 +22,7 @@ final class PipelineTest extends TestCase
 {
     public function testTarget(): void
     {
-        $pipeline = new Pipeline(new Container(), new Container());
+        $pipeline = new Pipeline($this->container, $this->container);
 
         $handler = new CallableHandler(function () {
             return 'response';
@@ -39,7 +37,7 @@ final class PipelineTest extends TestCase
 
     public function testHandle(): void
     {
-        $pipeline = new Pipeline(new Container(), new Container());
+        $pipeline = new Pipeline($this->container, $this->container);
 
         $handler = new CallableHandler(function () {
             return 'response';
@@ -56,7 +54,7 @@ final class PipelineTest extends TestCase
     {
         $this->expectException(PipelineException::class);
 
-        $pipeline = new Pipeline(new Container(), new Container());
+        $pipeline = new Pipeline($this->container, $this->container);
         $pipeline->handle(new ServerRequest('GET', ''));
     }
 
@@ -79,7 +77,7 @@ final class PipelineTest extends TestCase
             ->method('dispatch')
             ->with(new MiddlewareProcessing($request, $middleware));
 
-        $pipeline = new Pipeline(new Container(), new Container(), $dispatcher, new NullTracer(new Container()));
+        $pipeline = new Pipeline($this->container, $this->container, $dispatcher, new NullTracer($this->container));
 
         $pipeline->pushMiddleware($middleware);
 

@@ -12,6 +12,7 @@ use Psr\Http\Message\UriFactoryInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\Options;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\CurrentRequest;
 use Spiral\Router\GroupRegistry;
@@ -74,7 +75,9 @@ abstract class BaseTestCase extends TestCase
 
     private function initContainer(): void
     {
-        $this->container = new Container();
+        $options = new Options();
+        $options->checkScope = false;
+        $this->container = new Container(options: $options);
         $this->container->bind(TracerInterface::class, new NullTracer($this->container));
         $this->container->bind(ResponseFactoryInterface::class, new ResponseFactory(new HttpConfig(['headers' => []])));
         $this->container->bind(UriFactoryInterface::class, new UriFactory());

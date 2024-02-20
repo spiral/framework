@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Core\Container;
-use Spiral\Core\Scope;
+use Spiral\Core\Options;
 use Spiral\Csrf\Config\CsrfConfig;
 use Spiral\Csrf\Middleware\CsrfFirewall;
 use Spiral\Csrf\Middleware\CsrfMiddleware;
@@ -26,7 +26,9 @@ final class CsrfTest extends TestCase
 
     public function setUp(): void
     {
-        $this->container = new Container();
+        $options = new Options();
+        $options->checkScope = false;
+        $this->container = new Container(options: $options);
         $this->container->bind(
             CsrfConfig::class,
             new CsrfConfig(

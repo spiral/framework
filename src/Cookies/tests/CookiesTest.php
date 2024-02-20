@@ -12,6 +12,7 @@ use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
 use Spiral\Cookies\Middleware\CookiesMiddleware;
 use Spiral\Core\Container;
+use Spiral\Core\Options;
 use Spiral\Encrypter\Config\EncrypterConfig;
 use Spiral\Encrypter\Encrypter;
 use Spiral\Encrypter\EncrypterFactory;
@@ -28,7 +29,9 @@ final class CookiesTest extends TestCase
 
     public function setUp(): void
     {
-        $this->container = new Container();
+        $options = new Options();
+        $options->checkScope = false;
+        $this->container = new Container(options: $options);
         $this->container->bind(CookiesConfig::class, new CookiesConfig([
             'domain'   => '.%s',
             'method'   => CookiesConfig::COOKIE_ENCRYPT,

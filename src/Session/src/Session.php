@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Session;
 
+use Spiral\Core\Attribute\Scope;
 use Spiral\Session\Exception\SessionException;
 
 /**
@@ -14,6 +15,7 @@ use Spiral\Session\Exception\SessionException;
  *
  * @see  https://www.owasp.org/index.php/Session_Management_Cheat_Sheet
  */
+#[Scope('http')]
 final class Session implements SessionInterface
 {
     /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Session;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
@@ -16,21 +15,17 @@ use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
 use Spiral\Session\SessionSection;
 
-class SessionTest extends TestCase
+final class SessionTest extends TestCase
 {
-
-    /**
-     * @var SessionFactory
-     */
-    private $factory;
+    private SessionFactory $factory;
 
     public function setUp(): void
     {
-        $container = new Container();
-        $container->bind(FilesInterface::class, Files::class);
+        parent::setUp();
 
-        $container->bind(SessionInterface::class, Session::class);
-        $container->bind(SessionSectionInterface::class, SessionSection::class);
+        $this->container->bind(FilesInterface::class, Files::class);
+        $this->container->bind(SessionInterface::class, Session::class);
+        $this->container->bind(SessionSectionInterface::class, SessionSection::class);
 
         $this->factory = new SessionFactory(new SessionConfig([
             'lifetime' => 86400,
@@ -39,7 +34,7 @@ class SessionTest extends TestCase
             'handler'  => new Container\Autowire(FileHandler::class, [
                 'directory' => sys_get_temp_dir()
             ]),
-        ]), $container);
+        ]), $this->container);
     }
 
     public function tearDown(): void

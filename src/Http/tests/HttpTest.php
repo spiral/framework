@@ -8,6 +8,7 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\Container;
+use Spiral\Core\Options;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\RequestHandled;
@@ -29,7 +30,9 @@ final class HttpTest extends TestCase
 
     public function setUp(): void
     {
-        $this->container = new Container();
+        $options = new Options();
+        $options->checkScope = false;
+        $this->container = new Container(options: $options);
         $this->container->bind(TracerInterface::class, new NullTracer($this->container));
     }
 

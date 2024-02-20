@@ -45,9 +45,13 @@ final class SessionBootloader extends Bootloader
 
     public function defineSingletons(): array
     {
-        return [
-            SessionFactoryInterface::class => SessionFactory::class,
-        ];
+        $http = $this->binder->getBinder(Spiral::Http);
+        $http->bindSingleton(SessionFactory::class, SessionFactory::class);
+        $http->bindSingleton(SessionFactoryInterface::class, SessionFactory::class);
+
+        $this->binder->bind(SessionFactoryInterface::class, new Proxy(SessionFactoryInterface::class, true));
+
+        return [];
     }
 
     /**
