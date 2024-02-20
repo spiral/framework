@@ -26,6 +26,7 @@ use Spiral\Core\Internal\Common\DestructorTrait;
 use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Factory\Ctx;
 use Spiral\Core\InvokerInterface;
+use Spiral\Core\Options;
 use Spiral\Core\ResolverInterface;
 use Stringable;
 use WeakReference;
@@ -44,6 +45,7 @@ final class Factory implements FactoryInterface
     private ResolverInterface $resolver;
     private Tracer $tracer;
     private Scope $scope;
+    private Options $options;
 
     public function __construct(Registry $constructor)
     {
@@ -56,6 +58,7 @@ final class Factory implements FactoryInterface
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
         $this->tracer = $constructor->get('tracer', Tracer::class);
         $this->scope = $constructor->get('scope', Scope::class);
+        $this->options = $constructor->getOptions();
     }
 
     /**
@@ -378,13 +381,15 @@ final class Factory implements FactoryInterface
         Ctx $ctx,
         array $arguments,
     ): object {
-        // Check scope name
-        $ctx->reflection = new \ReflectionClass($instance);
-        $scopeName = ($ctx->reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
-        if ($scopeName !== null) {
-            $scope = $this->scope;
-            while ($scope->getScopeName() !== $scopeName) {
-                $scope = $scope->getParentScope() ?? throw new BadScopeException($scopeName, $instance::class);
+        if ($this->options->checkScope) {
+            // Check scope name
+            $ctx->reflection = new \ReflectionClass($instance);
+            $scopeName = ($ctx->reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
+            if ($scopeName !== null) {
+                $scope = $this->scope;
+                while ($scope->getScopeName() !== $scopeName) {
+                    $scope = $scope->getParentScope() ?? throw new BadScopeException($scopeName, $instance::class);
+                }
             }
         }
 
@@ -418,9 +423,11 @@ final class Factory implements FactoryInterface
         }
 
         // Check scope name
-        $scope = ($reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
-        if ($scope !== null && $scope !== $this->scope->getScopeName()) {
-            throw new BadScopeException($scope, $class);
+        if ($this->options->checkScope) {
+            $scope = ($reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
+            if ($scope !== null && $scope !== $this->scope->getScopeName()) {
+                throw new BadScopeException($scope, $class);
+            }
         }
 
         // We have to construct class using external injector when we know the exact context
@@ -445,7 +452,7 @@ final class Factory implements FactoryInterface
             try {
                 $this->tracer->push(false, action: 'resolve arguments', signature: $constructor);
                 $this->tracer->push(true);
-                $args = $this->resolver->resolveArguments($constructor, $arguments);
+                $args = $this->resolver->resolveArguments($constructor, $arguments, $this->options->validateArguments);
             } catch (ValidationException $e) {
                 throw new ContainerException(
                     $this->tracer->combineTraceMessage(

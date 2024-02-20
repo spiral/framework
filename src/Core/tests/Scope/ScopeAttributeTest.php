@@ -22,8 +22,14 @@ final class ScopeAttributeTest extends BaseTestCase
     {
         self::expectException(BadScopeException::class);
 
-        $root = new Container();
+        $root = self::makeContainer();
         $root->make(AttrScopeFooSingleton::class);
+    }
+
+    public function testBadScopeWithDisabledChecking(): void
+    {
+        $root = self::makeContainer(checkScope: false);
+        $this->assertInstanceOf(AttrScopeFooSingleton::class, $root->make(AttrScopeFooSingleton::class));
     }
 
     /**
@@ -31,7 +37,7 @@ final class ScopeAttributeTest extends BaseTestCase
      */
     public function testNamedScopeResolveFromRootInNullScope(): void
     {
-        $root = new Container();
+        $root = self::makeContainer();
 
         $root->runScoped(static function (Container $c1) {
             $c1->runScoped(static function (Container $c2) use ($c1) {
@@ -45,7 +51,7 @@ final class ScopeAttributeTest extends BaseTestCase
 
     public function testNamedScopeResolveFromParentScope(): void
     {
-        $root = new Container();
+        $root = self::makeContainer();
         $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
 
         $root->runScoped(static function (Container $fooScope) {
@@ -60,7 +66,19 @@ final class ScopeAttributeTest extends BaseTestCase
         self::expectException(BadScopeException::class);
         self::expectExceptionMessage('`foo`');
 
-        $root = new Container();
+        $root = self::makeContainer();
+        $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
+
+        $root->runScoped(static function (Container $fooScope) {
+            $fooScope->runScoped(static function (Container $container) {
+                $container->get('binding');
+            }, name: 'bar');
+        }, name: 'baz');
+    }
+
+    public function testAllParentNamedScopesNotContainsNeededScopeWithDisabledChecking(): void
+    {
+        $root = self::makeContainer(checkScope: false);
         $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
 
         $root->runScoped(static function (Container $fooScope) {
@@ -80,12 +98,25 @@ final class ScopeAttributeTest extends BaseTestCase
         self::expectException(NotFoundException::class);
         self::expectExceptionMessage('`foo`');
 
-        $root = new Container();
+        $root = self::makeContainer();
         $root->bind('foo', self::makeFooScopeObject(...));
 
         $root->runScoped(static function (Container $c1) {
             $c1->runScoped(static function (Container $c2) {
                 $c2->get('foo');
+            }, name: 'foo');
+        });
+    }
+
+    #[Group('scrutinizer-ignore')]
+    public function testRequestObjectFromValidScopeUsingFactoryFromWrongScopeWithDisabledChecking(): void
+    {
+        $root = self::makeContainer(checkScope: false);
+        $root->bind('foo', self::makeFooScopeObject(...));
+
+        $root->runScoped(static function (Container $c1) {
+            $c1->runScoped(static function (Container $c2) {
+                self::assertInstanceOf(AttrScopeFoo::class, $c2->get('foo'));
             }, name: 'foo');
         });
     }
@@ -99,12 +130,25 @@ final class ScopeAttributeTest extends BaseTestCase
         self::expectException(BadScopeException::class);
         self::expectExceptionMessage('`foo`');
 
-        $root = new Container();
+        $root = self::makeContainer();
         $root->bind('foo', self::makeFooScopeObject(...));
 
         $root->runScoped(static function (Container $c1) {
             $c1->runScoped(static function (Container $c2) {
                 $c2->get('foo');
+            });
+        });
+    }
+
+    #[Group('scrutinizer-ignore')]
+    public function testNamedScopeUseFactoryInWrongParentScopeWithDisabledChecking(): void
+    {
+        $root = self::makeContainer(checkScope: false);
+        $root->bind('foo', self::makeFooScopeObject(...));
+
+        $root->runScoped(static function (Container $c1) {
+            $c1->runScoped(static function (Container $c2) {
+                self::assertInstanceOf(AttrScopeFoo::class, $c2->get('foo'));
             });
         });
     }
@@ -119,7 +163,7 @@ final class ScopeAttributeTest extends BaseTestCase
         self::expectException(NamedScopeDuplicationException::class);
         self::expectExceptionMessage('`root`');
 
-        $root = new Container();
+        $root = self::makeContainer();
 
         try {
             $root->runScoped(static function (Container $c1) {
@@ -145,7 +189,7 @@ final class ScopeAttributeTest extends BaseTestCase
         self::expectException(BadScopeException::class);
 
         try {
-            $root = new Container();
+            $root = self::makeContainer();
             $root->runScoped(static function (Container $c1) {
                 $c1->runScoped(static function (Container $c2) {
                     $c2->get(AttrScopeFoo::class);
