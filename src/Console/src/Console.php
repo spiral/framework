@@ -81,7 +81,7 @@ final class Console
                     OutputInterface::class => $output,
                 ],
             ),
-            fn() => $this->getApplication()->doRun($input, $output),
+            fn () => $this->getApplication()->doRun($input, $output),
         );
 
         return new CommandOutput($code ?? self::CODE_NONE, $output);

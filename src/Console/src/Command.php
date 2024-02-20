@@ -97,7 +97,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
                         ],
                         autowire: true,
                     ),
-                    fn(CommandCoreFactory $factory) => $factory->make(
+                    fn (CommandCoreFactory $factory) => $factory->make(
                         $this->interceptors,
                         $this->eventDispatcher,
                     )->callAction(
