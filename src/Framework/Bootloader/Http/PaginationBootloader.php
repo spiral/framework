@@ -27,9 +27,9 @@ final class PaginationBootloader extends Bootloader
 
     public function defineSingletons(): array
     {
-        $this->binder
-            ->getBinder(Spiral::HttpRequest)
-            ->bindSingleton(PaginationProviderInterface::class, PaginationFactory::class);
+        $httpRequest = $this->binder->getBinder(Spiral::HttpRequest);
+        $httpRequest->bindSingleton(PaginationFactory::class, PaginationFactory::class);
+        $httpRequest->bindSingleton(PaginationProviderInterface::class, PaginationFactory::class);
 
         $this->binder->bind(
             PaginationProviderInterface::class,
