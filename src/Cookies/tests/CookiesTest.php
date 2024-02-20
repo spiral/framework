@@ -173,7 +173,7 @@ final class CookiesTest extends TestCase
 
     public function testUnprotected(): void
     {
-        $this->container->getBinder('root')->bind(CookiesConfig::class, new CookiesConfig([
+        $this->container->bind(CookiesConfig::class, new CookiesConfig([
             'domain'   => '.%s',
             'method'   => CookiesConfig::COOKIE_UNPROTECTED,
             'excluded' => ['PHPSESSID', 'csrf-token']
@@ -197,7 +197,7 @@ final class CookiesTest extends TestCase
 
     public function testGetUnprotected(): void
     {
-        $this->container->getBinder('root')->bind(CookiesConfig::class, new CookiesConfig([
+        $this->container->bind(CookiesConfig::class, new CookiesConfig([
             'domain'   => '.%s',
             'method'   => CookiesConfig::COOKIE_UNPROTECTED,
             'excluded' => ['PHPSESSID', 'csrf-token']
