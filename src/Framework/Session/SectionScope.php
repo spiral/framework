@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Session;
 
+/**
+ * @deprecated Use {@see SessionInterface::getSection()} instead. Will be removed in v4.0.
+ */
 final class SectionScope implements SessionSectionInterface
 {
     public function __construct(
-        private readonly SessionInterface $session,
+        private readonly SessionScope $session,
         private readonly string $name
     ) {
     }
