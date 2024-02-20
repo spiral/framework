@@ -7,6 +7,8 @@ namespace Spiral\Tests\Framework\Http;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
+use Spiral\Cookies\CookieQueue;
+use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Encrypter\EncrypterInterface;
 use Spiral\Framework\Spiral;
@@ -37,6 +39,34 @@ final class CookiesTest extends HttpTestCase
         $this->expectException(ScopeException::class);
 
         $this->cookies()->get('name');
+    }
+
+    public function testCookieQueueInScope(): void
+    {
+        $this->setHttpHandler(static function (ServerRequestInterface $request) {
+            ContainerScope::getContainer()->bindSingleton(ServerRequestInterface::class, $request);
+
+            self::assertInstanceOf(
+                CookieQueue::class,
+                ContainerScope::getContainer()->get(ServerRequestInterface::class)->getAttribute(CookieQueue::ATTRIBUTE)
+            );
+
+            self::assertSame(
+                ContainerScope::getContainer()
+                    ->get(ServerRequestInterface::class)
+                    ->getAttribute(CookieQueue::ATTRIBUTE),
+                $request->getAttribute(CookieQueue::ATTRIBUTE)
+            );
+
+            self::assertSame(
+                ContainerScope::getContainer()
+                    ->get(ServerRequestInterface::class)
+                    ->getAttribute(CookieQueue::ATTRIBUTE),
+                ContainerScope::getContainer()->get(CookieQueue::class)
+            );
+        });
+
+        $this->fakeHttp()->get('/')->assertOk();
     }
 
     public function testHasCookie(): void
