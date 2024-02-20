@@ -7,8 +7,11 @@ namespace Framework\Filter\Model;
 use Spiral\App\Request\FilterWithSetters;
 use Spiral\App\Request\PostFilter;
 use Spiral\Filters\Exception\ValidationException;
+use Spiral\Framework\Spiral;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\Filter\FilterTestCase;
 
+#[TestScope(Spiral::HttpRequest)]
 final class FilterWithSettersTest extends FilterTestCase
 {
     public function testSetters(): void

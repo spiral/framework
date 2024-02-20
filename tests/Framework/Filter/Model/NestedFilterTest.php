@@ -14,8 +14,11 @@ use Spiral\App\Request\UserFilter;
 use Spiral\App\Request\WithNullableNestedFilter;
 use Spiral\App\Request\WithNullableRequiredNestedFilter;
 use Spiral\Filters\Exception\ValidationException;
+use Spiral\Framework\Spiral;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\Filter\FilterTestCase;
 
+#[TestScope(Spiral::HttpRequest)]
 final class NestedFilterTest extends FilterTestCase
 {
     public function testGetsNestedFilter(): void

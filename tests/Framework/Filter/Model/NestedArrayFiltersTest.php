@@ -8,8 +8,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\App\Request\AddressFilter;
 use Spiral\App\Request\MultipleAddressesFilter;
 use Spiral\Filters\Exception\ValidationException;
+use Spiral\Framework\Spiral;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\Filter\FilterTestCase;
 
+#[TestScope(Spiral::HttpRequest)]
 final class NestedArrayFiltersTest extends FilterTestCase
 {
     public function testGetsNestedFilter(): void
