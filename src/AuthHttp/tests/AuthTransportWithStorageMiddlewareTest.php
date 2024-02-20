@@ -17,7 +17,7 @@ use Spiral\Auth\TokenStorageProviderInterface;
 use Spiral\Auth\TransportRegistry;
 use Spiral\Core\ScopeInterface;
 
-final class AuthTransportWithStorageMiddlewareTest extends ScopedTestCase
+final class AuthTransportWithStorageMiddlewareTest extends BaseTestCase
 {
     public function testProcessMiddlewareWithTokenStorageProvider(): void
     {

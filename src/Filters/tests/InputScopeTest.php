@@ -6,10 +6,9 @@ namespace Spiral\Tests\Filters;
 
 use Nyholm\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Core\Container;
-use Spiral\Core\Scope;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\InputInterface;
+use Spiral\Http\Request\InputManager;
 
 final class InputScopeTest extends BaseTestCase
 {
@@ -18,6 +17,7 @@ final class InputScopeTest extends BaseTestCase
         parent::setUp();
 
         $this->container->bindSingleton(InputInterface::class, InputScope::class);
+        $this->container->bindSingleton(InputManager::class, new InputManager($this->container));
         $this->container->bindSingleton(
             ServerRequestInterface::class,
             (new ServerRequest('POST', '/test'))->withParsedBody([
@@ -67,13 +67,5 @@ final class InputScopeTest extends BaseTestCase
     private function getInput(): InputInterface
     {
         return $this->container->get(InputInterface::class);
-    }
-
-    protected function runTest(): mixed
-    {
-        return $this->container->runScope(new Scope('http.request'), function (Container $container): mixed {
-            $this->container = $container;
-            return parent::runTest();
-        });
     }
 }

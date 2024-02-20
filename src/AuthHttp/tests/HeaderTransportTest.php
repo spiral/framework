@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\HttpTransportInterface;
 use Spiral\Auth\Middleware\AuthMiddleware;
@@ -19,14 +18,14 @@ use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 use Spiral\Tests\Auth\Stub\TestAuthHttpToken;
 
-final class HeaderTransportTest extends ScopedTestCase
+final class HeaderTransportTest extends BaseTestCase
 {
     public function testHeaderToken(): void
     {
         $http = $this->getCore(new HeaderTransport());
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 if ($request->getAttribute('authContext')->getToken() === null) {
                     echo 'no token';
                 } else {
@@ -50,7 +49,7 @@ final class HeaderTransportTest extends ScopedTestCase
         $http = $this->getCore(new HeaderTransport('Authorization', 'Bearer %s'));
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 if ($request->getAttribute('authContext')->getToken() === null) {
                     echo 'no token';
                 } else {
@@ -73,7 +72,7 @@ final class HeaderTransportTest extends ScopedTestCase
         $http = $this->getCore(new HeaderTransport());
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 if ($request->getAttribute('authContext')->getToken() === null) {
                     echo 'no token';
                 } else {
@@ -97,7 +96,7 @@ final class HeaderTransportTest extends ScopedTestCase
         $http = $this->getCore(new HeaderTransport());
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 $request->getAttribute('authContext')->close();
                 echo 'closed';
             }
@@ -115,7 +114,7 @@ final class HeaderTransportTest extends ScopedTestCase
         $http = $this->getCore(new HeaderTransport());
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 $request->getAttribute('authContext')->start(
                     new TestAuthHttpToken('new-token', ['ok' => 1])
                 );
@@ -132,7 +131,7 @@ final class HeaderTransportTest extends ScopedTestCase
         $http = $this->getCore(new HeaderTransport('Authorization', 'Bearer %s'));
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 $request->getAttribute('authContext')->start(
                     new TestAuthHttpToken('new-token', ['ok' => 1])
                 );

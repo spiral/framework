@@ -11,7 +11,6 @@ use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
 use Spiral\Cookies\Middleware\CookiesMiddleware;
 use Spiral\Core\Container;
-use Spiral\Core\Scope;
 use Spiral\Encrypter\Config\EncrypterConfig;
 use Spiral\Encrypter\Encrypter;
 use Spiral\Encrypter\EncrypterFactory;
@@ -21,8 +20,6 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Nyholm\Psr7\ServerRequest;
-use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\TracerInterface;
 
 final class CookiesTest extends TestCase
 {
@@ -253,7 +250,7 @@ final class CookiesTest extends TestCase
         $this->assertSame('value', (string)$response->getBody());
     }
 
-    protected function httpCore(array $middleware = []): Http
+    private function httpCore(array $middleware = []): Http
     {
         $config = new HttpConfig([
             'basePath'   => '/',
@@ -271,9 +268,9 @@ final class CookiesTest extends TestCase
         );
     }
 
-    protected function get(
+    private function get(
         Http $core,
-        $uri,
+        string $uri,
         array $query = [],
         array $headers = [],
         array $cookies = []
@@ -281,8 +278,8 @@ final class CookiesTest extends TestCase
         return $core->handle($this->request($uri, 'GET', $query, $headers, $cookies));
     }
 
-    protected function request(
-        $uri,
+    private function request(
+        string $uri,
         string $method,
         array $query = [],
         array $headers = [],
@@ -295,7 +292,7 @@ final class CookiesTest extends TestCase
             ->withCookieParams($cookies);
     }
 
-    protected function fetchCookies(ResponseInterface $response)
+    private function fetchCookies(ResponseInterface $response): array
     {
         $result = [];
 
@@ -309,14 +306,5 @@ final class CookiesTest extends TestCase
         }
 
         return $result;
-    }
-
-    protected function runTest(): mixed
-    {
-        return $this->container->runScope(new Scope('http'), function (Container $container): mixed {
-            $this->container = $container;
-            $this->container->bind(TracerInterface::class, new NullTracer($this->container));
-            return parent::runTest();
-        });
     }
 }

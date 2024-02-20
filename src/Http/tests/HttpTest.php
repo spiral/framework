@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Tests\Http;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Core\Container;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\RequestHandled;
@@ -15,12 +17,21 @@ use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerFactoryInterface;
+use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 
-final class HttpTest extends ScopedTestCase
+final class HttpTest extends TestCase
 {
     use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    private Container $container;
+
+    public function setUp(): void
+    {
+        $this->container = new Container();
+        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
+    }
 
     public function testGetPipeline(): void
     {

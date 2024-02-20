@@ -20,7 +20,7 @@ use Nyholm\Psr7\ServerRequest;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerInterface;
 
-class CsrfTest extends TestCase
+final class CsrfTest extends TestCase
 {
     private Container $container;
 
@@ -38,11 +38,7 @@ class CsrfTest extends TestCase
             )
         );
 
-        $this->container->bind(
-            TracerInterface::class,
-            new NullTracer($this->container)
-        );
-
+        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
         $this->container->bind(
             ResponseFactoryInterface::class,
             new TestResponseFactory(new HttpConfig(['headers' => []]))
@@ -215,7 +211,7 @@ class CsrfTest extends TestCase
         self::assertSame('all good', (string)$response->getBody());
     }
 
-    protected function httpCore(array $middleware = []): Http
+    private function httpCore(array $middleware = []): Http
     {
         $config = new HttpConfig(
             [
@@ -235,9 +231,9 @@ class CsrfTest extends TestCase
         );
     }
 
-    protected function get(
+    private function get(
         Http $core,
-        $uri,
+        string $uri,
         array $query = [],
         array $headers = [],
         array $cookies = []
@@ -245,9 +241,9 @@ class CsrfTest extends TestCase
         return $core->handle($this->request($uri, 'GET', $query, $headers, $cookies));
     }
 
-    protected function post(
+    private function post(
         Http $core,
-        $uri,
+        string $uri,
         array $data = [],
         array $headers = [],
         array $cookies = []
@@ -255,8 +251,8 @@ class CsrfTest extends TestCase
         return $core->handle($this->request($uri, 'POST', [], $headers, $cookies)->withParsedBody($data));
     }
 
-    protected function request(
-        $uri,
+    private function request(
+        string $uri,
         string $method,
         array $query = [],
         array $headers = [],
@@ -269,7 +265,7 @@ class CsrfTest extends TestCase
             ->withCookieParams($cookies);
     }
 
-    protected function fetchCookies(ResponseInterface $response): array
+    private function fetchCookies(ResponseInterface $response): array
     {
         $result = [];
 
@@ -286,14 +282,5 @@ class CsrfTest extends TestCase
         }
 
         return $result;
-    }
-
-    protected function runTest(): mixed
-    {
-        return $this->container->runScope(new Scope('http'), function (Container $container): mixed {
-            $this->container = $container;
-
-            return parent::runTest();
-        });
     }
 }
