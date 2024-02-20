@@ -9,6 +9,8 @@
   - Added `Spiral\Scaffolder\Command\InfoCommand` console command for getting information about available scaffolder 
     commands.
   - [spiral/core] Added the ability to bind the interface as a proxy via `Spiral\Core\Config\Proxy` or `Spiral\Core\Config\DeprecationProxy`.
+  - [spiral/core] Added the ability to configure the container using `Spiral\Core\Options`. Added option **checkScope** 
+    to enable scope checking.
 
 ## 3.11.1 - 2023-12-29
 
