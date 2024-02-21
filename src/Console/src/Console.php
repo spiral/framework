@@ -74,6 +74,9 @@ final class Console
             $input = new InputProxy($input, ['firstArgument' => $command]);
         }
 
+        /**
+         * @psalm-suppress InvalidArgument
+         */
         $code = $this->scope->runScope(
             new Scope(
                 bindings: [

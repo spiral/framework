@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Framework\Console\Confirmation;
 
+use Spiral\Framework\Spiral;
 use Spiral\Testing\Attribute\Env;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\BaseTestCase;
 
-#[TestScope('console')]
+#[TestScope(Spiral::Console)]
 final class ApplicationInProductionCommandTest extends BaseTestCase
 {
     #[Env('APP_ENV', 'production')]
