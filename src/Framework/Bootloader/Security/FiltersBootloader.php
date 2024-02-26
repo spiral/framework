@@ -51,7 +51,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
             ->getBinder(Spiral::HttpRequest)
             ->bindSingleton(
                 InputInterface::class,
-                static fn (ContainerInterface $container): InputScope => new InputScope(new InputManager($container))
+                static fn (InputManager $inputManager): InputScope => new InputScope($inputManager)
             );
 
         $this->binder->bind(InputInterface::class, new Proxy(InputInterface::class, true));
