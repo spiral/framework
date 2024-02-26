@@ -24,6 +24,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Config\Proxy;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use Spiral\Framework\Spiral;
@@ -59,6 +60,7 @@ final class HttpAuthBootloader extends Bootloader
                 static fn (CurrentRequest $request): AuthContextInterface =>
                     $request->get()->getAttribute(AuthMiddleware::ATTRIBUTE) ?? throw new InvalidAuthContext()
             );
+        $this->binder->bind(AuthContextInterface::class, new Proxy(AuthContextInterface::class, false));
 
         return [];
     }
