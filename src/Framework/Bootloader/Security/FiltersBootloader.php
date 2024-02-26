@@ -30,6 +30,7 @@ use Spiral\Filters\Model\Mapper\CasterRegistry;
 use Spiral\Filters\Model\Mapper\CasterRegistryInterface;
 use Spiral\Filters\Model\Mapper\UuidCaster;
 use Spiral\Framework\Spiral;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Request\InputManager;
 
 /**
@@ -51,7 +52,9 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
             ->getBinder(Spiral::HttpRequest)
             ->bindSingleton(
                 InputInterface::class,
-                static fn (InputManager $inputManager): InputScope => new InputScope($inputManager)
+                static function (ContainerInterface $container, HttpConfig $config): InputScope {
+                    return new InputScope(new InputManager($container, $config));
+                }
             );
 
         $this->binder->bind(InputInterface::class, new Proxy(InputInterface::class, true));
