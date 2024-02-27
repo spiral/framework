@@ -39,7 +39,7 @@ class AttributesBootloader extends Bootloader
             AttributesConfig::CONFIG,
             [
                 'annotations' => [
-                    'support' => $env->get('SUPPORT_ANNOTATIONS', true),
+                    'support' => $env->get('SUPPORT_ANNOTATIONS', \interface_exists(DoctrineReaderInterface::class)),
                 ],
                 'cache' => [
                     'storage' => $env->get('ATTRIBUTES_CACHE_STORAGE', null),
