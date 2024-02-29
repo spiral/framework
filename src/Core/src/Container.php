@@ -59,9 +59,13 @@ final class Container implements
      */
     public function __construct(
         private Config $config = new Config(),
-        ?string $scopeName = self::DEFAULT_ROOT_SCOPE_NAME,
+        string|\BackedEnum|null $scopeName = self::DEFAULT_ROOT_SCOPE_NAME,
         private Options $options = new Options(),
     ) {
+        if (\is_object($scopeName)) {
+            $scopeName = (string) $scopeName->value;
+        }
+
         $this->initServices($this, $scopeName);
 
         /** @psalm-suppress RedundantPropertyInitializationCheck */
@@ -154,13 +158,15 @@ final class Container implements
     /**
      * Make a Binder proxy to configure bindings for a specific scope.
      *
-     * @param null|string $scope Scope name.
+     * @param null|\BackedEnum|string $scope Scope name.
      *        If {@see null}, binder for the current working scope will be returned.
      *        If {@see string}, the default binder for the given scope will be returned. Default bindings won't affect
      *        already created Container instances except the case with the root one.
      */
-    public function getBinder(?string $scope = null): BinderInterface
+    public function getBinder(string|\BackedEnum|null $scope = null): BinderInterface
     {
+        $scope = \is_object($scope) ? (string) $scope->value : $scope;
+
         return $scope === null
             ? $this->binder
             : new StateBinder($this->config->scopedBindings->getState($scope));

@@ -7,14 +7,10 @@ namespace Spiral\Boot;
 /**
  * Dispatchers are general application flow controllers, system should start them and pass exception
  * or instance of snapshot into them when error happens.
+ * @method static bool canServe() Must return true if the dispatcher expects to handle requests in a current environment
  */
 interface DispatcherInterface
 {
-    /**
-     * Must return true if dispatcher expects to handle requests in a current environment.
-     */
-    public function canServe(): bool;
-
     /**
      * Start request execution.
      *

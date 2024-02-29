@@ -35,9 +35,7 @@ class KernelTest extends TestCase
     {
         $this->expectException(BootException::class);
 
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ])->run();
+        $kernel = TestCore::create(['root' => __DIR__])->run();
 
         $kernel->serve();
     }
@@ -47,28 +45,42 @@ class KernelTest extends TestCase
      */
     public function testDispatcher(): void
     {
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ])->run();
+        $kernel = TestCore::create(['root' => __DIR__])->run();
 
         $d = new class() implements DispatcherInterface {
-            public $fired = false;
+            public static function canServe(EnvironmentInterface $env): bool
+            {
+                return true;
+            }
 
+            public function serve(): bool
+            {
+                return true;
+            }
+        };
+        $kernel->addDispatcher($d);
+
+        $this->assertTrue($kernel->serve());
+    }
+
+    public function testDispatcherNonStaticServe(): void
+    {
+        $kernel = TestCore::create(['root' => __DIR__])->run();
+
+        $d = new class() implements DispatcherInterface {
             public function canServe(): bool
             {
                 return true;
             }
 
-            public function serve(): void
+            public function serve(): bool
             {
-                $this->fired = true;
+                return true;
             }
         };
         $kernel->addDispatcher($d);
-        $this->assertFalse($d->fired);
 
-        $kernel->serve();
-        $this->assertTrue($d->fired);
+        $this->assertTrue($kernel->serve());
     }
 
     /**
@@ -76,12 +88,10 @@ class KernelTest extends TestCase
      */
     public function testDispatcherReturnCode(): void
     {
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ])->run();
+        $kernel = TestCore::create(['root' => __DIR__])->run();
 
         $d = new class() implements DispatcherInterface {
-            public function canServe(): bool
+            public static function canServe(EnvironmentInterface $env): bool
             {
                 return true;
             }
@@ -102,9 +112,7 @@ class KernelTest extends TestCase
      */
     public function testEnv(): void
     {
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ])->run();
+        $kernel = TestCore::create(['root' => __DIR__])->run();
 
         $this->assertSame(
             'VALUE',
@@ -114,9 +122,7 @@ class KernelTest extends TestCase
 
     public function testBootingCallbacks()
     {
-        $kernel = TestCore::create([
-            'root' => __DIR__,
-        ]);
+        $kernel = TestCore::create(['root' => __DIR__]);
 
         $kernel->booting(static function (TestCore $core) {
             $core->getContainer()->bind('abc', 'foo');
@@ -154,7 +160,7 @@ class KernelTest extends TestCase
     public function testEventsShouldBeDispatched(): void
     {
         $testDispatcher = new class implements DispatcherInterface {
-            public function canServe(): bool
+            public static function canServe(EnvironmentInterface $env): bool
             {
                 return true;
             }
