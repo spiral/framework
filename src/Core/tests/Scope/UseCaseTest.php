@@ -11,7 +11,7 @@ use Spiral\Core\Config\Scalar;
 use Spiral\Core\Config\Shared;
 use Spiral\Core\Container;
 use Spiral\Core\Scope;
-use Spiral\Framework\ScopeName;
+use Spiral\Framework\Spiral;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
@@ -406,7 +406,7 @@ final class UseCaseTest extends BaseTestCase
 
     public static function scopeEnumDataProvider(): \Traversable
     {
-        yield [ScopeName::HttpRequest, 'http.request'];
+        yield [Spiral::HttpRequest, 'http.request'];
         yield [ScopeEnum::A, 'a'];
     }
 }

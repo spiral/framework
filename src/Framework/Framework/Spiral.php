@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Framework;
 
-enum ScopeName: string
+/**
+ * @internal
+ */
+enum Spiral: string
 {
     case Http = 'http';
     case HttpRequest = 'http.request';
