@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.12.0 - 2024-02-29
 
 - **Medium Impact Changes**
   - [spiral/core] Interface `Spiral\Core\Container\SingletonInterface` is deprecated,
