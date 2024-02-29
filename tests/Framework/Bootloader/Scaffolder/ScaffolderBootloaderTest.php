@@ -32,7 +32,7 @@ final class ScaffolderBootloaderTest extends BaseTestCase
 
         $this->assertSame(
             ['foo' => ['bar' => 'baz']],
-            $configs->getConfig(ScaffolderConfig::CONFIG)['defaults']['declarations']
+            $configs->getConfig(ScaffolderConfig::CONFIG)['defaults']['declarations'],
         );
     }
 
@@ -73,7 +73,7 @@ final class ScaffolderBootloaderTest extends BaseTestCase
                     ],
                     Declaration\MiddlewareDeclaration::TYPE => [
                         'namespace' => 'Middleware',
-                        'postfix' => '',
+                        'postfix' => 'Middleware',
                         'class' => Declaration\MiddlewareDeclaration::class,
                     ],
                     Declaration\CommandDeclaration::TYPE => [
@@ -87,7 +87,7 @@ final class ScaffolderBootloaderTest extends BaseTestCase
                         'class' => Declaration\JobHandlerDeclaration::class,
                     ],
                 ],
-            ]
+            ],
         ], $config);
     }
 }

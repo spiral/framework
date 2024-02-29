@@ -60,6 +60,7 @@ final class Container implements
     public function __construct(
         private Config $config = new Config(),
         string|\BackedEnum|null $scopeName = self::DEFAULT_ROOT_SCOPE_NAME,
+        private Options $options = new Options(),
     ) {
         if (\is_object($scopeName)) {
             $scopeName = (string) $scopeName->value;
@@ -110,7 +111,7 @@ final class Container implements
     }
 
     /**
-     * @param string|null $context Related to parameter caused injection if any.
+     * @param \Stringable|string|null $context Related to parameter caused injection if any.
      *
      * @throws ContainerException
      * @throws \Throwable
@@ -134,7 +135,7 @@ final class Container implements
      * @template T
      *
      * @param class-string<T>|string|Autowire $id
-     * @param string|null $context Call context.
+     * @param \Stringable|string|null $context Call context.
      *
      * @return ($id is class-string ? T : mixed)
      *
@@ -330,7 +331,7 @@ final class Container implements
         $constructor = new Internal\Common\Registry($container->config, [
             'state' => $state,
             'scope' => new Internal\Scope($scopeName),
-        ]);
+        ], $this->options);
 
         // Create container services
         foreach ($container->config as $property => $class) {
@@ -385,10 +386,10 @@ final class Container implements
     private function runIsolatedScope(Scope $config, callable $closure): mixed
     {
         // Open scope
-        $container = new self($this->config, $config->name);
+        $container = new self($this->config, $config->name, $this->options);
 
         // Configure scope
-        $container->scope->setParent($this, $this->scope);
+        $container->scope->setParent($this, $this->scope, $this->factory);
 
         // Add specific bindings
         foreach ($config->bindings as $alias => $resolver) {

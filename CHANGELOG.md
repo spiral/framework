@@ -5,6 +5,12 @@
 - **Medium Impact Changes**
   - [spiral/core] Interface `Spiral\Core\Container\SingletonInterface` is deprecated,
     use `Spiral\Core\Attribute\Singleton` instead. Will be removed in v4.0.
+- **Other Features**
+  - Added `Spiral\Scaffolder\Command\InfoCommand` console command for getting information about available scaffolder 
+    commands.
+  - [spiral/core] Added the ability to bind the interface as a proxy via `Spiral\Core\Config\Proxy` or `Spiral\Core\Config\DeprecationProxy`.
+  - [spiral/core] Added the ability to configure the container using `Spiral\Core\Options`. Added option **checkScope** 
+    to enable scope checking.
 
 ## 3.11.1 - 2023-12-29
 
