@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Console\Interceptor\AttributeInterceptor;
 use Spiral\Core\Attribute\Scope;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptableCore;
 
@@ -19,6 +20,9 @@ final class CommandCoreFactory
     ) {
     }
 
+    /**
+     * @param array<class-string<CoreInterceptorInterface>> $interceptors
+     */
     public function make(array $interceptors, ?EventDispatcherInterface $eventDispatcher = null): CoreInterface
     {
         /** @var CommandCore $core */
