@@ -73,6 +73,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
     /**
      * Pass execution to "perform" method using container to resolve method dependencies.
      * @final
+     * @TODO Change to final in v4.0
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
