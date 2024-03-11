@@ -7,6 +7,7 @@ namespace Spiral\Tests\Core\Attribute;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Attribute\Scope;
+use Spiral\Framework\Spiral;
 use Spiral\Tests\Core\Fixtures\ScopeEnum;
 
 final class ScopeTest extends TestCase
@@ -22,6 +23,7 @@ final class ScopeTest extends TestCase
     public static function scopeNameDataProvider(): \Traversable
     {
         yield ['foo', 'foo'];
+        yield [Spiral::HttpRequest, 'http.request'];
         yield [ScopeEnum::A, 'a'];
     }
 }
