@@ -15,7 +15,9 @@ use Spiral\Console\Configurator\SignatureBasedConfigurator;
 use Spiral\Console\Event\CommandFinished;
 use Spiral\Console\Event\CommandStarting;
 use Spiral\Console\Traits\HelpersTrait;
+use Spiral\Core\ContainerScope;
 use Spiral\Core\CoreInterceptorInterface;
+use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
@@ -99,10 +101,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
                         ],
                         autowire: true,
                     ),
-                    fn (CommandCoreFactory $factory) => $factory->make(
-                        $this->interceptors,
-                        $this->eventDispatcher,
-                    )->callAction(
+                    fn () => $this->buildCore()->callAction(
                         static::class,
                         $method,
                         [
@@ -119,6 +118,16 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
         } finally {
             [$this->input, $this->output] = [null, null];
         }
+    }
+
+    /**
+     * @deprecated This method will be removed in v4.0.
+     */
+    protected function buildCore(): CoreInterface
+    {
+        $factory = ContainerScope::getContainer()->get(CommandCoreFactory::class);
+
+        return $factory->make($this->interceptors, $this->eventDispatcher);
     }
 
     protected function prepareInput(InputInterface $input): InputInterface
