@@ -9,13 +9,17 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Config\Patch\Prepend;
+use Spiral\Console\CommandCore;
+use Spiral\Console\CommandCoreFactory;
 use Spiral\Console\CommandLocatorListener;
 use Spiral\Console\Config\ConsoleConfig;
+use Spiral\Console\Confirmation\ApplicationInProduction;
 use Spiral\Console\Console;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
 use Spiral\Core\Attribute\Singleton;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
@@ -40,12 +44,20 @@ final class ConsoleBootloader extends Bootloader
     ) {
     }
 
-    public function init(AbstractKernel $kernel): void
+    public function init(AbstractKernel $kernel, BinderInterface $binder): void
     {
         // Lowest priority
         $kernel->bootstrapped(static function (AbstractKernel $kernel): void {
             $kernel->addDispatcher(ConsoleDispatcher::class);
         });
+
+        // Registering necessary scope bindings
+        $commandBinder = $binder->getBinder('console.command');
+        $commandBinder->bindSingleton(ApplicationInProduction::class, ApplicationInProduction::class);
+        $commandBinder->bindSingleton(CommandCoreFactory::class, CommandCoreFactory::class);
+        $commandBinder->bindSingleton(CommandCore::class, CommandCore::class);
+
+        $binder->getBinder('console')->bindSingleton(Console::class, Console::class);
 
         $this->config->setDefaults(
             ConsoleConfig::CONFIG,
