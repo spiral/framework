@@ -41,7 +41,6 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
     {
         $newPipeline = new Pipeline(
             scope: $this->createMock(ScopeInterface::class),
-            container: $this->createMock(ContainerInterface::class),
         );
 
         $this->assertSame(
@@ -61,7 +60,6 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->with(Pipeline::class)
             ->andReturn($p = new Pipeline(
                 $this->createMock(ScopeInterface::class),
-                $container,
                 tracer: new NullTracer($container)
             ));
 
@@ -116,7 +114,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->shouldReceive('make')
             ->once()
             ->with(Pipeline::class)
-            ->andReturn(new Pipeline(m::mock(ScopeInterface::class), $this->container));
+            ->andReturn(new Pipeline(m::mock(ScopeInterface::class)));
 
         $this->expectException(RouteException::class);
         $this->expectExceptionMessage(\sprintf('Invalid middleware `%s`', $type));

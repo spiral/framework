@@ -227,7 +227,7 @@ final class CsrfTest extends TestCase
 
         return new Http(
             $config,
-            new Pipeline($this->container, $this->container),
+            new Pipeline($this->container),
             new TestResponseFactory($config),
             $this->container
         );

@@ -267,7 +267,7 @@ final class HttpTest extends TestCase
 
         $http = new Http(
             $config,
-            new Pipeline($this->container, $this->container),
+            new Pipeline($this->container),
             new ResponseFactory($config),
             $this->container,
             $tracerFactory = m::mock(TracerFactoryInterface::class),
@@ -292,7 +292,7 @@ final class HttpTest extends TestCase
 
         return new Http(
             $config,
-            new Pipeline($this->container, $this->container),
+            new Pipeline($this->container),
             new ResponseFactory($config),
             $this->container
         );

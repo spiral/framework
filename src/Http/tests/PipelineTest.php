@@ -22,7 +22,7 @@ final class PipelineTest extends TestCase
 {
     public function testTarget(): void
     {
-        $pipeline = new Pipeline($this->container, $this->container);
+        $pipeline = new Pipeline($this->container);
 
         $handler = new CallableHandler(function () {
             return 'response';
@@ -37,7 +37,7 @@ final class PipelineTest extends TestCase
 
     public function testHandle(): void
     {
-        $pipeline = new Pipeline($this->container, $this->container);
+        $pipeline = new Pipeline($this->container);
 
         $handler = new CallableHandler(function () {
             return 'response';
@@ -54,7 +54,7 @@ final class PipelineTest extends TestCase
     {
         $this->expectException(PipelineException::class);
 
-        $pipeline = new Pipeline($this->container, $this->container);
+        $pipeline = new Pipeline($this->container);
         $pipeline->handle(new ServerRequest('GET', ''));
     }
 
@@ -77,7 +77,7 @@ final class PipelineTest extends TestCase
             ->method('dispatch')
             ->with(new MiddlewareProcessing($request, $middleware));
 
-        $pipeline = new Pipeline($this->container, $this->container, $dispatcher, new NullTracer($this->container));
+        $pipeline = new Pipeline($this->container, $dispatcher, new NullTracer($this->container));
 
         $pipeline->pushMiddleware($middleware);
 

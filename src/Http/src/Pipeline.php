@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Http;
 
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\Attribute\Proxy;
+use Spiral\Core\ContainerScope;
 use Spiral\Core\ScopeInterface;
 use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
@@ -32,7 +32,6 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
     public function __construct(
         #[Proxy] private readonly ScopeInterface $scope,
-        #[Proxy] private readonly ContainerInterface $container,
         private readonly ?EventDispatcherInterface $dispatcher = null,
         ?TracerInterface $tracer = null
     ) {
@@ -91,14 +90,15 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
                     return $response;
                 },
-                scoped: true,
                 attributes: [
                     'http.middleware' => $middleware::class,
-                ]
+                ],
+                scoped: true
             );
         }
 
-        $this->container->get(CurrentRequest::class)->set($request);
+        // todo: find a better solution in the Spiral v4.0
+        ContainerScope::getContainer()?->get(CurrentRequest::class)->set($request);
 
         return $this->handler->handle($request);
     }

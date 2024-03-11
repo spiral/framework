@@ -30,7 +30,7 @@ abstract class BaseFirewallTestCase extends BaseTestCase
 
         $http = new Http(
             $config,
-            new Pipeline($this->container, $this->container),
+            new Pipeline($this->container),
             new ResponseFactory($config),
             $this->container
         );
