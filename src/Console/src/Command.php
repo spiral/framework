@@ -72,8 +72,9 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
 
     /**
      * Pass execution to "perform" method using container to resolve method dependencies.
+     * @final
      */
-    final protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($this->container === null) {
             throw new ScopeException('Container is not set');
