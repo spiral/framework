@@ -142,7 +142,7 @@ final class ProxyClassRenderer
         return \ltrim(
             \sprintf(
                 '%s %s%s%s%s',
-                $param->hasType() ? self::renderParameterTypes($param->getType(), $param->getDeclaringClass()) : '',
+                $param->hasType() ? 'mixed' : '',
                 $param->isPassedByReference() ? '&' : '',
                 $param->isVariadic() ? '...' : '',
                 '$' . $param->getName(),

@@ -18,6 +18,8 @@ use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
 use Spiral\Tests\Core\Scope\Stub\ScopedProxyLoggerCarrier;
 use Spiral\Tests\Core\Scope\Stub\ScopedProxyStdClass;
+use Spiral\Tests\Core\Scope\Stub\User;
+use Spiral\Tests\Core\Scope\Stub\UserInterface;
 use WeakReference;
 
 final class ProxyTest extends BaseTestCase
@@ -273,6 +275,26 @@ final class ProxyTest extends BaseTestCase
         self::assertFalse($context->destroyed);
     }
 
+    public function testImplementationWithWiderTypes(): void
+    {
+        $root = new Container();
+        $root->getBinder('http')->bindSingleton(UserInterface::class, static fn () => new User('Foo'));
+        $proxy = $root->runScope(new Scope(), static fn(#[Proxy] UserInterface $proxy) => $proxy);
+
+        $root->runScope(
+            new Scope('http'),
+            static function () use ($root, $proxy) {
+                self::assertSame('Foo', $proxy->getName());
+                $proxy->setName(new class implements \Stringable {
+                    public function __toString(): string
+                    {
+                        return 'Bar';
+                    }
+                });
+                self::assertSame('Bar', $proxy->getName());
+            }
+        );
+    }
 
     /*
     // Proxy::$attachContainer=true tests

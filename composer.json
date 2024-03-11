@@ -139,7 +139,8 @@
         "spiral/validator": "^1.3",
         "google/protobuf": "^3.25",
         "symplify/monorepo-builder": "^10.2.7",
-        "vimeo/psalm": "^5.9"
+        "vimeo/psalm": "^5.9",
+        "doctrine/annotations": "^2.0"
     },
     "autoload-dev": {
         "psr-4": {
