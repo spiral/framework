@@ -22,7 +22,7 @@ final class AuthTransportMiddleware implements MiddlewareInterface
     private readonly AuthMiddleware $authMiddleware;
 
     /**
-     * @param ScopeInterface $scope. Deprecated, will be removed in v4.0.
+     * @param ScopeInterface $scope Deprecated, will be removed in v4.0.
      */
     public function __construct(
         string $transportName,

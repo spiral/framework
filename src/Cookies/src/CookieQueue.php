@@ -6,7 +6,7 @@ namespace Spiral\Cookies;
 
 use Spiral\Core\Attribute\Scope;
 
-#[Scope('http.request')]
+#[Scope('http')]
 final class CookieQueue
 {
     public const ATTRIBUTE = 'cookieQueue';

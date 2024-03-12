@@ -25,7 +25,7 @@ final class AuthMiddleware implements MiddlewareInterface
     public const TOKEN_STORAGE_ATTRIBUTE = 'tokenStorage';
 
     /**
-     * @param ScopeInterface $scope. Deprecated, will be removed in v4.0.
+     * @param ScopeInterface $scope Deprecated, will be removed in v4.0.
      */
     public function __construct(
         private readonly ScopeInterface $scope,

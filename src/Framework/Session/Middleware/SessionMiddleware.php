@@ -26,7 +26,7 @@ final class SessionMiddleware implements MiddlewareInterface
     private const SIGNATURE_HEADERS = ['User-Agent', 'Accept-Language', 'Accept-Encoding'];
 
     /**
-     * @param ScopeInterface $scope. Deprecated, will be removed in v4.0.
+     * @param ScopeInterface $scope Deprecated, will be removed in v4.0.
      */
     public function __construct(
         private readonly SessionConfig $config,
