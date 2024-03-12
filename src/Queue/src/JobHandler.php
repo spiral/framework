@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Queue;
 
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\InvokerInterface;
 use Spiral\Queue\Exception\JobException;
 
@@ -18,7 +19,7 @@ abstract class JobHandler implements HandlerInterface
     protected const HANDLE_FUNCTION = 'invoke';
 
     public function __construct(
-        protected InvokerInterface $invoker,
+        #[Proxy] protected InvokerInterface $invoker,
     ) {
     }
 
