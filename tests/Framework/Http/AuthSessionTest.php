@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Http;
 
 use Spiral\Auth\AuthContextInterface;
-use Spiral\Auth\Exception\InvalidAuthContext;
-use Spiral\Auth\Middleware\AuthMiddleware;
+use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Testing\Attribute\TestScope;
@@ -74,16 +74,17 @@ final class AuthSessionTest extends HttpTestCase
         ]));
 
         $this->setHttpHandler(function (): void {
-            $this->expectException(InvalidAuthContext::class);
-            $this->expectExceptionMessage(\sprintf(
-                'The `%s` attribute was not found. To use the auth, the `%s` must be configured.',
-                AuthMiddleware::ATTRIBUTE,
-                AuthMiddleware::class
-            ));
-
+            $this->expectException(ContextualObjectNotFoundException::class);
             $this->getContainer()->get(AuthContextInterface::class);
         });
 
         $this->fakeHttp()->get('/');
+    }
+
+    public function testCookieQueueBindingWithoutRequest(): void
+    {
+        $this->expectException(InvalidRequestScopeException::class);
+
+        $this->getContainer()->get(AuthContextInterface::class);
     }
 }

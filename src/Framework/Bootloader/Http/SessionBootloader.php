@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Config\Proxy;
 use Spiral\Core\Container\Autowire;
 use Spiral\Framework\Spiral;
-use Spiral\Http\CurrentRequest;
 use Spiral\Session\Config\SessionConfig;
-use Spiral\Session\Exception\InvalidSessionContext;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SessionFactory;
@@ -33,10 +34,12 @@ final class SessionBootloader extends Bootloader
             ->getBinder(Spiral::Http)
             ->bind(
                 SessionInterface::class,
-                static function (CurrentRequest $request): SessionInterface {
-                    return $request->get()
-                        ->getAttribute(SessionMiddleware::ATTRIBUTE) ?? throw new InvalidSessionContext();
-                }
+                static fn (?ServerRequestInterface $request): SessionInterface =>
+                    ($request ?? throw new InvalidRequestScopeException(SessionInterface::class))
+                        ->getAttribute(SessionMiddleware::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
+                            SessionInterface::class,
+                            SessionMiddleware::ATTRIBUTE,
+                        )
             );
         $this->binder->bind(SessionInterface::class, new Proxy(SessionInterface::class, false));
 

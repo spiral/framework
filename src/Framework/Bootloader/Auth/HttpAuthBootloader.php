@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Auth;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Auth\Config\AuthConfig;
-use Spiral\Auth\Exception\InvalidAuthContext;
 use Spiral\Auth\HttpTransportInterface;
 use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\Session\TokenStorage as SessionTokenStorage;
@@ -19,6 +19,8 @@ use Spiral\Auth\TransportRegistry;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
+use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
@@ -57,8 +59,12 @@ final class HttpAuthBootloader extends Bootloader
             ->getBinder(Spiral::Http)
             ->bind(
                 AuthContextInterface::class,
-                static fn (CurrentRequest $request): AuthContextInterface =>
-                    $request->get()->getAttribute(AuthMiddleware::ATTRIBUTE) ?? throw new InvalidAuthContext()
+                static fn (?ServerRequestInterface $request): AuthContextInterface =>
+                    ($request ?? throw new InvalidRequestScopeException(AuthContextInterface::class))
+                        ->getAttribute(AuthMiddleware::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
+                            AuthContextInterface::class,
+                            AuthMiddleware::ATTRIBUTE,
+                        )
             );
         $this->binder->bind(AuthContextInterface::class, new Proxy(AuthContextInterface::class, false));
 

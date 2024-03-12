@@ -9,7 +9,8 @@ use Spiral\Core\Attribute\Scope;
 use Spiral\Http\Exception\HttpException;
 
 /**
- * Provides access to the current request in HTTP scope.
+ * Provides access to the current request in the `http` scope.
+ * @internal
  */
 #[Scope('http')]
 final class CurrentRequest
@@ -23,6 +24,6 @@ final class CurrentRequest
 
     public function get(): ServerRequestInterface
     {
-        return $this->request ?? throw new HttpException('Unable to resolve current request.');
+        return $this->request ?? throw new HttpException('Unable to resolve current server request.');
     }
 }

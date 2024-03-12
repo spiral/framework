@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
+use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
-use Spiral\Session\Exception\InvalidSessionContext;
-use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SessionInterface;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
@@ -112,17 +112,19 @@ final class SessionTest extends HttpTestCase
         ]));
 
         $this->setHttpHandler(function (): void {
-            $this->expectException(InvalidSessionContext::class);
-            $this->expectExceptionMessage(\sprintf(
-                'The `%s` attribute was not found. To use the session, the `%s` must be configured.',
-                SessionMiddleware::ATTRIBUTE,
-                SessionMiddleware::class
-            ));
+            $this->expectException(ContextualObjectNotFoundException::class);
 
             $this->session();
         });
 
         $this->fakeHttp()->get(uri: '/')->assertOk();
+    }
+
+    public function testSessionBindingWithoutRequest(): void
+    {
+        $this->expectException(InvalidRequestScopeException::class);
+
+        $this->session();
     }
 
     private function session(): SessionInterface
