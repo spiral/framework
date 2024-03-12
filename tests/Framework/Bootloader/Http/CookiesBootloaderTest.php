@@ -6,6 +6,8 @@ namespace Framework\Bootloader\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Bootloader\Http\CookiesBootloader;
+use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Cookies\Config\CookiesConfig;
@@ -16,29 +18,38 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class CookiesBootloaderTest extends BaseTestCase
 {
-    #[TestScope(Spiral::HttpRequest)]
+    #[TestScope(Spiral::Http)]
     public function testCookieQueueBinding(): void
     {
         $request = $this->mockContainer(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')
-            ->once()
-            ->with(CookieQueue::ATTRIBUTE, null)
-            ->andReturn(new CookieQueue());
+            ->with(CookieQueue::ATTRIBUTE)
+            ->andReturn(new CookieQueue(), new CookieQueue(), new CookieQueue(), new CookieQueue());
 
         $this->assertContainerBound(CookieQueue::class);
+        // Makes 3 calls to the container
+        $this->assertContainerBoundNotAsSingleton(CookieQueue::class, CookieQueue::class);
     }
 
-    #[TestScope(Spiral::HttpRequest)]
-    public function testCookieQueueBindingShouldThrowAndExceptionWhenAttributeIsEmpty(): void
+    #[TestScope(Spiral::Http)]
+    public function testCookieQueueBindingWithoutCookieQueueInRequest(): void
     {
-        $this->expectExceptionMessage('Unable to resolve CookieQueue, invalid request scope');
         $request = $this->mockContainer(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')
-            ->once()
-            ->with(CookieQueue::ATTRIBUTE, null)
-            ->andReturnNull();
+            ->with(CookieQueue::ATTRIBUTE)
+            ->andReturn(null);
 
-        $this->assertContainerBound(CookieQueue::class);
+        $this->expectException(ContextualObjectNotFoundException::class);
+
+        $this->getContainer()->get(CookieQueue::class);
+    }
+
+    #[TestScope(Spiral::Http)]
+    public function testCookieQueueBindingWithoutRequest(): void
+    {
+        $this->expectException(InvalidRequestScopeException::class);
+
+        $this->getContainer()->get(CookieQueue::class);
     }
 
     public function testConfig(): void

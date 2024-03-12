@@ -6,13 +6,14 @@ namespace Spiral\Bootloader\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\CookieQueue;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
-use Spiral\Core\Exception\ScopeException;
 use Spiral\Framework\Spiral;
 
 #[Singleton]
@@ -26,7 +27,7 @@ final class CookiesBootloader extends Bootloader
 
     public function defineBindings(): array
     {
-        $this->binder->getBinder(Spiral::HttpRequest)->bind(CookieQueue::class, [self::class, 'cookieQueue']);
+        $this->binder->getBinder(Spiral::Http)->bind(CookieQueue::class, [self::class, 'cookieQueue']);
 
         return [];
     }
@@ -51,13 +52,15 @@ final class CookiesBootloader extends Bootloader
         $this->config->modify(CookiesConfig::CONFIG, new Append('excluded', null, $cookie));
     }
 
-    private function cookieQueue(ServerRequestInterface $request): CookieQueue
+    private function cookieQueue(?ServerRequestInterface $request): CookieQueue
     {
-        $cookieQueue = $request->getAttribute(CookieQueue::ATTRIBUTE, null);
-        if ($cookieQueue === null) {
-            throw new ScopeException('Unable to resolve CookieQueue, invalid request scope');
+        if ($request === null) {
+            throw new InvalidRequestScopeException(CookieQueue::class);
         }
 
-        return $cookieQueue;
+        return $request->getAttribute(CookieQueue::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
+            CookieQueue::class,
+            CookieQueue::ATTRIBUTE,
+        );
     }
 }
