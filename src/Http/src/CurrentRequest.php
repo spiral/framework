@@ -22,8 +22,8 @@ final class CurrentRequest
         $this->request = $request;
     }
 
-    public function get(): ServerRequestInterface
+    public function get(): ?ServerRequestInterface
     {
-        return $this->request ?? throw new HttpException('Unable to resolve current server request.');
+        return $this->request;
     }
 }

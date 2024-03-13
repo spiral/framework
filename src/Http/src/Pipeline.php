@@ -63,43 +63,50 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             throw new PipelineException('Unable to run pipeline, no handler given.');
         }
 
-        $position = $this->position++;
-        if (isset($this->middleware[$position])) {
+        // todo: find a better solution in the Spiral v4.0
+        /** @var CurrentRequest|null $currentRequest */
+        $currentRequest = ContainerScope::getContainer()?->get(CurrentRequest::class);
+
+        $previousRequest = $currentRequest?->get();
+        $currentRequest?->set($request);
+        try {
+            $position = $this->position++;
+            if (!isset($this->middleware[$position])) {
+                return $this->handler->handle($request);
+            }
+
             $middleware = $this->middleware[$position];
             $this->dispatcher?->dispatch(new MiddlewareProcessing($request, $middleware));
 
+            $callback = function (SpanInterface $span) use ($request, $middleware): Response {
+                $response = $middleware->process($request, $this);
+
+                $span
+                    ->setAttribute(
+                        'http.status_code',
+                        $response->getStatusCode()
+                    )
+                    ->setAttribute(
+                        'http.response_content_length',
+                        $response->getHeaderLine('Content-Length') ?: $response->getBody()->getSize()
+                    )
+                    ->setStatus($response->getStatusCode() < 500 ? 'OK' : 'ERROR');
+
+                return $response;
+            };
+
             return $this->tracer->trace(
                 name: \sprintf('Middleware processing [%s]', $middleware::class),
-                callback: function (
-                    SpanInterface $span,
-                    CurrentRequest $current
-                ) use ($request, $middleware): Response {
-                    $current->set($request);
-                    $response = $middleware->process($request, $this);
-
-                    $span
-                        ->setAttribute(
-                            'http.status_code',
-                            $response->getStatusCode()
-                        )
-                        ->setAttribute(
-                            'http.response_content_length',
-                            $response->getHeaderLine('Content-Length') ?: $response->getBody()->getSize()
-                        )
-                        ->setStatus($response->getStatusCode() < 500 ? 'OK' : 'ERROR');
-
-                    return $response;
-                },
+                callback: $callback,
                 attributes: [
                     'http.middleware' => $middleware::class,
                 ],
                 scoped: true
             );
+        } finally {
+            if ($previousRequest !== null) {
+                $currentRequest?->set($previousRequest);
+            }
         }
-
-        // todo: find a better solution in the Spiral v4.0
-        ContainerScope::getContainer()?->get(CurrentRequest::class)->set($request);
-
-        return $this->handler->handle($request);
     }
 }

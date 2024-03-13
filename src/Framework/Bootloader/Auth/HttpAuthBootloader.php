@@ -165,8 +165,8 @@ final class HttpAuthBootloader extends Bootloader
      */
     private function getTokenStorage(
         TokenStorageProviderInterface $provider,
-        CurrentRequest $request
+        ServerRequestInterface $request
     ): TokenStorageInterface {
-        return $request->get()->getAttribute(AuthMiddleware::TOKEN_STORAGE_ATTRIBUTE) ?? $provider->getStorage();
+        return $request->getAttribute(AuthMiddleware::TOKEN_STORAGE_ATTRIBUTE) ?? $provider->getStorage();
     }
 }
