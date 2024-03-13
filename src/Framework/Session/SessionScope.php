@@ -6,11 +6,13 @@ namespace Spiral\Session;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
 
 /**
  * Provides access to the currently active session scope.
+ * @deprecated Use {@see SessionInterface} instead. Will be removed in v4.0.
  */
 #[Singleton]
 final class SessionScope implements SessionInterface
@@ -19,7 +21,7 @@ final class SessionScope implements SessionInterface
     private const DEFAULT_SECTION = '_DEFAULT';
 
     public function __construct(
-        private readonly ContainerInterface $container
+        #[Proxy] private readonly ContainerInterface $container
     ) {
     }
 

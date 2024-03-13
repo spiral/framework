@@ -11,6 +11,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Config\Proxy;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\InterceptableCore;
@@ -28,6 +29,9 @@ use Spiral\Filters\Model\Mapper\EnumCaster;
 use Spiral\Filters\Model\Mapper\CasterRegistry;
 use Spiral\Filters\Model\Mapper\CasterRegistryInterface;
 use Spiral\Filters\Model\Mapper\UuidCaster;
+use Spiral\Framework\Spiral;
+use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\Request\InputManager;
 
 /**
  * @implements Container\InjectorInterface<FilterInterface>
@@ -35,17 +39,30 @@ use Spiral\Filters\Model\Mapper\UuidCaster;
 #[Singleton]
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface
 {
-    protected const SINGLETONS = [
-        FilterProviderInterface::class => [self::class, 'initFilterProvider'],
-        InputInterface::class => InputScope::class,
-        CasterRegistryInterface::class => [self::class, 'initCasterRegistry'],
-    ];
-
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly BinderInterface $binder,
         private readonly ConfiguratorInterface $config
     ) {
+    }
+
+    public function defineSingletons(): array
+    {
+        $this->binder
+            ->getBinder(Spiral::HttpRequest)
+            ->bindSingleton(
+                InputInterface::class,
+                static function (ContainerInterface $container, HttpConfig $config): InputScope {
+                    return new InputScope(new InputManager($container, $config));
+                }
+            );
+
+        $this->binder->bind(InputInterface::class, new Proxy(InputInterface::class, true));
+
+        return [
+            FilterProviderInterface::class => [self::class, 'initFilterProvider'],
+            CasterRegistryInterface::class => [self::class, 'initCasterRegistry'],
+        ];
     }
 
     /**

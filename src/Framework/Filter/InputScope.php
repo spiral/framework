@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Spiral\Filter;
 
+use Spiral\Core\Attribute\Scope;
 use Spiral\Filters\Exception\InputException;
 use Spiral\Filters\InputInterface;
+use Spiral\Framework\Spiral;
 use Spiral\Http\Request\InputManager;
 
 /**
  * Provides ability to use http request scope as filters input.
  */
+#[Scope(Spiral::HttpRequest)]
 final class InputScope implements InputInterface
 {
     public function __construct(

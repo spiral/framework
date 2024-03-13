@@ -21,6 +21,9 @@ final class AuthTransportWithStorageMiddleware implements MiddlewareInterface
 {
     private readonly MiddlewareInterface $authMiddleware;
 
+    /**
+     * @param ScopeInterface $scope Deprecated, will be removed in v4.0.
+     */
     public function __construct(
         string $transportName,
         ScopeInterface $scope,

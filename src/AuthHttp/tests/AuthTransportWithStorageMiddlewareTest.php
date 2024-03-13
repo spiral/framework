@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use Mockery as m;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,54 +17,63 @@ use Spiral\Auth\TokenStorageProviderInterface;
 use Spiral\Auth\TransportRegistry;
 use Spiral\Core\ScopeInterface;
 
-final class AuthTransportWithStorageMiddlewareTest extends TestCase
+final class AuthTransportWithStorageMiddlewareTest extends BaseTestCase
 {
     public function testProcessMiddlewareWithTokenStorageProvider(): void
     {
-        $serverRequest = m::mock(ServerRequestInterface::class);
-        $storageProvider = m::mock(TokenStorageProviderInterface::class);
-        $scope = m::mock(ScopeInterface::class);
-        $response = m::mock(ResponseInterface::class);
+        $storageProvider = $this->createMock(TokenStorageProviderInterface::class);
+        $storageProvider
+            ->expects($this->once())
+            ->method('getStorage')
+            ->with('session')
+            ->willReturn($tokenStorage = $this->createMock(TokenStorageInterface::class));
 
-        $storageProvider->shouldReceive('getStorage')->once()->with('session')->andReturn(
-            $tokenStorage = m::mock(TokenStorageInterface::class)
-        );
+        $matcher = $this->exactly(2);
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request
+            ->expects($this->exactly(2))
+            ->method('withAttribute')
+            ->willReturnCallback(function (string $key, string $value) use ($matcher, $tokenStorage) {
+                match ($matcher->numberOfInvocations()) {
+                    1 =>  $this->assertInstanceOf(AuthContextInterface::class, $value),
+                    2 =>  $this->assertSame($tokenStorage, $value),
+                };
+            })
+            ->willReturnSelf();
+
+        $response = $this->createMock(ResponseInterface::class);
 
         $registry = new TransportRegistry();
-        $registry->setTransport('header', $transport = m::mock(HttpTransportInterface::class));
+        $registry->setTransport('header', $transport = $this->createMock(HttpTransportInterface::class));
 
-        $transport->shouldReceive('fetchToken')->once()->with($serverRequest)->andReturn('fooToken');
-        $transport->shouldReceive('commitToken')->once()->with($serverRequest, $response, '123', null)
-            ->andReturn($response);
+        $transport->expects($this->once())->method('fetchToken')->with($request)->willReturn('fooToken');
+        $transport->expects($this->once())->method('commitToken')->with($request, $response, '123', null)
+            ->willReturn($response);
 
-        $tokenStorage->shouldReceive('load')->once()->with('fooToken')->andReturn(
-            $token = m::mock(TokenInterface::class)
-        );
+        $tokenStorage
+            ->expects($this->once())
+            ->method('load')
+            ->with('fooToken')
+            ->willReturn($token = $this->createMock(TokenInterface::class));
 
-        $scope
-            ->shouldReceive('runScope')
-            ->once()
-            ->withArgs(
-                fn(array $bindings, callable $callback) => $bindings[AuthContextInterface::class]
-                        ->getToken() instanceof $token
-            )
-            ->andReturn($response);
-
-        $token->shouldReceive('getID')->once()->andReturn('123');
-        $token->shouldReceive('getExpiresAt')->once()->andReturnNull();
+        $token->expects($this->once())->method('getID')->willReturn('123');
+        $token->expects($this->once())->method('getExpiresAt')->willReturn(null);
 
         $middleware = new AuthTransportWithStorageMiddleware(
             'header',
-            $scope,
-            m::mock(ActorProviderInterface::class),
+            $this->createMock(ScopeInterface::class),
+            $this->createMock(ActorProviderInterface::class),
             $storageProvider,
             $registry,
             storage: 'session'
         );
 
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects($this->once())->method('handle')->with($request)->willReturn($response);
+
         $this->assertSame(
             $response,
-            $middleware->process($serverRequest, m::mock(RequestHandlerInterface::class))
+            $middleware->process($request, $handler)
         );
     }
 }

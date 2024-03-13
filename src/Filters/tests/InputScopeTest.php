@@ -8,6 +8,7 @@ use Nyholm\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\InputInterface;
+use Spiral\Http\Request\InputManager;
 
 final class InputScopeTest extends BaseTestCase
 {
@@ -16,6 +17,7 @@ final class InputScopeTest extends BaseTestCase
         parent::setUp();
 
         $this->container->bindSingleton(InputInterface::class, InputScope::class);
+        $this->container->bindSingleton(InputManager::class, new InputManager($this->container));
         $this->container->bindSingleton(
             ServerRequestInterface::class,
             (new ServerRequest('POST', '/test'))->withParsedBody([

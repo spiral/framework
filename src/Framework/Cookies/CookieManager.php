@@ -7,17 +7,21 @@ namespace Spiral\Cookies;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Attribute\Proxy;
+use Spiral\Core\Attribute\Scope;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
+use Spiral\Framework\Spiral;
 
 /**
  * Cookies manages provides the ability to write and read cookies from the active request/response scope.
  */
 #[Singleton]
+#[Scope(Spiral::HttpRequest)]
 final class CookieManager
 {
     public function __construct(
-        private readonly ContainerInterface $container
+        #[Proxy] private readonly ContainerInterface $container,
     ) {
     }
 

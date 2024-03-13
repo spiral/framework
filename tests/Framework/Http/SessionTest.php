@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
+use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Framework\Spiral;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Session\SessionInterface;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\HttpTestCase;
@@ -100,6 +103,28 @@ final class SessionTest extends HttpTestCase
             ->get(uri: '/', cookies: ['sid' => $result->getCookies()['sid']])
             ->assertOk()
             ->assertBodySame('1');
+    }
+
+    public function testInvalidSessionContextException(): void
+    {
+        $this->getContainer()->bind(HttpConfig::class, new HttpConfig([
+            'middleware' => [],
+        ]));
+
+        $this->setHttpHandler(function (): void {
+            $this->expectException(ContextualObjectNotFoundException::class);
+
+            $this->session();
+        });
+
+        $this->fakeHttp()->get(uri: '/')->assertOk();
+    }
+
+    public function testSessionBindingWithoutRequest(): void
+    {
+        $this->expectException(InvalidRequestScopeException::class);
+
+        $this->session();
     }
 
     private function session(): SessionInterface

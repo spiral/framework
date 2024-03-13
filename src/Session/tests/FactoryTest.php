@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Session;
 
-use PHPUnit\Framework\TestCase;
-use Spiral\Core\Container;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Exception\SessionException;
 use Spiral\Session\Handler\FileHandler;
@@ -13,7 +11,7 @@ use Spiral\Session\Session;
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
 
-class FactoryTest extends TestCase
+final class FactoryTest extends TestCase
 {
     public function tearDown(): void
     {
@@ -33,7 +31,7 @@ class FactoryTest extends TestCase
             'handlers' => [
                 //No directory
             ]
-        ]), new Container());
+        ]), $this->container);
 
         $factory->initSession('sig', 'sessionid');
     }
@@ -49,7 +47,7 @@ class FactoryTest extends TestCase
             'handlers' => [
                 //No directory
             ]
-        ]), new Container());
+        ]), $this->container);
 
         $factory->initSession('sig', 'sessionid');
     }
@@ -64,9 +62,9 @@ class FactoryTest extends TestCase
             'secure'   => false,
             'handler'  => null,
             'handlers' => []
-        ]), $c = new Container());
+        ]), $this->container);
 
-        $c->bind(SessionInterface::class, Session::class);
+        $this->container->bind(SessionInterface::class, Session::class);
 
         $session = $factory->initSession('sig');
         $session->resume();

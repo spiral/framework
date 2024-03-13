@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Auth;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Auth\AuthContextInterface;
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\HttpTransportInterface;
+use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\Session\TokenStorage as SessionTokenStorage;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageProvider;
@@ -16,13 +19,19 @@ use Spiral\Auth\TransportRegistry;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
+use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Attribute\Singleton;
+use Spiral\Core\BinderInterface;
+use Spiral\Core\Config\Proxy;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
+use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\CurrentRequest;
 
 /**
  * Enables Auth middleware and http transports to read and write tokens in PSR-7 request/response.
@@ -30,20 +39,55 @@ use Spiral\Http\Config\HttpConfig;
 #[Singleton]
 final class HttpAuthBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        AuthBootloader::class,
-        HttpBootloader::class,
-    ];
-
-    protected const SINGLETONS = [
-        TransportRegistry::class => [self::class, 'transportRegistry'],
-        TokenStorageInterface::class => [self::class, 'getDefaultTokenStorage'],
-        TokenStorageProviderInterface::class => TokenStorageProvider::class,
-    ];
-
     public function __construct(
-        private readonly ConfiguratorInterface $config
+        private readonly ConfiguratorInterface $config,
+        private readonly BinderInterface $binder,
     ) {
+    }
+
+    public function defineDependencies(): array
+    {
+        return [
+            AuthBootloader::class,
+            HttpBootloader::class,
+        ];
+    }
+
+    public function defineBindings(): array
+    {
+        $this->binder
+            ->getBinder(Spiral::Http)
+            ->bind(
+                AuthContextInterface::class,
+                static fn (?ServerRequestInterface $request): AuthContextInterface =>
+                    ($request ?? throw new InvalidRequestScopeException(AuthContextInterface::class))
+                        ->getAttribute(AuthMiddleware::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
+                            AuthContextInterface::class,
+                            AuthMiddleware::ATTRIBUTE,
+                        )
+            );
+        $this->binder->bind(AuthContextInterface::class, new Proxy(AuthContextInterface::class, false));
+
+        return [];
+    }
+
+    public function defineSingletons(): array
+    {
+        // Default token storage outside of HTTP scope
+        $this->binder->bindSingleton(
+            TokenStorageInterface::class,
+            static fn (TokenStorageProviderInterface $provider): TokenStorageInterface => $provider->getStorage(),
+        );
+
+        // Token storage from request attribute in HTTP scope
+        $this->binder
+            ->getBinder(Spiral::Http)
+            ->bindSingleton(TokenStorageInterface::class, [self::class, 'getTokenStorage']);
+
+        return [
+            TransportRegistry::class => [self::class, 'transportRegistry'],
+            TokenStorageProviderInterface::class => TokenStorageProvider::class,
+        ];
     }
 
     public function init(AbstractKernel $kernel, EnvironmentInterface $env): void
@@ -119,8 +163,10 @@ final class HttpAuthBootloader extends Bootloader
     /**
      * Get default token storage from provider
      */
-    private function getDefaultTokenStorage(TokenStorageProviderInterface $provider): TokenStorageInterface
-    {
-        return $provider->getStorage();
+    private function getTokenStorage(
+        TokenStorageProviderInterface $provider,
+        ServerRequestInterface $request
+    ): TokenStorageInterface {
+        return $request->getAttribute(AuthMiddleware::TOKEN_STORAGE_ATTRIBUTE) ?? $provider->getStorage();
     }
 }

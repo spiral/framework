@@ -7,14 +7,18 @@ namespace Spiral\Auth;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Auth\Exception\TokenStorageException;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
 
+/**
+ * @deprecated Use {@see TokenStorageInterface} instead. Will be removed in v4.0.
+ */
 #[Singleton]
 final class TokenStorageScope implements TokenStorageInterface
 {
     public function __construct(
-        private readonly ContainerInterface $container
+        #[Proxy] private readonly ContainerInterface $container
     ) {
     }
 

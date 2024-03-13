@@ -15,6 +15,8 @@ use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Interceptor\PopulateDataFromEntityInterceptor;
 use Spiral\Filters\Model\Interceptor\ValidateFilterInterceptor;
 use Spiral\Filters\InputInterface;
+use Spiral\Framework\Spiral;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class FiltersBootloaderTest extends BaseTestCase
@@ -24,6 +26,7 @@ final class FiltersBootloaderTest extends BaseTestCase
         $this->assertContainerBoundAsSingleton(FilterProviderInterface::class, FilterProvider::class);
     }
 
+    #[TestScope(Spiral::HttpRequest)]
     public function testInputInterfaceBinding(): void
     {
         $this->assertContainerBoundAsSingleton(InputInterface::class, InputScope::class);

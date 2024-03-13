@@ -4,41 +4,28 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth;
 
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\HttpTransportInterface;
 use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
-use Spiral\Core\Container;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
-use Spiral\Telemetry\NullTracer;
-use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 use Spiral\Tests\Auth\Stub\TestAuthHttpToken;
 
-class HeaderTransportTest extends TestCase
+final class HeaderTransportTest extends BaseTestCase
 {
-    private Container $container;
-
-    public function setUp(): void
-    {
-        $this->container = new Container();
-        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
-    }
-
     public function testHeaderToken(): void
     {
         $http = $this->getCore(new HeaderTransport());
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 if ($request->getAttribute('authContext')->getToken() === null) {
                     echo 'no token';
                 } else {
@@ -62,7 +49,7 @@ class HeaderTransportTest extends TestCase
         $http = $this->getCore(new HeaderTransport('Authorization', 'Bearer %s'));
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 if ($request->getAttribute('authContext')->getToken() === null) {
                     echo 'no token';
                 } else {
@@ -85,7 +72,7 @@ class HeaderTransportTest extends TestCase
         $http = $this->getCore(new HeaderTransport());
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 if ($request->getAttribute('authContext')->getToken() === null) {
                     echo 'no token';
                 } else {
@@ -109,7 +96,7 @@ class HeaderTransportTest extends TestCase
         $http = $this->getCore(new HeaderTransport());
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 $request->getAttribute('authContext')->close();
                 echo 'closed';
             }
@@ -127,7 +114,7 @@ class HeaderTransportTest extends TestCase
         $http = $this->getCore(new HeaderTransport());
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 $request->getAttribute('authContext')->start(
                     new TestAuthHttpToken('new-token', ['ok' => 1])
                 );
@@ -144,7 +131,7 @@ class HeaderTransportTest extends TestCase
         $http = $this->getCore(new HeaderTransport('Authorization', 'Bearer %s'));
 
         $http->setHandler(
-            static function (ServerRequestInterface $request, ResponseInterface $response): void {
+            static function (ServerRequestInterface $request): void {
                 $request->getAttribute('authContext')->start(
                     new TestAuthHttpToken('new-token', ['ok' => 1])
                 );

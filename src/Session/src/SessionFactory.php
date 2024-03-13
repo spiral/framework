@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Session;
 
 use Psr\Container\ContainerExceptionInterface;
+use Spiral\Core\Attribute\Scope;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\FactoryInterface;
 use Spiral\Session\Config\SessionConfig;
@@ -15,6 +16,7 @@ use Spiral\Session\Exception\SessionException;
  * Initiates session instance and configures session handlers.
  */
 #[Singleton]
+#[Scope('http')]
 final class SessionFactory implements SessionFactoryInterface
 {
     public function __construct(

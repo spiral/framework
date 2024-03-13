@@ -38,14 +38,6 @@ final class AuthMiddlewareTest extends HttpTestCase
             $this->assertSame($storage, $ref->invoke($scope));
         });
 
-        $scope = $this->getContainer()->get(TokenStorageScope::class);
-        $ref = new \ReflectionMethod($scope, 'getTokenStorage');
-        $this->assertNotInstanceOf($storage::class, $ref->invoke($scope));
-
         $this->fakeHttp()->get('/');
-
-        $scope = $this->getContainer()->get(TokenStorageScope::class);
-        $ref = new \ReflectionMethod($scope, 'getTokenStorage');
-        $this->assertNotInstanceOf($storage::class, $ref->invoke($scope));
     }
 }

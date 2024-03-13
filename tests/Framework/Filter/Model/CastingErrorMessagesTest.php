@@ -6,10 +6,13 @@ namespace Spiral\Tests\Framework\Filter\Model;
 
 use Spiral\App\Request\CastingErrorMessages;
 use Spiral\Filters\Exception\ValidationException;
+use Spiral\Framework\Spiral;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\Filter\FilterTestCase;
 
 final class CastingErrorMessagesTest extends FilterTestCase
 {
+    #[TestScope(Spiral::HttpRequest)]
     public function testValidationMessages(): void
     {
         try {
