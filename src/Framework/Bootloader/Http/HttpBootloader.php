@@ -6,6 +6,7 @@ namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
@@ -45,8 +46,14 @@ final class HttpBootloader extends Bootloader
 
     public function defineSingletons(): array
     {
-        $this->binder->getBinder(Spiral::Http)->bindSingleton(Http::class, [self::class, 'httpCore']);
-        $this->binder->getBinder(Spiral::Http)->bindSingleton(CurrentRequest::class, CurrentRequest::class);
+        $httpBinder = $this->binder->getBinder(Spiral::Http);
+
+        $httpBinder->bindSingleton(Http::class, [self::class, 'httpCore']);
+        $httpBinder->bindSingleton(CurrentRequest::class, CurrentRequest::class);
+        $httpBinder->bind(
+            ServerRequestInterface::class,
+            static fn (CurrentRequest $request): ServerRequestInterface => $request->get()
+        );
 
         /**
          * @deprecated since v3.12. Will be removed in v4.0.
