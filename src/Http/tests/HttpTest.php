@@ -294,7 +294,10 @@ final class HttpTest extends TestCase
             $config,
             new Pipeline($this->container),
             new ResponseFactory($config),
-            $this->container
+            $this->container,
+            dispatcher: $this->container->has(EventDispatcherInterface::class)
+                ? $this->container->get(EventDispatcherInterface::class)
+                : null,
         );
     }
 

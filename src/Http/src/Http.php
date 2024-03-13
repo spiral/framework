@@ -31,7 +31,8 @@ final class Http implements RequestHandlerInterface
         private readonly Pipeline $pipeline,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ContainerInterface $container,
-        ?TracerFactoryInterface $tracerFactory = null
+        ?TracerFactoryInterface $tracerFactory = null,
+        private readonly ?EventDispatcherInterface $dispatcher = null,
     ) {
         foreach ($this->config->getMiddleware() as $middleware) {
             $this->pipeline->pushMiddleware($this->container->get($middleware));
@@ -63,11 +64,7 @@ final class Http implements RequestHandlerInterface
         $callback = function (SpanInterface $span, CurrentRequest $currentRequest) use ($request): ResponseInterface {
             $currentRequest->set($request);
 
-            $dispatcher = $this->container->has(EventDispatcherInterface::class)
-                ? $this->container->get(EventDispatcherInterface::class)
-                : null;
-
-            $dispatcher?->dispatch(new RequestReceived($request));
+            $this->dispatcher?->dispatch(new RequestReceived($request));
 
             if ($this->handler === null) {
                 throw new HttpException('Unable to run HttpCore, no handler is set.');
@@ -86,7 +83,7 @@ final class Http implements RequestHandlerInterface
                 )
                 ->setStatus($response->getStatusCode() < 500 ? 'OK' : 'ERROR');
 
-            $dispatcher?->dispatch(new RequestHandled($request, $response));
+            $this->dispatcher?->dispatch(new RequestHandled($request, $response));
 
             return $response;
         };
