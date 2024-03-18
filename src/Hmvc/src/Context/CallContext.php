@@ -13,8 +13,8 @@ final class CallContext implements CallContextInterface
 
     public function __construct(
         private TargetInterface $target,
-        private array $arguments,
-        array $attributes,
+        private array $arguments = [],
+        array $attributes = [],
     ) {
         $this->attributes = $attributes;
     }

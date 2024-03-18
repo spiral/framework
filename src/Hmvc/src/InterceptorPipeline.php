@@ -5,27 +5,33 @@ declare(strict_types=1);
 namespace Spiral\Core;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Core\Context\CallContext;
+use Spiral\Core\Context\Target\Target;
 use Spiral\Core\Event\InterceptorCalling;
 use Spiral\Core\Exception\InterceptorException;
+use Spiral\Core\Reborn\HandlerInterface;
+use Spiral\Core\Reborn\InterceptorInterface;
 
 /**
  * Provides the ability to modify the call to the domain core on it's way to the action.
  */
-final class InterceptorPipeline implements CoreInterface
+final class InterceptorPipeline implements CoreInterface, HandlerInterface
 {
     private ?CoreInterface $core = null;
+    private ?HandlerInterface $handler = null;
 
-    /** @var CoreInterceptorInterface[] */
+    /** @var list<CoreInterceptorInterface|InterceptorInterface> */
     private array $interceptors = [];
 
     private int $position = 0;
+    private ?CallContext $context = null;
 
     public function __construct(
         private readonly ?EventDispatcherInterface $dispatcher = null
     ) {
     }
 
-    public function addInterceptor(CoreInterceptorInterface $interceptor): void
+    public function addInterceptor(CoreInterceptorInterface|InterceptorInterface $interceptor): void
     {
         $this->interceptors[] = $interceptor;
     }
@@ -34,7 +40,15 @@ final class InterceptorPipeline implements CoreInterface
     {
         $pipeline = clone $this;
         $pipeline->core = $core;
+        $pipeline->handler = null;
+        return $pipeline;
+    }
 
+    public function withHandler(HandlerInterface $handler): self
+    {
+        $pipeline = clone $this;
+        $pipeline->handler = $handler;
+        $pipeline->core = null;
         return $pipeline;
     }
 
@@ -43,23 +57,60 @@ final class InterceptorPipeline implements CoreInterface
      */
     public function callAction(string $controller, string $action, array $parameters = []): mixed
     {
-        if ($this->core === null) {
-            throw new InterceptorException('Unable to invoke pipeline without assigned core');
+        if ($this->context === null) {
+            return $this->handle(
+                new CallContext(Target::fromPathArray([$controller, $action]), $parameters),
+            );
         }
+
+        if ($this->context->getTarget()->getPath() === [$controller, $action]) {
+            return $this->handle($this->context->withArguments($parameters));
+        }
+
+        return $this->handle(
+            $this->context->withTarget(
+                Target::fromPathArray([$controller, $action]),
+            )->withArguments($parameters)
+        );
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function handle(CallContext $context): mixed
+    {
+        if ($this->core === null && $this->handler === null) {
+            throw new InterceptorException('Unable to invoke pipeline without last handler.');
+        }
+
+        $path = $context->getTarget()->getPath();
 
         $position = $this->position++;
         if (isset($this->interceptors[$position])) {
             $interceptor = $this->interceptors[$position];
+
             $this->dispatcher?->dispatch(new InterceptorCalling(
-                controller: $controller,
-                action: $action,
-                parameters: $parameters,
-                interceptor: $interceptor
+                controller: $path[0] ?? '',
+                action: $path[1] ?? '',
+                parameters: $context->getArguments(),
+                interceptor: $interceptor,
+                context: $context,
             ));
 
-            return $interceptor->process($controller, $action, $parameters, $this);
+            return $interceptor instanceof CoreInterceptorInterface
+                ? $interceptor->process($path[0] ?? '', $path[1] ?? '', $context->getArguments(), $this->withContext($context))
+                : $interceptor->intercept($context, $this->withContext($context));
         }
 
-        return $this->core->callAction($controller, $action, $parameters);
+        return $this->core !== null
+            ? $this->core->callAction($path[0] ?? '', $path[1] ?? '', $context->getArguments())
+            : $this->handler->handle($context);
+    }
+
+    private function withContext(CallContext $context): self
+    {
+        $pipeline = clone $this;
+        $pipeline->context = $context;
+        return $pipeline;
     }
 }

@@ -8,5 +8,5 @@ use Spiral\Core\Context\CallContextInterface;
 
 interface InterceptorInterface
 {
-    public function intercept(CallContextInterface $context, HandlerInterface $next): mixed;
+    public function intercept(CallContextInterface $context, HandlerInterface $handler): mixed;
 }
