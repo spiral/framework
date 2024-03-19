@@ -8,6 +8,8 @@ use Spiral\Core\Exception\ControllerException;
 
 /**
  * General application enterpoint class.
+ *
+ * @deprecated Use {@see HandlerInterface} instead.
  */
 interface CoreInterface
 {

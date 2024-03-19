@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Context;
 
-use Spiral\Core\Context\Attributed\AttributedInterface;
-use Spiral\Core\Context\Target\TargetInterface;
-
 interface CallContextInterface extends AttributedInterface
 {
     public function getTarget(): mixed;

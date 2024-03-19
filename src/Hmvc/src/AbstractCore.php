@@ -9,12 +9,13 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
-use TypeError;
 
 /**
  * Provides ability to call controllers in IoC scope.
  *
  * Make sure to bind ScopeInterface in your container.
+ *
+ * @deprecated
  */
 abstract class AbstractCore implements CoreInterface
 {

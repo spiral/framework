@@ -2,10 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core\Context\Target;
+namespace Spiral\Core\Context;
 
 final class Target implements TargetInterface
 {
+    /**
+     * @param list<non-empty-string> $path
+     * @param \ReflectionFunctionAbstract|null $reflection
+     */
+    private function __construct(
+        private ?array $path = null,
+        private ?\ReflectionFunctionAbstract $reflection = null,
+        private readonly string $delimiter = '.',
+    ) {
+    }
+
+    public function __toString(): string
+    {
+        return match (true) {
+            $this->path !== null => \implode($this->delimiter, $this->path),
+            $this->reflection !== null => $this->reflection->getName(),
+        };
+    }
+
     public static function fromReflection(\ReflectionFunctionAbstract $reflection): static
     {
         return new self(reflection: $reflection);
@@ -22,14 +41,6 @@ final class Target implements TargetInterface
     public static function fromPathArray(array $path, string $delimiter = '.'): static
     {
         return new self(path: $path, delimiter: $delimiter);
-    }
-
-    public function __toString(): string
-    {
-        return match (true) {
-            $this->path !== null => \implode($this->delimiter, $this->path),
-            $this->reflection !== null => $this->reflection->getName(),
-        };
     }
 
     public function getPath(): array
@@ -62,16 +73,5 @@ final class Target implements TargetInterface
         $clone = clone $this;
         $clone->reflection = $reflection;
         return $clone;
-    }
-
-    /**
-     * @param list<non-empty-string> $path
-     * @param \ReflectionFunctionAbstract|null $reflection
-     */
-    private function __construct(
-        private ?array $path = null,
-        private ?\ReflectionFunctionAbstract $reflection = null,
-        private readonly string $delimiter = '.',
-    ) {
     }
 }

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core\Context\Target;
+namespace Spiral\Core\Context;
 
 use Stringable;
 
 /**
- * The target may be a concrete reflection or alias.
+ * The target may be a concrete reflection or an alias.
  * In both cases, you can get a path to the target.
  */
 interface TargetInterface extends Stringable

@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Context;
 
-use Spiral\Core\Context\Attributed\AttributedTrait;
-use Spiral\Core\Context\Target\TargetInterface;
-
 final class CallContext implements CallContextInterface
 {
     use AttributedTrait;

@@ -8,6 +8,8 @@ use Spiral\Core\Exception\ControllerException;
 
 /**
  * Provides the ability to intercept and wrap the call to the domain core with all the call context.
+ *
+ * @deprecated Use {@see InterceptorInterface} instead.
  */
 interface CoreInterceptorInterface
 {

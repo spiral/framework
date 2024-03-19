@@ -6,11 +6,9 @@ namespace Spiral\Core;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\Context\CallContext;
-use Spiral\Core\Context\Target\Target;
+use Spiral\Core\Context\Target;
 use Spiral\Core\Event\InterceptorCalling;
 use Spiral\Core\Exception\InterceptorException;
-use Spiral\Core\Reborn\HandlerInterface;
-use Spiral\Core\Reborn\InterceptorInterface;
 
 /**
  * Provides the ability to modify the call to the domain core on it's way to the action.
@@ -102,9 +100,9 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
                 : $interceptor->intercept($context, $this->withContext($context));
         }
 
-        return $this->core !== null
-            ? $this->core->callAction($path[0] ?? '', $path[1] ?? '', $context->getArguments())
-            : $this->handler->handle($context);
+        return $this->core === null
+            ? $this->handler->handle($context)
+            : $this->core->callAction($path[0] ?? '', $path[1] ?? '', $context->getArguments());
     }
 
     private function withContext(CallContext $context): self

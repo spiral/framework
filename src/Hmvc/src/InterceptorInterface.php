@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core\Reborn;
+namespace Spiral\Core;
 
 use Spiral\Core\Context\CallContextInterface;
 

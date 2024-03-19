@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core\Context\Attributed;
+namespace Spiral\Core\Context;
 
 interface AttributedInterface
 {
