@@ -9,18 +9,28 @@ namespace Spiral\Core\Context;
  */
 trait AttributedTrait
 {
+    /** @var array<non-empty-string, mixed> */
     private array $attributes = [];
 
+    /**
+     * @return array<non-empty-string, mixed> Attributes derived from the context.
+     */
     public function getAttributes(): array
     {
         return $this->attributes;
     }
 
+    /**
+     * @param non-empty-string $name
+     */
     public function getAttribute(string $name, mixed $default = null): mixed
     {
         return $this->attributes[$name] ?? $default;
     }
 
+    /**
+     * @param non-empty-string $name
+     */
     public function withAttribute(string $name, mixed $value): static
     {
         $clone = clone $this;
@@ -28,6 +38,9 @@ trait AttributedTrait
         return $clone;
     }
 
+    /**
+     * @param non-empty-string $name
+     */
     public function withoutAttribute(string $name): static
     {
         $clone = clone $this;

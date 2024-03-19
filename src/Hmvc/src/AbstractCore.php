@@ -27,12 +27,18 @@ abstract class AbstractCore implements CoreInterface
         protected ContainerInterface $container
     ) {
         // resolver is usually the container itself
+        /** @psalm-suppress MixedAssignment */
         $this->resolver = $container->get(ResolverInterface::class);
     }
 
+    /**
+     * @psalm-assert class-string $controller
+     * @psalm-assert non-empty-string $action
+     */
     public function callAction(string $controller, string $action, array $parameters = []): mixed
     {
         try {
+            /** @psalm-suppress ArgumentTypeCoercion */
             $method = new \ReflectionMethod($controller, $action);
         } catch (\ReflectionException $e) {
             throw new ControllerException(
@@ -68,7 +74,8 @@ abstract class AbstractCore implements CoreInterface
         $container = $this->container;
         return ContainerScope::runScope(
             $container,
-            static fn () => $method->invokeArgs($container->get($controller), $args)
+            /** @psalm-suppress MixedArgument */
+            static fn (): mixed => $method->invokeArgs($container->get($controller), $args)
         );
     }
 
@@ -81,6 +88,7 @@ abstract class AbstractCore implements CoreInterface
                 $parameters[$name] === null &&
                 $parameter->isDefaultValueAvailable()
             ) {
+                /** @psalm-suppress MixedAssignment */
                 $parameters[$name] = $parameter->getDefaultValue();
             }
         }

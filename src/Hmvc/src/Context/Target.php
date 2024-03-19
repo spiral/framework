@@ -7,7 +7,7 @@ namespace Spiral\Core\Context;
 final class Target implements TargetInterface
 {
     /**
-     * @param list<non-empty-string> $path
+     * @param list<string> $path
      * @param \ReflectionFunctionAbstract|null $reflection
      */
     private function __construct(
@@ -32,11 +32,12 @@ final class Target implements TargetInterface
 
     public static function fromPathString(string $path, string $delimiter = '.'): static
     {
+        /** @psalm-suppress ArgumentTypeCoercion */
         return new self(path: \explode($delimiter, $path), delimiter: $delimiter);
     }
 
     /**
-     * @param list<non-empty-string> $path
+     * @param list<string> $path
      */
     public static function fromPathArray(array $path, string $delimiter = '.'): static
     {

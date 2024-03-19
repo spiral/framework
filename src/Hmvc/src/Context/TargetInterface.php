@@ -13,10 +13,13 @@ use Stringable;
 interface TargetInterface extends Stringable
 {
     /**
-     * @return list<non-empty-string>
+     * @return list<string>
      */
     public function getPath(): array;
 
+    /**
+     * @param list<string> $path
+     */
     public function withPath(array $path): static;
 
     public function getReflection(): ?\ReflectionFunctionAbstract;

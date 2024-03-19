@@ -8,6 +8,9 @@ final class CallContext implements CallContextInterface
 {
     use AttributedTrait;
 
+    /**
+     * @param array<non-empty-string, mixed> $attributes
+     */
     public function __construct(
         private TargetInterface $target,
         private array $arguments = [],
