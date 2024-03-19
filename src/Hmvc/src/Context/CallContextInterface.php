@@ -6,7 +6,7 @@ namespace Spiral\Core\Context;
 
 interface CallContextInterface extends AttributedInterface
 {
-    public function getTarget(): mixed;
+    public function getTarget(): TargetInterface;
 
     public function getArguments(): array;
 
