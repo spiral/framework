@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Unit\Stub;
 
-use Spiral\Core\Context\CallContextInterface;
-use Spiral\Core\HandlerInterface;
-use Spiral\Core\InterceptorInterface;
+use Spiral\Interceptors\Context\CallContextInterface;
+use Spiral\Interceptors\HandlerInterface;
+use Spiral\Interceptors\InterceptorInterface;
 
 final class StatefulInterceptor implements InterceptorInterface
 {

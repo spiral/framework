@@ -9,13 +9,14 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
+use Spiral\Interceptors\Handler\MethodResolver;
 
 /**
  * Provides ability to call controllers in IoC scope.
  *
  * Make sure to bind ScopeInterface in your container.
  *
- * @deprecated
+ * @deprecated will be removed in Spiral v4.0
  */
 abstract class AbstractCore implements CoreInterface
 {
@@ -37,20 +38,16 @@ abstract class AbstractCore implements CoreInterface
      */
     public function callAction(string $controller, string $action, array $parameters = []): mixed
     {
-        try {
-            /** @psalm-suppress ArgumentTypeCoercion */
-            $method = new \ReflectionMethod($controller, $action);
-        } catch (\ReflectionException $e) {
-            throw new ControllerException(
-                \sprintf('Invalid action `%s`->`%s`', $controller, $action),
-                ControllerException::BAD_ACTION,
-                $e
-            );
-        }
+        $method = MethodResolver::pathToReflection($controller, $action);
 
+        // Validate method
         if ($method->isStatic() || !$method->isPublic()) {
             throw new ControllerException(
-                \sprintf('Invalid action `%s`->`%s`', $controller, $action),
+                \sprintf(
+                    'Invalid action `%s`->`%s`',
+                    $method->getDeclaringClass()->getName(),
+                    $method->getName(),
+                ),
                 ControllerException::BAD_ACTION
             );
         }
@@ -61,13 +58,13 @@ abstract class AbstractCore implements CoreInterface
             throw new ControllerException(
                 \sprintf('Missing/invalid parameter %s of `%s`->`%s`', $e->getParameter(), $controller, $action),
                 ControllerException::BAD_ARGUMENT,
-                $e
+                $e,
             );
         } catch (ContainerExceptionInterface $e) {
             throw new ControllerException(
                 $e->getMessage(),
                 ControllerException::ERROR,
-                $e
+                $e,
             );
         }
 
@@ -94,6 +91,6 @@ abstract class AbstractCore implements CoreInterface
         }
 
         // getting the set of arguments should be sent to requested method
-        return $this->resolver->resolveArguments($method, $parameters, validate: true);
+        return $this->resolver->resolveArguments($method, $parameters);
     }
 }

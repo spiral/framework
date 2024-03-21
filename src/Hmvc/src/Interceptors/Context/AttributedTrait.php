@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core\Context;
+namespace Spiral\Interceptors\Context;
 
 /**
  * Provides a basic implementation of the {@see AttributedInterface}.

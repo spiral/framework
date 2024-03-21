@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core;
+namespace Spiral\Interceptors;
 
-use Spiral\Core\Context\CallContext;
+use Spiral\Interceptors\Context\CallContext;
 
 interface HandlerInterface
 {

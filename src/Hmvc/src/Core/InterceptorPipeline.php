@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Core;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Spiral\Core\Context\CallContext;
-use Spiral\Core\Context\Target;
 use Spiral\Core\Event\InterceptorCalling;
 use Spiral\Core\Exception\InterceptorException;
+use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\Target;
+use Spiral\Interceptors\HandlerInterface;
+use Spiral\Interceptors\InterceptorInterface;
 
 /**
  * Provides the ability to modify the call to the domain core on it's way to the action.
@@ -92,7 +94,6 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
                 action: $path[1] ?? '',
                 parameters: $context->getArguments(),
                 interceptor: $interceptor,
-                context: $context,
             ));
 
             return $interceptor instanceof CoreInterceptorInterface

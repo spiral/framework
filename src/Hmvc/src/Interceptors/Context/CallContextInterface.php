@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core\Context;
+namespace Spiral\Interceptors\Context;
 
 interface CallContextInterface extends AttributedInterface
 {

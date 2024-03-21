@@ -78,7 +78,7 @@
             "Spiral\\Cookies\\": "src/Cookies/src",
             "Spiral\\Core\\": [
                 "src/Core/src",
-                "src/Hmvc/src"
+                "src/Hmvc/src/Core"
             ],
             "Spiral\\Csrf\\": "src/Csrf/src",
             "Spiral\\Debug\\": "src/Debug/src",
@@ -90,6 +90,7 @@
             "Spiral\\Files\\": "src/Files/src",
             "Spiral\\Filters\\": "src/Filters/src",
             "Spiral\\Http\\": "src/Http/src",
+            "Spiral\\Interceptors\\": "src/Hmvc/src/Interceptors",
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Mailer\\": "src/Mailer/src",
             "Spiral\\Models\\": "src/Models/src",

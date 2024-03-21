@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core\Unit;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Spiral\Core\Context\Target;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Core\HandlerInterface;
-use Spiral\Core\InterceptorInterface;
 use Spiral\Core\InterceptorPipeline;
+use Spiral\Interceptors\Context\Target;
+use Spiral\Interceptors\HandlerInterface;
+use Spiral\Interceptors\InterceptorInterface;
 use Spiral\Testing\TestCase;
 use Spiral\Tests\Core\Unit\Stub\AddAttributeInterceptor;
 use Spiral\Tests\Core\Unit\Stub\ExceptionInterceptor;
@@ -35,7 +35,7 @@ final class InterceptorPipelineTest extends TestCase
 
         self::expectExceptionMessage('Unable to invoke pipeline without last handler.');
 
-        $pipeline->handle(new \Spiral\Core\Context\CallContext(Target::fromPathArray(['controller', 'action'])));
+        $pipeline->handle(new \Spiral\Interceptors\Context\CallContext(Target::fromPathArray(['controller', 'action'])));
     }
 
     public function testCrossCompatibility(): void

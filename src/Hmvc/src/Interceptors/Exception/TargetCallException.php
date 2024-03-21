@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Core\Exception;
+namespace Spiral\Interceptors\Exception;
 
 /**
  * Unable to perform user action or find controller.
  */
-class ControllerException extends RuntimeException
+class TargetCallException extends \RuntimeException
 {
     /**
      * Pre-defined controller error codes.
@@ -19,3 +19,5 @@ class ControllerException extends RuntimeException
     public const ERROR        = 4;
     public const UNAUTHORIZED = 8;
 }
+
+\class_alias(TargetCallException::class, 'Spiral\Core\Exception\ControllerException');
