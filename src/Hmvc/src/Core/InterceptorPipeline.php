@@ -85,20 +85,22 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
 
         $path = $context->getTarget()->getPath();
 
-        $position = $this->position++;
-        if (isset($this->interceptors[$position])) {
-            $interceptor = $this->interceptors[$position];
+        if (isset($this->interceptors[$this->position])) {
+            $interceptor = $this->interceptors[$this->position];
+            $handler = $this->nextWithContext($context);
 
-            $this->dispatcher?->dispatch(new InterceptorCalling(
-                controller: $path[0] ?? '',
-                action: $path[1] ?? '',
-                parameters: $context->getArguments(),
-                interceptor: $interceptor,
-            ));
+            $this->dispatcher?->dispatch(
+                new InterceptorCalling(
+                    controller: $path[0] ?? '',
+                    action: $path[1] ?? '',
+                    parameters: $context->getArguments(),
+                    interceptor: $interceptor,
+                )
+            );
 
             return $interceptor instanceof CoreInterceptorInterface
-                ? $interceptor->process($path[0] ?? '', $path[1] ?? '', $context->getArguments(), $this->withContext($context))
-                : $interceptor->intercept($context, $this->withContext($context));
+                ? $interceptor->process($path[0] ?? '', $path[1] ?? '', $context->getArguments(), $handler)
+                : $interceptor->intercept($context, $handler);
         }
 
         return $this->core === null
@@ -106,10 +108,11 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
             : $this->core->callAction($path[0] ?? '', $path[1] ?? '', $context->getArguments());
     }
 
-    private function withContext(CallContext $context): self
+    private function nextWithContext(CallContext $context): self
     {
         $pipeline = clone $this;
         $pipeline->context = $context;
+        ++$pipeline->position;
         return $pipeline;
     }
 }

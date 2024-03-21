@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
-use Spiral\Interceptors\Handler\MethodResolver;
+use Spiral\Interceptors\Handler\ActionResolver;
 
 /**
  * Provides ability to call controllers in IoC scope.
@@ -38,7 +38,7 @@ abstract class AbstractCore implements CoreInterface
      */
     public function callAction(string $controller, string $action, array $parameters = []): mixed
     {
-        $method = MethodResolver::pathToReflection($controller, $action);
+        $method = ActionResolver::pathToReflection($controller, $action);
 
         // Validate method
         if ($method->isStatic() || !$method->isPublic()) {
