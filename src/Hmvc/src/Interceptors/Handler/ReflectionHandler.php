@@ -10,6 +10,7 @@ use Spiral\Core\ResolverInterface;
 use Spiral\Interceptors\Context\CallContext;
 use Spiral\Interceptors\Exception\TargetCallException;
 use Spiral\Interceptors\HandlerInterface;
+use Spiral\Interceptors\Internal\ActionResolver;
 
 class ReflectionHandler implements HandlerInterface
 {

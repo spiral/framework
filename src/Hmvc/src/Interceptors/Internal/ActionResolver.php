@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Interceptors\Handler;
+namespace Spiral\Interceptors\Internal;
 
 use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;

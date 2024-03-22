@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Interceptors;
+namespace Spiral\Interceptors\Handler;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Interceptors\Context\CallContext;
 use Spiral\Interceptors\Event\InterceptorCalling;
 use Spiral\Interceptors\Exception\InterceptorException;
+use Spiral\Interceptors\HandlerInterface;
+use Spiral\Interceptors\InterceptorInterface;
 
 /**
  * Interceptor pipeline.
@@ -18,7 +20,7 @@ final class InterceptorPipeline implements HandlerInterface
 {
     private ?HandlerInterface $handler = null;
 
-    /** @var list<InterceptorInterface> */
+    /** @var InterceptorInterface */
     private array $interceptors = [];
 
     private int $position = 0;

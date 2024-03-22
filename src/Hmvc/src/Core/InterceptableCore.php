@@ -11,6 +11,8 @@ use Spiral\Interceptors\InterceptorInterface;
 
 /**
  * The domain core with a set of domain action interceptors (business logic middleware).
+ *
+ * @deprecated use {@see \Spiral\Interceptors\Handler\InterceptorPipeline} instead
  */
 final class InterceptableCore implements CoreInterface, HandlerInterface
 {

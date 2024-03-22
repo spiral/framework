@@ -14,6 +14,8 @@ use Spiral\Interceptors\InterceptorInterface;
 
 /**
  * Provides the ability to modify the call to the domain core on it's way to the action.
+ *
+ * @deprecated use {@see \Spiral\Interceptors\Handler\InterceptorPipeline} instead
  */
 final class InterceptorPipeline implements CoreInterface, HandlerInterface
 {
