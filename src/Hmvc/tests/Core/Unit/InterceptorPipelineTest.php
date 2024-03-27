@@ -8,6 +8,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptorPipeline;
+use Spiral\Interceptors\Context\CallContext;
 use Spiral\Interceptors\Context\Target;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\InterceptorInterface;
@@ -16,6 +17,7 @@ use Spiral\Tests\Core\Unit\Stub\AddAttributeInterceptor;
 use Spiral\Tests\Core\Unit\Stub\ExceptionInterceptor;
 use Spiral\Tests\Core\Unit\Stub\Legacy\LegacyChangerInterceptor;
 use Spiral\Tests\Core\Unit\Stub\Legacy\LegacyStatefulInterceptor;
+use Spiral\Tests\Core\Unit\Stub\MultipleCallNextInterceptor;
 use Spiral\Tests\Core\Unit\Stub\StatefulInterceptor;
 
 final class InterceptorPipelineTest extends TestCase
@@ -35,7 +37,7 @@ final class InterceptorPipelineTest extends TestCase
 
         self::expectExceptionMessage('Unable to invoke pipeline without last handler.');
 
-        $pipeline->handle(new \Spiral\Interceptors\Context\CallContext(Target::fromPathArray(['controller', 'action'])));
+        $pipeline->handle(new CallContext(Target::fromPathArray(['controller', 'action'])));
     }
 
     public function testCrossCompatibility(): void
@@ -95,6 +97,26 @@ final class InterceptorPipelineTest extends TestCase
             // Attributes won't be lost after legacy interceptor
             self::assertSame(['key' => 'value'], $state->context->getAttributes());
         }
+    }
+
+    /**
+     * Multiple call of same the handler inside the pipeline must invoke the same interceptor.
+     */
+    public function testCallHandlerTwice(): void
+    {
+        $mock = self::createMock(InterceptorInterface::class);
+        $mock->expects(self::exactly(2))
+            ->method('intercept')
+            ->willReturn('foo', 'bar');
+
+        $pipeline = $this->createPipeline([
+            new MultipleCallNextInterceptor(2),
+            $mock,
+            new ExceptionInterceptor(),
+        ], self::createMock(HandlerInterface::class));
+
+        $result = $pipeline->callAction('controller', 'action');
+        self::assertSame(['foo', 'bar'], $result);
     }
 
     /**
