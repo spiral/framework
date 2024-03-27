@@ -10,6 +10,8 @@ use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Event\InterceptorCalling;
 use Spiral\Core\InterceptorPipeline;
+use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\Target;
 
 final class InterceptorPipelineTest extends TestCase
 {
@@ -26,7 +28,13 @@ final class InterceptorPipelineTest extends TestCase
         $dispatcher
             ->expects(self::once())
             ->method('dispatch')
-            ->with(new InterceptorCalling('test', 'test2', [], $interceptor));
+            ->with(new InterceptorCalling(
+                'test',
+                'test2',
+                [],
+                $interceptor,
+                new CallContext(Target::fromPathArray(['test', 'test2']))
+            ));
 
         $pipeline = new InterceptorPipeline($dispatcher);
         $pipeline->addInterceptor($interceptor);

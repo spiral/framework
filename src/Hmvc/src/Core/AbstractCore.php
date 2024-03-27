@@ -9,12 +9,14 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
-use TypeError;
+use Spiral\Interceptors\Internal\ActionResolver;
 
 /**
  * Provides ability to call controllers in IoC scope.
  *
  * Make sure to bind ScopeInterface in your container.
+ *
+ * @deprecated will be removed in Spiral v4.0
  */
 abstract class AbstractCore implements CoreInterface
 {
@@ -26,24 +28,26 @@ abstract class AbstractCore implements CoreInterface
         protected ContainerInterface $container
     ) {
         // resolver is usually the container itself
+        /** @psalm-suppress MixedAssignment */
         $this->resolver = $container->get(ResolverInterface::class);
     }
 
+    /**
+     * @psalm-assert class-string $controller
+     * @psalm-assert non-empty-string $action
+     */
     public function callAction(string $controller, string $action, array $parameters = []): mixed
     {
-        try {
-            $method = new \ReflectionMethod($controller, $action);
-        } catch (\ReflectionException $e) {
-            throw new ControllerException(
-                \sprintf('Invalid action `%s`->`%s`', $controller, $action),
-                ControllerException::BAD_ACTION,
-                $e
-            );
-        }
+        $method = ActionResolver::pathToReflection($controller, $action);
 
+        // Validate method
         if ($method->isStatic() || !$method->isPublic()) {
             throw new ControllerException(
-                \sprintf('Invalid action `%s`->`%s`', $controller, $action),
+                \sprintf(
+                    'Invalid action `%s`->`%s`',
+                    $method->getDeclaringClass()->getName(),
+                    $method->getName(),
+                ),
                 ControllerException::BAD_ACTION
             );
         }
@@ -54,20 +58,21 @@ abstract class AbstractCore implements CoreInterface
             throw new ControllerException(
                 \sprintf('Missing/invalid parameter %s of `%s`->`%s`', $e->getParameter(), $controller, $action),
                 ControllerException::BAD_ARGUMENT,
-                $e
+                $e,
             );
         } catch (ContainerExceptionInterface $e) {
             throw new ControllerException(
                 $e->getMessage(),
                 ControllerException::ERROR,
-                $e
+                $e,
             );
         }
 
         $container = $this->container;
         return ContainerScope::runScope(
             $container,
-            static fn () => $method->invokeArgs($container->get($controller), $args)
+            /** @psalm-suppress MixedArgument */
+            static fn (): mixed => $method->invokeArgs($container->get($controller), $args)
         );
     }
 
@@ -80,11 +85,12 @@ abstract class AbstractCore implements CoreInterface
                 $parameters[$name] === null &&
                 $parameter->isDefaultValueAvailable()
             ) {
+                /** @psalm-suppress MixedAssignment */
                 $parameters[$name] = $parameter->getDefaultValue();
             }
         }
 
         // getting the set of arguments should be sent to requested method
-        return $this->resolver->resolveArguments($method, $parameters, validate: true);
+        return $this->resolver->resolveArguments($method, $parameters);
     }
 }

@@ -4,7 +4,7 @@
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 
-    errorLevel="4"
+    errorLevel="1"
     hoistConstants="true"
     resolveFromConfigFile="true"
     findUnusedPsalmSuppress="true"
@@ -17,4 +17,8 @@
     <projectFiles>
         <directory name="src" />
     </projectFiles>
+    <issueHandlers>
+        <DeprecatedClass errorLevel="suppress" />
+        <DeprecatedInterface errorLevel="suppress" />
+    </issueHandlers>
 </psalm>
