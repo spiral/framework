@@ -83,7 +83,6 @@ final class DynamicSyntax implements SyntaxInterface
             if (\in_array($n, ['"', '"'])) {
                 $values[\count($values) - 1] .= $n;
                 while (($nn = $src->peak()) !== null) {
-
                     $values[\count($values) - 1] .= $nn;
                     if ($nn === $n) {
                         break;
