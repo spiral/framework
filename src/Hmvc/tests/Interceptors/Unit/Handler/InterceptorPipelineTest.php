@@ -66,6 +66,21 @@ final class InterceptorPipelineTest extends TestCase
         $pipeline->handle(new CallContext(Target::fromPathArray(['controller', 'action'])));
     }
 
+    public function testHandleWithHandler(): void
+    {
+        $ctx = new CallContext(Target::fromPathArray(['controller', 'action']));
+        $mock = self::createMock(HandlerInterface::class);
+        $mock->expects(self::exactly(2))
+            ->method('handle')
+            ->with($ctx)
+            ->willReturn('test1', 'test2');
+        $pipeline = $this->createPipeline([new MultipleCallNextInterceptor(2)], $mock);
+
+        $result = $pipeline->handle($ctx);
+
+        self::assertSame(['test1', 'test2'], $result);
+    }
+
     /**
      * Multiple call of same the handler inside the pipeline must invoke the same interceptor.
      */

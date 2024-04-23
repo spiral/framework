@@ -53,7 +53,7 @@ class ReflectionHandler implements HandlerInterface
         }
 
         if ($method instanceof \ReflectionFunction) {
-            $method->invokeArgs(
+            return $method->invokeArgs(
                 $this->resolveArguments($method, $context)
             );
         }

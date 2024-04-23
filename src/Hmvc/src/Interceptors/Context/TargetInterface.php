@@ -22,6 +22,9 @@ interface TargetInterface extends Stringable
      */
     public function withPath(array $path): static;
 
+    /**
+     * @psalm-pure
+     */
     public function getReflection(): ?\ReflectionFunctionAbstract;
 
     /**
