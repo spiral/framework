@@ -8,4 +8,4 @@ class InterceptorException extends \RuntimeException
 {
 }
 
-\class_alias(InterceptorException::class, 'Spiral\Core\Exception\InterceptorException');
+\class_alias(InterceptorException::class, \Spiral\Core\Exception\InterceptorException::class);

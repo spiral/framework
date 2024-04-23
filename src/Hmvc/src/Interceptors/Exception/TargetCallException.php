@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Interceptors\Exception;
 
+use Spiral\Core\Exception\ControllerException;
+
 /**
  * Unable to perform user action or find controller.
  */
@@ -21,4 +23,4 @@ class TargetCallException extends \RuntimeException
     public const INVALID_CONTROLLER = 16;
 }
 
-\class_alias(TargetCallException::class, 'Spiral\Core\Exception\ControllerException');
+\class_alias(TargetCallException::class, ControllerException::class);
