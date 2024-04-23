@@ -20,7 +20,7 @@ final class InterceptorPipeline implements HandlerInterface
 {
     private ?HandlerInterface $handler = null;
 
-    /** @var InterceptorInterface */
+    /** @var list<InterceptorInterface> */
     private array $interceptors = [];
 
     private int $position = 0;

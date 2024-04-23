@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Interceptors\Internal;
 
-use Psr\Container\ContainerExceptionInterface;
-use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
-use Spiral\Core\Exception\Resolver\InvalidArgumentException;
-use Spiral\Core\ResolverInterface;
 use Spiral\Interceptors\Exception\TargetCallException;
 
 /**
@@ -66,37 +62,6 @@ final class ActionResolver
                     \get_debug_type($controller),
                 ),
                 TargetCallException::INVALID_CONTROLLER,
-            );
-        }
-    }
-
-    /**
-     * @throws TargetCallException
-     * @throws \Throwable
-     */
-    public static function resolveArguments(
-        ResolverInterface $resolver,
-        \ReflectionMethod $method,
-        array $arguments,
-    ): array {
-        try {
-            return $resolver->resolveArguments($method, $arguments);
-        } catch (ArgumentResolvingException|InvalidArgumentException $e) {
-            throw new TargetCallException(
-                \sprintf(
-                    'Missing/invalid parameter %s of `%s`->`%s`.',
-                    $e->getParameter(),
-                    $method->getDeclaringClass()->getName(),
-                    $method->getName(),
-                ),
-                TargetCallException::BAD_ARGUMENT,
-                $e,
-            );
-        } catch (ContainerExceptionInterface $e) {
-            throw new TargetCallException(
-                $e->getMessage(),
-                TargetCallException::ERROR,
-                $e,
             );
         }
     }

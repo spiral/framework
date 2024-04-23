@@ -12,4 +12,14 @@ final class TestService
     {
         ++$this->counter;
     }
+
+    public static function toUpperCase(string $value): string
+    {
+        return \strtoupper($value);
+    }
+
+    protected function toLowerCase(string $value): string
+    {
+        return \strtolower($value);
+    }
 }
