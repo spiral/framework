@@ -14,6 +14,7 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Logger\ListenerRegistryInterface;
+use Spiral\Logger\LoggerInjector;
 use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
@@ -58,6 +59,9 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         );
     }
 
+    /**
+     * @deprecated use {@see LoggerInjector} as an injector instead.
+     */
     public function createInjection(\ReflectionClass $class, ?string $context = null): LoggerInterface
     {
         return $this->getLogger();
