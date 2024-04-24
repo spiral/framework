@@ -39,12 +39,12 @@ class LoggerTest extends BaseTestCase
         ));
 
         $this->container->bind(FinalizerInterface::class, $finalizer = new Finalizer());
-        $this->container->bind(LogFactory::class, $injector = m::mock(Container\InjectorInterface::class));
+        $this->container->bind(LogFactory::class, $factory = m::mock(Container\InjectorInterface::class));
 
         $logger = m::mock(Logger::class);
         $logger->shouldReceive('reset')->once();
 
-        $injector->shouldReceive('createInjection')->once()->andReturn($logger);
+        $factory->shouldReceive('getLogger')->twice()->andReturn($logger);
 
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->get(LoggerInterface::class);

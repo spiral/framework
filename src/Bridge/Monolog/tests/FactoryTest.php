@@ -75,6 +75,7 @@ class FactoryTest extends BaseTestCase
         $this->container->bind(LogFactory::class, $factory);
 
         $this->assertSame($logger, $this->container->get(Logger::class));
+        $this->assertInstanceOf(LoggerInterface::class, $this->container->get(LoggerInterface::class));
         $this->assertSame($logger, $this->container->get(LoggerInterface::class));
     }
 

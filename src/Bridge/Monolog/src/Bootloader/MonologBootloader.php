@@ -28,7 +28,7 @@ final class MonologBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         LogsInterface::class => LogFactory::class,
-        LoggerInterface::class => Logger::class,
+        Logger::class => Logger::class,
     ];
 
     protected const BINDINGS = [
@@ -73,7 +73,7 @@ final class MonologBootloader extends Bootloader
             'handlers' => [],
         ]);
 
-        $container->bindInjector(Logger::class, LoggerInjector::class);
+        $container->bindInjector(LoggerInterface::class, LoggerInjector::class);
     }
 
     public function addHandler(string $channel, HandlerInterface $handler): void
