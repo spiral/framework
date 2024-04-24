@@ -19,6 +19,7 @@ use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container;
 use Spiral\Logger\ListenerRegistry;
 use Spiral\Logger\LogsInterface;
+use Spiral\Monolog\Attribute\LoggerChannel;
 use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\LogFactory;
@@ -75,6 +76,35 @@ class FactoryTest extends BaseTestCase
 
         $this->assertSame($logger, $this->container->get(Logger::class));
         $this->assertSame($logger, $this->container->get(LoggerInterface::class));
+    }
+
+    public function testInjectionWithAttribute(): void
+    {
+        $factory = new LogFactory(new MonologConfig([]), new ListenerRegistry(), new Container());
+
+        $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
+            new class() implements LoaderInterface {
+                public function has(string $section): bool
+                {
+                    return false;
+                }
+
+                public function load(string $section): array
+                {
+                    return [];
+                }
+            }
+        ));
+
+        $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
+        $finalizer->shouldReceive('addFinalizer')->once();
+
+        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
+        $this->container->bind(LogFactory::class, $factory);
+
+        $this->container->invoke(function (#[LoggerChannel('foo')] LoggerInterface $logger) {
+            $this->assertSame('foo', $logger->getName());
+        });
     }
 
     public function testFinalizerShouldResetDefaultLogger()
