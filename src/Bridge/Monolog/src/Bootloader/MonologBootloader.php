@@ -18,6 +18,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container;
+use Spiral\Logger\LoggerInjector;
 use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\LogFactory;
@@ -72,7 +73,7 @@ final class MonologBootloader extends Bootloader
             'handlers' => [],
         ]);
 
-        $container->bindInjector(Logger::class, LogFactory::class);
+        $container->bindInjector(Logger::class, LoggerInjector::class);
     }
 
     public function addHandler(string $channel, HandlerInterface $handler): void

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Monolog\Attribute;
+namespace Spiral\Logger\Attribute;
 
 use Psr\Log\LoggerInterface;
 
 /**
- * Used to specify the channel name for the logger Monolog when it injected as {@see LoggerInterface} on auto-wiring.
+ * Used to specify the channel name for the logger when it injected as {@see LoggerInterface} on auto-wiring.
  *
- * @see \Spiral\Monolog\LogFactory the injector that is required to support this attribute.
+ * Note: {@see \Spiral\Logger\LoggerInjector} should be registered in the container to support this attribute.
  */
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
 final class LoggerChannel

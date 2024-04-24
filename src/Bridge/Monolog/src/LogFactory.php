@@ -10,13 +10,11 @@ use Monolog\Processor\PsrLogMessageProcessor;
 use Monolog\ResettableInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Log\LoggerInterface;
-use ReflectionAttribute;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Logger\ListenerRegistryInterface;
 use Spiral\Logger\LogsInterface;
-use Spiral\Monolog\Attribute\LoggerChannel;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
@@ -60,14 +58,9 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         );
     }
 
-    public function createInjection(
-        \ReflectionClass $class,
-        \ReflectionParameter|null|string $context = null
-    ): LoggerInterface {
-        $channel = \is_object($context) ? $this->extractChannelAttribute($context) : null;
-
-        // always return default logger as injection
-        return $this->getLogger($channel);
+    public function createInjection(\ReflectionClass $class, ?string $context = null): LoggerInterface
+    {
+        return $this->getLogger();
     }
 
     public function reset(): void
@@ -132,16 +125,5 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         }
 
         return $processors;
-    }
-
-    /**
-     * @return non-empty-string|null
-     */
-    private function extractChannelAttribute(\ReflectionParameter $parameter): ?string
-    {
-        /** @var ReflectionAttribute<LoggerChannel>[] $attributes */
-        $attributes = $parameter->getAttributes(LoggerChannel::class);
-
-        return $attributes[0]?->newInstance()->name;
     }
 }
