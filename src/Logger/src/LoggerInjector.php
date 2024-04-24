@@ -23,6 +23,9 @@ final class LoggerInjector implements InjectorInterface
     ) {
     }
 
+    /**
+     * @param \ReflectionParameter|string|null $context may use extended context if possible.
+     */
     public function createInjection(
         \ReflectionClass $class,
         \ReflectionParameter|null|string $context = null,
@@ -38,7 +41,7 @@ final class LoggerInjector implements InjectorInterface
      */
     private function extractChannelAttribute(\ReflectionParameter $parameter): ?string
     {
-        /** @var ReflectionAttribute<LoggerChannel>[] $attributes */
+        /** @var \ReflectionAttribute<LoggerChannel>[] $attributes */
         $attributes = $parameter->getAttributes(LoggerChannel::class);
 
         return $attributes[0]?->newInstance()->name;
