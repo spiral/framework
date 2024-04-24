@@ -11,6 +11,7 @@ use Spiral\Filters\Model\Schema\AttributeMapper;
 use Spiral\Filters\Model\Schema\Builder;
 use Spiral\Filters\Model\Schema\InputMapper;
 use Spiral\Filters\InputInterface;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Models\SchematicEntity;
 
 /**
@@ -22,7 +23,7 @@ final class FilterProvider implements FilterProviderInterface
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly ResolverInterface $resolver,
-        private readonly CoreInterface $core
+        private readonly CoreInterface|HandlerInterface $core
     ) {
     }
 

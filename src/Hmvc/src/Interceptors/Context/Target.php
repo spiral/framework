@@ -25,12 +25,12 @@ final class Target implements TargetInterface
         };
     }
 
-    public static function fromReflection(\ReflectionFunctionAbstract $reflection): static
+    public static function fromReflection(\ReflectionFunctionAbstract $reflection): self
     {
         return new self(reflection: $reflection);
     }
 
-    public static function fromPathString(string $path, string $delimiter = '.'): static
+    public static function fromPathString(string $path, string $delimiter = '.'): self
     {
         /** @psalm-suppress ArgumentTypeCoercion */
         return new self(path: \explode($delimiter, $path), delimiter: $delimiter);
@@ -39,9 +39,16 @@ final class Target implements TargetInterface
     /**
      * @param list<string> $path
      */
-    public static function fromPathArray(array $path, string $delimiter = '.'): static
+    public static function fromPathArray(array $path, string $delimiter = '.'): self
     {
         return new self(path: $path, delimiter: $delimiter);
+    }
+
+    public static function fromPair(string $controller, string $action): self
+    {
+        return \class_exists($controller)
+            ? self::fromReflection(new \ReflectionMethod($controller, $action))
+            : self::fromPathArray([$controller, $action]);
     }
 
     public function getPath(): array

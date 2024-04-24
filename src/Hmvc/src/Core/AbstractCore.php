@@ -9,6 +9,8 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
+use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\Internal\ActionResolver;
 
 /**
@@ -18,7 +20,7 @@ use Spiral\Interceptors\Internal\ActionResolver;
  *
  * @deprecated will be removed in Spiral v4.0
  */
-abstract class AbstractCore implements CoreInterface
+abstract class AbstractCore implements CoreInterface, HandlerInterface
 {
     /** @internal */
     protected ResolverInterface $resolver;
@@ -41,39 +43,18 @@ abstract class AbstractCore implements CoreInterface
         $method = ActionResolver::pathToReflection($controller, $action);
 
         // Validate method
-        if ($method->isStatic() || !$method->isPublic()) {
-            throw new ControllerException(
-                \sprintf(
-                    'Invalid action `%s`->`%s`',
-                    $method->getDeclaringClass()->getName(),
-                    $method->getName(),
-                ),
-                ControllerException::BAD_ACTION
-            );
-        }
+        ActionResolver::validateControllerMethod($method);
 
-        try {
-            $args = $this->resolveArguments($method, $parameters);
-        } catch (ArgumentResolvingException|InvalidArgumentException $e) {
-            throw new ControllerException(
-                \sprintf('Missing/invalid parameter %s of `%s`->`%s`', $e->getParameter(), $controller, $action),
-                ControllerException::BAD_ARGUMENT,
-                $e,
-            );
-        } catch (ContainerExceptionInterface $e) {
-            throw new ControllerException(
-                $e->getMessage(),
-                ControllerException::ERROR,
-                $e,
-            );
-        }
+        return $this->invoke($method, $parameters);
+    }
 
-        $container = $this->container;
-        return ContainerScope::runScope(
-            $container,
-            /** @psalm-suppress MixedArgument */
-            static fn (): mixed => $method->invokeArgs($container->get($controller), $args)
-        );
+    public function handle(CallContext $context): mixed
+    {
+        $target = $context->getTarget();
+        $reflection = $target->getReflection();
+        return $reflection instanceof \ReflectionMethod
+            ? $this->invoke($reflection, $context->getArguments())
+            : $this->callAction($target->getPath()[0], $target->getPath()[1], $context->getArguments());
     }
 
     protected function resolveArguments(\ReflectionMethod $method, array $parameters): array
@@ -92,5 +73,39 @@ abstract class AbstractCore implements CoreInterface
 
         // getting the set of arguments should be sent to requested method
         return $this->resolver->resolveArguments($method, $parameters);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    private function invoke(\ReflectionMethod $method, array $arguments): mixed
+    {
+        try {
+            $args = $this->resolveArguments($method, $arguments);
+        } catch (ArgumentResolvingException | InvalidArgumentException $e) {
+            throw new ControllerException(
+                \sprintf(
+                    'Missing/invalid parameter %s of `%s`->`%s`',
+                    $e->getParameter(),
+                    $method->getDeclaringClass()->getName(),
+                    $method->getName(),
+                ),
+                ControllerException::BAD_ARGUMENT,
+                $e,
+            );
+        } catch (ContainerExceptionInterface $e) {
+            throw new ControllerException(
+                $e->getMessage(),
+                ControllerException::ERROR,
+                $e,
+            );
+        }
+
+        $container = $this->container;
+        return ContainerScope::runScope(
+            $container,
+            /** @psalm-suppress MixedArgument */
+            static fn (): mixed => $method->invokeArgs($container->get($method->getDeclaringClass()->getName()), $args)
+        );
     }
 }

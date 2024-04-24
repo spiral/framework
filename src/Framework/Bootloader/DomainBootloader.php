@@ -9,7 +9,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterceptorInterface;
-use Spiral\Core\InterceptableCore;
+use Spiral\Core\CoreInterface;
+use Spiral\Core\InterceptorPipeline;
+use Spiral\Interceptors\InterceptorInterface;
 
 /**
  * Configures global domain core (CoreInterface) with the set of interceptors to alter domain layer functionality.
@@ -25,17 +27,18 @@ abstract class DomainBootloader extends Bootloader
         Core $core,
         ContainerInterface $container,
         ?EventDispatcherInterface $dispatcher = null
-    ): InterceptableCore {
-        $interceptableCore = new InterceptableCore($core, $dispatcher);
+    ): CoreInterface {
+        $pipeline = (new InterceptorPipeline($dispatcher))->withCore($core);
 
         foreach (static::defineInterceptors() as $interceptor) {
-            if (!$interceptor instanceof CoreInterceptorInterface) {
+            if (!$interceptor instanceof CoreInterceptorInterface && !$interceptor instanceof InterceptorInterface) {
                 $interceptor = $container->get($interceptor);
             }
-            $interceptableCore->addInterceptor($interceptor);
+
+            $pipeline->addInterceptor($interceptor);
         }
 
-        return $interceptableCore;
+        return $pipeline;
     }
 
     /**

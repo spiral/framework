@@ -14,7 +14,7 @@ use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Bootloader\Http\RoutesBootloader as BaseRoutesBootloader;
 use Spiral\Cookies\Middleware\CookiesMiddleware;
 use Spiral\Core\Core;
-use Spiral\Core\InterceptableCore;
+use Spiral\Core\InterceptorPipeline;
 use Spiral\Csrf\Middleware\CsrfMiddleware;
 use Spiral\Debug\StateCollector\HttpCollector;
 use Spiral\Domain\PipelineInterceptor;
@@ -178,14 +178,14 @@ final class RoutesBootloader extends BaseRoutesBootloader
             ->middleware($this->middlewareGroups()['web']);
     }
 
-    private function getInterceptedCore(array $interceptors): InterceptableCore
+    private function getInterceptedCore(array $interceptors): InterceptorPipeline
     {
-        $core = new InterceptableCore($this->core);
+        $pipeline = (new InterceptorPipeline())->withCore($this->core);
 
         foreach ($interceptors as $interceptor) {
-            $core->addInterceptor(\is_object($interceptor) ? $interceptor : $this->container->get($interceptor));
+            $pipeline->addInterceptor(\is_object($interceptor) ? $interceptor : $this->container->get($interceptor));
         }
 
-        return $core;
+        return $pipeline;
     }
 }
