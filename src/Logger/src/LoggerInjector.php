@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Logger;
 
 use Psr\Log\LoggerInterface;
-use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Logger\Attribute\LoggerChannel;
 
@@ -17,9 +16,10 @@ use Spiral\Logger\Attribute\LoggerChannel;
  */
 final class LoggerInjector implements InjectorInterface
 {
+    public const DEFAULT_CHANNEL = 'default';
+
     public function __construct(
-        #[Proxy]
-        private readonly LogsInterface $factory
+        private readonly LogsInterface $factory,
     ) {
     }
 
@@ -32,7 +32,11 @@ final class LoggerInjector implements InjectorInterface
     ): LoggerInterface {
         $channel = \is_object($context) ? $this->extractChannelAttribute($context) : null;
 
-        // always return default logger as injection
+        // Check that null argument is available
+        $channel ??= (new \ReflectionMethod($this->factory, 'getLogger'))->getParameters()[0]->allowsNull()
+            ? null
+            : self::DEFAULT_CHANNEL;
+
         return $this->factory->getLogger($channel);
     }
 

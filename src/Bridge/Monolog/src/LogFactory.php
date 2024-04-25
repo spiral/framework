@@ -35,7 +35,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         $this->eventHandler = new EventHandler($listenerRegistry, $config->getEventLevel());
     }
 
-    public function getLogger(string $channel = null): LoggerInterface
+    public function getLogger(?string $channel = null): LoggerInterface
     {
         $default = $this->config->getDefault();
 
