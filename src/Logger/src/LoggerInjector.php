@@ -32,10 +32,19 @@ final class LoggerInjector implements InjectorInterface
     ): LoggerInterface {
         $channel = \is_object($context) ? $this->extractChannelAttribute($context) : null;
 
-        // Check that null argument is available
-        $channel ??= (new \ReflectionMethod($this->factory, 'getLogger'))->getParameters()[0]->allowsNull()
-            ? null
-            : self::DEFAULT_CHANNEL;
+        if ($channel === null) {
+            /**
+             * Array of flags to check if the logger allows null argument
+             *
+             * @var array<class-string<LogsInterface>, bool> $cache
+             */
+            static $cache = [];
+
+            $cache[$this->factory::class] = (new \ReflectionMethod($this->factory, 'getLogger'))
+                ->getParameters()[0]->allowsNull();
+
+            $channel = $cache[$this->factory::class] ? null : self::DEFAULT_CHANNEL;
+        }
 
         return $this->factory->getLogger($channel);
     }
