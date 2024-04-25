@@ -15,6 +15,7 @@ use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container;
+use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\LogFactory;
 
@@ -39,15 +40,14 @@ class LoggerTest extends BaseTestCase
         ));
 
         $this->container->bind(FinalizerInterface::class, $finalizer = new Finalizer());
-        $this->container->bind(LogFactory::class, $injector = m::mock(Container\InjectorInterface::class));
 
         $logger = m::mock(Logger::class);
         $logger->shouldReceive('reset')->once();
 
-        $injector->shouldReceive('createInjection')->once()->andReturn($logger);
-
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
-        $this->container->get(LoggerInterface::class);
+
+        $this->container->bind(LogsInterface::class, $factory = m::mock(LogsInterface::class));
+        $factory->shouldReceive('getLogger')->once()->andReturn($logger);
 
         $finalizer->finalize();
     }

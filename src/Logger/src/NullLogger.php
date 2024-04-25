@@ -18,7 +18,7 @@ final class NullLogger implements LoggerInterface
 
     public function __construct(
         callable $receptor,
-        private string $channel
+        private readonly string $channel
     ) {
         $this->receptor = $receptor(...);
     }

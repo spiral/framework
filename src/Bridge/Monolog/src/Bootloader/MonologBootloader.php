@@ -18,6 +18,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container;
+use Spiral\Logger\Bootloader\LoggerBootloader;
 use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\LogFactory;
@@ -27,11 +28,15 @@ final class MonologBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         LogsInterface::class => LogFactory::class,
-        LoggerInterface::class => Logger::class,
+        Logger::class => Logger::class,
     ];
 
     protected const BINDINGS = [
         'log.rotate' => [self::class, 'logRotate'],
+    ];
+
+    protected const DEPENDENCIES = [
+        LoggerBootloader::class,
     ];
 
     private const DEFAULT_FORMAT = "[%datetime%] %level_name%: %message% %context%\n";
@@ -71,8 +76,6 @@ final class MonologBootloader extends Bootloader
             'globalLevel' => Logger::DEBUG,
             'handlers' => [],
         ]);
-
-        $container->bindInjector(Logger::class, LogFactory::class);
     }
 
     public function addHandler(string $channel, HandlerInterface $handler): void
