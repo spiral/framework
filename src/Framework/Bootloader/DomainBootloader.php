@@ -11,6 +11,7 @@ use Spiral\Core\Core;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptorPipeline;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\InterceptorInterface;
 
 /**
@@ -27,7 +28,7 @@ abstract class DomainBootloader extends Bootloader
         Core $core,
         ContainerInterface $container,
         ?EventDispatcherInterface $dispatcher = null
-    ): CoreInterface {
+    ): CoreInterface&HandlerInterface {
         $pipeline = (new InterceptorPipeline($dispatcher))->withCore($core);
 
         foreach (static::defineInterceptors() as $interceptor) {

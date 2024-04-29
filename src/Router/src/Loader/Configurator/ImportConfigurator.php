@@ -6,6 +6,7 @@ namespace Spiral\Router\Loader\Configurator;
 
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Core\CoreInterface;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\RouteCollection;
 
 final class ImportConfigurator
@@ -77,7 +78,7 @@ final class ImportConfigurator
         return $this;
     }
 
-    public function core(CoreInterface $core): self
+    public function core(HandlerInterface|CoreInterface $core): self
     {
         foreach ($this->routes->all() as $configurator) {
             $configurator->core($core);

@@ -16,6 +16,7 @@ use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Framework\Kernel;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 use Spiral\Router\Loader\DelegatingLoader;
@@ -40,6 +41,7 @@ final class RouterBootloader extends Bootloader
     ];
 
     protected const SINGLETONS = [
+        HandlerInterface::class => Core::class,
         CoreInterface::class => Core::class,
         RouterInterface::class => [self::class, 'router'],
         RouteInterface::class => [self::class, 'route'],
