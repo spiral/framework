@@ -128,7 +128,7 @@ final class CommandTest extends AbstractCommandTestCase
 
         $output = $result->getOutput()->fetch();
 
-        $this->assertSame(
+        $this->assertStringEqualsStringIgnoringLineEndings(
             <<<OUTPUT
             Declaration of 'ArgumentCommand' has been successfully written into 'Command/ArgumentCommand.php'.
 

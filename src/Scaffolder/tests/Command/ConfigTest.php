@@ -242,7 +242,7 @@ class ConfigTest extends AbstractCommandTestCase
 
         $output = $result->getOutput()->fetch();
 
-        $this->assertSame(
+        $this->assertStringEqualsStringIgnoringLineEndings(
             <<<OUTPUT
             Declaration of 'InstructionConfig' has been successfully written into 'Config/InstructionConfig.php'.
 

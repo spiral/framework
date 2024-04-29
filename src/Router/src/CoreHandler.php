@@ -115,8 +115,11 @@ final class CoreHandler implements RequestHandlerInterface
                             action: $action,
                             parameters: $parameters,
                         )
-                        : fn (): mixed => $this->core->handle(new CallContext(
-                            Target::fromPair($controller, $action), $parameters)
+                        : fn (): mixed => $this->core->handle(
+                            new CallContext(
+                                Target::fromPair($controller, $action),
+                                $parameters,
+                            ),
                         ),
                     attributes: [
                         'route.controller' => $this->controller,

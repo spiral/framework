@@ -100,7 +100,7 @@ class ControllerTest extends AbstractCommandTestCase
 
         $output = $result->getOutput()->fetch();
 
-        $this->assertSame(
+        $this->assertStringEqualsStringIgnoringLineEndings(
             <<<OUTPUT
             Declaration of 'SampleController' has been successfully written into 'Custom/Controller/SampleController.php'.
 

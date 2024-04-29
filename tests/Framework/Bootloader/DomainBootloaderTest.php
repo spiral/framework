@@ -11,6 +11,7 @@ use Spiral\Bootloader\DomainBootloader;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Core;
 use Spiral\Core\InterceptableCore;
+use Spiral\Core\InterceptorPipeline;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class DomainBootloaderTest extends BaseTestCase
@@ -27,27 +28,28 @@ final class DomainBootloaderTest extends BaseTestCase
         );
     }
 
-    // public function testDomainCore(): void
-    // {
-    //     $bootloader = new class extends DomainBootloader {
-    //         protected static function defineInterceptors(): array
-    //         {
-    //             return [
-    //                 One::class,
-    //                 new Autowire(Two::class),
-    //                 new Three()
-    //             ];
-    //         }
-    //     };
-    //
-    //     /** @var InterceptableCore $core */
-    //     $core = (new \ReflectionMethod($bootloader, 'domainCore'))
-    //         ->invoke($bootloader, $this->getContainer()->get(Core::class), $this->getContainer());
-    //     $pipeline = (new \ReflectionProperty($core, 'pipeline'))->getValue($core);
-    //
-    //     $this->assertEquals(
-    //         [new One(), new Two(), new Three()],
-    //         (new \ReflectionProperty($pipeline, 'interceptors'))->getValue($pipeline)
-    //     );
-    // }
+    public function testDomainCore(): void
+    {
+        $bootloader = new class extends DomainBootloader {
+            protected static function defineInterceptors(): array
+            {
+                return [
+                    One::class,
+                    new Autowire(Two::class),
+                    new Three()
+                ];
+            }
+        };
+
+        /** @var InterceptorPipeline $pipeline */
+        $pipeline = (new \ReflectionMethod($bootloader, 'domainCore'))
+            ->invoke($bootloader, $this->getContainer()->get(Core::class), $this->getContainer());
+
+        $interceptors = (new \ReflectionProperty($pipeline, 'interceptors'))->getValue($pipeline);
+
+        $this->assertEquals(
+            [new One(), new Two(), new Three()],
+            $interceptors,
+        );
+    }
 }

@@ -13,6 +13,7 @@ use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterface;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 use Spiral\Router\Loader\DelegatingLoader;
@@ -87,6 +88,7 @@ abstract class BaseTestCase extends TestCase
             )
         );
 
+        $this->container->bind(HandlerInterface::class, Core::class);
         $this->container->bind(CoreInterface::class, Core::class);
         $this->container->bindSingleton(GroupRegistry::class, GroupRegistry::class);
         $this->container->bindSingleton(RoutingConfigurator::class, RoutingConfigurator::class);
