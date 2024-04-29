@@ -14,6 +14,7 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Logger\ListenerRegistryInterface;
+use Spiral\Logger\LoggerInjector;
 use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
@@ -34,7 +35,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         $this->eventHandler = new EventHandler($listenerRegistry, $config->getEventLevel());
     }
 
-    public function getLogger(string $channel = null): LoggerInterface
+    public function getLogger(?string $channel = null): LoggerInterface
     {
         $default = $this->config->getDefault();
 
@@ -58,9 +59,11 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         );
     }
 
-    public function createInjection(\ReflectionClass $class, string $context = null): LoggerInterface
+    /**
+     * @deprecated use {@see LoggerInjector} as an injector instead.
+     */
+    public function createInjection(\ReflectionClass $class, ?string $context = null): LoggerInterface
     {
-        // always return default logger as injection
         return $this->getLogger();
     }
 

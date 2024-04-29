@@ -80,9 +80,9 @@ final class DynamicSyntax implements SyntaxInterface
         $src = new StringStream($body);
 
         while ($n = $src->peak()) {
-            if (\in_array($n, ['"', '"'])) {
+            if (\in_array($n, ['"', "'"], true)) {
                 $values[\count($values) - 1] .= $n;
-                while ($nn = $src->peak()) {
+                while (($nn = $src->peak()) !== null) {
                     $values[\count($values) - 1] .= $nn;
                     if ($nn === $n) {
                         break;
