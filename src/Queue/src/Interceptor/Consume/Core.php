@@ -6,6 +6,8 @@ namespace Spiral\Queue\Interceptor\Consume;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\CoreInterface;
+use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Queue\Event\JobProcessed;
 use Spiral\Queue\Event\JobProcessing;
 use Spiral\Queue\HandlerRegistryInterface;
@@ -20,7 +22,7 @@ use Spiral\Queue\HandlerRegistryInterface;
  *     headers: array
  * }
  */
-final class Core implements CoreInterface
+final class Core implements CoreInterface, HandlerInterface
 {
     public function __construct(
         private readonly HandlerRegistryInterface $registry,
@@ -30,6 +32,7 @@ final class Core implements CoreInterface
 
     /**
      * @param-assert TParameters $parameters
+     * @deprecated
      */
     public function callAction(string $controller, string $action, array $parameters = []): mixed
     {
@@ -47,6 +50,15 @@ final class Core implements CoreInterface
         $this->dispatchEvent(JobProcessed::class, $controller, $parameters);
 
         return null;
+    }
+
+    public function handle(CallContext $context): mixed
+    {
+        $args = $context->getArguments();
+        $controller = $context->getTarget()->getPath()[0];
+        $action = $context->getTarget()->getPath()[1];
+
+        return $this->callAction($controller, $action, $args);
     }
 
     /**

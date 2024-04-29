@@ -14,7 +14,7 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\Config\Proxy;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
-use Spiral\Core\InterceptableCore;
+use Spiral\Core\InterceptorPipeline;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Config\FiltersConfig;
 use Spiral\Filters\Model\FilterBag;
@@ -111,12 +111,13 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         FiltersConfig $config,
         ?EventDispatcherInterface $dispatcher = null
     ): FilterProvider {
-        $core = new InterceptableCore(new Core(), $dispatcher);
+        $pipeline = (new InterceptorPipeline($dispatcher))->withHandler(new Core());
+
         foreach ($config->getInterceptors() as $interceptor) {
-            $core->addInterceptor($container->get($interceptor));
+            $pipeline->addInterceptor($container->get($interceptor));
         }
 
-        return new FilterProvider($container, $container, $core);
+        return new FilterProvider($container, $container, $pipeline);
     }
 
     private function initCasterRegistry(): CasterRegistryInterface

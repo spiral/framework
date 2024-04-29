@@ -72,7 +72,7 @@ class MiddlewareTest extends AbstractCommandTestCase
 
         $output = $result->getOutput()->fetch();
 
-        $this->assertSame(
+        $this->assertStringEqualsStringIgnoringLineEndings(
             <<<OUTPUT
             Declaration of 'SampleMiddleware' has been successfully written into 'Middleware/SampleMiddleware.php'.
 

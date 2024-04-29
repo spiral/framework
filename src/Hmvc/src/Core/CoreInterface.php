@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Core;
 
 use Spiral\Core\Exception\ControllerException;
+use Spiral\Interceptors\HandlerInterface;
 
 /**
  * General application enterpoint class.
+ *
+ * @deprecated Use {@see HandlerInterface} instead.
  */
 interface CoreInterface
 {

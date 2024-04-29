@@ -9,13 +9,15 @@ use Spiral\Bootloader\DomainBootloader;
 use Spiral\Bootloader\Http\JsonPayloadsBootloader;
 use Spiral\Core\CoreInterface;
 use Spiral\Domain\GuardInterceptor;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Security\PermissionsInterface;
 use Spiral\Views\Bootloader\ViewsBootloader;
 
 class AppBootloader extends DomainBootloader
 {
     protected const SINGLETONS = [
-        CoreInterface::class => [self::class, 'domainCore']
+        HandlerInterface::class => [self::class, 'domainCore'],
+        CoreInterface::class => [self::class, 'domainCore'],
     ];
 
     protected const INTERCEPTORS = [
