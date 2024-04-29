@@ -23,7 +23,7 @@ final class Handler
     private readonly bool $isLegacy;
 
     public function __construct(
-        private readonly CoreInterface|HandlerInterface $core,
+        private readonly HandlerInterface|CoreInterface $core,
         ?TracerFactoryInterface $tracerFactory = null,
     ) {
         $this->tracerFactory = $tracerFactory ?? new NullTracerFactory(new Container());
