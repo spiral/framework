@@ -9,6 +9,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\FactoryInterface;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\Target\AbstractTarget;
 
 /**
@@ -27,7 +28,7 @@ final class RouteGroup
     /** @var array<MiddlewareType> */
     private array $middleware = [];
 
-    private Autowire|CoreInterface|string|null $core = null;
+    private Autowire|HandlerInterface|CoreInterface|string|null $core = null;
 
     public function __construct(
         /** @deprecated since v3.3.0 */
@@ -67,7 +68,7 @@ final class RouteGroup
         return $this;
     }
 
-    public function setCore(Autowire|CoreInterface|string $core): self
+    public function setCore(Autowire|CoreInterface|HandlerInterface|string $core): self
     {
         $this->core = $core;
 
@@ -93,7 +94,7 @@ final class RouteGroup
     {
         foreach ($this->routes as $name => $route) {
             if ($this->core !== null) {
-                if (!$this->core instanceof CoreInterface) {
+                if (!$this->core instanceof CoreInterface && !$this->core instanceof HandlerInterface) {
                     $this->core = $factory->make($this->core);
                 }
 

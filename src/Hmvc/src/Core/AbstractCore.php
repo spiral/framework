@@ -1,0 +1,111 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Spiral\Core;
+
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Spiral\Core\Exception\ControllerException;
+use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
+use Spiral\Core\Exception\Resolver\InvalidArgumentException;
+use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\HandlerInterface;
+use Spiral\Interceptors\Internal\ActionResolver;
+
+/**
+ * Provides ability to call controllers in IoC scope.
+ *
+ * Make sure to bind ScopeInterface in your container.
+ *
+ * @deprecated will be removed in Spiral v4.0
+ */
+abstract class AbstractCore implements CoreInterface, HandlerInterface
+{
+    /** @internal */
+    protected ResolverInterface $resolver;
+
+    public function __construct(
+        /** @internal */
+        protected ContainerInterface $container
+    ) {
+        // resolver is usually the container itself
+        /** @psalm-suppress MixedAssignment */
+        $this->resolver = $container->get(ResolverInterface::class);
+    }
+
+    /**
+     * @psalm-assert class-string $controller
+     * @psalm-assert non-empty-string $action
+     */
+    public function callAction(string $controller, string $action, array $parameters = []): mixed
+    {
+        $method = ActionResolver::pathToReflection($controller, $action);
+
+        // Validate method
+        ActionResolver::validateControllerMethod($method);
+
+        return $this->invoke($method, $parameters);
+    }
+
+    public function handle(CallContext $context): mixed
+    {
+        $target = $context->getTarget();
+        $reflection = $target->getReflection();
+        return $reflection instanceof \ReflectionMethod
+            ? $this->invoke($reflection, $context->getArguments())
+            : $this->callAction($target->getPath()[0], $target->getPath()[1], $context->getArguments());
+    }
+
+    protected function resolveArguments(\ReflectionMethod $method, array $parameters): array
+    {
+        foreach ($method->getParameters() as $parameter) {
+            $name = $parameter->getName();
+            if (
+                \array_key_exists($name, $parameters) &&
+                $parameters[$name] === null &&
+                $parameter->isDefaultValueAvailable()
+            ) {
+                /** @psalm-suppress MixedAssignment */
+                $parameters[$name] = $parameter->getDefaultValue();
+            }
+        }
+
+        // getting the set of arguments should be sent to requested method
+        return $this->resolver->resolveArguments($method, $parameters);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    private function invoke(\ReflectionMethod $method, array $arguments): mixed
+    {
+        try {
+            $args = $this->resolveArguments($method, $arguments);
+        } catch (ArgumentResolvingException | InvalidArgumentException $e) {
+            throw new ControllerException(
+                \sprintf(
+                    'Missing/invalid parameter %s of `%s`->`%s`',
+                    $e->getParameter(),
+                    $method->getDeclaringClass()->getName(),
+                    $method->getName(),
+                ),
+                ControllerException::BAD_ARGUMENT,
+                $e,
+            );
+        } catch (ContainerExceptionInterface $e) {
+            throw new ControllerException(
+                $e->getMessage(),
+                ControllerException::ERROR,
+                $e,
+            );
+        }
+
+        $container = $this->container;
+        return ContainerScope::runScope(
+            $container,
+            /** @psalm-suppress MixedArgument */
+            static fn (): mixed => $method->invokeArgs($container->get($method->getDeclaringClass()->getName()), $args)
+        );
+    }
+}

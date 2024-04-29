@@ -78,7 +78,7 @@
             "Spiral\\Cookies\\": "src/Cookies/src",
             "Spiral\\Core\\": [
                 "src/Core/src",
-                "src/Hmvc/src"
+                "src/Hmvc/src/Core"
             ],
             "Spiral\\Csrf\\": "src/Csrf/src",
             "Spiral\\Debug\\": "src/Debug/src",
@@ -90,6 +90,7 @@
             "Spiral\\Files\\": "src/Files/src",
             "Spiral\\Filters\\": "src/Filters/src",
             "Spiral\\Http\\": "src/Http/src",
+            "Spiral\\Interceptors\\": "src/Hmvc/src/Interceptors",
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Mailer\\": "src/Mailer/src",
             "Spiral\\Models\\": "src/Models/src",
@@ -158,7 +159,7 @@
             "Spiral\\Tests\\Cookies\\": "src/Cookies/tests",
             "Spiral\\Tests\\Core\\": [
                 "src/Core/tests",
-                "src/Hmvc/tests"
+                "src/Hmvc/tests/Core"
             ],
             "Spiral\\Tests\\Csrf\\": "src/Csrf/tests",
             "Spiral\\Tests\\Debug\\": "src/Debug/tests",
@@ -171,6 +172,7 @@
             "Spiral\\Tests\\Filters\\": "src/Filters/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework",
             "Spiral\\Tests\\Http\\": "src/Http/tests",
+            "Spiral\\Tests\\Interceptors\\": "src/Hmvc/tests/Interceptors",
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
             "Spiral\\Tests\\Mailer\\": "src/Mailer/tests",
             "Spiral\\Tests\\Models\\": "src/Models/tests",

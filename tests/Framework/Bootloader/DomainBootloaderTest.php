@@ -11,6 +11,7 @@ use Spiral\Bootloader\DomainBootloader;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Core;
 use Spiral\Core\InterceptableCore;
+use Spiral\Core\InterceptorPipeline;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class DomainBootloaderTest extends BaseTestCase
@@ -40,14 +41,15 @@ final class DomainBootloaderTest extends BaseTestCase
             }
         };
 
-        /** @var InterceptableCore $core */
-        $core = (new \ReflectionMethod($bootloader, 'domainCore'))
+        /** @var InterceptorPipeline $pipeline */
+        $pipeline = (new \ReflectionMethod($bootloader, 'domainCore'))
             ->invoke($bootloader, $this->getContainer()->get(Core::class), $this->getContainer());
-        $pipeline = (new \ReflectionProperty($core, 'pipeline'))->getValue($core);
+
+        $interceptors = (new \ReflectionProperty($pipeline, 'interceptors'))->getValue($pipeline);
 
         $this->assertEquals(
             [new One(), new Two(), new Three()],
-            (new \ReflectionProperty($pipeline, 'interceptors'))->getValue($pipeline)
+            $interceptors,
         );
     }
 }

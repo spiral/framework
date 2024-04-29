@@ -7,14 +7,16 @@ namespace Spiral\Console\Traits;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Console\Command as SpiralCommand;
-use Spiral\Console\Config\ConsoleConfig;
+use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Events\EventDispatcherAwareInterface;
+use Spiral\Interceptors\InterceptorInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Command\LazyCommand;
 
 trait LazyTrait
 {
     private ContainerInterface $container;
+    /** @var array<class-string<CoreInterceptorInterface|InterceptorInterface>> */
     private array $interceptors = [];
     private ?EventDispatcherInterface $dispatcher = null;
 

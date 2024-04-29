@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Events\Bootloader;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\AbstractKernel;
@@ -16,7 +17,7 @@ use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
-use Spiral\Core\InterceptableCore;
+use Spiral\Core\InterceptorPipeline;
 use Spiral\Events\AutowireListenerFactory;
 use Spiral\Events\Config\EventsConfig;
 use Spiral\Events\EventDispatcher;
@@ -27,6 +28,7 @@ use Spiral\Events\ListenerProcessorRegistry;
 use Spiral\Events\Processor\AttributeProcessor;
 use Spiral\Events\Processor\ConfigProcessor;
 use Spiral\Events\Processor\ProcessorInterface;
+use Spiral\Interceptors\InterceptorInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
 /**
@@ -93,8 +95,9 @@ final class EventsBootloader extends Bootloader
     /**
      * @param TInterceptor $interceptor
      */
-    public function addInterceptor(string|CoreInterceptorInterface|Container\Autowire $interceptor): void
-    {
+    public function addInterceptor(
+        string|InterceptorInterface|CoreInterceptorInterface|Container\Autowire $interceptor,
+    ): void {
         $this->configs->modify(EventsConfig::CONFIG, new Append('interceptors', null, $interceptor));
     }
 
@@ -104,27 +107,34 @@ final class EventsBootloader extends Bootloader
         Container $container,
         FactoryInterface $factory
     ): void {
-        $core = new InterceptableCore($core);
+        $pipeline = (new InterceptorPipeline())->withCore($core);
 
         foreach ($config->getInterceptors() as $interceptor) {
             $interceptor = $this->autowire($interceptor, $container, $factory);
 
-            \assert($interceptor instanceof CoreInterceptorInterface);
-            $core->addInterceptor($interceptor);
+            \assert($interceptor instanceof CoreInterceptorInterface || $interceptor instanceof InterceptorInterface);
+            $pipeline->addInterceptor($interceptor);
         }
 
         $container->removeBinding(EventDispatcherInterface::class);
-        $container->bindSingleton(EventDispatcherInterface::class, new EventDispatcher($core));
+        $container->bindSingleton(EventDispatcherInterface::class, new EventDispatcher($pipeline));
     }
 
+    /**
+     * @template T of object
+     *
+     * @param class-string<T>|Autowire<T>|T $id
+     *
+     * @return T
+     *
+     * @throws ContainerExceptionInterface
+     */
     private function autowire(string|object $id, ContainerInterface $container, FactoryInterface $factory): object
     {
-        if (\is_string($id)) {
-            $id = $container->get($id);
-        } elseif ($id instanceof Autowire) {
-            $id = $id->resolve($factory);
-        }
-
-        return $id;
+        return match (true) {
+            \is_string($id) => $container->get($id),
+            $id instanceof Autowire => $id->resolve($factory),
+            default => $id,
+        };
     }
 }

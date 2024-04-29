@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace Spiral\Queue\Config;
 
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\CoreInterceptorInterface;
+use Spiral\Core\CoreInterceptorInterface as LegacyInterceptor;
 use Spiral\Core\InjectableConfig;
+use Spiral\Interceptors\InterceptorInterface;
 use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Serializer\SerializerInterface;
 
+/**
+ * @psalm-type TLegacyInterceptors = array<class-string<LegacyInterceptor>|LegacyInterceptor|Autowire>
+ * @psalm-type TNewInterceptors = array<class-string<InterceptorInterface>|InterceptorInterface|Autowire>
+ * @psalm-type TInterceptors = TNewInterceptors|TLegacyInterceptors
+ */
 final class QueueConfig extends InjectableConfig
 {
     public const CONFIG = 'queue';
@@ -41,7 +47,7 @@ final class QueueConfig extends InjectableConfig
     /**
      * Get consumer interceptors
      *
-     * @return array<class-string<CoreInterceptorInterface>|CoreInterceptorInterface|Autowire>
+     * @return TInterceptors
      */
     public function getConsumeInterceptors(): array
     {
@@ -51,7 +57,7 @@ final class QueueConfig extends InjectableConfig
     /**
      * Get pusher interceptors
      *
-     * @return array<class-string<CoreInterceptorInterface>|CoreInterceptorInterface|Autowire>
+     * @return TInterceptors
      */
     public function getPushInterceptors(): array
     {
