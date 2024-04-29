@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+- **Other Features**
+  - [spiral/queue] Added `Spiral\Queue\TaskInterface` and `Spiral\Queue\Task` which will contain all the necessary data
+    for job processing.
+
 ## 3.12.0 - 2024-02-29
 
 - **Medium Impact Changes**
