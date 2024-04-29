@@ -13,6 +13,9 @@ use Spiral\Core\InterceptableCore;
 use Spiral\Core\InterceptorPipeline;
 use Spiral\Domain\Annotation\Pipeline;
 
+/**
+ * @deprecated Will be removed in future releases.
+ */
 class PipelineInterceptor implements CoreInterceptorInterface
 {
     private array $cache = [];

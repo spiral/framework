@@ -7,6 +7,7 @@ namespace Spiral\Tests\Interceptors\Unit\Context;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Interceptors\Context\Target;
+use Spiral\Tests\Interceptors\Unit\Stub\TestService;
 
 class TargetTest extends TestCase
 {
@@ -93,6 +94,29 @@ class TargetTest extends TestCase
         self::assertSame($str, (string)$target);
     }
 
+    public static function providePairs(): iterable
+    {
+        yield 'static method' => [TestService::class, 'toUpperCase', true];
+        yield 'public method' => [TestService::class, 'increment', true];
+        yield 'protected method' => [TestService::class, 'toLowerCase', true];
+        yield 'not existing' => [TestService::class, 'noExistingMethod', false];
+        yield 'not a class' => ['Spiral\Tests\Interceptors\Unit\Stub\FooBarBaz', 'noExistingMethod', false];
+    }
+
+    #[DataProvider('providePairs')]
+    public function testCreateFromPair(string $controller, string $action, bool $hasReflection): void
+    {
+        $target = Target::fromPair($controller, $action);
+
+        self::assertSame([$controller, $action], $target->getPath());
+        $reflection = $target->getReflection();
+        self::assertSame($hasReflection, $reflection !== null);
+        if ($hasReflection) {
+            self::assertInstanceOf(\ReflectionMethod::class, $reflection);
+            self::assertSame($action, $reflection->getName());
+        }
+    }
+
     public function testCreateFromPathStringDefaultSeparator(): void
     {
         $str = 'foo.bar.baz';
@@ -106,6 +130,6 @@ class TargetTest extends TestCase
     {
         $this->expectException(\Error::class);
 
-        new \Spiral\Interceptors\Context\Target();
+        new Target();
     }
 }
