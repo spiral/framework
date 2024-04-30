@@ -49,7 +49,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
         // Validate method
         ActionResolver::validateControllerMethod($method);
 
-        return $this->invoke($method, $parameters);
+        return $this->invoke($controller, $method, $parameters);
     }
 
     public function handle(CallContext $context): mixed
@@ -57,7 +57,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
         $target = $context->getTarget();
         $reflection = $target->getReflection();
         return $reflection instanceof \ReflectionMethod
-            ? $this->invoke($reflection, $context->getArguments())
+            ? $this->invoke($target->getPath()[0], $reflection, $context->getArguments())
             : $this->callAction($target->getPath()[0], $target->getPath()[1], $context->getArguments());
     }
 
@@ -82,7 +82,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
     /**
      * @throws \Throwable
      */
-    private function invoke(\ReflectionMethod $method, array $arguments): mixed
+    private function invoke(string $class, \ReflectionMethod $method, array $arguments): mixed
     {
         try {
             $args = $this->resolveArguments($method, $arguments);
@@ -91,7 +91,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
                 \sprintf(
                     'Missing/invalid parameter %s of `%s`->`%s`',
                     $e->getParameter(),
-                    $method->getDeclaringClass()->getName(),
+                    $class,
                     $method->getName(),
                 ),
                 ControllerException::BAD_ARGUMENT,
@@ -105,6 +105,6 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
             );
         }
 
-        return $method->invokeArgs($this->container->get($controller), $args);
+        return $method->invokeArgs($this->container->get($class), $args);
     }
 }

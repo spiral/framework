@@ -16,6 +16,19 @@ use Spiral\Tests\Interceptors\Unit\Stub\TestService;
 
 final class ReflectionHandlerTest extends TestCase
 {
+    public function testHandleReflectionMethodFromExtendedAbstractClass(): void
+    {
+        $c = new Container();
+        $handler = new ReflectionHandler($c, false);
+        // Call Context
+        $ctx = (new CallContext(Target::fromPair(TestService::class, 'parentMethod')))
+            ->withArguments(['HELLO']);
+
+        $result = $handler->handle($ctx);
+
+        self::assertSame('hello', $result);
+    }
+
     public function testHandleReflectionFunction(): void
     {
         $c = new Container();

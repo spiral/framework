@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Interceptors\Unit\Stub;
+namespace Spiral\Tests\Core\Fixtures;
 
 final class TestService extends AbstractTestService
 {

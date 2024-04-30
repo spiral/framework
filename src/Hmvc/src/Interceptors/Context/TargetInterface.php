@@ -23,6 +23,12 @@ interface TargetInterface extends Stringable
     public function withPath(array $path): static;
 
     /**
+     * Returns the reflection of the target.
+     *
+     * It may be {@see \ReflectionFunction} or {@see \ReflectionMethod}.
+     * Note: {@see \ReflectionMethod::getDeclaringClass()} may return a parent class, but not the class used
+     *       when the target was created. Use {@see Target::getPath()} to get the original target class.
+     *
      * @psalm-pure
      */
     public function getReflection(): ?\ReflectionFunctionAbstract;

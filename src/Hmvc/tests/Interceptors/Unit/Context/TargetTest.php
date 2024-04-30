@@ -100,6 +100,7 @@ class TargetTest extends TestCase
         yield 'public method' => [TestService::class, 'increment', true];
         yield 'protected method' => [TestService::class, 'toLowerCase', true];
         yield 'not existing' => [TestService::class, 'noExistingMethod', false];
+        yield 'parent method' => [TestService::class, 'parentMethod', true];
         yield 'not a class' => ['Spiral\Tests\Interceptors\Unit\Stub\FooBarBaz', 'noExistingMethod', false];
     }
 

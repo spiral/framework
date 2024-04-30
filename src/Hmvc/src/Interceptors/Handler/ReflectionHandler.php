@@ -34,13 +34,13 @@ class ReflectionHandler implements HandlerInterface
     {
         // Resolve controller method
         $method = $context->getTarget()->getReflection();
+        $path = $context->getTarget()->getPath();
         if ($method === null) {
             $this->resolveFromPath or throw new TargetCallException(
                 "Reflection not provided for target `{$context->getTarget()}`.",
                 TargetCallException::NOT_FOUND,
             );
 
-            $path = $context->getTarget()->getPath();
             if (\count($path) !== 2) {
                 throw new TargetCallException(
                     "Invalid target path to resolve reflection for `{$context->getTarget()}`."
@@ -49,7 +49,7 @@ class ReflectionHandler implements HandlerInterface
                 );
             }
 
-            $method = ActionResolver::pathToReflection(\reset($path), \end($path));
+            $method = ActionResolver::pathToReflection(\reset($path), \next($path));
         }
 
         if ($method instanceof \ReflectionFunction) {
@@ -62,7 +62,7 @@ class ReflectionHandler implements HandlerInterface
             throw new TargetCallException("Action not found for target `{$context->getTarget()}`.");
         }
 
-        $controller = $this->container->get($method->getDeclaringClass()->getName());
+        $controller = $this->container->get($path[0]);
 
         // Validate method and controller
         ActionResolver::validateControllerMethod($method, $controller);

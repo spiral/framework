@@ -46,9 +46,10 @@ final class Target implements TargetInterface
 
     public static function fromPair(string $controller, string $action): self
     {
-        return \method_exists($controller, $action)
+        $target = \method_exists($controller, $action)
             ? self::fromReflection(new \ReflectionMethod($controller, $action))
             : self::fromPathArray([$controller, $action]);
+        return $target->withPath([$controller, $action]);
     }
 
     public function getPath(): array

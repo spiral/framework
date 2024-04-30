@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core;
 
 use Spiral\Core\Exception\ControllerException;
+use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\Target;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Testing\TestCase;
 use Spiral\Tests\Core\Fixtures\CleanController;
 use Spiral\Tests\Core\Fixtures\DummyController;
 use Spiral\Tests\Core\Fixtures\SampleCore;
+use Spiral\Tests\Core\Fixtures\TestService;
 
 #[TestScope('http')]
 final class CoreTest extends TestCase
@@ -188,5 +191,26 @@ final class CoreTest extends TestCase
             'missing',
             []
         ));
+    }
+
+    public function testCallActionReflectionMethodFromExtendedAbstractClass(): void
+    {
+        $handler = new SampleCore($this->getContainer());
+
+        $result = $handler->callAction(TestService::class, 'parentMethod', ['HELLO']);
+
+        self::assertSame('hello', $result);
+    }
+
+    public function testHandleReflectionMethodFromExtendedAbstractClass(): void
+    {
+        $handler = new SampleCore($this->getContainer());
+        // Call Context
+        $ctx = (new CallContext(Target::fromPair(TestService::class, 'parentMethod')))
+            ->withArguments(['HELLO']);
+
+        $result = $handler->handle($ctx);
+
+        self::assertSame('hello', $result);
     }
 }
