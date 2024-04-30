@@ -10,7 +10,9 @@ use Spiral\Console\Interceptor\AttributeInterceptor;
 use Spiral\Core\Attribute\Scope;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Core\InterceptableCore;
+use Spiral\Core\InterceptorPipeline;
+use Spiral\Interceptors\HandlerInterface;
+use Spiral\Interceptors\InterceptorInterface;
 
 #[Scope('console.command')]
 final class CommandCoreFactory
@@ -21,14 +23,16 @@ final class CommandCoreFactory
     }
 
     /**
-     * @param array<class-string<CoreInterceptorInterface>> $interceptors
+     * @param array<class-string<CoreInterceptorInterface|InterceptorInterface>> $interceptors
      */
-    public function make(array $interceptors, ?EventDispatcherInterface $eventDispatcher = null): CoreInterface
-    {
+    public function make(
+        array $interceptors,
+        ?EventDispatcherInterface $eventDispatcher = null,
+    ): CoreInterface|HandlerInterface {
         /** @var CommandCore $core */
         $core = $this->container->get(CommandCore::class);
 
-        $interceptableCore = new InterceptableCore($core, $eventDispatcher);
+        $interceptableCore = (new InterceptorPipeline($eventDispatcher))->withCore($core);
 
         foreach ($interceptors as $interceptor) {
             $interceptableCore->addInterceptor($this->container->get($interceptor));

@@ -95,7 +95,6 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
 
             $this->eventDispatcher?->dispatch(new CommandStarting($this, $this->input, $this->output));
 
-            $arguments = ['input' => $this->input, 'output' => $this->output, 'command' => $this];
 
             // Executing perform method with method injection
             $code = $this->container->get(ScopeInterface::class)
@@ -106,24 +105,20 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
                             InputInterface::class => $input,
                             OutputInterface::class => $output,
                         ],
-                        autowire: true,
+                        autowire: false,
                     ),
-                    fn () => $this->buildCore()->callAction(
-                        static::class,
-                        $method,
-                        [
-                            'input' => $this->input,
-                            'output' => $this->output,
-                            'command' => $this,
-                        ],
-                    ),
+                    function () use ($method) {
+                        $core = $this->buildCore();
+                        $arguments = ['input' => $this->input, 'output' => $this->output, 'command' => $this];
+
+                        return $core instanceof HandlerInterface
+                            ? (int)$core->handle(new CallContext(
+                                Target::fromReflection(new \ReflectionMethod(static::class, $method)),
+                                $arguments,
+                            ))
+                            : (int)$core->callAction(static::class, $method, $arguments);
+                    },
                 );
-            // $code = $core instanceof HandlerInterface
-            //     ? (int)$core->handle(new CallContext(
-            //         Target::fromReflection(new \ReflectionMethod(static::class, $method)),
-            //         $arguments,
-            //     ))
-            //     : (int)$core->callAction(static::class, $method, $arguments);
 
             $this->eventDispatcher?->dispatch(new CommandFinished($this, $code, $this->input, $this->output));
 
@@ -138,20 +133,9 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
      */
     protected function buildCore(): CoreInterface|HandlerInterface
     {
-        $factory = ContainerScope::getContainer()->get(CommandCoreFactory::class);
-
-        return $factory->make($this->interceptors, $this->eventDispatcher);
-
-        // $core = $this->container->get(CommandCore::class);
-        //
-        // $interceptableCore = (new InterceptorPipeline($this->eventDispatcher))->withCore($core);
-        //
-        // foreach ($this->interceptors as $interceptor) {
-        //     $interceptableCore->addInterceptor($this->container->get($interceptor));
-        // }
-        // $interceptableCore->addInterceptor($this->container->get(AttributeInterceptor::class));
-        //
-        // return $interceptableCore;
+        return ContainerScope::getContainer()
+            ->get(CommandCoreFactory::class)
+            ->make($this->interceptors, $this->eventDispatcher);
     }
 
     protected function prepareInput(InputInterface $input): InputInterface
