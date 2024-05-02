@@ -8,14 +8,16 @@ use Spiral\App\Bootloader\AppBootloader;
 use Spiral\App\Bootloader\AuthBootloader;
 use Spiral\App\Bootloader\RoutesBootloader;
 use Spiral\Bootloader;
-use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
 use Spiral\Nyholm\Bootloader\NyholmBootloader;
 use Spiral\Stempler\Bootloader\StemplerBootloader;
+use Spiral\Testing\Traits\TestableKernel;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
 class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
 {
+    use TestableKernel;
+
     private array $disabledBootloaders = [];
 
     public const LOAD = [
@@ -108,21 +110,6 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         return \array_filter($bootloaders, function (string $bootloader): bool {
             return !\in_array($bootloader, $this->disabledBootloaders, true);
         });
-    }
-
-    public function getContainer(): Container
-    {
-        return $this->container;
-    }
-
-    public function getRegisteredDispatchers(): array
-    {
-        return $this->dispatchers;
-    }
-
-    public function getRegisteredBootloaders(): array
-    {
-        return $this->bootloader->getClasses();
     }
 
     /**
