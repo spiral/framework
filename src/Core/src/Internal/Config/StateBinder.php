@@ -112,14 +112,14 @@ class StateBinder implements BinderInterface
 
     public function hasInjector(string $class): bool
     {
+        if (\array_key_exists($class, $this->state->injectors)) {
+            return true;
+        }
+
         try {
             $reflection = new \ReflectionClass($class);
         } catch (\ReflectionException $e) {
             throw new ContainerException($e->getMessage(), $e->getCode(), $e);
-        }
-
-        if (\array_key_exists($class, $this->state->injectors)) {
-            return true;
         }
 
         if (
