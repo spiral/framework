@@ -9,18 +9,21 @@ use Stringable;
 /**
  * The target may be a concrete reflection or an alias.
  * In both cases, you can get a path to the target.
+ *
+ * @template-covariant TController of object|null
  */
 interface TargetInterface extends Stringable
 {
     /**
-     * @return list<string>
+     * @return list<string>|list{class-string<TController>, non-empty-string}
      */
     public function getPath(): array;
 
     /**
      * @param list<string> $path
+     * @param string|null $delimiter The delimiter to use when converting the path to a string.
      */
-    public function withPath(array $path): static;
+    public function withPath(array $path, ?string $delimiter = null): static;
 
     /**
      * Returns the reflection of the target.
@@ -34,9 +37,7 @@ interface TargetInterface extends Stringable
     public function getReflection(): ?\ReflectionFunctionAbstract;
 
     /**
-     * @param \ReflectionFunctionAbstract|null $reflection Pass null to remove the reflection.
+     * @return TController|null
      */
-    public function withReflection(?\ReflectionFunctionAbstract $reflection): static;
-
     public function getObject(): ?object;
 }
