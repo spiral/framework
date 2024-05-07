@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
+use Psr\Container\ContainerInterface;
+use Spiral\Core\Container;
 use Spiral\Core\Exception\ControllerException;
+use Spiral\Core\ResolverInterface;
 use Spiral\Interceptors\Context\CallContext;
 use Spiral\Interceptors\Context\Target;
+use Spiral\Interceptors\Handler\ReflectionHandler;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Testing\TestCase;
 use Spiral\Tests\Core\Fixtures\CleanController;
@@ -207,6 +211,20 @@ final class CoreTest extends TestCase
         $handler = new SampleCore($this->getContainer());
         // Call Context
         $ctx = (new CallContext(Target::fromPair(TestService::class, 'parentMethod')))
+            ->withArguments(['HELLO']);
+
+        $result = $handler->handle($ctx);
+
+        self::assertSame('hello', $result);
+    }
+
+    public function testHandleReflectionMethodWithObject(): void
+    {
+        $c = new Container();
+        $handler = new SampleCore($c);
+        // Call Context
+        $service = new \Spiral\Tests\Interceptors\Unit\Stub\TestService();
+        $ctx = (new CallContext(Target::fromPair($service, 'parentMethod')->withPath(['foo', 'bar'])))
             ->withArguments(['HELLO']);
 
         $result = $handler->handle($ctx);

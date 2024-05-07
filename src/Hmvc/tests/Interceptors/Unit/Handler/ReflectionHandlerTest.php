@@ -48,6 +48,26 @@ final class ReflectionHandlerTest extends TestCase
         self::assertSame('HELLO', $result);
     }
 
+    public function testHandleReflectionMethodWithObject(): void
+    {
+        $c = new Container();
+        $container = self::createMock(ContainerInterface::class);
+        $container
+            ->expects(self::once())
+            ->method('get')
+            ->with(ResolverInterface::class)
+            ->willReturn($c);
+        $handler = new ReflectionHandler($container, false);
+        // Call Context
+        $service = new TestService();
+        $ctx = (new CallContext(Target::fromPair($service, 'parentMethod')))
+            ->withArguments(['HELLO']);
+
+        $result = $handler->handle($ctx);
+
+        self::assertSame('hello', $result);
+    }
+
     public function testHandleWrongReflectionFunction(): void
     {
         $handler = $this->createHandler();

@@ -15,6 +15,10 @@ use Stringable;
 interface TargetInterface extends Stringable
 {
     /**
+     * Returns the path to the target.
+     * If the target was created from a method reflection, the path will contain
+     * the class name and the method name by default.
+     *
      * @return list<string>|list{class-string<TController>, non-empty-string}
      */
     public function getPath(): array;
@@ -29,14 +33,21 @@ interface TargetInterface extends Stringable
      * Returns the reflection of the target.
      *
      * It may be {@see \ReflectionFunction} or {@see \ReflectionMethod}.
-     * Note: {@see \ReflectionMethod::getDeclaringClass()} may return a parent class, but not the class used
-     *       when the target was created. Use {@see Target::getPath()} to get the original target class.
+     *
+     * NOTE:
+     * The method {@see \ReflectionMethod::getDeclaringClass()} may return a parent class,
+     * but not the class used when the target was created.
+     * Use {@see getObject()} or {@see Target::getPath()}[0] to get the original object or class name.
      *
      * @psalm-pure
      */
     public function getReflection(): ?\ReflectionFunctionAbstract;
 
     /**
+     * Returns the object associated with the target.
+     *
+     * If the object is present, it always corresponds to the method reflection from {@see getReflection()}.
+     *
      * @return TController|null
      */
     public function getObject(): ?object;

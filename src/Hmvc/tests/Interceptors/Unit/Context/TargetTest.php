@@ -19,9 +19,28 @@ class TargetTest extends TestCase
 
         self::assertSame($reflection, $target->getReflection());
         self::assertSame('print_r-path', (string)$target);
+        self::assertNull($target->getObject());
     }
 
-    public function testCreateFromReflectionMethod(): void
+    public function testCreateFromClosure(): void
+    {
+        $target = Target::fromClosure(\print_r(...), ['print_r-path']);
+
+        self::assertNotNull($target->getReflection());
+        self::assertSame('print_r-path', (string)$target);
+        self::assertNull($target->getObject());
+    }
+
+    public function testCreateFromClosureWithContext(): void
+    {
+        $target = Target::fromClosure($this->{__FUNCTION__}(...), ['print_r-path']);
+
+        self::assertNotNull($target->getReflection());
+        self::assertSame('print_r-path', (string)$target);
+        self::assertNull($target->getObject());
+    }
+
+    public function testCreateFromReflectionMethodClassName(): void
     {
         $reflection = new \ReflectionMethod($this, __FUNCTION__);
 
@@ -29,6 +48,18 @@ class TargetTest extends TestCase
 
         self::assertSame($reflection, $target->getReflection());
         self::assertSame(__CLASS__ . '->' . __FUNCTION__, (string)$target);
+        self::assertNull($target->getObject());
+    }
+
+    public function testCreateFromReflectionMethodObject(): void
+    {
+        $reflection = new \ReflectionMethod($this, __FUNCTION__);
+
+        $target = Target::fromReflectionMethod($reflection, $this);
+
+        self::assertSame($reflection, $target->getReflection());
+        self::assertSame(__CLASS__ . '->' . __FUNCTION__, (string)$target);
+        self::assertNotNull($target->getObject());
     }
 
     public function testWithReflectionFunction(): void
