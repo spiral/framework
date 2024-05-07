@@ -40,7 +40,7 @@ final class ReflectionHandlerTest extends TestCase
             ->willReturn($c);
         $handler = new ReflectionHandler($container, false);
         // Call Context
-        $ctx = new CallContext(Target::fromReflection(new \ReflectionFunction('strtoupper')));
+        $ctx = new CallContext(Target::fromReflectionFunction(new \ReflectionFunction('strtoupper')));
         $ctx = $ctx->withArguments(['hello']);
 
         $result = $handler->handle($ctx);
@@ -52,23 +52,25 @@ final class ReflectionHandlerTest extends TestCase
     {
         $handler = $this->createHandler();
         // Call Context
-        $ctx = new CallContext(Target::fromReflection(new class extends \ReflectionFunctionAbstract {
-            /** @psalm-immutable */
-            public function getName(): string
-            {
-                return 'testReflection';
-            }
+        $ctx = new CallContext(
+            Target::fromPathArray(['testReflection'])
+                ->withReflection(new class extends \ReflectionFunctionAbstract {
+                    /** @psalm-immutable */
+                    public function getName(): string
+                    {
+                        return 'testReflection';
+                    }
 
-            public function __toString(): string
-            {
-                return 'really?';
-            }
+                    public function __toString(): string
+                    {
+                        return 'really?';
+                    }
 
-            public static function export(): void
-            {
-                // do nothing
-            }
-        }));
+                    public static function export(): void
+                    {
+                        // do nothing
+                    }
+                }));
 
         self::expectException(TargetCallException::class);
         self::expectExceptionMessageMatches('/Action not found for target `testReflection`/');
@@ -124,7 +126,7 @@ final class ReflectionHandlerTest extends TestCase
     {
         $handler = $this->createHandler();
         $ctx = new CallContext(
-            Target::fromReflection(new \ReflectionFunction(fn (string $value):string => \strtoupper($value)))
+            Target::fromReflectionFunction(new \ReflectionFunction(fn (string $value):string => \strtoupper($value)))
         );
         $ctx = $ctx->withArguments(['word' => 'world!', 'value' => 'hello']);
 

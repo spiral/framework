@@ -37,4 +37,6 @@ interface TargetInterface extends Stringable
      * @param \ReflectionFunctionAbstract|null $reflection Pass null to remove the reflection.
      */
     public function withReflection(?\ReflectionFunctionAbstract $reflection): static;
+
+    public function getObject(): ?object;
 }

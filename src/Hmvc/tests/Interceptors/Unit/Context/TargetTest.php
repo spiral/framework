@@ -15,7 +15,7 @@ class TargetTest extends TestCase
     {
         $reflection = new \ReflectionFunction('print_r');
 
-        $target = Target::fromReflection($reflection);
+        $target = Target::fromReflectionFunction($reflection);
 
         self::assertSame($reflection, $target->getReflection());
         self::assertSame('print_r', (string)$target);
@@ -25,7 +25,7 @@ class TargetTest extends TestCase
     {
         $reflection = new \ReflectionMethod($this, __FUNCTION__);
 
-        $target = Target::fromReflection($reflection);
+        $target = Target::fromReflectionMethod($reflection, __CLASS__);
 
         self::assertSame($reflection, $target->getReflection());
         self::assertSame(__FUNCTION__, (string)$target);
