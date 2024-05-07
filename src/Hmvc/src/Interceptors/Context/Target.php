@@ -153,13 +153,6 @@ final class Target implements TargetInterface
         return $this->reflection;
     }
 
-    public function withReflection(?\ReflectionFunctionAbstract $reflection): static
-    {
-        $clone = clone $this;
-        $clone->reflection = $reflection;
-        return $clone;
-    }
-
     public function getObject(): ?object
     {
         return $this->object;
