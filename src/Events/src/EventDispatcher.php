@@ -24,7 +24,7 @@ final class EventDispatcher implements EventDispatcherInterface
         return $this->isLegacy
             ? $this->core->callAction($event::class, 'dispatch', ['event' => $event])
             : $this->core->handle(new CallContext(
-                Target::fromReflectionMethod(new \ReflectionMethod($event::class, 'dispatch')),
+                Target::fromPair($event, 'dispatch'),
                 ['event' => $event],
             ));
     }

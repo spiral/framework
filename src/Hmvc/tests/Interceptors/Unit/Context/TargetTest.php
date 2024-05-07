@@ -143,10 +143,23 @@ class TargetTest extends TestCase
         self::assertSame([$controller, $action], $target->getPath());
         $reflection = $target->getReflection();
         self::assertSame($hasReflection, $reflection !== null);
+        self::assertNull($target->getObject());
         if ($hasReflection) {
             self::assertInstanceOf(\ReflectionMethod::class, $reflection);
             self::assertSame($action, $reflection->getName());
         }
+    }
+
+    public function testCreateFromObject(): void
+    {
+        $service = new TestService();
+        $target = Target::fromPair($service, 'parentMethod');
+
+        self::assertSame([TestService::class, 'parentMethod'], $target->getPath());
+        $reflection = $target->getReflection();
+        self::assertInstanceOf(\ReflectionMethod::class, $reflection);
+        self::assertSame('parentMethod', $reflection->getName());
+        self::assertSame($service, $target->getObject());
     }
 
     public function testCreateFromPathStringDefaultSeparator(): void
