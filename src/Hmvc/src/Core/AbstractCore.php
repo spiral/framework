@@ -33,9 +33,11 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
         // TODO: can we simplify this?
         // resolver is usually the container itself
         /** @psalm-suppress MixedAssignment */
-        $this->resolver = $container
-            ->get(InvokerInterface::class)
-            ->invoke(static fn (#[Proxy] ResolverInterface $resolver) => $resolver);
+        $this->resolver = $container instanceof ResolverInterface
+            ? $container
+            : $container
+                ->get(InvokerInterface::class)
+                ->invoke(static fn (#[Proxy] ResolverInterface $resolver) => $resolver);
     }
 
     /**
@@ -49,7 +51,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
         // Validate method
         ActionResolver::validateControllerMethod($method);
 
-        return $this->invoke($controller, $method, $parameters);
+        return $this->invoke(null, $controller, $method, $parameters);
     }
 
     public function handle(CallContext $context): mixed
@@ -57,7 +59,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
         $target = $context->getTarget();
         $reflection = $target->getReflection();
         return $reflection instanceof \ReflectionMethod
-            ? $this->invoke($target->getPath()[0], $reflection, $context->getArguments())
+            ? $this->invoke($target->getObject(), $target->getPath()[0], $reflection, $context->getArguments())
             : $this->callAction($target->getPath()[0], $target->getPath()[1], $context->getArguments());
     }
 
@@ -82,7 +84,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
     /**
      * @throws \Throwable
      */
-    private function invoke(string $class, \ReflectionMethod $method, array $arguments): mixed
+    private function invoke(?object $object, string $class, \ReflectionMethod $method, array $arguments): mixed
     {
         try {
             $args = $this->resolveArguments($method, $arguments);
@@ -105,6 +107,6 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
             );
         }
 
-        return $method->invokeArgs($this->container->get($class), $args);
+        return $method->invokeArgs($object ?? $this->container->get($class), $args);
     }
 }

@@ -40,7 +40,7 @@ final class ReflectionHandlerTest extends TestCase
             ->willReturn($c);
         $handler = new ReflectionHandler($container, false);
         // Call Context
-        $ctx = new CallContext(Target::fromReflection(new \ReflectionFunction('strtoupper')));
+        $ctx = new CallContext(Target::fromReflectionFunction(new \ReflectionFunction('strtoupper')));
         $ctx = $ctx->withArguments(['hello']);
 
         $result = $handler->handle($ctx);
@@ -48,32 +48,24 @@ final class ReflectionHandlerTest extends TestCase
         self::assertSame('HELLO', $result);
     }
 
-    public function testHandleWrongReflectionFunction(): void
+    public function testHandleReflectionMethodWithObject(): void
     {
-        $handler = $this->createHandler();
+        $c = new Container();
+        $container = self::createMock(ContainerInterface::class);
+        $container
+            ->expects(self::once())
+            ->method('get')
+            ->with(ResolverInterface::class)
+            ->willReturn($c);
+        $handler = new ReflectionHandler($container, false);
         // Call Context
-        $ctx = new CallContext(Target::fromReflection(new class extends \ReflectionFunctionAbstract {
-            /** @psalm-immutable */
-            public function getName(): string
-            {
-                return 'testReflection';
-            }
+        $service = new TestService();
+        $ctx = (new CallContext(Target::fromPair($service, 'parentMethod')))
+            ->withArguments(['HELLO']);
 
-            public function __toString(): string
-            {
-                return 'really?';
-            }
+        $result = $handler->handle($ctx);
 
-            public static function export(): void
-            {
-                // do nothing
-            }
-        }));
-
-        self::expectException(TargetCallException::class);
-        self::expectExceptionMessageMatches('/Action not found for target `testReflection`/');
-
-        $handler->handle($ctx);
+        self::assertSame('hello', $result);
     }
 
     public function testWithoutResolvingFromPathAndReflection(): void
@@ -124,7 +116,7 @@ final class ReflectionHandlerTest extends TestCase
     {
         $handler = $this->createHandler();
         $ctx = new CallContext(
-            Target::fromReflection(new \ReflectionFunction(fn (string $value):string => \strtoupper($value)))
+            Target::fromReflectionFunction(new \ReflectionFunction(fn (string $value):string => \strtoupper($value)))
         );
         $ctx = $ctx->withArguments(['word' => 'world!', 'value' => 'hello']);
 

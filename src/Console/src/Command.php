@@ -113,7 +113,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
 
                         return $core instanceof HandlerInterface
                             ? (int)$core->handle(new CallContext(
-                                Target::fromReflection(new \ReflectionMethod(static::class, $method)),
+                                Target::fromPair($this, $method),
                                 $arguments,
                             ))
                             : (int)$core->callAction(static::class, $method, $arguments);

@@ -62,7 +62,7 @@ class ReflectionHandler implements HandlerInterface
             throw new TargetCallException("Action not found for target `{$context->getTarget()}`.");
         }
 
-        $controller = $this->container->get($path[0]);
+        $controller = $context->getTarget()->getObject() ?? $this->container->get($path[0]);
 
         // Validate method and controller
         ActionResolver::validateControllerMethod($method, $controller);

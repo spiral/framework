@@ -15,40 +15,51 @@ class TargetTest extends TestCase
     {
         $reflection = new \ReflectionFunction('print_r');
 
-        $target = Target::fromReflection($reflection);
+        $target = Target::fromReflectionFunction($reflection, ['print_r-path']);
 
         self::assertSame($reflection, $target->getReflection());
-        self::assertSame('print_r', (string)$target);
+        self::assertSame('print_r-path', (string)$target);
+        self::assertNull($target->getObject());
     }
 
-    public function testCreateFromReflectionMethod(): void
+    public function testCreateFromClosure(): void
+    {
+        $target = Target::fromClosure(\print_r(...), ['print_r-path']);
+
+        self::assertNotNull($target->getReflection());
+        self::assertSame('print_r-path', (string)$target);
+        self::assertNull($target->getObject());
+    }
+
+    public function testCreateFromClosureWithContext(): void
+    {
+        $target = Target::fromClosure($this->{__FUNCTION__}(...), ['print_r-path']);
+
+        self::assertNotNull($target->getReflection());
+        self::assertSame('print_r-path', (string)$target);
+        self::assertNull($target->getObject());
+    }
+
+    public function testCreateFromReflectionMethodClassName(): void
     {
         $reflection = new \ReflectionMethod($this, __FUNCTION__);
 
-        $target = Target::fromReflection($reflection);
+        $target = Target::fromReflectionMethod($reflection, __CLASS__);
 
         self::assertSame($reflection, $target->getReflection());
-        self::assertSame(__FUNCTION__, (string)$target);
+        self::assertSame(__CLASS__ . '->' . __FUNCTION__, (string)$target);
+        self::assertNull($target->getObject());
     }
 
-    public function testWithReflectionFunction(): void
+    public function testCreateFromReflectionMethodObject(): void
     {
-        $reflection = new \ReflectionFunction('print_r');
+        $reflection = new \ReflectionMethod($this, __FUNCTION__);
 
-        $target = Target::fromPathArray(['foo', 'bar']);
-        $target2 = $target->withReflection($reflection);
+        $target = Target::fromReflectionMethod($reflection, $this);
 
-        // Immutability
-        self::assertNotSame($target, $target2);
-        // First target is not changed
-        self::assertSame(['foo', 'bar'], $target->getPath());
-        self::assertNull($target->getReflection());
-        self::assertSame('foo.bar', (string)$target);
-        // Second target is changed
-        self::assertSame(['foo', 'bar'], $target2->getPath());
-        self::assertSame($reflection, $target2->getReflection());
-        // Reflection does'n affect the string representation if path is set
-        self::assertSame('foo.bar', (string)$target);
+        self::assertSame($reflection, $target->getReflection());
+        self::assertSame(__CLASS__ . '->' . __FUNCTION__, (string)$target);
+        self::assertNotNull($target->getObject());
     }
 
     public function testCreateFromPathStringWithPath(): void
@@ -112,10 +123,23 @@ class TargetTest extends TestCase
         self::assertSame([$controller, $action], $target->getPath());
         $reflection = $target->getReflection();
         self::assertSame($hasReflection, $reflection !== null);
+        self::assertNull($target->getObject());
         if ($hasReflection) {
             self::assertInstanceOf(\ReflectionMethod::class, $reflection);
             self::assertSame($action, $reflection->getName());
         }
+    }
+
+    public function testCreateFromObject(): void
+    {
+        $service = new TestService();
+        $target = Target::fromPair($service, 'parentMethod');
+
+        self::assertSame([TestService::class, 'parentMethod'], $target->getPath());
+        $reflection = $target->getReflection();
+        self::assertInstanceOf(\ReflectionMethod::class, $reflection);
+        self::assertSame('parentMethod', $reflection->getName());
+        self::assertSame($service, $target->getObject());
     }
 
     public function testCreateFromPathStringDefaultSeparator(): void
