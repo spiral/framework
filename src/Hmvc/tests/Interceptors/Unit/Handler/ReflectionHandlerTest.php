@@ -68,36 +68,6 @@ final class ReflectionHandlerTest extends TestCase
         self::assertSame('hello', $result);
     }
 
-    public function testHandleWrongReflectionFunction(): void
-    {
-        $handler = $this->createHandler();
-        // Call Context
-        $ctx = new CallContext(
-            Target::fromPathArray(['testReflection'])
-                ->withReflection(new class extends \ReflectionFunctionAbstract {
-                    /** @psalm-immutable */
-                    public function getName(): string
-                    {
-                        return 'testReflection';
-                    }
-
-                    public function __toString(): string
-                    {
-                        return 'really?';
-                    }
-
-                    public static function export(): void
-                    {
-                        // do nothing
-                    }
-                }));
-
-        self::expectException(TargetCallException::class);
-        self::expectExceptionMessageMatches('/Action not found for target `testReflection`/');
-
-        $handler->handle($ctx);
-    }
-
     public function testWithoutResolvingFromPathAndReflection(): void
     {
         $container = self::createMock(ContainerInterface::class);

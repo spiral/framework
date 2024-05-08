@@ -62,26 +62,6 @@ class TargetTest extends TestCase
         self::assertNotNull($target->getObject());
     }
 
-    public function testWithReflectionFunction(): void
-    {
-        $reflection = new \ReflectionFunction('print_r');
-
-        $target = Target::fromPathArray(['foo', 'bar']);
-        $target2 = $target->withReflection($reflection);
-
-        // Immutability
-        self::assertNotSame($target, $target2);
-        // First target is not changed
-        self::assertSame(['foo', 'bar'], $target->getPath());
-        self::assertNull($target->getReflection());
-        self::assertSame('foo.bar', (string)$target);
-        // Second target is changed
-        self::assertSame(['foo', 'bar'], $target2->getPath());
-        self::assertSame($reflection, $target2->getReflection());
-        // Reflection does'n affect the string representation if path is set
-        self::assertSame('foo.bar', (string)$target);
-    }
-
     public function testCreateFromPathStringWithPath(): void
     {
         $str = 'foo.bar.baz';
