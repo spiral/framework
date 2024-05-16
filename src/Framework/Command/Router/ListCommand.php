@@ -72,6 +72,8 @@ final class ListCommand extends Command
         foreach ($route->getVerbs() as $verb) {
             $result[] = match (\strtolower($verb)) {
                 'get' => '<fg=green>GET</>',
+                'head' => '<fg=bright-green>HEAD</>',
+                'options' => '<fg=magenta>OPTIONS</>',
                 'post' => '<fg=blue>POST</>',
                 'patch' => '<fg=cyan>PATCH</>',
                 'put' => '<fg=yellow>PUT</>',
