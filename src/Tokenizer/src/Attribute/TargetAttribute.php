@@ -19,13 +19,16 @@ final class TargetAttribute extends AbstractTarget
 {
     /**
      * @param class-string $attribute
-     * @param non-empty-string|null $scope
+     * @param non-empty-string|null $scope Class locator scope
+     * @param bool $namedArguments Whether to use named arguments when reading attributes
+     * @param bool $scanParents Whether to scan parent classes/interfaces for attributes target of which is class
      */
     public function __construct(
         private readonly string $attribute,
         ?string $scope = null,
         private readonly bool $useAnnotations = false,
         private readonly bool $namedArguments = true,
+        private readonly bool $scanParents = false,
     ) {
         parent::__construct($scope);
     }
@@ -51,11 +54,31 @@ final class TargetAttribute extends AbstractTarget
         foreach ($classes as $class) {
             // If attribute is defined on class level and class has target attribute
             // then we can add it to the list of classes
-            if (($attribute->flags & \Attribute::TARGET_CLASS)
-                && $reader->firstClassMetadata($class, $target->getName())
-            ) {
-                yield $class->getName();
-                continue;
+            if ($attribute->flags & \Attribute::TARGET_CLASS) {
+                if ($reader->firstClassMetadata($class, $target->getName())) {
+                    yield $class->getName();
+                    continue;
+                }
+
+                if ($this->scanParents) {
+                    // Interfaces
+                    foreach ($class->getInterfaces() as $interface) {
+                        if ($reader->firstClassMetadata($interface, $target->getName())) {
+                            yield $class->getName();
+                            continue 2;
+                        }
+                    }
+
+                    // Parents
+                    $parent = $class->getParentClass();
+                    while ($parent !== false) {
+                        if ($reader->firstClassMetadata($parent, $target->getName())) {
+                            yield $class->getName();
+                            continue 2;
+                        }
+                        $parent = $parent->getParentClass();
+                    }
+                }
             }
 
             // If attribute is defined on method level and class methods has target attribute

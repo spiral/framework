@@ -54,9 +54,6 @@ final class LoggerInjector implements InjectorInterface
      */
     private function extractChannelAttribute(\ReflectionParameter $parameter): ?string
     {
-        /** @var \ReflectionAttribute<LoggerChannel>[] $attributes */
-        $attributes = $parameter->getAttributes(LoggerChannel::class);
-
-        return $attributes[0]?->newInstance()->name;
+        return ($parameter->getAttributes(LoggerChannel::class)[0] ?? null)?->newInstance()->name;
     }
 }
