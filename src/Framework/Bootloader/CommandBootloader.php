@@ -38,6 +38,7 @@ final class CommandBootloader extends Bootloader
         $console->addCommand(Console\Command\ConfigureCommand::class);
         $console->addCommand(Console\Command\UpdateCommand::class);
 
+        /** @psalm-suppress InvalidArgument */
         $console->addConfigureSequence(
             [RuntimeDirectory::class, 'ensure'],
             '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>verify `runtime` directory access</fg=cyan>'
