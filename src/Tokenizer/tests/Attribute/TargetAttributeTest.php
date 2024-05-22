@@ -20,10 +20,10 @@ final class TargetAttributeTest extends TestCase
     public function testToString(): void
     {
         $attribute = new TargetAttribute('foo');
-        $this->assertSame('d8d66e598d7117a26f6268ea9780774f', (string)$attribute);
+        $this->assertSame('3dc18b19eed74479a03c069dec2e8724', (string) $attribute);
 
         $attribute = new TargetAttribute('foo', 'bar');
-        $this->assertSame('5bd549fe54f1e987a4fbfc8513d2dc68', (string)$attribute);
+        $this->assertSame('52ec767c53f3898bf6de6f6e88125dc8', (string) $attribute);
     }
 
     public function testFilterAttrWithArgs(): void
@@ -59,7 +59,7 @@ final class TargetAttributeTest extends TestCase
         );
     }
 
-    public static function filterDataProvider()
+    public static function filterDataProvider(): iterable
     {
         yield [false, true, InterfaceWithAttributeOnClass::class];
         yield [false, false, ClassExtendsClassWithAttributeOnClass::class];

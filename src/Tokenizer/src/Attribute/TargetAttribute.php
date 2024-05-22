@@ -19,7 +19,7 @@ final class TargetAttribute extends AbstractTarget
 {
     /**
      * @param class-string $attribute
-     * @param non-empty-string|null $scope
+     * @param non-empty-string|null $scope Class locator scope
      * @param bool $namedArguments Whether to use named arguments when reading attributes
      * @param bool $scanParents Whether to scan parent classes/interfaces for attributes target of which is class
      */
