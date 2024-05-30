@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Queue\Driver;
 
 use Ramsey\Uuid\Uuid;
+use Spiral\Queue\ExtendedOptionsInterface;
 use Spiral\Queue\Interceptor\Consume\Handler;
 use Spiral\Queue\OptionsInterface;
 use Spiral\Queue\QueueInterface;
@@ -36,7 +37,8 @@ final class SyncDriver implements QueueInterface
             driver: 'sync',
             queue: 'default',
             id: $id,
-            payload: $payload
+            payload: $payload,
+            headers: $options instanceof ExtendedOptionsInterface ? $options->getHeaders() : [],
         );
 
         return $id;

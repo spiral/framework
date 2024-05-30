@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.13.0 - 2024-05-22
 
 - **Other Features**
   - [spiral/queue] Added `Spiral\Queue\TaskInterface` and `Spiral\Queue\Task` which will contain all the necessary data

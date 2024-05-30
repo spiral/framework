@@ -13,6 +13,7 @@ use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\Interceptor\Consume\Handler;
+use Spiral\Queue\Options;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerInterface;
@@ -60,6 +61,28 @@ final class SyncDriverTest extends TestCase
             ->once();
 
         $id = $this->queue->push('foo', $payload);
+
+        $this->assertSame($uuid->toString(), $id);
+    }
+
+    public function testJobWithHeadersShouldBePushed(): void
+    {
+        $this->factory->shouldReceive('uuid4')
+            ->andReturn($uuid = (new UuidFactory())->uuid4());
+
+        $options = (new Options())->withHeader('foo', 'bar');
+
+        $this->core->shouldReceive('callAction')
+            ->withSomeOfArgs('foo', [
+                'driver' => 'sync',
+                'queue' => 'default',
+                'id' => $uuid->toString(),
+                'payload' => ['baz' => 'baf'],
+                'headers' => ['foo' => ['bar']]
+            ])
+            ->once();
+
+        $id = $this->queue->push('foo', ['baz' => 'baf'], $options);
 
         $this->assertSame($uuid->toString(), $id);
     }

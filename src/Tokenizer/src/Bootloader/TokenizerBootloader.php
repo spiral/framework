@@ -9,6 +9,7 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Config\Patch\Set;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
 use Spiral\Tokenizer\ClassesInterface;
@@ -93,19 +94,48 @@ final class TokenizerBootloader extends Bootloader
 
     /**
      * Add directory for indexation into specific scope.
+     * @param non-empty-string $scope
+     * @param non-empty-string $directory
      */
     public function addScopedDirectory(string $scope, string $directory): void
     {
-        if (!isset($this->config->getConfig(TokenizerConfig::CONFIG)['scopes'][$scope])) {
-            $this->config->modify(
-                TokenizerConfig::CONFIG,
-                new Append('scopes', $scope, []),
-            );
-        }
+        $this->ensureScopeExists($scope, 'directories');
 
         $this->config->modify(
             TokenizerConfig::CONFIG,
-            new Append('scopes.' . $scope, null, $directory),
+            new Append('scopes.' . $scope . '.directories', null, $directory),
         );
+    }
+
+    /**
+     * Exclude directory from indexation in specific scope.
+     * @param non-empty-string $scope
+     * @param non-empty-string $directory
+     */
+    public function excludeScopedDirectory(string $scope, string $directory): void
+    {
+        $this->ensureScopeExists($scope, 'exclude');
+
+        $this->config->modify(
+            TokenizerConfig::CONFIG,
+            new Append('scopes.' . $scope . '.exclude', null, $directory),
+        );
+    }
+
+    private function ensureScopeExists(string $scope, string $section): void
+    {
+        if (!isset($this->config->getConfig(TokenizerConfig::CONFIG)['scopes'])) {
+            $this->config->modify(
+                TokenizerConfig::CONFIG,
+                new Set('scopes', []),
+            );
+        }
+
+        if (!isset($this->config->getConfig(TokenizerConfig::CONFIG)['scopes'][$scope])) {
+            $this->config->modify(
+                TokenizerConfig::CONFIG,
+                new Append('scopes', $scope, [$section => []]),
+            );
+        }
     }
 }

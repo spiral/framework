@@ -143,6 +143,7 @@ abstract class AbstractKernel implements KernelInterface
         $container->bind(BootloadManagerInterface::class, $bootloadManager);
 
         if (!$container->has(BootloaderRegistryInterface::class)) {
+            /** @psalm-suppress InvalidArgument */
             $container->bindSingleton(BootloaderRegistryInterface::class, [self::class, 'initBootloaderRegistry']);
         }
 
