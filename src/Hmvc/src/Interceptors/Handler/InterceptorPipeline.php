@@ -30,9 +30,17 @@ final class InterceptorPipeline implements HandlerInterface
     ) {
     }
 
-    public function addInterceptor(InterceptorInterface $interceptor): void
+    /**
+     * @psalm-immutable
+     */
+    public function withInterceptors(InterceptorInterface ...$interceptors): self
     {
-        $this->interceptors[] = $interceptor;
+        $clone = clone $this;
+        foreach ($interceptors as $interceptor) {
+            $clone->interceptors[] = $interceptor;
+        }
+
+        return $clone;
     }
 
     public function withHandler(HandlerInterface $handler): self
