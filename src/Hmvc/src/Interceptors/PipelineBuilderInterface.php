@@ -15,5 +15,5 @@ interface PipelineBuilderInterface
      */
     public function withInterceptors(InterceptorInterface ...$interceptors): static;
 
-    public function build(): HandlerInterface;
+    public function build(HandlerInterface $last): HandlerInterface;
 }
