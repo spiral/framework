@@ -15,5 +15,8 @@ interface PipelineBuilderInterface
      */
     public function withInterceptors(InterceptorInterface ...$interceptors): static;
 
+    /**
+     * @param HandlerInterface $last The last handler in the pipeline.
+     */
     public function build(HandlerInterface $last): HandlerInterface;
 }

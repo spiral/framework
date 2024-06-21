@@ -7,7 +7,7 @@ namespace Spiral\Interceptors;
 use Spiral\Interceptors\Handler\InterceptorPipeline;
 
 /**
- * Uses only {@see InterceptorInterface} instances to build a pipeline.
+ * Accepts only {@see InterceptorInterface} instances to build a pipeline.
  */
 class PipelineBuilder implements PipelineBuilderInterface
 {
