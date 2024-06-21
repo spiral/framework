@@ -20,6 +20,11 @@ class CompatiblePipelineBuilder implements PipelineBuilderInterface
         $this->pipeline = new InterceptorPipeline();
     }
 
+    public function __clone()
+    {
+        $this->pipeline = clone $this->pipeline;
+    }
+
     public function withInterceptors(CoreInterceptorInterface|InterceptorInterface ...$interceptors): static
     {
         $clone = clone $this;
@@ -36,10 +41,5 @@ class CompatiblePipelineBuilder implements PipelineBuilderInterface
         return $last instanceof HandlerInterface
             ? $this->pipeline->withHandler($last)
             : $this->pipeline->withCore($last);
-    }
-
-    public function __clone()
-    {
-        $this->pipeline = clone $this->pipeline;
     }
 }
