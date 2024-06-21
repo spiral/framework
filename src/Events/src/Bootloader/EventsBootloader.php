@@ -13,11 +13,11 @@ use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\CompatiblePipelineBuilder;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\FactoryInterface;
-use Spiral\Core\InterceptorPipeline;
 use Spiral\Events\AutowireListenerFactory;
 use Spiral\Events\Config\EventsConfig;
 use Spiral\Events\EventDispatcher;
@@ -107,15 +107,13 @@ final class EventsBootloader extends Bootloader
         Container $container,
         FactoryInterface $factory
     ): void {
-        $pipeline = (new InterceptorPipeline())->withCore($core);
-
+        $builder = new CompatiblePipelineBuilder();
+        $list = [];
         foreach ($config->getInterceptors() as $interceptor) {
-            $interceptor = $this->autowire($interceptor, $container, $factory);
-
-            \assert($interceptor instanceof CoreInterceptorInterface || $interceptor instanceof InterceptorInterface);
-            $pipeline->addInterceptor($interceptor);
+            $list[] = $this->autowire($interceptor, $container, $factory);
         }
 
+        $pipeline = $builder->withInterceptors(...$list)->build($core);
         $container->removeBinding(EventDispatcherInterface::class);
         $container->bindSingleton(EventDispatcherInterface::class, new EventDispatcher($pipeline));
     }

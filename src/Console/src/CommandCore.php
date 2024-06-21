@@ -7,11 +7,13 @@ namespace Spiral\Console;
 use Spiral\Core\Attribute\Scope as ScopeAttribute;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\InvokerInterface;
+use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\HandlerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[ScopeAttribute('console.command')]
-final class CommandCore implements CoreInterface
+final class CommandCore implements CoreInterface, HandlerInterface
 {
     public function __construct(
         private readonly InvokerInterface $invoker,
@@ -26,5 +28,11 @@ final class CommandCore implements CoreInterface
         $command = $parameters['command'];
 
         return (int)$this->invoker->invoke([$command, $action]);
+    }
+
+    public function handle(CallContext $context): int
+    {
+        $callable = $context->getTarget()->getCallable() ?? throw new \RuntimeException('Command action not found');
+        return (int)$this->invoker->invoke($callable, $context->getArguments());
     }
 }

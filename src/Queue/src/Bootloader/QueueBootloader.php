@@ -10,17 +10,17 @@ use Spiral\Boot\{AbstractKernel, EnvironmentInterface};
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Core\{BinderInterface, FactoryInterface, InterceptableCore, InterceptorPipeline};
+use Spiral\Core\{BinderInterface, CompatiblePipelineBuilder, FactoryInterface, InterceptableCore, InterceptorPipeline};
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
-use Spiral\Queue\{JobHandlerLocatorListener,
-    QueueConnectionProviderInterface,
-    QueueInterface,
-    QueueManager,
-    QueueRegistry,
-    SerializerLocatorListener,
-    SerializerRegistryInterface};
-use Spiral\Interceptors\InterceptorInterface;
+use Spiral\Queue\JobHandlerLocatorListener;
+use Spiral\Queue\QueueConnectionProviderInterface;
+use Spiral\Queue\QueueInterface;
+use Spiral\Queue\QueueManager;
+use Spiral\Queue\QueueRegistry;
+use Spiral\Queue\SerializerLocatorListener;
+use Spiral\Queue\SerializerRegistryInterface;
+use Spiral\Interceptors\PipelineBuilderInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Core\QueueInjector;
@@ -142,20 +142,20 @@ final class QueueBootloader extends Bootloader
         FactoryInterface $factory,
         TracerFactoryInterface $tracerFactory,
         ?EventDispatcherInterface $dispatcher = null,
+        ?PipelineBuilderInterface $builder = null,
     ): Handler {
-        $pipeline = (new InterceptorPipeline($dispatcher))->withHandler($core);
+        $builder ??= new CompatiblePipelineBuilder($dispatcher);
 
+        $list = [];
         foreach ($config->getConsumeInterceptors() as $interceptor) {
             if (\is_string($interceptor)) {
-                $interceptor = $container->get($interceptor);
+                $list[] = $container->get($interceptor);
             } elseif ($interceptor instanceof Autowire) {
-                $interceptor = $interceptor->resolve($factory);
+                $list[] = $interceptor->resolve($factory);
             }
-
-            \assert($interceptor instanceof CoreInterceptorInterface || $interceptor instanceof InterceptorInterface);
-            $pipeline->addInterceptor($interceptor);
         }
 
+        $pipeline = $builder->withInterceptors(...$list)->build($core);
         return new Handler($pipeline, $tracerFactory);
     }
 

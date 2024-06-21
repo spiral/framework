@@ -51,4 +51,12 @@ interface TargetInterface extends Stringable
      * @return TController|null
      */
     public function getObject(): ?object;
+
+    /**
+     * Returns the callable associated with the target.
+     * It may be a classic PHP callable or an array with a class name and a method name.
+     *
+     * @return callable|array{class-string, non-empty-string}|null
+     */
+    public function getCallable(): callable|array|null;
 }

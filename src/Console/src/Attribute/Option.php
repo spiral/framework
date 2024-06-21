@@ -11,10 +11,10 @@ use Symfony\Component\Console\Input\InputOption;
 final class Option
 {
     /**
-     * @param ?non-empty-string $name Option name. Property name by default
+     * @param non-empty-string|null $name Option name. Property name by default
      * @param non-empty-string|array|null $shortcut Option shortcut
-     * @param ?non-empty-string $description Option description
-     * @param ?positive-int $mode Option mode, {@see InputOption} constants
+     * @param non-empty-string|null $description Option description
+     * @param int<0, 31>|null $mode Option mode, {@see InputOption} constants
      * @param \Closure|array $suggestedValues Option suggested values
      */
     public function __construct(
