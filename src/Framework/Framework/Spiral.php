@@ -20,7 +20,7 @@ enum Spiral: string
     case Centrifugo = 'centrifugo';
     case CentrifugoRequest = 'centrifugo.request';
     case Tcp = 'tcp';
-    case TcpPacket = 'tcp.packet';
+    case TcpRequest = 'tcp.request';
     case Console = 'console';
     case ConsoleCommand = 'console.command';
 }
