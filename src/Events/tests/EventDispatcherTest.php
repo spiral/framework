@@ -6,6 +6,7 @@ namespace Spiral\Tests\Events\Interceptor;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Events\EventDispatcher;
 
@@ -19,7 +20,7 @@ final class EventDispatcherTest extends TestCase
         $core
             ->shouldReceive('callAction')
             ->once()
-            ->with($event::class, 'dispatch', ['event' => $event])
+            ->with(EventDispatcherInterface::class, 'dispatch', ['event' => $event])
             ->andReturn($event);
 
         $dispatcher = new EventDispatcher($core);

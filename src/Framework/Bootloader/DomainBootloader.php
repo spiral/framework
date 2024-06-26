@@ -7,10 +7,10 @@ namespace Spiral\Bootloader;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Core\CompatiblePipelineBuilder;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Core\InterceptorPipeline;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\InterceptorInterface;
 
@@ -29,17 +29,18 @@ abstract class DomainBootloader extends Bootloader
         ContainerInterface $container,
         ?EventDispatcherInterface $dispatcher = null
     ): CoreInterface&HandlerInterface {
-        $pipeline = (new InterceptorPipeline($dispatcher))->withCore($core);
+        $builder = new CompatiblePipelineBuilder($dispatcher);
 
+        $list = [];
         foreach (static::defineInterceptors() as $interceptor) {
-            if (!$interceptor instanceof CoreInterceptorInterface && !$interceptor instanceof InterceptorInterface) {
-                $interceptor = $container->get($interceptor);
-            }
-
-            $pipeline->addInterceptor($interceptor);
+            $list[] = $interceptor instanceof CoreInterceptorInterface || $interceptor instanceof InterceptorInterface
+                ? $interceptor
+                : $container->get($interceptor);
         }
 
-        return $pipeline;
+        return $builder
+            ->withInterceptors(...$list)
+            ->build($core);
     }
 
     /**

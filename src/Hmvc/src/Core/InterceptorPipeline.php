@@ -38,6 +38,9 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
         $this->interceptors[] = $interceptor;
     }
 
+    /**
+     * @psalm-immutable
+     */
     public function withCore(CoreInterface $core): self
     {
         $pipeline = clone $this;
@@ -46,6 +49,9 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
         return $pipeline;
     }
 
+    /**
+     * @psalm-immutable
+     */
     public function withHandler(HandlerInterface $handler): self
     {
         $pipeline = clone $this;

@@ -14,7 +14,7 @@ final class EventDispatcher implements EventDispatcherInterface
 {
     private readonly bool $isLegacy;
     public function __construct(
-        private readonly HandlerInterface|CoreInterface $core
+        private readonly HandlerInterface|CoreInterface $core,
     ) {
         $this->isLegacy = !$core instanceof HandlerInterface;
     }
@@ -22,9 +22,9 @@ final class EventDispatcher implements EventDispatcherInterface
     public function dispatch(object $event): object
     {
         return $this->isLegacy
-            ? $this->core->callAction($event::class, 'dispatch', ['event' => $event])
+            ? $this->core->callAction(EventDispatcherInterface::class, 'dispatch', ['event' => $event])
             : $this->core->handle(new CallContext(
-                Target::fromPair($event, 'dispatch'),
+                Target::fromPair(EventDispatcherInterface::class, 'dispatch'),
                 ['event' => $event],
             ));
     }

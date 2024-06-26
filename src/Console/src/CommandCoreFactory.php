@@ -8,11 +8,12 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Console\Interceptor\AttributeInterceptor;
 use Spiral\Core\Attribute\Scope;
+use Spiral\Core\CompatiblePipelineBuilder;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Core\InterceptorPipeline;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\InterceptorInterface;
+use Spiral\Interceptors\PipelineBuilderInterface;
 
 #[Scope('console.command')]
 final class CommandCoreFactory
@@ -28,17 +29,21 @@ final class CommandCoreFactory
     public function make(
         array $interceptors,
         ?EventDispatcherInterface $eventDispatcher = null,
+        ?PipelineBuilderInterface $pipelineBuilder = null,
     ): CoreInterface|HandlerInterface {
         /** @var CommandCore $core */
         $core = $this->container->get(CommandCore::class);
+        $pipelineBuilder ??= new CompatiblePipelineBuilder($eventDispatcher);
 
-        $interceptableCore = (new InterceptorPipeline($eventDispatcher))->withCore($core);
-
+        $resolved = [];
         foreach ($interceptors as $interceptor) {
-            $interceptableCore->addInterceptor($this->container->get($interceptor));
+            $resolved[] = $this->container->get($interceptor);
         }
-        $interceptableCore->addInterceptor($this->container->get(AttributeInterceptor::class));
 
-        return $interceptableCore;
+        $resolved[] = $this->container->get(AttributeInterceptor::class);
+
+        return $pipelineBuilder
+            ->withInterceptors(...$resolved)
+            ->build($core);
     }
 }

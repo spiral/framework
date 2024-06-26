@@ -237,7 +237,7 @@ final class Parser
     }
 
     /**
-     * @return positive-int
+     * @return int<0, 31>
      */
     private function guessOptionMode(\ReflectionNamedType $type, \ReflectionProperty $property): int
     {

@@ -11,10 +11,10 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\CompatiblePipelineBuilder;
 use Spiral\Core\Config\Proxy;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterceptorInterface;
-use Spiral\Core\InterceptorPipeline;
 use Spiral\Filter\InputScope;
 use Spiral\Filters\Config\FiltersConfig;
 use Spiral\Filters\Model\FilterBag;
@@ -32,6 +32,7 @@ use Spiral\Filters\Model\Mapper\UuidCaster;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Request\InputManager;
+use Spiral\Interceptors\PipelineBuilderInterface;
 
 /**
  * @implements Container\InjectorInterface<FilterInterface>
@@ -109,13 +110,19 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
     private function initFilterProvider(
         Container $container,
         FiltersConfig $config,
-        ?EventDispatcherInterface $dispatcher = null
+        ?EventDispatcherInterface $dispatcher = null,
+        ?PipelineBuilderInterface $builder = null,
     ): FilterProvider {
-        $pipeline = (new InterceptorPipeline($dispatcher))->withHandler(new Core());
+        $builder ??= new CompatiblePipelineBuilder($dispatcher);
 
+        $list = [];
         foreach ($config->getInterceptors() as $interceptor) {
-            $pipeline->addInterceptor($container->get($interceptor));
+            $list[] = $container->get($interceptor);
         }
+
+        $pipeline = $builder
+            ->withInterceptors(...$list)
+            ->build(new Core());
 
         return new FilterProvider($container, $container, $pipeline);
     }

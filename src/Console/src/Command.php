@@ -15,13 +15,12 @@ use Spiral\Console\Configurator\SignatureBasedConfigurator;
 use Spiral\Console\Event\CommandFinished;
 use Spiral\Console\Event\CommandStarting;
 use Spiral\Console\Traits\HelpersTrait;
-use Spiral\Core\ContainerScope;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
+use Spiral\Core\InvokerInterface;
 use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
-use Spiral\Core\InterceptorPipeline;
 use Spiral\Events\EventDispatcherAwareInterface;
 use Spiral\Interceptors\Context\CallContext;
 use Spiral\Interceptors\Context\Target;
@@ -133,9 +132,9 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
      */
     protected function buildCore(): CoreInterface|HandlerInterface
     {
-        return ContainerScope::getContainer()
-            ->get(CommandCoreFactory::class)
-            ->make($this->interceptors, $this->eventDispatcher);
+        /** @var InvokerInterface $invoker */
+        $invoker = $this->container->get(InvokerInterface::class);
+        return $invoker->invoke([CommandCoreFactory::class, 'make'], [$this->interceptors, $this->eventDispatcher]);
     }
 
     protected function prepareInput(InputInterface $input): InputInterface

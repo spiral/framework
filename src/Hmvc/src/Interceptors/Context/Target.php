@@ -20,6 +20,7 @@ final class Target implements TargetInterface
         private ?\ReflectionFunctionAbstract $reflection = null,
         private readonly ?object $object = null,
         private string $delimiter = '.',
+        private \Closure|array|null $callable = null,
     ) {
     }
 
@@ -46,18 +47,23 @@ final class Target implements TargetInterface
         \ReflectionFunctionAbstract $reflection,
         string|object $classOrObject,
     ): self {
+        $method = $reflection->getName();
+        $isStatic = $reflection->isStatic();
+
         /** @var self<T> $result */
         $result = \is_object($classOrObject)
             ? new self(
-                path: [$classOrObject::class, $reflection->getName()],
+                path: [$classOrObject::class, $method],
                 reflection: $reflection,
                 object: $classOrObject,
-                delimiter: $reflection->isStatic() ? '::' : '->',
+                delimiter: $isStatic ? '::' : '->',
+                callable: [$classOrObject, $method],
             )
             : new self(
-                path: [$classOrObject, $reflection->getName()],
+                path: [$classOrObject, $method],
                 reflection: $reflection,
-                delimiter: $reflection->isStatic() ? '::' : '->',
+                delimiter: $isStatic ? '::' : '->',
+                callable: [$classOrObject, $method],
             );
         return $result;
     }
@@ -72,7 +78,7 @@ final class Target implements TargetInterface
     public static function fromReflectionFunction(\ReflectionFunction $reflection, array $path = []): self
     {
         /** @var self<null> $result */
-        $result = new self(path: $path, reflection: $reflection);
+        $result = new self(path: $path, reflection: $reflection, callable: $reflection->getClosure());
         return $result;
     }
 
@@ -85,7 +91,9 @@ final class Target implements TargetInterface
      */
     public static function fromClosure(\Closure $closure, array $path = []): self
     {
-        return self::fromReflectionFunction(new \ReflectionFunction($closure), $path);
+        /** @var self<null> $result */
+        $result = new self(path: $path, reflection: new \ReflectionFunction($closure), callable: $closure);
+        return $result;
     }
 
     /**
@@ -110,6 +118,7 @@ final class Target implements TargetInterface
     {
         /** @var self<null> $result */
         $result = new self(path: $path, delimiter: $delimiter);
+
         return $result;
     }
 
@@ -156,5 +165,10 @@ final class Target implements TargetInterface
     public function getObject(): ?object
     {
         return $this->object;
+    }
+
+    public function getCallable(): callable|array|null
+    {
+        return $this->callable;
     }
 }

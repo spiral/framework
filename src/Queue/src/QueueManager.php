@@ -6,12 +6,11 @@ namespace Spiral\Queue;
 
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Core\CompatiblePipelineBuilder;
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\CoreInterceptorInterface as LegacyInterceptor;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
-use Spiral\Core\InterceptorPipeline;
-use Spiral\Interceptors\InterceptorInterface;
+use Spiral\Interceptors\PipelineBuilderInterface;
 use Spiral\Queue\Config\QueueConfig;
 use Spiral\Queue\Interceptor\Push\Core as PushCore;
 
@@ -19,13 +18,16 @@ final class QueueManager implements QueueConnectionProviderInterface
 {
     /** @var QueueInterface[] */
     private array $pipelines = [];
+    private PipelineBuilderInterface $builder;
 
     public function __construct(
         private readonly QueueConfig $config,
         private readonly ContainerInterface $container,
         private readonly FactoryInterface $factory,
-        private readonly ?EventDispatcherInterface $dispatcher = null
+        ?EventDispatcherInterface $dispatcher = null,
+        ?PipelineBuilderInterface $builder = null,
     ) {
+        $this->builder = $builder ?? new CompatiblePipelineBuilder($dispatcher);
     }
 
     public function getConnection(?string $name = null): QueueInterface
@@ -51,18 +53,15 @@ final class QueueManager implements QueueConnectionProviderInterface
 
         try {
             $driver = $this->factory->make($config['driver'], $config);
-            $pipeline = (new InterceptorPipeline($this->dispatcher))->withHandler(new PushCore($driver));
 
+            $list = [];
             foreach ($this->config->getPushInterceptors() as $interceptor) {
-                if (\is_string($interceptor) || $interceptor instanceof Autowire) {
-                    $interceptor = $this->container->get($interceptor);
-                }
-
-                \assert($interceptor instanceof LegacyInterceptor || $interceptor instanceof InterceptorInterface);
-                $pipeline->addInterceptor($interceptor);
+                $list[] = \is_string($interceptor) || $interceptor instanceof Autowire
+                    ? $this->container->get($interceptor)
+                    : $interceptor;
             }
 
-            return new Queue($pipeline);
+            return new Queue($this->builder->withInterceptors(...$list)->build(new PushCore($driver)));
         } catch (ContainerException $e) {
             throw new Exception\NotSupportedDriverException(
                 \sprintf(

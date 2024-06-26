@@ -57,6 +57,25 @@ final class InterceptorPipelineTest extends TestCase
         $pipeline->handle($this->createPathContext(['controller', 'action']));
     }
 
+    public function testWithInterceptors(): void
+    {
+        $handler = self::createMock(HandlerInterface::class);
+        $handler->expects(self::any())
+            ->method('handle')
+            ->willReturn('test');
+        $pipeline = $this->createPipeline(lastHandler: $handler);
+
+        $second = $pipeline->withInterceptors(new ExceptionInterceptor());
+
+        // Immutability
+        self::assertNotSame($pipeline, $second);
+        // No exception because the interceptor is not in the pipeline
+        $pipeline->handle($this->createPathContext(['controller', 'action']));
+        // Exception because the interceptor is in the pipeline
+        self::expectException(\RuntimeException::class);
+        $second->handle($this->createPathContext(['controller', 'action']));
+    }
+
     public function testHandleWithoutHandler(): void
     {
         $pipeline = $this->createPipeline();
@@ -113,11 +132,7 @@ final class InterceptorPipelineTest extends TestCase
 
         $lastHandler instanceof HandlerInterface and $pipeline = $pipeline->withHandler($lastHandler);
 
-        foreach ($interceptors as $interceptor) {
-            $pipeline->addInterceptor($interceptor);
-        }
-
-        return $pipeline;
+        return $pipeline->withInterceptors(...$interceptors);
     }
 
     public function createPathContext(array $path = []): CallContext
