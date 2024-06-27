@@ -202,11 +202,13 @@ class ConsoleRenderer extends AbstractRenderer
             $result .= $line . "\n";
 
             if ($h !== null && !empty($trace['file'])) {
+                $str = @\file_get_contents($trace['file']);
                 $result .= $h->highlightLines(
-                    \file_get_contents($trace['file']),
+                    $str,
                     $trace['line'],
                     static::SHOW_LINES
                 ) . "\n";
+                unset($str);
             }
         }
 
