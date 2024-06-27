@@ -102,12 +102,14 @@ final class PlainRenderer extends AbstractRenderer
 
             $result .= $line . "\n";
 
-            if ($h !== null && !empty($trace['file'])) {
+            if ($h !== null && !empty($trace['file']) && \is_file($trace['file'])) {
+                $str = @\file_get_contents($trace['file']);
                 $result .= $h->highlightLines(
-                    \file_get_contents($trace['file']),
+                    $str,
                     $trace['line'],
                     self::SHOW_LINES
                 ) . "\n";
+                unset($str);
             }
         }
 
