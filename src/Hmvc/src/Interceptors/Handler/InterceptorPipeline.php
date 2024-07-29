@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Interceptors\Handler;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\CallContextInterface;
 use Spiral\Interceptors\Event\InterceptorCalling;
 use Spiral\Interceptors\Exception\InterceptorException;
 use Spiral\Interceptors\HandlerInterface;
@@ -53,7 +53,7 @@ final class InterceptorPipeline implements HandlerInterface
     /**
      * @throws \Throwable
      */
-    public function handle(CallContext $context): mixed
+    public function handle(CallContextInterface $context): mixed
     {
         if ($this->handler === null) {
             throw new InterceptorException('Unable to invoke pipeline without last handler.');

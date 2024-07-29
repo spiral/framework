@@ -40,7 +40,7 @@ final class InterceptorPipelineTest extends TestCase
 
         $pipeline->withHandler(
             new class implements HandlerInterface {
-                public function handle(CallContext $context): mixed
+                public function handle(CallContextInterface $context): mixed
                 {
                     return null;
                 }
