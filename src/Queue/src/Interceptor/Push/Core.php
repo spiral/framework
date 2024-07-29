@@ -6,7 +6,7 @@ namespace Spiral\Queue\Interceptor\Push;
 
 use Spiral\Core\ContainerScope;
 use Spiral\Core\CoreInterface;
-use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\CallContextInterface;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Queue\Options;
 use Spiral\Queue\OptionsInterface;
@@ -59,7 +59,7 @@ final class Core implements CoreInterface, HandlerInterface
         );
     }
 
-    public function handle(CallContext $context): mixed
+    public function handle(CallContextInterface $context): mixed
     {
         $args = $context->getArguments();
         $controller = $context->getTarget()->getPath()[0];

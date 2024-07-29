@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Core;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\CallContextInterface;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\InterceptorInterface;
 
@@ -35,7 +35,7 @@ final class InterceptableCore implements CoreInterface, HandlerInterface
         return $this->pipeline->withCore($this->core)->callAction($controller, $action, $parameters);
     }
 
-    public function handle(CallContext $context): mixed
+    public function handle(CallContextInterface $context): mixed
     {
         return $this->pipeline->withCore($this->core)->handle($context);
     }

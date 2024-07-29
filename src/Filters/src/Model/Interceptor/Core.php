@@ -7,7 +7,7 @@ namespace Spiral\Filters\Model\Interceptor;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\Model\FilterBag;
 use Spiral\Filters\Model\FilterInterface;
-use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\CallContextInterface;
 use Spiral\Interceptors\HandlerInterface;
 
 /**
@@ -25,7 +25,7 @@ final class Core implements CoreInterface, HandlerInterface
         return $parameters['filterBag']->filter;
     }
 
-    public function handle(CallContext $context): FilterInterface
+    public function handle(CallContextInterface $context): FilterInterface
     {
         $args = $context->getArguments();
         \assert($args['filterBag'] instanceof FilterBag);

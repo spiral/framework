@@ -6,7 +6,7 @@ namespace Spiral\Events\Interceptor;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\CallContextInterface;
 use Spiral\Interceptors\HandlerInterface;
 
 /**
@@ -30,7 +30,7 @@ final class Core implements CoreInterface, HandlerInterface
         return $this->dispatcher->dispatch($parameters['event']);
     }
 
-    public function handle(CallContext $context): mixed
+    public function handle(CallContextInterface $context): mixed
     {
         return $this->dispatcher->dispatch($context->getArguments()['event']);
     }
