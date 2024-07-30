@@ -27,7 +27,7 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
     private array $interceptors = [];
 
     private int $position = 0;
-    private ?CallContext $context = null;
+    private ?CallContextInterface $context = null;
 
     public function __construct(
         private readonly ?EventDispatcherInterface $dispatcher = null
@@ -117,7 +117,7 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
             : $this->core->callAction($path[0] ?? '', $path[1] ?? '', $context->getArguments());
     }
 
-    private function nextWithContext(CallContext $context): self
+    private function nextWithContext(CallContextInterface $context): self
     {
         $pipeline = clone $this;
         $pipeline->context = $context;
