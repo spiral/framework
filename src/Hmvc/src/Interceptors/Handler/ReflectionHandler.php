@@ -7,7 +7,7 @@ namespace Spiral\Interceptors\Handler;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\ResolverInterface;
-use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\CallContextInterface;
 use Spiral\Interceptors\Exception\TargetCallException;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\Internal\ActionResolver;
@@ -30,7 +30,7 @@ class ReflectionHandler implements HandlerInterface
      * @psalm-assert non-empty-string $action
      * @throws \Throwable
      */
-    public function handle(CallContext $context): mixed
+    public function handle(CallContextInterface $context): mixed
     {
         // Resolve controller method
         $method = $context->getTarget()->getReflection();
@@ -74,7 +74,7 @@ class ReflectionHandler implements HandlerInterface
     /**
      * @throws ContainerExceptionInterface
      */
-    protected function resolveArguments(\ReflectionFunctionAbstract $method, CallContext $context): array
+    protected function resolveArguments(\ReflectionFunctionAbstract $method, CallContextInterface $context): array
     {
         $resolver = $this->container->get(ResolverInterface::class);
         \assert($resolver instanceof ResolverInterface);

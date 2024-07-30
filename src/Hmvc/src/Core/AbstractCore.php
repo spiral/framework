@@ -10,7 +10,7 @@ use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
-use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\CallContextInterface;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\Internal\ActionResolver;
 
@@ -54,7 +54,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
         return $this->invoke(null, $controller, $method, $parameters);
     }
 
-    public function handle(CallContext $context): mixed
+    public function handle(CallContextInterface $context): mixed
     {
         $target = $context->getTarget();
         $reflection = $target->getReflection();

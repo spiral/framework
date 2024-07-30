@@ -6,7 +6,7 @@ namespace Spiral\Queue\Interceptor\Consume;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\CallContextInterface;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Queue\Event\JobProcessed;
 use Spiral\Queue\Event\JobProcessing;
@@ -52,7 +52,7 @@ final class Core implements CoreInterface, HandlerInterface
         return null;
     }
 
-    public function handle(CallContext $context): mixed
+    public function handle(CallContextInterface $context): mixed
     {
         $args = $context->getArguments();
         $controller = $context->getTarget()->getPath()[0];

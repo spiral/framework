@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Interceptors;
 
-use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\CallContextInterface;
 
 interface HandlerInterface
 {
-    public function handle(CallContext $context): mixed;
+    public function handle(CallContextInterface $context): mixed;
 }
