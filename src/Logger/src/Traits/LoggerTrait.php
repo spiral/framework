@@ -14,7 +14,6 @@ use Spiral\Logger\LogsInterface;
  */
 trait LoggerTrait
 {
-    /** @internal */
     private ?LoggerInterface $logger = null;
 
     /**
