@@ -20,7 +20,7 @@ final class ClassExistsChecker implements BootloaderCheckerInterface
         }
 
         if (!\class_exists($bootloader)) {
-            throw new ClassNotFoundException(\sprintf('Bootloader class `%s` is not exist.', $bootloader));
+            throw new ClassNotFoundException(\sprintf('Bootloader class `%s` does not exist.', $bootloader));
         }
 
         return true;
