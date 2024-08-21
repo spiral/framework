@@ -22,7 +22,8 @@ final class Target implements TargetInterface
         private readonly ?object $object = null,
         private string $delimiter = '.',
         private readonly \Closure|array|null $callable = null,
-    ) {}
+    ) {
+    }
 
     public function __toString(): string
     {
