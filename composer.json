@@ -220,6 +220,7 @@
         "spiral/debug": "self.version",
         "spiral/distribution": "self.version",
         "spiral/dotenv-bridge": "self.version",
+        "spiral/interceptors": "self.version",
         "spiral/encrypter": "self.version",
         "spiral/exceptions": "self.version",
         "spiral/events": "self.version",

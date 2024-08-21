@@ -1,6 +1,12 @@
 {
     "name": "spiral/auth-http",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spiral"
+        }
+    ],
     "description": "Authorization component with set of authentication middlewares and providers",
     "homepage": "https://spiral.dev",
     "support": {
