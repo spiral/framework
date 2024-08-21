@@ -3,12 +3,20 @@
     "type": "library",
     "description": "Spiral Interceptors",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spiral"
+        }
+    ],
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",
-        "source": "https://github.com/spiral/hmvc"
+        "source": "https://github.com/spiral/interceptors",
+        "docs": "https://spiral.dev/docs",
+        "chat": "https://discord.gg/V6EK4he"
     },
-    "tags": [
+    "keywords": [
         "interceptors",
         "aop",
         "spiral"

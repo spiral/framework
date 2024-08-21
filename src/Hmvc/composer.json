@@ -3,10 +3,18 @@
     "type": "library",
     "description": "HMVC Core and Controllers",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spiral"
+        }
+    ],
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",
-        "source": "https://github.com/spiral/hmvc"
+        "source": "https://github.com/spiral/hmvc",
+        "docs": "https://spiral.dev/docs",
+        "chat": "https://discord.gg/V6EK4he"
     },
     "authors": [
         {
@@ -29,7 +37,8 @@
     "require": {
         "php": ">=8.1",
         "spiral/core": "^3.14",
-        "psr/event-dispatcher": "^1.0"
+        "psr/event-dispatcher": "^1.0",
+        "spiral/interceptors": "^3.14"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.1",
@@ -38,14 +47,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Spiral\\Core\\": "src/Core",
-            "Spiral\\Interceptors\\": "src/Interceptors"
+            "Spiral\\Core\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spiral\\Tests\\Core\\": "tests/Core",
-            "Spiral\\Tests\\Interceptors\\": "tests/Interceptors"
+            "Spiral\\Tests\\Core\\": "tests"
         }
     },
     "extra": {
@@ -57,5 +64,18 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "psalm": "psalm",
+        "psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
+        "psalm:ci": "psalm --output-format=github --shepherd --show-info=false --stats --threads=4",
+        "test": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --color=always"
+        ],
+        "test:cc": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --coverage-clover=runtime/phpunit/logs/clover.xml --color=always"
+        ]
+    }
 }

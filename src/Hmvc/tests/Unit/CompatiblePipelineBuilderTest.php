@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core\Unit;
+namespace Spiral\Tests\Core\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\CompatiblePipelineBuilder;
@@ -10,8 +10,8 @@ use Spiral\Core\CoreInterface;
 use Spiral\Interceptors\Context\CallContext;
 use Spiral\Interceptors\Context\Target;
 use Spiral\Interceptors\HandlerInterface;
+use Spiral\Tests\Core\Unit\Stub\ExceptionInterceptor;
 use Spiral\Tests\Core\Unit\Stub\Legacy\LegacyExceptionInterceptor;
-use Spiral\Tests\Interceptors\Unit\Stub\ExceptionInterceptor;
 
 final class CompatiblePipelineBuilderTest extends TestCase
 {
