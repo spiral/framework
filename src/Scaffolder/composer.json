@@ -2,6 +2,12 @@
     "name": "spiral/scaffolder",
     "type": "library",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spiral"
+        }
+    ],
     "description": "Spiral, Code Scaffolding module",
     "keywords": ["scaffolding"],
     "homepage": "https://spiral.dev",

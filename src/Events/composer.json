@@ -3,6 +3,12 @@
     "type": "library",
     "description": "Spiral Framework: PSR-14 Event Dispatcher",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spiral"
+        }
+    ],
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",
