@@ -3,6 +3,12 @@
     "type": "library",
     "description": "Exceptions Toolkit: exception and error handler, CLI and HTML renderer",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spiral"
+        }
+    ],
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",

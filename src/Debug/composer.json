@@ -3,6 +3,12 @@
     "type": "library",
     "description": "Debug Toolkit: Log factory interface, variable dumper, benchmarker",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spiral"
+        }
+    ],
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",
