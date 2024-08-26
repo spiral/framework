@@ -4,6 +4,12 @@
     "description": "Spiral, High-Performance PHP/Go Framework",
     "homepage": "https://spiral.dev",
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spiral"
+        }
+    ],
     "support": {
         "issues": "https://github.com/spiral/framework/issues",
         "source": "https://github.com/spiral/framework"
@@ -78,7 +84,7 @@
             "Spiral\\Cookies\\": "src/Cookies/src",
             "Spiral\\Core\\": [
                 "src/Core/src",
-                "src/Hmvc/src/Core"
+                "src/Hmvc/src"
             ],
             "Spiral\\Csrf\\": "src/Csrf/src",
             "Spiral\\Debug\\": "src/Debug/src",
@@ -90,7 +96,7 @@
             "Spiral\\Files\\": "src/Files/src",
             "Spiral\\Filters\\": "src/Filters/src",
             "Spiral\\Http\\": "src/Http/src",
-            "Spiral\\Interceptors\\": "src/Hmvc/src/Interceptors",
+            "Spiral\\Interceptors\\": "src/Interceptors/src",
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Mailer\\": "src/Mailer/src",
             "Spiral\\Models\\": "src/Models/src",
@@ -160,7 +166,7 @@
             "Spiral\\Tests\\Cookies\\": "src/Cookies/tests",
             "Spiral\\Tests\\Core\\": [
                 "src/Core/tests",
-                "src/Hmvc/tests/Core"
+                "src/Hmvc/tests"
             ],
             "Spiral\\Tests\\Csrf\\": "src/Csrf/tests",
             "Spiral\\Tests\\Debug\\": "src/Debug/tests",
@@ -173,7 +179,7 @@
             "Spiral\\Tests\\Filters\\": "src/Filters/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework",
             "Spiral\\Tests\\Http\\": "src/Http/tests",
-            "Spiral\\Tests\\Interceptors\\": "src/Hmvc/tests/Interceptors",
+            "Spiral\\Tests\\Interceptors\\": "src/Interceptors/tests",
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
             "Spiral\\Tests\\Mailer\\": "src/Mailer/tests",
             "Spiral\\Tests\\Models\\": "src/Models/tests",

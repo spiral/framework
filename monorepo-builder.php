@@ -31,6 +31,12 @@ use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorke
         'description'       => $dest['description'] ?? '',
         'homepage'          => 'https://spiral.dev',
         'license'           => 'MIT',
+        'funding' => [
+            [
+                'type' => 'github',
+                'url' => 'https://github.com/sponsors/spiral',
+            ],
+        ],
         'support'           => [
             'issues' => 'https://github.com/spiral/framework/issues',
             'source' => 'https://github.com/spiral/framework',

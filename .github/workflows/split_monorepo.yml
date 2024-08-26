@@ -64,6 +64,8 @@ jobs:
             split_repository: 'files'
           - local_path: 'Filters'
             split_repository: 'filters'
+          - local_path: 'Interceptors'
+            split_repository: 'interceptors'
           - local_path: 'Hmvc'
             split_repository: 'hmvc'
           - local_path: 'Http'

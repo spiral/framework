@@ -14,13 +14,14 @@ final class Target implements TargetInterface
      * @param list<string> $path
      * @param \ReflectionFunctionAbstract|null $reflection
      * @param TController|null $object
+     * @param \Closure|array{class-string|object, non-empty-string}|null $callable
      */
     private function __construct(
         private array $path,
         private ?\ReflectionFunctionAbstract $reflection = null,
         private readonly ?object $object = null,
         private string $delimiter = '.',
-        private \Closure|array|null $callable = null,
+        private readonly \Closure|array|null $callable = null,
     ) {
     }
 

@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
-use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\ControllerException;
-use Spiral\Core\ResolverInterface;
 use Spiral\Interceptors\Context\CallContext;
 use Spiral\Interceptors\Context\Target;
-use Spiral\Interceptors\Handler\ReflectionHandler;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Testing\TestCase;
 use Spiral\Tests\Core\Fixtures\CleanController;
@@ -223,7 +220,7 @@ final class CoreTest extends TestCase
         $c = new Container();
         $handler = new SampleCore($c);
         // Call Context
-        $service = new \Spiral\Tests\Interceptors\Unit\Stub\TestService();
+        $service = new TestService();
         $ctx = (new CallContext(Target::fromPair($service, 'parentMethod')->withPath(['foo', 'bar'])))
             ->withArguments(['HELLO']);
 
