@@ -96,7 +96,7 @@ final class Http implements RequestHandlerInterface
             callback: $callback,
             attributes: [
                 'http.method' => $request->getMethod(),
-                'http.url' => $request->getUri(),
+                'http.url' => (string) $request->getUri(),
                 'http.headers' => $request->getHeaders(),
             ],
             scoped: true,
