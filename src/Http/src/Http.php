@@ -100,7 +100,7 @@ final class Http implements RequestHandlerInterface
                 'http.headers' => $request->getHeaders(),
             ],
             scoped: true,
-            traceKind: TraceKind::SERVER
+            traceKind: TraceKind::SERVER,
         );
 
         foreach ($tracer->getContext() as $key => $value) {

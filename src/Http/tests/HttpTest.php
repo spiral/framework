@@ -293,45 +293,51 @@ final class HttpTest extends TestCase
         $config = $this->getHttpConfig();
         $request = new ServerRequest('GET', 'http://example.org/path', ['foo' => ['bar']]);
 
-        $http = new Http(
-            $config,
-            new Pipeline($this->container),
-            new ResponseFactory($config),
-            $this->container,
-            $tracerFactory = m::mock(TracerFactoryInterface::class),
-        );
-
-        $http->setHandler(function () {
-            return 'hello world';
-        });
-
-        $tracerFactory
-            ->shouldReceive('make')
-            ->once()
-            ->andReturn($tracer = m::mock(TracerInterface::class));
-
+        $tracer = $this->createMock(TracerInterface::class);
         $tracer
-            ->shouldReceive('trace')
-            ->once()
+            ->expects($this->once())
+            ->method('trace')
             ->with(
                 'GET http://example.org/path',
-                m::any(),
+                $this->anything(),
                 [
                     'http.method' => 'GET',
                     'http.url' => 'http://example.org/path',
                     'http.headers' => ['Host' => ['example.org'], 'foo' => ['bar']],
                 ],
                 true,
-                TraceKind::SERVER
+                TraceKind::SERVER,
             )
-            ->andReturnUsing(function($name, $callback, $attributes, $scoped, $traceKind) {
-                return $this->container->get(TracerInterface::class)->trace($name, $callback, $attributes, $scoped, $traceKind);
-            });
-
+            ->willReturnCallback(
+                function ($name, $callback, $attributes, $scoped, $traceKind) {
+                    self::assertIsString($attributes['http.url']);
+                    return $this->container
+                        ->get(TracerInterface::class)
+                        ->trace($name, $callback, $attributes, $scoped, $traceKind);
+                },
+            );
         $tracer
-            ->shouldReceive('getContext')
-            ->once()
-            ->andReturn([]);
+            ->expects($this->once())
+            ->method('getContext')
+            ->willReturn([]);
+
+        $tracerFactory = $this->createMock(TracerFactoryInterface::class);
+        $tracerFactory
+            ->expects($this->once())
+            ->method('make')
+            ->willReturn($tracer);
+
+        $http = new Http(
+            $config,
+            new Pipeline($this->container),
+            new ResponseFactory($config),
+            $this->container,
+            $tracerFactory,
+        );
+
+        $http->setHandler(function () {
+            return 'hello world';
+        });
 
         $response = $http->handle($request);
         $this->assertSame('hello world', (string)$response->getBody());
