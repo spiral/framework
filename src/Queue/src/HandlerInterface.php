@@ -12,7 +12,7 @@ interface HandlerInterface
     /**
      * Handle incoming job.
      *
-     * @param class-string<HandlerInterface> $name
+     * @param class-string<HandlerInterface>|non-empty-string $name
      * @param non-empty-string $id
      */
     public function handle(string $name, string $id, array $payload): void;
