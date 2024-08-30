@@ -406,7 +406,7 @@ final class UseCaseTest extends BaseTestCase
 
     public static function scopeEnumDataProvider(): \Traversable
     {
-        yield [Spiral::HttpRequest, 'http.request'];
+        yield [Spiral::HttpRequest, 'http-request'];
         yield [ScopeEnum::A, 'a'];
     }
 }

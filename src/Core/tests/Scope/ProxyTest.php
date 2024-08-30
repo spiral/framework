@@ -53,7 +53,7 @@ final class ProxyTest extends BaseTestCase
                         self::assertSame($lc, $carrier);
                         \Fiber::suspend();
                     }
-                }
+                },
             ),
             static fn() => $root->runScope(
                 new Scope(
@@ -73,7 +73,7 @@ final class ProxyTest extends BaseTestCase
                         self::assertSame($lc, $carrier);
                         \Fiber::suspend();
                     }
-                }
+                },
             ),
         );
     }
@@ -89,7 +89,7 @@ final class ProxyTest extends BaseTestCase
                 static function (
                     ScopedProxyLoggerCarrier $carrier,
                     ScopedProxyLoggerCarrier $carrier2,
-                    LoggerInterface $logger
+                    LoggerInterface $logger,
                 ) {
                     // from the current `foo` scope
                     self::assertInstanceOf(KVLogger::class, $logger);
@@ -100,7 +100,7 @@ final class ProxyTest extends BaseTestCase
                     // because of proxy
                     self::assertSame('kv', $carrier->logger->getName());
                     self::assertNotSame($carrier2->logger, $carrier->logger, 'Different contexts');
-                }
+                },
             );
         });
     }
@@ -122,7 +122,7 @@ final class ProxyTest extends BaseTestCase
 
                     // because of proxy
                     self::assertSame('kv', $carrier->logger->getName());
-                }
+                },
             );
         });
     }
@@ -139,8 +139,8 @@ final class ProxyTest extends BaseTestCase
                         {
                             return new Context($context);
                         }
-                    }
-                )
+                    },
+                ),
             );
 
         $root->runScope(new Scope(), static function (Container $c1) {
@@ -160,7 +160,7 @@ final class ProxyTest extends BaseTestCase
                 self::assertInstanceOf(
                     ReflectionParameter::class,
                     $proxy->getContext()->getValue(),
-                    'Context was injected'
+                    'Context was injected',
                 );
                 /** @see ScopedProxyStdClass::$context */
                 self::assertSame('context', $proxy->getContext()->getValue()->getName());
@@ -180,8 +180,8 @@ final class ProxyTest extends BaseTestCase
                         {
                             return new Context($context);
                         }
-                    }
-                )
+                    },
+                ),
             );
 
         FiberHelper::runFiberSequence(
@@ -216,7 +216,7 @@ final class ProxyTest extends BaseTestCase
                     self::assertInstanceOf(KVLogger::class, $cp->get(LoggerInterface::class));
                     self::assertSame($cp->get(LoggerInterface::class), $cp->get(LoggerInterface::class));
                 });
-            }
+            },
         );
     }
 
@@ -292,7 +292,7 @@ final class ProxyTest extends BaseTestCase
                     }
                 });
                 self::assertSame('Bar', $proxy->getName());
-            }
+            },
         );
     }
 
