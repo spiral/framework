@@ -10,17 +10,17 @@ namespace Spiral\Framework;
 enum Spiral: string
 {
     case Http = 'http';
-    case HttpRequest = 'http.request';
+    case HttpRequest = 'http-request';
     case Queue = 'queue';
-    case QueueTask = 'queue.task';
+    case QueueTask = 'queue-task';
     case Temporal = 'temporal';
-    case TemporalActivity = 'temporal.activity';
+    case TemporalActivity = 'temporal-activity';
     case Grpc = 'grpc';
-    case GrpcRequest = 'grpc.request';
+    case GrpcRequest = 'grpc-request';
     case Centrifugo = 'centrifugo';
-    case CentrifugoRequest = 'centrifugo.request';
+    case CentrifugoRequest = 'centrifugo-request';
     case Tcp = 'tcp';
-    case TcpRequest = 'tcp.request';
+    case TcpRequest = 'tcp-request';
     case Console = 'console';
-    case ConsoleCommand = 'console.command';
+    case ConsoleCommand = 'console-command';
 }
