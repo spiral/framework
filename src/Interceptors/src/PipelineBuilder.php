@@ -27,8 +27,8 @@ final class PipelineBuilder implements PipelineBuilderInterface
         return $clone;
     }
 
-    public function build(HandlerInterface $last): HandlerInterface
+    public function build(HandlerInterface $handler): HandlerInterface
     {
-        return $this->pipeline->withHandler($last);
+        return $this->pipeline->withHandler($handler);
     }
 }

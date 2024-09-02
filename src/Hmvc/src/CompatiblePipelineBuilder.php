@@ -38,11 +38,11 @@ final class CompatiblePipelineBuilder implements PipelineBuilderInterface
         return $clone;
     }
 
-    public function build(HandlerInterface|CoreInterface $last): InterceptorPipeline
+    public function build(HandlerInterface|CoreInterface $handler): InterceptorPipeline
     {
         /** @psalm-suppress InvalidArgument */
-        return $last instanceof HandlerInterface
-            ? $this->pipeline->withHandler($last)
-            : $this->pipeline->withCore($last);
+        return $handler instanceof HandlerInterface
+            ? $this->pipeline->withHandler($handler)
+            : $this->pipeline->withCore($handler);
     }
 }
