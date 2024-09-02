@@ -14,7 +14,7 @@ use Spiral\Interceptors\PipelineBuilderInterface;
  *
  * @deprecated Use {@see PipelineBuilder} instead.
  */
-class CompatiblePipelineBuilder implements PipelineBuilderInterface
+final class CompatiblePipelineBuilder implements PipelineBuilderInterface
 {
     private InterceptorPipeline $pipeline;
 

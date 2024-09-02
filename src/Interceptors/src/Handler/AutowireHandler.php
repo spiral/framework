@@ -12,16 +12,15 @@ use Spiral\Interceptors\Exception\TargetCallException;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\Internal\ActionResolver;
 
-class ReflectionHandler implements HandlerInterface
+/**
+ * Handler resolves missing arguments from the container.
+ * It requires the Target to explicitly point to a method or function.
+ */
+final class AutowireHandler implements HandlerInterface
 {
-    /**
-     * @param bool $resolveFromPath Try to resolve controller and action reflection from the target path if
-     *        reflection is not provided.
-     */
     public function __construct(
         /** @internal */
         protected ContainerInterface $container,
-        protected bool $resolveFromPath = true,
     ) {
     }
 
@@ -33,24 +32,11 @@ class ReflectionHandler implements HandlerInterface
     public function handle(CallContextInterface $context): mixed
     {
         // Resolve controller method
-        $method = $context->getTarget()->getReflection();
+        $method = $context->getTarget()->getReflection() ?? throw new TargetCallException(
+            "Reflection not provided for target `{$context->getTarget()}`.",
+            TargetCallException::NOT_FOUND,
+        );
         $path = $context->getTarget()->getPath();
-        if ($method === null) {
-            $this->resolveFromPath or throw new TargetCallException(
-                "Reflection not provided for target `{$context->getTarget()}`.",
-                TargetCallException::NOT_FOUND,
-            );
-
-            if (\count($path) !== 2) {
-                throw new TargetCallException(
-                    "Invalid target path to resolve reflection for `{$context->getTarget()}`."
-                    . ' Expected two parts: class and method.',
-                    TargetCallException::NOT_FOUND,
-                );
-            }
-
-            $method = ActionResolver::pathToReflection(\reset($path), \next($path));
-        }
 
         if ($method instanceof \ReflectionFunction) {
             return $method->invokeArgs(
