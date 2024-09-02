@@ -75,7 +75,7 @@ final class AutowireHandlerTest extends TestCase
         $handler = new AutowireHandler($container);
 
         self::expectException(TargetCallException::class);
-        self::expectExceptionMessageMatches('Reflection not provided for target');
+        self::expectExceptionMessage('Reflection not provided for target');
 
         $handler->handle(new CallContext(Target::fromPathString('foo')));
     }
