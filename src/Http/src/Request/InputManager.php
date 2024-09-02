@@ -50,7 +50,7 @@ use Spiral\Http\Header\AcceptHeader;
  * @method mixed attribute(string $name, mixed $default = null)
  */
 #[Singleton]
-#[Scope('http.request')]
+#[Scope('http-request')]
 final class InputManager
 {
     /**

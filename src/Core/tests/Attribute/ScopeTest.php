@@ -23,7 +23,7 @@ final class ScopeTest extends TestCase
     public static function scopeNameDataProvider(): \Traversable
     {
         yield ['foo', 'foo'];
-        yield [Spiral::HttpRequest, 'http.request'];
+        yield [Spiral::HttpRequest, 'http-request'];
         yield [ScopeEnum::A, 'a'];
     }
 }
