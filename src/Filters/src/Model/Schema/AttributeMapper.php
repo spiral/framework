@@ -73,7 +73,7 @@ final class AttributeMapper
                         }
                     }
 
-                    $schema[$property->getName()] = $attribute->getSchema($property);
+                    $schema[$property->getName()] = $attribute->getSchema();
                 } elseif ($attribute instanceof NestedArray) {
                     $values = $attribute->getValue($input, $property);
                     $propertyValues = [];

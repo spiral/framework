@@ -53,7 +53,7 @@ final class StreamWrapper
     /**
      * Open pre-mocked StreamInterface by it's unique uri.
      */
-    public function stream_open(string $path, string $mode, int $options, ?string &$opened_path): bool
+    public function stream_open(string $path, string $mode): bool
     {
         if (!isset(self::$uris[$path])) {
             return false;

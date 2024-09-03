@@ -44,7 +44,7 @@ final class NestedArray
         return $this->input->getValue($input, $property);
     }
 
-    public function getSchema(\ReflectionProperty $property): array
+    public function getSchema(): array
     {
         if ($this->prefix) {
             return [$this->class, $this->prefix];
