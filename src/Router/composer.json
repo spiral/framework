@@ -35,11 +35,11 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "spiral/core": "^3.14",
-        "spiral/hmvc": "^3.14",
-        "spiral/http": "^3.14",
+        "spiral/core": "^3.15",
+        "spiral/hmvc": "^3.15",
+        "spiral/http": "^3.15",
         "cocur/slugify": "^3.2 || ^4.0",
-        "spiral/telemetry": "^3.14",
+        "spiral/telemetry": "^3.15",
         "doctrine/inflector": "^1.4|^2.0",
         "psr/event-dispatcher": "^1.0"
     },
@@ -61,7 +61,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.14.x-dev"
+            "dev-master": "3.15.x-dev"
         }
     },
     "config": {
