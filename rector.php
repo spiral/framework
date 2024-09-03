@@ -46,6 +46,7 @@ return RectorConfig::configure()
             __DIR__ . '/src/Prototype/src/NodeVisitors/LocateProperties.php',
             __DIR__ . '/src/Prototype/src/NodeVisitors/RemoveTrait.php',
             __DIR__ . '/src/Logger/src/ListenerRegistry.php',
+            __DIR__ . '/src/Stempler/src/Transform/Merge/ExtendsParent.php',
         ],
         RemoveExtraParametersRector::class => [
             __DIR__ . '/src/Boot/src/BootloadManager/AbstractBootloadManager.php',
@@ -56,7 +57,6 @@ return RectorConfig::configure()
 
         // to be enabled later after upgrade to 1.2.4 merged
         // to easier to review
-        RemoveAlwaysTrueIfConditionRector::class,
         RemoveUnusedPublicMethodParameterRector::class,
         RemoveEmptyClassMethodRector::class,
         RemoveUnusedPromotedPropertyRector::class,
