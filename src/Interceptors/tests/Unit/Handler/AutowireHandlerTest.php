@@ -11,15 +11,15 @@ use Spiral\Core\ResolverInterface;
 use Spiral\Interceptors\Context\CallContext;
 use Spiral\Interceptors\Context\Target;
 use Spiral\Interceptors\Exception\TargetCallException;
-use Spiral\Interceptors\Handler\ReflectionHandler;
+use Spiral\Interceptors\Handler\AutowireHandler;
 use Spiral\Tests\Interceptors\Unit\Stub\TestService;
 
-final class ReflectionHandlerTest extends TestCase
+final class AutowireHandlerTest extends TestCase
 {
     public function testHandleReflectionMethodFromExtendedAbstractClass(): void
     {
         $c = new Container();
-        $handler = new ReflectionHandler($c, false);
+        $handler = new AutowireHandler($c);
         // Call Context
         $ctx = (new CallContext(Target::fromPair(TestService::class, 'parentMethod')))
             ->withArguments(['HELLO']);
@@ -38,7 +38,7 @@ final class ReflectionHandlerTest extends TestCase
             ->method('get')
             ->with(ResolverInterface::class)
             ->willReturn($c);
-        $handler = new ReflectionHandler($container, false);
+        $handler = new AutowireHandler($container);
         // Call Context
         $ctx = new CallContext(Target::fromReflectionFunction(new \ReflectionFunction('strtoupper')));
         $ctx = $ctx->withArguments(['hello']);
@@ -57,7 +57,7 @@ final class ReflectionHandlerTest extends TestCase
             ->method('get')
             ->with(ResolverInterface::class)
             ->willReturn($c);
-        $handler = new ReflectionHandler($container, false);
+        $handler = new AutowireHandler($container);
         // Call Context
         $service = new TestService();
         $ctx = (new CallContext(Target::fromPair($service, 'parentMethod')))
@@ -68,48 +68,28 @@ final class ReflectionHandlerTest extends TestCase
         self::assertSame('hello', $result);
     }
 
-    public function testWithoutResolvingFromPathAndReflection(): void
+    public function testWithoutResolvingFromPath(): void
     {
         $container = self::createMock(ContainerInterface::class);
 
-        $handler = new ReflectionHandler($container, false);
+        $handler = new AutowireHandler($container);
 
         self::expectException(TargetCallException::class);
-        self::expectExceptionMessageMatches('/Reflection not provided for target/');
+        self::expectExceptionMessage('Reflection not provided for target');
 
         $handler->handle(new CallContext(Target::fromPathString('foo')));
     }
 
-    public function testWithoutReflectionWithResolvingFromPathWithIncorrectPath(): void
+    public function testWithoutReflectionWithCallableArray(): void
     {
         $handler = $this->createHandler();
 
         self::expectException(TargetCallException::class);
-        self::expectExceptionMessageMatches('/Invalid target path to resolve reflection/');
-
-        $handler->handle(new CallContext(Target::fromPathArray(['foo', 'bar', 'baz'])));
-    }
-
-    public function testWithoutReflectionWithResolvingFromPathWithWrongPath(): void
-    {
-        $handler = $this->createHandler();
-
-        self::expectException(TargetCallException::class);
-        self::expectExceptionMessageMatches('/Invalid action/');
-
-        $handler->handle(new CallContext(Target::fromPathArray([TestService::class, 'nonExistingMethod'])));
-    }
-
-    public function testWithoutReflectionWithResolvingFromPath(): void
-    {
-        $handler = $this->createHandler([
-            TestService::class => $service = new TestService(),
-        ]);
-
-        self::assertSame(0, $service->counter);
+        self::expectExceptionMessage(
+            \sprintf('Reflection not provided for target `%s.increment`.', TestService::class),
+        );
 
         $handler->handle(new CallContext(Target::fromPathArray([TestService::class, 'increment'])));
-        self::assertSame(1, $service->counter);
     }
 
     public function testUsingResolver(): void
@@ -125,16 +105,15 @@ final class ReflectionHandlerTest extends TestCase
         self::assertSame('HELLO', $result);
     }
 
-    public function createHandler(array $definitions = [], bool $resolveFromPath = true): ReflectionHandler
+    public function createHandler(array $definitions = []): AutowireHandler
     {
         $container = new Container();
         foreach ($definitions as $id => $definition) {
             $container->bind($id, $definition);
         }
 
-        return new ReflectionHandler(
+        return new AutowireHandler(
             $container,
-            $resolveFromPath,
         );
     }
 }
