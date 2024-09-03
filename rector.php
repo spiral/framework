@@ -3,25 +3,25 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\ClassMethod\RemoveEmptyClassMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPromotedPropertyRector;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
-use Rector\Php71\Rector\FuncCall\CountOnNullRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
-use Rector\Set\ValueObject\LevelSetList;
-use Rector\Set\ValueObject\SetList;
 
-return static function (RectorConfig $config): void {
-    $config->paths([
+return RectorConfig::configure()
+    ->withPaths([
         __DIR__ . '/src/*/src',
-    ]);
-
-    $config->parallel();
-    $config->skip([
-        CountOnNullRector::class,
+    ])
+    ->withParallel()
+    ->withSkip([
         IfIssetToCoalescingRector::class,
         RemoveUnusedPrivatePropertyRector::class => [
             __DIR__ . '/src/Scaffolder/src/Command/BootloaderCommand.php',
@@ -55,8 +55,15 @@ return static function (RectorConfig $config): void {
         RemoveUnusedPrivateMethodParameterRector::class => [
             __DIR__ . '/src/Core/src/Internal/Factory.php',
         ],
-    ]);
 
-    $config->import(LevelSetList::UP_TO_PHP_72);
-    $config->import(SetList::DEAD_CODE);
-};
+        // to be enabled later after upgrade to 1.2.4 merged
+        // to easier to review
+        RemoveAlwaysTrueIfConditionRector::class,
+        RemoveUnusedPublicMethodParameterRector::class,
+        RemoveEmptyClassMethodRector::class,
+        RemoveUnusedPromotedPropertyRector::class,
+        RemoveUselessParamTagRector::class,
+        RemoveUselessReturnTagRector::class,
+    ])
+    ->withPhpSets(php72: true)
+    ->withPreparedSets(deadCode: true);
