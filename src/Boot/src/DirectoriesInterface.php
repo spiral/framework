@@ -14,7 +14,7 @@ interface DirectoriesInterface
     public function has(string $name): bool;
 
     /**
-     * @param string $name Directory alias, ie. "framework".
+     * @param non-empty-string $name Directory alias, ie. "framework".
      * @param string $path Directory path without ending slash.
      *
      * @throws DirectoryException
@@ -24,7 +24,7 @@ interface DirectoriesInterface
     /**
      * Get directory value.
      *
-     *
+     * @param non-empty-string $name Directory alias, ie. "framework".
      * @throws DirectoryException When no directory found.
      */
     public function get(string $name): string;
