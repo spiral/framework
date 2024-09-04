@@ -38,8 +38,7 @@ if (!function_exists('directory')) {
     /**
      * Get directory alias value. Uses application core from the current global scope.
      *
-     * @param string $alias Directory alias, ie. "framework".
-     * @return string
+     * @param non-empty-string $alias Directory alias, ie. "framework".
      *
      * @throws ScopeException
      * @throws DirectoryException
@@ -54,7 +53,7 @@ if (!function_exists('env')) {
     /**
      * Gets the value of an environment variable. Uses application core from the current global scope.
      *
-     * @param string $key
+     * @param non-empty-string $key
      * @param mixed  $default
      * @return mixed
      */

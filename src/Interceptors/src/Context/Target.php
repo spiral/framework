@@ -12,7 +12,6 @@ final class Target implements TargetInterface
 {
     /**
      * @param list<string> $path
-     * @param \ReflectionFunctionAbstract|null $reflection
      * @param TController|null $object
      * @param \Closure|array{class-string|object, non-empty-string}|null $callable
      */

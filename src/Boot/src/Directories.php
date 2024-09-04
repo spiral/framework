@@ -11,6 +11,9 @@ use Spiral\Boot\Exception\DirectoryException;
  */
 final class Directories implements DirectoriesInterface
 {
+    /**
+     * @param array<non-empty-string, string> $directories
+     */
     public function __construct(
         private array $directories = []
     ) {
