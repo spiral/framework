@@ -37,7 +37,7 @@
         "monolog/monolog": "^2.9.2 || ^3.5"
     },
     "require-dev": {
-        "spiral/boot": "^3.15",
+        "spiral/boot": "^3.14.1",
         "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^5.9"

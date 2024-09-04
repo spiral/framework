@@ -34,13 +34,13 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.15",
-        "spiral/files": "^3.15",
-        "spiral/config": "^3.15",
-        "spiral/debug": "^3.15",
-        "spiral/exceptions": "^3.15",
+        "spiral/core": "^3.14.1",
+        "spiral/files": "^3.14.1",
+        "spiral/config": "^3.14.1",
+        "spiral/debug": "^3.14.1",
+        "spiral/exceptions": "^3.14.1",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/events": "^3.15"
+        "spiral/events": "^3.14.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.1",
