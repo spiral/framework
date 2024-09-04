@@ -259,6 +259,10 @@
         "spiral/validation": "self.version",
         "spiral/views": "self.version"
     },
+    "conflict": {
+        "spiral/roadrunner-bridge": "<3.7",
+        "spiral/sapi-bridge": "<1.1"
+    },
     "scripts": {
         "tests": [
             "phpunit --testdox",
