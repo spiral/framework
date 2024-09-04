@@ -38,6 +38,7 @@
         "spiral/core": "^3.15",
         "spiral/hmvc": "^3.15",
         "spiral/http": "^3.15",
+        "spiral/interceptors": "^3.15",
         "cocur/slugify": "^3.2 || ^4.0",
         "spiral/telemetry": "^3.15",
         "doctrine/inflector": "^1.4|^2.0",
