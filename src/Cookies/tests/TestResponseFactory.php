@@ -14,20 +14,12 @@ final class TestResponseFactory implements ResponseFactoryInterface
     /** @var HttpConfig */
     protected $config;
 
-    /**
-     * @param HttpConfig $config
-     */
     public function __construct(HttpConfig $config)
     {
         $this->config = $config;
     }
 
-    /**
-     * @param int    $code
-     * @param string $reasonPhrase
-     *
-     * @return ResponseInterface
-     */
+    
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
         $response = new Response($code);

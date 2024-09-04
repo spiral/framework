@@ -31,7 +31,7 @@ class ImportedStackTest extends BaseTestCase
 
     public function testImportedStack(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/>
@@ -54,7 +54,7 @@ class ImportedStackTest extends BaseTestCase
 
     public function testStackDefinedInParent(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<extends:parent/>
@@ -89,7 +89,7 @@ class ImportedStackTest extends BaseTestCase
 
     public function testStackDefinedInParentWithChild(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<extends:parent/>
@@ -126,7 +126,7 @@ class ImportedStackTest extends BaseTestCase
 
     public function testGrid(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:dir dir="grid" ns="grid"/>

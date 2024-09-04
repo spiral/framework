@@ -90,7 +90,7 @@ final class BootloaderTest extends AbstractCommandTestCase
         $content = $this->files()->read($reflection->getFileName());
 
         $this->assertStringContainsString(
-            'Spiral\Bootloader\DomainBootloader',
+            \Spiral\Bootloader\DomainBootloader::class,
             $content
         );
 

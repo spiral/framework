@@ -30,7 +30,7 @@ class ConfigsTest extends TestCase
             'config' => __DIR__ . '/config',
         ])->run();
 
-        /** @var ConfiguratorInterface $config */
+        /** @var ConfiguratorInterface $configurator */
         $configurator = $core->getContainer()->get(ConfiguratorInterface::class);
 
         $this->assertSame(['test-key' => 'test value'], $configurator->getConfig('yaml'));

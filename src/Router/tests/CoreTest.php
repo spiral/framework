@@ -95,7 +95,7 @@ class CoreTest extends BaseTestCase
         $this->expectException(ForbiddenException::class);
 
         $action = new Action(TestController::class, 'forbidden');
-        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
+        $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
     }
 
     public function testNotFound(): void
@@ -103,7 +103,7 @@ class CoreTest extends BaseTestCase
         $this->expectException(NotFoundException::class);
 
         $action = new Action(TestController::class, 'not-found');
-        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
+        $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
     }
 
     public function testBadRequest(): void
@@ -111,7 +111,7 @@ class CoreTest extends BaseTestCase
         $this->expectException(BadRequestException::class);
 
         $action = new Action(TestController::class, 'weird');
-        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
+        $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
     }
 
     public function testCoreException(): void

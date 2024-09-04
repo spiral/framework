@@ -39,7 +39,7 @@ abstract class BaseTestCase extends TestCase
 
     protected function parse(string $source, array $visitors = [], LoaderInterface $loader = null)
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', $source);
 
         $builder = $this->getBuilder($loader, $visitors);
@@ -78,9 +78,6 @@ abstract class BaseTestCase extends TestCase
         return [];
     }
 
-    /**
-     * @return LoaderInterface
-     */
     protected function getFixtureLoader(): LoaderInterface
     {
         return new DirectoryLoader(__DIR__ . '/../fixtures');

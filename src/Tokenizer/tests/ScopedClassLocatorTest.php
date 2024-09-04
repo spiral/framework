@@ -39,7 +39,7 @@ final class ScopedClassLocatorTest extends TestCase
         $this->assertArrayNotHasKey(ClassA::class, $classes);
         $this->assertArrayNotHasKey(ClassB::class, $classes);
         $this->assertArrayNotHasKey(ClassC::class, $classes);
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX', $classes);
+        $this->assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
     }
 
@@ -54,7 +54,7 @@ final class ScopedClassLocatorTest extends TestCase
         $this->assertArrayHasKey(ClassD::class, $classes);
 
         // Excluded
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX', $classes);
+        $this->assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
     }
 }

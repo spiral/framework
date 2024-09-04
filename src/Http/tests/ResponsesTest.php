@@ -43,7 +43,7 @@ class ResponsesTest extends TestCase
         $response = $this->getWrapper()->html('hello world');
         $this->assertSame('hello world', (string)$response->getBody());
         $this->assertSame(200, $response->getStatusCode());
-        $ff = $response->getHeader('Content-Type');
+        $response->getHeader('Content-Type');
         $this->assertSame(['text/html; charset=utf-8'], $response->getHeader('Content-Type'));
     }
 
@@ -54,7 +54,7 @@ class ResponsesTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringEqualsFile(__FILE__, (string)$response->getBody());
         $this->assertSame(filesize(__FILE__), $response->getBody()->getSize());
-        $this->assertSame('application/octet-stream', (string)$response->getHeaderLine('Content-Type'));
+        $this->assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
 
     public function testAttachmentResource(): void
@@ -64,7 +64,7 @@ class ResponsesTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringEqualsFile(__FILE__, (string)$response->getBody());
         $this->assertSame(filesize(__FILE__), $response->getBody()->getSize());
-        $this->assertSame('application/octet-stream', (string)$response->getHeaderLine('Content-Type'));
+        $this->assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
 
     public function testAttachmentStream(): void
@@ -74,7 +74,7 @@ class ResponsesTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringEqualsFile(__FILE__, (string)$response->getBody());
         $this->assertSame(filesize(__FILE__), $response->getBody()->getSize());
-        $this->assertSame('application/octet-stream', (string)$response->getHeaderLine('Content-Type'));
+        $this->assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
 
     public function testAttachmentStreamable(): void
@@ -87,7 +87,7 @@ class ResponsesTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringEqualsFile(__FILE__, (string)$response->getBody());
         $this->assertSame(filesize(__FILE__), $response->getBody()->getSize());
-        $this->assertSame('application/octet-stream', (string)$response->getHeaderLine('Content-Type'));
+        $this->assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
 
     public function testCreate(): void

@@ -45,7 +45,7 @@ final class InterceptorPipelineTest extends TestCase
                     return null;
                 }
             }
-        )->handle($context, []);
+        )->handle($context);
     }
 
     public function testCallActionWithoutCore(): void

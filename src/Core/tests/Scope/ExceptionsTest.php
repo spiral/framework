@@ -21,13 +21,8 @@ final class ExceptionsTest extends BaseTestCase
         $container = new Container();
 
         $container->runScoped(static function (Container $c1) {
-            try {
-                $c1->get(ExceptionConstructor::class);
-                self::fail('Exception should be thrown');
-            } catch (\Throwable $e) {
-                // self::assertInstanceOf(\InvalidArgumentException::class, $e);
-                throw $e;
-            }
+            $c1->get(ExceptionConstructor::class);
+            self::fail('Exception should be thrown');
         });
     }
 
@@ -39,13 +34,8 @@ final class ExceptionsTest extends BaseTestCase
         $container = new Container();
 
         $container->runScoped(static function (Container $c1) {
-            try {
-                $c1->get(ExceptionConstructor::class);
-                self::fail('Exception should be thrown');
-            } catch (\Throwable $e) {
-                // self::assertInstanceOf(\InvalidArgumentException::class, $e);
-                throw $e;
-            }
+            $c1->get(ExceptionConstructor::class);
+            self::fail('Exception should be thrown');
         });
     }
 

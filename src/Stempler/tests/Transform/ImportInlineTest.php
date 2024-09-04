@@ -18,7 +18,7 @@ class ImportInlineTest extends BaseTestCase
 {
     public function testNoImport(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<url href="google.com">hello world</url>');
         $loader->set('import', '<a href="${href}">${context}</a>');
 
@@ -32,7 +32,7 @@ class ImportInlineTest extends BaseTestCase
 
     public function testInlineImport(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '
 <use:inline name="url">
     <a href="${href}">${context}</a>
@@ -50,7 +50,7 @@ class ImportInlineTest extends BaseTestCase
 
     public function testInlineImportN(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '
 <use:inline name="url">
     <a href="${href}">${context}</a>

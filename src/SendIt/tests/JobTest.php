@@ -130,14 +130,12 @@ class JobTest extends TestCase
 
     private function getHandler(?EventDispatcherInterface $dispatcher = null): MailJob
     {
-        $handler = new MailJob(
+        return new MailJob(
             new MailerConfig(['from' => 'no-reply@spiral.dev']),
             $this->mailer,
             $this->renderer,
             $dispatcher
         );
-
-        return $handler;
     }
 
     private function getMail(): Message

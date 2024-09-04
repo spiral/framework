@@ -26,9 +26,6 @@ abstract class TestCase extends BaseTestCase
      */
     protected $second;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         parent::setUp();
@@ -42,9 +39,6 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    /**
-     * @return void
-     */
     public function tearDown(): void
     {
         $this->cleanTempDirectory();
@@ -52,9 +46,6 @@ abstract class TestCase extends BaseTestCase
         parent::tearDown();
     }
 
-    /**
-     * @return void
-     */
     protected function cleanTempDirectory(): void
     {
         $iterator = new \RecursiveIteratorIterator(

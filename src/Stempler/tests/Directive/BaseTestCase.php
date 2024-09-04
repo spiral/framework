@@ -28,10 +28,6 @@ abstract class BaseTestCase extends \Spiral\Tests\Stempler\Compiler\BaseTestCase
 
     protected const DIRECTIVES = [];
 
-    /**
- * @param Template $document
- * @return string
- */
     protected function compile(Template $document): string
     {
         $compiler = new Compiler();

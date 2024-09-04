@@ -53,11 +53,7 @@ class CompositeRuleTest extends TestCase
         yield [false, OneCompositeRule::class, [$forbidRule, $forbidRule, $forbidRule]];
     }
 
-    /**
-     * @param array $rules
-     *
-     * @return RulesInterface
-     */
+    
     private function createRepository(array $rules): RulesInterface
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|RulesInterface $repository */

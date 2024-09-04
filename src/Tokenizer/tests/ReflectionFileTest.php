@@ -56,7 +56,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassWithNamedParameter.php');
 
         $this->assertSame([
-            'Spiral\Tests\Tokenizer\Classes\ClassWithNamedParameter',
+            \Spiral\Tests\Tokenizer\Classes\ClassWithNamedParameter::class,
         ], $reflection->getClasses());
     }
 
@@ -65,7 +65,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassWithAnonymousClass.php');
 
         $this->assertSame([
-            'Spiral\Tests\Tokenizer\Classes\ClassWithAnonymousClass',
+            \Spiral\Tests\Tokenizer\Classes\ClassWithAnonymousClass::class,
         ], $reflection->getClasses());
     }
 
@@ -83,7 +83,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassD.php');
 
         $this->assertSame([
-            'Spiral\Tests\Tokenizer\Classes\ClassD',
+            \Spiral\Tests\Tokenizer\Classes\ClassD::class,
         ], $reflection->getEnums());
     }
 
@@ -92,7 +92,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassE.php');
 
         $this->assertSame([
-            'Spiral\Tests\Tokenizer\Classes\ClassE',
+            \Spiral\Tests\Tokenizer\Classes\ClassE::class,
         ], $reflection->getEnums());
     }
 
@@ -101,7 +101,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Interfaces/InterfaceA.php');
 
         $this->assertSame([
-            'Spiral\Tests\Tokenizer\Interfaces\InterfaceA',
+            \Spiral\Tests\Tokenizer\Interfaces\InterfaceA::class,
         ], $reflection->getInterfaces());
     }
 

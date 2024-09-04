@@ -27,7 +27,7 @@ final class ClassLocatorTest extends TestCase
         $this->assertArrayHasKey(ClassD::class, $classes);
 
         //Excluded
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX', $classes);
+        $this->assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
     }
 

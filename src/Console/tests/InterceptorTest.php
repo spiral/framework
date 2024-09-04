@@ -27,16 +27,12 @@ final class InterceptorTest extends BaseTestCase
 
         $interceptor->shouldReceive('process')
             ->once()
-            ->withArgs(function (string $controller, string $action, array $parameters, CoreInterface $core) {
-                return $controller === TestCommand::class
-                    && $action === 'perform'
-                    && $parameters['input'] instanceof InputInterface
-                    && $parameters['output'] instanceof OutputInterface
-                    && $parameters['command'] instanceof TestCommand;
-            })
-            ->andReturnUsing(function (string $controller, string $action, array $parameters, CoreInterface $core) {
-                return $core->callAction($controller, $action, $parameters);
-            });
+            ->withArgs(fn(string $controller, string $action, array $parameters, CoreInterface $core) => $controller === TestCommand::class
+                && $action === 'perform'
+                && $parameters['input'] instanceof InputInterface
+                && $parameters['output'] instanceof OutputInterface
+                && $parameters['command'] instanceof TestCommand)
+            ->andReturnUsing(fn(string $controller, string $action, array $parameters, CoreInterface $core) => $core->callAction($controller, $action, $parameters));
 
         $core = $this->getCore($this->getStaticLocator([
             TestCommand::class

@@ -19,7 +19,7 @@ class ImportElementTest extends BaseTestCase
 {
     public function testNoImport(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<url href="google.com">hello world</url>');
         $loader->set('import', '<a href="${href}">${context}</a>');
 
@@ -33,7 +33,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testSimpleImport(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="google.com">hello world</url>'
@@ -50,7 +50,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testImportWithPHP(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="<?php echo \'google.com\'?>">hello world</url>'
@@ -67,7 +67,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testImportWithOutput(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="{{ $url }}">hello world</url>'
@@ -85,7 +85,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testStringValueIntoPHP(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="{{ $url }}">hello world</url>'
@@ -104,7 +104,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testOutputValueIntoPHPFromAttribute(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="{{ $url }}" value="<?php echo \'bad\'?>">abc</url>'
@@ -123,7 +123,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testOutputValueIntoPHPFromAttributeUsingOutput(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="{{ $url }}" value="{{ \'OK\' }}">abc</url>'
@@ -142,7 +142,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testValueIntoPHPFromMultiValue(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="{{ $url }}" value="hello {{ \'OK\' }}">abc</url>'
@@ -161,7 +161,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testValueIntoPHPFromMultiValueWithSpacing(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="{{ $url }}" value="{{ \'OK\' }}  {{ \'cool\' }}">abc</url>'
@@ -181,7 +181,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testValueIntoPHPFromMultiValueWithSpacingAround(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/>'
@@ -202,7 +202,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testDefaultPHPValue(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="{{ $url }}"></url>'
@@ -222,7 +222,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testDefaultPHPValueArray(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="url"/><url href="{{ $url }}"></url>'
@@ -242,7 +242,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testHasInjectionEmpty(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="opt"/><opt>hello world</opt>'
@@ -263,7 +263,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testHasInjection(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="opt"/><opt><block:header>abc</block:header>hello world</opt>'
@@ -284,7 +284,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testParentBlock(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="h"/><h><block:c>a<block:parent/></block:c></h>'
@@ -300,7 +300,7 @@ class ImportElementTest extends BaseTestCase
 
     public function testParentBlockShort(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="import" as="h"/><h c="a ${parent}"/>'

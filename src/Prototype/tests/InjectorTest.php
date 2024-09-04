@@ -273,10 +273,6 @@ class InjectorTest extends TestCase
     }
 
     /**
-     * @param string $filename
-     * @param array  $dependencies
-     *
-     * @return ClassNode
      * @throws \ReflectionException
      * @throws ClassNotDeclaredException
      */

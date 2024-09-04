@@ -92,49 +92,39 @@ final class FibersTest extends BaseTestCase
         $this->expectExceptionMessage('test');
 
         FiberHelper::runInFiber(
-            static function () {
-                return (new Container())->runScoped(
-                    function (): string {
-                        $result = '';
-                        $result .= Fiber::suspend('foo');
-                        $result .= Fiber::suspend('bar');
-                        $result .= Fiber::suspend('error');
-                        return $result;
-                    }
-                );
-            },
-            static function (string $suspendValue): string {
-                return $suspendValue !== 'error'
-                    ? $suspendValue
-                    : throw new \RuntimeException('test');
-            },
+            static fn() => (new Container())->runScoped(
+                function (): string {
+                    $result = '';
+                    $result .= Fiber::suspend('foo');
+                    $result .= Fiber::suspend('bar');
+                    return $result . Fiber::suspend('error');
+                }
+            ),
+            static fn(string $suspendValue): string => $suspendValue !== 'error'
+                ? $suspendValue
+                : throw new \RuntimeException('test'),
         );
     }
 
     public function testCatchThrownException(): void
     {
         $result = FiberHelper::runInFiber(
-            static function () {
-                return (new Container())->runScoped(
-                    function (): string {
-                        $result = '';
-                        $result .= Fiber::suspend('foo');
-                        $result .= Fiber::suspend('bar');
-                        try {
-                            $result .= Fiber::suspend('error');
-                        } catch (\Throwable $e) {
-                            $result .= $e->getMessage();
-                        }
-                        $result .= Fiber::suspend('baz');
-                        return $result;
+            static fn() => (new Container())->runScoped(
+                function (): string {
+                    $result = '';
+                    $result .= Fiber::suspend('foo');
+                    $result .= Fiber::suspend('bar');
+                    try {
+                        $result .= Fiber::suspend('error');
+                    } catch (\Throwable $e) {
+                        $result .= $e->getMessage();
                     }
-                );
-            },
-            static function (string $suspendValue): string {
-                return $suspendValue !== 'error'
-                    ? $suspendValue
-                    : throw new \RuntimeException('test');
-            },
+                    return $result . Fiber::suspend('baz');
+                }
+            ),
+            static fn(string $suspendValue): string => $suspendValue !== 'error'
+                ? $suspendValue
+                : throw new \RuntimeException('test'),
         );
 
         self::assertSame('foobartestbaz', $result);

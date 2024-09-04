@@ -62,7 +62,7 @@ class EncrypterTest extends TestCase
     {
         $this->expectException(EncrypterException::class);
 
-        $encrypter = new Encrypter('bad-key');
+        new Encrypter('bad-key');
     }
 
     public function testBadWithKey(): void
@@ -70,6 +70,6 @@ class EncrypterTest extends TestCase
         $this->expectException(EncrypterException::class);
 
         $encrypter = new Encrypter(Key::CreateNewRandomKey()->saveToAsciiSafeString());
-        $encrypter = $encrypter->withKey('bad-key');
+        $encrypter->withKey('bad-key');
     }
 }

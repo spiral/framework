@@ -84,8 +84,6 @@ class EnvironmentTest extends TestCase
     }
 
     /**
-     * @param array $env
-     * @return EnvironmentInterface
      * @throws \Throwable
      */
     protected function getEnv(array $env, bool $overwite= true): EnvironmentInterface

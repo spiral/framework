@@ -58,9 +58,7 @@ class SingletonsTest extends TestCase
 
         $instance = new SampleClass();
 
-        $container->bindSingleton('sampleClass', function () use ($instance) {
-            return $instance;
-        });
+        $container->bindSingleton('sampleClass', fn() => $instance);
 
         $this->assertSame($instance, $container->get('sampleClass'));
     }
@@ -69,9 +67,7 @@ class SingletonsTest extends TestCase
     {
         $container = new Container();
 
-        $container->bindSingleton('sampleClass', function () {
-            return new SampleClass();
-        });
+        $container->bindSingleton('sampleClass', fn() => new SampleClass());
 
         $instance = $container->get('sampleClass');
 
@@ -143,9 +139,7 @@ class SingletonsTest extends TestCase
         $container = new Container();
         $container->bindSingleton('singleton', 'sampleClass');
 
-        $container->bind('sampleClass', function () {
-            return new SampleClass();
-        });
+        $container->bind('sampleClass', fn() => new SampleClass());
 
         $instance = $container->get('singleton');
 

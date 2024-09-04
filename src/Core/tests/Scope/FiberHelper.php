@@ -39,7 +39,6 @@ final class FiberHelper
     /**
      * Runs a sequence of callables in fibers asynchronously.
      *
-     * @param callable ...$callables
      *
      * @return array The results of each callable.
      */
