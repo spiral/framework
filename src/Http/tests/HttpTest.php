@@ -348,7 +348,11 @@ final class HttpTest extends TestCase
         $tracer
             ->shouldReceive('trace')
             ->once()
-            ->andReturnUsing(fn($name, $callback, $attributes, $scoped, $traceKind) => $this->container->get(TracerInterface::class)->trace($name, $callback, $attributes, $scoped, $traceKind));
+            ->andReturnUsing(fn($name, $callback, $attributes, $scoped, $traceKind) => $this
+                ->container
+                ->get(TracerInterface::class)
+                ->trace($name, $callback, $attributes, $scoped, $traceKind),
+            );
 
         $tracer
             ->shouldReceive('getContext')

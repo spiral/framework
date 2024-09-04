@@ -19,7 +19,6 @@ final class ResponseFactory implements ResponseFactoryInterface
         $this->config = $config;
     }
 
-    
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
         $response = new Response($code);

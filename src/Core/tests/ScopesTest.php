@@ -106,7 +106,13 @@ class ScopesTest extends TestCase
             ContainerScope::runScope($container, static fn (ContainerInterface $container) => $container)
         );
 
-        $result = ContainerScope::runScope($container, static fn(Container $container) => $container->runScope([], static fn (Container $container) => $container));
+        $result = ContainerScope::runScope(
+            $container,
+            static fn(Container $container) => $container->runScope(
+                [],
+                static fn (Container $container) => $container,
+            ),
+        );
 
         $this->assertSame($container, $result);
     }

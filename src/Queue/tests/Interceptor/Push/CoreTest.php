@@ -30,7 +30,10 @@ final class CoreTest extends TestCase
         }
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(fn(string $name, mixed $p = [], OptionsInterface $options = null) => $name === 'foo' && $payload === $p && $options instanceof Options);
+            ->withArgs(fn(string $name, mixed $p = [], OptionsInterface $options = null) => $name === 'foo'
+                && $payload === $p
+                && $options instanceof Options,
+            );
 
         $core->callAction('foo', 'bar', [
             'id' => 'job-id',

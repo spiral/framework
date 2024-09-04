@@ -32,7 +32,14 @@ final class InterceptorTest extends BaseTestCase
                 && $parameters['input'] instanceof InputInterface
                 && $parameters['output'] instanceof OutputInterface
                 && $parameters['command'] instanceof TestCommand)
-            ->andReturnUsing(fn(string $controller, string $action, array $parameters, CoreInterface $core) => $core->callAction($controller, $action, $parameters));
+            ->andReturnUsing(
+                fn(
+                    string $controller,
+                    string $action,
+                    array $parameters,
+                    CoreInterface $core,
+                ) => $core->callAction($controller, $action, $parameters),
+            );
 
         $core = $this->getCore($this->getStaticLocator([
             TestCommand::class
