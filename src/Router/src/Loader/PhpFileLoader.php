@@ -28,9 +28,7 @@ final class PhpFileLoader implements LoaderInterface
             throw new LoaderLoadException(\sprintf('File [%s] does not exist.', $resource));
         }
 
-        $load = static function (string $path) {
-            return include $path;
-        };
+        $load = static fn (string $path) => include $path;
 
         $callback = $load($resource);
 

@@ -186,15 +186,13 @@ class Initializer implements InitializerInterface
         }
         $attr = $this->getBootloadConfigAttribute($bootloader);
 
-        $getArgument = static function (string $key, bool $override, mixed $default = []) use ($config, $attr): mixed {
-            return match (true) {
-                $config instanceof BootloadConfig && $override => $config->{$key},
-                $config instanceof BootloadConfig && !$override && \is_array($default) =>
-                    $config->{$key} + ($attr->{$key} ?? []),
-                $config instanceof BootloadConfig && !$override && \is_bool($default) => $config->{$key},
-                \is_array($config) && $config !== [] && $key === 'args' => $config,
-                default => $attr->{$key} ?? $default,
-            };
+        $getArgument = static fn (string $key, bool $override, mixed $default = []): mixed => match (true) {
+            $config instanceof BootloadConfig && $override => $config->{$key},
+            $config instanceof BootloadConfig && !$override && \is_array($default) =>
+                $config->{$key} + ($attr->{$key} ?? []),
+            $config instanceof BootloadConfig && !$override && \is_bool($default) => $config->{$key},
+            \is_array($config) && $config !== [] && $key === 'args' => $config,
+            default => $attr->{$key} ?? $default,
         };
 
         $override = $config instanceof BootloadConfig ? $config->override : true;

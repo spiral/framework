@@ -69,8 +69,8 @@ final class Translator implements TranslatorInterface
      */
     public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
     {
-        $domain = $domain ?? $this->config->getDefaultDomain();
-        $locale = $locale ?? $this->locale;
+        $domain ??= $this->config->getDefaultDomain();
+        $locale ??= $this->locale;
 
         $message = $this->get($locale, $domain, $id);
 
@@ -91,8 +91,8 @@ final class Translator implements TranslatorInterface
         string $domain = null,
         string $locale = null
     ): string {
-        $domain = $domain ?? $this->config->getDefaultDomain();
-        $locale = $locale ?? $this->locale;
+        $domain ??= $this->config->getDefaultDomain();
+        $locale ??= $this->locale;
 
         try {
             $message = $this->get($locale, $domain, $id);
