@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Spiral\Core\Container;
+use Spiral\Core\CoreInterface;
 use Spiral\Http\Exception\ClientException\NotFoundException;
+use Spiral\Interceptors\Handler\AutowireHandler;
+use Spiral\Interceptors\HandlerInterface;
+use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
@@ -64,6 +69,18 @@ class ControllerTest extends BaseTestCase
         $response = $router->handle(new ServerRequest('GET', new Uri('/default/123')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('123', (string)$response->getBody());
+    }
+
+    public function testFallbackHandler(): void
+    {
+        $target = new Action(TestController::class, 'default');
+        $this->container->removeBinding(HandlerInterface::class);
+        $this->container->removeBinding(CoreInterface::class);
+
+        $core = $target->getHandler($this->container, []);
+        $handler = (fn(CoreHandler $core) => $core->core)->call($core, $core);
+
+        self::assertInstanceOf(AutowireHandler::class, $handler);
     }
 
     public function testOptionalParamWithDefaultInt(): void

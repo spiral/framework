@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\ScopeInterface;
+use Spiral\Interceptors\Handler\AutowireHandler;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\TargetException;
@@ -91,7 +92,11 @@ abstract class AbstractTarget implements TargetInterface
         try {
             // construct on demand
             $this->handler = new CoreHandler(
-                $this->pipeline ?? $container->get(HandlerInterface::class),
+                match (false) {
+                    $this->pipeline === null => $this->pipeline,
+                    $container->has(HandlerInterface::class) => new AutowireHandler($container),
+                    default => $container->get(HandlerInterface::class),
+                },
                 $container->get(ScopeInterface::class),
                 $container->get(ResponseFactoryInterface::class),
                 $container->get(TracerInterface::class)
