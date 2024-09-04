@@ -17,6 +17,9 @@ class JsonPayloadConfig extends InjectableConfig
         ],
     ];
 
+    /**
+     * @return array<string>
+     */
     public function getContentTypes(): array
     {
         return $this->config['contentTypes'];
