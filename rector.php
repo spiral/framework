@@ -92,7 +92,7 @@ return RectorConfig::configure()
         __DIR__ . '/src/Console/tests/Configurator',
 
         // cache
-        '*/runtime/cache//*',
+        '*/runtime/cache/*',
     ])
     ->withPhpSets(php74: true)
     ->withPreparedSets(deadCode: true);
