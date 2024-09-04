@@ -70,9 +70,7 @@ final class CookiesTest extends HttpTestCase
     #[TestScope([Spiral::Http, Spiral::HttpRequest])]
     public function testHasCookie(): void
     {
-        $this->setHttpHandler(function (ServerRequestInterface $request) {
-            return (int)$this->cookies()->has('a');
-        });
+        $this->setHttpHandler(fn(ServerRequestInterface $request) => (int)$this->cookies()->has('a'));
 
         $this->fakeHttp()->get('/')->assertOk()->assertBodySame('0');
     }
@@ -80,9 +78,7 @@ final class CookiesTest extends HttpTestCase
     #[TestScope([Spiral::Http, Spiral::HttpRequest])]
     public function testHasCookie2(): void
     {
-        $this->setHttpHandler(function (ServerRequestInterface $request) {
-            return (int)$this->cookies()->has('a');
-        });
+        $this->setHttpHandler(fn(ServerRequestInterface $request) => (int)$this->cookies()->has('a'));
 
         $this
             ->fakeHttp()
@@ -97,9 +93,7 @@ final class CookiesTest extends HttpTestCase
     #[TestScope([Spiral::Http, Spiral::HttpRequest])]
     public function testGetCookie2(): void
     {
-        $this->setHttpHandler(function (ServerRequestInterface $request) {
-            return $this->cookies()->get('a');
-        });
+        $this->setHttpHandler(fn(ServerRequestInterface $request) => $this->cookies()->get('a'));
 
         $this
             ->fakeHttp()

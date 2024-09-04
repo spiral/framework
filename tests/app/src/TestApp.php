@@ -107,9 +107,7 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         $bootloaders = static::LOAD;
 
         // filter out disabled bootloaders
-        return \array_filter($bootloaders, function (string $bootloader): bool {
-            return !\in_array($bootloader, $this->disabledBootloaders, true);
-        });
+        return \array_filter($bootloaders, fn(string $bootloader): bool => !\in_array($bootloader, $this->disabledBootloaders, true));
     }
 
     /**
