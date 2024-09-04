@@ -32,7 +32,7 @@ final class NestedFilter
     ) {
     }
 
-    public function getSchema(\ReflectionProperty $property): string|array
+    public function getSchema(): string|array
     {
         if ($this->prefix) {
             return [$this->class, $this->prefix];
