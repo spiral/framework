@@ -61,5 +61,5 @@ return RectorConfig::configure()
         RemoveEmptyClassMethodRector::class,
         RemoveUnusedPromotedPropertyRector::class,
     ])
-    ->withPhpSets(php73: true)
+    ->withPhpSets(php74: true)
     ->withPreparedSets(deadCode: true);

@@ -24,18 +24,16 @@ final class WebsocketsBootloader extends Bootloader
 
     public function boot(BinderInterface $binder): void
     {
-        $binder->bindSingleton(AuthorizationMiddleware::class, static function (
+        $binder->bindSingleton(AuthorizationMiddleware::class, static fn (
             BroadcastInterface $broadcast,
             ResponseFactoryInterface $responseFactory,
             BroadcastConfig $config,
-            ?EventDispatcherInterface $dispatcher = null
-        ): AuthorizationMiddleware {
-            return new AuthorizationMiddleware(
-                $broadcast,
-                $responseFactory,
-                $config->getAuthorizationPath(),
-                $dispatcher
-            );
-        });
+            ?EventDispatcherInterface $dispatcher = null,
+        ): AuthorizationMiddleware => new AuthorizationMiddleware(
+            $broadcast,
+            $responseFactory,
+            $config->getAuthorizationPath(),
+            $dispatcher
+        ));
     }
 }
