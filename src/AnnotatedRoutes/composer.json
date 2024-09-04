@@ -35,7 +35,7 @@
     "require": {
         "php": ">=8.1",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/router": "^3.14.1"
+        "spiral/router": "^3.15"
     },
     "autoload": {
         "psr-4": {
