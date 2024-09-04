@@ -108,7 +108,7 @@ final class PublishTest extends ConsoleTestCase
 
     public function testEnsure(): void
     {
-        $dir = $this->getDirectoryByAlias('runtime', 'dir', false);
+        $dir = $this->getDirectoryByAlias('runtime', 'dir');
         $this->assertFalse(is_dir($dir));
 
         $this->runCommand('publish', [

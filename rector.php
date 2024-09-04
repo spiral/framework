@@ -17,6 +17,7 @@ use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/src/*/src',
+        __DIR__ . '/tests',
     ])
     ->withParallel()
     ->withSkip([
@@ -60,6 +61,9 @@ return RectorConfig::configure()
         RemoveUnusedPublicMethodParameterRector::class,
         RemoveEmptyClassMethodRector::class,
         RemoveUnusedPromotedPropertyRector::class,
+
+        // start with short open tag
+        __DIR__ . '/tests/app/views/native.php',
     ])
     ->withPhpSets(php74: true)
     ->withPreparedSets(deadCode: true);

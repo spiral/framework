@@ -123,9 +123,7 @@ final class PlainRendererTest extends TestCase
         $responseFactory
             ->expects(self::once())
             ->method('createResponse')
-            ->willReturnCallback(static function () {
-                return new Response();
-            });
+            ->willReturnCallback(static fn() => new Response());
         return $responseFactory;
     }
 }
