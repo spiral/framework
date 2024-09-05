@@ -20,6 +20,3 @@ clover.xml
 .env
 builds
 build
-
-/src/Prototype/tests/runtime/cache/
-/src/Scaffolder/tests/App/runtime/cache/
