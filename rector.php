@@ -16,6 +16,7 @@ use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
+use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -96,4 +97,7 @@ return RectorConfig::configure()
         '*/runtime/cache/*',
     ])
     ->withPhpSets(php80: true)
-    ->withPreparedSets(deadCode: true);
+    ->withPreparedSets(deadCode: true)
+    ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
+        ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,
+    ]);

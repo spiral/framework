@@ -36,9 +36,11 @@ final class Storage implements MutableStorageInterface
      * @var array<string, BucketInterface>
      */
     private array $buckets = [];
+    private string $default;
 
-    public function __construct(private string $default = self::DEFAULT_STORAGE)
+    public function __construct(string $name = self::DEFAULT_STORAGE)
     {
+        $this->default = $name;
     }
 
     public function withDefault(string $name): StorageInterface

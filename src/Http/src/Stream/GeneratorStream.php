@@ -10,6 +10,8 @@ use RuntimeException;
 
 final class GeneratorStream implements StreamInterface
 {
+    private ?Generator $stream;
+
     private bool $readable = true;
 
     private ?int $size = null;
@@ -18,8 +20,9 @@ final class GeneratorStream implements StreamInterface
 
     private bool $started = false;
 
-    public function __construct(private ?Generator $stream)
+    public function __construct(Generator $body)
     {
+        $this->stream = $body;
     }
 
     public function __toString(): string
