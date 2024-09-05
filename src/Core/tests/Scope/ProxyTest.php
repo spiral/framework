@@ -9,6 +9,7 @@ use ReflectionParameter;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Container;
 use Spiral\Core\Container\InjectorInterface;
+use Spiral\Core\Exception\Container\RecursiveProxyException;
 use Spiral\Core\Scope;
 use Spiral\Tests\Core\Scope\Stub\Context;
 use Spiral\Tests\Core\Scope\Stub\ContextInterface;
@@ -293,6 +294,22 @@ final class ProxyTest extends BaseTestCase
                 });
                 self::assertSame('Bar', $proxy->getName());
             },
+        );
+    }
+
+    /**
+     * Proxy gets a proxy of the same type.
+     */
+    public function testRecursiveProxy(): void
+    {
+        $root = new Container();
+        $root->bind(UserInterface::class, new \Spiral\Core\Config\Proxy(UserInterface::class));
+
+        $this->expectException(RecursiveProxyException::class);
+
+        $root->runScope(
+            new Scope(),
+            fn(#[Proxy] UserInterface $user) => $user->getName(),
         );
     }
 

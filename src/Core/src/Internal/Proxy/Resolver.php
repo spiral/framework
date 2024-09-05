@@ -7,6 +7,8 @@ namespace Spiral\Core\Internal\Proxy;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\Container\ContainerException;
+use Spiral\Core\Exception\Container\RecursiveProxyException;
+use Spiral\Core\Internal\Proxy;
 
 /**
  * @internal
@@ -29,6 +31,12 @@ final class Resolver
             throw new ContainerException(
                 \sprintf('Unable to resolve `%s` in a Proxy.', $alias),
                 previous: $e,
+            );
+        }
+
+        if (Proxy::isProxy($result)) {
+            throw new RecursiveProxyException(
+                \sprintf('Recursive proxy detected for `%s`.', $alias),
             );
         }
 
