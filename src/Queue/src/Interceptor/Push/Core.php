@@ -72,7 +72,7 @@ final class Core implements CoreInterface, HandlerInterface
     {
         try {
             return ContainerScope::getContainer()->get(TracerInterface::class);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return new NullTracer();
         }
     }

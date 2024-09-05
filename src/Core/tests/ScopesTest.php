@@ -90,7 +90,7 @@ class ScopesTest extends TestCase
             ], function () use ($c): void {
                 throw new RuntimeException('exception');
             }));
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
         }
 
         $this->assertSame('a', $c->get('bucket')->getName());

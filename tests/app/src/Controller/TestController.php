@@ -62,7 +62,7 @@ class TestController
     public function required(int $id)
     {
         //no index
-        $this->say(get_class($this));
+        $this->say(static::class);
         $this->say('Hello world');
         $this->say('Hello world', [], 'external');
 

@@ -84,6 +84,7 @@ return RectorConfig::configure()
         __DIR__ . '/tests/app/views/native.php',
 
         // example code for test
+        '*/Fixture/*',
         '*/Fixtures/*',
         '*/Stub/*',
         '*/Stubs/*',
@@ -94,5 +95,5 @@ return RectorConfig::configure()
         // cache
         '*/runtime/cache/*',
     ])
-    ->withPhpSets(php74: true)
+    ->withPhpSets(php80: true)
     ->withPreparedSets(deadCode: true);

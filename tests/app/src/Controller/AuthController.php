@@ -12,11 +12,8 @@ use Spiral\Security\GuardInterface;
 
 class AuthController
 {
-    private $auth;
-
-    public function __construct(AuthScope $auth)
+    public function __construct(private AuthScope $auth)
     {
-        $this->auth = $auth;
     }
 
     public function do(GuardInterface $guard)

@@ -9,11 +9,8 @@ use Spiral\Queue\Attribute\Queueable;
 
 final class QueueableDetector
 {
-    private ReaderInterface $reader;
-
-    public function __construct(ReaderInterface $reader)
+    public function __construct(private ReaderInterface $reader)
     {
-        $this->reader = $reader;
     }
 
     /**

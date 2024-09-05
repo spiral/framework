@@ -6,7 +6,7 @@ namespace Spiral\Tests\Models;
 
 use Spiral\Models\ValueInterface;
 
-class NameValue implements ValueInterface
+class NameValue implements ValueInterface, \Stringable
 {
     private $value;
 
@@ -17,7 +17,7 @@ class NameValue implements ValueInterface
 
     public function __toString(): string
     {
-        return $this->value;
+        return (string) $this->value;
     }
 
     public function setValue(mixed $data): self
