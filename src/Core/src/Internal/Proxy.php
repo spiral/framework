@@ -86,4 +86,9 @@ final class Proxy
 
         return $instance;
     }
+
+    public static function isProxy(object $object): bool
+    {
+        return \in_array($object::class, self::$classes, true);
+    }
 }
