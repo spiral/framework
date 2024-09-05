@@ -35,7 +35,7 @@ class StaticResolverTest extends TestCase
         // PHP 8.1 deprecation error fix
         self::assertTrue(
             ($error = error_get_last()) === null ||
-            !str_contains($error['message'], 'Spiral')
+            !\str_contains($error['message'], 'Spiral')
         );
     }
 }
