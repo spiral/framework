@@ -23,8 +23,6 @@ class App extends Kernel
     ];
 
     /**
-     * @param MessageInterface $message
-     * @return Email
      * @throws \Throwable
      */
     public function send(MessageInterface $message): Email

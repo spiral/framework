@@ -115,10 +115,7 @@ class ConflictResolverTest extends TestCase
     }
 
     /**
-     * @param string $filename
-     * @param array  $dependencies
      *
-     * @return ClassNode
      * @throws \Throwable
      */
     private function getDefinition(string $filename, array $dependencies): ClassNode
@@ -127,7 +124,6 @@ class ConflictResolverTest extends TestCase
     }
 
     /**
-     * @return NodeExtractor
      * @throws \Throwable
      */
     private function getExtractor(): NodeExtractor

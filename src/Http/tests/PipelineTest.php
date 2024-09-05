@@ -28,9 +28,7 @@ final class PipelineTest extends TestCase
     {
         $pipeline = new Pipeline($this->container);
 
-        $handler = new CallableHandler(function () {
-            return 'response';
-        }, new ResponseFactory(new HttpConfig(['headers' => []])));
+        $handler = new CallableHandler(fn() => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
 
         $response = $pipeline->withHandler($handler)->handle(new ServerRequest('GET', ''));
 
@@ -43,9 +41,7 @@ final class PipelineTest extends TestCase
     {
         $pipeline = new Pipeline($this->container);
 
-        $handler = new CallableHandler(function () {
-            return 'response';
-        }, new ResponseFactory(new HttpConfig(['headers' => []])));
+        $handler = new CallableHandler(fn() => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
 
         $response = $pipeline->process(new ServerRequest('GET', ''), $handler);
 
@@ -71,9 +67,7 @@ final class PipelineTest extends TestCase
             }
         };
         $request = new ServerRequest('GET', '');
-        $handler = new CallableHandler(function () {
-            return 'response';
-        }, new ResponseFactory(new HttpConfig(['headers' => []])));
+        $handler = new CallableHandler(fn() => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
@@ -115,9 +109,7 @@ final class PipelineTest extends TestCase
             new \Spiral\Core\Scope(name: 'http'),
             function (ScopeInterface $c) use ($middleware) {
                 $request = new ServerRequest('GET', '');
-                $handler = new CallableHandler(function () {
-                    return 'response';
-                }, new ResponseFactory(new HttpConfig(['headers' => []])));
+                $handler = new CallableHandler(fn() => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
 
                 $pipeline = new Pipeline($c, null, new NullTracer($c));
 

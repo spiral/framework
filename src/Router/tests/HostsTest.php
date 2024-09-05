@@ -22,7 +22,7 @@ class HostsTest extends BaseTestCase
             new Action(TestController::class, 'test')
         ));
 
-        $match = $router->handle(new ServerRequest('GET', ''));
+        $router->handle(new ServerRequest('GET', ''));
     }
 
     public function testRoute(): void

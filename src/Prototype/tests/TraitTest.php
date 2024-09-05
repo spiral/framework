@@ -57,9 +57,7 @@ class TraitTest extends TestCase
         $c->bindSingleton(TestClass::class, $t);
         $p->bindProperty('testClass', TestClass::class);
 
-        $r = ContainerScope::runScope($c, static function () use ($t) {
-            return $t->getTest();
-        });
+        $r = ContainerScope::runScope($c, static fn() => $t->getTest());
 
         $this->assertSame($t, $r);
     }

@@ -15,10 +15,6 @@ abstract class BaseTestCase extends TestCase
         /* GRAMMAR => SYNTAX */
     ];
 
-    /**
-     * @param string $string
-     * @return Template
-     */
     protected function parse(string $string): Template
     {
         $parser = new Parser();

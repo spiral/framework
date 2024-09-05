@@ -51,9 +51,7 @@ final class CsrfTest extends TestCase
     {
         $core = $this->httpCore([CsrfMiddleware::class]);
         $core->setHandler(
-            static function ($r) {
-                return $r->getAttribute(CsrfMiddleware::ATTRIBUTE);
-            }
+            static fn($r) => $r->getAttribute(CsrfMiddleware::ATTRIBUTE)
         );
 
         $response = $this->get($core, '/');
@@ -81,21 +79,17 @@ final class CsrfTest extends TestCase
 
         $core = $this->httpCore([CsrfMiddleware::class]);
         $core->setHandler(
-            static function () {
-                return 'all good';
-            }
+            static fn() => 'all good'
         );
 
-        $response = $this->get($core, '/');
+        $this->get($core, '/');
     }
 
     public function testPostForbidden(): void
     {
         $core = $this->httpCore([CsrfMiddleware::class, CsrfFirewall::class]);
         $core->setHandler(
-            static function () {
-                return 'all good';
-            }
+            static fn() => 'all good'
         );
 
         $response = $this->post($core, '/');
@@ -107,21 +101,17 @@ final class CsrfTest extends TestCase
         $this->expectException(\LogicException::class);
         $core = $this->httpCore([CsrfFirewall::class]);
         $core->setHandler(
-            static function () {
-                return 'all good';
-            }
+            static fn() => 'all good'
         );
 
-        $response = $this->post($core, '/');
+        $this->post($core, '/');
     }
 
     public function testPostOK(): void
     {
         $core = $this->httpCore([CsrfMiddleware::class, CsrfFirewall::class]);
         $core->setHandler(
-            static function () {
-                return 'all good';
-            }
+            static fn() => 'all good'
         );
 
         $response = $this->get($core, '/');
@@ -152,9 +142,7 @@ final class CsrfTest extends TestCase
     {
         $core = $this->httpCore([CsrfMiddleware::class, CsrfFirewall::class]);
         $core->setHandler(
-            static function () {
-                return 'all good';
-            }
+            static fn() => 'all good'
         );
 
         $response = $this->get($core, '/');
@@ -185,9 +173,7 @@ final class CsrfTest extends TestCase
     {
         $core = $this->httpCore([CsrfMiddleware::class, StrictCsrfFirewall::class]);
         $core->setHandler(
-            static function () {
-                return 'all good';
-            }
+            static fn() => 'all good'
         );
 
         $response = $this->get($core, '/');
@@ -274,7 +260,7 @@ final class CsrfTest extends TestCase
         foreach ($response->getHeaders() as $header) {
             foreach ($header as $headerLine) {
                 $chunk = explode(';', $headerLine);
-                if (!count($chunk) || mb_strpos($chunk[0], '=') === false) {
+                if (mb_strpos($chunk[0], '=') === false) {
                     continue;
                 }
 

@@ -18,7 +18,7 @@ class ExtendsTest extends BaseTestCase
 {
     public function testNoExtends(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<block:content>hello world</block:content>');
 
         $builder = $this->getBuilder($loader, []);
@@ -31,7 +31,7 @@ class ExtendsTest extends BaseTestCase
 
     public function testExtendsParent(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<extends:parent/><block:content>hello world</block:content>');
         $loader->set('parent', '<b><block:content>parent world</block:content></b>');
 
@@ -45,7 +45,7 @@ class ExtendsTest extends BaseTestCase
 
     public function testExtendsParentBlock(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<extends:parent/><block:content>hello ${parent}</block:content>');
         $loader->set('parent', '<b><block:content>parent world</block:content></b>');
 
@@ -59,7 +59,7 @@ class ExtendsTest extends BaseTestCase
 
     public function testExtendsParentBlockWithNoAttribute(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<extends:parent/><block:content>hello ${parent}</block:content>');
         $loader->set('parent', '<b attr:aggregate><block:content>parent world</block:content></b>');
 
@@ -73,7 +73,7 @@ class ExtendsTest extends BaseTestCase
 
     public function testExtendsParentBlockWithAttribute(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<extends:parent class="red"/><block:content>hello ${parent}</block:content>');
         $loader->set('parent', '<b attr:aggregate><block:content>parent world</block:content></b>');
 
@@ -87,7 +87,7 @@ class ExtendsTest extends BaseTestCase
 
     public function testExtendsAttribute(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<extends:parent value="x"/><block:content>hello ${parent}</block:content>');
         $loader->set('parent', '<b value="${value}"><block:content>parent world</block:content></b>');
 
@@ -101,7 +101,7 @@ class ExtendsTest extends BaseTestCase
 
     public function testExtendsViaPath(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<extends path="parent" value="x"/><block:content>hello ${parent}</block:content>');
         $loader->set('parent', '<b value="${value}"><block:content>parent world</block:content></b>');
 
@@ -115,7 +115,7 @@ class ExtendsTest extends BaseTestCase
 
     public function testExtendsMultiple(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<extends:child/><block:data>root</block:data>');
         $loader->set('child', '<extends:parent/><block:content><i><block:data/></i></block:content>');
         $loader->set('parent', '<b><block:content/></b>');
@@ -130,7 +130,7 @@ class ExtendsTest extends BaseTestCase
 
     public function testExtendsInline(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', 'hello <placeholder><extends:child/><block:data>root</block:data></placeholder>');
         $loader->set('child', '<extends:parent/><block:content><i><block:data/></i></block:content>');
         $loader->set('parent', '<b><block:content/></b>');

@@ -76,7 +76,7 @@ class GroupTest extends BaseTestCase
             ]))
         );
 
-        $uri = $router->uri('group/test');
+        $router->uri('group/test');
     }
 
     public function testUriInvalidNoAction(): void
@@ -91,7 +91,7 @@ class GroupTest extends BaseTestCase
             ]))
         );
 
-        $uri = $router->getRoute('group')->uri(['controller' => 'test']);
+        $router->getRoute('group')->uri(['controller' => 'test']);
     }
 
     public function testClientException(): void

@@ -3,12 +3,15 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\Assign\RemoveDoubleAssignRector;
+use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveEmptyClassMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPromotedPropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
+use Rector\DeadCode\Rector\Expression\RemoveDeadStmtRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
@@ -17,6 +20,7 @@ use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/src/*/src',
+        __DIR__ . '/src/*/tests',
         __DIR__ . '/tests',
     ])
     ->withParallel()
@@ -30,6 +34,7 @@ return RectorConfig::configure()
             __DIR__ . '/src/Scaffolder/src/Command/FilterCommand.php',
             __DIR__ . '/src/Scaffolder/src/Command/JobHandlerCommand.php',
             __DIR__ . '/src/Scaffolder/src/Command/MiddlewareCommand.php',
+            __DIR__ . '/src/Console/tests/PromptArgumentsTest.php',
         ],
         RemoveUnusedPrivateMethodRector::class => [
             __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
@@ -37,6 +42,9 @@ return RectorConfig::configure()
             __DIR__ . '/src/Cache/src/Bootloader/CacheBootloader.php',
             __DIR__ . '/src/Serializer/src/Bootloader/SerializerBootloader.php',
             __DIR__ . '/src/Validation/src/Bootloader/ValidationBootloader.php',
+            __DIR__ . '/src/Translator/tests/IndexerTest.php',
+            __DIR__ . '/src/Tokenizer/tests/ReflectionFileTest.php',
+            __DIR__ . '/src/Core/tests/SingletonsTest.php',
         ],
         RemoveUselessVarTagRector::class => [
             __DIR__ . '/src/Console/src/Traits/HelpersTrait.php',
@@ -54,16 +62,37 @@ return RectorConfig::configure()
         ],
         RemoveUnusedPrivateMethodParameterRector::class => [
             __DIR__ . '/src/Core/src/Internal/Factory.php',
+            __DIR__ . '/src/Core/tests/InjectableTest.php',
+        ],
+        RemoveDoubleAssignRector::class => [
+            __DIR__ . '/src/Core/tests/Scope/FinalizeAttributeTest.php',
+        ],
+        RemoveUnusedVariableAssignRector::class => [
+            __DIR__ . '/src/Core/tests/ExceptionsTest.php',
+        ],
+        RemoveDeadStmtRector::class => [
+            __DIR__ . '/src/Core/tests/ExceptionsTest.php',
         ],
 
-        // to be enabled later after upgrade to 1.2.4 merged
-        // to easier to review
+        // to be enabled later for bc break 4.x
         RemoveUnusedPublicMethodParameterRector::class,
         RemoveEmptyClassMethodRector::class,
         RemoveUnusedPromotedPropertyRector::class,
 
         // start with short open tag
+        __DIR__ . '/src/Views/tests/fixtures/other/var.php',
         __DIR__ . '/tests/app/views/native.php',
+
+        // example code for test
+        '*/Fixtures/*',
+        '*/Stub/*',
+        '*/Stubs/*',
+        '*/tests/Classes/*',
+        '*/tests/Internal/*',
+        __DIR__ . '/src/Console/tests/Configurator',
+
+        // cache
+        '*/runtime/cache/*',
     ])
     ->withPhpSets(php74: true)
     ->withPreparedSets(deadCode: true);

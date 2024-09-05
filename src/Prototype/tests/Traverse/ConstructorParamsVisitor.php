@@ -43,9 +43,6 @@ class ConstructorParamsVisitor extends NodeVisitorAbstract
         }
     }
 
-    /**
-     * @return array
-     */
     public function getParams(): array
     {
         return $this->params;

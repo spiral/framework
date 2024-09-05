@@ -44,10 +44,10 @@ class TargetTest extends TestCase
     {
         $reflection = new \ReflectionMethod($this, __FUNCTION__);
 
-        $target = Target::fromReflectionMethod($reflection, __CLASS__);
+        $target = Target::fromReflectionMethod($reflection, self::class);
 
         self::assertSame($reflection, $target->getReflection());
-        self::assertSame(__CLASS__ . '->' . __FUNCTION__, (string)$target);
+        self::assertSame(self::class . '->' . __FUNCTION__, (string)$target);
         self::assertNull($target->getObject());
     }
 
@@ -58,7 +58,7 @@ class TargetTest extends TestCase
         $target = Target::fromReflectionMethod($reflection, $this);
 
         self::assertSame($reflection, $target->getReflection());
-        self::assertSame(__CLASS__ . '->' . __FUNCTION__, (string)$target);
+        self::assertSame(self::class . '->' . __FUNCTION__, (string)$target);
         self::assertNotNull($target->getObject());
     }
 

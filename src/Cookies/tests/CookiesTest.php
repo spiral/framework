@@ -104,9 +104,7 @@ final class CookiesTest extends TestCase
     public function testDecrypt(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
-            return $r->getCookieParams()['name'];
-        });
+        $core->setHandler(fn(ServerRequestInterface $r) => $r->getCookieParams()['name']);
 
         $value = $this->container->get(EncrypterInterface::class)->encrypt('cookie-value');
 
@@ -118,9 +116,7 @@ final class CookiesTest extends TestCase
     public function testDecryptArray(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
-            return $r->getCookieParams()['name'][0];
-        });
+        $core->setHandler(fn(ServerRequestInterface $r) => $r->getCookieParams()['name'][0]);
 
         $value[] = $this->container->get(EncrypterInterface::class)->encrypt('cookie-value');
 
@@ -132,9 +128,7 @@ final class CookiesTest extends TestCase
     public function testDecryptBroken(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
-            return $r->getCookieParams()['name'];
-        });
+        $core->setHandler(fn(ServerRequestInterface $r) => $r->getCookieParams()['name']);
 
         $value = $this->container->get(EncrypterInterface::class)->encrypt('cookie-value') . 'BROKEN';
 
@@ -195,9 +189,7 @@ final class CookiesTest extends TestCase
         ]));
 
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
-            return $r->getCookieParams()['name'];
-        });
+        $core->setHandler(fn(ServerRequestInterface $r) => $r->getCookieParams()['name']);
 
         $value = 'cookie-value';
 
@@ -228,9 +220,7 @@ final class CookiesTest extends TestCase
         $cookies = $this->fetchCookies($response);
         $this->assertArrayHasKey('name', $cookies);
 
-        $core->setHandler(function ($r) {
-            return $r->getCookieParams()['name'];
-        });
+        $core->setHandler(fn($r) => $r->getCookieParams()['name']);
 
         $response = $this->get($core, '/', [], [], $cookies);
         $this->assertSame(200, $response->getStatusCode());
@@ -286,9 +276,9 @@ final class CookiesTest extends TestCase
         foreach ($response->getHeaders() as $line) {
             $cookie = explode('=', implode('', $line));
             $result[$cookie[0]] = rawurldecode(substr(
-                (string)$cookie[1],
+                $cookie[1],
                 0,
-                (int)strpos((string)$cookie[1], ';')
+                (int)strpos($cookie[1], ';')
             ));
         }
 

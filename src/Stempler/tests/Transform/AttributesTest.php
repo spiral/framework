@@ -16,7 +16,7 @@ class AttributesTest extends BaseTestCase
 {
     public function testAggregatedAttribute(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<a href="" attr:aggregate></a>'
@@ -36,7 +36,7 @@ class AttributesTest extends BaseTestCase
 
     public function testAggregatedAttributePattern(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<a href="${href}" attr:aggregate="prefix:a-"></a>'
@@ -57,7 +57,7 @@ class AttributesTest extends BaseTestCase
 
     public function testAggregateInclude(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<a href="${href}" attr:aggregate="include:style"></a>'
@@ -78,7 +78,7 @@ class AttributesTest extends BaseTestCase
 
     public function testAggregateExclude(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<a href="${href}" attr:aggregate="exclude:style"></a>'
@@ -99,7 +99,7 @@ class AttributesTest extends BaseTestCase
 
     public function testAggregateSimple(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="element" as="element"/><element href="google.com" style="color:red"/>'
@@ -120,7 +120,7 @@ class AttributesTest extends BaseTestCase
 
     public function testAggregateVoid(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="element" as="element"/><element href="google.com" blue/>'
@@ -140,7 +140,7 @@ class AttributesTest extends BaseTestCase
 
     public function testAggregateBlock(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="element" as="element"/>'
@@ -161,7 +161,7 @@ class AttributesTest extends BaseTestCase
 
     public function testAggregatePHP(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="element" as="element"/>'
@@ -182,7 +182,7 @@ class AttributesTest extends BaseTestCase
 
     public function testAggregateVerbatim(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="element" as="element"/><element href="google.com" style="color: <?=\'red\'?>"/>'
@@ -202,7 +202,7 @@ class AttributesTest extends BaseTestCase
 
     public function testEqualsToPHP(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set(
             'root',
             '<use:element path="element" as="element"/><element href="google.com" class=<?=\'red\'?>/>'

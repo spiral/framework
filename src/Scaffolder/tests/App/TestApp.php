@@ -18,7 +18,6 @@ class TestApp extends Boot\AbstractKernel
     ];
 
     /**
-     * @param string $target
      * @return mixed|object|null
      * @throws Throwable
      */
@@ -33,8 +32,6 @@ class TestApp extends Boot\AbstractKernel
     }
 
     /**
-     * @param string $directory
-     * @return string
      * @throws Throwable
      */
     public function directory(string $directory): string
@@ -54,9 +51,6 @@ class TestApp extends Boot\AbstractKernel
 
     /**
      * Normalizes directory list and adds all required aliases.
-     *
-     * @param array $directories
-     * @return array
      */
     protected function mapDirectories(array $directories): array
     {

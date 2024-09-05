@@ -13,10 +13,6 @@ use Psr\Http\Message\UriInterface;
  */
 abstract class TestCase extends BaseTestCase
 {
-    /**
-     * @param string $uri
-     * @return UriInterface
-     */
     protected function uri(string $uri): UriInterface
     {
         return new Uri($uri);

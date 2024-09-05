@@ -82,9 +82,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             new Autowire('bar'),
         ]));
 
-        $handle = function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
-            return $handler->handle($request);
-        };
+        $handle = fn(ServerRequestInterface $request, RequestHandlerInterface $handler) => $handler->handle($request);
 
         $middleware1->expects($this->once())->method('process')->willReturnCallback($handle);
         $middleware2->expects($this->once())->method('process')->willReturnCallback($handle);

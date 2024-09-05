@@ -51,7 +51,7 @@ final class AttributeProcessorTest extends TestCase
             ->once()
             ->withArgs(fn (AttributeProcessor $attributeProcessor) => true);
 
-        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory, $listenerRegistry);
+        new AttributeProcessor($tokenizerRegistry, $reader, $factory, $listenerRegistry);
     }
 
     public function testEventListenerShouldThrowAnExceptionWhenListenerNotFinalized(): void

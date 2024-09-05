@@ -30,10 +30,6 @@ class OnlyKnownTest extends BaseTestCase
         );
     }
 
-    /**
-     * @param string $string
-     * @return Template
-     */
     protected function parse(string $string): Template
     {
         $parser = new Parser();

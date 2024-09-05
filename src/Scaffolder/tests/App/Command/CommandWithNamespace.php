@@ -35,7 +35,7 @@ final class CommandWithNamespace extends AbstractCommand
 
     public function __invoke(): int
     {
-        $declaration = $this->createDeclaration(CommandDeclaration::class);
+        $this->createDeclaration(CommandDeclaration::class);
 
         return self::SUCCESS;
     }

@@ -14,9 +14,6 @@ abstract class AbstractCommandTestCase extends BaseTestCase
 {
     protected ?string $className = null;
 
-    /**
-     * @param string $class
-     */
     protected function deleteDeclaration(string $class): void
     {
         if (class_exists($class)) {
@@ -30,7 +27,6 @@ abstract class AbstractCommandTestCase extends BaseTestCase
     }
 
     /**
-     * @return Console
      * @throws Throwable
      */
     protected function console(): Console
@@ -39,7 +35,6 @@ abstract class AbstractCommandTestCase extends BaseTestCase
     }
 
     /**
-     * @return FilesInterface
      * @throws Throwable
      */
     protected function files(): FilesInterface

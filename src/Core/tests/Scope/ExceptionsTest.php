@@ -15,7 +15,7 @@ final class ExceptionsTest extends BaseTestCase
 {
     public function testParentScopeResolvingCustomException(): void
     {
-        // $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage(ExceptionConstructor::MESSAGE);
 
         $container = new Container();
@@ -25,7 +25,7 @@ final class ExceptionsTest extends BaseTestCase
                 $c1->get(ExceptionConstructor::class);
                 self::fail('Exception should be thrown');
             } catch (\Throwable $e) {
-                // self::assertInstanceOf(\InvalidArgumentException::class, $e);
+                self::assertInstanceOf(\Exception::class, $e);
                 throw $e;
             }
         });
@@ -33,7 +33,7 @@ final class ExceptionsTest extends BaseTestCase
 
     public function testParentScopeThrowConstructorErrorOnResolving(): void
     {
-        // $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage(ExceptionConstructor::MESSAGE);
 
         $container = new Container();
@@ -43,7 +43,7 @@ final class ExceptionsTest extends BaseTestCase
                 $c1->get(ExceptionConstructor::class);
                 self::fail('Exception should be thrown');
             } catch (\Throwable $e) {
-                // self::assertInstanceOf(\InvalidArgumentException::class, $e);
+                self::assertInstanceOf(\Exception::class, $e);
                 throw $e;
             }
         });

@@ -30,9 +30,10 @@ final class CoreTest extends TestCase
         }
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(function (string $name, mixed $p = [], OptionsInterface $options = null) use($payload) {
-                return $name === 'foo' && $payload === $p && $options instanceof Options;
-            });
+            ->withArgs(fn(string $name, mixed $p = [], OptionsInterface $options = null) => $name === 'foo'
+                && $payload === $p
+                && $options instanceof Options,
+            );
 
         $core->callAction('foo', 'bar', [
             'id' => 'job-id',
@@ -76,16 +77,12 @@ final class CoreTest extends TestCase
 
 
         $tracer->shouldReceive('getContext')->once()->andReturn(['foo' => ['bar']]);
-        $tracer->shouldReceive('trace')->once()->andReturnUsing(function ($name, $callback) {
-            return $callback();
-        });
+        $tracer->shouldReceive('trace')->once()->andReturnUsing(fn($name, $callback) => $callback());
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(function (string $name, array $payload = [], OptionsInterface $options = null) {
-                return $name === 'foo'
-                    && $payload === ['baz' => 'baf']
-                    && $options->getHeader('foo') === ['bar'];
-            });
+            ->withArgs(fn(string $name, array $payload = [], OptionsInterface $options = null) => $name === 'foo'
+                && $payload === ['baz' => 'baf']
+                && $options->getHeader('foo') === ['bar']);
 
         ContainerScope::runScope($container, function() use($core) {
             $core->callAction('foo', 'bar', [
@@ -106,11 +103,9 @@ final class CoreTest extends TestCase
         $tracer->shouldNotReceive('getContext');
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(function (string $name, array $payload = [], OptionsInterface $options = null) {
-                return $name === 'foo'
-                    && $payload === ['baz' => 'baf']
-                    && $options !== null;
-            });
+            ->withArgs(fn(string $name, array $payload = [], OptionsInterface $options = null) => $name === 'foo'
+                && $payload === ['baz' => 'baf']
+                && $options !== null);
 
         $core->callAction('foo', 'bar', [
             'id' => 'job-id',

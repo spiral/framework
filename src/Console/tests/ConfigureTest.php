@@ -125,9 +125,6 @@ class ConfigureTest extends BaseTestCase
         $this->assertEquals(1, $output->getCode());
     }
 
-    /**
-     * @return Console
-     */
     private function bindFailure(): Console
     {
         $core = $this->getCore(

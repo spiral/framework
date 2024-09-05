@@ -19,19 +19,11 @@ class Extractor
         $this->parser = $parser ?? (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
     }
 
-    /**
-     * @param string $filename
-     * @return array
-     */
     public function extractFromFilename(string $filename): array
     {
         return $this->extractFromString(file_get_contents($filename));
     }
 
-    /**
-     * @param string $code
-     * @return array
-     */
     public function extractFromString(string $code): array
     {
         $params = new ConstructorParamsVisitor();
@@ -40,10 +32,6 @@ class Extractor
         return $params->getParams();
     }
 
-    /**
-     * @param string      $code
-     * @param NodeVisitor ...$visitors
-     */
     private function traverse(string $code, NodeVisitor ...$visitors): void
     {
         $tr = new NodeTraverser();

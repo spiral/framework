@@ -12,10 +12,6 @@ abstract class BaseTestCase extends TestCase
 {
     protected const GRAMMARS = [];
 
-    /**
-     * @param array  $tokens
-     * @param string $source
-     */
     protected function assertTokens(array $tokens, string $source): void
     {
         $parsed = $this->tokens($source);

@@ -102,9 +102,7 @@ class InjectableTest extends TestCase
         $container->bind(ConfigsInterface::class, $configurator);
 
         $configurator->shouldReceive('createInjection')
-            ->with(m::on(static function (ReflectionClass $r) {
-                return $r->getName() === TestConfig::class;
-            }), null)
+            ->with(m::on(static fn(ReflectionClass $r) => $r->getName() === TestConfig::class), null)
             ->andReturn($expected);
 
         $this->assertSame($expected, $container->get(TestConfig::class));
@@ -119,9 +117,7 @@ class InjectableTest extends TestCase
         $container->bind(ConfigsInterface::class, $configurator);
 
         $configurator->shouldReceive('createInjection')
-            ->with(m::on(static function (ReflectionClass $r) {
-                return $r->getName() === TestConfig::class;
-            }), 'context')
+            ->with(m::on(static fn(ReflectionClass $r) => $r->getName() === TestConfig::class), 'context')
             ->andReturn($expected);
 
         $this->assertSame($expected, $container->get(TestConfig::class, 'context'));
@@ -236,9 +232,6 @@ class InjectableTest extends TestCase
         $this->assertInstanceOf(\ReflectionParameter::class, $result->context);
     }
 
-    /**
-     * @param TestConfig $contextArgument
-     */
     private function methodInjection(TestConfig $contextArgument): void
     {
     }

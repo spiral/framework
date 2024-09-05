@@ -16,9 +16,6 @@ class Streamable implements StreamableInterface
         $this->stream = $stream;
     }
 
-    /**
-     * @return StreamInterface
-     */
     public function getStream(): StreamInterface
     {
         return $this->stream;

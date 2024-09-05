@@ -48,10 +48,6 @@ final class GeneratorStreamTest extends TestCase
 
     public function testRewindAfterRead(): void
     {
-        if (PHP_VERSION_ID < 80000) {
-            $this->markTestSkipped('See issue https://bugs.php.net/bug.php?id=79927.');
-        }
-
         $stream = $this->createStream();
         $stream->read(1);
         $stream->read(1);

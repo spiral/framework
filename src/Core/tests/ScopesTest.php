@@ -21,9 +21,7 @@ class ScopesTest extends TestCase
 
         $this->assertNull(ContainerScope::getContainer());
 
-        $this->assertTrue(ContainerScope::runScope($container, function () use ($container) {
-            return $container === ContainerScope::getContainer();
-        }));
+        $this->assertTrue(ContainerScope::runScope($container, fn() => $container === ContainerScope::getContainer()));
 
         $this->assertNull(ContainerScope::getContainer());
     }
@@ -108,9 +106,13 @@ class ScopesTest extends TestCase
             ContainerScope::runScope($container, static fn (ContainerInterface $container) => $container)
         );
 
-        $result = ContainerScope::runScope($container, static function (Container $container) {
-            return $container->runScope([], static fn (Container $container) => $container);
-        });
+        $result = ContainerScope::runScope(
+            $container,
+            static fn(Container $container) => $container->runScope(
+                [],
+                static fn (Container $container) => $container,
+            ),
+        );
 
         $this->assertSame($container, $result);
     }

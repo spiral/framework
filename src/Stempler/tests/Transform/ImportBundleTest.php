@@ -18,7 +18,7 @@ class ImportBundleTest extends BaseTestCase
 {
     public function testNoImport(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '<url href="google.com">hello world</url>');
         $loader->set('import', '<a href="${href}">${context}</a>');
 
@@ -32,7 +32,7 @@ class ImportBundleTest extends BaseTestCase
 
     public function testInlineBundle(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '
 <use:bundle path="bundle" ns="prefix"/>
 <prefix:url href="google.com">hello world</prefix:url>
@@ -56,7 +56,7 @@ class ImportBundleTest extends BaseTestCase
 
     public function testImportElementViaBundle(): void
     {
-        $loader = $loader ?? new StringLoader();
+        $loader ??= new StringLoader();
         $loader->set('root', '
 <use:bundle path="bundle" ns="prefix"/>
 <prefix:url href="google.com">hello world</prefix:url>

@@ -17,7 +17,7 @@ class ConfigTest extends AbstractCommandTestCase
      */
     public function testScaffold(): void
     {
-        $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig';
+        $this->className = $class = \Spiral\Tests\Scaffolder\App\Config\SampleConfig::class;
 
         $this->console()->run('create:config', [
             'name' => 'sample',
@@ -256,7 +256,6 @@ class ConfigTest extends AbstractCommandTestCase
     }
 
     /**
-     * @param string $filename
      * @throws Throwable
      */
     private function deleteConfigFile(string $filename): void
@@ -265,9 +264,6 @@ class ConfigTest extends AbstractCommandTestCase
     }
 
     /**
-     * @param string $name
-     * @param string $comment
-     * @return string
      * @throws Throwable
      */
     private function createConfig(string $name, string $comment): string
