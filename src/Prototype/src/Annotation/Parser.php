@@ -22,7 +22,7 @@ final class Parser
             // strip up comment prefix
             $line = \preg_replace('/[\t ]*[\/]?\*[\/]? ?/', '', $line);
 
-            if (\preg_match('/ *@([^ ]+) (.*)/u', $line, $matches)) {
+            if (\preg_match('/ *@([^ ]+) (.*)/u', (string) $line, $matches)) {
                 $this->lines[] = new Line($matches[2], $matches[1]);
             } else {
                 $this->lines[] = new Line($line);

@@ -27,7 +27,7 @@ final class ConfigurationBootloader extends Bootloader
         ConfigManager::class         => [self::class, 'configManager'],
     ];
 
-    private ConfiguratorInterface $configurator;
+    private readonly ConfiguratorInterface $configurator;
 
     /** @var FileLoaderInterface[] */
     private array $loaders;

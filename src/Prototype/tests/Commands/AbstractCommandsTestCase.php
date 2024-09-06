@@ -25,7 +25,7 @@ abstract class AbstractCommandsTestCase extends TestCase
 
     protected TestApp $app;
     protected array $buf = [];
-    private Storage $storage;
+    private readonly Storage $storage;
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {

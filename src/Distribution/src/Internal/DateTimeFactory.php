@@ -13,7 +13,7 @@ final class DateTimeFactory implements DateTimeFactoryInterface
     private const DEFAULT_TIMEZONE = 'UTC';
     private const DATE_NOW = 'now';
 
-    private \DateTimeZone $timezone;
+    private readonly \DateTimeZone $timezone;
 
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
     {

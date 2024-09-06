@@ -88,7 +88,7 @@ final class AttributeMapperTest extends BaseTestCase
                 public int $page;
 
                 #[Attribute]
-                private string $wsPath;
+                private readonly string $wsPath;
 
                 #[BearerToken]
                 public string $token;

@@ -137,7 +137,7 @@ final class InjectPHP implements VisitorInterface
                 return $this->exportValue($node);
 
             case $node instanceof Output:
-                return \trim($node->body);
+                return \trim((string) $node->body);
 
             case $node instanceof PHP:
                 return $node->getContext()?->getValue(PHP::ORIGINAL_BODY)

@@ -17,11 +17,11 @@ final class ConstantBasedConfigurator implements ConfiguratorInterface
         $command->setDescription((string) $reflection->getConstant('DESCRIPTION'));
 
         foreach ($reflection->getMethod('defineOptions')->invoke($command) as $option) {
-            \call_user_func_array([$command, 'addOption'], $option);
+            \call_user_func_array($command->addOption(...), $option);
         }
 
         foreach ($reflection->getMethod('defineArguments')->invoke($command) as $argument) {
-            \call_user_func_array([$command, 'addArgument'], $argument);
+            \call_user_func_array($command->addArgument(...), $argument);
         }
     }
 

@@ -161,7 +161,7 @@ final class DynamicGrammar implements GrammarInterface
         }
 
         foreach ($this->fetchOptions($body) as $option => $value) {
-            $value = \trim($value, '\'" ');
+            $value = \trim((string) $value, '\'" ');
             switch ($option) {
                 case 'syntax':
                     $this->echo->setActive($value !== 'off');

@@ -22,7 +22,7 @@ class NameValue implements ValueInterface, \Stringable
 
     public function setValue(mixed $data): self
     {
-        $this->value = strtoupper($data);
+        $this->value = strtoupper((string) $data);
 
         return $this;
     }

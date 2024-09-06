@@ -19,7 +19,7 @@ final class LogFactory implements LogsInterface
 
     public function getLogger(string $channel): LoggerInterface
     {
-        return new NullLogger([$this, 'log'], $channel);
+        return new NullLogger($this->log(...), $channel);
     }
 
     public function log(string $channel, mixed $level, string $message, array $context = []): void

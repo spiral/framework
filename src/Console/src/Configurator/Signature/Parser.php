@@ -58,7 +58,7 @@ final class Parser
         $options = [];
 
         foreach ($tokens as $token) {
-            if (\preg_match('/-{2,}(.*)/', $token, $matches)) {
+            if (\preg_match('/-{2,}(.*)/', (string) $token, $matches)) {
                 $options[] = $this->parseOption($matches[1]);
             } else {
                 $arguments[] = $this->parseArgument($token);

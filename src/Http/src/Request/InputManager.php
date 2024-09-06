@@ -215,10 +215,10 @@ final class InputManager
     {
         $header = $this->header('Authorization', '');
 
-        $position = \strrpos($header, 'Bearer ');
+        $position = \strrpos((string) $header, 'Bearer ');
 
         if ($position !== false) {
-            $header = \substr($header, $position + 7);
+            $header = \substr((string) $header, $position + 7);
 
             return \str_contains($header, ',')
                 ? \strstr($header, ',', true)
@@ -279,7 +279,7 @@ final class InputManager
 
         if ($softMatch) {
             foreach ($acceptHeader->getAll() as $item) {
-                $itemValue = \strtolower($item->getValue());
+                $itemValue = \strtolower((string) $item->getValue());
                 if (\str_ends_with($itemValue, '/json') || \str_ends_with($itemValue, '+json')) {
                     return true;
                 }

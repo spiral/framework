@@ -34,8 +34,6 @@ final class UriHandler
     ];
 
     private ?string $pattern = null;
-
-    private readonly RoutePatternRegistryInterface $patternRegistry;
     private array $constrains = [];
     private array $defaults = [];
     private bool $matchHost = false;
@@ -56,10 +54,8 @@ final class UriHandler
     public function __construct(
         private readonly UriFactoryInterface $uriFactory,
         SlugifyInterface $slugify = null,
-        ?RoutePatternRegistryInterface $patternRegistry = null,
+        private readonly RoutePatternRegistryInterface $patternRegistry = new DefaultPatternRegistry(),
     ) {
-        $this->patternRegistry = $patternRegistry ?? new DefaultPatternRegistry();
-
         $slugify ??= new Slugify();
         $this->pathSegmentEncoder = static fn (string $segment): string => $slugify->slugify($segment);
     }

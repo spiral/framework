@@ -12,7 +12,7 @@ use Spiral\Security\RuleInterface;
  */
 final class CallableRule implements RuleInterface
 {
-    private \Closure $callable;
+    private readonly \Closure $callable;
 
     public function __construct(callable $callable)
     {

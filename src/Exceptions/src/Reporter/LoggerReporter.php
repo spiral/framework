@@ -11,7 +11,7 @@ use Spiral\Exceptions\ExceptionReporterInterface;
 class LoggerReporter implements ExceptionReporterInterface
 {
     public function __construct(
-        private LoggerInterface $logger = new NullLogger()
+        private readonly LoggerInterface $logger = new NullLogger()
     ) {
     }
 

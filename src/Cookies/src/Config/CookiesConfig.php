@@ -52,7 +52,7 @@ final class CookiesConfig extends InjectableConfig
 
         if ($host === 'localhost' || \filter_var($host, FILTER_VALIDATE_IP)) {
             //We can't use sub-domains when website required by IP
-            $pattern = \ltrim($pattern, '.');
+            $pattern = \ltrim((string) $pattern, '.');
         }
 
         if (!str_contains((string) $pattern, '%s')) {

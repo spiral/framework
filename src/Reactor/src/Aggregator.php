@@ -20,7 +20,7 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
      * @param TElement[] $elements
      */
     public function __construct(
-        private array $allowed,
+        private readonly array $allowed,
         private array $elements = []
     ) {
     }

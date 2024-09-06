@@ -164,11 +164,11 @@ class ConsoleRenderer extends AbstractRenderer
             $classColor = 'while';
 
             if (isset($trace['file'])) {
-                $file = \str_starts_with($trace['file'], $rootDir)
-                    ? \substr($trace['file'], \strlen($rootDir) + 1)
+                $file = \str_starts_with((string) $trace['file'], $rootDir)
+                    ? \substr((string) $trace['file'], \strlen($rootDir) + 1)
                     : $trace['file'];
 
-                $classColor = \str_starts_with($file, 'vendor/') ? 'gray' : 'white';
+                $classColor = \str_starts_with((string) $file, 'vendor/') ? 'gray' : 'white';
             }
 
             if (isset($trace['type'], $trace['class'])) {

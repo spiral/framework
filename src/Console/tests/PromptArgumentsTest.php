@@ -99,7 +99,7 @@ final class PromptArgumentsTest extends BaseTestCase
             new #[AsCommand(name: 'foo')] class extends Command
             {
                 #[Question(question: 'This is question from the attribute on the property')]
-                private string $email;
+                private readonly string $email;
 
                 public function perform(): int
                 {
@@ -119,10 +119,10 @@ final class PromptArgumentsTest extends BaseTestCase
             $promptArguments,
             new #[AsCommand(name: 'foo')] class extends Command
             {
-                private string $email;
+                private readonly string $email;
 
                 #[Question(question: 'This is question from the attribute on the property')]
-                private string $password;
+                private readonly string $password;
 
                 public function perform(): int
                 {

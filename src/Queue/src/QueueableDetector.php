@@ -9,7 +9,7 @@ use Spiral\Queue\Attribute\Queueable;
 
 final class QueueableDetector
 {
-    public function __construct(private ReaderInterface $reader)
+    public function __construct(private readonly ReaderInterface $reader)
     {
     }
 

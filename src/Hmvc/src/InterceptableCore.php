@@ -16,7 +16,7 @@ use Spiral\Interceptors\InterceptorInterface;
  */
 final class InterceptableCore implements CoreInterface, HandlerInterface
 {
-    private InterceptorPipeline $pipeline;
+    private readonly InterceptorPipeline $pipeline;
 
     public function __construct(
         private readonly CoreInterface $core,

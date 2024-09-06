@@ -17,14 +17,14 @@ use Spiral\Distribution\Internal\DateTimeIntervalFactoryInterface;
  */
 class CloudFrontResolver extends ExpirationAwareResolver
 {
-    private UrlSigner $signer;
-    private AmazonUriFactory $factory;
+    private readonly UrlSigner $signer;
+    private readonly AmazonUriFactory $factory;
 
     public function __construct(
         string $keyPairId,
         string $privateKey,
-        private string $domain,
-        private ?string $prefix = null
+        private readonly string $domain,
+        private readonly ?string $prefix = null
     ) {
         $this->assertCloudFrontAvailable();
         $this->factory = new AmazonUriFactory();

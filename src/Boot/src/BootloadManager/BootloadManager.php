@@ -13,7 +13,7 @@ use Spiral\Core\ScopeInterface;
  */
 final class BootloadManager extends AbstractBootloadManager
 {
-    private InvokerStrategyInterface $invokerStrategy;
+    private readonly InvokerStrategyInterface $invokerStrategy;
 
     public function __construct(
         ScopeInterface $scope,

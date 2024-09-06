@@ -18,7 +18,7 @@ final class QueueManager implements QueueConnectionProviderInterface
 {
     /** @var QueueInterface[] */
     private array $pipelines = [];
-    private PipelineBuilderInterface $builder;
+    private readonly PipelineBuilderInterface $builder;
 
     public function __construct(
         private readonly QueueConfig $config,

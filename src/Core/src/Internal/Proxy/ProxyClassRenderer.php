@@ -129,7 +129,7 @@ final class ProxyClassRenderer
             $m->isStatic() ? ' static' : '',
             $m->returnsReference() ? '&' : '',
             $m->getName(),
-            \implode(', ', \array_map([self::class, 'renderParameter'], $m->getParameters())),
+            \implode(', ', \array_map(self::renderParameter(...), $m->getParameters())),
             $m->hasReturnType()
                 ? ': ' . self::renderParameterTypes($m->getReturnType(), $m->getDeclaringClass())
                 : '',
@@ -181,7 +181,7 @@ final class ProxyClassRenderer
         if ($param->isDefaultValueConstant()) {
             $result = $param->getDefaultValueConstantName();
 
-            return \explode('::', $result)[0] === 'self'
+            return \explode('::', (string) $result)[0] === 'self'
                 ? $result
                 : '\\' . $result;
         }

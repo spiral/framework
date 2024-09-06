@@ -81,7 +81,7 @@ final class ValidateVersionReleaseWorkerTest extends TestCase
         return (new class($tags) implements TagParserInterface
         {
             public function __construct(
-                private array $tags
+                private readonly array $tags
             ) {
             }
 
