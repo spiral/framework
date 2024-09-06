@@ -36,7 +36,7 @@ final class Memory implements MemoryInterface
 
         try {
             $fp = fopen($filename, 'r');
-            if (!flock($fp, LOCK_SH)) {
+            if (!flock($fp, LOCK_SH | LOCK_NB)) {
                 return null;
             }
             $data = include($filename);
