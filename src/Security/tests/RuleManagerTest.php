@@ -35,7 +35,7 @@ class RuleManagerTest extends TestCase
 
     public function testFlow(): void
     {
-        $ruleClass = get_class($this->rule);
+        $ruleClass = $this->rule::class;
 
         $this->container->shouldReceive('get')
             ->once()
@@ -60,7 +60,7 @@ class RuleManagerTest extends TestCase
 
     public function testHasWithNotRegisteredClass(): void
     {
-        $ruleClass = get_class($this->rule);
+        $ruleClass = $this->rule::class;
         $manager = new RuleManager($this->container);
 
         $this->assertTrue($manager->has($ruleClass));

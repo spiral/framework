@@ -9,11 +9,8 @@ use Spiral\Views\ViewSource;
 
 class View implements ViewInterface
 {
-    private $source;
-
-    public function __construct(ViewSource $source)
+    public function __construct(private ViewSource $source)
     {
-        $this->source = $source;
     }
 
     public function render(array $data = []): string

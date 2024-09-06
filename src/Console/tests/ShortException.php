@@ -6,7 +6,7 @@ namespace Spiral\Tests\Console;
 
 class ShortException extends \Exception
 {
-    public function __toString()
+    public function __toString(): string
     {
         return 'exception';
     }

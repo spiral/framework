@@ -29,7 +29,7 @@ final class GeneratorStream implements StreamInterface
     {
         try {
             return $this->getContents();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return '';
         }
     }

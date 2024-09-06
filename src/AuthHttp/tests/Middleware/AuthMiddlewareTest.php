@@ -35,7 +35,7 @@ final class AuthMiddlewareTest extends BaseTestCase
         $http->setHandler(
             static function (ServerRequestInterface $request, ResponseInterface $response): void {
                 $response->getBody()->write(
-                    get_class($request->getAttribute('authContext'))
+                    $request->getAttribute('authContext')::class
                 );
             }
         );

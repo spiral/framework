@@ -33,7 +33,7 @@ class FilterDeclaration extends AbstractDeclaration implements HasInstructions
 
         try {
             $this->validationConfig = $container->get(ValidationConfig::class);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             // Validation is not configured
             $this->validationConfig = null;
         }

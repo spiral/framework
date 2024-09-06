@@ -34,7 +34,7 @@ abstract class JobHandler implements HandlerInterface
 
             $this->invoker->invoke([$this, $this->getHandlerMethod()], $params);
         } catch (\Throwable $e) {
-            $message = \sprintf('[%s] %s', $this::class, $e->getMessage());
+            $message = \sprintf('[%s] %s', static::class, $e->getMessage());
             throw new JobException($message, (int)$e->getCode(), $e);
         }
     }

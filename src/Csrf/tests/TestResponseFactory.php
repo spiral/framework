@@ -11,11 +11,8 @@ use Nyholm\Psr7\Response;
 
 final class TestResponseFactory implements ResponseFactoryInterface
 {
-    protected readonly HttpConfig $config;
-
-    public function __construct(HttpConfig $config)
+    public function __construct(protected readonly HttpConfig $config)
     {
-        $this->config = $config;
     }
 
     

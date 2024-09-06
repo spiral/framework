@@ -6,11 +6,8 @@ namespace Spiral\Tests\Config;
 
 class Value
 {
-    private $value;
-
-    public function __construct(string $value = 'value!')
+    public function __construct(private string $value = 'value!')
     {
-        $this->value = $value;
     }
 
     public function getValue()

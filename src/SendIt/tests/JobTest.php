@@ -63,7 +63,7 @@ class JobTest extends TestCase
                 'id',
                 json_encode(MessageSerializer::pack($this->getMail()))
             );
-        } catch (TransportException $e) {
+        } catch (TransportException) {
         }
     }
 

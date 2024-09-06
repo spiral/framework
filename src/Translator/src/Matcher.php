@@ -13,7 +13,7 @@ final class Matcher
 {
     public function isPattern(string $string): bool
     {
-        return \strpos($string, '*') !== false || \strpos($string, '|') !== false;
+        return \str_contains($string, '*') || \str_contains($string, '|');
     }
 
     /**

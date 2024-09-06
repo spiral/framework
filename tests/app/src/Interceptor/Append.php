@@ -9,11 +9,8 @@ use Spiral\Core\CoreInterface;
 
 class Append implements CoreInterceptorInterface
 {
-    private $string;
-
-    public function __construct(string $string)
+    public function __construct(private string $string)
     {
-        $this->string = $string;
     }
 
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): array

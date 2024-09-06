@@ -9,12 +9,8 @@ class Storage
     /** @var array */
     protected $storage = [];
 
-    /** @var string */
-    private $dir;
-
-    public function __construct(string $dir)
+    public function __construct(private string $dir)
     {
-        $this->dir = $dir;
     }
 
     public function store(string $name): void

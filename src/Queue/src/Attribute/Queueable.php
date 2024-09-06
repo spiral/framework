@@ -20,10 +20,7 @@ use Spiral\Attributes\NamedArgumentConstructor;
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class Queueable
 {
-    public ?string $queue = null;
-
-    public function __construct(string $queue = null)
+    public function __construct(public ?string $queue = null)
     {
-        $this->queue = $queue;
     }
 }
