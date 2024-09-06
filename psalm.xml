@@ -31,5 +31,10 @@
                 <referencedClass name="Psr\Container\ContainerExceptionInterface"/>
             </errorLevel>
         </InvalidThrow>
+        <RedundantCast>
+            <errorLevel type="suppress">
+                <file name="src/Core/src/Internal/Proxy/ProxyClassRenderer.php"/>
+            </errorLevel>
+        </RedundantCast>
     </issueHandlers>
 </psalm>
