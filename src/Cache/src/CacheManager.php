@@ -11,7 +11,7 @@ use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\FactoryInterface;
 
 #[Singleton]
-class CacheManager implements CacheStorageProviderInterface
+class CacheManager implements CacheStorageProviderInterface, CacheStorageRegistryInterface
 {
     /** @var CacheInterface[] */
     private array $storages = [];
@@ -48,5 +48,15 @@ class CacheManager implements CacheStorageProviderInterface
         $config = $this->config->getStorageConfig($name);
 
         return $this->factory->make($config['type'], $config);
+    }
+
+    public function set(string $name, CacheInterface $cache): void
+    {
+        $this->storages[$name] = $cache;
+    }
+
+    public function has(string $name): bool
+    {
+        return \array_key_exists($name, $this->storages);
     }
 }
