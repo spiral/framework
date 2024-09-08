@@ -35,7 +35,14 @@ final class Memory implements MemoryInterface
         }
 
         try {
-            return include($filename);
+            $fp = \fopen($filename, 'r');
+            if (!\flock($fp, \LOCK_SH | \LOCK_NB)) {
+                return null;
+            }
+            $data = include($filename);
+            \flock($fp, \LOCK_UN);
+            \fclose($fp);
+            return $data;
         } catch (\Throwable) {
             return null;
         }
