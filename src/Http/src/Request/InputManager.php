@@ -213,12 +213,12 @@ final class InputManager
      */
     public function bearerToken(): ?string
     {
-        $header = $this->header('Authorization', '');
+        $header = (string) $this->header('Authorization', '');
 
-        $position = \strrpos((string) $header, 'Bearer ');
+        $position = \strrpos($header, 'Bearer ');
 
         if ($position !== false) {
-            $header = \substr((string) $header, $position + 7);
+            $header = \substr($header, $position + 7);
 
             return \str_contains($header, ',')
                 ? \strstr($header, ',', true)

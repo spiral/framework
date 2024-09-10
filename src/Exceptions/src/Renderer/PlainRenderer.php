@@ -87,9 +87,8 @@ final class PlainRenderer extends AbstractRenderer
             }
 
             if (isset($trace['file'])) {
-                $file = \str_starts_with((string) $trace['file'], $rootDir)
-                    ? \substr((string) $trace['file'], \strlen($rootDir) + 1)
-                    : $trace['file'];
+                $file = (string) $trace['file'];
+                \str_starts_with($file, $rootDir) and $file = \substr($file, \strlen($rootDir) + 1);
 
                 $line .= \sprintf(' at %s:%s', $file, $trace['line']);
             }
