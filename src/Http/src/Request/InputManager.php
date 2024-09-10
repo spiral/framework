@@ -213,7 +213,7 @@ final class InputManager
      */
     public function bearerToken(): ?string
     {
-        $header = $this->header('Authorization', '');
+        $header = (string) $this->header('Authorization', '');
 
         $position = \strrpos($header, 'Bearer ');
 
@@ -279,7 +279,7 @@ final class InputManager
 
         if ($softMatch) {
             foreach ($acceptHeader->getAll() as $item) {
-                $itemValue = \strtolower($item->getValue());
+                $itemValue = \strtolower((string) $item->getValue());
                 if (\str_ends_with($itemValue, '/json') || \str_ends_with($itemValue, '+json')) {
                     return true;
                 }

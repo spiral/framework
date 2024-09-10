@@ -12,7 +12,7 @@ use Spiral\Security\GuardInterface;
 
 class AuthController
 {
-    public function __construct(private AuthScope $auth)
+    public function __construct(private readonly AuthScope $auth)
     {
     }
 

@@ -24,7 +24,7 @@ class StorageConfig extends InjectableConfig
 {
     public const CONFIG = 'storage';
 
-    private string $default;
+    private readonly string $default;
 
     /** @var array<string, FilesystemAdapter> */
     private array $adapters = [];

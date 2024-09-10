@@ -14,11 +14,11 @@ use Symfony\Component\Finder\SplFileInfo;
 class FileSnapshot
 {
     public function __construct(
-        private string $directory,
-        private int $maxFiles,
-        private Verbosity $verbosity,
-        private ExceptionRendererInterface $renderer,
-        private FilesInterface $files
+        private readonly string $directory,
+        private readonly int $maxFiles,
+        private readonly Verbosity $verbosity,
+        private readonly ExceptionRendererInterface $renderer,
+        private readonly FilesInterface $files
     ) {
     }
 

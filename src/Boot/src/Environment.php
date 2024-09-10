@@ -24,7 +24,7 @@ final class Environment implements EnvironmentInterface
 
     public function __construct(
         array $values = [],
-        private bool $overwrite = false
+        private readonly bool $overwrite = false
     ) {
         $this->values = $values + $_ENV + $_SERVER;
     }

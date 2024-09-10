@@ -8,7 +8,7 @@ use Spiral\Core\CoreInterface;
 
 class TestCore implements CoreInterface
 {
-    public function __construct(private CoreInterface $core)
+    public function __construct(private readonly CoreInterface $core)
     {
     }
 

@@ -29,7 +29,7 @@ final class Directory implements ImportInterface
 
     public function resolve(Builder $builder, string $name): ?Template
     {
-        $path = \substr($name, \strlen($this->prefix) + 1);
+        $path = \substr($name, \strlen((string) $this->prefix) + 1);
         $path = \str_replace('.', DIRECTORY_SEPARATOR, $path);
 
         return $builder->load($this->path . DIRECTORY_SEPARATOR . $path);

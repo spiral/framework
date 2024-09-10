@@ -10,7 +10,7 @@ final class RetryException extends StateException
 {
     public function __construct(
         string $reason = '',
-        private ?OptionsInterface $options = null
+        private readonly ?OptionsInterface $options = null
     ) {
         parent::__construct($reason);
     }

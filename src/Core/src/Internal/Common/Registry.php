@@ -16,9 +16,9 @@ final class Registry
      * @param array<string, object> $objects
      */
     public function __construct(
-        private Config $config,
+        private readonly Config $config,
         private array $objects = [],
-        private Options $options = new Options(),
+        private readonly Options $options = new Options(),
     ) {
     }
 

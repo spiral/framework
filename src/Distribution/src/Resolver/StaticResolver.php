@@ -12,7 +12,7 @@ class StaticResolver extends UriResolver
 {
     private const URI_PATH_DELIMITER = '/';
 
-    private UriInterface $host;
+    private readonly UriInterface $host;
 
     public function __construct(UriInterface $host)
     {

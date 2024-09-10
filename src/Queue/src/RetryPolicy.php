@@ -13,14 +13,14 @@ final class RetryPolicy implements RetryPolicyInterface
     /**
      * @var positive-int|0
      */
-    private int $maxAttempts;
+    private readonly int $maxAttempts;
 
     /**
      * @var positive-int|0
      */
-    private int $delay;
+    private readonly int $delay;
 
-    private float $multiplier;
+    private readonly float $multiplier;
 
     /**
      * @throws InvalidArgumentException

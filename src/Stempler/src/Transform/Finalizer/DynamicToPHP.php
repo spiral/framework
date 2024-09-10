@@ -95,17 +95,17 @@ final class DynamicToPHP implements VisitorInterface
          */
 
         if ($node->rawOutput) {
-            $result = \sprintf('<?php echo %s; ?>', \trim($node->body));
+            $result = \sprintf('<?php echo %s; ?>', \trim((string) $node->body));
         } else {
             $filter = $node->filter ?? $this->getFilterContext($ctx);
 
-            $result = \sprintf(\sprintf('<?php echo %s; ?>', $filter), \trim($node->body));
+            $result = \sprintf(\sprintf('<?php echo %s; ?>', $filter), \trim((string) $node->body));
         }
 
         return new PHP(
             $result,
             \token_get_all($result),
-            $node->getContext()->withValue(PHP::ORIGINAL_BODY, \trim($node->body))
+            $node->getContext()->withValue(PHP::ORIGINAL_BODY, \trim((string) $node->body))
         );
     }
 

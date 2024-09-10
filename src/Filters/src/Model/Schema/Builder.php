@@ -86,7 +86,7 @@ final class Builder
 
                 // [class, 'data:something.*'] vs [class, 'data:something']
                 $iterate = \str_contains((string)$origin, '.*') || !empty($definition[self::ITERATE]);
-                $origin = \rtrim($origin, '.*');
+                $origin = \rtrim((string) $origin, '.*');
             } else {
                 $origin = $field;
                 $iterate = true;

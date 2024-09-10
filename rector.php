@@ -17,6 +17,8 @@ use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
+use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -79,6 +81,7 @@ return RectorConfig::configure()
         RemoveUnusedPublicMethodParameterRector::class,
         RemoveEmptyClassMethodRector::class,
         RemoveUnusedPromotedPropertyRector::class,
+        NewInInitializerRector::class,
 
         // start with short open tag
         __DIR__ . '/src/Views/tests/fixtures/other/var.php',
@@ -87,6 +90,7 @@ return RectorConfig::configure()
         // example code for test
         '*/Fixture/*',
         '*/Fixtures/*',
+        '*/fixtures/*',
         '*/Stub/*',
         '*/Stubs/*',
         '*/tests/Classes/*',
@@ -95,8 +99,13 @@ return RectorConfig::configure()
 
         // cache
         '*/runtime/cache/*',
+
+        ReadOnlyPropertyRector::class => [
+            // used by Configurator
+            __DIR__ . '/src/Scaffolder/src/Command',
+        ],
     ])
-    ->withPhpSets(php80: true)
+    ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true)
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,

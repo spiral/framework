@@ -9,7 +9,7 @@ use Spiral\Views\ViewSource;
 
 class View implements ViewInterface
 {
-    public function __construct(private ViewSource $source)
+    public function __construct(private readonly ViewSource $source)
     {
     }
 

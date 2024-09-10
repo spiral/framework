@@ -12,7 +12,7 @@ use Spiral\Exceptions\StyleInterface;
 class Highlighter
 {
     public function __construct(
-        private StyleInterface $renderer
+        private readonly StyleInterface $renderer
     ) {
     }
 

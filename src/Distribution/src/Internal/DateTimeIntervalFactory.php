@@ -13,7 +13,7 @@ final class DateTimeIntervalFactory implements DateTimeIntervalFactoryInterface
     private const ERROR_INVALID_INTERVAL_TYPE = 'The value of type `%s` is not a valid date interval type.';
 
     public function __construct(
-        private DateTimeFactoryInterface $factory = new DateTimeFactory()
+        private readonly DateTimeFactoryInterface $factory = new DateTimeFactory()
     ) {
     }
 

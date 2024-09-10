@@ -9,7 +9,7 @@ class Storage
     /** @var array */
     protected $storage = [];
 
-    public function __construct(private string $dir)
+    public function __construct(private readonly string $dir)
     {
     }
 

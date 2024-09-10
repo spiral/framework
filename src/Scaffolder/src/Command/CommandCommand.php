@@ -39,7 +39,7 @@ class CommandCommand extends AbstractCommand
     {
         $declaration = $this->createDeclaration(CommandDeclaration::class, [
             'description' => $this->description,
-            'alias' => $this->alias ?? \strtolower(\preg_replace('/(?<!^)[A-Z]/', ':$0', $this->name)),
+            'alias' => $this->alias ?? \strtolower((string) \preg_replace('/(?<!^)[A-Z]/', ':$0', $this->name)),
         ]);
 
         foreach ($this->arguments as $argument) {

@@ -163,7 +163,7 @@ final class PHPMixin
                     }
 
                     if ($name === null) {
-                        $name = \stripcslashes(\substr($token[1], 1, -1));
+                        $name = \stripcslashes(\substr((string) $token[1], 1, -1));
                     }
                     $value .= $token[1];
                     break;

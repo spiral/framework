@@ -160,14 +160,11 @@ class ConsoleRenderer extends AbstractRenderer
         $pad = \strlen((string)\count($stacktrace));
 
         foreach ($stacktrace as $i => $trace) {
-            $file = null;
+            $file = isset($trace['file']) ? (string) $trace['file'] : null;
             $classColor = 'while';
 
-            if (isset($trace['file'])) {
-                $file = \str_starts_with($trace['file'], $rootDir)
-                    ? \substr($trace['file'], \strlen($rootDir) + 1)
-                    : $trace['file'];
-
+            if ($file !== null) {
+                \str_starts_with($file, $rootDir) and $file = \substr($file, \strlen($rootDir) + 1);
                 $classColor = \str_starts_with($file, 'vendor/') ? 'gray' : 'white';
             }
 

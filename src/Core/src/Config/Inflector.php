@@ -10,7 +10,7 @@ namespace Spiral\Core\Config;
  */
 final class Inflector extends Binding
 {
-    private int $parametersCount;
+    private readonly int $parametersCount;
 
     /**
      * @param \Closure $inflector The first closure argument is the object to be manipulated.

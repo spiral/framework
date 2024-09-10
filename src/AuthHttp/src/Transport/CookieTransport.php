@@ -16,7 +16,7 @@ use Spiral\Cookies\CookieQueue;
 final class CookieTransport implements HttpTransportInterface
 {
     public function __construct(
-        private string $cookie,
+        private readonly string $cookie,
         private readonly string $basePath = '/',
         private readonly ?string $domain = null,
         private readonly bool $secure = false,

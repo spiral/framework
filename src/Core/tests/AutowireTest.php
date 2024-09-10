@@ -203,7 +203,7 @@ class AutowireTest extends TestCase
         $container = new Container();
 
         $result = $container->invoke(
-            [UnionTypes::class, 'unionNull'],
+            UnionTypes::unionNull(...),
             [
                 'nullable' => null,
             ]
