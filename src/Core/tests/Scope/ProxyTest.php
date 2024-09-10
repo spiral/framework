@@ -9,6 +9,7 @@ use ReflectionParameter;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Container;
 use Spiral\Core\Container\InjectorInterface;
+use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\Container\RecursiveProxyException;
 use Spiral\Core\Scope;
 use Spiral\Tests\Core\Scope\Stub\Context;
@@ -313,6 +314,25 @@ final class ProxyTest extends BaseTestCase
         $root->runScope(
             new Scope(),
             fn(#[Proxy] UserInterface $user) => $user->getName(),
+        );
+    }
+
+    /**
+     * The {@see ContainerScope::runScope} ignores Container Proxy to avoid recursion.
+     */
+    public function testProxyIntoContainerScope(): void
+    {
+        $root = new Container();
+
+        $root->runScope(
+            new Scope(),
+            static function (#[Proxy] ContainerInterface $proxy, ContainerInterface $scoped) {
+                self::assertNotSame($scoped, $proxy);
+                ContainerScope::runScope($proxy, static function (ContainerInterface $passed) use ($proxy, $scoped) {
+                    self::assertNotSame($passed, $proxy);
+                    self::assertSame($scoped, ContainerScope::getContainer());
+                });
+            },
         );
     }
 

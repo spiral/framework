@@ -6,6 +6,8 @@ namespace Spiral\Core;
 
 use Fiber;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Exception\Container\ContainerException;
+use Spiral\Core\Internal\Proxy;
 use Throwable;
 
 /**
@@ -32,7 +34,12 @@ final class ContainerScope
      */
     public static function runScope(ContainerInterface $container, callable $scope): mixed
     {
-        [$previous, self::$container] = [self::$container, $container];
+        if (Proxy::isProxy($container)) {
+            // Ignore Proxy to avoid recursion
+            $container = $previous = self::$container ?? throw new ContainerException('Proxy is out of scope.');
+        } else {
+            [$previous, self::$container] = [self::$container, $container];
+        }
 
         try {
             if (Fiber::getCurrent() === null) {
