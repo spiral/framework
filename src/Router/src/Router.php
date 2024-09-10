@@ -44,14 +44,16 @@ final class Router implements RouterInterface
     private array $routes = [];
 
     private ?RouteInterface $default = null;
+    private readonly TracerInterface $tracer;
 
     public function __construct(
         string $basePath,
         private readonly UriHandler $uriHandler,
         private readonly ContainerInterface $container,
         private readonly ?EventDispatcherInterface $eventDispatcher = null,
-        private readonly TracerInterface $tracer = new NullTracer(),
+        ?TracerInterface $tracer = null,
     ) {
+        $this->tracer = $tracer ?? new NullTracer();
         $this->basePath = '/' . \ltrim($basePath, '/');
     }
 

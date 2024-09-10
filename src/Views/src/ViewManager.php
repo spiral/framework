@@ -12,6 +12,7 @@ final class ViewManager implements ViewsInterface
 {
     private readonly LoaderInterface $loader;
     private ?ViewCache $cache = null;
+    private ContextInterface $context;
 
     /** @var EngineInterface[] */
     private array $engines = [];
@@ -20,8 +21,9 @@ final class ViewManager implements ViewsInterface
         private readonly ViewsConfig $config,
         private readonly GlobalVariablesInterface $globalVariables,
         FactoryInterface $factory,
-        private ContextInterface $context = new ViewContext()
+        ?ContextInterface $context = null
     ) {
+        $this->context = $context ?? new ViewContext();
         $this->loader = $factory->make(LoaderInterface::class, [
             'namespaces' => $config->getNamespaces(),
         ]);

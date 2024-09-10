@@ -19,12 +19,14 @@ use Spiral\Telemetry\TracerFactoryInterface;
  */
 final class Handler
 {
+    private readonly TracerFactoryInterface $tracerFactory;
     private readonly bool $isLegacy;
 
     public function __construct(
         private readonly HandlerInterface|CoreInterface $core,
-        private readonly TracerFactoryInterface $tracerFactory = new NullTracerFactory(new Container()),
+        ?TracerFactoryInterface $tracerFactory = null,
     ) {
+        $this->tracerFactory = $tracerFactory ?? new NullTracerFactory(new Container());
         $this->isLegacy = !$core instanceof HandlerInterface;
     }
 
