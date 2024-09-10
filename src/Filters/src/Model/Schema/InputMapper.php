@@ -6,9 +6,9 @@ namespace Spiral\Filters\Model\Schema;
 
 use Spiral\Filters\Attribute\Setter;
 use Spiral\Filters\Exception\SetterException;
-use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Model\FilterProviderInterface;
 
 final class InputMapper
 {

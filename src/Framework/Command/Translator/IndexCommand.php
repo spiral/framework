@@ -6,8 +6,8 @@ namespace Spiral\Command\Translator;
 
 use Spiral\Console\Command;
 use Spiral\Core\Attribute\Singleton;
-use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
+use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Translator\Catalogue\CatalogueManager;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Indexer;

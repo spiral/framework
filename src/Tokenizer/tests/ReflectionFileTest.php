@@ -2,6 +2,11 @@
 
 namespace Spiral\Tests\Tokenizer;
 
+use Spiral\Tests\Tokenizer\Classes\ClassWithNamedParameter;
+use Spiral\Tests\Tokenizer\Classes\ClassWithAnonymousClass;
+use Spiral\Tests\Tokenizer\Classes\ClassD;
+use Spiral\Tests\Tokenizer\Classes\ClassE;
+use Spiral\Tests\Tokenizer\Interfaces\InterfaceA;
 use PHPUnit\Framework\TestCase;
 use Spiral\Tokenizer\Reflection\ReflectionArgument;
 use Spiral\Tokenizer\Reflection\ReflectionFile;
@@ -56,7 +61,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassWithNamedParameter.php');
 
         $this->assertSame([
-            \Spiral\Tests\Tokenizer\Classes\ClassWithNamedParameter::class,
+            ClassWithNamedParameter::class,
         ], $reflection->getClasses());
     }
 
@@ -65,7 +70,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassWithAnonymousClass.php');
 
         $this->assertSame([
-            \Spiral\Tests\Tokenizer\Classes\ClassWithAnonymousClass::class,
+            ClassWithAnonymousClass::class,
         ], $reflection->getClasses());
     }
 
@@ -83,7 +88,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassD.php');
 
         $this->assertSame([
-            \Spiral\Tests\Tokenizer\Classes\ClassD::class,
+            ClassD::class,
         ], $reflection->getEnums());
     }
 
@@ -92,7 +97,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Classes/ClassE.php');
 
         $this->assertSame([
-            \Spiral\Tests\Tokenizer\Classes\ClassE::class,
+            ClassE::class,
         ], $reflection->getEnums());
     }
 
@@ -101,7 +106,7 @@ class ReflectionFileTest extends TestCase
         $reflection = new ReflectionFile(__DIR__ . '/Interfaces/InterfaceA.php');
 
         $this->assertSame([
-            \Spiral\Tests\Tokenizer\Interfaces\InterfaceA::class,
+            InterfaceA::class,
         ], $reflection->getInterfaces());
     }
 

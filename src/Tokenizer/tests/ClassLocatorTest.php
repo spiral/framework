@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Tokenizer;
 
+use Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX;
 use Spiral\Tests\Tokenizer\Classes\ClassA;
 use Spiral\Tests\Tokenizer\Classes\ClassB;
 use Spiral\Tests\Tokenizer\Classes\ClassC;
@@ -27,7 +28,7 @@ final class ClassLocatorTest extends TestCase
         $this->assertArrayHasKey(ClassD::class, $classes);
 
         //Excluded
-        $this->assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
+        $this->assertArrayNotHasKey(ClassXX::class, $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
     }
 

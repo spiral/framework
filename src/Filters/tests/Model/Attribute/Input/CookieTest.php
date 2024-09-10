@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters\Model\Attribute\Input;
 
+use Spiral\Tests\Filters\Model\AttributeTestCase;
 use Spiral\Filters\Attribute\Input\Cookie;
 
-final class CookieTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
+final class CookieTest extends AttributeTestCase
 {
     public function testGetsValueForDefinedKey(): void
     {

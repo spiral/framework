@@ -4,6 +4,19 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Tokenizer\Listener;
 
+use Spiral\Tests\Tokenizer\Classes\Listeners\CommandInterfaceListener;
+use Spiral\Tests\Tokenizer\Interfaces\Targets\InterfaceWithAllTargets;
+use Spiral\Tests\Tokenizer\Interfaces\Targets\InterfaceWithClass;
+use Spiral\Tests\Tokenizer\Interfaces\Targets\InterfaceWithExtends;
+use Spiral\Tests\Tokenizer\Classes\Listeners\ControllerListener;
+use Spiral\Tests\Tokenizer\Interfaces\Targets\InterfaceWithAttributeOnClass;
+use Spiral\Tests\Tokenizer\Classes\Listeners\ConstantListener;
+use Spiral\Tests\Tokenizer\Interfaces\Targets\InterfaceWithAttributeOnConstant;
+use Spiral\Tests\Tokenizer\Classes\Listeners\RouteListener;
+use Spiral\Tests\Tokenizer\Interfaces\Targets\InterfaceWithAttributeOnMethod;
+use Spiral\Tests\Tokenizer\Classes\Listeners\ParameterListener;
+use Spiral\Tests\Tokenizer\Interfaces\Targets\InterfaceWithAttributeOnParameter;
+use Spiral\Tests\Tokenizer\Interfaces\Targets\InterfaceWithoutTargets;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -41,43 +54,43 @@ final class InterfaceLocatorByTargetTest extends TestCase
     public static function provideGetEnums(): \Generator
     {
         yield 'class' => [
-            Listeners\CommandInterfaceListener::class,
+            CommandInterfaceListener::class,
             [
-                Targets\InterfaceWithAllTargets::class,
-                Targets\InterfaceWithClass::class,
-                Targets\InterfaceWithExtends::class,
+                InterfaceWithAllTargets::class,
+                InterfaceWithClass::class,
+                InterfaceWithExtends::class,
             ],
         ];
 
         yield 'attribute-on-class' => [
-            Listeners\ControllerListener::class,
+            ControllerListener::class,
             [
-                Targets\InterfaceWithAllTargets::class,
-                Targets\InterfaceWithAttributeOnClass::class,
+                InterfaceWithAllTargets::class,
+                InterfaceWithAttributeOnClass::class,
             ],
         ];
 
         yield 'attribute-on-constant' => [
-            Listeners\ConstantListener::class,
+            ConstantListener::class,
             [
-                Targets\InterfaceWithAllTargets::class,
-                Targets\InterfaceWithAttributeOnConstant::class,
+                InterfaceWithAllTargets::class,
+                InterfaceWithAttributeOnConstant::class,
             ],
         ];
 
         yield 'attribute-on-method' => [
-            Listeners\RouteListener::class,
+            RouteListener::class,
             [
-                Targets\InterfaceWithAllTargets::class,
-                Targets\InterfaceWithAttributeOnMethod::class,
+                InterfaceWithAllTargets::class,
+                InterfaceWithAttributeOnMethod::class,
             ],
         ];
 
         yield 'attribute-on-parameter' => [
-            Listeners\ParameterListener::class,
+            ParameterListener::class,
             [
-                Targets\InterfaceWithAllTargets::class,
-                Targets\InterfaceWithAttributeOnParameter::class,
+                InterfaceWithAllTargets::class,
+                InterfaceWithAttributeOnParameter::class,
             ],
         ];
     }
@@ -90,14 +103,14 @@ final class InterfaceLocatorByTargetTest extends TestCase
         $interfaces = \array_map(
             fn (string $class) => new \ReflectionClass($class),
             [
-                Targets\InterfaceWithAllTargets::class,
-                Targets\InterfaceWithAttributeOnClass::class,
-                Targets\InterfaceWithAttributeOnConstant::class,
-                Targets\InterfaceWithAttributeOnMethod::class,
-                Targets\InterfaceWithAttributeOnParameter::class,
-                Targets\InterfaceWithClass::class,
-                Targets\InterfaceWithExtends::class,
-                Targets\InterfaceWithoutTargets::class,
+                InterfaceWithAllTargets::class,
+                InterfaceWithAttributeOnClass::class,
+                InterfaceWithAttributeOnConstant::class,
+                InterfaceWithAttributeOnMethod::class,
+                InterfaceWithAttributeOnParameter::class,
+                InterfaceWithClass::class,
+                InterfaceWithExtends::class,
+                InterfaceWithoutTargets::class,
             ],
         );
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use PHPUnit\Framework\TestCase;
 use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
@@ -21,7 +22,7 @@ use Spiral\Router\Exception\RouteException;
 use Spiral\Router\PipelineFactory;
 use Spiral\Telemetry\NullTracer;
 
-final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
+final class PipelineFactoryTest extends TestCase
 {
     private ContainerInterface $container;
     private FactoryInterface $factory;

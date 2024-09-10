@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype;
 
+use Spiral\Tests\Prototype\Traverse\Extractor;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Prototype\ClassNode;
@@ -143,7 +144,7 @@ class InjectorTest extends TestCase
     public function testModifyConstructor(): void
     {
         $filename = __DIR__ . '/Fixtures/WithConstructor.php';
-        $extractor = new Traverse\Extractor();
+        $extractor = new Extractor();
 
         $parameters = $extractor->extractFromFilename($filename);
         $this->assertArrayNotHasKey('testClass', $parameters);
@@ -169,7 +170,7 @@ class InjectorTest extends TestCase
     public function testPriorOptionalConstructorParameters(): void
     {
         $filename = __DIR__ . '/Fixtures/OptionalConstructorArgsClass.php';
-        $extractor = new Traverse\Extractor();
+        $extractor = new Extractor();
 
         $parameters = $extractor->extractFromFilename($filename);
         $this->assertArrayNotHasKey('testClass', $parameters);
@@ -212,7 +213,7 @@ class InjectorTest extends TestCase
             )
         );
 
-        $extractor = new Traverse\Extractor();
+        $extractor = new Extractor();
         $parameters = $extractor->extractFromString($printed);
 
         $this->assertArrayHasKey('str1', $parameters);

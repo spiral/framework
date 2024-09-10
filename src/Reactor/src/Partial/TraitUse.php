@@ -8,11 +8,13 @@ use Nette\PhpGenerator\TraitUse as NetteTraitUse;
 use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\CommentAware;
+use Spiral\Reactor\Traits\NameAware;
 
 final class TraitUse implements NamedInterface, AggregableInterface
 {
-    use Traits\CommentAware;
-    use Traits\NameAware;
+    use CommentAware;
+    use NameAware;
 
     private NetteTraitUse $element;
 

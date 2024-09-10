@@ -12,15 +12,18 @@ use Spiral\Reactor\Partial\EnumCase;
 use Spiral\Reactor\Partial\Method;
 use Spiral\Reactor\Partial\TraitUse;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\ConstantsAware;
+use Spiral\Reactor\Traits\MethodsAware;
+use Spiral\Reactor\Traits\TraitsAware;
 
 /**
  * @extends AbstractDeclaration<EnumType>
  */
 class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
 {
-    use Traits\ConstantsAware;
-    use Traits\MethodsAware;
-    use Traits\TraitsAware;
+    use ConstantsAware;
+    use MethodsAware;
+    use TraitsAware;
 
     public function __construct(string $name)
     {

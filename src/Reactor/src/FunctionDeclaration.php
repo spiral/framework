@@ -6,13 +6,17 @@ namespace Spiral\Reactor;
 
 use Nette\PhpGenerator\Factory;
 use Nette\PhpGenerator\GlobalFunction;
+use Spiral\Reactor\Traits\AttributeAware;
+use Spiral\Reactor\Traits\CommentAware;
+use Spiral\Reactor\Traits\FunctionLike;
+use Spiral\Reactor\Traits\NameAware;
 
 class FunctionDeclaration implements AggregableInterface, DeclarationInterface, NamedInterface, \Stringable
 {
-    use Traits\FunctionLike;
-    use Traits\NameAware;
-    use Traits\CommentAware;
-    use Traits\AttributeAware;
+    use FunctionLike;
+    use NameAware;
+    use CommentAware;
+    use AttributeAware;
 
     protected GlobalFunction $element;
 

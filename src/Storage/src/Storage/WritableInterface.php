@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\FileInterface;
-use Spiral\Storage\BucketInterface;
 use Spiral\Storage\StorageInterface;
 use Spiral\Storage\Visibility;
 

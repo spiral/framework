@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Domain\Annotation;
 
+use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
-use Doctrine\Common\Annotations\Annotation;
 use Spiral\Attributes\NamedArgumentConstructor;
 
 /**

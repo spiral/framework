@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters\Model\Attribute;
 
+use Spiral\Tests\Filters\Model\AttributeTestCase;
 use Spiral\Filters\Attribute\Setter;
 
-final class SetterTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
+final class SetterTest extends AttributeTestCase
 {
     public function testFilter(): void
     {

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Console;
 
+use Spiral\Console\Console;
 use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class HelpersTest extends BaseTestCase
 {
-    private \Spiral\Console\Console $core;
+    private Console $core;
 
     public function setUp(): void
     {

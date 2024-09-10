@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Reactor;
 
+use Spiral\Reactor\Partial\EnumCase;
+use Spiral\Reactor\Partial\Constant;
+use Spiral\Reactor\Partial\Method;
+use Spiral\Reactor\Partial\TraitUse;
 use Nette\PhpGenerator\EnumType;
 use PHPUnit\Framework\TestCase;
 use Spiral\Reactor\Aggregator\EnumCases;
@@ -72,15 +76,15 @@ final class EnumDeclarationTest extends TestCase
 
         $enum->addCase('test');
         $this->assertCount(1, $enum->getCases());
-        $this->assertInstanceOf(Partial\EnumCase::class, $enum->getCase('test'));
+        $this->assertInstanceOf(EnumCase::class, $enum->getCase('test'));
 
         $enum->removeCase('test');
         $this->assertEmpty($enum->getCases());
 
-        $enum->setCases(new EnumCases([new Partial\EnumCase('foo'), new Partial\EnumCase('bar')]));
+        $enum->setCases(new EnumCases([new EnumCase('foo'), new EnumCase('bar')]));
         $this->assertCount(2, $enum->getCases());
-        $this->assertInstanceOf(Partial\EnumCase::class, $enum->getCase('foo'));
-        $this->assertInstanceOf(Partial\EnumCase::class, $enum->getCase('bar'));
+        $this->assertInstanceOf(EnumCase::class, $enum->getCase('foo'));
+        $this->assertInstanceOf(EnumCase::class, $enum->getCase('bar'));
     }
 
     public function testImplements(): void
@@ -107,24 +111,24 @@ final class EnumDeclarationTest extends TestCase
         $enum = new EnumDeclaration('Test');
 
         $this->assertEmpty($enum->getCases());
-        $enum->addMember(new Partial\EnumCase('test'));
+        $enum->addMember(new EnumCase('test'));
         $this->assertCount(1, $enum->getCases());
-        $this->assertInstanceOf(Partial\EnumCase::class, $enum->getCase('test'));
+        $this->assertInstanceOf(EnumCase::class, $enum->getCase('test'));
 
         $this->assertEmpty($enum->getConstants());
-        $enum->addMember(new Partial\Constant('TEST'));
+        $enum->addMember(new Constant('TEST'));
         $this->assertCount(1, $enum->getConstants());
-        $this->assertInstanceOf(Partial\Constant::class, $enum->getConstant('TEST'));
+        $this->assertInstanceOf(Constant::class, $enum->getConstant('TEST'));
 
         $this->assertEmpty($enum->getMethods());
-        $enum->addMember(new Partial\Method('test'));
+        $enum->addMember(new Method('test'));
         $this->assertCount(1, $enum->getMethods());
-        $this->assertInstanceOf(Partial\Method::class, $enum->getMethod('test'));
+        $this->assertInstanceOf(Method::class, $enum->getMethod('test'));
 
         $this->assertEmpty($enum->getTraits());
-        $enum->addMember(new Partial\TraitUse('test'));
+        $enum->addMember(new TraitUse('test'));
         $this->assertCount(1, $enum->getTraits());
-        $this->assertInstanceOf(Partial\TraitUse::class, $enum->getTrait('test'));
+        $this->assertInstanceOf(TraitUse::class, $enum->getTrait('test'));
     }
 
     public function testIsEnum(): void

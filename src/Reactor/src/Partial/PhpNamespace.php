@@ -18,14 +18,19 @@ use Spiral\Reactor\InterfaceDeclaration;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\TraitDeclaration;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\ClassAware;
+use Spiral\Reactor\Traits\EnumAware;
+use Spiral\Reactor\Traits\InterfaceAware;
+use Spiral\Reactor\Traits\NameAware;
+use Spiral\Reactor\Traits\TraitAware;
 
 final class PhpNamespace implements NamedInterface, AggregableInterface, \Stringable
 {
-    use Traits\ClassAware;
-    use Traits\EnumAware;
-    use Traits\InterfaceAware;
-    use Traits\NameAware;
-    use Traits\TraitAware;
+    use ClassAware;
+    use EnumAware;
+    use InterfaceAware;
+    use NameAware;
+    use TraitAware;
 
     private NettePhpNamespace $element;
 

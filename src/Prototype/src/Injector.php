@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Spiral\Prototype;
 
 use PhpParser\Lexer;
+use PhpParser\Lexer\Emulative;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\CloningVisitor;
 use PhpParser\Parser;
+use PhpParser\Parser\Php7;
 use PhpParser\PrettyPrinter\Standard;
 use PhpParser\PrettyPrinterAbstract;
 use Spiral\Prototype\NodeVisitors\AddUse;
@@ -29,7 +31,7 @@ final class Injector
         Lexer $lexer = null,
         private readonly PrettyPrinterAbstract $printer = new Standard()
     ) {
-        $this->lexer = $lexer ?? new Lexer\Emulative([
+        $this->lexer = $lexer ?? new Emulative([
             'usedAttributes' => [
                 'comments',
                 'startLine',
@@ -39,7 +41,7 @@ final class Injector
             ],
         ]);
 
-        $this->parser = new Parser\Php7($this->lexer);
+        $this->parser = new Php7($this->lexer);
 
         $this->cloner = new NodeTraverser();
         $this->cloner->addVisitor(new CloningVisitor());

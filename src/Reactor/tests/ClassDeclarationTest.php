@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Reactor;
 
+use Spiral\Reactor\Partial\Visibility;
+use Spiral\Reactor\Partial\Constant;
+use Spiral\Reactor\Partial\Method;
+use Spiral\Reactor\Partial\Property;
+use Spiral\Reactor\Partial\TraitUse;
 use Nette\PhpGenerator\ClassType;
 use PHPUnit\Framework\TestCase;
 use Spiral\Reactor\ClassDeclaration;
@@ -42,15 +47,15 @@ final class ClassDeclarationTest extends TestCase
 
         $declaration
             ->addConstant('PRIVATE', 123)
-            ->setVisibility(Partial\Visibility::PRIVATE);
+            ->setVisibility(Visibility::PRIVATE);
 
         $declaration
             ->addConstant('PROTECTED', 456)
-            ->setVisibility(Partial\Visibility::PROTECTED);
+            ->setVisibility(Visibility::PROTECTED);
 
         $declaration
             ->addConstant('PUBLIC', 789)
-            ->setVisibility(Partial\Visibility::PUBLIC);
+            ->setVisibility(Visibility::PUBLIC);
 
         $declaration
             ->addConstant('WITH_COMMENT', 'foo')
@@ -197,24 +202,24 @@ final class ClassDeclarationTest extends TestCase
         $class = new ClassDeclaration();
 
         $this->assertEmpty($class->getConstants());
-        $class->addMember(new Partial\Constant('TEST'));
+        $class->addMember(new Constant('TEST'));
         $this->assertCount(1, $class->getConstants());
-        $this->assertInstanceOf(Partial\Constant::class, $class->getConstant('TEST'));
+        $this->assertInstanceOf(Constant::class, $class->getConstant('TEST'));
 
         $this->assertEmpty($class->getMethods());
-        $class->addMember(new Partial\Method('test'));
+        $class->addMember(new Method('test'));
         $this->assertCount(1, $class->getMethods());
-        $this->assertInstanceOf(Partial\Method::class, $class->getMethod('test'));
+        $this->assertInstanceOf(Method::class, $class->getMethod('test'));
 
         $this->assertEmpty($class->getProperties());
-        $class->addMember(new Partial\Property('test'));
+        $class->addMember(new Property('test'));
         $this->assertCount(1, $class->getProperties());
-        $this->assertInstanceOf(Partial\Property::class, $class->getProperty('test'));
+        $this->assertInstanceOf(Property::class, $class->getProperty('test'));
 
         $this->assertEmpty($class->getTraits());
-        $class->addMember(new Partial\TraitUse('test'));
+        $class->addMember(new TraitUse('test'));
         $this->assertCount(1, $class->getTraits());
-        $this->assertInstanceOf(Partial\TraitUse::class, $class->getTrait('test'));
+        $this->assertInstanceOf(TraitUse::class, $class->getTrait('test'));
     }
 
     public function testIsClass(): void

@@ -9,8 +9,17 @@ use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use ReflectionParameter;
 use Spiral\Core\Attribute;
+use Spiral\Core\Attribute\Finalize;
+use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Config;
+use Spiral\Core\Config\Alias;
+use Spiral\Core\Config\Autowire;
+use Spiral\Core\Config\DeferredFactory;
+use Spiral\Core\Config\DeprecationProxy;
+use Spiral\Core\Config\Injectable;
+use Spiral\Core\Config\Scalar;
+use Spiral\Core\Config\Shared;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\AutowireException;
@@ -91,19 +100,19 @@ final class Factory implements FactoryInterface
 
             unset($this->state->bindings[$alias]);
             return match ($binding::class) {
-                Config\Alias::class => $this->resolveAlias($binding, $alias, $context, $parameters),
+                Alias::class => $this->resolveAlias($binding, $alias, $context, $parameters),
                 Config\Proxy::class,
-                Config\DeprecationProxy::class => $this->resolveProxy($binding, $alias, $context),
-                Config\Autowire::class => $this->resolveAutowire($binding, $alias, $context, $parameters),
-                Config\DeferredFactory::class,
+                DeprecationProxy::class => $this->resolveProxy($binding, $alias, $context),
+                Autowire::class => $this->resolveAutowire($binding, $alias, $context, $parameters),
+                DeferredFactory::class,
                 Config\Factory::class => $this->resolveFactory($binding, $alias, $context, $parameters),
-                Config\Shared::class => $this->resolveShared($binding, $alias, $context, $parameters),
-                Config\Injectable::class => $this->resolveInjector(
+                Shared::class => $this->resolveShared($binding, $alias, $context, $parameters),
+                Injectable::class => $this->resolveInjector(
                     $binding,
                     new Ctx(alias: $alias, class: $alias, context: $context),
                     $parameters,
                 ),
-                Config\Scalar::class => $binding->value,
+                Scalar::class => $binding->value,
                 Config\WeakReference::class => $this
                     ->resolveWeakReference($binding, $alias, $context, $parameters),
                 default => $binding,
@@ -119,7 +128,7 @@ final class Factory implements FactoryInterface
      * @psalm-suppress UnusedParam
      * todo wat should we do with $arguments?
      */
-    private function resolveInjector(Config\Injectable $binding, Ctx $ctx, array $arguments)
+    private function resolveInjector(Injectable $binding, Ctx $ctx, array $arguments)
     {
         $context = $ctx->context;
         try {
@@ -176,7 +185,7 @@ final class Factory implements FactoryInterface
     }
 
     private function resolveAlias(
-        Config\Alias $binding,
+        Alias $binding,
         string $alias,
         Stringable|string|null $context,
         array $arguments,
@@ -208,7 +217,7 @@ final class Factory implements FactoryInterface
     }
 
     private function resolveShared(
-        Config\Shared $binding,
+        Shared $binding,
         string $alias,
         Stringable|string|null $context,
         array $arguments,
@@ -223,7 +232,7 @@ final class Factory implements FactoryInterface
     }
 
     private function resolveAutowire(
-        Config\Autowire $binding,
+        Autowire $binding,
         string $alias,
         Stringable|string|null $context,
         array $arguments,
@@ -235,7 +244,7 @@ final class Factory implements FactoryInterface
     }
 
     private function resolveFactory(
-        Config\Factory|Config\DeferredFactory $binding,
+        Config\Factory|DeferredFactory $binding,
         string $alias,
         Stringable|string|null $context,
         array $arguments,
@@ -523,7 +532,7 @@ final class Factory implements FactoryInterface
             return true;
         }
 
-        return $ctx->reflection->getAttributes(Attribute\Singleton::class) !== [];
+        return $ctx->reflection->getAttributes(Singleton::class) !== [];
     }
 
     private function getFinalizer(Ctx $ctx, object $instance): ?callable
@@ -532,7 +541,7 @@ final class Factory implements FactoryInterface
          * @psalm-suppress UnnecessaryVarAnnotation
          * @var Attribute\Finalize|null $attribute
          */
-        $attribute = ($ctx->reflection->getAttributes(Attribute\Finalize::class)[0] ?? null)?->newInstance();
+        $attribute = ($ctx->reflection->getAttributes(Finalize::class)[0] ?? null)?->newInstance();
         if ($attribute === null) {
             return null;
         }

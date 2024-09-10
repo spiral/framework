@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Translator;
 
 use Spiral\Logger\Traits\LoggerTrait;
-use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\Reflection\ReflectionArgument;
 use Spiral\Tokenizer\Reflection\ReflectionInvocation;
+use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Traits\TranslatorTrait;
 

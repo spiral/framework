@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Cache\Storage;
 
+use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Spiral\Cache\Storage\FileStorage;
@@ -17,7 +19,7 @@ final class FileStorageTest extends TestCase
     public const DEFAULT_TTL = 50;
     public const DEFAULT_PATH = 'path/to/cache/0b/ee/0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33';
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FilesInterface */
+    /** @var LegacyMockInterface|MockInterface|FilesInterface */
     private $files;
 
     /** @var FileStorage */

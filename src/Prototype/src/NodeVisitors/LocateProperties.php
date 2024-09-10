@@ -5,6 +5,13 @@ declare(strict_types=1);
 namespace Spiral\Prototype\NodeVisitors;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\PropertyFetch;
+use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Param;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Property;
+use PhpParser\Node\Stmt\PropertyProperty;
 use PhpParser\NodeVisitorAbstract;
 
 /**
@@ -34,17 +41,17 @@ final class LocateProperties extends NodeVisitorAbstract
     public function enterNode(Node $node): void
     {
         if (
-            $node instanceof Node\Expr\PropertyFetch &&
-            $node->var instanceof Node\Expr\Variable &&
+            $node instanceof PropertyFetch &&
+            $node->var instanceof Variable &&
             $node->var->name === 'this' &&
-            $node->name instanceof Node\Identifier
+            $node->name instanceof Identifier
         ) {
             $this->requested[$node->name->name] = $node->name->name;
         }
 
-        if ($node instanceof Node\Stmt\Property) {
+        if ($node instanceof Property) {
             foreach ($node->props as $prop) {
-                if ($prop instanceof Node\Stmt\PropertyProperty) {
+                if ($prop instanceof PropertyProperty) {
                     $this->properties[$prop->name->name] = $prop->name->name;
                 }
             }
@@ -55,14 +62,14 @@ final class LocateProperties extends NodeVisitorAbstract
 
     private function promotedProperties(Node $node): void
     {
-        if (!$node instanceof Node\Param || !$node->var instanceof Node\Expr\Variable) {
+        if (!$node instanceof Param || !$node->var instanceof Variable) {
             return;
         }
 
         if (
-            $node->flags & Node\Stmt\Class_::MODIFIER_PUBLIC ||
-            $node->flags & Node\Stmt\Class_::MODIFIER_PROTECTED ||
-            $node->flags & Node\Stmt\Class_::MODIFIER_PRIVATE
+            $node->flags & Class_::MODIFIER_PUBLIC ||
+            $node->flags & Class_::MODIFIER_PROTECTED ||
+            $node->flags & Class_::MODIFIER_PRIVATE
         ) {
             $this->properties[$node->var->name] = $node->var->name;
         }

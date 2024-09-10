@@ -14,9 +14,13 @@ use Spiral\Files\FilesInterface;
 use Spiral\Reactor\FileDeclaration;
 use Spiral\Reactor\Partial\Method;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
-use Spiral\Scaffolder\Exception\ScaffolderException;
+use Spiral\Scaffolder\Declaration\ConfigDeclaration\Defaults;
+use Spiral\Scaffolder\Declaration\ConfigDeclaration\TypeAnnotations;
+use Spiral\Scaffolder\Declaration\ConfigDeclaration\TypeHints;
 
 use function Spiral\Scaffolder\defineArrayType;
+
+use Spiral\Scaffolder\Exception\ScaffolderException;
 
 class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
 {
@@ -27,9 +31,9 @@ class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
         protected readonly FilesInterface $files,
         protected readonly DirectoriesInterface $dirs,
         protected readonly SlugifyInterface $slugify,
-        protected readonly ConfigDeclaration\TypeAnnotations $typeAnnotations,
-        protected readonly ConfigDeclaration\TypeHints $typeHints,
-        protected readonly ConfigDeclaration\Defaults $defaultValues,
+        protected readonly TypeAnnotations $typeAnnotations,
+        protected readonly TypeHints $typeHints,
+        protected readonly Defaults $defaultValues,
         protected string $name,
         protected ?string $comment = null,
         private readonly string $directory = '',

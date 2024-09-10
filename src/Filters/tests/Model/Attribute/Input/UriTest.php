@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters\Model\Attribute\Input;
 
+use Spiral\Tests\Filters\Model\AttributeTestCase;
 use Mockery as m;
 use Psr\Http\Message\UriInterface;
 use Spiral\Filters\Attribute\Input\Uri;
 
-final class UriTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
+final class UriTest extends AttributeTestCase
 {
     public function testGetsValue(): void
     {

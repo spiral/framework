@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace Framework\Bootloader\Translation;
 
+use Symfony\Component\Translation\Loader\PhpFileLoader;
+use Symfony\Component\Translation\Loader\PoFileLoader;
+use Symfony\Component\Translation\Loader\CsvFileLoader;
+use Symfony\Component\Translation\Loader\JsonFileLoader;
+use Symfony\Component\Translation\Dumper\PhpFileDumper;
+use Symfony\Component\Translation\Dumper\PoFileDumper;
+use Symfony\Component\Translation\Dumper\CsvFileDumper;
+use Symfony\Component\Translation\Dumper\JsonFileDumper;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Environment\DebugMode;
 use Spiral\Boot\EnvironmentInterface;
@@ -92,16 +100,16 @@ class I18nBootloaderTest extends BaseTestCase
                 'directories' => [],
                 'autoRegister' => $debugMode->isEnabled(),
                 'loaders' => [
-                    'php' => Loader\PhpFileLoader::class,
-                    'po' => Loader\PoFileLoader::class,
-                    'csv' => Loader\CsvFileLoader::class,
-                    'json' => Loader\JsonFileLoader::class,
+                    'php' => PhpFileLoader::class,
+                    'po' => PoFileLoader::class,
+                    'csv' => CsvFileLoader::class,
+                    'json' => JsonFileLoader::class,
                 ],
                 'dumpers' => [
-                    'php' => Dumper\PhpFileDumper::class,
-                    'po' => Dumper\PoFileDumper::class,
-                    'csv' => Dumper\CsvFileDumper::class,
-                    'json' => Dumper\JsonFileDumper::class,
+                    'php' => PhpFileDumper::class,
+                    'po' => PoFileDumper::class,
+                    'csv' => CsvFileDumper::class,
+                    'json' => JsonFileDumper::class,
                 ],
                 'domains' => [
                     'messages' => ['*'],

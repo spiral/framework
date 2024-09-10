@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
+use Spiral\Core\Container\Autowire;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\ContainerException;
@@ -326,7 +327,7 @@ class AutowireTest extends TestCase
             SoftDependedClass::class,
             [
                 'name'   => 'some-name',
-                'sample' => new Container\Autowire('sample-binding'),
+                'sample' => new Autowire('sample-binding'),
             ]
         );
 
@@ -335,7 +336,7 @@ class AutowireTest extends TestCase
 
     public function testSerializeAutowire(): void
     {
-        $wire = new Container\Autowire('sample-binding', ['a' => new Container\Autowire('b')]);
+        $wire = new Autowire('sample-binding', ['a' => new Autowire('b')]);
 
         $wireb = unserialize(serialize($wire));
 
@@ -347,7 +348,7 @@ class AutowireTest extends TestCase
         $container = new Container();
         $container->bind(
             'abc',
-            new Container\Autowire(
+            new Autowire(
                 SoftDependedClass::class,
                 [
                     'name' => 'Fixed',
@@ -371,7 +372,7 @@ class AutowireTest extends TestCase
          * @var SoftDependedClass $abc
          */
         $abc = $container->get(
-            new Container\Autowire(
+            new Autowire(
                 SoftDependedClass::class,
                 [
                     'name' => 'Fixed',
@@ -387,7 +388,7 @@ class AutowireTest extends TestCase
         $container = new Container();
         $container->bind(
             'abc',
-            new Container\Autowire(
+            new Autowire(
                 SoftDependedClass::class,
                 [
                     'name' => 'Fixed',
@@ -408,7 +409,7 @@ class AutowireTest extends TestCase
         $container = new Container();
         $container->bind(
             'abc',
-            Container\Autowire::wire(
+            Autowire::wire(
                 [
                     'class'   => SoftDependedClass::class,
                     'options' => [
@@ -428,14 +429,14 @@ class AutowireTest extends TestCase
 
     public function testSerialize(): void
     {
-        $a = new Container\Autowire(
+        $a = new Autowire(
             SoftDependedClass::class,
             [
                 'name' => 'Fixed',
             ]
         );
 
-        $b = Container\Autowire::__set_state(
+        $b = Autowire::__set_state(
             [
                 'alias'      => SoftDependedClass::class,
                 'parameters' => ['name' => 'Fixed'],

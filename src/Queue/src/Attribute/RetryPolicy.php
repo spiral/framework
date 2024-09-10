@@ -8,8 +8,8 @@ use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Spiral\Attributes\NamedArgumentConstructor;
-use Spiral\Queue\RetryPolicyInterface;
 use Spiral\Queue\RetryPolicy as Policy;
+use Spiral\Queue\RetryPolicyInterface;
 
 /**
  * @Annotation

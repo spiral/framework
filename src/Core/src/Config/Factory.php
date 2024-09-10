@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Config;
 
+use Spiral\Core\Exception\Traits\ClosureRendererTrait;
+
 /**
  * Make a value using a closure.
  */
 final class Factory extends Binding
 {
-    use \Spiral\Core\Exception\Traits\ClosureRendererTrait;
+    use ClosureRendererTrait;
 
     public readonly \Closure $factory;
     private readonly int $parametersCount;

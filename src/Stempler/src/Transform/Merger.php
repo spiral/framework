@@ -11,6 +11,9 @@ use Spiral\Stempler\Node\Template;
 use Spiral\Stempler\Transform\Finalizer\IsolateBlocks;
 use Spiral\Stempler\Transform\Finalizer\IsolatePHPBlocks;
 use Spiral\Stempler\Transform\Merge\Inject;
+use Spiral\Stempler\Transform\Merge\Inject\InjectAttributes;
+use Spiral\Stempler\Transform\Merge\Inject\InjectBlocks;
+use Spiral\Stempler\Transform\Merge\Inject\InjectPHP;
 use Spiral\Stempler\Traverser;
 use Spiral\Stempler\VisitorInterface;
 
@@ -45,9 +48,9 @@ final class Merger
         $target = $this->deepCopy->copy($target);
         $target->setContext($source->getContext());
 
-        $target->nodes = $this->traverse($target->nodes, new Inject\InjectBlocks($blocks));
-        $target->nodes = $this->traverse($target->nodes, new Inject\InjectPHP($blocks));
-        $target->nodes = $this->traverse($target->nodes, new Inject\InjectAttributes($blocks));
+        $target->nodes = $this->traverse($target->nodes, new InjectBlocks($blocks));
+        $target->nodes = $this->traverse($target->nodes, new InjectPHP($blocks));
+        $target->nodes = $this->traverse($target->nodes, new InjectAttributes($blocks));
 
         return $target;
     }

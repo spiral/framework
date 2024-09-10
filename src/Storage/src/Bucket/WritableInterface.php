@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Storage\Bucket;
 
 use JetBrains\PhpStorm\ExpectedValues;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\FileInterface;
-use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
 /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\ClassNode\ConflictResolver;
 
+use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures\Params;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
@@ -20,7 +21,7 @@ class NamesTest extends TestCase
         $cd = ClassNode::create('class\name');
         $cd->constructorVars = $vars;
 
-        foreach (Fixtures\Params::getParams($method) as $param) {
+        foreach (Params::getParams($method) as $param) {
             $cd->addParam($param);
         }
 

@@ -9,12 +9,15 @@ use Nette\PhpGenerator\Literal;
 use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\AttributeAware;
+use Spiral\Reactor\Traits\CommentAware;
+use Spiral\Reactor\Traits\NameAware;
 
 final class EnumCase implements NamedInterface, AggregableInterface
 {
-    use Traits\AttributeAware;
-    use Traits\CommentAware;
-    use Traits\NameAware;
+    use AttributeAware;
+    use CommentAware;
+    use NameAware;
 
     private NetteEnumCase $element;
 

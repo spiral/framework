@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Session;
 
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
@@ -31,7 +32,7 @@ final class SessionTest extends TestCase
             'lifetime' => 86400,
             'cookie'   => 'SID',
             'secure'   => false,
-            'handler'  => new Container\Autowire(FileHandler::class, [
+            'handler'  => new Autowire(FileHandler::class, [
                 'directory' => sys_get_temp_dir()
             ]),
         ]), $this->container);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Translator;
 
+use Spiral\Translator\Catalogue\CatalogueManager;
+use Spiral\Translator\Catalogue\CatalogueLoader;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\BootloadManager;
 use Spiral\Core\Container;
@@ -54,8 +56,8 @@ class InterpolateTest extends TestCase
         ]));
 
         $container->bindSingleton(TranslatorInterface::class, Translator::class);
-        $container->bindSingleton(CatalogueManagerInterface::class, Catalogue\CatalogueManager::class);
-        $container->bind(LoaderInterface::class, Catalogue\CatalogueLoader::class);
+        $container->bindSingleton(CatalogueManagerInterface::class, CatalogueManager::class);
+        $container->bind(LoaderInterface::class, CatalogueLoader::class);
 
         $loader = new RuntimeLoader();
         $loader->addCatalogue('en', new Catalogue('en', [

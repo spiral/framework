@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler\Directive;
 
+use Spiral\Stempler\Parser\Syntax\DynamicSyntax;
 use Spiral\Stempler\Directive\DirectiveGroup;
 use Spiral\Stempler\Directive\LoopDirective;
 use Spiral\Stempler\Lexer\Grammar\DynamicGrammar;
@@ -37,7 +38,7 @@ class OnlyKnownTest extends BaseTestCase
         $directives = new DirectiveGroup();
         $directives->addDirective(new LoopDirective());
 
-        $parser->addSyntax(new DynamicGrammar($directives), new Parser\Syntax\DynamicSyntax());
+        $parser->addSyntax(new DynamicGrammar($directives), new DynamicSyntax());
         $parser->addSyntax(new HTMLGrammar(), new HTMLSyntax());
 
         return $parser->parse(new StringStream($string));

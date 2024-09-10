@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\ClassNode\ConflictResolver;
 
+use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures\Params;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
@@ -23,7 +24,7 @@ class NamespacesTest extends TestCase
             $cd->addImportUsage($name, $alias);
         }
 
-        foreach (Fixtures\Params::getParams('paramsSource') as $param) {
+        foreach (Params::getParams('paramsSource') as $param) {
             $cd->addParam($param);
         }
 

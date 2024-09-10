@@ -12,6 +12,7 @@ use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Interceptors\PipelineBuilderInterface;
 use Spiral\Queue\Config\QueueConfig;
+use Spiral\Queue\Exception\NotSupportedDriverException;
 use Spiral\Queue\Interceptor\Push\Core as PushCore;
 
 final class QueueManager implements QueueConnectionProviderInterface
@@ -63,7 +64,7 @@ final class QueueManager implements QueueConnectionProviderInterface
 
             return new Queue($this->builder->withInterceptors(...$list)->build(new PushCore($driver)));
         } catch (ContainerException $e) {
-            throw new Exception\NotSupportedDriverException(
+            throw new NotSupportedDriverException(
                 \sprintf(
                     'Driver `%s` is not supported. Connection `%s` cannot be created. Reason: `%s`',
                     $config['driver'],

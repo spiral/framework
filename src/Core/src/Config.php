@@ -7,6 +7,7 @@ namespace Spiral\Core;
 use IteratorAggregate;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Internal\Binder;
+use Spiral\Core\Internal\Config\StateStorage;
 use Spiral\Core\Internal\Container;
 use Spiral\Core\Internal\Factory;
 use Spiral\Core\Internal\Invoker;
@@ -30,7 +31,7 @@ class Config implements IteratorAggregate
 {
     /** @var class-string<Scope> */
     public readonly string $scope;
-    public readonly Internal\Config\StateStorage $scopedBindings;
+    public readonly StateStorage $scopedBindings;
     private bool $rootLocked = true;
 
     /**
@@ -52,7 +53,7 @@ class Config implements IteratorAggregate
         public readonly string $tracer = Tracer::class,
     ) {
         $this->scope = Scope::class;
-        $this->scopedBindings = new Internal\Config\StateStorage();
+        $this->scopedBindings = new StateStorage();
     }
 
     public function getIterator(): Traversable

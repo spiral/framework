@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Reactor;
 
+use Spiral\Reactor\Partial\Constant;
+use Spiral\Reactor\Partial\EnumCase;
+use Spiral\Reactor\Partial\Method;
+use Spiral\Reactor\Partial\PhpNamespace;
+use Spiral\Reactor\Partial\Parameter;
+use Spiral\Reactor\Partial\Property;
+use Spiral\Reactor\Partial\TraitUse;
 use PHPUnit\Framework\TestCase;
 use Spiral\Reactor\Aggregator;
 use Spiral\Reactor\Aggregator\Classes;
@@ -46,7 +53,7 @@ final class AggregatorsTest extends TestCase
         $aggr = new Constants([]);
         $this->assertFalse($aggr->has('TEST'));
 
-        $constant = new Partial\Constant('TEST');
+        $constant = new Constant('TEST');
 
         $aggr->add($constant);
         $this->assertTrue($aggr->has('TEST'));
@@ -58,7 +65,7 @@ final class AggregatorsTest extends TestCase
         $aggr = new EnumCases([]);
         $this->assertFalse($aggr->has('test'));
 
-        $case = new Partial\EnumCase('test');
+        $case = new EnumCase('test');
 
         $aggr->add($case);
         $this->assertTrue($aggr->has('test'));
@@ -82,7 +89,7 @@ final class AggregatorsTest extends TestCase
         $aggr = new Methods([]);
         $this->assertFalse($aggr->has('method'));
 
-        $method = new Partial\Method('method');
+        $method = new Method('method');
 
         $aggr->add($method);
         $this->assertTrue($aggr->has('method'));
@@ -94,7 +101,7 @@ final class AggregatorsTest extends TestCase
         $aggr = new Namespaces([]);
         $this->assertFalse($aggr->has('test'));
 
-        $namespace = new Partial\PhpNamespace('test');
+        $namespace = new PhpNamespace('test');
 
         $aggr->add($namespace);
         $this->assertTrue($aggr->has('test'));
@@ -106,7 +113,7 @@ final class AggregatorsTest extends TestCase
         $aggr = new Parameters([]);
         $this->assertFalse($aggr->has('param'));
 
-        $param = new Partial\Parameter('param');
+        $param = new Parameter('param');
 
         $aggr->add($param);
         $this->assertTrue($aggr->has('param'));
@@ -118,7 +125,7 @@ final class AggregatorsTest extends TestCase
         $aggr = new Properties([]);
         $this->assertFalse($aggr->has('test'));
 
-        $property = new Partial\Property('test');
+        $property = new Property('test');
 
         $aggr->add($property);
         $this->assertTrue($aggr->has('test'));
@@ -130,7 +137,7 @@ final class AggregatorsTest extends TestCase
         $aggr = new TraitUses([]);
         $this->assertFalse($aggr->has('test'));
 
-        $uses = new Partial\TraitUse('test');
+        $uses = new TraitUse('test');
 
         $aggr->add($uses);
         $this->assertTrue($aggr->has('test'));
@@ -206,10 +213,10 @@ final class AggregatorsTest extends TestCase
         $this->expectException(ReactorException::class);
 
         $a = new Aggregator([
-            Partial\Method::class,
+            Method::class,
         ]);
 
-        $a->add(new Partial\Property('method'));
+        $a->add(new Property('method'));
     }
 
     public function testAggregatorNoElement(): void
@@ -217,7 +224,7 @@ final class AggregatorsTest extends TestCase
         $this->expectException(ReactorException::class);
 
         $a = new Aggregator([
-            Partial\Method::class,
+            Method::class,
         ]);
 
         $a->get('method');
@@ -226,19 +233,19 @@ final class AggregatorsTest extends TestCase
     public function testAggregatorRemove(): void
     {
         $a = new Aggregator([
-            Partial\Method::class,
+            Method::class,
         ]);
 
-        $a->add(new Partial\Method('method'));
-        $this->assertInstanceOf(Partial\Method::class, $a->method);
+        $a->add(new Method('method'));
+        $this->assertInstanceOf(Method::class, $a->method);
         $this->assertTrue(isset($a['method']));
-        $this->assertInstanceOf(Partial\Method::class, $a['method']);
+        $this->assertInstanceOf(Method::class, $a['method']);
 
         $this->assertTrue($a->has('method'));
         $a->remove('method');
         $this->assertFalse($a->has('method'));
 
-        $a['method'] = new Partial\Method('method');
+        $a['method'] = new Method('method');
         $this->assertTrue($a->has('method'));
         unset($a['method']);
         $this->assertFalse($a->has('method'));

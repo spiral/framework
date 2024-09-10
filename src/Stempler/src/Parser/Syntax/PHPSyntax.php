@@ -8,6 +8,7 @@ use Spiral\Stempler\Lexer\Token;
 use Spiral\Stempler\Node\PHP;
 use Spiral\Stempler\Parser;
 use Spiral\Stempler\Parser\Assembler;
+use Spiral\Stempler\Parser\Context;
 use Spiral\Stempler\Parser\SyntaxInterface;
 
 /**
@@ -20,7 +21,7 @@ final class PHPSyntax implements SyntaxInterface
         $asm->push(new PHP(
             $token->content,
             $token->tokens,
-            new Parser\Context($token, $parser->getPath())
+            new Context($token, $parser->getPath())
         ));
     }
 }

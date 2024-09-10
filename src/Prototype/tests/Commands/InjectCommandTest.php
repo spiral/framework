@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\Commands;
 
+use Spiral\Tests\Prototype\Fixtures\InheritedInjection\InjectionOne;
+use Spiral\Tests\Prototype\Fixtures\InheritedInjection\InjectionTwo;
+use Spiral\Tests\Prototype\Fixtures\InheritedInjection\ParentClass;
+use Spiral\Tests\Prototype\Fixtures\InheritedInjection\MiddleClass;
+use Spiral\Tests\Prototype\Fixtures\InheritedInjection\ChildClass;
 use Spiral\Console\Console;
 use Spiral\Prototype\PrototypeRegistry;
 use Spiral\Tests\Prototype\Commands\Fixtures\EmptyInjectionClass;
@@ -96,15 +101,15 @@ class InjectCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        $this->assertStringContainsString(InheritedInjection\InjectionOne::class, $result);
-        $this->assertStringContainsString(InheritedInjection\InjectionTwo::class, $result);
-        $this->assertStringContainsString(InheritedInjection\ParentClass::class, $result);
-        $this->assertStringContainsString(InheritedInjection\MiddleClass::class, $result);
-        $this->assertStringContainsString(InheritedInjection\ChildClass::class, $result);
+        $this->assertStringContainsString(InjectionOne::class, $result);
+        $this->assertStringContainsString(InjectionTwo::class, $result);
+        $this->assertStringContainsString(ParentClass::class, $result);
+        $this->assertStringContainsString(MiddleClass::class, $result);
+        $this->assertStringContainsString(ChildClass::class, $result);
 
-        $this->assertSame(['one'], $this->getParameters(InheritedInjection\ParentClass::class));
-        $this->assertSame(['one', 'ownInjection'], $this->getParameters(InheritedInjection\MiddleClass::class));
-        $this->assertSame(['two', 'one', 'ownInjection'], $this->getParameters(InheritedInjection\ChildClass::class));
+        $this->assertSame(['one'], $this->getParameters(ParentClass::class));
+        $this->assertSame(['one', 'ownInjection'], $this->getParameters(MiddleClass::class));
+        $this->assertSame(['two', 'one', 'ownInjection'], $this->getParameters(ChildClass::class));
     }
 
     private function getParameters(string $class): array

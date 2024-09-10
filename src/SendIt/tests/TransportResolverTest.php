@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\SendIt;
 
+use Symfony\Component\Mailer\Transport\Dsn;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -28,11 +30,11 @@ final class TransportResolverTest extends TestCase
     public function testCanResolveRegisteredTransport(): void
     {
         $transportFactory = m::mock(TransportFactoryInterface::class);
-        $arg = fn(Transport\Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
+        $arg = fn(Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
 
         $transportFactory->shouldReceive('supports')->once()->withArgs($arg)->andReturn(true);
         $transportFactory->shouldReceive('create')->once()->withArgs($arg)
-            ->andReturn($transport = m::mock(Transport\TransportInterface::class));
+            ->andReturn($transport = m::mock(TransportInterface::class));
 
         $transportResolver = new TransportResolver(new Transport([]));
 
@@ -44,11 +46,11 @@ final class TransportResolverTest extends TestCase
     public function testCanResolveRegisteredDefaultTransport(): void
     {
         $transportFactory = m::mock(TransportFactoryInterface::class);
-        $arg = fn(Transport\Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
+        $arg = fn(Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
 
         $transportFactory->shouldReceive('supports')->once()->withArgs($arg)->andReturn(true);
         $transportFactory->shouldReceive('create')->once()->withArgs($arg)
-            ->andReturn($transport = m::mock(Transport\TransportInterface::class));
+            ->andReturn($transport = m::mock(TransportInterface::class));
 
         $transportResolver = new TransportResolver(new Transport([$transportFactory]));
 

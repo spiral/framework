@@ -9,6 +9,7 @@ use Spiral\Stempler\Node\Mixin;
 use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Parser;
 use Spiral\Stempler\Parser\Assembler;
+use Spiral\Stempler\Parser\Context;
 
 trait MixinTrait
 {
@@ -22,7 +23,7 @@ trait MixinTrait
             return $token->content;
         }
 
-        $mixin = new Mixin([], new Parser\Context($token, $parser->getPath()));
+        $mixin = new Mixin([], new Context($token, $parser->getPath()));
         /**
          * TODO issue #767
          * @link https://github.com/spiral/framework/issues/767

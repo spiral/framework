@@ -100,4 +100,12 @@ return RectorConfig::configure()
     ->withPreparedSets(deadCode: true)
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,
-    ]);
+    ])
+    ->withImportNames(
+        importNames: true,
+        importDocBlockNames: true,
+
+        // currently cause test error
+        // to be checked later when possible
+        importShortClasses: false,
+    );

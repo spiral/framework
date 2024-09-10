@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
+use Spiral\Bootloader\DomainBootloader;
 use ReflectionClass;
 use ReflectionException;
 use Spiral\Core\CoreInterface;
@@ -90,7 +91,7 @@ final class BootloaderTest extends AbstractCommandTestCase
         $content = $this->files()->read($reflection->getFileName());
 
         $this->assertStringContainsString(
-            \Spiral\Bootloader\DomainBootloader::class,
+            DomainBootloader::class,
             $content
         );
 

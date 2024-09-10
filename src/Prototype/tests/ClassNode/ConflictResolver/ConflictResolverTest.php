@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\ClassNode\ConflictResolver;
 
+use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures\Some;
+use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures\ATest3;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Prototype\ClassNode;
@@ -27,17 +29,17 @@ class ConflictResolverTest extends TestCase
             $this->getDefinition(
                 $filename,
                 [
-                    'test'  => Fixtures\Some::class,
+                    'test'  => Some::class,
                     'test2' => Fixtures\SubFolder\Some::class,
-                    'test3' => Fixtures\ATest3::class,
+                    'test3' => ATest3::class,
                 ]
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Some::class . ';', $r);
+        $this->assertStringContainsString(Some::class . ';', $r);
         $this->assertStringContainsString(Fixtures\SubFolder\Some::class . ' as Some2;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
-        $this->assertStringContainsString(Fixtures\ATest3::class . ';', $r);
+        $this->assertStringContainsString(ATest3::class . ';', $r);
     }
 
     /**
@@ -53,19 +55,19 @@ class ConflictResolverTest extends TestCase
             $this->getDefinition(
                 $filename,
                 [
-                    'test'  => Fixtures\Some::class,
+                    'test'  => Some::class,
                     'test2' => Fixtures\SubFolder\Some::class,
-                    'test3' => Fixtures\ATest3::class,
+                    'test3' => ATest3::class,
                 ]
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Some::class . ' as FTest;', $r);
-        $this->assertStringNotContainsString(Fixtures\Some::class . ';', $r);
+        $this->assertStringContainsString(Some::class . ' as FTest;', $r);
+        $this->assertStringNotContainsString(Some::class . ';', $r);
         $this->assertStringContainsString(Fixtures\SubFolder\Some::class . ' as TestAlias;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
-        $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATest;', $r);
-        $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
+        $this->assertStringContainsString(ATest3::class . ' as ATest;', $r);
+        $this->assertStringNotContainsString(ATest3::class . ';', $r);
     }
 
     /**
@@ -81,18 +83,18 @@ class ConflictResolverTest extends TestCase
             $this->getDefinition(
                 $filename,
                 [
-                    'test'  => Fixtures\Some::class,
+                    'test'  => Some::class,
                     'test2' => Fixtures\SubFolder\Some::class,
-                    'test3' => Fixtures\ATest3::class,
+                    'test3' => ATest3::class,
                 ]
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Some::class . ';', $r);
+        $this->assertStringContainsString(Some::class . ';', $r);
         $this->assertStringContainsString(Fixtures\SubFolder\Some::class . ' as Some2;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
-        $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATestAlias;', $r);
-        $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
+        $this->assertStringContainsString(ATest3::class . ' as ATestAlias;', $r);
+        $this->assertStringNotContainsString(ATest3::class . ';', $r);
     }
 
     public function testDuplicateProperty(): void
@@ -105,12 +107,12 @@ class ConflictResolverTest extends TestCase
             $this->getDefinition(
                 $filename,
                 [
-                    'test' => Fixtures\Some::class,
+                    'test' => Some::class,
                 ]
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Some::class . ';', $r);
+        $this->assertStringContainsString(Some::class . ';', $r);
         $this->assertStringContainsString('__construct(private readonly Some $test)', $r);
     }
 

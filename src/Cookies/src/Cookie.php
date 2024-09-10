@@ -63,7 +63,7 @@ final class Cookie implements \Stringable
         private readonly bool $httpOnly = true,
         ?string $sameSite = null
     ) {
-        $this->sameSite = new Cookie\SameSite($sameSite, $secure);
+        $this->sameSite = new SameSite($sameSite, $secure);
     }
 
     public function __toString(): string

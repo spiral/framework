@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Interceptors\Unit\Handler;
 
+use Spiral\Interceptors\Event\InterceptorCalling;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Interceptors\Context\CallContext;
@@ -31,7 +32,7 @@ final class InterceptorPipelineTest extends TestCase
             ->expects(self::once())
             ->method('dispatch')
             ->with(
-                new \Spiral\Interceptors\Event\InterceptorCalling(
+                new InterceptorCalling(
                     $context,
                     $interceptor,
                 )

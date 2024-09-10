@@ -15,8 +15,23 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Scaffolder\Command;
+use Spiral\Scaffolder\Command\BootloaderCommand;
+use Spiral\Scaffolder\Command\CommandCommand;
+use Spiral\Scaffolder\Command\ConfigCommand;
+use Spiral\Scaffolder\Command\ControllerCommand;
+use Spiral\Scaffolder\Command\FilterCommand;
+use Spiral\Scaffolder\Command\InfoCommand;
+use Spiral\Scaffolder\Command\JobHandlerCommand;
+use Spiral\Scaffolder\Command\MiddlewareCommand;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
 use Spiral\Scaffolder\Declaration;
+use Spiral\Scaffolder\Declaration\BootloaderDeclaration;
+use Spiral\Scaffolder\Declaration\CommandDeclaration;
+use Spiral\Scaffolder\Declaration\ConfigDeclaration;
+use Spiral\Scaffolder\Declaration\ControllerDeclaration;
+use Spiral\Scaffolder\Declaration\FilterDeclaration;
+use Spiral\Scaffolder\Declaration\JobHandlerDeclaration;
+use Spiral\Scaffolder\Declaration\MiddlewareDeclaration;
 
 class ScaffolderBootloader extends Bootloader
 {
@@ -32,14 +47,14 @@ class ScaffolderBootloader extends Bootloader
 
     public function init(ConsoleBootloader $console, DirectoriesInterface $dir): void
     {
-        $console->addCommand(Command\InfoCommand::class);
-        $console->addCommand(Command\BootloaderCommand::class);
-        $console->addCommand(Command\CommandCommand::class);
-        $console->addCommand(Command\ConfigCommand::class);
-        $console->addCommand(Command\ControllerCommand::class);
-        $console->addCommand(Command\JobHandlerCommand::class);
-        $console->addCommand(Command\MiddlewareCommand::class);
-        $console->addCommand(Command\FilterCommand::class);
+        $console->addCommand(InfoCommand::class);
+        $console->addCommand(BootloaderCommand::class);
+        $console->addCommand(CommandCommand::class);
+        $console->addCommand(ConfigCommand::class);
+        $console->addCommand(ControllerCommand::class);
+        $console->addCommand(JobHandlerCommand::class);
+        $console->addCommand(MiddlewareCommand::class);
+        $console->addCommand(FilterCommand::class);
 
         try {
             $defaultNamespace = (new ReflectionClass($this->kernel))->getNamespaceName();
@@ -75,43 +90,43 @@ class ScaffolderBootloader extends Bootloader
              */
             'defaults' => [
                 'declarations' => [
-                    Declaration\BootloaderDeclaration::TYPE => [
+                    BootloaderDeclaration::TYPE => [
                         'namespace' => 'Bootloader',
                         'postfix' => 'Bootloader',
-                        'class' => Declaration\BootloaderDeclaration::class,
+                        'class' => BootloaderDeclaration::class,
                     ],
-                    Declaration\ConfigDeclaration::TYPE => [
+                    ConfigDeclaration::TYPE => [
                         'namespace' => 'Config',
                         'postfix' => 'Config',
-                        'class' => Declaration\ConfigDeclaration::class,
+                        'class' => ConfigDeclaration::class,
                         'options' => [
                             'directory' => $dir->get('config'),
                         ],
                     ],
-                    Declaration\ControllerDeclaration::TYPE => [
+                    ControllerDeclaration::TYPE => [
                         'namespace' => 'Controller',
                         'postfix' => 'Controller',
-                        'class' => Declaration\ControllerDeclaration::class,
+                        'class' => ControllerDeclaration::class,
                     ],
-                    Declaration\FilterDeclaration::TYPE => [
+                    FilterDeclaration::TYPE => [
                         'namespace' => 'Filter',
                         'postfix' => 'Filter',
-                        'class' => Declaration\FilterDeclaration::class,
+                        'class' => FilterDeclaration::class,
                     ],
-                    Declaration\MiddlewareDeclaration::TYPE => [
+                    MiddlewareDeclaration::TYPE => [
                         'namespace' => 'Middleware',
                         'postfix' => 'Middleware',
-                        'class' => Declaration\MiddlewareDeclaration::class,
+                        'class' => MiddlewareDeclaration::class,
                     ],
-                    Declaration\CommandDeclaration::TYPE => [
+                    CommandDeclaration::TYPE => [
                         'namespace' => 'Command',
                         'postfix' => 'Command',
-                        'class' => Declaration\CommandDeclaration::class,
+                        'class' => CommandDeclaration::class,
                     ],
-                    Declaration\JobHandlerDeclaration::TYPE => [
+                    JobHandlerDeclaration::TYPE => [
                         'namespace' => 'Job',
                         'postfix' => 'Job',
-                        'class' => Declaration\JobHandlerDeclaration::class,
+                        'class' => JobHandlerDeclaration::class,
                     ],
                 ],
             ],

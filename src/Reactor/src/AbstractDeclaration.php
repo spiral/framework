@@ -7,6 +7,9 @@ namespace Spiral\Reactor;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Nette\PhpGenerator\ClassLike;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\AttributeAware;
+use Spiral\Reactor\Traits\CommentAware;
+use Spiral\Reactor\Traits\NameAware;
 
 /**
  * Generic element declaration.
@@ -15,9 +18,9 @@ use Spiral\Reactor\Traits;
  */
 abstract class AbstractDeclaration implements DeclarationInterface, NamedInterface, \Stringable
 {
-    use Traits\CommentAware;
-    use Traits\NameAware;
-    use Traits\AttributeAware;
+    use CommentAware;
+    use NameAware;
+    use AttributeAware;
 
     /**
      * @var T

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters\Model\Attribute\Input;
 
+use Spiral\Tests\Filters\Model\AttributeTestCase;
 use Mockery as m;
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Filters\Attribute\Input\File;
 
-final class FileTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
+final class FileTest extends AttributeTestCase
 {
     public function testGetsValueForDefinedKey(): void
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
+use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\NamedScopeDuplicationException;
 use Spiral\Core\FactoryInterface;
 
@@ -12,7 +13,7 @@ use Spiral\Core\FactoryInterface;
  */
 final class Scope
 {
-    private ?\Spiral\Core\Container $parent = null;
+    private ?Container $parent = null;
     private ?self $parentScope = null;
     private ?FactoryInterface $parentFactory = null;
 
@@ -31,7 +32,7 @@ final class Scope
      *
      * @throws NamedScopeDuplicationException
      */
-    public function setParent(\Spiral\Core\Container $parent, self $parentScope, FactoryInterface $factory): void
+    public function setParent(Container $parent, self $parentScope, FactoryInterface $factory): void
     {
         $this->parent = $parent;
         $this->parentScope = $parentScope;
@@ -47,7 +48,7 @@ final class Scope
         }
     }
 
-    public function getParent(): ?\Spiral\Core\Container
+    public function getParent(): ?Container
     {
         return $this->parent;
     }

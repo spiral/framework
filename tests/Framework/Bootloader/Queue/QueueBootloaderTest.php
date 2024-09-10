@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Framework\Bootloader\Queue;
 
+use Spiral\Queue\Driver\SyncDriver;
+use Spiral\Queue\Driver\NullDriver;
+use Spiral\Queue\Interceptor\Consume\RetryPolicyInterceptor;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container\Autowire;
@@ -77,13 +80,13 @@ final class QueueBootloaderTest extends BaseTestCase
                 'serializers' => [],
             ],
             'driverAliases' => [
-                'sync' => \Spiral\Queue\Driver\SyncDriver::class,
-                'null' => \Spiral\Queue\Driver\NullDriver::class,
+                'sync' => SyncDriver::class,
+                'null' => NullDriver::class,
             ],
             'interceptors' => [
                 'consume' => [
-                    \Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor::class,
-                    \Spiral\Queue\Interceptor\Consume\RetryPolicyInterceptor::class,
+                    ErrorHandlerInterceptor::class,
+                    RetryPolicyInterceptor::class,
                 ],
                 'push' => []
             ],

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype;
 
+use Spiral\Prototype\ClassNode\ClassStmt;
 use Spiral\Prototype\ClassNode\ConstructorParam;
 
 /**
@@ -50,7 +51,7 @@ final class ClassNode
 
     public function addImportUsage(string $name, ?string $alias): void
     {
-        $this->addStmt(ClassNode\ClassStmt::create($name, $alias));
+        $this->addStmt(ClassStmt::create($name, $alias));
     }
 
     /**
@@ -69,7 +70,7 @@ final class ClassNode
         $this->constructorParams[$parameter->name] = ConstructorParam::createFromReflection($parameter);
     }
 
-    private function addStmt(ClassNode\ClassStmt $stmt): void
+    private function addStmt(ClassStmt $stmt): void
     {
         $this->stmts[(string)$stmt] = $stmt;
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Queue;
 
+use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Core\Container;
@@ -22,7 +24,7 @@ use Spiral\Serializer\SerializerRegistryInterface;
 final class QueueRegistryTest extends TestCase
 {
     private Container $mockContainer;
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HandlerRegistryInterface */
+    /** @var LegacyMockInterface|MockInterface|HandlerRegistryInterface */
     private $fallbackHandlers;
     /** @var QueueRegistry */
     private $registry;

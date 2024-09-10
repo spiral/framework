@@ -9,13 +9,17 @@ use Nette\PhpGenerator\Constant as NetteConstant;
 use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\AttributeAware;
+use Spiral\Reactor\Traits\CommentAware;
+use Spiral\Reactor\Traits\NameAware;
+use Spiral\Reactor\Traits\VisibilityAware;
 
 final class Constant implements NamedInterface, AggregableInterface
 {
-    use Traits\AttributeAware;
-    use Traits\CommentAware;
-    use Traits\NameAware;
-    use Traits\VisibilityAware;
+    use AttributeAware;
+    use CommentAware;
+    use NameAware;
+    use VisibilityAware;
 
     private NetteConstant $element;
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Prototype\ClassNode\ConflictResolver;
 
 use Spiral\Prototype\ClassNode;
+use Spiral\Prototype\ClassNode\Type;
 use Spiral\Prototype\Utils;
 
 final class Namespaces
@@ -139,7 +140,7 @@ final class Namespaces
         return null;
     }
 
-    private function parseNamespaceFromType(ClassNode\Type $type): NamespaceEntity
+    private function parseNamespaceFromType(Type $type): NamespaceEntity
     {
         return $this->parseNamespace($type->shortName, $type->name());
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
+use Spiral\Core\Container\Autowire;
+use Spiral\Core\ContainerScope;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Attribute\Proxy;
@@ -249,7 +251,7 @@ final class UseCaseTest extends BaseTestCase
     public function testSingletonRebindingInScope(): void
     {
         $c = new Container();
-        $c->bindSingleton('bucket', new Container\Autowire(Bucket::class, ['a']));
+        $c->bindSingleton('bucket', new Autowire(Bucket::class, ['a']));
 
         $this->assertSame('a', $c->get('bucket')->getName());
 
@@ -269,8 +271,8 @@ final class UseCaseTest extends BaseTestCase
         $root = new Container();
 
         $root->invoke(static function () use ($root) {
-            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
-            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+            self::assertNotNull(ContainerScope::getContainer());
+            self::assertSame($root, ContainerScope::getContainer());
         });
     }
 
@@ -278,8 +280,8 @@ final class UseCaseTest extends BaseTestCase
     {
         $root = new Container();
         $root->bind('foo', function () use ($root) {
-            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
-            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+            self::assertNotNull(ContainerScope::getContainer());
+            self::assertSame($root, ContainerScope::getContainer());
         });
 
         $root->get('foo');
@@ -289,8 +291,8 @@ final class UseCaseTest extends BaseTestCase
     {
         $root = new Container();
         $root->bind('foo', function () use ($root) {
-            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
-            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+            self::assertNotNull(ContainerScope::getContainer());
+            self::assertSame($root, ContainerScope::getContainer());
         });
 
         $root->make('foo');
@@ -308,8 +310,8 @@ final class UseCaseTest extends BaseTestCase
 
         $root->bind('foo', function (#[Proxy] ContainerInterface $c, ContainerInterface $r) use ($root) {
             // Direct
-            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
-            self::assertNotSame($root, \Spiral\Core\ContainerScope::getContainer());
+            self::assertNotNull(ContainerScope::getContainer());
+            self::assertNotSame($root, ContainerScope::getContainer());
 
             // Not a proxy
             self::assertSame($root, $r);

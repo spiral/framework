@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Core;
 
+use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 use Spiral\Cache\CacheRepository;
+use Spiral\Cache\CacheStorageProviderInterface;
+use Spiral\Cache\Exception\InvalidArgumentException;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Exception\Container\ContainerException;
-use Spiral\Cache\Exception\InvalidArgumentException;
-use Spiral\Cache\CacheStorageProviderInterface;
-use Psr\SimpleCache\CacheInterface;
 
 /**
  * @implements InjectorInterface<CacheInterface>

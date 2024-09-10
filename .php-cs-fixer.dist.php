@@ -10,6 +10,9 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
         'ternary_operator_spaces' => false,
+        'ordered_imports' => [
+            'sort_algorithm' => 'alpha',
+        ],
     ])
     ->setRiskyAllowed(true)
     ->setFinder(

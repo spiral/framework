@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
+use Spiral\Core\Scope;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -106,7 +107,7 @@ final class PipelineTest extends TestCase
         };
 
         $this->container->runScope(
-            new \Spiral\Core\Scope(name: 'http'),
+            new Scope(name: 'http'),
             function (ScopeInterface $c) use ($middleware) {
                 $request = new ServerRequest('GET', '');
                 $handler = new CallableHandler(fn() => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));

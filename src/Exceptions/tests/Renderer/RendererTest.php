@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Exceptions\Renderer;
 
+use Spiral\Exceptions\Verbosity;
 use PHPUnit\Framework\TestCase;
 use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\JsonRenderer;
@@ -39,7 +40,7 @@ class RendererTest extends TestCase
         $result = $handler->render(new \Error(
             'message',
             100,
-        ), \Spiral\Exceptions\Verbosity::BASIC);
+        ), Verbosity::BASIC);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
@@ -53,7 +54,7 @@ class RendererTest extends TestCase
     {
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
-        $result = $handler->render(new \Error('message', 100), \Spiral\Exceptions\Verbosity::BASIC);
+        $result = $handler->render(new \Error('message', 100), Verbosity::BASIC);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
@@ -67,7 +68,7 @@ class RendererTest extends TestCase
     {
         $handler = new ConsoleRenderer();
         $handler->setColorsSupport(true);
-        $result = $handler->render(new \Error('message', 100), \Spiral\Exceptions\Verbosity::VERBOSE);
+        $result = $handler->render(new \Error('message', 100), Verbosity::VERBOSE);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
@@ -85,7 +86,7 @@ class RendererTest extends TestCase
         $result = $handler->render(new \Error(
             'message',
             100,
-        ), \Spiral\Exceptions\Verbosity::BASIC);
+        ), Verbosity::BASIC);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
@@ -103,7 +104,7 @@ class RendererTest extends TestCase
         $result = $handler->render(new \Error(
             'message',
             100,
-        ), \Spiral\Exceptions\Verbosity::DEBUG);
+        ), Verbosity::DEBUG);
 
         $this->assertStringContainsString('Error', $result);
         $this->assertStringContainsString('message', $result);
@@ -123,7 +124,7 @@ class RendererTest extends TestCase
         } catch (\Throwable $e) {
         }
 
-        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
+        $result = $handler->render($e, Verbosity::DEBUG);
 
         $this->assertStringContainsString('LogicException', $result);
         $this->assertStringContainsString('makeException', $result);
@@ -138,7 +139,7 @@ class RendererTest extends TestCase
         } catch (\Throwable $e) {
         }
 
-        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
+        $result = $handler->render($e, Verbosity::DEBUG);
 
         $this->assertStringContainsString('LogicException', $result);
         $this->assertStringContainsString('makeException', $result);
@@ -153,7 +154,7 @@ class RendererTest extends TestCase
         } catch (\Throwable $e) {
         }
 
-        $result = $handler->render($e, \Spiral\Exceptions\Verbosity::DEBUG);
+        $result = $handler->render($e, Verbosity::DEBUG);
 
         $this->assertStringContainsString('LogicException', $result);
         $this->assertStringContainsString('makeException', $result);

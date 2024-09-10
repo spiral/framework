@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters\Model\Attribute;
 
+use Spiral\Tests\Filters\Model\AttributeTestCase;
 use Spiral\Filters\Attribute\NestedFilter;
 
-final class NestedFilterTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
+final class NestedFilterTest extends AttributeTestCase
 {
     public function testGetsSchemaWithPrefix(): void
     {

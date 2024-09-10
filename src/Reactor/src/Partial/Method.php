@@ -8,14 +8,19 @@ use Nette\PhpGenerator\Method as NetteMethod;
 use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\AttributeAware;
+use Spiral\Reactor\Traits\CommentAware;
+use Spiral\Reactor\Traits\FunctionLike;
+use Spiral\Reactor\Traits\NameAware;
+use Spiral\Reactor\Traits\VisibilityAware;
 
 final class Method implements NamedInterface, AggregableInterface, \Stringable
 {
-    use Traits\AttributeAware;
-    use Traits\CommentAware;
-    use Traits\FunctionLike;
-    use Traits\NameAware;
-    use Traits\VisibilityAware;
+    use AttributeAware;
+    use CommentAware;
+    use FunctionLike;
+    use NameAware;
+    use VisibilityAware;
 
     private NetteMethod $element;
 

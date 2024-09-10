@@ -7,28 +7,33 @@ namespace Spiral\Reactor;
 use Nette\PhpGenerator\ClassLike;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\EnumType;
+use Nette\PhpGenerator\Factory;
 use Nette\PhpGenerator\GlobalFunction;
 use Nette\PhpGenerator\InterfaceType;
-use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
-use Nette\PhpGenerator\Factory;
 use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
 use Nette\PhpGenerator\TraitType;
 use Spiral\Reactor\Aggregator\Elements;
 use Spiral\Reactor\Aggregator\Functions;
 use Spiral\Reactor\Aggregator\Namespaces;
 use Spiral\Reactor\Partial\PhpNamespace;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\ClassAware;
+use Spiral\Reactor\Traits\CommentAware;
+use Spiral\Reactor\Traits\EnumAware;
+use Spiral\Reactor\Traits\InterfaceAware;
+use Spiral\Reactor\Traits\TraitAware;
 
 /**
  * Provides ability to render file content.
  */
 class FileDeclaration implements \Stringable, DeclarationInterface
 {
-    use Traits\CommentAware;
-    use Traits\EnumAware;
-    use Traits\ClassAware;
-    use Traits\InterfaceAware;
-    use Traits\TraitAware;
+    use CommentAware;
+    use EnumAware;
+    use ClassAware;
+    use InterfaceAware;
+    use TraitAware;
 
     private PhpFile $element;
 

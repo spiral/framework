@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework;
 
+use Spiral\Testing\TestCase;
 use Spiral\App\TestApp;
 use Spiral\Core\Container;
 use Spiral\Testing\Traits\InteractsWithCore;
 
-abstract class BaseTestCase extends \Spiral\Testing\TestCase
+abstract class BaseTestCase extends TestCase
 {
     use InteractsWithCore;
 

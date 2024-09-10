@@ -11,6 +11,7 @@ use Spiral\Stempler\Node\Dynamic\Directive;
 use Spiral\Stempler\Node\Dynamic\Output;
 use Spiral\Stempler\Parser;
 use Spiral\Stempler\Parser\Assembler;
+use Spiral\Stempler\Parser\Context;
 use Spiral\Stempler\Parser\SyntaxInterface;
 
 /**
@@ -25,18 +26,18 @@ final class DynamicSyntax implements SyntaxInterface
     {
         switch ($token->type) {
             case DynamicGrammar::TYPE_DIRECTIVE:
-                $this->directive = new Directive(new Parser\Context($token, $parser->getPath()));
+                $this->directive = new Directive(new Context($token, $parser->getPath()));
                 $asm->push($this->directive);
                 break;
 
             case DynamicGrammar::TYPE_OPEN_TAG:
-                $this->output = new Output(new Parser\Context($token, $parser->getPath()));
+                $this->output = new Output(new Context($token, $parser->getPath()));
 
                 $asm->push($this->output);
                 break;
 
             case DynamicGrammar::TYPE_OPEN_RAW_TAG:
-                $this->output = new Output(new Parser\Context($token, $parser->getPath()));
+                $this->output = new Output(new Context($token, $parser->getPath()));
                 $this->output->rawOutput = true;
 
                 $asm->push($this->output);

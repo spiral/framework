@@ -6,6 +6,7 @@ namespace Spiral\Stempler\Compiler\Renderer;
 
 use Spiral\Stempler\Compiler;
 use Spiral\Stempler\Compiler\RendererInterface;
+use Spiral\Stempler\Compiler\Result;
 use Spiral\Stempler\Node\HTML\Attr;
 use Spiral\Stempler\Node\HTML\Nil;
 use Spiral\Stempler\Node\HTML\Tag;
@@ -14,7 +15,7 @@ use Spiral\Stempler\Node\NodeInterface;
 
 final class HTMLRenderer implements RendererInterface
 {
-    public function render(Compiler $compiler, Compiler\Result $result, NodeInterface $node): bool
+    public function render(Compiler $compiler, Result $result, NodeInterface $node): bool
     {
         switch (true) {
             case $node instanceof Tag:
@@ -31,7 +32,7 @@ final class HTMLRenderer implements RendererInterface
         }
     }
 
-    private function tag(Compiler $compiler, Compiler\Result $result, Tag $node): void
+    private function tag(Compiler $compiler, Result $result, Tag $node): void
     {
         $result->push(\sprintf('<%s', $node->name), $node->getContext());
 
@@ -55,7 +56,7 @@ final class HTMLRenderer implements RendererInterface
         }
     }
 
-    private function attribute(Compiler $compiler, Compiler\Result $result, Attr $node): void
+    private function attribute(Compiler $compiler, Result $result, Attr $node): void
     {
         if ($node->name instanceof NodeInterface) {
             $result->push(' ', null);
@@ -78,7 +79,7 @@ final class HTMLRenderer implements RendererInterface
         $result->push(\sprintf('=%s', $value), $node->getContext());
     }
 
-    private function verbatim(Compiler $compiler, Compiler\Result $result, Verbatim $node): void
+    private function verbatim(Compiler $compiler, Result $result, Verbatim $node): void
     {
         foreach ($node->nodes as $child) {
             if (\is_string($child)) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Prototype\NodeVisitors\ClassNode;
 
 use PhpParser\Node;
+use PhpParser\Node\Stmt\Use_;
 use PhpParser\NodeVisitorAbstract;
 
 /**
@@ -16,7 +17,7 @@ final class LocateStatements extends NodeVisitorAbstract
 
     public function enterNode(Node $node): void
     {
-        if ($node instanceof Node\Stmt\Use_) {
+        if ($node instanceof Use_) {
             foreach ($node->uses as $use) {
                 $this->imports[] = [
                     'name'  => \implode('\\', $use->name->parts),

@@ -7,14 +7,16 @@ namespace Spiral\Reactor\Partial;
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Nette\PhpGenerator\PromotedParameter as NettePromotedParameter;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\CommentAware;
+use Spiral\Reactor\Traits\VisibilityAware;
 
 /**
  * @property NettePromotedParameter $element
  */
 final class PromotedParameter extends Parameter
 {
-    use Traits\CommentAware;
-    use Traits\VisibilityAware;
+    use CommentAware;
+    use VisibilityAware;
 
     public function __construct(string $name)
     {

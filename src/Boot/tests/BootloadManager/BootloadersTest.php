@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\BootloadManager;
 
+use Spiral\Boot\Exception\ClassNotFoundException;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
@@ -109,7 +110,7 @@ final class BootloadersTest extends TestCase
 
     public function testException(): void
     {
-        $this->expectException(\Spiral\Boot\Exception\ClassNotFoundException::class);
+        $this->expectException(ClassNotFoundException::class);
         $this->expectExceptionMessage('Bootloader class `Foo\Bar\Invalid` does not exist.');
 
         $bootloader = $this->getBootloadManager();

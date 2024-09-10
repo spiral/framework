@@ -10,6 +10,19 @@ use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Filters\Attribute\Input;
 use Spiral\Filters\Attribute\Input\AbstractInput;
+use Spiral\Filters\Attribute\Input\BearerToken;
+use Spiral\Filters\Attribute\Input\Cookie;
+use Spiral\Filters\Attribute\Input\Data;
+use Spiral\Filters\Attribute\Input\File;
+use Spiral\Filters\Attribute\Input\Header;
+use Spiral\Filters\Attribute\Input\Method;
+use Spiral\Filters\Attribute\Input\Path;
+use Spiral\Filters\Attribute\Input\Post;
+use Spiral\Filters\Attribute\Input\Query;
+use Spiral\Filters\Attribute\Input\RemoteAddress;
+use Spiral\Filters\Attribute\Input\Route;
+use Spiral\Filters\Attribute\Input\Server;
+use Spiral\Filters\Attribute\Input\Uri;
 use Spiral\Filters\Model\Filter;
 use Spiral\Filters\Model\FilterDefinitionInterface;
 use Spiral\Filters\Model\HasFilterDefinition;
@@ -133,19 +146,19 @@ PHP,
     private function getSourceClassByName(string $source): array
     {
         return match ($source) {
-            'data' => [Input\Data::class, 'string'],
-            'post' => [Input\Post::class, 'string'],
-            'query' => [Input\Query::class, 'string'],
-            'file' => [Input\File::class, UploadedFileInterface::class],
-            'cookie' => [Input\Cookie::class, 'string'],
-            'header' => [Input\Header::class, 'string'],
-            'method' => [Input\Method::class, 'string'],
-            'path' => [Input\Path::class, 'string'],
-            'ip' => [Input\RemoteAddress::class, 'string'],
-            'route' => [Input\Route::class, 'string'],
-            'server' => [Input\Server::class, 'string'],
-            'uri' => [Input\Uri::class, UriInterface::class],
-            'token' => [Input\BearerToken::class, 'string'],
+            'data' => [Data::class, 'string'],
+            'post' => [Post::class, 'string'],
+            'query' => [Query::class, 'string'],
+            'file' => [File::class, UploadedFileInterface::class],
+            'cookie' => [Cookie::class, 'string'],
+            'header' => [Header::class, 'string'],
+            'method' => [Method::class, 'string'],
+            'path' => [Path::class, 'string'],
+            'ip' => [RemoteAddress::class, 'string'],
+            'route' => [Route::class, 'string'],
+            'server' => [Server::class, 'string'],
+            'uri' => [Uri::class, UriInterface::class],
+            'token' => [BearerToken::class, 'string'],
             default => [Input\Input::class, 'string']
         };
     }

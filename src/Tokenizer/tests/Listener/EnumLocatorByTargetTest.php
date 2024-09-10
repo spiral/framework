@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Tokenizer\Listener;
 
+use Spiral\Tests\Tokenizer\Classes\Listeners\CommandInterfaceListener;
+use Spiral\Tests\Tokenizer\Enums\Targets\EnumWithAllTargets;
+use Spiral\Tests\Tokenizer\Classes\Listeners\TraitListener;
+use Spiral\Tests\Tokenizer\Enums\Targets\EnumWithTrait;
+use Spiral\Tests\Tokenizer\Classes\Listeners\ControllerListener;
+use Spiral\Tests\Tokenizer\Enums\Targets\EnumWithAttributeOnClass;
+use Spiral\Tests\Tokenizer\Enums\Targets\EnumWithoutTargets;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -38,24 +45,24 @@ final class EnumLocatorByTargetTest extends TestCase
     public static function provideGetEnums(): \Generator
     {
         yield 'class' => [
-            Listeners\CommandInterfaceListener::class,
+            CommandInterfaceListener::class,
             [
-                Targets\EnumWithAllTargets::class,
+                EnumWithAllTargets::class,
             ],
         ];
 
         yield 'trait' => [
-            Listeners\TraitListener::class,
+            TraitListener::class,
             [
-                Targets\EnumWithTrait::class,
+                EnumWithTrait::class,
             ],
         ];
 
         yield 'attribute-on-class' => [
-            Listeners\ControllerListener::class,
+            ControllerListener::class,
             [
-                Targets\EnumWithAttributeOnClass::class,
-                Targets\EnumWithAllTargets::class,
+                EnumWithAttributeOnClass::class,
+                EnumWithAllTargets::class,
             ],
         ];
     }
@@ -68,10 +75,10 @@ final class EnumLocatorByTargetTest extends TestCase
         $enums = \array_map(
             fn (string $class) => new \ReflectionEnum($class),
             [
-                Targets\EnumWithAttributeOnClass::class,
-                Targets\EnumWithAllTargets::class,
-                Targets\EnumWithTrait::class,
-                Targets\EnumWithoutTargets::class,
+                EnumWithAttributeOnClass::class,
+                EnumWithAllTargets::class,
+                EnumWithTrait::class,
+                EnumWithoutTargets::class,
             ],
         );
 

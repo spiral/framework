@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\App;
 
+use Spiral\Boot\AbstractKernel;
+use Spiral\Scaffolder\Bootloader\ScaffolderBootloader;
+use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\Exception\BootException;
 use Spiral\Boot;
 use Spiral\Core\Container;
 use Spiral\Scaffolder;
 use Spiral\Validation\Bootloader\ValidationBootloader;
 use Throwable;
 
-class TestApp extends Boot\AbstractKernel
+class TestApp extends AbstractKernel
 {
     protected const LOAD = [
-        Scaffolder\Bootloader\ScaffolderBootloader::class,
+        ScaffolderBootloader::class,
         ValidationBootloader::class,
     ];
 
@@ -37,7 +41,7 @@ class TestApp extends Boot\AbstractKernel
     public function directory(string $directory): string
     {
         /** @var Boot\DirectoriesInterface $directories */
-        $directories = $this->container->get(Boot\DirectoriesInterface::class);
+        $directories = $this->container->get(DirectoriesInterface::class);
 
         return $directories->get($directory);
     }
@@ -55,7 +59,7 @@ class TestApp extends Boot\AbstractKernel
     protected function mapDirectories(array $directories): array
     {
         if (!isset($directories['root'])) {
-            throw new Boot\Exception\BootException('Missing required directory `root`.');
+            throw new BootException('Missing required directory `root`.');
         }
 
         if (!isset($directories['app'])) {

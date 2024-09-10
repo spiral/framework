@@ -9,13 +9,13 @@ use Aws\S3\S3Client;
 use GuzzleHttp\Psr7\Uri as GuzzleUri;
 use Nyholm\Psr7\Uri as NyholmUri;
 use Psr\Http\Message\UriInterface;
+use Spiral\Config\Exception\InvalidArgumentException;
 use Spiral\Core\InjectableConfig;
 use Spiral\Distribution\Manager;
 use Spiral\Distribution\Resolver\CloudFrontResolver;
 use Spiral\Distribution\Resolver\S3SignedResolver;
 use Spiral\Distribution\Resolver\StaticResolver;
 use Spiral\Distribution\UriResolverInterface;
-use Spiral\Config\Exception\InvalidArgumentException;
 
 final class DistributionConfig extends InjectableConfig
 {

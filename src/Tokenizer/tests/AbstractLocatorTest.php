@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Tokenizer;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Spiral\Tokenizer\AbstractLocator;
 use Spiral\Tokenizer\Exception\LocatorException;
 use Symfony\Component\Finder\Finder;
 
-final class AbstractLocatorTest extends \PHPUnit\Framework\TestCase
+final class AbstractLocatorTest extends TestCase
 {
     private Finder $finder;
 

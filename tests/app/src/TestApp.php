@@ -4,6 +4,40 @@ declare(strict_types=1);
 
 namespace Spiral\App;
 
+use Spiral\Testing\TestableKernelInterface;
+use Spiral\Telemetry\Bootloader\TelemetryBootloader;
+use Spiral\Bootloader\SnapshotsBootloader;
+use Spiral\Bootloader\I18nBootloader;
+use Spiral\Bootloader\Security\EncrypterBootloader;
+use Spiral\Validation\Bootloader\ValidationBootloader;
+use Spiral\Validator\Bootloader\ValidatorBootloader;
+use Spiral\Bootloader\Security\FiltersBootloader;
+use Spiral\Bootloader\Security\GuardBootloader;
+use Spiral\Console\Bootloader\ConsoleBootloader;
+use Spiral\Bootloader\Http\RouterBootloader;
+use Spiral\Bootloader\Http\ErrorHandlerBootloader;
+use Spiral\Bootloader\Http\JsonPayloadsBootloader;
+use Spiral\Bootloader\Http\CookiesBootloader;
+use Spiral\Bootloader\Http\SessionBootloader;
+use Spiral\Bootloader\Http\CsrfBootloader;
+use Spiral\Bootloader\Http\PaginationBootloader;
+use Spiral\Cache\Bootloader\CacheBootloader;
+use Spiral\Queue\Bootloader\QueueBootloader;
+use Spiral\Serializer\Bootloader\SerializerBootloader;
+use Spiral\SendIt\Bootloader\MailerBootloader;
+use Spiral\Scaffolder\Bootloader\ScaffolderBootloader;
+use Spiral\Distribution\Bootloader\DistributionBootloader;
+use Spiral\Broadcasting\Bootloader\BroadcastingBootloader;
+use Spiral\Broadcasting\Bootloader\WebsocketsBootloader;
+use Spiral\Events\Bootloader\EventsBootloader;
+use Spiral\Views\Bootloader\ViewsBootloader;
+use Spiral\Bootloader\Views\TranslatedCacheBootloader;
+use Spiral\Storage\Bootloader\StorageBootloader;
+use Spiral\Bootloader\CommandBootloader;
+use Spiral\Bootloader\DebugBootloader;
+use Spiral\Bootloader\Debug\LogCollectorBootloader;
+use Spiral\Bootloader\Debug\HttpCollectorBootloader;
+use Spiral\Prototype\Bootloader\PrototypeBootloader;
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\App\Bootloader\AuthBootloader;
 use Spiral\App\Bootloader\RoutesBootloader;
@@ -14,7 +48,7 @@ use Spiral\Stempler\Bootloader\StemplerBootloader;
 use Spiral\Testing\Traits\TestableKernel;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
-class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
+class TestApp extends Kernel implements TestableKernelInterface
 {
     use TestableKernel;
 
@@ -24,77 +58,77 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         TokenizerListenerBootloader::class,
 
         // Telemetry
-        \Spiral\Telemetry\Bootloader\TelemetryBootloader::class,
+        TelemetryBootloader::class,
 
         // Core Services
-        Bootloader\SnapshotsBootloader::class,
-        Bootloader\I18nBootloader::class,
+        SnapshotsBootloader::class,
+        I18nBootloader::class,
 
         // Validation, filtration, security
-        Bootloader\Security\EncrypterBootloader::class,
-        \Spiral\Validation\Bootloader\ValidationBootloader::class,
-        \Spiral\Validator\Bootloader\ValidatorBootloader::class,
-        Bootloader\Security\FiltersBootloader::class,
-        Bootloader\Security\GuardBootloader::class,
+        EncrypterBootloader::class,
+        ValidationBootloader::class,
+        ValidatorBootloader::class,
+        FiltersBootloader::class,
+        GuardBootloader::class,
 
         // Dispatchers
-        \Spiral\Console\Bootloader\ConsoleBootloader::class,
+        ConsoleBootloader::class,
 
         // HTTP extensions
         NyholmBootloader::class,
-        Bootloader\Http\RouterBootloader::class,
-        Bootloader\Http\ErrorHandlerBootloader::class,
-        Bootloader\Http\JsonPayloadsBootloader::class,
-        Bootloader\Http\CookiesBootloader::class,
-        Bootloader\Http\SessionBootloader::class,
-        Bootloader\Http\CsrfBootloader::class,
-        Bootloader\Http\PaginationBootloader::class,
+        RouterBootloader::class,
+        ErrorHandlerBootloader::class,
+        JsonPayloadsBootloader::class,
+        CookiesBootloader::class,
+        SessionBootloader::class,
+        CsrfBootloader::class,
+        PaginationBootloader::class,
 
         // Cache
-        \Spiral\Cache\Bootloader\CacheBootloader::class,
+        CacheBootloader::class,
 
         // Queue
-        \Spiral\Queue\Bootloader\QueueBootloader::class,
+        QueueBootloader::class,
 
         // Serializer
-        \Spiral\Serializer\Bootloader\SerializerBootloader::class,
+        SerializerBootloader::class,
 
         // SendIt
-        \Spiral\SendIt\Bootloader\MailerBootloader::class,
+        MailerBootloader::class,
 
         // Scaffolder
-        \Spiral\Scaffolder\Bootloader\ScaffolderBootloader::class,
+        ScaffolderBootloader::class,
 
         // Distribution
-        \Spiral\Distribution\Bootloader\DistributionBootloader::class,
+        DistributionBootloader::class,
 
         // Broadcasting
-        \Spiral\Broadcasting\Bootloader\BroadcastingBootloader::class,
-        \Spiral\Broadcasting\Bootloader\WebsocketsBootloader::class,
+        BroadcastingBootloader::class,
+        WebsocketsBootloader::class,
 
         // Events
-        \Spiral\Events\Bootloader\EventsBootloader::class,
+        EventsBootloader::class,
 
         // selects between session and cycle based on env configuration
         AuthBootloader::class,
 
         // Template engines and rendering
         StemplerBootloader::class,
-        \Spiral\Views\Bootloader\ViewsBootloader::class,
-        Bootloader\Views\TranslatedCacheBootloader::class,
+        ViewsBootloader::class,
+        TranslatedCacheBootloader::class,
 
         // Storage
-        \Spiral\Storage\Bootloader\StorageBootloader::class,
+        StorageBootloader::class,
 
         // Framework commands
-        Bootloader\CommandBootloader::class,
+        CommandBootloader::class,
 
         // Debug and debug extensions
-        Bootloader\DebugBootloader::class,
-        Bootloader\Debug\LogCollectorBootloader::class,
-        Bootloader\Debug\HttpCollectorBootloader::class,
+        DebugBootloader::class,
+        LogCollectorBootloader::class,
+        HttpCollectorBootloader::class,
 
-        \Spiral\Prototype\Bootloader\PrototypeBootloader::class,
+        PrototypeBootloader::class,
     ];
 
     public const APP = [

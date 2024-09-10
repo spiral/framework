@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters\Model\Attribute;
 
+use Spiral\Tests\Filters\Model\AttributeTestCase;
 use Mockery as m;
 use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 
-final class NestedArrayTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
+final class NestedArrayTest extends AttributeTestCase
 {
     public function testGetsValue(): void
     {

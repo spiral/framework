@@ -8,6 +8,7 @@ use Spiral\Stempler\Lexer\Token;
 use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Parser;
 use Spiral\Stempler\Parser\Assembler;
+use Spiral\Stempler\Parser\Context;
 use Spiral\Stempler\Parser\SyntaxInterface;
 
 /**
@@ -19,7 +20,7 @@ final class RawSyntax implements SyntaxInterface
     {
         $asm->push(new Raw(
             $token->content,
-            new Parser\Context($token, $parser->getPath())
+            new Context($token, $parser->getPath())
         ));
     }
 }

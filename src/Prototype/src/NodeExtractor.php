@@ -9,6 +9,8 @@ use PhpParser\NodeVisitor;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use Spiral\Prototype\ClassNode\ConflictResolver;
+use Spiral\Prototype\ClassNode\ConflictResolver\Names;
+use Spiral\Prototype\ClassNode\ConflictResolver\Namespaces;
 use Spiral\Prototype\Exception\ClassNotDeclaredException;
 use Spiral\Prototype\NodeVisitors\ClassNode\DeclareClass;
 use Spiral\Prototype\NodeVisitors\ClassNode\LocateStatements;
@@ -22,8 +24,8 @@ final class NodeExtractor
     private readonly Parser $parser;
 
     public function __construct(
-        private readonly ConflictResolver\Names $namesResolver,
-        private readonly ConflictResolver\Namespaces $namespacesResolver,
+        private readonly Names $namesResolver,
+        private readonly Namespaces $namespacesResolver,
         Parser $parser = null
     ) {
         $this->parser = $parser ?? (new ParserFactory())->create(ParserFactory::ONLY_PHP7);

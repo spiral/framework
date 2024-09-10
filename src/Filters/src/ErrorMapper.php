@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Filters;
 
 use Spiral\Filters\Exception\SchemaException;
+use Spiral\Filters\Model\Schema\Builder;
 
 final class ErrorMapper
 {
@@ -27,7 +28,7 @@ final class ErrorMapper
                 continue;
             }
 
-            $this->mount($mapped, $this->schema[$field][Model\Schema\Builder::SCHEMA_ORIGIN], $message);
+            $this->mount($mapped, $this->schema[$field][Builder::SCHEMA_ORIGIN], $message);
         }
 
         return $mapped;

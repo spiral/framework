@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Spiral\Stempler\Compiler\Renderer;
 
 use Spiral\Stempler\Compiler;
+use Spiral\Stempler\Compiler\RendererInterface;
+use Spiral\Stempler\Compiler\Result;
 use Spiral\Stempler\Directive\DirectiveRendererInterface;
 use Spiral\Stempler\Exception\DirectiveException;
 use Spiral\Stempler\Node\Dynamic\Directive;
 use Spiral\Stempler\Node\Dynamic\Output;
 use Spiral\Stempler\Node\NodeInterface;
 
-final class DynamicRenderer implements Compiler\RendererInterface
+final class DynamicRenderer implements RendererInterface
 {
     // default output filter
     public const DEFAULT_FILTER = "htmlspecialchars((string) (%s), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8')";
@@ -22,7 +24,7 @@ final class DynamicRenderer implements Compiler\RendererInterface
     ) {
     }
 
-    public function render(Compiler $compiler, Compiler\Result $result, NodeInterface $node): bool
+    public function render(Compiler $compiler, Result $result, NodeInterface $node): bool
     {
         switch (true) {
             case $node instanceof Output:
@@ -39,7 +41,7 @@ final class DynamicRenderer implements Compiler\RendererInterface
     /**
      * @throws DirectiveException
      */
-    private function directive(Compiler\Result $source, Directive $directive): void
+    private function directive(Result $source, Directive $directive): void
     {
         if ($this->directiveRenderer !== null) {
             $result = $this->directiveRenderer->render($directive);
@@ -55,7 +57,7 @@ final class DynamicRenderer implements Compiler\RendererInterface
         );
     }
 
-    private function output(Compiler\Result $source, Output $output): void
+    private function output(Result $source, Output $output): void
     {
         if ($output->rawOutput) {
             $source->push(\sprintf('<?php echo %s; ?>', \trim($output->body)), $output->getContext());

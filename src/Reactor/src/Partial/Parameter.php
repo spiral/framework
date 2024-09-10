@@ -10,14 +10,16 @@ use Nette\PhpGenerator\PromotedParameter as NettePromotedParameter;
 use Spiral\Reactor\AggregableInterface;
 use Spiral\Reactor\NamedInterface;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\AttributeAware;
+use Spiral\Reactor\Traits\NameAware;
 
 /**
  * @property NetteParameter $element
  */
 class Parameter implements NamedInterface, AggregableInterface
 {
-    use Traits\AttributeAware;
-    use Traits\NameAware;
+    use AttributeAware;
+    use NameAware;
 
     protected NettePromotedParameter|NetteParameter $element;
 

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Serializer\Serializer;
 
+use Google\Protobuf\Internal\Message;
 use Spiral\Serializer\Exception\InvalidArgumentException;
 use Spiral\Serializer\Exception\SerializerException;
 use Spiral\Serializer\Exception\UnserializeException;
 use Spiral\Serializer\SerializerInterface;
-use Google\Protobuf\Internal\Message;
 
 final class ProtoSerializer implements SerializerInterface
 {

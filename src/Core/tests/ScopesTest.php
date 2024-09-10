@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
+use Spiral\Core\Container\Autowire;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Attribute\Singleton;
@@ -120,7 +121,7 @@ class ScopesTest extends TestCase
     public function testSingletonRebindingInScope(): void
     {
         $c = new Container();
-        $c->bindSingleton('bucket', new Container\Autowire(Bucket::class, ['a']));
+        $c->bindSingleton('bucket', new Autowire(Bucket::class, ['a']));
 
         $this->assertSame('a', $c->get('bucket')->getName());
 

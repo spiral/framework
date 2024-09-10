@@ -9,7 +9,7 @@ use Spiral\Stempler\Node\Dynamic\Directive;
 final class DirectiveGroup implements DirectiveRendererInterface
 {
     /**
-     * @param \Spiral\Stempler\Directive\DirectiveRendererInterface[] $directives
+     * @param DirectiveRendererInterface[] $directives
      */
     public function __construct(
         private array $directives = []

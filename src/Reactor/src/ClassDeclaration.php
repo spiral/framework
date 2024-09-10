@@ -10,16 +10,20 @@ use Spiral\Reactor\Partial\Method;
 use Spiral\Reactor\Partial\Property;
 use Spiral\Reactor\Partial\TraitUse;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\ConstantsAware;
+use Spiral\Reactor\Traits\MethodsAware;
+use Spiral\Reactor\Traits\PropertiesAware;
+use Spiral\Reactor\Traits\TraitsAware;
 
 /**
  * @extends AbstractDeclaration<ClassType>
  */
 class ClassDeclaration extends AbstractDeclaration implements AggregableInterface
 {
-    use Traits\ConstantsAware;
-    use Traits\MethodsAware;
-    use Traits\PropertiesAware;
-    use Traits\TraitsAware;
+    use ConstantsAware;
+    use MethodsAware;
+    use PropertiesAware;
+    use TraitsAware;
 
     public function __construct(?string $name = null)
     {

@@ -7,8 +7,8 @@ namespace Spiral\Filters\Attribute;
 use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\Attribute\Input\AbstractInput;
-use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Model\FilterInterface;
 
 /**
  * The attribute provides the ability to create nested array of filters. To demonstrate the composition, we will use

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler\Directive;
 
+use Spiral\Stempler\Compiler\Renderer\DynamicRenderer;
 use Spiral\Stempler\Compiler;
 use Spiral\Stempler\Compiler\Renderer\CoreRenderer;
 use Spiral\Stempler\Compiler\Renderer\HTMLRenderer;
@@ -40,7 +41,7 @@ abstract class BaseTestCase extends \Spiral\Tests\Stempler\Compiler\BaseTestCase
             $directiveGroup->addDirective(new $directive());
         }
 
-        $compiler->addRenderer(new Compiler\Renderer\DynamicRenderer($directiveGroup));
+        $compiler->addRenderer(new DynamicRenderer($directiveGroup));
 
         return $compiler->compile($document)->getContent();
     }

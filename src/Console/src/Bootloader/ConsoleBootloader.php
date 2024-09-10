@@ -23,6 +23,7 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Bootloads console and provides ability to register custom bootload commands.
@@ -85,7 +86,7 @@ final class ConsoleBootloader extends Bootloader
     }
 
     /**
-     * @param class-string<\Symfony\Component\Console\Command\Command> $command
+     * @param class-string<Command> $command
      * @param bool $lowPriority A low priority command will be overwritten in a name conflict case.
      *        The parameter might be removed in the next major update.
      */

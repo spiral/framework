@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Spiral\Core\ContainerScope;
+use Spiral\Tests\Config\Value;
+
 return [
-    'value' => \Spiral\Core\ContainerScope::getContainer()->get(\Spiral\Tests\Config\Value::class)->getValue()
+    'value' => ContainerScope::getContainer()->get(Value::class)->getValue()
 ];

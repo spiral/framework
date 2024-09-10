@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler;
 
+use Spiral\Stempler\Exception\LoaderException;
 use PHPUnit\Framework\TestCase;
 use Spiral\Stempler\Builder;
 use Spiral\Stempler\Compiler\Renderer\CoreRenderer;
@@ -34,7 +35,7 @@ class BuilderTest extends TestCase
 
     public function testInvalidPath(): void
     {
-        $this->expectException(\Spiral\Stempler\Exception\LoaderException::class);
+        $this->expectException(LoaderException::class);
         $builder = $this->getBuilder(new StringLoader());
         $builder->compile('missing');
     }

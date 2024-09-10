@@ -19,8 +19,8 @@ use Spiral\Telemetry\LogTracerFactory;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerFactoryInterface;
-use Spiral\Telemetry\TracerInterface;
 use Spiral\Telemetry\TracerFactoryProviderInterface;
+use Spiral\Telemetry\TracerInterface;
 
 final class TelemetryBootloader extends Bootloader
 {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Bootloader\Events;
 
+use Spiral\Core\Container\Autowire;
 use Mockery as m;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -115,7 +116,7 @@ final class EventsBootloaderTest extends BaseTestCase
             kernel: $kernel,
             config: new EventsConfig([
                 'processors' => [
-                    new Container\Autowire('foo'),
+                    new Autowire('foo'),
                 ],
             ])
         );
@@ -165,7 +166,7 @@ final class EventsBootloaderTest extends BaseTestCase
         $configs->setDefaults(EventsConfig::CONFIG, ['interceptors' => []]);
 
         $interceptor = $this->createMock(CoreInterceptorInterface::class);
-        $autowire = new Container\Autowire('foo');
+        $autowire = new Autowire('foo');
 
         $bootloader = new EventsBootloader($configs);
         $bootloader->addInterceptor('foo');

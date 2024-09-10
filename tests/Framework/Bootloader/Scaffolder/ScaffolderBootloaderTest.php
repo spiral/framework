@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Framework\Bootloader\Scaffolder;
 
+use Spiral\Scaffolder\Declaration\BootloaderDeclaration;
+use Spiral\Scaffolder\Declaration\ConfigDeclaration;
+use Spiral\Scaffolder\Declaration\ControllerDeclaration;
+use Spiral\Scaffolder\Declaration\FilterDeclaration;
+use Spiral\Scaffolder\Declaration\MiddlewareDeclaration;
+use Spiral\Scaffolder\Declaration\CommandDeclaration;
+use Spiral\Scaffolder\Declaration\JobHandlerDeclaration;
 use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;
 use Spiral\Boot\DirectoriesInterface;
@@ -48,43 +55,43 @@ final class ScaffolderBootloaderTest extends BaseTestCase
             'declarations' => [],
             'defaults' => [
                 'declarations' => [
-                    Declaration\BootloaderDeclaration::TYPE => [
+                    BootloaderDeclaration::TYPE => [
                         'namespace' => 'Bootloader',
                         'postfix' => 'Bootloader',
-                        'class' => Declaration\BootloaderDeclaration::class,
+                        'class' => BootloaderDeclaration::class,
                     ],
-                    Declaration\ConfigDeclaration::TYPE => [
+                    ConfigDeclaration::TYPE => [
                         'namespace' => 'Config',
                         'postfix' => 'Config',
-                        'class' => Declaration\ConfigDeclaration::class,
+                        'class' => ConfigDeclaration::class,
                         'options' => [
                             'directory' => $dirs->get('config'),
                         ],
                     ],
-                    Declaration\ControllerDeclaration::TYPE => [
+                    ControllerDeclaration::TYPE => [
                         'namespace' => 'Controller',
                         'postfix' => 'Controller',
-                        'class' => Declaration\ControllerDeclaration::class,
+                        'class' => ControllerDeclaration::class,
                     ],
-                    Declaration\FilterDeclaration::TYPE => [
+                    FilterDeclaration::TYPE => [
                         'namespace' => 'Filter',
                         'postfix' => 'Filter',
-                        'class' => Declaration\FilterDeclaration::class,
+                        'class' => FilterDeclaration::class,
                     ],
-                    Declaration\MiddlewareDeclaration::TYPE => [
+                    MiddlewareDeclaration::TYPE => [
                         'namespace' => 'Middleware',
                         'postfix' => 'Middleware',
-                        'class' => Declaration\MiddlewareDeclaration::class,
+                        'class' => MiddlewareDeclaration::class,
                     ],
-                    Declaration\CommandDeclaration::TYPE => [
+                    CommandDeclaration::TYPE => [
                         'namespace' => 'Command',
                         'postfix' => 'Command',
-                        'class' => Declaration\CommandDeclaration::class,
+                        'class' => CommandDeclaration::class,
                     ],
-                    Declaration\JobHandlerDeclaration::TYPE => [
+                    JobHandlerDeclaration::TYPE => [
                         'namespace' => 'Job',
                         'postfix' => 'Job',
-                        'class' => Declaration\JobHandlerDeclaration::class,
+                        'class' => JobHandlerDeclaration::class,
                     ],
                 ],
             ],

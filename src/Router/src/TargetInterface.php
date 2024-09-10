@@ -6,6 +6,7 @@ namespace Spiral\Router;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
+use Spiral\Router\Exception\TargetException;
 
 /**
  * Targets provide logical and constrained bridge between route and specific function or controller.
@@ -33,7 +34,7 @@ interface TargetInterface
      *
      * @param Matches $matches
      *
-     * @throws \Spiral\Router\Exception\TargetException
+     * @throws TargetException
      */
     public function getHandler(ContainerInterface $container, array $matches): Handler;
 }

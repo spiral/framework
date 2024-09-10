@@ -13,7 +13,7 @@ class ExtractorTest extends TestCase
 {
     /**
      * @throws \ReflectionException
-     * @throws \Spiral\Prototype\Exception\ClassNotDeclaredException
+     * @throws ClassNotDeclaredException
      */
     public function testNoClass(): void
     {

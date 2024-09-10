@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\App\Bootloader;
 
+use Spiral\App\Interceptor\Append;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\App\Controller\AuthController;
@@ -65,9 +66,9 @@ final class RoutesBootloader extends BaseRoutesBootloader
             ->add('intercepted:without', '/intercepted/without')
             ->action(InterceptedController::class, 'without')
             ->core($this->getInterceptedCore([
-                new Interceptor\Append('one'),
-                new Interceptor\Append('two'),
-                new Interceptor\Append('three'),
+                new Append('one'),
+                new Append('two'),
+                new Append('three'),
             ]));
         $routes
             ->add('intercepted:with', '/intercepted/with')
@@ -77,45 +78,45 @@ final class RoutesBootloader extends BaseRoutesBootloader
             ->add('intercepted:mix', '/intercepted/mix')
             ->action(InterceptedController::class, 'mix')
             ->core($this->getInterceptedCore([
-                new Interceptor\Append('four'),
-                new Interceptor\Append('five'),
+                new Append('four'),
+                new Append('five'),
                 $this->pipelineInterceptor,
-                new Interceptor\Append('six'),
+                new Append('six'),
             ]));
         $routes
             ->add('intercepted:dup', '/intercepted/dup')
             ->action(InterceptedController::class, 'dup')
             ->core($this->getInterceptedCore([
                 $this->pipelineInterceptor,
-                new Interceptor\Append('one'),
-                new Interceptor\Append('two'),
-                new Interceptor\Append('three'),
+                new Append('one'),
+                new Append('two'),
+                new Append('three'),
             ]));
         $routes
             ->add('intercepted:skip', '/intercepted/skip')
             ->action(InterceptedController::class, 'skip')
             ->core($this->getInterceptedCore([
-                new Interceptor\Append('one'),
+                new Append('one'),
                 $this->pipelineInterceptor,
-                new Interceptor\Append('two'),
-                new Interceptor\Append('three'),
+                new Append('two'),
+                new Append('three'),
             ]));
         $routes
             ->add('intercepted:first', '/intercepted/first')
             ->action(InterceptedController::class, 'first')
             ->core($this->getInterceptedCore([
                 $this->pipelineInterceptor,
-                new Interceptor\Append('four'),
-                new Interceptor\Append('five'),
-                new Interceptor\Append('six'),
+                new Append('four'),
+                new Append('five'),
+                new Append('six'),
             ]));
         $routes
             ->add('intercepted:withoutAttribute', '/intercepted/withoutAttribute')
             ->action(InterceptedController::class, 'withoutAttribute')
             ->core($this->getInterceptedCore([
-                new Interceptor\Append('one'),
-                new Interceptor\Append('two'),
-                new Interceptor\Append('three'),
+                new Append('one'),
+                new Append('two'),
+                new Append('three'),
             ]));
         $routes
             ->add('intercepted:withAttribute', '/intercepted/withAttribute')
@@ -127,37 +128,37 @@ final class RoutesBootloader extends BaseRoutesBootloader
             ->add('intercepted:mixAttribute', '/intercepted/mixAttribute')
             ->action(InterceptedController::class, 'mixAttribute')
             ->core($this->getInterceptedCore([
-                new Interceptor\Append('four'),
-                new Interceptor\Append('five'),
+                new Append('four'),
+                new Append('five'),
                 $this->pipelineInterceptor,
-                new Interceptor\Append('six'),
+                new Append('six'),
             ]));
         $routes
             ->add('intercepted:dupAttribute', '/intercepted/dupAttribute')
             ->action(InterceptedController::class, 'dupAttribute')
             ->core($this->getInterceptedCore([
                 $this->pipelineInterceptor,
-                new Interceptor\Append('one'),
-                new Interceptor\Append('two'),
-                new Interceptor\Append('three'),
+                new Append('one'),
+                new Append('two'),
+                new Append('three'),
             ]));
         $routes
             ->add('intercepted:skipAttribute', '/intercepted/skipAttribute')
             ->action(InterceptedController::class, 'skipAttribute')
             ->core($this->getInterceptedCore([
-                new Interceptor\Append('one'),
+                new Append('one'),
                 $this->pipelineInterceptor,
-                new Interceptor\Append('two'),
-                new Interceptor\Append('three'),
+                new Append('two'),
+                new Append('three'),
             ]));
         $routes
             ->add('intercepted:firstAttribute', '/intercepted/firstAttribute')
             ->action(InterceptedController::class, 'firstAttribute')
             ->core($this->getInterceptedCore([
                 $this->pipelineInterceptor,
-                new Interceptor\Append('four'),
-                new Interceptor\Append('five'),
-                new Interceptor\Append('six'),
+                new Append('four'),
+                new Append('five'),
+                new Append('six'),
             ]));
 
         // with group, prefix, name prefix

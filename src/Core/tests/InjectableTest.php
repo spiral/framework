@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
+use Spiral\Core\Container\InjectorInterface;
 use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -169,7 +170,7 @@ class InjectableTest extends TestCase
     #[DataProvider('inheritanceDataProvider')]
     public function testInjectableInheritance(string $class): void
     {
-        $mock = $this->createMock(Container\InjectorInterface::class);
+        $mock = $this->createMock(InjectorInterface::class);
         $mock->expects($this->once())
             ->method('createInjection')
             ->with(
@@ -203,7 +204,7 @@ class InjectableTest extends TestCase
     public function testExtendedInjectorAnonClassObjectParam(): void
     {
         $container = new Container();
-        $container->bind(stdClass::class, new Injectable(new class implements Container\InjectorInterface {
+        $container->bind(stdClass::class, new Injectable(new class implements InjectorInterface {
             public function createInjection(\ReflectionClass $class, object|string|null $context = null): object
             {
                 return (object)['context' => $context];
@@ -219,7 +220,7 @@ class InjectableTest extends TestCase
     public function testExtendedInjectorAnonClassMixedParam(): void
     {
         $container = new Container();
-        $container->bind(stdClass::class, new Injectable(new class implements Container\InjectorInterface {
+        $container->bind(stdClass::class, new Injectable(new class implements InjectorInterface {
             public function createInjection(\ReflectionClass $class, mixed $context = null): object
             {
                 return (object)['context' => $context];

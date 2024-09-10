@@ -14,8 +14,14 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\LogicException;
 use Spiral\Core\Exception\Scope\FinalizersException;
+use Spiral\Core\Internal\Binder;
 use Spiral\Core\Internal\Common\DestructorTrait;
+use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Config\StateBinder;
+use Spiral\Core\Internal\Factory;
+use Spiral\Core\Internal\Invoker;
+use Spiral\Core\Internal\Resolver;
+use Spiral\Core\Internal\State;
 
 /**
  * Auto-wiring container: declarative singletons, contextual injections, parent container
@@ -46,12 +52,12 @@ final class Container implements
 
     public const DEFAULT_ROOT_SCOPE_NAME = 'root';
 
-    private Internal\State $state;
-    private ResolverInterface|Internal\Resolver $resolver;
-    private FactoryInterface|Internal\Factory $factory;
+    private State $state;
+    private ResolverInterface|Resolver $resolver;
+    private FactoryInterface|Factory $factory;
     private ContainerInterface|Internal\Container $container;
-    private BinderInterface|Internal\Binder $binder;
-    private InvokerInterface|Internal\Invoker $invoker;
+    private BinderInterface|Binder $binder;
+    private InvokerInterface|Invoker $invoker;
     private Internal\Scope $scope;
 
     /**
@@ -322,13 +328,13 @@ final class Container implements
 
         // Get named scope or create anonymous one
         $state = match (true) {
-            $scopeName === null => new Internal\State(),
+            $scopeName === null => new State(),
             // Only root container can make default bindings directly
             $isRoot => $container->config->scopedBindings->getState($scopeName),
             default => clone $container->config->scopedBindings->getState($scopeName),
         };
 
-        $constructor = new Internal\Common\Registry($container->config, [
+        $constructor = new Registry($container->config, [
             'state' => $state,
             'scope' => new Internal\Scope($scopeName),
         ], $this->options);

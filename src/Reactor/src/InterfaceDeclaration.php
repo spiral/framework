@@ -8,14 +8,16 @@ use Nette\PhpGenerator\InterfaceType;
 use Spiral\Reactor\Partial\Constant;
 use Spiral\Reactor\Partial\Method;
 use Spiral\Reactor\Traits;
+use Spiral\Reactor\Traits\ConstantsAware;
+use Spiral\Reactor\Traits\MethodsAware;
 
 /**
  * @extends AbstractDeclaration<InterfaceType>
  */
 class InterfaceDeclaration extends AbstractDeclaration implements AggregableInterface
 {
-    use Traits\ConstantsAware;
-    use Traits\MethodsAware;
+    use ConstantsAware;
+    use MethodsAware;
 
     public function __construct(string $name)
     {

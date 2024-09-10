@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Broadcasting;
 
+use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -16,7 +18,7 @@ final class BroadcastManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FactoryInterface */
+    /** @var LegacyMockInterface|MockInterface|FactoryInterface */
     private $factory;
     private BroadcastManager $manager;
 

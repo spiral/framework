@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Tokenizer\Listener;
 
+use Spiral\Tests\Tokenizer\Classes\Targets\ConsoleCommand;
+use Spiral\Tests\Tokenizer\Classes\Targets\Filter;
+use Spiral\Tests\Tokenizer\Classes\Targets\ConsoleCommandInterface;
+use Spiral\Tests\Tokenizer\Classes\Targets\HomeController;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
@@ -31,10 +35,10 @@ final class ListenerInvokerTest extends TestCase
         $classes = \array_map(
             fn(string $class) => new \ReflectionClass($class),
             [
-                Targets\ConsoleCommand::class,
-                Targets\Filter::class,
-                Targets\ConsoleCommandInterface::class,
-                Targets\HomeController::class,
+                ConsoleCommand::class,
+                Filter::class,
+                ConsoleCommandInterface::class,
+                HomeController::class,
             ],
         );
 

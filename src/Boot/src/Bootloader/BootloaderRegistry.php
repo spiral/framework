@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
 
+use Spiral\Boot\BootloadManagerInterface;
+
 /**
- * @psalm-import-type TClass from \Spiral\Boot\BootloadManagerInterface
+ * @psalm-import-type TClass from BootloadManagerInterface
  */
 final class BootloaderRegistry implements BootloaderRegistryInterface
 {

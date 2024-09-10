@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
+use Spiral\Core\Config\Injectable;
 use Psr\Container\ContainerInterface;
 use ReflectionParameter;
 use Spiral\Core\Attribute\Proxy;
@@ -134,7 +135,7 @@ final class ProxyTest extends BaseTestCase
         $root->getBinder('foo')
             ->bind(
                 ContextInterface::class,
-                new \Spiral\Core\Config\Injectable(
+                new Injectable(
                     new class implements InjectorInterface {
                         public function createInjection(\ReflectionClass $class, mixed $context = null): Context
                         {
@@ -175,7 +176,7 @@ final class ProxyTest extends BaseTestCase
         $root->getBinder('foo')
             ->bind(
                 ContextInterface::class,
-                new \Spiral\Core\Config\Injectable(
+                new Injectable(
                     new class implements InjectorInterface {
                         public function createInjection(\ReflectionClass $class, mixed $context = null): Context
                         {

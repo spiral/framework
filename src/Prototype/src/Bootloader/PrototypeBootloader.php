@@ -6,19 +6,56 @@ namespace Spiral\Prototype\Bootloader;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
+use Spiral\Auth\AuthContextInterface;
+use Spiral\Auth\AuthScope;
+use Spiral\Auth\TokenStorageInterface;
 use Spiral\Boot\Bootloader;
+use Spiral\Boot\Bootloader\CoreBootloader;
+use Spiral\Boot\EnvironmentInterface;
+use Spiral\Boot\KernelInterface;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Attributes\AttributesBootloader;
+use Spiral\Broadcasting\BroadcastInterface;
+use Spiral\Cache\CacheStorageProviderInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Console\Bootloader\ConsoleBootloader;
+use Spiral\Console\Console;
+use Spiral\Cookies\CookieManager;
 use Spiral\Core\Attribute\Singleton;
+use Spiral\Encrypter\EncrypterInterface;
+use Spiral\Exceptions\ExceptionHandlerInterface;
+use Spiral\Files\FilesInterface;
+use Spiral\Http\Http;
+use Spiral\Http\Request\InputManager;
+use Spiral\Http\ResponseWrapper;
+use Spiral\Logger\LogsInterface;
+use Spiral\Pagination\PaginationProviderInterface;
 use Spiral\Prototype\Command;
+use Spiral\Prototype\Command\DumpCommand;
+use Spiral\Prototype\Command\InjectCommand;
+use Spiral\Prototype\Command\ListCommand;
+use Spiral\Prototype\Command\UsageCommand;
 use Spiral\Prototype\Config\PrototypeConfig;
 use Spiral\Prototype\PrototypeLocatorListener;
 use Spiral\Prototype\PrototypeRegistry;
+use Spiral\Queue\QueueConnectionProviderInterface;
+use Spiral\Queue\QueueInterface;
+use Spiral\Router\RouterInterface;
+use Spiral\Security\GuardInterface;
+use Spiral\Serializer\SerializerManager;
+use Spiral\Session\SessionInterface;
+use Spiral\Session\SessionScope;
+use Spiral\Snapshots\SnapshotterInterface;
+use Spiral\Storage\BucketInterface;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
+use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
+use Spiral\Translator\TranslatorInterface;
+use Spiral\Validation\ValidationInterface;
+use Spiral\Views\ViewsInterface;
 
 /**
  * Manages ide-friendly container injections via PrototypeTrait.
@@ -27,7 +64,7 @@ use Spiral\Tokenizer\TokenizerListenerRegistryInterface;
 final class PrototypeBootloader extends Bootloader\Bootloader
 {
     protected const DEPENDENCIES = [
-        Bootloader\CoreBootloader::class,
+        CoreBootloader::class,
         TokenizerListenerBootloader::class,
         AttributesBootloader::class,
     ];
@@ -38,45 +75,45 @@ final class PrototypeBootloader extends Bootloader\Bootloader
 
     // Default spiral specific shortcuts, automatically checked on existence.
     private const DEFAULT_SHORTCUTS = [
-        'app' => ['resolve' => \Spiral\Boot\KernelInterface::class],
-        'classLocator' => \Spiral\Tokenizer\ClassesInterface::class,
-        'console' => \Spiral\Console\Console::class,
-        'broadcast' => \Spiral\Broadcasting\BroadcastInterface::class,
+        'app' => ['resolve' => KernelInterface::class],
+        'classLocator' => ClassesInterface::class,
+        'console' => Console::class,
+        'broadcast' => BroadcastInterface::class,
         'container' => ContainerInterface::class,
-        'encrypter' => \Spiral\Encrypter\EncrypterInterface::class,
-        'env' => \Spiral\Boot\EnvironmentInterface::class,
-        'files' => \Spiral\Files\FilesInterface::class,
-        'guard' => \Spiral\Security\GuardInterface::class,
-        'http' => \Spiral\Http\Http::class,
-        'i18n' => \Spiral\Translator\TranslatorInterface::class,
-        'input' => \Spiral\Http\Request\InputManager::class,
+        'encrypter' => EncrypterInterface::class,
+        'env' => EnvironmentInterface::class,
+        'files' => FilesInterface::class,
+        'guard' => GuardInterface::class,
+        'http' => Http::class,
+        'i18n' => TranslatorInterface::class,
+        'input' => InputManager::class,
         'session' => [
-            'resolve' => \Spiral\Session\SessionScope::class,
-            'with' => [\Spiral\Session\SessionInterface::class],
+            'resolve' => SessionScope::class,
+            'with' => [SessionInterface::class],
         ],
-        'cookies' => \Spiral\Cookies\CookieManager::class,
-        'logger' => \Psr\Log\LoggerInterface::class,
-        'logs' => \Spiral\Logger\LogsInterface::class,
+        'cookies' => CookieManager::class,
+        'logger' => LoggerInterface::class,
+        'logs' => LogsInterface::class,
         'memory' => MemoryInterface::class,
-        'paginators' => \Spiral\Pagination\PaginationProviderInterface::class,
-        'queue' => \Spiral\Queue\QueueInterface::class,
-        'queueManager' => \Spiral\Queue\QueueConnectionProviderInterface::class,
-        'request' => \Spiral\Http\Request\InputManager::class,
-        'response' => \Spiral\Http\ResponseWrapper::class,
-        'router' => \Spiral\Router\RouterInterface::class,
-        'snapshots' => \Spiral\Snapshots\SnapshotterInterface::class,
-        'storage' => \Spiral\Storage\BucketInterface::class,
-        'serializer' => \Spiral\Serializer\SerializerManager::class,
-        'validator' => \Spiral\Validation\ValidationInterface::class,
-        'views' => \Spiral\Views\ViewsInterface::class,
+        'paginators' => PaginationProviderInterface::class,
+        'queue' => QueueInterface::class,
+        'queueManager' => QueueConnectionProviderInterface::class,
+        'request' => InputManager::class,
+        'response' => ResponseWrapper::class,
+        'router' => RouterInterface::class,
+        'snapshots' => SnapshotterInterface::class,
+        'storage' => BucketInterface::class,
+        'serializer' => SerializerManager::class,
+        'validator' => ValidationInterface::class,
+        'views' => ViewsInterface::class,
         'auth' => [
-            'resolve' => \Spiral\Auth\AuthScope::class,
-            'with' => [\Spiral\Auth\AuthContextInterface::class],
+            'resolve' => AuthScope::class,
+            'with' => [AuthContextInterface::class],
         ],
-        'authTokens' => \Spiral\Auth\TokenStorageInterface::class,
-        'cache' => \Psr\SimpleCache\CacheInterface::class,
-        'cacheManager' => \Spiral\Cache\CacheStorageProviderInterface::class,
-        'exceptionHandler' => \Spiral\Exceptions\ExceptionHandlerInterface::class,
+        'authTokens' => TokenStorageInterface::class,
+        'cache' => CacheInterface::class,
+        'cacheManager' => CacheStorageProviderInterface::class,
+        'exceptionHandler' => ExceptionHandlerInterface::class,
     ];
 
     public function __construct(
@@ -86,10 +123,10 @@ final class PrototypeBootloader extends Bootloader\Bootloader
 
     public function init(ConsoleBootloader $console): void
     {
-        $console->addCommand(Command\DumpCommand::class);
-        $console->addCommand(Command\ListCommand::class);
-        $console->addCommand(Command\UsageCommand::class);
-        $console->addCommand(Command\InjectCommand::class);
+        $console->addCommand(DumpCommand::class);
+        $console->addCommand(ListCommand::class);
+        $console->addCommand(UsageCommand::class);
+        $console->addCommand(InjectCommand::class);
 
         $console->addConfigureSequence(
             'prototype:dump',

@@ -10,6 +10,10 @@ use Spiral\Boot\MemoryInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Logger;
+use Spiral\Logger\ListenerRegistry;
+use Spiral\Logger\ListenerRegistryInterface;
+use Spiral\Logger\LogFactory;
+use Spiral\Logger\LogsInterface;
 
 /**
  * Bootloads core services.
@@ -26,8 +30,8 @@ final class CoreBootloader extends Bootloader
         MemoryInterface::class => [self::class, 'memory'],
 
         // debug and logging services
-        Logger\ListenerRegistryInterface::class => Logger\ListenerRegistry::class,
-        Logger\LogsInterface::class => Logger\LogFactory::class,
+        ListenerRegistryInterface::class => ListenerRegistry::class,
+        LogsInterface::class => LogFactory::class,
     ];
 
     private function memory(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
+use Spiral\Tests\Scaffolder\App\Config\SampleConfig;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\Console\Input\StringInput;
@@ -17,7 +18,7 @@ class ConfigTest extends AbstractCommandTestCase
      */
     public function testScaffold(): void
     {
-        $this->className = $class = \Spiral\Tests\Scaffolder\App\Config\SampleConfig::class;
+        $this->className = $class = SampleConfig::class;
 
         $this->console()->run('create:config', [
             'name' => 'sample',

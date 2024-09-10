@@ -4,6 +4,22 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Tokenizer\Listener;
 
+use Spiral\Tests\Tokenizer\Classes\Listeners\CommandInterfaceListener;
+use Spiral\Tests\Tokenizer\Classes\Targets\ConsoleCommand;
+use Spiral\Tests\Tokenizer\Classes\Targets\ConsoleCommandInterface;
+use Spiral\Tests\Tokenizer\Classes\Targets\ConsoleCommandWithExtend;
+use Spiral\Tests\Tokenizer\Classes\Listeners\TraitListener;
+use Spiral\Tests\Tokenizer\Classes\Targets\ClassWithAttributeOnConstant;
+use Spiral\Tests\Tokenizer\Classes\Targets\ClassWithTrait;
+use Spiral\Tests\Tokenizer\Classes\Listeners\ControllerListener;
+use Spiral\Tests\Tokenizer\Classes\Targets\ClassWithAttributeOnClass;
+use Spiral\Tests\Tokenizer\Classes\Listeners\CommandListener;
+use Spiral\Tests\Tokenizer\Classes\Targets\Filter;
+use Spiral\Tests\Tokenizer\Classes\Targets\ClassWithAttributeOnProperty;
+use Spiral\Tests\Tokenizer\Classes\Listeners\ConstantListener;
+use Spiral\Tests\Tokenizer\Classes\Listeners\ParameterListener;
+use Spiral\Tests\Tokenizer\Classes\Targets\HomeController;
+use Spiral\Tests\Tokenizer\Classes\Targets\ClassWithAttributeOnParameter;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -35,51 +51,51 @@ final class ClassLocatorByTargetTest extends TestCase
     public static function provideGetClasses(): \Generator
     {
         yield 'class' => [
-            Listeners\CommandInterfaceListener::class,
+            CommandInterfaceListener::class,
             [
-                Targets\ConsoleCommand::class,
-                Targets\ConsoleCommandInterface::class,
-                Targets\ConsoleCommandWithExtend::class,
+                ConsoleCommand::class,
+                ConsoleCommandInterface::class,
+                ConsoleCommandWithExtend::class,
             ],
         ];
 
         yield 'trait' => [
-            Listeners\TraitListener::class,
+            TraitListener::class,
             [
-                Targets\ClassWithAttributeOnConstant::class,
-                Targets\ClassWithTrait::class,
+                ClassWithAttributeOnConstant::class,
+                ClassWithTrait::class,
             ],
         ];
 
         yield 'attribute-on-class' => [
-            Listeners\ControllerListener::class,
+            ControllerListener::class,
             [
-                Targets\ConsoleCommand::class,
-                Targets\ClassWithAttributeOnClass::class,
+                ConsoleCommand::class,
+                ClassWithAttributeOnClass::class,
             ],
         ];
 
         yield 'attribute-on-property' => [
-            Listeners\CommandListener::class,
+            CommandListener::class,
             [
-                Targets\Filter::class,
-                Targets\ClassWithAttributeOnProperty::class,
+                Filter::class,
+                ClassWithAttributeOnProperty::class,
             ],
         ];
 
         yield 'attribute-on-constant' => [
-            Listeners\ConstantListener::class,
+            ConstantListener::class,
             [
-                Targets\ConsoleCommand::class,
-                Targets\ClassWithAttributeOnConstant::class,
+                ConsoleCommand::class,
+                ClassWithAttributeOnConstant::class,
             ],
         ];
 
         yield 'attribute-on-parameter' => [
-            Listeners\ParameterListener::class,
+            ParameterListener::class,
             [
-                Targets\HomeController::class,
-                Targets\ClassWithAttributeOnParameter::class,
+                HomeController::class,
+                ClassWithAttributeOnParameter::class,
             ],
         ];
     }
@@ -92,16 +108,16 @@ final class ClassLocatorByTargetTest extends TestCase
         $classes = \array_map(
             fn (string $class) => new \ReflectionClass($class),
             [
-                Targets\ConsoleCommand::class,
-                Targets\Filter::class,
-                Targets\ConsoleCommandInterface::class,
-                Targets\HomeController::class,
-                Targets\ConsoleCommandWithExtend::class,
-                Targets\ClassWithAttributeOnClass::class,
-                Targets\ClassWithAttributeOnProperty::class,
-                Targets\ClassWithAttributeOnParameter::class,
-                Targets\ClassWithAttributeOnConstant::class,
-                Targets\ClassWithTrait::class,
+                ConsoleCommand::class,
+                Filter::class,
+                ConsoleCommandInterface::class,
+                HomeController::class,
+                ConsoleCommandWithExtend::class,
+                ClassWithAttributeOnClass::class,
+                ClassWithAttributeOnProperty::class,
+                ClassWithAttributeOnParameter::class,
+                ClassWithAttributeOnConstant::class,
+                ClassWithTrait::class,
             ],
         );
 

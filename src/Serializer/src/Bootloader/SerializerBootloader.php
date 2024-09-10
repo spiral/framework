@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Serializer\Bootloader;
 
+use Google\Protobuf\Internal\Message;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
@@ -15,10 +18,9 @@ use Spiral\Serializer\Serializer\JsonSerializer;
 use Spiral\Serializer\Serializer\PhpSerializer;
 use Spiral\Serializer\Serializer\ProtoSerializer;
 use Spiral\Serializer\SerializerInterface;
-use Spiral\Serializer\SerializerRegistry;
 use Spiral\Serializer\SerializerManager;
+use Spiral\Serializer\SerializerRegistry;
 use Spiral\Serializer\SerializerRegistryInterface;
-use Google\Protobuf\Internal\Message;
 
 final class SerializerBootloader extends Bootloader
 {
@@ -69,8 +71,8 @@ final class SerializerBootloader extends Bootloader
     }
 
     /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function wire(string|Autowire|SerializerInterface $serializer): SerializerInterface
     {

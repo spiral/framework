@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters\Model\Attribute\Input;
 
+use Spiral\Tests\Filters\Model\AttributeTestCase;
 use Spiral\Filters\Attribute\Input\Method;
 
-final class MethodTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
+final class MethodTest extends AttributeTestCase
 {
     public function testGetsValue(): void
     {

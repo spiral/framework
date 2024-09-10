@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters\Model\Attribute\Input;
 
+use Spiral\Tests\Filters\Model\AttributeTestCase;
 use Spiral\Filters\Attribute\Input\RemoteAddress;
 
-final class RemoteAddressTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
+final class RemoteAddressTest extends AttributeTestCase
 {
     public function testGetsValue(): void
     {
