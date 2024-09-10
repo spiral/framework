@@ -87,6 +87,7 @@ return RectorConfig::configure()
         // example code for test
         '*/Fixture/*',
         '*/Fixtures/*',
+        '*/fixtures/*',
         '*/Stub/*',
         '*/Stubs/*',
         '*/tests/Classes/*',
