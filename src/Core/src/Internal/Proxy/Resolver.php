@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Core\Internal\Proxy;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\RecursiveProxyException;
@@ -29,15 +30,21 @@ final class Resolver
                 'Resolved `null` from the container.',
             );
         } catch (\Throwable $e) {
+            $scope = self::getScope($c);
             throw new ContainerException(
-                \sprintf('Unable to resolve `%s` in a Proxy in `%s` scope.', $alias, self::getScope($c)),
+                $scope === null
+                    ? "Unable to resolve `{$alias}` in a Proxy."
+                    : "Unable to resolve `{$alias}` in a Proxy in `{$scope}` scope.",
                 previous: $e,
             );
         }
 
         if (Proxy::isProxy($result)) {
+            $scope = self::getScope($c);
             throw new RecursiveProxyException(
-                \sprintf('Recursive proxy detected for `%s` in `%s` scope.', $alias, self::getScope($c)),
+                $scope === null
+                    ? "Recursive proxy detected for `{$alias}`."
+                    : "Recursive proxy detected for `{$alias}` in `{$scope}` scope.",
             );
         }
 
@@ -45,10 +52,18 @@ final class Resolver
     }
 
     /**
-     * @return non-empty-string
+     * @return non-empty-string|null
      */
-    private static function getScope(ContainerInterface $c): string
+    private static function getScope(ContainerInterface $c): ?string
     {
+        if (!$c instanceof Container) {
+            if (!Proxy::isProxy($c)) {
+                return null;
+            }
+
+            $c = null;
+        }
+
         return \implode('.', \array_reverse(\array_map(
             static fn (?string $name): string => $name ?? 'null',
             Introspector::scopeNames($c),
