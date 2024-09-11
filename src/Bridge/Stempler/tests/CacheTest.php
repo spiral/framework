@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Tests\Stempler;
 
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Core\Internal\Introspector;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Views\ViewContext;
 
 class CacheTest extends BaseTestCase
@@ -25,6 +27,7 @@ class CacheTest extends BaseTestCase
         $configurator->modify('views', new EnableCachePatch());
     }
 
+    #[TestScope("http")]
     public function testCache(): void
     {
         $this->assertCount(0, $this->files->getFiles(__DIR__ . '/cache/', '*.php'));

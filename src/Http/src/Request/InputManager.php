@@ -13,6 +13,7 @@ use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Scope;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ScopeException;
+use Spiral\Core\Internal\Introspector;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Exception\InputException;
 use Spiral\Http\Header\AcceptHeader;
@@ -192,10 +193,11 @@ final class InputManager
         try {
             $request = $this->container->get(Request::class);
         } catch (ContainerExceptionInterface $e) {
+            $scope = implode('.', \array_reverse(Introspector::scopeNames($this->container)));
             throw new ScopeException(
-                'Unable to get `ServerRequestInterface` in active container scope',
+                "Unable to get `ServerRequestInterface` in the `$scope` container scope",
                 $e->getCode(),
-                $e
+                $e,
             );
         }
 

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler;
 
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Views\Context\ValueDependency;
 use Spiral\Views\Exception\CompileException;
 use Spiral\Views\Exception\RenderException;
 use Spiral\Views\ViewContext;
 
+#[TestScope("http")]
 class EngineTest extends BaseTestCase
 {
     public function testList(): void
@@ -52,6 +54,7 @@ class EngineTest extends BaseTestCase
 
         try {
             $s->get('echo', new ViewContext())->render();
+            $this->fail('Exception expected');
         } catch (RenderException $e) {
             $t = $e->getUserTrace()[0];
 
@@ -66,6 +69,7 @@ class EngineTest extends BaseTestCase
 
         try {
             $s->get('other:echo-in', new ViewContext())->render();
+            $this->fail('Exception expected');
         } catch (RenderException $e) {
             $t = $e->getUserTrace();
             $this->assertCount(2, $t);

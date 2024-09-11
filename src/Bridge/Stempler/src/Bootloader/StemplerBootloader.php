@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container\Autowire;
 use Spiral\Stempler\Builder;
@@ -109,7 +110,7 @@ final class StemplerBootloader extends Bootloader
     }
 
     protected function stemplerEngine(
-        ContainerInterface $container,
+        #[Proxy] ContainerInterface $container,
         StemplerConfig $config,
         ViewsConfig $viewConfig
     ): StemplerEngine {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler;
 
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Views\Exception\CompileException;
 use Spiral\Views\Exception\RenderException;
 use Spiral\Views\ViewContext;
@@ -21,6 +22,7 @@ class DirectiveTest extends BaseTestCase
         ;
     }
 
+    #[TestScope("http")]
     public function testRenderDirective(): void
     {
         $s = $this->getStempler();
@@ -29,6 +31,7 @@ class DirectiveTest extends BaseTestCase
         $this->assertSame('abc', $s->get('directive', new ViewContext())->render());
     }
 
+    #[TestScope("http")]
     public function testRenderDirectiveAsArray(): void
     {
         $s = $this->getStempler();

@@ -41,9 +41,13 @@ final class Introspector
      */
     public static function getAccessor(?ContainerInterface $container = null): Accessor
     {
-        if ($container !== null && !$container instanceof Container) {
-            throw new \InvalidArgumentException('Container must be an instance of ' . Container::class);
-        }
+        $container = match (true) {
+            $container === null || $container instanceof Container => $container,
+            Proxy::isProxy($container) => ContainerScope::getContainer() ?? throw new \RuntimeException(
+                'Container Proxy is out of scope.',
+            ),
+            default => throw new \InvalidArgumentException('Container must be an instance of ' . Container::class),
+        };
 
         $container ??= ContainerScope::getContainer();
 

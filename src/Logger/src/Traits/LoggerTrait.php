@@ -47,7 +47,7 @@ trait LoggerTrait
     private function allocateLogger(string $channel): LoggerInterface
     {
         $container = ContainerScope::getContainer();
-        if (empty($container) || !$container->has(LogsInterface::class)) {
+        if ($container === null || !$container->has(LogsInterface::class)) {
             return $this->logger ?? new NullLogger();
         }
 

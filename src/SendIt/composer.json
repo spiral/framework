@@ -48,6 +48,7 @@
         "mockery/mockery": "^1.5",
         "spiral/boot": "^3.15",
         "spiral/stempler-bridge": "^3.15",
+        "spiral/testing": "^2.8",
         "vimeo/psalm": "^5.9"
     },
     "autoload": {
