@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler;
 
+use Spiral\Testing\Attribute\TestScope;
 use Spiral\Views\Context\ValueDependency;
 use Spiral\Views\Exception\CompileException;
 use Spiral\Views\Exception\RenderException;
 use Spiral\Views\ViewContext;
 
+#[TestScope("http")]
 class EngineTest extends BaseTestCase
 {
     public function testList(): void
