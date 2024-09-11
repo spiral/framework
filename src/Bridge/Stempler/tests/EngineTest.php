@@ -54,6 +54,7 @@ class EngineTest extends BaseTestCase
 
         try {
             $s->get('echo', new ViewContext())->render();
+            $this->fail('Exception expected');
         } catch (RenderException $e) {
             $t = $e->getUserTrace()[0];
 
@@ -68,6 +69,7 @@ class EngineTest extends BaseTestCase
 
         try {
             $s->get('other:echo-in', new ViewContext())->render();
+            $this->fail('Exception expected');
         } catch (RenderException $e) {
             $t = $e->getUserTrace();
             $this->assertCount(2, $t);
