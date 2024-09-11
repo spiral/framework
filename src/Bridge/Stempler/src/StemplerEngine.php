@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Stempler;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use Spiral\Stempler\Compiler\Renderer\CoreRenderer;
@@ -42,7 +43,7 @@ final class StemplerEngine implements EngineInterface
     private ?LoaderInterface $loader = null;
 
     public function __construct(
-        private readonly ContainerInterface $container,
+        #[Proxy] private readonly ContainerInterface $container,
         private readonly StemplerConfig $config,
         private readonly ?StemplerCache $cache = null
     ) {
