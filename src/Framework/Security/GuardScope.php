@@ -6,11 +6,13 @@ namespace Spiral\Security;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Security\Exception\GuardException;
 
 /**
  * Resolves Actor dynamically, using current active IoC scope.
+ * @deprecated Use  {@see GuardInterface} instead. Will be removed in v4.0.
  */
 final class GuardScope implements GuardInterface
 {
@@ -18,7 +20,7 @@ final class GuardScope implements GuardInterface
 
     public function __construct(
         private readonly PermissionsInterface $permissions,
-        private readonly ContainerInterface $container,
+        #[Proxy] private readonly ContainerInterface $container,
         private array $roles = []
     ) {
     }
