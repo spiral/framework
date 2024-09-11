@@ -35,11 +35,11 @@
     "require": {
         "php": ">=8.1",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/tokenizer": "^3.15",
+        "spiral/tokenizer": "^3.14.3",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
-        "spiral/boot": "^3.15",
+        "spiral/boot": "^3.14.3",
         "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^5.9"
