@@ -12,7 +12,7 @@ use Spiral\Security\Exception\GuardException;
 
 /**
  * Resolves Actor dynamically, using current active IoC scope.
- * @deprecated Use {@see ActorInterface} instead. Will be removed in v4.0.
+ * @deprecated Use  {@see GuardInterface} instead. Will be removed in v4.0.
  */
 final class GuardScope implements GuardInterface
 {
