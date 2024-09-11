@@ -34,9 +34,9 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.14.3",
-        "spiral/config": "^3.14.3",
-        "spiral/files": "^3.14.3",
+        "spiral/core": "^3.15",
+        "spiral/config": "^3.15",
+        "spiral/files": "^3.15",
         "psr/simple-cache": "2 - 3",
         "psr/event-dispatcher": "^1.0"
     },
@@ -46,7 +46,7 @@
         }
     },
     "require-dev": {
-        "spiral/boot": "^3.14.3",
+        "spiral/boot": "^3.15",
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^10.1",
         "vimeo/psalm": "^5.9"
