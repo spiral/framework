@@ -25,10 +25,6 @@ use Spiral\Debug\StateInterface;
 #[Singleton]
 final class DebugBootloader extends Bootloader
 {
-    protected const SINGLETONS = [
-        EnvironmentCollector::class => EnvironmentCollector::class,
-    ];
-
     protected const BINDINGS = [
         StateInterface::class => [self::class, 'state'],
     ];
