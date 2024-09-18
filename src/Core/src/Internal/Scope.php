@@ -12,9 +12,16 @@ use Spiral\Core\FactoryInterface;
  */
 final class Scope
 {
+    /**
+     * If {@see true} and parent scopes have no related dependency definition,
+     * then the dependency will be resolved in this scope.
+     */
+    public bool $checkpoint = false;
+
     private ?\Spiral\Core\Container $parent = null;
     private ?self $parentScope = null;
     private ?FactoryInterface $parentFactory = null;
+    private ?State $parentState = null;
 
     public function __construct(
         private readonly ?string $scopeName = null,
@@ -31,11 +38,16 @@ final class Scope
      *
      * @throws NamedScopeDuplicationException
      */
-    public function setParent(\Spiral\Core\Container $parent, self $parentScope, FactoryInterface $factory): void
-    {
+    public function setParent(
+        \Spiral\Core\Container $parent,
+        self $parentScope,
+        FactoryInterface $factory,
+        State $state,
+    ): void {
         $this->parent = $parent;
         $this->parentScope = $parentScope;
         $this->parentFactory = $factory;
+        $this->parentState = $state;
 
         // Check a scope with the same name is not already registered
         if ($this->scopeName !== null) {
@@ -74,6 +86,11 @@ final class Scope
         }
 
         return $result;
+    }
+
+    public function getParentState(): ?State
+    {
+        return $this->parentState;
     }
 
     public function getParentScope(): ?self

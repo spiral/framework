@@ -299,9 +299,34 @@ final class Factory implements FactoryInterface
         array $parameters = [],
         Stringable|string|null $context = null
     ): mixed {
-        $parent = $this->scope->getParentFactory();
+        if ($this->scope->checkpoint) {
+            // Find definition in parents
+            // If there is no definition in parents,
+            // we resolve the dependency right here, in the current scope
+            $scope = $this->scope;
+            while ($state = $scope->getParentState()) {
+                if (\array_key_exists($alias, $state->singletons) or array_key_exists($alias, $state->bindings)) {
+                    $parent = $scope->getParentFactory();
+                    goto resolveFromParent;
+                }
+            }
 
+            // Resolve dependency in the current scope
+            $this->tracer->push(false, action: 'autowire', alias: $alias, context: $context, reason: 'checkpoint');
+            try {
+                //No direct instructions how to construct class, make is automatically
+                return $this->autowire(
+                    new Ctx(alias: $alias, class: $alias, context: $context),
+                    $parameters,
+                );
+            } finally {
+                $this->tracer->pop(false);
+            }
+        }
+
+        $parent = $this->scope->getParentFactory();
         if ($parent !== null) {
+            resolveFromParent:
             try {
                 $this->tracer->push(false, ...[
                     'current scope' => $this->scope->getScopeName(),

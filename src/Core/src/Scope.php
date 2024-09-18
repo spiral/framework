@@ -18,11 +18,15 @@ final class Scope
      * @param array<non-empty-string, TResolver> $bindings Custom bindings for the new scope.
      * @param bool $autowire If {@see false}, closure will be invoked with just only the passed Container
      *        as the first argument. Otherwise, {@see InvokerInterface::invoke()} will be used to invoke the closure.
+     * @param bool $checkpoint If {@see true} and parent scopes have no related dependency definition,
+     *        then the dependency will be resolved in this scope
+     *        EXPERIMENTAL: this feature may be removed or changed in the future.
      */
     public function __construct(
         public readonly string|\BackedEnum|null $name = null,
         public readonly array $bindings = [],
         public readonly bool $autowire = true,
+        public readonly bool $checkpoint = false,
     ) {
     }
 }
