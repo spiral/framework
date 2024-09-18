@@ -309,6 +309,8 @@ final class Factory implements FactoryInterface
                     $parent = $scope->getParentFactory();
                     goto resolveFromParent;
                 }
+
+                $scope = $scope->getParentScope();
             }
 
             // Resolve dependency in the current scope

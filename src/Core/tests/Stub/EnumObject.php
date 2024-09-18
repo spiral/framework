@@ -8,4 +8,6 @@ enum EnumObject
 {
     case foo;
     case bar;
+    case baz;
+    case qux;
 }
