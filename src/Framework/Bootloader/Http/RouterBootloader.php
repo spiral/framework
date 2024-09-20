@@ -59,7 +59,7 @@ final class RouterBootloader extends Bootloader
             ->bindSingleton(RouteInterface::class, [self::class, 'route']);
 
         return [
-            HandlerInterface::class => Core::class,
+            HandlerInterface::class => CoreInterface::class,
             CoreInterface::class => Core::class,
             RouterInterface::class => [self::class, 'router'],
             RequestHandlerInterface::class => RouterInterface::class,
