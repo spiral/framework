@@ -22,11 +22,6 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class DebugBootloaderTest extends BaseTestCase
 {
-    public function testEnvironmentCollectorBinding(): void
-    {
-        $this->assertContainerBoundAsSingleton(EnvironmentCollector::class, EnvironmentCollector::class);
-    }
-
     public function testStateInterfaceBinding(): void
     {
         $this->assertContainerBound(StateInterface::class, State::class);
@@ -40,7 +35,7 @@ final class DebugBootloaderTest extends BaseTestCase
         $collector = $this->createMock(StateCollectorInterface::class);
         $autowire = new Autowire('foo');
 
-        $bootloader = new DebugBootloader($this->getContainer(), $this->getContainer(), $configs);
+        $bootloader = new DebugBootloader($this->getContainer(), $configs);
         $bootloader->addStateCollector('foo');
         $bootloader->addStateCollector($collector);
         $bootloader->addStateCollector($autowire);
@@ -61,7 +56,7 @@ final class DebugBootloaderTest extends BaseTestCase
         };
         $fn = static fn (mixed $a): string => 'value 3';
 
-        $bootloader = new DebugBootloader($this->getContainer(), $this->getContainer(), $configs);
+        $bootloader = new DebugBootloader($this->getContainer(), $configs);
         $bootloader->addTag('foo', 'value 1');
         $bootloader->addTag('bar', $class);
         $bootloader->addTag('baz', $fn);
@@ -104,9 +99,10 @@ final class DebugBootloaderTest extends BaseTestCase
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
         $configs->setDefaults(DebugConfig::CONFIG, ['tags' => []]);
 
-        $bootloader = new DebugBootloader($this->getContainer(), $this->getContainer(), $configs);
+        $bootloader = new DebugBootloader($this->getContainer(), $configs);
         $ref = new \ReflectionMethod($bootloader, 'state');
-        $state = $ref->invoke($bootloader, new DebugConfig([
+        /** @see DebugBootloader::state() */
+        $state = $ref->invoke($bootloader, $this->getContainer(), new DebugConfig([
             'tags' => [
                 'env' => static fn (AppEnvironment $env): string => $env->isProduction() ? 'prod' : 'dev'
             ],
