@@ -7,6 +7,7 @@ namespace Spiral\Debug\StateCollector;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Debug\StateCollectorInterface;
 use Spiral\Debug\StateInterface;
@@ -15,7 +16,7 @@ use Spiral\Debug\StateInterface;
 final class EnvironmentCollector implements StateCollectorInterface
 {
     public function __construct(
-        private readonly ContainerInterface $container,
+        #[Proxy] private readonly ContainerInterface $container,
         private readonly EnvironmentInterface $env
     ) {
     }
