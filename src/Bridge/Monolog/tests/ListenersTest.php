@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Monolog;
 
 use Monolog\Logger;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use Spiral\Core\Container;
@@ -77,5 +78,13 @@ class ListenersTest extends TestCase
         $logger->debug('debug');
         $other->alert('alert', ['context']);
         $this->assertCount(1, $records);
+    }
+
+    #[DoesNotPerformAssertions]
+    public function testRemoveNotExistingListener(): void
+    {
+        $registry = new ListenerRegistry();
+
+        $registry->removeListener(static fn (LogEvent $e) => null);
     }
 }
