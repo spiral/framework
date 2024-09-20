@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\Internal\Proxy;
 use Spiral\Core\ScopeInterface;
 use Spiral\Interceptors\Handler\AutowireHandler;
 use Spiral\Interceptors\HandlerInterface;
@@ -89,6 +90,8 @@ abstract class AbstractTarget implements TargetInterface
             return $this->handler;
         }
 
+        $scope = Proxy::create(new \ReflectionClass(ScopeInterface::class), null, new \Spiral\Core\Attribute\Proxy());
+
         try {
             // construct on demand
             $this->handler = new CoreHandler(
@@ -97,7 +100,7 @@ abstract class AbstractTarget implements TargetInterface
                     $container->has(HandlerInterface::class) => new AutowireHandler($container),
                     default => $container->get(HandlerInterface::class),
                 },
-                $container->get(ScopeInterface::class),
+                $scope,
                 $container->get(ResponseFactoryInterface::class),
                 $container->get(TracerInterface::class)
             );

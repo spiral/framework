@@ -6,6 +6,7 @@ namespace Spiral\Tests\Router\Fixtures;
 
 use Spiral\Core\Exception\ControllerException;
 use Nyholm\Psr7\Response;
+use Spiral\Core\Internal\Introspector;
 
 class TestController
 {
@@ -88,5 +89,11 @@ class TestController
     public function deleteTarget(): string
     {
         return 'DELETE';
+    }
+
+    public function scopes(): string
+    {
+        $scopes = Introspector::scopeNames();
+        return \implode(', ', $scopes);
     }
 }
