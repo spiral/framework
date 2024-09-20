@@ -310,7 +310,7 @@ abstract class AbstractKernel implements KernelInterface
         }
 
         return $this->container->runScope(
-            new Scope(name: $servingScope, bindings: [DispatcherInterface::class => $serving], checkpoint: true),
+            new Scope(name: $servingScope, bindings: [DispatcherInterface::class => $serving], checkpoint: false),
             static function (DispatcherInterface $dispatcher) use ($eventDispatcher): mixed {
                 $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
                 return $dispatcher->serve();
