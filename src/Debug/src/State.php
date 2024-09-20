@@ -16,6 +16,9 @@ final class State implements StateInterface
     private array $extras = [];
     private array $logEvents = [];
 
+    /**
+     * @param array<array-key, string> $tags
+     */
     public function setTags(array $tags): void
     {
         $setTags = [];
@@ -23,11 +26,11 @@ final class State implements StateInterface
             if (!\is_string($value)) {
                 throw new StateException(\sprintf(
                     'Invalid tag value, string expected got %s',
-                    get_debug_type($value)
+                    \get_debug_type($value)
                 ));
             }
 
-            $setTags[(string)$key] = $value;
+            $setTags[$key] = $value;
         }
 
         $this->tags = $setTags;

@@ -7,6 +7,7 @@ namespace Spiral\Bootloader;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
@@ -34,7 +35,6 @@ final class DebugBootloader extends Bootloader
     ];
 
     public function __construct(
-        private readonly FactoryInterface $factory,
         private readonly InvokerInterface $invoker,
         private readonly ConfiguratorInterface $config,
     ) {
@@ -69,8 +69,10 @@ final class DebugBootloader extends Bootloader
     /**
      * Create state and populate it with collectors.
      */
-    private function state(DebugConfig $config): StateInterface
-    {
+    private function state(
+        #[Proxy] FactoryInterface $factory,
+        DebugConfig $config,
+    ): StateInterface {
         $state = new State();
 
         foreach ($config->getTags() as $key => $value) {
@@ -79,33 +81,46 @@ final class DebugBootloader extends Bootloader
             }
 
             if (!\is_string($value) && !$value instanceof \Stringable) {
-                throw new StateException(\sprintf(
-                    'Invalid tag value, `string` expected got `%s`',
-                    \is_object($value) ? $value::class : \gettype($value)
-                ));
+                throw new StateException(
+                    \sprintf(
+                        'Invalid tag value, `string` expected got `%s`',
+                        \is_object($value) ? $value::class : \gettype($value),
+                    ),
+                );
             }
 
-            $state->setTag((string) $key, (string) $value);
+            $state->setTag((string)$key, (string)$value);
         }
 
+        $errors = [];
+
         foreach ($config->getCollectors() as $collector) {
-            $collector = match (true) {
-                \is_string($collector) => $this->factory->make($collector),
-                $collector instanceof Autowire => $collector->resolve($this->factory),
-                default => $collector,
-            };
+            try {
+                $collector = match (true) {
+                    \is_string($collector) => $factory->make($collector),
+                    $collector instanceof Autowire => $collector->resolve($factory),
+                    default => $collector,
+                };
+            } catch (\Throwable) {
+                $errors[] = \is_string($collector) || $collector instanceof \Stringable
+                    ? (string) $collector
+                    : \get_debug_type($collector);
+                continue;
+            }
 
             if (!$collector instanceof StateCollectorInterface) {
                 throw new StateException(
                     \sprintf(
                         'Unable to populate state, invalid state collector %s',
-                        \is_object($collector) ? $collector::class : \gettype($collector)
-                    )
+                        \is_object($collector) ? $collector::class : \gettype($collector),
+                    ),
                 );
             }
 
             $collector->populate($state);
         }
+
+        $errors === [] or $state->setTags(['unresolved-collectors' => \implode(', ', $errors)]);
 
         return $state;
     }
