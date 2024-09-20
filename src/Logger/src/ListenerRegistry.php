@@ -24,7 +24,7 @@ final class ListenerRegistry implements ListenerRegistryInterface
     public function removeListener(callable $listener): void
     {
         $key = \array_search($listener, $this->listeners, true);
-        if ($key !== null) {
+        if ($key !== false) {
             unset($this->listeners[$key]);
         }
     }
