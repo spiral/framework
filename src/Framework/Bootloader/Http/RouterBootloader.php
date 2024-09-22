@@ -107,7 +107,7 @@ final class RouterBootloader extends Bootloader
         );
     }
 
-    private function handler(?CoreInterface $core = null, ContainerInterface $container): HandlerInterface
+    private function handler(?CoreInterface $core, ContainerInterface $container): HandlerInterface
     {
         return $core instanceof HandlerInterface
             ? $core
