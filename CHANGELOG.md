@@ -1,5 +1,43 @@
 # CHANGELOG
 
+## 3.14.4 - 2024-09-23
+
+- **Bug Fixes**
+  - [spiral/router] Router now uses proxied container to create middlewares in a right scope.
+  - [spiral/router] Better binding for the interceptor handler.
+  - `DebugBootloader` now uses a Factory Proxy to resolve collectors.
+    Unresolved collectors don't break state populating flow.
+
+## 3.14.3 - 2024-09-11
+
+- **Bug Fixes**
+  - [spiral/core] Improved introspecting of Container when a Container Proxy is provided into the `Introspector`.
+  - [spiral/http] Improved exception message when Input Manager can't get a Request in because  of wrong scope.
+  - `GuardScope` has been deprecated. Use `GuardInterface` directly instead.
+
+## 3.14.2 - 2024-09-10
+
+- **Bug Fixes**
+  - [spiral/core] Added a proxy recursion detection a dependency on resolving: a `RecursiveProxyException` will be
+    thrown in this case.
+  - [spiral/boot] Fixed concurrent writing and reading cached data on workers boot.
+- Increased code quality by Rector.
+
+## 3.14.1 - 2024-09-09
+
+- **Bug Fixes**
+  - [spiral/router] Fixed fallback interceptors handler in `AbstractTarget`.
+- Increased code quality by Rector.
+
+## 3.14.0 - 2024-09-03
+
+- **High Impact Changes**
+  - Scopes
+    - Deeper integration with Container Scopes: contextual scopes are created inside dispatcher scopes.
+  - Interceptors
+    - Added a new package `spiral/interceptors`.
+    - `spira/hmvc` is deprecated now.
+
 ## 3.13.0 - 2024-05-22
 
 - **Other Features**
