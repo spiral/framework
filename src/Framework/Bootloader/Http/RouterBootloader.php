@@ -59,7 +59,7 @@ final class RouterBootloader extends Bootloader
             ->bindSingleton(RouteInterface::class, [self::class, 'route']);
 
         return [
-            HandlerInterface::class => Core::class,
+            HandlerInterface::class => [self::class, 'handler'],
             CoreInterface::class => Core::class,
             RouterInterface::class => [self::class, 'router'],
             RequestHandlerInterface::class => RouterInterface::class,
@@ -105,6 +105,13 @@ final class RouterBootloader extends Bootloader
             $dispatcher,
             $tracer,
         );
+    }
+
+    private function handler(?CoreInterface $core, ContainerInterface $container): HandlerInterface
+    {
+        return $core instanceof HandlerInterface
+            ? $core
+            : $container->get(Core::class);
     }
 
     /**

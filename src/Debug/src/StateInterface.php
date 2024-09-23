@@ -8,6 +8,9 @@ use Spiral\Logger\Event\LogEvent;
 
 interface StateInterface
 {
+    /**
+     * @param array<array-key, string> $tags
+     */
     public function setTags(array $tags): void;
 
     public function setTag(string $key, string $value): void;

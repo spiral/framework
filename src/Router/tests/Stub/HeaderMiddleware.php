@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Router;
+namespace Spiral\Tests\Router\Stub;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Logger;
 
+use Spiral\Logger\Event\LogEvent;
+
 /**
  * Contains all log listeners.
  */
 final class ListenerRegistry implements ListenerRegistryInterface
 {
-    /** @var callable[] */
+    /** @var array<int, callable(LogEvent): void> */
     private array $listeners = [];
 
     public function addListener(callable $listener): self
@@ -24,14 +26,11 @@ final class ListenerRegistry implements ListenerRegistryInterface
     public function removeListener(callable $listener): void
     {
         $key = \array_search($listener, $this->listeners, true);
-        if ($key !== null) {
+        if ($key !== false) {
             unset($this->listeners[$key]);
         }
     }
 
-    /**
-     * @return callable[]
-     */
     public function getListeners(): array
     {
         return $this->listeners;

@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
 use Spiral\Http\Exception\ClientException;

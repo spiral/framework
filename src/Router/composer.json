@@ -47,7 +47,8 @@
     "require-dev": {
         "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
-        "nyholm/psr7": "^1.5",
+        "spiral/nyholm-bridge": "^1.3",
+        "spiral/testing": "^2.8",
         "vimeo/psalm": "^5.9"
     },
     "autoload": {
