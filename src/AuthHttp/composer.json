@@ -34,16 +34,16 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "spiral/auth": "^3.14.4",
+        "spiral/auth": "^3.15",
         "psr/http-message": "^1.0|^2.0",
         "psr/http-server-middleware": "^1.0",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.1",
-        "spiral/cookies": "^3.14.4",
-        "spiral/http": "^3.14.4",
-        "spiral/debug": "^3.14.4",
+        "spiral/cookies": "^3.15",
+        "spiral/http": "^3.15",
+        "spiral/debug": "^3.15",
         "nyholm/psr7": "^1.5",
         "vimeo/psalm": "^5.9"
     },
