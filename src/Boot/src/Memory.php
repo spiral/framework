@@ -36,16 +36,27 @@ final class Memory implements MemoryInterface
 
         try {
             $fp = \fopen($filename, 'r');
-            if (!\flock($fp, \LOCK_SH | \LOCK_NB)) {
+            if ($fp === false) {
                 return null;
             }
+
+            if (!\flock($fp, \LOCK_SH | \LOCK_NB)) {
+                \fclose($fp);
+                return null;
+            }
+
             $data = include($filename);
+
             \flock($fp, \LOCK_UN);
-            \fclose($fp);
-            return $data;
         } catch (\Throwable) {
             return null;
+        } finally {
+            if (isset($fp)) {
+                \fclose($fp);
+            }
         }
+
+        return $data;
     }
 
     public function saveData(string $section, mixed $data): void
