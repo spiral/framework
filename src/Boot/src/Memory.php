@@ -24,9 +24,9 @@ final class Memory implements MemoryInterface
     }
 
     /**
-     * @param string $filename Cache filename.
+     * @param non-empty-string|null $filename Cache filename.
      */
-    public function loadData(string $section, string &$filename = null): mixed
+    public function loadData(string $section, ?string &$filename = null): mixed
     {
         $filename = $this->getFilename($section);
 
