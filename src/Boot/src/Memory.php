@@ -34,29 +34,28 @@ final class Memory implements MemoryInterface
             return null;
         }
 
+        $fp = false;
+        $lock = false;
+
         try {
             $fp = \fopen($filename, 'r');
             if ($fp === false) {
                 return null;
             }
 
-            if (!\flock($fp, \LOCK_SH | \LOCK_NB)) {
-                \fclose($fp);
+            $lock = \flock($fp, \LOCK_SH | \LOCK_NB);
+
+            if ($lock === false) {
                 return null;
             }
 
-            $data = include($filename);
-
-            \flock($fp, \LOCK_UN);
+            return include($filename);
         } catch (\Throwable) {
             return null;
         } finally {
-            if (isset($fp)) {
-                \fclose($fp);
-            }
+            $lock === false or \flock($fp, \LOCK_UN);
+            $fp === false or \fclose($fp);
         }
-
-        return $data;
     }
 
     public function saveData(string $section, mixed $data): void
