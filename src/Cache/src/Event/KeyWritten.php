@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Event;
 
-final class KeyWritten
+final class KeyWritten extends AbstractCacheEvent
 {
     public function __construct(
-        public readonly string $key,
+        string $key,
         public readonly mixed $value,
     ) {
+        parent::__construct($key);
     }
 }

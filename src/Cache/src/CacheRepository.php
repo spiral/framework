@@ -8,7 +8,12 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Cache\Event\CacheHit;
 use Spiral\Cache\Event\CacheMissed;
+use Spiral\Cache\Event\CacheRetrieving;
 use Spiral\Cache\Event\KeyDeleted;
+use Spiral\Cache\Event\KeyDeleteFailed;
+use Spiral\Cache\Event\KeyDeleting;
+use Spiral\Cache\Event\KeyWriteFailed;
+use Spiral\Cache\Event\KeyWriting;
 use Spiral\Cache\Event\KeyWritten;
 
 /**
@@ -25,37 +30,51 @@ class CacheRepository implements CacheInterface
 
     public function get(string $key, mixed $default = null): mixed
     {
-        $value = $this->storage->get($this->resolveKey($key));
+        $key = $this->resolveKey($key);
+
+        $this->dispatcher?->dispatch(new CacheRetrieving($key));
+
+        $value = $this->storage->get($key);
 
         if ($value === null) {
-            $this->dispatcher?->dispatch(new CacheMissed($this->resolveKey($key)));
+            $this->dispatcher?->dispatch(new CacheMissed($key));
 
             return $default;
         }
 
-        $this->dispatcher?->dispatch(new CacheHit($this->resolveKey($key), $value));
+        $this->dispatcher?->dispatch(new CacheHit($key, $value));
 
         return $value;
     }
 
     public function set(string $key, mixed $value, \DateInterval|int|null $ttl = null): bool
     {
-        $result = $this->storage->set($this->resolveKey($key), $value, $ttl);
+        $key = $this->resolveKey($key);
 
-        if ($result) {
-            $this->dispatcher?->dispatch(new KeyWritten($this->resolveKey($key), $value));
-        }
+        $this->dispatcher?->dispatch(new KeyWriting($key, $value));
+
+        $result = $this->storage->set($key, $value, $ttl);
+
+        $this->dispatcher?->dispatch(match ($result) {
+            true => new KeyWritten($key, $value),
+            default => new KeyWriteFailed($key, $value),
+        });
 
         return $result;
     }
 
     public function delete(string $key): bool
     {
-        $result = $this->storage->delete($this->resolveKey($key));
+        $key = $this->resolveKey($key);
 
-        if ($result) {
-            $this->dispatcher?->dispatch(new KeyDeleted($this->resolveKey($key)));
-        }
+        $this->dispatcher?->dispatch(new KeyDeleting($key));
+
+        $result = $this->storage->delete($key);
+
+        $this->dispatcher?->dispatch(match ($result) {
+            true => new KeyDeleted($key),
+            default => new KeyDeleteFailed($key),
+        });
 
         return $result;
     }
