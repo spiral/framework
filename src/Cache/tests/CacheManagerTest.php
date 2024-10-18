@@ -12,6 +12,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Cache\CacheManager;
 use Spiral\Cache\Config\CacheConfig;
+use Spiral\Cache\Storage\ArrayStorage;
 use Spiral\Core\FactoryInterface;
 
 final class CacheManagerTest extends TestCase
@@ -217,5 +218,18 @@ final class CacheManagerTest extends TestCase
         yield ['store-data', null];
         yield ['order-data', null];
         yield ['delivery-data', null];
+    }
+
+    public function testSet(): void
+    {
+        $uniq = \uniqid();
+        $cache = new ArrayStorage();
+        $cache->set('uniq', $uniq);
+        $name = 'brandNewCache';
+        $this->assertFalse($this->manager->has($name));
+        $this->manager->set($name, $cache);
+        $this->assertTrue($this->manager->has($name));
+        $repo = $this->manager->storage($name);
+        $this->assertSame($uniq, $repo->get('uniq'));
     }
 }

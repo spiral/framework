@@ -10,6 +10,7 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Cache\CacheManager;
 use Spiral\Cache\CacheStorageProviderInterface;
+use Spiral\Cache\CacheStorageRegistryInterface;
 use Spiral\Cache\Config\CacheConfig;
 use Spiral\Cache\Core\CacheInjector;
 use Spiral\Cache\Storage\ArrayStorage;
@@ -22,6 +23,7 @@ use Spiral\Core\FactoryInterface;
 final class CacheBootloader extends Bootloader
 {
     protected const SINGLETONS = [
+        CacheStorageRegistryInterface::class => CacheManager::class,
         CacheStorageProviderInterface::class => CacheManager::class,
         CacheManager::class => [self::class, 'initCacheManager'],
     ];
