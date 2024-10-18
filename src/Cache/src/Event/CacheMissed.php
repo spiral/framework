@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Event;
 
-final class CacheMissed
+final class CacheMissed extends AbstractCacheEvent
 {
-    public function __construct(
-        public readonly string $key,
-    ) {
-    }
 }
