@@ -11,7 +11,8 @@ class Proxy extends Binding
     /**
      * @template T
      * @param class-string<T> $interface
-     * @param null|\Closure(ContainerInterface): T $fallbackFactory
+     * @param null|\Closure(ContainerInterface, \Stringable|string|null): T $fallbackFactory Factory that will be used
+     *        to create an instance if the value is resolved from a proxy.
      */
     public function __construct(
         protected readonly string $interface,

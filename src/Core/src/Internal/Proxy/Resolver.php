@@ -34,27 +34,30 @@ final class Resolver
             throw new ContainerException(
                 $scope === null
                     ? "Unable to resolve `{$alias}` in a Proxy."
-                    : "Unable to resolve `{$alias}` in a Proxy in `{$scope}` scope.",
+                    : \sprintf('Unable to resolve `%s` in a Proxy in `%s` scope.', $alias, \implode('.', $scope)),
                 previous: $e,
             );
         }
 
-        if (Proxy::isProxy($result)) {
+        /**
+         * If we get a Proxy again, that we should retry with the new context
+         * to try to get the instance from the Proxy Fallback Factory.
+         * If there is no the Proxy Fallback Factory, {@see RecursiveProxyException} will be thrown.
+         */
+        try {
+            return Proxy::isProxy($result)
+                ? $c->get($alias, new RetryContext($context))
+                : $result;
+        } catch (RecursiveProxyException $e) {
             $scope = self::getScope($c);
-            throw new RecursiveProxyException(
-                $scope === null
-                    ? "Recursive proxy detected for `{$alias}`."
-                    : "Recursive proxy detected for `{$alias}` in `{$scope}` scope.",
-            );
+            throw new RecursiveProxyException($e->alias, $e->bindingScope, $scope);
         }
-
-        return $result;
     }
 
     /**
      * @return non-empty-string|null
      */
-    private static function getScope(ContainerInterface $c): ?string
+    private static function getScope(ContainerInterface $c): ?array
     {
         if (!$c instanceof Container) {
             if (!Proxy::isProxy($c)) {
@@ -64,9 +67,9 @@ final class Resolver
             $c = null;
         }
 
-        return \implode('.', \array_reverse(\array_map(
+        return \array_reverse(\array_map(
             static fn (?string $name): string => $name ?? 'null',
             Introspector::scopeNames($c),
-        )));
+        ));
     }
 }
