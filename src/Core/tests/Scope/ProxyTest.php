@@ -342,7 +342,7 @@ final class ProxyTest extends BaseTestCase
         $root = new Container();
         $root->bind(UserInterface::class, new ProxyConfig(
             interface: UserInterface::class,
-            fallbackFactory: static fn() => new User('Foo'),
+            fallbackFactory: static fn(): UserInterface => new User('Foo'),
         ));
 
         $name = $root->runScope(
