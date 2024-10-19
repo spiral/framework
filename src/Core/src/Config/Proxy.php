@@ -12,6 +12,7 @@ class Proxy extends Binding
     public function __construct(
         protected readonly string $interface,
         public readonly bool $singleton = false,
+        public readonly ?\Closure $fallbackFactory = null,
     ) {
         if (!\interface_exists($interface)) {
             throw new \InvalidArgumentException(\sprintf('Interface `%s` does not exist.', $interface));
