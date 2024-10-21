@@ -52,15 +52,15 @@ final class CookiesBootloader extends Bootloader
         $this->config->modify(CookiesConfig::CONFIG, new Append('excluded', null, $cookie));
     }
 
-    private function cookieQueue(?ServerRequestInterface $request): CookieQueue
+    private function cookieQueue(ServerRequestInterface $request): CookieQueue
     {
-        if ($request === null) {
-            throw new InvalidRequestScopeException(CookieQueue::class);
+        try {
+            return $request->getAttribute(CookieQueue::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
+                CookieQueue::class,
+                CookieQueue::ATTRIBUTE,
+            );
+        } catch (InvalidRequestScopeException $e) {
+            throw new InvalidRequestScopeException(CookieQueue::class, previous: $e);
         }
-
-        return $request->getAttribute(CookieQueue::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
-            CookieQueue::class,
-            CookieQueue::ATTRIBUTE,
-        );
     }
 }

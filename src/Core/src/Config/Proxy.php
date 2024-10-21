@@ -22,6 +22,9 @@ class Proxy extends Binding
         \interface_exists($interface) or throw new \InvalidArgumentException(
             "Interface `{$interface}` does not exist.",
         );
+        $this->singleton and $this->fallbackFactory !== null and throw new \InvalidArgumentException(
+            'Singleton proxies must not have a fallback factory.',
+        );
     }
 
     public function __toString(): string

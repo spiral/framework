@@ -10,17 +10,18 @@ use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\InvokerInterface;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\CurrentRequest;
-use Spiral\Http\Exception\HttpException;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
@@ -57,7 +58,10 @@ final class HttpBootloader extends Bootloader
                 interface: RequestInterface::class,
                 fallbackFactory: static fn (ContainerInterface $c): RequestInterface => $c
                     ->get(CurrentRequest::class)
-                    ->get() ?? throw new HttpException('Unable to resolve the current server request.')
+                    ->get() ?? throw new InvalidRequestScopeException(
+                        RequestInterface::class,
+                        $c instanceof Container ? $c : null,
+                    ),
             ),
         );
 

@@ -40,22 +40,23 @@ final class Resolver
         }
 
         /**
-         * If we get a Proxy again, that we should retry with the new context
+         * If we got a Proxy again, that we should retry with the new context
          * to try to get the instance from the Proxy Fallback Factory.
          * If there is no the Proxy Fallback Factory, {@see RecursiveProxyException} will be thrown.
          */
-        try {
-            return Proxy::isProxy($result)
-                ? $c->get($alias, new RetryContext($context))
-                : $result;
-        } catch (RecursiveProxyException $e) {
-            $scope = self::getScope($c);
-            throw new RecursiveProxyException($e->alias, $e->bindingScope, $scope);
+        if (Proxy::isProxy($result)) {
+            try {
+                return $c->get($alias, new RetryContext($context));
+            } catch (RecursiveProxyException $e) {
+                throw new RecursiveProxyException($e->alias, $e->bindingScope, self::getScope($c));
+            }
         }
+
+        return $result;
     }
 
     /**
-     * @return non-empty-string|null
+     * @return list<non-empty-string|null>|null
      */
     private static function getScope(ContainerInterface $c): ?array
     {
