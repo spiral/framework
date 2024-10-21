@@ -6,21 +6,22 @@ namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\InvokerInterface;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\CurrentRequest;
-use Spiral\Http\Exception\HttpException;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
@@ -52,10 +53,16 @@ final class HttpBootloader extends Bootloader
         $httpBinder->bindSingleton(Http::class, [self::class, 'httpCore']);
         $httpBinder->bindSingleton(CurrentRequest::class, CurrentRequest::class);
         $httpBinder->bind(
-            ServerRequestInterface::class,
-            static fn (CurrentRequest $request): ServerRequestInterface => $request->get() ?? throw new HttpException(
-                'Unable to resolve current server request.',
-            )
+            RequestInterface::class,
+            new \Spiral\Core\Config\Proxy(
+                interface: RequestInterface::class,
+                fallbackFactory: static fn (ContainerInterface $c): RequestInterface => $c
+                    ->get(CurrentRequest::class)
+                    ->get() ?? throw new InvalidRequestScopeException(
+                        RequestInterface::class,
+                        $c instanceof Container ? $c : null,
+                    ),
+            ),
         );
 
         /**

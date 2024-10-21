@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
@@ -30,18 +31,13 @@ final class SessionBootloader extends Bootloader
 
     public function defineBindings(): array
     {
-        $this->binder
-            ->getBinder(Spiral::Http)
+        $this->binder->getBinder(Spiral::HttpRequest)->bind(SessionInterface::class, $this->resolveSession(...));
+        $this->binder->getBinder(Spiral::Http)
             ->bind(
                 SessionInterface::class,
-                static fn (?ServerRequestInterface $request): SessionInterface =>
-                    ($request ?? throw new InvalidRequestScopeException(SessionInterface::class))
-                        ->getAttribute(SessionMiddleware::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
-                            SessionInterface::class,
-                            SessionMiddleware::ATTRIBUTE,
-                        )
+                new Proxy(SessionInterface::class, false, $this->resolveSession(...)),
             );
-        $this->binder->bind(SessionInterface::class, new Proxy(SessionInterface::class, false));
+        $this->binder->bind(SessionInterface::class, new Proxy(SessionInterface::class, true), );
 
         return [];
     }
@@ -90,5 +86,19 @@ final class SessionBootloader extends Bootloader
         $session = $config->getConfig(SessionConfig::CONFIG);
 
         $cookies->whitelistCookie($session['cookie']);
+    }
+
+    private function resolveSession(ContainerInterface $container): SessionInterface
+    {
+        try {
+            /** @var ServerRequestInterface $request */
+            $request = $container->get(ServerRequestInterface::class);
+            return $request->getAttribute(SessionMiddleware::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
+                SessionInterface::class,
+                SessionMiddleware::ATTRIBUTE,
+            );
+        } catch (InvalidRequestScopeException $e) {
+            throw new InvalidRequestScopeException(SessionInterface::class, previous: $e);
+        }
     }
 }

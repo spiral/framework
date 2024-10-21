@@ -18,6 +18,7 @@ use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\InjectionException;
 use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Exception\Container\NotFoundException;
+use Spiral\Core\Exception\Container\RecursiveProxyException;
 use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\Exception\Scope\BadScopeException;
@@ -25,6 +26,7 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Core\Internal\Common\DestructorTrait;
 use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Factory\Ctx;
+use Spiral\Core\Internal\Proxy\RetryContext;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\Options;
 use Spiral\Core\ResolverInterface;
@@ -198,6 +200,15 @@ final class Factory implements FactoryInterface
 
     private function resolveProxy(Config\Proxy $binding, string $alias, Stringable|string|null $context): mixed
     {
+        if ($context instanceof RetryContext) {
+            return $binding->fallbackFactory === null
+                ? throw new RecursiveProxyException(
+                    $alias,
+                    $this->scope->getScopeName(),
+                )
+                : ($binding->fallbackFactory)($this->container, $context->context);
+        }
+
         $result = Proxy::create(new \ReflectionClass($binding->getInterface()), $context, new Attribute\Proxy());
 
         if ($binding->singleton) {
@@ -316,6 +327,7 @@ final class Factory implements FactoryInterface
             } catch (ContainerExceptionInterface $e) {
                 $className = match (true) {
                     $e instanceof NotFoundException => NotFoundException::class,
+                    $e instanceof RecursiveProxyException => throw $e,
                     default => ContainerException::class,
                 };
                 throw new $className($this->tracer->combineTraceMessage(\sprintf(

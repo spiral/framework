@@ -18,6 +18,7 @@ class InvalidContainerScopeException extends \RuntimeException implements NotFou
         protected readonly string $id,
         Container|string|null $scopeOrContainer = null,
         protected readonly ?string $requiredScope = null,
+        \Throwable|null $previous = null,
     ) {
         $this->scope = \is_string($scopeOrContainer)
             ? $scopeOrContainer
@@ -25,6 +26,6 @@ class InvalidContainerScopeException extends \RuntimeException implements NotFou
 
         $req = $this->requiredScope !== null ? ", `$this->requiredScope` is required" : '';
 
-        parent::__construct("Unable to resolve `$id` in the `$this->scope` scope{$req}.");
+        parent::__construct("Unable to resolve `$id` in the `$this->scope` scope{$req}.", previous: $previous);
     }
 }

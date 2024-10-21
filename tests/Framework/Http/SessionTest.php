@@ -112,9 +112,11 @@ final class SessionTest extends HttpTestCase
         ]));
 
         $this->setHttpHandler(function (): void {
+            $session = $this->session();
+
             $this->expectException(ContextualObjectNotFoundException::class);
 
-            $this->session();
+            $session->getID();
         });
 
         $this->fakeHttp()->get(uri: '/')->assertOk();
@@ -122,9 +124,12 @@ final class SessionTest extends HttpTestCase
 
     public function testSessionBindingWithoutRequest(): void
     {
+        // Get a Proxy
+        $session = $this->session();
+
         $this->expectException(InvalidRequestScopeException::class);
 
-        $this->session();
+        $session->getID();
     }
 
     private function session(): SessionInterface
