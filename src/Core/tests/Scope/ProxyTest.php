@@ -302,7 +302,7 @@ final class ProxyTest extends BaseTestCase
     /**
      * Proxy gets a proxy of the same type.
      */
-    public function testRecursiveProxy(): void
+    public function testRecursiveProxyNotSingleton(): void
     {
         $root = new Container();
         $root->bind(UserInterface::class, new ProxyConfig(UserInterface::class));
@@ -312,6 +312,28 @@ final class ProxyTest extends BaseTestCase
             <<<MSG
                 Recursive proxy detected for `Spiral\Tests\Core\Scope\Stub\UserInterface`.
                 Binding scope: `root`.
+                Calling scope: `root.null`.
+                MSG,
+        );
+
+        $root->runScope(
+            new Scope(),
+            fn(#[Proxy] UserInterface $user) => $user->getName(),
+        );
+    }
+
+    /**
+     * Proxy gets a proxy of the same type as a singleton.
+     */
+    public function testRecursiveProxySingleton(): void
+    {
+        $root = new Container();
+        $root->bind(UserInterface::class, new ProxyConfig(UserInterface::class, singleton: true));
+
+        $this->expectException(RecursiveProxyException::class);
+        $this->expectExceptionMessage(
+            <<<MSG
+                Recursive proxy detected for `Spiral\Tests\Core\Scope\Stub\UserInterface`.
                 Calling scope: `root.null`.
                 MSG,
         );

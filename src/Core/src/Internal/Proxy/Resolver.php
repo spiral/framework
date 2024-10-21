@@ -39,20 +39,25 @@ final class Resolver
             );
         }
 
+        if (!Proxy::isProxy($result)) {
+            return $result;
+        }
+
         /**
          * If we got a Proxy again, that we should retry with the new context
          * to try to get the instance from the Proxy Fallback Factory.
          * If there is no the Proxy Fallback Factory, {@see RecursiveProxyException} will be thrown.
          */
-        if (Proxy::isProxy($result)) {
-            try {
-                return $c->get($alias, new RetryContext($context));
-            } catch (RecursiveProxyException $e) {
-                throw new RecursiveProxyException($e->alias, $e->bindingScope, self::getScope($c));
-            }
+        try {
+            $result = $c->get($alias, new RetryContext($context));
+        } catch (RecursiveProxyException $e) {
+            throw new RecursiveProxyException($e->alias, $e->bindingScope, self::getScope($c));
         }
 
-        return $result;
+        // If Container returned a Proxy after the retry, then we have a recursion.
+        return Proxy::isProxy($result)
+            ? throw new RecursiveProxyException($alias, null, self::getScope($c))
+            : $result;
     }
 
     /**
