@@ -9,6 +9,7 @@ use Spiral\Cache\Bootloader\CacheBootloader;
 use Spiral\Cache\CacheManager;
 use Spiral\Cache\CacheRepository;
 use Spiral\Cache\CacheStorageProviderInterface;
+use Spiral\Cache\CacheStorageRegistryInterface;
 use Spiral\Cache\Config\CacheConfig;
 use Spiral\Cache\Storage\ArrayStorage;
 use Spiral\Cache\Storage\FileStorage;
@@ -18,17 +19,22 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class CacheBootloaderTest extends BaseTestCase
 {
-    public function testBindings()
+    public function testBindings(): void
     {
         $this->assertContainerInstantiable(CacheInterface::class, CacheRepository::class);
         $this->assertContainerBoundAsSingleton(CacheStorageProviderInterface::class, CacheManager::class);
+        $this->assertContainerBoundAsSingleton(CacheStorageRegistryInterface::class, CacheManager::class);
 
         $repository = $this->getContainer()->get(CacheInterface::class);
-
         $this->assertInstanceOf(ArrayStorage::class, $repository->getStorage());
+
+        $provider = $this->getContainer()->get(CacheStorageProviderInterface::class);
+        $this->assertInstanceOf(CacheManager::class, $provider);
+        $registry = $this->getContainer()->get(CacheStorageRegistryInterface::class);
+        $this->assertInstanceOf(CacheManager::class, $registry);
     }
 
-    public function testGetsStorageByAlias()
+    public function testGetsStorageByAlias(): void
     {
         $manager = $this->getContainer()->get(CacheStorageProviderInterface::class);
         $repository = $manager->storage('user-data');
