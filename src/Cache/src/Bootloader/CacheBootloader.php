@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Bootloader;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
@@ -49,9 +50,10 @@ final class CacheBootloader extends Bootloader
     private function initCacheManager(
         BinderInterface $binder,
         FactoryInterface $factory,
-        CacheConfig $config
+        CacheConfig $config,
+        ?EventDispatcherInterface $dispatcher = null
     ): CacheManager {
-        $manager = new CacheManager($config, $factory);
+        $manager = new CacheManager($config, $factory, $dispatcher);
 
         foreach ($config->getAliases() as $alias => $storageName) {
             $binder->bind(
