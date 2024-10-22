@@ -49,6 +49,7 @@ final class Resolver
          * If there is no the Proxy Fallback Factory, {@see RecursiveProxyException} will be thrown.
          */
         try {
+            /** @psalm-suppress TooManyArguments */
             $result = $c->get($alias, new RetryContext($context));
         } catch (RecursiveProxyException $e) {
             throw new RecursiveProxyException($e->alias, $e->bindingScope, self::getScope($c));
