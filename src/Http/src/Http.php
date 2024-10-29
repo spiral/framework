@@ -97,7 +97,10 @@ final class Http implements RequestHandlerInterface
             attributes: [
                 'http.method' => $request->getMethod(),
                 'http.url' => (string) $request->getUri(),
-                'http.headers' => $request->getHeaders(),
+                'http.headers' => \array_map(
+                    static fn (array $values): string => \implode(',', $values),
+                    $request->getHeaders(),
+                ),
             ],
             scoped: true,
             traceKind: TraceKind::SERVER,
