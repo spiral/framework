@@ -15,7 +15,7 @@ use Spiral\Core\ScopeInterface;
 final class NullTracerFactory implements TracerFactoryInterface
 {
     public function __construct(
-        #[Proxy] private readonly ?ScopeInterface $scope = new Container(),
+        private readonly ?ScopeInterface $scope = new Container(),
     ) {
     }
 

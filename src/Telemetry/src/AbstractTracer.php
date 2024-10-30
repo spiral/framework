@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Telemetry;
 
-use Spiral\Core\Attribute\Proxy;
+use Psr\Container\ContainerInterface;
+use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
+use Spiral\Core\ContainerScope;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ScopeInterface;
+use Spiral\Telemetry\Internal\CurrentTrace;
 
 /**
  * @internal The component is under development.
@@ -17,7 +20,7 @@ use Spiral\Core\ScopeInterface;
 abstract class AbstractTracer implements TracerInterface
 {
     public function __construct(
-        #[Proxy] private readonly ?ScopeInterface $scope = new Container(),
+        private readonly ?ScopeInterface $scope = new Container(),
     ) {
     }
 
@@ -26,10 +29,24 @@ abstract class AbstractTracer implements TracerInterface
      */
     final protected function runScope(Span $span, callable $callback): mixed
     {
-        // TODO: Can we remove this scope?
-        return $this->scope->runScope([
-            SpanInterface::class => $span,
-            TracerInterface::class => $this,
-        ], static fn (InvokerInterface $invoker): mixed => $invoker->invoke($callback));
+        $container = ContainerScope::getContainer();
+
+        if ($container instanceof Container) {
+            $invoker = $container;
+            $binder = $container;
+        } else {
+            /** @var InvokerInterface $invoker */
+            $invoker = $container->get(InvokerInterface::class);
+            /** @var BinderInterface $binder */
+            $binder = $container->get(BinderInterface::class);
+        }
+
+        $previous = $container->get(CurrentTrace::class);
+        $binder->bindSingleton(CurrentTrace::class, new CurrentTrace($this, $span));
+        try {
+            return $invoker->invoke($callback);
+        } finally {
+            $binder->bindSingleton(CurrentTrace::class, $previous);
+        }
     }
 }

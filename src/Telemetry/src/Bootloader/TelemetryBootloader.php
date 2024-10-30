@@ -14,13 +14,12 @@ use Spiral\Telemetry\ClockInterface;
 use Spiral\Telemetry\Config\TelemetryConfig;
 use Spiral\Telemetry\ConfigTracerFactoryProvider;
 use Spiral\Telemetry\Exception\TracerException;
-use Spiral\Telemetry\LogTracer;
+use Spiral\Telemetry\Internal\CurrentTrace;
 use Spiral\Telemetry\LogTracerFactory;
-use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerFactoryInterface;
-use Spiral\Telemetry\TracerInterface;
 use Spiral\Telemetry\TracerFactoryProviderInterface;
+use Spiral\Telemetry\TracerInterface;
 
 final class TelemetryBootloader extends Bootloader
 {
@@ -28,6 +27,7 @@ final class TelemetryBootloader extends Bootloader
         TracerFactoryInterface::class => [self::class, 'initFactory'],
         TracerFactoryProviderInterface::class => ConfigTracerFactoryProvider::class,
         ClockInterface::class => SystemClock::class,
+        CurrentTrace::class => [self::class, 'initCurrentTrace'],
     ];
 
     protected const BINDINGS = [
@@ -35,7 +35,7 @@ final class TelemetryBootloader extends Bootloader
     ];
 
     public function __construct(
-        private readonly ConfiguratorInterface $config
+        private readonly ConfiguratorInterface $config,
     ) {
     }
 
@@ -51,7 +51,7 @@ final class TelemetryBootloader extends Bootloader
     {
         $this->config->modify(
             TelemetryConfig::CONFIG,
-            new Append('drivers', $name, $driver)
+            new Append('drivers', $name, $driver),
         );
     }
 
@@ -59,7 +59,7 @@ final class TelemetryBootloader extends Bootloader
      * @throws TracerException
      */
     public function initFactory(
-        TracerFactoryProviderInterface $tracerProvider
+        TracerFactoryProviderInterface $tracerProvider,
     ): TracerFactoryInterface {
         return $tracerProvider->getTracerFactory();
     }
@@ -68,9 +68,18 @@ final class TelemetryBootloader extends Bootloader
      * @throws TracerException
      */
     public function getTracer(
-        TracerFactoryInterface $tracerFactory
+        CurrentTrace $currentTrace,
     ): TracerInterface {
-        return $tracerFactory->make();
+        return $currentTrace->tracer;
+    }
+
+    public function initCurrentTrace(TracerFactoryInterface $tracerFactory): CurrentTrace
+    {
+        $trace = $tracerFactory->make();
+        return new CurrentTrace(
+            $trace,
+            null,
+        );
     }
 
     private function initConfig(EnvironmentInterface $env): void
@@ -83,7 +92,7 @@ final class TelemetryBootloader extends Bootloader
                     'null' => NullTracerFactory::class,
                     'log' => LogTracerFactory::class,
                 ],
-            ]
+            ],
         );
     }
 }
