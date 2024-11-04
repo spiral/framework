@@ -25,24 +25,35 @@ final class Http implements RequestHandlerInterface
 {
     private ?RequestHandlerInterface $handler = null;
     private readonly TracerFactoryInterface $tracerFactory;
+    private readonly Pipeline|LazyPipeline $pipeline;
 
     public function __construct(
         private readonly HttpConfig $config,
-        private readonly Pipeline $pipeline,
+        Pipeline|LazyPipeline $pipeline,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ContainerInterface $container,
         ?TracerFactoryInterface $tracerFactory = null,
         private readonly ?EventDispatcherInterface $dispatcher = null,
     ) {
-        foreach ($this->config->getMiddleware() as $middleware) {
-            $this->pipeline->pushMiddleware($this->container->get($middleware));
+        if ($pipeline instanceof Pipeline) {
+            foreach ($this->config->getMiddleware() as $middleware) {
+                $pipeline->pushMiddleware($this->container->get($middleware));
+            }
+        } else {
+            $pipeline = $pipeline->withAddedMiddleware(
+                ...$this->config->getMiddleware()
+            );
         }
 
+        $this->pipeline = $pipeline;
         $scope = $this->container instanceof ScopeInterface ? $this->container : new Container();
         $this->tracerFactory = $tracerFactory ?? new NullTracerFactory($scope);
     }
 
-    public function getPipeline(): Pipeline
+    /**
+     * @internal
+     */
+    public function getPipeline(): Pipeline|LazyPipeline
     {
         return $this->pipeline;
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Telemetry;
 
-use Psr\Container\ContainerInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
@@ -41,12 +40,19 @@ abstract class AbstractTracer implements TracerInterface
             $binder = $container->get(BinderInterface::class);
         }
 
-        $previous = $container->get(CurrentTrace::class);
-        $binder->bindSingleton(CurrentTrace::class, new CurrentTrace($this, $span));
+        try {
+            $prevSpan = $container->get(SpanInterface::class);
+        } catch (\Throwable) {
+            $prevSpan = null;
+        }
+
+        $binder->bindSingleton(SpanInterface::class, $span);
         try {
             return $invoker->invoke($callback);
         } finally {
-            $binder->bindSingleton(CurrentTrace::class, $previous);
+            $prevSpan === null
+                ? $binder->removeBinding(SpanInterface::class)
+                : $binder->bindSingleton(SpanInterface::class, $prevSpan);
         }
     }
 }

@@ -17,6 +17,7 @@ use Spiral\Telemetry\Exception\TracerException;
 use Spiral\Telemetry\Internal\CurrentTrace;
 use Spiral\Telemetry\LogTracerFactory;
 use Spiral\Telemetry\NullTracerFactory;
+use Spiral\Telemetry\SpanInterface;
 use Spiral\Telemetry\TracerFactoryInterface;
 use Spiral\Telemetry\TracerFactoryProviderInterface;
 use Spiral\Telemetry\TracerInterface;
@@ -27,7 +28,6 @@ final class TelemetryBootloader extends Bootloader
         TracerFactoryInterface::class => [self::class, 'initFactory'],
         TracerFactoryProviderInterface::class => ConfigTracerFactoryProvider::class,
         ClockInterface::class => SystemClock::class,
-        CurrentTrace::class => [self::class, 'initCurrentTrace'],
     ];
 
     protected const BINDINGS = [
@@ -68,18 +68,9 @@ final class TelemetryBootloader extends Bootloader
      * @throws TracerException
      */
     public function getTracer(
-        CurrentTrace $currentTrace,
+        TracerFactoryInterface $tracerFactory,
     ): TracerInterface {
-        return $currentTrace->tracer;
-    }
-
-    public function initCurrentTrace(TracerFactoryInterface $tracerFactory): CurrentTrace
-    {
-        $trace = $tracerFactory->make();
-        return new CurrentTrace(
-            $trace,
-            null,
-        );
+        return $tracerFactory->make();
     }
 
     private function initConfig(EnvironmentInterface $env): void

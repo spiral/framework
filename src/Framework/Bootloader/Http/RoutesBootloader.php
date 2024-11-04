@@ -8,6 +8,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\FactoryInterface;
+use Spiral\Http\LazyPipeline;
 use Spiral\Http\Pipeline;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
@@ -60,10 +62,13 @@ abstract class RoutesBootloader extends Bootloader
     private function registerMiddlewareGroups(BinderInterface $binder, array $groups): void
     {
         foreach ($groups as $group => $middleware) {
+            // todo ->getBinder('http') ?
             $binder->bind(
                 'middleware:' . $group,
-                static function (PipelineFactory $factory) use ($middleware): Pipeline {
-                    return $factory->createWithMiddleware($middleware);
+                static function (FactoryInterface $factory) use ($middleware): LazyPipeline {
+                    /** @var LazyPipeline $pipeline */
+                    $pipeline = $factory->make(LazyPipeline::class);
+                    return $pipeline->withAddedMiddleware(...$middleware);
                 }
             );
         }

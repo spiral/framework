@@ -13,6 +13,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Http\CallableHandler;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\TargetException;
+use Spiral\Router\Traits\LazyPipelineTrait;
 use Spiral\Router\Traits\PipelineTrait;
 
 /**
@@ -90,7 +91,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
             $route->target = clone $route->target;
         }
 
-        $route->pipeline = $route->makePipeline();
+        $route->pipeline = $route->makeLazyPipeline();
 
         return $route;
     }
@@ -129,9 +130,9 @@ final class Route extends AbstractRoute implements ContainerizedInterface
      */
     protected function requestHandler(): RequestHandlerInterface
     {
-        if (!$this->hasContainer()) {
-            throw new RouteException('Unable to configure route pipeline without associated container');
-        }
+        $this->hasContainer() or throw new RouteException(
+            'Unable to configure route pipeline without associated container.',
+        );
 
         if ($this->target instanceof TargetInterface) {
             try {
