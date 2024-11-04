@@ -124,6 +124,7 @@ final class CoreHandler implements RequestHandlerInterface
                             new CallContext(
                                 Target::fromPair($controller, $action),
                                 $parameters,
+                                $request->getAttributes(),
                             ),
                         ),
                     attributes: [
