@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Interceptors\Context;
 
 /**
- * @template-covariant TController of object
+ * @template-covariant TController of object|null
  * @implements TargetInterface<TController>
  */
 final class Target implements TargetInterface
