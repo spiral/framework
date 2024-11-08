@@ -22,17 +22,17 @@ class RuleTest extends TestCase
     public const CONTEXT = [];
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ActorInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|ActorInterface
      */
     private $actor;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ResolverInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|ResolverInterface
      */
     private $resolver;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Rule
+     * @var \PHPUnit\Framework\MockObject\MockObject|Rule
      */
     private $rule;
 

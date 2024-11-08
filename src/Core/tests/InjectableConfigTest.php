@@ -12,6 +12,7 @@ use Spiral\Core\Traits\Config\AliasTrait;
 use Spiral\Tests\Core\Fixtures\IntKeysConfig;
 use Spiral\Tests\Core\Fixtures\TestConfig;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Core\InjectableConfig::class)]
 class InjectableConfigTest extends TestCase
 {
     use AliasTrait;
@@ -101,9 +102,6 @@ class InjectableConfigTest extends TestCase
         $config['keyC'];
     }
 
-    /**
-     * @covers \Spiral\Core\InjectableConfig::__set_state()
-     */
     public function testSerialize(): void
     {
         $config = new TestConfig([

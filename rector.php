@@ -106,7 +106,7 @@ return RectorConfig::configure()
         ],
     ])
     ->withPhpSets(php81: true)
-    ->withPreparedSets(deadCode: true)
+    ->withPreparedSets(deadCode: true, phpunit: true)
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,
     ]);

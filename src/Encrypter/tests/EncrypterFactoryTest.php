@@ -14,6 +14,7 @@ use Spiral\Encrypter\EncrypterInterface;
 use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Encrypter\Exception\EncrypterException;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Encrypter\EncrypterFactory::class)]
 class EncrypterFactoryTest extends TestCase
 {
     public function testInjection(): void
@@ -79,9 +80,6 @@ class EncrypterFactoryTest extends TestCase
         echo $factory->getKey();
     }
 
-    /**
-     * @covers \Spiral\Encrypter\EncrypterFactory::generateKey
-     */
     public function testGenerateKey(): void
     {
         $key = Key::CreateNewRandomKey()->saveToAsciiSafeString();

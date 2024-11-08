@@ -20,7 +20,7 @@ class CallableRuleTest extends TestCase
         $actor = $this->createMock(ActorInterface::class);
         $context = [];
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|callable $callable */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|callable $callable */
         $callable = $this->getMockBuilder(\stdClass::class)
             ->addMethods(['__invoke'])
             ->getMock();

@@ -10,7 +10,7 @@ use Stringable;
  * The target may be a concrete reflection or an alias.
  * In both cases, you can get a path to the target.
  *
- * @template-covariant TController of object|null
+ * @template-covariant TController of object
  */
 interface TargetInterface extends Stringable
 {

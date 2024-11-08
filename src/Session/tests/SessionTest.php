@@ -145,20 +145,20 @@ final class SessionTest extends TestCase
         $section->key = 'new value';
         $this->assertSame('new value', $section->key);
         $this->assertTrue(isset($section['key']));
-        $this->assertTrue(isset($section->key));
+        $this->assertObjectHasProperty('key', $section);
 
         $section->delete('key');
         $this->assertFalse(isset($section['key']));
-        $this->assertFalse(isset($section->key));
+        $this->assertObjectNotHasProperty('key', $section);
 
         $section->key = 'new value';
         unset($section->key);
-        $this->assertFalse(isset($section->key));
+        $this->assertObjectNotHasProperty('key', $section);
 
 
         $section->key = 'new value';
         unset($section['key']);
-        $this->assertFalse(isset($section->key));
+        $this->assertObjectNotHasProperty('key', $section);
 
         $section->new = 'another';
 

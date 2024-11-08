@@ -8,9 +8,7 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
 use Spiral\Storage\Bucket;
 use Spiral\Storage\Visibility;
 
-/**
- * @group unit
- */
+#[\PHPUnit\Framework\Attributes\Group('unit')]
 class StorageTestCase extends TestCase
 {
     public function testCreate(): void

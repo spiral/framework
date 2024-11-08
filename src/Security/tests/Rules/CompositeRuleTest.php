@@ -19,7 +19,7 @@ class CompositeRuleTest extends TestCase
     public const CONTEXT = [];
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ActorInterface $callable
+     * @var \PHPUnit\Framework\MockObject\MockObject|ActorInterface $callable
      */
     private $actor;
 
@@ -56,7 +56,7 @@ class CompositeRuleTest extends TestCase
     
     private function createRepository(array $rules): RulesInterface
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|RulesInterface $repository */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|RulesInterface $repository */
         $repository = $this->createMock(RulesInterface::class);
 
         $repository->method('get')
