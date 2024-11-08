@@ -11,6 +11,8 @@ use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPromotedPropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\Expression\RemoveDeadStmtRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
@@ -104,9 +106,24 @@ return RectorConfig::configure()
             // used by Configurator
             __DIR__ . '/src/Scaffolder/src/Command',
         ],
+
+        \Rector\PHPUnit\PHPUnit100\Rector\MethodCall\AssertIssetToAssertObjectHasPropertyRector::class => [
+            // ArrayAccess usage
+            __DIR__ . '/src/Session/tests/SessionTest.php',
+        ],
+
+        // nullable @template usage, see https://github.com/rectorphp/rector-src/pull/6409
+        // can be re-enabled on next rector release
+        RemoveUselessParamTagRector::class => [
+            __DIR__ . '/src/Interceptors/src/Context/Target.php',
+        ],
+
+        RemoveUselessReturnTagRector::class => [
+            __DIR__ . '/src/Interceptors/src/Context/TargetInterface.php',
+        ],
     ])
     ->withPhpSets(php81: true)
-    ->withPreparedSets(deadCode: true)
+    ->withPreparedSets(deadCode: true, phpunit: true)
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,
     ]);

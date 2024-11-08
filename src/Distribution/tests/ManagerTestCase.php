@@ -7,9 +7,7 @@ namespace Spiral\Tests\Distribution;
 use Spiral\Distribution\Manager;
 use Spiral\Distribution\Resolver\StaticResolver;
 
-/**
- * @group unit
- */
+#[\PHPUnit\Framework\Attributes\Group('unit')]
 class ManagerTestCase extends TestCase
 {
     /**

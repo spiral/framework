@@ -9,9 +9,7 @@ use Spiral\Tests\Framework\ConsoleTestCase;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @covers \Spiral\Command\CleanCommand
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Command\CleanCommand::class)]
 final class CleanCommandTest extends ConsoleTestCase
 {
     public int $defaultVerbosityLevel = OutputInterface::VERBOSITY_DEBUG;

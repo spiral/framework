@@ -11,9 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Spiral\Http\ErrorHandler\PlainRenderer;
 
-/**
- * @coversDefaultClass \Spiral\Http\ErrorHandler\PlainRenderer
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Http\ErrorHandler\PlainRenderer::class)]
 final class PlainRendererTest extends TestCase
 {
     public function testContentTypeApplicationJson(): void

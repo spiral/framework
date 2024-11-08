@@ -20,17 +20,17 @@ class GuardedTraitTest extends TestCase
     public const CONTEXT   = [];
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|GuardedTrait
+     * @var \PHPUnit\Framework\MockObject\MockObject|GuardedTrait
      */
     private $trait;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|GuardInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|GuardInterface
      */
     private $guard;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ContainerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|ContainerInterface
      */
     private $container;
 

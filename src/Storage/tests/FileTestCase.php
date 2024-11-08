@@ -6,9 +6,7 @@ namespace Spiral\Tests\Storage;
 
 use Spiral\Storage\Visibility;
 
-/**
- * @group unit
- */
+#[\PHPUnit\Framework\Attributes\Group('unit')]
 class FileTestCase extends TestCase
 {
     public function testPathname(): void
