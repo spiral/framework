@@ -9,18 +9,22 @@ use Spiral\Auth\ActorProviderInterface;
 use Spiral\Auth\AuthContext;
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Auth\Config\AuthConfig;
-use Spiral\Auth\Session\TokenStorage;
 use Spiral\Auth\Session\TokenStorage as SessionTokenStorage;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageProvider;
 use Spiral\Auth\TokenStorageProviderInterface;
+use Spiral\Auth\Transport\CookieTransport;
+use Spiral\Auth\Transport\HeaderTransport;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader\Auth\HttpAuthBootloader;
-use Spiral\Config\LoaderInterface;
 use Spiral\Config\ConfigManager;
+use Spiral\Config\LoaderInterface;
 use Spiral\Framework\Spiral;
 use Spiral\Http\CurrentRequest;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\BaseTestCase;
+
+use function PHPUnit\Framework\assertInstanceOf;
 
 final class HttpAuthBootloaderTest extends BaseTestCase
 {
@@ -31,7 +35,7 @@ final class HttpAuthBootloaderTest extends BaseTestCase
 
     public function testTokenStorageInterfaceBinding(): void
     {
-        $this->assertContainerBoundAsSingleton(TokenStorageInterface::class, TokenStorage::class);
+        $this->assertContainerBoundAsSingleton(TokenStorageInterface::class, SessionTokenStorage::class);
     }
 
     public function testProxyAuthContextInterfaceBinding(): void
@@ -57,12 +61,77 @@ final class HttpAuthBootloaderTest extends BaseTestCase
     public function testConfig(): void
     {
         $this->assertConfigHasFragments(AuthConfig::CONFIG, [
-            'defaultStorage' => 'session',
+            'defaultStorage'   => 'session',
             'defaultTransport' => 'cookie',
-            'storages' => [
-                'session' => SessionTokenStorage::class,
-            ],
+            'storages'         => ['session' => SessionTokenStorage::class],
         ]);
+
+        /** @var array{header: HeaderTransport, cookie: CookieTransport} $config */
+        $config = $this->getContainer()->get(AuthConfig::class)['transports'] ?? [];
+        self::assertArrayHasKey('cookie', $config);
+        self::assertArrayHasKey('header', $config);
+
+        self::assertInstanceOf(HeaderTransport::class, $config['header']);
+        self::assertInstanceOf(CookieTransport::class, $config['cookie']);
+    }
+
+    public function testCorrectDefaultTransports(): void
+    {
+        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+
+        $bootloader = new HttpAuthBootloader($configs, $this->getContainer());
+        $bootloader->init($this->getContainer()->get(EnvironmentInterface::class));
+
+        /** @var HeaderTransport $headerTransport */
+        $headerTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['header'];
+        self::assertInstanceOf(HeaderTransport::class, $headerTransport);
+        $header = (new \ReflectionClass($headerTransport))->getProperty('header');
+        $this->assertSame('X-Auth-Token', $header->getValue($headerTransport));
+
+        /** @var CookieTransport $cookieTransport */
+        $cookieTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['cookie'];
+        self::assertInstanceOf(CookieTransport::class, $cookieTransport);
+        $cookie = (new \ReflectionClass($cookieTransport))->getProperty('cookie');
+        $this->assertSame('token', $cookie->getValue($cookieTransport));
+    }
+
+    public function testCorrectConfigurableTransports(): void
+    {
+        $loader = new class() implements LoaderInterface {
+            public function has(string $section): bool
+            {
+                return $section === AuthConfig::CONFIG;
+            }
+
+            public function load(string $section): array
+            {
+                return [
+                    'defaultTransport' => 'header',
+                    'defaultStorage'   => 'session',
+                    'storages'         => ['session' => SessionTokenStorage::class],
+                    'transports'       => [
+                        'header' => new HeaderTransport(header: 'X-Auth-Token-test'),
+                        'cookie' => new CookieTransport(cookie: 'token-test', basePath: '/'),
+                    ],
+                ];
+            }
+        };
+        $configs = new ConfigManager($loader);
+
+        $bootloader = new HttpAuthBootloader($configs, $this->getContainer());
+        $bootloader->init($this->getContainer()->get(EnvironmentInterface::class));
+
+        /** @var HeaderTransport $headerTransport */
+        $headerTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['header'];
+        self::assertInstanceOf(HeaderTransport::class, $headerTransport);
+        $header = (new \ReflectionClass($headerTransport))->getProperty('header');
+        $this->assertSame('X-Auth-Token-test', $header->getValue($headerTransport));
+
+        /** @var CookieTransport $cookieTransport */
+        $cookieTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['cookie'];
+        self::assertInstanceOf(CookieTransport::class, $cookieTransport);
+        $cookie = (new \ReflectionClass($cookieTransport))->getProperty('cookie');
+        $this->assertSame('token-test', $cookie->getValue($cookieTransport));
     }
 
     public function testAddTokenStorage(): void
