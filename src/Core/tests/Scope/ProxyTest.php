@@ -7,6 +7,7 @@ namespace Spiral\Tests\Core\Scope;
 use Psr\Container\ContainerInterface;
 use ReflectionParameter;
 use Spiral\Core\Attribute\Proxy;
+use Spiral\Core\Config\Proxy as ProxyConfig;
 use Spiral\Core\Container;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\ContainerScope;
@@ -301,14 +302,40 @@ final class ProxyTest extends BaseTestCase
     /**
      * Proxy gets a proxy of the same type.
      */
-    public function testRecursiveProxy(): void
+    public function testRecursiveProxyNotSingleton(): void
     {
         $root = new Container();
-        $root->bind(UserInterface::class, new \Spiral\Core\Config\Proxy(UserInterface::class));
+        $root->bind(UserInterface::class, new ProxyConfig(UserInterface::class));
 
         $this->expectException(RecursiveProxyException::class);
         $this->expectExceptionMessage(
-            'Recursive proxy detected for `Spiral\Tests\Core\Scope\Stub\UserInterface` in `root.null` scope.',
+            <<<MSG
+                Recursive proxy detected for `Spiral\Tests\Core\Scope\Stub\UserInterface`.
+                Binding scope: `root`.
+                Calling scope: `root.null`.
+                MSG,
+        );
+
+        $root->runScope(
+            new Scope(),
+            fn(#[Proxy] UserInterface $user) => $user->getName(),
+        );
+    }
+
+    /**
+     * Proxy gets a proxy of the same type as a singleton.
+     */
+    public function testRecursiveProxySingleton(): void
+    {
+        $root = new Container();
+        $root->bind(UserInterface::class, new ProxyConfig(UserInterface::class, singleton: true));
+
+        $this->expectException(RecursiveProxyException::class);
+        $this->expectExceptionMessage(
+            <<<MSG
+                Recursive proxy detected for `Spiral\Tests\Core\Scope\Stub\UserInterface`.
+                Calling scope: `root.null`.
+                MSG,
         );
 
         $root->runScope(
@@ -334,6 +361,22 @@ final class ProxyTest extends BaseTestCase
                 });
             },
         );
+    }
+
+    public function testProxyFallbackFactory()
+    {
+        $root = new Container();
+        $root->bind(UserInterface::class, new ProxyConfig(
+            interface: UserInterface::class,
+            fallbackFactory: static fn(): UserInterface => new User('Foo'),
+        ));
+
+        $name = $root->runScope(
+            new Scope(),
+            fn(#[Proxy] UserInterface $user) => $user->getName(),
+        );
+
+        self::assertSame('Foo', $name);
     }
 
     /*

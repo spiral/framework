@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.14.6 - 2024-10-22
+
+- **Bug Fixes**
+    - [spiral/core] `ServerRequestInterface` is always resolved into a Proxy in the `http` scope
+    - [spiral/cache] `EventDispatcher` is now injected into `CacheManager`
+
 ## 3.14.4 - 2024-09-23
 
 - **Bug Fixes**
