@@ -28,6 +28,12 @@ abstract class AbstractTracer implements TracerInterface
     final protected function runScope(Span $span, callable $callback): mixed
     {
         $container = ContainerScope::getContainer();
+        if ($container === null) {
+            return $this->scope->runScope([
+                SpanInterface::class => $span,
+                TracerInterface::class => $this,
+            ], static fn (InvokerInterface $invoker): mixed => $invoker->invoke($callback));
+        }
 
         if ($container instanceof Container) {
             $invoker = $container;
