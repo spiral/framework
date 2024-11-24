@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
-use Spiral\Bootloader\Http\RouterBootloader;
-use Spiral\Nyholm\Bootloader\NyholmBootloader;
 use Spiral\Router\Route;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\Target\Group;
@@ -13,16 +11,8 @@ use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Spiral\Tests\Router\Stub\IdentityScopedMiddleware;
 
-class ContainerScopeTest extends \Spiral\Testing\TestCase
+class ContainerScopeTest extends BaseTestingCase
 {
-    public function defineBootloaders(): array
-    {
-        return [
-            RouterBootloader::class,
-            NyholmBootloader::class,
-        ];
-    }
-
     #[TestScope('http')]
     public function testRunOpenScopeSameTwice(): void
     {

@@ -37,6 +37,11 @@ abstract class BaseTestCase extends TestCase
     protected Container $container;
     protected Router $router;
 
+    protected function getContainer(): Container
+    {
+        return $this->container;
+    }
+
     protected function setUp(): void
     {
         $this->initContainer();
@@ -49,11 +54,11 @@ abstract class BaseTestCase extends TestCase
             $basePath,
             new UriHandler(
                 new UriFactory(),
-                new Slugify()
+                new Slugify(),
             ),
             $this->container,
             $dispatcher,
-            new NullTracer($this->container)
+            new NullTracer($this->container),
         );
     }
 
@@ -88,8 +93,8 @@ abstract class BaseTestCase extends TestCase
                 new LoaderRegistry([
                     new PhpFileLoader($this->container, $this->container),
                     new TestLoader(),
-                ])
-            )
+                ]),
+            ),
         );
 
         $this->container->bind(HandlerInterface::class, Core::class);
