@@ -102,14 +102,19 @@ final class LazyPipeline implements RequestHandlerInterface, MiddlewareInterface
             $this->dispatcher?->dispatch(new MiddlewareProcessing($request, $middleware));
 
             $span = $this->span;
+
+            $middlewareTitle = \is_string($this->middleware[$this->position])
+            && $this->middleware[$this->position] !== $middleware::class
+                ? \sprintf('%s=%s', $this->middleware[$this->position], $middleware::class)
+                : $middleware::class;
             // Init a tracing span when the pipeline starts
             if ($span === null) {
                 /** @var TracerInterface $tracer */
                 $tracer = $this->container->get(TracerInterface::class);
                 return $tracer->trace(
                     name: 'HTTP Pipeline',
-                    callback: function (SpanInterface $span) use ($request, $middleware): Response {
-                        $span->setAttribute('http.middleware', [$middleware::class]);
+                    callback: function (SpanInterface $span) use ($request, $middleware, $middlewareTitle): Response {
+                        $span->setAttribute('http.middleware', [$middlewareTitle]);
                         return $middleware->process($request, $this->next($span));
                     },
                     scoped: true,
@@ -117,7 +122,7 @@ final class LazyPipeline implements RequestHandlerInterface, MiddlewareInterface
             }
 
             $middlewares = $span->getAttribute('http.middleware') ?? [];
-            $middlewares[] = $middleware::class;
+            $middlewares[] = $middlewareTitle;
             $span->setAttribute('http.middleware', $middlewares);
 
             return $middleware->process($request, $this->next($span));

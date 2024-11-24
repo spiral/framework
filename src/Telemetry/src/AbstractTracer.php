@@ -9,7 +9,6 @@ use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ScopeInterface;
-use Spiral\Telemetry\Internal\CurrentTrace;
 
 /**
  * @internal The component is under development.

@@ -62,15 +62,14 @@ abstract class RoutesBootloader extends Bootloader
     private function registerMiddlewareGroups(BinderInterface $binder, array $groups): void
     {
         foreach ($groups as $group => $middleware) {
-            // todo ->getBinder('http') ?
-            $binder->bind(
-                'middleware:' . $group,
-                static function (FactoryInterface $factory) use ($middleware): LazyPipeline {
-                    /** @var LazyPipeline $pipeline */
-                    $pipeline = $factory->make(LazyPipeline::class);
-                    return $pipeline->withAddedMiddleware(...$middleware);
-                }
-            );
+            $binder
+                ->getBinder('http')
+                ->bind(
+                    'middleware:' . $group,
+                    static function (FactoryInterface $factory) use ($middleware): LazyPipeline {
+                        return $factory->make(LazyPipeline::class)->withAddedMiddleware(...$middleware);
+                    }
+                );
         }
     }
 
