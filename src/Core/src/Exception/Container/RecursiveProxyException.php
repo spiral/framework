@@ -10,4 +10,14 @@ namespace Spiral\Core\Exception\Container;
  */
 class RecursiveProxyException extends ContainerException
 {
+    public function __construct(
+        public readonly string $alias,
+        public readonly ?string $bindingScope = null,
+        public readonly ?array $callingScope = null,
+    ) {
+        $message = "Recursive proxy detected for `$alias`.";
+        $bindingScope === null or $message .= "\nBinding scope: `$bindingScope`.";
+        $callingScope === null or $message .= "\nCalling scope: `" . \implode('.', $callingScope) . '`.';
+        parent::__construct($message);
+    }
 }

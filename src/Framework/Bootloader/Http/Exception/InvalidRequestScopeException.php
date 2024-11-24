@@ -20,7 +20,8 @@ final class InvalidRequestScopeException extends InvalidContainerScopeException
     public function __construct(
         string $id,
         string|Container|null $scopeOrContainer = null,
+        \Throwable|null $previous = null,
     ) {
-        parent::__construct($id, $scopeOrContainer, Spiral::Http->value);
+        parent::__construct($id, $scopeOrContainer, Spiral::HttpRequest->value, $previous);
     }
 }
