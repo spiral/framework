@@ -18,6 +18,7 @@ use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\Exception\ScopeException;
 use Spiral\Core\InvokerInterface;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
@@ -48,6 +49,17 @@ final class HttpBootloader extends Bootloader
 
     public function defineSingletons(): array
     {
+        $this->binder->bind(
+            RequestInterface::class,
+            new \Spiral\Core\Config\Proxy(
+                interface: RequestInterface::class,
+                fallbackFactory: static fn (ContainerInterface $c) => throw new ScopeException(
+                    'Unable to receive current Server Request. '
+                    . 'Try to define the service in the `http` scope or use the Poxy attribute.',
+                ),
+            ),
+        );
+
         $httpBinder = $this->binder->getBinder(Spiral::Http);
 
         $httpBinder->bindSingleton(Http::class, [self::class, 'httpCore']);
