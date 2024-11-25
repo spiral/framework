@@ -90,23 +90,22 @@ final class HttpAuthBootloader extends Bootloader
         ];
     }
 
-    public function init(AbstractKernel $kernel, EnvironmentInterface $env): void
+    public function init(EnvironmentInterface $env): void
     {
         $this->config->setDefaults(
             AuthConfig::CONFIG,
             [
                 'defaultTransport' => $env->get('AUTH_TOKEN_TRANSPORT', 'cookie'),
                 'defaultStorage' => $env->get('AUTH_TOKEN_STORAGE', 'session'),
-                'transports' => [],
-                'storages' => [],
+                'transports' => [
+                    'cookie' => $this->createDefaultCookieTransport(),
+                    'header' => new HeaderTransport(header: 'X-Auth-Token'),
+                ],
+                'storages' => [
+                    'session' => SessionTokenStorage::class,
+                ],
             ]
         );
-
-        $kernel->booting(function () {
-            $this->addTransport('cookie', $this->createDefaultCookieTransport());
-            $this->addTransport('header', new HeaderTransport('X-Auth-Token'));
-            $this->addTokenStorage('session', SessionTokenStorage::class);
-        });
     }
 
     /**
