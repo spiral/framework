@@ -48,6 +48,14 @@ final class HttpBootloader extends Bootloader
 
     public function defineSingletons(): array
     {
+        $this->binder->bind(
+            RequestInterface::class,
+            new \Spiral\Core\Config\Proxy(
+                interface: RequestInterface::class,
+                singleton: true,
+            ),
+        );
+
         $httpBinder = $this->binder->getBinder(Spiral::Http);
 
         $httpBinder->bindSingleton(Http::class, [self::class, 'httpCore']);

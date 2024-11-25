@@ -37,7 +37,7 @@ final class SessionBootloader extends Bootloader
                 SessionInterface::class,
                 new Proxy(SessionInterface::class, false, $this->resolveSession(...)),
             );
-        $this->binder->bind(SessionInterface::class, new Proxy(SessionInterface::class, true), );
+        $this->binder->bind(SessionInterface::class, new Proxy(SessionInterface::class, true));
 
         return [];
     }
