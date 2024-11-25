@@ -38,6 +38,8 @@ class RenderTest extends TestCase
 
     public function tearDown(): void
     {
+        parent::tearDown();
+
         foreach (glob(__DIR__ . '/App/runtime/cache/views/*.php') as $file) {
             @unlink($file);
         }
