@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.14.7 - 2024-11-25
+
+- **Bug Fixes**
+  - [spiral/auth] Fixed configuration replacement for auth in HttpAuthBootloader
+  - [spiral/http] Fixed Server Request binding for root services
+
 ## 3.14.6 - 2024-10-22
 
 - **Bug Fixes**
