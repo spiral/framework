@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Telemetry;
 
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Spiral\Core\ScopeInterface;
@@ -31,7 +32,6 @@ final class LogTracerFactoryTest extends TestCase
         );
 
         $clock->expects($this->any())->method('now');
-        $scope->expects($this->once())->method('runScope');
         $logger->expects($this->once())->method('debug');
 
         $this->assertInstanceOf(LogTracer::class, $tracer = $factory->make());

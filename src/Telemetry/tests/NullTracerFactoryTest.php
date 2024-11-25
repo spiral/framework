@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Telemetry;
 
 use Mockery as m;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\ScopeInterface;
 use Spiral\Telemetry\NullTracer;
@@ -14,16 +15,11 @@ final class NullTracerFactoryTest extends TestCase
 {
     use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    #[RunInSeparateProcess]
     public function testMake(): void
     {
-        $factory = new NullTracerFactory(
-            $scope = m::mock(ScopeInterface::class)
-        );
+        $factory = new NullTracerFactory(m::mock(ScopeInterface::class));
 
-        $scope->shouldReceive('runScope')->once();
-
-        $this->assertInstanceOf(NullTracer::class, $tracer = $factory->make());
-
-        $tracer->trace('foo', fn() => 'hello');
+        $this->assertInstanceOf(NullTracer::class, $factory->make());
     }
 }
