@@ -6,6 +6,9 @@ namespace Spiral\Cache;
 
 use Psr\SimpleCache\CacheInterface;
 
+/**
+ * Use this interface to register cache storages at the bootloading stage.
+ */
 interface CacheStorageRegistryInterface
 {
     /**
