@@ -11,5 +11,10 @@ interface CacheStorageRegistryInterface
     /**
      * @param non-empty-string $name
      */
-    public function set(string $name, CacheInterface $cache): void;
+    public function register(string $name, CacheInterface $cache): void;
+
+    /**
+     * @return array<non-empty-string, CacheInterface>
+     */
+    public function getCacheStorages(): array;
 }

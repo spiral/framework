@@ -220,16 +220,33 @@ final class CacheManagerTest extends TestCase
         yield ['delivery-data', null];
     }
 
-    public function testSet(): void
+    public function testRegister(): void
     {
         $uniq = \uniqid();
         $cache = new ArrayStorage();
         $cache->set('uniq', $uniq);
         $name = 'brandNewCache';
-        $this->assertFalse($this->manager->has($name));
-        $this->manager->set($name, $cache);
-        $this->assertTrue($this->manager->has($name));
+        $this->assertArrayNotHasKey($name, $this->manager->getCacheStorages());
+
+        $this->manager->register($name, $cache);
+        $this->assertArrayHasKey($name, $this->manager->getCacheStorages());
+
         $repo = $this->manager->storage($name);
         $this->assertSame($uniq, $repo->get('uniq'));
+    }
+
+    public function testMany(): void
+    {
+        $cache1 = new ArrayStorage();
+        $name1 = 'brandNewCache';
+        $cache2 = new ArrayStorage();
+        $name2 = 'brandNewCache2';
+
+        $this->manager->register($name1, $cache1);
+        $this->manager->register($name2, $cache2);
+        $this->assertEquals([
+            $name1 => $cache1,
+            $name2 => $cache2,
+        ], $this->manager->getCacheStorages());
     }
 }

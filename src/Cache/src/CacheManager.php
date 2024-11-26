@@ -13,7 +13,7 @@ use Spiral\Core\FactoryInterface;
 #[Singleton]
 class CacheManager implements CacheStorageProviderInterface, CacheStorageRegistryInterface
 {
-    /** @var CacheInterface[] */
+    /** @var array<non-empty-string, CacheInterface> */
     private array $storages = [];
 
     public function __construct(
@@ -43,20 +43,20 @@ class CacheManager implements CacheStorageProviderInterface, CacheStorageRegistr
         return new CacheRepository($this->storages[$storage], $this->dispatcher, $prefix);
     }
 
+    public function register(string $name, CacheInterface $cache): void
+    {
+        $this->storages[$name] = $cache;
+    }
+
+    public function getCacheStorages(): array
+    {
+        return $this->storages;
+    }
+
     private function resolve(?string $name): CacheInterface
     {
         $config = $this->config->getStorageConfig($name);
 
         return $this->factory->make($config['type'], $config);
-    }
-
-    public function set(string $name, CacheInterface $cache): void
-    {
-        $this->storages[$name] = $cache;
-    }
-
-    public function has(string $name): bool
-    {
-        return \array_key_exists($name, $this->storages);
     }
 }
