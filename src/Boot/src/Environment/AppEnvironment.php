@@ -40,6 +40,13 @@ enum AppEnvironment: string implements InjectableEnumInterface
     {
         $value = $environment->get('APP_ENV');
 
+        // Aliases
+        $value = match ($value) {
+            'production' => self::Production->value,
+            'test' => self::Testing->value,
+            default => $value,
+        };
+
         return \is_string($value)
             ? (self::tryFrom($value) ?? self::Local)
             : self::Local;
