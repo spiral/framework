@@ -16,6 +16,7 @@ final class ApplicationInProductionCommand extends Command
     {
         if ($confirmation->confirmToProceed('Application in production.')) {
             $this->writeln('Application is in production.');
+            return self::SUCCESS;
         }
 
         $this->writeln('Application is in testing.');

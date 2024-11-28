@@ -10,6 +10,7 @@ use Spiral\Core\Attribute\Scope;
 use Spiral\Framework\Spiral;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[Scope(Spiral::ConsoleCommand)]
 final class ApplicationInProduction
@@ -22,7 +23,7 @@ final class ApplicationInProduction
         OutputInterface $output,
     ) {
         $this->input = $input;
-        $this->output = $output;
+        $this->output = new SymfonyStyle($input, $output);
     }
 
     public function confirmToProceed(string $message = 'Application in production.'): bool
