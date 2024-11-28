@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Event;
 
-final class KeyDeleteFailed extends AbstractCacheEvent
+/**
+ * Triggered when cache delete operation failed.
+ */
+final class KeyDeleteFailed extends CacheEvent
 {
 }

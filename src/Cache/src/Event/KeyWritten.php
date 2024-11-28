@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Event;
 
-final class KeyWritten extends AbstractCacheEvent
+/**
+ * Triggered after cache item is written.
+ */
+final class KeyWritten extends CacheEvent
 {
     public function __construct(
         string $key,

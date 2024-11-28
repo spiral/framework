@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spiral\Cache\Event;
 
-final class KeyWriting extends AbstractCacheEvent
+/**
+ * Triggered before cache item is written.
+ */
+final class KeyWriting extends CacheEvent
 {
     public function __construct(
         string $key,

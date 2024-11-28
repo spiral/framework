@@ -55,10 +55,11 @@ class CacheRepository implements CacheInterface
 
         $result = $this->storage->set($key, $value, $ttl);
 
-        $this->dispatcher?->dispatch(match ($result) {
-            true => new KeyWritten($key, $value),
-            default => new KeyWriteFailed($key, $value),
-        });
+        $this->dispatcher?->dispatch(
+            $result
+                ? new KeyWritten($key, $value)
+                : new KeyWriteFailed($key, $value),
+        );
 
         return $result;
     }
@@ -71,10 +72,11 @@ class CacheRepository implements CacheInterface
 
         $result = $this->storage->delete($key);
 
-        $this->dispatcher?->dispatch(match ($result) {
-            true => new KeyDeleted($key),
-            default => new KeyDeleteFailed($key),
-        });
+        $this->dispatcher?->dispatch(
+            $result
+                ? new KeyDeleted($key)
+                : new KeyDeleteFailed($key),
+        );
 
         return $result;
     }
@@ -130,10 +132,6 @@ class CacheRepository implements CacheInterface
 
     private function resolveKey(string $key): string
     {
-        if (!empty($this->prefix)) {
-            return $this->prefix . $key;
-        }
-
-        return $key;
+        return $this->prefix . $key;
     }
 }
