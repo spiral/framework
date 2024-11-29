@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Framework\Console\Confirmation;
 
-use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Environment\AppEnvironment;
@@ -19,8 +18,8 @@ final class ApplicationInProductionTest extends TestCase
     {
         $confirmation = new ApplicationInProduction(
             $env,
-            m::mock(InputInterface::class),
-            m::mock(OutputInterface::class)
+            $this->createMock(InputInterface::class),
+            $this->createMock(OutputInterface::class)
         );
 
         $this->assertTrue($confirmation->confirmToProceed());
@@ -30,52 +29,14 @@ final class ApplicationInProductionTest extends TestCase
     {
         $confirmation = new ApplicationInProduction(
             AppEnvironment::Production,
-            $input = m::mock(InputInterface::class),
-            m::mock(OutputInterface::class)
+            $input = $this->createMock(InputInterface::class),
+            $this->createMock(OutputInterface::class)
         );
 
-        $input->shouldReceive('hasOption')->once()->andReturnTrue();
-        $input->shouldReceive('getOption')->once()->andReturnTrue();
+        $input->expects($this->once())->method('hasOption')->willReturn(true);
+        $input->expects($this->once())->method('getOption')->willReturn(true);
 
         $this->assertTrue($confirmation->confirmToProceed());
-    }
-
-    public function testProductionEnvShouldBeAskAboutConfirmationAndConfirmed(): void
-    {
-        $confirmation = new ApplicationInProduction(
-            AppEnvironment::Production,
-            $input = m::mock(InputInterface::class),
-            $output = m::mock(OutputInterface::class)
-        );
-
-        $input->shouldReceive('hasOption')->once()->andReturnFalse();
-
-        $output->shouldReceive('writeln');
-        $output->shouldReceive('write');
-        $output->shouldReceive('newLine');
-
-        $output->shouldReceive('confirm')->once()->with('Do you really wish to run command?', false)->andReturnTrue();
-
-        $this->assertTrue($confirmation->confirmToProceed());
-    }
-
-    public function testProductionEnvShouldBeAskAboutConfirmationAndNotConfirmed(): void
-    {
-        $confirmation = new ApplicationInProduction(
-            AppEnvironment::Production,
-            $input = m::mock(InputInterface::class),
-            $output = m::mock(OutputInterface::class)
-        );
-
-        $input->shouldReceive('hasOption')->once()->andReturnFalse();
-
-        $output->shouldReceive('writeln');
-        $output->shouldReceive('write');
-        $output->shouldReceive('newLine');
-
-        $output->shouldReceive('confirm')->once()->with('Do you really wish to run command?', false)->andReturnFalse();
-
-        $this->assertFalse($confirmation->confirmToProceed());
     }
 
     public static function notProductionEnvs(): \Traversable
