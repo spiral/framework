@@ -12,6 +12,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * The component makes it easy to ask the user for confirmation before running
+ * a command if the application is running in production mode.
+ * This can help prevent accidental or unintended changes to the production environment.
+ */
 #[Scope(Spiral::ConsoleCommand)]
 final class ApplicationInProduction
 {
