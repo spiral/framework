@@ -23,7 +23,7 @@ final class ApplicationInProduction
         OutputInterface $output,
     ) {
         $this->input = $input;
-        $this->output = new SymfonyStyle($input, $output);
+        $this->output = $output instanceof SymfonyStyle ? $output : new SymfonyStyle($input, $output);
     }
 
     public function confirmToProceed(string $message = 'Application in production.'): bool
