@@ -11,6 +11,7 @@ use Spiral\Boot\Environment\AppEnvironment;
 use Spiral\Console\Confirmation\ApplicationInProduction;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ApplicationInProductionTest extends TestCase
 {
@@ -19,8 +20,8 @@ final class ApplicationInProductionTest extends TestCase
     {
         $confirmation = new ApplicationInProduction(
             $env,
-            m::mock(InputInterface::class),
-            m::mock(OutputInterface::class)
+            $this->createMock(InputInterface::class),
+            $this->createMock(OutputInterface::class)
         );
 
         $this->assertTrue($confirmation->confirmToProceed());
@@ -30,31 +31,31 @@ final class ApplicationInProductionTest extends TestCase
     {
         $confirmation = new ApplicationInProduction(
             AppEnvironment::Production,
-            $input = m::mock(InputInterface::class),
-            m::mock(OutputInterface::class)
+            $input = $this->createMock(InputInterface::class),
+            $this->createMock(OutputInterface::class)
         );
 
-        $input->shouldReceive('hasOption')->once()->andReturnTrue();
-        $input->shouldReceive('getOption')->once()->andReturnTrue();
+        $input->expects($this->once())->method('hasOption')->willReturn(true);
+        $input->expects($this->once())->method('getOption')->willReturn(true);
 
         $this->assertTrue($confirmation->confirmToProceed());
     }
+
 
     public function testProductionEnvShouldBeAskAboutConfirmationAndConfirmed(): void
     {
         $confirmation = new ApplicationInProduction(
             AppEnvironment::Production,
-            $input = m::mock(InputInterface::class),
-            $output = m::mock(OutputInterface::class)
+            $input = $this->createMock(InputInterface::class),
+            $output = $this->createMock(SymfonyStyle::class)
         );
 
-        $input->shouldReceive('hasOption')->once()->andReturnFalse();
-
-        $output->shouldReceive('writeln');
-        $output->shouldReceive('write');
-        $output->shouldReceive('newLine');
-
-        $output->shouldReceive('confirm')->once()->with('Do you really wish to run command?', false)->andReturnTrue();
+        $input->expects($this->once())->method('hasOption')->willReturn(false);
+        $output
+            ->expects($this->once())
+            ->method('confirm')
+            ->with('Do you really wish to run command?', false)
+            ->willReturn(true);
 
         $this->assertTrue($confirmation->confirmToProceed());
     }
@@ -63,17 +64,16 @@ final class ApplicationInProductionTest extends TestCase
     {
         $confirmation = new ApplicationInProduction(
             AppEnvironment::Production,
-            $input = m::mock(InputInterface::class),
-            $output = m::mock(OutputInterface::class)
+            $input = $this->createMock(InputInterface::class),
+            $output = $this->createMock(SymfonyStyle::class)
         );
 
-        $input->shouldReceive('hasOption')->once()->andReturnFalse();
-
-        $output->shouldReceive('writeln');
-        $output->shouldReceive('write');
-        $output->shouldReceive('newLine');
-
-        $output->shouldReceive('confirm')->once()->with('Do you really wish to run command?', false)->andReturnFalse();
+        $input->expects($this->once())->method('hasOption')->willReturn(false);
+        $output
+            ->expects($this->once())
+            ->method('confirm')
+            ->with('Do you really wish to run command?', false)
+            ->willReturn(false);
 
         $this->assertFalse($confirmation->confirmToProceed());
     }
