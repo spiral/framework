@@ -16,7 +16,7 @@ final class ApplicationInProductionCommandTest extends BaseTestCase
     public function testRunCommandInProductionEnv(): void
     {
         $this->assertConsoleCommandOutputContainsStrings('app-in-production', [], [
-            'Application is in production.',
+            'Denied.',
         ]);
     }
 
@@ -24,7 +24,7 @@ final class ApplicationInProductionCommandTest extends BaseTestCase
     public function testRunCommandInTestingEnv(): void
     {
         $this->assertConsoleCommandOutputContainsStrings('app-in-production', [], [
-            'Application is in testing.',
+            'Allowed.',
         ]);
     }
 }

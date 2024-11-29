@@ -39,9 +39,13 @@ final class AppEnvironmentTest extends TestCase
     {
         yield ['wrong', AppEnvironment::Local];
         yield ['prod', AppEnvironment::Production];
+        yield ['production', AppEnvironment::Production];
         yield ['stage', AppEnvironment::Stage];
         yield ['local', AppEnvironment::Local];
+        yield ['dev', AppEnvironment::Local];
+        yield ['development', AppEnvironment::Local];
         yield ['testing', AppEnvironment::Testing];
+        yield ['test', AppEnvironment::Testing];
     }
 
     public function testClassMethods(): void

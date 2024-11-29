@@ -15,10 +15,11 @@ final class ApplicationInProductionCommand extends Command
     public function __invoke(ApplicationInProduction $confirmation, OutputInterface $output): int
     {
         if ($confirmation->confirmToProceed('Application in production.')) {
-            $this->writeln('Application is in production.');
+            $this->writeln('Allowed.');
+            return self::SUCCESS;
         }
 
-        $this->writeln('Application is in testing.');
+        $this->writeln('Denied.');
 
         return self::SUCCESS;
     }
