@@ -13,7 +13,7 @@ final class RoutingConfiguratorTest extends BaseTestCase
 {
     public function testImportWithoutConcreteLoader(): void
     {
-        $routes = $this->container->get(RoutingConfigurator::class);
+        $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
         $this->assertCount(0, $routes->getCollection());
 
@@ -24,7 +24,7 @@ final class RoutingConfiguratorTest extends BaseTestCase
 
     public function testImportWithLoader(): void
     {
-        $routes = $this->container->get(RoutingConfigurator::class);
+        $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
         $this->assertCount(0, $routes->getCollection());
 
@@ -35,7 +35,7 @@ final class RoutingConfiguratorTest extends BaseTestCase
 
     public function testImportWithWrongLoader(): void
     {
-        $routes = $this->container->get(RoutingConfigurator::class);
+        $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
         $this->assertCount(0, $routes->getCollection());
 
@@ -46,14 +46,14 @@ final class RoutingConfiguratorTest extends BaseTestCase
 
     public function testGetCollection(): void
     {
-        $routes = $this->container->get(RoutingConfigurator::class);
+        $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
         $this->assertInstanceOf(RouteCollection::class, $routes->getCollection());
     }
 
     public function testDefault(): void
     {
-        $routes = $this->container->get(RoutingConfigurator::class);
+        $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
         $this->assertNull($routes->getDefault());
 
@@ -64,7 +64,7 @@ final class RoutingConfiguratorTest extends BaseTestCase
 
     public function testAdd(): void
     {
-        $routes = $this->container->get(RoutingConfigurator::class);
+        $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
         $this->assertCount(0, $routes->getCollection());
         $route = $routes->add('test', '/')->callable(static fn () => null);

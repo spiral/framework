@@ -283,7 +283,7 @@ final class HttpTest extends TestCase
                 [
                     'http.method' => 'GET',
                     'http.url' => 'http://example.org/path',
-                    'http.headers' => ['Host' => ['example.org'], 'foo' => ['bar']],
+                    'http.headers' => ['Host' => 'example.org', 'foo' => 'bar'],
                 ],
                 true,
                 TraceKind::SERVER,
@@ -293,7 +293,7 @@ final class HttpTest extends TestCase
                     self::assertSame($attributes, [
                         'http.method' => 'GET',
                         'http.url' => 'http://example.org/path',
-                        'http.headers' => ['Host' => ['example.org'], 'foo' => ['bar']],
+                        'http.headers' => ['Host' => 'example.org', 'foo' => 'bar'],
                     ]);
                     return $this->container
                         ->get(TracerInterface::class)

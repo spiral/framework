@@ -118,7 +118,6 @@ class TraverserTest extends BaseTestCase implements VisitorInterface
         );
     }
 
-    #[\PHPUnit\Framework\Attributes\DoesNotPerformAssertions]
     public function testVisitorContext(): void
     {
         $doc = $this->parse('<a href="url"><b>hello</b></a>');
@@ -127,6 +126,8 @@ class TraverserTest extends BaseTestCase implements VisitorInterface
         $t->addVisitor($this);
 
         $doc->nodes = $t->traverse($doc->nodes);
+        // To suppress Rector error
+        $this->assertTrue(true);
     }
 
     public function enterNode(mixed $node, VisitorContext $ctx): mixed

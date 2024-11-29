@@ -21,7 +21,7 @@ final class LogTracerFactory implements TracerFactoryInterface
     private readonly LoggerInterface $logger;
 
     public function __construct(
-        #[Proxy] private readonly ScopeInterface $scope,
+        private readonly ScopeInterface $scope,
         private readonly ClockInterface $clock,
         LogsInterface $logs,
         string $channel = self::LOG_CHANNEL

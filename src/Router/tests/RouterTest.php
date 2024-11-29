@@ -48,7 +48,7 @@ class RouterTest extends BaseTestCase
     public function testEventsShouldBeDispatched(): void
     {
         $request = new ServerRequest('GET', '/foo');
-        $route = (new Route('/foo', Call::class))->withContainer($this->container);
+        $route = (new Route('/foo', Call::class))->withContainer($this->getContainer());
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
@@ -88,7 +88,7 @@ class RouterTest extends BaseTestCase
         $configurator->add('foo', '//<host>/register')->callable(fn () => null);
 
         $router->import($configurator);
-        $this->container->get(GroupRegistry::class)->registerRoutes($router);
+        $this->getContainer()->get(GroupRegistry::class)->registerRoutes($router);
 
         $uri = (string) $router->uri('foo', ['host' => 'some']);
         $this->assertSame('some/register', $uri);

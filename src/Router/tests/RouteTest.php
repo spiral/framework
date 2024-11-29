@@ -51,7 +51,8 @@ class RouteTest extends BaseTestCase
         $m = $this->getProperty($p, 'middleware');
 
         $this->assertCount(1, $m);
-        $this->assertInstanceOf(TestMiddleware::class, $m[0]);
+        // Because of the pipeline is lazy
+        $this->assertSame($middleware, $m[0]);
     }
 
     public static function prefixesDataProvider(): \Traversable

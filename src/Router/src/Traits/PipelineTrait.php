@@ -7,6 +7,7 @@ namespace Spiral\Router\Traits;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Core\Container\Autowire;
+use Spiral\Http\LazyPipeline;
 use Spiral\Http\Pipeline;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\PipelineFactory;
@@ -19,7 +20,7 @@ trait PipelineTrait
 {
     use ContainerTrait;
 
-    protected ?Pipeline $pipeline = null;
+    protected Pipeline|LazyPipeline|null $pipeline = null;
 
     /** @psalm-var array<array-key, MiddlewareType> */
     protected array $middleware = [];
@@ -53,7 +54,7 @@ trait PipelineTrait
         }
 
         if ($route->pipeline !== null) {
-            $route->pipeline = $route->makePipeline();
+            $route->pipeline = $route->makeLazyPipeline();
         }
 
         return $route;
@@ -73,6 +74,8 @@ trait PipelineTrait
      * Get associated route pipeline.
      *
      * @throws RouteException
+     *
+     * @deprecated Will be removed in Spiral v4.0. Use {@see makeLazyPipeline()} instead.
      */
     protected function makePipeline(): Pipeline
     {
@@ -81,6 +84,23 @@ trait PipelineTrait
             return $this->container
                 ->get(PipelineFactory::class)
                 ->createWithMiddleware($this->middleware);
+        } catch (ContainerExceptionInterface $e) {
+            throw new RouteException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * Get associated route pipeline.
+     *
+     * @throws RouteException
+     */
+    protected function makeLazyPipeline(): LazyPipeline
+    {
+        \assert($this->container !== null);
+        try {
+            /** @var LazyPipeline $pipeline */
+            $pipeline = $this->container->get(LazyPipeline::class);
+            return $pipeline->withMiddleware(...$this->middleware);
         } catch (ContainerExceptionInterface $e) {
             throw new RouteException($e->getMessage(), $e->getCode(), $e);
         }

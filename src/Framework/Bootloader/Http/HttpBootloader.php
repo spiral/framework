@@ -24,7 +24,7 @@ use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\CurrentRequest;
 use Spiral\Http\Http;
-use Spiral\Http\Pipeline;
+use Spiral\Http\LazyPipeline;
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
 use Spiral\Telemetry\TracerFactoryInterface;
 
@@ -136,7 +136,7 @@ final class HttpBootloader extends Bootloader
      */
     protected function httpCore(
         HttpConfig $config,
-        Pipeline $pipeline,
+        LazyPipeline $pipeline,
         RequestHandlerInterface $handler,
         ResponseFactoryInterface $responseFactory,
         ContainerInterface $container,

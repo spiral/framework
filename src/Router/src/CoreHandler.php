@@ -6,6 +6,7 @@ namespace Spiral\Router;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
@@ -124,6 +125,9 @@ final class CoreHandler implements RequestHandlerInterface
                             new CallContext(
                                 Target::fromPair($controller, $action),
                                 $parameters,
+                                [
+                                    ServerRequestInterface::class => $request,
+                                ],
                             ),
                         ),
                     attributes: [
