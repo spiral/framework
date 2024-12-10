@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Event;
 
-final class CacheMissed
+/**
+ * Triggered when cache item is not found.
+ */
+final class CacheMissed extends CacheEvent
 {
-    public function __construct(
-        public readonly string $key,
-    ) {
-    }
 }

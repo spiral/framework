@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Cache\Event;
 
-final class KeyWritten
+/**
+ * Triggered after cache item is written.
+ */
+final class KeyWritten extends CacheEvent
 {
     public function __construct(
-        public readonly string $key,
+        string $key,
         public readonly mixed $value,
     ) {
+        parent::__construct($key);
     }
 }
