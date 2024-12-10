@@ -84,7 +84,7 @@ class ArrayStorage implements CacheInterface
             $this->set($key, $value, $ttl);
         }
 
-        return false;
+        return true;
     }
 
     public function deleteMultiple(iterable $keys): bool
