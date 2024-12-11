@@ -16,7 +16,7 @@ final class ValueDependency implements DependencyInterface
     public function __construct(
         private readonly string $name,
         private readonly mixed $value,
-        array $variants = null
+        ?array $variants = null
     ) {
         $this->variants = $variants ?? [$value];
     }

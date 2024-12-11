@@ -26,7 +26,7 @@ final class StackContext
         $node->setAttribute(self::class, $stacks);
     }
 
-    public function push(string $name, Tag $child, string $uniqueID = null): bool
+    public function push(string $name, Tag $child, ?string $uniqueID = null): bool
     {
         foreach ($this->getStacks() as $stack) {
             if ($stack->accepts($name) !== $name) {
@@ -53,7 +53,7 @@ final class StackContext
         return false;
     }
 
-    public function prepend(string $name, Tag $child, string $uniqueID = null): bool
+    public function prepend(string $name, Tag $child, ?string $uniqueID = null): bool
     {
         foreach ($this->getStacks() as $stack) {
             if ($stack->accepts($name) !== $name) {

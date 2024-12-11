@@ -24,7 +24,7 @@ final class Block implements NodeInterface, AttributedInterface
 
     public function __construct(
         public ?string $name,
-        Context $context = null
+        ?Context $context = null
     ) {
         $this->context = $context;
     }

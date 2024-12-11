@@ -64,8 +64,8 @@ final class ProxyClassRendererTest extends TestCase
         yield [$from(fn(float $string = 42) => 0), 'mixed $string = 42.0'];
         yield [$from(fn(?bool $string = false) => 0), 'mixed $string = false'];
         yield [$from(fn(bool|null $string = true) => 0), 'mixed $string = true'];
-        yield [$from(fn(object $string = null) => 0), 'mixed $string = NULL'];
-        yield [$from(fn(iterable $string = null) => 0), 'mixed $string = NULL'];
+        yield [$from(fn(?object $string = null) => 0), 'mixed $string = NULL'];
+        yield [$from(fn(?iterable $string = null) => 0), 'mixed $string = NULL'];
         yield [$from(fn(Countable&ArrayAccess $val) => 0), 'mixed $val'];
         yield [$from(fn(string ...$val) => 0), 'mixed ...$val'];
         yield [$from(fn(string|int ...$val) => 0), 'mixed ...$val'];

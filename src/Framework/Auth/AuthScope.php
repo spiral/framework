@@ -23,7 +23,7 @@ final class AuthScope implements AuthContextInterface
     /**
      * @throws ScopeException
      */
-    public function start(TokenInterface $token, string $transport = null): void
+    public function start(TokenInterface $token, ?string $transport = null): void
     {
         $this->getAuthContext()->start($token, $transport);
     }

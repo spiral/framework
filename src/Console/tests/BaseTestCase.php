@@ -42,7 +42,7 @@ abstract class BaseTestCase extends TestCase
         );
     }
 
-    protected function getCore(LocatorInterface $locator = null, ?EventDispatcherInterface $eventDispatcher = null): Console
+    protected function getCore(?LocatorInterface $locator = null, ?EventDispatcherInterface $eventDispatcher = null): Console
     {
         $config = $this->container->get(ConsoleConfig::class);
 

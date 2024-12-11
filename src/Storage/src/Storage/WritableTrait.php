@@ -17,7 +17,7 @@ trait WritableTrait
     /**
      * {@see StorageInterface::bucket()}
      */
-    abstract public function bucket(string $name = null): BucketInterface;
+    abstract public function bucket(?string $name = null): BucketInterface;
 
     public function create(string|\Stringable $id, array $config = []): FileInterface
     {

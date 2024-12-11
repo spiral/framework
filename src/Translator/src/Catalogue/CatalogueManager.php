@@ -23,7 +23,7 @@ final class CatalogueManager implements CatalogueManagerInterface
 
     public function __construct(
         private readonly LoaderInterface $loader,
-        CacheInterface $cache = null
+        ?CacheInterface $cache = null
     ) {
         $this->cache = $cache ?? new NullCache();
     }

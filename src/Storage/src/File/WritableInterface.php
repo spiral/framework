@@ -44,24 +44,22 @@ interface WritableInterface extends EntryInterface
     /**
      * {@see BucketInterface::copy()}
      *
-     * @param BucketInterface|null $storage
      * @throws FileOperationException
      */
     public function copy(
         string $pathname,
-        BucketInterface $storage = null,
+        ?BucketInterface $storage = null,
         array $config = []
     ): FileInterface;
 
     /**
      * {@see BucketInterface::move()}
      *
-     * @param BucketInterface|null $storage
      * @throws FileOperationException
      */
     public function move(
         string $pathname,
-        BucketInterface $storage = null,
+        ?BucketInterface $storage = null,
         array $config = []
     ): FileInterface;
 

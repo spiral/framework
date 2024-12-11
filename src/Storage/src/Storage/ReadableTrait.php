@@ -16,7 +16,7 @@ trait ReadableTrait
     /**
      * {@see StorageInterface::bucket()}
      */
-    abstract public function bucket(string $name = null): BucketInterface;
+    abstract public function bucket(?string $name = null): BucketInterface;
 
     public function getContents(string|\Stringable $id): string
     {

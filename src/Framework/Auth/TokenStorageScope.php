@@ -37,7 +37,7 @@ final class TokenStorageScope implements TokenStorageInterface
      *
      * @throws TokenStorageException
      */
-    public function create(array $payload, \DateTimeInterface $expiresAt = null): TokenInterface
+    public function create(array $payload, ?\DateTimeInterface $expiresAt = null): TokenInterface
     {
         return $this->getTokenStorage()->create($payload, $expiresAt);
     }

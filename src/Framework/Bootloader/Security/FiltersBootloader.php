@@ -98,7 +98,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
     /**
      * @throws \Throwable
      */
-    public function createInjection(\ReflectionClass $class, string $context = null): FilterInterface
+    public function createInjection(\ReflectionClass $class, ?string $context = null): FilterInterface
     {
         /** @var FilterBag $filter */
         return $this->container->get(FilterProviderInterface::class)->createFilter(

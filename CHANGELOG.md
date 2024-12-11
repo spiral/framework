@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 3.14.8 - 2024-12-11
+
+- Definitions of nullable parameters have been fixed according to PHP 8.4 deprecations.
+- `ArrayStorage::setMultiple()` now returns `true` instead of `false`.
+
+## 3.14.7 - 2024-11-25
+
+- **Bug Fixes**
+  - [spiral/auth] Fixed configuration replacement for auth in HttpAuthBootloader
+  - [spiral/http] Fixed Server Request binding for root services
+
 ## 3.14.6 - 2024-10-22
 
 - **Bug Fixes**

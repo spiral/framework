@@ -18,7 +18,7 @@ final class Raw implements NodeInterface
 
     public function __construct(
         public string|int|float $content,
-        Context $context = null
+        ?Context $context = null
     ) {
         $this->context = $context;
     }

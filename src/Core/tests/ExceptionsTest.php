@@ -60,7 +60,7 @@ class ExceptionsTest extends TestCase
         $container->resolveArguments(new \ReflectionMethod(IntersectionTypes::class, 'example'));
     }
 
-    public function testArgumentException(string $param = null): void
+    public function testArgumentException(?string $param = null): void
     {
         $method = new \ReflectionMethod($this, 'testArgumentException');
 

@@ -13,7 +13,7 @@ final class JsonRenderer extends AbstractRenderer
     public function render(
         \Throwable $exception,
         ?Verbosity $verbosity = Verbosity::BASIC,
-        string $format = null,
+        ?string $format = null,
     ): string {
         $verbosity ??= $this->defaultVerbosity;
         return \json_encode([

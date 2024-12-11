@@ -51,7 +51,7 @@ final class Traverser
      * @return NodeInterface[]
      * @throws \Throwable
      */
-    public function traverse(array $nodes, VisitorContext $context = null): array
+    public function traverse(array $nodes, ?VisitorContext $context = null): array
     {
         $context ??= new VisitorContext();
 

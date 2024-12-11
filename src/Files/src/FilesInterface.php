@@ -36,7 +36,7 @@ interface FilesInterface
      * @param int $mode When NULL class can pick default mode.
      *
      */
-    public function ensureDirectory(string $directory, int $mode = null): bool;
+    public function ensureDirectory(string $directory, ?int $mode = null): bool;
 
     /**
      * Read file content into string.
@@ -57,7 +57,7 @@ interface FilesInterface
     public function write(
         string $filename,
         string $data,
-        int $mode = null,
+        ?int $mode = null,
         bool $ensureDirectory = false
     ): bool;
 
@@ -73,7 +73,7 @@ interface FilesInterface
     public function append(
         string $filename,
         string $data,
-        int $mode = null,
+        ?int $mode = null,
         bool $ensureDirectory = false
     ): bool;
 
@@ -106,7 +106,7 @@ interface FilesInterface
      *
      * @param int $mode When NULL class can pick default mode.
      */
-    public function touch(string $filename, int $mode = null): bool;
+    public function touch(string $filename, ?int $mode = null): bool;
 
     /**
      * Check if file exists.
@@ -166,7 +166,7 @@ interface FilesInterface
      * @param string $location Location for search.
      * @param string $pattern  Extension pattern.
      */
-    public function getFiles(string $location, string $pattern = null): array;
+    public function getFiles(string $location, ?string $pattern = null): array;
 
     /**
      * Return unique name of temporary (should be removed when interface implementation destructed)
@@ -174,7 +174,7 @@ interface FilesInterface
      *
      * @param string $extension Desired file extension.
      */
-    public function tempFilename(string $extension = '', string $location = null): string;
+    public function tempFilename(string $extension = '', ?string $location = null): string;
 
     /*
      * Move outside in a future versions.

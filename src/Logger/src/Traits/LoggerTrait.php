@@ -27,7 +27,7 @@ trait LoggerTrait
     /**
      * Get associated or create new instance of LoggerInterface.
      */
-    protected function getLogger(string $channel = null): LoggerInterface
+    protected function getLogger(?string $channel = null): LoggerInterface
     {
         if ($channel !== null) {
             return $this->allocateLogger($channel);

@@ -22,7 +22,7 @@ final class PhpFileLoader implements LoaderInterface
     /**
      * Loads a PHP file.
      */
-    public function load(mixed $resource, string $type = null): RouteCollection
+    public function load(mixed $resource, ?string $type = null): RouteCollection
     {
         if (!\file_exists($resource)) {
             throw new LoaderLoadException(\sprintf('File [%s] does not exist.', $resource));
@@ -44,7 +44,7 @@ final class PhpFileLoader implements LoaderInterface
         return $collection;
     }
 
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         return
             \is_string($resource) &&

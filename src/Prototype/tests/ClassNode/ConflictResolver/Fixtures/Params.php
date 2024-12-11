@@ -27,7 +27,7 @@ class Params
         Some $t1,
         Some $t4,
         ?TestAlias $a1,
-        SubFolder\Some $st = null,
+        ?SubFolder\Some $st = null,
         string $str = 'value'
     ): void {
     }
@@ -36,12 +36,12 @@ class Params
         Some $t1,
         Some $t4,
         ?TestAlias $a1,
-        SubFolder\Some $st = null,
+        ?SubFolder\Some $st = null,
         string $t2 = 'value'
     ): void {
     }
 
-    private function paramsSource3(Some $t, Some $t4, ?TestAlias $a1, SubFolder\Some $st = null): void
+    private function paramsSource3(Some $t, Some $t4, ?TestAlias $a1, ?SubFolder\Some $st = null): void
     {
     }
 }
