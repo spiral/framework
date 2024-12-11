@@ -142,7 +142,7 @@
         "phpunit/phpunit": "10.5.3",
         "ramsey/collection": "^1.2",
         "ramsey/uuid": "^4.2.3",
-        "rector/rector": "1.2.5",
+        "rector/rector": "1.2.10",
         "spiral/code-style": "^2.2",
         "spiral/nyholm-bridge": "^1.2",
         "spiral/testing": "^2.8",
