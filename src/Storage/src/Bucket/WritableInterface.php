@@ -56,7 +56,7 @@ interface WritableInterface
     public function copy(
         string $source,
         string $destination,
-        BucketInterface $storage = null,
+        ?BucketInterface $storage = null,
         array $config = []
     ): FileInterface;
 
@@ -72,7 +72,7 @@ interface WritableInterface
     public function move(
         string $source,
         string $destination,
-        BucketInterface $storage = null,
+        ?BucketInterface $storage = null,
         array $config = []
     ): FileInterface;
 

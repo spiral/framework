@@ -25,7 +25,7 @@ final class EnumInjector implements InjectorInterface
     ) {
     }
 
-    public function createInjection(\ReflectionClass $class, string $context = null): UnitEnum
+    public function createInjection(\ReflectionClass $class, ?string $context = null): UnitEnum
     {
         $attribute = $this->reader->firstClassMetadata($class, ProvideFrom::class);
         if ($attribute === null) {

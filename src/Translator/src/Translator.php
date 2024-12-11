@@ -67,7 +67,7 @@ final class Translator implements TranslatorInterface
      *
      * @throws LocaleException
      */
-    public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
+    public function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
         $domain ??= $this->config->getDefaultDomain();
         $locale ??= $this->locale;
@@ -88,8 +88,8 @@ final class Translator implements TranslatorInterface
         string $id,
         string|int $number,
         array $parameters = [],
-        string $domain = null,
-        string $locale = null
+        ?string $domain = null,
+        ?string $locale = null
     ): string {
         $domain ??= $this->config->getDefaultDomain();
         $locale ??= $this->locale;

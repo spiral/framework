@@ -26,7 +26,7 @@ final class Injector
     private readonly NodeTraverser $cloner;
 
     public function __construct(
-        Lexer $lexer = null,
+        ?Lexer $lexer = null,
         private readonly PrettyPrinterAbstract $printer = new Standard()
     ) {
         $this->lexer = $lexer ?? new Lexer\Emulative([

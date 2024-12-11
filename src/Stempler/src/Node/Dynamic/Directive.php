@@ -19,7 +19,7 @@ final class Directive implements NodeInterface
     public ?string $body = null;
     public array $values = [];
 
-    public function __construct(Context $context = null)
+    public function __construct(?Context $context = null)
     {
         $this->context = $context;
     }

@@ -26,7 +26,7 @@ final class Verbatim implements NodeInterface, AttributedInterface
      */
     public array $nodes = [];
 
-    public function __construct(Context $context = null)
+    public function __construct(?Context $context = null)
     {
         $this->context = $context;
     }

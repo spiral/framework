@@ -10,7 +10,7 @@ final class ViewCache
 {
     private array $cache = [];
 
-    public function reset(ContextInterface $context = null): void
+    public function reset(?ContextInterface $context = null): void
     {
         if (empty($context)) {
             $this->cache = [];

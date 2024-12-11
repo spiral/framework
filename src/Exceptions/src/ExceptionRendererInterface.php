@@ -12,7 +12,7 @@ interface ExceptionRendererInterface
     public function render(
         \Throwable $exception,
         ?Verbosity $verbosity = Verbosity::BASIC,
-        string $format = null,
+        ?string $format = null,
     ): string;
 
     public function canRender(string $format): bool;

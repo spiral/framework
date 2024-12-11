@@ -24,7 +24,7 @@ final class InterfaceLocatorInjector implements InjectorInterface
      */
     public function createInjection(
         \ReflectionClass $class,
-        string $context = null
+        ?string $context = null
     ): InterfacesInterface {
         return $this->tokenizer->interfaceLocator();
     }

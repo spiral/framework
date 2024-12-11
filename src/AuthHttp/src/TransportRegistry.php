@@ -25,7 +25,7 @@ final class TransportRegistry
         $this->transports[$name] = $transport;
     }
 
-    public function getTransport(string $name = null): HttpTransportInterface
+    public function getTransport(?string $name = null): HttpTransportInterface
     {
         $name ??= $this->default;
 

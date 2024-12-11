@@ -12,7 +12,7 @@ interface AuthContextInterface
     /**
      * Start new auth context based on a given token. Actor can be received on demand.
      */
-    public function start(TokenInterface $token, string $transport = null): void;
+    public function start(TokenInterface $token, ?string $transport = null): void;
 
     /**
      * Returns associated token if any.

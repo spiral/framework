@@ -22,7 +22,7 @@ final class Compiler
         $this->renders[] = $renderer;
     }
 
-    public function compile(array|NodeInterface $node, Result $result = null): Result
+    public function compile(array|NodeInterface $node, ?Result $result = null): Result
     {
         $result ??= new Result();
 

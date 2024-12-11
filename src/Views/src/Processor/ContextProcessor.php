@@ -19,7 +19,7 @@ final class ContextProcessor implements ProcessorInterface
 
     private readonly string $pattern;
 
-    public function __construct(string $pattern = null)
+    public function __construct(?string $pattern = null)
     {
         $this->pattern = $pattern ?? self::PATTERN;
     }

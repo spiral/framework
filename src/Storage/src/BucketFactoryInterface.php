@@ -14,7 +14,7 @@ interface BucketFactoryInterface
      */
     public function createFromAdapter(
         FilesystemAdapter $adapter,
-        string $name = null,
-        UriResolverInterface $resolver = null
+        ?string $name = null,
+        ?UriResolverInterface $resolver = null
     ): BucketInterface;
 }

@@ -21,7 +21,7 @@ final class Directory implements ImportInterface
     public function __construct(
         public string $path,
         ?string $prefix,
-        Context $context = null
+        ?Context $context = null
     ) {
         $this->prefix = $prefix ?? \substr($path, \strrpos($path, '/') + 1);
         $this->context = $context;

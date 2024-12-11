@@ -9,10 +9,7 @@ namespace Spiral\Distribution;
  */
 interface DistributionInterface extends \IteratorAggregate, \Countable
 {
-    /**
-     * @param string|null $name
-     */
-    public function resolver(string $name = null): UriResolverInterface;
+    public function resolver(?string $name = null): UriResolverInterface;
 
     public function withDefault(string $name): self;
 }

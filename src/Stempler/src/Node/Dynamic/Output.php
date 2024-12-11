@@ -23,7 +23,7 @@ final class Output implements NodeInterface
     public ?string $filter = null;
     public ?string $body = null;
 
-    public function __construct(Context $context = null)
+    public function __construct(?Context $context = null)
     {
         $this->context = $context;
     }

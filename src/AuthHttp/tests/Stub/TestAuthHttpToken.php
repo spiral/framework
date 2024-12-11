@@ -22,7 +22,7 @@ class TestAuthHttpToken implements TokenInterface
      * @param array                   $payload
      * @param \DateTimeInterface|null $expiresAt
      */
-    public function __construct(string $id, array $payload, \DateTimeInterface $expiresAt = null)
+    public function __construct(string $id, array $payload, ?\DateTimeInterface $expiresAt = null)
     {
         $this->id = $id;
         $this->expiresAt = $expiresAt;

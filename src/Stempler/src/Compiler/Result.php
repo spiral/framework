@@ -37,7 +37,7 @@ final class Result
         }
     }
 
-    public function push(string $content, Context $ctx = null): void
+    public function push(string $content, ?Context $ctx = null): void
     {
         if ($ctx !== null && $ctx->getPath() !== null) {
             $this->locations[\strlen($this->content)] = Location::fromContext($ctx, $this->parent);

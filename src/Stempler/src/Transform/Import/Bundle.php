@@ -22,7 +22,7 @@ final class Bundle implements ImportInterface
     public function __construct(
         private string $path,
         private ?string $prefix = null,
-        Context $context = null
+        ?Context $context = null
     ) {
         $this->context = $context;
     }

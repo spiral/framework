@@ -51,7 +51,7 @@ final class Storage implements MutableStorageInterface
         return $self;
     }
 
-    public function bucket(string $name = null): BucketInterface
+    public function bucket(?string $name = null): BucketInterface
     {
         $name ??= $this->default;
 

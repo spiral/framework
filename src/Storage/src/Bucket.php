@@ -57,8 +57,8 @@ class Bucket implements BucketInterface
 
     public static function fromAdapter(
         FilesystemAdapter $adapter,
-        string $name = null,
-        UriResolverInterface $resolver = null
+        ?string $name = null,
+        ?UriResolverInterface $resolver = null
     ): self {
         $fs = new Filesystem($adapter);
 

@@ -73,11 +73,11 @@ final class CookieQueue
      */
     public function set(
         string $name,
-        string $value = null,
-        int $lifetime = null,
-        string $path = null,
-        string $domain = null,
-        bool $secure = null,
+        ?string $value = null,
+        ?int $lifetime = null,
+        ?string $path = null,
+        ?string $domain = null,
+        ?bool $secure = null,
         bool $httpOnly = true,
         ?string $sameSite = null
     ): self {

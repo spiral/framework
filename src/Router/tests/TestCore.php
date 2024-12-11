@@ -12,7 +12,7 @@ class TestCore implements CoreInterface
     {
     }
 
-    public function callAction(string $controller, string $action = null, array $parameters = []): string
+    public function callAction(string $controller, ?string $action = null, array $parameters = []): string
     {
         return '@wrapped.' . $this->core->callAction($controller, $action, $parameters);
     }

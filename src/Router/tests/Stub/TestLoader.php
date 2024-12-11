@@ -9,12 +9,12 @@ use Spiral\Router\RouteCollection;
 
 class TestLoader implements LoaderInterface
 {
-    public function load(mixed $resource, string $type = null): RouteCollection
+    public function load(mixed $resource, ?string $type = null): RouteCollection
     {
         return new RouteCollection();
     }
 
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         return $type === 'yaml';
     }

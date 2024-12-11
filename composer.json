@@ -142,8 +142,8 @@
         "phpunit/phpunit": "10.5.3",
         "ramsey/collection": "^1.2",
         "ramsey/uuid": "^4.2.3",
-        "rector/rector": "1.2.5",
-        "spiral/code-style": "^1.1",
+        "rector/rector": "1.2.10",
+        "spiral/code-style": "^2.2",
         "spiral/nyholm-bridge": "^1.2",
         "spiral/testing": "^2.8",
         "spiral/validator": "^1.3",
@@ -264,15 +264,11 @@
         "spiral/sapi-bridge": "<1.1"
     },
     "scripts": {
-        "tests": [
-            "phpunit --testdox",
-            "phpcs --standard=phpcs.xml",
-            "psalm --no-cache"
-        ],
-        "fixers": [
-            "phpcbf --standard=phpcs.xml",
-            "psalm --alter --dry-run"
-        ]
+        "cs:diff": "php-cs-fixer fix --dry-run -v --diff",
+        "cs:fix": "php-cs-fixer fix -v",
+        "psalm": "psalm",
+        "psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
+        "test": "phpunit --color=always"
     },
     "extra": {
         "branch-alias": {

@@ -28,7 +28,7 @@ interface SpanInterface
      * @param non-empty-string|int $code
      * @param non-empty-string|null $description
      */
-    public function setStatus(string|int $code, string $description = null): self;
+    public function setStatus(string|int $code, ?string $description = null): self;
 
     /**
      * Get the current span status.

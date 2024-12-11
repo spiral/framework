@@ -9,7 +9,7 @@ use Spiral\Core\CoreInterface;
 
 class Append implements CoreInterceptorInterface
 {
-    public function __construct(private string $string)
+    public function __construct(private readonly string $string)
     {
     }
 

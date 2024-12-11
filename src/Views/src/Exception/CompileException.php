@@ -8,7 +8,7 @@ class CompileException extends EngineException
 {
     private array $userTrace = [];
 
-    public function __construct(\Throwable $previous = null)
+    public function __construct(?\Throwable $previous = null)
     {
         parent::__construct((string) $previous?->getMessage(), (int) ($previous?->getCode() ?? 0), $previous);
 

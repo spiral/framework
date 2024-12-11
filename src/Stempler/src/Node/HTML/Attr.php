@@ -21,7 +21,7 @@ final class Attr implements NodeInterface
     public function __construct(
         public Mixin|string $name,
         public mixed $value,
-        Context $context = null
+        ?Context $context = null
     ) {
         $this->context = $context;
     }

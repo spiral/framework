@@ -17,7 +17,7 @@ final class RoutingConfigurator
     ) {
     }
 
-    public function import(string|array $resource, string $type = null): ImportConfigurator
+    public function import(string|array $resource, ?string $type = null): ImportConfigurator
     {
         $imported = $this->loader->load($resource, $type) ?: [];
 

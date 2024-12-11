@@ -17,7 +17,7 @@ final class Inline implements NodeInterface
     public string $name;
     public mixed $value = null;
 
-    public function __construct(Context $context = null)
+    public function __construct(?Context $context = null)
     {
         $this->context = $context;
     }

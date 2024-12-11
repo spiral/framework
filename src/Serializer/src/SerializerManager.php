@@ -12,7 +12,7 @@ class SerializerManager implements SerializerInterface
     ) {
     }
 
-    public function getSerializer(string $format = null): SerializerInterface
+    public function getSerializer(?string $format = null): SerializerInterface
     {
         return $this->serializers->get($format ?? $this->defaultFormat);
     }

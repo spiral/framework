@@ -30,7 +30,7 @@ trait TranslatorTrait
      *
      * @throws ScopeException
      */
-    protected function say(string $string, array $options = [], string $bundle = null): string
+    protected function say(string $string, array $options = [], ?string $bundle = null): string
     {
         if (Translator::isMessage($string)) {
             //Cut [[ and ]]

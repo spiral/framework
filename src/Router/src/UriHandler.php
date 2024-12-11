@@ -55,7 +55,7 @@ final class UriHandler
      */
     public function __construct(
         private readonly UriFactoryInterface $uriFactory,
-        SlugifyInterface $slugify = null,
+        ?SlugifyInterface $slugify = null,
         ?RoutePatternRegistryInterface $patternRegistry = null,
     ) {
         $this->patternRegistry = $patternRegistry ?? new DefaultPatternRegistry();

@@ -175,7 +175,7 @@ final class Router implements RouterInterface
     /**
      * Find route matched for given request.
      */
-    protected function matchRoute(ServerRequestInterface $request, string &$routeName = null): ?RouteInterface
+    protected function matchRoute(ServerRequestInterface $request, ?string &$routeName = null): ?RouteInterface
     {
         foreach ($this->routes as $name => $route) {
             // Matched route will return new route instance with matched parameters

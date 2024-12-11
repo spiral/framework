@@ -12,7 +12,7 @@ class MailInterceptor implements MailerInterface
 {
     private RawMessage $last;
 
-    public function send(RawMessage $message, Envelope $envelope = null): void
+    public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         $this->last = $message;
     }

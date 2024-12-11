@@ -52,7 +52,7 @@ final class EncrypterFactory implements InjectorInterface, EncryptionInterface
         return new Encrypter($this->getKey());
     }
 
-    public function createInjection(\ReflectionClass $class, string $context = null): EncrypterInterface
+    public function createInjection(\ReflectionClass $class, ?string $context = null): EncrypterInterface
     {
         return $this->getEncrypter();
     }

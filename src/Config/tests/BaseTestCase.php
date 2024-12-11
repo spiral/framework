@@ -23,7 +23,7 @@ abstract class BaseTestCase extends TestCase
         $this->container = new Container();
     }
 
-    protected function getFactory(string $directory = null, bool $strict = true): ConfigManager
+    protected function getFactory(?string $directory = null, bool $strict = true): ConfigManager
     {
         if (is_null($directory)) {
             $directory = __DIR__ . '/fixtures';

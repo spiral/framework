@@ -43,7 +43,7 @@ final class Session implements SessionInterface
     public function __construct(
         private readonly string $clientSignature,
         private readonly int $lifetime,
-        string $id = null
+        ?string $id = null
     ) {
         if (!empty($id) && $this->validID($id)) {
             $this->id = $id;
@@ -158,7 +158,7 @@ final class Session implements SessionInterface
         return $this->commit();
     }
 
-    public function getSection(string $name = null): SessionSectionInterface
+    public function getSection(?string $name = null): SessionSectionInterface
     {
         return new SessionSection($this, $name ?? self::DEFAULT_SECTION);
     }

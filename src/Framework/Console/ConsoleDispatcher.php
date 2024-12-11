@@ -38,7 +38,7 @@ final class ConsoleDispatcher implements DispatcherInterface
         return (PHP_SAPI === 'cli' && $env->get('RR_MODE') === null);
     }
 
-    public function serve(InputInterface $input = null, OutputInterface $output = null): int
+    public function serve(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
         // On demand to save some memory.
 

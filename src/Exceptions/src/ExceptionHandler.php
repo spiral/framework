@@ -67,7 +67,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     public function render(
         \Throwable $exception,
         ?Verbosity $verbosity = null,
-        string $format = null,
+        ?string $format = null,
     ): string {
         return (string)$this->getRenderer($format)?->render($exception, $verbosity ?? $this->verbosity, $format);
     }
