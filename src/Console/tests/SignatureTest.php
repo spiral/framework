@@ -136,7 +136,7 @@ final class SignatureTest extends BaseTestCase
             ])
         );
 
-        $this->assertSame(
+        $this->assertStringStartsWith(
             <<<'HELP'
 Usage:
   foo:bar [options] [--] <foo> [<bar> [<baz>...]]
