@@ -25,7 +25,7 @@ use Spiral\Stempler\Parser\Syntax\PHPSyntax;
 
 abstract class BaseTestCase extends TestCase
 {
-    protected function compile(string $source, array $visitors = [], LoaderInterface $loader = null)
+    protected function compile(string $source, array $visitors = [], ?LoaderInterface $loader = null)
     {
         if ($loader === null) {
             $loader = new StringLoader();
@@ -37,7 +37,7 @@ abstract class BaseTestCase extends TestCase
         return $builder->compile('root');
     }
 
-    protected function parse(string $source, array $visitors = [], LoaderInterface $loader = null)
+    protected function parse(string $source, array $visitors = [], ?LoaderInterface $loader = null)
     {
         $loader ??= new StringLoader();
         $loader->set('root', $source);

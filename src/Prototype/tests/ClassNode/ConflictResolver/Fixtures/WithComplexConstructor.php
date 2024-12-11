@@ -18,7 +18,7 @@ class WithComplexConstructor
         ?Some $test1 = null,
         ?string $str3 = null,
         ?int $int = 123,
-        \StdClass $nullableClass2 = null,
+        ?\StdClass $nullableClass2 = null,
         string ...$variadicVar
     ) {
         $var2 = new ATest3();

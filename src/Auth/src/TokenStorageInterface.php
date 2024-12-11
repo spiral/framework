@@ -25,7 +25,7 @@ interface TokenStorageInterface
      *
      * @throws TokenStorageException
      */
-    public function create(array $payload, \DateTimeInterface $expiresAt = null): TokenInterface;
+    public function create(array $payload, ?\DateTimeInterface $expiresAt = null): TokenInterface;
 
     /**
      * Delete token from the persistent storage.

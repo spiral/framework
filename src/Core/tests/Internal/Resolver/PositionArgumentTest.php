@@ -33,7 +33,7 @@ final class PositionArgumentTest extends BaseTestCase
     public function testFirstIsOptionalSecondPassedAsArgument(): void
     {
         $result = $this->resolveClosure(
-            static fn(int $foo = 42, EngineInterface $engine2 = null) => null,
+            static fn(int $foo = 42, ?EngineInterface $engine2 = null) => null,
             [1 => ($engineB = new EngineZIL130())]
         );
 

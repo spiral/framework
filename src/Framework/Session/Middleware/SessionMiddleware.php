@@ -91,7 +91,7 @@ final class SessionMiddleware implements MiddlewareInterface
         return $cookies[$this->config->getCookie()];
     }
 
-    protected function withCookie(Request $request, Response $response, string $id = null): Response
+    protected function withCookie(Request $request, Response $response, ?string $id = null): Response
     {
         return $response->withAddedHeader(
             'Set-Cookie',
@@ -118,7 +118,7 @@ final class SessionMiddleware implements MiddlewareInterface
      *
      * @param UriInterface $uri Incoming uri.
      */
-    private function sessionCookie(UriInterface $uri, string $id = null): Cookie
+    private function sessionCookie(UriInterface $uri, ?string $id = null): Cookie
     {
         return Cookie::create(
             $this->config->getCookie(),

@@ -294,8 +294,8 @@ final class Resolver implements ResolverInterface
     private function processArgument(
         ResolvingState $state,
         mixed &$value,
-        ReflectionParameter $validateWith = null,
-        int|string $key = null
+        ?ReflectionParameter $validateWith = null,
+        int|string|null $key = null
     ): void {
         // Resolve Autowire objects
         if ($value instanceof Autowire) {

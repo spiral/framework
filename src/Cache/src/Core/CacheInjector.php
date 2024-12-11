@@ -22,7 +22,7 @@ final class CacheInjector implements InjectorInterface
     ) {
     }
 
-    public function createInjection(ReflectionClass $class, string $context = null): CacheInterface
+    public function createInjection(ReflectionClass $class, ?string $context = null): CacheInterface
     {
         try {
             if ($context === null) {

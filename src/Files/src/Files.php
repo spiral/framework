@@ -46,7 +46,7 @@ final class Files implements FilesInterface
      */
     public function ensureDirectory(
         string $directory,
-        int $mode = null,
+        ?int $mode = null,
         bool $recursivePermissions = true
     ): bool {
         if (empty($mode)) {
@@ -97,7 +97,7 @@ final class Files implements FilesInterface
     public function write(
         string $filename,
         string $data,
-        int $mode = null,
+        ?int $mode = null,
         bool $ensureDirectory = false,
         bool $append = false
     ): bool {
@@ -133,7 +133,7 @@ final class Files implements FilesInterface
     public function append(
         string $filename,
         string $data,
-        int $mode = null,
+        ?int $mode = null,
         bool $ensureDirectory = false
     ): bool {
         return $this->write($filename, $data, $mode, $ensureDirectory, true);
@@ -202,7 +202,7 @@ final class Files implements FilesInterface
         return \copy($filename, $destination);
     }
 
-    public function touch(string $filename, int $mode = null): bool
+    public function touch(string $filename, ?int $mode = null): bool
     {
         if (!\touch($filename)) {
             return false;
@@ -277,7 +277,7 @@ final class Files implements FilesInterface
         return $this->getPermissions($filename) === $mode || \chmod($filename, $mode);
     }
 
-    public function getFiles(string $location, string $pattern = null): array
+    public function getFiles(string $location, ?string $pattern = null): array
     {
         $result = [];
         foreach ($this->filesIterator($location, $pattern) as $filename) {
@@ -293,7 +293,7 @@ final class Files implements FilesInterface
         return $result;
     }
 
-    public function tempFilename(string $extension = '', string $location = null): string
+    public function tempFilename(string $extension = '', ?string $location = null): string
     {
         if (empty($location)) {
             $location = \sys_get_temp_dir();
@@ -358,7 +358,7 @@ final class Files implements FilesInterface
         return \implode('/', $relative);
     }
 
-    private function filesIterator(string $location, string $pattern = null): \GlobIterator
+    private function filesIterator(string $location, ?string $pattern = null): \GlobIterator
     {
         $pattern ??= '*';
         $regexp = \rtrim($location, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . \ltrim($pattern, DIRECTORY_SEPARATOR);

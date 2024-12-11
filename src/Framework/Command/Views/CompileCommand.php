@@ -111,7 +111,7 @@ final class CompileCommand extends Command
         return (new \ReflectionObject($engine))->getShortName();
     }
 
-    private function renderSuccess(string $lastPath = null): void
+    private function renderSuccess(?string $lastPath = null): void
     {
         if (!$this->isVerbose()) {
             return;

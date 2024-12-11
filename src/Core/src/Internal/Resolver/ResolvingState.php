@@ -27,7 +27,7 @@ final class ResolvingState
         $this->modeNamed = $this->isNamedMode();
     }
 
-    public function addResolvedValue(mixed &$value, string $key = null): void
+    public function addResolvedValue(mixed &$value, ?string $key = null): void
     {
         if ($key === null) {
             $this->resolvedValues[] = &$value;

@@ -86,7 +86,7 @@ final class SessionScope implements SessionInterface
     /**
      * @throws ScopeException
      */
-    public function getSection(string $name = null): SessionSectionInterface
+    public function getSection(?string $name = null): SessionSectionInterface
     {
         return new SectionScope($this, $name ?? self::DEFAULT_SECTION);
     }

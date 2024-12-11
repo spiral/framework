@@ -2,22 +2,13 @@
 
 declare(strict_types=1);
 
-if (!file_exists(__DIR__.'/src')) {
-    exit(0);
-}
+require_once 'vendor/autoload.php';
 
-return (new PhpCsFixer\Config())
-    ->setRules([
-        '@PSR12' => true,
-        'ternary_operator_spaces' => false,
-    ])
-    ->setRiskyAllowed(true)
-    ->setFinder(
-        (new PhpCsFixer\Finder())
-            ->files()
-            ->name('*.php')
-            ->in(__DIR__ . '/src')
-            ->append([__FILE__])
-            ->notPath(['#/Fixtures/#', '#/tests/#', '#/views/#'])
-    )
-    ->setCacheFile('.php-cs-fixer.cache');
+return \Spiral\CodeStyle\Builder::create()
+    ->include(__DIR__ . '/builder')
+    ->include(__DIR__ . '/src')
+    ->include(__DIR__ . '/tests')
+    ->include(__FILE__)
+    ->cache('./runtime/php-cs-fixer.cache')
+    ->allowRisky()
+    ->build();

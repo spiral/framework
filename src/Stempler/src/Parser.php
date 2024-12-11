@@ -37,7 +37,7 @@ final class Parser
     /**
      * Associate template path with Parser (source-map).
      */
-    public function withPath(string $path = null): self
+    public function withPath(?string $path = null): self
     {
         $parser = clone $this;
         $parser->path = $path;

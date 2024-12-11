@@ -23,7 +23,7 @@ final class Aggregate implements NodeInterface
     public array $uniqueIDs = [];
 
     public function __construct(
-        Context $context = null,
+        ?Context $context = null,
         public string $pattern = '*'
     ) {
         $this->context = $context;

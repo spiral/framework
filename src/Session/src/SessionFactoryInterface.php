@@ -11,5 +11,5 @@ interface SessionFactoryInterface
      *                                     hardens session transfer.
      * @param string|null $id When null - expect php to create session automatically.
      */
-    public function initSession(string $clientSignature, string $id = null): SessionInterface;
+    public function initSession(string $clientSignature, ?string $id = null): SessionInterface;
 }

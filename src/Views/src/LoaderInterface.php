@@ -43,5 +43,5 @@ interface LoaderInterface
      *
      * @throws LoaderException
      */
-    public function list(string $namespace = null): array;
+    public function list(?string $namespace = null): array;
 }

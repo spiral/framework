@@ -25,7 +25,7 @@ final class SessionFactory implements SessionFactoryInterface
     ) {
     }
 
-    public function initSession(string $clientSignature, string $id = null): SessionInterface
+    public function initSession(string $clientSignature, ?string $id = null): SessionInterface
     {
         if (\session_status() === PHP_SESSION_ACTIVE) {
             throw new MultipleSessionException('Unable to initiate session, session already started');

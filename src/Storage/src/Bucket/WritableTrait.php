@@ -73,7 +73,7 @@ trait WritableTrait
     public function copy(
         string $source,
         string $destination,
-        BucketInterface $storage = null,
+        ?BucketInterface $storage = null,
         array $config = []
     ): FileInterface {
         $fs = $this->getOperator();
@@ -94,7 +94,7 @@ trait WritableTrait
     public function move(
         string $source,
         string $destination,
-        BucketInterface $storage = null,
+        ?BucketInterface $storage = null,
         array $config = []
     ): FileInterface {
         $fs = $this->getOperator();

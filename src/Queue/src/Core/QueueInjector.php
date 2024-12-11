@@ -21,7 +21,7 @@ final class QueueInjector implements InjectorInterface
     ) {
     }
 
-    public function createInjection(ReflectionClass $class, string $context = null): QueueInterface
+    public function createInjection(ReflectionClass $class, ?string $context = null): QueueInterface
     {
         try {
             if ($context === null) {

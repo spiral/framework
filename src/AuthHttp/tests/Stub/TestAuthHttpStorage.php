@@ -18,7 +18,7 @@ class TestAuthHttpStorage implements TokenStorageInterface
         return new TestAuthHttpToken($id, ['id' => $id]);
     }
 
-    public function create(array $payload, \DateTimeInterface $expiresAt = null): TokenInterface
+    public function create(array $payload, ?\DateTimeInterface $expiresAt = null): TokenInterface
     {
         return new TestAuthHttpToken(
             $payload['id'],

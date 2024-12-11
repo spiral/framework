@@ -32,7 +32,7 @@ final class Manager implements MutableDistributionInterface
         return $self;
     }
 
-    public function resolver(string $name = null): UriResolverInterface
+    public function resolver(?string $name = null): UriResolverInterface
     {
         $name ??= $this->default;
 

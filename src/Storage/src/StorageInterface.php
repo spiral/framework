@@ -23,7 +23,7 @@ interface StorageInterface extends
     /**
      * @throws InvalidArgumentException
      */
-    public function bucket(string $name = null): BucketInterface;
+    public function bucket(?string $name = null): BucketInterface;
 
     /**
      * @throws InvalidArgumentException

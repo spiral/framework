@@ -27,7 +27,7 @@ final class Template implements NodeInterface, AttributedInterface
     ) {
     }
 
-    public function setContext(Context $context = null): void
+    public function setContext(?Context $context = null): void
     {
         $this->context = $context;
     }

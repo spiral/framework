@@ -22,7 +22,7 @@ final class Mixin implements NodeInterface
      */
     public function __construct(
         public array $nodes = [],
-        Context $context = null
+        ?Context $context = null
     ) {
         $this->context = $context;
     }

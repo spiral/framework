@@ -14,7 +14,7 @@ use Spiral\Core\Container\InjectorInterface;
  */
 class DatetimeInjector implements InjectorInterface
 {
-    public function createInjection(\ReflectionClass $class, string $context = null): object
+    public function createInjection(\ReflectionClass $class, ?string $context = null): object
     {
         return match ($class->getName()) {
             DateTime::class => new DateTime(),

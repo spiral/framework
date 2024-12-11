@@ -19,7 +19,7 @@ final class Inline implements ImportInterface
     public function __construct(
         private readonly string $name,
         private readonly array $nodes,
-        Context $context = null
+        ?Context $context = null
     ) {
         $this->context = $context;
     }

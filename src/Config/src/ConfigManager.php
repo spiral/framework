@@ -79,7 +79,7 @@ final class ConfigManager implements ConfiguratorInterface
         }
     }
 
-    public function getConfig(string $section = null): array
+    public function getConfig(?string $section = null): array
     {
         if (isset($this->data[$section])) {
             return $this->data[$section];
@@ -99,7 +99,7 @@ final class ConfigManager implements ConfiguratorInterface
         return $this->data[$section] = $data;
     }
 
-    public function createInjection(\ReflectionClass $class, string $context = null): object
+    public function createInjection(\ReflectionClass $class, ?string $context = null): object
     {
         $config = $class->getConstant('CONFIG');
         if (isset($this->instances[$config])) {

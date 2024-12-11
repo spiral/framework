@@ -21,7 +21,7 @@ class LoaderRegistry implements LoaderRegistryInterface
         }
     }
 
-    public function resolve(mixed $resource, string $type = null): LoaderInterface|false
+    public function resolve(mixed $resource, ?string $type = null): LoaderInterface|false
     {
         foreach ($this->loaders as $loader) {
             if ($loader->supports($resource, $type)) {

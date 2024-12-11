@@ -48,5 +48,5 @@ interface SessionInterface
     /**
      * @param string|null $name When null default section to be returned.
      */
-    public function getSection(string $name = null): SessionSectionInterface;
+    public function getSection(?string $name = null): SessionSectionInterface;
 }

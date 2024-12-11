@@ -9,7 +9,7 @@ use Spiral\Queue\QueueInterface;
 
 final class TestQueueClass implements QueueInterface
 {
-    public function push(string $name, mixed $payload = [], OptionsInterface $options = null): string
+    public function push(string $name, mixed $payload = [], ?OptionsInterface $options = null): string
     {
         return $name;
     }

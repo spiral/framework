@@ -34,8 +34,8 @@ final class CookieTransport implements HttpTransportInterface
     public function commitToken(
         Request $request,
         Response $response,
-        string $tokenID = null,
-        \DateTimeInterface $expiresAt = null
+        ?string $tokenID = null,
+        ?\DateTimeInterface $expiresAt = null
     ): Response {
         /** @var CookieQueue $cookieQueue */
         $cookieQueue = $request->getAttribute(CookieQueue::ATTRIBUTE);
@@ -82,7 +82,7 @@ final class CookieTransport implements HttpTransportInterface
     /**
      * @return int<0, max>|null
      */
-    private function getLifetime(\DateTimeInterface $expiresAt = null): ?int
+    private function getLifetime(?\DateTimeInterface $expiresAt = null): ?int
     {
         if ($expiresAt === null) {
             return null;

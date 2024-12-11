@@ -18,7 +18,7 @@ final class PlainRenderer extends AbstractRenderer
     public function render(
         \Throwable $exception,
         ?Verbosity $verbosity = null,
-        string $format = null
+        ?string $format = null
     ): string {
         $verbosity ??= $this->defaultVerbosity;
         $exceptions = [$exception];
@@ -61,7 +61,7 @@ final class PlainRenderer extends AbstractRenderer
     /**
      * Render exception call stack.
      */
-    private function renderTrace(\Throwable $e, Highlighter $h = null): string
+    private function renderTrace(\Throwable $e, ?Highlighter $h = null): string
     {
         $stacktrace = $this->getStacktrace($e);
         if ($stacktrace === []) {

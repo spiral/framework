@@ -24,7 +24,7 @@ final class EnumLocatorInjector implements InjectorInterface
      */
     public function createInjection(
         \ReflectionClass $class,
-        string $context = null
+        ?string $context = null
     ): EnumsInterface {
         return $this->tokenizer->enumLocator();
     }

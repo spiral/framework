@@ -11,7 +11,7 @@ class RouteNotFoundException extends UndefinedRouteException
     public function __construct(
         private readonly UriInterface $uri,
         int $code = 0,
-        \Throwable $previous = null
+        ?\Throwable $previous = null
     ) {
         parent::__construct(\sprintf('Unable to route `%s`.', (string) $uri), $code, $previous);
     }

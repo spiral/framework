@@ -63,7 +63,7 @@ final class EnumLocator extends AbstractLocator implements EnumsInterface
      *
      * @param \ReflectionClass|null $target
      */
-    protected function isTargeted(\ReflectionEnum $enum, \ReflectionClass $target = null): bool
+    protected function isTargeted(\ReflectionEnum $enum, ?\ReflectionClass $target = null): bool
     {
         if ($target === null) {
             return true;

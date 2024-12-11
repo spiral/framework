@@ -22,5 +22,5 @@ interface ConfigsInterface extends InjectorInterface
      *
      * @throws ConfiguratorException
      */
-    public function getConfig(string $section = null): array;
+    public function getConfig(?string $section = null): array;
 }

@@ -20,7 +20,7 @@ if (!\function_exists('defineArrayType')) {
     /**
      * @internal
      */
-    function defineArrayType(array $array, string $failureType = null): ?string
+    function defineArrayType(array $array, ?string $failureType = null): ?string
     {
         $types = \array_map(static fn ($value): string => \gettype($value), $array);
 

@@ -49,7 +49,7 @@ interface WritableInterface extends EntryInterface
      */
     public function copy(
         string $pathname,
-        BucketInterface $storage = null,
+        ?BucketInterface $storage = null,
         array $config = []
     ): FileInterface;
 
@@ -61,7 +61,7 @@ interface WritableInterface extends EntryInterface
      */
     public function move(
         string $pathname,
-        BucketInterface $storage = null,
+        ?BucketInterface $storage = null,
         array $config = []
     ): FileInterface;
 

@@ -21,7 +21,7 @@ final class AuthContext implements AuthContextInterface
     ) {
     }
 
-    public function start(TokenInterface $token, string $transport = null): void
+    public function start(TokenInterface $token, ?string $transport = null): void
     {
         $this->closed = false;
         $this->actor = null;
