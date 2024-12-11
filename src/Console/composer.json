@@ -34,14 +34,14 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.14.7",
-        "spiral/events": "^3.14.7",
-        "spiral/hmvc": "^3.14.7",
-        "spiral/tokenizer": "^3.14.7",
+        "spiral/core": "^3.14.8",
+        "spiral/events": "^3.14.8",
+        "spiral/hmvc": "^3.14.8",
+        "spiral/tokenizer": "^3.14.8",
         "symfony/console": "^6.1 || ^7.0"
     },
     "require-dev": {
-        "spiral/boot": "^3.14.7",
+        "spiral/boot": "^3.14.8",
         "phpunit/phpunit": "^10.1",
         "mockery/mockery": "^1.5",
         "vimeo/psalm": "^5.9"

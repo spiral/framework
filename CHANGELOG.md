@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.14.8 - 2024-12-11
 
 - Definitions of nullable parameters have been fixed according to PHP 8.4 deprecations.
 
