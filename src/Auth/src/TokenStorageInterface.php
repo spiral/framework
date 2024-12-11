@@ -21,8 +21,6 @@ interface TokenStorageInterface
     /**
      * Create token based on the payload provided by actor provider.
      *
-     * @param \DateTimeInterface|null $expiresAt
-     *
      * @throws TokenStorageException
      */
     public function create(array $payload, ?\DateTimeInterface $expiresAt = null): TokenInterface;

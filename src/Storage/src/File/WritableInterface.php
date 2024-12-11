@@ -44,7 +44,6 @@ interface WritableInterface extends EntryInterface
     /**
      * {@see BucketInterface::copy()}
      *
-     * @param BucketInterface|null $storage
      * @throws FileOperationException
      */
     public function copy(
@@ -56,7 +55,6 @@ interface WritableInterface extends EntryInterface
     /**
      * {@see BucketInterface::move()}
      *
-     * @param BucketInterface|null $storage
      * @throws FileOperationException
      */
     public function move(

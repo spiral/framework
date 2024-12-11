@@ -12,7 +12,7 @@ final class Target implements TargetInterface
 {
     /**
      * @param list<string> $path
-     * @param TController|null $object
+     * @param TController|null $object The object associated with the target.
      * @param \Closure|array{class-string|object, non-empty-string}|null $callable
      */
     private function __construct(
