@@ -59,9 +59,7 @@ final class SideEffectTest extends BaseTestCase
             ->getBinder('test')
             ->bind(ScopeIndicatorLogger::class, new Container\Autowire(ScopeIndicatorLogger::class));
 
-        $logger = $root->runScope(new Scope('test'), static function (?ScopeIndicatorLogger $logger) {
-            return $logger;
-        });
+        $logger = $root->runScope(new Scope('test'), static fn(?ScopeIndicatorLogger $logger) => $logger);
 
         $this->assertNotNull($logger);
         $this->assertSame('test', $logger->getName());
@@ -74,9 +72,7 @@ final class SideEffectTest extends BaseTestCase
             ->getBinder('test')
             ->bind(ScopeIndicatorLogger::class, new Alias(ScopeIndicatorLogger::class));
 
-        $logger = $root->runScope(new Scope('test'), static function (?ScopeIndicatorLogger $logger) {
-            return $logger;
-        });
+        $logger = $root->runScope(new Scope('test'), static fn(?ScopeIndicatorLogger $logger) => $logger);
 
         $this->assertNotNull($logger);
         $this->assertSame('test', $logger->getName());
