@@ -24,8 +24,8 @@ final class Autowire
      * @param non-empty-string|class-string<TObject> $alias
      */
     public function __construct(
-        private readonly string $alias,
-        private readonly array $parameters = []
+        public readonly string $alias,
+        public readonly array $parameters = []
     ) {
     }
 

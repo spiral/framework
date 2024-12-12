@@ -239,9 +239,13 @@ final class Factory implements FactoryInterface
         Stringable|string|null $context,
         array $arguments,
     ): mixed {
-        $instance = $binding->autowire->resolve($this, $arguments);
+        $target = $binding->autowire->alias;
+        $ctx = new Ctx(alias: $alias, class: $target, context: $context, singleton: $binding->singleton);
 
-        $ctx = new Ctx(alias: $alias, class: $alias, context: $context, singleton: $binding->singleton);
+        $instance = $alias === $target
+            ? $this->autowire($ctx, \array_merge($binding->autowire->parameters, $arguments))
+            : $binding->autowire->resolve($this, $arguments);
+
         return $this->validateNewInstance($instance, $ctx, $arguments);
     }
 
