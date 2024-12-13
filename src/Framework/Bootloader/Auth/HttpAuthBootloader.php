@@ -9,6 +9,8 @@ use Spiral\Auth\AuthContextInterface;
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\HttpTransportInterface;
 use Spiral\Auth\Middleware\AuthMiddleware;
+use Spiral\Auth\Middleware\AuthTransportMiddleware;
+use Spiral\Auth\Middleware\AuthTransportWithStorageMiddleware;
 use Spiral\Auth\Session\TokenStorage as SessionTokenStorage;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageProvider;
@@ -16,7 +18,6 @@ use Spiral\Auth\TokenStorageProviderInterface;
 use Spiral\Auth\Transport\CookieTransport;
 use Spiral\Auth\Transport\HeaderTransport;
 use Spiral\Auth\TransportRegistry;
-use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
@@ -31,7 +32,6 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
-use Spiral\Http\CurrentRequest;
 
 /**
  * Enables Auth middleware and http transports to read and write tokens in PSR-7 request/response.
@@ -41,7 +41,6 @@ final class HttpAuthBootloader extends Bootloader
 {
     public function __construct(
         private readonly ConfiguratorInterface $config,
-        private readonly BinderInterface $binder,
     ) {
     }
 
@@ -55,43 +54,41 @@ final class HttpAuthBootloader extends Bootloader
 
     public function defineBindings(): array
     {
-        $this->binder
-            ->getBinder(Spiral::Http)
-            ->bind(
-                AuthContextInterface::class,
-                static fn (?ServerRequestInterface $request): AuthContextInterface =>
-                    ($request ?? throw new InvalidRequestScopeException(AuthContextInterface::class))
-                        ->getAttribute(AuthMiddleware::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
-                            AuthContextInterface::class,
-                            AuthMiddleware::ATTRIBUTE,
-                        )
-            );
-        $this->binder->bind(AuthContextInterface::class, new Proxy(AuthContextInterface::class, false));
-
-        return [];
+        return [
+            AuthContextInterface::class => new Proxy(AuthContextInterface::class, false),
+        ];
     }
 
     public function defineSingletons(): array
     {
-        // Default token storage outside of HTTP scope
-        $this->binder->bindSingleton(
-            TokenStorageInterface::class,
-            static fn (TokenStorageProviderInterface $provider): TokenStorageInterface => $provider->getStorage(),
-        );
-
-        // Token storage from request attribute in HTTP scope
-        $this->binder
-            ->getBinder(Spiral::Http)
-            ->bindSingleton(TokenStorageInterface::class, [self::class, 'getTokenStorage']);
-
         return [
             TransportRegistry::class => [self::class, 'transportRegistry'],
             TokenStorageProviderInterface::class => TokenStorageProvider::class,
+            // Default token storage outside of HTTP scope
+            TokenStorageInterface::class => static fn (TokenStorageProviderInterface $provider): TokenStorageInterface
+                => $provider->getStorage(),
         ];
     }
 
-    public function init(EnvironmentInterface $env): void
+    public function init(EnvironmentInterface $env, BinderInterface $binder): void
     {
+        $httpBinder = $binder->getBinder(Spiral::Http);
+        // Token storage from request attribute in HTTP scope
+        $httpBinder->bindSingleton(TokenStorageInterface::class, [self::class, 'getTokenStorage']);
+        $httpBinder->bind(
+            AuthContextInterface::class,
+            static fn (?ServerRequestInterface $request): AuthContextInterface =>
+                ($request ?? throw new InvalidRequestScopeException(AuthContextInterface::class))
+                    ->getAttribute(AuthMiddleware::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
+                AuthContextInterface::class,
+                AuthMiddleware::ATTRIBUTE,
+            )
+        );
+        // Bind middleware to `http` scope
+        $httpBinder->bind(AuthMiddleware::class, AuthMiddleware::class);
+        $httpBinder->bind(AuthTransportMiddleware::class, AuthTransportMiddleware::class);
+        $httpBinder->bind(AuthTransportWithStorageMiddleware::class, AuthTransportWithStorageMiddleware::class);
+
         $this->config->setDefaults(
             AuthConfig::CONFIG,
             [

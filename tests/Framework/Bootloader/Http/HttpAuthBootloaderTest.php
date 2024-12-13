@@ -19,6 +19,7 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader\Auth\HttpAuthBootloader;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
+use Spiral\Core\BinderInterface;
 use Spiral\Framework\Spiral;
 use Spiral\Http\CurrentRequest;
 use Spiral\Testing\Attribute\TestScope;
@@ -79,8 +80,11 @@ final class HttpAuthBootloaderTest extends BaseTestCase
     {
         $configs = new ConfigManager($this->createMock(LoaderInterface::class));
 
-        $bootloader = new HttpAuthBootloader($configs, $this->getContainer());
-        $bootloader->init($this->getContainer()->get(EnvironmentInterface::class));
+        $bootloader = new HttpAuthBootloader($configs);
+        $bootloader->init(
+            $this->getContainer()->get(EnvironmentInterface::class),
+            $this->getContainer()->get(BinderInterface::class),
+        );
 
         /** @var HeaderTransport $headerTransport */
         $headerTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['header'];
@@ -118,8 +122,10 @@ final class HttpAuthBootloaderTest extends BaseTestCase
         };
         $configs = new ConfigManager($loader);
 
-        $bootloader = new HttpAuthBootloader($configs, $this->getContainer());
-        $bootloader->init($this->getContainer()->get(EnvironmentInterface::class));
+        $bootloader = new HttpAuthBootloader($configs);
+        $bootloader->init($this->getContainer()->get(EnvironmentInterface::class),
+            $this->getContainer()->get(BinderInterface::class),
+        );
 
         /** @var HeaderTransport $headerTransport */
         $headerTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['header'];
