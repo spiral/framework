@@ -12,11 +12,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Auth\ActorProviderInterface;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TransportRegistry;
+use Spiral\Core\Attribute\Scope;
 use Spiral\Core\ScopeInterface;
 
 /**
  * Auth by specific transport.
  */
+#[Scope('http')]
 final class AuthTransportMiddleware implements MiddlewareInterface
 {
     private readonly AuthMiddleware $authMiddleware;

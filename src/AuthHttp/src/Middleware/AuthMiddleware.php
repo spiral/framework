@@ -14,11 +14,13 @@ use Spiral\Auth\AuthContext;
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TransportRegistry;
+use Spiral\Core\Attribute\Scope;
 use Spiral\Core\ScopeInterface;
 
 /**
  * Manages auth context scope.
  */
+#[Scope('http')]
 final class AuthMiddleware implements MiddlewareInterface
 {
     public const ATTRIBUTE = 'authContext';

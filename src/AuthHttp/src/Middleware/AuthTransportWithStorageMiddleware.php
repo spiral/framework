@@ -12,14 +12,16 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Auth\ActorProviderInterface;
 use Spiral\Auth\TokenStorageProviderInterface;
 use Spiral\Auth\TransportRegistry;
+use Spiral\Core\Attribute\Scope;
 use Spiral\Core\ScopeInterface;
 
 /**
  * Auth by specific transport.
  */
+#[Scope('http')]
 final class AuthTransportWithStorageMiddleware implements MiddlewareInterface
 {
-    private readonly MiddlewareInterface $authMiddleware;
+    private readonly AuthTransportMiddleware $authMiddleware;
 
     /**
      * @param ScopeInterface $scope Deprecated, will be removed in v4.0.
