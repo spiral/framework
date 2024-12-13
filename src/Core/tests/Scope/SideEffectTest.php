@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
+use Spiral\Core\Config\Alias;
 use Spiral\Core\Container;
 use Spiral\Core\Scope;
 use Spiral\Tests\Core\Scope\Stub\Factory;
@@ -11,6 +12,7 @@ use Spiral\Tests\Core\Scope\Stub\FileLogger;
 use Spiral\Tests\Core\Scope\Stub\KVLogger;
 use Spiral\Tests\Core\Scope\Stub\LoggerCarrier;
 use Spiral\Tests\Core\Scope\Stub\LoggerInterface;
+use Spiral\Tests\Core\Scope\Stub\ScopeIndicatorLogger;
 
 final class SideEffectTest extends BaseTestCase
 {
@@ -48,5 +50,31 @@ final class SideEffectTest extends BaseTestCase
                 $c1->get(Factory::class)->make(LoggerInterface::class),
             );
         });
+    }
+
+    public function testAutowireWithScope(): void
+    {
+        $root = new Container();
+        $root
+            ->getBinder('test')
+            ->bind(ScopeIndicatorLogger::class, new Container\Autowire(ScopeIndicatorLogger::class));
+
+        $logger = $root->runScope(new Scope('test'), static fn(?ScopeIndicatorLogger $logger) => $logger);
+
+        $this->assertNotNull($logger);
+        $this->assertSame('test', $logger->getName());
+    }
+
+    public function testAliasWithScope(): void
+    {
+        $root = new Container();
+        $root
+            ->getBinder('test')
+            ->bind(ScopeIndicatorLogger::class, new Alias(ScopeIndicatorLogger::class));
+
+        $logger = $root->runScope(new Scope('test'), static fn(?ScopeIndicatorLogger $logger) => $logger);
+
+        $this->assertNotNull($logger);
+        $this->assertSame('test', $logger->getName());
     }
 }
