@@ -47,7 +47,7 @@ interface ReadableInterface extends EntryInterface
     /**
      * {@see BucketInterface::getSize()}
      *
-     * @return positive-int|0
+     * @return int<0, max>
      * @throws FileOperationException
      */
     public function getSize(): int;

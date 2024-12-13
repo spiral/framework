@@ -104,14 +104,10 @@ return RectorConfig::configure()
             // used by Configurator
             __DIR__ . '/src/Scaffolder/src/Command',
         ],
-
-        \Rector\PHPUnit\PHPUnit100\Rector\MethodCall\AssertIssetToAssertObjectHasPropertyRector::class => [
-            // ArrayAccess usage
-            __DIR__ . '/src/Session/tests/SessionTest.php',
-        ],
     ])
     ->withPhpSets(php81: true)
-    ->withPreparedSets(deadCode: true, phpunit: true)
+    ->withPreparedSets(deadCode: true)
+    ->withComposerBased(phpunit: true)
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,
     ]);

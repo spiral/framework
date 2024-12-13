@@ -45,7 +45,7 @@ interface ReadableInterface
     /**
      * {@see BucketInterface::getLastModified()}
      *
-     * @return positive-int|0
+     * @return int<0, max>
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */
@@ -54,7 +54,7 @@ interface ReadableInterface
     /**
      * {@see BucketInterface::getSize()}
      *
-     * @return positive-int|0
+     * @return int<0, max>
      * @throws FileOperationException
      * @throws InvalidArgumentException
      */

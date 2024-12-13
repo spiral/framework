@@ -63,7 +63,7 @@ trait ReadableTrait
     }
 
     /**
-     * @return positive-int|0
+     * @return int<0, max>
      */
     public function getSize(string $pathname): int
     {
