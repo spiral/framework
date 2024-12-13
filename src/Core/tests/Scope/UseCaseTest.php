@@ -79,7 +79,7 @@ final class UseCaseTest extends BaseTestCase
 
     public static function provideScopeBindingsAsNotSingletons(): iterable
     {
-        yield 'array-factory' => [false, 'foo', (new Factory())->makeStdClass(...)];
+        yield 'array-factory' => [false, 'foo', [Factory::class, 'makeStdClass']];
         yield 'class-name' => [false, SampleClass::class, SampleClass::class];
         yield 'object' => [true, stdClass::class, new stdClass()];
     }
@@ -107,11 +107,11 @@ final class UseCaseTest extends BaseTestCase
                 self::assertNotSame($c1, $c2);
                 self::assertInstanceOf(stdClass::class, $obj2);
                 self::assertNotSame($obj1, $obj2);
-            }, bindings: ['foo' => (new Factory())->makeStdClass(...)]);
+            }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
 
             // $obj2 should be garbage collected
             self::assertCount(1, $this->weakMap);
-        }, bindings: ['foo' => (new Factory())->makeStdClass(...)]);
+        }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
 
         // $obj1 should be garbage collected
         self::assertEmpty($this->weakMap);
@@ -125,7 +125,7 @@ final class UseCaseTest extends BaseTestCase
     public function testChildContainerResolvesDepsFromParent(): void
     {
         $root = new Container();
-        $root->bindSingleton('bar', (new Factory())->makeStdClass(...));
+        $root->bindSingleton('bar', [Factory::class, 'makeStdClass']);
         $root->bind(stdClass::class, new stdClass());
 
         $root->runScoped(function (ContainerInterface $c1) use ($root) {
@@ -149,7 +149,7 @@ final class UseCaseTest extends BaseTestCase
                     "Nested container mustn't create new instance using class name as key without definition."
                 );
             });
-        }, bindings: ['foo' => (new Factory())->makeStdClass(...)]);
+        }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
     }
 
     /**
