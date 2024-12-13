@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\AuthHttp\Middleware;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\Middleware\AuthMiddleware;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageScope;
@@ -27,7 +28,7 @@ final class AuthMiddlewareTest extends HttpTestCase
         $storage = $this->createMock(TokenStorageInterface::class);
         $this->getContainer()->bind(
             AuthMiddleware::class,
-            new Autowire(AuthMiddleware::class, ['tokenStorage' => $storage])
+            new Autowire(AuthMiddleware::class, ['tokenStorage' => $storage]),
         );
 
         $this->setHttpHandler(function () use ($storage): void {
@@ -39,5 +40,20 @@ final class AuthMiddlewareTest extends HttpTestCase
         });
 
         $this->fakeHttp()->get('/');
+    }
+
+    #[TestScope(Spiral::Http)]
+    public function testCustomServices(): void
+    {
+        $user = new \stdClass();
+
+        $this->setHttpHandler(function (ServerRequestInterface $request) use ($user): void {
+            /** @var \Spiral\Auth\AuthContextInterface $authContext */
+            $authContext = $request->getAttribute(AuthMiddleware::ATTRIBUTE);
+
+            $this->assertSame($user, $authContext->getActor());
+        });
+
+        $this->fakeHttp()->withActor($user)->get('/');
     }
 }
