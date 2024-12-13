@@ -17,6 +17,7 @@ use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 
@@ -105,13 +106,13 @@ return RectorConfig::configure()
             __DIR__ . '/src/Scaffolder/src/Command',
         ],
 
-        \Rector\PHPUnit\PHPUnit100\Rector\MethodCall\AssertIssetToAssertObjectHasPropertyRector::class => [
-            // ArrayAccess usage
-            __DIR__ . '/src/Session/tests/SessionTest.php',
+        FirstClassCallableRector::class => [
+            __DIR__ . '/src/Core/tests/Scope/UseCaseTest.php',
         ],
     ])
     ->withPhpSets(php81: true)
-    ->withPreparedSets(deadCode: true, phpunit: true)
+    ->withPreparedSets(deadCode: true)
+    ->withComposerBased(phpunit: true)
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,
     ]);
