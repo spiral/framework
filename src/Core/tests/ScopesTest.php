@@ -141,7 +141,7 @@ class ScopesTest extends TestCase
         $container->bindSingleton('test', new #[Singleton] class {});
         $container->make('test');
 
-        $container->runScoped(function (Container $container) {
+        $container->runScoped(function (Container $container): void {
             $this->assertTrue($container->hasInstance('test'));
         });
     }
@@ -152,7 +152,7 @@ class ScopesTest extends TestCase
         $container->bindSingleton('test', SampleClass::class);
         $container->make('test');
 
-        $container->runScoped(function (Container $container) {
+        $container->runScoped(function (Container $container): void {
             $this->assertTrue($container->hasInstance('test'));
         });
     }
@@ -167,7 +167,7 @@ class ScopesTest extends TestCase
         $container->bindSingleton('bar', 'foo');
         $container->make('bar');
 
-        $container->runScoped(function (Container $container) {
+        $container->runScoped(function (Container $container): void {
             $this->assertTrue($container->hasInstance('bar'));
         });
     }

@@ -30,7 +30,7 @@ final class FibersTest extends BaseTestCase
 
         FiberHelper::runInFiber(
             self::functionScopedTestDataIterator(),
-            static function (mixed $suspendValue) {
+            static function (mixed $suspendValue): void {
                 self::assertNull(ContainerScope::getContainer());
                 self::assertTrue(\in_array($suspendValue, self::TEST_DATA, true));
             },

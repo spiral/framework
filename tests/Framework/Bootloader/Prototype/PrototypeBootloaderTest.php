@@ -18,7 +18,7 @@ final class PrototypeBootloaderTest extends BaseTestCase
 {
     protected function setUp(): void
     {
-        $this->beforeBooting(function (PrototypeBootloader $bootloader) {
+        $this->beforeBooting(function (PrototypeBootloader $bootloader): void {
             $bootloader->bindProperty(
                 'service.client.http',
                 HttpClient::class

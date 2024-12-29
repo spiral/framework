@@ -25,10 +25,10 @@ final class SideEffectTest extends BaseTestCase
         $root = new Container();
         $root->bind(LoggerInterface::class, KVLogger::class);
 
-        $root->runScope(new Scope(), static function (Container $c1) {
+        $root->runScope(new Scope(), static function (Container $c1): void {
             $c1->bind(LoggerInterface::class, FileLogger::class);
 
-            $c1->runScope(new Scope(), static function (LoggerCarrier $carrier, LoggerInterface $logger) {
+            $c1->runScope(new Scope(), static function (LoggerCarrier $carrier, LoggerInterface $logger): void {
                 // from the $root container
                 self::assertInstanceOf(KVLogger::class, $carrier->logger);
                 // from the $c1 container
@@ -42,7 +42,7 @@ final class SideEffectTest extends BaseTestCase
         $root = new Container();
         $root->bind(LoggerInterface::class, KVLogger::class);
 
-        $root->runScope(new Scope(), static function (Container $c1) {
+        $root->runScope(new Scope(), static function (Container $c1): void {
             $c1->bind(LoggerInterface::class, FileLogger::class);
 
             self::assertInstanceOf(

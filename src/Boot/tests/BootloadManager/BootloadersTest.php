@@ -26,11 +26,11 @@ final class BootloadersTest extends TestCase
             SampleBootWithMethodBoot::class,
             SampleBoot::class,
         ], [
-            static function(Container $container, SampleBoot $boot) {
+            static function(Container $container, SampleBoot $boot): void {
                 $container->bind('efg', $boot);
             }
         ], [
-            static function(Container $container, SampleBoot $boot) {
+            static function(Container $container, SampleBoot $boot): void {
                 $container->bind('ghi', $boot);
             }
         ]);
