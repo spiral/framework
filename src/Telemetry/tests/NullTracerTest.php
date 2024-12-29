@@ -78,7 +78,7 @@ final class NullTracerTest extends TestCase
             ->with(SpanInterface::class);
         $scope->shouldNotReceive('runScope');
 
-        ContainerScope::runScope($container, function () use ($tracer, $callable) {
+        ContainerScope::runScope($container, function () use ($tracer, $callable): void {
             $this->assertSame(
                 'hello',
                 $tracer->trace('foo', $callable, ['foo' => 'bar'])

@@ -84,7 +84,7 @@ final class CoreTest extends TestCase
                 && $payload === ['baz' => 'baf']
                 && $options->getHeader('foo') === ['bar']);
 
-        ContainerScope::runScope($container, function() use($core) {
+        ContainerScope::runScope($container, function() use($core): void {
             $core->callAction('foo', 'bar', [
                 'id' => 'job-id',
                 'payload' => ['baz' => 'baf'],

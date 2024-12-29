@@ -93,7 +93,7 @@ class FactoryTest extends TestCase
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([LoggerBootloader::class]);
         $this->container->bindSingleton(LogsInterface::class, $factory);
 
-        $this->container->invoke(function (#[LoggerChannel('foo')] LoggerInterface $logger) {
+        $this->container->invoke(function (#[LoggerChannel('foo')] LoggerInterface $logger): void {
             $this->assertSame('foo', $logger->getName());
         });
     }

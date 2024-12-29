@@ -107,7 +107,7 @@ final class PipelineTest extends TestCase
 
         $this->container->runScope(
             new \Spiral\Core\Scope(name: 'http'),
-            function (ScopeInterface $c) use ($middleware) {
+            function (ScopeInterface $c) use ($middleware): void {
                 $request = new ServerRequest('GET', '');
                 $handler = new CallableHandler(fn() => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
 

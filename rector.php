@@ -115,4 +115,5 @@ return RectorConfig::configure()
     ->withComposerBased(phpunit: true)
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,
-    ]);
+    ])
+    ->withTypeCoverageLevel(0);

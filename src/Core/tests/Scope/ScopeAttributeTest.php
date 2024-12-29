@@ -39,8 +39,8 @@ final class ScopeAttributeTest extends BaseTestCase
     {
         $root = self::makeContainer();
 
-        $root->runScoped(static function (Container $c1) {
-            $c1->runScoped(static function (Container $c2) use ($c1) {
+        $root->runScoped(static function (Container $c1): void {
+            $c1->runScoped(static function (Container $c2) use ($c1): void {
                 $obj1 = $c1->get(AttrScopeFooSingleton::class);
                 $obj2 = $c2->get(AttrScopeFooSingleton::class);
 
@@ -54,8 +54,8 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = self::makeContainer();
         $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
 
-        $root->runScoped(static function (Container $fooScope) {
-            $fooScope->runScoped(static function (Container $container) {
+        $root->runScoped(static function (Container $fooScope): void {
+            $fooScope->runScoped(static function (Container $container): void {
                 self::assertInstanceOf(AttrScopeFoo::class, $container->get('binding'));
             }, name: 'bar');
         }, name: 'foo');
@@ -69,8 +69,8 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = self::makeContainer();
         $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
 
-        $root->runScoped(static function (Container $fooScope) {
-            $fooScope->runScoped(static function (Container $container) {
+        $root->runScoped(static function (Container $fooScope): void {
+            $fooScope->runScoped(static function (Container $container): void {
                 $container->get('binding');
             }, name: 'bar');
         }, name: 'baz');
@@ -81,8 +81,8 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = self::makeContainer(checkScope: false);
         $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
 
-        $root->runScoped(static function (Container $fooScope) {
-            $fooScope->runScoped(static function (Container $container) {
+        $root->runScoped(static function (Container $fooScope): void {
+            $fooScope->runScoped(static function (Container $container): void {
                 self::assertInstanceOf(AttrScopeFoo::class, $container->get('binding'));
             }, name: 'bar');
         }, name: 'baz');
@@ -101,8 +101,8 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = self::makeContainer();
         $root->bind('foo', self::makeFooScopeObject(...));
 
-        $root->runScoped(static function (Container $c1) {
-            $c1->runScoped(static function (Container $c2) {
+        $root->runScoped(static function (Container $c1): void {
+            $c1->runScoped(static function (Container $c2): void {
                 $c2->get('foo');
             }, name: 'foo');
         });
@@ -114,8 +114,8 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = self::makeContainer(checkScope: false);
         $root->bind('foo', self::makeFooScopeObject(...));
 
-        $root->runScoped(static function (Container $c1) {
-            $c1->runScoped(static function (Container $c2) {
+        $root->runScoped(static function (Container $c1): void {
+            $c1->runScoped(static function (Container $c2): void {
                 self::assertInstanceOf(AttrScopeFoo::class, $c2->get('foo'));
             }, name: 'foo');
         });
@@ -133,8 +133,8 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = self::makeContainer();
         $root->bind('foo', self::makeFooScopeObject(...));
 
-        $root->runScoped(static function (Container $c1) {
-            $c1->runScoped(static function (Container $c2) {
+        $root->runScoped(static function (Container $c1): void {
+            $c1->runScoped(static function (Container $c2): void {
                 $c2->get('foo');
             });
         });
@@ -146,8 +146,8 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = self::makeContainer(checkScope: false);
         $root->bind('foo', self::makeFooScopeObject(...));
 
-        $root->runScoped(static function (Container $c1) {
-            $c1->runScoped(static function (Container $c2) {
+        $root->runScoped(static function (Container $c1): void {
+            $c1->runScoped(static function (Container $c2): void {
                 self::assertInstanceOf(AttrScopeFoo::class, $c2->get('foo'));
             });
         });
@@ -166,9 +166,9 @@ final class ScopeAttributeTest extends BaseTestCase
         $root = self::makeContainer();
 
         try {
-            $root->runScoped(static function (Container $c1) {
-                $c1->runScoped(static function (Container $c2) {
-                    $c2->runScoped(static function (Container $c3) {
+            $root->runScoped(static function (Container $c1): void {
+                $c1->runScoped(static function (Container $c2): void {
+                    $c2->runScoped(static function (Container $c3): void {
                         // do nothing
                     }, name: 'root');
                 });
@@ -190,8 +190,8 @@ final class ScopeAttributeTest extends BaseTestCase
 
         try {
             $root = self::makeContainer();
-            $root->runScoped(static function (Container $c1) {
-                $c1->runScoped(static function (Container $c2) {
+            $root->runScoped(static function (Container $c1): void {
+                $c1->runScoped(static function (Container $c2): void {
                     $c2->get(AttrScopeFoo::class);
                 });
             }, name: 'bar');

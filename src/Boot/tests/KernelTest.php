@@ -124,19 +124,19 @@ class KernelTest extends TestCase
     {
         $kernel = TestCore::create(['root' => __DIR__]);
 
-        $kernel->booting(static function (TestCore $core) {
+        $kernel->booting(static function (TestCore $core): void {
             $core->getContainer()->bind('abc', 'foo');
         });
 
-        $kernel->booting(static function (TestCore $core) {
+        $kernel->booting(static function (TestCore $core): void {
             $core->getContainer()->bind('bcd', 'foo');
         });
 
-        $kernel->booted( static function (TestCore $core) {
+        $kernel->booted( static function (TestCore $core): void {
             $core->getContainer()->bind('cde', 'foo');
         });
 
-        $kernel->booted( static function (TestCore $core) {
+        $kernel->booted( static function (TestCore $core): void {
             $core->getContainer()->bind('def', 'foo');
         });
 

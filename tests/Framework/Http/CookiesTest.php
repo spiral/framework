@@ -43,7 +43,7 @@ final class CookiesTest extends HttpTestCase
     #[TestScope([Spiral::Http, Spiral::HttpRequest])]
     public function testCookieQueueInScope(): void
     {
-        $this->setHttpHandler(static function (ServerRequestInterface $request) {
+        $this->setHttpHandler(static function (ServerRequestInterface $request): void {
             self::assertInstanceOf(
                 CookieQueue::class,
                 ContainerScope::getContainer()->get(ServerRequestInterface::class)->getAttribute(CookieQueue::ATTRIBUTE)

@@ -13,19 +13,19 @@ final class KernelTest extends BaseTestCase
     {
         $kernel = $this->createAppInstance();
 
-        $kernel->appBooting(static function (TestApp $core) {
+        $kernel->appBooting(static function (TestApp $core): void {
             $core->getContainer()->bind('abc', 'foo');
         });
 
-        $kernel->appBooting(static function (TestApp $core) {
+        $kernel->appBooting(static function (TestApp $core): void {
             $core->getContainer()->bind('bcd', 'foo');
         });
 
-        $kernel->appBooted(static function (TestApp $core) {
+        $kernel->appBooted(static function (TestApp $core): void {
             $core->getContainer()->bind('cde', 'foo');
         });
 
-        $kernel->appBooted(static function (TestApp $core) {
+        $kernel->appBooted(static function (TestApp $core): void {
             $core->getContainer()->bind('def', 'foo');
         });
 

@@ -20,7 +20,7 @@ final class ExceptionsTest extends BaseTestCase
 
         $container = new Container();
 
-        $container->runScoped(static function (Container $c1) {
+        $container->runScoped(static function (Container $c1): void {
             try {
                 $c1->get(ExceptionConstructor::class);
                 self::fail('Exception should be thrown');
@@ -38,7 +38,7 @@ final class ExceptionsTest extends BaseTestCase
 
         $container = new Container();
 
-        $container->runScoped(static function (Container $c1) {
+        $container->runScoped(static function (Container $c1): void {
             try {
                 $c1->get(ExceptionConstructor::class);
                 self::fail('Exception should be thrown');
@@ -56,7 +56,7 @@ final class ExceptionsTest extends BaseTestCase
 
         $container = new Container();
 
-        $container->runScoped(static function (Container $c1) {
+        $container->runScoped(static function (Container $c1): void {
             try {
                 $c1->get(DatetimeCarrier::class);
                 self::fail('Exception should be thrown');

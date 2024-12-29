@@ -125,7 +125,7 @@ final class FinalizeAttributeTest extends BaseTestCase
         self::expectExceptionMessage('An exception has been thrown during finalization of the scope `foo`');
 
         try {
-            $root->runScoped(static function (Container $c1) {
+            $root->runScoped(static function (Container $c1): void {
                 $obj = $c1->get(AttrScopeFooFinalize::class);
                 $obj->throwException = true;
             }, name: 'foo');
@@ -154,7 +154,7 @@ final class FinalizeAttributeTest extends BaseTestCase
         self::expectExceptionMessage('3 exceptions have been thrown during finalization of the scope `foo`');
 
         try {
-            $root->runScoped(static function (Container $c1) {
+            $root->runScoped(static function (Container $c1): void {
                 $c1->get(AttrScopeFooFinalize::class)->throwException = true;
                 $c1->get(AttrScopeFooFinalize::class)->throwException = true;
                 $c1->get(AttrScopeFooFinalize::class)->throwException = true;

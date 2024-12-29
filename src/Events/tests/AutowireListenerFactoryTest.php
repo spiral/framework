@@ -44,7 +44,7 @@ final class AutowireListenerFactoryTest extends TestCase
 
         $this->listener->shouldReceive('onFooEvent')->once()->with($this->ev);
 
-        ContainerScope::runScope($this->container, function () {
+        ContainerScope::runScope($this->container, function (): void {
             $listener = $this->factory->create(ClassAndMethodAttribute::class, 'onFooEvent');
             $listener($this->ev);
         });
@@ -54,7 +54,7 @@ final class AutowireListenerFactoryTest extends TestCase
     {
         $this->listener->shouldReceive('onFooEvent')->once()->with($this->ev);
 
-        ContainerScope::runScope($this->container, function () {
+        ContainerScope::runScope($this->container, function (): void {
             $listener = $this->factory->create($this->listener, 'onFooEvent');
             $listener($this->ev);
         });
@@ -76,7 +76,7 @@ final class AutowireListenerFactoryTest extends TestCase
             ->once()
             ->with([$this->listener, 'onFooEventWithTwoArguments'], ['event' => $this->ev]);
 
-        ContainerScope::runScope($this->container, function () {
+        ContainerScope::runScope($this->container, function (): void {
             $listener = $this->factory->create(ClassAndMethodAttribute::class, 'onFooEventWithTwoArguments');
             $listener($this->ev);
         });
@@ -93,7 +93,7 @@ final class AutowireListenerFactoryTest extends TestCase
             ->once()
             ->with([$this->listener, 'onFooEventWithTwoArguments'], ['event' => $this->ev]);
 
-        ContainerScope::runScope($this->container, function () {
+        ContainerScope::runScope($this->container, function (): void {
             $listener = $this->factory->create($this->listener, 'onFooEventWithTwoArguments');
             $listener($this->ev);
         });
@@ -106,7 +106,7 @@ final class AutowireListenerFactoryTest extends TestCase
             'Listener `Spiral\Tests\Events\Fixtures\Listener\ClassAndMethodAttribute` does not contain `test` method.'
         );
 
-        ContainerScope::runScope($this->container, function () {
+        ContainerScope::runScope($this->container, function (): void {
             $this->factory->create(ClassAndMethodAttribute::class, 'test');
         });
     }
