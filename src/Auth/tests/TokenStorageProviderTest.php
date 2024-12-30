@@ -137,7 +137,7 @@ class TokenStorageProviderTest extends TestCase
         $this->assertSame($sameStorage, $provider->getStorage('database'));
     }
 
-    public function testGetDifferentStorage()
+    public function testGetDifferentStorage(): void
     {
         $provider = new TokenStorageProvider(
             new AuthConfig([

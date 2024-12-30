@@ -9,7 +9,7 @@ use Spiral\Snapshots\Snapshot;
 
 class SnapshotTest extends TestCase
 {
-    public function testSnapshot()
+    public function testSnapshot(): void
     {
         $e = new \Error("message");
         $s = new Snapshot("id", $e);

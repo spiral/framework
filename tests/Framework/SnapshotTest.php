@@ -9,7 +9,7 @@ use Spiral\Snapshots\SnapshotterInterface;
 
 final class SnapshotTest extends BaseTestCase
 {
-    public function testStringConfigParams()
+    public function testStringConfigParams(): void
     {
         // string important. Emulating string from .env
         $app = $this->makeApp([

@@ -24,7 +24,7 @@ class StreamsTest extends TestCase
         $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
     }
 
-    public function testGetUri()
+    public function testGetUri(): void
     {
         $stream = Stream::create();
         $stream->write('sample text');
@@ -51,7 +51,7 @@ class StreamsTest extends TestCase
         $this->assertFalse(StreamWrapper::has($newFilename));
     }
 
-    public function testGetResource()
+    public function testGetResource(): void
     {
         $stream = Stream::create();
         $stream->write('sample text');
@@ -74,7 +74,7 @@ class StreamsTest extends TestCase
     /**
      * @requires PHP < 8.0
      */
-    public function testException()
+    public function testException(): void
     {
         try {
             fopen('spiral://non-exists', 'rb');
@@ -92,7 +92,7 @@ class StreamsTest extends TestCase
     /**
      * @requires PHP >= 8.0
      */
-    public function testExceptionPHP8()
+    public function testExceptionPHP8(): void
     {
         try {
             fopen('spiral://non-exists', 'rb');
@@ -107,7 +107,7 @@ class StreamsTest extends TestCase
         }
     }
 
-    public function testWriteIntoStream()
+    public function testWriteIntoStream(): void
     {
         $stream = Stream::create(fopen('php://temp', 'wrb+'));
         $file = StreamWrapper::getFilename($stream);

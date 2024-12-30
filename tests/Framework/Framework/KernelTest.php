@@ -9,7 +9,7 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class KernelTest extends BaseTestCase
 {
-    public function testAppBootingCallbacks()
+    public function testAppBootingCallbacks(): void
     {
         $kernel = $this->createAppInstance();
 

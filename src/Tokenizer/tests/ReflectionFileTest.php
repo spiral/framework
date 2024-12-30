@@ -113,7 +113,7 @@ class ReflectionFileTest extends TestCase
     }
 }
 
-function hello()
+function hello(): void
 {
 }
 
