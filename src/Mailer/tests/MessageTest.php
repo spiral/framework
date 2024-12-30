@@ -113,7 +113,7 @@ class MessageTest extends TestCase
         $this->assertNull($m->getReplyTo());
     }
 
-    public function testSetDelayInSeconds()
+    public function testSetDelayInSeconds(): void
     {
         $m = new Message('test', 'email@domain.com');
         $m->setDelay(100);
@@ -123,7 +123,7 @@ class MessageTest extends TestCase
         ], $m->getOptions());
     }
 
-    public function testSetDelayInDateInterval()
+    public function testSetDelayInDateInterval(): void
     {
         $m = new Message('test', 'email@domain.com');
         $m->setDelay(new \DateInterval('PT56S'));
@@ -133,7 +133,7 @@ class MessageTest extends TestCase
         ], $m->getOptions());
     }
 
-    public function testSetDelayInDateTime()
+    public function testSetDelayInDateTime(): void
     {
         $m = new Message('test', 'email@domain.com');
         $m->setDelay(new \DateTimeImmutable('+ 123 second'));
@@ -143,7 +143,7 @@ class MessageTest extends TestCase
         ], $m->getOptions());
     }
 
-    public function testSetDelayInDateTimeWithPastTime()
+    public function testSetDelayInDateTimeWithPastTime(): void
     {
         $m = new Message('test', 'email@domain.com');
         $m->setDelay(new \DateTimeImmutable('- 123 second'));

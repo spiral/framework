@@ -363,7 +363,7 @@ final class ProxyTest extends BaseTestCase
         );
     }
 
-    public function testProxyFallbackFactory()
+    public function testProxyFallbackFactory(): void
     {
         $root = new Container();
         $root->bind(UserInterface::class, new ProxyConfig(

@@ -117,7 +117,7 @@ final class FinalizeAttributeTest extends BaseTestCase
     }
 
     #[Group('scrutinizer-ignore')]
-    public function testExceptionOnDestroy()
+    public function testExceptionOnDestroy(): void
     {
         $root = self::makeContainer();
 
@@ -146,7 +146,7 @@ final class FinalizeAttributeTest extends BaseTestCase
     }
 
     #[Group('scrutinizer-ignore')]
-    public function testManyExceptionsOnDestroy()
+    public function testManyExceptionsOnDestroy(): void
     {
         $root = self::makeContainer();
 
