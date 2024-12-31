@@ -22,7 +22,7 @@ class LimitsTraitTest extends TestCase
     /**
      * @var LimitsTrait
      */
-    private $trait;
+    private \PHPUnit\Framework\MockObject\MockObject $trait;
 
     public function setUp(): void
     {

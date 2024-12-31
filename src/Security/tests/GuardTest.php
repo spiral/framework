@@ -19,12 +19,12 @@ class GuardTest extends TestCase
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|PermissionsInterface
      */
-    private $permission;
+    private \PHPUnit\Framework\MockObject\MockObject $permission;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|ActorInterface
      */
-    private $actor;
+    private \PHPUnit\Framework\MockObject\MockObject $actor;
 
     /**
      * @var array

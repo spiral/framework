@@ -22,17 +22,17 @@ class GuardedTraitTest extends TestCase
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|GuardedTrait
      */
-    private $trait;
+    private \PHPUnit\Framework\MockObject\MockObject $trait;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|GuardInterface
      */
-    private $guard;
+    private \PHPUnit\Framework\MockObject\MockObject $guard;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|ContainerInterface
      */
-    private $container;
+    private \PHPUnit\Framework\MockObject\MockObject $container;
 
     public function setUp(): void
     {

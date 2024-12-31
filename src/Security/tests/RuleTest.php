@@ -24,17 +24,17 @@ class RuleTest extends TestCase
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|ActorInterface
      */
-    private $actor;
+    private \PHPUnit\Framework\MockObject\MockObject $actor;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|ResolverInterface
      */
-    private $resolver;
+    private \PHPUnit\Framework\MockObject\MockObject $resolver;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|Rule
      */
-    private $rule;
+    private \PHPUnit\Framework\MockObject\MockObject $rule;
 
     protected function setUp(): void
     {

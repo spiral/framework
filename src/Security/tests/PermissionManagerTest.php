@@ -26,7 +26,7 @@ class PermissionManagerTest extends TestCase
     /**
      * @var RulesInterface
      */
-    private $rules;
+    private \PHPUnit\Framework\MockObject\MockObject $rules;
 
     public function setUp(): void
     {

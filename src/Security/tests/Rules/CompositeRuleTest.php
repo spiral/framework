@@ -21,7 +21,7 @@ class CompositeRuleTest extends TestCase
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|ActorInterface $callable
      */
-    private $actor;
+    private \PHPUnit\Framework\MockObject\MockObject $actor;
 
     public function setUp(): void
     {
