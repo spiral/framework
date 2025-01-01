@@ -78,7 +78,7 @@ class ControllerTest extends BaseTestCase
         $this->getContainer()->removeBinding(CoreInterface::class);
 
         $core = $target->getHandler($this->getContainer(), []);
-        $handler = (fn(CoreHandler $core) => $core->core)->call($core, $core);
+        $handler = (fn(CoreHandler $core): HandlerInterface|CoreInterface => $core->core)->call($core, $core);
 
         self::assertInstanceOf(AutowireHandler::class, $handler);
     }

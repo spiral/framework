@@ -26,7 +26,7 @@ trait AttributeAware
     public function setAttributes(array $attributes): static
     {
         $this->element->setAttributes(\array_map(
-            static fn (Attribute $attribute) => $attribute->getElement(),
+            static fn (Attribute $attribute): NetteAttribute => $attribute->getElement(),
             $attributes
         ));
 
@@ -37,7 +37,7 @@ trait AttributeAware
     public function getAttributes(): array
     {
         return \array_map(
-            static fn (NetteAttribute $attribute) => Attribute::fromElement($attribute),
+            static fn (NetteAttribute $attribute): Attribute => Attribute::fromElement($attribute),
             $this->element->getAttributes()
         );
     }

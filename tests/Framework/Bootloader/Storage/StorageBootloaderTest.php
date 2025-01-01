@@ -90,7 +90,7 @@ final class StorageBootloaderTest extends BaseTestCase
             FilesystemAdapter $adapter,
             string $name,
             ?UriResolverInterface $resolver = null
-        ) => $adapter instanceof LocalFilesystemAdapter
+        ): bool => $adapter instanceof LocalFilesystemAdapter
             && $name === 'default'
             && $resolver === null)->once()->andReturn($bucket = m::mock(BucketInterface::class)
         );

@@ -92,7 +92,7 @@ final class FibersTest extends BaseTestCase
         $this->expectExceptionMessage('test');
 
         FiberHelper::runInFiber(
-            static fn() => (new Container())->runScoped(
+            static fn(): mixed => (new Container())->runScoped(
                 function (): string {
                     $result = '';
                     $result .= Fiber::suspend('foo');
@@ -109,7 +109,7 @@ final class FibersTest extends BaseTestCase
     public function testCatchThrownException(): void
     {
         $result = FiberHelper::runInFiber(
-            static fn() => (new Container())->runScoped(
+            static fn(): mixed => (new Container())->runScoped(
                 function (): string {
                     $result = '';
                     $result .= Fiber::suspend('foo');

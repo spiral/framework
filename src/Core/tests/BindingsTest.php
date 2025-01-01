@@ -13,26 +13,13 @@ use Spiral\Tests\Core\Fixtures\SampleClass;
 
 class BindingsTest extends TestCase
 {
-    public function testBasicBinding(): void
-    {
-        $container = new Container();
-        $this->assertInstanceOf(ContainerInterface::class, $container);
-
-        $this->assertFalse($container->has('abc'));
-
-        $container->bind('abc', fn() => 'hello');
-
-        $this->assertTrue($container->has('abc'));
-        $this->assertEquals('hello', $container->get('abc'));
-    }
-
     public function testStringBinding(): void
     {
         $container = new Container();
-
+        $this->assertInstanceOf(ContainerInterface::class, $container);
         $this->assertFalse($container->has('abc'));
-        $container->bind('abc', fn() => 'hello');
 
+        $container->bind('abc', static fn(): string => 'hello');
         $container->bind('dce', 'abc');
 
         $this->assertTrue($container->has('dce'));

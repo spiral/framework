@@ -30,7 +30,7 @@ final class CoreTest extends TestCase
         }
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(fn(string $name, mixed $p = [], ?OptionsInterface $options = null) => $name === 'foo'
+            ->withArgs(fn(string $name, mixed $p = [], ?OptionsInterface $options = null): bool => $name === 'foo'
                 && $payload === $p
                 && $options instanceof Options,
             );
@@ -80,7 +80,7 @@ final class CoreTest extends TestCase
         $tracer->shouldReceive('trace')->once()->andReturnUsing(fn($name, $callback) => $callback());
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(fn(string $name, array $payload = [], ?OptionsInterface $options = null) => $name === 'foo'
+            ->withArgs(fn(string $name, array $payload = [], ?OptionsInterface $options = null): bool => $name === 'foo'
                 && $payload === ['baz' => 'baf']
                 && $options->getHeader('foo') === ['bar']);
 
@@ -103,7 +103,7 @@ final class CoreTest extends TestCase
         $tracer->shouldNotReceive('getContext');
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(fn(string $name, array $payload = [], ?OptionsInterface $options = null) => $name === 'foo'
+            ->withArgs(fn(string $name, array $payload = [], ?OptionsInterface $options = null): bool => $name === 'foo'
                 && $payload === ['baz' => 'baf']
                 && $options !== null);
 

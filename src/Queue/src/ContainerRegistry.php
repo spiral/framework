@@ -38,7 +38,7 @@ final class ContainerRegistry implements HandlerRegistryInterface
     private function className(string $jobType): string
     {
         $names = \explode('.', $jobType);
-        $names = \array_map(fn (string $value) => $this->inflector->classify($value), $names);
+        $names = \array_map(fn (string $value): string => $this->inflector->classify($value), $names);
 
         return \implode('\\', $names);
     }

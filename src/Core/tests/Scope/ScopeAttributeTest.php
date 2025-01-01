@@ -52,7 +52,7 @@ final class ScopeAttributeTest extends BaseTestCase
     public function testNamedScopeResolveFromParentScope(): void
     {
         $root = self::makeContainer();
-        $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
+        $root->getBinder('bar')->bindSingleton('binding', static fn (): AttrScopeFoo => new AttrScopeFoo());
 
         $root->runScoped(static function (Container $fooScope): void {
             $fooScope->runScoped(static function (Container $container): void {
@@ -67,7 +67,7 @@ final class ScopeAttributeTest extends BaseTestCase
         self::expectExceptionMessage('`foo`');
 
         $root = self::makeContainer();
-        $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
+        $root->getBinder('bar')->bindSingleton('binding', static fn (): AttrScopeFoo => new AttrScopeFoo());
 
         $root->runScoped(static function (Container $fooScope): void {
             $fooScope->runScoped(static function (Container $container): void {
@@ -79,7 +79,7 @@ final class ScopeAttributeTest extends BaseTestCase
     public function testAllParentNamedScopesNotContainsNeededScopeWithDisabledChecking(): void
     {
         $root = self::makeContainer(checkScope: false);
-        $root->getBinder('bar')->bindSingleton('binding', static fn () => new AttrScopeFoo());
+        $root->getBinder('bar')->bindSingleton('binding', static fn (): AttrScopeFoo => new AttrScopeFoo());
 
         $root->runScoped(static function (Container $fooScope): void {
             $fooScope->runScoped(static function (Container $container): void {

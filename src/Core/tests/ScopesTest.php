@@ -21,7 +21,7 @@ class ScopesTest extends TestCase
 
         $this->assertNull(ContainerScope::getContainer());
 
-        $this->assertTrue(ContainerScope::runScope($container, fn() => $container === ContainerScope::getContainer()));
+        $this->assertTrue(ContainerScope::runScope($container, static fn(): bool => $container === ContainerScope::getContainer()));
 
         $this->assertNull(ContainerScope::getContainer());
     }
@@ -33,7 +33,7 @@ class ScopesTest extends TestCase
         $this->assertNull(ContainerScope::getContainer());
 
         try {
-            $this->assertTrue(ContainerScope::runScope($container, function () use ($container): void {
+            $this->assertTrue(ContainerScope::runScope($container, static function (): never {
                 throw new RuntimeException('exception');
             }));
         } catch (\Throwable $e) {
@@ -103,14 +103,14 @@ class ScopesTest extends TestCase
 
         $this->assertSame(
             $container,
-            ContainerScope::runScope($container, static fn (ContainerInterface $container) => $container)
+            ContainerScope::runScope($container, static fn (ContainerInterface $container): \Psr\Container\ContainerInterface => $container)
         );
 
         $result = ContainerScope::runScope(
             $container,
-            static fn(Container $container) => $container->runScope(
+            static fn(Container $container): mixed => $container->runScope(
                 [],
-                static fn (Container $container) => $container,
+                static fn (Container $container): \Spiral\Core\Container => $container,
             ),
         );
 

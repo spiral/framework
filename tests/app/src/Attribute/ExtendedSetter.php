@@ -11,6 +11,6 @@ final class ExtendedSetter extends Setter
 {
     public function __construct()
     {
-        parent::__construct(static fn (mixed $value) => (int) $value + 5);
+        parent::__construct(static fn (mixed $value): int => (int) $value + 5);
     }
 }

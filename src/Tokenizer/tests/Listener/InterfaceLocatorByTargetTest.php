@@ -88,7 +88,7 @@ final class InterfaceLocatorByTargetTest extends TestCase
         array $expected,
     ): void {
         $interfaces = \array_map(
-            fn (string $class) => new \ReflectionClass($class),
+            fn (string $class): \ReflectionClass => new \ReflectionClass($class),
             [
                 Targets\InterfaceWithAllTargets::class,
                 Targets\InterfaceWithAttributeOnClass::class,

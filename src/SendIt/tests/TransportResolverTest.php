@@ -28,7 +28,7 @@ final class TransportResolverTest extends TestCase
     public function testCanResolveRegisteredTransport(): void
     {
         $transportFactory = m::mock(TransportFactoryInterface::class);
-        $arg = fn(Transport\Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
+        $arg = static fn(Transport\Dsn $dsn): bool => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
 
         $transportFactory->shouldReceive('supports')->once()->withArgs($arg)->andReturn(true);
         $transportFactory->shouldReceive('create')->once()->withArgs($arg)
@@ -44,7 +44,7 @@ final class TransportResolverTest extends TestCase
     public function testCanResolveRegisteredDefaultTransport(): void
     {
         $transportFactory = m::mock(TransportFactoryInterface::class);
-        $arg = fn(Transport\Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
+        $arg = static fn(Transport\Dsn $dsn): bool => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
 
         $transportFactory->shouldReceive('supports')->once()->withArgs($arg)->andReturn(true);
         $transportFactory->shouldReceive('create')->once()->withArgs($arg)

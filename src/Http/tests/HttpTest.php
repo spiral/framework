@@ -47,7 +47,7 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore();
 
-        $core->setHandler(fn() => 'hello world');
+        $core->setHandler(fn(): string => 'hello world');
 
         $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame('hello world', (string)$response->getBody());
@@ -67,7 +67,7 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore();
         $core->setHandler(
-            new CallableHandler(fn() => 'hello world', new ResponseFactory(new HttpConfig(['headers' => []])))
+            new CallableHandler(fn(): string => 'hello world', new ResponseFactory(new HttpConfig(['headers' => []])))
         );
 
         $response = $core->handle(new ServerRequest('GET', ''));
@@ -143,7 +143,7 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore();
 
-        $core->setHandler(fn() => [
+        $core->setHandler(fn(): array => [
             'status' => 404,
             'message' => 'not found',
         ]);
@@ -157,7 +157,7 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore();
 
-        $core->setHandler(fn() => new Json([
+        $core->setHandler(fn(): Json => new Json([
             'status' => 404,
             'message' => 'not found',
         ]));
@@ -171,7 +171,7 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore([HeaderMiddleware::class]);
 
-        $core->setHandler(fn() => 'hello?');
+        $core->setHandler(fn(): string => 'hello?');
 
         $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
@@ -186,7 +186,7 @@ final class HttpTest extends TestCase
         $core->getPipeline()->pushMiddleware(new Header2Middleware());
         $core->getPipeline()->riseMiddleware(new HeaderMiddleware());
 
-        $core->setHandler(fn() => 'hello?');
+        $core->setHandler(fn(): string => 'hello?');
 
         $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
@@ -201,7 +201,7 @@ final class HttpTest extends TestCase
         $core->getPipeline()->pushMiddleware(new HeaderMiddleware());
         $core->getPipeline()->riseMiddleware(new Header2Middleware());
 
-        $core->setHandler(fn() => 'hello?');
+        $core->setHandler(fn(): string => 'hello?');
 
         $response = $core->handle(new ServerRequest('GET', ''));
         $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
@@ -237,7 +237,7 @@ final class HttpTest extends TestCase
 
         $core = $this->getCore();
 
-        $core->setHandler(fn() => 'hello world');
+        $core->setHandler(fn(): string => 'hello world');
 
         $response = $core->handle($request);
         $this->assertSame('hello world', (string)$response->getBody());
@@ -256,7 +256,7 @@ final class HttpTest extends TestCase
             $tracerFactory = m::mock(TracerFactoryInterface::class),
         );
 
-        $http->setHandler(fn() => 'hello world');
+        $http->setHandler(fn(): string => 'hello world');
 
         $tracerFactory
             ->shouldReceive('make')
@@ -319,7 +319,7 @@ final class HttpTest extends TestCase
             $tracerFactory,
         );
 
-        $http->setHandler(fn() => 'hello world');
+        $http->setHandler(fn(): string => 'hello world');
 
         $response = $http->handle($request);
         $this->assertSame('hello world', (string)$response->getBody());
@@ -338,7 +338,7 @@ final class HttpTest extends TestCase
             $tracerFactory = m::mock(TracerFactoryInterface::class),
         );
 
-        $http->setHandler(fn() => 'hello world');
+        $http->setHandler(fn(): string => 'hello world');
 
         $tracerFactory
             ->shouldReceive('make')

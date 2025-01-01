@@ -79,7 +79,7 @@ final class CsrfTest extends TestCase
 
         $core = $this->httpCore([CsrfMiddleware::class]);
         $core->setHandler(
-            static fn() => 'all good'
+            static fn(): string => 'all good'
         );
 
         $this->get($core, '/');
@@ -89,7 +89,7 @@ final class CsrfTest extends TestCase
     {
         $core = $this->httpCore([CsrfMiddleware::class, CsrfFirewall::class]);
         $core->setHandler(
-            static fn() => 'all good'
+            static fn(): string => 'all good'
         );
 
         $response = $this->post($core, '/');
@@ -101,7 +101,7 @@ final class CsrfTest extends TestCase
         $this->expectException(\LogicException::class);
         $core = $this->httpCore([CsrfFirewall::class]);
         $core->setHandler(
-            static fn() => 'all good'
+            static fn(): string => 'all good'
         );
 
         $this->post($core, '/');
@@ -111,7 +111,7 @@ final class CsrfTest extends TestCase
     {
         $core = $this->httpCore([CsrfMiddleware::class, CsrfFirewall::class]);
         $core->setHandler(
-            static fn() => 'all good'
+            static fn(): string => 'all good'
         );
 
         $response = $this->get($core, '/');
@@ -142,7 +142,7 @@ final class CsrfTest extends TestCase
     {
         $core = $this->httpCore([CsrfMiddleware::class, CsrfFirewall::class]);
         $core->setHandler(
-            static fn() => 'all good'
+            static fn(): string => 'all good'
         );
 
         $response = $this->get($core, '/');
@@ -173,7 +173,7 @@ final class CsrfTest extends TestCase
     {
         $core = $this->httpCore([CsrfMiddleware::class, StrictCsrfFirewall::class]);
         $core->setHandler(
-            static fn() => 'all good'
+            static fn(): string => 'all good'
         );
 
         $response = $this->get($core, '/');

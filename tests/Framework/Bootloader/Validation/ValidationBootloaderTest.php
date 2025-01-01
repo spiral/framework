@@ -29,7 +29,7 @@ final class ValidationBootloaderTest extends BaseTestCase
         $this->getContainer()->bind(ValidationConfig::class, new ValidationConfig(['defaultValidator' => 'foo']));
         $this->getContainer()
             ->get(ValidationProviderInterface::class)
-            ->register('foo', static fn () => $validator);
+            ->register('foo', static fn (): ValidationInterface => $validator);
 
         $this->assertContainerBoundAsSingleton(ValidationInterface::class, $validator::class);
     }
@@ -53,7 +53,7 @@ final class ValidationBootloaderTest extends BaseTestCase
         $validator = $this->createValidator();
         $this->getContainer()
             ->get(ValidationProviderInterface::class)
-            ->register('bar', static fn () => $validator);
+            ->register('bar', static fn (): ValidationInterface => $validator);
 
         $bootloader = $this->getContainer()->get(ValidationBootloader::class);
         $bootloader->setDefaultValidator('bar');

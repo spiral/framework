@@ -49,7 +49,7 @@ final class AttributeProcessorTest extends TestCase
 
         $tokenizerRegistry->shouldReceive('addListener')
             ->once()
-            ->withArgs(fn (AttributeProcessor $attributeProcessor) => true);
+            ->withArgs(fn (AttributeProcessor $attributeProcessor): bool => true);
 
         new AttributeProcessor($tokenizerRegistry, $reader, $factory, $listenerRegistry);
     }

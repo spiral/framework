@@ -52,7 +52,7 @@ class RuleManagerTest extends TestCase
         // other rule types
         $manager->set('RuleInterface', $this->rule);
         $this->assertEquals($this->rule, $manager->get('RuleInterface'));
-        $manager->set('Closure', fn() => true);
+        $manager->set('Closure', static fn(): bool => true);
         $this->assertTrue($manager->get('Closure') instanceof CallableRule);
         $manager->set('Array', $this->testFlow(...));
         $this->assertTrue($manager->get('Array') instanceof CallableRule);

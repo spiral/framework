@@ -187,7 +187,7 @@ class ExceptionsTest extends TestCase
         $notConstructed->bind('Spiral\Tests\Core\Fixtures\InvalidClass', WithPrivateConstructor::class);
 
         $withClosure = new Container();
-        $withClosure->bind('Spiral\Tests\Core\Fixtures\InvalidClass', static fn() => 'FooBar');
+        $withClosure->bind('Spiral\Tests\Core\Fixtures\InvalidClass', static fn(): string => 'FooBar');
 
         $closureWithContainer = new Container();
         $closureWithContainer->bind(

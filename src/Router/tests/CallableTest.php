@@ -16,7 +16,7 @@ class CallableTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/something', fn() => 'hello world')
+            new Route('/something', static fn(): string => 'hello world')
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/something')));

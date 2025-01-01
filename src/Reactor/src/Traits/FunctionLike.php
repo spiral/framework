@@ -35,7 +35,7 @@ trait FunctionLike
     public function setParameters(Parameters $parameters): static
     {
         $this->element->setParameters(\array_map(
-            static fn (Parameter $parameter) => $parameter->getElement(),
+            static fn (Parameter $parameter): NetteParameter => $parameter->getElement(),
             \iterator_to_array($parameters)
         ));
 
@@ -45,7 +45,7 @@ trait FunctionLike
     public function getParameters(): Parameters
     {
         return new Parameters(\array_map(
-            static fn (NetteParameter $parameter) => Parameter::fromElement($parameter),
+            static fn (NetteParameter $parameter): Parameter => Parameter::fromElement($parameter),
             $this->element->getParameters()
         ));
     }

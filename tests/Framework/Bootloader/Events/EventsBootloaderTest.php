@@ -183,7 +183,7 @@ final class EventsBootloaderTest extends BaseTestCase
         $kernel = $this->getContainer()->get(AbstractKernel::class);
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->getContainer()->bindSingleton(EventDispatcherInterface::class, static fn() => $dispatcher);
+        $this->getContainer()->bindSingleton(EventDispatcherInterface::class, static fn(): EventDispatcherInterface => $dispatcher);
 
         $finalizer = m::mock(FinalizerInterface::class, EventDispatcherAwareInterface::class);
         $finalizer->shouldReceive('setEventDispatcher')->once()->with($dispatcher);

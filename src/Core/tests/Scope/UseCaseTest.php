@@ -190,7 +190,7 @@ final class UseCaseTest extends BaseTestCase
         $root = new Container();
         $root->getBinder('scope1')->bindSingleton('foo', $factory->makeStdClass(...));
 
-        $getter = fn () => $root->runScoped(function (Container $c1) use ($factory): mixed {
+        $getter = fn (): mixed => $root->runScoped(static function (Container $c1) use ($factory): mixed {
             self::assertFalse($c1->has('bar'));
             $c1->bindSingleton('bar', $factory->makeStdClass(...));
 

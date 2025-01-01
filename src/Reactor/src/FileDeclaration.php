@@ -72,7 +72,7 @@ class FileDeclaration implements \Stringable, DeclarationInterface
     public function getNamespaces(): Namespaces
     {
         return new Namespaces(\array_map(
-            static fn (NettePhpNamespace $namespace) => PhpNamespace::fromElement($namespace),
+            static fn (NettePhpNamespace $namespace): PhpNamespace => PhpNamespace::fromElement($namespace),
             $this->element->getNamespaces()
         ));
     }
@@ -80,7 +80,7 @@ class FileDeclaration implements \Stringable, DeclarationInterface
     public function getFunctions(): Functions
     {
         return new Functions(\array_map(
-            static fn (GlobalFunction $function) => FunctionDeclaration::fromElement($function),
+            static fn (GlobalFunction $function): FunctionDeclaration => FunctionDeclaration::fromElement($function),
             $this->element->getFunctions()
         ));
     }
@@ -110,7 +110,7 @@ class FileDeclaration implements \Stringable, DeclarationInterface
     public function getElements(): Elements
     {
         return new Elements(\array_map(
-            static fn (ClassLike $element) => match (true) {
+            static fn (ClassLike $element): AbstractDeclaration => match (true) {
                 $element instanceof ClassType => ClassDeclaration::fromElement($element),
                 $element instanceof InterfaceType => InterfaceDeclaration::fromElement($element),
                 $element instanceof TraitType => TraitDeclaration::fromElement($element),

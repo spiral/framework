@@ -125,8 +125,8 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $bootloader->addUpdateSequence('cycle', 'test2');
         $bootloader->addUpdateSequence('other', 'test3');
 
-        $bootloader->addUpdateSequence(static fn () => 'test', 'test4');
-        $bootloader->addUpdateSequence(static fn () => 'other', 'test5');
+        $bootloader->addUpdateSequence(static fn (): string => 'test', 'test4');
+        $bootloader->addUpdateSequence(static fn (): string => 'other', 'test5');
 
         $config = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['update'];
 

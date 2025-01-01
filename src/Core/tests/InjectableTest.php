@@ -102,7 +102,7 @@ class InjectableTest extends TestCase
         $container->bind(ConfigsInterface::class, $configurator);
 
         $configurator->shouldReceive('createInjection')
-            ->with(m::on(static fn(ReflectionClass $r) => $r->getName() === TestConfig::class), null)
+            ->with(m::on(static fn(ReflectionClass $r): bool => $r->getName() === TestConfig::class), null)
             ->andReturn($expected);
 
         $this->assertSame($expected, $container->get(TestConfig::class));
@@ -117,7 +117,7 @@ class InjectableTest extends TestCase
         $container->bind(ConfigsInterface::class, $configurator);
 
         $configurator->shouldReceive('createInjection')
-            ->with(m::on(static fn(ReflectionClass $r) => $r->getName() === TestConfig::class), 'context')
+            ->with(m::on(static fn(ReflectionClass $r): bool => $r->getName() === TestConfig::class), 'context')
             ->andReturn($expected);
 
         $this->assertSame($expected, $container->get(TestConfig::class, 'context'));
@@ -133,7 +133,7 @@ class InjectableTest extends TestCase
 
         $configurator->shouldReceive('createInjection')
             ->with(
-                m::on(static fn(ReflectionClass $r) => $r->getName() === TestConfig::class),
+                m::on(static fn(ReflectionClass $r): bool => $r->getName() === TestConfig::class),
                 'contextArgument'
             )
             ->andReturn($expected);
@@ -175,7 +175,7 @@ class InjectableTest extends TestCase
             ->with(
                 // Class
                 $this->callback(
-                    static fn(ReflectionClass $r) => $r->getName() === $class
+                    static fn(ReflectionClass $r): bool => $r->getName() === $class
                 ),
                 // Context
                 null,
@@ -194,7 +194,7 @@ class InjectableTest extends TestCase
         $container = new Container();
         $container->bindInjector(stdClass::class, ExtendedContextInjector::class);
 
-        $result = $container->invoke(fn(stdClass $dt) => $dt);
+        $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
 
         $this->assertInstanceOf(stdClass::class, $result);
         $this->assertInstanceOf(\ReflectionParameter::class, $result->context);
@@ -210,7 +210,7 @@ class InjectableTest extends TestCase
             }
         }));
 
-        $result = $container->invoke(fn(stdClass $dt) => $dt);
+        $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
 
         $this->assertInstanceOf(stdClass::class, $result);
         $this->assertInstanceOf(\ReflectionParameter::class, $result->context);
@@ -226,7 +226,7 @@ class InjectableTest extends TestCase
             }
         }));
 
-        $result = $container->invoke(fn(stdClass $dt) => $dt);
+        $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
 
         $this->assertInstanceOf(stdClass::class, $result);
         $this->assertInstanceOf(\ReflectionParameter::class, $result->context);

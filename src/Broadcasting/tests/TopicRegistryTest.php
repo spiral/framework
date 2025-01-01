@@ -17,14 +17,14 @@ final class TopicRegistryTest extends TestCase
 
         $this->registry = new TopicRegistry([
             'bar-topic.{id}' => fn($id) => $id,
-            'foo-topic' => fn() => 'foo',
+            'foo-topic' => static fn(): string => 'foo',
         ]);
     }
 
     public function testRegisterTopic(): void
     {
-        $this->registry->register('baz-topic', fn() => 'baz');
-        $this->registry->register('baz.{uuid}', fn(string $uuid) => $uuid);
+        $this->registry->register('baz-topic', static fn(): string => 'baz');
+        $this->registry->register('baz.{uuid}', static fn(string $uuid): string => $uuid);
 
 
         $params = [];

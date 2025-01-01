@@ -16,7 +16,7 @@ trait PropertiesAware
     public function setProperties(Properties $properties): static
     {
         $this->element->setProperties(\array_map(
-            static fn (Property $property) => $property->getElement(),
+            static fn (Property $property): NetteProperty => $property->getElement(),
             \iterator_to_array($properties)
         ));
 
@@ -26,7 +26,7 @@ trait PropertiesAware
     public function getProperties(): Properties
     {
         return new Properties(\array_map(
-            static fn (NetteProperty $property) => Property::fromElement($property),
+            static fn (NetteProperty $property): Property => Property::fromElement($property),
             $this->element->getProperties()
         ));
     }
