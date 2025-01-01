@@ -25,7 +25,7 @@ final class CachedClassesLoader extends AbstractCachedLoader implements ClassesL
         return $this->doLoad(
             $listener,
             $this->locator->getClasses(...),
-            static fn (string $class) => new \ReflectionClass($class),
+            static fn (string $class): \ReflectionClass => new \ReflectionClass($class),
         );
     }
 }

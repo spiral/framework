@@ -27,7 +27,7 @@ final class CachedEnumsLoader extends AbstractCachedLoader implements EnumsLoade
         return $this->doLoad(
             $listener,
             $this->locator->getEnums(...),
-            static fn (string $enum) => new \ReflectionEnum($enum),
+            static fn (string $enum): \ReflectionEnum => new \ReflectionEnum($enum),
         );
     }
 }

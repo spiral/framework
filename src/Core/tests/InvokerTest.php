@@ -95,7 +95,7 @@ class InvokerTest extends TestCase
         $this->container->bindSingleton(Bucket::class, $bucket = new Bucket('foo'));
 
         $result = $this->container->invoke(
-            static fn(Bucket $bucket, SampleClass $class, string $name, string $path = 'baz') => \compact('bucket', 'class', 'name', 'path'),
+            static fn(Bucket $bucket, SampleClass $class, string $name, string $path = 'baz'): array => \compact('bucket', 'class', 'name', 'path'),
             ['name' => 'bar']
         );
 
@@ -111,7 +111,7 @@ class InvokerTest extends TestCase
         $this->expectExceptionMessage('Unable to resolve required argument `name` when resolving');
 
         $this->container->invoke(
-            static fn(Bucket $bucket, SampleClass $class, string $name, string $path = 'baz') => \compact('bucket', 'class', 'name', 'path'),
+            static fn(Bucket $bucket, SampleClass $class, string $name, string $path = 'baz'): array => \compact('bucket', 'class', 'name', 'path'),
             ['name' => 'bar']
         );
     }

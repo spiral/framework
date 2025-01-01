@@ -16,7 +16,7 @@ abstract class AbstractBroadcast implements BroadcastInterface
      */
     protected function formatTopics(array $topics): array
     {
-        return \array_map(fn (string|\Stringable $topic) => (string) $topic, $topics);
+        return \array_map(fn (string|\Stringable $topic): string => (string) $topic, $topics);
     }
 
     /**

@@ -29,7 +29,7 @@ final class NullTracerTest extends TestCase
 
         $invoker = m::mock(InvokerInterface::class);
 
-        $callable = fn() => 'hello';
+        $callable = fn(): string => 'hello';
 
         $invoker->shouldReceive('invoke')
             ->once()
@@ -37,7 +37,7 @@ final class NullTracerTest extends TestCase
             ->andReturn('hello');
 
         $scope->shouldReceive('runScope')
-            ->withArgs(fn(array $scope) =>
+            ->withArgs(fn(array $scope): bool =>
                 $scope[SpanInterface::class] instanceof Span
                 && $scope[SpanInterface::class]->getName() === 'foo'
             )
@@ -66,7 +66,7 @@ final class NullTracerTest extends TestCase
             ->with(BinderInterface::class)
             ->andReturn($binder);
 
-        $callable = fn() => 'hello';
+        $callable = fn(): string => 'hello';
 
         $invoker->shouldReceive('invoke')
             ->once()

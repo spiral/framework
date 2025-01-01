@@ -12,8 +12,8 @@ final class CallbackSerializerTest extends TestCase
     public function testSerializer(): void
     {
         $serializer = new CallbackSerializer(
-            static fn (mixed $payload) => $payload,
-            static fn (mixed $payload) => $payload
+            static fn (mixed $payload): mixed => $payload,
+            static fn (mixed $payload): mixed => $payload
         );
 
         $this->assertSame('serialize', $serializer->serialize('serialize'));

@@ -27,7 +27,7 @@ final class InterceptorTest extends BaseTestCase
 
         $interceptor->shouldReceive('process')
             ->once()
-            ->withArgs(fn(string $controller, string $action, array $parameters, CoreInterface $core) => $controller === TestCommand::class
+            ->withArgs(fn(string $controller, string $action, array $parameters, CoreInterface $core): bool => $controller === TestCommand::class
                 && $action === 'perform'
                 && $parameters['input'] instanceof InputInterface
                 && $parameters['output'] instanceof OutputInterface
@@ -38,7 +38,7 @@ final class InterceptorTest extends BaseTestCase
                     string $action,
                     array $parameters,
                     CoreInterface $core,
-                ) => $core->callAction($controller, $action, $parameters),
+                ): mixed => $core->callAction($controller, $action, $parameters),
             );
 
         $core = $this->getCore($this->getStaticLocator([

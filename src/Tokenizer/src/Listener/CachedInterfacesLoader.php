@@ -27,7 +27,7 @@ final class CachedInterfacesLoader extends AbstractCachedLoader implements Inter
         return $this->doLoad(
             $listener,
             $this->locator->getInterfaces(...),
-            static fn (string $class) => new \ReflectionClass($class),
+            static fn (string $class): \ReflectionClass => new \ReflectionClass($class),
         );
     }
 }

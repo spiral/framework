@@ -47,7 +47,7 @@ final class StorageSnapshotTest extends TestCase
         $this->bucket
             ->expects($this->once())
             ->method('create')
-            ->with($this->callback(static fn (string $filename) => \str_contains($filename, 'Error.txt')))
+            ->with($this->callback(static fn (string $filename): bool => \str_contains($filename, 'Error.txt')))
             ->willReturn($this->file);
 
         $e = new \Error('message');
@@ -66,7 +66,7 @@ final class StorageSnapshotTest extends TestCase
         $this->bucket
             ->expects($this->once())
             ->method('create')
-            ->with($this->callback(static fn (string $filename) => \str_starts_with($filename, 'foo/bar')))
+            ->with($this->callback(static fn (string $filename): bool => \str_starts_with($filename, 'foo/bar')))
             ->willReturn($this->file);
 
         $e = new \Error('message');

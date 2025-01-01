@@ -126,7 +126,7 @@ class UriTest extends BaseTestCase
         );
 
         $route = $router->getRoute('group');
-        $uriHandler = $route->getUriHandler()->withPathSegmentEncoder(fn(string $segment) => \rawurlencode($segment));
+        $uriHandler = $route->getUriHandler()->withPathSegmentEncoder(fn(string $segment): string => \rawurlencode($segment));
         $route = $route->withUriHandler($uriHandler);
 
         $uri = $route->uri(['controller' => 'test', 'action' => $segment]);

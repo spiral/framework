@@ -121,7 +121,7 @@ final class Container implements
     {
         return ContainerScope::getContainer() === $this
             ? $this->factory->make($alias, $parameters, $context)
-            : ContainerScope::runScope($this, fn () => $this->factory->make($alias, $parameters, $context));
+            : ContainerScope::runScope($this, fn (): mixed => $this->factory->make($alias, $parameters, $context));
     }
 
     /**
@@ -290,7 +290,7 @@ final class Container implements
     {
         return ContainerScope::getContainer() === $this
             ? $this->invoker->invoke($target, $parameters)
-            : ContainerScope::runScope($this, fn () => $this->invoker->invoke($target, $parameters));
+            : ContainerScope::runScope($this, fn (): mixed => $this->invoker->invoke($target, $parameters));
     }
 
     /**

@@ -51,7 +51,7 @@ class FileSnapshot
     {
         $finder = new Finder();
         $finder->in($this->directory)->sort(
-            static fn (SplFileInfo $a, SplFileInfo $b) => $b->getMTime() - $a->getMTime()
+            static fn (SplFileInfo $a, SplFileInfo $b): int|float => $b->getMTime() - $a->getMTime()
         );
 
         $count = 0;

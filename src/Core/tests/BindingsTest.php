@@ -20,7 +20,7 @@ class BindingsTest extends TestCase
 
         $this->assertFalse($container->has('abc'));
 
-        $container->bind('abc', fn() => 'hello');
+        $container->bind('abc', fn(): string => 'hello');
 
         $this->assertTrue($container->has('abc'));
         $this->assertEquals('hello', $container->get('abc'));
@@ -31,7 +31,7 @@ class BindingsTest extends TestCase
         $container = new Container();
 
         $this->assertFalse($container->has('abc'));
-        $container->bind('abc', fn() => 'hello');
+        $container->bind('abc', fn(): string => 'hello');
 
         $container->bind('dce', 'abc');
 

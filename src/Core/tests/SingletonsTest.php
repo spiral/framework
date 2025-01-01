@@ -58,7 +58,7 @@ class SingletonsTest extends TestCase
 
         $instance = new SampleClass();
 
-        $container->bindSingleton('sampleClass', fn() => $instance);
+        $container->bindSingleton('sampleClass', fn(): \Spiral\Tests\Core\Fixtures\SampleClass => $instance);
 
         $this->assertSame($instance, $container->get('sampleClass'));
     }
@@ -67,7 +67,7 @@ class SingletonsTest extends TestCase
     {
         $container = new Container();
 
-        $container->bindSingleton('sampleClass', fn() => new SampleClass());
+        $container->bindSingleton('sampleClass', fn(): \Spiral\Tests\Core\Fixtures\SampleClass => new SampleClass());
 
         $instance = $container->get('sampleClass');
 
@@ -139,7 +139,7 @@ class SingletonsTest extends TestCase
         $container = new Container();
         $container->bindSingleton('singleton', 'sampleClass');
 
-        $container->bind('sampleClass', fn() => new SampleClass());
+        $container->bind('sampleClass', fn(): \Spiral\Tests\Core\Fixtures\SampleClass => new SampleClass());
 
         $instance = $container->get('singleton');
 

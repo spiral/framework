@@ -66,7 +66,7 @@ final class EnumLocatorByTargetTest extends TestCase
         array $expected,
     ): void {
         $enums = \array_map(
-            fn (string $class) => new \ReflectionEnum($class),
+            fn (string $class): \ReflectionEnum => new \ReflectionEnum($class),
             [
                 Targets\EnumWithAttributeOnClass::class,
                 Targets\EnumWithAllTargets::class,

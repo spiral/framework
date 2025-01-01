@@ -73,10 +73,10 @@ class StorageBootloader extends Bootloader
             return $manager;
         });
 
-        $binder->bindSingleton(Storage::class, static fn (StorageInterface $manager) => $manager);
+        $binder->bindSingleton(Storage::class, static fn (StorageInterface $manager): \Spiral\Storage\StorageInterface => $manager);
 
-        $binder->bindSingleton(BucketInterface::class, static fn (StorageInterface $manager) => $manager->bucket());
+        $binder->bindSingleton(BucketInterface::class, static fn (StorageInterface $manager): \Spiral\Storage\BucketInterface => $manager->bucket());
 
-        $binder->bindSingleton(Bucket::class, static fn (BucketInterface $storage) => $storage);
+        $binder->bindSingleton(Bucket::class, static fn (BucketInterface $storage): \Spiral\Storage\BucketInterface => $storage);
     }
 }

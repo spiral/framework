@@ -72,7 +72,7 @@ class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
     public function setCases(EnumCases $enumCases): static
     {
         $this->element->setCases(\array_map(
-            static fn (EnumCase $enumCase) => $enumCase->getElement(),
+            static fn (EnumCase $enumCase): \Nette\PhpGenerator\EnumCase => $enumCase->getElement(),
             \iterator_to_array($enumCases)
         ));
 
@@ -82,7 +82,7 @@ class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
     public function getCases(): EnumCases
     {
         return new EnumCases(\array_map(
-            static fn (NetteEnumCase $enumCase) => EnumCase::fromElement($enumCase),
+            static fn (NetteEnumCase $enumCase): \Spiral\Reactor\Partial\EnumCase => EnumCase::fromElement($enumCase),
             $this->element->getCases()
         ));
     }

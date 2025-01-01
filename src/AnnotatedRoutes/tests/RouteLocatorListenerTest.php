@@ -56,7 +56,7 @@ final class RouteLocatorListenerTest extends TestCase
         $this->container->bindSingleton(UriFactoryInterface::class, new Psr17Factory());
         $this->container->bindSingleton(
             RouterInterface::class,
-            static fn(UriHandler $handler, Container $container) => new Router(
+            static fn(UriHandler $handler, Container $container): \Spiral\Router\Router => new Router(
                 '/',
                 $handler,
                 $container,

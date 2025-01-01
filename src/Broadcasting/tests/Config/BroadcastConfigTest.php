@@ -21,7 +21,7 @@ final class BroadcastConfigTest extends TestCase
                 'path' => 'foo-path',
                 'topics' => [
                     'bar-topic.{id}' => fn ($id) => $id,
-                    'foo-topic' => fn () => 'foo',
+                    'foo-topic' => fn (): string => 'foo',
                 ],
             ],
             'default' => 'firebase',
