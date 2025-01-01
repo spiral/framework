@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Security\Traits;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
@@ -19,24 +20,17 @@ class GuardedTraitTest extends TestCase
     public const OPERATION = 'test';
     public const CONTEXT   = [];
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|GuardedTrait
-     */
-    private \PHPUnit\Framework\MockObject\MockObject $trait;
+    private object $trait;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|GuardInterface
-     */
-    private \PHPUnit\Framework\MockObject\MockObject $guard;
+    private MockObject&GuardInterface $guard;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ContainerInterface
-     */
-    private \PHPUnit\Framework\MockObject\MockObject $container;
+    private MockObject&ContainerInterface $container;
 
     public function setUp(): void
     {
-        $this->trait = $this->getMockForTrait(GuardedTrait::class);
+        $this->trait = new class {
+            use GuardedTrait;
+        };
         $this->guard = $this->createMock(GuardInterface::class);
         $this->container = $this->createMock(ContainerInterface::class);
     }

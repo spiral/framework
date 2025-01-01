@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Security;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\Exception\GuardException;
@@ -16,20 +17,11 @@ class GuardTest extends TestCase
     public const OPERATION = 'test';
     public const CONTEXT = [];
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|PermissionsInterface
-     */
-    private \PHPUnit\Framework\MockObject\MockObject $permission;
+    private MockObject&PermissionsInterface $permission;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ActorInterface
-     */
-    private \PHPUnit\Framework\MockObject\MockObject $actor;
+    private MockObject&ActorInterface $actor;
 
-    /**
-     * @var array
-     */
-    private $roles = ['user', 'admin'];
+    private array $roles = ['user', 'admin'];
 
     public function setUp(): void
     {

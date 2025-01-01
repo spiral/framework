@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Security;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Spiral\Security\Exception\PermissionException;
 use Spiral\Security\Exception\RoleException;
@@ -23,10 +24,7 @@ class PermissionManagerTest extends TestCase
     public const ROLE = 'test';
     public const PERMISSION = 'permission';
 
-    /**
-     * @var RulesInterface
-     */
-    private \PHPUnit\Framework\MockObject\MockObject $rules;
+    private MockObject&RulesInterface $rules;
 
     public function setUp(): void
     {

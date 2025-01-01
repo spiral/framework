@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Security;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\ResolverInterface;
 use Spiral\Security\ActorInterface;
@@ -21,20 +22,11 @@ class RuleTest extends TestCase
     public const OPERATION = 'test';
     public const CONTEXT = [];
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ActorInterface
-     */
-    private \PHPUnit\Framework\MockObject\MockObject $actor;
+    private MockObject&ActorInterface $actor;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ResolverInterface
-     */
-    private \PHPUnit\Framework\MockObject\MockObject $resolver;
+    private MockObject&ResolverInterface $resolver;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|Rule
-     */
-    private \PHPUnit\Framework\MockObject\MockObject $rule;
+    private MockObject&Rule $rule;
 
     protected function setUp(): void
     {
