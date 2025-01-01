@@ -194,7 +194,7 @@ class InjectableTest extends TestCase
         $container = new Container();
         $container->bindInjector(stdClass::class, ExtendedContextInjector::class);
 
-        $result = $container->invoke(fn(stdClass $dt): \stdClass => $dt);
+        $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
 
         $this->assertInstanceOf(stdClass::class, $result);
         $this->assertInstanceOf(\ReflectionParameter::class, $result->context);
@@ -210,7 +210,7 @@ class InjectableTest extends TestCase
             }
         }));
 
-        $result = $container->invoke(fn(stdClass $dt): \stdClass => $dt);
+        $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
 
         $this->assertInstanceOf(stdClass::class, $result);
         $this->assertInstanceOf(\ReflectionParameter::class, $result->context);
@@ -226,7 +226,7 @@ class InjectableTest extends TestCase
             }
         }));
 
-        $result = $container->invoke(fn(stdClass $dt): \stdClass => $dt);
+        $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
 
         $this->assertInstanceOf(stdClass::class, $result);
         $this->assertInstanceOf(\ReflectionParameter::class, $result->context);

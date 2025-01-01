@@ -32,7 +32,7 @@ final class LogTracerTest extends TestCase
 
         $uuid->shouldReceive('uuid4')->once()->andReturn($uuid = Uuid::uuid4());
 
-        $callable = fn(): string => 'hello';
+        $callable = static fn(): string => 'hello';
 
         $invoker->shouldReceive('invoke')
             ->once()
@@ -43,7 +43,7 @@ final class LogTracerTest extends TestCase
         $logger->shouldReceive('debug')->once();
 
         $scope->shouldReceive('runScope')
-            ->withArgs(fn(array $scope): bool =>
+            ->withArgs(static fn(array $scope): bool =>
                 $scope[SpanInterface::class] instanceof Span
                 && $scope[SpanInterface::class]->getName() === 'foo'
             )

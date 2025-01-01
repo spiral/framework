@@ -87,7 +87,7 @@ final class PipelineTest extends TestCase
         $this->container->getBinder('http')
             ->bindSingleton(CurrentRequest::class, new CurrentRequest());
         $this->container->getBinder('http')
-            ->bind(ServerRequestInterface::class, static fn(CurrentRequest $cr): ?\Psr\Http\Message\ServerRequestInterface => $cr->get());
+            ->bind(ServerRequestInterface::class, static fn(CurrentRequest $cr): ?ServerRequestInterface => $cr->get());
 
         $middleware = new class implements MiddlewareInterface {
             public function process(

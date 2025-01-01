@@ -32,7 +32,7 @@ class DistributionBootloader extends Bootloader
     {
         $binder->bindSingleton(
             UriResolverInterface::class,
-            static fn (DistributionInterface $dist): \Spiral\Distribution\UriResolverInterface => $dist->resolver()
+            static fn (DistributionInterface $dist): UriResolverInterface => $dist->resolver()
         );
 
         $binder->bindSingleton(

@@ -121,7 +121,7 @@ final class PlainRendererTest extends TestCase
         $responseFactory
             ->expects(self::once())
             ->method('createResponse')
-            ->willReturnCallback(static fn(): \GuzzleHttp\Psr7\Response => new Response());
+            ->willReturnCallback(static fn(): Response => new Response());
         return $responseFactory;
     }
 }

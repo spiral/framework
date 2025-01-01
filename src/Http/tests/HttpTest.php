@@ -157,7 +157,7 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore();
 
-        $core->setHandler(fn(): \Spiral\Tests\Http\Json => new Json([
+        $core->setHandler(fn(): Json => new Json([
             'status' => 404,
             'message' => 'not found',
         ]));

@@ -21,7 +21,7 @@ class ScopesTest extends TestCase
 
         $this->assertNull(ContainerScope::getContainer());
 
-        $this->assertTrue(ContainerScope::runScope($container, fn(): bool => $container === ContainerScope::getContainer()));
+        $this->assertTrue(ContainerScope::runScope($container, static fn(): bool => $container === ContainerScope::getContainer()));
 
         $this->assertNull(ContainerScope::getContainer());
     }
@@ -33,7 +33,7 @@ class ScopesTest extends TestCase
         $this->assertNull(ContainerScope::getContainer());
 
         try {
-            $this->assertTrue(ContainerScope::runScope($container, function () use ($container): void {
+            $this->assertTrue(ContainerScope::runScope($container, static function (): never {
                 throw new RuntimeException('exception');
             }));
         } catch (\Throwable $e) {

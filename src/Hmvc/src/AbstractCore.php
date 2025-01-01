@@ -37,7 +37,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
             ? $container
             : $container
                 ->get(InvokerInterface::class)
-                ->invoke(static fn (#[Proxy] ResolverInterface $resolver): \Spiral\Core\ResolverInterface => $resolver);
+                ->invoke(static fn (#[Proxy] ResolverInterface $resolver): ResolverInterface => $resolver);
     }
 
     /**

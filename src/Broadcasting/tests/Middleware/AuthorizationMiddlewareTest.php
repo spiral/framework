@@ -151,7 +151,9 @@ final class AuthorizationMiddlewareTest extends TestCase
         $handler = m::mock(RequestHandlerInterface::class);
         $dispatcher = m::mock(EventDispatcherInterface::class);
         $status = new AuthorizationStatus($authStatus, ['topic_name'], ['foo' => 'bar']);
-        $dispatcher->shouldReceive('dispatch')->once()->withArgs(fn(Authorized $e): bool => $e->status === $status && $e::class === $event);
+        $dispatcher->shouldReceive('dispatch')
+            ->once()
+            ->withArgs(static fn(Authorized $e): bool => $e->status === $status && $e::class === $event);
 
         $middleware = new AuthorizationMiddleware(
             $broadcast = m::mock(BroadcastInterface::class, GuardInterface::class),
@@ -177,9 +179,13 @@ final class AuthorizationMiddlewareTest extends TestCase
         $request = m::mock(ServerRequestInterface::class);
         $handler = m::mock(RequestHandlerInterface::class);
         $dispatcher = m::mock(EventDispatcherInterface::class);
-        $dispatcher->shouldReceive('dispatch')->once()->withArgs(fn(Authorized $event): bool => $event->status->success === true
-            && $event->status->topics === null
-            && $event->status->response === null);
+        $dispatcher->shouldReceive('dispatch')
+            ->once()
+            ->withArgs(
+                static fn(Authorized $event): bool => $event->status->success === true
+                && $event->status->topics === null
+                && $event->status->response === null
+            );
 
         $middleware = new AuthorizationMiddleware(
             m::mock(BroadcastInterface::class),

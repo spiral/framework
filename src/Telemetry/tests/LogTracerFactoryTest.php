@@ -36,7 +36,7 @@ final class LogTracerFactoryTest extends TestCase
 
         $this->assertInstanceOf(LogTracer::class, $tracer = $factory->make());
 
-        $tracer->trace('foo', fn(): string => 'hello');
+        $tracer->trace('foo', static fn(): string => 'hello');
     }
 }
 

@@ -33,7 +33,7 @@ final class FilterProviderTest extends BaseTestCase
         $this->container->bindSingleton(ReaderInterface::class, (new Factory())->create());
         $this->container->bindSingleton(
             CasterRegistryInterface::class,
-            static fn (): \Spiral\Filters\Model\Mapper\CasterRegistry => new CasterRegistry([new EnumCaster(), new UuidCaster()])
+            static fn (): CasterRegistry => new CasterRegistry([new EnumCaster(), new UuidCaster()])
         );
     }
 

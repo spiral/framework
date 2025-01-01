@@ -270,7 +270,7 @@ final class ProxyTest extends BaseTestCase
         };
         $root->bindSingleton(DestroyableInterface::class, $class);
 
-        $proxy = $root->runScope(new Scope(), static fn(#[Proxy] DestroyableInterface $proxy): \Spiral\Tests\Core\Scope\Stub\DestroyableInterface => $proxy);
+        $proxy = $root->runScope(new Scope(), static fn(#[Proxy] DestroyableInterface $proxy): DestroyableInterface => $proxy);
         $weak = WeakReference::create($proxy);
         unset($proxy);
 
@@ -281,8 +281,8 @@ final class ProxyTest extends BaseTestCase
     public function testImplementationWithWiderTypes(): void
     {
         $root = new Container();
-        $root->getBinder('http')->bindSingleton(UserInterface::class, static fn (): \Spiral\Tests\Core\Scope\Stub\User => new User('Foo'));
-        $proxy = $root->runScope(new Scope(), static fn(#[Proxy] UserInterface $proxy): \Spiral\Tests\Core\Scope\Stub\UserInterface => $proxy);
+        $root->getBinder('http')->bindSingleton(UserInterface::class, static fn (): User => new User('Foo'));
+        $proxy = $root->runScope(new Scope(), static fn(#[Proxy] UserInterface $proxy): UserInterface => $proxy);
 
         $root->runScope(
             new Scope('http'),

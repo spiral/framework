@@ -20,8 +20,8 @@ final class BroadcastConfigTest extends TestCase
             'authorize' => [
                 'path' => 'foo-path',
                 'topics' => [
-                    'bar-topic.{id}' => fn ($id) => $id,
-                    'foo-topic' => fn (): string => 'foo',
+                    'bar-topic.{id}' => static fn (mixed $id): mixed => $id,
+                    'foo-topic' => static fn (): string => 'foo',
                 ],
             ],
             'default' => 'firebase',
