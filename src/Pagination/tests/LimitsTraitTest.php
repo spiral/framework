@@ -8,8 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Pagination\Traits\LimitsTrait;
 
 /**
- * Class LimitTraitTest
- *
  * @package Spiral\Tests\Pagination\Traits
  */
 class LimitsTraitTest extends TestCase
@@ -19,14 +17,13 @@ class LimitsTraitTest extends TestCase
     public const LIMIT = 10;
     public const OFFSET = 15;
 
-    /**
-     * @var LimitsTrait
-     */
-    private $trait;
+    private object $trait;
 
     public function setUp(): void
     {
-        $this->trait = $this->getMockForTrait(LimitsTrait::class);
+        $this->trait = new class {
+            use LimitsTrait;
+        };
     }
 
     public function testLimit(): void

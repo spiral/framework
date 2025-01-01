@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Security\Rules;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub\ConsecutiveCalls;
 use PHPUnit\Framework\TestCase;
 use Spiral\Security\ActorInterface;
@@ -18,10 +19,7 @@ class CompositeRuleTest extends TestCase
     public const OPERATION = 'test';
     public const CONTEXT = [];
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ActorInterface $callable
-     */
-    private $actor;
+    private MockObject&ActorInterface $actor;
 
     public function setUp(): void
     {
@@ -53,10 +51,10 @@ class CompositeRuleTest extends TestCase
         yield [false, OneCompositeRule::class, [$forbidRule, $forbidRule, $forbidRule]];
     }
 
-    
+
     private function createRepository(array $rules): RulesInterface
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject|RulesInterface $repository */
+        /** @var MockObject|RulesInterface $repository */
         $repository = $this->createMock(RulesInterface::class);
 
         $repository->method('get')
