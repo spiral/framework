@@ -121,7 +121,7 @@ class JobTest extends TestCase
     private function expectRenderer(Email $email): void
     {
         $this->renderer->expects('render')->withArgs(
-            function (Message $message) {
+            function (Message $message): bool {
                 $this->assertSame($message->getSubject(), 'test');
                 return true;
             }

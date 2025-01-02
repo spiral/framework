@@ -52,7 +52,7 @@ final class CookiesTest extends TestCase
     public function testCookieQueueInRequestAttribute(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
+        $core->setHandler(function (ServerRequestInterface $r): string {
             $this->assertInstanceOf(CookieQueue::class, $r->getAttribute(CookieQueue::ATTRIBUTE));
             return 'all good';
         });
@@ -65,7 +65,7 @@ final class CookiesTest extends TestCase
     public function testSetEncryptedCookie(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
+        $core->setHandler(function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
@@ -86,7 +86,7 @@ final class CookiesTest extends TestCase
     public function testSetNotProtectedCookie(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
+        $core->setHandler(function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('PHPSESSID', 'value');
 
             return 'all good';
@@ -140,7 +140,7 @@ final class CookiesTest extends TestCase
     public function testDelete(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
+        $core->setHandler(function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
             $r->getAttribute(CookieQueue::ATTRIBUTE)->delete('name');
 
@@ -165,7 +165,7 @@ final class CookiesTest extends TestCase
         ]));
 
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
+        $core->setHandler(function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
@@ -207,7 +207,7 @@ final class CookiesTest extends TestCase
         ]));
 
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r) {
+        $core->setHandler(function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';

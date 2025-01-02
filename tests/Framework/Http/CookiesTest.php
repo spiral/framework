@@ -108,7 +108,7 @@ final class CookiesTest extends HttpTestCase
     #[TestScope([Spiral::Http, Spiral::HttpRequest])]
     public function testSetCookie(): void
     {
-        $this->setHttpHandler(function (ServerRequestInterface $request) {
+        $this->setHttpHandler(function (ServerRequestInterface $request): string {
             $this->cookies()->set('a', 'value');
             return 'ok';
         });

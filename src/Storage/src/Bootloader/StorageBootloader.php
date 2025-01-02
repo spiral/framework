@@ -45,7 +45,7 @@ class StorageBootloader extends Bootloader
             BucketFactoryInterface $bucketFactory,
             StorageConfig $config,
             FactoryInterface $factory
-        ) {
+        ): \Spiral\Storage\Storage {
             $manager = new Storage($config->getDefaultBucket());
 
             $distributions = $config->getDistributions();

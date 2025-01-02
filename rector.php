@@ -20,6 +20,7 @@ use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
+use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -116,4 +117,7 @@ return RectorConfig::configure()
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,
     ])
-    ->withTypeCoverageLevel(5);
+    ->withTypeCoverageLevel(5)
+    ->withRules([
+        ClosureReturnTypeRector::class,
+    ]);

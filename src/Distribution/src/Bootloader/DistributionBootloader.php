@@ -43,7 +43,7 @@ class DistributionBootloader extends Bootloader
 
     private function registerManager(BinderInterface $binder): void
     {
-        $binder->bindSingleton(DistributionInterface::class, static function (DistributionConfig $config) {
+        $binder->bindSingleton(DistributionInterface::class, static function (DistributionConfig $config): \Spiral\Distribution\Manager {
             $manager = new Manager($config->getDefaultDriver());
 
             foreach ($config->getResolvers() as $name => $resolver) {
