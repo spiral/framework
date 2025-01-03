@@ -13,10 +13,7 @@ use Spiral\Storage\Visibility;
 #[\PHPUnit\Framework\Attributes\Group('unit')]
 class ManagerTestCase extends TestCase
 {
-    /**
-     * @var Storage
-     */
-    private $manager;
+    private Storage $manager;
 
     public function setUp(): void
     {

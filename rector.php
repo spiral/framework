@@ -21,6 +21,7 @@ use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
+use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictSetUpRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -120,4 +121,5 @@ return RectorConfig::configure()
     ->withTypeCoverageLevel(5)
     ->withRules([
         ClosureReturnTypeRector::class,
+        TypedPropertyFromStrictSetUpRector::class,
     ]);

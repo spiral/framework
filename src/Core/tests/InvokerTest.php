@@ -14,8 +14,7 @@ use Spiral\Tests\Core\Fixtures\Storage;
 
 class InvokerTest extends TestCase
 {
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     protected function setUp(): void
     {
