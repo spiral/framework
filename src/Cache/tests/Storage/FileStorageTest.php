@@ -20,8 +20,7 @@ final class FileStorageTest extends TestCase
     /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FilesInterface */
     private $files;
 
-    /** @var FileStorage */
-    private $storage;
+    private FileStorage $storage;
 
     protected function setUp(): void
     {

@@ -12,15 +12,9 @@ use Nyholm\Psr7\ServerRequest;
 
 class SlicesTest extends TestCase
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
-    /**
-     * @var InputManager
-     */
-    private $input;
+    private InputManager $input;
 
     public function setUp(): void
     {

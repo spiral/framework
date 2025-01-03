@@ -24,8 +24,7 @@ final class QueueRegistryTest extends TestCase
     private Container $mockContainer;
     /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HandlerRegistryInterface */
     private $fallbackHandlers;
-    /** @var QueueRegistry */
-    private $registry;
+    private QueueRegistry $registry;
 
     protected function setUp(): void
     {

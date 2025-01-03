@@ -10,8 +10,7 @@ use Spiral\Cache\Exception\InvalidArgumentException;
 
 final class CacheConfigTest extends TestCase
 {
-    /** @var CacheConfig */
-    private $config;
+    private CacheConfig $config;
 
     protected function setUp(): void
     {

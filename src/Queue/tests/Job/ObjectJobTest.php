@@ -12,8 +12,7 @@ use Spiral\Tests\Queue\TestCase;
 
 final class ObjectJobTest extends TestCase
 {
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     protected function setUp(): void
     {

@@ -11,8 +11,7 @@ final class ArrayStorageTest extends TestCase
 {
     public const DEFAULT_TTL = 50;
 
-    /** @var ArrayStorage */
-    private $storage;
+    private ArrayStorage $storage;
 
     protected function setUp(): void
     {

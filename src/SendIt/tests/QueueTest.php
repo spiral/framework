@@ -17,8 +17,7 @@ class QueueTest extends TestCase
 {
     /** @var m\LegacyMockInterface|m\MockInterface|QueueInterface */
     private $queue;
-    /** @var MailQueue */
-    private $mailer;
+    private MailQueue $mailer;
 
     protected function setUp(): void
     {

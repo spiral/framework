@@ -22,8 +22,7 @@ final class CacheManagerTest extends TestCase
     /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FactoryInterface */
     private $factory;
 
-    /** @var CacheManager */
-    private $manager;
+    private CacheManager $manager;
 
     protected function setUp(): void
     {

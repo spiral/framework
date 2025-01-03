@@ -10,15 +10,9 @@ use Spiral\Distribution\Resolver\StaticResolver;
 #[\PHPUnit\Framework\Attributes\Group('unit')]
 class ManagerTestCase extends TestCase
 {
-    /**
-     * @var StaticResolver
-     */
-    private $resolver;
+    private StaticResolver $resolver;
 
-    /**
-     * @var Manager
-     */
-    private $manager;
+    private Manager $manager;
 
     public function setUp(): void
     {
