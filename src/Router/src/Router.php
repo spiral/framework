@@ -67,7 +67,7 @@ final class Router implements RouterInterface
 
         return $this->tracer->trace(
             name: 'Routing',
-            callback: function (SpanInterface $span) use ($request): \Psr\Http\Message\ResponseInterface {
+            callback: function (SpanInterface $span) use ($request): ResponseInterface {
                 try {
                     $route = $this->matchRoute($request, $routeName);
                 } catch (RouteException $e) {
