@@ -156,7 +156,7 @@ final class FibersTest extends BaseTestCase
                 self::assertInstanceOf(DateTime::class, $c2->get('foo'));
 
                 return $c2->runScoped(
-                    static function (ContainerInterface $c3) use ($load) {
+                    static function (ContainerInterface $c3) use ($load): \stdClass {
                         // check local binding
                         self::assertTrue($c3->has('bar'));
 

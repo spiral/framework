@@ -44,10 +44,9 @@ class StorageBootloader extends Bootloader
         $binder->bindSingleton(StorageInterface::class, static function (
             BucketFactoryInterface $bucketFactory,
             StorageConfig $config,
-            FactoryInterface $factory
-        ) {
+            FactoryInterface $factory,
+        ): StorageInterface {
             $manager = new Storage($config->getDefaultBucket());
-
             $distributions = $config->getDistributions();
 
             foreach ($config->getAdapters() as $name => $adapter) {

@@ -122,7 +122,7 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore();
 
-        $core->setHandler(function () {
+        $core->setHandler(function (): string {
             ob_start();
             ob_start();
             echo 'hello!';

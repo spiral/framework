@@ -91,7 +91,7 @@ final class SessionTest extends HttpTestCase
             ->assertOk()
             ->assertBodySame('2');
 
-        $this->setHttpHandler(function () {
+        $this->setHttpHandler(function (): int|float {
             $this->session()->destroy();
             $this->assertFalse($this->session()->isStarted());
 

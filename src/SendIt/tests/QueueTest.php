@@ -43,7 +43,7 @@ class QueueTest extends TestCase
         $mail->setBCC('admin2@google.com');
 
         $this->queue->expects('push')->withArgs(
-            function ($job, $data, Options $options) use ($mail) {
+            function ($job, $data, Options $options) use ($mail): bool {
                 $this->assertSame(MailQueue::JOB_NAME, $job);
                 $this->assertSame($data, MessageSerializer::pack($mail));
                 $this->assertSame('mailer', $options->getQueue());
@@ -68,21 +68,21 @@ class QueueTest extends TestCase
         $mail3->setDelay(200);
 
         $this->queue->expects('push')->once()->withArgs(
-            function ($job, $data, Options $options) {
+            function ($job, $data, Options $options): bool {
                 $this->assertSame(30, $options->getDelay());
                 return true;
             }
         );
 
         $this->queue->expects('push')->once()->withArgs(
-            function ($job, $data, Options $options) {
+            function ($job, $data, Options $options): bool {
                 $this->assertSame(100, $options->getDelay());
                 return true;
             }
         );
 
         $this->queue->expects('push')->once()->withArgs(
-            function ($job, $data, Options $options) {
+            function ($job, $data, Options $options): bool {
                 $this->assertSame(200, $options->getDelay());
                 return true;
             }
