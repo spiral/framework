@@ -60,10 +60,7 @@ final class TokenizerListenerBootloaderTest extends TestCase
         $kernel = TestCoreWithTokenizer::create(directories: ['root' => __DIR__], container: $container);
         $kernel->run();
 
-        $this->assertTrue(\in_array(
-            \dirname(__DIR__) . '/Fixtures/Bootloader',
-            $container->get(TokenizerConfig::class)->getDirectories()
-        ));
+        $this->assertContains(\dirname(__DIR__) . '/Fixtures/Bootloader', $container->get(TokenizerConfig::class)->getDirectories());
     }
 
 }

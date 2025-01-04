@@ -29,7 +29,7 @@ class BufferTest extends TestCase
             $out .= $n->char;
         }
 
-        $this->assertEquals('abc', $out);
+        $this->assertSame('abc', $out);
     }
 
     public function testGetBytes(): void
@@ -124,7 +124,7 @@ class BufferTest extends TestCase
 
         $src = new Buffer($this->generateToken(new StringStream('abc')));
         $this->assertEquals(new Token(0, null, 'a'), $src->next());
-        $this->assertEquals(0, $src->getOffset());
+        $this->assertSame(0, $src->getOffset());
     }
 
     public function testLookupBytes(): void

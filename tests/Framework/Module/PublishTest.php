@@ -109,14 +109,14 @@ final class PublishTest extends ConsoleTestCase
     public function testEnsure(): void
     {
         $dir = $this->getDirectoryByAlias('runtime', 'dir');
-        $this->assertFalse(is_dir($dir));
+        $this->assertDirectoryDoesNotExist($dir);
 
         $this->runCommand('publish', [
             'type'   => 'ensure',
             'target' => '@runtime/dir',
         ]);
 
-        $this->assertTrue(is_dir($dir));
+        $this->assertDirectoryExists($dir);
 
         rmdir($dir);
     }

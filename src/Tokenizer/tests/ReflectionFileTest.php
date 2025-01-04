@@ -31,10 +31,10 @@ class ReflectionFileTest extends TestCase
             }
         }
 
-        $this->assertNotEmpty($functionA);
-        $this->assertNotEmpty($functionB);
+        $this->assertInstanceOf(\Spiral\Tokenizer\Reflection\ReflectionInvocation::class, $functionA);
+        $this->assertInstanceOf(\Spiral\Tokenizer\Reflection\ReflectionInvocation::class, $functionB);
 
-        $this->assertSame(2, count($functionA->getArguments()));
+        $this->assertCount(2, $functionA->getArguments());
         $this->assertSame(ReflectionArgument::VARIABLE, $functionA->getArgument(0)->getType());
         $this->assertSame('$this', $functionA->getArgument(0)->getValue());
 

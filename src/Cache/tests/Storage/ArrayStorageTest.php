@@ -28,7 +28,7 @@ final class ArrayStorageTest extends TestCase
 
     public function testGetsWithNonExistsValue(): void
     {
-        $this->assertSame(null, $this->storage->get('foo'));
+        $this->assertNull($this->storage->get('foo'));
     }
 
     public function testGetsWithNonExistsValueAndCustomDefaultValue(): void
@@ -40,7 +40,7 @@ final class ArrayStorageTest extends TestCase
     {
         $this->storage->set('foo', 'bar', 0);
         $this->assertSame(time(), $this->getCacheTtl('foo'));
-        $this->assertSame(null, $this->storage->get('foo'));
+        $this->assertNull($this->storage->get('foo'));
     }
 
     public function testReplaceExistsValue(): void

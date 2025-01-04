@@ -13,7 +13,7 @@ class UtilsTest extends TestCase
     #[DataProvider('trailingProvider')]
     public function testTrimTrailingDigits(string $name, int $sequence, string $expected): void
     {
-        $this->assertEquals($expected, Utils::trimTrailingDigits($name, $sequence));
+        $this->assertSame($expected, Utils::trimTrailingDigits($name, $sequence));
     }
 
     public static function trailingProvider(): \Traversable
@@ -63,7 +63,7 @@ class UtilsTest extends TestCase
     #[DataProvider('shortNameProvider')]
     public function testShortName(string $name, string $expected): void
     {
-        $this->assertEquals($expected, Utils::shortName($name));
+        $this->assertSame($expected, Utils::shortName($name));
     }
 
     public static function shortNameProvider(): \Traversable

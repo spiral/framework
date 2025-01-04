@@ -30,7 +30,7 @@ class DynamicTest extends BaseTestCase
 
         $this->assertInstanceOf(Directive::class, $doc->nodes[0]);
         $this->assertSame('directive', $doc->nodes[0]->name);
-        $this->assertSame(null, $doc->nodes[0]->body);
+        $this->assertNull($doc->nodes[0]->body);
     }
 
     public function testDirectiveWithBody(): void
@@ -53,7 +53,7 @@ class DynamicTest extends BaseTestCase
         $doc = $this->parse('{{ $name }}');
 
         $this->assertInstanceOf(Output::class, $doc->nodes[0]);
-        $this->assertSame(false, $doc->nodes[0]->rawOutput);
+        $this->assertFalse($doc->nodes[0]->rawOutput);
         $this->assertSame(' $name ', $doc->nodes[0]->body);
     }
 
@@ -62,7 +62,7 @@ class DynamicTest extends BaseTestCase
         $doc = $this->parse('{!! $name !!}');
 
         $this->assertInstanceOf(Output::class, $doc->nodes[0]);
-        $this->assertSame(true, $doc->nodes[0]->rawOutput);
+        $this->assertTrue($doc->nodes[0]->rawOutput);
         $this->assertSame(' $name ', $doc->nodes[0]->body);
     }
 }

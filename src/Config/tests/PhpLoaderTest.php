@@ -42,16 +42,16 @@ class PhpLoaderTest extends BaseTestCase
     {
         $cf = $this->getFactory();
         $config = $cf->getConfig('scope');
-        $this->assertEquals(['value' => 'value!'], $config);
+        $this->assertSame(['value' => 'value!'], $config);
 
         $this->container->bind(Value::class, new Value('other!'));
 
         $config = $cf->getConfig('scope2');
-        $this->assertEquals(['value' => 'other!'], $config);
+        $this->assertSame(['value' => 'other!'], $config);
 
         $cf = clone $cf;
 
         $config = $cf->getConfig('scope');
-        $this->assertEquals(['value' => 'other!'], $config);
+        $this->assertSame(['value' => 'other!'], $config);
     }
 }

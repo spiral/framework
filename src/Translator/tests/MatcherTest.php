@@ -22,7 +22,7 @@ class MatcherTest extends TestCase
     public function testMatch(string $string, string $pattern, bool $result): void
     {
         $matcher = new Matcher();
-        $this->assertEquals($result, $matcher->matches($string, $pattern));
+        $this->assertSame($result, $matcher->matches($string, $pattern));
     }
 
     public static function patternProvider(): \Traversable

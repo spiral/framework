@@ -77,7 +77,7 @@ class JobTest extends TestCase
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(new MessageSent($email));
 
@@ -98,7 +98,7 @@ class JobTest extends TestCase
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(new MessageNotSent($email, $exception));
 
@@ -122,7 +122,7 @@ class JobTest extends TestCase
     {
         $this->renderer->expects('render')->withArgs(
             function (Message $message): bool {
-                $this->assertSame($message->getSubject(), 'test');
+                $this->assertSame('test', $message->getSubject());
                 return true;
             }
         )->andReturn($email);

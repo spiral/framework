@@ -81,7 +81,7 @@ final class BootloadConfigTest extends InitializerTestCase
         $result = \iterator_to_array($this->initializer->init([
             BootloaderA::class => static fn (AppEnvironment $env): BootloadConfig => new BootloadConfig(enabled: $env->isLocal()),
         ]));
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
 
         $result = \iterator_to_array($this->initializer->init([
             BootloaderA::class => static fn (AppEnvironment $env): BootloadConfig => new BootloadConfig(enabled: $env->isProduction()),
@@ -129,7 +129,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderA::class => new BootloadConfig(allowEnv: ['APP_DEBUG' => true], denyEnv: ['APP_DEBUG' => true]),
         ]));
 
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public static function allowEnvDataProvider(): \Traversable

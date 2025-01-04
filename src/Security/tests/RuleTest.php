@@ -60,7 +60,7 @@ class RuleTest extends TestCase
             ->with($parameters)
             ->willReturn($allowed);
 
-        $this->assertEquals($allowed, $this->rule->allows($this->actor, $permission, $context));
+        $this->assertSame($allowed, $this->rule->allows($this->actor, $permission, $context));
     }
 
     public function testAllowsException(): void

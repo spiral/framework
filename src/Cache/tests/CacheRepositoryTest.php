@@ -79,7 +79,7 @@ final class CacheRepositoryTest extends TestCase
 
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('set')
             ->with('test', [])
             ->willReturn(false);
@@ -202,7 +202,7 @@ final class CacheRepositoryTest extends TestCase
 
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('delete')
             ->with('test')
             ->willReturn(false);

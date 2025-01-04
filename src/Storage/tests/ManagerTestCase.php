@@ -69,11 +69,11 @@ class ManagerTestCase extends TestCase
     {
         $manager = clone $this->manager;
 
-        $this->assertSame(1, $manager->count());
+        $this->assertCount(1, $manager);
 
         $manager->add('example', $this->second);
 
-        $this->assertSame(2, $manager->count());
+        $this->assertCount(2, $manager);
     }
 
     public function testInvalidUri(): void

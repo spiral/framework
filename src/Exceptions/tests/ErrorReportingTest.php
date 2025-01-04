@@ -30,23 +30,23 @@ class ErrorReportingTest extends TestCase
     {
         \error_reporting(\E_USER_NOTICE);
 
-        self::assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_NOTICE));
-        self::assertNull($this->handleError(\E_USER_DEPRECATED));
-        self::assertNull($this->handleError(\E_USER_ERROR));
-        self::assertNull($this->handleError(\E_USER_WARNING));
+        $this->assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_NOTICE));
+        $this->assertNull($this->handleError(\E_USER_DEPRECATED));
+        $this->assertNull($this->handleError(\E_USER_ERROR));
+        $this->assertNull($this->handleError(\E_USER_WARNING));
     }
 
     public function testWithoutDeprecations(): void
     {
         \error_reporting(\E_ALL ^ \E_DEPRECATED);
 
-        self::assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_NOTICE));
-        self::assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_DEPRECATED));
-        self::assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_ERROR));
-        self::assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_WARNING));
-        self::assertInstanceOf(ErrorException::class, $this->handleError(\E_NOTICE));
-        self::assertInstanceOf(ErrorException::class, $this->handleError(\E_ERROR));
-        self::assertNull($this->handleError(\E_DEPRECATED));
+        $this->assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_NOTICE));
+        $this->assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_DEPRECATED));
+        $this->assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_ERROR));
+        $this->assertInstanceOf(ErrorException::class, $this->handleError(\E_USER_WARNING));
+        $this->assertInstanceOf(ErrorException::class, $this->handleError(\E_NOTICE));
+        $this->assertInstanceOf(ErrorException::class, $this->handleError(\E_ERROR));
+        $this->assertNull($this->handleError(\E_DEPRECATED));
     }
 
     /**

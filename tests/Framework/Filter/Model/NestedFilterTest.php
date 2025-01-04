@@ -62,7 +62,7 @@ final class NestedFilterTest extends FilterTestCase
         $this->assertSame('Some text', $filter->postFilter->body);
         $this->assertSame(1, $filter->postFilter->revision);
         $this->assertTrue($filter->postFilter->active);
-        $this->assertSame(1.1, $filter->postFilter->postRating);
+        $this->assertEqualsWithDelta(1.1, $filter->postFilter->postRating, PHP_FLOAT_EPSILON);
         $this->assertSame(2, $filter->postFilter->author->id);
     }
 

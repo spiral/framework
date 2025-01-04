@@ -51,7 +51,7 @@ final class FilterWithSettersTest extends FilterTestCase
         $this->assertSame('foo', $filter->body);
         $this->assertSame(1, $filter->revision);
         $this->assertTrue($filter->active);
-        $this->assertSame(0.9, $filter->postRating);
+        $this->assertEqualsWithDelta(0.9, $filter->postRating, PHP_FLOAT_EPSILON);
         $this->assertSame(3, $filter->author->id);
     }
 
@@ -71,7 +71,7 @@ final class FilterWithSettersTest extends FilterTestCase
                 'uuid' => 'foo',
             ]);
         } catch (ValidationException $e) {
-            $this->assertEquals(['uuid' => 'Unable to set value. The given data was invalid.'], $e->errors);
+            $this->assertSame(['uuid' => 'Unable to set value. The given data was invalid.'], $e->errors);
         }
     }
 }

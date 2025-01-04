@@ -42,7 +42,7 @@ class FunctionsTest extends TestCase
         $c = $core->getContainer();
 
         ContainerScope::runScope($c, function (): void {
-            $this->assertSame(true, env('key'));
+            $this->assertTrue(env('key'));
         });
     }
 

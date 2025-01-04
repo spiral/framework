@@ -82,7 +82,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         $result = \iterator_to_array($this->initializer->init([BootloaderJ::class]));
 
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public function testExtendedAttribute(): void
@@ -93,7 +93,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment(['RR_MODE' => 'jobs']), true);
         $result = \iterator_to_array($this->initializer->init([BootloaderK::class]));
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public static function allowEnvDataProvider(): \Traversable

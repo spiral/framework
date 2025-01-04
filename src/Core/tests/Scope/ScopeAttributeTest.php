@@ -174,7 +174,7 @@ final class ScopeAttributeTest extends BaseTestCase
                 });
             });
         } catch (NamedScopeDuplicationException $e) {
-            self::assertSame('root', $e->getScope());
+            $this->assertSame('root', $e->getScope());
             throw $e;
         }
     }
@@ -196,7 +196,7 @@ final class ScopeAttributeTest extends BaseTestCase
                 });
             }, name: 'bar');
         } catch (BadScopeException $e) {
-            self::assertSame('foo', $e->getScope());
+            $this->assertSame('foo', $e->getScope());
             throw $e;
         }
     }

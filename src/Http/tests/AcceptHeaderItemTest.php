@@ -15,7 +15,7 @@ class AcceptHeaderItemTest extends TestCase
     public function testEmptyItem(AcceptHeaderItem $item): void
     {
         $this->assertEmpty($item->getValue());
-        $this->assertEquals('', (string)$item);
+        $this->assertSame('', (string)$item);
     }
 
     public static function emptyItemProvider(): iterable
@@ -34,17 +34,17 @@ class AcceptHeaderItemTest extends TestCase
     public function testValue(string $value): void
     {
         $item = AcceptHeaderItem::fromString($value);
-        $this->assertEquals($value, $item->getValue());
+        $this->assertSame($value, $item->getValue());
 
         $acceptHeader = new AcceptHeader([$item]);
         $this->assertCount(1, $acceptHeader->getAll());
 
         $item = AcceptHeaderItem::fromString(" $value ");
-        $this->assertEquals($value, $item->getValue());
+        $this->assertSame($value, $item->getValue());
 
         $acceptHeader = new AcceptHeader([$item]);
         $this->assertCount(1, $acceptHeader->getAll());
-        $this->assertEquals($value, (string)$acceptHeader->getAll()[0]);
+        $this->assertSame($value, (string)$acceptHeader->getAll()[0]);
     }
 
     public static function valueProvider(): \Traversable
@@ -59,11 +59,11 @@ class AcceptHeaderItemTest extends TestCase
     public function testItemQualityBoundaries(float $quality, AcceptHeaderItem $item): void
     {
         if ($quality > 1) {
-            $this->assertSame(1.0, $item->getQuality());
+            $this->assertEqualsWithDelta(1.0, $item->getQuality(), PHP_FLOAT_EPSILON);
         }
 
         if ($quality < 0) {
-            $this->assertSame(0.0, $item->getQuality());
+            $this->assertEqualsWithDelta(0.0, $item->getQuality(), PHP_FLOAT_EPSILON);
         }
 
         $this->assertGreaterThanOrEqual(0, $item->getQuality());

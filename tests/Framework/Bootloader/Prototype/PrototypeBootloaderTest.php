@@ -66,7 +66,7 @@ final class PrototypeBootloaderTest extends BaseTestCase
     {
         $stateRef = new \ReflectionProperty($this->getContainer(), 'state');
 
-        $this->assertFalse(isset($stateRef->getValue($this->getContainer())->singletons[PrototypeRegistry::class]));
+        $this->assertArrayNotHasKey(PrototypeRegistry::class, $stateRef->getValue($this->getContainer())->singletons);
 
         $this->getContainer()->get(PrototypeRegistry::class);
 

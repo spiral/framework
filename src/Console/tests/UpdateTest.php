@@ -86,7 +86,7 @@ text;
         $this->assertStringContainsString('Unhandled failed command error at', $result);
         $this->assertStringContainsString('Aborting.', $result);
         $this->assertStringNotContainsString('Unhandled another failed command error at', $result);
-        $this->assertEquals(1, $output->getCode());
+        $this->assertSame(1, $output->getCode());
     }
 
     /**
@@ -102,7 +102,7 @@ text;
         $this->assertStringContainsString('Unhandled failed command error at', $result);
         $this->assertStringNotContainsString('Aborting.', $result);
         $this->assertStringContainsString('Unhandled another failed command error at', $result);
-        $this->assertEquals(0, $output->getCode());
+        $this->assertSame(0, $output->getCode());
     }
 
     /**
@@ -119,7 +119,7 @@ text;
         $this->assertStringContainsString('Unhandled failed command error at', $result);
         $this->assertStringNotContainsString('Aborting.', $result);
         $this->assertStringContainsString('Unhandled another failed command error at', $result);
-        $this->assertEquals(1, $output->getCode());
+        $this->assertSame(1, $output->getCode());
     }
 
     private function bindFailure(): Console

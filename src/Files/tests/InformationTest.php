@@ -49,7 +49,7 @@ class InformationTest extends TestCase
 
         $files->write($filename, 'data');
         $this->assertEquals(md5_file($filename), $files->md5($filename));
-        $this->assertEquals(md5('data'), $files->md5($filename));
+        $this->assertSame(md5('data'), $files->md5($filename));
     }
 
     public function testMD5MissingFile(): void

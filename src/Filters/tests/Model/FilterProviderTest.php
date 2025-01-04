@@ -112,9 +112,9 @@ final class FilterProviderTest extends BaseTestCase
 
         $this->assertSame('John', $filter->name);
         $this->assertInstanceOf(Status::class, $filter->status);
-        $this->assertEquals(Status::Active, $filter->status);
+        $this->assertSame(Status::Active, $filter->status);
         $this->assertInstanceOf(Status::class, $filter->activationStatus);
-        $this->assertEquals(Status::Inactive, $filter->activationStatus);
+        $this->assertSame(Status::Inactive, $filter->activationStatus);
         $this->assertInstanceOf(UuidInterface::class, $filter->groupUuid);
         $this->assertSame('f0a0b2c0-5b4b-4a5c-8d3e-6f7a8f9b0c1d', $filter->groupUuid->toString());
         $this->assertInstanceOf(UuidInterface::class, $filter->friendUuid);

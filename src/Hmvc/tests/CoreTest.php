@@ -200,7 +200,7 @@ final class CoreTest extends TestCase
 
         $result = $handler->callAction(TestService::class, 'parentMethod', ['HELLO']);
 
-        self::assertSame('hello', $result);
+        $this->assertSame('hello', $result);
     }
 
     public function testHandleReflectionMethodFromExtendedAbstractClass(): void
@@ -212,7 +212,7 @@ final class CoreTest extends TestCase
 
         $result = $handler->handle($ctx);
 
-        self::assertSame('hello', $result);
+        $this->assertSame('hello', $result);
     }
 
     public function testHandleReflectionMethodWithObject(): void
@@ -226,6 +226,6 @@ final class CoreTest extends TestCase
 
         $result = $handler->handle($ctx);
 
-        self::assertSame('hello', $result);
+        $this->assertSame('hello', $result);
     }
 }

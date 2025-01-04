@@ -63,6 +63,6 @@ class BindingsTest extends TestCase
         $container = new Container();
         $container->bind(ConfigsInterface::class, 42.69);
 
-        self::assertSame(42.69, $container->get(ConfigsInterface::class));
+        $this->assertEqualsWithDelta(42.69, $container->get(ConfigsInterface::class), PHP_FLOAT_EPSILON);
     }
 }

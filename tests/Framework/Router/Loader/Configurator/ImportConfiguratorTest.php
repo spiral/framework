@@ -19,7 +19,7 @@ final class ImportConfiguratorTest extends BaseTestCase
         $ref = new \ReflectionObject($group);
 
         /** import in @see RoutesBootloader */
-        $this->assertSame(3, \count($ref->getProperty('routes')->getValue($group)));
+        $this->assertCount(3, $ref->getProperty('routes')->getValue($group));
 
         // routes with prefix and name prefix
         $this->assertSame(
@@ -44,7 +44,7 @@ final class ImportConfiguratorTest extends BaseTestCase
         $ref = new \ReflectionObject($group);
 
         /** import in @see RoutesBootloader */
-        $this->assertSame(3, \count($ref->getProperty('routes')->getValue($group)));
+        $this->assertCount(3, $ref->getProperty('routes')->getValue($group));
 
         // routes with prefix and name prefix
         $this->assertSame('/other/test-import', (string) $router->getRoute('test-import-index')->uri());

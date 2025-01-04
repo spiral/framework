@@ -13,7 +13,7 @@ class PrependTest extends BaseTestCase
     {
         $cf = $this->getFactory();
 
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        $this->assertSame(['value' => 'value!'], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Prepend('.', 'other', ['a' => 'b']));
 
@@ -39,7 +39,7 @@ class PrependTest extends BaseTestCase
 
         $cf = $this->getFactory();
         $config = $cf->getConfig('scope');
-        $this->assertEquals(['value' => 'value!'], $config);
+        $this->assertSame(['value' => 'value!'], $config);
 
         $cf->modify('scope', new Prepend('other', 'other', ['a' => 'b']));
     }

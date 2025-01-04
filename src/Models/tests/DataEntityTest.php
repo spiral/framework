@@ -23,7 +23,7 @@ class DataEntityTest extends TestCase
     {
         $entity = new DataEntity();
         $entity->abc = 123;
-        $this->assertEquals(123, $entity->abc);
+        $this->assertSame(123, $entity->abc);
 
         $this->assertTrue(isset($entity->abc));
     }
@@ -51,21 +51,21 @@ class DataEntityTest extends TestCase
 
         $entity = new PublicEntity();
         $entity->setValue(['a' => 123]);
-        $this->assertEquals(['a' => 123], $entity->getValue());
+        $this->assertSame(['a' => 123], $entity->getValue());
 
         $this->assertSame(['a'], $entity->getKeys());
         $this->assertTrue(isset($entity->a));
 
         unset($entity->a);
-        $this->assertEquals([], $entity->getValue());
+        $this->assertSame([], $entity->getValue());
 
         $entity['a'] = 90;
-        $this->assertEquals(['a' => 90], $entity->getValue());
+        $this->assertSame(['a' => 90], $entity->getValue());
         $this->assertSame(90, $entity['a']);
-        $this->assertTrue(isset($entity['a']));
+        $this->assertArrayHasKey('a', $entity);
 
         unset($entity['a']);
-        $this->assertEquals([], $entity->getValue());
+        $this->assertSame([], $entity->getValue());
 
         $entity['a'] = 90;
         foreach ($entity as $key => $value) {
@@ -76,8 +76,8 @@ class DataEntityTest extends TestCase
         $this->assertSame('a', $key);
         $this->assertSame(90, $value);
 
-        $this->assertEquals(['a' => 90], $entity->toArray());
-        $this->assertEquals(['a' => 90], $entity->jsonSerialize());
+        $this->assertSame(['a' => 90], $entity->toArray());
+        $this->assertSame(['a' => 90], $entity->jsonSerialize());
     }
 
     public function testSecured(): void
@@ -88,7 +88,7 @@ class DataEntityTest extends TestCase
             'id'   => '900'
         ]);
 
-        $this->assertEquals([], $entity->getValue());
+        $this->assertSame([], $entity->getValue());
 
         $entity = new PartiallySecuredEntity();
         $entity->setValue([
@@ -96,7 +96,7 @@ class DataEntityTest extends TestCase
             'id'   => 900
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             'id' => 900
         ], $entity->getValue());
     }
@@ -109,13 +109,13 @@ class DataEntityTest extends TestCase
             'id'   => '900'
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             'id' => 900
         ], $entity->getValue());
 
         $entity->id = [];
 
-        $this->assertEquals([
+        $this->assertSame([
             'id' => 0
         ], $entity->getValue());
     }
@@ -128,7 +128,7 @@ class DataEntityTest extends TestCase
             'id'   => '900'
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             'name' => 'Antony',
             'id'   => 900
         ], $entity->getValue());
@@ -153,7 +153,7 @@ class DataEntityTest extends TestCase
             'id'   => null
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             'id' => 0
         ], $entity->getValue());
     }
@@ -163,7 +163,7 @@ class DataEntityTest extends TestCase
         $entity = new GetEntity(['id' => []]);
         $this->assertSame(0, $entity->id);
 
-        $this->assertEquals([
+        $this->assertSame([
             'id' => 0
         ], $entity->getFields());
     }

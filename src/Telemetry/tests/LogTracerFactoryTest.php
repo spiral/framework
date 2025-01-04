@@ -31,7 +31,7 @@ final class LogTracerFactoryTest extends TestCase
             'some-channel'
         );
 
-        $clock->expects($this->any())->method('now');
+        $clock->method('now');
         $logger->expects($this->once())->method('debug');
 
         $this->assertInstanceOf(LogTracer::class, $tracer = $factory->make());

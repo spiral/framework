@@ -39,7 +39,7 @@ class GuardTest extends TestCase
                 ];
 
                 [$expectedArgs, $return] = \array_shift($series);
-                self::assertSame($expectedArgs, $args);
+                $this->assertSame($expectedArgs, $args);
 
                 return $return;
             });

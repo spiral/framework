@@ -85,8 +85,8 @@ class LoaderTest extends TestCase
         $this->assertSame('ru', $catalogue->getLocale());
 
         $this->assertCount(2, $catalogue->getDomains());
-        $this->assertTrue(in_array('messages', $catalogue->getDomains()));
-        $this->assertTrue(in_array('views', $catalogue->getDomains()));
+        $this->assertContains('messages', $catalogue->getDomains());
+        $this->assertContains('views', $catalogue->getDomains());
 
         $mc = $catalogue->toMessageCatalogue();
 
@@ -169,8 +169,8 @@ class LoaderTest extends TestCase
         $this->assertSame('ru', $catalogue->getLocale());
 
         $this->assertCount(1, $catalogue->getDomains());
-        $this->assertTrue(in_array('messages', $catalogue->getDomains()));
-        $this->assertFalse(in_array('views', $catalogue->getDomains()));
+        $this->assertContains('messages', $catalogue->getDomains());
+        $this->assertNotContains('views', $catalogue->getDomains());
     }
 
     public function testStaticLoader(): void

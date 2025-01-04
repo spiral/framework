@@ -69,7 +69,7 @@ class AuthContextTest extends TestCase
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(new Authenticated($token, 'cookie'));
 
@@ -83,7 +83,7 @@ class AuthContextTest extends TestCase
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(new Logout($token));
 
