@@ -19,7 +19,7 @@ final class ExportCommandTest extends ConsoleTestCase
 
     public function testExport(): void
     {
-        $this->assertFalse(is_file(sys_get_temp_dir().'/messages.ru.php'));
+        self::assertFalse(is_file(sys_get_temp_dir().'/messages.ru.php'));
 
         $this->runCommand('i18n:index');
 
@@ -32,6 +32,6 @@ final class ExportCommandTest extends ConsoleTestCase
             ]
         );
 
-        $this->assertTrue(is_file(sys_get_temp_dir().'/messages.ru.php'));
+        self::assertTrue(is_file(sys_get_temp_dir().'/messages.ru.php'));
     }
 }

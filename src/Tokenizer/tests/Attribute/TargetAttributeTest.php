@@ -20,16 +20,16 @@ final class TargetAttributeTest extends TestCase
     public function testToString(): void
     {
         $attribute = new TargetAttribute('foo');
-        $this->assertSame('3dc18b19eed74479a03c069dec2e8724', (string) $attribute);
+        self::assertSame('3dc18b19eed74479a03c069dec2e8724', (string) $attribute);
 
         $attribute = new TargetAttribute('foo', 'bar');
-        $this->assertSame('52ec767c53f3898bf6de6f6e88125dc8', (string) $attribute);
+        self::assertSame('52ec767c53f3898bf6de6f6e88125dc8', (string) $attribute);
     }
 
     public function testFilterAttrWithArgs(): void
     {
         $attribute = new TargetAttribute(attribute: WithTargetClassWithArgs::class);
-        $this->assertEquals([
+        self::assertSame([
             ClassWithAttributeWithArgsOnClass::class,
         ], \iterator_to_array($attribute->filter([new \ReflectionClass(ClassWithAttributeWithArgsOnClass::class)])));
     }
@@ -53,10 +53,7 @@ final class TargetAttributeTest extends TestCase
 
         $result = \iterator_to_array($attribute->filter([new \ReflectionClass($class)]));
 
-        $this->assertEquals(
-            $found ? [$class] : [],
-            $result,
-        );
+        self::assertEquals($found ? [$class] : [], $result);
     }
 
     public static function filterDataProvider(): iterable

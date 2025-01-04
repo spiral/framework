@@ -43,30 +43,21 @@ final class CacheConfigTest extends TestCase
 
     public function testGetdDefaultDriver(): void
     {
-        $this->assertSame(
-            'array',
-            $this->config->getDefaultStorage()
-        );
+        self::assertSame('array', $this->config->getDefaultStorage());
     }
 
     public function testGetsStorageConfigByStorageName(): void
     {
-        $this->assertSame(
-            [
-                'type' => 'file-storage',
-            ],
-            $this->config->getStorageConfig('filesystem')
-        );
+        self::assertSame([
+            'type' => 'file-storage',
+        ], $this->config->getStorageConfig('filesystem'));
     }
 
     public function testGetsStorageWithAliasTypeShouldBeReplacedWithRealType(): void
     {
-        $this->assertSame(
-            [
-                'type' => 'array-storage',
-            ],
-            $this->config->getStorageConfig('local')
-        );
+        self::assertSame([
+            'type' => 'array-storage',
+        ], $this->config->getStorageConfig('local'));
     }
 
     public function testNotDefinedStorageShouldThrowAnException(): void

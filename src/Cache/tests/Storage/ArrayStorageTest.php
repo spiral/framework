@@ -22,70 +22,70 @@ final class ArrayStorageTest extends TestCase
 
     public function testGetsWithExistsValue(): void
     {
-        $this->assertTrue($this->storage->set('foo', 'bar'));
-        $this->assertSame('bar', $this->storage->get('foo'));
+        self::assertTrue($this->storage->set('foo', 'bar'));
+        self::assertSame('bar', $this->storage->get('foo'));
     }
 
     public function testGetsWithNonExistsValue(): void
     {
-        $this->assertSame(null, $this->storage->get('foo'));
+        self::assertNull($this->storage->get('foo'));
     }
 
     public function testGetsWithNonExistsValueAndCustomDefaultValue(): void
     {
-        $this->assertSame('baz', $this->storage->get('foo', 'baz'));
+        self::assertSame('baz', $this->storage->get('foo', 'baz'));
     }
 
     public function testGetsWithExpiredCache(): void
     {
         $this->storage->set('foo', 'bar', 0);
-        $this->assertSame(time(), $this->getCacheTtl('foo'));
-        $this->assertSame(null, $this->storage->get('foo'));
+        self::assertSame(time(), $this->getCacheTtl('foo'));
+        self::assertNull($this->storage->get('foo'));
     }
 
     public function testReplaceExistsValue(): void
     {
         $this->storage->set('foo', 'bar');
         $this->storage->set('foo', 'baz');
-        $this->assertSame('baz', $this->storage->get('foo'));
+        self::assertSame('baz', $this->storage->get('foo'));
     }
 
     public function testSetsWithDefaultTTL(): void
     {
         $this->storage->set('foo', 'bar');
-        $this->assertSame(time() + self::DEFAULT_TTL, $this->getCacheTtl('foo'));
+        self::assertSame(time() + self::DEFAULT_TTL, $this->getCacheTtl('foo'));
     }
 
     public function testSetsWithTTLInSeconds(): void
     {
         $this->storage->set('foo', 'bar', 60);
 
-        $this->assertSame(time() + 60, $this->getCacheTtl('foo'));
+        self::assertSame(time() + 60, $this->getCacheTtl('foo'));
     }
 
     public function testSetsWithTTLInDateInterval(): void
     {
         $this->storage->set('foo', 'bar', new \DateInterval('PT30S'));
 
-        $this->assertSame(time() + 30, $this->getCacheTtl('foo'));
+        self::assertSame(time() + 30, $this->getCacheTtl('foo'));
     }
 
     public function testSetsWithTTLInDateTime(): void
     {
         $this->storage->set('foo', 'bar', new \DateTime('+30 seconds'));
 
-        $this->assertSame(time() + 30, $this->getCacheTtl('foo'));
+        self::assertSame(time() + 30, $this->getCacheTtl('foo'));
     }
 
     public function testDeletesExistsValue(): void
     {
         $this->storage->set('foo', 'bar');
-        $this->assertTrue($this->storage->delete('foo'));
+        self::assertTrue($this->storage->delete('foo'));
     }
 
     public function testDeletesNonExistsValue(): void
     {
-        $this->assertFalse($this->storage->delete('foo'));
+        self::assertFalse($this->storage->delete('foo'));
     }
 
     public function testClearsStorage(): void
@@ -95,7 +95,7 @@ final class ArrayStorageTest extends TestCase
 
         $this->storage->clear();
 
-        $this->assertTrue($this->isStorageClear());
+        self::assertTrue($this->isStorageClear());
     }
 
     public function testGetsMultipleValues(): void
@@ -103,7 +103,7 @@ final class ArrayStorageTest extends TestCase
         $this->storage->set('foo', 'bar', 60);
         $this->storage->set('baz', 'bar', 0);
 
-        $this->assertSame([
+        self::assertSame([
             'foo' => 'bar',
             'bar' => null,
             'baz' => null,
@@ -115,7 +115,7 @@ final class ArrayStorageTest extends TestCase
         $this->storage->set('foo', 'bar', 60);
         $this->storage->set('baz', 'bar', 0);
 
-        $this->assertSame([
+        self::assertSame([
             'foo' => 'bar',
             'bar' => 'baz',
             'baz' => 'baz',
@@ -129,11 +129,11 @@ final class ArrayStorageTest extends TestCase
             'bar' => 'baz',
         ]);
 
-        $this->assertSame('bar', $this->storage->get('foo'));
-        $this->assertSame('baz', $this->storage->get('bar'));
+        self::assertSame('bar', $this->storage->get('foo'));
+        self::assertSame('baz', $this->storage->get('bar'));
 
-        $this->assertSame(time() + self::DEFAULT_TTL, $this->getCacheTtl('foo'));
-        $this->assertSame(time() + self::DEFAULT_TTL, $this->getCacheTtl('bar'));
+        self::assertSame(time() + self::DEFAULT_TTL, $this->getCacheTtl('foo'));
+        self::assertSame(time() + self::DEFAULT_TTL, $this->getCacheTtl('bar'));
     }
 
     public function testSetsMultipleWithTtlInSeconds(): void
@@ -143,11 +143,11 @@ final class ArrayStorageTest extends TestCase
             'bar' => 'baz',
         ], 30);
 
-        $this->assertSame('bar', $this->storage->get('foo'));
-        $this->assertSame('baz', $this->storage->get('bar'));
+        self::assertSame('bar', $this->storage->get('foo'));
+        self::assertSame('baz', $this->storage->get('bar'));
 
-        $this->assertSame(time() + 30, $this->getCacheTtl('foo'));
-        $this->assertSame(time() + 30, $this->getCacheTtl('bar'));
+        self::assertSame(time() + 30, $this->getCacheTtl('foo'));
+        self::assertSame(time() + 30, $this->getCacheTtl('bar'));
     }
 
     public function testDeletesMultiple(): void
@@ -155,25 +155,25 @@ final class ArrayStorageTest extends TestCase
         $this->storage->set('foo', 'bar', 60);
         $this->storage->set('bar', 'bar', 60);
 
-        $this->assertTrue($this->storage->deleteMultiple(['foo', 'bar']));
-        $this->assertNull($this->storage->get('foo'));
-        $this->assertNull($this->storage->get('bar'));
+        self::assertTrue($this->storage->deleteMultiple(['foo', 'bar']));
+        self::assertNull($this->storage->get('foo'));
+        self::assertNull($this->storage->get('bar'));
     }
 
     public function testDeletesMultipleWithNonExistsCacheKey(): void
     {
         $this->storage->set('foo', 'bar', 60);
 
-        $this->assertFalse($this->storage->deleteMultiple(['foo', 'bar']));
-        $this->assertNull($this->storage->get('foo'));
+        self::assertFalse($this->storage->deleteMultiple(['foo', 'bar']));
+        self::assertNull($this->storage->get('foo'));
     }
 
     public function testHasKey(): void
     {
         $this->storage->set('foo', 'bar', 60);
 
-        $this->assertTrue($this->storage->has('foo'));
-        $this->assertFalse($this->storage->has('bar'));
+        self::assertTrue($this->storage->has('foo'));
+        self::assertFalse($this->storage->has('bar'));
     }
 
     private function getCacheTtl(string $key): ?int

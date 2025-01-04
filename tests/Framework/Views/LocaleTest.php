@@ -26,9 +26,9 @@ final class LocaleTest extends BaseTestCase
 
         $d = $d->__debugInfo();
 
-        $this->assertSame('en', $d['value']);
+        self::assertSame('en', $d['value']);
 
-        $this->assertTrue(in_array('en', $d['variants']));
-        $this->assertTrue(in_array('ru', $d['variants']));
+        self::assertContains('en', $d['variants']);
+        self::assertContains('ru', $d['variants']);
     }
 }

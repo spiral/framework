@@ -31,12 +31,12 @@ final class NestedFilterTest extends FilterTestCase
             ],
         ]);
 
-        $this->assertInstanceOf(ProfileFilter::class, $filter);
-        $this->assertInstanceOf(AddressFilter::class, $filter->address);
+        self::assertInstanceOf(ProfileFilter::class, $filter);
+        self::assertInstanceOf(AddressFilter::class, $filter->address);
 
-        $this->assertSame('John Doe', $filter->name);
-        $this->assertSame('New York', $filter->address->city);
-        $this->assertSame('Wall Street', $filter->address->address);
+        self::assertSame('John Doe', $filter->name);
+        self::assertSame('New York', $filter->address->city);
+        self::assertSame('Wall Street', $filter->address->address);
     }
 
     public function testGetsNestedFilterWithOtherNestedFilter(): void
@@ -54,16 +54,16 @@ final class NestedFilterTest extends FilterTestCase
             ]
         ]);
 
-        $this->assertInstanceOf(UserFilter::class, $filter);
-        $this->assertInstanceOf(PostFilter::class, $filter->postFilter);
-        $this->assertInstanceOf(AuthorFilter::class, $filter->postFilter->author);
+        self::assertInstanceOf(UserFilter::class, $filter);
+        self::assertInstanceOf(PostFilter::class, $filter->postFilter);
+        self::assertInstanceOf(AuthorFilter::class, $filter->postFilter->author);
 
-        $this->assertSame('John Doe', $filter->name);
-        $this->assertSame('Some text', $filter->postFilter->body);
-        $this->assertSame(1, $filter->postFilter->revision);
-        $this->assertTrue($filter->postFilter->active);
-        $this->assertSame(1.1, $filter->postFilter->postRating);
-        $this->assertSame(2, $filter->postFilter->author->id);
+        self::assertSame('John Doe', $filter->name);
+        self::assertSame('Some text', $filter->postFilter->body);
+        self::assertSame(1, $filter->postFilter->revision);
+        self::assertTrue($filter->postFilter->active);
+        self::assertEqualsWithDelta(1.1, $filter->postFilter->postRating, PHP_FLOAT_EPSILON);
+        self::assertSame(2, $filter->postFilter->author->id);
     }
 
     public function testGetsNestedFilterWithCustomPrefix(): void
@@ -76,12 +76,12 @@ final class NestedFilterTest extends FilterTestCase
             ],
         ]);
 
-        $this->assertInstanceOf(ProfileFilterWithPrefix::class, $filter);
-        $this->assertInstanceOf(AddressFilter::class, $filter->address);
+        self::assertInstanceOf(ProfileFilterWithPrefix::class, $filter);
+        self::assertInstanceOf(AddressFilter::class, $filter->address);
 
-        $this->assertSame('John Doe', $filter->name);
-        $this->assertSame('New York', $filter->address->city);
-        $this->assertSame('Wall Street', $filter->address->address);
+        self::assertSame('John Doe', $filter->name);
+        self::assertSame('New York', $filter->address->city);
+        self::assertSame('Wall Street', $filter->address->address);
     }
 
     public function testGetsNullableNestedFilterWithoutData(): void
@@ -90,8 +90,8 @@ final class NestedFilterTest extends FilterTestCase
             'name' => 'John Doe'
         ]);
 
-        $this->assertSame('John Doe', $filter->name);
-        $this->assertNull($filter->address);
+        self::assertSame('John Doe', $filter->name);
+        self::assertNull($filter->address);
     }
 
     public function testGetsNullableRequiredNestedFilterWithoutData(): void
@@ -113,7 +113,7 @@ final class NestedFilterTest extends FilterTestCase
         try {
             $this->getFilter($filter, $data);
         } catch (ValidationException $e) {
-            $this->assertEquals($expectedErrors, $e->errors);
+            self::assertEquals($expectedErrors, $e->errors);
             throw $e;
         }
     }

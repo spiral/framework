@@ -13,7 +13,7 @@ class UtilsTest extends TestCase
     #[DataProvider('trailingProvider')]
     public function testTrimTrailingDigits(string $name, int $sequence, string $expected): void
     {
-        $this->assertEquals($expected, Utils::trimTrailingDigits($name, $sequence));
+        self::assertSame($expected, Utils::trimTrailingDigits($name, $sequence));
     }
 
     public static function trailingProvider(): \Traversable
@@ -29,7 +29,7 @@ class UtilsTest extends TestCase
     #[DataProvider('injectValuesProvider')]
     public function testInjectValues(array $array, int $index, array $child, array $expected): void
     {
-        $this->assertEquals($expected, Utils::injectValues($array, $index, $child));
+        self::assertEquals($expected, Utils::injectValues($array, $index, $child));
     }
 
     public static function injectValuesProvider(): \Traversable
@@ -63,7 +63,7 @@ class UtilsTest extends TestCase
     #[DataProvider('shortNameProvider')]
     public function testShortName(string $name, string $expected): void
     {
-        $this->assertEquals($expected, Utils::shortName($name));
+        self::assertSame($expected, Utils::shortName($name));
     }
 
     public static function shortNameProvider(): \Traversable

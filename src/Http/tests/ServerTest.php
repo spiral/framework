@@ -33,7 +33,7 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame('sample', $this->input->server('path'));
+        self::assertSame('sample', $this->input->server('path'));
     }
 
     public function testHas(): void
@@ -46,9 +46,9 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertTrue($this->input->server->has('path'));
-        $this->assertFalse($this->input->server->has('another'));
-        $this->assertTrue($this->input->server->has('path'));
+        self::assertTrue($this->input->server->has('path'));
+        self::assertFalse($this->input->server->has('another'));
+        self::assertTrue($this->input->server->has('path'));
     }
 
     public function testGet(): void
@@ -61,8 +61,8 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame('sample', $this->input->server->get('path'));
-        $this->assertSame(null, $this->input->server->get('other'));
+        self::assertSame('sample', $this->input->server->get('path'));
+        self::assertNull($this->input->server->get('other'));
     }
 
     public function testGetDot(): void
@@ -75,8 +75,8 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame(1, $this->input->server->get('path.SAMPLE'));
-        $this->assertSame(null, $this->input->server->get('path.another'));
+        self::assertSame(1, $this->input->server->get('path.SAMPLE'));
+        self::assertNull($this->input->server->get('path.another'));
     }
 
     public function testAll(): void
@@ -89,7 +89,7 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame([
+        self::assertSame([
             'PATH' => 'sample',
         ], $this->input->server->all());
     }
@@ -104,11 +104,11 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame([
+        self::assertSame([
             'PATH' => 'sample',
         ], $this->input->server->all());
 
-        $this->assertSame([
+        self::assertSame([
             'PATH' => 'sample',
         ], $this->input->server->fetch(['path']));
     }
@@ -123,14 +123,11 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame([
+        self::assertSame([
             'PATH' => 'sample',
         ], $this->input->server->fetch(['path'], true, null));
 
-        $this->assertSame(
-            ['PATH' => 'sample', 'OTHER' => null],
-            $this->input->server->fetch(['path', 'other'], true, null)
-        );
+        self::assertSame(['PATH' => 'sample', 'OTHER' => null], $this->input->server->fetch(['path', 'other'], true, null));
     }
 
     public function testServerBagCount(): void
@@ -143,7 +140,7 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame(1, $this->input->server->count());
+        self::assertCount(1, $this->input->server);
     }
 
     public function testServerBagArrayAccess(): void
@@ -156,8 +153,8 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame('sample', $this->input->server['path']);
-        $this->assertFalse(isset($this->input->server['other']));
+        self::assertSame('sample', $this->input->server['path']);
+        self::assertArrayNotHasKey('other', $this->input->server);
     }
 
     public function testDebugInfo(): void
@@ -170,10 +167,7 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame(
-            ['PATH' => 'sample',],
-            $this->input->server->__debugInfo()
-        );
+        self::assertSame(['PATH' => 'sample',], $this->input->server->__debugInfo());
     }
 
     public function testIterator(): void
@@ -186,10 +180,7 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame(
-            ['PATH' => 'sample',],
-            iterator_to_array($this->input->server)
-        );
+        self::assertSame(['PATH' => 'sample',], iterator_to_array($this->input->server));
     }
 
     public function testSetAndExceptions(): void

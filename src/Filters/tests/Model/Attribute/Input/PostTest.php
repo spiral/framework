@@ -18,20 +18,14 @@ final class PostTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
             ->with('post', 'foo')
             ->andReturn('bar');
 
-        $this->assertSame(
-            'bar',
-            $attribute->getValue($this->input, $this->makeProperty())
-        );
+        self::assertSame('bar', $attribute->getValue($this->input, $this->makeProperty()));
     }
 
     public function testGetsSchemaForDefinedKey(): void
     {
         $attribute = new Post('foo');
 
-        $this->assertSame(
-            'post:foo',
-            $attribute->getSchema($this->makeProperty())
-        );
+        self::assertSame('post:foo', $attribute->getSchema($this->makeProperty()));
     }
 
     public function testGetsValueForNotDefinedKey(): void
@@ -44,19 +38,13 @@ final class PostTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
             ->with('post', 'baz')
             ->andReturn('bar');
 
-        $this->assertSame(
-            'bar',
-            $attribute->getValue($this->input, $this->makeProperty())
-        );
+        self::assertSame('bar', $attribute->getValue($this->input, $this->makeProperty()));
     }
 
     public function testGetsSchemaForNotDefinedKey(): void
     {
         $attribute = new Post();
 
-        $this->assertSame(
-            'post:baz',
-            $attribute->getSchema($this->makeProperty())
-        );
+        self::assertSame('post:baz', $attribute->getSchema($this->makeProperty()));
     }
 }

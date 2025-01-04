@@ -12,9 +12,9 @@ final class PrototypeConfigTest extends TestCase
     public function testGetBindings(): void
     {
         $config = new PrototypeConfig();
-        $this->assertSame([], $config->getBindings());
+        self::assertSame([], $config->getBindings());
 
         $config = new PrototypeConfig(['bindings' => ['foo' => 'test', 'bar' => ['with' => [], 'resolve' => 'test2']]]);
-        $this->assertSame(['foo' => 'test', 'bar' => ['with' => [], 'resolve' => 'test2']], $config->getBindings());
+        self::assertSame(['foo' => 'test', 'bar' => ['with' => [], 'resolve' => 'test2']], $config->getBindings());
     }
 }

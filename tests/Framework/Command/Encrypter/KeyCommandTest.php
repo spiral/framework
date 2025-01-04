@@ -13,7 +13,7 @@ final class KeyCommandTest extends ConsoleTestCase
     public function testKey(): void
     {
         $key = $this->runCommand('encrypt:key');
-        $this->assertNotEmpty($key);
+        self::assertNotEmpty($key);
     }
 
     public function testMountFileNotFound(): void
@@ -22,7 +22,7 @@ final class KeyCommandTest extends ConsoleTestCase
             '-m' => __DIR__ . '/.env'
         ]);
 
-        $this->assertStringContainsString('Unable to find', $out);
+        self::assertStringContainsString('Unable to find', $out);
     }
 
     public function testReplace(): void
@@ -33,10 +33,10 @@ final class KeyCommandTest extends ConsoleTestCase
             '-m' => __DIR__ . '/.env'
         ]);
 
-        $this->assertStringContainsString('key has been updated', $out);
+        self::assertStringContainsString('key has been updated', $out);
 
         $body = file_get_contents(__DIR__ . '/.env');
-        $this->assertStringContainsString($body, $out);
+        self::assertStringContainsString($body, $out);
 
         unlink(__DIR__ . '/.env');
     }
@@ -57,10 +57,10 @@ final class KeyCommandTest extends ConsoleTestCase
 
         $out = $out->getOutput()->fetch();
 
-        $this->assertStringContainsString('key has been updated', $out);
+        self::assertStringContainsString('key has been updated', $out);
 
         $body = file_get_contents(__DIR__ . '/.env');
-        $this->assertStringContainsString($body, $out);
+        self::assertStringContainsString($body, $out);
 
         unlink(__DIR__ . '/.env');
     }

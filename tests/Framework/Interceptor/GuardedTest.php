@@ -93,7 +93,7 @@ final class GuardedTest extends BaseTestCase
 
         $this->getContainer()->bind(ActorInterface::class, new Actor(['user']));
 
-        $this->assertSame('ok', $core->callAction(DemoController::class, 'do', []));
+        self::assertSame('ok', $core->callAction(DemoController::class, 'do', []));
     }
 
     public function testNotAllowed3(): void
@@ -103,7 +103,7 @@ final class GuardedTest extends BaseTestCase
         $this->getContainer()->bind(ActorInterface::class, new Actor(['user']));
 
         $this->expectExceptionCode(ControllerException::FORBIDDEN);
-        $this->assertSame('ok', $core->callAction(Demo2Controller::class, 'do1', []));
+        self::assertSame('ok', $core->callAction(Demo2Controller::class, 'do1', []));
     }
 
     public function testAllowed2(): void
@@ -111,6 +111,6 @@ final class GuardedTest extends BaseTestCase
         $core = $this->getCore();
 
         $this->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
-        $this->assertSame('ok', $core->callAction(Demo2Controller::class, 'do1', []));
+        self::assertSame('ok', $core->callAction(Demo2Controller::class, 'do1', []));
     }
 }

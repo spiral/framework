@@ -23,7 +23,7 @@ class InjectCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        $this->assertStringContainsString('prototype:inject', $result);
+        self::assertStringContainsString('prototype:inject', $result);
     }
 
     public function testEmptyInjection(): void
@@ -32,7 +32,7 @@ class InjectCommandTest extends AbstractCommandsTestCase
         $reflection = new \ReflectionClass($target);
         $filename = $reflection->getFileName();
         $source = file_get_contents($filename);
-        $this->assertStringContainsString('use PrototypeTrait;', $source);
+        self::assertStringContainsString('use PrototypeTrait;', $source);
 
         try {
             $this->app->bindApp();
@@ -41,7 +41,7 @@ class InjectCommandTest extends AbstractCommandsTestCase
             $out = new BufferedOutput();
             $this->app->get(Console::class)->run('prototype:inject', $inp, $out);
 
-            $this->assertStringNotContainsString('use PrototypeTrait;', file_get_contents($filename));
+            self::assertStringNotContainsString('use PrototypeTrait;', file_get_contents($filename));
         } finally {
             file_put_contents($filename, $source);
         }
@@ -57,8 +57,8 @@ class InjectCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        $this->assertStringContainsString(TestClass::class, $result);
-        $this->assertStringContainsString(TestApp::class, $result);
+        self::assertStringContainsString(TestClass::class, $result);
+        self::assertStringContainsString(TestApp::class, $result);
     }
 
     public function testNone(): void
@@ -69,7 +69,7 @@ class InjectCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        $this->assertSame('', $result);
+        self::assertSame('', $result);
     }
 
     public function testInvalid(): void
@@ -82,8 +82,8 @@ class InjectCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        $this->assertStringContainsString('Can\'t resolve', $result);
-        $this->assertStringContainsString('Invalid', $result);
+        self::assertStringContainsString('Can\'t resolve', $result);
+        self::assertStringContainsString('Invalid', $result);
     }
 
     public function testInheritedInjection(): void
@@ -96,15 +96,15 @@ class InjectCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        $this->assertStringContainsString(InheritedInjection\InjectionOne::class, $result);
-        $this->assertStringContainsString(InheritedInjection\InjectionTwo::class, $result);
-        $this->assertStringContainsString(InheritedInjection\ParentClass::class, $result);
-        $this->assertStringContainsString(InheritedInjection\MiddleClass::class, $result);
-        $this->assertStringContainsString(InheritedInjection\ChildClass::class, $result);
+        self::assertStringContainsString(InheritedInjection\InjectionOne::class, $result);
+        self::assertStringContainsString(InheritedInjection\InjectionTwo::class, $result);
+        self::assertStringContainsString(InheritedInjection\ParentClass::class, $result);
+        self::assertStringContainsString(InheritedInjection\MiddleClass::class, $result);
+        self::assertStringContainsString(InheritedInjection\ChildClass::class, $result);
 
-        $this->assertSame(['one'], $this->getParameters(InheritedInjection\ParentClass::class));
-        $this->assertSame(['one', 'ownInjection'], $this->getParameters(InheritedInjection\MiddleClass::class));
-        $this->assertSame(['two', 'one', 'ownInjection'], $this->getParameters(InheritedInjection\ChildClass::class));
+        self::assertSame(['one'], $this->getParameters(InheritedInjection\ParentClass::class));
+        self::assertSame(['one', 'ownInjection'], $this->getParameters(InheritedInjection\MiddleClass::class));
+        self::assertSame(['two', 'one', 'ownInjection'], $this->getParameters(InheritedInjection\ChildClass::class));
     }
 
     private function getParameters(string $class): array

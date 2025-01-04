@@ -24,6 +24,6 @@ final class NullBroadcastTest extends TestCase
     public function testPublishMessageToTopic(): void
     {
         $this->driver->publish('topic', 'message');
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 }

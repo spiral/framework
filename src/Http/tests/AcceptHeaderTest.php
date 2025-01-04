@@ -19,18 +19,18 @@ class AcceptHeaderTest extends TestCase
             (new AcceptHeaderItem('*/*'))->withValue('')
         ]);
 
-        $this->assertCount(0, $header->getAll());
-        $this->assertSame('', (string)$header);
+        self::assertCount(0, $header->getAll());
+        self::assertSame('', (string)$header);
     }
 
     public function testHeaderSanitize(): void
     {
         $headers = AcceptHeader::fromString('text/*, text/html, ,;,text/html;level=1, */*')->getAll();
 
-        $this->assertCount(3, $headers);
-        $this->assertSame('text/html', $headers[0]->getValue());
-        $this->assertSame('text/*', $headers[1]->getValue());
-        $this->assertSame('*/*', $headers[2]->getValue());
+        self::assertCount(3, $headers);
+        self::assertSame('text/html', $headers[0]->getValue());
+        self::assertSame('text/*', $headers[1]->getValue());
+        self::assertSame('*/*', $headers[2]->getValue());
     }
 
     public function testImmutability(): void
@@ -40,7 +40,7 @@ class AcceptHeaderTest extends TestCase
         $header = new AcceptHeader([$firstItem]);
         $firstItem->withValue('text/html');
 
-        $this->assertSame('*/*', $header->add($secondItem)->getAll()[0]->getValue());
+        self::assertSame('*/*', $header->add($secondItem)->getAll()[0]->getValue());
     }
 
     #[DataProvider('sameQualityCompareProvider')]
@@ -48,9 +48,9 @@ class AcceptHeaderTest extends TestCase
     {
         $headers = AcceptHeader::fromString($input)->getAll();
 
-        $this->assertCount(2, $headers);
-        $this->assertEquals($a, $headers[0]->getValue());
-        $this->assertEquals($b, $headers[1]->getValue());
+        self::assertCount(2, $headers);
+        self::assertEquals($a, $headers[0]->getValue());
+        self::assertEquals($b, $headers[1]->getValue());
     }
 
     public static function sameQualityCompareProvider(): \Traversable
@@ -64,20 +64,20 @@ class AcceptHeaderTest extends TestCase
     public function testDuplicatedItems(): void
     {
         $header = AcceptHeader::fromString('*/*;q=0.9,text/html,*/*');
-        $this->assertSame('text/html, */*', (string)$header);
+        self::assertSame('text/html, */*', (string)$header);
 
         $header = AcceptHeader::fromString('text/html;q=0.4,*/*;q=0.9,text/html;q=0.6');
-        $this->assertSame('*/*; q=0.9, text/html; q=0.6', (string)$header);
+        self::assertSame('*/*; q=0.9, text/html; q=0.6', (string)$header);
     }
 
     public function testAccessor(): void
     {
         $acceptHeader = AcceptHeader::fromString('text/css;q=0.3, text/html;q=0.3');
-        $this->assertTrue($acceptHeader->has('tExt/css '));
-        $this->assertFalse($acceptHeader->has('tExt/javascript'));
+        self::assertTrue($acceptHeader->has('tExt/css '));
+        self::assertFalse($acceptHeader->has('tExt/javascript'));
 
-        $this->assertSame('text/css; q=0.3', (string)$acceptHeader->get('text/css'));
-        $this->assertSame('text/html; q=0.3', (string)$acceptHeader->get('text/html'));
+        self::assertSame('text/css; q=0.3', (string)$acceptHeader->get('text/css'));
+        self::assertSame('text/html; q=0.3', (string)$acceptHeader->get('text/html'));
     }
 
     #[DataProvider('addAndSortProvider')]
@@ -87,10 +87,10 @@ class AcceptHeaderTest extends TestCase
         $acceptHeader = $acceptHeader->add($item);
 
         $headers = $acceptHeader->getAll();
-        $this->assertCount(count($expected), $headers);
+        self::assertCount(count($expected), $headers);
 
         foreach ($expected as $i => $value) {
-            $this->assertSame($value, $headers[$i]->getValue());
+            self::assertSame($value, $headers[$i]->getValue());
         }
     }
 
@@ -124,10 +124,10 @@ class AcceptHeaderTest extends TestCase
         $acceptHeader = AcceptHeader::fromString($items);
 
         $headers = $acceptHeader->getAll();
-        $this->assertCount(count($expected), $headers);
+        self::assertCount(count($expected), $headers);
 
         foreach ($expected as $i => $value) {
-            $this->assertSame($value, (string)$headers[$i]);
+            self::assertSame($value, (string)$headers[$i]);
         }
     }
 

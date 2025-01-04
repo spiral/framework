@@ -15,13 +15,13 @@ final class FiltersConfigTest extends TestCase
             'interceptors' => $array = ['foo', 'bar'],
         ]);
 
-        $this->assertSame($array, $config->getInterceptors());
+        self::assertSame($array, $config->getInterceptors());
     }
 
     public function testGetsInterceptorsWhenKeyIsNotDefined(): void
     {
         $config = new FiltersConfig([]);
 
-        $this->assertSame([], $config->getInterceptors());
+        self::assertSame([], $config->getInterceptors());
     }
 }

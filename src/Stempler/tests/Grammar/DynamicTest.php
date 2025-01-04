@@ -357,9 +357,9 @@ class DynamicTest extends BaseTestCase
 
     public function testTokenName(): void
     {
-        $this->assertSame('DECLARE:KEYWORD', DeclareGrammar::tokenName(DeclareGrammar::TYPE_KEYWORD));
-        $this->assertSame('DECLARE:EQUAL', DeclareGrammar::tokenName(DeclareGrammar::TYPE_EQUAL));
-        $this->assertSame('DECLARE:COMMA', DeclareGrammar::tokenName(DeclareGrammar::TYPE_COMMA));
-        $this->assertSame('DECLARE:QUOTED', DeclareGrammar::tokenName(DeclareGrammar::TYPE_QUOTED));
+        self::assertSame('DECLARE:KEYWORD', DeclareGrammar::tokenName(DeclareGrammar::TYPE_KEYWORD));
+        self::assertSame('DECLARE:EQUAL', DeclareGrammar::tokenName(DeclareGrammar::TYPE_EQUAL));
+        self::assertSame('DECLARE:COMMA', DeclareGrammar::tokenName(DeclareGrammar::TYPE_COMMA));
+        self::assertSame('DECLARE:QUOTED', DeclareGrammar::tokenName(DeclareGrammar::TYPE_QUOTED));
     }
 }

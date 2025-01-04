@@ -41,16 +41,16 @@ class NamespacedTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test/id/900')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('900', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('900', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/other/action')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('action!', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('action!', (string)$response->getBody());
     }
 
     public function testBypass(): void

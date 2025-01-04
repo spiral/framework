@@ -17,8 +17,8 @@ final class CanBootedCheckerTest extends TestCase
     {
         $checker = new CanBootedChecker(new ClassesRegistry());
 
-        $this->assertTrue($checker->canInitialize(BootloaderA::class));
-        $this->assertTrue($checker->canInitialize(new BootloaderA()));
+        self::assertTrue($checker->canInitialize(BootloaderA::class));
+        self::assertTrue($checker->canInitialize(new BootloaderA()));
     }
 
     public function testCanInitializeBootloaderAlreadyBooted(): void
@@ -28,21 +28,21 @@ final class CanBootedCheckerTest extends TestCase
 
         $checker = new CanBootedChecker($registry);
 
-        $this->assertFalse($checker->canInitialize(BootloaderA::class));
-        $this->assertFalse($checker->canInitialize(new BootloaderA()));
+        self::assertFalse($checker->canInitialize(BootloaderA::class));
+        self::assertFalse($checker->canInitialize(new BootloaderA()));
     }
 
     public function testCanInitializeAbstractBootloader(): void
     {
         $checker = new CanBootedChecker(new ClassesRegistry());
 
-        $this->assertFalse($checker->canInitialize(AbstractBootloader::class));
+        self::assertFalse($checker->canInitialize(AbstractBootloader::class));
     }
 
     public function testCanInitializeNotImplementInterface(): void
     {
         $checker = new CanBootedChecker(new ClassesRegistry());
 
-        $this->assertFalse($checker->canInitialize(SampleClass::class));
+        self::assertFalse($checker->canInitialize(SampleClass::class));
     }
 }

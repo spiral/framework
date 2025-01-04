@@ -61,7 +61,7 @@ final class BroadcastManagerTest extends TestCase
             'foo' => 'bar',
         ])->andReturn($connection);
 
-        $this->assertSame($connection, $this->manager->connection());
+        self::assertSame($connection, $this->manager->connection());
     }
 
     public function testGetConnectionByName(): void
@@ -73,7 +73,7 @@ final class BroadcastManagerTest extends TestCase
             'foo' => 'baz',
         ])->andReturn($connection);
 
-        $this->assertSame($connection, $this->manager->connection('null'));
+        self::assertSame($connection, $this->manager->connection('null'));
     }
 
     public function testGetConnectionWithDriverAlias(): void
@@ -85,7 +85,7 @@ final class BroadcastManagerTest extends TestCase
             'bar' => 'baz',
         ])->andReturn($connection);
 
-        $this->assertSame($connection, $this->manager->connection('inMemory'));
+        self::assertSame($connection, $this->manager->connection('inMemory'));
     }
 
     public function testGetConnectionByAlias(): void
@@ -97,7 +97,7 @@ final class BroadcastManagerTest extends TestCase
             'foo' => 'bar',
         ])->andReturn($connection);
 
-        $this->assertSame($connection, $this->manager->connection('firebase'));
+        self::assertSame($connection, $this->manager->connection('firebase'));
     }
 
     public function testConnectionShouldBeCreatedOnlyOnce(): void
@@ -110,15 +110,15 @@ final class BroadcastManagerTest extends TestCase
             'foo' => 'bar',
         ])->andReturn($connection1);
 
-        $this->assertSame($connection1, $this->manager->connection());
-        $this->assertSame($connection1, $this->manager->connection());
+        self::assertSame($connection1, $this->manager->connection());
+        self::assertSame($connection1, $this->manager->connection());
 
         $this->factory->shouldReceive('make')->once()->with('null-driver-class', [
             'driver' => 'null-driver-class',
             'foo' => 'baz',
         ])->andReturn($connection2);
 
-        $this->assertSame($connection2, $this->manager->connection('null'));
-        $this->assertSame($connection2, $this->manager->connection('null'));
+        self::assertSame($connection2, $this->manager->connection('null'));
+        self::assertSame($connection2, $this->manager->connection('null'));
     }
 }

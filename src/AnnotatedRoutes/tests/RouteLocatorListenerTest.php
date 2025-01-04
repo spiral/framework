@@ -33,7 +33,7 @@ final class RouteLocatorListenerTest extends TestCase
 
         $groups = $this->container->get(GroupRegistry::class);
 
-        $this->assertSame(['web'], \array_keys(\iterator_to_array($groups)));
+        self::assertSame(['web'], \array_keys(\iterator_to_array($groups)));
     }
 
     public function testChangedDefaultGroup(): void
@@ -46,7 +46,7 @@ final class RouteLocatorListenerTest extends TestCase
 
         $groups = $this->container->get(GroupRegistry::class);
 
-        $this->assertSame(['other'], \array_keys(\iterator_to_array($groups)));
+        self::assertSame(['other'], \array_keys(\iterator_to_array($groups)));
     }
 
     private function configureRouter(): void

@@ -30,8 +30,8 @@ final class PhpFileLoaderTest extends TestCase
         $loader = new PhpFileLoader($this->container, $this->container);
 
         $routes = $loader->load(\dirname(__DIR__) . '/Fixtures/file.php');
-        $this->assertInstanceOf(RouteCollection::class, $routes);
-        $this->assertCount(3, $routes);
+        self::assertInstanceOf(RouteCollection::class, $routes);
+        self::assertCount(3, $routes);
 
         $this->expectException(LoaderLoadException::class);
         $loader->load(\dirname(__DIR__) . '/Fixtures/unknown.php');
@@ -41,11 +41,11 @@ final class PhpFileLoaderTest extends TestCase
     {
         $loader = new PhpFileLoader($this->container, $this->container);
 
-        $this->assertTrue($loader->supports('file.php'));
-        $this->assertTrue($loader->supports('file.php', 'php'));
+        self::assertTrue($loader->supports('file.php'));
+        self::assertTrue($loader->supports('file.php', 'php'));
 
-        $this->assertFalse($loader->supports('file.php', 'txt'));
-        $this->assertFalse($loader->supports('file.txt'));
-        $this->assertFalse($loader->supports('file.txt', 'txt'));
+        self::assertFalse($loader->supports('file.php', 'txt'));
+        self::assertFalse($loader->supports('file.txt'));
+        self::assertFalse($loader->supports('file.txt', 'txt'));
     }
 }

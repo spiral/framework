@@ -56,10 +56,7 @@ final class ValidationHandlerMiddlewareTest extends TestCase
             ->with($request)
             ->andReturn($response = m::mock(ResponseInterface::class));
 
-        $this->assertSame(
-            $response,
-            $this->middleware->process($request, $handler)
-        );
+        self::assertSame($response, $this->middleware->process($request, $handler));
     }
 
     public function testRequestWithNonValidationExceptionShouldThrowIt(): void
@@ -91,9 +88,6 @@ final class ValidationHandlerMiddlewareTest extends TestCase
             ->with($errors, $context)
             ->andReturn($response = m::mock(ResponseInterface::class));
 
-        $this->assertSame(
-            $response,
-            $this->middleware->process($request, $handler)
-        );
+        self::assertSame($response, $this->middleware->process($request, $handler));
     }
 }

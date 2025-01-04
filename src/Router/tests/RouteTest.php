@@ -19,7 +19,7 @@ class RouteTest extends BaseTestCase
         $route = new Route('/action', Call::class);
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        $this->assertSame('', $route->getUriHandler()->getPrefix());
+        self::assertSame('', $route->getUriHandler()->getPrefix());
     }
 
     #[DataProvider('prefixesDataProvider')]
@@ -28,7 +28,7 @@ class RouteTest extends BaseTestCase
         $route = new Route('/action', Call::class);
         $route = $route->withUriHandler((new UriHandler(new UriFactory()))->withPrefix($prefix));
 
-        $this->assertSame($expected, $route->getUriHandler()->getPrefix());
+        self::assertSame($expected, $route->getUriHandler()->getPrefix());
     }
 
     public function testContainerException(): void
@@ -50,9 +50,9 @@ class RouteTest extends BaseTestCase
         $p = $this->getProperty($route, 'pipeline');
         $m = $this->getProperty($p, 'middleware');
 
-        $this->assertCount(1, $m);
+        self::assertCount(1, $m);
         // Because of the pipeline is lazy
-        $this->assertSame($middleware, $m[0]);
+        self::assertSame($middleware, $m[0]);
     }
 
     public static function prefixesDataProvider(): \Traversable

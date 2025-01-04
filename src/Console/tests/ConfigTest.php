@@ -36,6 +36,6 @@ class ConfigTest extends TestCase
             ],
         ]);
 
-        $this->assertCount(1, iterator_to_array($config->updateSequence()));
+        self::assertCount(1, iterator_to_array($config->updateSequence()));
     }
 }

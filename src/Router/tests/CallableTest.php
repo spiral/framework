@@ -20,8 +20,8 @@ class CallableTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
     }
 
     public function testObjectRoute(): void
@@ -33,8 +33,8 @@ class CallableTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('invoked', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('invoked', (string)$response->getBody());
     }
 
     public function testObjectViaContainerRoute(): void
@@ -46,8 +46,8 @@ class CallableTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('invoked', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('invoked', (string)$response->getBody());
     }
 
     public function testHandlerRoute(): void
@@ -59,8 +59,8 @@ class CallableTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('handler', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('handler', (string)$response->getBody());
     }
 
     public function testHandlerViaContainerRoute(): void
@@ -72,8 +72,8 @@ class CallableTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('handler', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('handler', (string)$response->getBody());
     }
 
     public function testInvalidTarget(): void
@@ -87,7 +87,7 @@ class CallableTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/something')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('handler', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('handler', (string)$response->getBody());
     }
 }

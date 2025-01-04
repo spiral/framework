@@ -33,6 +33,6 @@ final class JsonPayloadsBootloaderTest extends BaseTestCase
         $bootloader = new JsonPayloadsBootloader($configs);
         $bootloader->addContentType('foo');
 
-        $this->assertSame(['foo'], $configs->getConfig(JsonPayloadConfig::CONFIG)['contentTypes']);
+        self::assertSame(['foo'], $configs->getConfig(JsonPayloadConfig::CONFIG)['contentTypes']);
     }
 }

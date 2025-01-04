@@ -37,8 +37,8 @@ final class EventsBootloaderTest extends BaseTestCase
     {
         $config = $this->getConfig(EventsConfig::CONFIG);
 
-        $this->assertArrayHasKey('listeners', $config);
-        $this->assertArrayHasKey('processors', $config);
+        self::assertArrayHasKey('listeners', $config);
+        self::assertArrayHasKey('processors', $config);
     }
 
     public function testProcessorsShouldBeProcessed(): void
@@ -47,8 +47,8 @@ final class EventsBootloaderTest extends BaseTestCase
         $bootloader = $this->getContainer()->get(EventsBootloader::class);
 
         $kernel = $this->getContainer()->get(AbstractKernel::class);
-        $this->assertFalse($registry->isProcessed());
-        $this->assertCount(0, $registry->getProcessors());
+        self::assertFalse($registry->isProcessed());
+        self::assertCount(0, $registry->getProcessors());
 
         $this->bootBootloader(
             bootloader: $bootloader,
@@ -67,8 +67,8 @@ final class EventsBootloaderTest extends BaseTestCase
 
         $kernel->run();
 
-        $this->assertTrue($registry->isProcessed());
-        $this->assertCount(2, $registry->getProcessors());
+        self::assertTrue($registry->isProcessed());
+        self::assertCount(2, $registry->getProcessors());
     }
 
     public function testStringProcessorsShouldBeProcessed(): void
@@ -172,7 +172,7 @@ final class EventsBootloaderTest extends BaseTestCase
         $bootloader->addInterceptor($interceptor);
         $bootloader->addInterceptor($autowire);
 
-        $this->assertSame([
+        self::assertSame([
             'foo', $interceptor, $autowire
         ], $configs->getConfig(EventsConfig::CONFIG)['interceptors']);
     }
@@ -196,10 +196,7 @@ final class EventsBootloaderTest extends BaseTestCase
             eventDispatcher: $this->getContainer()->get(EventDispatcherInterface::class)
         );
 
-        $this->assertInstanceOf(
-            EventDispatcher::class,
-            $this->getContainer()->get(EventDispatcherInterface::class)
-        );
+        self::assertInstanceOf(EventDispatcher::class, $this->getContainer()->get(EventDispatcherInterface::class));
     }
 
     public function bootBootloader(

@@ -40,7 +40,7 @@ final class DebugBootloaderTest extends BaseTestCase
         $bootloader->addStateCollector($collector);
         $bootloader->addStateCollector($autowire);
 
-        $this->assertSame(['foo', $collector, $autowire], $configs->getConfig(DebugConfig::CONFIG)['collectors']);
+        self::assertSame(['foo', $collector, $autowire], $configs->getConfig(DebugConfig::CONFIG)['collectors']);
     }
 
     public function testAddTag(): void
@@ -61,19 +61,13 @@ final class DebugBootloaderTest extends BaseTestCase
         $bootloader->addTag('bar', $class);
         $bootloader->addTag('baz', $fn);
 
-        $this->assertSame(
-            ['foo' => 'value 1', 'bar' => $class, 'baz' => $fn],
-            $configs->getConfig(DebugConfig::CONFIG)['tags']
-        );
+        self::assertSame(['foo' => 'value 1', 'bar' => $class, 'baz' => $fn], $configs->getConfig(DebugConfig::CONFIG)['tags']);
     }
 
     #[Config('debug.tags', ['foo' => 'bar', 'baz' => 'qux'])]
     public function testGetTagsFromConfig(): void
     {
-        $this->assertSame(
-            ['foo' => 'bar', 'baz' => 'qux', 'php' => \phpversion()],
-            $this->getContainer()->get(StateInterface::class)->getTags()
-        );
+        self::assertSame(['foo' => 'bar', 'baz' => 'qux', 'php' => \phpversion()], $this->getContainer()->get(StateInterface::class)->getTags());
     }
 
     #[Config('debug.tags', ['foo' => new HttpCollector()])]
@@ -108,14 +102,14 @@ final class DebugBootloaderTest extends BaseTestCase
             ],
         ]));
 
-        $this->assertSame('dev', $state->getTags()['env']);
+        self::assertSame('dev', $state->getTags()['env']);
     }
 
     public function testDefaultConfig(): void
     {
         $config = $this->getConfig(DebugConfig::CONFIG);
 
-        $this->assertEquals([
+        self::assertEquals([
             'collectors' => [
                 EnvironmentCollector::class,
                 new LogCollector(),

@@ -20,6 +20,6 @@ final class NullTracerFactoryTest extends TestCase
     {
         $factory = new NullTracerFactory(m::mock(ScopeInterface::class));
 
-        $this->assertInstanceOf(NullTracer::class, $factory->make());
+        self::assertInstanceOf(NullTracer::class, $factory->make());
     }
 }

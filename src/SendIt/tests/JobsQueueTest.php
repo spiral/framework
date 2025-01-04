@@ -34,9 +34,9 @@ class JobsQueueTest extends TestCase
 
         $queue->expects('push')->withArgs(
             function ($job, $data, Options $options) use ($mail): bool {
-                $this->assertSame(MailQueue::JOB_NAME, $job);
-                $this->assertSame($data, MessageSerializer::pack($mail));
-                $this->assertSame('mailer', $options->getQueue());
+                self::assertSame(MailQueue::JOB_NAME, $job);
+                self::assertSame($data, MessageSerializer::pack($mail));
+                self::assertSame('mailer', $options->getQueue());
 
                 return true;
             }

@@ -32,7 +32,7 @@ final class ContainerRegistryT extends TestCase
 
         $this->registry->getHandler('mail.job');
 
-        $this->assertSame($handler, $this->registry->getHandler('mail.job'));
+        self::assertSame($handler, $this->registry->getHandler('mail.job'));
     }
 
     public function testGetsHandlerWithWrongInterface(): void

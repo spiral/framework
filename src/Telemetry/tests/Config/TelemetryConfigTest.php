@@ -16,7 +16,7 @@ final class TelemetryConfigTest extends TestCase
     {
         $config = new TelemetryConfig(['default' => 'foo']);
 
-        $this->assertSame('foo', $config->getDefaultDriver());
+        self::assertSame('foo', $config->getDefaultDriver());
     }
 
     public function testGetsDriverConfigAsString(): void
@@ -25,7 +25,7 @@ final class TelemetryConfigTest extends TestCase
             'foo' => 'bar'
         ]]);
 
-        $this->assertSame('bar', $config->getDriverConfig('foo'));
+        self::assertSame('bar', $config->getDriverConfig('foo'));
     }
 
     public function testGetsDriverConfigAsAutowire(): void
@@ -34,7 +34,7 @@ final class TelemetryConfigTest extends TestCase
             'foo' => $driver = new Autowire('bar')
         ]]);
 
-        $this->assertSame($driver, $config->getDriverConfig('foo'));
+        self::assertSame($driver, $config->getDriverConfig('foo'));
     }
 
     public function testGetsDriverConfigAsObject(): void
@@ -43,6 +43,6 @@ final class TelemetryConfigTest extends TestCase
             'foo' => $driver = m::mock(TracerFactoryInterface::class)
         ]]);
 
-        $this->assertSame($driver, $config->getDriverConfig('foo'));
+        self::assertSame($driver, $config->getDriverConfig('foo'));
     }
 }

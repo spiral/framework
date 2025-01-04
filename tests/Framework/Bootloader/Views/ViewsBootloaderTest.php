@@ -47,7 +47,7 @@ final class ViewsBootloaderTest extends BaseTestCase
         $bootloader = new ViewsBootloader($configs);
         $bootloader->addDirectory('foo', 'bar');
 
-        $this->assertSame(['foo' => ['bar']], $configs->getConfig(ViewsConfig::CONFIG)['namespaces']);
+        self::assertSame(['foo' => ['bar']], $configs->getConfig(ViewsConfig::CONFIG)['namespaces']);
     }
 
     public function testAddDirectory(): void
@@ -58,7 +58,7 @@ final class ViewsBootloaderTest extends BaseTestCase
         $bootloader = new ViewsBootloader($configs);
         $bootloader->addDirectory('foo', 'bar');
 
-        $this->assertSame(['foo' => ['baz', 'bar']], $configs->getConfig(ViewsConfig::CONFIG)['namespaces']);
+        self::assertSame(['foo' => ['baz', 'bar']], $configs->getConfig(ViewsConfig::CONFIG)['namespaces']);
     }
 
     public function testAddEngine(): void
@@ -70,7 +70,7 @@ final class ViewsBootloaderTest extends BaseTestCase
         $bootloader->addEngine('foo');
         $bootloader->addEngine($engine = $this->createMock(EngineInterface::class));
 
-        $this->assertSame(['foo', $engine], $configs->getConfig(ViewsConfig::CONFIG)['engines']);
+        self::assertSame(['foo', $engine], $configs->getConfig(ViewsConfig::CONFIG)['engines']);
     }
 
     public function testAddCacheDependency(): void
@@ -82,6 +82,6 @@ final class ViewsBootloaderTest extends BaseTestCase
         $bootloader->addCacheDependency('foo');
         $bootloader->addCacheDependency($dependency = $this->createMock(DependencyInterface::class));
 
-        $this->assertSame(['foo', $dependency], $configs->getConfig(ViewsConfig::CONFIG)['dependencies']);
+        self::assertSame(['foo', $dependency], $configs->getConfig(ViewsConfig::CONFIG)['dependencies']);
     }
 }

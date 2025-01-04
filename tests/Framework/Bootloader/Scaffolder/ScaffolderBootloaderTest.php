@@ -30,10 +30,7 @@ final class ScaffolderBootloaderTest extends BaseTestCase
         $bootloader = new ScaffolderBootloader($configs, $this->createMock(KernelInterface::class));
         $bootloader->addDeclaration('foo', ['bar' => 'baz']);
 
-        $this->assertSame(
-            ['foo' => ['bar' => 'baz']],
-            $configs->getConfig(ScaffolderConfig::CONFIG)['defaults']['declarations'],
-        );
+        self::assertSame(['foo' => ['bar' => 'baz']], $configs->getConfig(ScaffolderConfig::CONFIG)['defaults']['declarations']);
     }
 
     public function testDefaultConfig(): void
@@ -41,7 +38,7 @@ final class ScaffolderBootloaderTest extends BaseTestCase
         $config = $this->getConfig(ScaffolderConfig::CONFIG);
         $dirs = $this->getContainer()->get(DirectoriesInterface::class);
 
-        $this->assertSame([
+        self::assertSame([
             'header' => [],
             'directory' => $dirs->get('app') . 'src/',
             'namespace' => 'Spiral\\App',

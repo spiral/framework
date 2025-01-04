@@ -53,7 +53,7 @@ class GuardTest extends TestCase
             ->willReturn($rule);
 
         $guard = new Guard($this->permission, $this->actor, $this->roles);
-        $this->assertTrue($guard->allows(static::OPERATION, static::CONTEXT));
+        self::assertTrue($guard->allows(static::OPERATION, static::CONTEXT));
     }
 
     public function testAllowsPermissionsHasNoRole(): void
@@ -61,7 +61,7 @@ class GuardTest extends TestCase
         $this->permission->method('hasRole')->with($this->anything())->willReturn(false);
 
         $guard = new Guard($this->permission, $this->actor, $this->roles);
-        $this->assertFalse($guard->allows(static::OPERATION, static::CONTEXT));
+        self::assertFalse($guard->allows(static::OPERATION, static::CONTEXT));
     }
 
     public function testAllowsNoActor(): void
@@ -77,8 +77,8 @@ class GuardTest extends TestCase
         $guard = new Guard($this->permission);
         $guardWithActor = $guard->withActor($this->actor);
 
-        $this->assertEquals($this->actor, $guardWithActor->getActor());
-        $this->assertNotEquals($guard, $guardWithActor);
+        self::assertEquals($this->actor, $guardWithActor->getActor());
+        self::assertNotEquals($guard, $guardWithActor);
     }
 
     public function testWithRoles(): void
@@ -86,7 +86,7 @@ class GuardTest extends TestCase
         $guard = new Guard($this->permission, $this->actor);
         $guardWithRoles = $guard->withRoles($this->roles);
 
-        $this->assertEquals($this->roles, $guardWithRoles->getRoles());
-        $this->assertNotEquals($guard, $guardWithRoles);
+        self::assertEquals($this->roles, $guardWithRoles->getRoles());
+        self::assertNotEquals($guard, $guardWithRoles);
     }
 }

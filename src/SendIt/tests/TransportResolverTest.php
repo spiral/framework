@@ -22,7 +22,7 @@ final class TransportResolverTest extends TestCase
         $transportResolver = new TransportResolver(new Transport([]));
 
         $transportResolver->registerTransport($transportFactory);
-        $this->assertCount(1, $transportResolver->getTransports());
+        self::assertCount(1, $transportResolver->getTransports());
     }
 
     public function testCanResolveRegisteredTransport(): void
@@ -38,7 +38,7 @@ final class TransportResolverTest extends TestCase
 
         $transportResolver->registerTransport($transportFactory);
 
-        $this->assertSame($transport, $transportResolver->resolve('smtp://localhost'));
+        self::assertSame($transport, $transportResolver->resolve('smtp://localhost'));
     }
 
     public function testCanResolveRegisteredDefaultTransport(): void
@@ -52,7 +52,7 @@ final class TransportResolverTest extends TestCase
 
         $transportResolver = new TransportResolver(new Transport([$transportFactory]));
 
-        $this->assertSame($transport, $transportResolver->resolve('smtp://localhost'));
+        self::assertSame($transport, $transportResolver->resolve('smtp://localhost'));
     }
 
     public function testNotRegisteredTransportShouldTrowAnException(): void

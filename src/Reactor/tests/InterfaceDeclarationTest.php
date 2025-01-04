@@ -16,60 +16,60 @@ final class InterfaceDeclarationTest extends TestCase
     {
         $interface = new InterfaceDeclaration('TestInterface');
 
-        $this->assertTrue($interface->isInterface());
+        self::assertTrue($interface->isInterface());
 
-        $this->assertFalse($interface->isClass());
-        $this->assertFalse($interface->isEnum());
-        $this->assertFalse($interface->isTrait());
+        self::assertFalse($interface->isClass());
+        self::assertFalse($interface->isEnum());
+        self::assertFalse($interface->isTrait());
     }
 
     public function testExtends(): void
     {
         $interface = new InterfaceDeclaration('TestInterface');
 
-        $this->assertEmpty($interface->getExtends());
+        self::assertEmpty($interface->getExtends());
 
         $interface->addExtend(\Countable::class);
-        $this->assertCount(1, $interface->getExtends());
-        $this->assertSame([\Countable::class], $interface->getExtends());
+        self::assertCount(1, $interface->getExtends());
+        self::assertSame([\Countable::class], $interface->getExtends());
 
         $interface->addExtend(\ArrayAccess::class);
-        $this->assertCount(2, $interface->getExtends());
-        $this->assertSame([\Countable::class, \ArrayAccess::class], $interface->getExtends());
+        self::assertCount(2, $interface->getExtends());
+        self::assertSame([\Countable::class, \ArrayAccess::class], $interface->getExtends());
 
         $interface->setExtends(\IteratorAggregate::class);
-        $this->assertCount(1, $interface->getExtends());
-        $this->assertSame([\IteratorAggregate::class], $interface->getExtends());
+        self::assertCount(1, $interface->getExtends());
+        self::assertSame([\IteratorAggregate::class], $interface->getExtends());
     }
 
     public function testAddMember(): void
     {
         $interface = new InterfaceDeclaration('TestInterface');
 
-        $this->assertEmpty($interface->getConstants());
+        self::assertEmpty($interface->getConstants());
         $interface->addMember(new Constant('TEST'));
-        $this->assertCount(1, $interface->getConstants());
-        $this->assertInstanceOf(Constant::class, $interface->getConstant('TEST'));
+        self::assertCount(1, $interface->getConstants());
+        self::assertInstanceOf(Constant::class, $interface->getConstant('TEST'));
 
-        $this->assertEmpty($interface->getMethods());
+        self::assertEmpty($interface->getMethods());
         $interface->addMember(new Method('test'));
-        $this->assertCount(1, $interface->getMethods());
-        $this->assertInstanceOf(Method::class, $interface->getMethod('test'));
+        self::assertCount(1, $interface->getMethods());
+        self::assertInstanceOf(Method::class, $interface->getMethod('test'));
     }
 
     public function testFromElement(): void
     {
         $interface = InterfaceDeclaration::fromElement(new InterfaceType('TestInterface'));
 
-        $this->assertInstanceOf(InterfaceDeclaration::class, $interface);
-        $this->assertSame('TestInterface', $interface->getName());
+        self::assertInstanceOf(InterfaceDeclaration::class, $interface);
+        self::assertSame('TestInterface', $interface->getName());
     }
 
     public function testGetElement(): void
     {
         $element = (new InterfaceDeclaration('TestInterface'))->getElement();
 
-        $this->assertInstanceOf(InterfaceType::class, $element);
-        $this->assertSame('TestInterface', $element->getName());
+        self::assertInstanceOf(InterfaceType::class, $element);
+        self::assertSame('TestInterface', $element->getName());
     }
 }

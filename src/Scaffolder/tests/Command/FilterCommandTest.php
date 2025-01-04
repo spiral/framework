@@ -18,14 +18,14 @@ final class FilterCommandTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(\class_exists($class));
+        self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('strict_types=1', $content);
-        $this->assertTrue($reflection->isFinal());
-        $this->assertTrue($reflection->isSubclassOf(Filter::class));
+        self::assertStringContainsString('strict_types=1', $content);
+        self::assertTrue($reflection->isFinal());
+        self::assertTrue($reflection->isSubclassOf(Filter::class));
     }
 
     /**
@@ -42,16 +42,13 @@ final class FilterCommandTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(\class_exists($class));
+        self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString(
-            'App/Custom/Filter/SampleFilter.php',
-            \str_replace('\\', '/', $reflection->getFileName()),
-        );
-        $this->assertStringContainsString('App\Custom\Filter', $content);
+        self::assertStringContainsString('App/Custom/Filter/SampleFilter.php', \str_replace('\\', '/', $reflection->getFileName()));
+        self::assertStringContainsString('App\Custom\Filter', $content);
     }
 
     public function testCreateProperty(): void
@@ -71,38 +68,38 @@ final class FilterCommandTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(\class_exists($class));
+        self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('use Spiral\Filters\Attribute\Input\Post;', $content);
-        $this->assertStringContainsString('#[Post(key: \'name\')]', $content);
-        $this->assertStringContainsString('public string $name;', $content);
+        self::assertStringContainsString('use Spiral\Filters\Attribute\Input\Post;', $content);
+        self::assertStringContainsString('#[Post(key: \'name\')]', $content);
+        self::assertStringContainsString('public string $name;', $content);
 
-        $this->assertStringContainsString('use Spiral\Filters\Attribute\Input\Query;', $content);
-        $this->assertStringContainsString('#[Query(key: \'age\')]', $content);
-        $this->assertStringContainsString('public int $age;', $content);
+        self::assertStringContainsString('use Spiral\Filters\Attribute\Input\Query;', $content);
+        self::assertStringContainsString('#[Query(key: \'age\')]', $content);
+        self::assertStringContainsString('public int $age;', $content);
 
-        $this->assertStringContainsString('use Spiral\Filters\Attribute\Input\Data;', $content);
-        $this->assertStringContainsString('#[Data(key: \'tags\')]', $content);
-        $this->assertStringContainsString('public array $tags;', $content);
+        self::assertStringContainsString('use Spiral\Filters\Attribute\Input\Data;', $content);
+        self::assertStringContainsString('#[Data(key: \'tags\')]', $content);
+        self::assertStringContainsString('public array $tags;', $content);
 
-        $this->assertStringContainsString('use Spiral\Filters\Attribute\Input\RemoteAddress;', $content);
-        $this->assertStringContainsString('#[RemoteAddress(key: \'ipAddress\')]', $content);
-        $this->assertStringContainsString('public string $ipAddress;', $content);
+        self::assertStringContainsString('use Spiral\Filters\Attribute\Input\RemoteAddress;', $content);
+        self::assertStringContainsString('#[RemoteAddress(key: \'ipAddress\')]', $content);
+        self::assertStringContainsString('public string $ipAddress;', $content);
 
-        $this->assertStringContainsString('use Spiral\Filters\Attribute\Input\File;', $content);
-        $this->assertStringContainsString('#[File(key: \'avatar\')]', $content);
-        $this->assertStringContainsString('public \Psr\Http\Message\UploadedFileInterface $avatar;', $content);
+        self::assertStringContainsString('use Spiral\Filters\Attribute\Input\File;', $content);
+        self::assertStringContainsString('#[File(key: \'avatar\')]', $content);
+        self::assertStringContainsString('public \Psr\Http\Message\UploadedFileInterface $avatar;', $content);
 
-        $this->assertStringContainsString('use Spiral\Filters\Attribute\Input\Uri;', $content);
-        $this->assertStringContainsString('#[Uri(key: \'path\')]', $content);
-        $this->assertStringContainsString('public \Psr\Http\Message\UriInterface $path;', $content);
+        self::assertStringContainsString('use Spiral\Filters\Attribute\Input\Uri;', $content);
+        self::assertStringContainsString('#[Uri(key: \'path\')]', $content);
+        self::assertStringContainsString('public \Psr\Http\Message\UriInterface $path;', $content);
 
-        $this->assertStringContainsString('use Spiral\Filters\Attribute\Input\BearerToken;', $content);
-        $this->assertStringContainsString('#[BearerToken(key: \'token\')]', $content);
-        $this->assertStringContainsString('public string $token;', $content);
+        self::assertStringContainsString('use Spiral\Filters\Attribute\Input\BearerToken;', $content);
+        self::assertStringContainsString('#[BearerToken(key: \'token\')]', $content);
+        self::assertStringContainsString('public string $token;', $content);
     }
 
     public function testShowInstructionAfterInstallation(): void
@@ -116,16 +113,13 @@ final class FilterCommandTest extends AbstractCommandTestCase
 
         $output = $result->getOutput()->fetch();
 
-        $this->assertStringEqualsStringIgnoringLineEndings(
-            <<<OUTPUT
+        self::assertStringEqualsStringIgnoringLineEndings(<<<OUTPUT
             Declaration of 'SampleFilter' has been successfully written into 'Filter/SampleFilter.php'.
 
             Next steps:
             1. Read more about Filter Objects in the documentation: https://spiral.dev/docs/filters-filter
             2. Read more about Filter validation handling here: https://spiral.dev/docs/filters-filter#handle-validation-errors
 
-            OUTPUT,
-            $output
-        );
+            OUTPUT, $output);
     }
 }

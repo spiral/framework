@@ -14,7 +14,7 @@ class GroupTest extends BaseTestCase
     public function testPatch(): void
     {
         $cf = $this->getFactory();
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        self::assertSame(['value' => 'value!'], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Group(
             new Prepend('.', 'other', ['a' => 'b']),
@@ -22,7 +22,7 @@ class GroupTest extends BaseTestCase
             new Append('other', 'c', 'd')
         ));
 
-        $this->assertEquals([
+        self::assertSame([
             'other' => ['c' => 'd'],
             'value' => 'value!'
         ], $cf->getConfig('scope'));

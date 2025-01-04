@@ -24,34 +24,34 @@ class HTMLTest extends BaseTestCase
     {
         $doc = $this->parse('<a href="google.com">click me</a>');
 
-        $this->assertSame('<a href="google.com">click me</a>', $this->compile($doc));
+        self::assertSame('<a href="google.com">click me</a>', $this->compile($doc));
     }
 
     public function testCompileNested(): void
     {
         $doc = $this->parse('<a href="google.com"><b>click me</b></a>');
 
-        $this->assertSame('<a href="google.com"><b>click me</b></a>', $this->compile($doc));
+        self::assertSame('<a href="google.com"><b>click me</b></a>', $this->compile($doc));
     }
 
     public function testCompileNestedSingleQuote(): void
     {
         $doc = $this->parse('<a href=\'google.com\'><b>click me</b></a>');
 
-        $this->assertSame('<a href=\'google.com\'><b>click me</b></a>', $this->compile($doc));
+        self::assertSame('<a href=\'google.com\'><b>click me</b></a>', $this->compile($doc));
     }
 
     public function testCompileVoid(): void
     {
         $doc = $this->parse('<br>');
 
-        $this->assertSame('<br/>', $this->compile($doc));
+        self::assertSame('<br/>', $this->compile($doc));
     }
 
     public function testCompileScript(): void
     {
         $doc = $this->parse('<script>alert("hello <b>name</b>");</script>');
 
-        $this->assertSame('<script>alert("hello <b>name</b>");</script>', $this->compile($doc));
+        self::assertSame('<script>alert("hello <b>name</b>");</script>', $this->compile($doc));
     }
 }

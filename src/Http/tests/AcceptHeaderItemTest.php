@@ -14,8 +14,8 @@ class AcceptHeaderItemTest extends TestCase
     #[DataProvider('emptyItemProvider')]
     public function testEmptyItem(AcceptHeaderItem $item): void
     {
-        $this->assertEmpty($item->getValue());
-        $this->assertEquals('', (string)$item);
+        self::assertEmpty($item->getValue());
+        self::assertSame('', (string)$item);
     }
 
     public static function emptyItemProvider(): iterable
@@ -34,17 +34,17 @@ class AcceptHeaderItemTest extends TestCase
     public function testValue(string $value): void
     {
         $item = AcceptHeaderItem::fromString($value);
-        $this->assertEquals($value, $item->getValue());
+        self::assertSame($value, $item->getValue());
 
         $acceptHeader = new AcceptHeader([$item]);
-        $this->assertCount(1, $acceptHeader->getAll());
+        self::assertCount(1, $acceptHeader->getAll());
 
         $item = AcceptHeaderItem::fromString(" $value ");
-        $this->assertEquals($value, $item->getValue());
+        self::assertSame($value, $item->getValue());
 
         $acceptHeader = new AcceptHeader([$item]);
-        $this->assertCount(1, $acceptHeader->getAll());
-        $this->assertEquals($value, (string)$acceptHeader->getAll()[0]);
+        self::assertCount(1, $acceptHeader->getAll());
+        self::assertSame($value, (string)$acceptHeader->getAll()[0]);
     }
 
     public static function valueProvider(): \Traversable
@@ -59,15 +59,15 @@ class AcceptHeaderItemTest extends TestCase
     public function testItemQualityBoundaries(float $quality, AcceptHeaderItem $item): void
     {
         if ($quality > 1) {
-            $this->assertSame(1.0, $item->getQuality());
+            self::assertEqualsWithDelta(1.0, $item->getQuality(), PHP_FLOAT_EPSILON);
         }
 
         if ($quality < 0) {
-            $this->assertSame(0.0, $item->getQuality());
+            self::assertEqualsWithDelta(0.0, $item->getQuality(), PHP_FLOAT_EPSILON);
         }
 
-        $this->assertGreaterThanOrEqual(0, $item->getQuality());
-        $this->assertLessThanOrEqual(1, $item->getQuality());
+        self::assertGreaterThanOrEqual(0, $item->getQuality());
+        self::assertLessThanOrEqual(1, $item->getQuality());
     }
 
     public static function qualityBoundariesProvider(): iterable
@@ -86,7 +86,7 @@ class AcceptHeaderItemTest extends TestCase
     #[DataProvider('paramsProvider')]
     public function testParams(array $params, AcceptHeaderItem $item): void
     {
-        $this->assertSame($params, $item->getParams());
+        self::assertSame($params, $item->getParams());
     }
 
     public static function paramsProvider(): iterable
@@ -132,7 +132,7 @@ class AcceptHeaderItemTest extends TestCase
     #[DataProvider('itemProvider')]
     public function testItem(string $expected, AcceptHeaderItem $item): void
     {
-        $this->assertSame($expected, (string)$item);
+        self::assertSame($expected, (string)$item);
     }
 
     public static function itemProvider(): iterable

@@ -122,7 +122,7 @@ class JobTest extends TestCase
     {
         $this->renderer->expects('render')->withArgs(
             function (Message $message): bool {
-                $this->assertSame($message->getSubject(), 'test');
+                self::assertSame('test', $message->getSubject());
                 return true;
             }
         )->andReturn($email);

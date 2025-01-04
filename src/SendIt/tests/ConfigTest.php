@@ -19,10 +19,10 @@ class ConfigTest extends TestCase
             'queueConnection' => 'foo',
         ]);
 
-        $this->assertSame('mailer-dsn', $cfg->getDSN());
-        $this->assertSame('admin@spiral.dev', $cfg->getFromAddress());
-        $this->assertSame('emails', $cfg->getQueue());
-        $this->assertSame('foo', $cfg->getQueueConnection());
+        self::assertSame('mailer-dsn', $cfg->getDSN());
+        self::assertSame('admin@spiral.dev', $cfg->getFromAddress());
+        self::assertSame('emails', $cfg->getQueue());
+        self::assertSame('foo', $cfg->getQueueConnection());
     }
 
     public function testDefaultConfig(): void
@@ -36,10 +36,10 @@ class ConfigTest extends TestCase
             'queueConnection' => $env->get('MAILER_QUEUE_CONNECTION'),
         ]);
 
-        $this->assertSame('', $config->getDSN());
-        $this->assertSame('Spiral <sendit@local.host>', $config->getFromAddress());
-        $this->assertSame('local', $config->getQueue());
-        $this->assertNull($config->getQueueConnection());
+        self::assertSame('', $config->getDSN());
+        self::assertSame('Spiral <sendit@local.host>', $config->getFromAddress());
+        self::assertSame('local', $config->getQueue());
+        self::assertNull($config->getQueueConnection());
     }
 
     public function testDefaultConfigWithQueue(): void
@@ -50,7 +50,7 @@ class ConfigTest extends TestCase
             'queue' => $env->get('MAILER_QUEUE', 'local'),
         ]);
 
-        $this->assertSame('emails', $config->getQueue());
+        self::assertSame('emails', $config->getQueue());
     }
 
     public function testQueueWithNull(): void
@@ -59,12 +59,12 @@ class ConfigTest extends TestCase
             'queue' => null,
         ]);
 
-        $this->assertNull($config->getQueue());
+        self::assertNull($config->getQueue());
     }
 
     public function testGetsQueueConnectionWithoutKey(): void
     {
         $cfg = new MailerConfig();
-        $this->assertNull($cfg->getQueueConnection());
+        self::assertNull($cfg->getQueueConnection());
     }
 }

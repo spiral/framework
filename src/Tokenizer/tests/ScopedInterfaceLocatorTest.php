@@ -34,29 +34,29 @@ final class ScopedInterfaceLocatorTest extends TestCase
     {
         $classes = $this->container->get(ScopedInterfacesInterface::class)->getScopedInterfaces('foo');
 
-        $this->assertArrayHasKey(InterfaceD::class, $classes);
+        self::assertArrayHasKey(InterfaceD::class, $classes);
 
         // Excluded
-        $this->assertArrayNotHasKey(InterfaceA::class, $classes);
-        $this->assertArrayNotHasKey(InterfaceB::class, $classes);
-        $this->assertArrayNotHasKey(InterfaceC::class, $classes);
-        $this->assertArrayNotHasKey(InterfaceXX::class, $classes);
-        $this->assertArrayNotHasKey(BadInterface::class, $classes);
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Interfaces\Bad_Interface', $classes);
+        self::assertArrayNotHasKey(InterfaceA::class, $classes);
+        self::assertArrayNotHasKey(InterfaceB::class, $classes);
+        self::assertArrayNotHasKey(InterfaceC::class, $classes);
+        self::assertArrayNotHasKey(InterfaceXX::class, $classes);
+        self::assertArrayNotHasKey(BadInterface::class, $classes);
+        self::assertArrayNotHasKey('Spiral\Tests\Tokenizer\Interfaces\Bad_Interface', $classes);
     }
 
     public function testGetsInterfacesForNotExistScope(): void
     {
         $classes = $this->container->get(ScopedInterfacesInterface::class)->getScopedInterfaces('bar');
 
-        $this->assertArrayHasKey(InterfaceA::class, $classes);
-        $this->assertArrayHasKey(InterfaceB::class, $classes);
-        $this->assertArrayHasKey(InterfaceC::class, $classes);
-        $this->assertArrayHasKey(InterfaceD::class, $classes);
+        self::assertArrayHasKey(InterfaceA::class, $classes);
+        self::assertArrayHasKey(InterfaceB::class, $classes);
+        self::assertArrayHasKey(InterfaceC::class, $classes);
+        self::assertArrayHasKey(InterfaceD::class, $classes);
 
         // Excluded
-        $this->assertArrayNotHasKey(InterfaceXX::class, $classes);
-        $this->assertArrayNotHasKey(BadInterface::class, $classes);
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Interfaces\Bad_Interface', $classes);
+        self::assertArrayNotHasKey(InterfaceXX::class, $classes);
+        self::assertArrayNotHasKey(BadInterface::class, $classes);
+        self::assertArrayNotHasKey('Spiral\Tests\Tokenizer\Interfaces\Bad_Interface', $classes);
     }
 }

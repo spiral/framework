@@ -22,7 +22,7 @@ final class VerbosityTest extends TestCase
 
         $enum = Verbosity::detect($env);
 
-        $this->assertSame($expected, $enum);
+        self::assertSame($expected, $enum);
     }
 
     public static function envVariablesDataProvider(): \Traversable

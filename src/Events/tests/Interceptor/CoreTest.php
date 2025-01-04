@@ -24,6 +24,6 @@ final class CoreTest extends TestCase
 
         $core = new Core($dispatcher);
 
-        $this->assertSame($event, $core->callAction('', '', ['event' => $event]));
+        self::assertSame($event, $core->callAction('', '', ['event' => $event]));
     }
 }

@@ -22,8 +22,8 @@ class ConfigTest extends TestCase
             ],
         ]);
 
-        $this->assertTrue($config->isCacheEnabled());
-        $this->assertSame('/tmp/', $config->getCacheDirectory());
+        self::assertTrue($config->isCacheEnabled());
+        self::assertSame('/tmp/', $config->getCacheDirectory());
     }
 
     public function testNamespace(): void
@@ -34,7 +34,7 @@ class ConfigTest extends TestCase
             ],
         ]);
 
-        $this->assertSame([
+        self::assertSame([
             'default' => [__DIR__],
         ], $config->getNamespaces());
     }
@@ -47,19 +47,13 @@ class ConfigTest extends TestCase
             'engines' => [new Autowire(NativeEngine::class)],
         ]);
 
-        $this->assertInstanceOf(
-            NativeEngine::class,
-            $config->getEngines()[0]->resolve($container)
-        );
+        self::assertInstanceOf(NativeEngine::class, $config->getEngines()[0]->resolve($container));
 
         $config = new ViewsConfig([
             'engines' => [NativeEngine::class],
         ]);
 
-        $this->assertInstanceOf(
-            NativeEngine::class,
-            $config->getEngines()[0]->resolve($container)
-        );
+        self::assertInstanceOf(NativeEngine::class, $config->getEngines()[0]->resolve($container));
     }
 
     public function testDependencies(): void
@@ -76,9 +70,6 @@ class ConfigTest extends TestCase
             ],
         ]);
 
-        $this->assertSame(
-            $dependency,
-            $config->getDependencies()[0]->resolve($container)
-        );
+        self::assertSame($dependency, $config->getDependencies()[0]->resolve($container));
     }
 }

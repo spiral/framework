@@ -20,7 +20,7 @@ class SingletonsTest extends TestCase
     {
         $container = new Container();
         $container->bindSingleton('sampleClass', $instance = new SampleClass());
-        $this->assertSame($instance, $container->get('sampleClass'));
+        self::assertSame($instance, $container->get('sampleClass'));
     }
 
     public function testSingletonToItself(): void
@@ -29,8 +29,8 @@ class SingletonsTest extends TestCase
         $container->bindSingleton(SampleClass::class, SampleClass::class);
 
         $sc = $container->get(SampleClass::class);
-        $this->assertTrue($container->hasInstance(SampleClass::class));
-        $this->assertSame($sc, $container->get(SampleClass::class));
+        self::assertTrue($container->hasInstance(SampleClass::class));
+        self::assertSame($sc, $container->get(SampleClass::class));
     }
 
     public function testSingletonInstanceWithBinding(): void
@@ -39,8 +39,8 @@ class SingletonsTest extends TestCase
         $container->bindSingleton('sampleClass', $instance = new SampleClass());
         $container->bind('binding', 'sampleClass');
 
-        $this->assertSame($instance, $container->get('sampleClass'));
-        $this->assertSame($instance, $container->get('binding'));
+        self::assertSame($instance, $container->get('sampleClass'));
+        self::assertSame($instance, $container->get('binding'));
     }
 
     public function testHasInstance(): void
@@ -48,8 +48,8 @@ class SingletonsTest extends TestCase
         $container = new Container();
         $container->bindSingleton('sampleClass', $instance = new SampleClass());
 
-        $this->assertTrue($container->hasInstance('sampleClass'));
-        $this->assertFalse($container->hasInstance('otherClass'));
+        self::assertTrue($container->hasInstance('sampleClass'));
+        self::assertFalse($container->hasInstance('otherClass'));
     }
 
     public function testSingletonClosure(): void
@@ -60,7 +60,7 @@ class SingletonsTest extends TestCase
 
         $container->bindSingleton('sampleClass', static fn(): SampleClass => $instance);
 
-        $this->assertSame($instance, $container->get('sampleClass'));
+        self::assertSame($instance, $container->get('sampleClass'));
     }
 
     public function testSingletonClosureTwice(): void
@@ -71,8 +71,8 @@ class SingletonsTest extends TestCase
 
         $instance = $container->get('sampleClass');
 
-        $this->assertInstanceOf(SampleClass::class, $instance);
-        $this->assertSame($instance, $container->get('sampleClass'));
+        self::assertInstanceOf(SampleClass::class, $instance);
+        self::assertSame($instance, $container->get('sampleClass'));
     }
 
     public function testSingletonFactory(): void
@@ -83,8 +83,8 @@ class SingletonsTest extends TestCase
 
         $instance = $container->get('sampleClass');
 
-        $this->assertInstanceOf(SampleClass::class, $instance);
-        $this->assertSame($instance, $container->get('sampleClass'));
+        self::assertInstanceOf(SampleClass::class, $instance);
+        self::assertSame($instance, $container->get('sampleClass'));
     }
 
     #[DataProvider('singletonWithCustomArgsProvider')]
@@ -94,12 +94,12 @@ class SingletonsTest extends TestCase
         $container->bindSingleton($alias, $definition);
         $instance = $container->make($alias);
 
-        $this->assertSame($instance, $container->make($alias));
-        $this->assertSame($instance, $container->make($alias, []));
-        $this->assertNotSame($instance, $bar = $container->make($alias, ['bar']));
-        $this->assertNotSame($bar, $container->make($alias, ['bar']));
+        self::assertSame($instance, $container->make($alias));
+        self::assertSame($instance, $container->make($alias, []));
+        self::assertNotSame($instance, $bar = $container->make($alias, ['bar']));
+        self::assertNotSame($bar, $container->make($alias, ['bar']));
         // The binding mustn't be rebound
-        $this->assertSame($instance, $container->make($alias));
+        self::assertSame($instance, $container->make($alias));
     }
 
     public function testSingletonWithCustomArgsObject(): void
@@ -108,12 +108,12 @@ class SingletonsTest extends TestCase
         $container->bindSingleton('sampleClass', self::class::sampleClass());
         $instance = $container->make('sampleClass');
 
-        $this->assertSame($instance, $container->make('sampleClass'));
-        $this->assertSame($instance, $container->make('sampleClass', []));
-        $this->assertNotSame($instance, $bar = $container->make('sampleClass', ['bar']));
-        $this->assertNotSame($bar, $container->make('sampleClass', ['bar']));
+        self::assertSame($instance, $container->make('sampleClass'));
+        self::assertSame($instance, $container->make('sampleClass', []));
+        self::assertNotSame($instance, $bar = $container->make('sampleClass', ['bar']));
+        self::assertNotSame($bar, $container->make('sampleClass', ['bar']));
         // The binding mustn't be rebound
-        $this->assertSame($instance, $container->make('sampleClass'));
+        self::assertSame($instance, $container->make('sampleClass'));
     }
 
     public static function singletonWithCustomArgsProvider(): iterable
@@ -129,9 +129,9 @@ class SingletonsTest extends TestCase
         $container = new Container();
         $instance = $container->make(DeclarativeSingleton::class, ['foo' => 'bar']);
 
-        $this->assertFalse($container->hasInstance(DeclarativeSingleton::class));
+        self::assertFalse($container->hasInstance(DeclarativeSingleton::class));
 
-        $this->assertNotSame($instance, $container->get(DeclarativeSingleton::class));
+        self::assertNotSame($instance, $container->get(DeclarativeSingleton::class));
     }
 
     public function testDelayedSingleton(): void
@@ -143,9 +143,9 @@ class SingletonsTest extends TestCase
 
         $instance = $container->get('singleton');
 
-        $this->assertInstanceOf(SampleClass::class, $instance);
-        $this->assertSame($instance, $container->get('singleton'));
-        $this->assertNotSame($instance, $container->get('sampleClass'));
+        self::assertInstanceOf(SampleClass::class, $instance);
+        self::assertSame($instance, $container->get('singleton'));
+        self::assertNotSame($instance, $container->get('sampleClass'));
     }
 
     public function testDeclarativeSingleton(): void
@@ -154,8 +154,8 @@ class SingletonsTest extends TestCase
 
         $instance = $container->get(DeclarativeSingleton::class);
 
-        $this->assertInstanceOf(DeclarativeSingleton::class, $instance);
-        $this->assertSame($instance, $container->get(DeclarativeSingleton::class));
+        self::assertInstanceOf(DeclarativeSingleton::class, $instance);
+        self::assertSame($instance, $container->get(DeclarativeSingleton::class));
     }
 
     public function testAttribute(): void
@@ -183,11 +183,11 @@ class SingletonsTest extends TestCase
         $container = new Container();
         $class = new #[Singleton] class {};
 
-        $this->assertFalse($container->has($class::class));
+        self::assertFalse($container->has($class::class));
 
         $container->get($class::class);
 
-        $this->assertTrue($container->has($class::class));
+        self::assertTrue($container->has($class::class));
     }
 
     private function makeAttributedClass(): object

@@ -12,7 +12,7 @@ final class RequestFactoryTest extends TestCase
     public function testCreateRequest(): void
     {
         $r = (new Psr17Factory())->createServerRequest('GET', '/home');
-        $this->assertSame('GET', $r->getMethod());
-        $this->assertSame('/home', $r->getUri()->getPath());
+        self::assertSame('GET', $r->getMethod());
+        self::assertSame('/home', $r->getUri()->getPath());
     }
 }

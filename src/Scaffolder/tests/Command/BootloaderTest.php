@@ -26,25 +26,25 @@ final class BootloaderTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(\class_exists($class));
+        self::assertTrue(\class_exists($class));
 
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('strict_types=1', $content);
-        $this->assertStringContainsString('Sample Bootloader', $reflection->getDocComment());
-        $this->assertStringContainsString('{project-name}', $content);
-        $this->assertStringContainsString('@author {author-name}', $content);
-        $this->assertTrue($reflection->hasMethod('boot'));
-        $this->assertTrue($reflection->isFinal());
+        self::assertStringContainsString('strict_types=1', $content);
+        self::assertStringContainsString('Sample Bootloader', $reflection->getDocComment());
+        self::assertStringContainsString('{project-name}', $content);
+        self::assertStringContainsString('@author {author-name}', $content);
+        self::assertTrue($reflection->hasMethod('boot'));
+        self::assertTrue($reflection->isFinal());
 
-        $this->assertTrue($reflection->hasConstant('BINDINGS'));
-        $this->assertTrue($reflection->hasConstant('SINGLETONS'));
-        $this->assertTrue($reflection->hasConstant('DEPENDENCIES'));
+        self::assertTrue($reflection->hasConstant('BINDINGS'));
+        self::assertTrue($reflection->hasConstant('SINGLETONS'));
+        self::assertTrue($reflection->hasConstant('DEPENDENCIES'));
 
-        $this->assertEquals([], $reflection->getReflectionConstant('BINDINGS')->getValue());
-        $this->assertEquals([], $reflection->getReflectionConstant('SINGLETONS')->getValue());
-        $this->assertEquals([], $reflection->getReflectionConstant('DEPENDENCIES')->getValue());
+        self::assertEquals([], $reflection->getReflectionConstant('BINDINGS')->getValue());
+        self::assertEquals([], $reflection->getReflectionConstant('SINGLETONS')->getValue());
+        self::assertEquals([], $reflection->getReflectionConstant('DEPENDENCIES')->getValue());
     }
 
     /**
@@ -61,17 +61,14 @@ final class BootloaderTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(\class_exists($class));
+        self::assertTrue(\class_exists($class));
 
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString(
-            'App/Custom/Bootloader/SampleBootloader.php',
-            \str_replace('\\', '/', $reflection->getFileName())
-        );
+        self::assertStringContainsString('App/Custom/Bootloader/SampleBootloader.php', \str_replace('\\', '/', $reflection->getFileName()));
 
-        $this->assertStringContainsString('App\Custom\Bootloader', $content);
+        self::assertStringContainsString('App\Custom\Bootloader', $content);
     }
 
     public function testScaffoldForDomainBootloader(): void
@@ -84,20 +81,17 @@ final class BootloaderTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(\class_exists($class));
+        self::assertTrue(\class_exists($class));
 
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString(
-            \Spiral\Bootloader\DomainBootloader::class,
-            $content
-        );
+        self::assertStringContainsString(\Spiral\Bootloader\DomainBootloader::class, $content);
 
         //$this->assertTrue($reflection->hasConstant('INTERCEPTORS'));
-        $this->assertTrue($reflection->hasConstant('SINGLETONS'));
+        self::assertTrue($reflection->hasConstant('SINGLETONS'));
 
-        $this->assertEquals([
+        self::assertEquals([
             HandlerInterface::class => ['Spiral\Tests\Scaffolder\App\Bootloader\SampleDomainBootloader', 'domainCore'],
         ], $reflection->getConstant('SINGLETONS'));
     }
@@ -113,16 +107,13 @@ final class BootloaderTest extends AbstractCommandTestCase
 
         $output = $result->getOutput()->fetch();
 
-        $this->assertStringEqualsStringIgnoringLineEndings(
-            <<<OUTPUT
+        self::assertStringEqualsStringIgnoringLineEndings(<<<OUTPUT
             Declaration of 'SampleBootloader' has been successfully written into 'Bootloader/SampleBootloader.php'.
 
             Next steps:
             1. Don't forget to add your bootloader to the bootloader's list in 'Spiral\Tests\Scaffolder\App\TestApp' class
             2. Read more about bootloaders in the documentation: https://spiral.dev/docs/framework-bootloaders
 
-            OUTPUT,
-            $output
-        );
+            OUTPUT, $output);
     }
 }

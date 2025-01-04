@@ -22,8 +22,8 @@ final class QueueableDetectorTest extends TestCase
     {
         $detector = new QueueableDetector((new Factory())->create());
 
-        $this->assertSame($queueable, $detector->isQueueable($object));
-        $this->assertSame($queue, $detector->getQueue($object));
+        self::assertSame($queueable, $detector->isQueueable($object));
+        self::assertSame($queue, $detector->getQueue($object));
     }
 
     public static function queueableProvider(): \Traversable

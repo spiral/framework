@@ -70,10 +70,7 @@ class ConfigureTest extends BaseTestCase
 
             text;
 
-        $this->assertSame(
-            \str_replace("\r", '', $expected),
-            \str_replace("\r", '', $actual)
-        );
+        self::assertSame(\str_replace("\r", '', $expected), \str_replace("\r", '', $actual));
     }
 
     /**
@@ -86,10 +83,10 @@ class ConfigureTest extends BaseTestCase
         $output = $core->run('configure', ['--break' => true]);
         $result = $output->getOutput()->fetch();
 
-        $this->assertStringContainsString('Unhandled failed command error at', $result);
-        $this->assertStringContainsString('Aborting.', $result);
-        $this->assertStringNotContainsString('Unhandled another failed command error at', $result);
-        $this->assertEquals(1, $output->getCode());
+        self::assertStringContainsString('Unhandled failed command error at', $result);
+        self::assertStringContainsString('Aborting.', $result);
+        self::assertStringNotContainsString('Unhandled another failed command error at', $result);
+        self::assertSame(1, $output->getCode());
     }
 
     /**
@@ -102,10 +99,10 @@ class ConfigureTest extends BaseTestCase
         $output = $core->run('configure', ['--ignore' => true, '--break' => true]);
         $result = $output->getOutput()->fetch();
 
-        $this->assertStringContainsString('Unhandled failed command error at', $result);
-        $this->assertStringNotContainsString('Aborting.', $result);
-        $this->assertStringContainsString('Unhandled another failed command error at', $result);
-        $this->assertEquals(0, $output->getCode());
+        self::assertStringContainsString('Unhandled failed command error at', $result);
+        self::assertStringNotContainsString('Aborting.', $result);
+        self::assertStringContainsString('Unhandled another failed command error at', $result);
+        self::assertSame(0, $output->getCode());
     }
 
     /**
@@ -119,10 +116,10 @@ class ConfigureTest extends BaseTestCase
         $output = $core->run('configure');
         $result = $output->getOutput()->fetch();
 
-        $this->assertStringContainsString('Unhandled failed command error at', $result);
-        $this->assertStringNotContainsString('Aborting.', $result);
-        $this->assertStringContainsString('Unhandled another failed command error at', $result);
-        $this->assertEquals(1, $output->getCode());
+        self::assertStringContainsString('Unhandled failed command error at', $result);
+        self::assertStringNotContainsString('Aborting.', $result);
+        self::assertStringContainsString('Unhandled another failed command error at', $result);
+        self::assertSame(1, $output->getCode());
     }
 
     private function bindFailure(): Console

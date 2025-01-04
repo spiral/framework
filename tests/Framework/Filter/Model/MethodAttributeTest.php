@@ -16,6 +16,6 @@ final class MethodAttributeTest extends FilterTestCase
     {
         $filter = $this->getFilter(TestRequest::class, method: 'GET');
 
-        $this->assertSame('GET', $filter->method);
+        self::assertSame('GET', $filter->method);
     }
 }

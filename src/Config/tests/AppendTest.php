@@ -13,18 +13,18 @@ class AppendTest extends BaseTestCase
     {
         $cf = $this->getFactory();
 
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        self::assertSame(['value' => 'value!'], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Append('.', 'other', ['a' => 'b']));
 
-        $this->assertSame([
+        self::assertSame([
             'value' => 'value!',
             'other' => ['a' => 'b'],
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Append('other.', null, 'c'));
 
-        $this->assertSame([
+        self::assertSame([
             'value' => 'value!',
             'other' => [
                 'a' => 'b',
@@ -39,7 +39,7 @@ class AppendTest extends BaseTestCase
 
         $cf = $this->getFactory();
         $config = $cf->getConfig('scope');
-        $this->assertEquals(['value' => 'value!'], $config);
+        self::assertSame(['value' => 'value!'], $config);
 
         $cf->modify('scope', new Append('other', 'other', ['a' => 'b']));
     }

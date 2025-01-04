@@ -23,25 +23,16 @@ final class ProtoSerializerTest extends TestCase
     {
         $message = new PingRequest(['url' => 'foo']);
 
-        $this->assertSame(
-            $message->serializeToString(),
-            $this->serializer->serialize($message)
-        );
+        self::assertSame($message->serializeToString(), $this->serializer->serialize($message));
     }
 
     public function testUnserialize(): void
     {
         $message = new PingRequest(['url' => 'foo']);
 
-        $this->assertEquals(
-            $message,
-            $this->serializer->unserialize($message->serializeToString(), PingRequest::class)
-        );
+        self::assertEquals($message, $this->serializer->unserialize($message->serializeToString(), PingRequest::class));
 
-        $this->assertEquals(
-            $message,
-            $this->serializer->unserialize($message->serializeToString(), new PingRequest())
-        );
+        self::assertEquals($message, $this->serializer->unserialize($message->serializeToString(), new PingRequest()));
     }
 
     public function testInvalidPayloadException(): void

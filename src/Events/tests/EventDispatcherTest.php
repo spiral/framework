@@ -25,6 +25,6 @@ final class EventDispatcherTest extends TestCase
 
         $dispatcher = new EventDispatcher($core);
 
-        $this->assertSame($event, $dispatcher->dispatch($event));
+        self::assertSame($event, $dispatcher->dispatch($event));
     }
 }

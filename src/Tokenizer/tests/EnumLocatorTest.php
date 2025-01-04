@@ -22,15 +22,15 @@ final class EnumLocatorTest extends TestCase
         //Direct loading
         $enums = $tokenizer->enumLocator()->getEnums();
 
-        $this->assertArrayHasKey(EnumA::class, $enums);
-        $this->assertArrayHasKey(EnumB::class, $enums);
-        $this->assertArrayHasKey(EnumC::class, $enums);
-        $this->assertArrayHasKey(EnumD::class, $enums);
+        self::assertArrayHasKey(EnumA::class, $enums);
+        self::assertArrayHasKey(EnumB::class, $enums);
+        self::assertArrayHasKey(EnumC::class, $enums);
+        self::assertArrayHasKey(EnumD::class, $enums);
 
         //Excluded
-        $this->assertArrayNotHasKey(EnumXX::class, $enums);
-        $this->assertArrayNotHasKey(BadEnum::class, $enums);
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Enums\Bad_Enum', $enums);
+        self::assertArrayNotHasKey(EnumXX::class, $enums);
+        self::assertArrayNotHasKey(BadEnum::class, $enums);
+        self::assertArrayNotHasKey('Spiral\Tests\Tokenizer\Enums\Bad_Enum', $enums);
     }
 
     public function testEnumsByEnum(): void
@@ -40,11 +40,11 @@ final class EnumLocatorTest extends TestCase
         //By namespace
         $enums = $tokenizer->enumLocator()->getEnums(EnumD::class);
 
-        $this->assertArrayHasKey(EnumD::class, $enums);
+        self::assertArrayHasKey(EnumD::class, $enums);
 
-        $this->assertArrayNotHasKey(EnumA::class, $enums);
-        $this->assertArrayNotHasKey(EnumB::class, $enums);
-        $this->assertArrayNotHasKey(EnumC::class, $enums);
+        self::assertArrayNotHasKey(EnumA::class, $enums);
+        self::assertArrayNotHasKey(EnumB::class, $enums);
+        self::assertArrayNotHasKey(EnumC::class, $enums);
     }
 
     public function testEnumsByInterface(): void
@@ -54,11 +54,11 @@ final class EnumLocatorTest extends TestCase
         //By interface
         $enums = $tokenizer->enumLocator()->getEnums(TestInterface::class);
 
-        $this->assertArrayHasKey(EnumB::class, $enums);
-        $this->assertArrayHasKey(EnumC::class, $enums);
+        self::assertArrayHasKey(EnumB::class, $enums);
+        self::assertArrayHasKey(EnumC::class, $enums);
 
-        $this->assertArrayNotHasKey(EnumA::class, $enums);
-        $this->assertArrayNotHasKey(EnumD::class, $enums);
+        self::assertArrayNotHasKey(EnumA::class, $enums);
+        self::assertArrayNotHasKey(EnumD::class, $enums);
     }
 
     public function testEnumsByTrait(): void
@@ -68,10 +68,10 @@ final class EnumLocatorTest extends TestCase
         //By trait
         $enums = $tokenizer->enumLocator()->getEnums(TestTrait::class);
 
-        $this->assertArrayHasKey(EnumB::class, $enums);
-        $this->assertArrayHasKey(EnumC::class, $enums);
+        self::assertArrayHasKey(EnumB::class, $enums);
+        self::assertArrayHasKey(EnumC::class, $enums);
 
-        $this->assertArrayNotHasKey(EnumA::class, $enums);
-        $this->assertArrayNotHasKey(EnumD::class, $enums);
+        self::assertArrayNotHasKey(EnumA::class, $enums);
+        self::assertArrayNotHasKey(EnumD::class, $enums);
     }
 }

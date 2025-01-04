@@ -18,43 +18,43 @@ class ExceptionsTest extends TestCase
     public function testClientException(): void
     {
         $e = new ClientException();
-        $this->assertSame(400, $e->getCode());
+        self::assertSame(400, $e->getCode());
     }
 
     public function testNotFound(): void
     {
         $e = new NotFoundException();
-        $this->assertSame(404, $e->getCode());
+        self::assertSame(404, $e->getCode());
     }
 
     public function testBadRequest(): void
     {
         $e = new BadRequestException();
-        $this->assertSame(400, $e->getCode());
+        self::assertSame(400, $e->getCode());
     }
 
     public function testForbidden(): void
     {
         $e = new ForbiddenException();
-        $this->assertSame(403, $e->getCode());
+        self::assertSame(403, $e->getCode());
     }
 
     public function testUnauthorized(): void
     {
         $e = new UnauthorizedException();
-        $this->assertSame(401, $e->getCode());
+        self::assertSame(401, $e->getCode());
     }
 
     public function testServerError(): void
     {
         $e = new ClientException\ServerErrorException();
-        $this->assertSame(500, $e->getCode());
+        self::assertSame(500, $e->getCode());
     }
 
     #[DataProvider('allExceptionsWithPreviousSet')]
     public function testPreviousSetter(\Throwable $exception): void
     {
-        $this->assertInstanceOf(\Throwable::class, $exception->getPrevious());
+        self::assertInstanceOf(\Throwable::class, $exception->getPrevious());
     }
 
     public static function allExceptionsWithPreviousSet(): \Generator

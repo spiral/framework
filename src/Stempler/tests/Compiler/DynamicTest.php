@@ -29,10 +29,7 @@ class DynamicTest extends BaseTestCase
     {
         $doc = $this->parse('{{ $name }}');
 
-        $this->assertSame(
-            "<?php echo htmlspecialchars((string) (\$name), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8'); ?>",
-            $this->compile($doc)
-        );
+        self::assertSame("<?php echo htmlspecialchars((string) (\$name), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8'); ?>", $this->compile($doc));
     }
 
     public function testOutputEscapeOptions(): void
@@ -41,9 +38,6 @@ class DynamicTest extends BaseTestCase
 
         $doc->nodes[0]->filter = 'e(%s)';
 
-        $this->assertSame(
-            '<?php echo e($name); ?>',
-            $this->compile($doc)
-        );
+        self::assertSame('<?php echo e($name); ?>', $this->compile($doc));
     }
 }

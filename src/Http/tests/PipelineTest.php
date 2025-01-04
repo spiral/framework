@@ -32,9 +32,9 @@ final class PipelineTest extends TestCase
 
         $response = $pipeline->withHandler($handler)->handle(new ServerRequest('GET', ''));
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('OK', $response->getReasonPhrase());
-        $this->assertSame('response', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('OK', $response->getReasonPhrase());
+        self::assertSame('response', (string)$response->getBody());
     }
 
     public function testHandle(): void
@@ -45,9 +45,9 @@ final class PipelineTest extends TestCase
 
         $response = $pipeline->process(new ServerRequest('GET', ''), $handler);
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('OK', $response->getReasonPhrase());
-        $this->assertSame('response', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('OK', $response->getReasonPhrase());
+        self::assertSame('response', (string)$response->getBody());
     }
 
     public function testHandleException(): void

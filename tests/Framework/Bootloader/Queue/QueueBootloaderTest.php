@@ -61,7 +61,7 @@ final class QueueBootloaderTest extends BaseTestCase
         $mock = $this->mockContainer(QueueConnectionProviderInterface::class);
         $mock->shouldReceive('getConnection')->andReturn($queue = $this->createMock(QueueInterface::class));
 
-        $this->assertSame($queue, $this->getContainer()->get(QueueInterface::class));
+        self::assertSame($queue, $this->getContainer()->get(QueueInterface::class));
     }
 
     public function testConfig(): void
@@ -103,7 +103,7 @@ final class QueueBootloaderTest extends BaseTestCase
         $bootloader->addConsumeInterceptor($interceptor);
         $bootloader->addConsumeInterceptor($autowire);
 
-        $this->assertSame([
+        self::assertSame([
             'foo', $interceptor, $autowire
         ], $configs->getConfig(QueueConfig::CONFIG)['interceptors']['consume']);
     }
@@ -121,7 +121,7 @@ final class QueueBootloaderTest extends BaseTestCase
         $bootloader->addPushInterceptor($interceptor);
         $bootloader->addPushInterceptor($autowire);
 
-        $this->assertSame([
+        self::assertSame([
             'foo', $interceptor, $autowire
         ], $configs->getConfig(QueueConfig::CONFIG)['interceptors']['push']);
     }
@@ -134,7 +134,7 @@ final class QueueBootloaderTest extends BaseTestCase
         $bootloader = new QueueBootloader($configs);
         $bootloader->registerDriverAlias('foo', 'bar');
 
-        $this->assertSame([
+        self::assertSame([
             'bar' => 'foo'
         ], $configs->getConfig(QueueConfig::CONFIG)['driverAliases']);
     }

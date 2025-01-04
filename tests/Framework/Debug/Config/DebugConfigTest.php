@@ -17,14 +17,14 @@ final class DebugConfigTest extends TestCase
     public function testGetCollectors(array $collectors): void
     {
         $config = new DebugConfig(['collectors' => $collectors]);
-        $this->assertSame($collectors, $config->getCollectors());
+        self::assertSame($collectors, $config->getCollectors());
     }
 
     #[DataProvider('tagsDataProvider')]
     public function testGetTags(array $tags): void
     {
         $config = new DebugConfig(['tags' => $tags]);
-        $this->assertSame($tags, $config->getTags());
+        self::assertSame($tags, $config->getTags());
     }
 
     public static function collectorsDataProvider(): \Traversable

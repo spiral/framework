@@ -13,38 +13,38 @@ final class InputBagTest extends TestCase
     public function testEmptyBagCount(): void
     {
         $bag = new InputBag(data: []);
-        $this->assertSame(0, $bag->count());
+        self::assertCount(0, $bag);
 
         $bag = new InputBag(data: [], prefix: 'foo');
-        $this->assertSame(0, $bag->count());
+        self::assertCount(0, $bag);
     }
 
     public function testCount(): void
     {
         $bag = new InputBag(data: [1 => 'bar', 2 => [3 => 'foo']]);
 
-        $this->assertSame(2, $bag->count());
-        $this->assertSame(2, \count($bag));
+        self::assertCount(2, $bag);
+        self::assertCount(2, $bag);
     }
 
     public function testCountWithPrefix(): void
     {
         $bag = new InputBag(data: [1 => 'bar', 2 => [3 => 'foo']], prefix: '2');
 
-        $this->assertSame(1, $bag->count());
-        $this->assertSame(1, \count($bag));
+        self::assertCount(1, $bag);
+        self::assertCount(1, $bag);
     }
 
     public function testGetsAllData(): void
     {
         $bag = new InputBag($data = [1 => 'bar', 2 => [3 => 'foo']]);
-        $this->assertSame($data, $bag->all());
+        self::assertSame($data, $bag->all());
     }
 
     public function testGetsAllDataWithPrefix(): void
     {
         $bag = new InputBag([1 => 'bar', 2 => [3 => 'foo']], prefix: '2');
-        $this->assertSame([3 => 'foo'], $bag->all());
+        self::assertSame([3 => 'foo'], $bag->all());
     }
 
     public function testIterator(): void
@@ -52,7 +52,7 @@ final class InputBagTest extends TestCase
         $bag = new InputBag($data = [1 => 'bar', 2 => [3 => 'foo']]);
         $dataFromIterator = \iterator_to_array($bag);
 
-        $this->assertSame($data, $dataFromIterator);
+        self::assertSame($data, $dataFromIterator);
     }
 
     public function testHas(): void
@@ -60,29 +60,29 @@ final class InputBagTest extends TestCase
         $bag = new InputBag([1 => 'bar', 2 => [3 => 'foo'], 4 => null]);
 
         // Key exists and not null
-        $this->assertTrue($bag->has(1));
-        $this->assertTrue(isset($bag[1]));
-        $this->assertTrue($bag->has('1'));
-        $this->assertTrue(isset($bag['1']));
+        self::assertTrue($bag->has(1));
+        self::assertArrayHasKey(1, $bag);
+        self::assertTrue($bag->has('1'));
+        self::assertArrayHasKey('1', $bag);
 
         // Key exists and null
-        $this->assertTrue($bag->has(4));
-        $this->assertFalse(isset($bag[4]));
+        self::assertTrue($bag->has(4));
+        self::assertArrayNotHasKey(4, $bag);
 
         // Key doesn't exist
-        $this->assertFalse($bag->has(5));
-        $this->assertFalse(isset($bag[5]));
+        self::assertFalse($bag->has(5));
+        self::assertArrayNotHasKey(5, $bag);
     }
 
     public function testHasWithPrefix(): void
     {
         $bag = new InputBag([1 => 'bar', 2 => [3 => 'foo'], 4 => null], prefix: 2);
 
-        $this->assertFalse($bag->has(1));
-        $this->assertFalse(isset($bag[1]));
+        self::assertFalse($bag->has(1));
+        self::assertArrayNotHasKey(1, $bag);
 
-        $this->assertTrue($bag->has(3));
-        $this->assertTrue(isset($bag[3]));
+        self::assertTrue($bag->has(3));
+        self::assertArrayHasKey(3, $bag);
     }
 
     public function testGet(): void
@@ -90,26 +90,26 @@ final class InputBagTest extends TestCase
         $bag = new InputBag([1 => 'bar', 2 => [3 => 'foo'], 4 => null]);
 
         // Key exists and not null
-        $this->assertSame('bar', $bag->get(1));
-        $this->assertSame('bar', $bag->get('1'));
-        $this->assertSame('bar', $bag->get(1, 'baz'));
-        $this->assertSame('bar', $bag[1]);
-        $this->assertSame('bar', $bag['1']);
+        self::assertSame('bar', $bag->get(1));
+        self::assertSame('bar', $bag->get('1'));
+        self::assertSame('bar', $bag->get(1, 'baz'));
+        self::assertSame('bar', $bag[1]);
+        self::assertSame('bar', $bag['1']);
 
         // Key exists and not null
-        $this->assertSame('foo', $bag->get('2.3'));
-        $this->assertSame('foo', $bag['2.3']);
+        self::assertSame('foo', $bag->get('2.3'));
+        self::assertSame('foo', $bag['2.3']);
 
         // Key exists and null
-        $this->assertNull($bag->get(4));
-        $this->assertNull($bag->get(4, 'baz'));
-        $this->assertNull($bag[4]);
+        self::assertNull($bag->get(4));
+        self::assertNull($bag->get(4, 'baz'));
+        self::assertNull($bag[4]);
 
         // Key exists and null
-        $this->assertNull($bag->get(5));
-        $this->assertNull($bag->get('5.5'));
-        $this->assertNull($bag['5.5']);
-        $this->assertSame('baz', $bag->get('5.5', 'baz'));
+        self::assertNull($bag->get(5));
+        self::assertNull($bag->get('5.5'));
+        self::assertNull($bag['5.5']);
+        self::assertSame('baz', $bag->get('5.5', 'baz'));
     }
 
     public function testGetWithPrefix(): void
@@ -117,10 +117,10 @@ final class InputBagTest extends TestCase
         $bag = new InputBag([1 => 'bar', 2 => [3 => 'foo'], 4 => null], prefix: 2);
 
         // Key exists and not null
-        $this->assertSame('foo', $bag->get(3));
+        self::assertSame('foo', $bag->get(3));
 
         // Key doesn't exist
-        $this->assertNull($bag->get(4));
+        self::assertNull($bag->get(4));
     }
 
     public function testSet(): void
@@ -144,15 +144,15 @@ final class InputBagTest extends TestCase
         $bag = new InputBag([1 => 'bar', 2 => [3 => 'foo'], 4 => null]);
 
         $result = $bag->fetch(['1', 4, 5]);
-        $this->assertSame([1 => 'bar', 4 => null], $result);
+        self::assertSame([1 => 'bar', 4 => null], $result);
 
         // Fill missed values with null
         $result = $bag->fetch(['1', 4, 5], true);
-        $this->assertSame([1 => 'bar', 4 => null, 5 => null], $result);
+        self::assertSame([1 => 'bar', 4 => null, 5 => null], $result);
 
         // Fill missed values with filler
         $result = $bag->fetch(['1', 4, 5], true, 'baz');
-        $this->assertSame([1 => 'bar', 4 => null, 5 => 'baz'], $result);
+        self::assertSame([1 => 'bar', 4 => null, 5 => 'baz'], $result);
     }
 
     public function testFetchWithPrefix(): void
@@ -160,14 +160,14 @@ final class InputBagTest extends TestCase
         $bag = new InputBag([1 => 'bar', 2 => [3 => 'foo'], 4 => null], prefix: 2);
 
         $result = $bag->fetch(['1', 4, 3]);
-        $this->assertSame([3 => 'foo'], $result);
+        self::assertSame([3 => 'foo'], $result);
 
         // Fill missed values with null
         $result = $bag->fetch(['1', 4, 3], true);
-        $this->assertSame([3 => 'foo', 1 => null, 4 => null], $result);
+        self::assertSame([3 => 'foo', 1 => null, 4 => null], $result);
 
         // Fill missed values with filler
         $result = $bag->fetch(['1', 4, 3], true, 'baz');
-        $this->assertSame([3 => 'foo', 1 => 'baz', 4 => 'baz'], $result);
+        self::assertSame([3 => 'foo', 1 => 'baz', 4 => 'baz'], $result);
     }
 }

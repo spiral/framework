@@ -15,7 +15,7 @@ final class UuidCasterTest extends TestCase
     #[DataProvider('supportsDataProvider')]
     public function testSupports(\ReflectionProperty $ref, bool $expected): void
     {
-        $this->assertSame($expected, (new UuidCaster())->supports($ref->getType()));
+        self::assertSame($expected, (new UuidCaster())->supports($ref->getType()));
     }
 
     public function testSetValue(): void
@@ -25,7 +25,7 @@ final class UuidCasterTest extends TestCase
         $property = new \ReflectionProperty($filter, 'groupUuid');
 
         $setter->setValue($filter, $property, '11111111-1111-1111-1111-111111111111');
-        $this->assertSame('11111111-1111-1111-1111-111111111111', $property->getValue($filter)->toString());
+        self::assertSame('11111111-1111-1111-1111-111111111111', $property->getValue($filter)->toString());
     }
 
     public function testSetValueException(): void

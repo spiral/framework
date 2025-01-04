@@ -13,7 +13,7 @@ class EntitiesTest extends TestCase
     #[DataProvider('nameProvider')]
     public function testName(string $name, int $sequence, string $expected): void
     {
-        $this->assertEquals($expected, NameEntity::createWithSequence($name, $sequence)->fullName());
+        self::assertSame($expected, NameEntity::createWithSequence($name, $sequence)->fullName());
     }
 
     public static function nameProvider(): \Traversable

@@ -16,16 +16,16 @@ final class SerializerRegistryTest extends TestCase
     {
         $registry = new SerializerRegistry();
 
-        $this->assertFalse($registry->has('foo'));
-        $this->assertFalse($registry->has('bar'));
+        self::assertFalse($registry->has('foo'));
+        self::assertFalse($registry->has('bar'));
 
         $registry->register('foo', new PhpSerializer());
         $registry->register('bar', new JsonSerializer());
 
-        $this->assertTrue($registry->has('foo'));
-        $this->assertTrue($registry->has('bar'));
-        $this->assertInstanceOf(PhpSerializer::class, $registry->get('foo'));
-        $this->assertInstanceOf(JsonSerializer::class, $registry->get('bar'));
+        self::assertTrue($registry->has('foo'));
+        self::assertTrue($registry->has('bar'));
+        self::assertInstanceOf(PhpSerializer::class, $registry->get('foo'));
+        self::assertInstanceOf(JsonSerializer::class, $registry->get('bar'));
     }
 
     public function testGet(): void
@@ -33,7 +33,7 @@ final class SerializerRegistryTest extends TestCase
         $registry = new SerializerRegistry();
         $registry->register('foo', new PhpSerializer());
 
-        $this->assertInstanceOf(PhpSerializer::class, $registry->get('foo'));
+        self::assertInstanceOf(PhpSerializer::class, $registry->get('foo'));
         $this->expectException(SerializerNotFoundException::class);
         $registry->get('bar');
     }
@@ -42,13 +42,13 @@ final class SerializerRegistryTest extends TestCase
     {
         $registry = new SerializerRegistry();
 
-        $this->assertFalse($registry->has('foo'));
-        $this->assertFalse($registry->has('bar'));
+        self::assertFalse($registry->has('foo'));
+        self::assertFalse($registry->has('bar'));
 
         $registry->register('foo', new PhpSerializer());
         $registry->register('bar', new JsonSerializer());
 
-        $this->assertTrue($registry->has('foo'));
-        $this->assertTrue($registry->has('bar'));
+        self::assertTrue($registry->has('foo'));
+        self::assertTrue($registry->has('bar'));
     }
 }

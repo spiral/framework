@@ -24,7 +24,7 @@ final class ApplicationInProductionTest extends TestCase
             $this->createMock(OutputInterface::class)
         );
 
-        $this->assertTrue($confirmation->confirmToProceed());
+        self::assertTrue($confirmation->confirmToProceed());
     }
 
     public function testProductionEnvWithForceOptionShouldBeConfirmed(): void
@@ -38,7 +38,7 @@ final class ApplicationInProductionTest extends TestCase
         $input->expects($this->once())->method('hasOption')->willReturn(true);
         $input->expects($this->once())->method('getOption')->willReturn(true);
 
-        $this->assertTrue($confirmation->confirmToProceed());
+        self::assertTrue($confirmation->confirmToProceed());
     }
 
 
@@ -57,7 +57,7 @@ final class ApplicationInProductionTest extends TestCase
             ->with('Do you really wish to run command?', false)
             ->willReturn(true);
 
-        $this->assertTrue($confirmation->confirmToProceed());
+        self::assertTrue($confirmation->confirmToProceed());
     }
 
     public function testProductionEnvShouldBeAskAboutConfirmationAndNotConfirmed(): void
@@ -75,7 +75,7 @@ final class ApplicationInProductionTest extends TestCase
             ->with('Do you really wish to run command?', false)
             ->willReturn(false);
 
-        $this->assertFalse($confirmation->confirmToProceed());
+        self::assertFalse($confirmation->confirmToProceed());
     }
 
     public static function notProductionEnvs(): \Traversable

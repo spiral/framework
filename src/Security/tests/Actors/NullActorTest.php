@@ -15,6 +15,6 @@ class NullActorTest extends TestCase
         /** @var ActorInterface $actor */
         $actor = new NullActor();
 
-        $this->assertEquals([], $actor->getRoles());
+        self::assertEquals([], $actor->getRoles());
     }
 }

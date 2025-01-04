@@ -25,7 +25,7 @@ class FunctionsTest extends TestCase
         $c = $core->getContainer();
 
         ContainerScope::runScope($c, function (): void {
-            $this->assertSame(['key' => 'value'], spiral(TestConfig::class)->toArray());
+            self::assertSame(['key' => 'value'], spiral(TestConfig::class)->toArray());
         });
     }
 
@@ -42,7 +42,7 @@ class FunctionsTest extends TestCase
         $c = $core->getContainer();
 
         ContainerScope::runScope($c, function (): void {
-            $this->assertSame(true, env('key'));
+            self::assertTrue(env('key'));
         });
     }
 
@@ -102,6 +102,6 @@ class FunctionsTest extends TestCase
     private function assertDir($path, $value): void
     {
         $path = str_replace(['\\', '//'], '/', $path);
-        $this->assertSame(rtrim($path, '/') . '/', $value);
+        self::assertSame(rtrim($path, '/') . '/', $value);
     }
 }

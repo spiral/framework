@@ -17,10 +17,7 @@ final class SnapshotTest extends BaseTestCase
             'SNAPSHOT_VERBOSITY' => '1'
         ]);
 
-        $this->assertInstanceOf(
-            SnapshotterInterface::class,
-            $app->getContainer()->get(SnapshotterInterface::class)
-        );
+        self::assertInstanceOf(SnapshotterInterface::class, $app->getContainer()->get(SnapshotterInterface::class));
     }
 
     public function testSnapshot(): void
@@ -34,6 +31,6 @@ final class SnapshotTest extends BaseTestCase
             $s = $app->getContainer()->get(SnapshotterInterface::class)->register($e);
         }
 
-        $this->assertInstanceOf(\Error::class, $s->getException());
+        self::assertInstanceOf(\Error::class, $s->getException());
     }
 }

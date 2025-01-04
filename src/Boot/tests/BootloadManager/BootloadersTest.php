@@ -35,17 +35,17 @@ final class BootloadersTest extends TestCase
             }
         ]);
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->hasInstance('cde'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->has('ghi'));
-        $this->assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
-        $this->assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->hasInstance('cde'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->has('ghi'));
+        self::assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
+        self::assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
 
         $classes = \array_filter($classes, static fn(string $class): bool => $class !== SampleClass::class);
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class,
         ]), $bootloader->getClasses());
@@ -61,14 +61,14 @@ final class BootloadersTest extends TestCase
             new SampleBoot(),
         ]);
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->hasInstance('cde'));
-        $this->assertTrue($this->container->has('ghi'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->hasInstance('cde'));
+        self::assertTrue($this->container->has('ghi'));
 
-        $this->assertSame([
+        self::assertSame([
             SampleBootWithMethodBoot::class,
             SampleBoot::class,
             BootloaderA::class,
@@ -98,13 +98,13 @@ final class BootloadersTest extends TestCase
             },
         ]);
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->has('ghi'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->has('ghi'));
 
-        $this->assertCount(1, $bootloader->getClasses());
+        self::assertCount(1, $bootloader->getClasses());
     }
 
     public function testException(): void
@@ -123,7 +123,7 @@ final class BootloadersTest extends TestCase
             SampleBoot::class,
         ]);
 
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class,
         ]), $bootloader->getClasses());
@@ -136,7 +136,7 @@ final class BootloadersTest extends TestCase
             BootloaderB::class,
         ]);
 
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
         ]), $bootloader->getClasses());
     }
@@ -148,7 +148,7 @@ final class BootloadersTest extends TestCase
             BootloaderC::class,
         ]);
 
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class
         ]), $bootloader->getClasses());

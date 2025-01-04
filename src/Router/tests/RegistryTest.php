@@ -19,6 +19,6 @@ final class RegistryTest extends BaseTestCase
         $this->getContainer()->bind(RouterInterface::class, $router);
 
         $group = $registry->getGroup('default');
-        $this->assertSame($group, $registry->getGroup('default'));
+        self::assertSame($group, $registry->getGroup('default'));
     }
 }

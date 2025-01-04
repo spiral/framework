@@ -25,22 +25,22 @@ class ConfigTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists($class));
+        self::assertTrue(class_exists($class));
 
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('strict_types=1', $content);
-        $this->assertStringContainsString('{project-name}', $content);
-        $this->assertStringContainsString('@author {author-name}', $content);
-        $this->assertStringContainsString('Sample Config', $reflection->getDocComment());
+        self::assertStringContainsString('strict_types=1', $content);
+        self::assertStringContainsString('{project-name}', $content);
+        self::assertStringContainsString('@author {author-name}', $content);
+        self::assertStringContainsString('Sample Config', $reflection->getDocComment());
 
-        $this->assertTrue($reflection->isFinal());
-        $this->assertTrue($reflection->hasConstant('CONFIG'));
-        $this->assertTrue($reflection->hasProperty('config'));
+        self::assertTrue($reflection->isFinal());
+        self::assertTrue($reflection->hasConstant('CONFIG'));
+        self::assertTrue($reflection->hasProperty('config'));
 
-        $this->assertIsString($reflection->getReflectionConstant('CONFIG')->getValue());
-        $this->assertEquals([], $reflection->getDefaultProperties()['config']);
+        self::assertIsString($reflection->getReflectionConstant('CONFIG')->getValue());
+        self::assertEquals([], $reflection->getDefaultProperties()['config']);
     }
 
     /**
@@ -57,16 +57,13 @@ class ConfigTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists($class));
+        self::assertTrue(class_exists($class));
 
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString(
-            'App/Custom/Config/SampleConfig.php',
-            \str_replace('\\', '/', $reflection->getFileName())
-        );
-        $this->assertStringContainsString('App\Custom\Config', $content);
+        self::assertStringContainsString('App/Custom/Config/SampleConfig.php', \str_replace('\\', '/', $reflection->getFileName()));
+        self::assertStringContainsString('App\Custom\Config', $content);
     }
 
     /**
@@ -78,7 +75,7 @@ class ConfigTest extends AbstractCommandTestCase
         $this->console()->run(null, new StringInput('create:config reversed -r'));
 
         clearstatcache();
-        $this->assertTrue(class_exists($className));
+        self::assertTrue(class_exists($className));
     }
 
     /**
@@ -94,16 +91,16 @@ class ConfigTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists($className));
+        self::assertTrue(class_exists($className));
 
         $reflection = new ReflectionClass($className);
 
-        $this->assertTrue($reflection->hasConstant('CONFIG'));
-        $this->assertTrue($reflection->hasProperty('config'));
+        self::assertTrue($reflection->hasConstant('CONFIG'));
+        self::assertTrue($reflection->hasProperty('config'));
 
-        $this->assertIsString($reflection->getReflectionConstant('CONFIG')->getValue());
-        $this->assertIsArray($reflection->getDefaultProperties()['config']);
-        $this->assertNotEmpty($reflection->getDefaultProperties()['config']);
+        self::assertIsString($reflection->getReflectionConstant('CONFIG')->getValue());
+        self::assertIsArray($reflection->getDefaultProperties()['config']);
+        self::assertNotEmpty($reflection->getDefaultProperties()['config']);
 
         $methods = [
             'getStrParam' => ['hint' => 'string', 'annotation' => 'string'],
@@ -139,16 +136,16 @@ class ConfigTest extends AbstractCommandTestCase
             }
 
             $reflectionMethods[$method->name] = $method;
-            $this->assertArrayHasKey($method->name, $methods);
+            self::assertArrayHasKey($method->name, $methods);
 
             if (!$method->hasReturnType()) {
-                $this->assertNull($methods[$method->name]['hint']);
+                self::assertNull($methods[$method->name]['hint']);
             } else {
-                $this->assertEquals($methods[$method->name]['hint'], $method->getReturnType()->getName());
+                self::assertEquals($methods[$method->name]['hint'], $method->getReturnType()->getName());
             }
         }
 
-        $this->assertCount(count($methods), $reflectionMethods);
+        self::assertCount(count($methods), $reflectionMethods);
     }
 
     /**
@@ -164,16 +161,16 @@ class ConfigTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists($className));
+        self::assertTrue(class_exists($className));
 
         $reflection = new ReflectionClass($className);
 
-        $this->assertTrue($reflection->hasConstant('CONFIG'));
-        $this->assertTrue($reflection->hasProperty('config'));
+        self::assertTrue($reflection->hasConstant('CONFIG'));
+        self::assertTrue($reflection->hasProperty('config'));
 
-        $this->assertIsString($reflection->getReflectionConstant('CONFIG')->getValue());
-        $this->assertIsArray($reflection->getDefaultProperties()['config']);
-        $this->assertNotEmpty($reflection->getDefaultProperties()['config']);
+        self::assertIsString($reflection->getReflectionConstant('CONFIG')->getValue());
+        self::assertIsArray($reflection->getDefaultProperties()['config']);
+        self::assertNotEmpty($reflection->getDefaultProperties()['config']);
 
         $methods = [
             'getAthello',
@@ -189,10 +186,10 @@ class ConfigTest extends AbstractCommandTestCase
             }
             $reflectionMethods[$method->name] = $method;
 
-            $this->assertContains($method->name, $methods);
+            self::assertContains($method->name, $methods);
         }
 
-        $this->assertCount(count($methods), $reflectionMethods);
+        self::assertCount(count($methods), $reflectionMethods);
     }
 
     /**
@@ -201,11 +198,8 @@ class ConfigTest extends AbstractCommandTestCase
     public function testConfigFile(): void
     {
         $filename = $this->createConfig('sample', 'Sample Config');
-        $this->assertStringContainsString('strict_types=1', $this->files()->read($filename));
-        $this->assertStringContainsString(
-            '@see \\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig',
-            $this->files()->read($filename)
-        );
+        self::assertStringContainsString('strict_types=1', $this->files()->read($filename));
+        self::assertStringContainsString('@see \\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig', $this->files()->read($filename));
 
         $this->deleteConfigFile($filename);
     }
@@ -221,12 +215,12 @@ class ConfigTest extends AbstractCommandTestCase
         $this->files()->append($filename, '//sample comment');
 
         $source = $this->files()->read($filename);
-        $this->assertStringContainsString('//sample comment', $source);
+        self::assertStringContainsString('//sample comment', $source);
 
         $filename = $this->createConfig('sample2', 'Sample2 Config');
 
         $source = $this->files()->read($filename);
-        $this->assertStringContainsString('//sample comment', $source);
+        self::assertStringContainsString('//sample comment', $source);
 
         $this->deleteConfigFile($filename);
     }
@@ -242,17 +236,14 @@ class ConfigTest extends AbstractCommandTestCase
 
         $output = $result->getOutput()->fetch();
 
-        $this->assertStringEqualsStringIgnoringLineEndings(
-            <<<OUTPUT
+        self::assertStringEqualsStringIgnoringLineEndings(<<<OUTPUT
             Declaration of 'InstructionConfig' has been successfully written into 'Config/InstructionConfig.php'.
 
             Next steps:
             1. You can now add your config values to the 'config/instruction.php' file.
             2. Read more about Config Objects in the documentation: https://spiral.dev/docs/framework-config
 
-            OUTPUT,
-            $output
-        );
+            OUTPUT, $output);
     }
 
     /**
@@ -276,7 +267,7 @@ class ConfigTest extends AbstractCommandTestCase
         clearstatcache();
 
         $filename = $this->app->directory('config') . "$name.php";
-        $this->assertFileExists($filename);
+        self::assertFileExists($filename);
 
         return $filename;
     }

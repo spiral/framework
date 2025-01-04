@@ -12,24 +12,24 @@ class ScannerTest extends TestCase
     public function testPeakNull(): void
     {
         $src = new StringStream('abc');
-        $this->assertSame('a', $src->peak());
-        $this->assertSame('b', $src->peak());
-        $this->assertSame('c', $src->peak());
+        self::assertSame('a', $src->peak());
+        self::assertSame('b', $src->peak());
+        self::assertSame('c', $src->peak());
 
-        $this->assertSame(null, $src->peak());
+        self::assertNull($src->peak());
     }
 
     public function testOffsetEOF(): void
     {
         $src = new StringStream('abc');
 
-        $this->assertSame(false, $src->isEOI());
+        self::assertFalse($src->isEOI());
 
-        $this->assertSame('a', $src->peak());
-        $this->assertSame('b', $src->peak());
-        $this->assertSame('c', $src->peak());
+        self::assertSame('a', $src->peak());
+        self::assertSame('b', $src->peak());
+        self::assertSame('c', $src->peak());
 
-        $this->assertSame(3, $src->getOffset());
-        $this->assertSame(true, $src->isEOI());
+        self::assertSame(3, $src->getOffset());
+        self::assertTrue($src->isEOI());
     }
 }

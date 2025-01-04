@@ -29,7 +29,7 @@ final class ScopeAttributeTest extends BaseTestCase
     public function testBadScopeWithDisabledChecking(): void
     {
         $root = self::makeContainer(checkScope: false);
-        $this->assertInstanceOf(AttrScopeFooSingleton::class, $root->make(AttrScopeFooSingleton::class));
+        self::assertInstanceOf(AttrScopeFooSingleton::class, $root->make(AttrScopeFooSingleton::class));
     }
 
     /**

@@ -21,7 +21,7 @@ class GroupTargetTest extends TestCase
         $route = new Route('/<controller>/<action>', new Group(['test' => TestController::class]));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        $this->assertSame(['controller' => null, 'action' => null], $route->getDefaults());
+        self::assertSame(['controller' => null, 'action' => null], $route->getDefaults());
     }
 
     public function testConstrainedController(): void
@@ -54,26 +54,18 @@ class GroupTargetTest extends TestCase
 
         $route = $route->withDefaults(['controller' => 'test']);
 
-        $this->assertNull($route->match(new ServerRequest('GET', '')));
+        self::assertNull($route->match(new ServerRequest('GET', '')));
 
-        $this->assertNotNull(
-            $match = $route->match(new ServerRequest('GET', new Uri('/test')))
-        );
+        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test'))));
 
-        $this->assertSame(['controller' => 'test', 'action' => null], $match->getMatches());
+        self::assertSame(['controller' => 'test', 'action' => null], $match->getMatches());
 
-        $this->assertNotNull(
-            $match = $route->match(new ServerRequest('GET', new Uri('/test/action/')))
-        );
+        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test/action/'))));
 
-        $this->assertSame(['controller' => 'test', 'action' => 'action'], $match->getMatches());
+        self::assertSame(['controller' => 'test', 'action' => 'action'], $match->getMatches());
 
-        $this->assertNull(
-            $match = $route->match(new ServerRequest('GET', new Uri('/other/action/')))
-        );
+        self::assertNull($match = $route->match(new ServerRequest('GET', new Uri('/other/action/'))));
 
-        $this->assertNull(
-            $match = $route->match(new ServerRequest('GET', new Uri('/other')))
-        );
+        self::assertNull($match = $route->match(new ServerRequest('GET', new Uri('/other'))));
     }
 }

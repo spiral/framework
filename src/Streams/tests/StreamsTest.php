@@ -31,24 +31,24 @@ class StreamsTest extends TestCase
 
         $filename = StreamWrapper::getFilename($stream);
 
-        $this->assertFileExists($filename);
-        $this->assertSame(strlen('sample text'), filesize($filename));
-        $this->assertSame(md5('sample text'), md5_file($filename));
+        self::assertFileExists($filename);
+        self::assertSame(strlen('sample text'), filesize($filename));
+        self::assertSame(md5('sample text'), md5_file($filename));
 
         $newFilename = self::FIXTURE_DIRECTORY . '/test.txt';
         copy($filename, $newFilename);
 
-        $this->assertFileExists($newFilename);
-        $this->assertSame(strlen('sample text'), filesize($newFilename));
-        $this->assertSame(md5('sample text'), md5_file($newFilename));
+        self::assertFileExists($newFilename);
+        self::assertSame(strlen('sample text'), filesize($newFilename));
+        self::assertSame(md5('sample text'), md5_file($newFilename));
 
         //Rewinding
-        $this->assertFileExists($newFilename);
-        $this->assertSame(strlen('sample text'), filesize($newFilename));
-        $this->assertSame(md5('sample text'), md5_file($newFilename));
+        self::assertFileExists($newFilename);
+        self::assertSame(strlen('sample text'), filesize($newFilename));
+        self::assertSame(md5('sample text'), md5_file($newFilename));
 
-        $this->assertTrue(StreamWrapper::has($filename));
-        $this->assertFalse(StreamWrapper::has($newFilename));
+        self::assertTrue(StreamWrapper::has($filename));
+        self::assertFalse(StreamWrapper::has($newFilename));
     }
 
     public function testGetResource(): void
@@ -56,19 +56,19 @@ class StreamsTest extends TestCase
         $stream = Stream::create();
         $stream->write('sample text');
 
-        $this->assertFalse(StreamWrapper::has($stream));
+        self::assertFalse(StreamWrapper::has($stream));
         $resource = StreamWrapper::getResource($stream);
-        $this->assertTrue(StreamWrapper::has($stream));
+        self::assertTrue(StreamWrapper::has($stream));
 
-        $this->assertIsResource($resource);
-        $this->assertSame('sample text', stream_get_contents($resource, -1, 0));
+        self::assertIsResource($resource);
+        self::assertSame('sample text', stream_get_contents($resource, -1, 0));
 
         //Rewinding
-        $this->assertSame('sample text', stream_get_contents($resource, -1, 0));
+        self::assertSame('sample text', stream_get_contents($resource, -1, 0));
 
         fseek($resource, 7);
-        $this->assertSame('text', stream_get_contents($resource, -1));
-        $this->assertSame('sample', stream_get_contents($resource, 6, 0));
+        self::assertSame('text', stream_get_contents($resource, -1));
+        self::assertSame('sample', stream_get_contents($resource, 6, 0));
     }
 
     /**
@@ -79,13 +79,13 @@ class StreamsTest extends TestCase
         try {
             fopen('spiral://non-exists', 'rb');
         } catch (\Throwable $e) {
-            $this->assertStringContainsString('failed to open stream', $e->getMessage());
+            self::assertStringContainsString('failed to open stream', $e->getMessage());
         }
 
         try {
             filemtime('spiral://non-exists');
         } catch (\Throwable $e) {
-            $this->assertStringContainsString('stat failed', $e->getMessage());
+            self::assertStringContainsString('stat failed', $e->getMessage());
         }
     }
 
@@ -97,13 +97,13 @@ class StreamsTest extends TestCase
         try {
             fopen('spiral://non-exists', 'rb');
         } catch (\Throwable $e) {
-            $this->assertStringContainsString('Failed to open stream', $e->getMessage());
+            self::assertStringContainsString('Failed to open stream', $e->getMessage());
         }
 
         try {
             filemtime('spiral://non-exists');
         } catch (\Throwable $e) {
-            $this->assertStringContainsString('stat failed', $e->getMessage());
+            self::assertStringContainsString('stat failed', $e->getMessage());
         }
     }
 
@@ -114,7 +114,7 @@ class StreamsTest extends TestCase
 
         file_put_contents($file, 'test');
 
-        $this->assertSame('test', file_get_contents($file));
+        self::assertSame('test', file_get_contents($file));
 
         StreamWrapper::release($file);
     }

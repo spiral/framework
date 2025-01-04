@@ -30,10 +30,10 @@ class InvokerTest extends TestCase
 
         $result = $this->container->invoke([$object, 'makeBucket'], ['name' => 'bar']);
 
-        $this->assertSame($bucket, $result['bucket']);
-        $this->assertInstanceOf(SampleClass::class, $result['class']);
-        $this->assertSame('bar', $result['name']);
-        $this->assertSame('baz', $result['path']);
+        self::assertSame($bucket, $result['bucket']);
+        self::assertInstanceOf(SampleClass::class, $result['class']);
+        self::assertSame('bar', $result['name']);
+        self::assertSame('baz', $result['path']);
     }
 
     public function testCallValidCallableArrayWithClassResolving(): void
@@ -42,10 +42,10 @@ class InvokerTest extends TestCase
 
         $result = $this->container->invoke([Storage::class, 'makeBucket'], ['name' => 'bar']);
 
-        $this->assertSame($bucket, $result['bucket']);
-        $this->assertInstanceOf(SampleClass::class, $result['class']);
-        $this->assertSame('bar', $result['name']);
-        $this->assertSame('baz', $result['path']);
+        self::assertSame($bucket, $result['bucket']);
+        self::assertInstanceOf(SampleClass::class, $result['class']);
+        self::assertSame('bar', $result['name']);
+        self::assertSame('baz', $result['path']);
     }
 
     public function testCallValidCallableArrayWithResolvingFromContainer(): void
@@ -55,10 +55,10 @@ class InvokerTest extends TestCase
 
         $result = $this->container->invoke(['foo', 'makeBucket'], ['name' => 'bar']);
 
-        $this->assertSame($bucket, $result['bucket']);
-        $this->assertInstanceOf(SampleClass::class, $result['class']);
-        $this->assertSame('bar', $result['name']);
-        $this->assertSame('baz', $result['path']);
+        self::assertSame($bucket, $result['bucket']);
+        self::assertInstanceOf(SampleClass::class, $result['class']);
+        self::assertSame('bar', $result['name']);
+        self::assertSame('baz', $result['path']);
     }
 
     public function testCallValidCallableArrayWithNotResolvableDependencies(): void
@@ -75,10 +75,10 @@ class InvokerTest extends TestCase
 
         $result = $this->container->invoke(Storage::class.'::createBucket', ['name' => 'bar']);
 
-        $this->assertSame($bucket, $result['bucket']);
-        $this->assertInstanceOf(SampleClass::class, $result['class']);
-        $this->assertSame('bar', $result['name']);
-        $this->assertSame('baz', $result['path']);
+        self::assertSame($bucket, $result['bucket']);
+        self::assertInstanceOf(SampleClass::class, $result['class']);
+        self::assertSame('bar', $result['name']);
+        self::assertSame('baz', $result['path']);
     }
 
     public function testCallValidCallableStringWithNotResolvableDependencies(): void
@@ -98,10 +98,10 @@ class InvokerTest extends TestCase
             ['name' => 'bar']
         );
 
-        $this->assertSame($bucket, $result['bucket']);
-        $this->assertInstanceOf(SampleClass::class, $result['class']);
-        $this->assertSame('bar', $result['name']);
-        $this->assertSame('baz', $result['path']);
+        self::assertSame($bucket, $result['bucket']);
+        self::assertInstanceOf(SampleClass::class, $result['class']);
+        self::assertSame('bar', $result['name']);
+        self::assertSame('baz', $result['path']);
     }
 
     public function testCallValidClosureWithNotResolvableDependencies(): void

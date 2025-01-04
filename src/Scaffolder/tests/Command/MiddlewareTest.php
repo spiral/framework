@@ -24,16 +24,16 @@ class MiddlewareTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(\class_exists($class));
+        self::assertTrue(\class_exists($class));
 
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('strict_types=1', $content);
-        $this->assertStringContainsString('{project-name}', $content);
-        $this->assertStringContainsString('@author {author-name}', $content);
-        $this->assertStringContainsString('Sample Middleware', $reflection->getDocComment());
-        $this->assertTrue($reflection->hasMethod('process'));
+        self::assertStringContainsString('strict_types=1', $content);
+        self::assertStringContainsString('{project-name}', $content);
+        self::assertStringContainsString('@author {author-name}', $content);
+        self::assertStringContainsString('Sample Middleware', $reflection->getDocComment());
+        self::assertTrue($reflection->hasMethod('process'));
     }
 
     /**
@@ -50,16 +50,13 @@ class MiddlewareTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(\class_exists($class));
+        self::assertTrue(\class_exists($class));
 
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString(
-            'App/Custom/Middleware/SampleMiddleware.php',
-            \str_replace('\\', '/', $reflection->getFileName())
-        );
-        $this->assertStringContainsString('App\Custom\Middleware', $content);
+        self::assertStringContainsString('App/Custom/Middleware/SampleMiddleware.php', \str_replace('\\', '/', $reflection->getFileName()));
+        self::assertStringContainsString('App\Custom\Middleware', $content);
     }
 
     public function testShowInstructionAfterInstallation(): void
@@ -72,16 +69,13 @@ class MiddlewareTest extends AbstractCommandTestCase
 
         $output = $result->getOutput()->fetch();
 
-        $this->assertStringEqualsStringIgnoringLineEndings(
-            <<<OUTPUT
+        self::assertStringEqualsStringIgnoringLineEndings(<<<OUTPUT
             Declaration of 'SampleMiddleware' has been successfully written into 'Middleware/SampleMiddleware.php'.
 
             Next steps:
             1. Don't forget to activate a middleware in the 'App\Application\Bootloader\RoutesBootloader'
             2. Read more about Middleware in the documentation: https://spiral.dev/docs/http-middleware
 
-            OUTPUT,
-            $output
-        );
+            OUTPUT, $output);
     }
 }

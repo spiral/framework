@@ -38,7 +38,7 @@ final class PlainRendererTest extends TestCase
         $response = $renderer->renderException($request, 400, new \Exception('message'));
         $stream = $response->getBody();
         $stream->rewind();
-        self::assertEquals('Error code: 400', $stream->getContents());
+        self::assertSame('Error code: 400', $stream->getContents());
     }
 
     #[DataProvider('dataResponseIsJson')]
@@ -93,7 +93,7 @@ final class PlainRendererTest extends TestCase
         $response = $renderer->renderException($request, 400, new \Exception('message'));
         $stream = $response->getBody();
         $stream->rewind();
-        self::assertEquals('Error code: 400', $stream->getContents());
+        self::assertSame('Error code: 400', $stream->getContents());
     }
 
     public static function dataResponseIsPlain(): iterable

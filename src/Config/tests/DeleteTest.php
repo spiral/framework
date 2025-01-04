@@ -13,40 +13,40 @@ class DeleteTest extends BaseTestCase
     {
         $cf = $this->getFactory();
 
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        self::assertSame(['value' => 'value!'], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Append('.', 'other', ['a' => 'b']));
         $cf->modify('scope', new Delete('.', 'value'));
 
-        $this->assertSame([
+        self::assertSame([
             'other' => ['a' => 'b']
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Append('.', null, 'c'));
 
-        $this->assertSame([
+        self::assertSame([
             'other' => ['a' => 'b'],
             'c'
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Delete('.', null, 'c'));
 
-        $this->assertSame([
+        self::assertSame([
             'other' => ['a' => 'b']
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Delete('other', 'a'));
-        $this->assertSame([
+        self::assertSame([
             'other' => []
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Append('.', 'other', ['a' => 'b']));
-        $this->assertSame([
+        self::assertSame([
             'other' => ['a' => 'b']
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Delete('other', null, 'b'));
-        $this->assertSame([
+        self::assertSame([
             'other' => []
         ], $cf->getConfig('scope'));
     }
@@ -54,9 +54,9 @@ class DeleteTest extends BaseTestCase
     public function testException(): void
     {
         $cf = $this->getFactory();
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        self::assertSame(['value' => 'value!'], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Delete('something.', 'other'));
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        self::assertSame(['value' => 'value!'], $cf->getConfig('scope'));
     }
 }

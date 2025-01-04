@@ -34,9 +34,7 @@ final class FiltersBootloaderTest extends BaseTestCase
 
     public function testFiltersInjector(): void
     {
-        $this->assertTrue(
-            $this->getContainer()->hasInjector(FilterInterface::class)
-        );
+        self::assertTrue($this->getContainer()->hasInjector(FilterInterface::class));
     }
 
     public function testConfig(): void
@@ -59,7 +57,7 @@ final class FiltersBootloaderTest extends BaseTestCase
         $bootloader->addInterceptor('foo');
         $bootloader->addInterceptor('bar');
 
-        $this->assertSame([
+        self::assertSame([
             'foo', 'bar'
         ], $configs->getConfig(FiltersConfig::CONFIG)['interceptors']);
     }

@@ -26,8 +26,8 @@ final class CacheInjectorTest extends TestCase
 
         $result = $injector->createInjection($reflection, 'array');
 
-        $this->assertInstanceOf(CacheRepository::class, $result);
-        $this->assertInstanceOf(ArrayStorage::class, $result->getStorage());
+        self::assertInstanceOf(CacheRepository::class, $result);
+        self::assertInstanceOf(ArrayStorage::class, $result->getStorage());
     }
 
     public function testGetByIncorrectContext(): void
@@ -38,7 +38,7 @@ final class CacheInjectorTest extends TestCase
         $result = $injector->createInjection($reflection, 'userCache');
 
         // The default connection should be returned
-        $this->assertSame($this->defaultCache, $result->getStorage());
+        self::assertSame($this->defaultCache, $result->getStorage());
     }
 
     public function testBadArgumentTypeException(): void
