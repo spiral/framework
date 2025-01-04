@@ -30,13 +30,13 @@ class CacheTest extends BaseTestCase
     #[TestScope("http")]
     public function testCache(): void
     {
-        $this->assertCount(0, $this->files->getFiles(__DIR__ . '/cache/', '*.php'));
+        self::assertCount(0, $this->files->getFiles(__DIR__ . '/cache/', '*.php'));
 
         $s = $this->getStempler();
-        $this->assertSame('test', $s->get('test', new ViewContext())->render([]));
-        $this->assertCount(2, $this->files->getFiles(__DIR__ . '/cache/', '*.php'));
+        self::assertSame('test', $s->get('test', new ViewContext())->render([]));
+        self::assertCount(2, $this->files->getFiles(__DIR__ . '/cache/', '*.php'));
 
         $s->reset('test', new ViewContext());
-        $this->assertCount(0, $this->files->getFiles(__DIR__ . '/../cache/', '*.php'));
+        self::assertCount(0, $this->files->getFiles(__DIR__ . '/../cache/', '*.php'));
     }
 }

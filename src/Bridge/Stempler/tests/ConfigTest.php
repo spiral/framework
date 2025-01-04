@@ -24,10 +24,7 @@ class ConfigTest extends BaseTestCase
             'processors' => [ContextProcessor::class]
         ]);
 
-        $this->assertInstanceOf(
-            ContextProcessor::class,
-            $config->getProcessors()[0]->resolve($this->container)
-        );
+        self::assertInstanceOf(ContextProcessor::class, $config->getProcessors()[0]->resolve($this->container));
     }
 
     public function testWireDirective(): void
@@ -36,10 +33,7 @@ class ConfigTest extends BaseTestCase
             'directives' => [ContainerDirective::class]
         ]);
 
-        $this->assertInstanceOf(
-            ContainerDirective::class,
-            $config->getDirectives()[0]->resolve($this->container)
-        );
+        self::assertInstanceOf(ContainerDirective::class, $config->getDirectives()[0]->resolve($this->container));
     }
 
     public function testWireConfig(): void
@@ -50,10 +44,7 @@ class ConfigTest extends BaseTestCase
             ]
         ]);
 
-        $this->assertInstanceOf(
-            ContextProcessor::class,
-            $config->getProcessors()[0]->resolve($this->container)
-        );
+        self::assertInstanceOf(ContextProcessor::class, $config->getProcessors()[0]->resolve($this->container));
     }
 
     public function testDebugConfig(): void
@@ -63,7 +54,7 @@ class ConfigTest extends BaseTestCase
 
         $config = $this->container->get(StemplerConfig::class);
 
-        $this->assertEquals([
+        self::assertEquals([
             new Autowire(PHPDirective::class),
             new Autowire(RouteDirective::class),
             new Autowire(LoopDirective::class),
@@ -86,8 +77,8 @@ class ConfigTest extends BaseTestCase
         /** @var StemplerConfig $cfg */
         $cfg = $this->container->get(StemplerConfig::class);
 
-        $this->assertCount(7, $cfg->getDirectives());
-        $this->assertSame($object, $cfg->getDirectives()[6]->resolve($this->container));
+        self::assertCount(7, $cfg->getDirectives());
+        self::assertSame($object, $cfg->getDirectives()[6]->resolve($this->container));
     }
 
     public function testBootloaderProcessors(): void
@@ -100,8 +91,8 @@ class ConfigTest extends BaseTestCase
 
         $cfg = $this->container->get(StemplerConfig::class);
 
-        $this->assertCount(3, $cfg->getProcessors());
-        $this->assertSame($object, $cfg->getProcessors()[2]->resolve($this->container));
+        self::assertCount(3, $cfg->getProcessors());
+        self::assertSame($object, $cfg->getProcessors()[2]->resolve($this->container));
     }
 
     public function testBootloaderVisitors(): void
@@ -114,8 +105,8 @@ class ConfigTest extends BaseTestCase
 
         $cfg = $this->container->get(StemplerConfig::class);
 
-        $this->assertCount(3, $cfg->getVisitors(Builder::STAGE_FINALIZE));
-        $this->assertSame($object, $cfg->getVisitors(Builder::STAGE_FINALIZE)[2]->resolve($this->container));
+        self::assertCount(3, $cfg->getVisitors(Builder::STAGE_FINALIZE));
+        self::assertSame($object, $cfg->getVisitors(Builder::STAGE_FINALIZE)[2]->resolve($this->container));
     }
 
     public function testBootloaderVisitors0(): void
@@ -128,8 +119,8 @@ class ConfigTest extends BaseTestCase
 
         $cfg = $this->container->get(StemplerConfig::class);
 
-        $this->assertCount(3, $cfg->getVisitors(Builder::STAGE_COMPILE));
-        $this->assertSame($object, $cfg->getVisitors(Builder::STAGE_COMPILE)[2]->resolve($this->container));
+        self::assertCount(3, $cfg->getVisitors(Builder::STAGE_COMPILE));
+        self::assertSame($object, $cfg->getVisitors(Builder::STAGE_COMPILE)[2]->resolve($this->container));
     }
 
     public function testBootloaderVisitors2(): void
@@ -142,8 +133,8 @@ class ConfigTest extends BaseTestCase
 
         $cfg = $this->container->get(StemplerConfig::class);
 
-        $this->assertCount(1, $cfg->getVisitors(Builder::STAGE_TRANSFORM));
-        $this->assertSame($object, $cfg->getVisitors(Builder::STAGE_TRANSFORM)[0]->resolve($this->container));
+        self::assertCount(1, $cfg->getVisitors(Builder::STAGE_TRANSFORM));
+        self::assertSame($object, $cfg->getVisitors(Builder::STAGE_TRANSFORM)[0]->resolve($this->container));
     }
 
     public function testBootloaderVisitors3(): void
@@ -156,7 +147,7 @@ class ConfigTest extends BaseTestCase
 
         $cfg = $this->container->get(StemplerConfig::class);
 
-        $this->assertCount(4, $cfg->getVisitors(Builder::STAGE_PREPARE));
-        $this->assertSame($object, $cfg->getVisitors(Builder::STAGE_PREPARE)[3]->resolve($this->container));
+        self::assertCount(4, $cfg->getVisitors(Builder::STAGE_PREPARE));
+        self::assertSame($object, $cfg->getVisitors(Builder::STAGE_PREPARE)[3]->resolve($this->container));
     }
 }

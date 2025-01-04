@@ -41,11 +41,11 @@ final class EventHandlerTest extends TestCase
             'context' => ['foo' => 'bar'],
         ]);
 
-        $this->assertSame('foo', $this->listener->event->getChannel());
-        $this->assertSame('bar', $this->listener->event->getMessage());
-        $this->assertSame(['foo' => 'bar'], $this->listener->event->getContext());
-        $this->assertSame('debug', $this->listener->event->getLevel());
-        $this->assertFalse($result);
+        self::assertSame('foo', $this->listener->event->getChannel());
+        self::assertSame('bar', $this->listener->event->getMessage());
+        self::assertSame(['foo' => 'bar'], $this->listener->event->getContext());
+        self::assertSame('debug', $this->listener->event->getLevel());
+        self::assertFalse($result);
     }
 
     public function testHandleWithBubbleFalse(): void
@@ -60,10 +60,10 @@ final class EventHandlerTest extends TestCase
             'context' => ['foo' => 'bar'],
         ]);
 
-        $this->assertSame('foo', $this->listener->event->getChannel());
-        $this->assertSame('bar', $this->listener->event->getMessage());
-        $this->assertSame(['foo' => 'bar'], $this->listener->event->getContext());
-        $this->assertSame('debug', $this->listener->event->getLevel());
-        $this->assertTrue($result);
+        self::assertSame('foo', $this->listener->event->getChannel());
+        self::assertSame('bar', $this->listener->event->getMessage());
+        self::assertSame(['foo' => 'bar'], $this->listener->event->getContext());
+        self::assertSame('debug', $this->listener->event->getLevel());
+        self::assertTrue($result);
     }
 }
