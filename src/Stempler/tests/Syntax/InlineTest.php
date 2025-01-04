@@ -29,7 +29,7 @@ class InlineTest extends BaseTestCase
 
         $this->assertInstanceOf(Inline::class, $doc->nodes[0]);
         $this->assertSame('name', $doc->nodes[0]->name);
-        $this->assertSame(null, $doc->nodes[0]->value);
+        $this->assertNull($doc->nodes[0]->value);
     }
 
     public function testInlineDefault(): void

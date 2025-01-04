@@ -69,11 +69,11 @@ final class HttpAuthBootloaderTest extends BaseTestCase
 
         /** @var array{header: HeaderTransport, cookie: CookieTransport} $config */
         $config = $this->getContainer()->get(AuthConfig::class)['transports'] ?? [];
-        self::assertArrayHasKey('cookie', $config);
-        self::assertArrayHasKey('header', $config);
+        $this->assertArrayHasKey('cookie', $config);
+        $this->assertArrayHasKey('header', $config);
 
-        self::assertInstanceOf(HeaderTransport::class, $config['header']);
-        self::assertInstanceOf(CookieTransport::class, $config['cookie']);
+        $this->assertInstanceOf(HeaderTransport::class, $config['header']);
+        $this->assertInstanceOf(CookieTransport::class, $config['cookie']);
     }
 
     public function testCorrectDefaultTransports(): void
@@ -88,13 +88,13 @@ final class HttpAuthBootloaderTest extends BaseTestCase
 
         /** @var HeaderTransport $headerTransport */
         $headerTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['header'];
-        self::assertInstanceOf(HeaderTransport::class, $headerTransport);
+        $this->assertInstanceOf(HeaderTransport::class, $headerTransport);
         $header = (new \ReflectionClass($headerTransport))->getProperty('header');
         $this->assertSame('X-Auth-Token', $header->getValue($headerTransport));
 
         /** @var CookieTransport $cookieTransport */
         $cookieTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['cookie'];
-        self::assertInstanceOf(CookieTransport::class, $cookieTransport);
+        $this->assertInstanceOf(CookieTransport::class, $cookieTransport);
         $cookie = (new \ReflectionClass($cookieTransport))->getProperty('cookie');
         $this->assertSame('token', $cookie->getValue($cookieTransport));
     }
@@ -129,13 +129,13 @@ final class HttpAuthBootloaderTest extends BaseTestCase
 
         /** @var HeaderTransport $headerTransport */
         $headerTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['header'];
-        self::assertInstanceOf(HeaderTransport::class, $headerTransport);
+        $this->assertInstanceOf(HeaderTransport::class, $headerTransport);
         $header = (new \ReflectionClass($headerTransport))->getProperty('header');
         $this->assertSame('X-Auth-Token-test', $header->getValue($headerTransport));
 
         /** @var CookieTransport $cookieTransport */
         $cookieTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['cookie'];
-        self::assertInstanceOf(CookieTransport::class, $cookieTransport);
+        $this->assertInstanceOf(CookieTransport::class, $cookieTransport);
         $cookie = (new \ReflectionClass($cookieTransport))->getProperty('cookie');
         $this->assertSame('token-test', $cookie->getValue($cookieTransport));
     }

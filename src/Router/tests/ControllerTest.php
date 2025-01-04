@@ -80,7 +80,7 @@ class ControllerTest extends BaseTestCase
         $core = $target->getHandler($this->getContainer(), []);
         $handler = (fn(CoreHandler $core): HandlerInterface|CoreInterface => $core->core)->call($core, $core);
 
-        self::assertInstanceOf(AutowireHandler::class, $handler);
+        $this->assertInstanceOf(AutowireHandler::class, $handler);
     }
 
     public function testOptionalParamWithDefaultInt(): void

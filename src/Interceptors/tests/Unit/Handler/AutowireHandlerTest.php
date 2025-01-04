@@ -26,15 +26,15 @@ final class AutowireHandlerTest extends TestCase
 
         $result = $handler->handle($ctx);
 
-        self::assertSame('hello', $result);
+        $this->assertSame('hello', $result);
     }
 
     public function testHandleReflectionFunction(): void
     {
         $c = new Container();
-        $container = self::createMock(ContainerInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
         $container
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('get')
             ->with(ResolverInterface::class)
             ->willReturn($c);
@@ -45,15 +45,15 @@ final class AutowireHandlerTest extends TestCase
 
         $result = $handler->handle($ctx);
 
-        self::assertSame('HELLO', $result);
+        $this->assertSame('HELLO', $result);
     }
 
     public function testHandleReflectionMethodWithObject(): void
     {
         $c = new Container();
-        $container = self::createMock(ContainerInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
         $container
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('get')
             ->with(ResolverInterface::class)
             ->willReturn($c);
@@ -65,12 +65,12 @@ final class AutowireHandlerTest extends TestCase
 
         $result = $handler->handle($ctx);
 
-        self::assertSame('hello', $result);
+        $this->assertSame('hello', $result);
     }
 
     public function testWithoutResolvingFromPath(): void
     {
-        $container = self::createMock(ContainerInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
 
         $handler = new AutowireHandler($container);
 
@@ -102,7 +102,7 @@ final class AutowireHandlerTest extends TestCase
 
         $result = $handler->handle($ctx);
 
-        self::assertSame('HELLO', $result);
+        $this->assertSame('HELLO', $result);
     }
 
     public function createHandler(array $definitions = []): AutowireHandler

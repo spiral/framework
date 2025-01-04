@@ -43,7 +43,7 @@ class PermissionManagerTest extends TestCase
 
         $manager->addRole('one');
         $manager->addRole('two');
-        $this->assertEquals(['one', 'two'], $manager->getRoles());
+        $this->assertSame(['one', 'two'], $manager->getRoles());
     }
 
     public function testAddRoleException(): void
@@ -78,7 +78,7 @@ class PermissionManagerTest extends TestCase
         $this->rules->method('get')
             ->willReturnCallback(function (...$args) use (&$series) {
                 [$expectedArgs, $return] = \array_shift($series);
-                self::assertSame($expectedArgs, $args);
+                $this->assertSame($expectedArgs, $args);
 
                 return $return;
             });

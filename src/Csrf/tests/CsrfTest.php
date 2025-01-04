@@ -55,12 +55,12 @@ final class CsrfTest extends TestCase
         );
 
         $response = $this->get($core, '/');
-        self::assertSame(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
 
         $cookies = $this->fetchCookies($response);
 
-        self::assertArrayHasKey('csrf-token', $cookies);
-        self::assertSame($cookies['csrf-token'], (string)$response->getBody());
+        $this->assertArrayHasKey('csrf-token', $cookies);
+        $this->assertSame($cookies['csrf-token'], (string)$response->getBody());
     }
 
     public function testLengthException(): void
@@ -93,7 +93,7 @@ final class CsrfTest extends TestCase
         );
 
         $response = $this->post($core, '/');
-        self::assertSame(412, $response->getStatusCode());
+        $this->assertSame(412, $response->getStatusCode());
     }
 
     public function testLogicException(): void
@@ -115,14 +115,14 @@ final class CsrfTest extends TestCase
         );
 
         $response = $this->get($core, '/');
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('all good', (string)$response->getBody());
 
         $cookies = $this->fetchCookies($response);
 
         $response = $this->post($core, '/', [], [], ['csrf-token' => $cookies['csrf-token']]);
 
-        self::assertSame(412, $response->getStatusCode());
+        $this->assertSame(412, $response->getStatusCode());
 
         $response = $this->post(
             $core,
@@ -134,8 +134,8 @@ final class CsrfTest extends TestCase
             ['csrf-token' => $cookies['csrf-token']]
         );
 
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('all good', (string)$response->getBody());
     }
 
     public function testHeaderOK(): void
@@ -146,14 +146,14 @@ final class CsrfTest extends TestCase
         );
 
         $response = $this->get($core, '/');
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('all good', (string)$response->getBody());
 
         $cookies = $this->fetchCookies($response);
 
         $response = $this->post($core, '/', [], [], ['csrf-token' => $cookies['csrf-token']]);
 
-        self::assertSame(412, $response->getStatusCode());
+        $this->assertSame(412, $response->getStatusCode());
 
         $response = $this->post(
             $core,
@@ -165,8 +165,8 @@ final class CsrfTest extends TestCase
             ['csrf-token' => $cookies['csrf-token']]
         );
 
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('all good', (string)$response->getBody());
     }
 
     public function testHeaderOKStrict(): void
@@ -177,13 +177,13 @@ final class CsrfTest extends TestCase
         );
 
         $response = $this->get($core, '/');
-        self::assertSame(412, $response->getStatusCode());
+        $this->assertSame(412, $response->getStatusCode());
 
         $cookies = $this->fetchCookies($response);
 
         $response = $this->get($core, '/', [], [], ['csrf-token' => $cookies['csrf-token']]);
 
-        self::assertSame(412, $response->getStatusCode());
+        $this->assertSame(412, $response->getStatusCode());
 
         $response = $this->get(
             $core,
@@ -195,8 +195,8 @@ final class CsrfTest extends TestCase
             ['csrf-token' => $cookies['csrf-token']]
         );
 
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('all good', (string)$response->getBody());
     }
 
     private function httpCore(array $middleware = []): Http

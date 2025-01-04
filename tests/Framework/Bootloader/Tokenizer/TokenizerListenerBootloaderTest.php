@@ -72,23 +72,23 @@ final class TokenizerListenerBootloaderTest extends BaseTestCase
 
     public function testListenerShouldBeListen(): void
     {
-        self::assertCount(2, $this->classes);
+        $this->assertCount(2, $this->classes);
 
-        self::assertContains(\Spiral\App\Tokenizer\A::class, $this->classes);
-        self::assertContains(\Spiral\App\Tokenizer\B::class, $this->classes);
-        self::assertTrue($this->finalized);
+        $this->assertContains(\Spiral\App\Tokenizer\A::class, $this->classes);
+        $this->assertContains(\Spiral\App\Tokenizer\B::class, $this->classes);
+        $this->assertTrue($this->finalized);
     }
 
     #[Env('TOKENIZER_LOAD_ENUMS', true)]
     #[Env('TOKENIZER_LOAD_INTERFACES', true)]
     public function testListenerShouldBeListenWithEnumsAndInterfaces(): void
     {
-        self::assertCount(4, $this->classes);
+        $this->assertCount(4, $this->classes);
 
-        self::assertContains(\Spiral\App\Tokenizer\A::class, $this->classes);
-        self::assertContains(\Spiral\App\Tokenizer\B::class, $this->classes);
-        self::assertContains(\Spiral\App\Tokenizer\TestEnum::class, $this->classes);
-        self::assertContains(\Spiral\App\Tokenizer\TestInterface::class, $this->classes);
-        self::assertTrue($this->finalized);
+        $this->assertContains(\Spiral\App\Tokenizer\A::class, $this->classes);
+        $this->assertContains(\Spiral\App\Tokenizer\B::class, $this->classes);
+        $this->assertContains(\Spiral\App\Tokenizer\TestEnum::class, $this->classes);
+        $this->assertContains(\Spiral\App\Tokenizer\TestInterface::class, $this->classes);
+        $this->assertTrue($this->finalized);
     }
 }

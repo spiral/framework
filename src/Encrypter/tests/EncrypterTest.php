@@ -29,17 +29,17 @@ class EncrypterTest extends TestCase
         $encrypter = new Encrypter(Key::CreateNewRandomKey()->saveToAsciiSafeString());
 
         $encrypted = $encrypter->encrypt('test string');
-        $this->assertNotEquals('test string', $encrypted);
+        $this->assertNotSame('test string', $encrypted);
         $this->assertEquals('test string', $encrypter->decrypt($encrypted));
 
         $encrypter = $encrypter->withKey(Key::CreateNewRandomKey()->saveToAsciiSafeString());
 
         $encrypted = $encrypter->encrypt('test string');
-        $this->assertNotEquals('test string', $encrypted);
+        $this->assertNotSame('test string', $encrypted);
         $this->assertEquals('test string', $encrypter->decrypt($encrypted));
 
         $encrypted = $encrypter->encrypt('test string');
-        $this->assertNotEquals('test string', $encrypted);
+        $this->assertNotSame('test string', $encrypted);
         $this->assertEquals('test string', $encrypter->decrypt($encrypted));
     }
 
@@ -50,7 +50,7 @@ class EncrypterTest extends TestCase
         $encrypter = new Encrypter(Key::CreateNewRandomKey()->saveToAsciiSafeString());
 
         $encrypted = $encrypter->encrypt('test string');
-        $this->assertNotEquals('test string', $encrypted);
+        $this->assertNotSame('test string', $encrypted);
         $this->assertEquals('test string', $encrypter->decrypt($encrypted));
 
         $encrypter->decrypt('badData.' . $encrypted);

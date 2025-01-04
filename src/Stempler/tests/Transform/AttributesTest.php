@@ -51,7 +51,7 @@ class AttributesTest extends BaseTestCase
         /** @var Aggregate $aggr */
         $aggr = $doc->nodes[0]->attrs[1];
 
-        $this->assertSame(null, $aggr->accepts('style'));
+        $this->assertNull($aggr->accepts('style'));
         $this->assertSame('style', $aggr->accepts('a-style'));
     }
 
@@ -73,7 +73,7 @@ class AttributesTest extends BaseTestCase
         $aggr = $doc->nodes[0]->attrs[1];
 
         $this->assertSame('style', $aggr->accepts('style'));
-        $this->assertSame(null, $aggr->accepts('another'));
+        $this->assertNull($aggr->accepts('another'));
     }
 
     public function testAggregateExclude(): void
@@ -93,7 +93,7 @@ class AttributesTest extends BaseTestCase
         /** @var Aggregate $aggr */
         $aggr = $doc->nodes[0]->attrs[1];
 
-        $this->assertSame(null, $aggr->accepts('style'));
+        $this->assertNull($aggr->accepts('style'));
         $this->assertSame('another', $aggr->accepts('another'));
     }
 

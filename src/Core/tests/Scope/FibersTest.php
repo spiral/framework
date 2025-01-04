@@ -26,13 +26,13 @@ final class FibersTest extends BaseTestCase
      */
     public function testSingleFiberNestedContainers(): void
     {
-        self::assertNull(ContainerScope::getContainer());
+        $this->assertNull(ContainerScope::getContainer());
 
         FiberHelper::runInFiber(
             self::functionScopedTestDataIterator(),
             static function (mixed $suspendValue): void {
                 self::assertNull(ContainerScope::getContainer());
-                self::assertTrue(\in_array($suspendValue, self::TEST_DATA, true));
+                self::assertContains($suspendValue, self::TEST_DATA);
             },
         );
     }
@@ -42,7 +42,7 @@ final class FibersTest extends BaseTestCase
      */
     public function testALotOfFibersWithNestedContainers(): void
     {
-        self::assertNull(ContainerScope::getContainer());
+        $this->assertNull(ContainerScope::getContainer());
 
         $result = FiberHelper::runFiberSequence(
             self::functionScopedTestDataIterator(
@@ -62,9 +62,9 @@ final class FibersTest extends BaseTestCase
             self::functionScopedTestDataIterator(),
         );
 
-        self::assertCount(5, $result);
+        $this->assertCount(5, $result);
         foreach ($result as $suspendValue) {
-            self::assertSame(self::TEST_DATA, $suspendValue);
+            $this->assertSame(self::TEST_DATA, $suspendValue);
         }
     }
 
@@ -80,9 +80,9 @@ final class FibersTest extends BaseTestCase
             self::functionScopedTestDataIterator(self::functionScopedTestDataIterator(), $container),
         );
 
-        self::assertCount(2, $result);
+        $this->assertCount(2, $result);
         foreach ($result as $suspendValue) {
-            self::assertSame(self::TEST_DATA, $suspendValue);
+            $this->assertSame(self::TEST_DATA, $suspendValue);
         }
     }
 
@@ -127,7 +127,7 @@ final class FibersTest extends BaseTestCase
                 : throw new \RuntimeException('test'),
         );
 
-        self::assertSame('foobartestbaz', $result);
+        $this->assertSame('foobartestbaz', $result);
     }
 
     /**

@@ -27,12 +27,6 @@ abstract class AbstractCommandsTestCase extends TestCase
     protected array $buf = [];
     private readonly Storage $storage;
 
-    public function __construct($name = null, array $data = [], $dataName = '')
-    {
-        $this->storage = new Storage($this->dir() . '/Fixtures/');
-        parent::__construct($name, $data, $dataName);
-    }
-
     public function setUp(): void
     {
         if (!\class_exists(Kernel::class)) {
@@ -45,6 +39,8 @@ abstract class AbstractCommandsTestCase extends TestCase
             'app'    => $this->dir(),
             'cache'  => sys_get_temp_dir()
         ], false)->run();
+
+        $this->storage = new Storage($this->dir() . '/Fixtures/');
 
         foreach (static::STORE as $name) {
             $this->storage->store($name);

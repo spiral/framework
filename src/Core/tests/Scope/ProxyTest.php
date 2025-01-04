@@ -274,8 +274,8 @@ final class ProxyTest extends BaseTestCase
         $weak = WeakReference::create($proxy);
         unset($proxy);
 
-        self::assertNull($weak->get());
-        self::assertFalse($context->destroyed);
+        $this->assertNull($weak->get());
+        $this->assertFalse($context->destroyed);
     }
 
     public function testImplementationWithWiderTypes(): void
@@ -376,7 +376,7 @@ final class ProxyTest extends BaseTestCase
             fn(#[Proxy] UserInterface $user): string => $user->getName(),
         );
 
-        self::assertSame('Foo', $name);
+        $this->assertSame('Foo', $name);
     }
 
     /*

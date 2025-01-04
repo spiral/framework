@@ -16,7 +16,7 @@ class DefaultsTest extends BaseTestCase
 
         $config = $cf->getConfig('magic');
 
-        $this->assertEquals(
+        $this->assertSame(
             ['key' => 'value'],
             $config
         );

@@ -290,7 +290,7 @@ final class HttpTest extends TestCase
             )
             ->willReturnCallback(
                 function ($name, $callback, $attributes, $scoped, $traceKind) {
-                    self::assertSame($attributes, [
+                    $this->assertSame($attributes, [
                         'http.method' => 'GET',
                         'http.url' => 'http://example.org/path',
                         'http.headers' => ['Host' => 'example.org', 'foo' => 'bar'],

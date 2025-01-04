@@ -38,7 +38,7 @@ class GuardedTraitTest extends TestCase
     public function testGetGuardFromContainer(): void
     {
         $this->container->method('has')->willReturn(true);
-        $this->container->method('get')->will($this->returnValue($this->guard));
+        $this->container->method('get')->willReturn($this->guard);
 
         ContainerScope::runScope($this->container, function (): void {
             $this->assertEquals($this->guard, $this->trait->getGuard());
@@ -67,7 +67,7 @@ class GuardedTraitTest extends TestCase
     {
         $this->guard->method('allows')
             ->with(static::OPERATION, static::CONTEXT)
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $guarded = new Guarded();
@@ -84,10 +84,10 @@ class GuardedTraitTest extends TestCase
     public function testResolvePermission(): void
     {
         $guarded = new Guarded();
-        $this->assertEquals(static::OPERATION, $guarded->resolvePermission(static::OPERATION));
+        $this->assertSame(static::OPERATION, $guarded->resolvePermission(static::OPERATION));
 
         $guarded = new GuardedWithNamespace();
         $resolvedPermission = GuardedWithNamespace::GUARD_NAMESPACE . '.' . static::OPERATION;
-        $this->assertEquals($resolvedPermission, $guarded->resolvePermission(static::OPERATION));
+        $this->assertSame($resolvedPermission, $guarded->resolvePermission(static::OPERATION));
     }
 }

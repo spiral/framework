@@ -71,7 +71,7 @@ final class PipelineTest extends TestCase
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('dispatch')
             ->with(new MiddlewareProcessing($request, $middleware));
 

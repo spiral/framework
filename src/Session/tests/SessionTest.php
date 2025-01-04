@@ -144,11 +144,11 @@ final class SessionTest extends TestCase
         $this->assertSame('value', $section['key']);
         $section->key = 'new value';
         $this->assertSame('new value', $section->key);
-        $this->assertTrue(isset($section['key']));
+        $this->assertArrayHasKey('key', $section);
         $this->assertTrue(isset($section->key));
 
         $section->delete('key');
-        $this->assertFalse(isset($section['key']));
+        $this->assertArrayNotHasKey('key', $section);
         $this->assertFalse(isset($section->key));
 
         $section->key = 'new value';

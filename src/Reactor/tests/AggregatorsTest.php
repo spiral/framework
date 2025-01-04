@@ -231,7 +231,7 @@ final class AggregatorsTest extends TestCase
 
         $a->add(new Partial\Method('method'));
         $this->assertInstanceOf(Partial\Method::class, $a->method);
-        $this->assertTrue(isset($a['method']));
+        $this->assertArrayHasKey('method', $a);
         $this->assertInstanceOf(Partial\Method::class, $a['method']);
 
         $this->assertTrue($a->has('method'));

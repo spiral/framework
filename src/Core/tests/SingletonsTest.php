@@ -165,7 +165,7 @@ class SingletonsTest extends TestCase
         $first = $container->get(SingletonAttribute::class);
         $second = $container->get(SingletonAttribute::class);
 
-        self::assertSame($first, $second);
+        $this->assertSame($first, $second);
     }
 
     public function testAttributeAnonClass(): void
@@ -175,7 +175,7 @@ class SingletonsTest extends TestCase
         $first = $container->get('foo');
         $second = $container->get('foo');
 
-        self::assertSame($first, $second);
+        $this->assertSame($first, $second);
     }
 
     public function testHasShouldReturnTrueWhenSingletonIsAlreadyConstructed(): void

@@ -34,7 +34,7 @@ final class FinalizeAttributeTest extends BaseTestCase
         }, name: 'foo');
 
         // Finalizer should be called when the scope `foo` is destroyed.
-        self::assertTrue($obj->finalized);
+        $this->assertTrue($obj->finalized);
     }
 
     /**
@@ -63,9 +63,9 @@ final class FinalizeAttributeTest extends BaseTestCase
         }, name: 'foo');
 
 
-        self::assertInstanceOf(FileLogger::class, $obj2->logger);
-        self::assertInstanceOf(FileLogger::class, $obj->logger);
-        self::assertSame($obj2->logger, $obj->logger);
+        $this->assertInstanceOf(FileLogger::class, $obj2->logger);
+        $this->assertInstanceOf(FileLogger::class, $obj->logger);
+        $this->assertSame($obj2->logger, $obj->logger);
     }
 
     /**
@@ -94,9 +94,9 @@ final class FinalizeAttributeTest extends BaseTestCase
         }, bindings: [AttrFinalize::class => AttrFinalize::class], name: 'foo');
 
 
-        self::assertInstanceOf(FileLogger::class, $obj2->logger);
-        self::assertInstanceOf(FileLogger::class, $obj->logger);
-        self::assertSame($obj2->logger, $obj->logger);
+        $this->assertInstanceOf(FileLogger::class, $obj2->logger);
+        $this->assertInstanceOf(FileLogger::class, $obj->logger);
+        $this->assertSame($obj2->logger, $obj->logger);
     }
 
     /**
@@ -109,11 +109,11 @@ final class FinalizeAttributeTest extends BaseTestCase
 
         $obj = $root->get(AttrFinalize::class);
 
-        self::assertNull($obj->logger);
+        $this->assertNull($obj->logger);
 
         // Destroy the root scope.
         unset($root);
-        self::assertInstanceOf(LoggerInterface::class, $obj->logger);
+        $this->assertInstanceOf(LoggerInterface::class, $obj->logger);
     }
 
     #[Group('scrutinizer-ignore')]
@@ -130,17 +130,11 @@ final class FinalizeAttributeTest extends BaseTestCase
                 $obj->throwException = true;
             }, name: 'foo');
         } catch (FinalizersException $e) {
-            self::assertSame('foo', $e->getScope());
-            self::assertCount(1, $e->getExceptions());
+            $this->assertSame('foo', $e->getScope());
+            $this->assertCount(1, $e->getExceptions());
             // Contains the message from the inner exception.
-            self::assertStringContainsString(
-                'Test exception from finalize method',
-                $e->getMessage(),
-            );
-            self::assertStringContainsString(
-                'Test exception from finalize method',
-                $e->getExceptions()[0]->getMessage(),
-            );
+            $this->assertStringContainsString('Test exception from finalize method', $e->getMessage());
+            $this->assertStringContainsString('Test exception from finalize method', $e->getExceptions()[0]->getMessage());
             throw $e;
         }
     }
@@ -160,13 +154,10 @@ final class FinalizeAttributeTest extends BaseTestCase
                 $c1->get(AttrScopeFooFinalize::class)->throwException = true;
             }, name: 'foo');
         } catch (FinalizersException $e) {
-            self::assertSame('foo', $e->getScope());
-            self::assertCount(3, $e->getExceptions());
+            $this->assertSame('foo', $e->getScope());
+            $this->assertCount(3, $e->getExceptions());
             // Contains the message from the inner exception.
-            self::assertStringContainsString(
-                'Test exception from finalize method',
-                $e->getMessage(),
-            );
+            $this->assertStringContainsString('Test exception from finalize method', $e->getMessage());
             throw $e;
         }
     }

@@ -62,7 +62,7 @@ class ServerTest extends TestCase
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('sample', $this->input->server->get('path'));
-        $this->assertSame(null, $this->input->server->get('other'));
+        $this->assertNull($this->input->server->get('other'));
     }
 
     public function testGetDot(): void
@@ -76,7 +76,7 @@ class ServerTest extends TestCase
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame(1, $this->input->server->get('path.SAMPLE'));
-        $this->assertSame(null, $this->input->server->get('path.another'));
+        $this->assertNull($this->input->server->get('path.another'));
     }
 
     public function testAll(): void
@@ -143,7 +143,7 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertSame(1, $this->input->server->count());
+        $this->assertCount(1, $this->input->server);
     }
 
     public function testServerBagArrayAccess(): void
@@ -157,7 +157,7 @@ class ServerTest extends TestCase
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $this->assertSame('sample', $this->input->server['path']);
-        $this->assertFalse(isset($this->input->server['other']));
+        $this->assertArrayNotHasKey('other', $this->input->server);
     }
 
     public function testDebugInfo(): void

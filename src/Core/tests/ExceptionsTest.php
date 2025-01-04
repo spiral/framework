@@ -172,7 +172,7 @@ class ExceptionsTest extends TestCase
         try {
             $container->get(ClassWithUndefinedDependency::class);
         } catch (ContainerException $e) {
-            self::assertSame($message, $e->getMessage());
+            $this->assertSame($message, $e->getMessage());
 
             throw $e;
         }

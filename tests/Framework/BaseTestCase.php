@@ -37,7 +37,10 @@ abstract class BaseTestCase extends \Spiral\Testing\TestCase
 
     public function getTestEnvVariables(): array
     {
-        return [...static::ENV, ...$this->getEnvVariablesFromConfig()];
+        return [
+            ...static::ENV,
+            ...$this->getEnvVariablesFromConfig(),
+        ];
     }
 
     protected function tearDown(): void

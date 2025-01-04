@@ -16,20 +16,20 @@ class ScannerTest extends TestCase
         $this->assertSame('b', $src->peak());
         $this->assertSame('c', $src->peak());
 
-        $this->assertSame(null, $src->peak());
+        $this->assertNull($src->peak());
     }
 
     public function testOffsetEOF(): void
     {
         $src = new StringStream('abc');
 
-        $this->assertSame(false, $src->isEOI());
+        $this->assertFalse($src->isEOI());
 
         $this->assertSame('a', $src->peak());
         $this->assertSame('b', $src->peak());
         $this->assertSame('c', $src->peak());
 
         $this->assertSame(3, $src->getOffset());
-        $this->assertSame(true, $src->isEOI());
+        $this->assertTrue($src->isEOI());
     }
 }

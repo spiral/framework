@@ -94,7 +94,7 @@ class ResponsesTest extends TestCase
     {
         $response = $this->getWrapper()->create(400);
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
     }
 
     public function testAttachmentStreamNoName(): void

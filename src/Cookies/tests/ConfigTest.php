@@ -32,7 +32,7 @@ class ConfigTest extends TestCase
         $this->assertSame('.domain.com', $c->resolveDomain(new Uri('http://domain.com/')));
         $this->assertSame('.domain.com', $c->resolveDomain(new Uri('https://domain.com/')));
         $this->assertSame('.domain.com', $c->resolveDomain(new Uri('https://domain.com:9090/')));
-        $this->assertSame(null, $c->resolveDomain(new Uri('/')));
+        $this->assertNull($c->resolveDomain(new Uri('/')));
         $this->assertSame('localhost', $c->resolveDomain(new Uri('localhost:9090/')));
 
         $this->assertSame('192.169.1.10', $c->resolveDomain(new Uri('http://192.169.1.10:8080/')));

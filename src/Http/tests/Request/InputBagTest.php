@@ -13,26 +13,26 @@ final class InputBagTest extends TestCase
     public function testEmptyBagCount(): void
     {
         $bag = new InputBag(data: []);
-        $this->assertSame(0, $bag->count());
+        $this->assertCount(0, $bag);
 
         $bag = new InputBag(data: [], prefix: 'foo');
-        $this->assertSame(0, $bag->count());
+        $this->assertCount(0, $bag);
     }
 
     public function testCount(): void
     {
         $bag = new InputBag(data: [1 => 'bar', 2 => [3 => 'foo']]);
 
-        $this->assertSame(2, $bag->count());
-        $this->assertSame(2, \count($bag));
+        $this->assertCount(2, $bag);
+        $this->assertCount(2, $bag);
     }
 
     public function testCountWithPrefix(): void
     {
         $bag = new InputBag(data: [1 => 'bar', 2 => [3 => 'foo']], prefix: '2');
 
-        $this->assertSame(1, $bag->count());
-        $this->assertSame(1, \count($bag));
+        $this->assertCount(1, $bag);
+        $this->assertCount(1, $bag);
     }
 
     public function testGetsAllData(): void
@@ -61,17 +61,17 @@ final class InputBagTest extends TestCase
 
         // Key exists and not null
         $this->assertTrue($bag->has(1));
-        $this->assertTrue(isset($bag[1]));
+        $this->assertArrayHasKey(1, $bag);
         $this->assertTrue($bag->has('1'));
-        $this->assertTrue(isset($bag['1']));
+        $this->assertArrayHasKey('1', $bag);
 
         // Key exists and null
         $this->assertTrue($bag->has(4));
-        $this->assertFalse(isset($bag[4]));
+        $this->assertArrayNotHasKey(4, $bag);
 
         // Key doesn't exist
         $this->assertFalse($bag->has(5));
-        $this->assertFalse(isset($bag[5]));
+        $this->assertArrayNotHasKey(5, $bag);
     }
 
     public function testHasWithPrefix(): void
@@ -79,10 +79,10 @@ final class InputBagTest extends TestCase
         $bag = new InputBag([1 => 'bar', 2 => [3 => 'foo'], 4 => null], prefix: 2);
 
         $this->assertFalse($bag->has(1));
-        $this->assertFalse(isset($bag[1]));
+        $this->assertArrayNotHasKey(1, $bag);
 
         $this->assertTrue($bag->has(3));
-        $this->assertTrue(isset($bag[3]));
+        $this->assertArrayHasKey(3, $bag);
     }
 
     public function testGet(): void

@@ -17,19 +17,19 @@ final class CompatiblePipelineBuilderTest extends TestCase
 {
     public function testCreateEmpty(): void
     {
-        $handler = self::createMock(HandlerInterface::class);
-        $handler->expects(self::once())->method('handle')->willReturn('foo');
+        $handler = $this->createMock(HandlerInterface::class);
+        $handler->expects($this->once())->method('handle')->willReturn('foo');
 
         $builder = (new CompatiblePipelineBuilder())->build($handler);
         $result = $builder->handle($this->createPathContext());
 
-        self::assertSame('foo', $result);
+        $this->assertSame('foo', $result);
     }
 
     public function testCreateWithInterceptor(): void
     {
-        $handler = self::createMock(HandlerInterface::class);
-        $handler->expects(self::never())->method('handle')->willReturn('foo');
+        $handler = $this->createMock(HandlerInterface::class);
+        $handler->expects($this->never())->method('handle')->willReturn('foo');
 
         $builder = (new CompatiblePipelineBuilder())->withInterceptors(
             new ExceptionInterceptor(),
@@ -41,8 +41,8 @@ final class CompatiblePipelineBuilderTest extends TestCase
 
     public function testCreateWithLegacyHandler(): void
     {
-        $handler = self::createMock(CoreInterface::class);
-        $handler->expects(self::never())->method('callAction')->willReturn('foo');
+        $handler = $this->createMock(CoreInterface::class);
+        $handler->expects($this->never())->method('callAction')->willReturn('foo');
 
         $builder = (new CompatiblePipelineBuilder())->withInterceptors(
             new ExceptionInterceptor(),
@@ -54,8 +54,8 @@ final class CompatiblePipelineBuilderTest extends TestCase
 
     public function testCreateWithLegacyInterceptor(): void
     {
-        $handler = self::createMock(CoreInterface::class);
-        $handler->expects(self::never())->method('callAction')->willReturn('foo');
+        $handler = $this->createMock(CoreInterface::class);
+        $handler->expects($this->never())->method('callAction')->willReturn('foo');
 
         $builder = (new CompatiblePipelineBuilder())->withInterceptors(
             new LegacyExceptionInterceptor(),
@@ -67,13 +67,13 @@ final class CompatiblePipelineBuilderTest extends TestCase
 
     public function testWithMiddleware(): void
     {
-        $handler = self::createMock(HandlerInterface::class);
-        $handler->expects(self::never())->method('handle')->willReturn('foo');
+        $handler = $this->createMock(HandlerInterface::class);
+        $handler->expects($this->never())->method('handle')->willReturn('foo');
 
         $builder = (new CompatiblePipelineBuilder());
         $second = $builder->withInterceptors(new ExceptionInterceptor());
 
-        self::assertNotSame($builder, $second);
+        $this->assertNotSame($builder, $second);
     }
 
     private function createPathContext(array $path = []): CallContext

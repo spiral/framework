@@ -44,7 +44,7 @@ class InjectableConfigTest extends TestCase
             'keyB' => 'valueB',
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             'keyA' => 'value',
             'keyB' => 'valueB',
         ], $config->toArray());
@@ -122,8 +122,8 @@ class InjectableConfigTest extends TestCase
 
     public function testAliases(): void
     {
-        $this->assertEquals('test', $this->resolveAlias('default'));
-        $this->assertEquals('test', $this->resolveAlias('value'));
+        $this->assertSame('test', $this->resolveAlias('default'));
+        $this->assertSame('test', $this->resolveAlias('value'));
     }
 
     public function testCircleReference(): void
@@ -146,11 +146,11 @@ class InjectableConfigTest extends TestCase
     {
         $config = new IntKeysConfig([10 => 'value']);
 
-        $this->assertEquals([
+        $this->assertSame([
+            10 => 'value',
             1 => 'some',
             3 => 'other',
             7 => 'key',
-            10 => 'value'
         ], $config->toArray());
     }
 }

@@ -29,7 +29,7 @@ final class TargetAttributeTest extends TestCase
     public function testFilterAttrWithArgs(): void
     {
         $attribute = new TargetAttribute(attribute: WithTargetClassWithArgs::class);
-        $this->assertEquals([
+        $this->assertSame([
             ClassWithAttributeWithArgsOnClass::class,
         ], \iterator_to_array($attribute->filter([new \ReflectionClass(ClassWithAttributeWithArgsOnClass::class)])));
     }

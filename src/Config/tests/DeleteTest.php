@@ -13,7 +13,7 @@ class DeleteTest extends BaseTestCase
     {
         $cf = $this->getFactory();
 
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        $this->assertSame(['value' => 'value!'], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Append('.', 'other', ['a' => 'b']));
         $cf->modify('scope', new Delete('.', 'value'));
@@ -54,9 +54,9 @@ class DeleteTest extends BaseTestCase
     public function testException(): void
     {
         $cf = $this->getFactory();
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        $this->assertSame(['value' => 'value!'], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Delete('something.', 'other'));
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        $this->assertSame(['value' => 'value!'], $cf->getConfig('scope'));
     }
 }

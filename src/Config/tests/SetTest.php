@@ -12,7 +12,7 @@ class SetTest extends BaseTestCase
     {
         $cf = $this->getFactory();
 
-        $this->assertEquals(['value' => 'value!'], $cf->getConfig('scope'));
+        $this->assertSame(['value' => 'value!'], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Set('value', 'x'));
 

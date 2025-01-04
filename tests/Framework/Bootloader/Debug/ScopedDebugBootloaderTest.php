@@ -31,7 +31,7 @@ final class ScopedDebugBootloaderTest extends TestCase
 
         $state = $this->getContainer()->get(StateInterface::class);
 
-        self::assertInstanceOf(StateInterface::class, $state);
-        self::assertSame('my-collector, yet-another-collector', $state->getTags()['unresolved-collectors']);
+        $this->assertInstanceOf(StateInterface::class, $state);
+        $this->assertSame('my-collector, yet-another-collector', $state->getTags()['unresolved-collectors']);
     }
 }

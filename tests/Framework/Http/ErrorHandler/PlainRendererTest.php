@@ -22,12 +22,12 @@ final class PlainRendererTest extends TestCase
         ]);
 
         $response = $renderer->renderException($request, 400, new \Exception('message'));
-        self::assertTrue($response->hasHeader('Content-Type'));
-        self::assertSame(['application/json; charset=UTF-8'], $response->getHeader('Content-Type'));
+        $this->assertTrue($response->hasHeader('Content-Type'));
+        $this->assertSame(['application/json; charset=UTF-8'], $response->getHeader('Content-Type'));
 
         $stream = $response->getBody();
         $stream->rewind();
-        self::assertJsonStringEqualsJsonString('{"status": 400}', $stream->getContents());
+        $this->assertJsonStringEqualsJsonString('{"status": 400}', $stream->getContents());
     }
 
     public function testNoAcceptHeader(): void
@@ -38,7 +38,7 @@ final class PlainRendererTest extends TestCase
         $response = $renderer->renderException($request, 400, new \Exception('message'));
         $stream = $response->getBody();
         $stream->rewind();
-        self::assertEquals('Error code: 400', $stream->getContents());
+        $this->assertSame('Error code: 400', $stream->getContents());
     }
 
     #[DataProvider('dataResponseIsJson')]
@@ -53,12 +53,12 @@ final class PlainRendererTest extends TestCase
         ], 'php://input');
 
         $response = $renderer->renderException($request, 400, new \Exception('message'));
-        self::assertTrue($response->hasHeader('Content-Type'));
-        self::assertSame(['application/json; charset=UTF-8'], $response->getHeader('Content-Type'));
+        $this->assertTrue($response->hasHeader('Content-Type'));
+        $this->assertSame(['application/json; charset=UTF-8'], $response->getHeader('Content-Type'));
 
         $stream = $response->getBody();
         $stream->rewind();
-        self::assertJsonStringEqualsJsonString('{"status": 400}', $stream->getContents());
+        $this->assertJsonStringEqualsJsonString('{"status": 400}', $stream->getContents());
     }
 
     public static function dataResponseIsJson(): iterable
@@ -93,7 +93,7 @@ final class PlainRendererTest extends TestCase
         $response = $renderer->renderException($request, 400, new \Exception('message'));
         $stream = $response->getBody();
         $stream->rewind();
-        self::assertEquals('Error code: 400', $stream->getContents());
+        $this->assertSame('Error code: 400', $stream->getContents());
     }
 
     public static function dataResponseIsPlain(): iterable
@@ -119,7 +119,7 @@ final class PlainRendererTest extends TestCase
     {
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
         $responseFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createResponse')
             ->willReturnCallback(static fn(): Response => new Response());
         return $responseFactory;
