@@ -37,29 +37,29 @@ final class RetryPolicyTest extends TestCase
     {
         $policy = new RetryPolicy(1, 0);
 
-        $this->assertSame($expected, $policy->isRetryable($exception, $attempts));
+        self::assertSame($expected, $policy->isRetryable($exception, $attempts));
     }
 
     public function testGetDelayWithoutMultiplier(): void
     {
         $policy = new RetryPolicy(4, 1_000);
 
-        $this->assertSame(1_000, $policy->getDelay());
-        $this->assertSame(1_000, $policy->getDelay(1));
-        $this->assertSame(1_000, $policy->getDelay(2));
-        $this->assertSame(1_000, $policy->getDelay(3));
-        $this->assertSame(1_000, $policy->getDelay(4));
+        self::assertSame(1_000, $policy->getDelay());
+        self::assertSame(1_000, $policy->getDelay(1));
+        self::assertSame(1_000, $policy->getDelay(2));
+        self::assertSame(1_000, $policy->getDelay(3));
+        self::assertSame(1_000, $policy->getDelay(4));
     }
 
     public function testGetDelayWithMultiplier(): void
     {
         $policy = new RetryPolicy(4, 1_000, 2);
 
-        $this->assertSame(1_000, $policy->getDelay());
-        $this->assertSame(2_000, $policy->getDelay(1));
-        $this->assertSame(4_000, $policy->getDelay(2));
-        $this->assertSame(8_000, $policy->getDelay(3));
-        $this->assertSame(16_000, $policy->getDelay(4));
+        self::assertSame(1_000, $policy->getDelay());
+        self::assertSame(2_000, $policy->getDelay(1));
+        self::assertSame(4_000, $policy->getDelay(2));
+        self::assertSame(8_000, $policy->getDelay(3));
+        self::assertSame(16_000, $policy->getDelay(4));
     }
 
     public static function retryableDataProvider(): \Traversable

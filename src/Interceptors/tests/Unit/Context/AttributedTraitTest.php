@@ -14,10 +14,10 @@ class AttributedTraitTest extends TestCase
         $dto = (new AttributedStub())
             ->withAttribute('key', 'value');
 
-        $this->assertSame('value', $dto->getAttribute('key'));
-        $this->assertNull($dto->getAttribute('non-exist-key'));
+        self::assertSame('value', $dto->getAttribute('key'));
+        self::assertNull($dto->getAttribute('non-exist-key'));
         // default value
-        $this->assertSame(42, $dto->getAttribute('non-exist-key', 42));
+        self::assertSame(42, $dto->getAttribute('non-exist-key', 42));
     }
 
     public function testWithAttribute(): void
@@ -26,10 +26,10 @@ class AttributedTraitTest extends TestCase
 
         $new = $dto->withAttribute('key', 'value');
 
-        $this->assertSame('value', $new->getAttribute('key'));
+        self::assertSame('value', $new->getAttribute('key'));
         // Immutability
-        $this->assertNotSame($dto, $new);
-        $this->assertNotSame('value', $dto->getAttribute('key'));
+        self::assertNotSame($dto, $new);
+        self::assertNotSame('value', $dto->getAttribute('key'));
     }
 
     public function testWithAttributes(): void
@@ -40,7 +40,7 @@ class AttributedTraitTest extends TestCase
             ->withAttribute('key', 'value')
             ->withAttribute('key2', 'value2');
 
-        $this->assertSame([
+        self::assertSame([
             'key' => 'value',
             'key2' => 'value2',
         ], $new->getAttributes());
@@ -54,8 +54,8 @@ class AttributedTraitTest extends TestCase
 
         $new = $dto->withoutAttribute('key');
 
-        $this->assertNull($new->getAttribute('key'));
-        $this->assertSame([
+        self::assertNull($new->getAttribute('key'));
+        self::assertSame([
             'key2' => 'value2',
         ], $new->getAttributes());
     }

@@ -18,8 +18,8 @@ class FinalizerTest extends TestCase
             $value = 2;
         });
 
-        $this->assertSame(1, $value);
+        self::assertSame(1, $value);
         $f->finalize();
-        $this->assertSame(2, $value);
+        self::assertSame(2, $value);
     }
 }

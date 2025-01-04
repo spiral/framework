@@ -30,7 +30,7 @@ final class CookiesTest extends HttpTestCase
 
     public function testOutsideOfScopeOK(): void
     {
-        $this->assertInstanceOf(CookieManager::class, $this->cookies());
+        self::assertInstanceOf(CookieManager::class, $this->cookies());
     }
 
     public function testOutsideOfScopeFail(): void
@@ -117,10 +117,7 @@ final class CookiesTest extends HttpTestCase
 
         $cookies = $result->getCookies();
 
-        $this->assertSame(
-            'value',
-            $this->getContainer()->get(EncrypterInterface::class)->decrypt($cookies['a'])
-        );
+        self::assertSame('value', $this->getContainer()->get(EncrypterInterface::class)->decrypt($cookies['a']));
     }
 
     #[TestScope([Spiral::Http, Spiral::HttpRequest])]
@@ -128,8 +125,8 @@ final class CookiesTest extends HttpTestCase
     {
         $this->setHttpHandler(function (ServerRequestInterface $request): string {
             $this->cookies()->schedule(Cookie::create('a', 'value'));
-            $this->assertSame([], $this->cookies()->getAll());
-            $this->assertCount(1, $this->cookies()->getScheduled());
+            self::assertSame([], $this->cookies()->getAll());
+            self::assertCount(1, $this->cookies()->getScheduled());
 
             return 'ok';
         });
@@ -138,10 +135,7 @@ final class CookiesTest extends HttpTestCase
 
         $cookies = $result->getCookies();
 
-        $this->assertSame(
-            'value',
-            $this->getContainer()->get(EncrypterInterface::class)->decrypt($cookies['a'])
-        );
+        self::assertSame('value', $this->getContainer()->get(EncrypterInterface::class)->decrypt($cookies['a']));
     }
 
     #[TestScope([Spiral::Http, Spiral::HttpRequest])]

@@ -121,7 +121,7 @@ final class ErrorHandlerMiddlewareTest extends TestCase
 
         $response = $middleware->process($this->request, $this->handler);
 
-        $this->assertSame($code, $response->getStatusCode());
+        self::assertSame($code, $response->getStatusCode());
     }
 
     #[DataProvider('exceptionsDataProvider')]
@@ -167,7 +167,7 @@ final class ErrorHandlerMiddlewareTest extends TestCase
 
         $response = $middleware->process($this->request, $this->handler);
 
-        $this->assertSame($code, $response->getStatusCode());
+        self::assertSame($code, $response->getStatusCode());
     }
 
     public static function exceptionsDataProvider(): \Traversable

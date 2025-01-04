@@ -25,8 +25,8 @@ class CacheTest extends TestCase
         $view = $this->getView($ctx, 'default:view');
 
         $cache->set($ctx, 'default:view', $view);
-        $this->assertTrue($cache->has($ctx, 'default:view'));
-        $this->assertSame($view, $cache->get($ctx, 'default:view'));
+        self::assertTrue($cache->has($ctx, 'default:view'));
+        self::assertSame($view, $cache->get($ctx, 'default:view'));
     }
 
     public function testGet(): void
@@ -50,13 +50,13 @@ class CacheTest extends TestCase
         $cache->set($ctx, 'default:view', $view);
         $cache->set($ctx2, 'other:view', $view2);
 
-        $this->assertTrue($cache->has($ctx, 'default:view'));
-        $this->assertTrue($cache->has($ctx2, 'other:view'));
+        self::assertTrue($cache->has($ctx, 'default:view'));
+        self::assertTrue($cache->has($ctx2, 'other:view'));
 
         $cache->reset($ctx);
 
-        $this->assertFalse($cache->has($ctx, 'default:view'));
-        $this->assertTrue($cache->has($ctx2, 'other:view'));
+        self::assertFalse($cache->has($ctx, 'default:view'));
+        self::assertTrue($cache->has($ctx2, 'other:view'));
     }
 
     public function testResetAll(): void
@@ -72,13 +72,13 @@ class CacheTest extends TestCase
         $cache->set($ctx, 'default:view', $view);
         $cache->set($ctx2, 'other:view', $view2);
 
-        $this->assertTrue($cache->has($ctx, 'default:view'));
-        $this->assertTrue($cache->has($ctx2, 'other:view'));
+        self::assertTrue($cache->has($ctx, 'default:view'));
+        self::assertTrue($cache->has($ctx2, 'other:view'));
 
         $cache->reset();
 
-        $this->assertFalse($cache->has($ctx, 'default:view'));
-        $this->assertFalse($cache->has($ctx2, 'other:view'));
+        self::assertFalse($cache->has($ctx, 'default:view'));
+        self::assertFalse($cache->has($ctx2, 'other:view'));
     }
 
     public function testResetPath(): void
@@ -92,13 +92,13 @@ class CacheTest extends TestCase
         $cache->set($ctx, 'default:view', $view);
         $cache->set($ctx, 'other:view', $view2);
 
-        $this->assertTrue($cache->has($ctx, 'default:view'));
-        $this->assertTrue($cache->has($ctx, 'other:view'));
+        self::assertTrue($cache->has($ctx, 'default:view'));
+        self::assertTrue($cache->has($ctx, 'other:view'));
 
         $cache->resetPath('other:view');
 
-        $this->assertTrue($cache->has($ctx, 'default:view'));
-        $this->assertFalse($cache->has($ctx, 'other:view'));
+        self::assertTrue($cache->has($ctx, 'default:view'));
+        self::assertFalse($cache->has($ctx, 'other:view'));
     }
 
     public function testContextValue(): void
@@ -111,13 +111,13 @@ class CacheTest extends TestCase
         $view = $this->getView($ctx, 'default:view');
 
         $cache->set($ctx, 'default:view', $view);
-        $this->assertTrue($cache->has($ctx, 'default:view'));
+        self::assertTrue($cache->has($ctx, 'default:view'));
 
         $ctx = $ctx->withDependency(new ValueDependency('test', 'another'));
-        $this->assertFalse($cache->has($ctx, 'default:view'));
+        self::assertFalse($cache->has($ctx, 'default:view'));
 
         $ctx = $ctx->withDependency(new ValueDependency('test', 'value'));
-        $this->assertTrue($cache->has($ctx, 'default:view'));
+        self::assertTrue($cache->has($ctx, 'default:view'));
     }
 
     protected function getView(ContextInterface $context, string $path): ViewInterface

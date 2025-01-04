@@ -40,8 +40,8 @@ final class HeaderTransportTest extends BaseTestCase
             new ServerRequest('GET', '', ['X-Auth-Token' => 'good-token'], 'php://input')
         );
 
-        $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        $this->assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
+        self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+        self::assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
     }
 
     public function testHeaderTokenWithCustomValueFormat(): void
@@ -64,8 +64,8 @@ final class HeaderTransportTest extends BaseTestCase
             new ServerRequest('GET', '', ['Authorization' => 'Bearer good-token'], 'php://input')
         );
 
-        $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        $this->assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
+        self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+        self::assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
     }
     public function testBadHeaderToken(): void
     {
@@ -87,8 +87,8 @@ final class HeaderTransportTest extends BaseTestCase
             new ServerRequest('GET', '', ['X-Auth-Token' => 'bad'], 'php://input')
         );
 
-        $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        $this->assertSame('no token', (string)$response->getBody());
+        self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+        self::assertSame('no token', (string)$response->getBody());
     }
 
     public function testDeleteToken(): void
@@ -105,8 +105,8 @@ final class HeaderTransportTest extends BaseTestCase
             new ServerRequest('GET', '',['X-Auth-Token' => 'bad'], 'php://input')
         );
 
-        $this->assertEmpty($response->getHeader('X-Auth-Token'));
-        $this->assertSame('closed', (string)$response->getBody());
+        self::assertEmpty($response->getHeader('X-Auth-Token'));
+        self::assertSame('closed', (string)$response->getBody());
     }
 
     public function testCommitToken(): void
@@ -123,7 +123,7 @@ final class HeaderTransportTest extends BaseTestCase
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
 
-        $this->assertSame(['new-token'], $response->getHeader('X-Auth-Token'));
+        self::assertSame(['new-token'], $response->getHeader('X-Auth-Token'));
     }
 
     public function testCommitTokenWithCustomValueFormat(): void
@@ -140,7 +140,7 @@ final class HeaderTransportTest extends BaseTestCase
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
 
-        $this->assertSame(['Bearer new-token'], $response->getHeader('Authorization'));
+        self::assertSame(['Bearer new-token'], $response->getHeader('Authorization'));
     }
 
     protected function getCore(HttpTransportInterface $transport): Http

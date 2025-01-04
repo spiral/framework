@@ -31,17 +31,17 @@ class MiddlewareTest extends BaseTestingCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
-        $this->assertSame('Value*', $response->getHeaderLine('Header'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('Value*', $response->getHeaderLine('Header'));
 
         $r = $router->getRoute('group')->withMiddleware(HeaderMiddleware::class);
 
         $r = $r->match(new ServerRequest('GET', new Uri('/test')));
         $response = $r->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
-        $this->assertSame('Value*, Value*', $response->getHeaderLine('Header'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('Value*, Value*', $response->getHeaderLine('Header'));
     }
 
     public function testRouteRuntime(): void
@@ -56,9 +56,9 @@ class MiddlewareTest extends BaseTestingCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
-        $this->assertSame('Value*', $response->getHeaderLine('Header'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('Value*', $response->getHeaderLine('Header'));
     }
 
     public function testRouteArray(): void
@@ -73,14 +73,14 @@ class MiddlewareTest extends BaseTestingCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
-        $this->assertSame('Value*, Value*', $response->getHeaderLine('Header'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('Value*, Value*', $response->getHeaderLine('Header'));
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
-        $this->assertSame('Value*, Value*', $response->getHeaderLine('Header'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('Value*, Value*', $response->getHeaderLine('Header'));
     }
 
     public function testInvalid(): void
@@ -120,9 +120,9 @@ class MiddlewareTest extends BaseTestingCase
 
         $r = $r->match(new ServerRequest('GET', new Uri('/test')));
         $response = $r->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
-        $this->assertSame('Value*, Value*', $response->getHeaderLine('Header'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('Value*, Value*', $response->getHeaderLine('Header'));
     }
 
     public function testUndefinedMiddleware(): void

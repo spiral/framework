@@ -38,7 +38,7 @@ final class UseCaseTest extends BaseTestCase
             $c1->get('foo');
         }, bindings: ['foo' => SampleClass::class]);
 
-        $this->assertInstanceOf(SampleClass::class, $root->get('foo'));
+        self::assertInstanceOf(SampleClass::class, $root->get('foo'));
     }
 
     /**
@@ -72,8 +72,8 @@ final class UseCaseTest extends BaseTestCase
             $obj2 = $c1->get($alias);
 
             $theSame
-                ? $this->assertSame($obj1, $obj2)
-                : $this->assertNotSame($obj1, $obj2);
+                ? self::assertSame($obj1, $obj2)
+                : self::assertNotSame($obj1, $obj2);
         }, bindings: [$alias => $definition]);
     }
 
@@ -96,25 +96,25 @@ final class UseCaseTest extends BaseTestCase
             $obj1 = $c1->get('foo');
             $this->weakMap->offsetSet($obj1, true);
 
-            $this->assertNotSame($root, $c1);
-            $this->assertInstanceOf(stdClass::class, $obj1);
+            self::assertNotSame($root, $c1);
+            self::assertInstanceOf(stdClass::class, $obj1);
 
             $c1->runScoped(function (ContainerInterface $c2) use ($root, $c1, $obj1): void {
                 $obj2 = $c2->get('foo');
                 $this->weakMap->offsetSet($obj2, true);
 
-                $this->assertNotSame($root, $c2);
-                $this->assertNotSame($c1, $c2);
-                $this->assertInstanceOf(stdClass::class, $obj2);
-                $this->assertNotSame($obj1, $obj2);
+                self::assertNotSame($root, $c2);
+                self::assertNotSame($c1, $c2);
+                self::assertInstanceOf(stdClass::class, $obj2);
+                self::assertNotSame($obj1, $obj2);
             }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
 
             // $obj2 should be garbage collected
-            $this->assertCount(1, $this->weakMap);
+            self::assertCount(1, $this->weakMap);
         }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
 
         // $obj1 should be garbage collected
-        $this->assertEmpty($this->weakMap);
+        self::assertEmpty($this->weakMap);
     }
 
     /**
@@ -132,18 +132,22 @@ final class UseCaseTest extends BaseTestCase
             $obj1 = $c1->get('foo');
             $this->weakMap->offsetSet($obj1, true);
 
-            $this->assertInstanceOf(stdClass::class, $obj1);
+            self::assertInstanceOf(stdClass::class, $obj1);
             // Singleton must be the same
-            $this->assertSame($c1->get('bar'), $root->get('bar'));
+            self::assertSame($c1->get('bar'), $root->get('bar'));
             $c1->runScoped(function (ContainerInterface $c2) use ($root, $obj1): void {
                 $obj2 = $c2->get('foo');
 
-                $this->assertInstanceOf(stdClass::class, $obj2);
-                $this->assertNotSame($obj1, $obj2);
+                self::assertInstanceOf(stdClass::class, $obj2);
+                self::assertNotSame($obj1, $obj2);
                 // Singleton must be the same
-                $this->assertSame($c2->get('bar'), $root->get('bar'));
+                self::assertSame($c2->get('bar'), $root->get('bar'));
                 // Key is class name but parent has the definition.
-                $this->assertSame($c2->get(stdClass::class), $root->get(stdClass::class), "Nested container mustn't create new instance using class name as key without definition.");
+                self::assertSame(
+                    $c2->get(stdClass::class),
+                    $root->get(stdClass::class),
+                    "Nested container mustn't create new instance using class name as key without definition."
+                );
             });
         }, bindings: ['foo' => [Factory::class, 'makeStdClass']]);
     }
@@ -157,11 +161,11 @@ final class UseCaseTest extends BaseTestCase
         // Configure Scope 1
         $root->getBinder('scope1')->bindSingleton('foo', (object)['scope' => 'scope1']);
         // Configure Scope 2
-        $this->assertFalse($root->getBinder('scope2')->hasInstance('foo'));
+        self::assertFalse($root->getBinder('scope2')->hasInstance('foo'));
         $root->getBinder('scope2')->bindSingleton('foo', (object)['scope' => 'scope2']);
         $root->getBinder('scope2')->bindSingleton('bar', (object)['from' => 'default']);
 
-        $this->assertFalse($root->has('foo'));
+        self::assertFalse($root->has('foo'));
 
         $root->runScoped(static function (ContainerInterface $c1): void {
             self::assertTrue($c1->has('foo'));
@@ -196,7 +200,7 @@ final class UseCaseTest extends BaseTestCase
         $obj1 = $getter();
         $obj2 = $getter();
 
-        $this->assertNotSame($obj1, $obj2);
+        self::assertNotSame($obj1, $obj2);
     }
 
     /**
@@ -209,12 +213,12 @@ final class UseCaseTest extends BaseTestCase
 
         $root->runScoped(function (Container $c1) use ($factory): void {
             $c1->getBinder('scope1')->bindSingleton('bar', $factory->makeStdClass(...));
-            $this->assertFalse($c1->has('bar'));
+            self::assertFalse($c1->has('bar'));
         }, name: 'scope1');
 
         $root->runScoped(function (Container $c1): void {
-            $this->assertTrue($c1->has('bar'));
-            $this->assertInstanceOf(stdClass::class, $c1->get('bar'));
+            self::assertTrue($c1->has('bar'));
+            self::assertInstanceOf(stdClass::class, $c1->get('bar'));
         }, name: 'scope1');
     }
 
@@ -231,7 +235,7 @@ final class UseCaseTest extends BaseTestCase
         $root->bindInjector(LoggerInterface::class, LoggerInjector::class);
         $root->bind(LoggerInjector::class, new Shared(new LoggerInjector($logger1)));
 
-        $this->assertSame($logger1, $root->get(LoggerInterface::class));
+        self::assertSame($logger1, $root->get(LoggerInterface::class));
 
         $root->runScoped(static function (ContainerInterface $c1) use ($logger1): void {
             self::assertSame($logger1, $c1->get(LoggerInterface::class));
@@ -247,17 +251,17 @@ final class UseCaseTest extends BaseTestCase
         $c = new Container();
         $c->bindSingleton('bucket', new Container\Autowire(Bucket::class, ['a']));
 
-        $this->assertSame('a', $c->get('bucket')->getName());
+        self::assertSame('a', $c->get('bucket')->getName());
 
-        $this->assertTrue($c->runScoped(function (ContainerInterface $c): bool {
-            $this->assertSame('b', $c->get('bucket')->getName());
+        self::assertTrue($c->runScoped(function (ContainerInterface $c): bool {
+            self::assertSame('b', $c->get('bucket')->getName());
 
             return $c->get('bucket')->getName() === 'b';
         }, bindings: [
             'bucket' => new Bucket('b'),
         ]));
 
-        $this->assertSame('a', $c->get('bucket')->getName());
+        self::assertSame('a', $c->get('bucket')->getName());
     }
 
     public function testRegisterContainerOnInvoke(): void
@@ -274,8 +278,8 @@ final class UseCaseTest extends BaseTestCase
     {
         $root = new Container();
         $root->bind('foo', function () use ($root): void {
-            $this->assertNotNull(\Spiral\Core\ContainerScope::getContainer());
-            $this->assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
         });
 
         $root->get('foo');
@@ -285,8 +289,8 @@ final class UseCaseTest extends BaseTestCase
     {
         $root = new Container();
         $root->bind('foo', function () use ($root): void {
-            $this->assertNotNull(\Spiral\Core\ContainerScope::getContainer());
-            $this->assertSame($root, \Spiral\Core\ContainerScope::getContainer());
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
         });
 
         $root->make('foo');
@@ -304,21 +308,21 @@ final class UseCaseTest extends BaseTestCase
 
         $root->bind('foo', function (#[Proxy] ContainerInterface $c, ContainerInterface $r) use ($root): void {
             // Direct
-            $this->assertNotNull(\Spiral\Core\ContainerScope::getContainer());
-            $this->assertNotSame($root, \Spiral\Core\ContainerScope::getContainer());
+            self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
+            self::assertNotSame($root, \Spiral\Core\ContainerScope::getContainer());
 
             // Not a proxy
-            $this->assertSame($root, $r);
-            $this->assertFalse($r->get('isFoo'));
+            self::assertSame($root, $r);
+            self::assertFalse($r->get('isFoo'));
 
             // Via proxy
-            $this->assertTrue($c->get('isFoo'));
+            self::assertTrue($c->get('isFoo'));
         });
 
         $root->runScope(
             new Scope('foo'),
             function (ContainerInterface $c): void {
-                $this->assertTrue($c->get('isFoo'));
+                self::assertTrue($c->get('isFoo'));
                 $c->get('foo');
             }
         );
@@ -331,10 +335,10 @@ final class UseCaseTest extends BaseTestCase
         $root->getBinder($scope)->bindSingleton('foo', SampleClass::class);
 
         $root->runScope(new Scope($scope), function (Container $container): void {
-            $this->assertTrue($container->has('foo'));
-            $this->assertInstanceOf(SampleClass::class, $container->get('foo'));
+            self::assertTrue($container->has('foo'));
+            self::assertInstanceOf(SampleClass::class, $container->get('foo'));
         });
-        $this->assertFalse($root->has('foo'));
+        self::assertFalse($root->has('foo'));
     }
 
     public function testHasInParentScope(): void
@@ -343,12 +347,12 @@ final class UseCaseTest extends BaseTestCase
         $root->bindSingleton('sampleClass', SampleClass::class);
 
         $root->runScope(new Scope('foo'), function (Container $container): void {
-            $this->assertTrue($container->has('sampleClass'));
+            self::assertTrue($container->has('sampleClass'));
         });
 
         $root->runScope(new Scope('foo'), function (Container $container): void {
             $container->runScope(new Scope('bar'), function (Container $container): void {
-                $this->assertTrue($container->has('sampleClass'));
+                self::assertTrue($container->has('sampleClass'));
             });
         });
 
@@ -356,8 +360,8 @@ final class UseCaseTest extends BaseTestCase
             $container->bindSingleton('otherClass', SampleClass::class);
 
             $container->runScope(new Scope('bar'), function (Container $container): void {
-                $this->assertTrue($container->has('sampleClass'));
-                $this->assertTrue($container->has('otherClass'));
+                self::assertTrue($container->has('sampleClass'));
+                self::assertTrue($container->has('otherClass'));
             });
         });
     }
@@ -368,16 +372,16 @@ final class UseCaseTest extends BaseTestCase
         $root->getBinder('foo')->bindSingleton('sampleClass', AttrScopeFoo::class);
 
         $root->runScope(new Scope('foo'), function (Container $container): void {
-            $this->assertTrue($container->has('sampleClass'));
+            self::assertTrue($container->has('sampleClass'));
         });
 
         $root->runScope(new Scope('bar'), function (Container $container): void {
-            $this->assertFalse($container->has('sampleClass'));
+            self::assertFalse($container->has('sampleClass'));
         });
 
         $root->runScope(new Scope('foo'), function (Container $container): void {
             $container->runScope(new Scope('bar'), function (Container $container): void {
-                $this->assertTrue($container->has('sampleClass'));
+                self::assertTrue($container->has('sampleClass'));
             });
         });
 
@@ -385,8 +389,8 @@ final class UseCaseTest extends BaseTestCase
             $container->bindSingleton('otherClass', AttrScopeFoo::class);
 
             $container->runScope(new Scope('bar'), function (Container $container): void {
-                $this->assertTrue($container->has('sampleClass'));
-                $this->assertTrue($container->has('otherClass'));
+                self::assertTrue($container->has('sampleClass'));
+                self::assertTrue($container->has('otherClass'));
             });
         });
 
@@ -394,8 +398,8 @@ final class UseCaseTest extends BaseTestCase
             $container->getBinder('foo')->bindSingleton('otherClass', AttrScopeFoo::class);
 
             $container->runScope(new Scope('bar'), function (Container $container): void {
-                $this->assertFalse($container->has('sampleClass'));
-                $this->assertFalse($container->has('otherClass'));
+                self::assertFalse($container->has('sampleClass'));
+                self::assertFalse($container->has('otherClass'));
             });
         });
     }

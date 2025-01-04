@@ -18,7 +18,7 @@ final class DumpCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        $this->assertStringContainsString('prototype:dump', $result);
+        self::assertStringContainsString('prototype:dump', $result);
     }
 
     public function testDump(): void
@@ -36,65 +36,50 @@ final class DumpCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        $this->assertStringContainsString('Updating PrototypeTrait DOCComment... complete', $result);
+        self::assertStringContainsString('Updating PrototypeTrait DOCComment... complete', $result);
     }
 
     private function validateTrait(string $content): bool
     {
-        $this->assertStringContainsString('namespace Spiral\Prototype\Traits;', $content);
-        $this->assertStringContainsString('use Spiral\Prototype\PrototypeRegistry;', $content);
-        $this->assertStringContainsString(
-            'This DocComment is auto-generated, do not edit or commit this file to repository.',
-            $content
-        );
-        $this->assertStringContainsString('@property \Spiral\Tests\Prototype\Fixtures\TestApp $app', $content);
-        $this->assertStringContainsString('@property \Spiral\Tokenizer\ClassesInterface $classLocator', $content);
-        $this->assertStringContainsString('@property \Spiral\Console\Console $console', $content);
-        $this->assertStringContainsString('@property \Spiral\Broadcasting\BroadcastInterface $broadcast', $content);
-        $this->assertStringContainsString('@property \Psr\Container\ContainerInterface $container', $content);
-        $this->assertStringContainsString('@property \Spiral\Encrypter\EncrypterInterface $encrypter', $content);
-        $this->assertStringContainsString('@property \Spiral\Boot\EnvironmentInterface $env', $content);
-        $this->assertStringContainsString('@property \Spiral\Files\FilesInterface $files', $content);
-        $this->assertStringContainsString('@property \Spiral\Security\GuardInterface $guard', $content);
-        $this->assertStringContainsString('@property \Spiral\Http\Http $http', $content);
-        $this->assertStringContainsString('@property \Spiral\Translator\TranslatorInterface $i18n', $content);
-        $this->assertStringContainsString('@property \Spiral\Http\Request\InputManager $input', $content);
-        $this->assertStringContainsString('@property \Spiral\Session\SessionScope $session', $content);
-        $this->assertStringContainsString('@property \Spiral\Cookies\CookieManager $cookies', $content);
-        $this->assertStringContainsString('@property \Psr\Log\LoggerInterface $logger', $content);
-        $this->assertStringContainsString('@property \Spiral\Logger\LogsInterface $logs', $content);
-        $this->assertStringContainsString('@property \Spiral\Boot\MemoryInterface $memory', $content);
-        $this->assertStringContainsString(
-            '@property \Spiral\Pagination\PaginationProviderInterface $paginators',
-            $content
-        );
-        $this->assertStringContainsString('@property \Spiral\Queue\QueueInterface $queue', $content);
-        $this->assertStringContainsString(
-            '@property \Spiral\Queue\QueueConnectionProviderInterface $queueManager',
-            $content
-        );
-        $this->assertStringContainsString('@property \Spiral\Http\Request\InputManager $request', $content);
-        $this->assertStringContainsString('@property \Spiral\Http\ResponseWrapper $response', $content);
-        $this->assertStringContainsString('@property \Spiral\Router\RouterInterface $router', $content);
-        $this->assertStringContainsString('@property \Spiral\Snapshots\SnapshotterInterface $snapshots', $content);
-        $this->assertStringContainsString('@property \Spiral\Storage\BucketInterface $storage', $content);
-        $this->assertStringContainsString('@property \Spiral\Serializer\SerializerManager $serializer', $content);
-        $this->assertStringContainsString('@property \Spiral\Validation\ValidationInterface $validator', $content);
-        $this->assertStringContainsString('@property \Spiral\Views\ViewsInterface $views', $content);
-        $this->assertStringContainsString('@property \Spiral\Auth\AuthScope $auth', $content);
-        $this->assertStringContainsString('@property \Spiral\Auth\TokenStorageInterface $authTokens', $content);
-        $this->assertStringContainsString('@property \Psr\SimpleCache\CacheInterface $cache', $content);
-        $this->assertStringContainsString(
-            '@property \Spiral\Cache\CacheStorageProviderInterface $cacheManager',
-            $content
-        );
-        $this->assertStringContainsString(
-            '@property \Spiral\Exceptions\ExceptionHandlerInterface $exceptionHandler',
-            $content
-        );
-        $this->assertStringContainsString('trait PrototypeTrait', $content);
-        $this->assertStringContainsString('public function __get(string $name): mixed', $content);
-        $this->assertStringContainsString('return $container->get($target->type->name());', $content);
+        self::assertStringContainsString('namespace Spiral\Prototype\Traits;', $content);
+        self::assertStringContainsString('use Spiral\Prototype\PrototypeRegistry;', $content);
+        self::assertStringContainsString('This DocComment is auto-generated, do not edit or commit this file to repository.', $content);
+        self::assertStringContainsString('@property \Spiral\Tests\Prototype\Fixtures\TestApp $app', $content);
+        self::assertStringContainsString('@property \Spiral\Tokenizer\ClassesInterface $classLocator', $content);
+        self::assertStringContainsString('@property \Spiral\Console\Console $console', $content);
+        self::assertStringContainsString('@property \Spiral\Broadcasting\BroadcastInterface $broadcast', $content);
+        self::assertStringContainsString('@property \Psr\Container\ContainerInterface $container', $content);
+        self::assertStringContainsString('@property \Spiral\Encrypter\EncrypterInterface $encrypter', $content);
+        self::assertStringContainsString('@property \Spiral\Boot\EnvironmentInterface $env', $content);
+        self::assertStringContainsString('@property \Spiral\Files\FilesInterface $files', $content);
+        self::assertStringContainsString('@property \Spiral\Security\GuardInterface $guard', $content);
+        self::assertStringContainsString('@property \Spiral\Http\Http $http', $content);
+        self::assertStringContainsString('@property \Spiral\Translator\TranslatorInterface $i18n', $content);
+        self::assertStringContainsString('@property \Spiral\Http\Request\InputManager $input', $content);
+        self::assertStringContainsString('@property \Spiral\Session\SessionScope $session', $content);
+        self::assertStringContainsString('@property \Spiral\Cookies\CookieManager $cookies', $content);
+        self::assertStringContainsString('@property \Psr\Log\LoggerInterface $logger', $content);
+        self::assertStringContainsString('@property \Spiral\Logger\LogsInterface $logs', $content);
+        self::assertStringContainsString('@property \Spiral\Boot\MemoryInterface $memory', $content);
+        self::assertStringContainsString('@property \Spiral\Pagination\PaginationProviderInterface $paginators', $content);
+        self::assertStringContainsString('@property \Spiral\Queue\QueueInterface $queue', $content);
+        self::assertStringContainsString('@property \Spiral\Queue\QueueConnectionProviderInterface $queueManager', $content);
+        self::assertStringContainsString('@property \Spiral\Http\Request\InputManager $request', $content);
+        self::assertStringContainsString('@property \Spiral\Http\ResponseWrapper $response', $content);
+        self::assertStringContainsString('@property \Spiral\Router\RouterInterface $router', $content);
+        self::assertStringContainsString('@property \Spiral\Snapshots\SnapshotterInterface $snapshots', $content);
+        self::assertStringContainsString('@property \Spiral\Storage\BucketInterface $storage', $content);
+        self::assertStringContainsString('@property \Spiral\Serializer\SerializerManager $serializer', $content);
+        self::assertStringContainsString('@property \Spiral\Validation\ValidationInterface $validator', $content);
+        self::assertStringContainsString('@property \Spiral\Views\ViewsInterface $views', $content);
+        self::assertStringContainsString('@property \Spiral\Auth\AuthScope $auth', $content);
+        self::assertStringContainsString('@property \Spiral\Auth\TokenStorageInterface $authTokens', $content);
+        self::assertStringContainsString('@property \Psr\SimpleCache\CacheInterface $cache', $content);
+        self::assertStringContainsString('@property \Spiral\Cache\CacheStorageProviderInterface $cacheManager', $content);
+        self::assertStringContainsString('@property \Spiral\Exceptions\ExceptionHandlerInterface $exceptionHandler', $content);
+        self::assertStringContainsString('trait PrototypeTrait', $content);
+        self::assertStringContainsString('public function __get(string $name): mixed', $content);
+        self::assertStringContainsString('return $container->get($target->type->name());', $content);
 
         return true;
     }

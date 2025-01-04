@@ -42,8 +42,8 @@ final class CookieTransportTest extends BaseTestCase
             (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'good-token'])
         );
 
-        $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        $this->assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
+        self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+        self::assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
     }
 
     public function testBadCookieToken(): void
@@ -66,8 +66,8 @@ final class CookieTransportTest extends BaseTestCase
             (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'bad'])
         );
 
-        $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        $this->assertSame('no token', (string)$response->getBody());
+        self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+        self::assertSame('no token', (string)$response->getBody());
     }
 
     public function testDeleteToken(): void
@@ -86,8 +86,8 @@ final class CookieTransportTest extends BaseTestCase
             (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'good-token'])
         );
 
-        $this->assertSame(['auth-token=; Path=/; HttpOnly'], $response->getHeader('Set-Cookie'));
-        $this->assertSame('closed', (string)$response->getBody());
+        self::assertSame(['auth-token=; Path=/; HttpOnly'], $response->getHeader('Set-Cookie'));
+        self::assertSame('closed', (string)$response->getBody());
     }
 
     public function testCommitToken(): void
@@ -104,7 +104,7 @@ final class CookieTransportTest extends BaseTestCase
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
 
-        $this->assertSame(['auth-token=new-token; Path=/; HttpOnly'], $response->getHeader('Set-Cookie'));
+        self::assertSame(['auth-token=new-token; Path=/; HttpOnly'], $response->getHeader('Set-Cookie'));
     }
 
     public function testCommitTokenOtherParams(): void
@@ -123,7 +123,10 @@ final class CookieTransportTest extends BaseTestCase
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
 
-        $this->assertSame(['auth-token=new-token; Path=/; Domain=localhost; Secure; SameSite=None'], $response->getHeader('Set-Cookie'));
+        self::assertSame(
+            ['auth-token=new-token; Path=/; Domain=localhost; Secure; SameSite=None'],
+            $response->getHeader('Set-Cookie')
+        );
     }
 
     public function testCommitTokenLifetime(): void
@@ -142,11 +145,20 @@ final class CookieTransportTest extends BaseTestCase
 
         $cookie = explode('; ', $response->getHeader('Set-Cookie')[0]);
 
-        $this->assertSame('auth-token=new-token', $cookie[0]);
+        self::assertSame(
+            'auth-token=new-token',
+            $cookie[0]
+        );
 
-        $this->assertSame('Expires=' . gmdate(DATE_COOKIE, time() + 3600), $cookie[1]);
+        self::assertSame(
+            'Expires=' . gmdate(DATE_COOKIE, time() + 3600),
+            $cookie[1]
+        );
 
-        $this->assertSame('Max-Age=3600', $cookie[2]);
+        self::assertSame(
+            'Max-Age=3600',
+            $cookie[2]
+        );
     }
 
     protected function getCore(HttpTransportInterface $transport): Http

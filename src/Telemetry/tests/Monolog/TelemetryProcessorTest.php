@@ -31,7 +31,7 @@ final class TelemetryProcessorTest extends TestCase
 
         $record = $processor->__invoke(['baz' => 'baf']);
 
-        $this->assertSame(['baz' => 'baf', 'extra' => ['telemetry' => ['foo' => 'bar']]], $record);
+        self::assertSame(['baz' => 'baf', 'extra' => ['telemetry' => ['foo' => 'bar']]], $record);
     }
 
     public function testProcessWithEmptyContext(): void
@@ -49,6 +49,6 @@ final class TelemetryProcessorTest extends TestCase
 
         $record = $processor->__invoke(['baz' => 'baf']);
 
-        $this->assertSame(['baz' => 'baf'], $record);
+        self::assertSame(['baz' => 'baf'], $record);
     }
 }

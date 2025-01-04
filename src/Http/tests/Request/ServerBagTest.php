@@ -13,27 +13,27 @@ final class ServerBagTest extends TestCase
     {
         $bag = new ServerBag(data: ['FOO' => 'bar', 'BAZ' => ['BAR' => 'baf'], 'FOO_BAR' => 12334]);
 
-        $this->assertTrue($bag->has('foo'));
-        $this->assertTrue($bag->has('Foo'));
-        $this->assertTrue($bag->has('FOO'));
+        self::assertTrue($bag->has('foo'));
+        self::assertTrue($bag->has('Foo'));
+        self::assertTrue($bag->has('FOO'));
 
-        $this->assertTrue($bag->has('baz.bar'));
-        $this->assertTrue($bag->has('BAZ.bar'));
+        self::assertTrue($bag->has('baz.bar'));
+        self::assertTrue($bag->has('BAZ.bar'));
 
-        $this->assertFalse($bag->has('FOO-BAZ'));
-        $this->assertTrue($bag->has('FOO-BAR'));
+        self::assertFalse($bag->has('FOO-BAZ'));
+        self::assertTrue($bag->has('FOO-BAR'));
     }
 
     public function testGet(): void
     {
         $bag = new ServerBag(data: ['FOO' => 'bar', 'BAZ' => ['BAR' => 'baf'], 'FOO_BAR' => 12334]);
 
-        $this->assertSame('bar', $bag->get('foo'));
-        $this->assertSame('bar', $bag->get('Foo'));
-        $this->assertSame('baf', $bag->get('baz.bar'));
+        self::assertSame('bar', $bag->get('foo'));
+        self::assertSame('bar', $bag->get('Foo'));
+        self::assertSame('baf', $bag->get('baz.bar'));
 
-        $this->assertSame(12334, $bag->get('FOO-BAR'));
+        self::assertSame(12334, $bag->get('FOO-BAR'));
 
-        $this->assertNull($bag->get('FOO-BAZ'));
+        self::assertNull($bag->get('FOO-BAZ'));
     }
 }

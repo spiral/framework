@@ -15,63 +15,57 @@ final class EnumCaseTest extends TestCase
     {
         $case = new EnumCase('test');
 
-        $this->assertSame('test', $case->getName());
+        self::assertSame('test', $case->getName());
     }
 
     public function testComment(): void
     {
         $case = new EnumCase('test');
-        $this->assertNull($case->getComment());
+        self::assertNull($case->getComment());
 
         $case->setComment('/** Awesome case */');
-        $this->assertSame('/** Awesome case */', $case->getComment());
+        self::assertSame('/** Awesome case */', $case->getComment());
 
         $case->setComment(null);
-        $this->assertNull($case->getComment());
+        self::assertNull($case->getComment());
 
         $case->setComment(['/** Line one */', '/** Line two */']);
-        $this->assertSame(
-            \preg_replace('/\s+/', '', '/** Line one *//** Line two */'),
-            \preg_replace('/\s+/', '', $case->getComment())
-        );
+        self::assertSame(\preg_replace('/\s+/', '', '/** Line one *//** Line two */'), \preg_replace('/\s+/', '', $case->getComment()));
 
         $case->setComment(null);
         $case->addComment('/** Line one */');
         $case->addComment('/** Line two */');
-        $this->assertSame(
-            \preg_replace('/\s+/', '', '/** Line one *//** Line two */'),
-            \preg_replace('/\s+/', '', $case->getComment())
-        );
+        self::assertSame(\preg_replace('/\s+/', '', '/** Line one *//** Line two */'), \preg_replace('/\s+/', '', $case->getComment()));
     }
 
     public function testAttribute(): void
     {
         $case = new EnumCase('test');
-        $this->assertEmpty($case->getAttributes());
+        self::assertEmpty($case->getAttributes());
 
         $case->addAttribute('test', ['name' => 'foo', 'otherName' => 'bar']);
-        $this->assertCount(1, $case->getAttributes());
+        self::assertCount(1, $case->getAttributes());
 
         $case->setAttributes([
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar'])
         ]);
-        $this->assertCount(2, $case->getAttributes());
+        self::assertCount(2, $case->getAttributes());
     }
 
     public function testFromElement(): void
     {
         $case = EnumCase::fromElement(new NetteEnumCase('test'));
 
-        $this->assertInstanceOf(EnumCase::class, $case);
-        $this->assertSame('test', $case->getName());
+        self::assertInstanceOf(EnumCase::class, $case);
+        self::assertSame('test', $case->getName());
     }
 
     public function testGetElement(): void
     {
         $element = (new EnumCase('test'))->getElement();
 
-        $this->assertInstanceOf(NetteEnumCase::class, $element);
-        $this->assertSame('test', $element->getName());
+        self::assertInstanceOf(NetteEnumCase::class, $element);
+        self::assertSame('test', $element->getName());
     }
 }

@@ -31,8 +31,8 @@ class ManagerTest extends TestCase
                 ]
             ])), $cache);
 
-        $this->assertTrue($manager->has('ru'));
-        $this->assertTrue($manager->has('en'));
+        self::assertTrue($manager->has('ru'));
+        self::assertTrue($manager->has('en'));
     }
 
     public function testLocalesFromMemory(): void
@@ -49,8 +49,8 @@ class ManagerTest extends TestCase
                 ]
             ])), $cache);
 
-        $this->assertTrue($manager->has('ru'));
-        $this->assertTrue($manager->has('en'));
+        self::assertTrue($manager->has('ru'));
+        self::assertTrue($manager->has('en'));
     }
 
     public function testCatalogue(): void
@@ -69,10 +69,10 @@ class ManagerTest extends TestCase
         $cache->shouldReceive('loadLocale')->with('ru')->andReturn([]);
 
         $catalogue = $manager->get('ru');
-        $this->assertInstanceOf(CatalogueInterface::class, $catalogue);
+        self::assertInstanceOf(CatalogueInterface::class, $catalogue);
 
-        $this->assertTrue($catalogue->has('messages', 'message'));
-        $this->assertSame('translation', $catalogue->get('messages', 'message'));
+        self::assertTrue($catalogue->has('messages', 'message'));
+        self::assertSame('translation', $catalogue->get('messages', 'message'));
 
         $cache->shouldReceive('saveLocale')->with(
             'ru',
@@ -134,10 +134,10 @@ class ManagerTest extends TestCase
         $cache->shouldReceive('loadLocale')->with('ru')->andReturn([]);
 
         $catalogue = $manager->get('ru');
-        $this->assertInstanceOf(CatalogueInterface::class, $catalogue);
+        self::assertInstanceOf(CatalogueInterface::class, $catalogue);
 
-        $this->assertTrue($catalogue->has('messages', 'message'));
-        $this->assertSame('new message', $catalogue->get('messages', 'message'));
+        self::assertTrue($catalogue->has('messages', 'message'));
+        self::assertSame('new message', $catalogue->get('messages', 'message'));
 
         $cache->shouldReceive('setLocales')->with(null);
         $cache->shouldReceive('saveLocale')->with('ru', null);

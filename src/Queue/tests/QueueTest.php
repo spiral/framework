@@ -28,7 +28,7 @@ final class QueueTest extends TestCase
 
         $id = $queue->push('foo', $payload, $options);
 
-        $this->assertSame('task-id', $id);
+        self::assertSame('task-id', $id);
     }
 
     public static function pushDataProvider(): \Traversable

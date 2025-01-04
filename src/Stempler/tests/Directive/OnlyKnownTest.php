@@ -23,11 +23,8 @@ class OnlyKnownTest extends BaseTestCase
     {
         $doc = $this->parse('@foreach($users as $u) {{ $u->name }} @endforeach @hello after');
 
-        $this->assertSame(
-            '<?php foreach($users as $u): ?> <?php echo htmlspecialchars'
-            . "((string) (\$u->name), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8'); ?> <?php endforeach; ?> @hello after",
-            $this->compile($doc)
-        );
+        self::assertSame('<?php foreach($users as $u): ?> <?php echo htmlspecialchars'
+        . "((string) (\$u->name), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8'); ?> <?php endforeach; ?> @hello after", $this->compile($doc));
     }
 
     protected function parse(string $string): Template

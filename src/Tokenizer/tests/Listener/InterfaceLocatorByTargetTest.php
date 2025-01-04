@@ -120,6 +120,6 @@ final class InterfaceLocatorByTargetTest extends TestCase
             $attribute
         );
 
-        $this->assertSame($expected, $interfaces);
+        self::assertSame($expected, $interfaces);
     }
 }

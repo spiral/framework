@@ -20,8 +20,8 @@ final class FilterBagTest extends BaseTestCase
             $schema = ['foo' => 'bar',]
         );
 
-        $this->assertSame($filter, $bag->filter);
-        $this->assertSame($entity, $bag->entity);
-        $this->assertSame($schema, $bag->schema);
+        self::assertSame($filter, $bag->filter);
+        self::assertSame($entity, $bag->entity);
+        self::assertSame($schema, $bag->schema);
     }
 }

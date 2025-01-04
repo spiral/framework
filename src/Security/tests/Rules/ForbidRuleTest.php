@@ -26,6 +26,6 @@ class ForbidRuleTest extends TestCase
         /** @var ActorInterface $actor */
         $actor = $this->createMock(ActorInterface::class);
 
-        $this->assertFalse($rule->allows($actor, static::OPERATION, static::CONTEXT));
+        self::assertFalse($rule->allows($actor, static::OPERATION, static::CONTEXT));
     }
 }

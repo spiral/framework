@@ -16,7 +16,7 @@ final class RenderTest extends BaseTestCase
             ->render('stempler:null', ['var' => null, 'users' => []]);
 
         // any exceptions threw
-        $this->assertIsString($out);
+        self::assertIsString($out);
     }
 
     public function testWithNullVariableExression(): void
@@ -27,7 +27,7 @@ final class RenderTest extends BaseTestCase
         );
 
         // any exceptions threw
-        $this->assertIsString($out);
+        self::assertIsString($out);
     }
 
     public function testWithGlobalVariable(): void
@@ -41,9 +41,9 @@ final class RenderTest extends BaseTestCase
             ->get(ViewsInterface::class)
             ->render('stempler:globalVariables', ['replaced' => 'replaced-bar']);
 
-        $this->assertStringContainsString('bar', $out);
-        $this->assertStringContainsString('global-body', $out);
-        $this->assertStringContainsString('replaced-bar', $out);
-        $this->assertStringNotContainsString('replaced-foo', $out);
+        self::assertStringContainsString('bar', $out);
+        self::assertStringContainsString('global-body', $out);
+        self::assertStringContainsString('replaced-bar', $out);
+        self::assertStringNotContainsString('replaced-foo', $out);
     }
 }

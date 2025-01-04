@@ -16,7 +16,7 @@ final class EnumCasterTest extends TestCase
     #[DataProvider('supportsDataProvider')]
     public function testSupports(\ReflectionProperty $ref, bool $expected): void
     {
-        $this->assertSame($expected, (new EnumCaster())->supports($ref->getType()));
+        self::assertSame($expected, (new EnumCaster())->supports($ref->getType()));
     }
 
     public function testSetValue(): void
@@ -26,7 +26,7 @@ final class EnumCasterTest extends TestCase
         $property = new \ReflectionProperty($filter, 'status');
 
         $setter->setValue($filter, $property, 'active');
-        $this->assertEquals(Status::Active, $property->getValue($filter));
+        self::assertEquals(Status::Active, $property->getValue($filter));
     }
 
     public function testSetValueException(): void

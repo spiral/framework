@@ -94,6 +94,6 @@ final class EnumLocatorByTargetTest extends TestCase
             $attribute
         );
 
-        $this->assertSame($expected, $enums);
+        self::assertSame($expected, $enums);
     }
 }

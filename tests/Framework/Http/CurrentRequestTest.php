@@ -21,7 +21,7 @@ final class CurrentRequestTest extends HttpTestCase
     public function testSetInitialRequest(): void
     {
         $this->setHttpHandler(function (ServerRequestInterface $request): void {
-            $this->assertSame($request, $this->getContainer()->get(CurrentRequest::class)->get());
+            self::assertSame($request, $this->getContainer()->get(CurrentRequest::class)->get());
         });
 
         $this->fakeHttp()->get('/')->assertOk();
@@ -42,7 +42,7 @@ final class CurrentRequestTest extends HttpTestCase
         ]));
 
         $this->setHttpHandler(function (ServerRequestInterface $request): void {
-            $this->assertSame($request, $this->getContainer()->get(CurrentRequest::class)->get());
+            self::assertSame($request, $this->getContainer()->get(CurrentRequest::class)->get());
         });
 
         $this->fakeHttp()->get('/')->assertOk();
@@ -77,9 +77,9 @@ final class CurrentRequestTest extends HttpTestCase
         $this->setHttpHandler(function (ServerRequestInterface $request): void {
             $current = $this->getContainer()->get(CurrentRequest::class)->get();
 
-            $this->assertSame($request, $current);
-            $this->assertSame(5, $current->getAttribute('first'));
-            $this->assertSame(10, $current->getAttribute('second'));
+            self::assertSame($request, $current);
+            self::assertSame(5, $current->getAttribute('first'));
+            self::assertSame(10, $current->getAttribute('second'));
         });
 
         $this->fakeHttp()->get('/')->assertOk();

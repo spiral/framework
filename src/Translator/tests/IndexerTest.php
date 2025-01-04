@@ -41,11 +41,11 @@ class IndexerTest extends TestCase
 
         $indexer->indexInvocations($this->tContainer()->get(InvocationsInterface::class));
 
-        $this->assertTrue($catalogue->has('messages', 'hello'));
-        $this->assertTrue($catalogue->has('messages', '{n} dog|{n} dogs'));
+        self::assertTrue($catalogue->has('messages', 'hello'));
+        self::assertTrue($catalogue->has('messages', '{n} dog|{n} dogs'));
 
-        $this->assertTrue($catalogue->has('spiral', 'other'));
-        $this->assertTrue($catalogue->has('spiral', 'hi-from-class'));
+        self::assertTrue($catalogue->has('spiral', 'other'));
+        self::assertTrue($catalogue->has('spiral', 'hi-from-class'));
     }
 
     public function testIndexClasses(): void
@@ -62,14 +62,14 @@ class IndexerTest extends TestCase
 
         $indexer->indexClasses($this->tContainer()->get(ScopedClassesInterface::class));
 
-        $this->assertTrue($catalogue->has('spiral', 'indexer-message'));
-        $this->assertFalse($catalogue->has('spiral', 'not-message'));
+        self::assertTrue($catalogue->has('spiral', 'indexer-message'));
+        self::assertFalse($catalogue->has('spiral', 'not-message'));
 
         // from stubs
-        $this->assertTrue($catalogue->has('spiral', 'some-text'));
-        $this->assertFalse($catalogue->has('spiral', 'no-message'));
+        self::assertTrue($catalogue->has('spiral', 'some-text'));
+        self::assertFalse($catalogue->has('spiral', 'no-message'));
 
-        $this->assertTrue($catalogue->has('spiral', 'new-mess'));
+        self::assertTrue($catalogue->has('spiral', 'new-mess'));
     }
 
     public function testRegisterMessageShouldNotOverrideMessages(): void
@@ -83,8 +83,8 @@ class IndexerTest extends TestCase
 
         $indexer->indexInvocations($this->tContainer()->get(InvocationsInterface::class));
 
-        $this->assertTrue($catalogue->has('messages', 'hello'));
-        $this->assertSame('Bonjour', $catalogue->get('messages', 'hello'));
+        self::assertTrue($catalogue->has('messages', 'hello'));
+        self::assertSame('Bonjour', $catalogue->get('messages', 'hello'));
     }
 
     protected function tContainer(): Container

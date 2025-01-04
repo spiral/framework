@@ -26,12 +26,12 @@ final class CacheBootloaderTest extends BaseTestCase
         $this->assertContainerBoundAsSingleton(CacheStorageRegistryInterface::class, CacheManager::class);
 
         $repository = $this->getContainer()->get(CacheInterface::class);
-        $this->assertInstanceOf(ArrayStorage::class, $repository->getStorage());
+        self::assertInstanceOf(ArrayStorage::class, $repository->getStorage());
 
         $provider = $this->getContainer()->get(CacheStorageProviderInterface::class);
-        $this->assertInstanceOf(CacheManager::class, $provider);
+        self::assertInstanceOf(CacheManager::class, $provider);
         $registry = $this->getContainer()->get(CacheStorageRegistryInterface::class);
-        $this->assertInstanceOf(CacheManager::class, $registry);
+        self::assertInstanceOf(CacheManager::class, $registry);
     }
 
     public function testGetsStorageByAlias(): void
@@ -39,21 +39,17 @@ final class CacheBootloaderTest extends BaseTestCase
         $manager = $this->getContainer()->get(CacheStorageProviderInterface::class);
         $repository = $manager->storage('user-data');
 
-        $this->assertInstanceOf(FileStorage::class, $repository->getStorage());
+        self::assertInstanceOf(FileStorage::class, $repository->getStorage());
     }
 
     public function testCacheInjector(): void
     {
-        $this->assertTrue(
-            $this->getContainer()->hasInjector(CacheInterface::class)
-        );
+        self::assertTrue($this->getContainer()->hasInjector(CacheInterface::class));
     }
 
     public function testCacheConfigInjector(): void
     {
-        $this->assertTrue(
-            $this->getContainer()->hasInjector(CacheConfig::class)
-        );
+        self::assertTrue($this->getContainer()->hasInjector(CacheConfig::class));
     }
 
     public function testRegisterTypeAlias(): void
@@ -64,6 +60,6 @@ final class CacheBootloaderTest extends BaseTestCase
         $bootloader = new CacheBootloader($configs);
         $bootloader->registerTypeAlias('foo', 'bar');
 
-        $this->assertSame(['bar' => 'foo'], $configs->getConfig(CacheConfig::CONFIG)['typeAliases']);
+        self::assertSame(['bar' => 'foo'], $configs->getConfig(CacheConfig::CONFIG)['typeAliases']);
     }
 }

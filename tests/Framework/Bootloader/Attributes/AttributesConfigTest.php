@@ -11,24 +11,19 @@ final class AttributesConfigTest extends TestCase
 {
     public function testIsAnnotationsReaderEnabled(): void
     {
-        $this->assertTrue((new AttributesConfig())->isAnnotationsReaderEnabled());
-        $this->assertFalse(
-            (new AttributesConfig(['annotations' => ['support' => false]]))->isAnnotationsReaderEnabled()
-        );
+        self::assertTrue((new AttributesConfig())->isAnnotationsReaderEnabled());
+        self::assertFalse((new AttributesConfig(['annotations' => ['support' => false]]))->isAnnotationsReaderEnabled());
     }
 
     public function testIsCacheEnabled(): void
     {
-        $this->assertFalse((new AttributesConfig())->isCacheEnabled());
-        $this->assertTrue((new AttributesConfig(['cache' => ['enabled' => true]]))->isCacheEnabled());
+        self::assertFalse((new AttributesConfig())->isCacheEnabled());
+        self::assertTrue((new AttributesConfig(['cache' => ['enabled' => true]]))->isCacheEnabled());
     }
 
     public function testGetCacheStorage(): void
     {
-        $this->assertNull((new AttributesConfig())->getCacheStorage());
-        $this->assertSame(
-            'test',
-            (new AttributesConfig(['cache' => ['storage' => 'test']]))->getCacheStorage()
-        );
+        self::assertNull((new AttributesConfig())->getCacheStorage());
+        self::assertSame('test', (new AttributesConfig(['cache' => ['storage' => 'test']]))->getCacheStorage());
     }
 }

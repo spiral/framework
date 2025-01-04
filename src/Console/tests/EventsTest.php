@@ -32,6 +32,6 @@ final class EventsTest extends BaseTestCase
 
         $core->run('test');
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 }

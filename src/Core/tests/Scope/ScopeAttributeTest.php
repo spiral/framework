@@ -29,7 +29,7 @@ final class ScopeAttributeTest extends BaseTestCase
     public function testBadScopeWithDisabledChecking(): void
     {
         $root = self::makeContainer(checkScope: false);
-        $this->assertInstanceOf(AttrScopeFooSingleton::class, $root->make(AttrScopeFooSingleton::class));
+        self::assertInstanceOf(AttrScopeFooSingleton::class, $root->make(AttrScopeFooSingleton::class));
     }
 
     /**
@@ -174,7 +174,7 @@ final class ScopeAttributeTest extends BaseTestCase
                 });
             });
         } catch (NamedScopeDuplicationException $e) {
-            $this->assertSame('root', $e->getScope());
+            self::assertSame('root', $e->getScope());
             throw $e;
         }
     }
@@ -196,7 +196,7 @@ final class ScopeAttributeTest extends BaseTestCase
                 });
             }, name: 'bar');
         } catch (BadScopeException $e) {
-            $this->assertSame('foo', $e->getScope());
+            self::assertSame('foo', $e->getScope());
             throw $e;
         }
     }

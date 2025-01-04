@@ -17,9 +17,9 @@ final class PhpSerializerTest extends TestCase
     {
         $serializer = new PhpSerializer();
 
-        $this->assertSame('a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', $serializer->serialize(['some', 'elements']));
-        $this->assertSame(['some', 'elements'], $serializer->unserialize('a:2:{i:0;s:4:"some";i:1;s:8:"elements";}'));
-        $this->assertSame(['some', 'elements'], $serializer->unserialize(new class() implements \Stringable {
+        self::assertSame('a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', $serializer->serialize(['some', 'elements']));
+        self::assertSame(['some', 'elements'], $serializer->unserialize('a:2:{i:0;s:4:"some";i:1;s:8:"elements";}'));
+        self::assertSame(['some', 'elements'], $serializer->unserialize(new class() implements \Stringable {
             public function __toString(): string
             {
                 return 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}';
@@ -30,19 +30,19 @@ final class PhpSerializerTest extends TestCase
             'O:41:"Spiral\Tests\Serializer\Fixture\SomeClass":3:{s:2:"id";i:2;s:4:"text";s:4:"text";s:6:"active";b:0;}',
             SomeClass::class
         );
-        $this->assertInstanceOf(SomeClass::class, $object);
-        $this->assertSame(2, $object->id);
-        $this->assertSame('text', $object->text);
-        $this->assertFalse($object->active);
+        self::assertInstanceOf(SomeClass::class, $object);
+        self::assertSame(2, $object->id);
+        self::assertSame('text', $object->text);
+        self::assertFalse($object->active);
 
         $byInterface = $serializer->unserialize(
             'O:41:"Spiral\Tests\Serializer\Fixture\SomeClass":3:{s:2:"id";i:2;s:4:"text";s:4:"text";s:6:"active";b:0;}',
             SomeInterface::class
         );
-        $this->assertInstanceOf(SomeClass::class, $byInterface);
-        $this->assertSame(2, $byInterface->id);
-        $this->assertSame('text', $byInterface->text);
-        $this->assertFalse($byInterface->active);
+        self::assertInstanceOf(SomeClass::class, $byInterface);
+        self::assertSame(2, $byInterface->id);
+        self::assertSame('text', $byInterface->text);
+        self::assertFalse($byInterface->active);
     }
 
     public function testClassIsNotExistException(): void

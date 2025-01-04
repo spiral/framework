@@ -27,11 +27,11 @@ final class FilterWithSettersTest extends FilterTestCase
             'nullableString' => null
         ]);
 
-        $this->assertInstanceOf(FilterWithSetters::class, $filter);
+        self::assertInstanceOf(FilterWithSetters::class, $filter);
 
-        $this->assertSame(1, $filter->integer);
-        $this->assertSame('&lt;b&gt;&quot;test&quot;&lt;/b&gt;', $filter->string);
-        $this->assertNull($filter->nullableString);
+        self::assertSame(1, $filter->integer);
+        self::assertSame('&lt;b&gt;&quot;test&quot;&lt;/b&gt;', $filter->string);
+        self::assertNull($filter->nullableString);
     }
 
     public function testSettersWithValidation(): void
@@ -46,13 +46,13 @@ final class FilterWithSettersTest extends FilterTestCase
             ]
         ]);
 
-        $this->assertInstanceOf(PostFilter::class, $filter);
+        self::assertInstanceOf(PostFilter::class, $filter);
 
-        $this->assertSame('foo', $filter->body);
-        $this->assertSame(1, $filter->revision);
-        $this->assertTrue($filter->active);
-        $this->assertEqualsWithDelta(0.9, $filter->postRating, PHP_FLOAT_EPSILON);
-        $this->assertSame(3, $filter->author->id);
+        self::assertSame('foo', $filter->body);
+        self::assertSame(1, $filter->revision);
+        self::assertTrue($filter->active);
+        self::assertEqualsWithDelta(0.9, $filter->postRating, PHP_FLOAT_EPSILON);
+        self::assertSame(3, $filter->author->id);
     }
 
     public function testExtendedSetter(): void
@@ -61,7 +61,7 @@ final class FilterWithSettersTest extends FilterTestCase
             'amount' => 10,
         ]);
 
-        $this->assertSame(15, $filter->amount);
+        self::assertSame(15, $filter->amount);
     }
 
     public function testSetterException(): void
@@ -71,7 +71,7 @@ final class FilterWithSettersTest extends FilterTestCase
                 'uuid' => 'foo',
             ]);
         } catch (ValidationException $e) {
-            $this->assertSame(['uuid' => 'Unable to set value. The given data was invalid.'], $e->errors);
+            self::assertSame(['uuid' => 'Unable to set value. The given data was invalid.'], $e->errors);
         }
     }
 }

@@ -70,7 +70,7 @@ final class ValidationBootloaderTest extends BaseTestCase
         $bootloader = $this->getContainer()->get(ValidationBootloader::class);
         $bootloader->setDefaultValidator('bar');
 
-        $this->assertSame('foo', $this->getConfig(ValidationConfig::CONFIG)['defaultValidator']);
+        self::assertSame('foo', $this->getConfig(ValidationConfig::CONFIG)['defaultValidator']);
     }
 
     private function createValidator(): ValidationInterface

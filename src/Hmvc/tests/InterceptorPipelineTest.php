@@ -26,7 +26,7 @@ final class InterceptorPipelineTest extends TestCase
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('dispatch')
             ->with(new InterceptorCalling(
                 'test',

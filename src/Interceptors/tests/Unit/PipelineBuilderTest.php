@@ -15,19 +15,19 @@ final class PipelineBuilderTest extends TestCase
 {
     public function testCreateEmpty(): void
     {
-        $handler = $this->createMock(HandlerInterface::class);
-        $handler->expects($this->once())->method('handle')->willReturn('foo');
+        $handler = self::createMock(HandlerInterface::class);
+        $handler->expects(self::once())->method('handle')->willReturn('foo');
 
         $builder = (new PipelineBuilder())->build($handler);
         $result = $builder->handle($this->createPathContext());
 
-        $this->assertSame('foo', $result);
+        self::assertSame('foo', $result);
     }
 
     public function testCreateWithMiddleware(): void
     {
-        $handler = $this->createMock(HandlerInterface::class);
-        $handler->expects($this->never())->method('handle')->willReturn('foo');
+        $handler = self::createMock(HandlerInterface::class);
+        $handler->expects(self::never())->method('handle')->willReturn('foo');
 
         $builder = (new PipelineBuilder())->withInterceptors(
             new ExceptionInterceptor(),
@@ -39,13 +39,13 @@ final class PipelineBuilderTest extends TestCase
 
     public function testWithMiddleware(): void
     {
-        $handler = $this->createMock(HandlerInterface::class);
-        $handler->expects($this->never())->method('handle')->willReturn('foo');
+        $handler = self::createMock(HandlerInterface::class);
+        $handler->expects(self::never())->method('handle')->willReturn('foo');
 
         $builder = (new PipelineBuilder());
         $second = $builder->withInterceptors(new ExceptionInterceptor());
 
-        $this->assertNotSame($builder, $second);
+        self::assertNotSame($builder, $second);
     }
 
     private function createPathContext(array $path = []): CallContext

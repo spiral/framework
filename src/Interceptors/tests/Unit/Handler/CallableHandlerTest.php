@@ -33,7 +33,7 @@ final class CallableHandlerTest extends TestCase
 
         $result = $handler->handle($ctx);
 
-        $this->assertSame('HELLO', $result);
+        self::assertSame('HELLO', $result);
     }
 
     public function testInvokeArrayCallable(): void
@@ -46,7 +46,7 @@ final class CallableHandlerTest extends TestCase
 
         $result = $handler->handle($ctx);
 
-        $this->assertSame('hello', $result);
+        self::assertSame('hello', $result);
     }
 
     public function testInvokeFromReflectionWithNamedArguments(): void
@@ -59,7 +59,7 @@ final class CallableHandlerTest extends TestCase
 
         $result = $handler->handle($ctx);
 
-        $this->assertSame('HELLO', $result);
+        self::assertSame('HELLO', $result);
     }
 
     public function createHandler(): CallableHandler

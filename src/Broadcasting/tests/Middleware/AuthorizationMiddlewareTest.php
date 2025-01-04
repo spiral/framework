@@ -141,7 +141,7 @@ final class AuthorizationMiddlewareTest extends TestCase
                 )
             );
 
-        $this->assertSame($response, $middleware->process($request, $handler));
+        self::assertSame($response, $middleware->process($request, $handler));
     }
 
     #[DataProvider('eventsDataProvider')]

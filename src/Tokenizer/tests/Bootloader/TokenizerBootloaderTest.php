@@ -39,8 +39,8 @@ final class TokenizerBootloaderTest extends TestCase
 
         $initConfig = $config->getConfig(TokenizerConfig::CONFIG);
 
-        $this->assertSame('runtime/cache/listeners', $initConfig['cache']['directory']);
-        $this->assertSame($expected, $initConfig['cache']['enabled']);
+        self::assertSame('runtime/cache/listeners', $initConfig['cache']['directory']);
+        self::assertSame($expected, $initConfig['cache']['enabled']);
     }
 
     #[DataProvider('boolValuesDataProvider')]
@@ -62,7 +62,7 @@ final class TokenizerBootloaderTest extends TestCase
         $bootloader = new TokenizerBootloader($config = new ConfigManager(new DirectoryLoader('config')));
         $bootloader->init(m::spy(BinderInterface::class), $dirs, $env);
 
-        $this->assertSame($expected, $config->getConfig(TokenizerConfig::CONFIG)['load']['classes']);
+        self::assertSame($expected, $config->getConfig(TokenizerConfig::CONFIG)['load']['classes']);
     }
 
     #[DataProvider('boolValuesDataProvider')]
@@ -84,7 +84,7 @@ final class TokenizerBootloaderTest extends TestCase
         $bootloader = new TokenizerBootloader($config = new ConfigManager(new DirectoryLoader('config')));
         $bootloader->init(m::spy(BinderInterface::class), $dirs, $env);
 
-        $this->assertSame($expected, $config->getConfig(TokenizerConfig::CONFIG)['load']['enums']);
+        self::assertSame($expected, $config->getConfig(TokenizerConfig::CONFIG)['load']['enums']);
     }
 
     #[DataProvider('boolValuesDataProvider')]
@@ -106,7 +106,7 @@ final class TokenizerBootloaderTest extends TestCase
         $bootloader = new TokenizerBootloader($config = new ConfigManager(new DirectoryLoader('config')));
         $bootloader->init(m::spy(BinderInterface::class), $dirs, $env);
 
-        $this->assertSame($expected, $config->getConfig(TokenizerConfig::CONFIG)['load']['interfaces']);
+        self::assertSame($expected, $config->getConfig(TokenizerConfig::CONFIG)['load']['interfaces']);
     }
 
     public static function boolValuesDataProvider(): \Traversable

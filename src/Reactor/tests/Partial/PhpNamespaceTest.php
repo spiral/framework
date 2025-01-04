@@ -21,86 +21,86 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
     {
         $namespace = new PhpNamespace('Foo\\Bar');
 
-        $this->assertSame('Foo\\Bar', $namespace->getName());
+        self::assertSame('Foo\\Bar', $namespace->getName());
     }
 
     public function testBracketedSyntax(): void
     {
         $namespace = new PhpNamespace('Foo\\Bar');
 
-        $this->assertFalse($namespace->hasBracketedSyntax());
+        self::assertFalse($namespace->hasBracketedSyntax());
 
         $file = new FileDeclaration();
         $file->addNamespace('Bar\\Baz');
         $file->addNamespace('');
         $file->addNamespace($namespace);
 
-        $this->assertTrue($namespace->hasBracketedSyntax());
+        self::assertTrue($namespace->hasBracketedSyntax());
     }
 
     public function testAddUse(): void
     {
         $namespace = new PhpNamespace('Foo\\Bar');
 
-        $this->assertEmpty($namespace->getUses());
+        self::assertEmpty($namespace->getUses());
 
         $namespace->addUse('Some\\Other');
         $namespace->addUse('Other\\Some', 'Baz');
         $namespace->addClass('Test')->setExtends('Some\\Other')->addImplement('Baz');
 
-        $this->assertSame(['Baz' => 'Other\\Some', 'Other' => 'Some\\Other'], $namespace->getUses());
+        self::assertSame(['Baz' => 'Other\\Some', 'Other' => 'Some\\Other'], $namespace->getUses());
 
-        $this->assertStringContainsString('use Other\\Some as Baz;', $namespace->__toString());
-        $this->assertStringContainsString('use Some\\Other;', $namespace->__toString());
+        self::assertStringContainsString('use Other\\Some as Baz;', $namespace->__toString());
+        self::assertStringContainsString('use Some\\Other;', $namespace->__toString());
 
         $namespace->removeUse('Other\\Some');
-        $this->assertSame(['Other' => 'Some\\Other'], $namespace->getUses());
+        self::assertSame(['Other' => 'Some\\Other'], $namespace->getUses());
     }
 
     public function testUseFunction(): void
     {
         $namespace = new PhpNamespace('Foo\\Bar');
 
-        $this->assertEmpty($namespace->getUses(NettePhpNamespace::NameFunction));
+        self::assertEmpty($namespace->getUses(NettePhpNamespace::NameFunction));
 
         $namespace->addUseFunction('foo');
         $namespace->addUseFunction('bar', 'baz');
         $namespace->addClass('Test')->addMethod('test')->addBody('foo();baz();');
 
-        $this->assertSame(['baz' => 'bar', 'foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameFunction));
-        $this->assertStringContainsString('use function bar as baz;', $namespace->__toString());
-        $this->assertStringContainsString('use function foo;', $namespace->__toString());
+        self::assertSame(['baz' => 'bar', 'foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameFunction));
+        self::assertStringContainsString('use function bar as baz;', $namespace->__toString());
+        self::assertStringContainsString('use function foo;', $namespace->__toString());
 
         $namespace->removeUse('bar', NettePhpNamespace::NameFunction);
-        $this->assertSame(['foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameFunction));
+        self::assertSame(['foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameFunction));
     }
 
     public function testUseConstant(): void
     {
         $namespace = new PhpNamespace('Foo\\Bar');
 
-        $this->assertEmpty($namespace->getUses(NettePhpNamespace::NameConstant));
+        self::assertEmpty($namespace->getUses(NettePhpNamespace::NameConstant));
 
         $namespace->addUseConstant('foo');
         $namespace->addUseConstant('bar', 'baz');
         $namespace->addClass('Test')->addMethod('test')->addBody('foo::some;baz::some;');
 
-        $this->assertSame(['baz' => 'bar', 'foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameConstant));
-        $this->assertStringContainsString('use const bar as baz;', $namespace->__toString());
-        $this->assertStringContainsString('use const foo;', $namespace->__toString());
+        self::assertSame(['baz' => 'bar', 'foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameConstant));
+        self::assertStringContainsString('use const bar as baz;', $namespace->__toString());
+        self::assertStringContainsString('use const foo;', $namespace->__toString());
 
         $namespace->removeUse('bar', NettePhpNamespace::NameConstant);
-        $this->assertSame(['foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameConstant));
+        self::assertSame(['foo' => 'foo'], $namespace->getUses(NettePhpNamespace::NameConstant));
     }
 
     public function testRemoveElement(): void
     {
         $namespace = new PhpNamespace('Foo\\Bar');
         $namespace->addClass('Test');
-        $this->assertCount(1, $namespace->getClasses());
+        self::assertCount(1, $namespace->getClasses());
 
         $namespace->removeElement('Test');
-        $this->assertCount(0, $namespace->getClasses());
+        self::assertCount(0, $namespace->getClasses());
     }
 
     public function testGetClass(): void
@@ -109,7 +109,7 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $class = $namespace->addClass('Test');
 
-        $this->assertEquals($class, $namespace->getClass('Test'));
+        self::assertEquals($class, $namespace->getClass('Test'));
     }
 
     public function testAddClass(): void
@@ -118,8 +118,8 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $class = $namespace->addClass('Test');
 
-        $this->assertCount(1, $namespace->getClasses());
-        $this->assertEquals($class, $namespace->getClasses()->getIterator()->current());
+        self::assertCount(1, $namespace->getClasses());
+        self::assertEquals($class, $namespace->getClasses()->getIterator()->current());
     }
 
     public function testGetInterface(): void
@@ -128,7 +128,7 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $interface = $namespace->addInterface('Test');
 
-        $this->assertEquals($interface, $namespace->getInterface('Test'));
+        self::assertEquals($interface, $namespace->getInterface('Test'));
     }
 
     public function testAddInterface(): void
@@ -137,8 +137,8 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $interface = $namespace->addInterface('Test');
 
-        $this->assertCount(1, $namespace->getInterfaces());
-        $this->assertEquals($interface, $namespace->getInterfaces()->getIterator()->current());
+        self::assertCount(1, $namespace->getInterfaces());
+        self::assertEquals($interface, $namespace->getInterfaces()->getIterator()->current());
     }
 
     public function testGetTrait(): void
@@ -147,7 +147,7 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $trait = $namespace->addTrait('Test');
 
-        $this->assertEquals($trait, $namespace->getTrait('Test'));
+        self::assertEquals($trait, $namespace->getTrait('Test'));
     }
 
     public function testAddTrait(): void
@@ -156,8 +156,8 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $trait = $namespace->addTrait('Test');
 
-        $this->assertCount(1, $namespace->getTraits());
-        $this->assertEquals($trait, $namespace->getTraits()->getIterator()->current());
+        self::assertCount(1, $namespace->getTraits());
+        self::assertEquals($trait, $namespace->getTraits()->getIterator()->current());
     }
 
     public function testGetEnum(): void
@@ -166,7 +166,7 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $enum = $namespace->addEnum('Test');
 
-        $this->assertEquals($enum, $namespace->getEnum('Test'));
+        self::assertEquals($enum, $namespace->getEnum('Test'));
     }
 
     public function testAddEnum(): void
@@ -175,8 +175,8 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
 
         $enum = $namespace->addEnum('Test');
 
-        $this->assertCount(1, $namespace->getEnums());
-        $this->assertEquals($enum, $namespace->getEnums()->getIterator()->current());
+        self::assertCount(1, $namespace->getEnums());
+        self::assertEquals($enum, $namespace->getEnums()->getIterator()->current());
     }
 
     public function testRender(): void
@@ -184,53 +184,53 @@ final class PhpNamespaceTest extends BaseWithElementsTestCase
         $namespace = new PhpNamespace('Foo\\Bar');
         $namespace->addClass('Test');
 
-        $this->assertStringContainsString('namespace Foo\\Bar;', $namespace->__toString());
+        self::assertStringContainsString('namespace Foo\\Bar;', $namespace->__toString());
     }
 
     public function testFromElement(): void
     {
         $namespace = PhpNamespace::fromElement(new NettePhpNamespace('Foo\\Bar'));
 
-        $this->assertInstanceOf(PhpNamespace::class, $namespace);
-        $this->assertSame('Foo\\Bar', $namespace->getName());
+        self::assertInstanceOf(PhpNamespace::class, $namespace);
+        self::assertSame('Foo\\Bar', $namespace->getName());
     }
 
     public function testGetElement(): void
     {
         $element = (new PhpNamespace('Foo\\Bar'))->getElement();
 
-        $this->assertInstanceOf(NettePhpNamespace::class, $element);
-        $this->assertSame('Foo\\Bar', $element->getName());
+        self::assertInstanceOf(NettePhpNamespace::class, $element);
+        self::assertSame('Foo\\Bar', $element->getName());
     }
 
     #[DataProvider('classesDataProvider')]
     public function testGetClasses(PhpNamespace $namespace, Classes $expected): void
     {
-        $this->assertEquals($namespace->getClasses(), $expected);
+        self::assertEquals($namespace->getClasses(), $expected);
     }
 
     #[DataProvider('interfacesDataProvider')]
     public function testGetInterfaces(PhpNamespace $namespace, Interfaces $expected): void
     {
-        $this->assertEquals($namespace->getInterfaces(), $expected);
+        self::assertEquals($namespace->getInterfaces(), $expected);
     }
 
     #[DataProvider('traitsDataProvider')]
     public function testGetTraits(PhpNamespace $namespace, Traits $expected): void
     {
-        $this->assertEquals($namespace->getTraits(), $expected);
+        self::assertEquals($namespace->getTraits(), $expected);
     }
 
     #[DataProvider('enumsDataProvider')]
     public function testGetEnums(PhpNamespace $namespace, Enums $expected): void
     {
-        $this->assertEquals($namespace->getEnums(), $expected);
+        self::assertEquals($namespace->getEnums(), $expected);
     }
 
     #[DataProvider('elementsDataProvider')]
     public function testGetElements(PhpNamespace $namespace, Elements $expected): void
     {
-        $this->assertEquals($namespace->getElements(), $expected);
+        self::assertEquals($namespace->getElements(), $expected);
     }
 
     protected static function getTestedClass(): string

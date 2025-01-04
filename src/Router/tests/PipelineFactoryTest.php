@@ -43,10 +43,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             scope: $this->createMock(ScopeInterface::class),
         );
 
-        $this->assertSame(
-            $newPipeline,
-            $this->pipeline->createWithMiddleware([$newPipeline])
-        );
+        self::assertSame($newPipeline, $this->pipeline->createWithMiddleware([$newPipeline]));
     }
 
     public function testCreates(): void
@@ -75,7 +72,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->with('foo')
             ->willReturn($middleware4 = $this->createMock(MiddlewareInterface::class));
 
-        $this->assertSame($p, $this->pipeline->createWithMiddleware([
+        self::assertSame($p, $this->pipeline->createWithMiddleware([
             'foo',
             $middleware1 = $this->createMock(MiddlewareInterface::class),
             $middleware2 = $this->createMock(MiddlewareInterface::class),

@@ -29,7 +29,7 @@ final class PublishTest extends ConsoleTestCase
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->assertFalse(is_file($file));
+        self::assertFalse(is_file($file));
 
         $this->runCommand('publish', [
             'type'   => 'replace',
@@ -38,8 +38,8 @@ final class PublishTest extends ConsoleTestCase
             'mode'   => 'runtime'
         ]);
 
-        $this->assertFileExists($file);
-        $this->assertSame('test', file_get_contents($file));
+        self::assertFileExists($file);
+        self::assertSame('test', file_get_contents($file));
     }
 
     public function testReplace(): void
@@ -55,7 +55,7 @@ final class PublishTest extends ConsoleTestCase
             'mode'   => 'runtime'
         ]);
 
-        $this->assertSame('test', file_get_contents($file));
+        self::assertSame('test', file_get_contents($file));
     }
 
     public function testFollow(): void
@@ -71,7 +71,7 @@ final class PublishTest extends ConsoleTestCase
             'mode'   => 'runtime'
         ]);
 
-        $this->assertSame('original', file_get_contents($file));
+        self::assertSame('original', file_get_contents($file));
     }
 
     public function testInvalid(): void
@@ -103,20 +103,20 @@ final class PublishTest extends ConsoleTestCase
             'mode'   => 'readonly'
         ]);
 
-        $this->assertSame('test', file_get_contents($file));
+        self::assertSame('test', file_get_contents($file));
     }
 
     public function testEnsure(): void
     {
         $dir = $this->getDirectoryByAlias('runtime', 'dir');
-        $this->assertDirectoryDoesNotExist($dir);
+        self::assertDirectoryDoesNotExist($dir);
 
         $this->runCommand('publish', [
             'type'   => 'ensure',
             'target' => '@runtime/dir',
         ]);
 
-        $this->assertDirectoryExists($dir);
+        self::assertDirectoryExists($dir);
 
         rmdir($dir);
     }
@@ -134,8 +134,8 @@ final class PublishTest extends ConsoleTestCase
             'mode'   => 'runtime'
         ]);
 
-        $this->assertSame('test', file_get_contents($file));
-        $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+        self::assertSame('test', file_get_contents($file));
+        self::assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
     public function testPublishDirectoryFollow(): void
@@ -151,8 +151,8 @@ final class PublishTest extends ConsoleTestCase
             'mode'   => 'runtime'
         ]);
 
-        $this->assertSame('original', file_get_contents($file));
-        $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+        self::assertSame('original', file_get_contents($file));
+        self::assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
     public function testPublishDirectoryReplaceStar(): void
@@ -168,8 +168,8 @@ final class PublishTest extends ConsoleTestCase
             'mode'   => 'runtime'
         ]);
 
-        $this->assertSame('test', file_get_contents($file));
-        $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+        self::assertSame('test', file_get_contents($file));
+        self::assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
     public function testPublishDirectoryFollowStar(): void
@@ -185,8 +185,8 @@ final class PublishTest extends ConsoleTestCase
             'mode'   => 'runtime'
         ]);
 
-        $this->assertSame('original', file_get_contents($file));
-        $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+        self::assertSame('original', file_get_contents($file));
+        self::assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
     public function testInvalidFile(): void

@@ -21,17 +21,17 @@ class TranslatorTest extends TestCase
 {
     public function testIsMessage(): void
     {
-        $this->assertTrue(Translator::isMessage('[[hello]]'));
-        $this->assertFalse(Translator::isMessage('hello'));
+        self::assertTrue(Translator::isMessage('[[hello]]'));
+        self::assertFalse(Translator::isMessage('hello'));
     }
 
     public function testLocale(): void
     {
         $translator = $this->translator();
-        $this->assertSame('en', $translator->getLocale());
+        self::assertSame('en', $translator->getLocale());
 
         $translator->setLocale('ru');
-        $this->assertSame('ru', $translator->getLocale());
+        self::assertSame('ru', $translator->getLocale());
     }
 
     public function testLocaleException(): void
@@ -46,23 +46,23 @@ class TranslatorTest extends TestCase
     {
         $translator = $this->translator();
 
-        $this->assertSame('spiral', $translator->getDomain('spiral-views'));
-        $this->assertSame('messages', $translator->getDomain('vendor-views'));
+        self::assertSame('spiral', $translator->getDomain('spiral-views'));
+        self::assertSame('messages', $translator->getDomain('vendor-views'));
     }
 
     public function testCatalogues(): void
     {
         $translator = $this->translator();
-        $this->assertCount(2, $translator->getCatalogueManager()->getLocales());
+        self::assertCount(2, $translator->getCatalogueManager()->getLocales());
     }
 
     public function testTrans(): void
     {
         $translator = $this->translator();
-        $this->assertSame('message', $translator->trans('message'));
+        self::assertSame('message', $translator->trans('message'));
 
         $translator->setLocale('ru');
-        $this->assertSame('translation', $translator->trans('message'));
+        self::assertSame('translation', $translator->trans('message'));
     }
 
     protected function translator(): Translator

@@ -51,61 +51,61 @@ final class InputScopeTest extends BaseTestCase
 
     public function testGetsMethod(): void
     {
-        $this->assertSame('POST', $this->getContainer()->get(InputInterface::class)->getValue('method'));
+        self::assertSame('POST', $this->getContainer()->get(InputInterface::class)->getValue('method'));
     }
 
     public function testGetsPath(): void
     {
-        $this->assertSame('/users', $this->getContainer()->get(InputInterface::class)->getValue('path'));
+        self::assertSame('/users', $this->getContainer()->get(InputInterface::class)->getValue('path'));
     }
 
     public function testGetsUri(): void
     {
         $uri = $this->getContainer()->get(InputInterface::class)->getValue('uri');
-        $this->assertInstanceOf(UriInterface::class, $uri);
+        self::assertInstanceOf(UriInterface::class, $uri);
 
-        $this->assertSame('https://site.com/users', (string)$uri);
+        self::assertSame('https://site.com/users', (string)$uri);
     }
 
     public function testGetsRequest(): void
     {
-        $this->assertSame($this->request, $this->getContainer()->get(InputInterface::class)->getValue('request'));
+        self::assertSame($this->request, $this->getContainer()->get(InputInterface::class)->getValue('request'));
     }
 
     public function testGetsBearerToken(): void
     {
-        $this->assertSame('123', $this->getContainer()->get(InputInterface::class)->getValue('bearerToken'));
+        self::assertSame('123', $this->getContainer()->get(InputInterface::class)->getValue('bearerToken'));
     }
 
     public function testIsSecure(): void
     {
-        $this->assertTrue($this->getContainer()->get(InputInterface::class)->getValue('isSecure'));
+        self::assertTrue($this->getContainer()->get(InputInterface::class)->getValue('isSecure'));
     }
 
     public function testIsAjax(): void
     {
-        $this->assertTrue($this->getContainer()->get(InputInterface::class)->getValue('isAjax'));
+        self::assertTrue($this->getContainer()->get(InputInterface::class)->getValue('isAjax'));
     }
 
     public function testIsXmlHttpRequest(): void
     {
-        $this->assertTrue($this->getContainer()->get(InputInterface::class)->getValue('isXmlHttpRequest'));
+        self::assertTrue($this->getContainer()->get(InputInterface::class)->getValue('isXmlHttpRequest'));
     }
 
     public function testIsJsonExpected(): void
     {
-        $this->assertTrue($this->getContainer()->get(InputInterface::class)->getValue('isJsonExpected', true));
+        self::assertTrue($this->getContainer()->get(InputInterface::class)->getValue('isJsonExpected', true));
     }
 
     public function testGetsRemoteAddress(): void
     {
-        $this->assertSame('123.123.123', $this->getContainer()->get(InputInterface::class)->getValue('remoteAddress'));
+        self::assertSame('123.123.123', $this->getContainer()->get(InputInterface::class)->getValue('remoteAddress'));
     }
 
     #[DataProvider('InputBagsDataProvider')]
     public function testGetsInputBag(string $source, string $name, mixed $expected): void
     {
-        $this->assertSame($expected, $this->getContainer()->get(InputInterface::class)->getValue($source, $name));
+        self::assertSame($expected, $this->getContainer()->get(InputInterface::class)->getValue($source, $name));
     }
 
     public function testGetValueFromCustomInputBag(): void
@@ -116,10 +116,7 @@ final class InputScopeTest extends BaseTestCase
                 new HttpConfig(['inputBags' => ['test' => ['class'  => InputBag::class, 'source' => 'getParsedBody']]])
             );
 
-        $this->assertSame(
-            'corge',
-            $this->getContainer()->get(InputInterface::class)->getValue('test', 'quux')
-        );
+        self::assertSame('corge', $this->getContainer()->get(InputInterface::class)->getValue('test', 'quux'));
     }
 
     public static function InputBagsDataProvider(): \Traversable

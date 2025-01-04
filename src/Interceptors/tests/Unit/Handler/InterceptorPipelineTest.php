@@ -28,7 +28,7 @@ final class InterceptorPipelineTest extends TestCase
         };
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('dispatch')
             ->with(
                 new \Spiral\Interceptors\Event\InterceptorCalling(
@@ -59,7 +59,7 @@ final class InterceptorPipelineTest extends TestCase
 
     public function testWithInterceptors(): void
     {
-        $handler = $this->createMock(HandlerInterface::class);
+        $handler = self::createMock(HandlerInterface::class);
         $handler->expects(self::any())
             ->method('handle')
             ->willReturn('test');
@@ -68,7 +68,7 @@ final class InterceptorPipelineTest extends TestCase
         $second = $pipeline->withInterceptors(new ExceptionInterceptor());
 
         // Immutability
-        $this->assertNotSame($pipeline, $second);
+        self::assertNotSame($pipeline, $second);
         // No exception because the interceptor is not in the pipeline
         $pipeline->handle($this->createPathContext(['controller', 'action']));
         // Exception because the interceptor is in the pipeline
@@ -88,7 +88,7 @@ final class InterceptorPipelineTest extends TestCase
     public function testHandleWithHandler(): void
     {
         $ctx = new CallContext(Target::fromPathArray(['controller', 'action']));
-        $mock = $this->createMock(HandlerInterface::class);
+        $mock = self::createMock(HandlerInterface::class);
         $mock->expects(self::exactly(2))
             ->method('handle')
             ->with($ctx)
@@ -97,7 +97,7 @@ final class InterceptorPipelineTest extends TestCase
 
         $result = $pipeline->handle($ctx);
 
-        $this->assertSame(['test1', 'test2'], $result);
+        self::assertSame(['test1', 'test2'], $result);
     }
 
     /**
@@ -105,7 +105,7 @@ final class InterceptorPipelineTest extends TestCase
      */
     public function testCallHandlerTwice(): void
     {
-        $mock = $this->createMock(InterceptorInterface::class);
+        $mock = self::createMock(InterceptorInterface::class);
         $mock->expects(self::exactly(2))
             ->method('intercept')
             ->willReturn('foo', 'bar');
@@ -114,10 +114,10 @@ final class InterceptorPipelineTest extends TestCase
             new MultipleCallNextInterceptor(2),
             $mock,
             new ExceptionInterceptor(),
-        ], $this->createMock(HandlerInterface::class));
+        ], self::createMock(HandlerInterface::class));
 
         $result = $pipeline->handle($this->createPathContext(['controller', 'action']));
-        $this->assertSame(['foo', 'bar'], $result);
+        self::assertSame(['foo', 'bar'], $result);
     }
 
     /**

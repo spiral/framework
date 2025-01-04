@@ -39,7 +39,7 @@ final class SerializerBootloaderTest extends BaseTestCase
     {
         $config = $this->getConfig(SerializerConfig::CONFIG);
 
-        $this->assertEquals([
+        self::assertEquals([
             'default' => 'test',
             'serializers' => [
                 'json' => new JsonSerializer(),
@@ -51,9 +51,6 @@ final class SerializerBootloaderTest extends BaseTestCase
 
     public function testConfig(): void
     {
-        $this->assertSame(
-            'test',
-            $this->getConfig(SerializerConfig::CONFIG)['default']
-        );
+        self::assertSame('test', $this->getConfig(SerializerConfig::CONFIG)['default']);
     }
 }

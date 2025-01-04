@@ -42,8 +42,8 @@ final class InterceptorPipelineTest extends TestCase
 
     public function testCrossCompatibility(): void
     {
-        $handler = $this->createMock(CoreInterface::class);
-        $handler->expects($this->once())
+        $handler = self::createMock(CoreInterface::class);
+        $handler->expects(self::once())
             ->method('callAction')
             ->with('controller', 'action')
             ->willReturn('result');
@@ -58,14 +58,14 @@ final class InterceptorPipelineTest extends TestCase
 
         $result = $pipeline->callAction('controller', 'action');
         // Attributes won't be lost after legacy interceptor
-        $this->assertSame(['key' => 'value', 'foo' => 'bar'], $state->context->getAttributes());
-        $this->assertSame('result', $result);
+        self::assertSame(['key' => 'value', 'foo' => 'bar'], $state->context->getAttributes());
+        self::assertSame('result', $result);
     }
 
     public function testLegacyChangesContextPath(): void
     {
-        $handler = $this->createMock(CoreInterface::class);
-        $handler->expects($this->once())
+        $handler = self::createMock(CoreInterface::class);
+        $handler->expects(self::once())
             ->method('callAction')
             ->with('foo', 'bar')
             ->willReturn('result');
@@ -78,8 +78,8 @@ final class InterceptorPipelineTest extends TestCase
 
         $result = $pipeline->callAction('controller', 'action');
         // Attributes won't be lost after legacy interceptor
-        $this->assertSame(['newController', 'newAction'], $state->context->getTarget()->getPath());
-        $this->assertSame('result', $result);
+        self::assertSame(['newController', 'newAction'], $state->context->getTarget()->getPath());
+        self::assertSame('result', $result);
     }
 
     public function testAttributesCompatibilityAttributes(): void
@@ -89,13 +89,13 @@ final class InterceptorPipelineTest extends TestCase
             new LegacyStatefulInterceptor(),
             $state = new StatefulInterceptor(),
             new ExceptionInterceptor(),
-        ], $this->createMock(CoreInterface::class));
+        ], self::createMock(CoreInterface::class));
 
         try {
             $pipeline->callAction('controller', 'action');
         } catch (\RuntimeException) {
             // Attributes won't be lost after legacy interceptor
-            $this->assertSame(['key' => 'value'], $state->context->getAttributes());
+            self::assertSame(['key' => 'value'], $state->context->getAttributes());
         }
     }
 
@@ -104,7 +104,7 @@ final class InterceptorPipelineTest extends TestCase
      */
     public function testCallHandlerTwice(): void
     {
-        $mock = $this->createMock(InterceptorInterface::class);
+        $mock = self::createMock(InterceptorInterface::class);
         $mock->expects(self::exactly(2))
             ->method('intercept')
             ->willReturn('foo', 'bar');
@@ -113,10 +113,10 @@ final class InterceptorPipelineTest extends TestCase
             new MultipleCallNextInterceptor(2),
             $mock,
             new ExceptionInterceptor(),
-        ], $this->createMock(HandlerInterface::class));
+        ], self::createMock(HandlerInterface::class));
 
         $result = $pipeline->callAction('controller', 'action');
-        $this->assertSame(['foo', 'bar'], $result);
+        self::assertSame(['foo', 'bar'], $result);
     }
 
     /**

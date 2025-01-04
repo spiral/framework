@@ -19,28 +19,28 @@ class ScopesTest extends TestCase
     {
         $container = $this->createMock(ContainerInterface::class);
 
-        $this->assertNull(ContainerScope::getContainer());
+        self::assertNull(ContainerScope::getContainer());
 
-        $this->assertTrue(ContainerScope::runScope($container, static fn(): bool => $container === ContainerScope::getContainer()));
+        self::assertTrue(ContainerScope::runScope($container, static fn(): bool => $container === ContainerScope::getContainer()));
 
-        $this->assertNull(ContainerScope::getContainer());
+        self::assertNull(ContainerScope::getContainer());
     }
 
     public function testScopeException(): void
     {
         $container = $this->createMock(ContainerInterface::class);
 
-        $this->assertNull(ContainerScope::getContainer());
+        self::assertNull(ContainerScope::getContainer());
 
         try {
-            $this->assertTrue(ContainerScope::runScope($container, static function (): never {
+            self::assertTrue(ContainerScope::runScope($container, static function (): never {
                 throw new RuntimeException('exception');
             }));
         } catch (\Throwable $e) {
         }
 
-        $this->assertInstanceOf(RuntimeException::class, $e);
-        $this->assertNull(ContainerScope::getContainer());
+        self::assertInstanceOf(RuntimeException::class, $e);
+        self::assertNull(ContainerScope::getContainer());
     }
 
     public function testContainerScope(): void
@@ -48,21 +48,21 @@ class ScopesTest extends TestCase
         $c = new Container();
         $c->bind('bucket', new Bucket('a'));
 
-        $this->assertSame('a', $c->get('bucket')->getName());
-        $this->assertFalse($c->has('other'));
+        self::assertSame('a', $c->get('bucket')->getName());
+        self::assertFalse($c->has('other'));
 
-        $this->assertTrue($c->runScope([
+        self::assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
             'other'  => new SampleClass()
         ], function ($c): bool {
-            $this->assertSame('b', $c->get('bucket')->getName());
-            $this->assertTrue($c->has('other'));
+            self::assertSame('b', $c->get('bucket')->getName());
+            self::assertTrue($c->has('other'));
 
             return $c->get('bucket')->getName() == 'b' && $c->has('other');
         }));
 
-        $this->assertSame('a', $c->get('bucket')->getName());
-        $this->assertFalse($c->has('other'));
+        self::assertSame('a', $c->get('bucket')->getName());
+        self::assertFalse($c->has('other'));
     }
 
     public function testContainerScopeException(): void
@@ -70,21 +70,21 @@ class ScopesTest extends TestCase
         $c = new Container();
         $c->bind('bucket', new Bucket('a'));
 
-        $this->assertSame('a', $c->get('bucket')->getName());
-        $this->assertFalse($c->has('other'));
+        self::assertSame('a', $c->get('bucket')->getName());
+        self::assertFalse($c->has('other'));
 
-        $this->assertTrue($c->runScope([
+        self::assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
             'other'  => new SampleClass()
         ], function ($c): bool {
-            $this->assertSame('b', $c->get('bucket')->getName());
-            $this->assertTrue($c->has('other'));
+            self::assertSame('b', $c->get('bucket')->getName());
+            self::assertTrue($c->has('other'));
 
             return $c->get('bucket')->getName() == 'b' && $c->has('other');
         }));
 
         try {
-            $this->assertTrue($c->runScope([
+            self::assertTrue($c->runScope([
                 'bucket' => new Bucket('b'),
                 'other'  => new SampleClass()
             ], function () use ($c): void {
@@ -93,18 +93,15 @@ class ScopesTest extends TestCase
         } catch (\Throwable) {
         }
 
-        $this->assertSame('a', $c->get('bucket')->getName());
-        $this->assertFalse($c->has('other'));
+        self::assertSame('a', $c->get('bucket')->getName());
+        self::assertFalse($c->has('other'));
     }
 
     public function testContainerInScope(): void
     {
         $container = new Container();
 
-        $this->assertSame(
-            $container,
-            ContainerScope::runScope($container, static fn (ContainerInterface $container): \Psr\Container\ContainerInterface => $container)
-        );
+        self::assertSame($container, ContainerScope::runScope($container, static fn (ContainerInterface $container): \Psr\Container\ContainerInterface => $container));
 
         $result = ContainerScope::runScope(
             $container,
@@ -114,7 +111,7 @@ class ScopesTest extends TestCase
             ),
         );
 
-        $this->assertSame($container, $result);
+        self::assertSame($container, $result);
     }
 
     public function testSingletonRebindingInScope(): void
@@ -122,17 +119,17 @@ class ScopesTest extends TestCase
         $c = new Container();
         $c->bindSingleton('bucket', new Container\Autowire(Bucket::class, ['a']));
 
-        $this->assertSame('a', $c->get('bucket')->getName());
+        self::assertSame('a', $c->get('bucket')->getName());
 
-        $this->assertTrue($c->runScope([
+        self::assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
         ], function ($c): bool {
-            $this->assertSame('b', $c->get('bucket')->getName());
+            self::assertSame('b', $c->get('bucket')->getName());
 
             return $c->get('bucket')->getName() === 'b';
         }));
 
-        $this->assertSame('a', $c->get('bucket')->getName());
+        self::assertSame('a', $c->get('bucket')->getName());
     }
 
     public function testHasInstanceAfterMakeWithoutAliasInScope(): void
@@ -142,7 +139,7 @@ class ScopesTest extends TestCase
         $container->make('test');
 
         $container->runScoped(function (Container $container): void {
-            $this->assertTrue($container->hasInstance('test'));
+            self::assertTrue($container->hasInstance('test'));
         });
     }
 
@@ -153,7 +150,7 @@ class ScopesTest extends TestCase
         $container->make('test');
 
         $container->runScoped(function (Container $container): void {
-            $this->assertTrue($container->hasInstance('test'));
+            self::assertTrue($container->hasInstance('test'));
         });
     }
 
@@ -168,7 +165,7 @@ class ScopesTest extends TestCase
         $container->make('bar');
 
         $container->runScoped(function (Container $container): void {
-            $this->assertTrue($container->hasInstance('bar'));
+            self::assertTrue($container->hasInstance('bar'));
         });
     }
 }

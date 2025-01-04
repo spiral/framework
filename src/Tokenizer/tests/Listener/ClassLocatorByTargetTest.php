@@ -124,6 +124,6 @@ final class ClassLocatorByTargetTest extends TestCase
             $attribute
         );
 
-        $this->assertSame($expected, $classes);
+        self::assertSame($expected, $classes);
     }
 }

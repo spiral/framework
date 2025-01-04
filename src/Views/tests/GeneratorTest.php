@@ -19,9 +19,9 @@ class GeneratorTest extends TestCase
         $generator = new ContextGenerator($context);
         $variants = $generator->generate();
 
-        $this->assertCount(1, $variants);
-        $this->assertSame($context->getID(), $variants[0]->getID());
-        $this->assertSame('value', $variants[0]->resolveValue('test'));
+        self::assertCount(1, $variants);
+        self::assertSame($context->getID(), $variants[0]->getID());
+        self::assertSame('value', $variants[0]->resolveValue('test'));
     }
 
     public function testRotateEmpty(): void
@@ -31,7 +31,7 @@ class GeneratorTest extends TestCase
         $generator = new ContextGenerator($context);
         $variants = $generator->generate();
 
-        $this->assertCount(0, $variants);
+        self::assertCount(0, $variants);
     }
 
     public function testRotateMultiValue(): void
@@ -42,10 +42,10 @@ class GeneratorTest extends TestCase
         $generator = new ContextGenerator($context);
         $variants = $generator->generate();
 
-        $this->assertCount(2, $variants);
-        $this->assertSame($context->getID(), $variants[0]->getID());
-        $this->assertSame('value', $variants[0]->resolveValue('test'));
-        $this->assertSame('another', $variants[1]->resolveValue('test'));
+        self::assertCount(2, $variants);
+        self::assertSame($context->getID(), $variants[0]->getID());
+        self::assertSame('value', $variants[0]->resolveValue('test'));
+        self::assertSame('another', $variants[1]->resolveValue('test'));
     }
 
     public function testRotateMultiple(): void
@@ -58,12 +58,12 @@ class GeneratorTest extends TestCase
         $generator = new ContextGenerator($context);
         $variants = $generator->generate();
 
-        $this->assertCount(8, $variants);
-        $this->assertSame($context->getID(), $variants[0]->getID());
+        self::assertCount(8, $variants);
+        self::assertSame($context->getID(), $variants[0]->getID());
 
         // ending
-        $this->assertSame('b', $variants[7]->resolveValue('a'));
-        $this->assertSame('e', $variants[7]->resolveValue('b'));
-        $this->assertSame('g', $variants[7]->resolveValue('d'));
+        self::assertSame('b', $variants[7]->resolveValue('a'));
+        self::assertSame('e', $variants[7]->resolveValue('b'));
+        self::assertSame('g', $variants[7]->resolveValue('d'));
     }
 }

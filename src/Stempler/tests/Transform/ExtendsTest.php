@@ -23,10 +23,7 @@ class ExtendsTest extends BaseTestCase
 
         $builder = $this->getBuilder($loader, []);
 
-        $this->assertSame(
-            'hello world',
-            $builder->compile('root')->getContent()
-        );
+        self::assertSame('hello world', $builder->compile('root')->getContent());
     }
 
     public function testExtendsParent(): void
@@ -37,10 +34,7 @@ class ExtendsTest extends BaseTestCase
 
         $builder = $this->getBuilder($loader, []);
 
-        $this->assertSame(
-            '<b>hello world</b>',
-            $builder->compile('root')->getContent()
-        );
+        self::assertSame('<b>hello world</b>', $builder->compile('root')->getContent());
     }
 
     public function testExtendsParentBlock(): void
@@ -51,10 +45,7 @@ class ExtendsTest extends BaseTestCase
 
         $builder = $this->getBuilder($loader, []);
 
-        $this->assertSame(
-            '<b>hello parent world</b>',
-            $builder->compile('root')->getContent()
-        );
+        self::assertSame('<b>hello parent world</b>', $builder->compile('root')->getContent());
     }
 
     public function testExtendsParentBlockWithNoAttribute(): void
@@ -65,10 +56,7 @@ class ExtendsTest extends BaseTestCase
 
         $builder = $this->getBuilder($loader, []);
 
-        $this->assertSame(
-            '<b>hello parent world</b>',
-            $builder->compile('root')->getContent()
-        );
+        self::assertSame('<b>hello parent world</b>', $builder->compile('root')->getContent());
     }
 
     public function testExtendsParentBlockWithAttribute(): void
@@ -79,10 +67,7 @@ class ExtendsTest extends BaseTestCase
 
         $builder = $this->getBuilder($loader, []);
 
-        $this->assertSame(
-            '<b class="red">hello parent world</b>',
-            $builder->compile('root')->getContent()
-        );
+        self::assertSame('<b class="red">hello parent world</b>', $builder->compile('root')->getContent());
     }
 
     public function testExtendsAttribute(): void
@@ -93,10 +78,7 @@ class ExtendsTest extends BaseTestCase
 
         $builder = $this->getBuilder($loader, []);
 
-        $this->assertSame(
-            '<b value="x">hello parent world</b>',
-            $builder->compile('root')->getContent()
-        );
+        self::assertSame('<b value="x">hello parent world</b>', $builder->compile('root')->getContent());
     }
 
     public function testExtendsViaPath(): void
@@ -107,10 +89,7 @@ class ExtendsTest extends BaseTestCase
 
         $builder = $this->getBuilder($loader, []);
 
-        $this->assertSame(
-            '<b value="x">hello parent world</b>',
-            $builder->compile('root')->getContent()
-        );
+        self::assertSame('<b value="x">hello parent world</b>', $builder->compile('root')->getContent());
     }
 
     public function testExtendsMultiple(): void
@@ -122,10 +101,7 @@ class ExtendsTest extends BaseTestCase
 
         $builder = $this->getBuilder($loader, []);
 
-        $this->assertSame(
-            '<b><i>root</i></b>',
-            $builder->compile('root')->getContent()
-        );
+        self::assertSame('<b><i>root</i></b>', $builder->compile('root')->getContent());
     }
 
     public function testExtendsInline(): void
@@ -137,10 +113,7 @@ class ExtendsTest extends BaseTestCase
 
         $builder = $this->getBuilder($loader, []);
 
-        $this->assertSame(
-            'hello <b><i>root</i></b>',
-            $builder->compile('root')->getContent()
-        );
+        self::assertSame('hello <b><i>root</i></b>', $builder->compile('root')->getContent());
     }
 
     protected function getBuilder(LoaderInterface $loader, array $visitors): Builder

@@ -57,16 +57,13 @@ final class TelemetryBootloaderTest extends BaseTestCase
 
     public function testConfig(): void
     {
-        $this->assertSame(
-            [
-                'default' => 'null',
-                'drivers' => [
-                    'null' => NullTracerFactory::class,
-                    'log' => LogTracerFactory::class,
-                ],
+        self::assertSame([
+            'default' => 'null',
+            'drivers' => [
+                'null' => NullTracerFactory::class,
+                'log' => LogTracerFactory::class,
             ],
-            $this->getConfig(TelemetryConfig::CONFIG)
-        );
+        ], $this->getConfig(TelemetryConfig::CONFIG));
     }
 
     public function testRegisterTracer(): void
@@ -90,7 +87,7 @@ final class TelemetryBootloaderTest extends BaseTestCase
             $driver2 = new Autowire('bar')
         );
 
-        $this->assertSame([
+        self::assertSame([
             'foo' => $driver,
             'foo1' => $driver1,
             'foo2' => $driver2,

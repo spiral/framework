@@ -19,7 +19,7 @@ class ConfigTest extends TestCase
             'locale' => 'ru'
         ]);
 
-        $this->assertSame('ru', $config->getDefaultLocale());
+        self::assertSame('ru', $config->getDefaultLocale());
     }
 
     public function testDefaultDomain(): void
@@ -28,7 +28,7 @@ class ConfigTest extends TestCase
             'locale' => 'ru'
         ]);
 
-        $this->assertSame('messages', $config->getDefaultDomain());
+        self::assertSame('messages', $config->getDefaultDomain());
     }
 
     public function testFallbackLocale(): void
@@ -37,20 +37,20 @@ class ConfigTest extends TestCase
             'fallbackLocale' => 'ru'
         ]);
 
-        $this->assertSame('ru', $config->getFallbackLocale());
+        self::assertSame('ru', $config->getFallbackLocale());
     }
 
     public function testRegisterMessages(): void
     {
         $config = new TranslatorConfig(['autoRegister' => true]);
-        $this->assertTrue($config->isAutoRegisterMessages());
+        self::assertTrue($config->isAutoRegisterMessages());
 
         $config = new TranslatorConfig(['autoRegister' => false]);
-        $this->assertFalse($config->isAutoRegisterMessages());
+        self::assertFalse($config->isAutoRegisterMessages());
 
         //Legacy
         $config = new TranslatorConfig(['registerMessages' => true]);
-        $this->assertTrue($config->isAutoRegisterMessages());
+        self::assertTrue($config->isAutoRegisterMessages());
     }
 
     public function testLocalesDirectory(): void
@@ -59,7 +59,7 @@ class ConfigTest extends TestCase
             'localesDirectory' => 'directory/'
         ]);
 
-        $this->assertSame('directory/', $config->getLocalesDirectory());
+        self::assertSame('directory/', $config->getLocalesDirectory());
     }
 
     public function testLocaleDirectory(): void
@@ -68,7 +68,7 @@ class ConfigTest extends TestCase
             'localesDirectory' => 'directory/'
         ]);
 
-        $this->assertSame('directory/ru/', $config->getLocaleDirectory('ru'));
+        self::assertSame('directory/ru/', $config->getLocaleDirectory('ru'));
     }
 
     public function testLocaleDirectoryShort(): void
@@ -77,7 +77,7 @@ class ConfigTest extends TestCase
             'directory' => 'directory/'
         ]);
 
-        $this->assertSame('directory/ru/', $config->getLocaleDirectory('ru'));
+        self::assertSame('directory/ru/', $config->getLocaleDirectory('ru'));
     }
 
     public function testLocaleDirectoryWithoutSlash(): void
@@ -85,20 +85,20 @@ class ConfigTest extends TestCase
         $config = new TranslatorConfig([
             'localesDirectory' => 'directory'
         ]);
-        $this->assertSame('directory/en/', $config->getLocaleDirectory('en'));
+        self::assertSame('directory/en/', $config->getLocaleDirectory('en'));
 
         $config = new TranslatorConfig([
             'directory' => 'directory'
         ]);
-        $this->assertSame('directory/en/', $config->getLocaleDirectory('en'));
+        self::assertSame('directory/en/', $config->getLocaleDirectory('en'));
     }
 
     public function testLocaleDirectoryWithDirectoryParam(): void
     {
         $config = new TranslatorConfig();
 
-        $this->assertSame('directory/en/', $config->getLocaleDirectory('en', 'directory'));
-        $this->assertSame('directory/en/', $config->getLocaleDirectory('en', 'directory/'));
+        self::assertSame('directory/en/', $config->getLocaleDirectory('en', 'directory'));
+        self::assertSame('directory/en/', $config->getLocaleDirectory('en', 'directory/'));
     }
 
     public function testLocaleDirectoryLeadingSlash(): void
@@ -107,7 +107,7 @@ class ConfigTest extends TestCase
             'directory' => '/directory/locale'
         ]);
 
-        $this->assertSame('/directory/locale/en/', $config->getLocaleDirectory('en'));
+        self::assertSame('/directory/locale/en/', $config->getLocaleDirectory('en'));
     }
 
     public function testDomains(): void
@@ -121,8 +121,8 @@ class ConfigTest extends TestCase
             ]
         ]);
 
-        $this->assertSame('spiral', $config->resolveDomain('spiral-views'));
-        $this->assertSame('messages', $config->resolveDomain('vendor-views'));
+        self::assertSame('spiral', $config->resolveDomain('spiral-views'));
+        self::assertSame('messages', $config->resolveDomain('vendor-views'));
     }
 
     public function testDomainsFallback(): void
@@ -135,7 +135,7 @@ class ConfigTest extends TestCase
             ]
         ]);
 
-        $this->assertSame('external', $config->resolveDomain('external'));
+        self::assertSame('external', $config->resolveDomain('external'));
     }
 
     public function testHasLoader(): void
@@ -144,8 +144,8 @@ class ConfigTest extends TestCase
             'loaders' => ['php' => PhpFileLoader::class]
         ]);
 
-        $this->assertTrue($config->hasLoader('php'));
-        $this->assertFalse($config->hasLoader('txt'));
+        self::assertTrue($config->hasLoader('php'));
+        self::assertFalse($config->hasLoader('txt'));
     }
 
     public function testGetLoader(): void
@@ -154,7 +154,7 @@ class ConfigTest extends TestCase
             'loaders' => ['php' => PhpFileLoader::class]
         ]);
 
-        $this->assertInstanceOf(LoaderInterface::class, $config->getLoader('php'));
+        self::assertInstanceOf(LoaderInterface::class, $config->getLoader('php'));
     }
 
     public function testHasDumper(): void
@@ -163,8 +163,8 @@ class ConfigTest extends TestCase
             'dumpers' => ['po' => PoFileDumper::class]
         ]);
 
-        $this->assertTrue($config->hasDumper('po'));
-        $this->assertFalse($config->hasDumper('xml'));
+        self::assertTrue($config->hasDumper('po'));
+        self::assertFalse($config->hasDumper('xml'));
     }
 
     public function testGetDumper(): void
@@ -173,13 +173,13 @@ class ConfigTest extends TestCase
             'dumpers' => ['po' => PoFileDumper::class]
         ]);
 
-        $this->assertInstanceOf(DumperInterface::class, $config->getDumper('po'));
+        self::assertInstanceOf(DumperInterface::class, $config->getDumper('po'));
     }
 
     public function testGetDirectories(): void
     {
         $config = new TranslatorConfig();
-        $this->assertSame([], $config->getDirectories());
+        self::assertSame([], $config->getDirectories());
 
         $config = new TranslatorConfig([
             'directories' => [
@@ -187,6 +187,6 @@ class ConfigTest extends TestCase
                 'bar/'
             ]
         ]);
-        $this->assertSame(['foo', 'bar/'], $config->getDirectories());
+        self::assertSame(['foo', 'bar/'], $config->getDirectories());
     }
 }

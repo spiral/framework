@@ -20,15 +20,15 @@ final class ClassLocatorTest extends TestCase
         //Direct loading
         $classes = $tokenizer->classLocator()->getClasses();
 
-        $this->assertArrayHasKey(self::class, $classes);
-        $this->assertArrayHasKey(ClassA::class, $classes);
-        $this->assertArrayHasKey(ClassB::class, $classes);
-        $this->assertArrayHasKey(ClassC::class, $classes);
-        $this->assertArrayHasKey(ClassD::class, $classes);
+        self::assertArrayHasKey(self::class, $classes);
+        self::assertArrayHasKey(ClassA::class, $classes);
+        self::assertArrayHasKey(ClassB::class, $classes);
+        self::assertArrayHasKey(ClassC::class, $classes);
+        self::assertArrayHasKey(ClassD::class, $classes);
 
         //Excluded
-        $this->assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
+        self::assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
+        self::assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
     }
 
     public function testClassesByClass(): void
@@ -38,12 +38,12 @@ final class ClassLocatorTest extends TestCase
         //By namespace
         $classes = $tokenizer->classLocator()->getClasses(ClassD::class);
 
-        $this->assertArrayHasKey(ClassD::class, $classes);
+        self::assertArrayHasKey(ClassD::class, $classes);
 
-        $this->assertArrayNotHasKey(self::class, $classes);
-        $this->assertArrayNotHasKey(ClassA::class, $classes);
-        $this->assertArrayNotHasKey(ClassB::class, $classes);
-        $this->assertArrayNotHasKey(ClassC::class, $classes);
+        self::assertArrayNotHasKey(self::class, $classes);
+        self::assertArrayNotHasKey(ClassA::class, $classes);
+        self::assertArrayNotHasKey(ClassB::class, $classes);
+        self::assertArrayNotHasKey(ClassC::class, $classes);
     }
 
     public function testClassesByInterface(): void
@@ -53,12 +53,12 @@ final class ClassLocatorTest extends TestCase
         //By interface
         $classes = $tokenizer->classLocator()->getClasses(TestInterface::class);
 
-        $this->assertArrayHasKey(ClassB::class, $classes);
-        $this->assertArrayHasKey(ClassC::class, $classes);
+        self::assertArrayHasKey(ClassB::class, $classes);
+        self::assertArrayHasKey(ClassC::class, $classes);
 
-        $this->assertArrayNotHasKey(self::class, $classes);
-        $this->assertArrayNotHasKey(ClassA::class, $classes);
-        $this->assertArrayNotHasKey(ClassD::class, $classes);
+        self::assertArrayNotHasKey(self::class, $classes);
+        self::assertArrayNotHasKey(ClassA::class, $classes);
+        self::assertArrayNotHasKey(ClassD::class, $classes);
     }
 
     public function testClassesByTrait(): void
@@ -68,12 +68,12 @@ final class ClassLocatorTest extends TestCase
         //By trait
         $classes = $tokenizer->classLocator()->getClasses(TestTrait::class);
 
-        $this->assertArrayHasKey(ClassB::class, $classes);
-        $this->assertArrayHasKey(ClassC::class, $classes);
+        self::assertArrayHasKey(ClassB::class, $classes);
+        self::assertArrayHasKey(ClassC::class, $classes);
 
-        $this->assertArrayNotHasKey(self::class, $classes);
-        $this->assertArrayNotHasKey(ClassA::class, $classes);
-        $this->assertArrayNotHasKey(ClassD::class, $classes);
+        self::assertArrayNotHasKey(self::class, $classes);
+        self::assertArrayNotHasKey(ClassA::class, $classes);
+        self::assertArrayNotHasKey(ClassD::class, $classes);
     }
 
     public function testClassesByClassA(): void
@@ -83,12 +83,12 @@ final class ClassLocatorTest extends TestCase
         //By class
         $classes = $tokenizer->classLocator()->getClasses(ClassA::class);
 
-        $this->assertArrayHasKey(ClassA::class, $classes);
-        $this->assertArrayHasKey(ClassB::class, $classes);
-        $this->assertArrayHasKey(ClassC::class, $classes);
-        $this->assertArrayHasKey(ClassD::class, $classes);
+        self::assertArrayHasKey(ClassA::class, $classes);
+        self::assertArrayHasKey(ClassB::class, $classes);
+        self::assertArrayHasKey(ClassC::class, $classes);
+        self::assertArrayHasKey(ClassD::class, $classes);
 
-        $this->assertArrayNotHasKey(self::class, $classes);
+        self::assertArrayNotHasKey(self::class, $classes);
     }
 
     public function testClassesByClassB(): void
@@ -96,11 +96,11 @@ final class ClassLocatorTest extends TestCase
         $tokenizer = $this->getTokenizer();
         $classes = $tokenizer->classLocator()->getClasses(ClassB::class);
 
-        $this->assertArrayHasKey(ClassB::class, $classes);
-        $this->assertArrayHasKey(ClassC::class, $classes);
+        self::assertArrayHasKey(ClassB::class, $classes);
+        self::assertArrayHasKey(ClassC::class, $classes);
 
-        $this->assertArrayNotHasKey(self::class, $classes);
-        $this->assertArrayNotHasKey(ClassA::class, $classes);
-        $this->assertArrayNotHasKey(ClassD::class, $classes);
+        self::assertArrayNotHasKey(self::class, $classes);
+        self::assertArrayNotHasKey(ClassA::class, $classes);
+        self::assertArrayNotHasKey(ClassD::class, $classes);
     }
 }

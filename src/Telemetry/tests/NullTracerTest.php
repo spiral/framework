@@ -43,10 +43,7 @@ final class NullTracerTest extends TestCase
             )
             ->andReturnUsing(static fn(array $scope, callable $callable) => $callable($invoker));
 
-        $this->assertSame(
-            'hello',
-            $tracer->trace('foo', $callable, ['foo' => 'bar'])
-        );
+        self::assertSame('hello', $tracer->trace('foo', $callable, ['foo' => 'bar']));
     }
 
     #[RunInSeparateProcess]
@@ -79,10 +76,7 @@ final class NullTracerTest extends TestCase
         $scope->shouldNotReceive('runScope');
 
         ContainerScope::runScope($container, function () use ($tracer, $callable): void {
-            $this->assertSame(
-                'hello',
-                $tracer->trace('foo', $callable, ['foo' => 'bar'])
-            );
+            self::assertSame('hello', $tracer->trace('foo', $callable, ['foo' => 'bar']));
         });
     }
 }

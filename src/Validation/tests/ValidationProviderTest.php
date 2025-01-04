@@ -35,9 +35,6 @@ final class ValidationProviderTest extends TestCase
             ->with($resolver, $params)
             ->andReturn($validation);
 
-        $this->assertSame(
-            $validation,
-            $this->provider->getValidation('foo', $params)
-        );
+        self::assertSame($validation, $this->provider->getValidation('foo', $params));
     }
 }

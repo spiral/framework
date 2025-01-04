@@ -32,29 +32,29 @@ final class ScopedClassLocatorTest extends TestCase
     {
         $classes = $this->container->get(ScopedClassesInterface::class)->getScopedClasses('foo');
 
-        $this->assertArrayHasKey(ClassD::class, $classes);
+        self::assertArrayHasKey(ClassD::class, $classes);
 
         // Excluded
-        $this->assertArrayNotHasKey(self::class, $classes);
-        $this->assertArrayNotHasKey(ClassA::class, $classes);
-        $this->assertArrayNotHasKey(ClassB::class, $classes);
-        $this->assertArrayNotHasKey(ClassC::class, $classes);
-        $this->assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
+        self::assertArrayNotHasKey(self::class, $classes);
+        self::assertArrayNotHasKey(ClassA::class, $classes);
+        self::assertArrayNotHasKey(ClassB::class, $classes);
+        self::assertArrayNotHasKey(ClassC::class, $classes);
+        self::assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
+        self::assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
     }
 
     public function testGetsClassesForNotExistScope(): void
     {
         $classes = $this->container->get(ScopedClassesInterface::class)->getScopedClasses('bar');
 
-        $this->assertArrayHasKey(self::class, $classes);
-        $this->assertArrayHasKey(ClassA::class, $classes);
-        $this->assertArrayHasKey(ClassB::class, $classes);
-        $this->assertArrayHasKey(ClassC::class, $classes);
-        $this->assertArrayHasKey(ClassD::class, $classes);
+        self::assertArrayHasKey(self::class, $classes);
+        self::assertArrayHasKey(ClassA::class, $classes);
+        self::assertArrayHasKey(ClassB::class, $classes);
+        self::assertArrayHasKey(ClassC::class, $classes);
+        self::assertArrayHasKey(ClassD::class, $classes);
 
         // Excluded
-        $this->assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
+        self::assertArrayNotHasKey(\Spiral\Tests\Tokenizer\Classes\Excluded\ClassXX::class, $classes);
+        self::assertArrayNotHasKey('Spiral\Tests\Tokenizer\Classes\Bad_Class', $classes);
     }
 }

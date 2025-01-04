@@ -21,7 +21,7 @@ final class RetryPolicyTest extends TestCase
     {
         $reader = (new Factory())->create();
 
-        $this->assertEquals($expected, $reader->firstClassMetadata(new \ReflectionClass($class), RetryPolicy::class));
+        self::assertEquals($expected, $reader->firstClassMetadata(new \ReflectionClass($class), RetryPolicy::class));
     }
 
     public static function classesProvider(): \Traversable

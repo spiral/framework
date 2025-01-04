@@ -36,12 +36,12 @@ class SingleActionTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
     }
 
     public function testVerbRoute(): void
@@ -66,8 +66,8 @@ class SingleActionTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('POST', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('hello world', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
     }
 
     public function testEchoed(): void
@@ -79,8 +79,8 @@ class SingleActionTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('echoed', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('echoed', (string)$response->getBody());
     }
 
     public function testAutoFill(): void
@@ -92,8 +92,8 @@ class SingleActionTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/echo')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('echoed', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('echoed', (string)$response->getBody());
 
         $e = null;
         try {
@@ -101,7 +101,7 @@ class SingleActionTest extends BaseTestCase
         } catch (UndefinedRouteException $e) {
         }
 
-        $this->assertNotNull($e, 'Autofill not fired');
+        self::assertNotNull($e, 'Autofill not fired');
     }
 
     public function testVerbException(): void
@@ -124,8 +124,8 @@ class SingleActionTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test/100')));
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('100', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('100', (string)$response->getBody());
     }
 
     public function testParametrizedActionRouteNotFound(): void
@@ -150,10 +150,10 @@ class SingleActionTest extends BaseTestCase
         );
 
         $uri = $router->uri('action');
-        $this->assertSame('/test', $uri->getPath());
+        self::assertSame('/test', $uri->getPath());
 
         $uri = $router->uri('action', ['id' => 100]);
-        $this->assertSame('/test/100', $uri->getPath());
+        self::assertSame('/test/100', $uri->getPath());
     }
 
     public function testWrongActionRoute(): void

@@ -42,8 +42,8 @@ final class AuthMiddlewareTest extends BaseTestCase
 
         $response = $http->handle(new ServerRequest('GET', ''));
 
-        $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        $this->assertSame(AuthContext::class, (string)$response->getBody());
+        self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+        self::assertSame(AuthContext::class, (string)$response->getBody());
     }
 
     public function testNoToken(): void
@@ -68,8 +68,8 @@ final class AuthMiddlewareTest extends BaseTestCase
 
         $response = $http->handle(new ServerRequest('GET', ''));
 
-        $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        $this->assertSame('no token', (string)$response->getBody());
+        self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+        self::assertSame('no token', (string)$response->getBody());
     }
 
     protected function getCore(array $middleware = []): Http

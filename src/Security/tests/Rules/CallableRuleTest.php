@@ -32,7 +32,7 @@ class CallableRuleTest extends TestCase
         /** @var RuleInterface $rule */
         $rule = new CallableRule($callable);
 
-        $this->assertTrue($rule->allows($actor, static::OPERATION, $context));
-        $this->assertFalse($rule->allows($actor, static::OPERATION, $context));
+        self::assertTrue($rule->allows($actor, static::OPERATION, $context));
+        self::assertFalse($rule->allows($actor, static::OPERATION, $context));
     }
 }

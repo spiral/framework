@@ -14,21 +14,21 @@ class SnapshotTest extends TestCase
         $e = new \Error("message");
         $s = new Snapshot("id", $e);
 
-        $this->assertSame("id", $s->getID());
-        $this->assertSame($e, $s->getException());
+        self::assertSame("id", $s->getID());
+        self::assertSame($e, $s->getException());
 
-        $this->assertStringContainsString("Error", $s->getMessage());
-        $this->assertStringContainsString("message", $s->getMessage());
-        $this->assertStringContainsString(__FILE__, $s->getMessage());
-        $this->assertStringContainsString("14", $s->getMessage());
+        self::assertStringContainsString("Error", $s->getMessage());
+        self::assertStringContainsString("message", $s->getMessage());
+        self::assertStringContainsString(__FILE__, $s->getMessage());
+        self::assertStringContainsString("14", $s->getMessage());
 
         $description = $s->describe();
-        $this->assertStringContainsString("Error", $description['error']);
-        $this->assertStringContainsString("message", $description['error']);
-        $this->assertStringContainsString(__FILE__, $description['error']);
-        $this->assertStringContainsString("14", $description['error']);
+        self::assertStringContainsString("Error", $description['error']);
+        self::assertStringContainsString("message", $description['error']);
+        self::assertStringContainsString(__FILE__, $description['error']);
+        self::assertStringContainsString("14", $description['error']);
 
-        $this->assertSame(__FILE__, $description['location']['file']);
-        $this->assertSame(14, $description['location']['line']);
+        self::assertSame(__FILE__, $description['location']['file']);
+        self::assertSame(14, $description['location']['line']);
     }
 }

@@ -73,7 +73,7 @@ final class SessionTest extends HttpTestCase
             ->assertBodySame('3')
             ->assertCookieExists('sid');
 
-        $this->assertNotEquals($result->getCookies()['sid'], $newResult->getCookies()['sid']);
+        self::assertNotEquals($result->getCookies()['sid'], $newResult->getCookies()['sid']);
     }
 
     public function testDestroySession(): void
@@ -93,7 +93,7 @@ final class SessionTest extends HttpTestCase
 
         $this->setHttpHandler(function (): int|float {
             $this->session()->destroy();
-            $this->assertFalse($this->session()->isStarted());
+            self::assertFalse($this->session()->isStarted());
 
             return ++$this->session()->getSection('cli')->value;
         });

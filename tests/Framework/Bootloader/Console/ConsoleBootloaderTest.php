@@ -42,7 +42,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $bootloader->addInterceptor('foo');
         $bootloader->addInterceptor('bar');
 
-        $this->assertSame([
+        self::assertSame([
             'foo', 'bar'
         ], $configs->getConfig(ConsoleConfig::CONFIG)['interceptors']);
     }
@@ -58,7 +58,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $bootloader->addCommand('baz', true);
         $bootloader->addCommand('baf');
 
-        $this->assertSame([
+        self::assertSame([
             'baz', 'foo', 'bar', 'baf'
         ], $configs->getConfig(ConsoleConfig::CONFIG)['commands']);
     }
@@ -74,10 +74,10 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $sequences = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['configure'];
 
         $output = new BufferedOutput();
-        $this->assertInstanceOf(CommandSequence::class, $sequences['foo']);
+        self::assertInstanceOf(CommandSequence::class, $sequences['foo']);
         $sequences['foo']->writeHeader($output);
         $sequences['foo']->writeFooter($output);
-        $this->assertSame("header\nfooter\n", \str_replace(PHP_EOL, "\n", $output->fetch()));
+        self::assertSame("header\nfooter\n", \str_replace(PHP_EOL, "\n", $output->fetch()));
     }
 
     public function testAddUpdateSequence(): void
@@ -91,10 +91,10 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $sequences = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['update'];
 
         $output = new BufferedOutput();
-        $this->assertInstanceOf(CommandSequence::class, $sequences['foo']);
+        self::assertInstanceOf(CommandSequence::class, $sequences['foo']);
         $sequences['foo']->writeHeader($output);
         $sequences['foo']->writeFooter($output);
-        $this->assertSame("header\nfooter\n", \str_replace(PHP_EOL, "\n", $output->fetch()));
+        self::assertSame("header\nfooter\n", \str_replace(PHP_EOL, "\n", $output->fetch()));
     }
 
     public function testAddCustomSequence(): void
@@ -108,10 +108,10 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $sequences = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['custom'];
 
         $output = new BufferedOutput();
-        $this->assertInstanceOf(CommandSequence::class, $sequences['foo']);
+        self::assertInstanceOf(CommandSequence::class, $sequences['foo']);
         $sequences['foo']->writeHeader($output);
         $sequences['foo']->writeFooter($output);
-        $this->assertSame("header\nfooter\n", \str_replace(PHP_EOL, "\n", $output->fetch()));
+        self::assertSame("header\nfooter\n", \str_replace(PHP_EOL, "\n", $output->fetch()));
     }
 
     public function testSequencesIsNotDuplicated(): void
@@ -130,10 +130,10 @@ final class ConsoleBootloaderTest extends BaseTestCase
 
         $config = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['update'];
 
-        $this->assertCount(4, $config);
-        $this->assertArrayHasKey('cycle', $config);
-        $this->assertArrayHasKey('other', $config);
-        $this->assertArrayHasKey(0, $config);
-        $this->assertArrayHasKey(1, $config);
+        self::assertCount(4, $config);
+        self::assertArrayHasKey('cycle', $config);
+        self::assertArrayHasKey('other', $config);
+        self::assertArrayHasKey(0, $config);
+        self::assertArrayHasKey(1, $config);
     }
 }

@@ -14,10 +14,10 @@ final class FunctionDeclarationTest extends TestCase
     {
         $fn = FunctionDeclaration::from('var_dump');
 
-        $this->assertInstanceOf(FunctionDeclaration::class, $fn);
-        $this->assertSame('var_dump', $fn->getName());
-        $this->assertSame('void', $fn->getReturnType());
-        $this->assertCount(2, $fn->getParameters());
+        self::assertInstanceOf(FunctionDeclaration::class, $fn);
+        self::assertSame('var_dump', $fn->getName());
+        self::assertSame('void', $fn->getReturnType());
+        self::assertCount(2, $fn->getParameters());
     }
 
     public function testRender(): void
@@ -40,21 +40,21 @@ final class FunctionDeclarationTest extends TestCase
             ->addAttribute('SomeAttribute')
             ->addComment('Some function');
 
-        $this->assertSame($expect, preg_replace('/\s+/', '', $fn->render()));
-        $this->assertSame($expect, preg_replace('/\s+/', '', $fn->__toString()));
+        self::assertSame($expect, preg_replace('/\s+/', '', $fn->render()));
+        self::assertSame($expect, preg_replace('/\s+/', '', $fn->__toString()));
     }
 
     public function testFromElement(): void
     {
         $fn = FunctionDeclaration::fromElement(new GlobalFunction('var_dump'));
 
-        $this->assertInstanceOf(FunctionDeclaration::class, $fn);
+        self::assertInstanceOf(FunctionDeclaration::class, $fn);
     }
 
     public function testGetElement(): void
     {
         $element = (new FunctionDeclaration('var_dump'))->getElement();
 
-        $this->assertInstanceOf(GlobalFunction::class, $element);
+        self::assertInstanceOf(GlobalFunction::class, $element);
     }
 }

@@ -20,7 +20,7 @@ final class ClassDeclarationTest extends TestCase
             ->addComment("Description of class.\nSecond line\n")
             ->addComment('@property-read Nette\Forms\Form $form');
 
-        $this->assertSame(preg_replace('/\s+/', '', '/**
+        self::assertSame(preg_replace('/\s+/', '', '/**
             * Description of class.
             * Second line
             *
@@ -28,9 +28,7 @@ final class ClassDeclarationTest extends TestCase
             */
             final class MyClass extends Spiral\Tests\Reactor\ClassDeclarationTest implements Countable
             {
-            }'),
-            preg_replace('/\s+/', '', (string) $declaration)
-        );
+            }'), preg_replace('/\s+/', '', (string) $declaration));
     }
 
     public function testClassDeclarationWithConstants(): void
@@ -64,7 +62,7 @@ final class ClassDeclarationTest extends TestCase
             ->addConstant('WITH_ATTRIBUTE', 'attr')
             ->addAttribute('Foo\Cached', ['mode' => true]);
 
-        $this->assertSame(preg_replace('/\s+/', '', '
+        self::assertSame(preg_replace('/\s+/', '', '
         class MyClass extends Spiral\Tests\Reactor\ClassDeclarationTest implements Countable
             {
                 private const PRIVATE = 123;
@@ -77,9 +75,7 @@ final class ClassDeclarationTest extends TestCase
 
                 #[Foo\Cached(mode: true)]
                 public const WITH_ATTRIBUTE = \'attr\';
-            }'),
-            preg_replace('/\s+/', '', (string) $declaration)
-        );
+            }'), preg_replace('/\s+/', '', (string) $declaration));
     }
 
     public function testClassDeclarationWithMethods(): void
@@ -100,7 +96,7 @@ final class ClassDeclarationTest extends TestCase
             ->setReference()
             ->setType('array');
 
-        $this->assertSame(preg_replace('/\s+/', '', '
+        self::assertSame(preg_replace('/\s+/', '', '
         class MyClass extends Spiral\Tests\Reactor\ClassDeclarationTest implements Countable
         {
            /**
@@ -110,122 +106,120 @@ final class ClassDeclarationTest extends TestCase
             {
                 return count($items ?: $this->items);
             }
-        }'),
-            preg_replace('/\s+/', '', (string) $declaration)
-        );
+        }'), preg_replace('/\s+/', '', (string) $declaration));
     }
 
     public function testName(): void
     {
         $class = new ClassDeclaration();
 
-        $this->assertNull($class->getName());
+        self::assertNull($class->getName());
 
         $class->setName('test');
-        $this->assertSame('Test', $class->getName()); // classified
+        self::assertSame('Test', $class->getName()); // classified
 
         $class->setName('Test');
-        $this->assertSame('Test', $class->getName());
+        self::assertSame('Test', $class->getName());
 
         $class->setName(null);
-        $this->assertNull($class->getName());
+        self::assertNull($class->getName());
     }
 
     public function testFinal(): void
     {
         $class = new ClassDeclaration();
 
-        $this->assertFalse($class->isFinal());
+        self::assertFalse($class->isFinal());
 
         $class->setFinal();
-        $this->assertTrue($class->isFinal());
+        self::assertTrue($class->isFinal());
 
         $class->setFinal(false);
-        $this->assertFalse($class->isFinal());
+        self::assertFalse($class->isFinal());
 
         $class->setFinal(true);
-        $this->assertTrue($class->isFinal());
+        self::assertTrue($class->isFinal());
     }
 
     public function testAbstract(): void
     {
         $class = new ClassDeclaration();
 
-        $this->assertFalse($class->isAbstract());
+        self::assertFalse($class->isAbstract());
 
         $class->setAbstract();
-        $this->assertTrue($class->isAbstract());
+        self::assertTrue($class->isAbstract());
 
         $class->setAbstract(false);
-        $this->assertFalse($class->isAbstract());
+        self::assertFalse($class->isAbstract());
 
         $class->setAbstract(true);
-        $this->assertTrue($class->isAbstract());
+        self::assertTrue($class->isAbstract());
     }
 
     public function testExtends(): void
     {
         $class = new ClassDeclaration();
 
-        $this->assertNull($class->getExtends());
+        self::assertNull($class->getExtends());
 
         $class->setExtends('Test');
-        $this->assertSame('Test', $class->getExtends());
+        self::assertSame('Test', $class->getExtends());
     }
 
     public function testImplements(): void
     {
         $class = new ClassDeclaration();
 
-        $this->assertEmpty($class->getImplements());
+        self::assertEmpty($class->getImplements());
 
         $class->addImplement('Test');
-        $this->assertSame(['Test'], $class->getImplements());
+        self::assertSame(['Test'], $class->getImplements());
 
         $class->setImplements(['Foo', 'Bar']);
-        $this->assertSame(['Foo', 'Bar'], $class->getImplements());
+        self::assertSame(['Foo', 'Bar'], $class->getImplements());
 
         $class->removeImplement('Bar');
-        $this->assertSame(['Foo'], $class->getImplements());
+        self::assertSame(['Foo'], $class->getImplements());
 
         $class->removeImplement('Foo');
-        $this->assertEmpty($class->getImplements());
+        self::assertEmpty($class->getImplements());
     }
 
     public function testAddMember(): void
     {
         $class = new ClassDeclaration();
 
-        $this->assertEmpty($class->getConstants());
+        self::assertEmpty($class->getConstants());
         $class->addMember(new Partial\Constant('TEST'));
-        $this->assertCount(1, $class->getConstants());
-        $this->assertInstanceOf(Partial\Constant::class, $class->getConstant('TEST'));
+        self::assertCount(1, $class->getConstants());
+        self::assertInstanceOf(Partial\Constant::class, $class->getConstant('TEST'));
 
-        $this->assertEmpty($class->getMethods());
+        self::assertEmpty($class->getMethods());
         $class->addMember(new Partial\Method('test'));
-        $this->assertCount(1, $class->getMethods());
-        $this->assertInstanceOf(Partial\Method::class, $class->getMethod('test'));
+        self::assertCount(1, $class->getMethods());
+        self::assertInstanceOf(Partial\Method::class, $class->getMethod('test'));
 
-        $this->assertEmpty($class->getProperties());
+        self::assertEmpty($class->getProperties());
         $class->addMember(new Partial\Property('test'));
-        $this->assertCount(1, $class->getProperties());
-        $this->assertInstanceOf(Partial\Property::class, $class->getProperty('test'));
+        self::assertCount(1, $class->getProperties());
+        self::assertInstanceOf(Partial\Property::class, $class->getProperty('test'));
 
-        $this->assertEmpty($class->getTraits());
+        self::assertEmpty($class->getTraits());
         $class->addMember(new Partial\TraitUse('test'));
-        $this->assertCount(1, $class->getTraits());
-        $this->assertInstanceOf(Partial\TraitUse::class, $class->getTrait('test'));
+        self::assertCount(1, $class->getTraits());
+        self::assertInstanceOf(Partial\TraitUse::class, $class->getTrait('test'));
     }
 
     public function testIsClass(): void
     {
         $class = new ClassDeclaration();
 
-        $this->assertTrue($class->isClass());
+        self::assertTrue($class->isClass());
 
-        $this->assertFalse($class->isInterface());
-        $this->assertFalse($class->isEnum());
-        $this->assertFalse($class->isTrait());
+        self::assertFalse($class->isInterface());
+        self::assertFalse($class->isEnum());
+        self::assertFalse($class->isTrait());
     }
 
     public function testRender(): void
@@ -247,8 +241,8 @@ final class ClassDeclarationTest extends TestCase
             ->addComment("Description of class.\nSecond line\n")
             ->addComment('@property-read $form');
 
-        $this->assertSame($expect, preg_replace('/\s+/', '', $class->render()));
-        $this->assertSame($expect, preg_replace('/\s+/', '', $class->__toString()));
+        self::assertSame($expect, preg_replace('/\s+/', '', $class->render()));
+        self::assertSame($expect, preg_replace('/\s+/', '', $class->__toString()));
     }
 
     public function testRenderPromotedParameter(): void
@@ -261,22 +255,22 @@ final class ClassDeclarationTest extends TestCase
             ->setPrivate()
             ->setReadOnly();
 
-        $this->assertStringContainsString('private readonly string $foo', $class->render());
+        self::assertStringContainsString('private readonly string $foo', $class->render());
     }
 
     public function testFromElement(): void
     {
         $class = ClassDeclaration::fromElement(new ClassType('Test'));
 
-        $this->assertInstanceOf(ClassDeclaration::class, $class);
-        $this->assertSame('Test', $class->getName());
+        self::assertInstanceOf(ClassDeclaration::class, $class);
+        self::assertSame('Test', $class->getName());
     }
 
     public function testGetElement(): void
     {
         $element = (new ClassDeclaration('Test'))->getElement();
 
-        $this->assertInstanceOf(ClassType::class, $element);
-        $this->assertSame('Test', $element->getName());
+        self::assertInstanceOf(ClassType::class, $element);
+        self::assertSame('Test', $element->getName());
     }
 }

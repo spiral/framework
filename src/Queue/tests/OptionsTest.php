@@ -12,52 +12,49 @@ final class OptionsTest extends TestCase
     {
         $options = new Options();
 
-        $this->assertNull($options->getQueue());
-        $this->assertSame('foo', $options->withQueue('foo')->getQueue());
+        self::assertNull($options->getQueue());
+        self::assertSame('foo', $options->withQueue('foo')->getQueue());
     }
 
     public function testDelay(): void
     {
         $options = new Options();
 
-        $this->assertNull($options->getDelay());
-        $this->assertSame(1, $options->withDelay(1)->getDelay());
-        $this->assertSame(0, $options->withDelay(0)->getDelay());
-        $this->assertNull($options->withDelay(null)->getDelay());
+        self::assertNull($options->getDelay());
+        self::assertSame(1, $options->withDelay(1)->getDelay());
+        self::assertSame(0, $options->withDelay(0)->getDelay());
+        self::assertNull($options->withDelay(null)->getDelay());
     }
 
     public function testHeaders(): void
     {
         $options = new Options();
 
-        $this->assertSame([], $options->getHeaders());
-        $this->assertFalse($options->hasHeader('foo'));
-        $this->assertSame([], $options->getHeader('foo'));
-        $this->assertSame('', $options->getHeaderLine('foo'));
+        self::assertSame([], $options->getHeaders());
+        self::assertFalse($options->hasHeader('foo'));
+        self::assertSame([], $options->getHeader('foo'));
+        self::assertSame('', $options->getHeaderLine('foo'));
 
         $options = $options->withHeader('foo', ['bar', 'baz']);
 
-        $this->assertSame(['foo' => ['bar', 'baz']], $options->getHeaders());
-        $this->assertTrue($options->hasHeader('foo'));
-        $this->assertSame(['bar', 'baz'], $options->getHeader('foo'));
-        $this->assertSame('bar,baz', $options->getHeaderLine('foo'));
+        self::assertSame(['foo' => ['bar', 'baz']], $options->getHeaders());
+        self::assertTrue($options->hasHeader('foo'));
+        self::assertSame(['bar', 'baz'], $options->getHeader('foo'));
+        self::assertSame('bar,baz', $options->getHeaderLine('foo'));
     }
 
     public function testWithAddedHeader(): void
     {
         $options = new Options();
 
-        $this->assertSame(
-            ['foo' => ['some', 'other']],
-            $options->withHeader('foo', 'some')->withAddedHeader('foo', 'other')->getHeaders()
-        );
+        self::assertSame(['foo' => ['some', 'other']], $options->withHeader('foo', 'some')->withAddedHeader('foo', 'other')->getHeaders());
     }
 
     public function testWithoutHeader(): void
     {
         $options = (new Options())->withHeader('foo', 'bar');
 
-        $this->assertSame([], $options->withoutHeader('foo')->getHeaders());
+        self::assertSame([], $options->withoutHeader('foo')->getHeaders());
     }
 
     public function testJsonSerialize(): void
@@ -67,7 +64,7 @@ final class OptionsTest extends TestCase
             ->withQueue('foo')
             ->withHeader('foo', 'bar');
 
-        $this->assertSame([
+        self::assertSame([
             'delay' => 5,
             'queue' => 'foo',
             'headers' => ['foo' => ['bar']],

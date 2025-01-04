@@ -26,7 +26,7 @@ final class FibersTest extends BaseTestCase
      */
     public function testSingleFiberNestedContainers(): void
     {
-        $this->assertNull(ContainerScope::getContainer());
+        self::assertNull(ContainerScope::getContainer());
 
         FiberHelper::runInFiber(
             self::functionScopedTestDataIterator(),
@@ -42,7 +42,7 @@ final class FibersTest extends BaseTestCase
      */
     public function testALotOfFibersWithNestedContainers(): void
     {
-        $this->assertNull(ContainerScope::getContainer());
+        self::assertNull(ContainerScope::getContainer());
 
         $result = FiberHelper::runFiberSequence(
             self::functionScopedTestDataIterator(
@@ -62,9 +62,9 @@ final class FibersTest extends BaseTestCase
             self::functionScopedTestDataIterator(),
         );
 
-        $this->assertCount(5, $result);
+        self::assertCount(5, $result);
         foreach ($result as $suspendValue) {
-            $this->assertSame(self::TEST_DATA, $suspendValue);
+            self::assertSame(self::TEST_DATA, $suspendValue);
         }
     }
 
@@ -80,9 +80,9 @@ final class FibersTest extends BaseTestCase
             self::functionScopedTestDataIterator(self::functionScopedTestDataIterator(), $container),
         );
 
-        $this->assertCount(2, $result);
+        self::assertCount(2, $result);
         foreach ($result as $suspendValue) {
-            $this->assertSame(self::TEST_DATA, $suspendValue);
+            self::assertSame(self::TEST_DATA, $suspendValue);
         }
     }
 
@@ -127,7 +127,7 @@ final class FibersTest extends BaseTestCase
                 : throw new \RuntimeException('test'),
         );
 
-        $this->assertSame('foobartestbaz', $result);
+        self::assertSame('foobartestbaz', $result);
     }
 
     /**

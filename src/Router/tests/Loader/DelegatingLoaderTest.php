@@ -20,33 +20,33 @@ final class DelegatingLoaderTest extends TestCase
             new TestLoader()
         ]));
 
-        $this->assertInstanceOf(RouteCollection::class, $loader->load('file.yaml', 'yaml'));
+        self::assertInstanceOf(RouteCollection::class, $loader->load('file.yaml', 'yaml'));
     }
 
     public function testSupports(): void
     {
         $loader = new DelegatingLoader(new LoaderRegistry());
 
-        $this->assertFalse($loader->supports('file.php'));
-        $this->assertFalse($loader->supports('file.php', 'php'));
+        self::assertFalse($loader->supports('file.php'));
+        self::assertFalse($loader->supports('file.php', 'php'));
 
         $container = new Container();
 
         $loader = new DelegatingLoader(new LoaderRegistry([new PhpFileLoader($container, $container)]));
-        $this->assertTrue($loader->supports('file.php'));
-        $this->assertTrue($loader->supports('file.php', 'php'));
-        $this->assertFalse($loader->supports('file.php', 'yaml'));
-        $this->assertFalse($loader->supports('file.yaml'));
-        $this->assertFalse($loader->supports('file.yaml', 'yaml'));
+        self::assertTrue($loader->supports('file.php'));
+        self::assertTrue($loader->supports('file.php', 'php'));
+        self::assertFalse($loader->supports('file.php', 'yaml'));
+        self::assertFalse($loader->supports('file.yaml'));
+        self::assertFalse($loader->supports('file.yaml', 'yaml'));
 
         $loader = new DelegatingLoader(new LoaderRegistry([
             new PhpFileLoader($container, $container),
             new TestLoader()
         ]));
-        $this->assertTrue($loader->supports('file.php'));
-        $this->assertTrue($loader->supports('file.php', 'php'));
-        $this->assertFalse($loader->supports('file.yaml'));
-        $this->assertTrue($loader->supports('file.yaml', 'yaml'));
-        $this->assertFalse($loader->supports('file.yaml', 'php'));
+        self::assertTrue($loader->supports('file.php'));
+        self::assertTrue($loader->supports('file.php', 'php'));
+        self::assertFalse($loader->supports('file.yaml'));
+        self::assertTrue($loader->supports('file.yaml', 'yaml'));
+        self::assertFalse($loader->supports('file.yaml', 'php'));
     }
 }

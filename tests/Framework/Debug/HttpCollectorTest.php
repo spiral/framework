@@ -20,6 +20,6 @@ final class HttpCollectorTest extends TestCase
         );
         $collector->reset();
 
-        $this->assertNull((new \ReflectionProperty($collector, 'request'))->getValue($collector));
+        self::assertNull((new \ReflectionProperty($collector, 'request'))->getValue($collector));
     }
 }

@@ -53,12 +53,12 @@ final class StorageSnapshotTest extends TestCase
         $e = new \Error('message');
         $s = (new StorageSnapshot('foo', $this->storage, Verbosity::VERBOSE, $this->renderer))->create($e);
 
-        $this->assertSame($e, $s->getException());
+        self::assertSame($e, $s->getException());
 
-        $this->assertStringContainsString('Error', $s->getMessage());
-        $this->assertStringContainsString('message', $s->getMessage());
-        $this->assertStringContainsString(__FILE__, $s->getMessage());
-        $this->assertStringContainsString('53', $s->getMessage());
+        self::assertStringContainsString('Error', $s->getMessage());
+        self::assertStringContainsString('message', $s->getMessage());
+        self::assertStringContainsString(__FILE__, $s->getMessage());
+        self::assertStringContainsString('53', $s->getMessage());
     }
 
     public function testCreateWithDirectory(): void
@@ -73,11 +73,11 @@ final class StorageSnapshotTest extends TestCase
         $s = (new StorageSnapshot('foo', $this->storage, Verbosity::VERBOSE, $this->renderer, 'foo/bar'))
             ->create($e);
 
-        $this->assertSame($e, $s->getException());
+        self::assertSame($e, $s->getException());
 
-        $this->assertStringContainsString('Error', $s->getMessage());
-        $this->assertStringContainsString('message', $s->getMessage());
-        $this->assertStringContainsString(__FILE__, $s->getMessage());
-        $this->assertStringContainsString('72', $s->getMessage());
+        self::assertStringContainsString('Error', $s->getMessage());
+        self::assertStringContainsString('message', $s->getMessage());
+        self::assertStringContainsString(__FILE__, $s->getMessage());
+        self::assertStringContainsString('72', $s->getMessage());
     }
 }

@@ -20,6 +20,8 @@ use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector;
+use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictSetUpRector;
 
@@ -111,6 +113,8 @@ return RectorConfig::configure()
         FirstClassCallableRector::class => [
             __DIR__ . '/src/Core/tests/Scope/UseCaseTest.php',
         ],
+
+        PreferPHPUnitThisCallRector::class,
     ])
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)
@@ -122,4 +126,5 @@ return RectorConfig::configure()
     ->withRules([
         ClosureReturnTypeRector::class,
         TypedPropertyFromStrictSetUpRector::class,
+        PreferPHPUnitSelfCallRector::class,
     ]);

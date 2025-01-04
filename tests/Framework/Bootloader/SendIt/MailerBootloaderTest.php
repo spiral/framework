@@ -34,7 +34,7 @@ final class MailerBootloaderTest extends BaseTestCase
         /**
          * {@see https://github.com/spiral/framework/pull/683}
          */
-        $this->assertFalse($class->isFinal(), 'MailerBootloader should not be final.');
+        self::assertFalse($class->isFinal(), 'MailerBootloader should not be final.');
     }
 
     public function testTransportResolverBindings(): void

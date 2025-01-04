@@ -15,8 +15,8 @@ class CatalogueTest extends TestCase
     {
         $catalogue = new Catalogue('ru', []);
 
-        $this->assertSame('ru', $catalogue->getLocale());
-        $this->assertSame([], $catalogue->getData());
+        self::assertSame('ru', $catalogue->getLocale());
+        self::assertSame([], $catalogue->getData());
     }
 
     public function testHas(): void
@@ -30,12 +30,12 @@ class CatalogueTest extends TestCase
             ],
         ]);
 
-        $this->assertSame(['messages', 'views'], $catalogue->getDomains());
+        self::assertSame(['messages', 'views'], $catalogue->getDomains());
 
-        $this->assertTrue($catalogue->has('messages', 'message'));
-        $this->assertTrue($catalogue->has('views', 'view'));
-        $this->assertFalse($catalogue->has('messages', 'another-message'));
-        $this->assertFalse($catalogue->has('other-domain', 'message'));
+        self::assertTrue($catalogue->has('messages', 'message'));
+        self::assertTrue($catalogue->has('views', 'view'));
+        self::assertFalse($catalogue->has('messages', 'another-message'));
+        self::assertFalse($catalogue->has('other-domain', 'message'));
     }
 
     public function testUndefinedString(): void
@@ -58,8 +58,8 @@ class CatalogueTest extends TestCase
             ],
         ]);
 
-        $this->assertSame('Russian Translation', $catalogue->get('messages', 'message'));
-        $this->assertSame('Russian View', $catalogue->get('views', 'view'));
+        self::assertSame('Russian Translation', $catalogue->get('messages', 'message'));
+        self::assertSame('Russian View', $catalogue->get('views', 'view'));
     }
 
     public function testLoadGetAndSet(): void
@@ -73,16 +73,16 @@ class CatalogueTest extends TestCase
             ],
         ]);
 
-        $this->assertSame('Russian Translation', $catalogue->get('messages', 'message'));
-        $this->assertSame('Russian View', $catalogue->get('views', 'view'));
+        self::assertSame('Russian Translation', $catalogue->get('messages', 'message'));
+        self::assertSame('Russian View', $catalogue->get('views', 'view'));
 
-        $this->assertFalse($catalogue->has('views', 'message'));
+        self::assertFalse($catalogue->has('views', 'message'));
         $catalogue->set('views', 'message', 'View Message');
-        $this->assertTrue($catalogue->has('views', 'message'));
+        self::assertTrue($catalogue->has('views', 'message'));
 
-        $this->assertSame('View Message', $catalogue->get('views', 'message'));
+        self::assertSame('View Message', $catalogue->get('views', 'message'));
 
-        $this->assertSame([
+        self::assertSame([
             'messages' => [
                 'message' => 'Russian Translation',
             ],
@@ -98,12 +98,12 @@ class CatalogueTest extends TestCase
         $catalogue = new Catalogue('ru', []);
 
         $catalogue->set('domain', 'message', 'Original Translation');
-        $this->assertSame('Original Translation', $catalogue->get('domain', 'message'));
+        self::assertSame('Original Translation', $catalogue->get('domain', 'message'));
 
         $messageCatalogue = new MessageCatalogue('ru', ['domain' => ['message' => 'Translation']]);
         $catalogue->mergeFrom($messageCatalogue, true);
 
-        $this->assertSame('Original Translation', $catalogue->get('domain', 'message'));
+        self::assertSame('Original Translation', $catalogue->get('domain', 'message'));
     }
 
     public function testMergeSymfonyAndFollowOnEmpty(): void
@@ -113,7 +113,7 @@ class CatalogueTest extends TestCase
         $messageCatalogue = new MessageCatalogue('ru', ['domain' => ['message' => 'Translation']]);
         $catalogue->mergeFrom($messageCatalogue, true);
 
-        $this->assertSame('Translation', $catalogue->get('domain', 'message'));
+        self::assertSame('Translation', $catalogue->get('domain', 'message'));
     }
 
     public function testMergeSymfonyAndReplace(): void
@@ -121,12 +121,12 @@ class CatalogueTest extends TestCase
         $catalogue = new Catalogue('ru', []);
 
         $catalogue->set('domain', 'message', 'Original Translation');
-        $this->assertSame('Original Translation', $catalogue->get('domain', 'message'));
+        self::assertSame('Original Translation', $catalogue->get('domain', 'message'));
 
         $messageCatalogue = new MessageCatalogue('ru', ['domain' => ['message' => 'Translation']]);
         $catalogue->mergeFrom($messageCatalogue, false);
 
-        $this->assertSame('Translation', $catalogue->get('domain', 'message'));
+        self::assertSame('Translation', $catalogue->get('domain', 'message'));
     }
 
     public function testToCatalogue(): void
@@ -142,7 +142,7 @@ class CatalogueTest extends TestCase
 
         $sc = $catalogue->toMessageCatalogue();
 
-        $this->assertSame('ru', $sc->getLocale());
-        $this->assertSame(['messages', 'views'], $sc->getDomains());
+        self::assertSame('ru', $sc->getLocale());
+        self::assertSame(['messages', 'views'], $sc->getDomains());
     }
 }

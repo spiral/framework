@@ -26,10 +26,7 @@ final class AttributeTest extends BaseTestCase
             WithNameCommand::class
         ]));
 
-        $this->assertSame(
-            'attribute-with-name',
-            $core->run(command: 'attribute-with-name')->getOutput()->fetch()
-        );
+        self::assertSame('attribute-with-name', $core->run(command: 'attribute-with-name')->getOutput()->fetch());
     }
 
     public function testCommandWithDescription(): void
@@ -38,10 +35,7 @@ final class AttributeTest extends BaseTestCase
             WithDescriptionCommand::class
         ]));
 
-        $this->assertSame(
-            'Some description text',
-            $core->run(command: 'attribute-with-description')->getOutput()->fetch()
-        );
+        self::assertSame('Some description text', $core->run(command: 'attribute-with-description')->getOutput()->fetch());
     }
 
     public function testCommandWithHelp(): void
@@ -50,10 +44,7 @@ final class AttributeTest extends BaseTestCase
             WithHelpCommand::class
         ]));
 
-        $this->assertSame(
-            'Some help message',
-            $core->run(command: 'attribute-with-help')->getOutput()->fetch()
-        );
+        self::assertSame('Some help message', $core->run(command: 'attribute-with-help')->getOutput()->fetch());
     }
 
     public function testCommandWithSymfonyAttribute(): void
@@ -62,9 +53,6 @@ final class AttributeTest extends BaseTestCase
             WithSymfonyAttributeCommand::class
         ]));
 
-        $this->assertSame(
-            'Some description text|attribute-with-sf-command-attr',
-            $core->run(command: 'attribute-with-sf-command-attr')->getOutput()->fetch()
-        );
+        self::assertSame('Some description text|attribute-with-sf-command-attr', $core->run(command: 'attribute-with-sf-command-attr')->getOutput()->fetch());
     }
 }

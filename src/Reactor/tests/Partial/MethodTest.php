@@ -18,210 +18,204 @@ final class MethodTest extends TestCase
     public function testAttribute(): void
     {
         $method = new Method('test');
-        $this->assertEmpty($method->getAttributes());
+        self::assertEmpty($method->getAttributes());
 
         $method->addAttribute('test', ['name' => 'foo', 'otherName' => 'bar']);
-        $this->assertCount(1, $method->getAttributes());
+        self::assertCount(1, $method->getAttributes());
 
         $method->setAttributes([
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar'])
         ]);
-        $this->assertCount(2, $method->getAttributes());
+        self::assertCount(2, $method->getAttributes());
     }
 
     public function testComment(): void
     {
         $method = new Method('test');
-        $this->assertNull($method->getComment());
+        self::assertNull($method->getComment());
 
         $method->setComment('/** Awesome method */');
-        $this->assertSame('/** Awesome method */', $method->getComment());
+        self::assertSame('/** Awesome method */', $method->getComment());
 
         $method->setComment(null);
-        $this->assertNull($method->getComment());
+        self::assertNull($method->getComment());
 
         $method->setComment(['/** Line one */', '/** Line two */']);
-        $this->assertSame(
-            \preg_replace('/\s+/', '', '/** Line one *//** Line two */'),
-            \preg_replace('/\s+/', '', $method->getComment())
-        );
+        self::assertSame(\preg_replace('/\s+/', '', '/** Line one *//** Line two */'), \preg_replace('/\s+/', '', $method->getComment()));
 
         $method->setComment(null);
         $method->addComment('/** Line one */');
         $method->addComment('/** Line two */');
-        $this->assertSame(
-            \preg_replace('/\s+/', '', '/** Line one *//** Line two */'),
-            \preg_replace('/\s+/', '', $method->getComment())
-        );
+        self::assertSame(\preg_replace('/\s+/', '', '/** Line one *//** Line two */'), \preg_replace('/\s+/', '', $method->getComment()));
     }
 
     public function testGetName(): void
     {
         $method = new Method('test');
 
-        $this->assertSame('test', $method->getName());
+        self::assertSame('test', $method->getName());
     }
 
     public function testBody(): void
     {
         $method = new Method('test');
 
-        $this->assertEmpty($method->getBody());
+        self::assertEmpty($method->getBody());
 
         $method->setBody('return 1;');
-        $this->assertSame('return 1;', $method->getBody());
+        self::assertSame('return 1;', $method->getBody());
 
         $method = new Method('test');
         $method->addBody('$var = 1;');
         $method->addBody('return $var;');
-        $this->assertSame('$var=1;return$var;', \preg_replace('/\s+/', '', $method->getBody()));
+        self::assertSame('$var=1;return$var;', \preg_replace('/\s+/', '', $method->getBody()));
     }
 
     public function testParameter(): void
     {
         $method = new Method('test');
-        $this->assertEmpty($method->getParameters());
+        self::assertEmpty($method->getParameters());
 
         $method->addParameter('test');
-        $this->assertCount(1, $method->getParameters());
+        self::assertCount(1, $method->getParameters());
 
         $method->setParameters(new Parameters([
             new Parameter('name'),
             new Parameter('name2')
         ]));
-        $this->assertCount(2, $method->getParameters());
-        $this->assertTrue($method->getParameters()->has('name'));
-        $this->assertTrue($method->getParameters()->has('name2'));
+        self::assertCount(2, $method->getParameters());
+        self::assertTrue($method->getParameters()->has('name'));
+        self::assertTrue($method->getParameters()->has('name2'));
 
         $method->removeParameter('name');
-        $this->assertCount(1, $method->getParameters());
-        $this->assertFalse($method->getParameters()->has('name'));
+        self::assertCount(1, $method->getParameters());
+        self::assertFalse($method->getParameters()->has('name'));
     }
 
     public function testVariadic(): void
     {
         $method = new Method('test');
 
-        $this->assertFalse($method->isVariadic());
+        self::assertFalse($method->isVariadic());
 
         $method->setVariadic(true);
-        $this->assertTrue($method->isVariadic());
+        self::assertTrue($method->isVariadic());
     }
 
     public function testReturnType(): void
     {
         $method = new Method('test');
 
-        $this->assertNull($method->getReturnType());
+        self::assertNull($method->getReturnType());
 
         $method->setReturnType('string');
-        $this->assertSame('string', $method->getReturnType());
+        self::assertSame('string', $method->getReturnType());
 
-        $this->assertFalse($method->isReturnNullable());
+        self::assertFalse($method->isReturnNullable());
 
         $method->setReturnNullable(true);
-        $this->assertTrue($method->isReturnNullable());
+        self::assertTrue($method->isReturnNullable());
     }
 
     public function testReturnReference(): void
     {
         $method = new Method('test');
 
-        $this->assertFalse($method->getReturnReference());
+        self::assertFalse($method->getReturnReference());
 
         $method->setReturnReference(true);
-        $this->assertTrue($method->getReturnReference());
+        self::assertTrue($method->getReturnReference());
     }
 
     public function testVisibility(): void
     {
         $method = new Method('test');
-        $this->assertNull($method->getVisibility());
+        self::assertNull($method->getVisibility());
 
         $method->setVisibility(Visibility::PUBLIC);
-        $this->assertSame(Visibility::PUBLIC, $method->getVisibility());
-        $this->assertTrue($method->isPublic());
-        $this->assertFalse($method->isProtected());
-        $this->assertFalse($method->isPrivate());
+        self::assertSame(Visibility::PUBLIC, $method->getVisibility());
+        self::assertTrue($method->isPublic());
+        self::assertFalse($method->isProtected());
+        self::assertFalse($method->isPrivate());
 
         $method->setVisibility(Visibility::PROTECTED);
-        $this->assertSame(Visibility::PROTECTED, $method->getVisibility());
-        $this->assertFalse($method->isPublic());
-        $this->assertTrue($method->isProtected());
-        $this->assertFalse($method->isPrivate());
+        self::assertSame(Visibility::PROTECTED, $method->getVisibility());
+        self::assertFalse($method->isPublic());
+        self::assertTrue($method->isProtected());
+        self::assertFalse($method->isPrivate());
 
         $method->setVisibility(Visibility::PRIVATE);
-        $this->assertSame(Visibility::PRIVATE, $method->getVisibility());
-        $this->assertFalse($method->isPublic());
-        $this->assertFalse($method->isProtected());
-        $this->assertTrue($method->isPrivate());
+        self::assertSame(Visibility::PRIVATE, $method->getVisibility());
+        self::assertFalse($method->isPublic());
+        self::assertFalse($method->isProtected());
+        self::assertTrue($method->isPrivate());
 
         $method->setPublic();
-        $this->assertSame(Visibility::PUBLIC, $method->getVisibility());
-        $this->assertTrue($method->isPublic());
-        $this->assertFalse($method->isProtected());
-        $this->assertFalse($method->isPrivate());
+        self::assertSame(Visibility::PUBLIC, $method->getVisibility());
+        self::assertTrue($method->isPublic());
+        self::assertFalse($method->isProtected());
+        self::assertFalse($method->isPrivate());
 
         $method->setProtected();
-        $this->assertSame(Visibility::PROTECTED, $method->getVisibility());
-        $this->assertFalse($method->isPublic());
-        $this->assertTrue($method->isProtected());
-        $this->assertFalse($method->isPrivate());
+        self::assertSame(Visibility::PROTECTED, $method->getVisibility());
+        self::assertFalse($method->isPublic());
+        self::assertTrue($method->isProtected());
+        self::assertFalse($method->isPrivate());
 
         $method->setPrivate();
-        $this->assertSame(Visibility::PRIVATE, $method->getVisibility());
-        $this->assertFalse($method->isPublic());
-        $this->assertFalse($method->isProtected());
-        $this->assertTrue($method->isPrivate());
+        self::assertSame(Visibility::PRIVATE, $method->getVisibility());
+        self::assertFalse($method->isPublic());
+        self::assertFalse($method->isProtected());
+        self::assertTrue($method->isPrivate());
     }
 
     public function testStatic(): void
     {
         $method = new Method('test');;
 
-        $this->assertFalse($method->isStatic());
+        self::assertFalse($method->isStatic());
 
         $method->setStatic();
-        $this->assertTrue($method->isStatic());
+        self::assertTrue($method->isStatic());
 
         $method->setStatic(false);
-        $this->assertFalse($method->isStatic());
+        self::assertFalse($method->isStatic());
 
         $method->setStatic(true);
-        $this->assertTrue($method->isStatic());
+        self::assertTrue($method->isStatic());
     }
 
     public function testFinal(): void
     {
         $method = new Method('test');;
 
-        $this->assertFalse($method->isFinal());
+        self::assertFalse($method->isFinal());
 
         $method->setFinal();
-        $this->assertTrue($method->isFinal());
+        self::assertTrue($method->isFinal());
 
         $method->setFinal(false);
-        $this->assertFalse($method->isFinal());
+        self::assertFalse($method->isFinal());
 
         $method->setFinal(true);
-        $this->assertTrue($method->isFinal());
+        self::assertTrue($method->isFinal());
     }
 
     public function testAbstract(): void
     {
         $method = new Method('test');;
 
-        $this->assertFalse($method->isAbstract());
+        self::assertFalse($method->isAbstract());
 
         $method->setAbstract();
-        $this->assertTrue($method->isAbstract());
+        self::assertTrue($method->isAbstract());
 
         $method->setAbstract(false);
-        $this->assertFalse($method->isAbstract());
+        self::assertFalse($method->isAbstract());
 
         $method->setAbstract(true);
-        $this->assertTrue($method->isAbstract());
+        self::assertTrue($method->isAbstract());
     }
 
     public function testAddPromotedParameter(): void
@@ -229,8 +223,8 @@ final class MethodTest extends TestCase
         $method = new Method('test');
         $param = $method->addPromotedParameter('test');
 
-        $this->assertInstanceOf(PromotedParameter::class, $param);
-        $this->assertSame('test', $param->getName());
+        self::assertInstanceOf(PromotedParameter::class, $param);
+        self::assertSame('test', $param->getName());
     }
 
     public function testAddPromotedParameterWithoutDefaultValue(): void
@@ -238,7 +232,7 @@ final class MethodTest extends TestCase
         $method = new Method('test');
         $param = $method->addPromotedParameter('test');
 
-        $this->assertFalse($param->hasDefaultValue());
+        self::assertFalse($param->hasDefaultValue());
     }
 
     public function testAddPromotedParameterWithDefaultNullValue(): void
@@ -247,8 +241,8 @@ final class MethodTest extends TestCase
         $param = $method->addPromotedParameter('test', null);
         $param->setNullable();
 
-        $this->assertTrue($param->hasDefaultValue());
-        $this->assertNull($param->getDefaultValue());
+        self::assertTrue($param->hasDefaultValue());
+        self::assertNull($param->getDefaultValue());
     }
 
     public function testAddPromotedParameterWithDefaultValue(): void
@@ -256,8 +250,8 @@ final class MethodTest extends TestCase
         $method = new Method('test');
         $param = $method->addPromotedParameter('test', 'foo');
 
-        $this->assertTrue($param->hasDefaultValue());
-        $this->assertSame('foo', $param->getDefaultValue());
+        self::assertTrue($param->hasDefaultValue());
+        self::assertSame('foo', $param->getDefaultValue());
     }
 
     public function testRender(): void
@@ -271,22 +265,22 @@ final class MethodTest extends TestCase
         $method = new Method('test');
         $method->setReturnType('int')->setPublic()->setBody('return 1;');
 
-        $this->assertSame($expect, preg_replace('/\s+/', '', $method->__toString()));
+        self::assertSame($expect, preg_replace('/\s+/', '', $method->__toString()));
     }
 
     public function testFromElement(): void
     {
         $method = Method::fromElement(new NetteMethod('test'));
 
-        $this->assertInstanceOf(Method::class, $method);
-        $this->assertSame('test', $method->getName());
+        self::assertInstanceOf(Method::class, $method);
+        self::assertSame('test', $method->getName());
     }
 
     public function testGetElement(): void
     {
         $element = (new Method('test'))->getElement();
 
-        $this->assertInstanceOf(NetteMethod::class, $element);
-        $this->assertSame('test', $element->getName());
+        self::assertInstanceOf(NetteMethod::class, $element);
+        self::assertSame('test', $element->getName());
     }
 }

@@ -26,9 +26,9 @@ final class DispatcherScopeTest extends BaseTestCase
 
         $app = $this->makeApp();
 
-        $this->assertInstanceOf(\stdClass::class, $app->serve()['foo']);
-        $this->assertInstanceOf($dispatcher, $app->serve()['dispatcher']);
-        $this->assertSame(is_object($scope) ? $scope->value : $scope, $app->serve()['scope']);
+        self::assertInstanceOf(\stdClass::class, $app->serve()['foo']);
+        self::assertInstanceOf($dispatcher, $app->serve()['dispatcher']);
+        self::assertSame(is_object($scope) ? $scope->value : $scope, $app->serve()['scope']);
     }
 
     public static function dispatchersDataProvider(): \Traversable

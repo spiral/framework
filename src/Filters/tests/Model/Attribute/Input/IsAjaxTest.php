@@ -18,18 +18,13 @@ final class IsAjaxTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
             ->with('isAjax')
             ->andReturnTrue();
 
-        $this->assertTrue(
-            $attribute->getValue($this->input, $this->makeProperty())
-        );
+        self::assertTrue($attribute->getValue($this->input, $this->makeProperty()));
     }
 
     public function testGetsSchema(): void
     {
         $attribute = new IsAjax();
 
-        $this->assertSame(
-            'isAjax',
-            $attribute->getSchema($this->makeProperty())
-        );
+        self::assertSame('isAjax', $attribute->getSchema($this->makeProperty()));
     }
 }

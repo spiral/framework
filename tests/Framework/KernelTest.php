@@ -63,8 +63,8 @@ class KernelTest extends BaseTestCase
             'root' => __DIR__.'/../',
         ], container: $container);
 
-        $this->assertSame($container, $app->getContainer());
-        $this->assertInstanceOf(stdClass::class, $app->getContainer()->get('foofoo'));
+        self::assertSame($container, $app->getContainer());
+        self::assertInstanceOf(stdClass::class, $app->getContainer()->get('foofoo'));
     }
 
     public function testRunningCallbackShouldBeFired(): void
@@ -85,8 +85,8 @@ class KernelTest extends BaseTestCase
 
         $kernel->run();
 
-        $this->assertTrue($callback1);
-        $this->assertTrue($callback2);
+        self::assertTrue($callback1);
+        self::assertTrue($callback2);
     }
 
     public function testBootloaderRegistryShouldBeBoundAsSingleton(): void
@@ -102,7 +102,7 @@ class KernelTest extends BaseTestCase
 
         $kernel = TestApp::create(directories: ['root' => __DIR__. '/../'], container: $container);
 
-        $this->assertSame($registry, $kernel->getContainer()->get(BootloaderRegistryInterface::class));
+        self::assertSame($registry, $kernel->getContainer()->get(BootloaderRegistryInterface::class));
     }
 
     public function testDispatcherWithoutNamedScope(): void
@@ -113,10 +113,10 @@ class KernelTest extends BaseTestCase
 
         $app = $this->makeApp();
 
-        $this->assertInstanceOf(DispatcherWithoutScope::class, $app->serve()['dispatcher']);
-        $this->assertSame('root', $app->serve()['scope']);
+        self::assertInstanceOf(DispatcherWithoutScope::class, $app->serve()['dispatcher']);
+        self::assertSame('root', $app->serve()['scope']);
 
-        $this->assertTrue($app->getContainer()->has(DispatcherWithoutScope::class));
+        self::assertTrue($app->getContainer()->has(DispatcherWithoutScope::class));
     }
 
     #[DataProvider('dispatchersDataProvider')]
@@ -128,10 +128,10 @@ class KernelTest extends BaseTestCase
 
         $app = $this->makeApp();
 
-        $this->assertInstanceOf($dispatcher, $app->serve()['dispatcher']);
-        $this->assertSame($scope, $app->serve()['scope']);
+        self::assertInstanceOf($dispatcher, $app->serve()['dispatcher']);
+        self::assertSame($scope, $app->serve()['scope']);
 
-        $this->assertFalse($app->getContainer()->has($dispatcher));
+        self::assertFalse($app->getContainer()->has($dispatcher));
     }
 
     public static function dispatchersDataProvider(): \Traversable

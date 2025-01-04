@@ -15,63 +15,63 @@ final class RoutingConfiguratorTest extends BaseTestCase
     {
         $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
-        $this->assertCount(0, $routes->getCollection());
+        self::assertCount(0, $routes->getCollection());
 
         $routes->import(\dirname(__DIR__, 2) . '/Fixtures/file.php');
 
-        $this->assertCount(3, $routes->getCollection());
+        self::assertCount(3, $routes->getCollection());
     }
 
     public function testImportWithLoader(): void
     {
         $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
-        $this->assertCount(0, $routes->getCollection());
+        self::assertCount(0, $routes->getCollection());
 
         $routes->import(\dirname(__DIR__, 2) . '/Fixtures/file.php', 'php');
 
-        $this->assertCount(3, $routes->getCollection());
+        self::assertCount(3, $routes->getCollection());
     }
 
     public function testImportWithWrongLoader(): void
     {
         $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
-        $this->assertCount(0, $routes->getCollection());
+        self::assertCount(0, $routes->getCollection());
 
         $routes->import(\dirname(__DIR__, 2) . '/Fixtures/file.php', 'yaml');
 
-        $this->assertCount(0, $routes->getCollection());
+        self::assertCount(0, $routes->getCollection());
     }
 
     public function testGetCollection(): void
     {
         $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
-        $this->assertInstanceOf(RouteCollection::class, $routes->getCollection());
+        self::assertInstanceOf(RouteCollection::class, $routes->getCollection());
     }
 
     public function testDefault(): void
     {
         $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
-        $this->assertNull($routes->getDefault());
+        self::assertNull($routes->getDefault());
 
         $routes->default('/')->callable(static fn () => null);
 
-        $this->assertInstanceOf(RouteConfigurator::class, $routes->getDefault());
+        self::assertInstanceOf(RouteConfigurator::class, $routes->getDefault());
     }
 
     public function testAdd(): void
     {
         $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
-        $this->assertCount(0, $routes->getCollection());
+        self::assertCount(0, $routes->getCollection());
         $route = $routes->add('test', '/')->callable(static fn () => null);
-        $this->assertInstanceOf(RouteConfigurator::class, $route);
+        self::assertInstanceOf(RouteConfigurator::class, $route);
 
         // important. For destruct
         unset($route);
-        $this->assertCount(1, $routes->getCollection());
+        self::assertCount(1, $routes->getCollection());
     }
 }

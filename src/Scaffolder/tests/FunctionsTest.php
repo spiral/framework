@@ -14,7 +14,7 @@ class FunctionsTest extends TestCase
     #[DataProvider('defineProvider')]
     public function testDefineArrayType(?string $expected, array $array, ?string $failureType): void
     {
-        $this->assertEquals($expected, defineArrayType($array, $failureType));
+        self::assertEquals($expected, defineArrayType($array, $failureType));
     }
 
     public static function defineProvider(): \Traversable

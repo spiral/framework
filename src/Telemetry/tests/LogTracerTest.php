@@ -49,13 +49,7 @@ final class LogTracerTest extends TestCase
             )
             ->andReturnUsing(fn(array $scope, callable $callable) => $callable($invoker));
 
-        $this->assertSame(
-            'hello',
-            $tracer->trace('foo', $callable, ['foo' => 'bar'])
-        );
-        $this->assertSame(
-            ['telemetry' => $uuid->toString()],
-            $tracer->getContext()
-        );
+        self::assertSame('hello', $tracer->trace('foo', $callable, ['foo' => 'bar']));
+        self::assertSame(['telemetry' => $uuid->toString()], $tracer->getContext());
     }
 }

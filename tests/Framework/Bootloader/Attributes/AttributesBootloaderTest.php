@@ -25,11 +25,11 @@ final class AttributesBootloaderTest extends BaseTestCase
 
     public function testIsCacheEnabledShouldBeFalse(): void
     {
-        $this->assertFalse($this->getConfig(AttributesConfig::CONFIG)['cache']['enabled']);
+        self::assertFalse($this->getConfig(AttributesConfig::CONFIG)['cache']['enabled']);
     }
 
     public function testGetStorageShouldBeNull(): void
     {
-        $this->assertNull($this->getConfig(AttributesConfig::CONFIG)['cache']['storage']);
+        self::assertNull($this->getConfig(AttributesConfig::CONFIG)['cache']['storage']);
     }
 }

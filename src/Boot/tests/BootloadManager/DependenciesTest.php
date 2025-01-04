@@ -16,8 +16,8 @@ final class DependenciesTest extends TestCase
 
         $b->bootload([BootloaderA::class]);
 
-        $this->assertTrue($this->container->has('a'));
-        $this->assertFalse($this->container->has('b'));
+        self::assertTrue($this->container->has('a'));
+        self::assertFalse($this->container->has('b'));
     }
 
     public function testDep2(): void
@@ -26,7 +26,7 @@ final class DependenciesTest extends TestCase
 
         $b->bootload([BootloaderB::class]);
 
-        $this->assertTrue($this->container->has('a'));
-        $this->assertTrue($this->container->has('b'));
+        self::assertTrue($this->container->has('a'));
+        self::assertTrue($this->container->has('b'));
     }
 }

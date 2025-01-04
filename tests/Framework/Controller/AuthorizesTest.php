@@ -39,7 +39,7 @@ final class AuthorizesTest extends BaseTestCase
             ->get(CoreInterface::class)
             ->callAction(AuthController::class, 'do');
 
-        $this->assertSame('ok', $r);
+        self::assertSame('ok', $r);
     }
 
     public function testAuthNoActor(): void
@@ -54,26 +54,26 @@ final class AuthorizesTest extends BaseTestCase
     public function testWithRoles(): void
     {
         $g = $this->getContainer()->get(GuardInterface::class);
-        $this->assertInstanceOf(GuardScope::class, $g);
+        self::assertInstanceOf(GuardScope::class, $g);
 
-        $this->assertSame(['guest'], $g->getRoles());
+        self::assertSame(['guest'], $g->getRoles());
 
         $g2 = $g->withRoles(['user']);
 
-        $this->assertSame(['guest'], $g->getRoles());
-        $this->assertSame(['user', 'guest'], $g2->getRoles());
+        self::assertSame(['guest'], $g->getRoles());
+        self::assertSame(['user', 'guest'], $g2->getRoles());
     }
 
     public function testWithActor(): void
     {
         $g = $this->getContainer()->get(GuardInterface::class);
-        $this->assertInstanceOf(GuardScope::class, $g);
+        self::assertInstanceOf(GuardScope::class, $g);
 
-        $this->assertSame(['guest'], $g->getRoles());
+        self::assertSame(['guest'], $g->getRoles());
 
         $g2 = $g->withActor(new Actor(['admin']));
 
-        $this->assertSame(['admin'], $g2->getRoles());
-        $this->assertSame(['guest'], $g->getRoles());
+        self::assertSame(['admin'], $g2->getRoles());
+        self::assertSame(['guest'], $g->getRoles());
     }
 }

@@ -33,10 +33,7 @@ class CompositeRuleTest extends TestCase
 
         /** @var RuleInterface $rule */
         $rule = new $compositeRuleClass($repository);
-        $this->assertEquals(
-            $expected,
-            $rule->allows($this->actor, static::OPERATION, static::CONTEXT)
-        );
+        self::assertEquals($expected, $rule->allows($this->actor, static::OPERATION, static::CONTEXT));
     }
 
     public static function allowsProvider(): \Traversable

@@ -22,10 +22,7 @@ final class DomainBootloaderTest extends BaseTestCase
             protected const INTERCEPTORS = ['foo', 'bar'];
         };
 
-        $this->assertSame(
-            ['foo', 'bar'],
-            (new \ReflectionMethod($bootloader, 'defineInterceptors'))->invoke($bootloader)
-        );
+        self::assertSame(['foo', 'bar'], (new \ReflectionMethod($bootloader, 'defineInterceptors'))->invoke($bootloader));
     }
 
     public function testDomainCore(): void
@@ -47,9 +44,6 @@ final class DomainBootloaderTest extends BaseTestCase
 
         $interceptors = (new \ReflectionProperty($pipeline, 'interceptors'))->getValue($pipeline);
 
-        $this->assertEquals(
-            [new One(), new Two(), new Three()],
-            $interceptors,
-        );
+        self::assertEquals([new One(), new Two(), new Three()], $interceptors);
     }
 }

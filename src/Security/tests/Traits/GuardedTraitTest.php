@@ -41,7 +41,7 @@ class GuardedTraitTest extends TestCase
         $this->container->method('get')->willReturn($this->guard);
 
         ContainerScope::runScope($this->container, function (): void {
-            $this->assertEquals($this->guard, $this->trait->getGuard());
+            self::assertEquals($this->guard, $this->trait->getGuard());
         });
     }
 
@@ -52,7 +52,7 @@ class GuardedTraitTest extends TestCase
         $this->container->method('has')->willReturn(false);
 
         ContainerScope::runScope($this->container, function (): void {
-            $this->assertEquals($this->guard, $this->trait->getGuard());
+            self::assertEquals($this->guard, $this->trait->getGuard());
         });
     }
 
@@ -60,7 +60,7 @@ class GuardedTraitTest extends TestCase
     {
         $this->expectException(ScopeException::class);
 
-        $this->assertEquals($this->guard, $this->trait->getGuard());
+        self::assertEquals($this->guard, $this->trait->getGuard());
     }
 
     public function testAllows(): void
@@ -76,18 +76,18 @@ class GuardedTraitTest extends TestCase
         $container->bind(GuardInterface::class, $this->guard);
 
         ContainerScope::runScope($container, function () use ($guarded): void {
-            $this->assertTrue($guarded->allows(static::OPERATION, static::CONTEXT));
-            $this->assertFalse($guarded->denies(static::OPERATION, static::CONTEXT));
+            self::assertTrue($guarded->allows(static::OPERATION, static::CONTEXT));
+            self::assertFalse($guarded->denies(static::OPERATION, static::CONTEXT));
         });
     }
 
     public function testResolvePermission(): void
     {
         $guarded = new Guarded();
-        $this->assertSame(static::OPERATION, $guarded->resolvePermission(static::OPERATION));
+        self::assertSame(static::OPERATION, $guarded->resolvePermission(static::OPERATION));
 
         $guarded = new GuardedWithNamespace();
         $resolvedPermission = GuardedWithNamespace::GUARD_NAMESPACE . '.' . static::OPERATION;
-        $this->assertSame($resolvedPermission, $guarded->resolvePermission(static::OPERATION));
+        self::assertSame($resolvedPermission, $guarded->resolvePermission(static::OPERATION));
     }
 }

@@ -15,7 +15,7 @@ final class ConfigTest extends BaseTestCase
     {
         $config = $this->getContainer()->get(TokenizerConfig::class);
 
-        $this->assertFalse($config->isCacheEnabled());
+        self::assertFalse($config->isCacheEnabled());
     }
 
     #[Env('TOKENIZER_CACHE_TARGETS', 'true')]
@@ -23,6 +23,6 @@ final class ConfigTest extends BaseTestCase
     {
         $config = $this->getContainer()->get(TokenizerConfig::class);
 
-        $this->assertTrue($config->isCacheEnabled());
+        self::assertTrue($config->isCacheEnabled());
     }
 }

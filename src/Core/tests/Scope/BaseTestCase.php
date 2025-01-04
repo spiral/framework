@@ -21,7 +21,7 @@ abstract class BaseTestCase extends TestCase
 
     protected function tearDown(): void
     {
-        $this->assertEmpty($this->weakMap, 'Weak map is not empty.');
+        self::assertEmpty($this->weakMap, 'Weak map is not empty.');
         parent::tearDown();
     }
 

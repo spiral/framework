@@ -31,9 +31,9 @@ final class KernelTest extends BaseTestCase
 
         $kernel->run();
 
-        $this->assertTrue($kernel->getContainer()->has('abc'));
-        $this->assertTrue($kernel->getContainer()->has('bcd'));
-        $this->assertTrue($kernel->getContainer()->has('cde'));
-        $this->assertTrue($kernel->getContainer()->has('def'));
+        self::assertTrue($kernel->getContainer()->has('abc'));
+        self::assertTrue($kernel->getContainer()->has('bcd'));
+        self::assertTrue($kernel->getContainer()->has('cde'));
+        self::assertTrue($kernel->getContainer()->has('def'));
     }
 }
