@@ -147,10 +147,10 @@ class InjectableConfigTest extends TestCase
         $config = new IntKeysConfig([10 => 'value']);
 
         self::assertSame([
+            10 => 'value',
             1 => 'some',
             3 => 'other',
             7 => 'key',
-            10 => 'value'
         ], $config->toArray());
     }
 }
