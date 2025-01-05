@@ -12,43 +12,33 @@ class FormatTest extends BaseTestCase
     {
         $s = $this->getStempler();
 
-        $this->assertSame(
-            "<div>\n  hello\n</div>",
-            $s->get('format/f1', new ViewContext())->render([])
-        );
+        self::assertSame("<div>\n  hello\n</div>", $s->get('format/f1', new ViewContext())->render([]));
     }
 
     public function testFormatDiv2(): void
     {
         $s = $this->getStempler();
 
-        $this->assertSame(
-            "<div>\n  hello\n</div>",
-            $s->get('format/f2', new ViewContext())->render([])
-        );
+        self::assertSame("<div>\n  hello\n</div>", $s->get('format/f2', new ViewContext())->render([]));
     }
 
     public function testFormatDiv3(): void
     {
         $s = $this->getStempler();
 
-        $this->assertSame(
-            '<div> first
+        self::assertSame('<div> first
   <div>
     hello
   </div>
   test
-</div>',
-            $s->get('format/f3', new ViewContext())->render([])
-        );
+</div>', $s->get('format/f3', new ViewContext())->render([]));
     }
 
     public function testFormatDiv4(): void
     {
         $s = $this->getStempler();
 
-        $this->assertSame(
-            '<div>
+        self::assertSame('<div>
   hello
   <pre>
           test magic
@@ -56,20 +46,15 @@ class FormatTest extends BaseTestCase
 
     </pre>
   extra spaces
-</div>',
-            str_replace("\r", '', $s->get('format/f4', new ViewContext())->render([]))
-        );
+</div>', str_replace("\r", '', $s->get('format/f4', new ViewContext())->render([])));
     }
 
     public function testFormatDiv5(): void
     {
         $s = $this->getStempler();
 
-        $this->assertSame(
-            '<div>
+        self::assertSame('<div>
   hello
-</div>',
-            $s->get('format/f5', new ViewContext())->render([])
-        );
+</div>', $s->get('format/f5', new ViewContext())->render([]));
     }
 }

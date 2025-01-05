@@ -34,17 +34,17 @@ class ListenersTest extends TestCase
         $logger->debug('debug');
         $other->alert('alert', ['context']);
 
-        $this->assertCount(2, $records);
-        $this->assertInstanceOf(\DateTimeInterface::class, $records[0]->getTime());
-        $this->assertSame('default', $records[0]->getChannel());
-        $this->assertSame(LogLevel::DEBUG, $records[0]->getLevel());
-        $this->assertSame('debug', $records[0]->getMessage());
-        $this->assertSame([], $records[0]->getContext());
+        self::assertCount(2, $records);
+        self::assertInstanceOf(\DateTimeInterface::class, $records[0]->getTime());
+        self::assertSame('default', $records[0]->getChannel());
+        self::assertSame(LogLevel::DEBUG, $records[0]->getLevel());
+        self::assertSame('debug', $records[0]->getMessage());
+        self::assertSame([], $records[0]->getContext());
 
-        $this->assertSame('other', $records[1]->getChannel());
-        $this->assertSame(LogLevel::ALERT, $records[1]->getLevel());
-        $this->assertSame('alert', $records[1]->getMessage());
-        $this->assertSame(['context'], $records[1]->getContext());
+        self::assertSame('other', $records[1]->getChannel());
+        self::assertSame(LogLevel::ALERT, $records[1]->getLevel());
+        self::assertSame('alert', $records[1]->getMessage());
+        self::assertSame(['context'], $records[1]->getContext());
     }
 
     public function testListenError(): void
@@ -65,19 +65,19 @@ class ListenersTest extends TestCase
         $logger->debug('debug');
         $other->alert('alert', ['context']);
 
-        $this->assertCount(1, $records);
+        self::assertCount(1, $records);
 
-        $this->assertInstanceOf(\DateTimeInterface::class, $records[0]->getTime());
-        $this->assertSame('other', $records[0]->getChannel());
-        $this->assertSame(LogLevel::ALERT, $records[0]->getLevel());
-        $this->assertSame('alert', $records[0]->getMessage());
-        $this->assertSame(['context'], $records[0]->getContext());
+        self::assertInstanceOf(\DateTimeInterface::class, $records[0]->getTime());
+        self::assertSame('other', $records[0]->getChannel());
+        self::assertSame(LogLevel::ALERT, $records[0]->getLevel());
+        self::assertSame('alert', $records[0]->getMessage());
+        self::assertSame(['context'], $records[0]->getContext());
 
         $ll->removeListener($l);
 
         $logger->debug('debug');
         $other->alert('alert', ['context']);
-        $this->assertCount(1, $records);
+        self::assertCount(1, $records);
     }
 
     #[DoesNotPerformAssertions]

@@ -34,7 +34,7 @@ final class ContainerDirective extends AbstractDirective
 
         return \sprintf(
             '<?php $%s = $this->container->get(%s); ?>',
-            \trim($directive->values[0], '\'"'),
+            \trim((string) $directive->values[0], '\'"'),
             $directive->values[1]
         );
     }

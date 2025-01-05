@@ -57,11 +57,11 @@ class RotateHandlerTest extends BaseTestCase
 
         /** @var RotatingFileHandler $handler */
         $handler = $autowire->resolve($this->container);
-        $this->assertInstanceOf(RotatingFileHandler::class, $handler);
+        self::assertInstanceOf(RotatingFileHandler::class, $handler);
 
         $level = $handler->getLevel();
-        $this->assertSame(Logger::DEBUG, $level instanceof Level ? $level->value : $level);
-        $this->assertTrue($handler->getBubble());
+        self::assertSame(Logger::DEBUG, $level instanceof Level ? $level->value : $level);
+        self::assertTrue($handler->getBubble());
     }
 
     public function testChangeFormat(): void
@@ -79,12 +79,12 @@ class RotateHandlerTest extends BaseTestCase
 
         /** @var RotatingFileHandler $handler */
         $handler = $autowire->resolve($this->container);
-        $this->assertInstanceOf(RotatingFileHandler::class, $handler);
+        self::assertInstanceOf(RotatingFileHandler::class, $handler);
 
         $level = $handler->getLevel();
-        $this->assertSame(Logger::DEBUG, $level instanceof Level ? $level->value : $level);
+        self::assertSame(Logger::DEBUG, $level instanceof Level ? $level->value : $level);
 
         $formatter = $handler->getFormatter();
-        $this->assertSame('foo', (new \ReflectionProperty($formatter, 'format'))->getValue($formatter));
+        self::assertSame('foo', (new \ReflectionProperty($formatter, 'format'))->getValue($formatter));
     }
 }
