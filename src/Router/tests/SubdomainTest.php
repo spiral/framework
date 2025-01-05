@@ -24,10 +24,10 @@ class SubdomainTest extends TestCase
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/foo')));
-        $this->assertSame(['sub' => 'subdomain'], $match->getMatches());
+        self::assertSame(['sub' => 'subdomain'], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://bar.site.com/foo')));
-        $this->assertSame(['sub' => 'bar'], $match->getMatches());
+        self::assertSame(['sub' => 'bar'], $match->getMatches());
     }
 
     public function testSubDomainWithAction(): void
@@ -41,15 +41,15 @@ class SubdomainTest extends TestCase
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/foo/bar')));
-        $this->assertSame(['sub' => 'subdomain', 'action' => 'bar'], $match->getMatches());
+        self::assertSame(['sub' => 'subdomain', 'action' => 'bar'], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/foo')));
-        $this->assertSame(['sub' => 'subdomain', 'action' => null], $match->getMatches());
+        self::assertSame(['sub' => 'subdomain', 'action' => null], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://bar.site.com/foo')));
-        $this->assertSame(['sub' => 'bar', 'action' => null], $match->getMatches());
+        self::assertSame(['sub' => 'bar', 'action' => null], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://bar.site.com/foo/bar')));
-        $this->assertSame(['sub' => 'bar', 'action' => 'bar'], $match->getMatches());
+        self::assertSame(['sub' => 'bar', 'action' => 'bar'], $match->getMatches());
     }
 }

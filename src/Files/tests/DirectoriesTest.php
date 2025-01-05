@@ -27,13 +27,13 @@ class DirectoriesTest extends TestCase
         $files = new Files();
         $directory = self::FIXTURE_DIRECTORY . 'directory/';
 
-        $this->assertFalse($files->exists($directory));
-        $this->assertFalse($files->isDirectory($directory));
+        self::assertFalse($files->exists($directory));
+        self::assertFalse($files->isDirectory($directory));
 
         $files->ensureDirectory($directory);
 
-        $this->assertTrue($files->exists($directory));
-        $this->assertTrue($files->isDirectory($directory));
+        self::assertTrue($files->exists($directory));
+        self::assertTrue($files->isDirectory($directory));
     }
 
     public function testEnsureExistedDirectory(): void
@@ -41,18 +41,18 @@ class DirectoriesTest extends TestCase
         $files = new Files();
         $directory = self::FIXTURE_DIRECTORY . 'directory/';
 
-        $this->assertFalse($files->exists($directory));
-        $this->assertFalse($files->isDirectory($directory));
+        self::assertFalse($files->exists($directory));
+        self::assertFalse($files->isDirectory($directory));
 
         mkdir($directory);
 
-        $this->assertTrue($files->exists($directory));
-        $this->assertTrue($files->isDirectory($directory));
+        self::assertTrue($files->exists($directory));
+        self::assertTrue($files->isDirectory($directory));
 
         $files->ensureDirectory($directory);
 
-        $this->assertTrue($files->exists($directory));
-        $this->assertTrue($files->isDirectory($directory));
+        self::assertTrue($files->exists($directory));
+        self::assertTrue($files->isDirectory($directory));
     }
 
     public function testEnsureNestedDirectory(): void
@@ -60,13 +60,13 @@ class DirectoriesTest extends TestCase
         $files = new Files();
         $directory = self::FIXTURE_DIRECTORY . 'directory/sub/other';
 
-        $this->assertFalse($files->exists($directory));
-        $this->assertFalse($files->isDirectory($directory));
+        self::assertFalse($files->exists($directory));
+        self::assertFalse($files->isDirectory($directory));
 
         $files->ensureDirectory($directory);
 
-        $this->assertTrue($files->exists($directory));
-        $this->assertTrue($files->isDirectory($directory));
+        self::assertTrue($files->exists($directory));
+        self::assertTrue($files->isDirectory($directory));
     }
 
     public function testEnsureNestedDirectoryNoRecursivePermissions(): void
@@ -74,13 +74,13 @@ class DirectoriesTest extends TestCase
         $files = new Files();
         $directory = self::FIXTURE_DIRECTORY . 'directory/sub/other';
 
-        $this->assertFalse($files->exists($directory));
-        $this->assertFalse($files->isDirectory($directory));
+        self::assertFalse($files->exists($directory));
+        self::assertFalse($files->isDirectory($directory));
 
         $files->ensureDirectory($directory, Files::DEFAULT_FILE_MODE, false);
 
-        $this->assertTrue($files->exists($directory));
-        $this->assertTrue($files->isDirectory($directory));
+        self::assertTrue($files->exists($directory));
+        self::assertTrue($files->isDirectory($directory));
     }
 
     public function testEnsureExistedNestedDirectory(): void
@@ -88,20 +88,20 @@ class DirectoriesTest extends TestCase
         $files = new Files();
         $directory = self::FIXTURE_DIRECTORY . 'directory/sub/other';
 
-        $this->assertFalse($files->exists($directory));
-        $this->assertFalse($files->isDirectory($directory));
+        self::assertFalse($files->exists($directory));
+        self::assertFalse($files->isDirectory($directory));
 
         mkdir(self::FIXTURE_DIRECTORY . 'directory');
         mkdir(self::FIXTURE_DIRECTORY . 'directory/sub');
         mkdir(self::FIXTURE_DIRECTORY . 'directory/sub/other');
 
-        $this->assertTrue($files->exists($directory));
-        $this->assertTrue($files->isDirectory($directory));
+        self::assertTrue($files->exists($directory));
+        self::assertTrue($files->isDirectory($directory));
 
         $files->ensureDirectory($directory);
 
-        $this->assertTrue($files->exists($directory));
-        $this->assertTrue($files->isDirectory($directory));
+        self::assertTrue($files->exists($directory));
+        self::assertTrue($files->isDirectory($directory));
     }
 
     public function testDeleteDirectoryContent(): void
@@ -116,36 +116,36 @@ class DirectoriesTest extends TestCase
             $directory . '.sample',
         ];
 
-        $this->assertFalse($files->exists($baseDirectory));
-        $this->assertFalse($files->isDirectory($baseDirectory));
+        self::assertFalse($files->exists($baseDirectory));
+        self::assertFalse($files->isDirectory($baseDirectory));
 
-        $this->assertFalse($files->exists($directory));
-        $this->assertFalse($files->isDirectory($directory));
+        self::assertFalse($files->exists($directory));
+        self::assertFalse($files->isDirectory($directory));
 
         $files->ensureDirectory($directory);
 
-        $this->assertTrue($files->exists($baseDirectory));
-        $this->assertTrue($files->isDirectory($baseDirectory));
+        self::assertTrue($files->exists($baseDirectory));
+        self::assertTrue($files->isDirectory($baseDirectory));
 
-        $this->assertTrue($files->exists($directory));
-        $this->assertTrue($files->isDirectory($directory));
+        self::assertTrue($files->exists($directory));
+        self::assertTrue($files->isDirectory($directory));
 
         foreach ($filenames as $filename) {
-            $this->assertFalse($files->exists($filename));
+            self::assertFalse($files->exists($filename));
             $files->write($filename, 'random-data');
-            $this->assertTrue($files->exists($filename));
+            self::assertTrue($files->exists($filename));
         }
 
         $files->deleteDirectory($baseDirectory, true);
 
-        $this->assertTrue($files->exists($baseDirectory));
-        $this->assertTrue($files->isDirectory($baseDirectory));
+        self::assertTrue($files->exists($baseDirectory));
+        self::assertTrue($files->isDirectory($baseDirectory));
 
-        $this->assertFalse($files->exists($directory));
-        $this->assertFalse($files->isDirectory($directory));
+        self::assertFalse($files->exists($directory));
+        self::assertFalse($files->isDirectory($directory));
 
         foreach ($filenames as $filename) {
-            $this->assertFalse($files->exists($filename));
+            self::assertFalse($files->exists($filename));
         }
     }
 
@@ -161,36 +161,36 @@ class DirectoriesTest extends TestCase
             $directory . '.sample',
         ];
 
-        $this->assertFalse($files->exists($baseDirectory));
-        $this->assertFalse($files->isDirectory($baseDirectory));
+        self::assertFalse($files->exists($baseDirectory));
+        self::assertFalse($files->isDirectory($baseDirectory));
 
-        $this->assertFalse($files->exists($directory));
-        $this->assertFalse($files->isDirectory($directory));
+        self::assertFalse($files->exists($directory));
+        self::assertFalse($files->isDirectory($directory));
 
         $files->ensureDirectory($directory);
 
-        $this->assertTrue($files->exists($baseDirectory));
-        $this->assertTrue($files->isDirectory($baseDirectory));
+        self::assertTrue($files->exists($baseDirectory));
+        self::assertTrue($files->isDirectory($baseDirectory));
 
-        $this->assertTrue($files->exists($directory));
-        $this->assertTrue($files->isDirectory($directory));
+        self::assertTrue($files->exists($directory));
+        self::assertTrue($files->isDirectory($directory));
 
         foreach ($filenames as $filename) {
-            $this->assertFalse($files->exists($filename));
+            self::assertFalse($files->exists($filename));
             $files->write($filename, 'random-data');
-            $this->assertTrue($files->exists($filename));
+            self::assertTrue($files->exists($filename));
         }
 
         $files->deleteDirectory($baseDirectory, false);
 
-        $this->assertFalse($files->exists($baseDirectory));
-        $this->assertFalse($files->isDirectory($baseDirectory));
+        self::assertFalse($files->exists($baseDirectory));
+        self::assertFalse($files->isDirectory($baseDirectory));
 
-        $this->assertFalse($files->exists($directory));
-        $this->assertFalse($files->isDirectory($directory));
+        self::assertFalse($files->exists($directory));
+        self::assertFalse($files->isDirectory($directory));
 
         foreach ($filenames as $filename) {
-            $this->assertFalse($files->exists($filename));
+            self::assertFalse($files->exists($filename));
         }
     }
 
@@ -207,26 +207,26 @@ class DirectoriesTest extends TestCase
     public function testGetFiles(): void
     {
         $files = new Files();
-        $this->assertNotEmpty($files->getFiles(__DIR__));
+        self::assertNotEmpty($files->getFiles(__DIR__));
     }
 
     public function testGetFilesRecursive(): void
     {
         $files = new Files();
-        $this->assertNotEmpty($files->getFiles(dirname(__DIR__)));
+        self::assertNotEmpty($files->getFiles(dirname(__DIR__)));
     }
 
     public function testGetFilesPattern(): void
     {
         $files = new Files();
-        $this->assertEmpty($files->getFiles(__DIR__, '*.jpg'));
+        self::assertEmpty($files->getFiles(__DIR__, '*.jpg'));
     }
 
     public function testGetFilesRecursivePattern(): void
     {
         $files = new Files();
 
-        $this->assertEmpty($files->getFiles(__DIR__, '*.jpg'));
-        $this->assertNotEmpty($files->getFiles(__DIR__, '*.php'));
+        self::assertEmpty($files->getFiles(__DIR__, '*.jpg'));
+        self::assertNotEmpty($files->getFiles(__DIR__, '*.php'));
     }
 }

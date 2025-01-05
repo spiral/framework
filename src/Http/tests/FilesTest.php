@@ -38,8 +38,8 @@ class FilesTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        $this->assertInstanceOf(UploadedFileInterface::class, $this->input->file('file'));
-        $this->assertSame(null, $this->input->file('other'));
+        self::assertInstanceOf(UploadedFileInterface::class, $this->input->file('file'));
+        self::assertNull($this->input->file('other'));
     }
 
     public function testGetFilename(): void
@@ -58,9 +58,9 @@ class FilesTest extends TestCase
 
 
         $filename = $this->input->files->getFilename('file');
-        $this->assertTrue(file_exists($filename));
+        self::assertFileExists($filename);
 
-        $this->assertSame(file_get_contents(__FILE__), file_get_contents($filename));
+        self::assertSame(file_get_contents(__FILE__), file_get_contents($filename));
     }
 
 
@@ -79,6 +79,6 @@ class FilesTest extends TestCase
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $filename = $this->input->files->getFilename('file2');
-        $this->assertNull($filename);
+        self::assertNull($filename);
     }
 }

@@ -24,17 +24,17 @@ class JobHandlerTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists($class));
+        self::assertTrue(class_exists($class));
 
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString('strict_types=1', $content);
-        $this->assertStringContainsString('{project-name}', $content);
-        $this->assertStringContainsString('@author {author-name}', $content);
-        $this->assertStringContainsString('function invoke(string $id, mixed $payload, array $headers)', $content);
-        $this->assertStringContainsString('Sample Job Handler', $reflection->getDocComment());
-        $this->assertTrue($reflection->hasMethod('invoke'));
+        self::assertStringContainsString('strict_types=1', $content);
+        self::assertStringContainsString('{project-name}', $content);
+        self::assertStringContainsString('@author {author-name}', $content);
+        self::assertStringContainsString('function invoke(string $id, mixed $payload, array $headers)', $content);
+        self::assertStringContainsString('Sample Job Handler', $reflection->getDocComment());
+        self::assertTrue($reflection->hasMethod('invoke'));
     }
 
     /**
@@ -51,16 +51,13 @@ class JobHandlerTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(\class_exists($class));
+        self::assertTrue(\class_exists($class));
 
         $reflection = new ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
-        $this->assertStringContainsString(
-            'App/Custom/Job/SampleJob.php',
-            \str_replace('\\', '/', $reflection->getFileName())
-        );
-        $this->assertStringContainsString('App\Custom\Job', $content);
+        self::assertStringContainsString('App/Custom/Job/SampleJob.php', \str_replace('\\', '/', $reflection->getFileName()));
+        self::assertStringContainsString('App\Custom\Job', $content);
     }
 
     public function testShowInstructionAfterInstallation(): void
@@ -74,15 +71,12 @@ class JobHandlerTest extends AbstractCommandTestCase
 
         $output = $result->getOutput()->fetch();
 
-        $this->assertStringEqualsStringIgnoringLineEndings(
-            <<<OUTPUT
+        self::assertStringEqualsStringIgnoringLineEndings(<<<OUTPUT
             Declaration of 'SampleJob' has been successfully written into 'Job/SampleJob.php'.
 
             Next steps:
             1. Read more about Job handlers in the documentation: https://spiral.dev/docs/queue-jobs
 
-            OUTPUT,
-            $output
-        );
+            OUTPUT, $output);
     }
 }

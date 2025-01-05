@@ -37,17 +37,15 @@ final class PrototypeBootloaderTest extends BaseTestCase
 
     public function testPrototypeRegistryBinding(): void
     {
-        $this->assertSame(
-            $this->getContainer()->get(PrototypeRegistry::class),
-            $this->getContainer()->get(PrototypeRegistry::class));
+        self::assertSame($this->getContainer()->get(PrototypeRegistry::class), $this->getContainer()->get(PrototypeRegistry::class));
     }
 
     public function testPrototypedClassesShouldBeFound(): void
     {
         $registry = $this->getContainer()->get(PrototypeRegistry::class);
 
-        $this->assertSame(Client::class, $registry->resolveProperty('service.client')->type->fullName);
-        $this->assertSame(HttpClient::class, $registry->resolveProperty('service.client.http')->type->fullName);
+        self::assertSame(Client::class, $registry->resolveProperty('service.client')->type->fullName);
+        self::assertSame(HttpClient::class, $registry->resolveProperty('service.client.http')->type->fullName);
     }
 
     public function testDefaultConfig(): void
@@ -59,20 +57,17 @@ final class PrototypeBootloaderTest extends BaseTestCase
         $bindings['service.client.http'] = HttpClient::class;
         $bindings['service.client'] = Client::class;
 
-        $this->assertSame(['bindings' => $bindings], $this->getConfig(PrototypeConfig::CONFIG));
+        self::assertSame(['bindings' => $bindings], $this->getConfig(PrototypeConfig::CONFIG));
     }
 
     public function testPrototypeRegistryShouldBeCreatedLazy(): void
     {
         $stateRef = new \ReflectionProperty($this->getContainer(), 'state');
 
-        $this->assertFalse(isset($stateRef->getValue($this->getContainer())->singletons[PrototypeRegistry::class]));
+        self::assertArrayNotHasKey(PrototypeRegistry::class, $stateRef->getValue($this->getContainer())->singletons);
 
         $this->getContainer()->get(PrototypeRegistry::class);
 
-        $this->assertInstanceOf(
-            PrototypeRegistry::class,
-            $stateRef->getValue($this->getContainer())->singletons[PrototypeRegistry::class]
-        );
+        self::assertInstanceOf(PrototypeRegistry::class, $stateRef->getValue($this->getContainer())->singletons[PrototypeRegistry::class]);
     }
 }

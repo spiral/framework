@@ -22,7 +22,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderE::class, BootloaderD::class]));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderE::class => [
                 'bootloader' => new BootloaderE(),
                 'options' => [],
@@ -42,7 +42,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderF::class, BootloaderD::class]));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderD::class => [
                 'bootloader' => new BootloaderD(),
                 'options' => [],
@@ -56,7 +56,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderG::class]));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderG::class => [
                 'bootloader' => new BootloaderG(),
                 'options' => ['a' => 'b', 'c' => 'd'],
@@ -70,7 +70,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderF::class, BootloaderD::class], false));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderF::class => [
                 'bootloader' => new BootloaderF(),
                 'options' => [],
@@ -93,7 +93,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         $result = \iterator_to_array($this->initializer->init([BootloaderH::class]));
 
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     #[DataProvider('denyEnvDataProvider')]
@@ -103,7 +103,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         $result = \iterator_to_array($this->initializer->init([BootloaderI::class]));
 
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     public function testDenyEnvShouldHaveHigherPriority(): void
@@ -112,14 +112,14 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         $result = \iterator_to_array($this->initializer->init([BootloaderJ::class]));
 
-        $this->assertEquals([], $result);
+        self::assertSame([], $result);
     }
 
     public function testExtendedAttribute(): void
     {
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment(['RR_MODE' => 'http']), true);
         $result = \iterator_to_array($this->initializer->init([BootloaderK::class]));
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderK::class => [
                 'bootloader' => new BootloaderK(),
                 'options' => [],
@@ -130,7 +130,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment(['RR_MODE' => 'jobs']), true);
         $result = \iterator_to_array($this->initializer->init([BootloaderK::class]));
-        $this->assertEquals([], $result);
+        self::assertSame([], $result);
     }
 
     public static function allowEnvDataProvider(): \Traversable

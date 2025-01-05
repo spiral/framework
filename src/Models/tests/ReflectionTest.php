@@ -14,77 +14,68 @@ class ReflectionTest extends TestCase
     public function testReflection(): void
     {
         $schema = new ReflectionEntity(TestModel::class);
-        $this->assertEquals(new \ReflectionClass(TestModel::class), $schema->getReflection());
+        self::assertEquals(new \ReflectionClass(TestModel::class), $schema->getReflection());
     }
 
     public function testFillable(): void
     {
         $schema = new ReflectionEntity(TestModel::class);
-        $this->assertSame(['value'], $schema->getFillable());
+        self::assertSame(['value'], $schema->getFillable());
     }
 
     public function testFillableExtended(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
-        $this->assertSame(['value', 'name'], $schema->getFillable());
+        self::assertSame(['value', 'name'], $schema->getFillable());
     }
 
     public function testSetters(): void
     {
         $schema = new ReflectionEntity(TestModel::class);
-        $this->assertSame(
-            [
-                'value' => 'intval'
-            ],
-            $schema->getSetters()
-        );
+        self::assertSame([
+            'value' => 'intval'
+        ], $schema->getSetters());
     }
 
     public function testSettersExtended(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
-        $this->assertSame(
-            [
-                'value' => 'intval',
-                'name'  => 'strval'
-            ],
-            $schema->getSetters()
-        );
+        self::assertSame([
+            'value' => 'intval',
+            'name'  => 'strval'
+        ], $schema->getSetters());
     }
 
     public function testSecured(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
-        $this->assertSame(['name'], $schema->getSecured());
+        self::assertSame(['name'], $schema->getSecured());
     }
 
     public function testDeclaredMethods(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
-        $this->assertEquals(
-            [
-                new \ReflectionMethod(ExtendedModel::class, 'methodB')
-            ],
-            $schema->declaredMethods()
-        );
+        self::assertEquals([
+            new \ReflectionMethod(ExtendedModel::class, 'methodB')
+        ], $schema->declaredMethods());
     }
 
     public function testGetSecured(): void
     {
         $schema = new ReflectionEntity(TestModel::class);
-        $this->assertSame('*', $schema->getSecured());
+        self::assertSame('*', $schema->getSecured());
     }
 
     public function testGetReflectionValues(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
 
-        $this->assertSame([
+        self::assertSame([
             'value' => 'intval',
             'name'  => 'strtoupper'
         ], $schema->getGetters());
 
-        $this->assertSame([
+        self::assertSame([
             'value' => 'intval',
             'name'  => 'strval'
         ], $schema->getSetters());
@@ -93,15 +84,15 @@ class ReflectionTest extends TestCase
     public function testGetSchema(): void
     {
         $schema = new ReflectionEntity(SchemaModel::class);
-        $this->assertSame(['nice'], $schema->getSchema());
+        self::assertSame(['nice'], $schema->getSchema());
 
         $schema = new ReflectionEntity(SchemaModelB::class);
-        $this->assertSame(['nice', 'nice2'], $schema->getSchema());
+        self::assertSame(['nice', 'nice2'], $schema->getSchema());
     }
 
     public function testGetSchemaNotSchematic(): void
     {
         $schema = new ReflectionEntity(SchemaModelC::class);
-        $this->assertSame(['nice2'], $schema->getSchema());
+        self::assertSame(['nice2'], $schema->getSchema());
     }
 }

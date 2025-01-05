@@ -30,7 +30,7 @@ final class HttpBootloaderTest extends BaseTestCase
 
     public function testDefaultInputBags(): void
     {
-        $this->assertSame([], $this->getContainer()->get(HttpConfig::class)->getInputBags());
+        self::assertSame([], $this->getContainer()->get(HttpConfig::class)->getInputBags());
     }
 
     public function testAddInputBag(): void
@@ -41,7 +41,7 @@ final class HttpBootloaderTest extends BaseTestCase
         $bootloader = new HttpBootloader($configs, new Container());
         $bootloader->addInputBag('test', ['class' => 'foo', 'source' => 'bar']);
 
-        $this->assertSame([
+        self::assertSame([
             'test' => ['class' => 'foo', 'source' => 'bar']
         ], $configs->getConfig(HttpConfig::CONFIG)['inputBags']);
     }
@@ -55,7 +55,7 @@ final class HttpBootloaderTest extends BaseTestCase
         $bootloader = new HttpBootloader($configs, new Container());
         $bootloader->addMiddleware($middleware);
 
-        $this->assertSame([$middleware], $configs->getConfig(HttpConfig::CONFIG)['middleware']);
+        self::assertSame([$middleware], $configs->getConfig(HttpConfig::CONFIG)['middleware']);
     }
 
     public static function middlewaresDataProvider(): \Traversable

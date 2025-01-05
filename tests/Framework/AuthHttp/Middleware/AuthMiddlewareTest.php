@@ -35,8 +35,8 @@ final class AuthMiddlewareTest extends HttpTestCase
             $scope = $this->getContainer()->get(TokenStorageScope::class);
             $ref = new \ReflectionMethod($scope, 'getTokenStorage');
 
-            $this->assertInstanceOf($storage::class, $ref->invoke($scope));
-            $this->assertSame($storage, $ref->invoke($scope));
+            self::assertInstanceOf($storage::class, $ref->invoke($scope));
+            self::assertSame($storage, $ref->invoke($scope));
         });
 
         $this->fakeHttp()->get('/');
@@ -51,7 +51,7 @@ final class AuthMiddlewareTest extends HttpTestCase
             /** @var \Spiral\Auth\AuthContextInterface $authContext */
             $authContext = $request->getAttribute(AuthMiddleware::ATTRIBUTE);
 
-            $this->assertSame($user, $authContext->getActor());
+            self::assertSame($user, $authContext->getActor());
         });
 
         $this->fakeHttp()->withActor($user)->get('/');

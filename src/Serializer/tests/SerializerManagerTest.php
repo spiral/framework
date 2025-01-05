@@ -26,11 +26,11 @@ final class SerializerManagerTest extends TestCase
 
     public function testGetSerializer(): void
     {
-        $this->assertInstanceOf(PhpSerializer::class, $this->serializer->getSerializer('serializer'));
-        $this->assertInstanceOf(JsonSerializer::class, $this->serializer->getSerializer('json'));
+        self::assertInstanceOf(PhpSerializer::class, $this->serializer->getSerializer('serializer'));
+        self::assertInstanceOf(JsonSerializer::class, $this->serializer->getSerializer('json'));
 
         // default serializer
-        $this->assertInstanceOf(JsonSerializer::class, $this->serializer->getSerializer());
+        self::assertInstanceOf(JsonSerializer::class, $this->serializer->getSerializer());
 
         $this->expectException(SerializerNotFoundException::class);
         $this->serializer->getSerializer('bad');
@@ -39,7 +39,7 @@ final class SerializerManagerTest extends TestCase
     #[DataProvider('serializeDataProvider')]
     public function testSerialize(mixed $payload, string $expected, ?string $format = null): void
     {
-        $this->assertSame($expected, $this->serializer->serialize($payload, $format));
+        self::assertSame($expected, $this->serializer->serialize($payload, $format));
     }
 
     public function testBadSerializer(): void
@@ -54,7 +54,7 @@ final class SerializerManagerTest extends TestCase
     #[DataProvider('unserializeDataProvider')]
     public function testUnserialize(string|\Stringable $payload, mixed $expected, ?string $format = null): void
     {
-        $this->assertSame($expected, $this->serializer->unserialize($payload, format: $format));
+        self::assertSame($expected, $this->serializer->unserialize($payload, format: $format));
     }
 
     public static function serializeDataProvider(): \Traversable

@@ -41,27 +41,27 @@ final class BootloadersTest extends TestCase
             ],
         );
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->hasInstance('cde'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->hasInstance('ijk'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->has('singleAbc'));
-        $this->assertTrue($this->container->has('ghi'));
-        $this->assertTrue($this->container->has('hij'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->hasInstance('cde'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->hasInstance('ijk'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->has('singleAbc'));
+        self::assertTrue($this->container->has('ghi'));
+        self::assertTrue($this->container->has('hij'));
 
-        $this->assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
-        $this->assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
-        $this->assertInstanceOf(SampleClass::class, $this->container->get('hij'));
-        $this->assertInstanceOf(SampleClass::class, $this->container->get('singleAbc'));
+        self::assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
+        self::assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
+        self::assertInstanceOf(SampleClass::class, $this->container->get('hij'));
+        self::assertInstanceOf(SampleClass::class, $this->container->get('singleAbc'));
 
-        $this->assertSame($this->container->get('singleAbc'), $this->container->get('singleAbc'));
-        $this->assertNotSame($this->container->get('hij'), $this->container->get('hij'));
+        self::assertSame($this->container->get('singleAbc'), $this->container->get('singleAbc'));
+        self::assertNotSame($this->container->get('hij'), $this->container->get('hij'));
 
         $classes = \array_filter($classes, static fn(string $class): bool => $class !== SampleClass::class);
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class,
         ]), $bootloader->getClasses());
@@ -77,14 +77,14 @@ final class BootloadersTest extends TestCase
             new SampleBoot(),
         ]);
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->hasInstance('cde'));
-        $this->assertTrue($this->container->has('ghi'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->hasInstance('cde'));
+        self::assertTrue($this->container->has('ghi'));
 
-        $this->assertSame([
+        self::assertSame([
             SampleBootWithMethodBoot::class,
             SampleBoot::class,
             BootloaderA::class,
@@ -114,13 +114,13 @@ final class BootloadersTest extends TestCase
             },
         ]);
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->has('ghi'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->has('ghi'));
 
-        $this->assertCount(1, $bootloader->getClasses());
+        self::assertCount(1, $bootloader->getClasses());
     }
 
     public function testBootloaderWithAttributes(): void
@@ -131,21 +131,21 @@ final class BootloadersTest extends TestCase
             BootloaderWithAttributes::class,
         ]);
 
-        $this->assertTrue($this->container->has('init'));
-        $this->assertTrue($this->container->has('initMethodF'));
-        $this->assertTrue($this->container->has('initMethodE'));
-        $this->assertTrue($this->container->has('initMethodB'));
-        $this->assertTrue($this->container->has('initMethodC'));
-        $this->assertTrue($this->container->has('initMethodD'));
-        $this->assertFalse($this->container->has('initMethodA'));
+        self::assertTrue($this->container->has('init'));
+        self::assertTrue($this->container->has('initMethodF'));
+        self::assertTrue($this->container->has('initMethodE'));
+        self::assertTrue($this->container->has('initMethodB'));
+        self::assertTrue($this->container->has('initMethodC'));
+        self::assertTrue($this->container->has('initMethodD'));
+        self::assertFalse($this->container->has('initMethodA'));
 
-        $this->assertTrue($this->container->has('boot'));
-        $this->assertTrue($this->container->has('bootMethodF'));
-        $this->assertTrue($this->container->has('bootMethodE'));
-        $this->assertTrue($this->container->has('bootMethodB'));
-        $this->assertTrue($this->container->has('bootMethodC'));
-        $this->assertTrue($this->container->has('bootMethodD'));
-        $this->assertFalse($this->container->has('bootMethodA'));
+        self::assertTrue($this->container->has('boot'));
+        self::assertTrue($this->container->has('bootMethodF'));
+        self::assertTrue($this->container->has('bootMethodE'));
+        self::assertTrue($this->container->has('bootMethodB'));
+        self::assertTrue($this->container->has('bootMethodC'));
+        self::assertTrue($this->container->has('bootMethodD'));
+        self::assertFalse($this->container->has('bootMethodA'));
     }
 
     public function testException(): void
@@ -166,7 +166,7 @@ final class BootloadersTest extends TestCase
             ],
         );
 
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class,
         ]), $bootloader->getClasses());
@@ -181,7 +181,7 @@ final class BootloadersTest extends TestCase
             ],
         );
 
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
         ]), $bootloader->getClasses());
     }
@@ -195,7 +195,7 @@ final class BootloadersTest extends TestCase
             ],
         );
 
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderD::class,
             BootloaderB::class,

@@ -70,12 +70,9 @@ class I18nBootloaderTest extends BaseTestCase
     {
         $this->getContainer()->get(I18nBootloader::class)->addDirectory('directory');
 
-        $this->assertSame(
-            [
-                'directory',
-            ],
-            $this->getConfig(TranslatorConfig::CONFIG)['directories']
-        );
+        self::assertSame([
+            'directory',
+        ], $this->getConfig(TranslatorConfig::CONFIG)['directories']);
     }
 
     public function testDefaultConfig(): void
@@ -84,30 +81,27 @@ class I18nBootloaderTest extends BaseTestCase
         $dirs = $this->getContainer()->get(DirectoriesInterface::class);
         $debugMode = $this->getContainer()->get(DebugMode::class);
 
-        $this->assertSame(
-            [
-                'locale' => $env->get('LOCALE', 'en'),
-                'fallbackLocale' => $env->get('LOCALE', 'en'),
-                'directory' => $dirs->get('locale'),
-                'directories' => [],
-                'autoRegister' => $debugMode->isEnabled(),
-                'loaders' => [
-                    'php' => Loader\PhpFileLoader::class,
-                    'po' => Loader\PoFileLoader::class,
-                    'csv' => Loader\CsvFileLoader::class,
-                    'json' => Loader\JsonFileLoader::class,
-                ],
-                'dumpers' => [
-                    'php' => Dumper\PhpFileDumper::class,
-                    'po' => Dumper\PoFileDumper::class,
-                    'csv' => Dumper\CsvFileDumper::class,
-                    'json' => Dumper\JsonFileDumper::class,
-                ],
-                'domains' => [
-                    'messages' => ['*'],
-                ],
+        self::assertSame([
+            'locale' => $env->get('LOCALE', 'en'),
+            'fallbackLocale' => $env->get('LOCALE', 'en'),
+            'directory' => $dirs->get('locale'),
+            'directories' => [],
+            'autoRegister' => $debugMode->isEnabled(),
+            'loaders' => [
+                'php' => Loader\PhpFileLoader::class,
+                'po' => Loader\PoFileLoader::class,
+                'csv' => Loader\CsvFileLoader::class,
+                'json' => Loader\JsonFileLoader::class,
             ],
-            $this->getConfig(TranslatorConfig::CONFIG)
-        );
+            'dumpers' => [
+                'php' => Dumper\PhpFileDumper::class,
+                'po' => Dumper\PoFileDumper::class,
+                'csv' => Dumper\CsvFileDumper::class,
+                'json' => Dumper\JsonFileDumper::class,
+            ],
+            'domains' => [
+                'messages' => ['*'],
+            ],
+        ], $this->getConfig(TranslatorConfig::CONFIG));
     }
 }

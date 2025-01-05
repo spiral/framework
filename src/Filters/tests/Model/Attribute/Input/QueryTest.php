@@ -18,20 +18,14 @@ final class QueryTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
             ->with('query', 'foo')
             ->andReturn('bar');
 
-        $this->assertSame(
-            'bar',
-            $attribute->getValue($this->input, $this->makeProperty())
-        );
+        self::assertSame('bar', $attribute->getValue($this->input, $this->makeProperty()));
     }
 
     public function testGetsSchemaForDefinedKey(): void
     {
         $attribute = new Query('foo');
 
-        $this->assertSame(
-            'query:foo',
-            $attribute->getSchema($this->makeProperty())
-        );
+        self::assertSame('query:foo', $attribute->getSchema($this->makeProperty()));
     }
 
     public function testGetsValueForNotDefinedKey(): void
@@ -44,19 +38,13 @@ final class QueryTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
             ->with('query', 'baz')
             ->andReturn('bar');
 
-        $this->assertSame(
-            'bar',
-            $attribute->getValue($this->input, $this->makeProperty())
-        );
+        self::assertSame('bar', $attribute->getValue($this->input, $this->makeProperty()));
     }
 
     public function testGetsSchemaForNotDefinedKey(): void
     {
         $attribute = new Query();
 
-        $this->assertSame(
-            'query:baz',
-            $attribute->getSchema($this->makeProperty())
-        );
+        self::assertSame('query:baz', $attribute->getSchema($this->makeProperty()));
     }
 }

@@ -42,8 +42,8 @@ final class BroadcastingBootloaderTest extends BaseTestCase
     {
         $config = $this->getConfig(BroadcastConfig::CONFIG);
 
-        $this->assertSame('null', $config['default']);
-        $this->assertSame('/ws', $config['authorize']['path']);
+        self::assertSame('null', $config['default']);
+        self::assertSame('/ws', $config['authorize']['path']);
     }
 
     public function testRegisterDriverAlias(): void
@@ -54,6 +54,6 @@ final class BroadcastingBootloaderTest extends BaseTestCase
         $bootloader = new BroadcastingBootloader($configs);
         $bootloader->registerDriverAlias('foo', 'bar');
 
-        $this->assertSame(['bar' => 'foo'], $configs->getConfig(BroadcastConfig::CONFIG)['driverAliases']);
+        self::assertSame(['bar' => 'foo'], $configs->getConfig(BroadcastConfig::CONFIG)['driverAliases']);
     }
 }

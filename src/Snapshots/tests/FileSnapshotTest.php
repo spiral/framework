@@ -38,13 +38,13 @@ final class FileSnapshotTest extends TestCase
         $e = new \Error('message');
         $s = $this->fileSnapshot->create($e);
 
-        $this->assertSame($e, $s->getException());
+        self::assertSame($e, $s->getException());
 
-        $this->assertStringContainsString('Error', $s->getMessage());
-        $this->assertStringContainsString('message', $s->getMessage());
-        $this->assertStringContainsString(__FILE__, $s->getMessage());
-        $this->assertStringContainsString('38', $s->getMessage());
-        $this->assertCount(1, $this->files->getFiles(__DIR__ . '/snapshots'));
+        self::assertStringContainsString('Error', $s->getMessage());
+        self::assertStringContainsString('message', $s->getMessage());
+        self::assertStringContainsString(__FILE__, $s->getMessage());
+        self::assertStringContainsString('38', $s->getMessage());
+        self::assertCount(1, $this->files->getFiles(__DIR__ . '/snapshots'));
     }
 
     public function testCreateBiggerThanMaxFiles(): void
@@ -55,9 +55,9 @@ final class FileSnapshotTest extends TestCase
         $e2 = new \Error('message');
         $s2 = $this->fileSnapshot->create($e2);
 
-        $this->assertSame($e, $s->getException());
-        $this->assertSame($e2, $s2->getException());
+        self::assertSame($e, $s->getException());
+        self::assertSame($e2, $s2->getException());
 
-        $this->assertCount(1, $this->files->getFiles(__DIR__ . '/snapshots'));
+        self::assertCount(1, $this->files->getFiles(__DIR__ . '/snapshots'));
     }
 }

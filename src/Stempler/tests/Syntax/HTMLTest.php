@@ -22,51 +22,51 @@ class HTMLTest extends BaseTestCase
     {
         $doc = $this->parse('raw');
 
-        $this->assertInstanceOf(Raw::class, $doc->nodes[0]);
-        $this->assertSame('raw', $doc->nodes[0]->content);
+        self::assertInstanceOf(Raw::class, $doc->nodes[0]);
+        self::assertSame('raw', $doc->nodes[0]->content);
     }
 
     public function testNode(): void
     {
         $doc = $this->parse('<a href="google.com">hello world</a>');
 
-        $this->assertInstanceOf(Tag::class, $doc->nodes[0]);
+        self::assertInstanceOf(Tag::class, $doc->nodes[0]);
 
-        $this->assertSame('a', $doc->nodes[0]->name);
-        $this->assertFalse($doc->nodes[0]->void);
+        self::assertSame('a', $doc->nodes[0]->name);
+        self::assertFalse($doc->nodes[0]->void);
 
-        $this->assertInstanceOf(Attr::class, $doc->nodes[0]->attrs[0]);
+        self::assertInstanceOf(Attr::class, $doc->nodes[0]->attrs[0]);
 
-        $this->assertSame('href', $doc->nodes[0]->attrs[0]->name);
-        $this->assertSame('"google.com"', $doc->nodes[0]->attrs[0]->value);
-        $this->assertSame('hello world', $doc->nodes[0]->nodes[0]->content);
+        self::assertSame('href', $doc->nodes[0]->attrs[0]->name);
+        self::assertSame('"google.com"', $doc->nodes[0]->attrs[0]->value);
+        self::assertSame('hello world', $doc->nodes[0]->nodes[0]->content);
     }
 
     public function testShortNode(): void
     {
         $doc = $this->parse('<br>');
 
-        $this->assertInstanceOf(Tag::class, $doc->nodes[0]);
+        self::assertInstanceOf(Tag::class, $doc->nodes[0]);
 
-        $this->assertSame('br', $doc->nodes[0]->name);
-        $this->assertTrue($doc->nodes[0]->void);
-        $this->assertSame([], $doc->nodes[0]->attrs);
-        $this->assertSame([], $doc->nodes[0]->nodes);
+        self::assertSame('br', $doc->nodes[0]->name);
+        self::assertTrue($doc->nodes[0]->void);
+        self::assertSame([], $doc->nodes[0]->attrs);
+        self::assertSame([], $doc->nodes[0]->nodes);
     }
 
     public function testShortNode2(): void
     {
         $doc = $this->parse('<embed url="google.com"/>');
 
-        $this->assertInstanceOf(Tag::class, $doc->nodes[0]);
+        self::assertInstanceOf(Tag::class, $doc->nodes[0]);
 
-        $this->assertSame('embed', $doc->nodes[0]->name);
-        $this->assertTrue($doc->nodes[0]->void);
+        self::assertSame('embed', $doc->nodes[0]->name);
+        self::assertTrue($doc->nodes[0]->void);
 
-        $this->assertSame('url', $doc->nodes[0]->attrs[0]->name);
-        $this->assertSame('"google.com"', $doc->nodes[0]->attrs[0]->value);
+        self::assertSame('url', $doc->nodes[0]->attrs[0]->name);
+        self::assertSame('"google.com"', $doc->nodes[0]->attrs[0]->value);
 
-        $this->assertSame([], $doc->nodes[0]->nodes);
+        self::assertSame([], $doc->nodes[0]->nodes);
     }
 
     public function testBrokenNode(): void
@@ -87,16 +87,16 @@ class HTMLTest extends BaseTestCase
     {
         $doc = $this->parse('<a style="color: blue" onclick="alert(1);"></a>');
 
-        $this->assertSame('a', $doc->nodes[0]->name);
-        $this->assertFalse($doc->nodes[0]->void);
+        self::assertSame('a', $doc->nodes[0]->name);
+        self::assertFalse($doc->nodes[0]->void);
 
-        $this->assertInstanceOf(Attr::class, $doc->nodes[0]->attrs[0]);
-        $this->assertInstanceOf(Attr::class, $doc->nodes[0]->attrs[1]);
+        self::assertInstanceOf(Attr::class, $doc->nodes[0]->attrs[0]);
+        self::assertInstanceOf(Attr::class, $doc->nodes[0]->attrs[1]);
 
-        $this->assertSame('style', $doc->nodes[0]->attrs[0]->name);
-        $this->assertSame('onclick', $doc->nodes[0]->attrs[1]->name);
+        self::assertSame('style', $doc->nodes[0]->attrs[0]->name);
+        self::assertSame('onclick', $doc->nodes[0]->attrs[1]->name);
 
-        $this->assertInstanceOf(Verbatim::class, $doc->nodes[0]->attrs[0]->value);
-        $this->assertInstanceOf(Verbatim::class, $doc->nodes[0]->attrs[1]->value);
+        self::assertInstanceOf(Verbatim::class, $doc->nodes[0]->attrs[0]->value);
+        self::assertInstanceOf(Verbatim::class, $doc->nodes[0]->attrs[1]->value);
     }
 }

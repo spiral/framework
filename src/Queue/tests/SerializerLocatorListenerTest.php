@@ -53,7 +53,7 @@ final class SerializerLocatorListenerTest extends TestCase
         ]));
         $listener->listen(new \ReflectionClass($handler::class));
 
-        $this->assertEquals(new PhpSerializer(), $registry->getSerializer($handler::class));
+        self::assertEquals(new PhpSerializer(), $registry->getSerializer($handler::class));
     }
 
     public function testListenWithJobTypeFromAttribute(): void
@@ -89,7 +89,7 @@ final class SerializerLocatorListenerTest extends TestCase
         ]));
         $listener->listen(new \ReflectionClass($handler::class));
 
-        $this->assertEquals(new PhpSerializer(), $registry->getSerializer('test'));
+        self::assertEquals(new PhpSerializer(), $registry->getSerializer('test'));
     }
 
     public function testListenWithJobTypeFromClass(): void
@@ -119,6 +119,6 @@ final class SerializerLocatorListenerTest extends TestCase
         $listener = new SerializerLocatorListener($reader, $registry, new QueueConfig());
         $listener->listen(new \ReflectionClass($handler::class));
 
-        $this->assertEquals(new PhpSerializer(), $registry->getSerializer($handler::class));
+        self::assertEquals(new PhpSerializer(), $registry->getSerializer($handler::class));
     }
 }

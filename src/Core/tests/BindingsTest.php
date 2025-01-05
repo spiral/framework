@@ -16,26 +16,26 @@ class BindingsTest extends TestCase
     public function testStringBinding(): void
     {
         $container = new Container();
-        $this->assertInstanceOf(ContainerInterface::class, $container);
-        $this->assertFalse($container->has('abc'));
+        self::assertInstanceOf(ContainerInterface::class, $container);
+        self::assertFalse($container->has('abc'));
 
         $container->bind('abc', static fn(): string => 'hello');
         $container->bind('dce', 'abc');
 
-        $this->assertTrue($container->has('dce'));
-        $this->assertEquals('hello', $container->get('abc'));
-        $this->assertEquals($container->get('abc'), $container->get('dce'));
+        self::assertTrue($container->has('dce'));
+        self::assertEquals('hello', $container->get('abc'));
+        self::assertEquals($container->get('abc'), $container->get('dce'));
     }
 
     public function testClassBinding(): void
     {
         $container = new Container();
 
-        $this->assertFalse($container->has('sampleClass'));
+        self::assertFalse($container->has('sampleClass'));
         $container->bind('sampleClass', SampleClass::class);
 
-        $this->assertTrue($container->has('sampleClass'));
-        $this->assertInstanceOf(SampleClass::class, $container->get('sampleClass'));
+        self::assertTrue($container->has('sampleClass'));
+        self::assertInstanceOf(SampleClass::class, $container->get('sampleClass'));
     }
 
     public function testFactoryBinding(): void
@@ -43,7 +43,7 @@ class BindingsTest extends TestCase
         $container = new Container();
 
         $container->bindSingleton('sampleClass', [Factory::class, 'sampleClass']);
-        $this->assertInstanceOf(SampleClass::class, $container->get('sampleClass'));
+        self::assertInstanceOf(SampleClass::class, $container->get('sampleClass'));
     }
 
     public function testInstanceBinding(): void
@@ -54,8 +54,8 @@ class BindingsTest extends TestCase
 
         $instance = $container->get('sampleClass');
 
-        $this->assertInstanceOf(SampleClass::class, $instance);
-        $this->assertSame($instance, $container->get('sampleClass'));
+        self::assertInstanceOf(SampleClass::class, $instance);
+        self::assertSame($instance, $container->get('sampleClass'));
     }
 
     public function testAutoScalarBinding(): void

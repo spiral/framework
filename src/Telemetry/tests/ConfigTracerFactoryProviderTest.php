@@ -28,7 +28,7 @@ final class ConfigTracerFactoryProviderTest extends TestCase
             ->with('bar')
             ->andReturn($f = \Mockery::mock(TracerFactoryInterface::class));
 
-        $this->assertSame($f, $provider->getTracerFactory('foo'));
+        self::assertSame($f, $provider->getTracerFactory('foo'));
     }
 
     public function testGetsTraceeFactoryWithDefaultName(): void
@@ -46,7 +46,7 @@ final class ConfigTracerFactoryProviderTest extends TestCase
             ->with('bar')
             ->andReturn($f = \Mockery::mock(TracerFactoryInterface::class));
 
-        $this->assertSame($f, $provider->getTracerFactory());
+        self::assertSame($f, $provider->getTracerFactory());
     }
 
     public function testGetsTraceeFactoryWithNonExistName(): void

@@ -26,13 +26,13 @@ class NamespacedNameTest extends AbstractCommandTestCase
         ]);
 
         clearstatcache();
-        $this->assertTrue(class_exists(self::CLASS_NAME));
+        self::assertTrue(class_exists(self::CLASS_NAME));
 
         $reflection = new ReflectionClass(self::CLASS_NAME);
 
-        $this->assertStringContainsString('strict_types=1', $this->files()->read($reflection->getFileName()));
-        $this->assertStringContainsString('Sample Controller', $reflection->getDocComment());
-        $this->assertTrue($reflection->hasMethod('index'));
-        $this->assertTrue($reflection->hasMethod('save'));
+        self::assertStringContainsString('strict_types=1', $this->files()->read($reflection->getFileName()));
+        self::assertStringContainsString('Sample Controller', $reflection->getDocComment());
+        self::assertTrue($reflection->hasMethod('index'));
+        self::assertTrue($reflection->hasMethod('save'));
     }
 }

@@ -18,18 +18,13 @@ final class IsJsonExpectedTest extends \Spiral\Tests\Filters\Model\AttributeTest
             ->with('isJsonExpected')
             ->andReturnTrue();
 
-        $this->assertTrue(
-            $attribute->getValue($this->input, $this->makeProperty())
-        );
+        self::assertTrue($attribute->getValue($this->input, $this->makeProperty()));
     }
 
     public function testGetsSchema(): void
     {
         $attribute = new IsJsonExpected();
 
-        $this->assertSame(
-            'isJsonExpected',
-            $attribute->getSchema($this->makeProperty())
-        );
+        self::assertSame('isJsonExpected', $attribute->getSchema($this->makeProperty()));
     }
 }

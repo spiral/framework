@@ -22,7 +22,7 @@ final class CastingErrorMessagesTest extends FilterTestCase
                 'uuidWithValidationMessageCallback' => 'foo',
             ]);
         } catch (ValidationException $e) {
-            $this->assertSame([
+            self::assertSame([
                 'uuid' => 'Unable to set UUID value. Invalid UUID string: foo',
                 'uuidWithValidationMessage' => 'Invalid UUID',
                 'uuidWithValidationMessageCallback' => 'Invalid UUID: foo. Error: Unable to set UUID value. Invalid UUID string: foo',

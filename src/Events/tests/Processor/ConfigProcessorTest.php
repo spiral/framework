@@ -42,9 +42,9 @@ final class ConfigProcessorTest extends TestCase
         );
         $processor->process();
 
-        $this->assertSame($args[0], $registry->event);
-        $this->assertEquals($args[1], $registry->listener);
-        $this->assertSame($args[2], $registry->priority);
+        self::assertSame($args[0], $registry->event);
+        self::assertEquals($args[1], $registry->listener);
+        self::assertSame($args[2], $registry->priority);
     }
 
     public static function listenersDataProvider(): \Traversable

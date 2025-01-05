@@ -20,11 +20,11 @@ class AutoRegisterTest extends TestCase
     {
         $tr = $this->translator();
 
-        $this->assertTrue($tr->getCatalogueManager()->get('en')->has('messages', 'Welcome, {name}!'));
-        $this->assertFalse($tr->getCatalogueManager()->get('en')->has('messages', 'new'));
+        self::assertTrue($tr->getCatalogueManager()->get('en')->has('messages', 'Welcome, {name}!'));
+        self::assertFalse($tr->getCatalogueManager()->get('en')->has('messages', 'new'));
 
         $tr->trans('new');
-        $this->assertTrue($tr->getCatalogueManager()->get('en')->has('messages', 'new'));
+        self::assertTrue($tr->getCatalogueManager()->get('en')->has('messages', 'new'));
     }
 
     protected function translator(): Translator

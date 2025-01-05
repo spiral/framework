@@ -105,7 +105,7 @@ class InjectableTest extends TestCase
             ->with(m::on(static fn(ReflectionClass $r): bool => $r->getName() === TestConfig::class), null)
             ->andReturn($expected);
 
-        $this->assertSame($expected, $container->get(TestConfig::class));
+        self::assertSame($expected, $container->get(TestConfig::class));
     }
 
     public function testInjectorWithContext(): void
@@ -120,7 +120,7 @@ class InjectableTest extends TestCase
             ->with(m::on(static fn(ReflectionClass $r): bool => $r->getName() === TestConfig::class), 'context')
             ->andReturn($expected);
 
-        $this->assertSame($expected, $container->get(TestConfig::class, 'context'));
+        self::assertSame($expected, $container->get(TestConfig::class, 'context'));
     }
 
     public function testInjectorForMethod(): void
@@ -139,8 +139,8 @@ class InjectableTest extends TestCase
             ->andReturn($expected);
 
         $arguments = $container->resolveArguments(new ReflectionMethod(...[$this, 'methodInjection']));
-        $this->assertCount(1, $arguments);
-        $this->assertSame($expected, $arguments[0]);
+        self::assertCount(1, $arguments);
+        self::assertSame($expected, $arguments[0]);
     }
 
     public function testCheckIsClassHasInjector(): void
@@ -151,11 +151,11 @@ class InjectableTest extends TestCase
         $container->bind(ConfigsInterface::class, $configurator);
         $container->bindInjector(InjectableClassInterface::class, 'bar');
 
-        $this->assertFalse($container->hasInjector(SampleClass::class));
+        self::assertFalse($container->hasInjector(SampleClass::class));
 
-        $this->assertTrue($container->hasInjector(TestConfig::class));
-        $this->assertTrue($container->hasInjector(InjectableClassInterface::class));
-        $this->assertTrue($container->hasInjector(InjectableClassImplementation::class));
+        self::assertTrue($container->hasInjector(TestConfig::class));
+        self::assertTrue($container->hasInjector(InjectableClassInterface::class));
+        self::assertTrue($container->hasInjector(InjectableClassImplementation::class));
     }
 
     public static function inheritanceDataProvider(): iterable
@@ -196,8 +196,8 @@ class InjectableTest extends TestCase
 
         $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
 
-        $this->assertInstanceOf(stdClass::class, $result);
-        $this->assertInstanceOf(\ReflectionParameter::class, $result->context);
+        self::assertInstanceOf(stdClass::class, $result);
+        self::assertInstanceOf(\ReflectionParameter::class, $result->context);
     }
 
     public function testExtendedInjectorAnonClassObjectParam(): void
@@ -212,8 +212,8 @@ class InjectableTest extends TestCase
 
         $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
 
-        $this->assertInstanceOf(stdClass::class, $result);
-        $this->assertInstanceOf(\ReflectionParameter::class, $result->context);
+        self::assertInstanceOf(stdClass::class, $result);
+        self::assertInstanceOf(\ReflectionParameter::class, $result->context);
     }
 
     public function testExtendedInjectorAnonClassMixedParam(): void
@@ -228,8 +228,8 @@ class InjectableTest extends TestCase
 
         $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
 
-        $this->assertInstanceOf(stdClass::class, $result);
-        $this->assertInstanceOf(\ReflectionParameter::class, $result->context);
+        self::assertInstanceOf(stdClass::class, $result);
+        self::assertInstanceOf(\ReflectionParameter::class, $result->context);
     }
 
     private function methodInjection(TestConfig $contextArgument): void

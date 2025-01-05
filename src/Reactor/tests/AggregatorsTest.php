@@ -32,118 +32,118 @@ final class AggregatorsTest extends TestCase
     public function testClasses(): void
     {
         $aggr = new Classes([]);
-        $this->assertFalse($aggr->has('Test'));
+        self::assertFalse($aggr->has('Test'));
 
         $class = new ClassDeclaration('Test');
 
         $aggr->add($class);
-        $this->assertTrue($aggr->has('Test'));
-        $this->assertSame($class, $aggr->get('Test'));
+        self::assertTrue($aggr->has('Test'));
+        self::assertSame($class, $aggr->get('Test'));
     }
 
     public function testConstants(): void
     {
         $aggr = new Constants([]);
-        $this->assertFalse($aggr->has('TEST'));
+        self::assertFalse($aggr->has('TEST'));
 
         $constant = new Partial\Constant('TEST');
 
         $aggr->add($constant);
-        $this->assertTrue($aggr->has('TEST'));
-        $this->assertSame($constant, $aggr->get('TEST'));
+        self::assertTrue($aggr->has('TEST'));
+        self::assertSame($constant, $aggr->get('TEST'));
     }
 
     public function testEnumCases(): void
     {
         $aggr = new EnumCases([]);
-        $this->assertFalse($aggr->has('test'));
+        self::assertFalse($aggr->has('test'));
 
         $case = new Partial\EnumCase('test');
 
         $aggr->add($case);
-        $this->assertTrue($aggr->has('test'));
-        $this->assertSame($case, $aggr->get('test'));
+        self::assertTrue($aggr->has('test'));
+        self::assertSame($case, $aggr->get('test'));
     }
 
     public function testFunctions(): void
     {
         $aggr = new Functions([]);
-        $this->assertFalse($aggr->has('test'));
+        self::assertFalse($aggr->has('test'));
 
         $fn = new FunctionDeclaration('test');
 
         $aggr->add($fn);
-        $this->assertTrue($aggr->has('test'));
-        $this->assertSame($fn, $aggr->get('test'));
+        self::assertTrue($aggr->has('test'));
+        self::assertSame($fn, $aggr->get('test'));
     }
 
     public function testMethods(): void
     {
         $aggr = new Methods([]);
-        $this->assertFalse($aggr->has('method'));
+        self::assertFalse($aggr->has('method'));
 
         $method = new Partial\Method('method');
 
         $aggr->add($method);
-        $this->assertTrue($aggr->has('method'));
-        $this->assertSame($method, $aggr->get('method'));
+        self::assertTrue($aggr->has('method'));
+        self::assertSame($method, $aggr->get('method'));
     }
 
     public function testNamespaces(): void
     {
         $aggr = new Namespaces([]);
-        $this->assertFalse($aggr->has('test'));
+        self::assertFalse($aggr->has('test'));
 
         $namespace = new Partial\PhpNamespace('test');
 
         $aggr->add($namespace);
-        $this->assertTrue($aggr->has('test'));
-        $this->assertSame($namespace, $aggr->get('test'));
+        self::assertTrue($aggr->has('test'));
+        self::assertSame($namespace, $aggr->get('test'));
     }
 
     public function testParameters(): void
     {
         $aggr = new Parameters([]);
-        $this->assertFalse($aggr->has('param'));
+        self::assertFalse($aggr->has('param'));
 
         $param = new Partial\Parameter('param');
 
         $aggr->add($param);
-        $this->assertTrue($aggr->has('param'));
-        $this->assertSame($param, $aggr->get('param'));
+        self::assertTrue($aggr->has('param'));
+        self::assertSame($param, $aggr->get('param'));
     }
 
     public function testProperties(): void
     {
         $aggr = new Properties([]);
-        $this->assertFalse($aggr->has('test'));
+        self::assertFalse($aggr->has('test'));
 
         $property = new Partial\Property('test');
 
         $aggr->add($property);
-        $this->assertTrue($aggr->has('test'));
-        $this->assertSame($property, $aggr->get('test'));
+        self::assertTrue($aggr->has('test'));
+        self::assertSame($property, $aggr->get('test'));
     }
 
     public function testTraitUses(): void
     {
         $aggr = new TraitUses([]);
-        $this->assertFalse($aggr->has('test'));
+        self::assertFalse($aggr->has('test'));
 
         $uses = new Partial\TraitUse('test');
 
         $aggr->add($uses);
-        $this->assertTrue($aggr->has('test'));
-        $this->assertSame($uses, $aggr->get('test'));
+        self::assertTrue($aggr->has('test'));
+        self::assertSame($uses, $aggr->get('test'));
     }
 
     public function testElements(): void
     {
         $aggr = new Elements([]);
-        $this->assertFalse($aggr->has('c'));
-        $this->assertFalse($aggr->has('i'));
-        $this->assertFalse($aggr->has('t'));
-        $this->assertFalse($aggr->has('e'));
+        self::assertFalse($aggr->has('c'));
+        self::assertFalse($aggr->has('i'));
+        self::assertFalse($aggr->has('t'));
+        self::assertFalse($aggr->has('e'));
 
         $class = new ClassDeclaration('c');
         $interface = new InterfaceDeclaration('i');
@@ -155,50 +155,50 @@ final class AggregatorsTest extends TestCase
         $aggr->add($trait);
         $aggr->add($enum);
 
-        $this->assertTrue($aggr->has('c'));
-        $this->assertSame($class, $aggr->get('c'));
-        $this->assertTrue($aggr->has('i'));
-        $this->assertSame($interface, $aggr->get('i'));
-        $this->assertTrue($aggr->has('t'));
-        $this->assertSame($trait, $aggr->get('t'));
-        $this->assertTrue($aggr->has('e'));
-        $this->assertSame($enum, $aggr->get('e'));
+        self::assertTrue($aggr->has('c'));
+        self::assertSame($class, $aggr->get('c'));
+        self::assertTrue($aggr->has('i'));
+        self::assertSame($interface, $aggr->get('i'));
+        self::assertTrue($aggr->has('t'));
+        self::assertSame($trait, $aggr->get('t'));
+        self::assertTrue($aggr->has('e'));
+        self::assertSame($enum, $aggr->get('e'));
     }
 
     public function testEnums(): void
     {
         $aggr = new Enums([]);
-        $this->assertFalse($aggr->has('test'));
+        self::assertFalse($aggr->has('test'));
 
         $enum = new EnumDeclaration('test');
 
         $aggr->add($enum);
-        $this->assertTrue($aggr->has('test'));
-        $this->assertSame($enum, $aggr->get('test'));
+        self::assertTrue($aggr->has('test'));
+        self::assertSame($enum, $aggr->get('test'));
     }
 
     public function testInterfaces(): void
     {
         $aggr = new Interfaces([]);
-        $this->assertFalse($aggr->has('test'));
+        self::assertFalse($aggr->has('test'));
 
         $interface = new InterfaceDeclaration('test');
 
         $aggr->add($interface);
-        $this->assertTrue($aggr->has('test'));
-        $this->assertSame($interface, $aggr->get('test'));
+        self::assertTrue($aggr->has('test'));
+        self::assertSame($interface, $aggr->get('test'));
     }
 
     public function testTraits(): void
     {
         $aggr = new Traits([]);
-        $this->assertFalse($aggr->has('test'));
+        self::assertFalse($aggr->has('test'));
 
         $trait = new TraitDeclaration('test');
 
         $aggr->add($trait);
-        $this->assertTrue($aggr->has('test'));
-        $this->assertSame($trait, $aggr->get('test'));
+        self::assertTrue($aggr->has('test'));
+        self::assertSame($trait, $aggr->get('test'));
     }
 
     public function testAggregator(): void
@@ -230,17 +230,17 @@ final class AggregatorsTest extends TestCase
         ]);
 
         $a->add(new Partial\Method('method'));
-        $this->assertInstanceOf(Partial\Method::class, $a->method);
-        $this->assertTrue(isset($a['method']));
-        $this->assertInstanceOf(Partial\Method::class, $a['method']);
+        self::assertInstanceOf(Partial\Method::class, $a->method);
+        self::assertArrayHasKey('method', $a);
+        self::assertInstanceOf(Partial\Method::class, $a['method']);
 
-        $this->assertTrue($a->has('method'));
+        self::assertTrue($a->has('method'));
         $a->remove('method');
-        $this->assertFalse($a->has('method'));
+        self::assertFalse($a->has('method'));
 
         $a['method'] = new Partial\Method('method');
-        $this->assertTrue($a->has('method'));
+        self::assertTrue($a->has('method'));
         unset($a['method']);
-        $this->assertFalse($a->has('method'));
+        self::assertFalse($a->has('method'));
     }
 }

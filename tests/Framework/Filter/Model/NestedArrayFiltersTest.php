@@ -31,17 +31,17 @@ final class NestedArrayFiltersTest extends FilterTestCase
             ],
         ]);
 
-        $this->assertInstanceOf(MultipleAddressesFilter::class, $filter);
-        $this->assertInstanceOf(AddressFilter::class, $filter->addresses[0]);
-        $this->assertInstanceOf(AddressFilter::class, $filter->addresses[1]);
+        self::assertInstanceOf(MultipleAddressesFilter::class, $filter);
+        self::assertInstanceOf(AddressFilter::class, $filter->addresses[0]);
+        self::assertInstanceOf(AddressFilter::class, $filter->addresses[1]);
 
-        $this->assertSame('John Doe', $filter->name);
+        self::assertSame('John Doe', $filter->name);
 
-        $this->assertSame('New York', $filter->addresses[0]->city);
-        $this->assertSame('Wall Street', $filter->addresses[0]->address);
+        self::assertSame('New York', $filter->addresses[0]->city);
+        self::assertSame('Wall Street', $filter->addresses[0]->address);
 
-        $this->assertSame('Los Angeles', $filter->addresses[1]->city);
-        $this->assertSame('Hollywood', $filter->addresses[1]->address);
+        self::assertSame('Los Angeles', $filter->addresses[1]->city);
+        self::assertSame('Hollywood', $filter->addresses[1]->address);
     }
 
     #[DataProvider('provideInvalidData')]
@@ -54,9 +54,9 @@ final class NestedArrayFiltersTest extends FilterTestCase
 
         try {
             $filter = $this->getFilter(MultipleAddressesFilter::class, $data);
-            $this->assertSame('John Doe', $filter->name);
+            self::assertSame('John Doe', $filter->name);
         } catch (ValidationException $e) {
-            $this->assertSame($expectedErrors, $e->errors);
+            self::assertSame($expectedErrors, $e->errors);
             throw $e;
         }
     }

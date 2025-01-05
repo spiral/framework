@@ -15,6 +15,6 @@ class ConfigTest extends TestCase
             'key' => 'abc'
         ]);
 
-        $this->assertSame('abc', $config->getKey());
+        self::assertSame('abc', $config->getKey());
     }
 }

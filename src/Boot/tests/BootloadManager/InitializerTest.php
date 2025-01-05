@@ -13,7 +13,7 @@ final class InitializerTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([AbstractBootloader::class, BootloaderD::class]));
 
-        $this->assertCount(1, $result);
-        $this->assertIsArray($result[BootloaderD::class]);
+        self::assertCount(1, $result);
+        self::assertIsArray($result[BootloaderD::class]);
     }
 }

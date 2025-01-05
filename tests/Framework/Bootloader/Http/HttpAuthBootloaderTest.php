@@ -90,13 +90,13 @@ final class HttpAuthBootloaderTest extends BaseTestCase
         $headerTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['header'];
         self::assertInstanceOf(HeaderTransport::class, $headerTransport);
         $header = (new \ReflectionClass($headerTransport))->getProperty('header');
-        $this->assertSame('X-Auth-Token', $header->getValue($headerTransport));
+        self::assertSame('X-Auth-Token', $header->getValue($headerTransport));
 
         /** @var CookieTransport $cookieTransport */
         $cookieTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['cookie'];
         self::assertInstanceOf(CookieTransport::class, $cookieTransport);
         $cookie = (new \ReflectionClass($cookieTransport))->getProperty('cookie');
-        $this->assertSame('token', $cookie->getValue($cookieTransport));
+        self::assertSame('token', $cookie->getValue($cookieTransport));
     }
 
     public function testCorrectConfigurableTransports(): void
@@ -131,13 +131,13 @@ final class HttpAuthBootloaderTest extends BaseTestCase
         $headerTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['header'];
         self::assertInstanceOf(HeaderTransport::class, $headerTransport);
         $header = (new \ReflectionClass($headerTransport))->getProperty('header');
-        $this->assertSame('X-Auth-Token-test', $header->getValue($headerTransport));
+        self::assertSame('X-Auth-Token-test', $header->getValue($headerTransport));
 
         /** @var CookieTransport $cookieTransport */
         $cookieTransport = $configs->getConfig(AuthConfig::CONFIG)['transports']['cookie'];
         self::assertInstanceOf(CookieTransport::class, $cookieTransport);
         $cookie = (new \ReflectionClass($cookieTransport))->getProperty('cookie');
-        $this->assertSame('token-test', $cookie->getValue($cookieTransport));
+        self::assertSame('token-test', $cookie->getValue($cookieTransport));
     }
 
     public function testAddTokenStorage(): void
@@ -148,7 +148,7 @@ final class HttpAuthBootloaderTest extends BaseTestCase
         $bootloader = new HttpAuthBootloader($configs, $this->getContainer());
         $bootloader->addTokenStorage('foo', 'bar');
 
-        $this->assertSame(['foo' => 'bar'], $configs->getConfig(AuthConfig::CONFIG)['storages']);
+        self::assertSame(['foo' => 'bar'], $configs->getConfig(AuthConfig::CONFIG)['storages']);
     }
 
     public function testAddTransport(): void
@@ -159,6 +159,6 @@ final class HttpAuthBootloaderTest extends BaseTestCase
         $bootloader = new HttpAuthBootloader($configs, $this->getContainer());
         $bootloader->addTransport('foo', 'bar');
 
-        $this->assertSame(['foo' => 'bar'], $configs->getConfig(AuthConfig::CONFIG)['transports']);
+        self::assertSame(['foo' => 'bar'], $configs->getConfig(AuthConfig::CONFIG)['transports']);
     }
 }

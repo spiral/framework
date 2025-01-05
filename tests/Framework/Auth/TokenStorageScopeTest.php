@@ -26,7 +26,7 @@ final class TokenStorageScopeTest extends TestCase
 
         $scope = new TokenStorageScope($container);
 
-        $this->assertSame($token, $scope->load('foo'));
+        self::assertSame($token, $scope->load('foo'));
     }
 
     public function testCreate(): void
@@ -45,7 +45,7 @@ final class TokenStorageScopeTest extends TestCase
 
         $scope = new TokenStorageScope($container);
 
-        $this->assertSame($token, $scope->create(['foo' => 'bar'], $expiresAt));
+        self::assertSame($token, $scope->create(['foo' => 'bar'], $expiresAt));
     }
 
     public function testDelete(): void

@@ -14,7 +14,7 @@ class TrimRawTest extends BaseTestCase
     {
         $doc = $this->parse('<a>hello world</a>abc');
 
-        $this->assertInstanceOf(Raw::class, $doc->nodes[1]);
+        self::assertInstanceOf(Raw::class, $doc->nodes[1]);
     }
 
     public function testEmpty(): void
@@ -23,7 +23,7 @@ class TrimRawTest extends BaseTestCase
             <a>hello world</a>
         ');
 
-        $this->assertCount(1, $doc->nodes);
+        self::assertCount(1, $doc->nodes);
     }
 
     public function testKeepAttribute(): void
@@ -32,11 +32,11 @@ class TrimRawTest extends BaseTestCase
             <a href=" ${name} ${other} ">hello world</a>
         ');
 
-        $this->assertCount(1, $doc->nodes);
+        self::assertCount(1, $doc->nodes);
 
         /** @var Attr $href */
         $href = $doc->nodes[0]->attrs[0];
-        $this->assertCount(5, $href->value->nodes);
+        self::assertCount(5, $href->value->nodes);
     }
 
     protected function getVisitors(): array

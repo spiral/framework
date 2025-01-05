@@ -38,7 +38,7 @@ final class QueueInjectorTest extends TestCase
         $result = $injector->createInjection($reflection, 'test');
         $result->push('foo');
 
-        $this->assertInstanceOf(Queue::class, $result);
+        self::assertInstanceOf(Queue::class, $result);
     }
 
     public function testGetByIncorrectContext(): void

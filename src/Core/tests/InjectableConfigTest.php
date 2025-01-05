@@ -31,10 +31,10 @@ class InjectableConfigTest extends TestCase
             'key' => 'value',
         ]);
 
-        $this->assertArrayHasKey('key', $config);
-        $this->assertEquals('value', $config['key']);
+        self::assertArrayHasKey('key', $config);
+        self::assertEquals('value', $config['key']);
 
-        $this->assertArrayNotHasKey('otherKey', $config);
+        self::assertArrayNotHasKey('otherKey', $config);
     }
 
     public function testToArray(): void
@@ -44,7 +44,7 @@ class InjectableConfigTest extends TestCase
             'keyB' => 'valueB',
         ]);
 
-        $this->assertEquals([
+        self::assertSame([
             'keyA' => 'value',
             'keyB' => 'valueB',
         ], $config->toArray());
@@ -58,8 +58,8 @@ class InjectableConfigTest extends TestCase
         ]);
 
         $iterator = $config->getIterator();
-        $this->assertInstanceOf(ArrayIterator::class, $iterator);
-        $this->assertSame($iterator->getArrayCopy(), $config->toArray());
+        self::assertInstanceOf(ArrayIterator::class, $iterator);
+        self::assertSame($iterator->getArrayCopy(), $config->toArray());
     }
 
     public function testWriteError(): void
@@ -110,9 +110,9 @@ class InjectableConfigTest extends TestCase
         ]);
 
         $serialized = serialize($config);
-        $this->assertEquals($config, unserialize($serialized));
+        self::assertEquals($config, unserialize($serialized));
 
-        $this->assertEquals($config, TestConfig::__set_state([
+        self::assertEquals($config, TestConfig::__set_state([
             'config' => [
                 'keyA' => 'value',
                 'keyB' => 'valueB',
@@ -122,8 +122,8 @@ class InjectableConfigTest extends TestCase
 
     public function testAliases(): void
     {
-        $this->assertEquals('test', $this->resolveAlias('default'));
-        $this->assertEquals('test', $this->resolveAlias('value'));
+        self::assertSame('test', $this->resolveAlias('default'));
+        self::assertSame('test', $this->resolveAlias('value'));
     }
 
     public function testCircleReference(): void
@@ -146,11 +146,11 @@ class InjectableConfigTest extends TestCase
     {
         $config = new IntKeysConfig([10 => 'value']);
 
-        $this->assertEquals([
+        self::assertSame([
+            10 => 'value',
             1 => 'some',
             3 => 'other',
             7 => 'key',
-            10 => 'value'
         ], $config->toArray());
     }
 }

@@ -13,26 +13,26 @@ final class EventListenerTest extends TestCase
     {
         $dto = new EventListener('foo');
 
-        $this->assertSame('foo', $dto->listener);
-        $this->assertSame('__invoke', $dto->method);
-        $this->assertSame(0, $dto->priority);
+        self::assertSame('foo', $dto->listener);
+        self::assertSame('__invoke', $dto->method);
+        self::assertSame(0, $dto->priority);
     }
 
     public function testMethod(): void
     {
         $dto = new EventListener('foo', method: 'bar');
 
-        $this->assertSame('foo', $dto->listener);
-        $this->assertSame('bar', $dto->method);
-        $this->assertSame(0, $dto->priority);
+        self::assertSame('foo', $dto->listener);
+        self::assertSame('bar', $dto->method);
+        self::assertSame(0, $dto->priority);
     }
 
     public function testPriority(): void
     {
         $dto = new EventListener('foo', method: 'bar', priority: 10);
 
-        $this->assertSame('foo', $dto->listener);
-        $this->assertSame('bar', $dto->method);
-        $this->assertSame(10, $dto->priority);
+        self::assertSame('foo', $dto->listener);
+        self::assertSame('bar', $dto->method);
+        self::assertSame(10, $dto->priority);
     }
 }

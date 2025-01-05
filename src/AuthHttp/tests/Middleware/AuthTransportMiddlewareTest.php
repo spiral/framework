@@ -49,10 +49,10 @@ final class AuthTransportMiddlewareTest extends BaseTestCase
         /** @var TransportRegistry $registry2 */
         $registry2 = $this->getPrivateProperty('transportRegistry', $auth2);
 
-        $this->assertCount(1, $registry->getTransports());
-        $this->assertInstanceOf(CookieTransport::class, $registry->getTransport('cookie'));
-        $this->assertCount(1, $registry2->getTransports());
-        $this->assertInstanceOf(HeaderTransport::class, $registry2->getTransport('header'));
+        self::assertCount(1, $registry->getTransports());
+        self::assertInstanceOf(CookieTransport::class, $registry->getTransport('cookie'));
+        self::assertCount(1, $registry2->getTransports());
+        self::assertInstanceOf(HeaderTransport::class, $registry2->getTransport('header'));
     }
 
     public function testCloseContextWithAuthContextTransportNull(): void

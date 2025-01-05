@@ -69,12 +69,12 @@ class ExceptionsTest extends TestCase
             $method
         );
 
-        $this->assertInstanceOf(AutowireException::class, $e);
-        $this->assertInstanceOf(ContainerException::class, $e);
-        $this->assertInstanceOf(ContainerExceptionInterface::class, $e);
+        self::assertInstanceOf(AutowireException::class, $e);
+        self::assertInstanceOf(ContainerException::class, $e);
+        self::assertInstanceOf(ContainerExceptionInterface::class, $e);
 
-        $this->assertSame($method, $e->getContext());
-        $this->assertSame('param', $e->getParameter()->getName());
+        self::assertSame($method, $e->getContext());
+        self::assertSame('param', $e->getParameter()->getName());
     }
 
     /**
@@ -138,16 +138,13 @@ class ExceptionsTest extends TestCase
         try {
             $container->get('invalid');
         } catch (ContainerException $e) {
-            $this->assertSame(
-                <<<MARKDOWN
+            self::assertSame(<<<MARKDOWN
                 Can't resolve `invalid`: undefined class or binding `invalid`.
                 Container trace list:
                 - action: 'autowire'
                   alias: 'invalid'
                   context: null
-                MARKDOWN,
-                $e->getMessage(),
-            );
+                MARKDOWN, $e->getMessage());
         }
 
         $this->expectException(ContainerException::class);

@@ -16,7 +16,7 @@ final class ExtensionsCommand extends ConsoleTestCase
         $output = $this->runCommand('php:extensions');
 
         foreach (get_loaded_extensions() as $extension) {
-            $this->assertStringContainsString($extension, $output);
+            self::assertStringContainsString($extension, $output);
         }
     }
 }

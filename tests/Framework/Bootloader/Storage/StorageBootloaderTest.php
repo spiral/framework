@@ -37,9 +37,7 @@ final class StorageBootloaderTest extends BaseTestCase
 
     public function testConfigShouldBeInjectable(): void
     {
-        $this->assertTrue(
-            $this->getContainer()->hasInjector(StorageConfig::class)
-        );
+        self::assertTrue($this->getContainer()->hasInjector(StorageConfig::class));
     }
 
     public function testStorageInterfaceBinding(): void
@@ -97,6 +95,6 @@ final class StorageBootloaderTest extends BaseTestCase
 
         $storage = $this->getContainer()->get(StorageInterface::class);
 
-        $this->assertSame($bucket, $storage->bucket('default'));
+        self::assertSame($bucket, $storage->bucket('default'));
     }
 }

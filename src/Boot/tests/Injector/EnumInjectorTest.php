@@ -52,7 +52,7 @@ final class EnumInjectorTest extends TestCase
         $container = new Container();
         $enum = $container->get(InjectableEnum::class);
 
-        $this->assertSame(InjectableEnum::Bar, $enum);
+        self::assertSame(InjectableEnum::Bar, $enum);
     }
 
     public function testCreateInjectionForClassWithoutMethod(): void

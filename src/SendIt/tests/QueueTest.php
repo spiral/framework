@@ -43,10 +43,10 @@ class QueueTest extends TestCase
 
         $this->queue->expects('push')->withArgs(
             function ($job, $data, Options $options) use ($mail): bool {
-                $this->assertSame(MailQueue::JOB_NAME, $job);
-                $this->assertSame($data, MessageSerializer::pack($mail));
-                $this->assertSame('mailer', $options->getQueue());
-                $this->assertNull($options->getDelay());
+                self::assertSame(MailQueue::JOB_NAME, $job);
+                self::assertSame($data, MessageSerializer::pack($mail));
+                self::assertSame('mailer', $options->getQueue());
+                self::assertNull($options->getDelay());
 
                 return true;
             }
@@ -68,21 +68,21 @@ class QueueTest extends TestCase
 
         $this->queue->expects('push')->once()->withArgs(
             function ($job, $data, Options $options): bool {
-                $this->assertSame(30, $options->getDelay());
+                self::assertSame(30, $options->getDelay());
                 return true;
             }
         );
 
         $this->queue->expects('push')->once()->withArgs(
             function ($job, $data, Options $options): bool {
-                $this->assertSame(100, $options->getDelay());
+                self::assertSame(100, $options->getDelay());
                 return true;
             }
         );
 
         $this->queue->expects('push')->once()->withArgs(
             function ($job, $data, Options $options): bool {
-                $this->assertSame(200, $options->getDelay());
+                self::assertSame(200, $options->getDelay());
                 return true;
             }
         );

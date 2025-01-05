@@ -69,6 +69,6 @@ final class CookiesBootloaderTest extends BaseTestCase
         $bootloader = new CookiesBootloader($configs, $this->getContainer());
         $bootloader->whitelistCookie('foo');
 
-        $this->assertSame(['foo'], $configs->getConfig(CookiesConfig::CONFIG)['excluded']);
+        self::assertSame(['foo'], $configs->getConfig(CookiesConfig::CONFIG)['excluded']);
     }
 }

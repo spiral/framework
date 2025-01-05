@@ -52,32 +52,32 @@ final class BootloadManagerTest extends TestCase
             ],
         );
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->hasInstance('cde'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->has('ghi'));
-        $this->assertTrue($this->container->has(SampleClassInterface::class));
-        $this->assertTrue($this->container->has(SampleClass::class));
-        $this->assertTrue($this->container->has(SampleClass2::class));
-        $this->assertTrue($this->container->has(SampleClass3::class));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->hasInstance('cde'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->has('ghi'));
+        self::assertTrue($this->container->has(SampleClassInterface::class));
+        self::assertTrue($this->container->has(SampleClass::class));
+        self::assertTrue($this->container->has(SampleClass2::class));
+        self::assertTrue($this->container->has(SampleClass3::class));
 
-        $this->assertTrue($this->container->hasInjector(SampleInjectableClass::class));
-        $this->assertInstanceOf(
+        self::assertTrue($this->container->hasInjector(SampleInjectableClass::class));
+        self::assertInstanceOf(
             SampleInjectableClass::class,
             $injectable = $this->container->get(SampleInjectableClass::class),
         );
-        $this->assertSame('foo', $injectable->name);
+        self::assertSame('foo', $injectable->name);
 
-        $this->assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
-        $this->assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
+        self::assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
+        self::assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
 
-        $this->assertNotSame($this->container->get(SampleClass2::class), $this->container->get(SampleClass2::class));
-        $this->assertSame($this->container->get(SampleClass3::class), $this->container->get(SampleClass3::class));
+        self::assertNotSame($this->container->get(SampleClass2::class), $this->container->get(SampleClass2::class));
+        self::assertSame($this->container->get(SampleClass3::class), $this->container->get(SampleClass3::class));
 
         $classes = \array_filter($classes, static fn(string $class): bool => $class !== SampleClass::class);
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class,
         ]), $bootloader->getClasses());
@@ -89,10 +89,10 @@ final class BootloadManagerTest extends TestCase
 
         $bootloader->bootload([BootloaderQ::class]);
 
-        $this->assertTrue($this->container->has(SampleClass::class));
-        $this->assertTrue($this->container->has(SampleClassInterface::class));
+        self::assertTrue($this->container->has(SampleClass::class));
+        self::assertTrue($this->container->has(SampleClassInterface::class));
 
-        $this->assertSame(
+        self::assertSame(
             $this->container->get(SampleClass::class),
             $this->container->get(SampleClassInterface::class),
         );
@@ -104,10 +104,10 @@ final class BootloadManagerTest extends TestCase
 
         $bootloader->bootload([BootloaderR::class]);
 
-        $this->assertTrue($this->container->has(SampleClass::class));
-        $this->assertTrue($this->container->has(SampleClassInterface::class));
+        self::assertTrue($this->container->has(SampleClass::class));
+        self::assertTrue($this->container->has(SampleClassInterface::class));
 
-        $this->assertNotSame(
+        self::assertNotSame(
             $this->container->get(SampleClass::class),
             $this->container->get(SampleClassInterface::class),
         );
@@ -119,17 +119,17 @@ final class BootloadManagerTest extends TestCase
 
         $bootloader->bootload([BootloaderS::class]);
 
-        $this->assertTrue($this->container->has('sample1'));
-        $this->assertTrue($this->container->has('sample2'));
-        $this->assertTrue($this->container->has('sample3'));
-        $this->assertFalse($this->container->has(SampleClass::class));
-        $this->assertFalse($this->container->has(SampleClassInterface::class));
+        self::assertTrue($this->container->has('sample1'));
+        self::assertTrue($this->container->has('sample2'));
+        self::assertTrue($this->container->has('sample3'));
+        self::assertFalse($this->container->has(SampleClass::class));
+        self::assertFalse($this->container->has(SampleClassInterface::class));
 
-        $this->assertTrue($this->container->has('sample4'));
-        $this->assertTrue($this->container->has('sample5'));
-        $this->assertTrue($this->container->has('sample6'));
-        $this->assertTrue($this->container->has('sample7'));
-        $this->assertTrue($this->container->has(SampleClass2::class));
+        self::assertTrue($this->container->has('sample4'));
+        self::assertTrue($this->container->has('sample5'));
+        self::assertTrue($this->container->has('sample6'));
+        self::assertTrue($this->container->has('sample7'));
+        self::assertTrue($this->container->has(SampleClass2::class));
     }
 
     #[DataProvider('provideErrorBootloader')]

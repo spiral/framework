@@ -14,17 +14,17 @@ final class CasterRegistryTest extends TestCase
     public function testRegisterAndGetCasters(): void
     {
         $registry = new CasterRegistry();
-        $this->assertCount(0, $registry->getCasters());
+        self::assertCount(0, $registry->getCasters());
 
         $setter = $this->createMock(CasterInterface::class);
         $registry->register($setter);
-        $this->assertCount(1, $registry->getCasters());
-        $this->assertSame([$setter], $registry->getCasters());
+        self::assertCount(1, $registry->getCasters());
+        self::assertSame([$setter], $registry->getCasters());
     }
 
     public function testGetDefault(): void
     {
         $registry = new CasterRegistry();
-        $this->assertInstanceOf(DefaultCaster::class, $registry->getDefault());
+        self::assertInstanceOf(DefaultCaster::class, $registry->getDefault());
     }
 }

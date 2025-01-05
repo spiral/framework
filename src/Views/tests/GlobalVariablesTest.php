@@ -15,11 +15,11 @@ final class GlobalVariablesTest extends TestCase
             'foo' => 'bar'
         ]);
 
-        $this->assertSame('bar', $variables->getAll()['foo']);
-        $this->assertArrayNotHasKey('baf', $variables->getAll());
+        self::assertSame('bar', $variables->getAll()['foo']);
+        self::assertArrayNotHasKey('baf', $variables->getAll());
 
         $variables->set('baz', 'baf');
 
-        $this->assertSame('baf', $variables->getAll()['baz']);
+        self::assertSame('baf', $variables->getAll()['baz']);
     }
 }

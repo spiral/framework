@@ -34,8 +34,8 @@ final class ConsoleDispatcherTest extends BaseTestCase
             ->serve(new ArrayInput([]), $output);
         $result = $output->fetch();
 
-        $this->assertStringContainsString('dead', $result);
-        $this->assertSame(0, $serveResult);
+        self::assertStringContainsString('dead', $result);
+        self::assertSame(0, $serveResult);
     }
 
     public function testException(): void
@@ -51,10 +51,10 @@ final class ConsoleDispatcherTest extends BaseTestCase
         );
         $result = $output->fetch();
 
-        $this->assertStringContainsString('This command is dead', $result);
-        $this->assertStringContainsString('DeadCommand.php', $result);
-        $this->assertStringNotContainsString('throw new \InvalidArgumentException(\'This command is dead\');', $result);
-        $this->assertNotEquals(0, $serveResult);
+        self::assertStringContainsString('This command is dead', $result);
+        self::assertStringContainsString('DeadCommand.php', $result);
+        self::assertStringNotContainsString('throw new \InvalidArgumentException(\'This command is dead\');', $result);
+        self::assertNotEquals(0, $serveResult);
     }
 
     public function testExceptionVerbose(): void
@@ -71,10 +71,10 @@ final class ConsoleDispatcherTest extends BaseTestCase
         );
         $result = $output->fetch();
 
-        $this->assertStringContainsString('This command is dead', $result);
-        $this->assertStringContainsString('DeadCommand.php', $result);
-        $this->assertStringNotContainsString('throw new \InvalidArgumentException(\'This command is dead\');', $result);
-        $this->assertNotEquals(0, $serveResult);
+        self::assertStringContainsString('This command is dead', $result);
+        self::assertStringContainsString('DeadCommand.php', $result);
+        self::assertStringNotContainsString('throw new \InvalidArgumentException(\'This command is dead\');', $result);
+        self::assertNotEquals(0, $serveResult);
     }
 
     public function testExceptionDebug(): void
@@ -91,9 +91,9 @@ final class ConsoleDispatcherTest extends BaseTestCase
         );
         $result = $output->fetch();
 
-        $this->assertStringContainsString('This command is dead', $result);
-        $this->assertStringContainsString('DeadCommand.php', $result);
-        $this->assertStringContainsString('throw new \InvalidArgumentException(\'This command is dead\');', $result);
-        $this->assertNotEquals(0, $serveResult);
+        self::assertStringContainsString('This command is dead', $result);
+        self::assertStringContainsString('DeadCommand.php', $result);
+        self::assertStringContainsString('throw new \InvalidArgumentException(\'This command is dead\');', $result);
+        self::assertNotEquals(0, $serveResult);
     }
 }

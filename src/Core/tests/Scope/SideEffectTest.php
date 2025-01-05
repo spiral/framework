@@ -64,8 +64,8 @@ final class SideEffectTest extends BaseTestCase
             static fn(?ScopeIndicatorLogger $logger): ?ScopeIndicatorLogger => $logger,
         );
 
-        $this->assertNotNull($logger);
-        $this->assertSame('test', $logger->getName());
+        self::assertNotNull($logger);
+        self::assertSame('test', $logger->getName());
     }
 
     public function testAliasWithScope(): void
@@ -80,7 +80,7 @@ final class SideEffectTest extends BaseTestCase
             static fn(?ScopeIndicatorLogger $logger): ?ScopeIndicatorLogger => $logger,
         );
 
-        $this->assertNotNull($logger);
-        $this->assertSame('test', $logger->getName());
+        self::assertNotNull($logger);
+        self::assertSame('test', $logger->getName());
     }
 }

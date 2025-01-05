@@ -35,16 +35,12 @@ final class TokenizerBootloaderTest extends BaseTestCase
 
     public function testClassLocatorInjector(): void
     {
-        $this->assertTrue(
-            $this->getContainer()->hasInjector(ClassLocator::class),
-        );
+        self::assertTrue($this->getContainer()->hasInjector(ClassLocator::class));
     }
 
     public function testInvocationLocatorInjector(): void
     {
-        $this->assertTrue(
-            $this->getContainer()->hasInjector(InvocationLocator::class),
-        );
+        self::assertTrue($this->getContainer()->hasInjector(InvocationLocator::class));
     }
 
     public function testConfig(): void
@@ -84,7 +80,7 @@ final class TokenizerBootloaderTest extends BaseTestCase
         $bootloader = new TokenizerBootloader($configs);
         $bootloader->addDirectory('foo');
 
-        $this->assertSame(['foo'], $configs->getConfig(TokenizerConfig::CONFIG)['directories']);
+        self::assertSame(['foo'], $configs->getConfig(TokenizerConfig::CONFIG)['directories']);
     }
 
     public function testAddScopedDirectoryWithNonExistScope(): void
@@ -95,8 +91,7 @@ final class TokenizerBootloaderTest extends BaseTestCase
         $bootloader = new TokenizerBootloader($configs);
         $bootloader->addScopedDirectory('foo', 'bar');
 
-        $this->assertSame(['bar' => ['directories' => ['baz']], 'foo' => ['directories' => ['bar']]],
-            $configs->getConfig(TokenizerConfig::CONFIG)['scopes']);
+        self::assertSame(['bar' => ['directories' => ['baz']], 'foo' => ['directories' => ['bar']]], $configs->getConfig(TokenizerConfig::CONFIG)['scopes']);
     }
 
     public function testAddScopedDirectory(): void
@@ -110,8 +105,7 @@ final class TokenizerBootloaderTest extends BaseTestCase
         $bootloader = new TokenizerBootloader($configs);
         $bootloader->addScopedDirectory('foo', 'bar');
 
-        $this->assertSame(['foo' => ['exclude' => ['baz'], 'directories' => ['baz', 'bar']]],
-            $configs->getConfig(TokenizerConfig::CONFIG)['scopes']);
+        self::assertSame(['foo' => ['exclude' => ['baz'], 'directories' => ['baz', 'bar']]], $configs->getConfig(TokenizerConfig::CONFIG)['scopes']);
     }
 
     public function testExcludeScopedDirectoryWithNonExistScope(): void
@@ -122,8 +116,7 @@ final class TokenizerBootloaderTest extends BaseTestCase
         $bootloader = new TokenizerBootloader($configs);
         $bootloader->excludeScopedDirectory('foo', 'bar');
 
-        $this->assertSame(['foo' => ['exclude' => ['bar']]],
-            $configs->getConfig(TokenizerConfig::CONFIG)['scopes']);
+        self::assertSame(['foo' => ['exclude' => ['bar']]], $configs->getConfig(TokenizerConfig::CONFIG)['scopes']);
     }
 
     public function testExcludeScopedDirectory(): void
@@ -137,7 +130,6 @@ final class TokenizerBootloaderTest extends BaseTestCase
         $bootloader = new TokenizerBootloader($configs);
         $bootloader->excludeScopedDirectory('foo', 'bar');
 
-        $this->assertSame(['foo' => ['exclude' => ['baz', 'bar'], 'directories' => ['baz']]],
-            $configs->getConfig(TokenizerConfig::CONFIG)['scopes']);
+        self::assertSame(['foo' => ['exclude' => ['baz', 'bar'], 'directories' => ['baz']]], $configs->getConfig(TokenizerConfig::CONFIG)['scopes']);
     }
 }

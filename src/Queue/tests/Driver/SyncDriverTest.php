@@ -62,7 +62,7 @@ final class SyncDriverTest extends TestCase
 
         $id = $this->queue->push('foo', $payload);
 
-        $this->assertSame($uuid->toString(), $id);
+        self::assertSame($uuid->toString(), $id);
     }
 
     public function testJobWithHeadersShouldBePushed(): void
@@ -84,7 +84,7 @@ final class SyncDriverTest extends TestCase
 
         $id = $this->queue->push('foo', ['baz' => 'baf'], $options);
 
-        $this->assertSame($uuid->toString(), $id);
+        self::assertSame($uuid->toString(), $id);
     }
 
     public static function payloadDataProvider(): \Traversable

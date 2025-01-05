@@ -39,9 +39,7 @@ final class DistributionBootloaderTest extends BaseTestCase
 
     public function testDistributionConfigInjector(): void
     {
-        $this->assertTrue(
-            $this->getContainer()->hasInjector(DistributionConfig::class)
-        );
+        self::assertTrue($this->getContainer()->hasInjector(DistributionConfig::class));
     }
 
     public function testConfig(): void

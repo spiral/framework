@@ -15,183 +15,177 @@ final class PropertyTest extends TestCase
     public function testAttribute(): void
     {
         $property = new Property('foo');
-        $this->assertEmpty($property->getAttributes());
+        self::assertEmpty($property->getAttributes());
 
         $property->addAttribute('test', ['name' => 'foo', 'otherName' => 'bar']);
-        $this->assertCount(1, $property->getAttributes());
+        self::assertCount(1, $property->getAttributes());
 
         $property->setAttributes([
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar'])
         ]);
-        $this->assertCount(2, $property->getAttributes());
+        self::assertCount(2, $property->getAttributes());
     }
 
     public function testComment(): void
     {
         $property = new Property('foo');
-        $this->assertNull($property->getComment());
+        self::assertNull($property->getComment());
 
         $property->setComment('/** Awesome property */');
-        $this->assertSame('/** Awesome property */', $property->getComment());
+        self::assertSame('/** Awesome property */', $property->getComment());
 
         $property->setComment(null);
-        $this->assertNull($property->getComment());
+        self::assertNull($property->getComment());
 
         $property->setComment(['/** Line one */', '/** Line two */']);
-        $this->assertSame(
-            \preg_replace('/\s+/', '', '/** Line one *//** Line two */'),
-            \preg_replace('/\s+/', '', $property->getComment())
-        );
+        self::assertSame(\preg_replace('/\s+/', '', '/** Line one *//** Line two */'), \preg_replace('/\s+/', '', $property->getComment()));
 
         $property->setComment(null);
         $property->addComment('/** Line one */');
         $property->addComment('/** Line two */');
-        $this->assertSame(
-            \preg_replace('/\s+/', '', '/** Line one *//** Line two */'),
-            \preg_replace('/\s+/', '', $property->getComment())
-        );
+        self::assertSame(\preg_replace('/\s+/', '', '/** Line one *//** Line two */'), \preg_replace('/\s+/', '', $property->getComment()));
     }
 
     public function testGetName(): void
     {
         $property = new Property('foo');
 
-        $this->assertSame('foo', $property->getName());
+        self::assertSame('foo', $property->getName());
     }
 
     public function testVisibility(): void
     {
         $property = new Property('foo');
-        $this->assertNull($property->getVisibility());
+        self::assertNull($property->getVisibility());
 
         $property->setVisibility(Visibility::PUBLIC);
-        $this->assertSame(Visibility::PUBLIC, $property->getVisibility());
-        $this->assertTrue($property->isPublic());
-        $this->assertFalse($property->isProtected());
-        $this->assertFalse($property->isPrivate());
+        self::assertSame(Visibility::PUBLIC, $property->getVisibility());
+        self::assertTrue($property->isPublic());
+        self::assertFalse($property->isProtected());
+        self::assertFalse($property->isPrivate());
 
         $property->setVisibility(Visibility::PROTECTED);
-        $this->assertSame(Visibility::PROTECTED, $property->getVisibility());
-        $this->assertFalse($property->isPublic());
-        $this->assertTrue($property->isProtected());
-        $this->assertFalse($property->isPrivate());
+        self::assertSame(Visibility::PROTECTED, $property->getVisibility());
+        self::assertFalse($property->isPublic());
+        self::assertTrue($property->isProtected());
+        self::assertFalse($property->isPrivate());
 
         $property->setVisibility(Visibility::PRIVATE);
-        $this->assertSame(Visibility::PRIVATE, $property->getVisibility());
-        $this->assertFalse($property->isPublic());
-        $this->assertFalse($property->isProtected());
-        $this->assertTrue($property->isPrivate());
+        self::assertSame(Visibility::PRIVATE, $property->getVisibility());
+        self::assertFalse($property->isPublic());
+        self::assertFalse($property->isProtected());
+        self::assertTrue($property->isPrivate());
 
         $property->setPublic();
-        $this->assertSame(Visibility::PUBLIC, $property->getVisibility());
-        $this->assertTrue($property->isPublic());
-        $this->assertFalse($property->isProtected());
-        $this->assertFalse($property->isPrivate());
+        self::assertSame(Visibility::PUBLIC, $property->getVisibility());
+        self::assertTrue($property->isPublic());
+        self::assertFalse($property->isProtected());
+        self::assertFalse($property->isPrivate());
 
         $property->setProtected();
-        $this->assertSame(Visibility::PROTECTED, $property->getVisibility());
-        $this->assertFalse($property->isPublic());
-        $this->assertTrue($property->isProtected());
-        $this->assertFalse($property->isPrivate());
+        self::assertSame(Visibility::PROTECTED, $property->getVisibility());
+        self::assertFalse($property->isPublic());
+        self::assertTrue($property->isProtected());
+        self::assertFalse($property->isPrivate());
 
         $property->setPrivate();
-        $this->assertSame(Visibility::PRIVATE, $property->getVisibility());
-        $this->assertFalse($property->isPublic());
-        $this->assertFalse($property->isProtected());
-        $this->assertTrue($property->isPrivate());
+        self::assertSame(Visibility::PRIVATE, $property->getVisibility());
+        self::assertFalse($property->isPublic());
+        self::assertFalse($property->isProtected());
+        self::assertTrue($property->isPrivate());
     }
 
     public function testValue(): void
     {
         $property = new Property('foo');
 
-        $this->assertNull($property->getValue());
+        self::assertNull($property->getValue());
 
         $property->setValue('foo');
-        $this->assertSame('foo', $property->getValue());
+        self::assertSame('foo', $property->getValue());
     }
 
     public function testStatic(): void
     {
         $property = new Property('foo');
 
-        $this->assertFalse($property->isStatic());
+        self::assertFalse($property->isStatic());
 
         $property->setStatic(true);
-        $this->assertTrue($property->isStatic());
+        self::assertTrue($property->isStatic());
 
         $property->setStatic(false);
-        $this->assertFalse($property->isStatic());
+        self::assertFalse($property->isStatic());
 
         $property->setStatic(true);
-        $this->assertTrue($property->isStatic());
+        self::assertTrue($property->isStatic());
     }
 
     public function testType(): void
     {
         $property = new Property('foo');
-        $this->assertNull($property->getType());
+        self::assertNull($property->getType());
 
         $property->setType('int');
-        $this->assertSame('int', $property->getType());
+        self::assertSame('int', $property->getType());
     }
 
     public function testNullable(): void
     {
         $property = new Property('foo');
-        $this->assertFalse($property->isNullable());
+        self::assertFalse($property->isNullable());
 
         $property->setNullable(true);
-        $this->assertTrue($property->isNullable());
+        self::assertTrue($property->isNullable());
 
         $property->setNullable(false);
-        $this->assertFalse($property->isNullable());
+        self::assertFalse($property->isNullable());
     }
 
     public function testInitialized(): void
     {
         $property = new Property('foo');
-        $this->assertFalse($property->isInitialized());
+        self::assertFalse($property->isInitialized());
 
         $property->setValue(null);
-        $this->assertTrue($property->isInitialized());
+        self::assertTrue($property->isInitialized());
 
         $property = new Property('foo');
 
         $property->setValue('bar');
-        $this->assertTrue($property->isInitialized());
+        self::assertTrue($property->isInitialized());
     }
 
     public function testReadOnly(): void
     {
         $property = new Property('foo');
 
-        $this->assertFalse($property->isReadOnly());
+        self::assertFalse($property->isReadOnly());
 
         $property->setReadOnly(true);
-        $this->assertTrue($property->isReadOnly());
+        self::assertTrue($property->isReadOnly());
 
         $property->setReadOnly(false);
-        $this->assertFalse($property->isReadOnly());
+        self::assertFalse($property->isReadOnly());
 
         $property->setReadOnly(true);
-        $this->assertTrue($property->isReadOnly());
+        self::assertTrue($property->isReadOnly());
     }
 
     public function testFromElement(): void
     {
         $property = Property::fromElement(new NetteProperty('test'));
 
-        $this->assertInstanceOf(Property::class, $property);
-        $this->assertSame('test', $property->getName());
+        self::assertInstanceOf(Property::class, $property);
+        self::assertSame('test', $property->getName());
     }
 
     public function testGetElement(): void
     {
         $element = (new Property('test'))->getElement();
 
-        $this->assertInstanceOf(NetteProperty::class, $element);
-        $this->assertSame('test', $element->getName());
+        self::assertInstanceOf(NetteProperty::class, $element);
+        self::assertSame('test', $element->getName());
     }
 }

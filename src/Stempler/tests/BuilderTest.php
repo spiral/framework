@@ -29,7 +29,7 @@ class BuilderTest extends TestCase
         $builder = $this->getBuilder(new StringLoader());
         $builder->getLoader()->set('home', 'hello world');
 
-        $this->assertSame('hello world', $builder->compile('home')->getContent());
+        self::assertSame('hello world', $builder->compile('home')->getContent());
     }
 
     public function testInvalidPath(): void

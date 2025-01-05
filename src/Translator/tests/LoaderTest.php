@@ -21,20 +21,20 @@ class LoaderTest extends TestCase
             'directory' => __DIR__ . '/fixtures/locales/',
         ]));
 
-        $this->assertTrue($loader->hasLocale('ru'));
-        $this->assertTrue($loader->hasLocale('RU'));
-        $this->assertFalse($loader->hasLocale('fr'));
-        $this->assertFalse($loader->hasLocale('FR'));
+        self::assertTrue($loader->hasLocale('ru'));
+        self::assertTrue($loader->hasLocale('RU'));
+        self::assertFalse($loader->hasLocale('fr'));
+        self::assertFalse($loader->hasLocale('FR'));
 
         $loader = new CatalogueLoader(new TranslatorConfig([
             'directory' => __DIR__ . '/fixtures/locales/',
             'directories' => [__DIR__ . '/fixtures/additional'],
         ]));
 
-        $this->assertTrue($loader->hasLocale('ru'));
-        $this->assertTrue($loader->hasLocale('RU'));
-        $this->assertTrue($loader->hasLocale('fr'));
-        $this->assertTrue($loader->hasLocale('FR'));
+        self::assertTrue($loader->hasLocale('ru'));
+        self::assertTrue($loader->hasLocale('RU'));
+        self::assertTrue($loader->hasLocale('fr'));
+        self::assertTrue($loader->hasLocale('FR'));
     }
 
     public function testGetLocales(): void
@@ -48,7 +48,7 @@ class LoaderTest extends TestCase
         sort($shouldBe);
         sort($compared);
 
-        $this->assertSame($shouldBe, $compared);
+        self::assertSame($shouldBe, $compared);
     }
 
     public function testGetLocalesWithAdditionalDirectories(): void
@@ -63,7 +63,7 @@ class LoaderTest extends TestCase
         sort($shouldBe);
         sort($compared);
 
-        $this->assertSame($shouldBe, $compared);
+        self::assertSame($shouldBe, $compared);
     }
 
     public function testLoadCatalogue(): void
@@ -77,35 +77,29 @@ class LoaderTest extends TestCase
         ]));
 
         $catalogue = $loader->loadCatalogue('RU');
-        $this->assertInstanceOf(CatalogueInterface::class, $catalogue);
-        $this->assertSame('ru', $catalogue->getLocale());
+        self::assertInstanceOf(CatalogueInterface::class, $catalogue);
+        self::assertSame('ru', $catalogue->getLocale());
 
         $catalogue = $loader->loadCatalogue('ru');
-        $this->assertInstanceOf(CatalogueInterface::class, $catalogue);
-        $this->assertSame('ru', $catalogue->getLocale());
+        self::assertInstanceOf(CatalogueInterface::class, $catalogue);
+        self::assertSame('ru', $catalogue->getLocale());
 
-        $this->assertCount(2, $catalogue->getDomains());
-        $this->assertTrue(in_array('messages', $catalogue->getDomains()));
-        $this->assertTrue(in_array('views', $catalogue->getDomains()));
+        self::assertCount(2, $catalogue->getDomains());
+        self::assertContains('messages', $catalogue->getDomains());
+        self::assertContains('views', $catalogue->getDomains());
 
         $mc = $catalogue->toMessageCatalogue();
 
-        $this->assertTrue($mc->has('message'));
-        $this->assertSame('translation', $mc->get('message'));
+        self::assertTrue($mc->has('message'));
+        self::assertSame('translation', $mc->get('message'));
 
-        $this->assertTrue($mc->has('Welcome To Spiral', 'views'));
-        $this->assertSame(
-            'Добро пожаловать в Spiral Framework',
-            $mc->get('Welcome To Spiral', 'views')
-        );
+        self::assertTrue($mc->has('Welcome To Spiral', 'views'));
+        self::assertSame('Добро пожаловать в Spiral Framework', $mc->get('Welcome To Spiral', 'views'));
 
-        $this->assertTrue($mc->has('Twig Version', 'views'));
-        $this->assertSame(
-            'Twig версия',
-            $mc->get('Twig Version', 'views')
-        );
+        self::assertTrue($mc->has('Twig Version', 'views'));
+        self::assertSame('Twig версия', $mc->get('Twig Version', 'views'));
 
-        $this->assertFalse($loader->hasLocale('fr'));
+        self::assertFalse($loader->hasLocale('fr'));
     }
 
     public function testLoadCatalogueWithAdditionalDirectories(): void
@@ -121,16 +115,13 @@ class LoaderTest extends TestCase
 
         $catalogue = $loader->loadCatalogue('fr');
         $mc = $catalogue->toMessageCatalogue();
-        $this->assertTrue($mc->has('Welcome To Spiral', 'views'));
-        $this->assertSame(
-            'Bienvenue à Spirale',
-            $mc->get('Welcome To Spiral', 'views')
-        );
+        self::assertTrue($mc->has('Welcome To Spiral', 'views'));
+        self::assertSame('Bienvenue à Spirale', $mc->get('Welcome To Spiral', 'views'));
 
-        $this->assertTrue($loader->hasLocale('fr'));
-        $this->assertTrue($loader->hasLocale('FR'));
-        $this->assertTrue($loader->hasLocale('ru'));
-        $this->assertTrue($loader->hasLocale('RU'));
+        self::assertTrue($loader->hasLocale('fr'));
+        self::assertTrue($loader->hasLocale('FR'));
+        self::assertTrue($loader->hasLocale('ru'));
+        self::assertTrue($loader->hasLocale('RU'));
     }
 
     public function testApplicationTranslationShouldOverrideAdditionalTranslations(): void
@@ -147,8 +138,8 @@ class LoaderTest extends TestCase
         $catalogue = $loader->loadCatalogue('ru');
         $mc = $catalogue->toMessageCatalogue();
 
-        $this->assertTrue($mc->has('should_be_override'));
-        $this->assertSame('changed by application translation', $mc->get('should_be_override'));
+        self::assertTrue($mc->has('should_be_override'));
+        self::assertSame('changed by application translation', $mc->get('should_be_override'));
     }
 
     public function testLoadCatalogueNoLoader(): void
@@ -161,22 +152,22 @@ class LoaderTest extends TestCase
         ]));
 
         $catalogue = $loader->loadCatalogue('RU');
-        $this->assertInstanceOf(CatalogueInterface::class, $catalogue);
-        $this->assertSame('ru', $catalogue->getLocale());
+        self::assertInstanceOf(CatalogueInterface::class, $catalogue);
+        self::assertSame('ru', $catalogue->getLocale());
 
         $catalogue = $loader->loadCatalogue('ru');
-        $this->assertInstanceOf(CatalogueInterface::class, $catalogue);
-        $this->assertSame('ru', $catalogue->getLocale());
+        self::assertInstanceOf(CatalogueInterface::class, $catalogue);
+        self::assertSame('ru', $catalogue->getLocale());
 
-        $this->assertCount(1, $catalogue->getDomains());
-        $this->assertTrue(in_array('messages', $catalogue->getDomains()));
-        $this->assertFalse(in_array('views', $catalogue->getDomains()));
+        self::assertCount(1, $catalogue->getDomains());
+        self::assertContains('messages', $catalogue->getDomains());
+        self::assertNotContains('views', $catalogue->getDomains());
     }
 
     public function testStaticLoader(): void
     {
         $loader = new RuntimeLoader();
-        $this->assertFalse($loader->hasLocale('en'));
+        self::assertFalse($loader->hasLocale('en'));
     }
 
     public function testStaticLoaderException(): void

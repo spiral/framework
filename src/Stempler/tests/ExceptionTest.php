@@ -26,10 +26,7 @@ class ExceptionTest extends BaseTestCase
     {
         $builder = $this->getBuilder($this->getFixtureLoader());
 
-        $this->assertSame(
-            'hello world',
-            $builder->compile('hello')->getContent()
-        );
+        self::assertSame('hello world', $builder->compile('hello')->getContent());
     }
 
     public function testSyntaxException(): void
@@ -39,9 +36,9 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('broken')->getContent();
         } catch (ParserException $e) {
-            $this->assertInstanceOf(SyntaxException::class, $e->getPrevious());
-            $this->assertStringContainsString('broken.dark.php', $e->getFile());
-            $this->assertSame(3, $e->getLine());
+            self::assertInstanceOf(SyntaxException::class, $e->getPrevious());
+            self::assertStringContainsString('broken.dark.php', $e->getFile());
+            self::assertSame(3, $e->getLine());
         }
     }
 
@@ -52,8 +49,8 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('import/bad-element');
         } catch (ImportException $e) {
-            $this->assertStringContainsString('bad-element.dark.php', $e->getFile());
-            $this->assertSame(1, $e->getLine());
+            self::assertStringContainsString('bad-element.dark.php', $e->getFile());
+            self::assertSame(1, $e->getLine());
         }
     }
 
@@ -64,8 +61,8 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('import/bad-element-3');
         } catch (ImportException $e) {
-            $this->assertStringContainsString('bad-element-3.dark.php', $e->getFile());
-            $this->assertSame(3, $e->getLine());
+            self::assertStringContainsString('bad-element-3.dark.php', $e->getFile());
+            self::assertSame(3, $e->getLine());
         }
     }
 
@@ -76,8 +73,8 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('import/bad-dir');
         } catch (ImportException $e) {
-            $this->assertStringContainsString('bad-dir.dark.php', $e->getFile());
-            $this->assertSame(1, $e->getLine());
+            self::assertStringContainsString('bad-dir.dark.php', $e->getFile());
+            self::assertSame(1, $e->getLine());
         }
     }
 
@@ -88,8 +85,8 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('import/bad-dir-2');
         } catch (ImportException $e) {
-            $this->assertStringContainsString('bad-dir-2.dark.php', $e->getFile());
-            $this->assertSame(2, $e->getLine());
+            self::assertStringContainsString('bad-dir-2.dark.php', $e->getFile());
+            self::assertSame(2, $e->getLine());
         }
     }
 
@@ -100,8 +97,8 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('bad-directive');
         } catch (DirectiveException $e) {
-            $this->assertStringContainsString('bad-directive.dark.php', $e->getFile());
-            $this->assertSame(2, $e->getLine());
+            self::assertStringContainsString('bad-directive.dark.php', $e->getFile());
+            self::assertSame(2, $e->getLine());
         }
     }
 
@@ -112,13 +109,13 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('exception-in-import');
         } catch (ImportException $e) {
-            $this->assertStringContainsString('exception-in-import.dark.php', $e->getFile());
-            $this->assertSame(3, $e->getLine());
+            self::assertStringContainsString('exception-in-import.dark.php', $e->getFile());
+            self::assertSame(3, $e->getLine());
 
             $e = $e->getPrevious();
-            $this->assertInstanceOf(ImportException::class, $e);
-            $this->assertStringContainsString('bad-element.dark.php', $e->getFile());
-            $this->assertSame(1, $e->getLine());
+            self::assertInstanceOf(ImportException::class, $e);
+            self::assertStringContainsString('bad-element.dark.php', $e->getFile());
+            self::assertSame(1, $e->getLine());
         }
     }
 
@@ -129,14 +126,14 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('exception-in-import-2');
         } catch (ImportException $e) {
-            $this->assertInstanceOf(ImportException::class, $e);
-            $this->assertStringContainsString('exception-in-import-2.dark.php', $e->getFile());
-            $this->assertSame(3, $e->getLine());
+            self::assertInstanceOf(ImportException::class, $e);
+            self::assertStringContainsString('exception-in-import-2.dark.php', $e->getFile());
+            self::assertSame(3, $e->getLine());
 
             $e = $e->getPrevious();
-            $this->assertInstanceOf(ParserException::class, $e);
-            $this->assertStringContainsString('bundle2.dark.php', $e->getFile());
-            $this->assertSame(3, $e->getLine());
+            self::assertInstanceOf(ParserException::class, $e);
+            self::assertStringContainsString('bundle2.dark.php', $e->getFile());
+            self::assertSame(3, $e->getLine());
         }
     }
 
@@ -147,10 +144,10 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('bad-extends');
         } catch (ExtendsException $e) {
-            $this->assertStringContainsString('bad-extends.dark.php', $e->getFile());
-            $this->assertSame(1, $e->getLine());
+            self::assertStringContainsString('bad-extends.dark.php', $e->getFile());
+            self::assertSame(1, $e->getLine());
 
-            $this->assertInstanceOf(LoaderException::class, $e->getPrevious());
+            self::assertInstanceOf(LoaderException::class, $e->getPrevious());
         }
     }
 
@@ -161,14 +158,14 @@ class ExceptionTest extends BaseTestCase
         try {
             $builder->compile('bad-extends-2');
         } catch (ExtendsException $e) {
-            $this->assertInstanceOf(ExtendsException::class, $e);
-            $this->assertStringContainsString('bad-extends-2.dark.php', $e->getFile());
-            $this->assertSame(1, $e->getLine());
+            self::assertInstanceOf(ExtendsException::class, $e);
+            self::assertStringContainsString('bad-extends-2.dark.php', $e->getFile());
+            self::assertSame(1, $e->getLine());
 
             $e = $e->getPrevious();
-            $this->assertInstanceOf(ParserException::class, $e);
-            $this->assertStringContainsString('broken.dark.php', $e->getFile());
-            $this->assertSame(3, $e->getLine());
+            self::assertInstanceOf(ParserException::class, $e);
+            self::assertStringContainsString('broken.dark.php', $e->getFile());
+            self::assertSame(3, $e->getLine());
         }
     }
 

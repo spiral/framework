@@ -21,7 +21,7 @@ final class CoreTest extends TestCase
     public function testCallAction(): void
     {
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('Hello, Antony.', $core->callAction(
+        self::assertSame('Hello, Antony.', $core->callAction(
             DummyController::class,
             'index',
             ['name' => 'Antony']
@@ -31,7 +31,7 @@ final class CoreTest extends TestCase
     public function testCallActionDefaultParameter(): void
     {
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('Hello, Dave.', $core->callAction(
+        self::assertSame('Hello, Dave.', $core->callAction(
             DummyController::class,
             'index'
         ));
@@ -40,7 +40,7 @@ final class CoreTest extends TestCase
     public function testCallActionDefaultAction(): void
     {
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('Hello, Dave.', $core->callAction(
+        self::assertSame('Hello, Dave.', $core->callAction(
             DummyController::class,
             'index'
         ));
@@ -49,7 +49,7 @@ final class CoreTest extends TestCase
     public function testCallActionDefaultActionWithParameter(): void
     {
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('Hello, Antony.', $core->callAction(
+        self::assertSame('Hello, Antony.', $core->callAction(
             DummyController::class,
             'index',
             ['name' => 'Antony']
@@ -127,7 +127,7 @@ final class CoreTest extends TestCase
     public function testCleanController(): void
     {
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('900', $core->callAction(
+        self::assertSame('900', $core->callAction(
             CleanController::class,
             'test',
             ['id' => '900']
@@ -139,7 +139,7 @@ final class CoreTest extends TestCase
         $this->expectException(ControllerException::class);
 
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('900', $core->callAction(
+        self::assertSame('900', $core->callAction(
             CleanController::class,
             'test',
             ['id' => null]
@@ -151,7 +151,7 @@ final class CoreTest extends TestCase
         $this->expectException(ControllerException::class);
 
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('900', $core->callAction(
+        self::assertSame('900', $core->callAction(
             CleanController::class,
             'test',
             []
@@ -163,7 +163,7 @@ final class CoreTest extends TestCase
         $this->expectException(ControllerException::class);
 
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('900', $core->callAction(
+        self::assertSame('900', $core->callAction(
             CleanController::class,
             'invalid',
             []
@@ -175,7 +175,7 @@ final class CoreTest extends TestCase
         $this->expectException(ControllerException::class);
 
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('900', $core->callAction(
+        self::assertSame('900', $core->callAction(
             CleanController::class,
             'another',
             []
@@ -187,7 +187,7 @@ final class CoreTest extends TestCase
         $this->expectException(ControllerException::class);
 
         $core = new SampleCore($this->getContainer());
-        $this->assertSame('900', $core->callAction(
+        self::assertSame('900', $core->callAction(
             CleanController::class,
             'missing',
             []

@@ -18,7 +18,7 @@ class SchematicEntityTest extends TestCase
 
         $entity = new SchematicEntity([], $schema);
         $entity->setFields($data);
-        $this->assertSame($data, $entity->getFields());
+        self::assertSame($data, $entity->getFields());
     }
 
     public function testFillable2(): void
@@ -29,7 +29,7 @@ class SchematicEntityTest extends TestCase
 
         $entity = new SchematicEntity([], $schema);
         $entity->setFields($data);
-        $this->assertSame($data, $entity->getFields());
+        self::assertSame($data, $entity->getFields());
     }
 
     public function testSecured(): void
@@ -40,7 +40,7 @@ class SchematicEntityTest extends TestCase
 
         $entity = new SchematicEntity([], $schema);
         $entity->setFields($data);
-        $this->assertSame([], $entity->getFields());
+        self::assertSame([], $entity->getFields());
     }
 
     public function testPartiallySecured(): void
@@ -54,7 +54,7 @@ class SchematicEntityTest extends TestCase
 
         $entity = new SchematicEntity([], $schema);
         $entity->setFields($data);
-        $this->assertSame(['a' => 1, 'b' => 2], $entity->getFields());
+        self::assertSame(['a' => 1, 'b' => 2], $entity->getFields());
     }
 
     public function getSetters(): void
@@ -68,12 +68,12 @@ class SchematicEntityTest extends TestCase
         $entity = new SchematicEntity([], $schema);
         $entity->setField('a', '123');
 
-        $this->assertIsInt($entity->getField('a'));
-        $this->assertSame(123, $entity->getField('a'));
+        self::assertIsInt($entity->getField('a'));
+        self::assertSame(123, $entity->getField('a'));
 
         $entity->a = '800';
-        $this->assertIsInt($entity->a);
-        $this->assertSame(800, $entity->a);
+        self::assertIsInt($entity->a);
+        self::assertSame(800, $entity->a);
     }
 
     public function testGetters(): void
@@ -87,11 +87,11 @@ class SchematicEntityTest extends TestCase
         $entity = new SchematicEntity([], $schema);
 
         $entity->setField('a', false);
-        $this->assertIsInt($entity->getField('a'));
-        $this->assertIsBool($entity->getValue()['a']);
+        self::assertIsInt($entity->getField('a'));
+        self::assertIsBool($entity->getValue()['a']);
 
         $entity->a = 8000.1;
-        $this->assertIsInt($entity->a);
-        $this->assertIsFloat($entity->getValue()['a']);
+        self::assertIsInt($entity->a);
+        self::assertIsFloat($entity->getValue()['a']);
     }
 }

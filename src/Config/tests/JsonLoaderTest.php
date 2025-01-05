@@ -12,7 +12,7 @@ class JsonLoaderTest extends BaseTestCase
     {
         $cf = $this->getFactory();
 
-        $this->assertEquals(['name' => 'value'], $cf->getConfig('json'));
+        self::assertSame(['name' => 'value'], $cf->getConfig('json'));
     }
 
     public function testEmpty(): void

@@ -19,21 +19,12 @@ final class ImportConfiguratorTest extends BaseTestCase
         $ref = new \ReflectionObject($group);
 
         /** import in @see RoutesBootloader */
-        $this->assertSame(3, \count($ref->getProperty('routes')->getValue($group)));
+        self::assertCount(3, $ref->getProperty('routes')->getValue($group));
 
         // routes with prefix and name prefix
-        $this->assertSame(
-            '/api/test-import',
-            (string) $router->getRoute('api.test-import-index')->uri()
-        );
-        $this->assertSame(
-            '/api/test-import/posts',
-            (string) $router->getRoute('api.test-import-posts')->uri()
-        );
-        $this->assertSame(
-            '/api/test-import/post/5',
-            (string) $router->getRoute('api.test-import-post')->uri(['id' => 5])
-        );
+        self::assertSame('/api/test-import', (string) $router->getRoute('api.test-import-index')->uri());
+        self::assertSame('/api/test-import/posts', (string) $router->getRoute('api.test-import-posts')->uri());
+        self::assertSame('/api/test-import/post/5', (string) $router->getRoute('api.test-import-post')->uri(['id' => 5]));
     }
 
     public function testImportWithoutNamePrefix(): void
@@ -44,11 +35,11 @@ final class ImportConfiguratorTest extends BaseTestCase
         $ref = new \ReflectionObject($group);
 
         /** import in @see RoutesBootloader */
-        $this->assertSame(3, \count($ref->getProperty('routes')->getValue($group)));
+        self::assertCount(3, $ref->getProperty('routes')->getValue($group));
 
         // routes with prefix and name prefix
-        $this->assertSame('/other/test-import', (string) $router->getRoute('test-import-index')->uri());
-        $this->assertSame('/other/test-import/posts', (string) $router->getRoute('test-import-posts')->uri());
-        $this->assertSame('/other/test-import/post/5', (string) $router->getRoute('test-import-post')->uri(['id' => 5]));
+        self::assertSame('/other/test-import', (string) $router->getRoute('test-import-index')->uri());
+        self::assertSame('/other/test-import/posts', (string) $router->getRoute('test-import-posts')->uri());
+        self::assertSame('/other/test-import/post/5', (string) $router->getRoute('test-import-post')->uri(['id' => 5]));
     }
 }

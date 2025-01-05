@@ -18,20 +18,14 @@ final class ServerTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
             ->with('server', 'foo')
             ->andReturn('bar');
 
-        $this->assertSame(
-            'bar',
-            $attribute->getValue($this->input, $this->makeProperty())
-        );
+        self::assertSame('bar', $attribute->getValue($this->input, $this->makeProperty()));
     }
 
     public function testGetsSchemaForDefinedKey(): void
     {
         $attribute = new Server('foo');
 
-        $this->assertSame(
-            'server:foo',
-            $attribute->getSchema($this->makeProperty())
-        );
+        self::assertSame('server:foo', $attribute->getSchema($this->makeProperty()));
     }
 
     public function testGetsValueForNotDefinedKey(): void
@@ -44,19 +38,13 @@ final class ServerTest extends \Spiral\Tests\Filters\Model\AttributeTestCase
             ->with('server', 'baz')
             ->andReturn('bar');
 
-        $this->assertSame(
-            'bar',
-            $attribute->getValue($this->input, $this->makeProperty())
-        );
+        self::assertSame('bar', $attribute->getValue($this->input, $this->makeProperty()));
     }
 
     public function testGetsSchemaForNotDefinedKey(): void
     {
         $attribute = new Server();
 
-        $this->assertSame(
-            'server:baz',
-            $attribute->getSchema($this->makeProperty())
-        );
+        self::assertSame('server:baz', $attribute->getSchema($this->makeProperty()));
     }
 }

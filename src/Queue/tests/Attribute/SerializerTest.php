@@ -20,7 +20,7 @@ final class SerializerTest extends TestCase
     {
         $reader = (new Factory())->create();
 
-        $this->assertEquals($expected, $reader->firstClassMetadata(new \ReflectionClass($class), Serializer::class));
+        self::assertEquals($expected, $reader->firstClassMetadata(new \ReflectionClass($class), Serializer::class));
     }
 
     public static function classesProvider(): \Traversable

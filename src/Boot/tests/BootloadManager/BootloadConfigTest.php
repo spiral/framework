@@ -21,7 +21,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderD::class,
         ]));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderA::class => [
                 'bootloader' => new BootloaderA(),
                 'options' => [],
@@ -44,7 +44,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderD::class,
         ]));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderD::class => [
                 'bootloader' => new BootloaderD(),
                 'options' => [],
@@ -60,7 +60,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderA::class => new BootloadConfig(args: ['a' => 'b']),
         ]));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderA::class => [
                 'bootloader' => new BootloaderA(),
                 'options' => ['a' => 'b'],
@@ -77,7 +77,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderD::class,
         ], false));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderA::class => [
                 'bootloader' => new BootloaderA(),
                 'options' => [],
@@ -96,10 +96,10 @@ final class BootloadConfigTest extends InitializerTestCase
     public function testCallableConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn() => new BootloadConfig(args: ['a' => 'b']),
+            BootloaderA::class => static fn () => new BootloadConfig(args: ['a' => 'b']),
         ]));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderA::class => [
                 'bootloader' => new BootloaderA(),
                 'options' => ['a' => 'b'],
@@ -114,14 +114,14 @@ final class BootloadConfigTest extends InitializerTestCase
         $this->container->bind(AppEnvironment::class, AppEnvironment::Production);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn(AppEnvironment $env) => new BootloadConfig(enabled: $env->isLocal()),
+            BootloaderA::class => static fn (AppEnvironment $env) => new BootloadConfig(enabled: $env->isLocal()),
         ]));
-        $this->assertEquals([], $result);
+        self::assertSame([], $result);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn(AppEnvironment $env) => new BootloadConfig(enabled: $env->isProduction()),
+            BootloaderA::class => static fn (AppEnvironment $env) => new BootloadConfig(enabled: $env->isProduction()),
         ]));
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderA::class => [
                 'bootloader' => new BootloaderA(),
                 'options' => [],
@@ -144,7 +144,7 @@ final class BootloadConfigTest extends InitializerTestCase
             ]),
         ]));
 
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     #[DataProvider('denyEnvDataProvider')]
@@ -160,7 +160,7 @@ final class BootloadConfigTest extends InitializerTestCase
             ]),
         ]));
 
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     public function testDenyEnvShouldHaveHigherPriority(): void
@@ -171,7 +171,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderA::class => new BootloadConfig(allowEnv: ['APP_DEBUG' => true], denyEnv: ['APP_DEBUG' => true]),
         ]));
 
-        $this->assertEquals([], $result);
+        self::assertSame([], $result);
     }
 
     public static function allowEnvDataProvider(): \Traversable

@@ -32,7 +32,7 @@ class NamesTest extends TestCase
             $resolved[] = $dependency->var;
         }
 
-        $this->assertEquals($expected, $resolved);
+        self::assertEquals($expected, $resolved);
     }
 
     public static function cdProvider(): \Traversable

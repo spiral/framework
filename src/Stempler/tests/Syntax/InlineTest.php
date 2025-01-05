@@ -19,25 +19,25 @@ class InlineTest extends BaseTestCase
     {
         $doc = $this->parse('raw');
 
-        $this->assertInstanceOf(Raw::class, $doc->nodes[0]);
-        $this->assertSame('raw', $doc->nodes[0]->content);
+        self::assertInstanceOf(Raw::class, $doc->nodes[0]);
+        self::assertSame('raw', $doc->nodes[0]->content);
     }
 
     public function testInline(): void
     {
         $doc = $this->parse('${name}');
 
-        $this->assertInstanceOf(Inline::class, $doc->nodes[0]);
-        $this->assertSame('name', $doc->nodes[0]->name);
-        $this->assertSame(null, $doc->nodes[0]->value);
+        self::assertInstanceOf(Inline::class, $doc->nodes[0]);
+        self::assertSame('name', $doc->nodes[0]->name);
+        self::assertNull($doc->nodes[0]->value);
     }
 
     public function testInlineDefault(): void
     {
         $doc = $this->parse('${name|default}');
 
-        $this->assertInstanceOf(Inline::class, $doc->nodes[0]);
-        $this->assertSame('name', $doc->nodes[0]->name);
-        $this->assertSame('default', $doc->nodes[0]->value);
+        self::assertInstanceOf(Inline::class, $doc->nodes[0]);
+        self::assertSame('name', $doc->nodes[0]->name);
+        self::assertSame('default', $doc->nodes[0]->value);
     }
 }

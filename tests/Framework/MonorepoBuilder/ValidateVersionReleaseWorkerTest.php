@@ -45,7 +45,7 @@ final class ValidateVersionReleaseWorkerTest extends TestCase
     {
         $method = new \ReflectionMethod($this->worker, 'findMostRecentVersion');
 
-        $this->assertSame($method->invoke($this->worker, new Version(\strtolower($version))), $exceptMaxVersion);
+        self::assertSame($method->invoke($this->worker, new Version(\strtolower($version))), $exceptMaxVersion);
     }
 
     public static function dataVersions(): \Traversable

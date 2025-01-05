@@ -31,7 +31,7 @@ final class BuilderTest extends BaseTestCase
             'nested4' => [NestedFilter::class, 'query:foo.*']
         ]);
 
-        $this->assertSame([
+        self::assertSame([
             'id' => [
                 Builder::SCHEMA_SOURCE => 'data',
                 Builder::SCHEMA_ORIGIN => 'id',

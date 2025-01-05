@@ -18,12 +18,12 @@ class ResponsesTest extends TestCase
     public function testRedirect(): void
     {
         $response = $this->getWrapper()->redirect('google.com');
-        $this->assertSame('google.com', $response->getHeaderLine('Location'));
-        $this->assertSame(302, $response->getStatusCode());
+        self::assertSame('google.com', $response->getHeaderLine('Location'));
+        self::assertSame(302, $response->getStatusCode());
 
         $response = $this->getWrapper()->redirect('google.com', 301);
-        $this->assertSame('google.com', $response->getHeaderLine('Location'));
-        $this->assertSame(301, $response->getStatusCode());
+        self::assertSame('google.com', $response->getHeaderLine('Location'));
+        self::assertSame(301, $response->getStatusCode());
     }
 
     public function testJson(): void
@@ -33,48 +33,48 @@ class ResponsesTest extends TestCase
             'message' => 'hi'
         ]);
 
-        $this->assertSame('{"status":300,"message":"hi"}', (string)$response->getBody());
-        $this->assertSame(300, $response->getStatusCode());
-        $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+        self::assertSame('{"status":300,"message":"hi"}', (string)$response->getBody());
+        self::assertSame(300, $response->getStatusCode());
+        self::assertSame('application/json', $response->getHeaderLine('Content-Type'));
     }
 
     public function testHtml(): void
     {
         $response = $this->getWrapper()->html('hello world');
-        $this->assertSame('hello world', (string)$response->getBody());
-        $this->assertSame(200, $response->getStatusCode());
+        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame(200, $response->getStatusCode());
         $response->getHeader('Content-Type');
-        $this->assertSame(['text/html; charset=utf-8'], $response->getHeader('Content-Type'));
+        self::assertSame(['text/html; charset=utf-8'], $response->getHeader('Content-Type'));
     }
 
     public function testAttachment(): void
     {
         $response = $this->getWrapper()->attachment(__FILE__);
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertStringEqualsFile(__FILE__, (string)$response->getBody());
-        $this->assertSame(filesize(__FILE__), $response->getBody()->getSize());
-        $this->assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertStringEqualsFile(__FILE__, (string)$response->getBody());
+        self::assertSame(filesize(__FILE__), $response->getBody()->getSize());
+        self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
 
     public function testAttachmentResource(): void
     {
         $response = $this->getWrapper()->attachment(fopen(__FILE__, 'r'), 'file.php');
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertStringEqualsFile(__FILE__, (string)$response->getBody());
-        $this->assertSame(filesize(__FILE__), $response->getBody()->getSize());
-        $this->assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertStringEqualsFile(__FILE__, (string)$response->getBody());
+        self::assertSame(filesize(__FILE__), $response->getBody()->getSize());
+        self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
 
     public function testAttachmentStream(): void
     {
         $response = $this->getWrapper()->attachment(Stream::create(fopen(__FILE__, 'r')), 'file.php');
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertStringEqualsFile(__FILE__, (string)$response->getBody());
-        $this->assertSame(filesize(__FILE__), $response->getBody()->getSize());
-        $this->assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertStringEqualsFile(__FILE__, (string)$response->getBody());
+        self::assertSame(filesize(__FILE__), $response->getBody()->getSize());
+        self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
 
     public function testAttachmentStreamable(): void
@@ -84,17 +84,17 @@ class ResponsesTest extends TestCase
             'file.php'
         );
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertStringEqualsFile(__FILE__, (string)$response->getBody());
-        $this->assertSame(filesize(__FILE__), $response->getBody()->getSize());
-        $this->assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertStringEqualsFile(__FILE__, (string)$response->getBody());
+        self::assertSame(filesize(__FILE__), $response->getBody()->getSize());
+        self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
 
     public function testCreate(): void
     {
         $response = $this->getWrapper()->create(400);
 
-        $this->assertEquals(400, $response->getStatusCode());
+        self::assertSame(400, $response->getStatusCode());
     }
 
     public function testAttachmentStreamNoName(): void

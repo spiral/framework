@@ -14,29 +14,29 @@ final class AttributeTest extends TestCase
     {
         $attribute = new Attribute('test', ['name' => 'foo', 'otherName' => 'bar']);
 
-        $this->assertSame(['name' => 'foo', 'otherName' => 'bar'], $attribute->getArguments());
+        self::assertSame(['name' => 'foo', 'otherName' => 'bar'], $attribute->getArguments());
     }
 
     public function testGetName(): void
     {
         $attribute = new Attribute('test', []);
 
-        $this->assertSame('test', $attribute->getName());
+        self::assertSame('test', $attribute->getName());
     }
 
     public function testFromElement(): void
     {
         $attribute = Attribute::fromElement(new NetteAttribute('test', []));
 
-        $this->assertInstanceOf(Attribute::class, $attribute);
-        $this->assertSame('test', $attribute->getName());
+        self::assertInstanceOf(Attribute::class, $attribute);
+        self::assertSame('test', $attribute->getName());
     }
 
     public function testGetElement(): void
     {
         $element = (new Attribute('test', []))->getElement();
 
-        $this->assertInstanceOf(NetteAttribute::class, $element);
-        $this->assertSame('test', $element->getName());
+        self::assertInstanceOf(NetteAttribute::class, $element);
+        self::assertSame('test', $element->getName());
     }
 }

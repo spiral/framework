@@ -34,29 +34,29 @@ final class ScopedEnumLocatorTest extends TestCase
     {
         $classes = $this->container->get(ScopedEnumsInterface::class)->getScopedEnums('foo');
 
-        $this->assertArrayHasKey(EnumD::class, $classes);
+        self::assertArrayHasKey(EnumD::class, $classes);
 
         // Excluded
-        $this->assertArrayNotHasKey(EnumA::class, $classes);
-        $this->assertArrayNotHasKey(EnumB::class, $classes);
-        $this->assertArrayNotHasKey(EnumC::class, $classes);
-        $this->assertArrayNotHasKey(EnumXX::class, $classes);
-        $this->assertArrayNotHasKey(BadEnum::class, $classes);
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Enums\Bad_Enum', $classes);
+        self::assertArrayNotHasKey(EnumA::class, $classes);
+        self::assertArrayNotHasKey(EnumB::class, $classes);
+        self::assertArrayNotHasKey(EnumC::class, $classes);
+        self::assertArrayNotHasKey(EnumXX::class, $classes);
+        self::assertArrayNotHasKey(BadEnum::class, $classes);
+        self::assertArrayNotHasKey('Spiral\Tests\Tokenizer\Enums\Bad_Enum', $classes);
     }
 
     public function testGetsEnumsForNotExistScope(): void
     {
         $classes = $this->container->get(ScopedEnumsInterface::class)->getScopedEnums('bar');
 
-        $this->assertArrayHasKey(EnumA::class, $classes);
-        $this->assertArrayHasKey(EnumB::class, $classes);
-        $this->assertArrayHasKey(EnumC::class, $classes);
-        $this->assertArrayHasKey(EnumD::class, $classes);
+        self::assertArrayHasKey(EnumA::class, $classes);
+        self::assertArrayHasKey(EnumB::class, $classes);
+        self::assertArrayHasKey(EnumC::class, $classes);
+        self::assertArrayHasKey(EnumD::class, $classes);
 
         // Excluded
-        $this->assertArrayNotHasKey(EnumXX::class, $classes);
-        $this->assertArrayNotHasKey(BadEnum::class, $classes);
-        $this->assertArrayNotHasKey('Spiral\Tests\Tokenizer\Enums\Bad_Enum', $classes);
+        self::assertArrayNotHasKey(EnumXX::class, $classes);
+        self::assertArrayNotHasKey(BadEnum::class, $classes);
+        self::assertArrayNotHasKey('Spiral\Tests\Tokenizer\Enums\Bad_Enum', $classes);
     }
 }

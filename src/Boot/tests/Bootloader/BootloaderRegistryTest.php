@@ -12,27 +12,27 @@ final class BootloaderRegistryTest extends TestCase
     public function testConstructor(): void
     {
         $registry = new BootloaderRegistry();
-        $this->assertSame([], $registry->getSystemBootloaders());
-        $this->assertSame([], $registry->getBootloaders());
+        self::assertSame([], $registry->getSystemBootloaders());
+        self::assertSame([], $registry->getBootloaders());
 
         $registry = new BootloaderRegistry(
             ['BootloaderA', 'BootloaderB'],
             ['BootloaderC', 'BootloaderD'],
         );
 
-        $this->assertSame(['BootloaderA', 'BootloaderB'], $registry->getSystemBootloaders());
-        $this->assertSame(['BootloaderC', 'BootloaderD'], $registry->getBootloaders());
+        self::assertSame(['BootloaderA', 'BootloaderB'], $registry->getSystemBootloaders());
+        self::assertSame(['BootloaderC', 'BootloaderD'], $registry->getBootloaders());
     }
 
     public function testSystemBootloaders(): void
     {
         $registry = new BootloaderRegistry();
-        $this->assertSame([], $registry->getSystemBootloaders());
+        self::assertSame([], $registry->getSystemBootloaders());
 
         $registry->registerSystem('BootloaderA');
         $registry->registerSystem(['BootloaderB' => ['option' => 'value']]);
 
-        $this->assertSame([
+        self::assertSame([
             'BootloaderA',
             'BootloaderB' => ['option' => 'value'],
         ], $registry->getSystemBootloaders());
@@ -41,12 +41,12 @@ final class BootloaderRegistryTest extends TestCase
     public function testBootloaders(): void
     {
         $registry = new BootloaderRegistry();
-        $this->assertSame([], $registry->getBootloaders());
+        self::assertSame([], $registry->getBootloaders());
 
         $registry->register('BootloaderA');
         $registry->register(['BootloaderB' => ['option' => 'value']]);
 
-        $this->assertSame([
+        self::assertSame([
             'BootloaderA',
             'BootloaderB' => ['option' => 'value'],
         ], $registry->getBootloaders());
@@ -59,15 +59,15 @@ final class BootloaderRegistryTest extends TestCase
         $registry->register('BootloaderA');
         $registry->registerSystem('BootloaderA');
 
-        $this->assertSame(['BootloaderA'], $registry->getBootloaders());
-        $this->assertSame([], $registry->getSystemBootloaders());
+        self::assertSame(['BootloaderA'], $registry->getBootloaders());
+        self::assertSame([], $registry->getSystemBootloaders());
 
         $registry = new BootloaderRegistry();
         $registry->registerSystem('BootloaderA');
         $registry->registerSystem('BootloaderA');
         $registry->register('BootloaderA');
 
-        $this->assertSame([], $registry->getBootloaders());
-        $this->assertSame(['BootloaderA'], $registry->getSystemBootloaders());
+        self::assertSame([], $registry->getBootloaders());
+        self::assertSame(['BootloaderA'], $registry->getSystemBootloaders());
     }
 }

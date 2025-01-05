@@ -49,30 +49,21 @@ final class BroadcastConfigTest extends TestCase
 
     public function testGetsDefaultConnection(): void
     {
-        $this->assertSame(
-            'firebase',
-            $this->config->getDefaultConnection()
-        );
+        self::assertSame('firebase', $this->config->getDefaultConnection());
     }
 
     public function testGetsConnectionConfigByName(): void
     {
-        $this->assertSame(
-            [
-                'driver' => 'null-driver',
-            ],
-            $this->config->getConnectionConfig('null')
-        );
+        self::assertSame([
+            'driver' => 'null-driver',
+        ], $this->config->getConnectionConfig('null'));
     }
 
     public function testGetsConnectionWithAliasDriverShouldBeReplacedWithRealDriver(): void
     {
-        $this->assertSame(
-            [
-                'driver' => 'log-driver',
-            ],
-            $this->config->getConnectionConfig('firebase')
-        );
+        self::assertSame([
+            'driver' => 'log-driver',
+        ], $this->config->getConnectionConfig('firebase'));
     }
 
     public function testNotDefinedConnectionShouldThrowAnException(): void
@@ -93,20 +84,17 @@ final class BroadcastConfigTest extends TestCase
 
     public function testGetAuthorizationPath(): void
     {
-        $this->assertSame('foo-path', $this->config->getAuthorizationPath());
+        self::assertSame('foo-path', $this->config->getAuthorizationPath());
     }
 
     public function testNotDefinedAuthorizationPathShouldReturnNull(): void
     {
         $config = new BroadcastConfig();
-        $this->assertNull($config->getAuthorizationPath());
+        self::assertNull($config->getAuthorizationPath());
     }
 
     public function testGetsTopics(): void
     {
-        $this->assertSame(
-            $this->config['authorize']['topics'],
-            $this->config->getTopics()
-        );
+        self::assertSame($this->config['authorize']['topics'], $this->config->getTopics());
     }
 }

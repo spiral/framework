@@ -15,8 +15,8 @@ final class ClassExistsCheckerTest extends TestCase
     {
         $checker = new ClassExistsChecker();
 
-        $this->assertTrue($checker->canInitialize(BootloaderA::class));
-        $this->assertTrue($checker->canInitialize(new BootloaderA()));
+        self::assertTrue($checker->canInitialize(BootloaderA::class));
+        self::assertTrue($checker->canInitialize(new BootloaderA()));
     }
 
     public function testCanInitializeException(): void

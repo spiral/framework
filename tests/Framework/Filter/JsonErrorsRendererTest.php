@@ -21,11 +21,8 @@ final class JsonErrorsRendererTest extends BaseTestCase
             'foo_context'
         );
 
-        $this->assertSame(422, $response->getStatusCode());
-        $this->assertSame('The given data was invalid.', $response->getReasonPhrase());
-        $this->assertSame(
-            '{"errors":{"foo":"bar"}}',
-            (string) $response->getBody()
-        );
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('The given data was invalid.', $response->getReasonPhrase());
+        self::assertSame('{"errors":{"foo":"bar"}}', (string) $response->getBody());
     }
 }

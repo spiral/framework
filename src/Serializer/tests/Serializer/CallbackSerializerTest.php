@@ -16,7 +16,7 @@ final class CallbackSerializerTest extends TestCase
             static fn (mixed $payload): mixed => $payload
         );
 
-        $this->assertSame('serialize', $serializer->serialize('serialize'));
-        $this->assertSame('unserialize', $serializer->unserialize('unserialize'));
+        self::assertSame('serialize', $serializer->serialize('serialize'));
+        self::assertSame('unserialize', $serializer->unserialize('unserialize'));
     }
 }

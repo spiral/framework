@@ -31,10 +31,10 @@ final class LogTracerFactoryTest extends TestCase
             'some-channel'
         );
 
-        $clock->expects($this->any())->method('now');
+        $clock->method('now');
         $logger->expects($this->once())->method('debug');
 
-        $this->assertInstanceOf(LogTracer::class, $tracer = $factory->make());
+        self::assertInstanceOf(LogTracer::class, $tracer = $factory->make());
 
         $tracer->trace('foo', static fn(): string => 'hello');
     }

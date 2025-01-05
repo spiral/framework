@@ -18,7 +18,7 @@ class AuthConfigTest extends BaseTestCase
             ]
         ]);
 
-        $this->assertSame($session, $config->getStorage('session'));
+        self::assertSame($session, $config->getStorage('session'));
     }
 
     public function testGetDefaultStorage(): void
@@ -27,14 +27,14 @@ class AuthConfigTest extends BaseTestCase
             'defaultStorage' => 'test'
         ]);
 
-        $this->assertSame('test', $config->getDefaultStorage());
+        self::assertSame('test', $config->getDefaultStorage());
     }
 
     public function testGetEmptyDefaultStorage(): void
     {
         $config = new AuthConfig([]);
 
-        $this->assertSame('session', $config->getDefaultStorage());
+        self::assertSame('session', $config->getDefaultStorage());
     }
 
     public function testGetDefaultTransport(): void
@@ -43,14 +43,14 @@ class AuthConfigTest extends BaseTestCase
             'defaultTransport' => 'header'
         ]);
 
-        $this->assertSame('header', $config->getDefaultTransport());
+        self::assertSame('header', $config->getDefaultTransport());
     }
 
     public function testGetEmptyDefaultTransport(): void
     {
         $config = new AuthConfig([]);
 
-        $this->assertSame('cookie', $config->getDefaultTransport());
+        self::assertSame('cookie', $config->getDefaultTransport());
     }
 
     public function testGetTransports(): void
@@ -59,13 +59,13 @@ class AuthConfigTest extends BaseTestCase
             'transports' => []
         ]);
 
-        $this->assertSame([], $config->getTransports());
+        self::assertSame([], $config->getTransports());
     }
 
     public function testGetEmptyTransports(): void
     {
         $config = new AuthConfig([]);
 
-        $this->assertSame([], $config->getTransports());
+        self::assertSame([], $config->getTransports());
     }
 }

@@ -34,10 +34,10 @@ class ConflictResolverTest extends TestCase
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Some::class . ';', $r);
-        $this->assertStringContainsString(Fixtures\SubFolder\Some::class . ' as Some2;', $r);
-        $this->assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
-        $this->assertStringContainsString(Fixtures\ATest3::class . ';', $r);
+        self::assertStringContainsString(Fixtures\Some::class . ';', $r);
+        self::assertStringContainsString(Fixtures\SubFolder\Some::class . ' as Some2;', $r);
+        self::assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
+        self::assertStringContainsString(Fixtures\ATest3::class . ';', $r);
     }
 
     /**
@@ -60,12 +60,12 @@ class ConflictResolverTest extends TestCase
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Some::class . ' as FTest;', $r);
-        $this->assertStringNotContainsString(Fixtures\Some::class . ';', $r);
-        $this->assertStringContainsString(Fixtures\SubFolder\Some::class . ' as TestAlias;', $r);
-        $this->assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
-        $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATest;', $r);
-        $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
+        self::assertStringContainsString(Fixtures\Some::class . ' as FTest;', $r);
+        self::assertStringNotContainsString(Fixtures\Some::class . ';', $r);
+        self::assertStringContainsString(Fixtures\SubFolder\Some::class . ' as TestAlias;', $r);
+        self::assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
+        self::assertStringContainsString(Fixtures\ATest3::class . ' as ATest;', $r);
+        self::assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
     }
 
     /**
@@ -88,11 +88,11 @@ class ConflictResolverTest extends TestCase
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Some::class . ';', $r);
-        $this->assertStringContainsString(Fixtures\SubFolder\Some::class . ' as Some2;', $r);
-        $this->assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
-        $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATestAlias;', $r);
-        $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
+        self::assertStringContainsString(Fixtures\Some::class . ';', $r);
+        self::assertStringContainsString(Fixtures\SubFolder\Some::class . ' as Some2;', $r);
+        self::assertStringNotContainsString(Fixtures\SubFolder\Some::class . ';', $r);
+        self::assertStringContainsString(Fixtures\ATest3::class . ' as ATestAlias;', $r);
+        self::assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
     }
 
     public function testDuplicateProperty(): void
@@ -110,8 +110,8 @@ class ConflictResolverTest extends TestCase
             )
         );
 
-        $this->assertStringContainsString(Fixtures\Some::class . ';', $r);
-        $this->assertStringContainsString('__construct(private readonly Some $test)', $r);
+        self::assertStringContainsString(Fixtures\Some::class . ';', $r);
+        self::assertStringContainsString('__construct(private readonly Some $test)', $r);
     }
 
     /**

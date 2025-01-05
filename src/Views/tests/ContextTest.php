@@ -16,7 +16,7 @@ class ContextTest extends TestCase
         $context = new ViewContext();
         $context = $context->withDependency(new ValueDependency('test', 'value'));
 
-        $this->assertSame('value', $context->resolveValue('test'));
+        self::assertSame('value', $context->resolveValue('test'));
     }
 
     public function testResolveValueException(): void
@@ -26,6 +26,6 @@ class ContextTest extends TestCase
         $context = new ViewContext();
         $context = $context->withDependency(new ValueDependency('test', 'value'));
 
-        $this->assertSame('value', $context->resolveValue('other'));
+        self::assertSame('value', $context->resolveValue('other'));
     }
 }
