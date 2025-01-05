@@ -23,8 +23,18 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
         $result = \iterator_to_array($this->initializer->init([BootloaderE::class, BootloaderD::class]));
 
         $this->assertEquals([
-            BootloaderE::class => ['bootloader' => new BootloaderE(), 'options' => []],
-            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
+            BootloaderE::class => [
+                'bootloader' => new BootloaderE(),
+                'options' => [],
+                'init_methods' => ['init'],
+                'boot_methods' => ['boot'],
+            ],
+            BootloaderD::class => [
+                'bootloader' => new BootloaderD(),
+                'options' => [],
+                'init_methods' => ['init'],
+                'boot_methods' => ['boot'],
+            ],
         ], $result);
     }
 
@@ -33,7 +43,12 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
         $result = \iterator_to_array($this->initializer->init([BootloaderF::class, BootloaderD::class]));
 
         $this->assertEquals([
-            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
+            BootloaderD::class => [
+                'bootloader' => new BootloaderD(),
+                'options' => [],
+                'init_methods' => ['init'],
+                'boot_methods' => ['boot'],
+            ],
         ], $result);
     }
 
@@ -42,7 +57,12 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
         $result = \iterator_to_array($this->initializer->init([BootloaderG::class]));
 
         $this->assertEquals([
-            BootloaderG::class => ['bootloader' => new BootloaderG(), 'options' => ['a' => 'b', 'c' => 'd']],
+            BootloaderG::class => [
+                'bootloader' => new BootloaderG(),
+                'options' => ['a' => 'b', 'c' => 'd'],
+                'init_methods' => ['init'],
+                'boot_methods' => ['boot'],
+            ],
         ], $result);
     }
 
@@ -51,8 +71,18 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
         $result = \iterator_to_array($this->initializer->init([BootloaderF::class, BootloaderD::class], false));
 
         $this->assertEquals([
-            BootloaderF::class => ['bootloader' => new BootloaderF(), 'options' => []],
-            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
+            BootloaderF::class => [
+                'bootloader' => new BootloaderF(),
+                'options' => [],
+                'init_methods' => ['init'],
+                'boot_methods' => ['boot'],
+            ],
+            BootloaderD::class => [
+                'bootloader' => new BootloaderD(),
+                'options' => [],
+                'init_methods' => ['init'],
+                'boot_methods' => ['boot'],
+            ],
         ], $result);
     }
 
@@ -89,7 +119,14 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment(['RR_MODE' => 'http']), true);
         $result = \iterator_to_array($this->initializer->init([BootloaderK::class]));
-        $this->assertEquals([BootloaderK::class => ['bootloader' => new BootloaderK(), 'options' => []]], $result);
+        $this->assertEquals([
+            BootloaderK::class => [
+                'bootloader' => new BootloaderK(),
+                'options' => [],
+                'init_methods' => ['init'],
+                'boot_methods' => ['boot'],
+            ],
+        ], $result);
 
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment(['RR_MODE' => 'jobs']), true);
         $result = \iterator_to_array($this->initializer->init([BootloaderK::class]));
@@ -100,19 +137,26 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         yield [
             ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
-            [BootloaderH::class => ['bootloader' => new BootloaderH(), 'options' => []]]
+            [
+                BootloaderH::class => [
+                    'bootloader' => new BootloaderH(),
+                    'options' => [],
+                    'init_methods' => ['init'],
+                    'boot_methods' => ['boot'],
+                ],
+            ],
         ];
         yield [
             ['APP_ENV' => 'dev', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
-            []
+            [],
         ];
         yield [
             ['APP_ENV' => 'prod', 'APP_DEBUG' => true, 'RR_MODE' => 'http'],
-            []
+            [],
         ];
         yield [
             ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'jobs'],
-            []
+            [],
         ];
     }
 
@@ -120,31 +164,38 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         yield [
             ['RR_MODE' => 'http', 'APP_ENV' => 'prod', 'DB_HOST' => 'db.example.com'],
-            []
+            [],
         ];
         yield [
             ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            []
+            [],
         ];
         yield [
             ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            []
+            [],
         ];
         yield [
             ['RR_MODE' => 'jobs', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            []
+            [],
         ];
         yield [
             ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'db.example.com'],
-            []
+            [],
         ];
         yield [
             ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
-            []
+            [],
         ];
         yield [
             ['RR_MODE' => 'jobs', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
-            [BootloaderI::class => ['bootloader' => new BootloaderI(), 'options' => []]]
+            [
+                BootloaderI::class => [
+                    'bootloader' => new BootloaderI(),
+                    'options' => [],
+                    'init_methods' => ['init'],
+                    'boot_methods' => ['boot'],
+                ],
+            ],
         ];
     }
 }
