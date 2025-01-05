@@ -18,7 +18,7 @@ final class DirectoryTest extends BaseTestCase
         $directory = new Directory('path/to/dir', 'test');
 
         $loader = m::mock(LoaderInterface::class);
-        $this->assertNull(
+        self::assertNull(
             $directory->resolve(new Builder($loader), 'span'),
         );
     }
@@ -37,6 +37,6 @@ final class DirectoryTest extends BaseTestCase
 
         $template = $directory->resolve(new Builder($loader), 'test:span');
 
-        $this->assertSame($path, $template->getContext()->getPath());
+        self::assertSame($path, $template->getContext()->getPath());
     }
 }

@@ -24,7 +24,7 @@ final class BundleTest extends BaseTestCase
             ->with($path = 'path/to/dir')
             ->andReturn(new Source('<span></span>'));
 
-        $this->assertNull(
+        self::assertNull(
             $bundle->resolve(new Builder($loader), 'span'),
         );
     }
