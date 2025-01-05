@@ -21,7 +21,7 @@ final class Directory implements ImportInterface
     public function __construct(
         public string $path,
         ?string $prefix,
-        ?Context $context = null
+        ?Context $context = null,
     ) {
         $this->prefix = $prefix ?? \substr($path, \strrpos($path, '/') + 1);
         $this->context = $context;
@@ -30,6 +30,10 @@ final class Directory implements ImportInterface
     public function resolve(Builder $builder, string $name): ?Template
     {
         $path = \substr($name, \strlen((string) $this->prefix) + 1);
+        if ($path === '') {
+            return null;
+        }
+
         $path = \str_replace('.', DIRECTORY_SEPARATOR, $path);
 
         return $builder->load($this->path . DIRECTORY_SEPARATOR . $path);

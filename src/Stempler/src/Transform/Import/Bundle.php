@@ -22,7 +22,7 @@ final class Bundle implements ImportInterface
     public function __construct(
         private string $path,
         private ?string $prefix = null,
-        ?Context $context = null
+        ?Context $context = null,
     ) {
         $this->context = $context;
     }
@@ -36,6 +36,10 @@ final class Bundle implements ImportInterface
         $path = $name;
         if ($this->prefix !== null) {
             $path = \substr($path, \strlen($this->prefix) + 1);
+        }
+
+        if ($path === '') {
+            return null;
         }
 
         /** @var ImportInterface $import */
