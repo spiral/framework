@@ -214,6 +214,7 @@ class InjectableTest extends TestCase
 
         self::assertInstanceOf(stdClass::class, $result);
         self::assertInstanceOf(\ReflectionParameter::class, $result->context);
+        self::assertTrue($container->hasInjector(stdClass::class));
     }
 
     public function testExtendedInjectorAnonClassMixedParam(): void
