@@ -27,7 +27,7 @@ final class TelemetryProcessorTest extends TestCase
             [
                 'datetime' => $date,
                 'channel' => 'foo',
-                'level' => Level::Debug,
+                'level' => 100,
                 'message' => 'bar',
                 'context' => [],
                 'extra' => [],
@@ -37,7 +37,7 @@ final class TelemetryProcessorTest extends TestCase
             [
                 'datetime' => $date,
                 'channel' => 'foo',
-                'level' => Level::Debug,
+                'level' => 100,
                 'message' => 'bar',
                 'context' => [],
                 'extra' => [
@@ -54,7 +54,7 @@ final class TelemetryProcessorTest extends TestCase
             [
                 'datetime' => $date,
                 'channel' => 'foo',
-                'level' => Level::Debug,
+                'level' => 100,
                 'message' => 'bar',
                 'context' => [],
                 'extra' => [],
@@ -64,7 +64,7 @@ final class TelemetryProcessorTest extends TestCase
             [
                 'datetime' => $date,
                 'channel' => 'foo',
-                'level' => Level::Debug,
+                'level' => 100,
                 'message' => 'bar',
                 'context' => [],
                 'extra' => [],
