@@ -30,12 +30,12 @@ final class BootloadersTest extends TestCase
                 SampleBoot::class,
             ],
             [
-                static function (Container $container, SampleBoot $boot) {
+                static function (Container $container, SampleBoot $boot): void {
                     $container->bind('efg', $boot);
                 },
             ],
             [
-                static function (Container $container, SampleBoot $boot) {
+                static function (Container $container, SampleBoot $boot): void {
                     $container->bind('ghi', $boot);
                 },
             ],

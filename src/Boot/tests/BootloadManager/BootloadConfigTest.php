@@ -96,7 +96,7 @@ final class BootloadConfigTest extends InitializerTestCase
     public function testCallableConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn () => new BootloadConfig(args: ['a' => 'b']),
+            BootloaderA::class => static fn(): BootloadConfig => new BootloadConfig(args: ['a' => 'b']),
         ]));
 
         self::assertEquals([
@@ -114,12 +114,16 @@ final class BootloadConfigTest extends InitializerTestCase
         $this->container->bind(AppEnvironment::class, AppEnvironment::Production);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn (AppEnvironment $env) => new BootloadConfig(enabled: $env->isLocal()),
+            BootloaderA::class => static fn(AppEnvironment $env): BootloadConfig => new BootloadConfig(
+                enabled: $env->isLocal(),
+            ),
         ]));
         self::assertSame([], $result);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn (AppEnvironment $env) => new BootloadConfig(enabled: $env->isProduction()),
+            BootloaderA::class => static fn(AppEnvironment $env): BootloadConfig => new BootloadConfig(
+                enabled: $env->isProduction(),
+            ),
         ]));
         self::assertEquals([
             BootloaderA::class => [

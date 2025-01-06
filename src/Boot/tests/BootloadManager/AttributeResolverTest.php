@@ -40,7 +40,7 @@ final class AttributeResolverTest extends TestCase
             $refl->getMethod('sampleMethod'),
         );
 
-        $this->assertInstanceOf(SampleClass::class, $this->container->get('foo'));
+        self::assertInstanceOf(SampleClass::class, $this->container->get('foo'));
     }
 
     public function testRegisterResolverThroughBootloader()
@@ -60,6 +60,6 @@ final class AttributeResolverTest extends TestCase
             SampleBootWithMethodBoot::class,
         ]);
 
-        $this->assertInstanceOf(SampleClass::class, $this->container->get('sampleMethod'));
+        self::assertInstanceOf(SampleClass::class, $this->container->get('sampleMethod'));
     }
 }

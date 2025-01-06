@@ -12,7 +12,7 @@ final class InitializerAttributesTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderWithAttributes::class]));
 
-        $this->assertSame([
+        self::assertSame([
             'initMethodF',
             'init',
             'initMethodB',
@@ -26,7 +26,7 @@ final class InitializerAttributesTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderWithAttributes::class]));
 
-        $this->assertSame([
+        self::assertSame([
             'bootMethodF',
             'boot',
             'bootMethodB',
