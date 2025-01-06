@@ -22,7 +22,6 @@ final class TelemetryProcessorTest extends TestCase
     public static function provideRecords(): iterable
     {
         $date = new \DateTimeImmutable('2025-01-06 09:55:42.986918');
-        $record = new LogRecord($date, 'foo', Level::Debug, 'bar');
 
         yield [
             [
@@ -73,6 +72,11 @@ final class TelemetryProcessorTest extends TestCase
             ],
         ];
 
+        if (!\class_exists(LogRecord::class)) {
+            return;
+        }
+
+        $record = new LogRecord($date, 'foo', Level::Debug, 'bar');
         yield [
             $record,
             ['foo' => 'bar'],
