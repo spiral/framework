@@ -64,7 +64,7 @@ final class RetryPolicy implements RetryPolicyInterface
      */
     public function isRetryable(\Throwable $exception, int $attempts = 0): bool
     {
-        if ($exception instanceof JobException && $exception->getPrevious() !== null) {
+        if ($exception instanceof JobException && $exception->getPrevious() instanceof \Throwable) {
             $exception = $exception->getPrevious();
         }
 

@@ -114,7 +114,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if (empty($this->requestHandler)) {
+        if (!$this->requestHandler instanceof \Psr\Http\Server\RequestHandlerInterface) {
             $this->requestHandler = $this->requestHandler();
         }
 

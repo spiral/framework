@@ -63,7 +63,7 @@ final class AuthMiddleware implements MiddlewareInterface
             }
 
             $token = $this->tokenStorage->load($tokenID);
-            if ($token === null) {
+            if (!$token instanceof \Spiral\Auth\TokenInterface) {
                 continue;
             }
 
@@ -77,7 +77,7 @@ final class AuthMiddleware implements MiddlewareInterface
 
     private function closeContext(Request $request, Response $response, AuthContextInterface $authContext): Response
     {
-        if ($authContext->getToken() === null) {
+        if (!$authContext->getToken() instanceof \Spiral\Auth\TokenInterface) {
             return $response;
         }
 

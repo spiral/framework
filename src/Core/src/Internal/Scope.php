@@ -40,7 +40,7 @@ final class Scope
         // Check a scope with the same name is not already registered
         if ($this->scopeName !== null) {
             $tmp = $this;
-            while ($tmp->parentScope !== null) {
+            while ($tmp->parentScope instanceof \Spiral\Core\Internal\Scope) {
                 $tmp = $tmp->parentScope;
                 $tmp->scopeName !== $this->scopeName ?: throw new NamedScopeDuplicationException($this->scopeName);
             }
@@ -68,7 +68,7 @@ final class Scope
         $result = [$this->scopeName];
 
         $parent = $this;
-        while ($parent->parentScope !== null) {
+        while ($parent->parentScope instanceof \Spiral\Core\Internal\Scope) {
             $parent = $parent->parentScope;
             $result[] = $parent->scopeName;
         }

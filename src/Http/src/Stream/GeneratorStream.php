@@ -36,14 +36,14 @@ final class GeneratorStream implements StreamInterface
 
     public function close(): void
     {
-        if ($this->stream !== null) {
+        if ($this->stream instanceof \Generator) {
             $this->detach();
         }
     }
 
     public function detach()
     {
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Generator) {
             return null;
         }
         $this->stream = null;
@@ -66,7 +66,7 @@ final class GeneratorStream implements StreamInterface
 
     public function eof(): bool
     {
-        return $this->stream === null || !$this->stream->valid();
+        return !$this->stream instanceof \Generator || !$this->stream->valid();
     }
 
     public function isSeekable(): bool
@@ -81,7 +81,7 @@ final class GeneratorStream implements StreamInterface
 
     public function rewind(): void
     {
-        if ($this->stream !== null) {
+        if ($this->stream instanceof \Generator) {
             $this->stream->rewind();
         }
         $this->caret = 0;
@@ -108,7 +108,7 @@ final class GeneratorStream implements StreamInterface
         if (!$this->readable) {
             throw new RuntimeException('Cannot read from non-readable stream.');
         }
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Generator) {
             throw new RuntimeException('Cannot read from detached stream.');
         }
         do {
@@ -132,7 +132,7 @@ final class GeneratorStream implements StreamInterface
 
     public function getContents(): string
     {
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Generator) {
             throw new RuntimeException('Unable to read stream contents.');
         }
         $content = '';
@@ -144,7 +144,7 @@ final class GeneratorStream implements StreamInterface
 
     public function getMetadata($key = null)
     {
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Generator) {
             return $key ? null : [];
         }
 

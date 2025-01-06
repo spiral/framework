@@ -105,7 +105,7 @@ final class CoreTest extends TestCase
         $queue->shouldReceive('push')->once()
             ->withArgs(fn(string $name, array $payload = [], ?OptionsInterface $options = null): bool => $name === 'foo'
                 && $payload === ['baz' => 'baf']
-                && $options !== null);
+                && $options instanceof \Spiral\Queue\OptionsInterface);
 
         $core->callAction('foo', 'bar', [
             'id' => 'job-id',

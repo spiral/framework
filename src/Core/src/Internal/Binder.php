@@ -32,7 +32,7 @@ final class Binder extends StateBinder
     public function hasInstance(string $alias): bool
     {
         $parent = $this->scope->getParent();
-        if ($parent !== null && $parent->hasInstance($alias)) {
+        if ($parent instanceof \Spiral\Core\Container && $parent->hasInstance($alias)) {
             return true;
         }
 

@@ -32,7 +32,7 @@ final class SessionFactory implements SessionFactoryInterface
         }
 
         // Initiating proper session handler
-        if ($this->config->getHandler() !== null) {
+        if ($this->config->getHandler() instanceof \Spiral\Core\Container\Autowire) {
             try {
                 $handler = $this->config->getHandler()->resolve($this->factory);
             } catch (\Throwable | ContainerExceptionInterface $e) {

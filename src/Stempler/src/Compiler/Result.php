@@ -24,7 +24,7 @@ final class Result
 
     public function withinContext(?Context $ctx, callable $body): void
     {
-        if ($ctx === null || $ctx->getPath() === null) {
+        if (!$ctx instanceof \Spiral\Stempler\Parser\Context || $ctx->getPath() === null) {
             $body($this);
             return;
         }
@@ -39,7 +39,7 @@ final class Result
 
     public function push(string $content, ?Context $ctx = null): void
     {
-        if ($ctx !== null && $ctx->getPath() !== null) {
+        if ($ctx instanceof \Spiral\Stempler\Parser\Context && $ctx->getPath() !== null) {
             $this->locations[\strlen($this->content)] = Location::fromContext($ctx, $this->parent);
         }
 

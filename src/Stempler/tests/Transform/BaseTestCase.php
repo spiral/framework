@@ -27,7 +27,7 @@ abstract class BaseTestCase extends TestCase
 {
     protected function compile(string $source, array $visitors = [], ?LoaderInterface $loader = null)
     {
-        if ($loader === null) {
+        if (!$loader instanceof \Spiral\Stempler\Loader\LoaderInterface) {
             $loader = new StringLoader();
             $loader->set('root', $source);
         }

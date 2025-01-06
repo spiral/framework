@@ -179,7 +179,7 @@ class ReflectionEntity
         }
 
         //Merge with parent value requested
-        if ($merge && \is_array($value) && !empty($parent = $this->parentReflection())) {
+        if ($merge && \is_array($value) && ($parent = $this->parentReflection()) instanceof \Spiral\Models\Reflection\ReflectionEntity) {
             $parentValue = $parent->getProperty($property, $merge);
 
             if (\is_array($parentValue)) {

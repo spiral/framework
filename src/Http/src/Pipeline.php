@@ -60,7 +60,7 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
 
     public function handle(Request $request): Response
     {
-        if ($this->handler === null) {
+        if (!$this->handler instanceof \Psr\Http\Server\RequestHandlerInterface) {
             throw new PipelineException('Unable to run pipeline, no handler given.');
         }
 

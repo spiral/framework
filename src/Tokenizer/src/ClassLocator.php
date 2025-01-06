@@ -63,7 +63,7 @@ final class ClassLocator extends AbstractLocator implements ClassesInterface
      */
     protected function isTargeted(\ReflectionClass $class, ?\ReflectionClass $target = null): bool
     {
-        if (empty($target)) {
+        if (!$target instanceof \ReflectionClass) {
             return true;
         }
 

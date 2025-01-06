@@ -20,7 +20,7 @@ trait PrototypeTrait
     public function __get(string $name): mixed
     {
         $container = ContainerScope::getContainer();
-        if ($container === null || !$container->has(PrototypeRegistry::class)) {
+        if (!$container instanceof \Psr\Container\ContainerInterface || !$container->has(PrototypeRegistry::class)) {
             throw new ScopeException(
                 \sprintf('Unable to resolve prototyped dependency `%s`, invalid container scope', $name)
             );

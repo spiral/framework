@@ -35,8 +35,8 @@ final class Tracer implements \Stringable
     {
         $trace = $details === [] ? null : new Trace($details);
         if ($nextLevel || $this->traces === []) {
-            $this->traces[] = $trace === null ? [] : [$trace];
-        } elseif ($trace !== null) {
+            $this->traces[] = $trace instanceof \Spiral\Core\Internal\Tracer\Trace ? [$trace] : [];
+        } elseif ($trace instanceof \Spiral\Core\Internal\Tracer\Trace) {
             $this->traces[\array_key_last($this->traces)][] = $trace;
         }
     }

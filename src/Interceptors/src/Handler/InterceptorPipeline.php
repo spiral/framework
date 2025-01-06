@@ -55,7 +55,7 @@ final class InterceptorPipeline implements HandlerInterface
      */
     public function handle(CallContextInterface $context): mixed
     {
-        if ($this->handler === null) {
+        if (!$this->handler instanceof \Spiral\Interceptors\HandlerInterface) {
             throw new InterceptorException('Unable to invoke pipeline without last handler.');
         }
 

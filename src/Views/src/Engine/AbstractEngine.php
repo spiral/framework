@@ -28,7 +28,7 @@ abstract class AbstractEngine implements EngineInterface
 
     public function getLoader(): LoaderInterface
     {
-        if (empty($this->loader)) {
+        if (!$this->loader instanceof \Spiral\Views\LoaderInterface) {
             throw new EngineException('No associated loader found');
         }
 

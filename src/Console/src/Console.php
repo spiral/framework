@@ -97,7 +97,7 @@ final class Console
      */
     public function getApplication(): Application
     {
-        if ($this->application !== null) {
+        if ($this->application instanceof \Symfony\Component\Console\Application) {
             return $this->application;
         }
 
@@ -108,7 +108,7 @@ final class Console
             $this->application->setDispatcher($this->dispatcher);
         }
 
-        if ($this->locator !== null) {
+        if ($this->locator instanceof \Spiral\Console\LocatorInterface) {
             $this->addCommands($this->locator->locateCommands());
         }
 
@@ -134,7 +134,7 @@ final class Console
                 $command->setInterceptors($interceptors);
             }
 
-            if ($this->dispatcher !== null && $command instanceof EventDispatcherAwareInterface) {
+            if ($this->dispatcher instanceof \Psr\EventDispatcher\EventDispatcherInterface && $command instanceof EventDispatcherAwareInterface) {
                 $command->setEventDispatcher($this->dispatcher);
             }
 

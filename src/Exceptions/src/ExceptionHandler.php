@@ -74,7 +74,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     public function canRender(string $format): bool
     {
-        return $this->getRenderer($format) !== null;
+        return $this->getRenderer($format) instanceof \Spiral\Exceptions\ExceptionRendererInterface;
     }
 
     public function report(\Throwable $exception): void

@@ -99,7 +99,7 @@ class CacheRepository implements CacheInterface
         // If no dispatcher is set, we can skip the loop with events
         // to save some CPU cycles
         $keys = \array_keys($array);
-        if ($this->dispatcher === null) {
+        if (!$this->dispatcher instanceof \Psr\EventDispatcher\EventDispatcherInterface) {
             return $this->storage->getMultiple($keys, $default);
         }
 
@@ -132,7 +132,7 @@ class CacheRepository implements CacheInterface
         $result = $this->storage->setMultiple($array, $ttl);
 
         // If there is a dispatcher, we need to dispatch events for each key
-        $dispatcher === null or \array_walk(
+        !$dispatcher instanceof \Psr\EventDispatcher\EventDispatcherInterface or \array_walk(
             $array,
             $result
                 ? static fn(mixed $value, string $key) => $dispatcher->dispatch(new KeyWritten($key, $value))
@@ -157,7 +157,7 @@ class CacheRepository implements CacheInterface
         $result = $this->storage->deleteMultiple($array);
 
         // If there is a dispatcher, we need to dispatch events for each key
-        $dispatcher === null or \array_walk(
+        !$dispatcher instanceof \Psr\EventDispatcher\EventDispatcherInterface or \array_walk(
             $array,
             $result
                 ? static fn(string $key) => $dispatcher->dispatch(new KeyDeleted($key))

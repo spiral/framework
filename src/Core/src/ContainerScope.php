@@ -42,7 +42,7 @@ final class ContainerScope
         }
 
         try {
-            if (Fiber::getCurrent() === null) {
+            if (!Fiber::getCurrent() instanceof \Fiber) {
                 return $scope(self::$container);
             }
 

@@ -22,7 +22,7 @@ if (!function_exists('spiral')) {
      */
     function spiral(string $alias): mixed
     {
-        if (ContainerScope::getContainer() === null) {
+        if (!ContainerScope::getContainer() instanceof \Psr\Container\ContainerInterface) {
             throw new ScopeException('Container scope was not set.');
         }
 

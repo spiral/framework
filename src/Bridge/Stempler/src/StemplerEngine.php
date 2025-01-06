@@ -65,7 +65,7 @@ final class StemplerEngine implements EngineInterface
 
     public function getLoader(): LoaderInterface
     {
-        if ($this->loader === null) {
+        if (!$this->loader instanceof \Spiral\Views\LoaderInterface) {
             throw new EngineException('No associated loader found');
         }
 
@@ -77,7 +77,7 @@ final class StemplerEngine implements EngineInterface
      */
     public function getBuilder(ContextInterface $context): Builder
     {
-        if ($this->builder === null) {
+        if (!$this->builder instanceof \Spiral\Stempler\Builder) {
             throw new EngineException('No associated builder found');
         }
 
@@ -101,7 +101,7 @@ final class StemplerEngine implements EngineInterface
         // cache key
         $key = $this->cacheKey($view, $context);
 
-        if ($this->cache !== null && $this->cache->isFresh($key)) {
+        if ($this->cache instanceof \Spiral\Stempler\StemplerCache && $this->cache->isFresh($key)) {
             $this->cache->load($key);
         } elseif (!\class_exists($class)) {
             try {
@@ -114,7 +114,7 @@ final class StemplerEngine implements EngineInterface
 
             $compiled = $this->compileClass($class, $result);
 
-            if ($this->cache !== null) {
+            if ($this->cache instanceof \Spiral\Stempler\StemplerCache) {
                 $this->cache->write(
                     $key,
                     $compiled,
@@ -142,7 +142,7 @@ final class StemplerEngine implements EngineInterface
 
     public function reset(string $path, ContextInterface $context): void
     {
-        if ($this->cache === null) {
+        if (!$this->cache instanceof \Spiral\Stempler\StemplerCache) {
             return;
         }
 

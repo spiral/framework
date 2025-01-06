@@ -86,7 +86,7 @@ abstract class AbstractTarget implements TargetInterface
 
     protected function coreHandler(ContainerInterface $container): CoreHandler
     {
-        if ($this->handler !== null) {
+        if ($this->handler instanceof \Spiral\Router\CoreHandler) {
             return $this->handler;
         }
 

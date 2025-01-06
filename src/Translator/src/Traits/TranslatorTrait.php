@@ -38,7 +38,7 @@ trait TranslatorTrait
         }
 
         $container = ContainerScope::getContainer();
-        if (empty($container) || !$container->has(TranslatorInterface::class)) {
+        if (!$container instanceof \Psr\Container\ContainerInterface || !$container->has(TranslatorInterface::class)) {
             return Translator::interpolate($string, $options);
         }
 

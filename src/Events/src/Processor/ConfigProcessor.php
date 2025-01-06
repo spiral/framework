@@ -19,7 +19,7 @@ final class ConfigProcessor extends AbstractProcessor
 
     public function process(): void
     {
-        if ($this->registry === null) {
+        if (!$this->registry instanceof \Spiral\Events\ListenerRegistryInterface) {
             return;
         }
         foreach ($this->config->getListeners() as $event => $eventListeners) {

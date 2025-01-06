@@ -65,7 +65,7 @@ final class ResolveImports implements VisitorInterface
             );
         }
 
-        if ($import !== null) {
+        if ($import instanceof \Spiral\Stempler\Node\Template) {
             $node = $this->merger->merge($import, $node);
 
             return $this->merger->isolateNodes($node, $import->getContext()->getPath());

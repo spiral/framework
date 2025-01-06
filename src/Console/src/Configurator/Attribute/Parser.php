@@ -113,7 +113,7 @@ final class Parser
                 suggestedValues: $attribute->suggestedValues
             );
 
-            if ($arrayArgument !== null && $isArray) {
+            if ($arrayArgument instanceof \Symfony\Component\Console\Input\InputArgument && $isArray) {
                 throw new ConfiguratorException('There must be only one array argument!');
             }
 
@@ -125,7 +125,7 @@ final class Parser
             $result[] = $argument;
         }
 
-        if ($arrayArgument !== null) {
+        if ($arrayArgument instanceof \Symfony\Component\Console\Input\InputArgument) {
             $result[] = $arrayArgument;
         }
 

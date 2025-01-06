@@ -90,7 +90,7 @@ final class StorageBootloaderTest extends BaseTestCase
             ?UriResolverInterface $resolver = null
         ): bool => $adapter instanceof LocalFilesystemAdapter
             && $name === 'default'
-            && $resolver === null)->once()->andReturn($bucket = m::mock(BucketInterface::class)
+            && !$resolver instanceof \Spiral\Distribution\UriResolverInterface)->once()->andReturn($bucket = m::mock(BucketInterface::class)
         );
 
         $storage = $this->getContainer()->get(StorageInterface::class);

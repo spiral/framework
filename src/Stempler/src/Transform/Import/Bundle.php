@@ -29,7 +29,7 @@ final class Bundle implements ImportInterface
 
     public function resolve(Builder $builder, string $name): ?Template
     {
-        if ($this->template === null) {
+        if (!$this->template instanceof \Spiral\Stempler\Node\Template) {
             $this->template = $builder->load($this->path);
         }
 

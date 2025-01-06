@@ -34,7 +34,7 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
 
             $policy = $this->getRetryPolicy($e, new \ReflectionClass($controller));
 
-            if ($policy === null) {
+            if (!$policy instanceof \Spiral\Queue\RetryPolicyInterface) {
                 throw $e;
             }
 
@@ -58,7 +58,7 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
     {
         $attribute = $this->reader->firstClassMetadata($handler, Attribute::class);
 
-        if ($exception instanceof JobException && $exception->getPrevious() !== null) {
+        if ($exception instanceof JobException && $exception->getPrevious() instanceof \Throwable) {
             $exception = $exception->getPrevious();
         }
 

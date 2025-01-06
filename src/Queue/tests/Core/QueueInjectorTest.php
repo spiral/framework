@@ -87,7 +87,7 @@ final class QueueInjectorTest extends TestCase
         $factory->shouldReceive('make')->andReturnUsing(function (string $name): QueueInterface {
             $result = ['sync' => $this->defaultQueue, 'test' => $this->testQueue][$name] ?? null;
 
-            if ($result === null) {
+            if (!$result instanceof \Spiral\Queue\QueueInterface) {
                 throw new NotFoundException();
             }
             return $result;

@@ -201,12 +201,12 @@ final class Factory implements FactoryInterface
     private function resolveProxy(Config\Proxy $binding, string $alias, Stringable|string|null $context): mixed
     {
         if ($context instanceof RetryContext) {
-            return $binding->fallbackFactory === null
-                ? throw new RecursiveProxyException(
+            return $binding->fallbackFactory instanceof \Closure
+                ? ($binding->fallbackFactory)($this->container, $context->context)
+                : throw new RecursiveProxyException(
                     $alias,
                     $this->scope->getScopeName(),
-                )
-                : ($binding->fallbackFactory)($this->container, $context->context);
+                );
         }
 
         $result = Proxy::create(new \ReflectionClass($binding->getInterface()), $context, new Attribute\Proxy());
@@ -316,7 +316,7 @@ final class Factory implements FactoryInterface
     ): mixed {
         $parent = $this->scope->getParentFactory();
 
-        if ($parent !== null) {
+        if ($parent instanceof \Spiral\Core\FactoryInterface) {
             try {
                 $this->tracer->push(false, ...[
                     'current scope' => $this->scope->getScopeName(),
@@ -563,7 +563,7 @@ final class Factory implements FactoryInterface
     {
         $scope = $this->scope;
 
-        while ($scope !== null) {
+        while ($scope instanceof \Spiral\Core\Internal\Scope) {
             foreach ($this->state->inflectors as $class => $inflectors) {
                 if ($instance instanceof $class) {
                     foreach ($inflectors as $inflector) {

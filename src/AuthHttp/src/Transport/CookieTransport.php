@@ -84,7 +84,7 @@ final class CookieTransport implements HttpTransportInterface
      */
     private function getLifetime(?\DateTimeInterface $expiresAt = null): ?int
     {
-        if ($expiresAt === null) {
+        if (!$expiresAt instanceof \DateTimeInterface) {
             return null;
         }
 

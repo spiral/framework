@@ -40,7 +40,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
         $default = $this->config->getDefault();
 
         if ($channel === null || $channel === $default) {
-            if ($this->default !== null) {
+            if ($this->default instanceof \Psr\Log\LoggerInterface) {
                 // we should use only one default logger per system
                 return $this->default;
             }

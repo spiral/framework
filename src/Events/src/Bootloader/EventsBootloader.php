@@ -72,7 +72,7 @@ final class EventsBootloader extends Bootloader
         FinalizerInterface $finalizer,
         ?EventDispatcherInterface $eventDispatcher = null
     ): void {
-        if ($eventDispatcher !== null) {
+        if ($eventDispatcher instanceof \Psr\EventDispatcher\EventDispatcherInterface) {
             $this->initEventDispatcher(new Core($eventDispatcher), $config, $container, $factory);
         }
 
@@ -87,7 +87,7 @@ final class EventsBootloader extends Bootloader
             $registry->process();
         });
 
-        if ($finalizer instanceof EventDispatcherAwareInterface && $eventDispatcher !== null) {
+        if ($finalizer instanceof EventDispatcherAwareInterface && $eventDispatcher instanceof \Psr\EventDispatcher\EventDispatcherInterface) {
             $finalizer->setEventDispatcher($eventDispatcher);
         }
     }

@@ -159,7 +159,7 @@ final class Indexer
             default => null
         };
 
-        if (!empty($argument) && $argument->getType() === ReflectionArgument::STRING) {
+        if ($argument instanceof \Spiral\Tokenizer\Reflection\ReflectionArgument && $argument->getType() === ReflectionArgument::STRING) {
             //Domain specified in arguments
             $domain = $this->config->resolveDomain($argument->stringValue());
         }

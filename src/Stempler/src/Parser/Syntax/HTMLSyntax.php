@@ -68,7 +68,7 @@ final class HTMLSyntax implements SyntaxInterface
                     return;
                 }
 
-                if ($this->attr !== null && !$this->attr->value instanceof Nil) {
+                if ($this->attr instanceof \Spiral\Stempler\Node\HTML\Attr && !$this->attr->value instanceof Nil) {
                     $this->attr->value = $this->parseToken($parser, $token);
                     $this->attr = null;
                     break;
@@ -84,7 +84,7 @@ final class HTMLSyntax implements SyntaxInterface
                 break;
 
             case HTMLGrammar::TYPE_EQUAL:
-                if ($this->attr === null) {
+                if (!$this->attr instanceof \Spiral\Stempler\Node\HTML\Attr) {
                     throw new SyntaxException('unexpected attribute token', $token);
                 }
 
@@ -93,7 +93,7 @@ final class HTMLSyntax implements SyntaxInterface
                 break;
 
             case HTMLGrammar::TYPE_ATTRIBUTE:
-                if ($this->attr === null) {
+                if (!$this->attr instanceof \Spiral\Stempler\Node\HTML\Attr) {
                     throw new SyntaxException('unexpected attribute token', $token);
                 }
 

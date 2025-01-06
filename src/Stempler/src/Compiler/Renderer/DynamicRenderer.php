@@ -41,7 +41,7 @@ final class DynamicRenderer implements Compiler\RendererInterface
      */
     private function directive(Compiler\Result $source, Directive $directive): void
     {
-        if ($this->directiveRenderer !== null) {
+        if ($this->directiveRenderer instanceof \Spiral\Stempler\Directive\DirectiveRendererInterface) {
             $result = $this->directiveRenderer->render($directive);
             if ($result !== null) {
                 $source->push($result, $directive->getContext());

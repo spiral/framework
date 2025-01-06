@@ -74,7 +74,7 @@ final class Router implements RouterInterface
                     throw new RouterException('Invalid route definition', $e->getCode(), $e);
                 }
 
-                if ($route === null) {
+                if (!$route instanceof \Spiral\Router\RouteInterface) {
                     $this->eventDispatcher?->dispatch(new RouteNotFound($request));
                     throw new RouteNotFoundException($request->getUri());
                 }
@@ -118,7 +118,7 @@ final class Router implements RouterInterface
 
     public function getRoutes(): array
     {
-        if (!empty($this->default)) {
+        if ($this->default instanceof \Spiral\Router\RouteInterface) {
             return $this->routes + [null => $this->default];
         }
 
@@ -187,7 +187,7 @@ final class Router implements RouterInterface
             }
         }
 
-        if ($this->default !== null) {
+        if ($this->default instanceof \Spiral\Router\RouteInterface) {
             return $this->default->match($request);
         }
 
@@ -241,7 +241,7 @@ final class Router implements RouterInterface
          */
         if (!empty($matches['name'])) {
             $routeObject = $this->getRoute($matches['name']);
-        } elseif ($this->default !== null) {
+        } elseif ($this->default instanceof \Spiral\Router\RouteInterface) {
             $routeObject = $this->default;
         } else {
             throw new UndefinedRouteException(\sprintf('Unable to locate route candidate for `%s`', $route));

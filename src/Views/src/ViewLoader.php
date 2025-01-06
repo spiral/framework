@@ -39,7 +39,7 @@ final class ViewLoader implements LoaderInterface
 
     public function getExtension(): ?string
     {
-        if ($this->parser !== null) {
+        if ($this->parser instanceof \Spiral\Views\Loader\PathParser) {
             return $this->parser->getExtension();
         }
 
@@ -52,12 +52,12 @@ final class ViewLoader implements LoaderInterface
      */
     public function exists(string $path, ?string &$filename = null, ?ViewPath &$parsed = null): bool
     {
-        if (empty($this->parser)) {
+        if (!$this->parser instanceof \Spiral\Views\Loader\PathParser) {
             throw new LoaderException('Unable to locate view source, no extension has been associated.');
         }
 
         $parsed = $this->parser->parse($path);
-        if ($parsed === null) {
+        if (!$parsed instanceof \Spiral\Views\Loader\ViewPath) {
             return false;
         }
 
@@ -94,7 +94,7 @@ final class ViewLoader implements LoaderInterface
 
     public function list(?string $namespace = null): array
     {
-        if (empty($this->parser)) {
+        if (!$this->parser instanceof \Spiral\Views\Loader\PathParser) {
             throw new LoaderException('Unable to list view sources, no extension has been associated.');
         }
 

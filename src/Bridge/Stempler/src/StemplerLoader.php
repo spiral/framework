@@ -40,7 +40,7 @@ final class StemplerLoader implements StemplerLoaderInterface
      */
     public function load(string $path): Source
     {
-        if ($this->context === null) {
+        if (!$this->context instanceof \Spiral\Views\ContextInterface) {
             throw new EngineException('Unable to use StemplerLoader without given context.');
         }
 

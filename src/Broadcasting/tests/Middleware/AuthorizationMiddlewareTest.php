@@ -184,7 +184,7 @@ final class AuthorizationMiddlewareTest extends TestCase
             ->withArgs(
                 static fn(Authorized $event): bool => $event->status->success === true
                 && $event->status->topics === null
-                && $event->status->response === null
+                && !$event->status->response instanceof \Psr\Http\Message\ResponseInterface
             );
 
         $middleware = new AuthorizationMiddleware(

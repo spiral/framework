@@ -122,7 +122,7 @@ class TargetTest extends TestCase
 
         self::assertSame([$controller, $action], $target->getPath());
         $reflection = $target->getReflection();
-        self::assertSame($hasReflection, $reflection !== null);
+        self::assertSame($hasReflection, $reflection instanceof \ReflectionFunctionAbstract);
         self::assertNull($target->getObject());
         if ($hasReflection) {
             self::assertInstanceOf(\ReflectionMethod::class, $reflection);

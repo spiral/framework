@@ -64,7 +64,7 @@ final class Guard implements GuardInterface
      */
     public function getActor(): ActorInterface
     {
-        if (empty($this->actor)) {
+        if (!$this->actor instanceof \Spiral\Security\ActorInterface) {
             throw new GuardException('Unable to get Guard Actor, no value set');
         }
 

@@ -27,7 +27,7 @@ class AuthController
 
     public function token(AuthContextInterface $authContext)
     {
-        if ($authContext->getToken() !== null) {
+        if ($authContext->getToken() instanceof \Spiral\Auth\TokenInterface) {
             return $authContext->getToken()->getID();
         }
 
@@ -52,7 +52,7 @@ class AuthController
 
     public function token2()
     {
-        if ($this->auth->getToken() !== null) {
+        if ($this->auth->getToken() instanceof \Spiral\Auth\TokenInterface) {
             return $this->auth->getToken()->getID();
         }
 

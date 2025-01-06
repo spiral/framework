@@ -42,7 +42,7 @@ final class Introspector
     public static function getAccessor(?ContainerInterface $container = null): Accessor
     {
         $container = match (true) {
-            $container === null || $container instanceof Container => $container,
+            !$container instanceof \Psr\Container\ContainerInterface || $container instanceof Container => $container,
             Proxy::isProxy($container) => ContainerScope::getContainer() ?? throw new \RuntimeException(
                 'Container Proxy is out of scope.',
             ),

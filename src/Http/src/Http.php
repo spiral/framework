@@ -77,7 +77,7 @@ final class Http implements RequestHandlerInterface
 
             $this->dispatcher?->dispatch(new RequestReceived($request));
 
-            if ($this->handler === null) {
+            if (!$this->handler instanceof \Psr\Http\Server\RequestHandlerInterface) {
                 throw new HttpException('Unable to run HttpCore, no handler is set.');
             }
 

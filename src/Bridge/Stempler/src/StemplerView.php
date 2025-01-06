@@ -34,7 +34,7 @@ abstract class StemplerView implements ViewInterface
             $this->context
         );
 
-        if ($sourcemap === null) {
+        if (!$sourcemap instanceof \Spiral\Stempler\Compiler\SourceMap) {
             return $e;
         }
 

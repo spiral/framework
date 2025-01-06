@@ -198,7 +198,7 @@ class ConsoleRenderer extends AbstractRenderer
 
             $result .= $line . "\n";
 
-            if ($h !== null && !empty($trace['file'])) {
+            if ($h instanceof \Spiral\Exceptions\Renderer\Highlighter && !empty($trace['file'])) {
                 $str = @\file_get_contents($trace['file']);
                 $result .= $h->highlightLines(
                     $str,

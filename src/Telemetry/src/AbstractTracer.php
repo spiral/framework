@@ -28,7 +28,7 @@ abstract class AbstractTracer implements TracerInterface
     final protected function runScope(Span $span, callable $callback): mixed
     {
         $container = ContainerScope::getContainer();
-        if ($container === null) {
+        if (!$container instanceof \Psr\Container\ContainerInterface) {
             return $this->scope->runScope([
                 SpanInterface::class => $span,
                 TracerInterface::class => $this,

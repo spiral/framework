@@ -125,7 +125,7 @@ final class SourceMap
         return [
             \array_search($path, $this->paths),
             Source::resolveLine($this->sourceCache[$location->path]->getContent(), $location->offset),
-            $location->parent === null ? null : $this->calculateLine($location->parent, $loader),
+            $location->parent instanceof \Spiral\Stempler\Compiler\Location ? $this->calculateLine($location->parent, $loader) : null,
         ];
     }
 }

@@ -12,7 +12,7 @@ final class ViewCache
 
     public function reset(?ContextInterface $context = null): void
     {
-        if (empty($context)) {
+        if (!$context instanceof \Spiral\Views\ContextInterface) {
             $this->cache = [];
             return;
         }

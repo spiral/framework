@@ -26,14 +26,14 @@ final class AttributeProcessor extends AbstractProcessor implements Tokenization
         private readonly ?ListenerRegistryInterface $registry = null,
     ) {
         // Look for Spiral\Events\Attribute\Listener attribute only when ListenerRegistry provided by container
-        if ($this->registry !== null) {
+        if ($this->registry instanceof \Spiral\Events\ListenerRegistryInterface) {
             $listenerRegistry->addListener($this);
         }
     }
 
     public function process(): void
     {
-        if ($this->registry === null) {
+        if (!$this->registry instanceof \Spiral\Events\ListenerRegistryInterface) {
             return;
         }
 

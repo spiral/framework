@@ -67,6 +67,6 @@ final class Container implements ContainerInterface
 
         $parent = $this->scope->getParent();
 
-        return $parent !== null && $parent->has($id);
+        return $parent instanceof \Spiral\Core\Container && $parent->has($id);
     }
 }

@@ -83,7 +83,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Psr\Container\ContainerInterface) {
             throw new ScopeException('Container is not set');
         }
 

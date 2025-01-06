@@ -43,7 +43,7 @@ final class StreamWrapper
      */
     public function stream_eof(): bool
     {
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Psr\Http\Message\StreamInterface) {
             throw new WrapperException('Stream is not opened.');
         }
 
@@ -72,7 +72,7 @@ final class StreamWrapper
      */
     public function stream_read(int $length): string|false
     {
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Psr\Http\Message\StreamInterface) {
             throw new WrapperException('Stream is not opened.');
         }
 
@@ -84,7 +84,7 @@ final class StreamWrapper
      */
     public function stream_seek(int $offset, int $whence = SEEK_SET): bool
     {
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Psr\Http\Message\StreamInterface) {
             throw new WrapperException('Stream is not opened.');
         }
 
@@ -102,7 +102,7 @@ final class StreamWrapper
      */
     public function stream_stat(): array
     {
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Psr\Http\Message\StreamInterface) {
             throw new WrapperException('Stream is not opened.');
         }
 
@@ -114,7 +114,7 @@ final class StreamWrapper
      */
     public function stream_tell(): int
     {
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Psr\Http\Message\StreamInterface) {
             throw new WrapperException('Stream is not opened.');
         }
 
@@ -128,7 +128,7 @@ final class StreamWrapper
      */
     public function stream_write(string $data): int
     {
-        if ($this->stream === null) {
+        if (!$this->stream instanceof \Psr\Http\Message\StreamInterface) {
             throw new WrapperException('Stream is not opened.');
         }
 

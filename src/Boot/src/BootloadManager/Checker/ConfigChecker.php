@@ -17,7 +17,7 @@ final class ConfigChecker implements BootloaderCheckerInterface
 
     public function canInitialize(BootloaderInterface|string $bootloader, ?BootloadConfig $config = null): bool
     {
-        if ($config === null) {
+        if (!$config instanceof \Spiral\Boot\Attribute\BootloadConfig) {
             return true;
         }
 

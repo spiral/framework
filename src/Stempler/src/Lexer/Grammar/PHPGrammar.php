@@ -23,7 +23,7 @@ final class PHPGrammar implements GrammarInterface
             }
 
             $php = $this->parseGrammar($n->char . $src->nextBytes(), $n->offset);
-            if ($php === null) {
+            if (!$php instanceof \Spiral\Stempler\Lexer\Token) {
                 yield $n;
                 $src->replay($n->offset);
                 continue;

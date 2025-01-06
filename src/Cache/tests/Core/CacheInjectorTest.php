@@ -78,7 +78,7 @@ final class CacheInjectorTest extends TestCase
                     'test' => $this->defaultCache,
                     'array' => new ArrayStorage(),
                 ][$name] ?? null;
-            if ($result === null) {
+            if (!$result instanceof \Psr\SimpleCache\CacheInterface) {
                 throw new NotFoundException();
             }
             return $result;

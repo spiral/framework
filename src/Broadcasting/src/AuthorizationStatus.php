@@ -35,6 +35,6 @@ final class AuthorizationStatus
      */
     public function hasResponse(): bool
     {
-        return $this->response !== null;
+        return $this->response instanceof \Psr\Http\Message\ResponseInterface;
     }
 }

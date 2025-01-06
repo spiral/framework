@@ -146,7 +146,7 @@ class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
 
         foreach ($gettersByKey as $item) {
             $method = $this->declareGettersByKey($getters, $item['key'], $item['value']);
-            if ($method !== null) {
+            if ($method instanceof \Spiral\Reactor\Partial\Method) {
                 $getters[] = $method->getName();
             }
         }

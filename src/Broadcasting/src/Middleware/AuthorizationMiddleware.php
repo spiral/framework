@@ -44,7 +44,7 @@ final class AuthorizationMiddleware implements MiddlewareInterface
 
         $this->dispatcher?->dispatch(new Authorized($status, $request));
 
-        if ($status->response !== null) {
+        if ($status->response instanceof \Psr\Http\Message\ResponseInterface) {
             return $status->response;
         }
 

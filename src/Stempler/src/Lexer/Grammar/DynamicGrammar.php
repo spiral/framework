@@ -91,7 +91,7 @@ final class DynamicGrammar implements GrammarInterface
                         $this->declare($directive->getBody());
                     } else {
                         if (
-                            $this->directiveRenderer !== null
+                            $this->directiveRenderer instanceof \Spiral\Stempler\Directive\DirectiveRendererInterface
                             && !$this->directiveRenderer->hasDirective($directive->getKeyword())
                         ) {
                             // directive opening char

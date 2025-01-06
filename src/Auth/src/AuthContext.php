@@ -47,7 +47,7 @@ final class AuthContext implements AuthContextInterface
             return null;
         }
 
-        if ($this->actor === null && $this->token !== null) {
+        if ($this->actor === null && $this->token instanceof \Spiral\Auth\TokenInterface) {
             $this->actor = $this->actorProvider->getActor($this->token);
         }
 

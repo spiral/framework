@@ -66,7 +66,7 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
      */
     public function callAction(string $controller, string $action, array $parameters = []): mixed
     {
-        if ($this->context === null) {
+        if (!$this->context instanceof \Spiral\Interceptors\Context\CallContextInterface) {
             return $this->handle(
                 new CallContext(Target::fromPathArray([$controller, $action]), $parameters),
             );
@@ -88,7 +88,7 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
      */
     public function handle(CallContextInterface $context): mixed
     {
-        if ($this->core === null && $this->handler === null) {
+        if (!$this->core instanceof \Spiral\Core\CoreInterface && !$this->handler instanceof \Spiral\Interceptors\HandlerInterface) {
             throw new InterceptorException('Unable to invoke pipeline without last handler.');
         }
 
@@ -112,9 +112,9 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
                 : $interceptor->intercept($context, $handler);
         }
 
-        return $this->core === null
-            ? $this->handler->handle($context)
-            : $this->core->callAction($path[0] ?? '', $path[1] ?? '', $context->getArguments());
+        return $this->core instanceof \Spiral\Core\CoreInterface
+            ? $this->core->callAction($path[0] ?? '', $path[1] ?? '', $context->getArguments())
+            : $this->handler->handle($context);
     }
 
     private function nextWithContext(CallContextInterface $context): self

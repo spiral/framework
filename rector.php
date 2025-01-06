@@ -120,7 +120,7 @@ return RectorConfig::configure()
         PreferPHPUnitThisCallRector::class,
     ])
     ->withPhpSets(php81: true)
-    ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)
+    ->withPreparedSets(deadCode: true, phpunitCodeQuality: true, instanceOf: true)
     ->withComposerBased(phpunit: true)
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,

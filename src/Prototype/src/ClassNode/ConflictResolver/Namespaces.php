@@ -105,7 +105,7 @@ final class Namespaces
             $namespace = $this->parseNamespaceFromType($dependency->type);
             if (isset($counters[$namespace->name])) {
                 $alreadyImported = $this->getAlreadyImportedNamespace($counters[$namespace->name], $namespace);
-                if ($alreadyImported !== null) {
+                if ($alreadyImported instanceof \Spiral\Prototype\ClassNode\ConflictResolver\NamespaceEntity) {
                     $dependency->type->alias = $alreadyImported->fullName();
 
                     continue;

@@ -78,7 +78,7 @@ trait WritableTrait
     ): FileInterface {
         $fs = $this->getOperator();
 
-        if ($storage === null || $storage === $this) {
+        if (!$storage instanceof \Spiral\Storage\BucketInterface || $storage === $this) {
             try {
                 $fs->copy($source, $destination, $config);
             } catch (FilesystemException $e) {
@@ -99,7 +99,7 @@ trait WritableTrait
     ): FileInterface {
         $fs = $this->getOperator();
 
-        if ($storage === null || $storage === $this) {
+        if (!$storage instanceof \Spiral\Storage\BucketInterface || $storage === $this) {
             try {
                 $fs->move($source, $destination, $config);
             } catch (FilesystemException $e) {

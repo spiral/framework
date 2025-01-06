@@ -94,7 +94,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
             foreach ($acceptItems as $item) {
                 $format = $item->getValue();
                 $renderer = $handler->getRenderer($format);
-                if ($renderer !== null) {
+                if ($renderer instanceof \Spiral\Exceptions\ExceptionRendererInterface) {
                     return [$format, $renderer];
                 }
             }

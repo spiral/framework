@@ -48,20 +48,20 @@ final class DynamicSyntax implements SyntaxInterface
                 break;
 
             case DynamicGrammar::TYPE_KEYWORD:
-                if ($this->directive !== null) {
+                if ($this->directive instanceof \Spiral\Stempler\Node\Dynamic\Directive) {
                     $this->directive->name = $token->content;
                 }
                 break;
 
             case DynamicGrammar::TYPE_BODY:
-                if ($this->directive !== null) {
+                if ($this->directive instanceof \Spiral\Stempler\Node\Dynamic\Directive) {
                     $this->directive->body = $token->content;
                     $this->directive->values = $this->fetchValues($this->directive->body);
 
                     $this->directive = null;
                 }
 
-                if ($this->output !== null) {
+                if ($this->output instanceof \Spiral\Stempler\Node\Dynamic\Output) {
                     $this->output->body = $token->content;
                 }
 
