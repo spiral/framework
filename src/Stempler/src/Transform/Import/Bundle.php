@@ -35,11 +35,11 @@ final class Bundle implements ImportInterface
 
         $path = $name;
         if ($this->prefix !== null) {
-            $path = \substr($path, \strlen($this->prefix) + 1);
-        }
+            if (!TagHelper::hasPrefix($name, $this->prefix)) {
+                return null;
+            }
 
-        if ($path === '') {
-            return null;
+            $path = TagHelper::stripPrefix($path, $this->prefix);
         }
 
         /** @var ImportInterface $import */
