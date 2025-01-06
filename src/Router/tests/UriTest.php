@@ -119,10 +119,12 @@ class UriTest extends BaseTestCase
 
     public static function providePatternsWithRequiredSegments(): iterable
     {
+        yield ['<controller>[/<section>[/<ext>]]/test/<id>', ['controller' => 'test', 'id' => 1], '/test/test/1'];
         yield ['/articles/<id>[/<section>]', ['id' => 1], '/articles/1'];
         yield ['/articles/<id>', ['id' => 1], '/articles/1'];
         yield ['/articles/<id>/edit', ['id' => 1], '/articles/1/edit'];
         yield ['/articles/<id>/edit/<section>', ['id' => 1, 'section' => 'test'], '/articles/1/edit/test'];
+        yield ['/articles/<id>/edit/[<section>/]<path>', ['id' => 1, 'path' => 'test'], '/articles/1/edit/test'];
         yield ['/articles/<id:int>', ['id' => 1], '/articles/1'];
         yield ['/articles/<id:\d+>', ['id' => 1], '/articles/1'];
         yield ['/<path:.*>', ['path' => 'test'], '/test'];

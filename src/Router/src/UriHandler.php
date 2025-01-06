@@ -29,8 +29,9 @@ final class UriHandler
         '[/]' => '',
         '[' => '',
         ']' => '',
-        '://' => '://',
         '//' => '/',
+        // todo: probably should be removed. There are no examples of usage or cases where it is needed.
+        '://' => '://',
     ];
 
     private ?string $pattern = null;
@@ -441,7 +442,11 @@ final class UriHandler
             };
         }
 
-        return \strtr($string, $replaces + self::URI_FIXERS);
+        // Replace all variables
+        $path = \strtr($string, [...$replaces, ...self::URI_FIXERS]);
+
+        // Remove all empty segments
+        return \preg_replace('/\/{2,}/', '/', $path);
     }
 
     /**
