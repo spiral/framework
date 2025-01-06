@@ -43,7 +43,7 @@ final class AttributeResolverTest extends TestCase
         self::assertInstanceOf(SampleClass::class, $this->container->get('foo'));
     }
 
-    public function testRegisterResolverThroughBootloader()
+    public function testRegisterResolverThroughBootloader(): void
     {
         $this->container->bind(AttributeResolverRegistryInterface::class, AttributeResolver::class);
         $this->container->bind(InitializerInterface::class, new Initializer($this->container, $this->container));
