@@ -32,8 +32,7 @@ class StateBinder implements BinderInterface
 {
     public function __construct(
         protected readonly State $state,
-    ) {
-    }
+    ) {}
 
     /**
      * @param TResolver|object $resolver
@@ -97,8 +96,7 @@ class StateBinder implements BinderInterface
 
     public function bindInjector(string $class, string $injector): void
     {
-        $this->state->bindings[$class] = new Injectable($injector);
-        $this->state->injectors[$class] = $injector;
+        $this->setBinding($class, new Injectable($injector));
     }
 
     public function removeInjector(string $class): void
@@ -182,11 +180,13 @@ class StateBinder implements BinderInterface
 
     private function invalidBindingException(string $alias, Throwable $previous): Throwable
     {
-        return new ConfiguratorException(\sprintf(
-            'Invalid binding for `%s`. %s',
-            $alias,
-            $previous->getMessage(),
-        ), previous: $previous);
+        return new ConfiguratorException(
+            \sprintf(
+                'Invalid binding for `%s`. %s',
+                $alias,
+                $previous->getMessage(),
+            ), previous: $previous,
+        );
     }
 
     private function setBinding(string $alias, Binding $config): void
@@ -196,5 +196,9 @@ class StateBinder implements BinderInterface
         }
 
         $this->state->bindings[$alias] = $config;
+
+        if ($config instanceof Injectable) {
+            $this->state->injectors[$alias] = $config->injector;
+        }
     }
 }
