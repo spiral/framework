@@ -23,6 +23,6 @@ final class Injectable extends Binding
 
     public function __toString(): string
     {
-        return sprintf('Injectable with %s', \is_string($this->injector) ? $this->injector : $this->injector::class);
+        return \sprintf('Injectable with %s', \is_string($this->injector) ? $this->injector : $this->injector::class);
     }
 }
