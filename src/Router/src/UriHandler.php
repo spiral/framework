@@ -213,13 +213,18 @@ final class UriHandler
         );
 
         $required = \array_keys($this->constrains);
-        $parametersToCheck = $parameters;
         if ($this->strict) {
             $required = \array_unique([...$this->requiredOptions, ...$required]);
-            $parametersToCheck = \array_filter($parametersToCheck);
         }
 
-        $missingParameters = \array_diff($required, \array_keys($parametersToCheck));
+        $missingParameters = [];
+
+        foreach ($required as $key) {
+            if (empty($parameters[$key])) {
+                $missingParameters[] = $key;
+            }
+        }
+
         if ($missingParameters !== []) {
             throw new UriHandlerException(
                 \sprintf(
