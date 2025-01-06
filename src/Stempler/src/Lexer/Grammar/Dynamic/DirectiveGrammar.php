@@ -229,6 +229,12 @@ final class DirectiveGrammar implements \IteratorAggregate
     {
         $tokens = $this->tokens;
 
+        // A directive must have at least one keyword
+        // Without it, it's just a char
+        if (\count($tokens) === 1 && $tokens[0]->content === self::DIRECTIVE_CHAR) {
+            return false;
+        }
+
         foreach (\array_reverse($tokens, true) as $i => $t) {
             if ($t->type !== DynamicGrammar::TYPE_WHITESPACE) {
                 break;

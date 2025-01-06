@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler\Transform;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Stempler\Directive\LoopDirective;
 use Spiral\Stempler\Node\PHP;
+use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Transform\Finalizer\DynamicToPHP;
 
 class DynamicToPHPTest extends BaseTestCase
@@ -15,6 +17,20 @@ class DynamicToPHPTest extends BaseTestCase
         $doc = $this->parse('{{ $name }}');
 
         self::assertInstanceOf(PHP::class, $doc->nodes[0]);
+    }
+
+    public static function provideStringWithoutDirective(): iterable
+    {
+        yield ['https://unpkg.com/tailwindcss@^1.6/dist/tailwind.min.css'];
+    }
+
+    #[DataProvider('provideStringWithoutDirective')]
+    public function testLinkWithReservedSymbol(string $string): void
+    {
+        $doc = $this->parse($string);
+
+        self::assertInstanceOf(Raw::class, $doc->nodes[0]);
+        self::assertSame($string, $doc->nodes[0]->content);
     }
 
     public function testDirective(): void
