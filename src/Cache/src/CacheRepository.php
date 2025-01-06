@@ -24,9 +24,8 @@ class CacheRepository implements CacheInterface
     public function __construct(
         protected CacheInterface $storage,
         protected ?EventDispatcherInterface $dispatcher = null,
-        protected ?string $prefix = null
-    ) {
-    }
+        protected ?string $prefix = null,
+    ) {}
 
     public function get(string $key, mixed $default = null): mixed
     {
@@ -88,36 +87,76 @@ class CacheRepository implements CacheInterface
 
     public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
-        $result = [];
-
+        $array = [];
         foreach ($keys as $key) {
-            $result[$key] = $this->get($key, $default);
+            $key = $this->resolveKey($key);
+            $this->dispatcher?->dispatch(new CacheRetrieving($key));
+            $array[$key] = $default;
         }
 
-        return $result;
+        if ($this->dispatcher === null) {
+            return $this->storage->getMultiple(\array_keys($array), $default);
+        }
+
+        $result = $this->storage->getMultiple(\array_keys($array));
+
+        foreach ($result as $key => $value) {
+            if ($value === null) {
+                $this->dispatcher->dispatch(new CacheMissed($key));
+            } else {
+                $array[$key] = $value;
+                $this->dispatcher->dispatch(new CacheHit($key, $value));
+            }
+        }
+
+        return $array;
     }
 
     public function setMultiple(iterable $values, \DateInterval|int|null $ttl = null): bool
     {
-        $state = null;
-
+        $dispatcher = $this->dispatcher;
+        $array = [];
         foreach ($values as $key => $value) {
-            $result = $this->set($key, $value, $ttl);
-            $state = \is_null($state) ? $result : $result && $state;
+            $key = $this->resolveKey($key);
+            $dispatcher?->dispatch(new KeyWriting($key, $value));
+            $array[$key] = $value;
         }
 
-        return $state ?: false;
+        $result = $this->storage->setMultiple($array, $ttl);
+
+        // use array_walk to dispatch events
+        $dispatcher === null or \array_walk(
+            $array,
+            $result
+                ? static fn(mixed $value, string $key) => $dispatcher->dispatch(new KeyWritten($key, $value))
+                : static fn(mixed $value, string $key) => $dispatcher->dispatch(new KeyWriteFailed($key, $value)),
+        );
+
+        return $result;
     }
 
     public function deleteMultiple(iterable $keys): bool
     {
-        $state = null;
+        $dispatcher = $this->dispatcher;
+
+        $array = [];
         foreach ($keys as $key) {
-            $result = $this->delete($key);
-            $state = \is_null($state) ? $result : $result && $state;
+            $key = $this->resolveKey($key);
+            $dispatcher?->dispatch(new KeyDeleting($key));
+            $array[] = $key;
         }
 
-        return $state ?: false;
+        $result = $this->storage->deleteMultiple($array);
+
+        // use array_walk to dispatch events
+        $dispatcher === null or \array_walk(
+            $array,
+            $result
+                ? static fn(string $key) => $dispatcher->dispatch(new KeyDeleted($key))
+                : static fn(string $key) => $dispatcher->dispatch(new KeyDeleteFailed($key)),
+        );
+
+        return $result;
     }
 
     public function has(string $key): bool
