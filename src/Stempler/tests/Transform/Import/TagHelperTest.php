@@ -32,6 +32,7 @@ final class TagHelperTest extends BaseTestCase
     public function testHasPrefixEdgeCases(): void
     {
         self::assertFalse(TagHelper::hasPrefix('foo', 'foo'));
+        self::assertFalse(TagHelper::hasPrefix('foo:', 'foo'));
     }
 
     public function testStripPrefixWithValidPrefix(): void
@@ -51,6 +52,6 @@ final class TagHelperTest extends BaseTestCase
     public function testStripPrefixEdgeCases(): void
     {
         self::assertSame('foo', TagHelper::stripPrefix('foo', 'foo'));
-        self::assertSame('', TagHelper::stripPrefix('foo:', 'foo'));
+        self::assertSame('foo:', TagHelper::stripPrefix('foo:', 'foo'));
     }
 }
