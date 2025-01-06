@@ -88,22 +88,28 @@ class CacheRepository implements CacheInterface
     public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
         $array = [];
+        // Resolve keys and dispatch events
         foreach ($keys as $key) {
             $key = $this->resolveKey($key);
             $this->dispatcher?->dispatch(new CacheRetrieving($key));
+            // Fill resulting array with default values
             $array[$key] = $default;
         }
 
+        // If no dispatcher is set, we can skip the loop with events
+        // to save some CPU cycles
+        $keys = \array_keys($array);
         if ($this->dispatcher === null) {
-            return $this->storage->getMultiple(\array_keys($array), $default);
+            return $this->storage->getMultiple($keys, $default);
         }
 
-        $result = $this->storage->getMultiple(\array_keys($array));
+        $result = $this->storage->getMultiple($keys);
 
         foreach ($result as $key => $value) {
             if ($value === null) {
                 $this->dispatcher->dispatch(new CacheMissed($key));
             } else {
+                // Replace default value with actual value in the resulting array
                 $array[$key] = $value;
                 $this->dispatcher->dispatch(new CacheHit($key, $value));
             }
@@ -116,6 +122,7 @@ class CacheRepository implements CacheInterface
     {
         $dispatcher = $this->dispatcher;
         $array = [];
+        // Resolve keys and dispatch events
         foreach ($values as $key => $value) {
             $key = $this->resolveKey($key);
             $dispatcher?->dispatch(new KeyWriting($key, $value));
@@ -124,7 +131,7 @@ class CacheRepository implements CacheInterface
 
         $result = $this->storage->setMultiple($array, $ttl);
 
-        // use array_walk to dispatch events
+        // If there is a dispatcher, we need to dispatch events for each key
         $dispatcher === null or \array_walk(
             $array,
             $result
@@ -140,6 +147,7 @@ class CacheRepository implements CacheInterface
         $dispatcher = $this->dispatcher;
 
         $array = [];
+        // Resolve keys and dispatch events
         foreach ($keys as $key) {
             $key = $this->resolveKey($key);
             $dispatcher?->dispatch(new KeyDeleting($key));
@@ -148,7 +156,7 @@ class CacheRepository implements CacheInterface
 
         $result = $this->storage->deleteMultiple($array);
 
-        // use array_walk to dispatch events
+        // If there is a dispatcher, we need to dispatch events for each key
         $dispatcher === null or \array_walk(
             $array,
             $result
