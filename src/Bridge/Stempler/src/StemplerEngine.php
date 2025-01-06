@@ -119,7 +119,7 @@ final class StemplerEngine implements EngineInterface
                     $key,
                     $compiled,
                     \array_map(
-                        fn ($path) => $this->getLoader()->load($path)->getFilename(),
+                        fn ($path): string => $this->getLoader()->load($path)->getFilename(),
                         $result->getPaths()
                     )
                 );

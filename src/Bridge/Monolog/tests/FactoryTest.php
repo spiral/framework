@@ -33,9 +33,9 @@ class FactoryTest extends BaseTestCase
         $factory = new LogFactory(new MonologConfig([]), new ListenerRegistry(), $this->container);
         $logger = $factory->getLogger();
 
-        $this->assertNotEmpty($logger);
-        $this->assertSame($logger, $factory->getLogger());
-        $this->assertSame($logger, $factory->getLogger(MonologConfig::DEFAULT_CHANNEL));
+        self::assertNotEmpty($logger);
+        self::assertSame($logger, $factory->getLogger());
+        self::assertSame($logger, $factory->getLogger(MonologConfig::DEFAULT_CHANNEL));
     }
 
     public function testChangedDefaultLogger(): void
@@ -44,9 +44,9 @@ class FactoryTest extends BaseTestCase
 
         $logger = $factory->getLogger();
 
-        $this->assertNotEmpty($logger);
-        $this->assertSame($logger, $factory->getLogger());
-        $this->assertSame($logger, $factory->getLogger('foo'));
+        self::assertNotEmpty($logger);
+        self::assertSame($logger, $factory->getLogger());
+        self::assertSame($logger, $factory->getLogger('foo'));
     }
 
     public function testInjection(): void
@@ -74,9 +74,9 @@ class FactoryTest extends BaseTestCase
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->bind(LogFactory::class, $factory);
 
-        $this->assertSame($logger, $this->container->get(Logger::class));
-        $this->assertInstanceOf(LoggerInterface::class, $this->container->get(LoggerInterface::class));
-        $this->assertSame($logger, $this->container->get(LoggerInterface::class));
+        self::assertSame($logger, $this->container->get(Logger::class));
+        self::assertInstanceOf(LoggerInterface::class, $this->container->get(LoggerInterface::class));
+        self::assertSame($logger, $this->container->get(LoggerInterface::class));
     }
 
     public function testInjectionWithAttribute(): void
@@ -103,12 +103,12 @@ class FactoryTest extends BaseTestCase
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->bind(LogFactory::class, $factory);
 
-        $this->container->invoke(function (#[LoggerChannel('foo')] LoggerInterface $logger) {
-            $this->assertSame('foo', $logger->getName());
+        $this->container->invoke(function (#[LoggerChannel('foo')] LoggerInterface $logger): void {
+            self::assertSame('foo', $logger->getName());
         });
     }
 
-    public function testFinalizerShouldResetDefaultLogger()
+    public function testFinalizerShouldResetDefaultLogger(): void
     {
         $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
             new class() implements LoaderInterface {
@@ -148,7 +148,7 @@ class FactoryTest extends BaseTestCase
         $finalizer->finalize();
     }
 
-    public function testFinalizerShouldNotResetLoggerWhenApplicationTerminating()
+    public function testFinalizerShouldNotResetLoggerWhenApplicationTerminating(): void
     {
         $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
             new class() implements LoaderInterface {

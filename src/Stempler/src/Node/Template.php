@@ -23,18 +23,12 @@ final class Template implements NodeInterface, AttributedInterface
      * @param list<TNode> $nodes
      */
     public function __construct(
-        public array $nodes = []
-    ) {
-    }
+        public array $nodes = [],
+    ) {}
 
     public function setContext(?Context $context = null): void
     {
         $this->context = $context;
-    }
-
-    public function getContext(): ?Context
-    {
-        return $this->context;
     }
 
     public function getIterator(): \Generator

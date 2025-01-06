@@ -30,12 +30,14 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(4))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new KeyWriting('test', []),
-                new KeyWritten('test', []),
-                new CacheRetrieving('test'),
-                new CacheHit('test', []),
-            ));
+            ->with(
+                $this->logicalOr(
+                    new KeyWriting('test', []),
+                    new KeyWritten('test', []),
+                    new CacheRetrieving('test'),
+                    new CacheHit('test', []),
+                ),
+            );
 
         $repository = new CacheRepository(new ArrayStorage(self::DEFAULT_TTL), $dispatcher);
 
@@ -49,16 +51,18 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(8))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new KeyWriting('test', []),
-                new KeyWritten('test', []),
-                new KeyWriting('test2', []),
-                new KeyWritten('test2', []),
-                new CacheRetrieving('test'),
-                new CacheHit('test', []),
-                new CacheRetrieving('test2'),
-                new CacheHit('test2', [])
-            ));
+            ->with(
+                $this->logicalOr(
+                    new KeyWriting('test', []),
+                    new KeyWritten('test', []),
+                    new KeyWriting('test2', []),
+                    new KeyWritten('test2', []),
+                    new CacheRetrieving('test'),
+                    new CacheHit('test', []),
+                    new CacheRetrieving('test2'),
+                    new CacheHit('test2', []),
+                ),
+            );
 
         $repository = new CacheRepository(new ArrayStorage(self::DEFAULT_TTL), $dispatcher);
 
@@ -72,10 +76,12 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(2))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new KeyWriting('test', []),
-                new KeyWriteFailed('test', []),
-            ));
+            ->with(
+                $this->logicalOr(
+                    new KeyWriting('test', []),
+                    new KeyWriteFailed('test', []),
+                ),
+            );
 
         $storage = $this->createMock(CacheInterface::class);
         $storage
@@ -95,17 +101,19 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(4))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new KeyWriting('test', []),
-                new KeyWriteFailed('test', []),
-                new KeyWriting('test2', []),
-                new KeyWriteFailed('test2', []),
-            ));
+            ->with(
+                $this->logicalOr(
+                    new KeyWriting('test', []),
+                    new KeyWriteFailed('test', []),
+                    new KeyWriting('test2', []),
+                    new KeyWriteFailed('test2', []),
+                ),
+            );
 
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects(self::exactly(2))
-            ->method('set')
+            ->expects(self::exactly(1))
+            ->method('setMultiple')
             ->willReturn(false);
 
         $repository = new CacheRepository($storage, $dispatcher);
@@ -119,10 +127,12 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(2))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new CacheRetrieving('test'),
-                new CacheMissed('test'),
-            ));
+            ->with(
+                $this->logicalOr(
+                    new CacheRetrieving('test'),
+                    new CacheMissed('test'),
+                ),
+            );
 
         $repository = new CacheRepository(new ArrayStorage(self::DEFAULT_TTL), $dispatcher);
 
@@ -135,12 +145,14 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(4))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new CacheRetrieving('test'),
-                new CacheMissed('test'),
-                new CacheRetrieving('test2'),
-                new CacheMissed('test2')
-            ));
+            ->with(
+                $this->logicalOr(
+                    new CacheRetrieving('test'),
+                    new CacheMissed('test'),
+                    new CacheRetrieving('test2'),
+                    new CacheMissed('test2'),
+                ),
+            );
 
         $repository = new CacheRepository(new ArrayStorage(self::DEFAULT_TTL), $dispatcher);
 
@@ -153,12 +165,14 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(4))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new KeyWriting('test', []),
-                new KeyWritten('test', []),
-                new KeyDeleting('test'),
-                new KeyDeleted('test')
-            ));
+            ->with(
+                $this->logicalOr(
+                    new KeyWriting('test', []),
+                    new KeyWritten('test', []),
+                    new KeyDeleting('test'),
+                    new KeyDeleted('test'),
+                ),
+            );
 
         $repository = new CacheRepository(new ArrayStorage(self::DEFAULT_TTL), $dispatcher);
 
@@ -172,16 +186,18 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(8))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new KeyWriting('test', []),
-                new KeyWritten('test', []),
-                new KeyWriting('test2', []),
-                new KeyWritten('test2', []),
-                new KeyDeleting('test'),
-                new KeyDeleted('test'),
-                new KeyDeleting('test2'),
-                new KeyDeleted('test2')
-            ));
+            ->with(
+                $this->logicalOr(
+                    new KeyWriting('test', []),
+                    new KeyWritten('test', []),
+                    new KeyWriting('test2', []),
+                    new KeyWritten('test2', []),
+                    new KeyDeleting('test'),
+                    new KeyDeleted('test'),
+                    new KeyDeleting('test2'),
+                    new KeyDeleted('test2'),
+                ),
+            );
 
         $repository = new CacheRepository(new ArrayStorage(self::DEFAULT_TTL), $dispatcher);
 
@@ -195,10 +211,12 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(2))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new KeyDeleting('test'),
-                new KeyDeleteFailed('test')
-            ));
+            ->with(
+                $this->logicalOr(
+                    new KeyDeleting('test'),
+                    new KeyDeleteFailed('test'),
+                ),
+            );
 
         $storage = $this->createMock(CacheInterface::class);
         $storage
@@ -218,17 +236,19 @@ final class CacheRepositoryTest extends TestCase
         $dispatcher
             ->expects(self::exactly(4))
             ->method('dispatch')
-            ->with($this->logicalOr(
-                new KeyDeleting('test'),
-                new KeyDeleteFailed('test'),
-                new KeyDeleting('test2'),
-                new KeyDeleteFailed('test2')
-            ));
+            ->with(
+                $this->logicalOr(
+                    new KeyDeleting('test'),
+                    new KeyDeleteFailed('test'),
+                    new KeyDeleting('test2'),
+                    new KeyDeleteFailed('test2'),
+                ),
+            );
 
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects(self::exactly(2))
-            ->method('delete')
+            ->expects(self::exactly(1))
+            ->method('deleteMultiple')
             ->willReturn(false);
 
         $repository = new CacheRepository($storage, $dispatcher);
@@ -287,9 +307,9 @@ final class CacheRepositoryTest extends TestCase
         $storage = $this->createMock(CacheInterface::class);
         $storage
             ->expects($this->once())
-            ->method('get')
-            ->with($expectedKey)
-            ->willReturn(null);
+            ->method('getMultiple')
+            ->with([$expectedKey], null)
+            ->willReturn([]);
 
         $repository = new CacheRepository(storage: $storage, prefix: $prefix);
 
@@ -302,8 +322,8 @@ final class CacheRepositoryTest extends TestCase
         $storage = $this->createMock(CacheInterface::class);
         $storage
             ->expects($this->once())
-            ->method('set')
-            ->with($expectedKey, 'foo')
+            ->method('setMultiple')
+            ->with([$expectedKey => 'foo'])
             ->willReturn(true);
 
         $repository = new CacheRepository(storage: $storage, prefix: $prefix);
@@ -317,8 +337,8 @@ final class CacheRepositoryTest extends TestCase
         $storage = $this->createMock(CacheInterface::class);
         $storage
             ->expects($this->once())
-            ->method('delete')
-            ->with($expectedKey)
+            ->method('deleteMultiple')
+            ->with([$expectedKey])
             ->willReturn(true);
 
         $repository = new CacheRepository(storage: $storage, prefix: $prefix);

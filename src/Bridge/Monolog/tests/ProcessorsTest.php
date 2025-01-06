@@ -48,9 +48,9 @@ class ProcessorsTest extends BaseTestCase
         $this->container->bind(MonologConfig::class, new MonologConfig());
 
         $logger = $this->container->get(LogsInterface::class)->getLogger('test');
-        $this->assertSame('test', $logger->getName());
-        $this->assertCount(1, $logger->getProcessors());
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getProcessors()[0]);
+        self::assertSame('test', $logger->getName());
+        self::assertCount(1, $logger->getProcessors());
+        self::assertInstanceOf(PsrLogMessageProcessor::class, $logger->getProcessors()[0]);
     }
 
     public function testInvalidProcessor(): void
@@ -80,8 +80,8 @@ class ProcessorsTest extends BaseTestCase
 
         $logger = $this->container->get(LogsInterface::class)->getLogger('test');;
 
-        $this->assertCount(1, $logger->getProcessors());
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getProcessors()[0]);
+        self::assertCount(1, $logger->getProcessors());
+        self::assertInstanceOf(PsrLogMessageProcessor::class, $logger->getProcessors()[0]);
     }
 
     public function testBindedProcessor(): void
@@ -97,9 +97,9 @@ class ProcessorsTest extends BaseTestCase
 
         $logger = $this->container->get(LogsInterface::class)->getLogger('test');
 
-        $this->assertCount(1, $logger->getProcessors());
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getProcessors()[0]);
-        $this->assertSame($this->container->get('PsrLogMessageProcessor'), $logger->getProcessors()[0]);
+        self::assertCount(1, $logger->getProcessors());
+        self::assertInstanceOf(PsrLogMessageProcessor::class, $logger->getProcessors()[0]);
+        self::assertSame($this->container->get('PsrLogMessageProcessor'), $logger->getProcessors()[0]);
     }
 
     public function testConstructProcessor(): void
@@ -116,8 +116,8 @@ class ProcessorsTest extends BaseTestCase
 
         $logger = $this->container->get(LogsInterface::class)->getLogger('test');
 
-        $this->assertCount(1, $logger->getProcessors());
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getProcessors()[0]);
+        self::assertCount(1, $logger->getProcessors());
+        self::assertInstanceOf(PsrLogMessageProcessor::class, $logger->getProcessors()[0]);
     }
 
     public function testConstructWithOptionsProcessor(): void
@@ -138,11 +138,11 @@ class ProcessorsTest extends BaseTestCase
         $logger = $this->container->get(LogsInterface::class)->getLogger('test');
         $processor = $logger->getProcessors()[0];
 
-        $this->assertCount(1, $logger->getProcessors());
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $processor);
+        self::assertCount(1, $logger->getProcessors());
+        self::assertInstanceOf(PsrLogMessageProcessor::class, $processor);
 
         $property = new \ReflectionProperty(PsrLogMessageProcessor::class, 'dateFormat');
 
-        $this->assertSame('c', $property->getValue($processor));
+        self::assertSame('c', $property->getValue($processor));
     }
 }

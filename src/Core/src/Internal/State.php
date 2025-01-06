@@ -7,6 +7,7 @@ namespace Spiral\Core\Internal;
 use Spiral\Core\Config\Binding;
 use Spiral\Core\Config\Inflector;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\Container\InjectorInterface;
 
 /**
  * @psalm-type TResolver = class-string|non-empty-string|callable|array{class-string, non-empty-string}|Autowire
@@ -26,7 +27,7 @@ final class State
     public array $singletons = [];
 
     /**
-     * @var array<class-string, string>
+     * @var array<class-string, string|InjectorInterface>
      */
     public array $injectors = [];
 
