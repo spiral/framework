@@ -225,12 +225,19 @@ final class Factory implements FactoryInterface
         array $arguments,
     ): object {
         $avoidCache = $arguments !== [];
-        return $avoidCache
-            ? $this->createInstance(
+
+        if ($avoidCache) {
+            return $this->createInstance(
                 new Ctx(alias: $alias, class: $binding->value::class, context: $context),
                 $arguments,
-            )
-            : $binding->value;
+            );
+        }
+
+        if ($binding->singleton) {
+            $this->state->singletons[$alias] = $binding->value;
+        }
+
+        return $binding->value;
     }
 
     private function resolveAutowire(
