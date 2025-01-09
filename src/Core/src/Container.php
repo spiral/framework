@@ -260,13 +260,13 @@ final class Container implements
      *
      * @psalm-param TResolver $resolver
      * @param bool|null $force If the value is false, an exception will be thrown when attempting
-     *  to bind an already constructed singleton. If the value is null, option from the container will be used.
+     *        to bind an already constructed singleton.
+     *        If the value is null, option {@see Options::$allowSingletonsRebinding} will be used.
      * @throws SingletonOverloadException
-     * @throws \Throwable
      */
     public function bindSingleton(string $alias, string|array|callable|object $resolver, ?bool $force = null): void
     {
-        if ($force ?? $this->options->allowSingletonsRebind) {
+        if ($force ?? $this->options->allowSingletonsRebinding) {
             $this->binder->removeBinding($alias);
         }
 

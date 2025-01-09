@@ -62,26 +62,27 @@ class BindingsTest extends TestCase
 
     public function testInstanceBindingWithForceMode(): void
     {
-        $container = new Container();
-
+        $options = new Options();
+        $options->allowSingletonsRebinding = true;
+        $container = new Container(options: $options);
         $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
 
         $instance = $container->get('sampleClass');
-
         $container->bindSingleton('sampleClass', new SampleClass());
+
         self::assertNotSame($instance, $container->get('sampleClass'));
     }
 
     public function testInstanceBindingWithForceMode2(): void
     {
         $options = new Options();
-        $options->allowSingletonsRebind = false;
+        $options->allowSingletonsRebinding = false;
         $container = new Container(options: $options);
-
         $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
 
         $instance = $container->get('sampleClass');
         $container->bindSingleton('sampleClass', new SampleClass(), true);
+
         self::assertNotSame($instance, $container->get('sampleClass'));
     }
 
@@ -134,7 +135,7 @@ class BindingsTest extends TestCase
     public function testInstanceBindingWithoutForceMode4(): void
     {
         $options = new Options();
-        $options->allowSingletonsRebind = false;
+        $options->allowSingletonsRebinding = false;
         $container = new Container(options: $options);
 
         $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());

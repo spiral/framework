@@ -30,11 +30,10 @@ class Options
 
     /**
      * Force rebind of singletons in the Container. If set to false, the Container will throw
-     * an exception {@see SingletonOverloadException} if you try to rebind a singleton
-     * {@see BinderInterface::bindSingleton()} after it has been resolved. This option will be used only
-     * if the `force` argument in {@see BinderInterface::bindSingleton()} is null.
+     * an exception {@see SingletonOverloadException} if you try to rebind a singleton after it has been resolved.
+     * This option will be used only if the `force` argument in {@see Container::bindSingleton()} is null.
      *
      * Will be set to false by default since version 4.0
      */
-    public bool $allowSingletonsRebind = true;
+    public bool $allowSingletonsRebinding = true;
 }
