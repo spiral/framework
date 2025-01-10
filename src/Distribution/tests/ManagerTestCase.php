@@ -14,7 +14,7 @@ class ManagerTestCase extends TestCase
 
     private Manager $manager;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->resolver = new StaticResolver($this->uri('localhost'));
 

@@ -36,7 +36,7 @@ class RenderTest extends TestCase
             ] + parent::defineDirectories($root);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 

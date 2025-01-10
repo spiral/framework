@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodingStyle\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Assign\RemoveDoubleAssignRector;
 use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
@@ -120,6 +121,10 @@ return RectorConfig::configure()
         ],
 
         PreferPHPUnitThisCallRector::class,
+
+        MakeInheritedMethodVisibilitySameAsParentRector::class => [
+            __DIR__ . '/src/Models/tests/PublicEntity.php',
+        ],
     ])
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)
@@ -134,4 +139,5 @@ return RectorConfig::configure()
         PreferPHPUnitSelfCallRector::class,
         TypedPropertyFromAssignsRector::class,
         AddClosureNeverReturnTypeRector::class,
+        MakeInheritedMethodVisibilitySameAsParentRector::class,
     ]);

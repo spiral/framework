@@ -23,7 +23,7 @@ class GuardTest extends TestCase
 
     private array $roles = ['user', 'admin'];
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->permission = $this->createMock(PermissionsInterface::class);
         $this->actor = $this->createMock(ActorInterface::class);

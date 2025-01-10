@@ -19,7 +19,7 @@ class LimitsTraitTest extends TestCase
 
     private object $trait;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->trait = new class {
             use LimitsTrait;

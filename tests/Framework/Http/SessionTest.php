@@ -15,7 +15,7 @@ use Spiral\Tests\Framework\HttpTestCase;
 #[TestScope(Spiral::Http)]
 final class SessionTest extends HttpTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

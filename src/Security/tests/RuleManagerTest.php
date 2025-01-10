@@ -27,7 +27,7 @@ class RuleManagerTest extends TestCase
     /** @var RuleInterface */
     private $rule;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->container = m::mock(ContainerInterface::class);
         $this->rule = m::mock(RuleInterface::class);

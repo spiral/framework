@@ -27,7 +27,7 @@ abstract class AbstractCommandsTestCase extends TestCase
     protected array $buf = [];
     private readonly Storage $storage;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         if (!\class_exists(Kernel::class)) {
             $this->markTestSkipped('A "spiral/framework" dependency is required to run these tests');
@@ -47,7 +47,7 @@ abstract class AbstractCommandsTestCase extends TestCase
         }
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         foreach (static::STORE as $name) {
             $this->storage->restore($name);

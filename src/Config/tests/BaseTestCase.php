@@ -18,7 +18,7 @@ abstract class BaseTestCase extends TestCase
      */
     protected $container;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->container = new Container();
     }

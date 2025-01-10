@@ -19,7 +19,7 @@ final class SessionTest extends TestCase
 {
     private SessionFactory $factory;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +37,7 @@ final class SessionTest extends TestCase
         ]), $this->container);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         if ((int)session_status() === PHP_SESSION_ACTIVE) {
             session_abort();

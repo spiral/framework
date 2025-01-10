@@ -26,7 +26,7 @@ class PermissionManagerTest extends TestCase
 
     private MockObject&RulesInterface $rules;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->rules = $this->createMock(RulesInterface::class);
     }

@@ -13,7 +13,7 @@ final class PublishTest extends ConsoleTestCase
     protected const TEST_FILE   = __DIR__ . '/test.txt';
     protected const TEST_FILE_2 = __DIR__ . '/PublishTest.php';
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         if (file_exists(self::TEST_FILE)) {
             unlink(self::TEST_FILE);

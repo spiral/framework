@@ -25,7 +25,7 @@ final class ValidateFilterInterceptorTest extends BaseTestCase
     private ValidateFilterInterceptor $interceptor;
     private m\MockInterface $validationProvider;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

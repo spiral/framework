@@ -26,7 +26,7 @@ class JobTest extends TestCase
     /** @var RendererInterface */
     protected $renderer;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

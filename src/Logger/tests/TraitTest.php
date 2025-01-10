@@ -17,7 +17,7 @@ class TraitTest extends TestCase
 {
     use LoggerTrait;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->logger = null;
     }
