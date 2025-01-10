@@ -215,7 +215,7 @@ final class HttpTest extends TestCase
 
         $core = $this->getCore();
 
-        $core->setHandler(function ($req, $resp): void {
+        $core->setHandler(function ($req, $resp): never {
             throw new \RuntimeException('error');
         });
 
