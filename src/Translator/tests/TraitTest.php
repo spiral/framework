@@ -28,7 +28,7 @@ class TraitTest extends TestCase
 
     private Container $container;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->container = new Container();
 

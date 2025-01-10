@@ -15,7 +15,7 @@ abstract class BaseTestCase extends TestCase
 {
     protected ContainerInterface $container;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $options = new Options();
         $options->checkScope = false;

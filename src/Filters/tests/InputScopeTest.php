@@ -12,7 +12,7 @@ use Spiral\Http\Request\InputManager;
 
 final class InputScopeTest extends BaseTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

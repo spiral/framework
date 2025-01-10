@@ -26,7 +26,7 @@ use Spiral\Tests\Filters\Fixtures\UserFilter;
 
 final class FilterProviderTest extends BaseTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

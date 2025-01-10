@@ -21,7 +21,7 @@ final class CookiesTest extends HttpTestCase
         'ENCRYPTER_KEY' => self::ENCRYPTER_KEY,
     ];
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -21,7 +21,7 @@ class CompositeRuleTest extends TestCase
 
     private MockObject&ActorInterface $actor;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->actor = $this->createMock(ActorInterface::class);
     }

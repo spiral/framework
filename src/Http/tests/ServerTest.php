@@ -17,7 +17,7 @@ class ServerTest extends TestCase
 
     private InputManager $input;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->container = new Container();
         $this->input = new InputManager($this->container);

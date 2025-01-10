@@ -29,7 +29,7 @@ final class AttributeMapperTest extends BaseTestCase
     private m\LegacyMockInterface|m\MockInterface|FilterProviderInterface $provider;
     private AttributeMapper $mapper;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

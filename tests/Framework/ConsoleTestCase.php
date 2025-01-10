@@ -6,7 +6,7 @@ namespace Spiral\Tests\Framework;
 
 abstract class ConsoleTestCase extends BaseTestCase
 {
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 

@@ -27,7 +27,7 @@ final class CookiesTest extends TestCase
 {
     private Container $container;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $options = new Options();
         $options->checkScope = false;

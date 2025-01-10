@@ -23,7 +23,7 @@ class InputManagerTest extends TestCase
     private Container $container;
     private InputManager $input;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->container = new Container();
         $this->input = new InputManager($this->container);

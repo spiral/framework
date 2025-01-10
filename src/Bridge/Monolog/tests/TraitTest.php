@@ -25,7 +25,7 @@ final class TraitTest extends BaseTestCase
 {
     use LoggerTrait;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -15,7 +15,7 @@ use Spiral\Tests\Framework\HttpTestCase;
 
 final class AuthMiddlewareTest extends HttpTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -8,7 +8,7 @@ use Spiral\Tests\Framework\ConsoleTestCase;
 
 final class ExportCommandTest extends ConsoleTestCase
 {
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 

@@ -9,13 +9,13 @@ use Spiral\Files\FilesInterface;
 
 class TempFilesTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         $files = new Files();
         $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $files = new Files();
         $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);

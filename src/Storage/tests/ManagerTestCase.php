@@ -15,7 +15,7 @@ class ManagerTestCase extends TestCase
 {
     private Storage $manager;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

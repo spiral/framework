@@ -19,7 +19,7 @@ use Spiral\Monolog\Exception\ConfigException;
 
 class ProcessorsTest extends BaseTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

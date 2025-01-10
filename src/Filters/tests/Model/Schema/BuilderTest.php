@@ -13,7 +13,7 @@ final class BuilderTest extends BaseTestCase
 {
     private Builder $builder;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->builder = new Builder();

@@ -16,7 +16,7 @@ class CacheTest extends BaseTestCase
     /** @var FilesInterface */
     protected $files;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

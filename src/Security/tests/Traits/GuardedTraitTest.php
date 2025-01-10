@@ -26,7 +26,7 @@ class GuardedTraitTest extends TestCase
 
     private MockObject&ContainerInterface $container;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->trait = new class {
             use GuardedTrait;
