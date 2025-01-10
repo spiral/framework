@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Core;
 
 use Spiral\Core\Container\InjectorInterface;
+use Spiral\Core\Exception\Binder\SingletonOverloadException;
 use Spiral\Core\Exception\Scope\BadScopeException;
 
 class Options
@@ -26,4 +27,13 @@ class Options
      * from the Container or predefined arguments.
      */
     public bool $validateArguments = true;
+
+    /**
+     * Force rebind of singletons in the Container. If set to false, the Container will throw
+     * an exception {@see SingletonOverloadException} if you try to rebind a singleton after it has been resolved.
+     * This option will be used only if the `force` argument in {@see Container::bindSingleton()} is null.
+     *
+     * Will be set to false by default since version 4.0
+     */
+    public bool $allowSingletonsRebinding = true;
 }

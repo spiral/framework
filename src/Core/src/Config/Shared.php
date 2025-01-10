@@ -11,8 +11,8 @@ final class Shared extends Binding
 {
     public function __construct(
         public readonly object $value,
-    ) {
-    }
+        public readonly bool $singleton = false,
+    ) {}
 
     public function __toString(): string
     {

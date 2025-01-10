@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\ConfigsInterface;
 use Spiral\Core\Container;
+use Spiral\Core\Exception\Binder\SingletonOverloadException;
+use Spiral\Core\Options;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 
@@ -56,6 +58,92 @@ class BindingsTest extends TestCase
 
         self::assertInstanceOf(SampleClass::class, $instance);
         self::assertSame($instance, $container->get('sampleClass'));
+    }
+
+    public function testInstanceBindingWithForceMode(): void
+    {
+        $options = new Options();
+        $options->allowSingletonsRebinding = true;
+        $container = new Container(options: $options);
+        $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
+
+        $instance = $container->get('sampleClass');
+        $container->bindSingleton('sampleClass', new SampleClass());
+
+        self::assertNotSame($instance, $container->get('sampleClass'));
+    }
+
+    public function testInstanceBindingWithForceMode2(): void
+    {
+        $options = new Options();
+        $options->allowSingletonsRebinding = false;
+        $container = new Container(options: $options);
+        $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
+
+        $instance = $container->get('sampleClass');
+        $container->bindSingleton('sampleClass', new SampleClass(), true);
+
+        self::assertNotSame($instance, $container->get('sampleClass'));
+    }
+
+    public function testInstanceSharedBinding(): void
+    {
+        $container = new Container();
+
+        $container->bind('sampleClass', new SampleClass());
+
+        self::assertSame($container->get('sampleClass'), $container->get('sampleClass'));
+    }
+
+    public function testInstanceBindingWithoutForceMode(): void
+    {
+        $container = new Container();
+
+        $container->bindSingleton('sampleClass', new SampleClass());
+
+        self::assertSame($container->get('sampleClass'), $container->get('sampleClass'));
+
+        $this->expectException(SingletonOverloadException::class);
+        $container->bindSingleton('sampleClass', new SampleClass(), false);
+    }
+
+    public function testInstanceBindingWithoutForceMode2(): void
+    {
+        $container = new Container();
+
+        $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
+
+        $container->get('sampleClass');
+
+        $this->expectException(SingletonOverloadException::class);
+        $container->bindSingleton('sampleClass', new SampleClass(), false);
+    }
+
+    public function testInstanceBindingWithoutForceMode3(): void
+    {
+        $container = new Container();
+
+        $container->bind('test', new SampleClass());
+        $container->bindSingleton('sampleClass', 'test');
+
+        $container->get('sampleClass');
+
+        $this->expectException(SingletonOverloadException::class);
+        $container->bindSingleton('sampleClass', new SampleClass(), false);
+    }
+
+    public function testInstanceBindingWithoutForceMode4(): void
+    {
+        $options = new Options();
+        $options->allowSingletonsRebinding = false;
+        $container = new Container(options: $options);
+
+        $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
+
+        $container->get('sampleClass');
+
+        $this->expectException(SingletonOverloadException::class);
+        $container->bindSingleton('sampleClass', new SampleClass());
     }
 
     public function testAutoScalarBinding(): void

@@ -155,7 +155,7 @@ class StateBinder implements BinderInterface
             $resolver instanceof WeakReference => new \Spiral\Core\Config\WeakReference($resolver),
             \is_string($resolver) => new Alias($resolver, $singleton),
             \is_scalar($resolver) => new Scalar($resolver),
-            \is_object($resolver) => new Shared($resolver),
+            \is_object($resolver) => new Shared($resolver, $singleton),
             \is_array($resolver) => $this->makeConfigFromArray($resolver, $singleton),
             default => throw new InvalidArgumentException('Unknown resolver type.'),
         };
