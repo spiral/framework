@@ -23,6 +23,7 @@ use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
+use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictSetUpRector;
 
 return RectorConfig::configure()
@@ -130,4 +131,5 @@ return RectorConfig::configure()
         ClosureReturnTypeRector::class,
         TypedPropertyFromStrictSetUpRector::class,
         PreferPHPUnitSelfCallRector::class,
+        TypedPropertyFromAssignsRector::class,
     ]);
