@@ -20,7 +20,7 @@ final class Buffer implements \IteratorAggregate
     public function __construct(
         /** @internal */
         private readonly \Generator $generator,
-        private int $offset = 0
+        private int $offset = 0,
     ) {
     }
 
@@ -135,5 +135,10 @@ final class Buffer implements \IteratorAggregate
                 $this->replay[] = $n;
             }
         }
+    }
+
+    public function cleanReplay(): void
+    {
+        $this->replay = [];
     }
 }
