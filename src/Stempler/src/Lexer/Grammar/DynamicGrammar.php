@@ -108,9 +108,9 @@ final class DynamicGrammar implements GrammarInterface
                     $src->replay($directive->getLastOffset());
                     continue;
                 } else {
-                    // When we found directive char but it's not a directive, we need to flush the replay buffer
+                    // When we found directive char but it's not a directive, we need to clean the replay buffer
                     // because it may contain extra tokens that we don't need to return back to the stream
-                    $src->flushReplay();
+                    $src->cleanReplay();
                 }
 
                 $src->replay($n->offset);

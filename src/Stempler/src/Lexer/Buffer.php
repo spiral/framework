@@ -137,7 +137,7 @@ final class Buffer implements \IteratorAggregate
         }
     }
 
-    public function flushReplay(): void
+    public function cleanReplay(): void
     {
         $this->replay = [];
     }
