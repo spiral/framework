@@ -45,20 +45,20 @@ final class DynamicGrammar implements GrammarInterface
     private readonly BracesGrammar $raw;
 
     public function __construct(
-        private readonly ?DirectiveRendererInterface $directiveRenderer = null
+        private readonly ?DirectiveRendererInterface $directiveRenderer = null,
     ) {
         $this->echo = new BracesGrammar(
             '{{',
             '}}',
             self::TYPE_OPEN_TAG,
-            self::TYPE_CLOSE_TAG
+            self::TYPE_CLOSE_TAG,
         );
 
         $this->raw = new BracesGrammar(
             '{!!',
             '!!}',
             self::TYPE_OPEN_RAW_TAG,
-            self::TYPE_CLOSE_RAW_TAG
+            self::TYPE_CLOSE_RAW_TAG,
         );
     }
 
@@ -107,6 +107,10 @@ final class DynamicGrammar implements GrammarInterface
 
                     $src->replay($directive->getLastOffset());
                     continue;
+                } else {
+                    // When we found directive char but it's not a directive, we need to clean the replay buffer
+                    // because it may contain extra tokens that we don't need to return back to the stream
+                    $src->cleanReplay();
                 }
 
                 $src->replay($n->offset);
