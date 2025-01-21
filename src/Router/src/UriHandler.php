@@ -289,11 +289,9 @@ final class UriHandler
             $path = '/' . $path;
         }
 
-        if ($this->matchHost) {
-            $uriString = $uri->getHost() . $path;
-        } else {
-            $uriString = \substr($path, \strlen($this->basePath)) ?: '';
-        }
+        $uriString = $this->matchHost
+            ? $uri->getHost() . $path
+            : \substr($path, \strlen($this->basePath));
 
         return \trim($uriString, '/');
     }
@@ -382,21 +380,22 @@ final class UriHandler
         $optionalVars = [];
 
         // 1) Identify any variables that appear in optional bracket segments
-        $stack = [];
+        $optLevel = 0;
         $pos = 0;
         $length = \strlen($pattern);
 
         while ($pos < $length) {
             $char = $pattern[$pos];
 
-            // We enter an optional segment
             if ($char === '[') {
-                \array_push($stack, '[');
-            } // We exit an optional segment
-            elseif ($char === ']') {
-                \array_pop($stack);
-            } // We see a parameter like <id> or <action:\d+>
-            elseif ($char === '<') {
+                // We enter an optional segment
+                ++$optLevel;
+            } elseif ($char === ']') {
+                // We exit an optional segment
+                $optLevel = \max(0, $optLevel - 1);
+            } elseif ($char === '<') {
+                // We see a parameter like <id> or <action:\d+>
+
                 // Find the closing '>'
                 $endPos = \strpos($pattern, '>', $pos);
                 if ($endPos === false) {
@@ -410,9 +409,7 @@ final class UriHandler
                 $varName = \explode(':', $varPart)[0];
 
                 // If we are inside a bracket, that var is optional
-                if ($stack !== []) {
-                    $optionalVars[] = $varName;
-                }
+                $optLevel > 0 and $optionalVars[] = $varName;
 
                 // Move past this variable
                 $pos = $endPos;
@@ -443,7 +440,7 @@ final class UriHandler
         }
 
         // Replace all variables
-        $path = \strtr($string, [...$replaces, ...self::URI_FIXERS]);
+        $path = \strtr($string, $replaces + self::URI_FIXERS);
 
         // Remove all empty segments
         return \preg_replace('/\/{2,}/', '/', $path);
