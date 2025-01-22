@@ -37,11 +37,15 @@ interface SpanInterface
 
     /**
      * Get the current span attributes.
+     *
+     * @return array<non-empty-string, mixed>
      */
     public function getAttributes(): array;
 
     /**
      * Set the current span attributes.
+     *
+     * @param array<non-empty-string, mixed> $attributes
      */
     public function setAttributes(array $attributes): self;
 
