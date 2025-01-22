@@ -29,8 +29,9 @@ final class UriHandler
         '[/]' => '',
         '[' => '',
         ']' => '',
-        '://' => '://',
         '//' => '/',
+        // todo: probably should be removed. There are no examples of usage or cases where it is needed.
+        '://' => '://',
     ];
 
     private ?string $pattern = null;
@@ -45,7 +46,10 @@ final class UriHandler
     private string $basePath = '/';
     private ?string $compiled = null;
     private ?string $template = null;
+
     private array $options = [];
+    private array $requiredOptions = [];
+    private bool $strict = false;
 
     private \Closure $pathSegmentEncoder;
 
@@ -61,7 +65,12 @@ final class UriHandler
         $this->patternRegistry = $patternRegistry ?? new DefaultPatternRegistry();
 
         $slugify ??= new Slugify();
-        $this->pathSegmentEncoder = static fn (string $segment): string => $slugify->slugify($segment);
+        $this->pathSegmentEncoder = static fn(string $segment): string => $slugify->slugify($segment);
+    }
+
+    public function setStrict(bool $strict): void
+    {
+        $this->strict = $strict;
     }
 
     /**
@@ -182,8 +191,8 @@ final class UriHandler
         }
 
         $matches = \array_intersect_key(
-            \array_filter($matches, static fn (string $value): bool => $value !== ''),
-            $this->options
+            \array_filter($matches, static fn(string $value): bool => $value !== ''),
+            $this->options,
         );
 
         return \array_merge($this->options, $defaults, $matches);
@@ -201,13 +210,31 @@ final class UriHandler
         $parameters = \array_merge(
             $this->options,
             $defaults,
-            $this->fetchOptions($parameters, $query)
+            $this->fetchOptions($parameters, $query),
         );
 
-        foreach ($this->constrains as $key => $_) {
+        $required = \array_keys($this->constrains);
+        if ($this->strict) {
+            $required = \array_unique([...$this->requiredOptions, ...$required]);
+        }
+
+        $missingParameters = [];
+
+        foreach ($required as $key) {
             if (empty($parameters[$key])) {
-                throw new UriHandlerException(\sprintf('Unable to generate Uri, parameter `%s` is missing', $key));
+                $missingParameters[] = $key;
             }
+        }
+
+        if ($missingParameters !== []) {
+            throw new UriHandlerException(
+                \sprintf(
+                    \count($missingParameters) === 1
+                        ? 'Unable to generate Uri, parameter `%s` is missing'
+                        : 'Unable to generate Uri, parameters `%s` are missing',
+                    \implode('`, `', $missingParameters),
+                ),
+            );
         }
 
         //Uri without empty blocks (pretty stupid implementation)
@@ -245,7 +272,7 @@ final class UriHandler
                 continue;
             }
 
-            $result[$key] = (string)$parameter;
+            $result[$key] = (string) $parameter;
         }
 
         return $result;
@@ -262,14 +289,9 @@ final class UriHandler
             $path = '/' . $path;
         }
 
-        if ($this->matchHost) {
-            $uriString = $uri->getHost() . $path;
-        } else {
-            $uriString = \substr($path, \strlen($this->basePath));
-            if ($uriString === false) {
-                $uriString = '';
-            }
-        }
+        $uriString = $this->matchHost
+            ? $uri->getHost() . $path
+            : \substr($path, \strlen($this->basePath));
 
         return \trim($uriString, '/');
     }
@@ -289,6 +311,7 @@ final class UriHandler
         $options = [];
         $replaces = [];
 
+        // 1) Build full pattern
         $prefix = \rtrim($this->getPrefix(), '/ ');
         $pattern = \ltrim($this->pattern, '/ ');
         $pattern = $prefix . '/' . $pattern;
@@ -299,6 +322,7 @@ final class UriHandler
             $pattern = '[' . \substr($pattern, 2);
         }
 
+        // 2) Extract variables from the pattern
         if (\preg_match_all('/<(\w+):?(.*?)?>/', $pattern, $matches)) {
             $variables = \array_combine($matches[1], $matches[2]);
 
@@ -309,29 +333,97 @@ final class UriHandler
             }
         }
 
+        // Simplify template
         $template = \preg_replace('/<(\w+):?.*?>/', '<\1>', $pattern);
         $options = \array_fill_keys($options, null);
 
+        // 3) Validate constraints
         foreach ($this->constrains as $key => $value) {
             if ($value instanceof Autofill) {
                 // only forces value replacement, not required to be presented as parameter
                 continue;
             }
 
+            // If a constraint references a param that doesn't appear in the pattern or defaults
             if (!\array_key_exists($key, $options) && !isset($this->defaults[$key])) {
                 throw new ConstrainException(
                     \sprintf(
                         'Route `%s` does not define routing parameter `<%s>`.',
                         $this->pattern,
-                        $key
-                    )
+                        $key,
+                    ),
                 );
             }
         }
 
+        // 4) Compile your final regex pattern
         $this->compiled = '/^' . \strtr($template, $replaces + self::PATTERN_REPLACES) . '$/iu';
         $this->template = \stripslashes(\str_replace('?', '', $template));
         $this->options = $options;
+
+        // 5) Mark which parameters are required vs. optional
+        if ($this->strict) {
+            $this->requiredOptions = $this->findRequiredOptions($pattern, \array_keys($options));
+        }
+    }
+
+    /**
+     * Find which parameters are required based on bracket notation and defaults.
+     *
+     * @param string $pattern The full pattern (with optional segments in [ ])
+     * @param array $paramNames All the parameter names found (e.g. ['id','controller','action'])
+     * @return array List of required parameter names
+     */
+    private function findRequiredOptions(string $pattern, array $paramNames): array
+    {
+        // This array will collect optional vars, either because they're in [ ] or have defaults
+        $optionalVars = [];
+
+        // 1) Identify any variables that appear in optional bracket segments
+        $optLevel = 0;
+        $pos = 0;
+        $length = \strlen($pattern);
+
+        while ($pos < $length) {
+            $char = $pattern[$pos];
+
+            if ($char === '[') {
+                // We enter an optional segment
+                ++$optLevel;
+            } elseif ($char === ']') {
+                // We exit an optional segment
+                $optLevel = \max(0, $optLevel - 1);
+            } elseif ($char === '<') {
+                // We see a parameter like <id> or <action:\d+>
+
+                // Find the closing '>'
+                $endPos = \strpos($pattern, '>', $pos);
+                if ($endPos === false) {
+                    break;
+                }
+
+                // The inside is something like 'id:\d+' or just 'id'
+                $varPart = \substr($pattern, $pos + 1, $endPos - $pos - 1);
+
+                // The first chunk is the variable name (before any :)
+                $varName = \explode(':', $varPart)[0];
+
+                // If we are inside a bracket, that var is optional
+                $optLevel > 0 and $optionalVars[] = $varName;
+
+                // Move past this variable
+                $pos = $endPos;
+            }
+
+            $pos++;
+        }
+
+        // 2) Also mark anything that has a default value as optional
+        // so we merge them into $optionalVars
+        $optionalVars = \array_unique($optionalVars);
+
+        // 3) Required = everything in $paramNames that is not in optionalVars
+        return \array_diff($paramNames, $optionalVars);
     }
 
     /**
@@ -342,12 +434,16 @@ final class UriHandler
         $replaces = [];
         foreach ($values as $key => $value) {
             $replaces[\sprintf('<%s>', $key)] = match (true) {
-                $value instanceof \Stringable || \is_scalar($value) => (string)$value,
+                $value instanceof \Stringable || \is_scalar($value) => (string) $value,
                 default => '',
             };
         }
 
-        return \strtr($string, $replaces + self::URI_FIXERS);
+        // Replace all variables
+        $path = \strtr($string, $replaces + self::URI_FIXERS);
+
+        // Remove all empty segments
+        return \preg_replace('/\/{2,}/', '/', $path);
     }
 
     /**
@@ -360,9 +456,9 @@ final class UriHandler
             !isset($this->constrains[$name]) => self::DEFAULT_SEGMENT,
             \is_array($this->constrains[$name]) => \implode(
                 '|',
-                \array_map(fn (string $segment): string => $this->filterSegment($segment), $this->constrains[$name])
+                \array_map(fn(string $segment): string => $this->filterSegment($segment), $this->constrains[$name]),
             ),
-            default => $this->filterSegment((string)$this->constrains[$name])
+            default => $this->filterSegment((string) $this->constrains[$name])
         };
     }
 
