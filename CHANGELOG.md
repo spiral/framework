@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.14.10 - 2025-01-22
+
+- **Bug Fixes**
+  - [spiral/telemetry] Improve types for `SpanInterface`
+  - [spiral/stempler] Fix parsing of `@` inside a string that is not a directive
+
 ## 3.14.9 - 2025-01-07
 
 - **Bug Fixes**
