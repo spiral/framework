@@ -192,7 +192,7 @@ final class HTMLGrammar implements GrammarInterface
     {
         foreach ($tag as $token) {
             if ($token->type === self::TYPE_KEYWORD) {
-                return \strtolower($token->content);
+                return \strtolower((string) $token->content);
             }
         }
 
