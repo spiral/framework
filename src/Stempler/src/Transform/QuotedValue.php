@@ -64,7 +64,7 @@ final class QuotedValue
              */
             $content = $nodes[\count($nodes) - 1]->content;
             $nodes[\count($nodes) - 1] = new Raw(
-                \rtrim($content, $quote)
+                \is_string($content) ? \rtrim($content, $quote) : $content,
             );
         }
 
