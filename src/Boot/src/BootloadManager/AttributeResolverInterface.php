@@ -6,8 +6,8 @@ namespace Spiral\Boot\BootloadManager;
 
 /**
  * @internal
- * @template T of object
- * @template TBootloader of object
+ * @template T
+ * @template TBootloader
  */
 interface AttributeResolverInterface
 {

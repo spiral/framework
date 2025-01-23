@@ -13,6 +13,7 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\Config\Binding;
 
 /**
+ * @internal
  * @template T of AbstractMethod
  * @template TBootloader of BootloaderInterface
  * @implements AttributeResolverInterface<T, TBootloader>
