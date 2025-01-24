@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Unreleased
+
+## 3.14.10 - 2025-01-22
+
+- **Bug Fixes**
+    - [spiral/telemetry] Improve types for `SpanInterface`
+    - [spiral/stempler] Fix parsing of `@` inside a string that is not a directive
+
+## 3.14.9 - 2025-01-07
+
+- **Bug Fixes**
+    - [spiral/core] Define Auth* middleware in `http` scope
+    - [spiral/auth-http] Fixed injectors binding via `Binder::bind` method
+    - [spiral/telemetry] Fixed returning type in TelemetryProcessor for Monolog
+    - [spiral/stempler] Fixed directory import in stempler component
+
 ## 3.14.8 - 2024-12-11
 
 - Definitions of nullable parameters have been fixed according to PHP 8.4 deprecations.
