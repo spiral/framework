@@ -36,10 +36,13 @@ final class CoreHandler implements RequestHandlerInterface
 
     /** @readonly */
     private ?string $controller = null;
+
     /** @readonly */
     private ?string $action = null;
+
     /** @readonly */
     private ?bool $verbActions = null;
+
     /** @readonly */
     private ?array $parameters = null;
 
@@ -49,7 +52,7 @@ final class CoreHandler implements RequestHandlerInterface
         private readonly HandlerInterface|CoreInterface $core,
         private readonly ScopeInterface $scope,
         private readonly ResponseFactoryInterface $responseFactory,
-        ?TracerInterface $tracer = null
+        ?TracerInterface $tracer = null,
     ) {
         $this->tracer = $tracer ?? new NullTracer($scope);
         $this->isLegacyPipeline = !$core instanceof HandlerInterface;
@@ -113,15 +116,15 @@ final class CoreHandler implements RequestHandlerInterface
                     name: 'http-request',
                     bindings: [Request::class => $request, Response::class => $response, $controller => $controller],
                 ),
-                fn (): mixed => $this->tracer->trace(
+                fn(): mixed => $this->tracer->trace(
                     name: 'Controller [' . $controller . ':' . $action . ']',
                     callback: $this->isLegacyPipeline
-                        ? fn (): mixed => $this->core->callAction(
+                        ? fn(): mixed => $this->core->callAction(
                             controller: $controller,
                             action: $action,
                             parameters: $parameters,
                         )
-                        : fn (): mixed => $this->core->handle(
+                        : fn(): mixed => $this->core->handle(
                             new CallContext(
                                 Target::fromPair($controller, $action),
                                 $parameters,
@@ -134,8 +137,8 @@ final class CoreHandler implements RequestHandlerInterface
                         'route.controller' => $this->controller,
                         'route.action' => $action,
                         'route.parameters' => \array_keys($parameters),
-                    ]
-                )
+                    ],
+                ),
             );
         } catch (TargetCallException $e) {
             \ob_get_clean();
@@ -180,7 +183,7 @@ final class CoreHandler implements RequestHandlerInterface
         if (\is_array($result) || $result instanceof \JsonSerializable) {
             $response = $this->writeJson($response, $result);
         } else {
-            $response->getBody()->write((string)$result);
+            $response->getBody()->write((string) $result);
         }
 
         //Always glue buffered output

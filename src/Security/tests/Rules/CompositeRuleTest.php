@@ -21,21 +21,6 @@ class CompositeRuleTest extends TestCase
 
     private MockObject&ActorInterface $actor;
 
-    protected function setUp(): void
-    {
-        $this->actor = $this->createMock(ActorInterface::class);
-    }
-
-    #[DataProvider('allowsProvider')]
-    public function testAllow(bool $expected, string $compositeRuleClass, array $rules): void
-    {
-        $repository = $this->createRepository($rules);
-
-        /** @var RuleInterface $rule */
-        $rule = new $compositeRuleClass($repository);
-        self::assertEquals($expected, $rule->allows($this->actor, static::OPERATION, static::CONTEXT));
-    }
-
     public static function allowsProvider(): \Traversable
     {
         $allowRule = self::allowRule();
@@ -48,16 +33,19 @@ class CompositeRuleTest extends TestCase
         yield [false, OneCompositeRule::class, [$forbidRule, $forbidRule, $forbidRule]];
     }
 
-
-    private function createRepository(array $rules): RulesInterface
+    #[DataProvider('allowsProvider')]
+    public function testAllow(bool $expected, string $compositeRuleClass, array $rules): void
     {
-        /** @var MockObject|RulesInterface $repository */
-        $repository = $this->createMock(RulesInterface::class);
+        $repository = $this->createRepository($rules);
 
-        $repository->method('get')
-            ->will(new ConsecutiveCalls($rules));
+        /** @var RuleInterface $rule */
+        $rule = new $compositeRuleClass($repository);
+        self::assertEquals($expected, $rule->allows($this->actor, static::OPERATION, static::CONTEXT));
+    }
 
-        return $repository;
+    protected function setUp(): void
+    {
+        $this->actor = $this->createMock(ActorInterface::class);
     }
 
     private static function allowRule(): RuleInterface
@@ -74,5 +62,16 @@ class CompositeRuleTest extends TestCase
         $rule->shouldReceive('allows')->andReturnFalse();
 
         return $rule;
+    }
+
+    private function createRepository(array $rules): RulesInterface
+    {
+        /** @var MockObject|RulesInterface $repository */
+        $repository = $this->createMock(RulesInterface::class);
+
+        $repository->method('get')
+            ->will(new ConsecutiveCalls($rules));
+
+        return $repository;
     }
 }

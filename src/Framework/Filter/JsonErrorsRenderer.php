@@ -11,9 +11,8 @@ use Spiral\Http\ResponseWrapper;
 final class JsonErrorsRenderer implements ErrorsRendererInterface
 {
     public function __construct(
-        private readonly ResponseWrapper $wrapper
-    ) {
-    }
+        private readonly ResponseWrapper $wrapper,
+    ) {}
 
     public function render(array $errors, mixed $context = null): ResponseInterface
     {

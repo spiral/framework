@@ -25,8 +25,6 @@ use Spiral\Http\CurrentRequest;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Framework\BaseTestCase;
 
-use function PHPUnit\Framework\assertInstanceOf;
-
 final class HttpAuthBootloaderTest extends BaseTestCase
 {
     public function testTokenStorageProviderInterfaceBinding(): void
@@ -101,7 +99,7 @@ final class HttpAuthBootloaderTest extends BaseTestCase
 
     public function testCorrectConfigurableTransports(): void
     {
-        $loader = new class() implements LoaderInterface {
+        $loader = new class implements LoaderInterface {
             public function has(string $section): bool
             {
                 return $section === AuthConfig::CONFIG;
@@ -123,7 +121,8 @@ final class HttpAuthBootloaderTest extends BaseTestCase
         $configs = new ConfigManager($loader);
 
         $bootloader = new HttpAuthBootloader($configs);
-        $bootloader->init($this->getContainer()->get(EnvironmentInterface::class),
+        $bootloader->init(
+            $this->getContainer()->get(EnvironmentInterface::class),
             $this->getContainer()->get(BinderInterface::class),
         );
 

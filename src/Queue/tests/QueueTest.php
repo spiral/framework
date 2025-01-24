@@ -12,25 +12,6 @@ use Spiral\Queue\Queue;
 
 final class QueueTest extends TestCase
 {
-    #[DataProvider('pushDataProvider')]
-    public function testPush(mixed $payload, mixed $options): void
-    {
-        $queue = new Queue(
-            $core = m::mock(CoreInterface::class)
-        );
-
-        $core->shouldReceive('callAction')->once()
-            ->with('foo', 'push', [
-                'payload' => $payload,
-                'options' => $options
-            ])
-            ->andReturn('task-id');
-
-        $id = $queue->push('foo', $payload, $options);
-
-        self::assertSame('task-id', $id);
-    }
-
     public static function pushDataProvider(): \Traversable
     {
         yield ['some string', new Options()];
@@ -38,5 +19,24 @@ final class QueueTest extends TestCase
         yield [['baz' => 'baf'], new Options()];
         yield [new \stdClass(), new Options()];
         yield [new \stdClass(), new \stdClass()];
+    }
+
+    #[DataProvider('pushDataProvider')]
+    public function testPush(mixed $payload, mixed $options): void
+    {
+        $queue = new Queue(
+            $core = m::mock(CoreInterface::class),
+        );
+
+        $core->shouldReceive('callAction')->once()
+            ->with('foo', 'push', [
+                'payload' => $payload,
+                'options' => $options,
+            ])
+            ->andReturn('task-id');
+
+        $id = $queue->push('foo', $payload, $options);
+
+        self::assertSame('task-id', $id);
     }
 }

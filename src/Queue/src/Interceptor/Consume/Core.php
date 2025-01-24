@@ -26,9 +26,8 @@ final class Core implements CoreInterface, HandlerInterface
 {
     public function __construct(
         private readonly HandlerRegistryInterface $registry,
-        private readonly ?EventDispatcherInterface $dispatcher = null
-    ) {
-    }
+        private readonly ?EventDispatcherInterface $dispatcher = null,
+    ) {}
 
     /**
      * @param-assert TParameters $parameters
@@ -73,7 +72,7 @@ final class Core implements CoreInterface, HandlerInterface
             queue: $parameters['queue'],
             id: $parameters['id'],
             payload: $parameters['payload'],
-            headers: $parameters['headers'] ?? []
+            headers: $parameters['headers'] ?? [],
         ));
     }
 }

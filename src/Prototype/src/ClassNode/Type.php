@@ -13,8 +13,7 @@ final class Type
     private function __construct(
         public readonly string $shortName,
         public readonly ?string $fullName = null,
-    ) {
-    }
+    ) {}
 
     public static function create(string $name): Type
     {

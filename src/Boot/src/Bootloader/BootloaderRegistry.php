@@ -16,8 +16,7 @@ final class BootloaderRegistry implements BootloaderRegistryInterface
     public function __construct(
         private array $systemBootloaders = [],
         private array $bootloaders = [],
-    ) {
-    }
+    ) {}
 
     /**
      * @param TClass|array<TClass, array<string, mixed>> $bootloader

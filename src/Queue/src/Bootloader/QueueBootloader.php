@@ -10,7 +10,7 @@ use Spiral\Boot\{AbstractKernel, EnvironmentInterface};
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
-use Spiral\Core\{BinderInterface, CompatiblePipelineBuilder, FactoryInterface, InterceptableCore, InterceptorPipeline};
+use Spiral\Core\{BinderInterface, CompatiblePipelineBuilder, FactoryInterface};
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Queue\JobHandlerLocatorListener;
@@ -42,7 +42,6 @@ final class QueueBootloader extends Bootloader
         TokenizerListenerBootloader::class,
         TelemetryBootloader::class,
     ];
-
     protected const SINGLETONS = [
         HandlerRegistryInterface::class => QueueRegistry::class,
         SerializerRegistryInterface::class => QueueRegistry::class,
@@ -55,8 +54,7 @@ final class QueueBootloader extends Bootloader
 
     public function __construct(
         private readonly ConfiguratorInterface $config,
-    ) {
-    }
+    ) {}
 
     public function init(
         ContainerInterface $container,
@@ -86,7 +84,7 @@ final class QueueBootloader extends Bootloader
     public function boot(
         TokenizerListenerRegistryInterface $listenerRegistry,
         JobHandlerLocatorListener $jobHandlerLocator,
-        SerializerLocatorListener $serializerLocator
+        SerializerLocatorListener $serializerLocator,
     ): void {
         $listenerRegistry->addListener($jobHandlerLocator);
         $listenerRegistry->addListener($serializerLocator);

@@ -15,9 +15,8 @@ use Spiral\Interceptors\HandlerInterface;
 final class Core implements CoreInterface, HandlerInterface
 {
     public function __construct(
-        private readonly EventDispatcherInterface $dispatcher
-    ) {
-    }
+        private readonly EventDispatcherInterface $dispatcher,
+    ) {}
 
     /**
      * @param string $controller event name

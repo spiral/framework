@@ -17,7 +17,7 @@ class EngineVAZ2101 extends LightEngine implements MadeInUssrInterface
 
     public function rust(float $index): self
     {
-        $this->power = (int)ceil($this->power / $index);
+        $this->power = (int) ceil($this->power / $index);
         return $this;
     }
 }

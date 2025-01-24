@@ -83,7 +83,7 @@ class AutowireTest extends TestCase
             DependedClass::class,
             [
                 'name' => 'some-name',
-            ]
+            ],
         );
 
         self::assertInstanceOf(DependedClass::class, $object);
@@ -119,7 +119,7 @@ class AutowireTest extends TestCase
             DependedClass::class,
             [
                 'name' => 'some-name',
-            ]
+            ],
         );
 
         self::assertInstanceOf(DependedClass::class, $object);
@@ -130,7 +130,7 @@ class AutowireTest extends TestCase
     public function testAutowireException(): void
     {
         $this->expectExceptionMessage(
-            'Can\'t resolve `Spiral\Tests\Core\Fixtures\DependedClass`: undefined class or binding `WrongClass`.'
+            'Can\'t resolve `Spiral\Tests\Core\Fixtures\DependedClass`: undefined class or binding `WrongClass`.',
         );
         $this->expectException(NotFoundException::class);
         $container = new Container();
@@ -140,7 +140,7 @@ class AutowireTest extends TestCase
             DependedClass::class,
             [
                 'name' => 'some-name',
-            ]
+            ],
         );
     }
 
@@ -159,7 +159,7 @@ class AutowireTest extends TestCase
             SoftDependedClass::class,
             [
                 'name' => 'some-name',
-            ]
+            ],
         );
 
         self::assertInstanceOf(SoftDependedClass::class, $object);
@@ -180,7 +180,7 @@ class AutowireTest extends TestCase
                 'int'    => 123,
                 'float'  => 123.00,
                 'bool'   => true,
-            ]
+            ],
         );
     }
 
@@ -192,7 +192,7 @@ class AutowireTest extends TestCase
             [SampleClass::class, 'nullableScalar'],
             [
                 'nullable' => null,
-            ]
+            ],
         );
 
         self::assertNull($result);
@@ -206,7 +206,7 @@ class AutowireTest extends TestCase
             UnionTypes::unionNull(...),
             [
                 'nullable' => null,
-            ]
+            ],
         );
 
         self::assertNull($result);
@@ -225,7 +225,7 @@ class AutowireTest extends TestCase
                 'int'    => 'yo!',
                 'float'  => 123.00,
                 'bool'   => true,
-            ]
+            ],
         );
     }
 
@@ -242,7 +242,7 @@ class AutowireTest extends TestCase
                 'int'    => 123,
                 'float'  => '~',
                 'bool'   => true,
-            ]
+            ],
         );
     }
 
@@ -259,7 +259,7 @@ class AutowireTest extends TestCase
                 'int'    => 123,
                 'float'  => 1.00,
                 'bool'   => 'true',
-            ]
+            ],
         );
     }
 
@@ -277,7 +277,7 @@ class AutowireTest extends TestCase
                 'float'  => 1.00,
                 'bool'   => true,
                 'array'  => 'not array',
-            ]
+            ],
         );
     }
 
@@ -292,7 +292,7 @@ class AutowireTest extends TestCase
                 'int'    => 123,
                 'float'  => 1.00,
                 'bool'   => true,
-            ]
+            ],
         );
 
         self::assertInstanceOf(TypedClass::class, $object);
@@ -310,7 +310,7 @@ class AutowireTest extends TestCase
                 'float'  => 1.00,
                 'bool'   => true,
                 'pong'   => null,
-            ]
+            ],
         );
 
         self::assertInstanceOf(TypedClass::class, $object);
@@ -327,7 +327,7 @@ class AutowireTest extends TestCase
             [
                 'name'   => 'some-name',
                 'sample' => new Container\Autowire('sample-binding'),
-            ]
+            ],
         );
 
         self::assertSame($s, $object->getSample());
@@ -351,8 +351,8 @@ class AutowireTest extends TestCase
                 SoftDependedClass::class,
                 [
                     'name' => 'Fixed',
-                ]
-            )
+                ],
+            ),
         );
 
         /**
@@ -375,8 +375,8 @@ class AutowireTest extends TestCase
                 SoftDependedClass::class,
                 [
                     'name' => 'Fixed',
-                ]
-            )
+                ],
+            ),
         );
 
         self::assertSame('Fixed', $abc->getName());
@@ -391,8 +391,8 @@ class AutowireTest extends TestCase
                 SoftDependedClass::class,
                 [
                     'name' => 'Fixed',
-                ]
-            )
+                ],
+            ),
         );
 
         /**
@@ -414,8 +414,8 @@ class AutowireTest extends TestCase
                     'options' => [
                         'name' => 'Fixed',
                     ],
-                ]
-            )
+                ],
+            ),
         );
 
         /**
@@ -432,14 +432,14 @@ class AutowireTest extends TestCase
             SoftDependedClass::class,
             [
                 'name' => 'Fixed',
-            ]
+            ],
         );
 
         $b = Container\Autowire::__set_state(
             [
                 'alias'      => SoftDependedClass::class,
                 'parameters' => ['name' => 'Fixed'],
-            ]
+            ],
         );
         self::assertEquals($a, $b);
     }
@@ -449,7 +449,7 @@ class AutowireTest extends TestCase
         // $this->expectException(InvalidArgumentException::class);
         $this->expectException(ContainerException::class);
         $this->expectExceptionMessage(
-            "Invalid argument value type for the `$parameter` parameter when validating arguments"
+            "Invalid argument value type for the `$parameter` parameter when validating arguments",
         );
     }
 }

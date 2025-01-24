@@ -26,7 +26,7 @@ final class BracesGrammar
         string $startSequence,
         string $endSequence,
         private readonly int $startToken,
-        private readonly int $endToken
+        private readonly int $endToken,
     ) {
         $this->setStartSequence($startSequence);
         $this->setEndSequence($endSequence);
@@ -92,7 +92,7 @@ final class BracesGrammar
             new Token(
                 $this->startToken,
                 $n->offset,
-                $n->char . $this->nextBytes($src, \strlen((string) $this->startSequence) - 1)
+                $n->char . $this->nextBytes($src, \strlen((string) $this->startSequence) - 1),
             ),
         ];
 
@@ -125,7 +125,7 @@ final class BracesGrammar
                     $this->tokens[] = new Token(
                         $this->endToken,
                         $n->offset,
-                        $n->char . $this->nextBytes($src, \strlen((string) $this->endSequence) - 1)
+                        $n->char . $this->nextBytes($src, \strlen((string) $this->endSequence) - 1),
                     );
 
                     break 2;

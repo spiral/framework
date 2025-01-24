@@ -41,12 +41,16 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
 
     /** Command name. */
     protected const NAME = '';
+
     /** Short command description. */
     protected const DESCRIPTION = null;
+
     /** Command signature. */
     protected const SIGNATURE = null;
+
     /** Command options specified in Symfony format. For more complex definitions redefine getOptions() method. */
     protected const OPTIONS = [];
+
     /** Command arguments specified in Symfony format. For more complex definitions redefine getArguments() method. */
     protected const ARGUMENTS = [];
 
@@ -56,7 +60,9 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
     /** @var array<class-string<CoreInterceptorInterface|InterceptorInterface>> */
     protected array $interceptors = [];
 
-    /** @internal */
+    /**
+     * @internal
+     */
     public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
@@ -111,11 +117,11 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
                         $arguments = ['input' => $this->input, 'output' => $this->output, 'command' => $this];
 
                         return $core instanceof HandlerInterface
-                            ? (int)$core->handle(new CallContext(
+                            ? (int) $core->handle(new CallContext(
                                 Target::fromPair($this, $method),
                                 $arguments,
                             ))
-                            : (int)$core->callAction(static::class, $method, $arguments);
+                            : (int) $core->callAction(static::class, $method, $arguments);
                     },
                 );
 

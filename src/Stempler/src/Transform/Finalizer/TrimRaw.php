@@ -15,9 +15,8 @@ use Spiral\Stempler\VisitorInterface;
 final class TrimRaw implements VisitorInterface
 {
     public function __construct(
-        private readonly string $characters = " \n\t\r"
-    ) {
-    }
+        private readonly string $characters = " \n\t\r",
+    ) {}
 
     public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {

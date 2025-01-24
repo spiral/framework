@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Exception\Traits;
 
-use ReflectionNamedType;
-use ReflectionUnionType;
-
 trait ClosureRendererTrait
 {
     /**
@@ -14,7 +11,7 @@ trait ClosureRendererTrait
      */
     protected function renderFunctionAndParameter(
         \ReflectionFunctionAbstract $reflection,
-        string $pattern
+        string $pattern,
     ): string {
         $function = $reflection->getName();
         /** @var class-string|null $class */
@@ -42,7 +39,7 @@ trait ClosureRendererTrait
         $closureParameters = [];
 
         foreach ($reflection->getParameters() as $parameter) {
-            /** @var ReflectionNamedType|ReflectionUnionType|null $type */
+            /** @var \ReflectionNamedType|\ReflectionUnionType|null $type */
             $type = $parameter->getType();
             $parameterString = \sprintf(
                 '%s %s%s$%s',

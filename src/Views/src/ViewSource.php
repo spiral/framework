@@ -14,9 +14,8 @@ final class ViewSource
     public function __construct(
         private readonly string $filename,
         private readonly string $namespace,
-        private readonly string $name
-    ) {
-    }
+        private readonly string $name,
+    ) {}
 
     /**
      * Template namespace.

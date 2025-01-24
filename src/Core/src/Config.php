@@ -14,7 +14,6 @@ use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\Scope;
 use Spiral\Core\Internal\State;
 use Spiral\Core\Internal\Tracer;
-use Traversable;
 
 /**
  * Container configuration that will be used not only in the root container but also in all child containers.
@@ -26,10 +25,11 @@ use Traversable;
  *     class-string<State>|class-string<ResolverInterface>|class-string<FactoryInterface>|class-string<ContainerInterface>|class-string<BinderInterface>|class-string<InvokerInterface>|class-string<Tracer>|class-string<Scope>
  * >
  */
-class Config implements IteratorAggregate
+class Config implements \IteratorAggregate
 {
     /** @var class-string<Scope> */
     public readonly string $scope;
+
     public readonly Internal\Config\StateStorage $scopedBindings;
     private bool $rootLocked = true;
 
@@ -55,7 +55,7 @@ class Config implements IteratorAggregate
         $this->scopedBindings = new Internal\Config\StateStorage();
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         yield 'state' => $this->state;
         yield 'resolver' => $this->resolver;

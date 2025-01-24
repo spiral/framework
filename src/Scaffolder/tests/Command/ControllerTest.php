@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-use ReflectionClass;
-use ReflectionException;
 use Spiral\Prototype\Traits\PrototypeTrait;
-use Throwable;
 
 class ControllerTest extends AbstractCommandTestCase
 {
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffold(): void
     {
@@ -21,13 +18,13 @@ class ControllerTest extends AbstractCommandTestCase
         $this->console()->run('create:controller', [
             'name'      => 'sample',
             '--comment' => 'Sample Controller',
-            '-a'        => ['index', 'save']
+            '-a'        => ['index', 'save'],
         ]);
 
         clearstatcache();
         self::assertTrue(class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('strict_types=1', $content);
@@ -44,21 +41,21 @@ class ControllerTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffoldWithCustomNamespace(): void
     {
         $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller\\SampleController';
         $this->console()->run('create:controller', [
             'name' => 'sample',
-            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller'
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller',
         ]);
 
         clearstatcache();
         self::assertTrue(class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('App/Custom/Controller/SampleController.php', \str_replace('\\', '/', $reflection->getFileName()));
@@ -66,8 +63,8 @@ class ControllerTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testPrototypeTrait(): void
     {
@@ -80,7 +77,7 @@ class ControllerTest extends AbstractCommandTestCase
         clearstatcache();
         self::assertTrue(class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $traits = $reflection->getTraitNames();
 
         self::assertNotEmpty($traits);
@@ -92,7 +89,7 @@ class ControllerTest extends AbstractCommandTestCase
         $this->className = $class = '\\Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller\\SampleController';
         $result = $this->console()->run('create:controller', [
             'name' => 'sample',
-            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller'
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller',
         ]);
 
         $output = $result->getOutput()->fetch();

@@ -22,20 +22,6 @@ use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
 final class AuthTransportMiddlewareTest extends BaseTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $transports = new TransportRegistry();
-        $transports->setTransport('cookie', new CookieTransport('/'));
-        $transports->setTransport('header', new HeaderTransport());
-
-        $this->container->bind(TransportRegistry::class, $transports);
-        $this->container->bind(ScopeInterface::class, $this->container);
-        $this->container->bind(ActorProviderInterface::class, new TestAuthHttpProvider());
-        $this->container->bind(TokenStorageInterface::class, new TestAuthHttpStorage());
-    }
-
     public function testCreateMiddlewareWithOneTransport(): void
     {
         $middleware1 = new Autowire(AuthTransportMiddleware::class, ['cookie']);
@@ -73,6 +59,20 @@ final class AuthTransportMiddlewareTest extends BaseTestCase
         $request->expects($this->once())->method('hasHeader')->willReturn(false);
 
         (new \ReflectionMethod($auth, 'closeContext'))->invoke($auth, $request, $response, $authContext);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $transports = new TransportRegistry();
+        $transports->setTransport('cookie', new CookieTransport('/'));
+        $transports->setTransport('header', new HeaderTransport());
+
+        $this->container->bind(TransportRegistry::class, $transports);
+        $this->container->bind(ScopeInterface::class, $this->container);
+        $this->container->bind(ActorProviderInterface::class, new TestAuthHttpProvider());
+        $this->container->bind(TokenStorageInterface::class, new TestAuthHttpStorage());
     }
 
     private function getPrivateProperty(string $property, object $object): mixed

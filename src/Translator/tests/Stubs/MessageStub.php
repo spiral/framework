@@ -11,6 +11,6 @@ class MessageStub
     use TranslatorTrait;
 
     private $messages = [
-        '[[some-text]]'
+        '[[some-text]]',
     ];
 }

@@ -11,7 +11,6 @@ use Spiral\Core\Exception\Resolver\InvalidArgumentException;
 use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\Options;
 use Spiral\Tests\Core\Fixtures\Bucket;
-use TypeError;
 
 final class CommonTest extends TestCase
 {
@@ -49,9 +48,9 @@ final class CommonTest extends TestCase
         $options->validateArguments = false;
         $container = new Container(options: $options);
 
-        $this->expectException(TypeError::class);
+        $this->expectException(\TypeError::class);
 
-        $container->invoke(fn (int $x): int => $x, [
+        $container->invoke(fn(int $x): int => $x, [
             'x' => 'string',
         ]);
     }
@@ -64,7 +63,7 @@ final class CommonTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        $container->invoke(fn (int $x): int => $x, [
+        $container->invoke(fn(int $x): int => $x, [
             'x' => 'string',
         ]);
     }

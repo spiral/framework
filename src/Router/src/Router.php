@@ -80,7 +80,7 @@ final class Router implements RouterInterface
                 }
 
                 $span
-                    ->setAttribute('request.uri', (string)$request->getUri())
+                    ->setAttribute('request.uri', (string) $request->getUri())
                     ->setAttribute('route.name', $routeName)
                     ->setAttribute('route.matches', $route->getMatches() ?? []);
 
@@ -92,7 +92,7 @@ final class Router implements RouterInterface
                 $this->eventDispatcher?->dispatch(new RouteMatched($request, $route));
 
                 return $route->handle($request);
-            }
+            },
         );
     }
 
@@ -228,11 +228,11 @@ final class Router implements RouterInterface
             !\preg_match(
                 '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
                 $route,
-                $matches
+                $matches,
             )
         ) {
             throw new UndefinedRouteException(
-                "Unable to locate route or use default route with 'name/controller:action' pattern"
+                "Unable to locate route or use default route with 'name/controller:action' pattern",
             );
         }
 
@@ -251,7 +251,7 @@ final class Router implements RouterInterface
             [
                 'controller' => $matches['controller'],
                 'action' => $matches['action'],
-            ]
+            ],
         );
     }
 }

@@ -8,6 +8,4 @@ use Spiral\Attribute\DispatcherScope;
 use Spiral\Framework\Spiral;
 
 #[DispatcherScope(scope: Spiral::Console)]
-final class DispatcherWithScopeName extends AbstractDispatcher
-{
-}
+final class DispatcherWithScopeName extends AbstractDispatcher {}

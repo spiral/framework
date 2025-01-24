@@ -65,7 +65,7 @@ final class AuthTransportWithStorageMiddlewareTest extends BaseTestCase
             $this->createMock(ActorProviderInterface::class),
             $storageProvider,
             $registry,
-            storage: 'session'
+            storage: 'session',
         );
 
         $handler = $this->createMock(RequestHandlerInterface::class);

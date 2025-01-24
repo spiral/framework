@@ -26,7 +26,7 @@ final class ValidationHandlerMiddleware implements MiddlewareInterface
      */
     public function __construct(
         ContainerInterface $container,
-        ?ErrorsRendererInterface $renderErrors = null
+        ?ErrorsRendererInterface $renderErrors = null,
     ) {
         $this->renderErrors = $renderErrors ?? $container->get(JsonErrorsRenderer::class);
     }

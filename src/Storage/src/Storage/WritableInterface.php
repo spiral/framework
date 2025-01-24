@@ -46,7 +46,7 @@ interface WritableInterface
     public function setVisibility(
         string|\Stringable $id,
         #[ExpectedValues(valuesFromClass: Visibility::class)]
-        string $visibility
+        string $visibility,
     ): FileInterface;
 
     /**
@@ -58,7 +58,7 @@ interface WritableInterface
     public function copy(
         string|\Stringable $source,
         string|\Stringable $destination,
-        array $config = []
+        array $config = [],
     ): FileInterface;
 
     /**
@@ -70,7 +70,7 @@ interface WritableInterface
     public function move(
         string|\Stringable $source,
         string|\Stringable $destination,
-        array $config = []
+        array $config = [],
     ): FileInterface;
 
     /**

@@ -10,6 +10,20 @@ use Mockery as m;
 
 final class VerbosityTest extends TestCase
 {
+    public static function envVariablesDataProvider(): \Traversable
+    {
+        yield ['basic', Verbosity::BASIC];
+        yield [0, Verbosity::BASIC];
+        yield ['Basic', Verbosity::BASIC];
+        yield ['debug', Verbosity::DEBUG];
+        yield [2, Verbosity::DEBUG];
+        yield ['invalid', Verbosity::VERBOSE];
+        yield ['', Verbosity::VERBOSE];
+        yield [null, Verbosity::VERBOSE];
+        yield [true, Verbosity::VERBOSE];
+        yield [false, Verbosity::VERBOSE];
+    }
+
     #[DataProvider('envVariablesDataProvider')]
     public function testDetectEnvironmentVariable($name, Verbosity $expected): void
     {
@@ -23,19 +37,5 @@ final class VerbosityTest extends TestCase
         $enum = Verbosity::detect($env);
 
         self::assertSame($expected, $enum);
-    }
-
-    public static function envVariablesDataProvider(): \Traversable
-    {
-        yield ['basic', Verbosity::BASIC];
-        yield [0, Verbosity::BASIC];
-        yield ['Basic', Verbosity::BASIC];
-        yield ['debug', Verbosity::DEBUG];
-        yield [2, Verbosity::DEBUG];
-        yield ['invalid', Verbosity::VERBOSE];
-        yield ['', Verbosity::VERBOSE];
-        yield [null, Verbosity::VERBOSE];
-        yield [true, Verbosity::VERBOSE];
-        yield [false, Verbosity::VERBOSE];
     }
 }

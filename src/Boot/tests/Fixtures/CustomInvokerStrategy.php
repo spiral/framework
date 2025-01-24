@@ -8,7 +8,5 @@ use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 
 final class CustomInvokerStrategy implements InvokerStrategyInterface
 {
-    public function invokeBootloaders(array $classes, array $bootingCallbacks, array $bootedCallbacks): void
-    {
-    }
+    public function invokeBootloaders(array $classes, array $bootingCallbacks, array $bootedCallbacks): void {}
 }

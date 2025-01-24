@@ -12,6 +12,18 @@ use Spiral\Boot\EnvironmentInterface;
 
 final class DebugModeTest extends TestCase
 {
+    public static function envVariablesDataProvider(): \Traversable
+    {
+        yield [true, DebugMode::Enabled];
+        yield ['true', DebugMode::Enabled];
+        yield ['1', DebugMode::Enabled];
+        yield ['on', DebugMode::Enabled];
+        yield ['false', DebugMode::Disabled];
+        yield ['0', DebugMode::Disabled];
+        yield ['off', DebugMode::Disabled];
+        yield [false, DebugMode::Disabled];
+    }
+
     public function testDetectWithoutEnvironmentVariable(): void
     {
         $env = m::mock(EnvironmentInterface::class);
@@ -39,17 +51,5 @@ final class DebugModeTest extends TestCase
         } else {
             self::assertFalse($enum->isEnabled());
         }
-    }
-
-    public static function envVariablesDataProvider(): \Traversable
-    {
-        yield [true, DebugMode::Enabled];
-        yield ['true', DebugMode::Enabled];
-        yield ['1', DebugMode::Enabled];
-        yield ['on', DebugMode::Enabled];
-        yield ['false', DebugMode::Disabled];
-        yield ['0', DebugMode::Disabled];
-        yield ['off', DebugMode::Disabled];
-        yield [false, DebugMode::Disabled];
     }
 }

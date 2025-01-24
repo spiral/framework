@@ -21,7 +21,7 @@ class ConfigTest extends BaseTestCase
     public function testWireConfigString(): void
     {
         $config = new StemplerConfig([
-            'processors' => [ContextProcessor::class]
+            'processors' => [ContextProcessor::class],
         ]);
 
         self::assertInstanceOf(ContextProcessor::class, $config->getProcessors()[0]->resolve($this->container));
@@ -30,7 +30,7 @@ class ConfigTest extends BaseTestCase
     public function testWireDirective(): void
     {
         $config = new StemplerConfig([
-            'directives' => [ContainerDirective::class]
+            'directives' => [ContainerDirective::class],
         ]);
 
         self::assertInstanceOf(ContainerDirective::class, $config->getDirectives()[0]->resolve($this->container));
@@ -40,8 +40,8 @@ class ConfigTest extends BaseTestCase
     {
         $config = new StemplerConfig([
             'processors' => [
-                new Autowire(ContextProcessor::class)
-            ]
+                new Autowire(ContextProcessor::class),
+            ],
         ]);
 
         self::assertInstanceOf(ContextProcessor::class, $config->getProcessors()[0]->resolve($this->container));
@@ -61,7 +61,7 @@ class ConfigTest extends BaseTestCase
             new Autowire(JsonDirective::class),
             new Autowire(ConditionalDirective::class),
             new Autowire(ContainerDirective::class),
-            new Autowire(self::class)
+            new Autowire(self::class),
         ], $config->getDirectives());
     }
 

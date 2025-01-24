@@ -19,36 +19,6 @@ final class TokenizerListenerBootloaderTest extends BaseTestCase
     protected array $classes = [];
     protected bool $finalized = false;
 
-    protected function setUp(): void
-    {
-        $this->beforeBooting(function (TokenizerListenerBootloader $bootloader): void {
-            $bootloader->addListener(
-                new class($this->classes, $this->finalized) implements TokenizationListenerInterface {
-
-                    public function __construct(
-                        private array &$classes,
-                        private bool &$finalized
-                    ) {
-                    }
-
-                    public function listen(\ReflectionClass $class): void
-                    {
-                        if ($class->implementsInterface(TestInterface::class)) {
-                            $this->classes[] = $class->name;
-                        }
-                    }
-
-                    public function finalize(): void
-                    {
-                        $this->finalized = true;
-                    }
-                }
-            );
-        });
-
-        parent::setUp();
-    }
-
     public function testDependencies(): void
     {
         $this->assertBootloaderRegistered(TokenizerBootloader::class);
@@ -58,7 +28,7 @@ final class TokenizerListenerBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             TokenizerListenerRegistryInterface::class,
-            TokenizerListenerBootloader::class
+            TokenizerListenerBootloader::class,
         );
     }
 
@@ -66,7 +36,7 @@ final class TokenizerListenerBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             ClassesLoaderInterface::class,
-            CachedClassesLoader::class
+            CachedClassesLoader::class,
         );
     }
 
@@ -90,5 +60,33 @@ final class TokenizerListenerBootloaderTest extends BaseTestCase
         self::assertContains(\Spiral\App\Tokenizer\TestEnum::class, $this->classes);
         self::assertContains(\Spiral\App\Tokenizer\TestInterface::class, $this->classes);
         self::assertTrue($this->finalized);
+    }
+
+    protected function setUp(): void
+    {
+        $this->beforeBooting(function (TokenizerListenerBootloader $bootloader): void {
+            $bootloader->addListener(
+                new class($this->classes, $this->finalized) implements TokenizationListenerInterface {
+                    public function __construct(
+                        private array &$classes,
+                        private bool &$finalized,
+                    ) {}
+
+                    public function listen(\ReflectionClass $class): void
+                    {
+                        if ($class->implementsInterface(TestInterface::class)) {
+                            $this->classes[] = $class->name;
+                        }
+                    }
+
+                    public function finalize(): void
+                    {
+                        $this->finalized = true;
+                    }
+                },
+            );
+        });
+
+        parent::setUp();
     }
 }

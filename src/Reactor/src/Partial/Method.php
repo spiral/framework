@@ -24,9 +24,16 @@ final class Method implements NamedInterface, AggregableInterface, \Stringable
         $this->element = new NetteMethod($name);
     }
 
-    public function __toString(): string
+    /**
+     * @internal
+     */
+    public static function fromElement(NetteMethod $element): self
     {
-        return $this->element->__toString();
+        $method = new self($element->getName());
+
+        $method->element = $element;
+
+        return $method;
     }
 
     public function setStatic(bool $state = true): self
@@ -82,20 +89,13 @@ final class Method implements NamedInterface, AggregableInterface, \Stringable
     /**
      * @internal
      */
-    public static function fromElement(NetteMethod $element): self
-    {
-        $method = new self($element->getName());
-
-        $method->element = $element;
-
-        return $method;
-    }
-
-    /**
-     * @internal
-     */
     public function getElement(): NetteMethod
     {
         return $this->element;
+    }
+
+    public function __toString(): string
+    {
+        return $this->element->__toString();
     }
 }

@@ -13,15 +13,13 @@ use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Spiral\Tests\Console\Fixtures\TestCommand;
 use Spiral\Tests\Console\Fixtures\UpdateClass;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 class ConfigureTest extends BaseTestCase
 {
     public const TOKENIZER_CONFIG = [
-        'directories' => [__DIR__.'/../src/Command', __DIR__.'/Fixtures/'],
+        'directories' => [__DIR__ . '/../src/Command', __DIR__ . '/Fixtures/'],
         'exclude' => [],
     ];
-
     public const CONFIG = [
         'locateCommands' => false,
         'sequences' => [
@@ -29,24 +27,24 @@ class ConfigureTest extends BaseTestCase
                 ['command' => 'test', 'header' => 'Test Command'],
                 ['command' => 'helper', 'options' => ['helper' => 'writeln'], 'footer' => 'Good!'],
                 ['invoke' => [UpdateClass::class, 'do']],
-                ['invoke' => UpdateClass::class.'::do'],
+                ['invoke' => UpdateClass::class . '::do'],
                 'Spiral\Tests\Console\ok',
-                ['invoke' => UpdateClass::class.'::err'],
+                ['invoke' => UpdateClass::class . '::err'],
             ],
         ],
     ];
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testConfigure(): void
     {
         $core = $this->getCore(
-           $this->getStaticLocator([
-               HelperCommand::class,
-               ConfigureCommand::class,
-               TestCommand::class,
-           ])
+            $this->getStaticLocator([
+                HelperCommand::class,
+                ConfigureCommand::class,
+                TestCommand::class,
+            ]),
         );
 
         $this->container->bind(Console::class, $core);
@@ -74,7 +72,7 @@ class ConfigureTest extends BaseTestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testBreakFailure(): void
     {
@@ -90,7 +88,7 @@ class ConfigureTest extends BaseTestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testIgnoreAndBreakFailure(): void
     {
@@ -106,7 +104,7 @@ class ConfigureTest extends BaseTestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testNoBreakFailure(): void
     {
@@ -131,7 +129,7 @@ class ConfigureTest extends BaseTestCase
                 TestCommand::class,
                 FailedCommand::class,
                 AnotherFailedCommand::class,
-            ])
+            ]),
         );
         $this->container->bind(
             ConsoleConfig::class,
@@ -142,8 +140,8 @@ class ConfigureTest extends BaseTestCase
                         ['command' => 'failed', 'header' => 'Failed Command'],
                         ['command' => 'failed:another', 'header' => 'Another failed Command'],
                     ],
-                ]
-            ])
+                ],
+            ]),
         );
         $this->container->bind(Console::class, $core);
 

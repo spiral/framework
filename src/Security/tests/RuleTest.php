@@ -23,29 +23,26 @@ class RuleTest extends TestCase
     public const CONTEXT = [];
 
     private MockObject&ActorInterface $actor;
-
     private MockObject&ResolverInterface $resolver;
-
     private MockObject&Rule $rule;
 
-    protected function setUp(): void
+    public static function allowsProvider(): \Traversable
     {
-        $this->actor = $this->createMock(ActorInterface::class);
-        $this->resolver = $this->createMock(ResolverInterface::class);
-        $this->rule = $this->getMockBuilder(Rule::class)
-            ->setConstructorArgs([$this->resolver])
-            ->addMethods(['check'])->getMock();
+        yield ['test.create', [], false];
+        yield ['test.create', [], true];
+        yield ['test.create', ['a' => 'b'], false];
+        yield ['test.create', ['a' => 'b'], true];
     }
 
     #[DataProvider('allowsProvider')]
     public function testAllows(string $permission, array $context, bool $allowed): void
     {
         $parameters = [
-                'actor'      => $this->actor,
-                'user'       => $this->actor,
-                'permission' => $permission,
-                'context'    => $context,
-            ] + $context;
+            'actor'      => $this->actor,
+            'user'       => $this->actor,
+            'permission' => $permission,
+            'context'    => $context,
+        ] + $context;
 
         $method = new \ReflectionMethod($this->rule, 'check');
         $this->resolver
@@ -69,11 +66,12 @@ class RuleTest extends TestCase
         $this->rule->allows($this->actor, static::OPERATION, static::CONTEXT);
     }
 
-    public static function allowsProvider(): \Traversable
+    protected function setUp(): void
     {
-        yield ['test.create', [], false];
-        yield ['test.create', [], true];
-        yield ['test.create', ['a' => 'b'], false];
-        yield ['test.create', ['a' => 'b'], true];
+        $this->actor = $this->createMock(ActorInterface::class);
+        $this->resolver = $this->createMock(ResolverInterface::class);
+        $this->rule = $this->getMockBuilder(Rule::class)
+            ->setConstructorArgs([$this->resolver])
+            ->addMethods(['check'])->getMock();
     }
 }

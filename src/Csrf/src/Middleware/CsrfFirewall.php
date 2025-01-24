@@ -33,9 +33,8 @@ final class CsrfFirewall implements MiddlewareInterface
 
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly array $allowMethods = self::ALLOW_METHODS
-    ) {
-    }
+        private readonly array $allowMethods = self::ALLOW_METHODS,
+    ) {}
 
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {

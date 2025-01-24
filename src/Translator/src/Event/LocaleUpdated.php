@@ -8,6 +8,5 @@ final class LocaleUpdated
 {
     public function __construct(
         public readonly string $locale,
-    ) {
-    }
+    ) {}
 }

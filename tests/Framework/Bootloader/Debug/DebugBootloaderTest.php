@@ -54,7 +54,7 @@ final class DebugBootloaderTest extends BaseTestCase
                 return 'value 2';
             }
         };
-        $fn = static fn (mixed $a): string => 'value 3';
+        $fn = static fn(mixed $a): string => 'value 3';
 
         $bootloader = new DebugBootloader($this->getContainer(), $configs);
         $bootloader->addTag('foo', 'value 1');
@@ -98,7 +98,7 @@ final class DebugBootloaderTest extends BaseTestCase
         /** @see DebugBootloader::state() */
         $state = $ref->invoke($bootloader, $this->getContainer(), new DebugConfig([
             'tags' => [
-                'env' => static fn (AppEnvironment $env): string => $env->isProduction() ? 'prod' : 'dev'
+                'env' => static fn(AppEnvironment $env): string => $env->isProduction() ? 'prod' : 'dev',
             ],
         ]));
 
@@ -115,7 +115,7 @@ final class DebugBootloaderTest extends BaseTestCase
                 new LogCollector(),
                 new HttpCollector(),
             ],
-            'tags' => []
+            'tags' => [],
         ], $config);
     }
 }

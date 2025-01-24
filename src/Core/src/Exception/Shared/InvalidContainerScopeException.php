@@ -14,6 +14,7 @@ use Spiral\Core\Internal\Introspector;
 class InvalidContainerScopeException extends \RuntimeException implements NotFoundExceptionInterface
 {
     protected string $scope;
+
     public function __construct(
         protected readonly string $id,
         Container|string|null $scopeOrContainer = null,

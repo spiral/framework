@@ -18,8 +18,7 @@ final class SerializerLocatorListener implements TokenizationListenerInterface
         private readonly ReaderInterface $reader,
         private readonly QueueRegistry $registry,
         private readonly QueueConfig $config,
-    ) {
-    }
+    ) {}
 
     public function listen(\ReflectionClass $class): void
     {
@@ -31,9 +30,7 @@ final class SerializerLocatorListener implements TokenizationListenerInterface
         $this->registry->setSerializer($this->getJobType($class), $attribute->serializer);
     }
 
-    public function finalize(): void
-    {
-    }
+    public function finalize(): void {}
 
     private function getJobType(\ReflectionClass $class): string
     {

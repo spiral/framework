@@ -10,7 +10,6 @@ use Psr\Container\ContainerInterface;
 use Spiral\Security\Exception\RuleException;
 use Spiral\Security\RuleInterface;
 use Spiral\Security\RuleManager;
-use Spiral\Security\Rule\CallableRule;
 
 /**
  * Class RuleManagerTest
@@ -26,12 +25,6 @@ class RuleManagerTest extends TestCase
 
     /** @var RuleInterface */
     private $rule;
-
-    protected function setUp(): void
-    {
-        $this->container = m::mock(ContainerInterface::class);
-        $this->rule = m::mock(RuleInterface::class);
-    }
 
     public function testFlow(): void
     {
@@ -107,11 +100,17 @@ class RuleManagerTest extends TestCase
 
         $this->container->shouldReceive('get')
             ->with($ruleClass)
-            ->andReturn(new $ruleClass);
+            ->andReturn(new $ruleClass());
 
         $manager = new RuleManager($this->container);
 
         $this->expectException(RuleException::class);
         $manager->get($ruleClass);
+    }
+
+    protected function setUp(): void
+    {
+        $this->container = m::mock(ContainerInterface::class);
+        $this->rule = m::mock(RuleInterface::class);
     }
 }

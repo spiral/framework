@@ -14,12 +14,6 @@ final class ObjectJobTest extends TestCase
 {
     private Container $container;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->container = new Container();
-    }
-
     public function testPayloadObjectKeyIsRequired(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -41,9 +35,7 @@ final class ObjectJobTest extends TestCase
     public function testHandleWithHandleMethod(): void
     {
         $object = new class($this) {
-            public function __construct(private $testCase)
-            {
-            }
+            public function __construct(private $testCase) {}
 
             public function handle(string $name, string $id, ContainerInterface $container): void
             {
@@ -61,9 +53,7 @@ final class ObjectJobTest extends TestCase
     public function testHandleWithInvokeMethod(): void
     {
         $object = new class($this) {
-            public function __construct(private $testCase)
-            {
-            }
+            public function __construct(private $testCase) {}
 
             public function __invoke(string $name, string $id, ContainerInterface $container): void
             {
@@ -76,5 +66,11 @@ final class ObjectJobTest extends TestCase
         $job = new ObjectJob($this->container);
 
         $job->handle('foo', 'foo-id', ['object' => $object]);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->container = new Container();
     }
 }

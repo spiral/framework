@@ -17,7 +17,7 @@ class EventTest extends TestCase
             'default',
             LogLevel::DEBUG,
             'message',
-            ['context']
+            ['context'],
         );
 
         self::assertInstanceOf(\DateTimeInterface::class, $e->getTime());

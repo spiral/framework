@@ -82,7 +82,7 @@ class StorageConfig extends InjectableConfig
                 throw new InvalidArgumentException(
                     \vsprintf('Storage bucket config key must be a string, but %s defined', [
                         \get_debug_type($name),
-                    ])
+                    ]),
                 );
             }
 
@@ -92,7 +92,7 @@ class StorageConfig extends InjectableConfig
                     \vsprintf('Storage bucket `%s.server` config key required and must be a string, but %s defined', [
                         $name,
                         \get_debug_type($serverName),
-                    ])
+                    ]),
                 );
             }
 
@@ -102,7 +102,7 @@ class StorageConfig extends InjectableConfig
                     \vsprintf('Storage bucket `%s` relates to non-existing server `%s`', [
                         $name,
                         $serverName,
-                    ])
+                    ]),
                 );
             }
 
@@ -112,7 +112,7 @@ class StorageConfig extends InjectableConfig
                     \vsprintf('Storage server `%s.adapter` config key required and must be a string, but %s defined', [
                         $serverName,
                         \get_debug_type($adapter),
-                    ])
+                    ]),
                 );
             }
 
@@ -141,7 +141,7 @@ class StorageConfig extends InjectableConfig
         if (!$async && !\class_exists(Credentials::class)) {
             throw new ConfigException(
                 'Can not create AWS credentials while creating "' . $serverName . '" server. '
-                . 'Perhaps you forgot to install the "league/flysystem-aws-s3-v3" package?'
+                . 'Perhaps you forgot to install the "league/flysystem-aws-s3-v3" package?',
             );
         }
 
@@ -151,7 +151,7 @@ class StorageConfig extends InjectableConfig
         if ($async) {
             if (!\class_exists(AsyncAwsS3Adapter::class)) {
                 throw new InvalidArgumentException(
-                    'Can not create async S3 client, please install "league/flysystem-async-aws-s3"'
+                    'Can not create async S3 client, please install "league/flysystem-async-aws-s3"',
                 );
             }
 
@@ -159,13 +159,13 @@ class StorageConfig extends InjectableConfig
                 new S3AsyncClient($this->createAwsConfig($bucket, $server, true)),
                 $name,
                 $bucket['prefix'] ?? $server['prefix'] ?? '',
-                new AsyncAwsS3PortableVisibilityConverter($visibility)
+                new AsyncAwsS3PortableVisibilityConverter($visibility),
             );
         }
 
         if (!\class_exists(AwsS3V3Adapter::class)) {
             throw new InvalidArgumentException(
-                'Can not create S3 client, please install "league/flysystem-aws-s3-v3"'
+                'Can not create S3 client, please install "league/flysystem-aws-s3-v3"',
             );
         }
 
@@ -173,7 +173,7 @@ class StorageConfig extends InjectableConfig
             new S3Client($this->createAwsConfig($bucket, $server)),
             $name,
             $bucket['prefix'] ?? $server['prefix'] ?? '',
-            new AwsS3PortableVisibilityConverter($visibility)
+            new AwsS3PortableVisibilityConverter($visibility),
         );
     }
 
@@ -184,7 +184,7 @@ class StorageConfig extends InjectableConfig
                 \vsprintf('Storage server `%s.directory` config key required and must be a string, but %s defined', [
                     $serverName,
                     \get_debug_type($server['directory'] ?? null),
-                ])
+                ]),
             );
         }
 
@@ -193,7 +193,7 @@ class StorageConfig extends InjectableConfig
             $server['visibility']['private']['file'] ?? 0600,
             $server['visibility']['public']['dir'] ?? 0755,
             $server['visibility']['private']['dir'] ?? 0700,
-            $bucket['visibility'] ?? $server['visibility']['default'] ?? Visibility::VISIBILITY_PRIVATE
+            $bucket['visibility'] ?? $server['visibility']['default'] ?? Visibility::VISIBILITY_PRIVATE,
         );
 
         $directory = \implode('/', [
@@ -215,7 +215,7 @@ class StorageConfig extends InjectableConfig
                     $serverName,
                     FilesystemAdapter::class,
                     $adapter,
-                ])
+                ]),
             );
         }
 
@@ -240,7 +240,7 @@ class StorageConfig extends InjectableConfig
                 $server['key'] ?? null,
                 $server['secret'] ?? null,
                 $server['token'] ?? null,
-                $server['expires'] ?? null
+                $server['expires'] ?? null,
             );
 
             return $config;

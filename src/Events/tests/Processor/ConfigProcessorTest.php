@@ -18,11 +18,42 @@ use Spiral\Tests\Events\Fixtures\Listener\ClassAttribute;
 
 final class ConfigProcessorTest extends TestCase
 {
+    public static function listenersDataProvider(): \Traversable
+    {
+        yield [
+            [
+                FooEvent::class => [new EventListener(ClassAndMethodAttribute::class, 'onFooEvent', 1)],
+            ],
+            [
+                FooEvent::class,
+                (new AutowireListenerFactory())->create(ClassAndMethodAttribute::class, 'onFooEvent'),
+                1,
+            ],
+        ];
+        yield [
+            [
+                BarEvent::class => [new EventListener(ClassAndMethodAttribute::class, 'onBarEvent', 1)],
+            ],
+            [
+                BarEvent::class,
+                (new AutowireListenerFactory())->create(ClassAndMethodAttribute::class, 'onBarEvent'),
+                1,
+            ],
+        ];
+        yield [
+            [BarEvent::class => [ClassAttribute::class]],
+            [
+                BarEvent::class,
+                (new AutowireListenerFactory())->create(ClassAttribute::class, '__invoke'),
+                0,
+            ],
+        ];
+    }
+
     #[DataProvider('listenersDataProvider')]
     public function testProcess(array $listener, array $args): void
     {
-        $registry = new class() implements ListenerRegistryInterface {
-
+        $registry = new class implements ListenerRegistryInterface {
             public string $event;
             public \Closure $listener;
             public int $priority;
@@ -45,37 +76,5 @@ final class ConfigProcessorTest extends TestCase
         self::assertSame($args[0], $registry->event);
         self::assertEquals($args[1], $registry->listener);
         self::assertSame($args[2], $registry->priority);
-    }
-
-    public static function listenersDataProvider(): \Traversable
-    {
-        yield [
-            [
-                FooEvent::class => [new EventListener(ClassAndMethodAttribute::class, 'onFooEvent', 1)]
-            ],
-            [
-                FooEvent::class,
-                (new AutowireListenerFactory())->create(ClassAndMethodAttribute::class, 'onFooEvent'),
-                1
-            ]
-        ];
-        yield [
-            [
-                BarEvent::class => [new EventListener(ClassAndMethodAttribute::class, 'onBarEvent', 1)]
-            ],
-            [
-                BarEvent::class,
-                (new AutowireListenerFactory())->create(ClassAndMethodAttribute::class, 'onBarEvent'),
-                1
-            ]
-        ];
-        yield [
-            [BarEvent::class => [ClassAttribute::class]],
-            [
-                BarEvent::class,
-                (new AutowireListenerFactory())->create(ClassAttribute::class, '__invoke'),
-                0
-            ]
-        ];
     }
 }

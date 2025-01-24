@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype;
 
-use ReflectionClass;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Prototype\Annotation\Prototyped;
 use Spiral\Prototype\Bootloader\PrototypeBootloader;
@@ -22,11 +21,10 @@ final class PrototypeLocatorListener implements TokenizationListenerInterface
 
     public function __construct(
         private readonly ReaderInterface $reader,
-        private readonly PrototypeBootloader $prototype
-    ) {
-    }
+        private readonly PrototypeBootloader $prototype,
+    ) {}
 
-    public function listen(ReflectionClass $class): void
+    public function listen(\ReflectionClass $class): void
     {
         $attribute = $this->reader->firstClassMetadata($class, Prototyped::class);
         if ($attribute === null) {

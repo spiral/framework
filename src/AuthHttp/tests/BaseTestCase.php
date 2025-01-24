@@ -22,7 +22,7 @@ abstract class BaseTestCase extends TestCase
 
         $this->container->bind(
             TracerInterface::class,
-            new NullTracer($this->container)
+            new NullTracer($this->container),
         );
     }
 }

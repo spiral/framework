@@ -48,7 +48,7 @@ final class ProxyClassRenderer
             }
 
             $hasRefs = false;
-            $return = $method->hasReturnType() && (string)$method->getReturnType() === 'void' ? '' : 'return ';
+            $return = $method->hasReturnType() && (string) $method->getReturnType() === 'void' ? '' : 'return ';
             $call = ($method->isStatic() ? '::' : '->') . $method->getName();
             $context = $method->isStatic() ? 'null' : '$this->__container_proxy_context';
             $containerStr = match (false) {
@@ -79,7 +79,7 @@ final class ProxyClassRenderer
                     $method,
                     <<<PHP
                     {$return}{$resolveStr}{$call}(...\\func_get_args());
-                PHP
+                PHP,
                 );
                 continue;
             }
@@ -91,7 +91,7 @@ final class ProxyClassRenderer
                     $method,
                     <<<PHP
                     {$return}{$resolveStr}{$call}($argsStr);
-                PHP
+                PHP,
                 );
                 continue;
             }
@@ -101,14 +101,14 @@ final class ProxyClassRenderer
                 $method,
                 <<<PHP
                 {$return}{$resolveStr}{$call}($argsStr, ...\\array_slice(\\func_get_args(), {$countParams}));
-            PHP
+            PHP,
             );
         }
         $bodyStr = \implode("\n\n", $classBody);
 
         $traitsStr = $traits === [] ? '' : \implode(
             "\n    ",
-            \array_map(fn (string $trait): string => 'use \\' . \ltrim($trait, '\\') . ';', $traits)
+            \array_map(fn(string $trait): string => 'use \\' . \ltrim($trait, '\\') . ';', $traits),
         );
         return <<<PHP
             $classNamespaceStr
@@ -148,7 +148,7 @@ final class ProxyClassRenderer
                 '$' . $param->getName(),
                 $param->isOptional() && !$param->isVariadic() ? ' = ' . self::renderDefaultValue($param) : '',
             ),
-            ' '
+            ' ',
         );
     }
 
@@ -200,7 +200,7 @@ final class ProxyClassRenderer
 
     private static function cutDefaultValue(\ReflectionParameter $param): string
     {
-        $string = (string)$param;
+        $string = (string) $param;
 
         return \trim(\substr($string, \strpos($string, '=') + 1, -1));
     }

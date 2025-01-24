@@ -30,7 +30,7 @@ abstract class AbstractRoute implements RouteInterface
 
     public function __construct(
         protected string $pattern,
-        array $defaults = []
+        array $defaults = [],
     ) {
         $this->defaults = $defaults;
     }
@@ -80,7 +80,7 @@ abstract class AbstractRoute implements RouteInterface
     {
         return $this->uriHandler->uri(
             $parameters,
-            \array_merge($this->defaults, $this->matches ?? [])
+            \array_merge($this->defaults, $this->matches ?? []),
         );
     }
 }

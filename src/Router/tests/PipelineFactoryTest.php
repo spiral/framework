@@ -27,14 +27,14 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
     private FactoryInterface $factory;
     private PipelineFactory $pipeline;
 
-    protected function setUp(): void
+    public static function invalidTypeDataProvider(): \Generator
     {
-        parent::setUp();
-
-        $this->container = $this->createMock(ContainerInterface::class);
-        $this->factory = m::mock(FactoryInterface::class);
-
-        $this->pipeline = new PipelineFactory($this->container, $this->factory);
+        yield 'true' => [true, 'bool'];
+        yield 'false' => [false, 'bool'];
+        yield 'array' => [[], 'array'];
+        yield 'int' => [1, 'int'];
+        yield 'float' => [1.0, 'float'];
+        yield 'object' => [new \stdClass(), 'stdClass'];
     }
 
     public function testCreatesFromArrayWithPipeline(): void
@@ -57,7 +57,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->with(Pipeline::class)
             ->andReturn($p = new Pipeline(
                 $this->createMock(ScopeInterface::class),
-                tracer: new NullTracer($container)
+                tracer: new NullTracer($container),
             ));
 
         $this->factory
@@ -116,13 +116,13 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
         $this->pipeline->createWithMiddleware([$value]);
     }
 
-    public static function invalidTypeDataProvider(): \Generator
+    protected function setUp(): void
     {
-        yield 'true' => [true, 'bool'];
-        yield 'false' => [false, 'bool'];
-        yield 'array' => [[], 'array'];
-        yield 'int' => [1, 'int'];
-        yield 'float' => [1.0, 'float'];
-        yield 'object' => [new \stdClass(), 'stdClass'];
+        parent::setUp();
+
+        $this->container = $this->createMock(ContainerInterface::class);
+        $this->factory = m::mock(FactoryInterface::class);
+
+        $this->pipeline = new PipelineFactory($this->container, $this->factory);
     }
 }

@@ -16,8 +16,8 @@ trait TraitsAware
     public function setTraits(TraitUses $traits): static
     {
         $this->element->setTraits(\array_map(
-            static fn (TraitUse $traitUse): NetteTraitUse => $traitUse->getElement(),
-            \iterator_to_array($traits)
+            static fn(TraitUse $traitUse): NetteTraitUse => $traitUse->getElement(),
+            \iterator_to_array($traits),
         ));
 
         return $this;
@@ -26,8 +26,8 @@ trait TraitsAware
     public function getTraits(): TraitUses
     {
         return new TraitUses(\array_map(
-            static fn (NetteTraitUse $trait): TraitUse => TraitUse::fromElement($trait),
-            $this->element->getTraits()
+            static fn(NetteTraitUse $trait): TraitUse => TraitUse::fromElement($trait),
+            $this->element->getTraits(),
         ));
     }
 

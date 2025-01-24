@@ -7,15 +7,14 @@ namespace Spiral\Tests\Core\Scope;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Core\Options;
-use WeakMap;
 
 abstract class BaseTestCase extends TestCase
 {
-    public WeakMap $weakMap;
+    public \WeakMap $weakMap;
 
     protected function setUp(): void
     {
-        $this->weakMap = new WeakMap();
+        $this->weakMap = new \WeakMap();
         parent::setUp();
     }
 

@@ -18,11 +18,6 @@ final class Tracer implements \Stringable
      */
     private array $traces = [];
 
-    public function __toString(): string
-    {
-        return $this->traces === [] ? '' : "Container trace list:\n" . $this->renderTraceList($this->traces);
-    }
-
     /**
      * @param string $header Message before stack list
      */
@@ -60,6 +55,11 @@ final class Tracer implements \Stringable
         return $this->traces[0][0]->alias ?? '';
     }
 
+    public function __toString(): string
+    {
+        return $this->traces === [] ? '' : "Container trace list:\n" . $this->renderTraceList($this->traces);
+    }
+
     /**
      * @param Trace[][] $blocks
      */
@@ -88,7 +88,7 @@ final class Tracer implements \Stringable
         $s = "\n";
         $nexPrefix = "$s$padding  ";
         foreach ($items as $item) {
-            $result[] = $firstPrefix . \str_replace($s, $nexPrefix, (string)$item);
+            $result[] = $firstPrefix . \str_replace($s, $nexPrefix, (string) $item);
         }
         return $result;
     }

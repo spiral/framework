@@ -16,7 +16,7 @@ use Spiral\Stempler\Node\Dynamic\Directive;
 final class RouteDirective extends AbstractDirective
 {
     public function __construct(
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
     ) {
         parent::__construct();
     }
@@ -29,13 +29,13 @@ final class RouteDirective extends AbstractDirective
         if (\count($directive->values) < 1) {
             throw new DirectiveException(
                 'Unable to call @route directive, at least 1 value is required',
-                $directive->getContext()
+                $directive->getContext(),
             );
         }
 
         return \sprintf(
             '<?php echo $this->container->get(\Spiral\Stempler\Directive\RouteDirective::class)->uri(%s); ?>',
-            $directive->body
+            $directive->body,
         );
     }
 
@@ -58,7 +58,7 @@ final class RouteDirective extends AbstractDirective
         try {
             return \strtr(
                 $this->container->get(RouterInterface::class)->uri($route, $vars)->__toString(),
-                $restore
+                $restore,
             );
         } catch (UndefinedRouteException $e) {
             throw new RouterException("No such route {$route}", $e->getCode(), $e);

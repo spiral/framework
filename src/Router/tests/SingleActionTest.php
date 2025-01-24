@@ -21,7 +21,7 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/test', new Action(TestController::class, 'test'))
+            new Route('/test', new Action(TestController::class, 'test')),
         );
 
         $router->handle(new ServerRequest('GET', ''));
@@ -32,16 +32,16 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/test', new Action(TestController::class, 'test'))
+            new Route('/test', new Action(TestController::class, 'test')),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
     }
 
     public function testVerbRoute(): void
@@ -51,7 +51,7 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST')
+            (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST'),
         );
 
         $router->handle(new ServerRequest('GET', new Uri('/test')));
@@ -62,12 +62,12 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST')
+            (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST'),
         );
 
         $response = $router->handle(new ServerRequest('POST', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
     }
 
     public function testEchoed(): void
@@ -75,12 +75,12 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/test', new Action(TestController::class, 'echo'))
+            new Route('/test', new Action(TestController::class, 'echo')),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('echoed', (string)$response->getBody());
+        self::assertSame('echoed', (string) $response->getBody());
     }
 
     public function testAutoFill(): void
@@ -88,12 +88,12 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/<action>', new Action(TestController::class, 'echo'))
+            new Route('/<action>', new Action(TestController::class, 'echo')),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/echo')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('echoed', (string)$response->getBody());
+        self::assertSame('echoed', (string) $response->getBody());
 
         $e = null;
         try {
@@ -111,7 +111,7 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('other')
+            (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('other'),
         );
     }
 
@@ -120,12 +120,12 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/test/<id:\d+>', new Action(TestController::class, 'id'))
+            new Route('/test/<id:\d+>', new Action(TestController::class, 'id')),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test/100')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('100', (string)$response->getBody());
+        self::assertSame('100', (string) $response->getBody());
     }
 
     public function testParametrizedActionRouteNotFound(): void
@@ -135,7 +135,7 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/test/<id:\d+>', new Action(TestController::class, 'id'))
+            new Route('/test/<id:\d+>', new Action(TestController::class, 'id')),
         );
 
         $router->handle(new ServerRequest('GET', new Uri('/test/abc')));
@@ -146,7 +146,7 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/test/<id>', new Action(TestController::class, 'id'))
+            new Route('/test/<id>', new Action(TestController::class, 'id')),
         );
 
         $uri = $router->uri('action');
@@ -163,7 +163,7 @@ class SingleActionTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/test', new Action(TestController::class, 'test'))
+            new Route('/test', new Action(TestController::class, 'test')),
         );
 
         $router->handle(new ServerRequest('GET', new Uri('/other')));

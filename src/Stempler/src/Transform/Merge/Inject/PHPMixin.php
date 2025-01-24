@@ -13,7 +13,7 @@ final class PHPMixin
 
     public function __construct(
         private readonly array $tokens,
-        string $func
+        string $func,
     ) {
         $this->parse($func);
     }

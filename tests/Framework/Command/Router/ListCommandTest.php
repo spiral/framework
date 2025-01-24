@@ -11,7 +11,7 @@ final class ListCommandTest extends ConsoleTestCase
     public function testExtensions(): void
     {
         $this->assertConsoleCommandOutputContainsStrings('route:list', strings: [
-            'AuthController'
+            'AuthController',
         ]);
     }
 }

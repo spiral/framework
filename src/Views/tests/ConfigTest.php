@@ -61,7 +61,7 @@ class ConfigTest extends TestCase
         $container = new Container();
         $container->bindSingleton(
             'localeDependency',
-            $dependency = new ValueDependency('locale', 'en', ['en', 'ru'])
+            $dependency = new ValueDependency('locale', 'en', ['en', 'ru']),
         );
 
         $config = new ViewsConfig([

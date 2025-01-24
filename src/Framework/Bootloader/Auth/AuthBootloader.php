@@ -28,9 +28,8 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface
     private array $actorProvider = [];
 
     public function __construct(
-        private readonly FactoryInterface $factory
-    ) {
-    }
+        private readonly FactoryInterface $factory,
+    ) {}
 
     /**
      * Find actor by first matching actor provider.
@@ -42,8 +41,8 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface
                 throw new AuthException(
                     \sprintf(
                         'Expected `ActorProviderInterface`, got `%s`',
-                        $provider::class
-                    )
+                        $provider::class,
+                    ),
                 );
             }
 

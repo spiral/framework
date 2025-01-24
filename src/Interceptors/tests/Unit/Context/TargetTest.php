@@ -11,6 +11,24 @@ use Spiral\Tests\Interceptors\Unit\Stub\TestService;
 
 class TargetTest extends TestCase
 {
+    public static function providePathChunks(): iterable
+    {
+        yield [['Foo', 'Bar', 'baz'], '.'];
+        yield [['Foo', 'Bar', 'baz', 'fiz.baz'], '/'];
+        yield [['Foo'], ' '];
+        yield [['Foo', '', ''], '-'];
+    }
+
+    public static function providePairs(): iterable
+    {
+        yield 'static method' => [TestService::class, 'toUpperCase', true];
+        yield 'public method' => [TestService::class, 'increment', true];
+        yield 'protected method' => [TestService::class, 'toLowerCase', true];
+        yield 'not existing' => [TestService::class, 'noExistingMethod', false];
+        yield 'parent method' => [TestService::class, 'parentMethod', true];
+        yield 'not a class' => ['Spiral\Tests\Interceptors\Unit\Stub\FooBarBaz', 'noExistingMethod', false];
+    }
+
     public function testCreateFromReflectionFunction(): void
     {
         $reflection = new \ReflectionFunction('print_r');
@@ -18,7 +36,7 @@ class TargetTest extends TestCase
         $target = Target::fromReflectionFunction($reflection, ['print_r-path']);
 
         self::assertSame($reflection, $target->getReflection());
-        self::assertSame('print_r-path', (string)$target);
+        self::assertSame('print_r-path', (string) $target);
         self::assertNull($target->getObject());
     }
 
@@ -27,7 +45,7 @@ class TargetTest extends TestCase
         $target = Target::fromClosure(\print_r(...), ['print_r-path']);
 
         self::assertNotNull($target->getReflection());
-        self::assertSame('print_r-path', (string)$target);
+        self::assertSame('print_r-path', (string) $target);
         self::assertNull($target->getObject());
     }
 
@@ -36,7 +54,7 @@ class TargetTest extends TestCase
         $target = Target::fromClosure($this->{__FUNCTION__}(...), ['print_r-path']);
 
         self::assertNotNull($target->getReflection());
-        self::assertSame('print_r-path', (string)$target);
+        self::assertSame('print_r-path', (string) $target);
         self::assertNull($target->getObject());
     }
 
@@ -47,7 +65,7 @@ class TargetTest extends TestCase
         $target = Target::fromReflectionMethod($reflection, self::class);
 
         self::assertSame($reflection, $target->getReflection());
-        self::assertSame(self::class . '->' . __FUNCTION__, (string)$target);
+        self::assertSame(self::class . '->' . __FUNCTION__, (string) $target);
         self::assertNull($target->getObject());
     }
 
@@ -58,7 +76,7 @@ class TargetTest extends TestCase
         $target = Target::fromReflectionMethod($reflection, $this);
 
         self::assertSame($reflection, $target->getReflection());
-        self::assertSame(self::class . '->' . __FUNCTION__, (string)$target);
+        self::assertSame(self::class . '->' . __FUNCTION__, (string) $target);
         self::assertNotNull($target->getObject());
     }
 
@@ -71,18 +89,10 @@ class TargetTest extends TestCase
         // Immutability
         self::assertNotSame($target, $target2);
         self::assertSame(['bar', 'baz'], $target2->getPath());
-        self::assertSame('bar.baz', (string)$target2);
+        self::assertSame('bar.baz', (string) $target2);
         // First target is not changed
         self::assertSame(['foo', 'bar', 'baz'], $target->getPath());
-        self::assertSame($str, (string)$target);
-    }
-
-    public static function providePathChunks(): iterable
-    {
-        yield [['Foo', 'Bar', 'baz'], '.'];
-        yield [['Foo', 'Bar', 'baz', 'fiz.baz'], '/'];
-        yield [['Foo'], ' '];
-        yield [['Foo', '', ''], '-'];
+        self::assertSame($str, (string) $target);
     }
 
     #[DataProvider('providePathChunks')]
@@ -92,7 +102,7 @@ class TargetTest extends TestCase
         $target = Target::fromPathString($str, $separator);
 
         self::assertSame($chunks, $target->getPath());
-        self::assertSame($str, (string)$target);
+        self::assertSame($str, (string) $target);
     }
 
     #[DataProvider('providePathChunks')]
@@ -102,17 +112,7 @@ class TargetTest extends TestCase
         $target = Target::fromPathArray($chunks, $separator);
 
         self::assertSame($chunks, $target->getPath());
-        self::assertSame($str, (string)$target);
-    }
-
-    public static function providePairs(): iterable
-    {
-        yield 'static method' => [TestService::class, 'toUpperCase', true];
-        yield 'public method' => [TestService::class, 'increment', true];
-        yield 'protected method' => [TestService::class, 'toLowerCase', true];
-        yield 'not existing' => [TestService::class, 'noExistingMethod', false];
-        yield 'parent method' => [TestService::class, 'parentMethod', true];
-        yield 'not a class' => ['Spiral\Tests\Interceptors\Unit\Stub\FooBarBaz', 'noExistingMethod', false];
+        self::assertSame($str, (string) $target);
     }
 
     #[DataProvider('providePairs')]
@@ -148,7 +148,7 @@ class TargetTest extends TestCase
         $target = Target::fromPathString($str);
 
         self::assertSame(['foo', 'bar', 'baz'], $target->getPath());
-        self::assertSame($str, (string)$target);
+        self::assertSame($str, (string) $target);
     }
 
     public function testPrivateConstructor(): void

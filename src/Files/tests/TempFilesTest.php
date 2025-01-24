@@ -9,18 +9,6 @@ use Spiral\Files\FilesInterface;
 
 class TempFilesTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $files = new Files();
-        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
-    }
-
-    protected function tearDown(): void
-    {
-        $files = new Files();
-        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
-    }
-
     public function testTempFilename(): void
     {
         $files = new Files();
@@ -76,5 +64,17 @@ class TempFilesTest extends TestCase
         $files->__destruct();
 
         self::assertFileDoesNotExist($tempFilename);
+    }
+
+    protected function setUp(): void
+    {
+        $files = new Files();
+        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
+    }
+
+    protected function tearDown(): void
+    {
+        $files = new Files();
+        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
     }
 }

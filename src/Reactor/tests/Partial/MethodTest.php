@@ -25,7 +25,7 @@ final class MethodTest extends TestCase
 
         $method->setAttributes([
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
-            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar'])
+            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
         ]);
         self::assertCount(2, $method->getAttributes());
     }
@@ -82,7 +82,7 @@ final class MethodTest extends TestCase
 
         $method->setParameters(new Parameters([
             new Parameter('name'),
-            new Parameter('name2')
+            new Parameter('name2'),
         ]));
         self::assertCount(2, $method->getParameters());
         self::assertTrue($method->getParameters()->has('name'));
@@ -172,7 +172,8 @@ final class MethodTest extends TestCase
 
     public function testStatic(): void
     {
-        $method = new Method('test');;
+        $method = new Method('test');
+        ;
 
         self::assertFalse($method->isStatic());
 
@@ -188,7 +189,8 @@ final class MethodTest extends TestCase
 
     public function testFinal(): void
     {
-        $method = new Method('test');;
+        $method = new Method('test');
+        ;
 
         self::assertFalse($method->isFinal());
 
@@ -204,7 +206,8 @@ final class MethodTest extends TestCase
 
     public function testAbstract(): void
     {
-        $method = new Method('test');;
+        $method = new Method('test');
+        ;
 
         self::assertFalse($method->isAbstract());
 

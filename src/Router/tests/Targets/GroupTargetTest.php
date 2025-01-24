@@ -47,7 +47,7 @@ class GroupTargetTest extends TestCase
     {
         $route = new Route(
             '/<controller>[/<action>]',
-            new Group(['test' => TestController::class])
+            new Group(['test' => TestController::class]),
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Resolver;
 
-use DateTimeImmutable;
 use Spiral\Core\Exception\Resolver\InvalidArgumentException;
 use Spiral\Tests\Core\Stub\EngineInterface;
-use stdClass;
 
 final class ResolvingValidationTest extends BaseTestCase
 {
@@ -27,7 +25,7 @@ final class ResolvingValidationTest extends BaseTestCase
 
         $this->resolveClosure(
             static fn(EngineInterface $engine) => null,
-            [new stdClass()],
+            [new \stdClass()],
         );
     }
 
@@ -35,11 +33,11 @@ final class ResolvingValidationTest extends BaseTestCase
     {
         $result = $this->resolveClosure(
             static fn(EngineInterface $engine) => null,
-            [new stdClass()],
-            validate: false
+            [new \stdClass()],
+            validate: false,
         );
 
-        $this->assertInstanceOf(stdClass::class, $result[0]);
+        $this->assertInstanceOf(\stdClass::class, $result[0]);
     }
 
     public function testVariadicWrongClass(): void
@@ -48,7 +46,7 @@ final class ResolvingValidationTest extends BaseTestCase
 
         $this->resolveClosure(
             static fn(EngineInterface ...$engine) => null,
-            ['engine' => [new stdClass(), new DateTimeImmutable()]],
+            ['engine' => [new \stdClass(), new \DateTimeImmutable()]],
         );
     }
 
@@ -56,34 +54,34 @@ final class ResolvingValidationTest extends BaseTestCase
     {
         $result = $this->resolveClosure(
             static fn(EngineInterface ...$engine) => null,
-            ['engine' => [new stdClass(), new DateTimeImmutable()]],
-            validate: false
+            ['engine' => [new \stdClass(), new \DateTimeImmutable()]],
+            validate: false,
         );
 
-        $this->assertInstanceOf(stdClass::class, $result[0]);
-        $this->assertInstanceOf(DateTimeImmutable::class, $result[1]);
+        $this->assertInstanceOf(\stdClass::class, $result[0]);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $result[1]);
     }
 
     public function testWrongClassFromContainer(): void
     {
-        $this->bindSingleton(stdClass::class, new DateTimeImmutable());
+        $this->bindSingleton(\stdClass::class, new \DateTimeImmutable());
 
         $this->expectException(InvalidArgumentException::class);
 
         $this->resolveClosure(
-            static fn(stdClass $engine) => null,
+            static fn(\stdClass $engine) => null,
         );
     }
 
     public function testWrongClassFromContainerValidationOff(): void
     {
-        $this->bindSingleton(stdClass::class, new DateTimeImmutable());
+        $this->bindSingleton(\stdClass::class, new \DateTimeImmutable());
 
         $result = $this->resolveClosure(
-            static fn(stdClass $engine) => null,
-            validate: false
+            static fn(\stdClass $engine) => null,
+            validate: false,
         );
 
-        $this->assertInstanceOf(DateTimeImmutable::class, $result[0]);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $result[0]);
     }
 }

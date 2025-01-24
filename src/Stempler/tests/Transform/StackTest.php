@@ -44,7 +44,7 @@ class StackTest extends BaseTestCase
     {
         $doc = $this->parse(
             '<stack:collect name="css"/><stack:push name="css">css</stack:push>'
-            . '<stack:push name="css">css2</stack:push>'
+            . '<stack:push name="css">css2</stack:push>',
         );
 
         self::assertInstanceOf(Aggregate::class, $doc->nodes[0]);
@@ -61,7 +61,7 @@ class StackTest extends BaseTestCase
     {
         $doc = $this->parse(
             '<stack:push name="css">css2</stack:push><stack:collect name="css"/>'
-            . '<stack:push name="css">css</stack:push>'
+            . '<stack:push name="css">css</stack:push>',
         );
 
         self::assertInstanceOf(Aggregate::class, $doc->nodes[0]);
@@ -78,7 +78,7 @@ class StackTest extends BaseTestCase
     {
         $doc = $this->parse(
             '<stack:push name="css">css2</stack:push><stack:collect name="css"/>'
-            . '<stack:prepend name="css">css</stack:prepend>'
+            . '<stack:prepend name="css">css</stack:prepend>',
         );
 
         self::assertInstanceOf(Aggregate::class, $doc->nodes[0]);
@@ -98,7 +98,7 @@ class StackTest extends BaseTestCase
         <div><stack:push name="css">css2</stack:push></div>
         <stack:collect name="css"/>
         <div><stack:prepend name="css">css</stack:prepend></div>
-        '
+        ',
         );
 
         self::assertInstanceOf(Aggregate::class, $doc->nodes[1]);
@@ -115,7 +115,7 @@ class StackTest extends BaseTestCase
     {
         self::assertSame('<div></div><stack:push name="css">css2</stack:push>', $this->compile(
             '<div><stack:collect name="css"/></div>
-            <stack:push name="css">css2</stack:push>'
+            <stack:push name="css">css2</stack:push>',
         )->getContent());
     }
 
@@ -125,7 +125,7 @@ class StackTest extends BaseTestCase
             '
             <div><stack:collect name="css" level="1"/></div>
             <stack:push name="css">css2</stack:push>
-            '
+            ',
         )->getContent());
     }
 
@@ -138,7 +138,7 @@ class StackTest extends BaseTestCase
     <stack:collect name="css"/>
     <stack:push name="css">css1</stack:push>
 </div>
-<stack:push name="css">css2</stack:push>'
+<stack:push name="css">css2</stack:push>',
         )->getContent());
     }
 
@@ -152,7 +152,7 @@ class StackTest extends BaseTestCase
     </div>
     <stack:push name="css">css1</stack:push>
 </div>
-<stack:push name="css">css2</stack:push>'
+<stack:push name="css">css2</stack:push>',
         )->getContent());
     }
 
@@ -166,7 +166,7 @@ class StackTest extends BaseTestCase
     </div>
     <stack:push name="css">css1</stack:push>
 </div>
-<stack:push name="css">css2</stack:push>'
+<stack:push name="css">css2</stack:push>',
         )->getContent());
     }
 
@@ -178,7 +178,7 @@ class StackTest extends BaseTestCase
 <stack:push name="element">1</stack:push>
 <stack:push name="element">2</stack:push>
 <stack:push name="element">3</stack:push>
-'
+',
         )->getContent());
     }
 
@@ -190,7 +190,7 @@ class StackTest extends BaseTestCase
 <stack:push name="element" unique-id="1">1</stack:push>
 <stack:push name="element" unique-id="1">2</stack:push>
 <stack:push name="element" unique-id="2">3</stack:push>
-'
+',
         )->getContent());
     }
 
@@ -208,7 +208,7 @@ class StackTest extends BaseTestCase
     protected function getVisitors(): array
     {
         return [
-            new DefineStacks()
+            new DefineStacks(),
         ];
     }
 }

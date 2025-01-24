@@ -11,6 +11,4 @@ use Spiral\Storage\File\WritableInterface;
 interface FileInterface extends
     ReadableInterface,
     WritableInterface,
-    UriResolvableInterface
-{
-}
+    UriResolvableInterface {}

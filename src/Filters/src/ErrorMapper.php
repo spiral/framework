@@ -9,9 +9,8 @@ use Spiral\Filters\Exception\SchemaException;
 final class ErrorMapper
 {
     public function __construct(
-        private readonly array $schema
-    ) {
-    }
+        private readonly array $schema,
+    ) {}
 
     /**
      * @param array<string, string> $errors
@@ -42,7 +41,7 @@ final class ErrorMapper
     {
         if ($path === '.') {
             throw new SchemaException(
-                \sprintf('Unable to mount error `%s` to `%s` (root path is forbidden)', $message, $path)
+                \sprintf('Unable to mount error `%s` to `%s` (root path is forbidden)', $message, $path),
             );
         }
 

@@ -28,7 +28,7 @@ class I18nBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             \Symfony\Contracts\Translation\TranslatorInterface::class,
-            Translator::class
+            Translator::class,
         );
 
         $this->assertContainerBoundAsSingleton(TranslatorInterface::class, Translator::class);
@@ -38,7 +38,7 @@ class I18nBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             CatalogueManagerInterface::class,
-            CatalogueManager::class
+            CatalogueManager::class,
         );
     }
 
@@ -46,7 +46,7 @@ class I18nBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             LoaderInterface::class,
-            CatalogueLoader::class
+            CatalogueLoader::class,
         );
     }
 
@@ -54,7 +54,7 @@ class I18nBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             CacheInterface::class,
-            MemoryCache::class
+            MemoryCache::class,
         );
     }
 
@@ -62,7 +62,7 @@ class I18nBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             IdentityTranslator::class,
-            IdentityTranslator::class
+            IdentityTranslator::class,
         );
     }
 

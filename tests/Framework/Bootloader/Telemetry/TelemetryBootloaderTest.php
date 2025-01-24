@@ -12,7 +12,6 @@ use Spiral\Telemetry\Clock\SystemClock;
 use Spiral\Telemetry\ClockInterface;
 use Spiral\Telemetry\Config\TelemetryConfig;
 use Spiral\Telemetry\ConfigTracerFactoryProvider;
-use Spiral\Telemetry\LogTracer;
 use Spiral\Telemetry\LogTracerFactory;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\NullTracerFactory;
@@ -27,7 +26,7 @@ final class TelemetryBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             TracerFactoryInterface::class,
-            NullTracerFactory::class
+            NullTracerFactory::class,
         );
     }
 
@@ -35,7 +34,7 @@ final class TelemetryBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             TracerFactoryProviderInterface::class,
-            ConfigTracerFactoryProvider::class
+            ConfigTracerFactoryProvider::class,
         );
     }
 
@@ -43,7 +42,7 @@ final class TelemetryBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             ClockInterface::class,
-            SystemClock::class
+            SystemClock::class,
         );
     }
 
@@ -51,7 +50,7 @@ final class TelemetryBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBound(
             TracerInterface::class,
-            NullTracer::class
+            NullTracer::class,
         );
     }
 
@@ -74,17 +73,17 @@ final class TelemetryBootloaderTest extends BaseTestCase
         $bootloader = new TelemetryBootloader($configs);
         $bootloader->registerTracer(
             'foo',
-            $driver = $this->createMock(TracerFactoryInterface::class)
+            $driver = $this->createMock(TracerFactoryInterface::class),
         );
 
         $bootloader->registerTracer(
             'foo1',
-            $driver1 = 'bar'
+            $driver1 = 'bar',
         );
 
         $bootloader->registerTracer(
             'foo2',
-            $driver2 = new Autowire('bar')
+            $driver2 = new Autowire('bar'),
         );
 
         self::assertSame([

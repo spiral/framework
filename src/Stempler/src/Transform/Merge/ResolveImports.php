@@ -26,9 +26,8 @@ final class ResolveImports implements VisitorInterface
 
     public function __construct(
         private readonly Builder $builder,
-        private readonly Merger $merger = new Merger()
-    ) {
-    }
+        private readonly Merger $merger = new Merger(),
+    ) {}
 
     public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
@@ -61,7 +60,7 @@ final class ResolveImports implements VisitorInterface
             throw new ImportException(
                 \sprintf('Unable to resolve import `%s`', $node->name),
                 $node->getContext(),
-                $e
+                $e,
             );
         }
 
@@ -96,7 +95,7 @@ final class ResolveImports implements VisitorInterface
                 return new Element(
                     $options['path'],
                     $options['as'] ?? $options['alias'] ?? null,
-                    $tag->getContext()
+                    $tag->getContext(),
                 );
 
             case 'use:dir':
@@ -106,7 +105,7 @@ final class ResolveImports implements VisitorInterface
                 return new Directory(
                     $options['dir'],
                     $options['ns'],
-                    $tag->getContext()
+                    $tag->getContext(),
                 );
 
             case 'use:bundle':
@@ -115,7 +114,7 @@ final class ResolveImports implements VisitorInterface
                 return new Bundle(
                     $options['path'],
                     $options['ns'] ?? null,
-                    $tag->getContext()
+                    $tag->getContext(),
                 );
 
             case 'use:inline':
@@ -124,7 +123,7 @@ final class ResolveImports implements VisitorInterface
                 return new Inline(
                     $options['name'],
                     $tag->nodes,
-                    $tag->getContext()
+                    $tag->getContext(),
                 );
 
             default:

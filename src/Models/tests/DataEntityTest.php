@@ -85,7 +85,7 @@ class DataEntityTest extends TestCase
         $entity = new SecuredEntity();
         $entity->setValue([
             'name' => 'Antony',
-            'id'   => '900'
+            'id'   => '900',
         ]);
 
         self::assertSame([], $entity->getValue());
@@ -93,11 +93,11 @@ class DataEntityTest extends TestCase
         $entity = new PartiallySecuredEntity();
         $entity->setValue([
             'name' => 'Antony',
-            'id'   => 900
+            'id'   => 900,
         ]);
 
         self::assertSame([
-            'id' => 900
+            'id' => 900,
         ], $entity->getValue());
     }
 
@@ -106,17 +106,17 @@ class DataEntityTest extends TestCase
         $entity = new FilteredEntity();
         $entity->setValue([
             'name' => 'Antony',
-            'id'   => '900'
+            'id'   => '900',
         ]);
 
         self::assertSame([
-            'id' => 900
+            'id' => 900,
         ], $entity->getValue());
 
         $entity->id = [];
 
         self::assertSame([
-            'id' => 0
+            'id' => 0,
         ], $entity->getValue());
     }
 
@@ -125,36 +125,36 @@ class DataEntityTest extends TestCase
         $entity = new NullableEntity();
         $entity->setValue([
             'name' => 'Antony',
-            'id'   => '900'
+            'id'   => '900',
         ]);
 
         self::assertSame([
             'name' => 'Antony',
-            'id'   => 900
+            'id'   => 900,
         ], $entity->getValue());
 
         // no filter
         $entity->name = null;
         self::assertEquals([
             'name' => null,
-            'id'   => 900
+            'id'   => 900,
         ], $entity->getValue());
 
         $entity->id = null;
         self::assertEquals([
             'name' => null,
-            'id'   => null
+            'id'   => null,
         ], $entity->getValue());
 
 
         $entity = new FilteredEntity();
         $entity->setValue([
             'name' => 'Antony',
-            'id'   => null
+            'id'   => null,
         ]);
 
         self::assertSame([
-            'id' => 0
+            'id' => 0,
         ], $entity->getValue());
     }
 
@@ -164,7 +164,7 @@ class DataEntityTest extends TestCase
         self::assertSame(0, $entity->id);
 
         self::assertSame([
-            'id' => 0
+            'id' => 0,
         ], $entity->getFields());
     }
 }

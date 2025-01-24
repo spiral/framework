@@ -29,7 +29,6 @@ final class DebugBootloader extends Bootloader
     protected const SINGLETONS = [
         EnvironmentCollector::class => EnvironmentCollector::class,
     ];
-
     protected const BINDINGS = [
         StateInterface::class => [self::class, 'state'],
     ];
@@ -37,8 +36,7 @@ final class DebugBootloader extends Bootloader
     public function __construct(
         private readonly InvokerInterface $invoker,
         private readonly ConfiguratorInterface $config,
-    ) {
-    }
+    ) {}
 
     /**
      * Boot default state collector.
@@ -89,7 +87,7 @@ final class DebugBootloader extends Bootloader
                 );
             }
 
-            $state->setTag((string)$key, (string)$value);
+            $state->setTag((string) $key, (string) $value);
         }
 
         $errors = [];

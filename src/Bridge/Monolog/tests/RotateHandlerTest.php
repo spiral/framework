@@ -23,21 +23,13 @@ use Spiral\Monolog\Bootloader\MonologBootloader;
 
 class RotateHandlerTest extends BaseTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->container->bind(InvokerStrategyInterface::class, DefaultInvokerStrategy::class);
-        $this->container->bind(InitializerInterface::class, Initializer::class);
-    }
-
     public function testRotateHandler(): void
     {
         $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
         $finalizer->shouldReceive('addFinalizer')->once();
 
         $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
-            new class() implements LoaderInterface {
+            new class implements LoaderInterface {
                 public function has(string $section): bool
                 {
                     return false;
@@ -47,12 +39,12 @@ class RotateHandlerTest extends BaseTestCase
                 {
                     return [];
                 }
-            }
+            },
         ));
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
 
         $autowire = new Container\Autowire('log.rotate', [
-            'filename' => 'monolog.log'
+            'filename' => 'monolog.log',
         ]);
 
         /** @var RotatingFileHandler $handler */
@@ -74,7 +66,7 @@ class RotateHandlerTest extends BaseTestCase
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
 
         $autowire = new Container\Autowire('log.rotate', [
-            'filename' => 'monolog.log'
+            'filename' => 'monolog.log',
         ]);
 
         /** @var RotatingFileHandler $handler */
@@ -86,5 +78,13 @@ class RotateHandlerTest extends BaseTestCase
 
         $formatter = $handler->getFormatter();
         self::assertSame('foo', (new \ReflectionProperty($formatter, 'format'))->getValue($formatter));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container->bind(InvokerStrategyInterface::class, DefaultInvokerStrategy::class);
+        $this->container->bind(InitializerInterface::class, Initializer::class);
     }
 }

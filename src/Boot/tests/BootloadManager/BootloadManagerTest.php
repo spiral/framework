@@ -25,7 +25,7 @@ final class BootloadManagerTest extends TestCase
             $this->container,
             $this->container,
             $this->container,
-            $this->container->get(InitializerInterface::class)
+            $this->container->get(InitializerInterface::class),
         );
 
         $bootloader->bootload($classes = [
@@ -33,13 +33,13 @@ final class BootloadManagerTest extends TestCase
             SampleBootWithMethodBoot::class,
             SampleBoot::class,
         ], [
-            static function(Container $container, SampleBoot $boot): void {
+            static function (Container $container, SampleBoot $boot): void {
                 $container->bind('efg', $boot);
-            }
+            },
         ], [
-            static function(Container $container, SampleBoot $boot): void {
+            static function (Container $container, SampleBoot $boot): void {
                 $container->bind('ghi', $boot);
-            }
+            },
         ]);
 
         self::assertTrue($this->container->has('abc'));

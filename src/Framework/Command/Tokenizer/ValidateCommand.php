@@ -18,7 +18,7 @@ final class ValidateCommand extends Command
     public function perform(
         TokenizerListenerRegistryInterface $registry,
         DirectoriesInterface $dirs,
-        ReaderInterface $reader
+        ReaderInterface $reader,
     ): int {
         $listeners = \method_exists($registry, 'getListenerClasses') ? $registry->getListenerClasses() : [];
 
@@ -32,7 +32,10 @@ final class ValidateCommand extends Command
                 default => '<fg=green> ✓ </>',
             };
             $grid->addRow([
-                $class . "\n" . \sprintf('<fg=gray>%s</>', \str_replace($dirs->get('root'), '', $ref->getFileName())),
+                $class . "\n" . \sprintf(
+                    '<fg=gray>%s</>',
+                    \str_replace([$dirs->get('root'), '\\'], ['', '/'], $ref->getFileName()),
+                ),
                 $suggestion,
             ]);
         }

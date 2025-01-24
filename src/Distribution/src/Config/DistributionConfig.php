@@ -56,7 +56,7 @@ final class DistributionConfig extends InjectableConfig
                 throw new InvalidArgumentException(
                     \vsprintf('Distribution driver config key must be a string, but %s given', [
                         \get_debug_type($child),
-                    ])
+                    ]),
                 );
             }
 
@@ -65,7 +65,7 @@ final class DistributionConfig extends InjectableConfig
                     \vsprintf('Distribution driver config `%s` must be an array, but %s given', [
                         $name,
                         \get_debug_type($child),
-                    ])
+                    ]),
                 );
             }
 
@@ -83,7 +83,7 @@ final class DistributionConfig extends InjectableConfig
                 throw new InvalidArgumentException(
                     \vsprintf('Distribution config default driver must be a string, but %s given', [
                         \get_debug_type($default),
-                    ])
+                    ]),
                 );
             }
 
@@ -167,7 +167,7 @@ final class DistributionConfig extends InjectableConfig
                 $config['key'],
                 $config['secret'],
                 $config['token'] ?? null,
-                $config['expires'] ?? null
+                $config['expires'] ?? null,
             ),
         ];
 
@@ -200,7 +200,7 @@ final class DistributionConfig extends InjectableConfig
             $config['key'],
             $config['private'],
             $config['domain'],
-            $config['prefix'] ?? null
+            $config['prefix'] ?? null,
         );
     }
 
@@ -225,8 +225,8 @@ final class DistributionConfig extends InjectableConfig
             \class_exists(GuzzleUri::class) => new GuzzleUri($uri),
             default => throw new InvalidArgumentException(
                 \sprintf('Can not resolve available PSR-7 UriFactory implementation; 
-                    Please define `factory` config section in `%s` distribution driver config', $name)
-            )
+                    Please define `factory` config section in `%s` distribution driver config', $name),
+            ),
         };
     }
 

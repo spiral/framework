@@ -19,12 +19,12 @@ final class Builder
     public const SCHEMA_OPTIONAL = 'optional';
     public const SCHEMA_ITERATE_SOURCE = 'iterate_source';
     public const SCHEMA_ITERATE_ORIGIN = 'iterate_origin';
+
     // Used to define multiple nested models.
     protected const NESTED = 0;
     protected const ORIGIN = 1;
     protected const ITERATE = 2;
     protected const OPTIONAL = 'optional';
-
 
     /**
      * Generate entity schema based on schema definitions.
@@ -76,7 +76,7 @@ final class Builder
 
             if (!\is_array($definition) || $definition === []) {
                 throw new SchemaException(
-                    \sprintf('Invalid schema definition at `%s`->`%s`', $name, $field)
+                    \sprintf('Invalid schema definition at `%s`->`%s`', $name, $field),
                 );
             }
 
@@ -85,7 +85,7 @@ final class Builder
                 $origin = $definition[self::ORIGIN];
 
                 // [class, 'data:something.*'] vs [class, 'data:something']
-                $iterate = \str_contains((string)$origin, '.*') || !empty($definition[self::ITERATE]);
+                $iterate = \str_contains((string) $origin, '.*') || !empty($definition[self::ITERATE]);
                 $origin = \rtrim((string) $origin, '.*');
             } else {
                 $origin = $field;

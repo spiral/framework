@@ -20,7 +20,7 @@ class MultipleActionsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/<action>/<id>', new Action(TestController::class, ['test', 'id']))
+            new Route('/<action>/<id>', new Action(TestController::class, ['test', 'id'])),
         );
 
         $router->handle(new ServerRequest('GET', ''));
@@ -31,16 +31,16 @@ class MultipleActionsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id']))
+            new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id'])),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/id/900')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('900', (string)$response->getBody());
+        self::assertSame('900', (string) $response->getBody());
     }
 
     public function testUriGeneration(): void
@@ -48,7 +48,7 @@ class MultipleActionsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id']))
+            new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id'])),
         );
 
         $uri = $router->uri('action/test');

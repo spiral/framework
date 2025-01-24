@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Controller;
 
-use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\ScopeException;

@@ -30,7 +30,7 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
     public function __construct(
         private readonly MonologConfig $config,
         ListenerRegistryInterface $listenerRegistry,
-        private readonly FactoryInterface $factory
+        private readonly FactoryInterface $factory,
     ) {
         $this->eventHandler = new EventHandler($listenerRegistry, $config->getEventLevel());
     }
@@ -48,14 +48,14 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
             return $this->default = new Logger(
                 $default,
                 $this->getHandlers($default),
-                $this->getProcessors($default)
+                $this->getProcessors($default),
             );
         }
 
         return new Logger(
             $channel,
             $this->getHandlers($channel),
-            $this->getProcessors($channel)
+            $this->getProcessors($channel),
         );
     }
 
@@ -76,7 +76,6 @@ final class LogFactory implements LogsInterface, InjectorInterface, ResettableIn
 
     /**
      * Get list of channel specific handlers.
-     *
      *
      * @throws ConfigException
      */

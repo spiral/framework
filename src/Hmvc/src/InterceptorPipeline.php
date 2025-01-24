@@ -30,9 +30,8 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
     private ?CallContextInterface $context = null;
 
     public function __construct(
-        private readonly ?EventDispatcherInterface $dispatcher = null
-    ) {
-    }
+        private readonly ?EventDispatcherInterface $dispatcher = null,
+    ) {}
 
     public function addInterceptor(CoreInterceptorInterface|InterceptorInterface $interceptor): void
     {
@@ -79,7 +78,7 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
         return $this->handle(
             $this->context->withTarget(
                 Target::fromPathArray([$controller, $action]),
-            )->withArguments($parameters)
+            )->withArguments($parameters),
         );
     }
 
@@ -104,7 +103,7 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
                     action: $path[1] ?? '',
                     parameters: $context->getArguments(),
                     interceptor: $interceptor,
-                )
+                ),
             );
 
             return $interceptor instanceof CoreInterceptorInterface

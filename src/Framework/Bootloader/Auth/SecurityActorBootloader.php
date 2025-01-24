@@ -19,7 +19,6 @@ final class SecurityActorBootloader extends Bootloader
         AuthBootloader::class,
         GuardBootloader::class,
     ];
-
     protected const BINDINGS = [
         ActorInterface::class => [self::class, 'actor'],
     ];

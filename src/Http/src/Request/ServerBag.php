@@ -22,7 +22,7 @@ final class ServerBag extends InputBag
 
     public function fetch(array $keys, bool $fill = false, mixed $filler = null): array
     {
-        $keys = \array_map(fn (string $name): string => $this->normalize($name), $keys);
+        $keys = \array_map(fn(string $name): string => $this->normalize($name), $keys);
 
         return parent::fetch($keys, $fill, $filler);
     }

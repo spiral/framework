@@ -29,8 +29,10 @@ final class LazyPipeline implements RequestHandlerInterface, MiddlewareInterface
      * @var list<MiddlewareInterface|Autowire|string>
      */
     protected array $middleware = [];
+
     private ?RequestHandlerInterface $handler = null;
     private int $position = 0;
+
     /**
      * Trace span for the current pipeline run.
      */
@@ -39,8 +41,7 @@ final class LazyPipeline implements RequestHandlerInterface, MiddlewareInterface
     public function __construct(
         #[Proxy] private readonly ContainerInterface $container,
         private readonly ?EventDispatcherInterface $dispatcher = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Add middleware to the pipeline.

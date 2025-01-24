@@ -8,7 +8,6 @@ use Spiral\Boot;
 use Spiral\Core\Container;
 use Spiral\Scaffolder;
 use Spiral\Validation\Bootloader\ValidationBootloader;
-use Throwable;
 
 class TestApp extends Boot\AbstractKernel
 {
@@ -19,7 +18,7 @@ class TestApp extends Boot\AbstractKernel
 
     /**
      * @return mixed|object|null
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function get(string $target)
     {
@@ -32,7 +31,7 @@ class TestApp extends Boot\AbstractKernel
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function directory(string $directory): string
     {
@@ -42,12 +41,7 @@ class TestApp extends Boot\AbstractKernel
         return $directories->get($directory);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function bootstrap(): void
-    {
-    }
+    protected function bootstrap(): void {}
 
     /**
      * Normalizes directory list and adds all required aliases.

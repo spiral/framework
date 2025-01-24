@@ -65,7 +65,7 @@ final class ViewLoader implements LoaderInterface
             return false;
         }
 
-        foreach ((array)$this->namespaces[$parsed->getNamespace()] as $directory) {
+        foreach ((array) $this->namespaces[$parsed->getNamespace()] as $directory) {
             $directory = $this->files->normalizePath($directory, true);
             if ($this->files->exists(\sprintf('%s%s', $directory, $parsed->getBasename()))) {
                 $filename = \sprintf('%s%s', $directory, $parsed->getBasename());
@@ -88,7 +88,7 @@ final class ViewLoader implements LoaderInterface
         return new ViewSource(
             $filename,
             $parsed->getNamespace(),
-            $parsed->getName()
+            $parsed->getName(),
         );
     }
 
@@ -104,7 +104,7 @@ final class ViewLoader implements LoaderInterface
                 continue;
             }
 
-            foreach ((array)$directories as $directory) {
+            foreach ((array) $directories as $directory) {
                 $files = $this->files->getFiles($directory);
 
                 foreach ($files as $filename) {

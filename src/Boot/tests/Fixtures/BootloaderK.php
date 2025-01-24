@@ -7,6 +7,4 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Tests\Boot\Fixtures\Attribute\TargetWorker;
 
 #[TargetWorker('http')]
-class BootloaderK extends AbstractBootloader
-{
-}
+class BootloaderK extends AbstractBootloader {}

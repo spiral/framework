@@ -20,7 +20,7 @@ final class CoreTest extends BaseTestCase
         $filter = m::mock(FilterInterface::class);
 
         self::assertSame($filter, $core->callAction('foo', 'bar', [
-            'filterBag' => new FilterBag($filter, m::mock(AbstractEntity::class), [], [])
+            'filterBag' => new FilterBag($filter, m::mock(AbstractEntity::class), [], []),
         ]));
     }
 }

@@ -7,6 +7,4 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\Attribute\BootloadConfig;
 
 #[BootloadConfig(args: ['a' => 'b', 'c' => 'd'])]
-class BootloaderG extends AbstractBootloader
-{
-}
+class BootloaderG extends AbstractBootloader {}

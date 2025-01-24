@@ -17,18 +17,13 @@ final class ArgumentsTest extends TestCase
 {
     private Parser $parser;
 
-    protected function setUp(): void
-    {
-        $this->parser = new Parser((new Factory())->create());
-    }
-
     public function testRequired(): void
     {
         $result = $this->parser->parse(new \ReflectionClass(
             new #[AsCommand(name: 'foo')] class {
                 #[Argument]
                 private int $arg;
-            }
+            },
         ));
 
         $this->assertTrue($result->arguments[0]->isRequired());
@@ -44,7 +39,7 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument]
                 private int $arg = 1;
-            }
+            },
         ));
 
         $this->assertFalse($result->arguments[0]->isRequired());
@@ -60,7 +55,7 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument]
                 private ?int $arg;
-            }
+            },
         ));
 
         $this->assertFalse($result->arguments[0]->isRequired());
@@ -76,7 +71,7 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument(name: 'customName')]
                 private int $arg;
-            }
+            },
         ));
 
         $this->assertTrue($result->arguments[0]->isRequired());
@@ -92,7 +87,7 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument(description: 'Some description')]
                 private int $arg;
-            }
+            },
         ));
 
         $this->assertTrue($result->arguments[0]->isRequired());
@@ -108,13 +103,13 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument(suggestedValues: [1, 0])]
                 private int $arg;
-            }
+            },
         ));
 
         $suggestions = new CompletionSuggestions();
         $result->arguments[0]->complete(
             new CompletionInput(),
-            $suggestions
+            $suggestions,
         );
 
         $this->assertTrue($result->arguments[0]->isRequired());
@@ -132,7 +127,7 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument]
                 private array $arg;
-            }
+            },
         ));
 
         $this->assertTrue($result->arguments[0]->isRequired());
@@ -148,7 +143,7 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument]
                 private ?array $arg;
-            }
+            },
         ));
 
         $this->assertFalse($result->arguments[0]->isRequired());
@@ -167,7 +162,7 @@ final class ArgumentsTest extends TestCase
 
                 #[Argument]
                 private int $otherArg;
-            }
+            },
         ));
 
         $this->assertTrue($result->arguments[1]->isArray());
@@ -183,7 +178,7 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument]
                 private int|\stdClass $arg;
-            }
+            },
         ));
 
         $this->assertTrue($result->arguments[0]->isRequired());
@@ -200,7 +195,7 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument]
                 private \stdClass $arg;
-            }
+            },
         ));
     }
 
@@ -211,7 +206,7 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument]
                 private \stdClass&\Traversable $arg;
-            }
+            },
         ));
     }
 
@@ -225,7 +220,7 @@ final class ArgumentsTest extends TestCase
 
                 #[Argument]
                 private array $otherArg;
-            }
+            },
         ));
     }
 
@@ -236,7 +231,12 @@ final class ArgumentsTest extends TestCase
             new #[AsCommand(name: 'foo')] class {
                 #[Argument]
                 private object $arg;
-            }
+            },
         ));
+    }
+
+    protected function setUp(): void
+    {
+        $this->parser = new Parser((new Factory())->create());
     }
 }

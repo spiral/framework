@@ -11,8 +11,7 @@ class FileReporter implements ExceptionReporterInterface
 {
     public function __construct(
         private FileSnapshot $fileSnapshot,
-    ) {
-    }
+    ) {}
 
     public function report(\Throwable $exception): void
     {

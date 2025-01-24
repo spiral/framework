@@ -36,7 +36,7 @@ trait WritableTrait
 
     public function setVisibility(
         #[ExpectedValues(valuesFromClass: Visibility::class)]
-        string $visibility
+        string $visibility,
     ): FileInterface {
         return $this->getBucket()->setVisibility($this->getPathname(), $visibility);
     }

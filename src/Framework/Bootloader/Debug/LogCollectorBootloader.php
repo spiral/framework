@@ -23,7 +23,7 @@ final class LogCollectorBootloader extends Bootloader
         LogCollector $logCollector,
         DebugBootloader $debug,
         ListenerRegistryInterface $listenerRegistry,
-        FinalizerInterface $finalizer
+        FinalizerInterface $finalizer,
     ): void {
         $listenerRegistry->addListener($logCollector);
 

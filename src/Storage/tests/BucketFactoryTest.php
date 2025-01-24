@@ -30,7 +30,7 @@ final class BucketFactoryTest extends TestCase
         $bucket = $factory->createFromAdapter(
             $this->createMock(FilesystemAdapter::class),
             $name = 'foo',
-            $resolver = $this->createMock(UriResolverInterface::class)
+            $resolver = $this->createMock(UriResolverInterface::class),
         );
 
         self::assertSame($name, $bucket->getName());

@@ -7,6 +7,4 @@ namespace Spiral\Cache\Event;
 /**
  * Triggered before cache item is retrieved.
  */
-final class CacheRetrieving extends CacheEvent
-{
-}
+final class CacheRetrieving extends CacheEvent {}

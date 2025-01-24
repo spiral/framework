@@ -13,14 +13,7 @@ use Nyholm\Psr7\ServerRequest;
 class HeadersTest extends TestCase
 {
     private Container $container;
-
     private InputManager $input;
-
-    protected function setUp(): void
-    {
-        $this->container = new Container();
-        $this->input = new InputManager($this->container);
-    }
 
     public function testShortcut(): void
     {
@@ -52,7 +45,7 @@ class HeadersTest extends TestCase
         $this->container->bind(ServerRequestInterface::class, $request);
 
         self::assertSame([
-            'Path' => 'value,value2'
+            'Path' => 'value,value2',
         ], $this->input->headers->fetch(['path']));
     }
 
@@ -65,9 +58,15 @@ class HeadersTest extends TestCase
         $this->container->bind(ServerRequestInterface::class, $request);
 
         self::assertSame([
-            'Path' => ['value', 'value2']
+            'Path' => ['value', 'value2'],
         ], $this->input->headers->fetch(['path'], false, true, null));
 
         self::assertSame(['value', 'value2'], $this->input->headers->get('path', null, false));
+    }
+
+    protected function setUp(): void
+    {
+        $this->container = new Container();
+        $this->input = new InputManager($this->container);
     }
 }

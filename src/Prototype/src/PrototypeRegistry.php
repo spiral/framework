@@ -18,9 +18,8 @@ final class PrototypeRegistry
     private array $dependencies = [];
 
     public function __construct(
-        private readonly ContainerInterface $container
-    ) {
-    }
+        private readonly ContainerInterface $container,
+    ) {}
 
     /**
      * Assign class to prototype property.

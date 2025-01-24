@@ -23,7 +23,6 @@ class Pipeline
 {
     public function __construct(
         public readonly array $pipeline = [],
-        public readonly bool $skipNext = false
-    ) {
-    }
+        public readonly bool $skipNext = false,
+    ) {}
 }

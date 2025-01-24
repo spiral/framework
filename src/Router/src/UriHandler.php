@@ -35,22 +35,22 @@ final class UriHandler
     ];
 
     private ?string $pattern = null;
-
     private readonly RoutePatternRegistryInterface $patternRegistry;
     private array $constrains = [];
     private array $defaults = [];
     private bool $matchHost = false;
+
     /** @readonly */
     private string $prefix = '';
+
     /** @readonly */
     private string $basePath = '/';
+
     private ?string $compiled = null;
     private ?string $template = null;
-
     private array $options = [];
     private array $requiredOptions = [];
     private bool $strict = false;
-
     private \Closure $pathSegmentEncoder;
 
     /**
@@ -458,7 +458,7 @@ final class UriHandler
                 '|',
                 \array_map(fn(string $segment): string => $this->filterSegment($segment), $this->constrains[$name]),
             ),
-            default => $this->filterSegment((string) $this->constrains[$name])
+            default => $this->filterSegment((string) $this->constrains[$name]),
         };
     }
 

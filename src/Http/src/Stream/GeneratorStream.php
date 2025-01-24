@@ -4,34 +4,19 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Stream;
 
-use Generator;
 use Psr\Http\Message\StreamInterface;
-use RuntimeException;
 
 final class GeneratorStream implements StreamInterface
 {
-    private ?Generator $stream;
-
+    private ?\Generator $stream;
     private bool $readable = true;
-
     private ?int $size = null;
-
     private int $caret = 0;
-
     private bool $started = false;
 
-    public function __construct(Generator $body)
+    public function __construct(\Generator $body)
     {
         $this->stream = $body;
-    }
-
-    public function __toString(): string
-    {
-        try {
-            return $this->getContents();
-        } catch (\Exception) {
-            return '';
-        }
     }
 
     public function close(): void
@@ -76,7 +61,7 @@ final class GeneratorStream implements StreamInterface
 
     public function seek($offset, $whence = \SEEK_SET): void
     {
-        throw new RuntimeException('Stream is not seekable.');
+        throw new \RuntimeException('Stream is not seekable.');
     }
 
     public function rewind(): void
@@ -95,7 +80,7 @@ final class GeneratorStream implements StreamInterface
 
     public function write($string): int
     {
-        throw new RuntimeException('Cannot write to a non-writable stream.');
+        throw new \RuntimeException('Cannot write to a non-writable stream.');
     }
 
     public function isReadable(): bool
@@ -106,17 +91,17 @@ final class GeneratorStream implements StreamInterface
     public function read($length): string
     {
         if (!$this->readable) {
-            throw new RuntimeException('Cannot read from non-readable stream.');
+            throw new \RuntimeException('Cannot read from non-readable stream.');
         }
         if ($this->stream === null) {
-            throw new RuntimeException('Cannot read from detached stream.');
+            throw new \RuntimeException('Cannot read from detached stream.');
         }
         do {
             if ($this->started) {
-                $read = (string)$this->stream->send(null);
+                $read = (string) $this->stream->send(null);
             } else {
                 $this->started = true;
-                $read = (string)$this->stream->current();
+                $read = (string) $this->stream->current();
             }
             if (!$this->stream->valid()) {
                 $read .= $this->stream->getReturn();
@@ -133,7 +118,7 @@ final class GeneratorStream implements StreamInterface
     public function getContents(): string
     {
         if ($this->stream === null) {
-            throw new RuntimeException('Unable to read stream contents.');
+            throw new \RuntimeException('Unable to read stream contents.');
         }
         $content = '';
         do {
@@ -153,10 +138,19 @@ final class GeneratorStream implements StreamInterface
             'eof' => $this->eof(),
         ];
 
-        if (null === $key) {
+        if ($key === null) {
             return $meta;
         }
 
         return $meta[$key] ?? null;
+    }
+
+    public function __toString(): string
+    {
+        try {
+            return $this->getContents();
+        } catch (\Exception) {
+            return '';
+        }
     }
 }

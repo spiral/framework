@@ -10,18 +10,6 @@ use Spiral\Files\FilesInterface;
 
 class InformationTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $files = new Files();
-        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
-    }
-
-    protected function tearDown(): void
-    {
-        $files = new Files();
-        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
-    }
-
     public function testTime(): void
     {
         $files = new Files();
@@ -193,5 +181,17 @@ class InformationTest extends TestCase
 
         self::assertTrue($files->isDirectory($directory));
         self::assertSame(is_dir($directory), $files->isDirectory($directory));
+    }
+
+    protected function setUp(): void
+    {
+        $files = new Files();
+        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
+    }
+
+    protected function tearDown(): void
+    {
+        $files = new Files();
+        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
     }
 }

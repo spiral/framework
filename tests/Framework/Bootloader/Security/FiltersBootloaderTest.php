@@ -58,7 +58,7 @@ final class FiltersBootloaderTest extends BaseTestCase
         $bootloader->addInterceptor('bar');
 
         self::assertSame([
-            'foo', 'bar'
+            'foo', 'bar',
         ], $configs->getConfig(FiltersConfig::CONFIG)['interceptors']);
     }
 }

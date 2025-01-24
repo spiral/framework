@@ -18,7 +18,7 @@ final class Memory implements MemoryInterface
 
     public function __construct(
         string $directory,
-        private readonly FilesInterface $files
+        private readonly FilesInterface $files,
     ) {
         $this->directory = \rtrim($directory, '/');
     }
@@ -64,7 +64,7 @@ final class Memory implements MemoryInterface
             $this->getFilename($section),
             '<?php return ' . \var_export($data, true) . ';',
             FilesInterface::RUNTIME,
-            true
+            true,
         );
     }
 
@@ -80,7 +80,7 @@ final class Memory implements MemoryInterface
             '%s/%s.%s',
             $this->directory,
             \strtolower(\str_replace(['/', '\\'], '-', $name)),
-            self::EXTENSION
+            self::EXTENSION,
         );
     }
 }

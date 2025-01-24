@@ -10,6 +10,6 @@ class BadAccessedEntity extends DataEntity
 {
     protected const FILLABLE  = '*';
     protected const ACCESSORS = [
-        'name' => NameAccessorX::class
+        'name' => NameAccessorX::class,
     ];
 }

@@ -30,7 +30,7 @@ final class JsonSerializer implements SerializerInterface
     {
         if ($type !== null) {
             throw new InvalidArgumentException(
-                \sprintf('Serializer `%s` does not support data hydration to an object.', self::class)
+                \sprintf('Serializer `%s` does not support data hydration to an object.', self::class),
             );
         }
 

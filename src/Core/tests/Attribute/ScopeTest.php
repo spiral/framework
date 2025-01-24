@@ -12,18 +12,18 @@ use Spiral\Tests\Core\Fixtures\ScopeEnum;
 
 final class ScopeTest extends TestCase
 {
+    public static function scopeNameDataProvider(): \Traversable
+    {
+        yield ['foo', 'foo'];
+        yield [Spiral::HttpRequest, 'http-request'];
+        yield [ScopeEnum::A, 'a'];
+    }
+
     #[DataProvider('scopeNameDataProvider')]
     public function testScope(string|\BackedEnum $name, string $expected): void
     {
         $scope = new Scope($name);
 
         self::assertSame($expected, $scope->name);
-    }
-
-    public static function scopeNameDataProvider(): \Traversable
-    {
-        yield ['foo', 'foo'];
-        yield [Spiral::HttpRequest, 'http-request'];
-        yield [ScopeEnum::A, 'a'];
     }
 }

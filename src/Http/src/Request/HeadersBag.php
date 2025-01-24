@@ -34,7 +34,7 @@ final class HeadersBag extends InputBag
      */
     public function fetch(array $keys, bool $fill = false, mixed $filler = null, ?string $implode = ','): array
     {
-        $keys = \array_map(fn (string $header): string => $this->normalize($header), $keys);
+        $keys = \array_map(fn(string $header): string => $this->normalize($header), $keys);
 
         $values = parent::fetch($keys, $fill, $filler);
 
@@ -56,7 +56,7 @@ final class HeadersBag extends InputBag
         return \str_replace(
             ' ',
             '-',
-            \ucwords(\str_replace('-', ' ', $header))
+            \ucwords(\str_replace('-', ' ', $header)),
         );
     }
 }

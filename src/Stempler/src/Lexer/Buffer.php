@@ -21,8 +21,7 @@ final class Buffer implements \IteratorAggregate
         /** @internal */
         private readonly \Generator $generator,
         private int $offset = 0,
-    ) {
-    }
+    ) {}
 
     /**
      * Delegate generation to the nested generator and collect

@@ -17,7 +17,7 @@ final class CompileCommandTest extends ConsoleTestCase
     public function testCompile(): void
     {
         $this->assertConsoleCommandOutputContainsStrings('views:compile', strings: [
-            'default:custom/file', 'custom:error', 'Unable to compile custom:error'
+            'default:custom/file', 'custom:error', 'Unable to compile custom:error',
         ]);
     }
 
@@ -28,7 +28,7 @@ final class CompileCommandTest extends ConsoleTestCase
 
         $this->assertConsoleCommandOutputContainsStrings(
             'views:reset',
-            strings: 'test.php'
+            strings: 'test.php',
         );
     }
 
@@ -36,7 +36,7 @@ final class CompileCommandTest extends ConsoleTestCase
     {
         $this->assertConsoleCommandOutputContainsStrings(
             'views:reset',
-            strings: 'no cache'
+            strings: 'no cache',
         );
     }
 
@@ -46,7 +46,7 @@ final class CompileCommandTest extends ConsoleTestCase
 
         $this->assertConsoleCommandOutputContainsStrings(
             'cache:clean',
-            strings: 'i18n.en'
+            strings: 'i18n.en',
         );
     }
 }

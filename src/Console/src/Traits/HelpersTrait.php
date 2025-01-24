@@ -94,7 +94,7 @@ trait HelpersTrait
         array $choices,
         mixed $default = null,
         ?int $attempts = null,
-        bool $multiselect = false
+        bool $multiselect = false,
     ): mixed {
         $question = new ChoiceQuestion($question, $choices, $default);
 
@@ -185,7 +185,7 @@ trait HelpersTrait
         $styled = $style ? "<$style>$string</$style>" : $string;
 
         $this->writeln(
-            messages: $styled
+            messages: $styled,
         );
     }
 
@@ -204,7 +204,7 @@ trait HelpersTrait
     {
         $this->write(
             messages: \sprintf($format, ...$args),
-            newline: false
+            newline: false,
         );
     }
 

@@ -70,6 +70,6 @@ interface PermissionsInterface
     public function associate(
         string $role,
         string $permission,
-        string $rule = 'Spiral\Security\Rules\AllowRule'
+        string $rule = 'Spiral\Security\Rules\AllowRule',
     );
 }

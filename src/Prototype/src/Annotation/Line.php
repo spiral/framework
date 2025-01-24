@@ -13,9 +13,8 @@ final class Line
 {
     public function __construct(
         public string $value,
-        public ?string $type = null
-    ) {
-    }
+        public ?string $type = null,
+    ) {}
 
     public function is(array $type): bool
     {

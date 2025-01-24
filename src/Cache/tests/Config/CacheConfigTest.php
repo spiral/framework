@@ -12,35 +12,6 @@ final class CacheConfigTest extends TestCase
 {
     private CacheConfig $config;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->config = new CacheConfig([
-            'default' => 'array',
-
-            'aliases' => [
-                'users-data' => 'local',
-                'foo-data' => 'foo',
-            ],
-
-            'typeAliases' => [
-                'array' => 'array-storage',
-            ],
-
-            'storages' => [
-                'local' => [
-                    'type' => 'array',
-                ],
-                'filesystem' => [
-                    'type' => 'file-storage',
-                ],
-                'memory' => [],
-            ],
-        ]);
-    }
-
-
     public function testGetdDefaultDriver(): void
     {
         self::assertSame('array', $this->config->getDefaultStorage());
@@ -74,5 +45,33 @@ final class CacheConfigTest extends TestCase
         $this->expectExceptionMessage('Storage type for `memory` is not defined.');
 
         $this->config->getStorageConfig('memory');
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->config = new CacheConfig([
+            'default' => 'array',
+
+            'aliases' => [
+                'users-data' => 'local',
+                'foo-data' => 'foo',
+            ],
+
+            'typeAliases' => [
+                'array' => 'array-storage',
+            ],
+
+            'storages' => [
+                'local' => [
+                    'type' => 'array',
+                ],
+                'filesystem' => [
+                    'type' => 'file-storage',
+                ],
+                'memory' => [],
+            ],
+        ]);
     }
 }

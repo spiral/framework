@@ -45,7 +45,6 @@ final class Route
         public readonly array $defaults = [],
         public readonly ?string $group = null,
         public readonly array $middleware = [],
-        public readonly int $priority = 0
-    ) {
-    }
+        public readonly int $priority = 0,
+    ) {}
 }

@@ -12,7 +12,7 @@ return [
     'mapParam'      => ['k1' => 'v1', 'k2' => 'v2'],
     'mixedArrParam' => ['k1' => 'v1', 'k2' => 2],
     'params'        => [
-        'default' => 'runtime'
+        'default' => 'runtime',
     ],
     'parameters'    => [
         'default'   => [1, 2, 3],
@@ -31,5 +31,5 @@ return [
         'secondary' => [7, 8, 9],
     ],
     'value'         => 'conflict value',
-    'valueBy'       => 'final conflict value'
+    'valueBy'       => 'final conflict value',
 ];

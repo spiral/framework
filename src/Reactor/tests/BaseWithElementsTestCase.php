@@ -160,7 +160,7 @@ abstract class BaseWithElementsTestCase extends TestCase
             'e' => $e,
             'f' => $f,
             'g' => $g,
-            'h' => $h
+            'h' => $h,
         ])];
     }
 

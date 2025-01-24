@@ -20,7 +20,7 @@ final class InterceptableCore implements CoreInterface, HandlerInterface
 
     public function __construct(
         private readonly CoreInterface $core,
-        ?EventDispatcherInterface $dispatcher = null
+        ?EventDispatcherInterface $dispatcher = null,
     ) {
         $this->pipeline = new InterceptorPipeline($dispatcher);
     }

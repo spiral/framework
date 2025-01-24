@@ -17,6 +17,7 @@ final class AttributeProcessor extends AbstractProcessor implements Tokenization
 {
     /** @var array<class-string, Listener[]> */
     private array $attributes = [];
+
     private bool $collected = false;
 
     public function __construct(
@@ -45,12 +46,12 @@ final class AttributeProcessor extends AbstractProcessor implements Tokenization
             foreach ($attributes as $attribute) {
                 $method = $this->getMethod($listener, $attribute->method ?? '__invoke');
 
-                $events = (array)($attribute->event ?? $this->getEventFromTypeDeclaration($method));
+                $events = (array) ($attribute->event ?? $this->getEventFromTypeDeclaration($method));
                 foreach ($events as $event) {
                     $this->registry->addListener(
                         event: $event,
                         listener: $this->factory->create($listener, $method->getName()),
-                        priority: $attribute->priority
+                        priority: $attribute->priority,
                     );
                 }
             }

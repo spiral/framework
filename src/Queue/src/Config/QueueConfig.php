@@ -51,7 +51,7 @@ final class QueueConfig extends InjectableConfig
      */
     public function getConsumeInterceptors(): array
     {
-        return (array)($this->config['interceptors']['consume'] ?? []);
+        return (array) ($this->config['interceptors']['consume'] ?? []);
     }
 
     /**
@@ -61,7 +61,7 @@ final class QueueConfig extends InjectableConfig
      */
     public function getPushInterceptors(): array
     {
-        return (array)($this->config['interceptors']['push'] ?? []);
+        return (array) ($this->config['interceptors']['push'] ?? []);
     }
 
     /**
@@ -82,7 +82,7 @@ final class QueueConfig extends InjectableConfig
      */
     public function getDriverAliases(): array
     {
-        return (array)($this->config['driverAliases'] ?? []);
+        return (array) ($this->config['driverAliases'] ?? []);
     }
 
     /**
@@ -101,7 +101,7 @@ final class QueueConfig extends InjectableConfig
         if (isset($driverAliases[$driver])) {
             if (!\is_string($this->config['driverAliases'][$driver])) {
                 throw new InvalidArgumentException(
-                    \sprintf('Driver alias for `%s` value must be a string', $driver)
+                    \sprintf('Driver alias for `%s` value must be a string', $driver),
                 );
             }
 
@@ -140,7 +140,7 @@ final class QueueConfig extends InjectableConfig
 
         if (!\is_string($driver)) {
             throw new InvalidArgumentException(
-                \sprintf('Driver for queue connection `%s` value must be a string', $name)
+                \sprintf('Driver for queue connection `%s` value must be a string', $name),
             );
         }
 
@@ -150,7 +150,7 @@ final class QueueConfig extends InjectableConfig
 
         if (!\is_string($connection['driver'])) {
             throw new InvalidArgumentException(
-                \sprintf('Driver alias for queue connection `%s` value must be a string', $name)
+                \sprintf('Driver alias for queue connection `%s` value must be a string', $name),
             );
         }
 
@@ -162,12 +162,12 @@ final class QueueConfig extends InjectableConfig
      */
     public function getRegistryHandlers(): array
     {
-        return (array)($this->config['registry']['handlers'] ?? []);
+        return (array) ($this->config['registry']['handlers'] ?? []);
     }
 
     public function getRegistrySerializers(): array
     {
-        return (array)($this->config['registry']['serializers'] ?? []);
+        return (array) ($this->config['registry']['serializers'] ?? []);
     }
 
     /**

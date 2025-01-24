@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Core\Scope;
 
 use Psr\Container\ContainerInterface;
-use ReflectionParameter;
 use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Config\Proxy as ProxyConfig;
 use Spiral\Core\Container;
@@ -23,7 +22,6 @@ use Spiral\Tests\Core\Scope\Stub\ScopedProxyLoggerCarrier;
 use Spiral\Tests\Core\Scope\Stub\ScopedProxyStdClass;
 use Spiral\Tests\Core\Scope\Stub\User;
 use Spiral\Tests\Core\Scope\Stub\UserInterface;
-use WeakReference;
 
 final class ProxyTest extends BaseTestCase
 {
@@ -148,7 +146,7 @@ final class ProxyTest extends BaseTestCase
 
         $root->runScope(new Scope(), static function (Container $c1): void {
             $c1->runScope(new Scope(name: 'foo'), static function (Container $c, ContextInterface $param): void {
-                self::assertInstanceOf(ReflectionParameter::class, $param->value);
+                self::assertInstanceOf(\ReflectionParameter::class, $param->value);
                 self::assertSame('param', $param->value->getName());
 
                 $get = $c->get(ContextInterface::class);
@@ -161,7 +159,7 @@ final class ProxyTest extends BaseTestCase
                 $proxy = $c->get(ScopedProxyStdClass::class);
                 self::assertInstanceOf(ContextInterface::class, $proxy->getContext(), 'Context was resolved');
                 self::assertInstanceOf(
-                    ReflectionParameter::class,
+                    \ReflectionParameter::class,
                     $proxy->getContext()->getValue(),
                     'Context was injected',
                 );
@@ -190,14 +188,14 @@ final class ProxyTest extends BaseTestCase
         FiberHelper::runFiberSequence(
             static fn(): mixed => $root->runScope(new Scope(name: 'foo'), static function (ContextInterface $ctx): void {
                 for ($i = 0; $i < 10; $i++) {
-                    self::assertInstanceOf(ReflectionParameter::class, $ctx->getValue(), 'Context injected');
+                    self::assertInstanceOf(\ReflectionParameter::class, $ctx->getValue(), 'Context injected');
                     self::assertSame('ctx', $ctx->getValue()->getName());
                     \Fiber::suspend();
                 }
             }),
             static fn(): mixed => $root->runScope(new Scope(name: 'foo'), static function (ContextInterface $context): void {
                 for ($i = 0; $i < 10; $i++) {
-                    self::assertInstanceOf(ReflectionParameter::class, $context->getValue(), 'Context injected');
+                    self::assertInstanceOf(\ReflectionParameter::class, $context->getValue(), 'Context injected');
                     self::assertSame('context', $context->getValue()->getName());
                     \Fiber::suspend();
                 }
@@ -256,12 +254,11 @@ final class ProxyTest extends BaseTestCase
     public function testDestroyMethod(): void
     {
         $root = new Container();
-        $context = (object)['destroyed' => false];
+        $context = (object) ['destroyed' => false];
         $class = new class($context) implements DestroyableInterface {
             public function __construct(
                 private readonly \stdClass $context,
-            ) {
-            }
+            ) {}
 
             public function __destruct()
             {
@@ -271,7 +268,7 @@ final class ProxyTest extends BaseTestCase
         $root->bindSingleton(DestroyableInterface::class, $class);
 
         $proxy = $root->runScope(new Scope(), static fn(#[Proxy] DestroyableInterface $proxy): DestroyableInterface => $proxy);
-        $weak = WeakReference::create($proxy);
+        $weak = \WeakReference::create($proxy);
         unset($proxy);
 
         self::assertNull($weak->get());
@@ -281,7 +278,7 @@ final class ProxyTest extends BaseTestCase
     public function testImplementationWithWiderTypes(): void
     {
         $root = new Container();
-        $root->getBinder('http')->bindSingleton(UserInterface::class, static fn (): User => new User('Foo'));
+        $root->getBinder('http')->bindSingleton(UserInterface::class, static fn(): User => new User('Foo'));
         $proxy = $root->runScope(new Scope(), static fn(#[Proxy] UserInterface $proxy): UserInterface => $proxy);
 
         $root->runScope(

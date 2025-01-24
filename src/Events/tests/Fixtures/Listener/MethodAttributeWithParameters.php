@@ -10,7 +10,5 @@ use Spiral\Tests\Events\Fixtures\Event\FooEvent;
 final class MethodAttributeWithParameters
 {
     #[Listener(method: 'customMethod')]
-    public function customMethod(FooEvent $event): void
-    {
-    }
+    public function customMethod(FooEvent $event): void {}
 }

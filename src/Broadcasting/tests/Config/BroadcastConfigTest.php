@@ -12,41 +12,6 @@ final class BroadcastConfigTest extends TestCase
 {
     private BroadcastConfig $config;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->config = new BroadcastConfig([
-            'authorize' => [
-                'path' => 'foo-path',
-                'topics' => [
-                    'bar-topic.{id}' => static fn (mixed $id): mixed => $id,
-                    'foo-topic' => static fn (): string => 'foo',
-                ],
-            ],
-            'default' => 'firebase',
-            'aliases' => [
-                'users-data' => 'firebase',
-                'foo-data' => 'foo',
-            ],
-
-            'driverAliases' => [
-                'log' => 'log-driver',
-            ],
-
-            'connections' => [
-                'firebase' => [
-                    'driver' => 'log',
-                ],
-                'null' => [
-                    'driver' => 'null-driver',
-                ],
-                'memory' => [],
-            ],
-        ]);
-    }
-
-
     public function testGetsDefaultConnection(): void
     {
         self::assertSame('firebase', $this->config->getDefaultConnection());
@@ -96,5 +61,39 @@ final class BroadcastConfigTest extends TestCase
     public function testGetsTopics(): void
     {
         self::assertSame($this->config['authorize']['topics'], $this->config->getTopics());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->config = new BroadcastConfig([
+            'authorize' => [
+                'path' => 'foo-path',
+                'topics' => [
+                    'bar-topic.{id}' => static fn(mixed $id): mixed => $id,
+                    'foo-topic' => static fn(): string => 'foo',
+                ],
+            ],
+            'default' => 'firebase',
+            'aliases' => [
+                'users-data' => 'firebase',
+                'foo-data' => 'foo',
+            ],
+
+            'driverAliases' => [
+                'log' => 'log-driver',
+            ],
+
+            'connections' => [
+                'firebase' => [
+                    'driver' => 'log',
+                ],
+                'null' => [
+                    'driver' => 'null-driver',
+                ],
+                'memory' => [],
+            ],
+        ]);
     }
 }

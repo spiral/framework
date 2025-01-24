@@ -23,7 +23,6 @@ final class StorageSnapshotsBootloader extends Bootloader
     protected const DEPENDENCIES = [
         StorageBootloader::class,
     ];
-
     protected const SINGLETONS = [
         StorageSnapshot::class => [self::class, 'storageSnapshot'],
         SnapshotterInterface::class => StorageSnapshooter::class,
@@ -35,7 +34,7 @@ final class StorageSnapshotsBootloader extends Bootloader
 
         if ($bucket === null) {
             throw new \RuntimeException(
-                'Please, configure a bucket for storing snapshots using the environment variable `SNAPSHOTS_BUCKET`.'
+                'Please, configure a bucket for storing snapshots using the environment variable `SNAPSHOTS_BUCKET`.',
             );
         }
 

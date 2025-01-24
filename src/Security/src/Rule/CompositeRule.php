@@ -31,9 +31,8 @@ abstract class CompositeRule implements RuleInterface
     protected const RULES = [];
 
     public function __construct(
-        private readonly RulesInterface $repository
-    ) {
-    }
+        private readonly RulesInterface $repository,
+    ) {}
 
     public function allows(ActorInterface $actor, string $permission, array $context): bool
     {

@@ -27,7 +27,6 @@ final class CsrfConfig extends InjectableConfig
         return $this->config['cookie'];
     }
 
-
     public function getCookieLifetime(): ?int
     {
         return $this->config['lifetime'];

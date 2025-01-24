@@ -20,8 +20,7 @@ class CacheManager implements CacheStorageProviderInterface, CacheStorageRegistr
         private readonly CacheConfig $config,
         private readonly FactoryInterface $factory,
         private readonly ?EventDispatcherInterface $dispatcher = null,
-    ) {
-    }
+    ) {}
 
     public function storage(?string $name = null): CacheInterface
     {

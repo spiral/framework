@@ -8,9 +8,7 @@ use Spiral\Core\CoreInterface;
 
 class TestCore implements CoreInterface
 {
-    public function __construct(private readonly CoreInterface $core)
-    {
-    }
+    public function __construct(private readonly CoreInterface $core) {}
 
     public function callAction(string $controller, ?string $action = null, array $parameters = []): string
     {

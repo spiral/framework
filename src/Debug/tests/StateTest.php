@@ -19,19 +19,19 @@ class StateTest extends TestCase
 
         $state->setTag('key', 'value');
         self::assertSame([
-            'key' => 'value'
+            'key' => 'value',
         ], $state->getTags());
 
         $state->setTag('key2', 'value');
         self::assertSame([
             'key'  => 'value',
-            'key2' => 'value'
+            'key2' => 'value',
         ], $state->getTags());
 
         $state->setTag('key', 'value2');
         self::assertSame([
             'key'  => 'value2',
-            'key2' => 'value'
+            'key2' => 'value',
         ], $state->getTags());
 
         $state->setTags(['a' => 'b']);
@@ -59,20 +59,20 @@ class StateTest extends TestCase
 
         $state->setVariable('key', 'value');
         self::assertSame([
-            'key' => 'value'
+            'key' => 'value',
         ], $state->getVariables());
 
         $state->setVariable('key2', 'value');
         self::assertSame([
             'key'  => 'value',
-            'key2' => 'value'
+            'key2' => 'value',
         ], $state->getVariables());
 
 
         $state->setVariable('key', 'value2');
         self::assertSame([
             'key'  => 'value2',
-            'key2' => 'value'
+            'key2' => 'value',
         ], $state->getVariables());
 
         $state->setVariables(['a' => 'b']);
@@ -95,7 +95,7 @@ class StateTest extends TestCase
             new \DateTime(),
             'default',
             LogLevel::ERROR,
-            'message'
+            'message',
         ));
         self::assertCount(1, $state->getLogEvents());
 
@@ -104,14 +104,14 @@ class StateTest extends TestCase
                 new \DateTime(),
                 'default1',
                 LogLevel::ERROR,
-                'message'
+                'message',
             ),
             new LogEvent(
                 new \DateTime(),
                 'default1',
                 LogLevel::ERROR,
-                'message'
-            )
+                'message',
+            ),
         );
 
         self::assertCount(3, $state->getLogEvents());

@@ -11,7 +11,6 @@ class TypeHints
         'integer' => 'int',
         'double'  => 'float',
     ];
-
     private const REAL_HINT_TYPES = [
         'bool'     => 'bool',
         'int'      => 'int',

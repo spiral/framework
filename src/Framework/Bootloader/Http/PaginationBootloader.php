@@ -15,8 +15,7 @@ final class PaginationBootloader extends Bootloader
 {
     public function __construct(
         private readonly BinderInterface $binder,
-    ) {
-    }
+    ) {}
 
     public function defineDependencies(): array
     {
@@ -33,7 +32,7 @@ final class PaginationBootloader extends Bootloader
 
         $this->binder->bind(
             PaginationProviderInterface::class,
-            new DeprecationProxy(PaginationProviderInterface::class, true, Spiral::HttpRequest, '4.0')
+            new DeprecationProxy(PaginationProviderInterface::class, true, Spiral::HttpRequest, '4.0'),
         );
 
         return [];

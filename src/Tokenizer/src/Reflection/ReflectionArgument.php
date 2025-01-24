@@ -15,6 +15,7 @@ final class ReflectionArgument
      * Argument types.
      */
     public const CONSTANT   = 'constant';   //Scalar constant and not variable.
+
     public const VARIABLE   = 'variable';   //PHP variable
     public const EXPRESSION = 'expression'; //PHP code (expression).
     public const STRING     = 'string';     //Simple scalar string, can be fetched using stringValue().
@@ -27,36 +28,8 @@ final class ReflectionArgument
      */
     public function __construct(
         private string $type,
-        private readonly string $value
-    ) {
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
-    }
-
-    /**
-     * Convert argument value into valid string. Can be applied only for STRING type arguments.
-     *
-     * @throws ReflectionException When value can not be converted into string.
-     */
-    public function stringValue(): string
-    {
-        if ($this->type !== self::STRING) {
-            throw new ReflectionException(
-                \sprintf("Unable to represent value as string, value type is '%s'", $this->type)
-            );
-        }
-
-        //The most reliable way
-        return eval("return {$this->value};");
-    }
+        private readonly string $value,
+    ) {}
 
     /**
      * Create Argument reflections based on provided set of tokens (fetched from invoke).
@@ -116,6 +89,33 @@ final class ReflectionArgument
         return $result;
     }
 
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * Convert argument value into valid string. Can be applied only for STRING type arguments.
+     *
+     * @throws ReflectionException When value can not be converted into string.
+     */
+    public function stringValue(): string
+    {
+        if ($this->type !== self::STRING) {
+            throw new ReflectionException(
+                \sprintf("Unable to represent value as string, value type is '%s'", $this->type),
+            );
+        }
+
+        //The most reliable way
+        return eval("return {$this->value};");
+    }
+
     /**
      * Create Argument reflection using token definition. Internal method.
      *
@@ -124,14 +124,14 @@ final class ReflectionArgument
      */
     private static function createArgument(array $definition): ReflectionArgument
     {
-        $result = new static(self::EXPRESSION, $definition['value']);
+        $result = new self(self::EXPRESSION, $definition['value']);
 
         if (\count($definition['tokens']) == 1) {
             $result->type = match ($definition['tokens'][0][0]) {
                 T_VARIABLE => self::VARIABLE,
                 T_LNUMBER, T_DNUMBER => self::CONSTANT,
                 T_CONSTANT_ENCAPSED_STRING => self::STRING,
-                default => $result->type
+                default => $result->type,
             };
         }
 

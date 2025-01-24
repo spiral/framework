@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace Spiral\Validation\Exception;
 
-class ValidationException extends \RuntimeException
-{
-}
+class ValidationException extends \RuntimeException {}

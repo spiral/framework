@@ -19,11 +19,6 @@ final class FillPropertiesTest extends TestCase
 {
     private Parser $parser;
 
-    protected function setUp(): void
-    {
-        $this->parser = new Parser((new Factory())->create());
-    }
-
     public function testFillArgumentProperties(): void
     {
         $input = $this->createMock(InputInterface::class);
@@ -243,5 +238,10 @@ final class FillPropertiesTest extends TestCase
         $this->parser->fillProperties($command, $input);
 
         $this->assertNull($command->intVal);
+    }
+
+    protected function setUp(): void
+    {
+        $this->parser = new Parser((new Factory())->create());
     }
 }

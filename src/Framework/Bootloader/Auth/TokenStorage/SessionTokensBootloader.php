@@ -21,7 +21,6 @@ final class SessionTokensBootloader extends Bootloader
         HttpAuthBootloader::class,
         SessionBootloader::class,
     ];
-
     protected const SINGLETONS = [
         TokenStorageInterface::class => SessionStorage::class,
     ];

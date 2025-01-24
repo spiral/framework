@@ -14,7 +14,7 @@ trait ContextTrait
     public function __construct(
         string $message,
         private Context $context,
-        ?\Throwable $previous = null
+        ?\Throwable $previous = null,
     ) {
         parent::__construct($message, 0, $previous);
     }

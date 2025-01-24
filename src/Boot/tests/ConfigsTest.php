@@ -14,7 +14,7 @@ class ConfigsTest extends TestCase
     {
         $core = TestCore::create([
             'root'   => __DIR__,
-            'config' => __DIR__ . '/config'
+            'config' => __DIR__ . '/config',
         ])->run();
 
         /** @var TestConfig $config */

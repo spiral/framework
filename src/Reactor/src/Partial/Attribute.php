@@ -19,12 +19,6 @@ final class Attribute implements NamedInterface
         $this->element = new NetteAttribute($name, $args);
     }
 
-    /** @return mixed[] */
-    public function getArguments(): mixed
-    {
-        return $this->element->getArguments();
-    }
-
     /**
      * @internal
      */
@@ -35,6 +29,14 @@ final class Attribute implements NamedInterface
         $attribute->element = $element;
 
         return $attribute;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getArguments(): mixed
+    {
+        return $this->element->getArguments();
     }
 
     /**

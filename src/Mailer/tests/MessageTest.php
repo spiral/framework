@@ -119,7 +119,7 @@ class MessageTest extends TestCase
         $m->setDelay(100);
 
         self::assertSame([
-            'delay' => 100
+            'delay' => 100,
         ], $m->getOptions());
     }
 
@@ -129,7 +129,7 @@ class MessageTest extends TestCase
         $m->setDelay(new \DateInterval('PT56S'));
 
         self::assertSame([
-            'delay' => 56
+            'delay' => 56,
         ], $m->getOptions());
     }
 
@@ -139,7 +139,7 @@ class MessageTest extends TestCase
         $m->setDelay(new \DateTimeImmutable('+ 123 second'));
 
         self::assertSame([
-            'delay' => 123
+            'delay' => 123,
         ], $m->getOptions());
     }
 
@@ -149,7 +149,7 @@ class MessageTest extends TestCase
         $m->setDelay(new \DateTimeImmutable('- 123 second'));
 
         self::assertSame([
-            'delay' => 0
+            'delay' => 0,
         ], $m->getOptions());
     }
 }

@@ -13,11 +13,6 @@ final class LogCollector implements StateCollectorInterface
     /** @var LogEvent[] */
     private array $logEvents = [];
 
-    public function __invoke(LogEvent $event): void
-    {
-        $this->logEvents[] = $event;
-    }
-
     public function populate(StateInterface $state): void
     {
         $state->addLogEvent(...$this->logEvents);
@@ -29,5 +24,10 @@ final class LogCollector implements StateCollectorInterface
     public function reset(): void
     {
         $this->logEvents = [];
+    }
+
+    public function __invoke(LogEvent $event): void
+    {
+        $this->logEvents[] = $event;
     }
 }

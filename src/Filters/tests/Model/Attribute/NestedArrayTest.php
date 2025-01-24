@@ -15,7 +15,7 @@ final class NestedArrayTest extends \Spiral\Tests\Filters\Model\AttributeTestCas
         $attribute = new NestedArray(
             'foo',
             $input = m::mock(AbstractInput::class),
-            'baz'
+            'baz',
         );
 
         $property = $this->makeProperty();
@@ -34,7 +34,7 @@ final class NestedArrayTest extends \Spiral\Tests\Filters\Model\AttributeTestCas
         $attribute = new NestedArray(
             'foo',
             m::mock(AbstractInput::class),
-            'baz'
+            'baz',
         );
 
         self::assertSame(['foo', 'baz'], $attribute->getSchema($this->makeProperty()));
@@ -44,7 +44,7 @@ final class NestedArrayTest extends \Spiral\Tests\Filters\Model\AttributeTestCas
     {
         $attribute = new NestedArray(
             'foo',
-            m::mock(AbstractInput::class)
+            m::mock(AbstractInput::class),
         );
 
         self::assertSame(['foo'], $attribute->getSchema($this->makeProperty()));

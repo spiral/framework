@@ -18,7 +18,7 @@ final class Append implements PatchInterface
     public function __construct(
         string $position,
         private ?string $key,
-        private mixed $value
+        private mixed $value,
     ) {
         $this->position = $position === '.' ? '' : $position;
     }

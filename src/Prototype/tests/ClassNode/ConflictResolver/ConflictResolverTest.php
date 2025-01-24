@@ -115,7 +115,6 @@ class ConflictResolverTest extends TestCase
     }
 
     /**
-     *
      * @throws \Throwable
      */
     private function getDefinition(string $filename, array $dependencies): ClassNode

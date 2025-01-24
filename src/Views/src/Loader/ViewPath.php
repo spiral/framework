@@ -9,9 +9,8 @@ final class ViewPath
     public function __construct(
         private readonly string $namespace,
         private readonly string $name,
-        private readonly string $basename
-    ) {
-    }
+        private readonly string $basename,
+    ) {}
 
     public function getNamespace(): string
     {

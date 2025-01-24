@@ -17,21 +17,8 @@ class QueueTest extends TestCase
 {
     /** @var m\LegacyMockInterface|m\MockInterface|QueueInterface */
     private $queue;
+
     private MailQueue $mailer;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->queue = m::mock(QueueInterface::class);
-
-        $this->mailer = new MailQueue(
-            new MailerConfig([
-                'queue' => 'mailer',
-            ]),
-            $this->queue
-        );
-    }
 
     public function testQueue(): void
     {
@@ -49,7 +36,7 @@ class QueueTest extends TestCase
                 self::assertNull($options->getDelay());
 
                 return true;
-            }
+            },
         );
 
         $this->mailer->send($mail);
@@ -70,23 +57,37 @@ class QueueTest extends TestCase
             function ($job, $data, Options $options): bool {
                 self::assertSame(30, $options->getDelay());
                 return true;
-            }
+            },
         );
 
         $this->queue->expects('push')->once()->withArgs(
             function ($job, $data, Options $options): bool {
                 self::assertSame(100, $options->getDelay());
                 return true;
-            }
+            },
         );
 
         $this->queue->expects('push')->once()->withArgs(
             function ($job, $data, Options $options): bool {
                 self::assertSame(200, $options->getDelay());
                 return true;
-            }
+            },
         );
 
         $this->mailer->send($mail1, $mail2, $mail3);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->queue = m::mock(QueueInterface::class);
+
+        $this->mailer = new MailQueue(
+            new MailerConfig([
+                'queue' => 'mailer',
+            ]),
+            $this->queue,
+        );
     }
 }

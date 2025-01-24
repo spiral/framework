@@ -12,9 +12,7 @@ final class Dependency
     public string $property;
     public string $var;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function create(string $name, string $type): Dependency
     {

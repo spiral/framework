@@ -25,7 +25,7 @@ final class Namespaced extends AbstractTarget
     public function __construct(
         string $namespace,
         string $postfix = 'Controller',
-        int $options = 0
+        int $options = 0,
     ) {
         $this->namespace = \rtrim($namespace, '\\');
         $this->postfix = \ucfirst($postfix);
@@ -33,7 +33,7 @@ final class Namespaced extends AbstractTarget
         parent::__construct(
             ['controller' => null, 'action' => null],
             ['controller' => null, 'action' => null],
-            $options
+            $options,
         );
 
         $this->inflector = (new InflectorFactory())->build();
@@ -52,7 +52,7 @@ final class Namespaced extends AbstractTarget
             '%s\\%s%s',
             $this->namespace,
             $this->inflector->classify($matches['controller']),
-            $this->postfix
+            $this->postfix,
         );
     }
 

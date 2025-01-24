@@ -83,7 +83,7 @@ class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
     public function getInstructions(): array
     {
         $configFile = $this->makeConfigFilename(
-            $this->class->getConstant('CONFIG')->getValue()
+            $this->class->getConstant('CONFIG')->getValue(),
         );
 
         $configFile = \str_replace($this->dirs->get('root'), '', $configFile);
@@ -127,7 +127,7 @@ class ConfigDeclaration extends AbstractDeclaration implements HasInstructions
         $gettersByKey = [];
 
         foreach ($defaults as $key => $value) {
-            $key = (string)$key;
+            $key = (string) $key;
             $getter = $this->makeGetterName($key);
             $getters[] = $getter;
 

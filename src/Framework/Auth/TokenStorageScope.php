@@ -18,9 +18,8 @@ use Spiral\Core\Exception\ScopeException;
 final class TokenStorageScope implements TokenStorageInterface
 {
     public function __construct(
-        #[Proxy] private readonly ContainerInterface $container
-    ) {
-    }
+        #[Proxy] private readonly ContainerInterface $container,
+    ) {}
 
     /**
      * Load token by id, must return null if token not found.

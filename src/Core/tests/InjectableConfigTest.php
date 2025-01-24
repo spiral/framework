@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
-use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Exception\ConfigException;
 use Spiral\Core\Exception\Container\ContainerException;
@@ -58,7 +57,7 @@ class InjectableConfigTest extends TestCase
         ]);
 
         $iterator = $config->getIterator();
-        self::assertInstanceOf(ArrayIterator::class, $iterator);
+        self::assertInstanceOf(\ArrayIterator::class, $iterator);
         self::assertSame($iterator->getArrayCopy(), $config->toArray());
     }
 
@@ -135,8 +134,8 @@ class InjectableConfigTest extends TestCase
             'key' => 'value',
             'aliases' => [
                 'foo' => 'bar',
-                'bar' => 'foo'
-            ]
+                'bar' => 'foo',
+            ],
         ]);
 
         $config->resolveAlias('foo');

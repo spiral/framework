@@ -18,6 +18,7 @@ final class QueueManager implements QueueConnectionProviderInterface
 {
     /** @var QueueInterface[] */
     private array $pipelines = [];
+
     private readonly PipelineBuilderInterface $builder;
 
     public function __construct(
@@ -68,10 +69,10 @@ final class QueueManager implements QueueConnectionProviderInterface
                     'Driver `%s` is not supported. Connection `%s` cannot be created. Reason: `%s`',
                     $config['driver'],
                     $name,
-                    $e->getMessage()
+                    $e->getMessage(),
                 ),
                 $e->getCode(),
-                $e
+                $e,
             );
         }
     }

@@ -10,6 +10,6 @@ class AccessedEntity extends DataEntity
 {
     protected const FILLABLE  = '*';
     protected const ACCESSORS = [
-        'name' => NameValue::class
+        'name' => NameValue::class,
     ];
 }

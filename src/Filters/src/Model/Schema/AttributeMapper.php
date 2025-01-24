@@ -25,9 +25,8 @@ final class AttributeMapper
     public function __construct(
         private readonly FilterProviderInterface $provider,
         private readonly ReaderInterface $reader,
-        private readonly Mapper $mapper
-    ) {
-    }
+        private readonly Mapper $mapper,
+    ) {}
 
     /**
      * @return array{0: array, 1: array, 2: array, 3: array}
@@ -56,7 +55,7 @@ final class AttributeMapper
                     try {
                         $value = $this->provider->createFilter(
                             $attribute->class,
-                            $input->withPrefix($prefix)
+                            $input->withPrefix($prefix),
                         );
 
                         try {
@@ -85,7 +84,7 @@ final class AttributeMapper
                             try {
                                 $propertyValues[$key] = $this->provider->createFilter(
                                     $attribute->class,
-                                    $input->withPrefix($prefix . '.' . $key)
+                                    $input->withPrefix($prefix . '.' . $key),
                                 );
                             } catch (ValidationException $e) {
                                 /** @psalm-suppress InvalidArrayOffset */
@@ -130,7 +129,7 @@ final class AttributeMapper
     private function createErrorMessage(
         SetterException $exception,
         \ReflectionProperty $property,
-        mixed $value = null
+        mixed $value = null,
     ): string {
         $attribute = $this->reader->firstPropertyMetadata($property, CastingErrorMessage::class);
 

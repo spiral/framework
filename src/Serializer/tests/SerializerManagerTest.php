@@ -16,12 +16,30 @@ final class SerializerManagerTest extends TestCase
 {
     private SerializerManager $serializer;
 
-    protected function setUp(): void
+    public static function serializeDataProvider(): \Traversable
     {
-        $this->serializer = new SerializerManager(new SerializerRegistry([
-            'serializer' => new PhpSerializer(),
-            'json' => new JsonSerializer(),
-        ]), 'json');
+        yield [['some', 'elements'], '["some","elements"]', 'json'];
+        yield [['some', 'elements'], 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', 'serializer'];
+        yield [['some', 'elements'], '["some","elements"]'];
+    }
+
+    public static function unserializeDataProvider(): \Traversable
+    {
+        yield ['["some","elements"]', ['some', 'elements'], 'json'];
+        yield [new class implements \Stringable {
+            public function __toString(): string
+            {
+                return '["some","elements"]';
+            }
+        }, ['some', 'elements'], 'json'];
+        yield ['a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', ['some', 'elements'], 'serializer'];
+        yield [new class implements \Stringable {
+            public function __toString(): string
+            {
+                return 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}';
+            }
+        }, ['some', 'elements'], 'serializer'];
+        yield ['["some","elements"]', ['some', 'elements']];
     }
 
     public function testGetSerializer(): void
@@ -57,29 +75,11 @@ final class SerializerManagerTest extends TestCase
         self::assertSame($expected, $this->serializer->unserialize($payload, format: $format));
     }
 
-    public static function serializeDataProvider(): \Traversable
+    protected function setUp(): void
     {
-        yield [['some', 'elements'], '["some","elements"]', 'json'];
-        yield [['some', 'elements'], 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', 'serializer'];
-        yield [['some', 'elements'], '["some","elements"]'];
-    }
-
-    public static function unserializeDataProvider(): \Traversable
-    {
-        yield ['["some","elements"]', ['some', 'elements'], 'json'];
-        yield [new class() implements \Stringable {
-            public function __toString(): string
-            {
-                return '["some","elements"]';
-            }
-        }, ['some', 'elements'], 'json'];
-        yield ['a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', ['some', 'elements'], 'serializer'];
-        yield [new class() implements \Stringable {
-            public function __toString(): string
-            {
-                return 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}';
-            }
-        }, ['some', 'elements'], 'serializer'];
-        yield ['["some","elements"]', ['some', 'elements']];
+        $this->serializer = new SerializerManager(new SerializerRegistry([
+            'serializer' => new PhpSerializer(),
+            'json' => new JsonSerializer(),
+        ]), 'json');
     }
 }

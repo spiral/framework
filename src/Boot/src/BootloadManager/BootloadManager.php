@@ -20,12 +20,12 @@ final class BootloadManager extends AbstractBootloadManager
         private readonly InvokerInterface $invoker,
         private readonly ResolverInterface $resolver,
         InitializerInterface $initializer,
-        ?InvokerStrategyInterface $invokerStrategy = null
+        ?InvokerStrategyInterface $invokerStrategy = null,
     ) {
         parent::__construct($scope, $initializer);
 
         $this->invokerStrategy = $invokerStrategy ?? new DefaultInvokerStrategy(...$this->resolver->resolveArguments(
-            (new \ReflectionClass(DefaultInvokerStrategy::class))->getConstructor()
+            (new \ReflectionClass(DefaultInvokerStrategy::class))->getConstructor(),
         ));
     }
 

@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Interceptors\Context;
 
-use Stringable;
-
 /**
  * The target may be a concrete reflection or an alias.
  * In both cases, you can get a path to the target.
  *
  * @template-covariant TController of object|null
  */
-interface TargetInterface extends Stringable
+interface TargetInterface extends \Stringable
 {
     /**
      * Returns the path to the target.

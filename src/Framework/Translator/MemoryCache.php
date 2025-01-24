@@ -10,9 +10,8 @@ use Spiral\Translator\Catalogue\CacheInterface;
 final class MemoryCache implements CacheInterface
 {
     public function __construct(
-        private readonly MemoryInterface $memory
-    ) {
-    }
+        private readonly MemoryInterface $memory,
+    ) {}
 
     public function setLocales(?array $locales): void
     {

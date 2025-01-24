@@ -6,12 +6,12 @@ namespace Spiral\Tests\Scaffolder\Fixtures;
 
 class SourceEntity74
 {
-    protected bool $typedBool;
-
     public $noTypeString;
 
     /** @var SourceEntity74 */
     public $obj;
+
+    protected bool $typedBool;
 
     /** @var int */
     protected $intFromPhpDoc;

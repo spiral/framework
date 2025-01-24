@@ -27,7 +27,7 @@ class EncrypterFactoryTest extends TestCase
         //Manager must be created automatically
         $container->bind(
             EncrypterConfig::class,
-            new EncrypterConfig(['key' => $key])
+            new EncrypterConfig(['key' => $key]),
         );
 
         self::assertInstanceOf(EncrypterInterface::class, $container->get(EncrypterInterface::class));
@@ -49,7 +49,7 @@ class EncrypterFactoryTest extends TestCase
         //Manager must be created automatically
         $container->bind(
             EncrypterConfig::class,
-            new EncrypterConfig(['key' => $key])
+            new EncrypterConfig(['key' => $key]),
         );
 
         self::assertInstanceOf(EncryptionInterface::class, $container->get(EncryptionInterface::class));

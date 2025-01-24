@@ -15,6 +15,67 @@ use Spiral\Tests\Framework\Filter\FilterTestCase;
 #[TestScope(Spiral::HttpRequest)]
 final class NestedArrayFiltersTest extends FilterTestCase
 {
+    public static function provideInvalidData(): \Generator
+    {
+        yield 'empty' => [
+            [],
+            [
+                'name' => 'This value is required.',
+            ],
+        ];
+
+        yield 'With name' => [
+            ['name' => 'John Doe'],
+            [],
+        ];
+
+        yield 'Without city' => [
+            [
+                'name' => 'John Doe',
+                'addresses' => [
+                    [
+                        'address' => 'Wall Street',
+                    ],
+                    [
+                        'address' => 'Hollywood',
+                    ],
+                ],
+            ],
+            [
+                'addresses' => [
+                    [
+                        'city' => 'This value is required.',
+                    ],
+                    [
+                        'city' => 'This value is required.',
+                    ],
+                ],
+            ],
+        ];
+
+        yield 'Without city - 1' => [
+            [
+                'name' => 'John Doe',
+                'addresses' => [
+                    [
+                        'city' => 'New York',
+                        'address' => 'Wall Street',
+                    ],
+                    [
+                        'address' => 'Hollywood',
+                    ],
+                ],
+            ],
+            [
+                'addresses' => [
+                    1 => [
+                        'city' => 'This value is required.',
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function testGetsNestedFilter(): void
     {
         $filter = $this->getFilter(MultipleAddressesFilter::class, post: [
@@ -60,66 +121,4 @@ final class NestedArrayFiltersTest extends FilterTestCase
             throw $e;
         }
     }
-
-    public static function provideInvalidData(): \Generator
-    {
-        yield 'empty' => [
-            [],
-            [
-                'name' => 'This value is required.',
-            ],
-        ];
-
-        yield 'With name' => [
-            ['name' => 'John Doe'],
-            [],
-        ];
-
-        yield 'Without city' => [
-            [
-                'name' => 'John Doe',
-                'addresses' => [
-                    [
-                        'address' => 'Wall Street',
-                    ],
-                    [
-                        'address' => 'Hollywood',
-                    ],
-                ],
-            ],
-            [
-                'addresses' => [
-                    [
-                        'city' => 'This value is required.'
-                    ],
-                    [
-                        'city' => 'This value is required.'
-                    ],
-                ],
-            ],
-        ];
-
-        yield 'Without city - 1' => [
-            [
-                'name' => 'John Doe',
-                'addresses' => [
-                    [
-                        'city' => 'New York',
-                        'address' => 'Wall Street',
-                    ],
-                    [
-                        'address' => 'Hollywood',
-                    ],
-                ],
-            ],
-            [
-                'addresses' => [
-                    1 => [
-                        'city' => 'This value is required.'
-                    ],
-                ],
-            ],
-        ];
-    }
 }
-

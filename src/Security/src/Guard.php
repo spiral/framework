@@ -17,9 +17,8 @@ final class Guard implements GuardInterface
     public function __construct(
         private readonly PermissionsInterface $permissions,
         private ?ActorInterface $actor = null,
-        private array $roles = []
-    ) {
-    }
+        private array $roles = [],
+    ) {}
 
     public function allows(string $permission, array $context = []): bool
     {

@@ -9,7 +9,6 @@ use Spiral\Reactor\Partial\Constant;
 use Spiral\Reactor\Partial\Method;
 use Spiral\Reactor\Partial\Property;
 use Spiral\Reactor\Partial\TraitUse;
-use Spiral\Reactor\Traits;
 
 /**
  * @extends AbstractDeclaration<TraitType>
@@ -26,13 +25,6 @@ class TraitDeclaration extends AbstractDeclaration implements AggregableInterfac
         $this->element = new TraitType($name);
     }
 
-    public function addMember(Method|Property|Constant|TraitUse $member): static
-    {
-        $this->element->addMember($member->getElement());
-
-        return $this;
-    }
-
     /**
      * @internal
      */
@@ -43,6 +35,13 @@ class TraitDeclaration extends AbstractDeclaration implements AggregableInterfac
         $trait->element = $element;
 
         return $trait;
+    }
+
+    public function addMember(Method|Property|Constant|TraitUse $member): static
+    {
+        $this->element->addMember($member->getElement());
+
+        return $this;
     }
 
     /**

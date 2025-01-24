@@ -8,6 +8,11 @@ abstract class LightEngine implements EngineInterface
 {
     protected int $power;
 
+    public static function isWroomWroom(): bool
+    {
+        return true;
+    }
+
     public function getPower(): int
     {
         return $this->power;
@@ -19,10 +24,5 @@ abstract class LightEngine implements EngineInterface
         $clone->power = $value;
 
         return $clone;
-    }
-
-    public static function isWroomWroom(): bool
-    {
-        return true;
     }
 }

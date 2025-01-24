@@ -11,9 +11,8 @@ final class ProcessParser implements TagParserInterface
     private const COMMAND = ['git', 'tag', '-l', '--sort=committerdate'];
 
     public function __construct(
-        private readonly ProcessRunner $processRunner
-    ) {
-    }
+        private readonly ProcessRunner $processRunner,
+    ) {}
 
     /**
      * Returns null, when there are no local tags yet

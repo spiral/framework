@@ -16,9 +16,9 @@ class RawTest extends BaseTestCase
     {
         $this->assertTokens(
             [
-                new Token(Token::TYPE_RAW, 0, 'raw body')
+                new Token(Token::TYPE_RAW, 0, 'raw body'),
             ],
-            ('raw body')
+            ('raw body'),
         );
     }
 

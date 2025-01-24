@@ -35,7 +35,7 @@ abstract class AbstractTarget implements TargetInterface
         private array $defaults,
         private array $constrains,
         int $options = 0,
-        private string $defaultAction = 'index'
+        private string $defaultAction = 'index',
     ) {
         $this->verbActions = ($options & self::RESTFUL) === self::RESTFUL;
     }
@@ -80,7 +80,7 @@ abstract class AbstractTarget implements TargetInterface
         return $this->coreHandler($container)->withContext(
             $this->resolveController($matches),
             $this->resolveAction($matches) ?? $this->defaultAction,
-            $matches
+            $matches,
         )->withVerbActions($this->verbActions);
     }
 
@@ -102,7 +102,7 @@ abstract class AbstractTarget implements TargetInterface
                 },
                 $scope,
                 $container->get(ResponseFactoryInterface::class),
-                $container->get(TracerInterface::class)
+                $container->get(TracerInterface::class),
             );
 
             return $this->handler;

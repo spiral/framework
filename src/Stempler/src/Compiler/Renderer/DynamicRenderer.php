@@ -18,9 +18,8 @@ final class DynamicRenderer implements Compiler\RendererInterface
 
     public function __construct(
         private readonly ?DirectiveRendererInterface $directiveRenderer = null,
-        private readonly string $defaultFilter = self::DEFAULT_FILTER
-    ) {
-    }
+        private readonly string $defaultFilter = self::DEFAULT_FILTER,
+    ) {}
 
     public function render(Compiler $compiler, Compiler\Result $result, NodeInterface $node): bool
     {
@@ -51,7 +50,7 @@ final class DynamicRenderer implements Compiler\RendererInterface
 
         throw new DirectiveException(
             \sprintf('Undefined directive `%s`', $directive->name),
-            $directive->getContext()
+            $directive->getContext(),
         );
     }
 
@@ -66,7 +65,7 @@ final class DynamicRenderer implements Compiler\RendererInterface
 
         $source->push(
             \sprintf(\sprintf('<?php echo %s; ?>', $filter), \trim((string) $output->body)),
-            $output->getContext()
+            $output->getContext(),
         );
     }
 }

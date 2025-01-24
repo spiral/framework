@@ -12,13 +12,11 @@ use Spiral\Boot\Exception\BootException;
 class TestCore extends AbstractKernel
 {
     protected const SYSTEM = [
-        CoreBootloader::class
+        CoreBootloader::class,
     ];
-
     protected const LOAD = [
         ConfigBootloader::class,
     ];
-
     protected const APP = [];
 
     public function getContainer()
@@ -29,7 +27,7 @@ class TestCore extends AbstractKernel
     protected function bootstrap(): void
     {
         $this->bootloader->bootload(
-            $this->defineAppBootloaders()
+            $this->defineAppBootloaders(),
         );
 
         $this->container->get(EnvironmentInterface::class)->set('INTERNAL', 'VALUE');
@@ -37,9 +35,6 @@ class TestCore extends AbstractKernel
 
     /**
      * Normalizes directory list and adds all required alises.
-     *
-     * @param array $directories
-     * @return array
      */
     protected function mapDirectories(array $directories): array
     {

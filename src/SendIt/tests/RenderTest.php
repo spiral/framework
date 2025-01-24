@@ -31,18 +31,9 @@ class RenderTest extends TestCase
     public function defineDirectories(string $root): array
     {
         return [
-                'root' => __DIR__ . '/App',
-                'app'  => __DIR__ . '/App'
-            ] + parent::defineDirectories($root);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        foreach (glob(__DIR__ . '/App/runtime/cache/views/*.php') as $file) {
-            @unlink($file);
-        }
+            'root' => __DIR__ . '/App',
+            'app'  => __DIR__ . '/App',
+        ] + parent::defineDirectories($root);
     }
 
     public function testRenderError(): void
@@ -62,12 +53,21 @@ class RenderTest extends TestCase
         self::assertStringContainsString('<p>Hello, Antony!</p>', $body);
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        foreach (glob(__DIR__ . '/App/runtime/cache/views/*.php') as $file) {
+            @unlink($file);
+        }
+    }
+
     private function send(MessageInterface $message): Email
     {
         $this->getContainer()->get(MailJob::class)->handle(
             MailQueue::JOB_NAME,
             'id',
-            json_encode(MessageSerializer::pack($message))
+            json_encode(MessageSerializer::pack($message)),
         );
 
         return $this->getContainer()->get(MailerInterface::class)->getLast();

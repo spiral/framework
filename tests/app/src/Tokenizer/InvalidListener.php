@@ -8,11 +8,7 @@ use Spiral\Tokenizer\TokenizationListenerInterface;
 
 final class InvalidListener implements TokenizationListenerInterface
 {
-    public function listen(\ReflectionClass $class): void
-    {
-    }
+    public function listen(\ReflectionClass $class): void {}
 
-    public function finalize(): void
-    {
-    }
+    public function finalize(): void {}
 }

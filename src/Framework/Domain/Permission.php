@@ -11,9 +11,7 @@ class Permission
     public int $code;
     public string $message;
 
-    protected function __construct()
-    {
-    }
+    protected function __construct() {}
 
     public static function failed(): self
     {

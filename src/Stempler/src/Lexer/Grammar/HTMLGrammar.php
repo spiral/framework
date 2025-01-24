@@ -39,11 +39,33 @@ final class HTMLGrammar implements GrammarInterface
     private const REGEXP_KEYWORD = '/[a-z0-9_\\-:\\.]/ui';
 
     private array $whitespace = [];
+
     /**
      * @var array<array-key, Byte|Token>|array{0: Byte}
      */
     private array $attribute = [];
+
     private array $keyword = [];
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public static function tokenName(int $token): string
+    {
+        return match ($token) {
+            self::TYPE_RAW => 'HTML:RAW',
+            self::TYPE_KEYWORD => 'HTML:KEYWORD',
+            self::TYPE_OPEN => 'HTML:OPEN_TAG',
+            self::TYPE_OPEN_SHORT => 'HTML:OPEN_SHORT_TAG',
+            self::TYPE_CLOSE => 'HTML:CLOSE_TAG',
+            self::TYPE_CLOSE_SHORT => 'HTML:CLOSE_SHORT_TAG',
+            self::TYPE_EQUAL => 'HTML:EQUAL',
+            self::TYPE_ATTRIBUTE => 'HTML:ATTRIBUTE',
+            self::TYPE_WHITESPACE => 'HTML:WHITESPACE',
+            self::TYPE_VERBATIM => 'HTML:VERBATIM',
+            default => 'HTML:UNDEFINED',
+        };
+    }
 
     public function parse(Buffer $src): \Generator
     {
@@ -72,26 +94,6 @@ final class HTMLGrammar implements GrammarInterface
 
             yield from $tag;
         }
-    }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    public static function tokenName(int $token): string
-    {
-        return match ($token) {
-            self::TYPE_RAW => 'HTML:RAW',
-            self::TYPE_KEYWORD => 'HTML:KEYWORD',
-            self::TYPE_OPEN => 'HTML:OPEN_TAG',
-            self::TYPE_OPEN_SHORT => 'HTML:OPEN_SHORT_TAG',
-            self::TYPE_CLOSE => 'HTML:CLOSE_TAG',
-            self::TYPE_CLOSE_SHORT => 'HTML:CLOSE_SHORT_TAG',
-            self::TYPE_EQUAL => 'HTML:EQUAL',
-            self::TYPE_ATTRIBUTE => 'HTML:ATTRIBUTE',
-            self::TYPE_WHITESPACE => 'HTML:WHITESPACE',
-            self::TYPE_VERBATIM => 'HTML:VERBATIM',
-            default => 'HTML:UNDEFINED',
-        };
     }
 
     private function parseVerbatim(Buffer $src, string $verbatim): \Generator
@@ -244,7 +246,7 @@ final class HTMLGrammar implements GrammarInterface
                     $this->tokens[] = new Token(
                         self::TYPE_EQUAL,
                         $n->offset,
-                        $n->char
+                        $n->char,
                     );
                     break;
 
@@ -254,7 +256,7 @@ final class HTMLGrammar implements GrammarInterface
                         $this->tokens[] = new Token(
                             self::TYPE_CLOSE_SHORT,
                             $n->offset,
-                            $n->char . $src->next()->char
+                            $n->char . $src->next()->char,
                         );
 
                         break 2;
@@ -268,7 +270,7 @@ final class HTMLGrammar implements GrammarInterface
                     $this->tokens[] = new Token(
                         self::TYPE_CLOSE,
                         $n->offset,
-                        $n->char
+                        $n->char,
                     );
                     break 2;
 

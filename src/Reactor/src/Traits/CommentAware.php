@@ -29,7 +29,6 @@ trait CommentAware
         return $this->element->getComment();
     }
 
-
     public function addComment(string $comment): static
     {
         $this->element->addComment($comment);

@@ -32,12 +32,12 @@ class DistributionBootloader extends Bootloader
     {
         $binder->bindSingleton(
             UriResolverInterface::class,
-            static fn (DistributionInterface $dist): UriResolverInterface => $dist->resolver()
+            static fn(DistributionInterface $dist): UriResolverInterface => $dist->resolver(),
         );
 
         $binder->bindSingleton(
             UriResolver::class,
-            static fn (ContainerInterface $app) => $app->get(UriResolverInterface::class)
+            static fn(ContainerInterface $app) => $app->get(UriResolverInterface::class),
         );
     }
 
@@ -58,12 +58,12 @@ class DistributionBootloader extends Bootloader
 
         $binder->bindSingleton(
             MutableDistributionInterface::class,
-            static fn (ContainerInterface $app) => $app->get(DistributionInterface::class)
+            static fn(ContainerInterface $app) => $app->get(DistributionInterface::class),
         );
 
         $binder->bindSingleton(
             Manager::class,
-            static fn (ContainerInterface $app) => $app->get(DistributionInterface::class)
+            static fn(ContainerInterface $app) => $app->get(DistributionInterface::class),
         );
     }
 }

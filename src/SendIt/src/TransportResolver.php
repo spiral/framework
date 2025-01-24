@@ -16,8 +16,7 @@ final class TransportResolver implements TransportResolverInterface, TransportRe
 
     public function __construct(
         private readonly Transport $transport,
-    ) {
-    }
+    ) {}
 
     public function registerTransport(TransportFactoryInterface $factory): void
     {

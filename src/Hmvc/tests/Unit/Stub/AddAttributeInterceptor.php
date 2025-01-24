@@ -13,8 +13,7 @@ final class AddAttributeInterceptor implements InterceptorInterface
     public function __construct(
         private string $attribute,
         private mixed $value,
-    ) {
-    }
+    ) {}
 
     public function intercept(CallContextInterface $context, HandlerInterface $handler): mixed
     {

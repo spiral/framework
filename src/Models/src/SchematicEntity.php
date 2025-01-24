@@ -11,7 +11,7 @@ class SchematicEntity extends AbstractEntity
 {
     public function __construct(
         array $data,
-        private array $schema
+        private array $schema,
     ) {
         parent::__construct($data);
     }
@@ -22,7 +22,7 @@ class SchematicEntity extends AbstractEntity
             !empty($this->schema[ModelSchema::FILLABLE]) && $this->schema[ModelSchema::FILLABLE] === '*' => true,
             !empty($this->schema[ModelSchema::FILLABLE]) => \in_array($field, $this->schema[ModelSchema::FILLABLE], true),
             !empty($this->schema[ModelSchema::SECURED]) && $this->schema[ModelSchema::SECURED] === '*' => false,
-            default => !\in_array($field, $this->schema[ModelSchema::SECURED], true)
+            default => !\in_array($field, $this->schema[ModelSchema::SECURED], true),
         };
     }
 

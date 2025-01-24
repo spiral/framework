@@ -22,7 +22,7 @@ trait PrototypeTrait
         $container = ContainerScope::getContainer();
         if ($container === null || !$container->has(PrototypeRegistry::class)) {
             throw new ScopeException(
-                \sprintf('Unable to resolve prototyped dependency `%s`, invalid container scope', $name)
+                \sprintf('Unable to resolve prototyped dependency `%s`, invalid container scope', $name),
             );
         }
 
@@ -38,7 +38,7 @@ trait PrototypeTrait
             throw new PrototypeException(
                 \sprintf('Undefined prototype property `%s`', $name),
                 0,
-                $target instanceof \Throwable ? $target : null
+                $target instanceof \Throwable ? $target : null,
             );
         }
 

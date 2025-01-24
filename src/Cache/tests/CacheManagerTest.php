@@ -24,41 +24,12 @@ final class CacheManagerTest extends TestCase
 
     private CacheManager $manager;
 
-    protected function setUp(): void
+    public static function prefixesDataProvider(): \Traversable
     {
-        parent::setUp();
-
-        $config = new CacheConfig([
-            'default' => 'local',
-            'aliases' => [
-                'user-data' => 'local',
-                'blog-data' => ['storage' => 'file', 'prefix' => 'blog_'],
-                'news-data' => ['storage' => 'file', 'prefix' => 'news_'],
-                'store-data' => ['storage' => 'file', 'prefix' => ''],
-                'order-data' => ['storage' => 'file', 'prefix' => null],
-                'delivery-data' => ['storage' => 'file']
-            ],
-            'typeAliases' => [
-                'array' => 'array-storage-class',
-            ],
-            'storages' => [
-                'local' => [
-                    'type' => 'array-storage-class',
-                    'foo' => 'bar',
-                ],
-                'file' => [
-                    'type' => 'file-storage-class',
-                    'foo' => 'baz',
-                ],
-                'inMemory' => [
-                    'type' => 'array',
-                    'bar' => 'baz',
-                ],
-            ],
-        ]);
-
-        $this->factory = m::mock(FactoryInterface::class);
-        $this->manager = new CacheManager($config, $this->factory);
+        yield ['blog-data', 'blog_'];
+        yield ['store-data', null];
+        yield ['order-data', null];
+        yield ['delivery-data', null];
     }
 
     public function testGetDefaultStorage(): void
@@ -208,14 +179,6 @@ final class CacheManagerTest extends TestCase
         self::assertSame($dispatcher, (new \ReflectionProperty($repository, 'dispatcher'))->getValue($repository));
     }
 
-    public static function prefixesDataProvider(): \Traversable
-    {
-        yield ['blog-data', 'blog_'];
-        yield ['store-data', null];
-        yield ['order-data', null];
-        yield ['delivery-data', null];
-    }
-
     public function testRegister(): void
     {
         $uniq = \uniqid();
@@ -244,5 +207,42 @@ final class CacheManagerTest extends TestCase
             $name1 => $cache1,
             $name2 => $cache2,
         ], $this->manager->getCacheStorages());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $config = new CacheConfig([
+            'default' => 'local',
+            'aliases' => [
+                'user-data' => 'local',
+                'blog-data' => ['storage' => 'file', 'prefix' => 'blog_'],
+                'news-data' => ['storage' => 'file', 'prefix' => 'news_'],
+                'store-data' => ['storage' => 'file', 'prefix' => ''],
+                'order-data' => ['storage' => 'file', 'prefix' => null],
+                'delivery-data' => ['storage' => 'file'],
+            ],
+            'typeAliases' => [
+                'array' => 'array-storage-class',
+            ],
+            'storages' => [
+                'local' => [
+                    'type' => 'array-storage-class',
+                    'foo' => 'bar',
+                ],
+                'file' => [
+                    'type' => 'file-storage-class',
+                    'foo' => 'baz',
+                ],
+                'inMemory' => [
+                    'type' => 'array',
+                    'bar' => 'baz',
+                ],
+            ],
+        ]);
+
+        $this->factory = m::mock(FactoryInterface::class);
+        $this->manager = new CacheManager($config, $this->factory);
     }
 }

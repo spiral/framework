@@ -15,18 +15,18 @@ use Spiral\Tests\Queue\Attribute\Stub\WithoutJobHandler;
 
 final class JobHandlerTest extends TestCase
 {
+    public static function classesProvider(): \Traversable
+    {
+        yield [WithoutJobHandler::class, null];
+        yield [JobHandlerAttribute::class, new JobHandler('test')];
+        yield [WithExtendedJobHandlerAttribute::class, new ExtendedJobHandler()];
+    }
+
     #[DataProvider('classesProvider')]
     public function testJobHandler(string $class, ?JobHandler $expected): void
     {
         $reader = (new Factory())->create();
 
         self::assertEquals($expected, $reader->firstClassMetadata(new \ReflectionClass($class), JobHandler::class));
-    }
-
-    public static function classesProvider(): \Traversable
-    {
-        yield [WithoutJobHandler::class, null];
-        yield [JobHandlerAttribute::class, new JobHandler('test')];
-        yield [WithExtendedJobHandlerAttribute::class, new ExtendedJobHandler()];
     }
 }

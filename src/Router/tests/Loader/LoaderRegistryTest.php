@@ -17,7 +17,7 @@ final class LoaderRegistryTest extends TestCase
         $container = new Container();
         $registry = new LoaderRegistry([
             new PhpFileLoader($container, $container),
-            new TestLoader()
+            new TestLoader(),
         ]);
 
         self::assertInstanceOf(PhpFileLoader::class, $registry->resolve('test/file.php'));

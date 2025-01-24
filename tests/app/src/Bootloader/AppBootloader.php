@@ -19,7 +19,6 @@ class AppBootloader extends DomainBootloader
         HandlerInterface::class => [self::class, 'domainCore'],
         CoreInterface::class => [self::class, 'domainCore'],
     ];
-
     protected const INTERCEPTORS = [
         GuardInterceptor::class,
     ];

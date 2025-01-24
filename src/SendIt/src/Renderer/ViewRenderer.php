@@ -14,45 +14,8 @@ use Symfony\Component\Mime\Email;
 final class ViewRenderer implements RendererInterface
 {
     public function __construct(
-        private readonly ViewsInterface $views
-    ) {
-    }
-
-    public function render(MessageInterface $message): Email
-    {
-        try {
-            $view = $this->views->get($message->getSubject());
-        } catch (ViewException $e) {
-            throw new MailerException(
-                \sprintf('Invalid email template `%s`: %s', $message->getSubject(), $e->getMessage()),
-                $e->getCode(),
-                $e
-            );
-        }
-
-        $msg = new Email();
-
-        if ($message->getFrom() !== null) {
-            $msg->from($message->getFrom());
-        }
-
-        $msg->to(...$message->getTo());
-        $msg->cc(...$message->getCC());
-        $msg->bcc(...$message->getBCC());
-
-        try {
-            // render message partials
-            $view->render(\array_merge(['_msg_' => $msg], $message->getData()));
-        } catch (ViewException $e) {
-            throw new MailerException(
-                \sprintf('Unable to render email `%s`: %s', $message->getSubject(), $e->getMessage()),
-                $e->getCode(),
-                $e
-            );
-        }
-
-        return $msg;
-    }
+        private readonly ViewsInterface $views,
+    ) {}
 
     /**
      * Copy-pasted form https://stackoverflow.com/a/20806227
@@ -74,5 +37,41 @@ final class ViewRenderer implements RendererInterface
         $suffix = '?=';
 
         return $prefix . \str_replace("=\r\n", $suffix . "\r\n  " . $prefix, $encoded) . $suffix;
+    }
+
+    public function render(MessageInterface $message): Email
+    {
+        try {
+            $view = $this->views->get($message->getSubject());
+        } catch (ViewException $e) {
+            throw new MailerException(
+                \sprintf('Invalid email template `%s`: %s', $message->getSubject(), $e->getMessage()),
+                $e->getCode(),
+                $e,
+            );
+        }
+
+        $msg = new Email();
+
+        if ($message->getFrom() !== null) {
+            $msg->from($message->getFrom());
+        }
+
+        $msg->to(...$message->getTo());
+        $msg->cc(...$message->getCC());
+        $msg->bcc(...$message->getBCC());
+
+        try {
+            // render message partials
+            $view->render(\array_merge(['_msg_' => $msg], $message->getData()));
+        } catch (ViewException $e) {
+            throw new MailerException(
+                \sprintf('Unable to render email `%s`: %s', $message->getSubject(), $e->getMessage()),
+                $e->getCode(),
+                $e,
+            );
+        }
+
+        return $msg;
     }
 }

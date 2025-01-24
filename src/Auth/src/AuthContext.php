@@ -17,9 +17,8 @@ final class AuthContext implements AuthContextInterface
 
     public function __construct(
         private readonly ActorProviderInterface $actorProvider,
-        private readonly ?EventDispatcherInterface $eventDispatcher = null
-    ) {
-    }
+        private readonly ?EventDispatcherInterface $eventDispatcher = null,
+    ) {}
 
     public function start(TokenInterface $token, ?string $transport = null): void
     {

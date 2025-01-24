@@ -15,9 +15,8 @@ final class ValidationProvider implements ValidationProviderInterface
     private array $resolvers = [];
 
     public function __construct(
-        private readonly InvokerInterface $invoker
-    ) {
-    }
+        private readonly InvokerInterface $invoker,
+    ) {}
 
     /**
      * @param non-empty-string $name
@@ -38,7 +37,7 @@ final class ValidationProvider implements ValidationProviderInterface
 
         return $this->invoker->invoke(
             $this->resolvers[$name],
-            $params
+            $params,
         );
     }
 }

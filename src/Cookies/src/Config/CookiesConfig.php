@@ -15,6 +15,7 @@ final class CookiesConfig extends InjectableConfig
      * Cookie protection methods.
      */
     public const COOKIE_UNPROTECTED = 0;
+
     public const COOKIE_ENCRYPT     = 1;
     public const COOKIE_HMAC        = 2;
 

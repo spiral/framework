@@ -8,8 +8,7 @@ final class Context implements ContextInterface
 {
     public function __construct(
         public \Stringable|string|null $value,
-    ) {
-    }
+    ) {}
 
     public function getValue(): \Stringable|string|null
     {

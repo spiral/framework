@@ -15,9 +15,9 @@ class InlineTest extends BaseTestCase
     {
         $this->assertTokens(
             [
-                new Token(Token::TYPE_RAW, 0, 'raw body')
+                new Token(Token::TYPE_RAW, 0, 'raw body'),
             ],
-            ('raw body')
+            ('raw body'),
         );
     }
 
@@ -29,7 +29,7 @@ class InlineTest extends BaseTestCase
                 new Token(InlineGrammar::TYPE_NAME, 2, 'name'),
                 new Token(InlineGrammar::TYPE_CLOSE_TAG, 6, '}'),
             ],
-            ('${name}')
+            ('${name}'),
         );
     }
 
@@ -42,7 +42,7 @@ class InlineTest extends BaseTestCase
                 new Token(InlineGrammar::TYPE_NAME, 3, 'name'),
                 new Token(InlineGrammar::TYPE_CLOSE_TAG, 8, '}'),
             ],
-            ('${ name }')
+            ('${ name }'),
         );
     }
 
@@ -57,7 +57,7 @@ class InlineTest extends BaseTestCase
                 new Token(InlineGrammar::TYPE_DEFAULT, 7, 'default'),
                 new Token(InlineGrammar::TYPE_CLOSE_TAG, 14, '}'),
             ],
-            ('${name|default}')
+            ('${name|default}'),
         );
     }
 
@@ -72,7 +72,7 @@ class InlineTest extends BaseTestCase
                 new Token(InlineGrammar::TYPE_DEFAULT, 7, '"default"'),
                 new Token(InlineGrammar::TYPE_CLOSE_TAG, 16, '}'),
             ],
-            ('${name|"default"}')
+            ('${name|"default"}'),
         );
     }
 
@@ -83,7 +83,7 @@ class InlineTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '${}'),
             ],
-            ('${}')
+            ('${}'),
         );
     }
 
@@ -94,7 +94,7 @@ class InlineTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '${|}'),
             ],
-            ('${|}')
+            ('${|}'),
         );
     }
 
@@ -105,7 +105,7 @@ class InlineTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '${name|}'),
             ],
-            ('${name|}')
+            ('${name|}'),
         );
     }
 
@@ -116,7 +116,7 @@ class InlineTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '${|default}'),
             ],
-            ('${|default}')
+            ('${|default}'),
         );
     }
 
@@ -127,7 +127,7 @@ class InlineTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '${name|default|default2}'),
             ],
-            ('${name|default|default2}')
+            ('${name|default|default2}'),
         );
     }
 
@@ -142,7 +142,7 @@ class InlineTest extends BaseTestCase
                 new Token(InlineGrammar::TYPE_DEFAULT, 7, ' default '),
                 new Token(InlineGrammar::TYPE_CLOSE_TAG, 16, '}'),
             ],
-            ('${name| default }')
+            ('${name| default }'),
         );
     }
 }

@@ -12,16 +12,16 @@ use Spiral\Stempler\Transform\Finalizer\DynamicToPHP;
 
 class DynamicToPHPTest extends BaseTestCase
 {
+    public static function provideStringWithoutDirective(): iterable
+    {
+        yield ['https://unpkg.com/tailwindcss@^1.6/dist/tailwind.min.css'];
+    }
+
     public function testOutput(): void
     {
         $doc = $this->parse('{{ $name }}');
 
         self::assertInstanceOf(PHP::class, $doc->nodes[0]);
-    }
-
-    public static function provideStringWithoutDirective(): iterable
-    {
-        yield ['https://unpkg.com/tailwindcss@^1.6/dist/tailwind.min.css'];
     }
 
     #[DataProvider('provideStringWithoutDirective')]

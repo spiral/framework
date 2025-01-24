@@ -16,6 +16,24 @@ use Nyholm\Psr7\Uri;
 
 class NamespacedTargetTest extends TestCase
 {
+    public static function defaultProvider(): \Traversable
+    {
+        yield ['<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']];
+        yield ['<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']];
+        yield ['/<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']];
+        yield ['/<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']];
+
+        yield ['[<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']];
+        yield ['[<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']];
+        yield ['[<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']];
+        yield ['[<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']];
+
+        yield ['[/<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']];
+        yield ['[/<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']];
+        yield ['[/<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']];
+        yield ['[/<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']];
+    }
+
     public function testDefaultAction(): void
     {
         $route = new Route('/<controller>/<action>', new Namespaced('Spiral\Router\Fixtures'));
@@ -48,7 +66,7 @@ class NamespacedTargetTest extends TestCase
     {
         $route = new Route(
             '/<controller>[/<action>]',
-            new Namespaced('Spiral\Router\Fixtures')
+            new Namespaced('Spiral\Router\Fixtures'),
         );
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
@@ -83,23 +101,5 @@ class NamespacedTargetTest extends TestCase
         $values = $match->getMatches();
         self::assertNotNull($values['controller']);
         self::assertNotNull($values['action']);
-    }
-
-    public static function defaultProvider(): \Traversable
-    {
-        yield ['<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']];
-        yield ['<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']];
-        yield ['/<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']];
-        yield ['/<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']];
-
-        yield ['[<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']];
-        yield ['[<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']];
-        yield ['[<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']];
-        yield ['[<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']];
-
-        yield ['[/<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']];
-        yield ['[/<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']];
-        yield ['[/<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']];
-        yield ['[/<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']];
     }
 }

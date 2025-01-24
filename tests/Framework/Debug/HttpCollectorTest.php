@@ -16,7 +16,7 @@ final class HttpCollectorTest extends TestCase
         $collector = new HttpCollector();
         $collector->process(
             $this->createMock(ServerRequestInterface::class),
-            $this->createMock(RequestHandlerInterface::class)
+            $this->createMock(RequestHandlerInterface::class),
         );
         $collector->reset();
 

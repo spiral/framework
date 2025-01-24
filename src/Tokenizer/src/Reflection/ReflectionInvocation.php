@@ -28,9 +28,8 @@ final class ReflectionInvocation
         private readonly string $name,
         private readonly array $arguments,
         private readonly string $source,
-        private readonly int $level
-    ) {
-    }
+        private readonly int $level,
+    ) {}
 
     /**
      * Function usage filename.

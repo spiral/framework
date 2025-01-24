@@ -16,11 +16,6 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class GuardedTest extends BaseTestCase
 {
-    private function getCore(): CoreInterface
-    {
-        return $this->getContainer()->get(CoreInterface::class);
-    }
-
     public function testInvalidAnnotationConfiguration(): void
     {
         $core = $this->getCore();
@@ -69,7 +64,6 @@ final class GuardedTest extends BaseTestCase
         $core->callAction(Demo2Controller::class, 'do2', []);
     }
 
-
     public function testNotAllowedError3(): void
     {
         $core = $this->getCore();
@@ -77,7 +71,6 @@ final class GuardedTest extends BaseTestCase
         $this->expectExceptionCode(ControllerException::ERROR);
         $core->callAction(Demo2Controller::class, 'do3', []);
     }
-
 
     public function testNotAllowedError4(): void
     {
@@ -112,5 +105,10 @@ final class GuardedTest extends BaseTestCase
 
         $this->getContainer()->bind(ActorInterface::class, new Actor(['demo']));
         self::assertSame('ok', $core->callAction(Demo2Controller::class, 'do1', []));
+    }
+
+    private function getCore(): CoreInterface
+    {
+        return $this->getContainer()->get(CoreInterface::class);
     }
 }

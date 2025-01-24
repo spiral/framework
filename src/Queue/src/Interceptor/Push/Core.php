@@ -22,8 +22,7 @@ final class Core implements CoreInterface, HandlerInterface
 {
     public function __construct(
         private readonly QueueInterface $connection,
-    ) {
-    }
+    ) {}
 
     /**
      * @param-assert TParameters $parameters
@@ -48,7 +47,7 @@ final class Core implements CoreInterface, HandlerInterface
 
         return $tracer->trace(
             name: \sprintf('Job push [%s]', $controller),
-            callback: fn (): string => $this->connection->push(
+            callback: fn(): string => $this->connection->push(
                 name: $controller,
                 payload: $parameters['payload'],
                 options: $parameters['options'],

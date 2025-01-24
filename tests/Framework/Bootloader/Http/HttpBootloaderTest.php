@@ -22,6 +22,15 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class HttpBootloaderTest extends BaseTestCase
 {
+    public static function middlewaresDataProvider(): \Traversable
+    {
+        yield ['class-string'];
+        yield [new class implements MiddlewareInterface {
+            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {}
+        }];
+        yield [new Autowire('class-string')];
+    }
+
     #[TestScope(Spiral::Http)]
     public function testHttpBinding(): void
     {
@@ -42,7 +51,7 @@ final class HttpBootloaderTest extends BaseTestCase
         $bootloader->addInputBag('test', ['class' => 'foo', 'source' => 'bar']);
 
         self::assertSame([
-            'test' => ['class' => 'foo', 'source' => 'bar']
+            'test' => ['class' => 'foo', 'source' => 'bar'],
         ], $configs->getConfig(HttpConfig::CONFIG)['inputBags']);
     }
 
@@ -56,17 +65,5 @@ final class HttpBootloaderTest extends BaseTestCase
         $bootloader->addMiddleware($middleware);
 
         self::assertSame([$middleware], $configs->getConfig(HttpConfig::CONFIG)['middleware']);
-    }
-
-    public static function middlewaresDataProvider(): \Traversable
-    {
-        yield ['class-string'];
-        yield [new class () implements MiddlewareInterface
-        {
-            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-            {
-            }
-        }];
-        yield [new Autowire('class-string')];
     }
 }

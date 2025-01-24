@@ -38,9 +38,9 @@ final class MonologConfigTest extends TestCase
         $config = new MonologConfig([
             'handlers' => [
                 'foo' => [
-                    $this->createMock(HandlerInterface::class)
-                ]
-            ]
+                    $this->createMock(HandlerInterface::class),
+                ],
+            ],
         ]);
         self::assertInstanceOf(HandlerInterface::class, \iterator_to_array($config->getHandlers('foo'))[0]);
     }
@@ -53,9 +53,9 @@ final class MonologConfigTest extends TestCase
         $config = new MonologConfig([
             'processors' => [
                 'foo' => [
-                    $this->createMock(ProcessorInterface::class)
-                ]
-            ]
+                    $this->createMock(ProcessorInterface::class),
+                ],
+            ],
         ]);
         self::assertInstanceOf(ProcessorInterface::class, \iterator_to_array($config->getProcessors('foo'))[0]);
     }

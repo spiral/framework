@@ -12,9 +12,7 @@ use Spiral\Security\GuardInterface;
 
 class AuthController
 {
-    public function __construct(private readonly AuthScope $auth)
-    {
-    }
+    public function __construct(private readonly AuthScope $auth) {}
 
     public function do(GuardInterface $guard)
     {
@@ -37,7 +35,7 @@ class AuthController
     public function login(AuthContextInterface $authContext, TokenStorageInterface $tokenStorage)
     {
         $authContext->start(
-            $tokenStorage->create(['userID' => 1])
+            $tokenStorage->create(['userID' => 1]),
         );
 
         return 'OK';
@@ -67,7 +65,7 @@ class AuthController
     public function login2(TokenStorageInterface $tokenStorage)
     {
         $this->auth->start(
-            $tokenStorage->create(['userID' => 1])
+            $tokenStorage->create(['userID' => 1]),
         );
 
         return 'OK';

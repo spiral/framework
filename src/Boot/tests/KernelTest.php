@@ -24,12 +24,11 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Tests\Boot\Fixtures\CustomInitializer;
 use Spiral\Tests\Boot\Fixtures\CustomInvokerStrategy;
 use Spiral\Tests\Boot\Fixtures\TestCore;
-use Throwable;
 
 class KernelTest extends TestCase
 {
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testKernelException(): void
     {
@@ -41,13 +40,13 @@ class KernelTest extends TestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testDispatcher(): void
     {
         $kernel = TestCore::create(['root' => __DIR__])->run();
 
-        $d = new class() implements DispatcherInterface {
+        $d = new class implements DispatcherInterface {
             public static function canServe(EnvironmentInterface $env): bool
             {
                 return true;
@@ -67,7 +66,7 @@ class KernelTest extends TestCase
     {
         $kernel = TestCore::create(['root' => __DIR__])->run();
 
-        $d = new class() implements DispatcherInterface {
+        $d = new class implements DispatcherInterface {
             public function canServe(): bool
             {
                 return true;
@@ -84,13 +83,13 @@ class KernelTest extends TestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testDispatcherReturnCode(): void
     {
         $kernel = TestCore::create(['root' => __DIR__])->run();
 
-        $d = new class() implements DispatcherInterface {
+        $d = new class implements DispatcherInterface {
             public static function canServe(EnvironmentInterface $env): bool
             {
                 return true;
@@ -108,7 +107,7 @@ class KernelTest extends TestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testEnv(): void
     {
@@ -129,11 +128,11 @@ class KernelTest extends TestCase
             $core->getContainer()->bind('bcd', 'foo');
         });
 
-        $kernel->booted( static function (TestCore $core): void {
+        $kernel->booted(static function (TestCore $core): void {
             $core->getContainer()->bind('cde', 'foo');
         });
 
-        $kernel->booted( static function (TestCore $core): void {
+        $kernel->booted(static function (TestCore $core): void {
             $core->getContainer()->bind('def', 'foo');
         });
 
@@ -162,9 +161,7 @@ class KernelTest extends TestCase
                 return true;
             }
 
-            public function serve(): void
-            {
-            }
+            public function serve(): void {}
         };
 
         $container = new Container();
@@ -258,8 +255,8 @@ class KernelTest extends TestCase
             directories: ['root' => __DIR__],
             container: $container,
             bootloadManager: new Autowire(StrategyBasedBootloadManager::class, [
-                'invoker' => new CustomInvokerStrategy()
-            ])
+                'invoker' => new CustomInvokerStrategy(),
+            ]),
         );
 
         /** @var BootloadManagerInterface $manager */

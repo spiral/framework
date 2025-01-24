@@ -7,6 +7,4 @@ namespace Spiral\Tests\Queue\Attribute\Stub;
 use Spiral\Queue\Attribute\RetryPolicy;
 
 #[RetryPolicy]
-final class WithDefaultRetryPolicyAttribute
-{
-}
+final class WithDefaultRetryPolicyAttribute {}

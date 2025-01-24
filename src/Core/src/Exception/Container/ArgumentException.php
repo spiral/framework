@@ -15,7 +15,7 @@ class ArgumentException extends AutowireException
      */
     public function __construct(
         protected \ReflectionParameter $parameter,
-        protected \ReflectionFunctionAbstract $context
+        protected \ReflectionFunctionAbstract $context,
     ) {
         $name = $context->getName();
         if ($context instanceof \ReflectionMethod) {

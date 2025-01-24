@@ -38,7 +38,7 @@ final class CurrentRequestTest extends HttpTestCase
                 $middleware2::class,
             ],
             'basePath' => '/',
-            'headers' => []
+            'headers' => [],
         ]));
 
         $this->setHttpHandler(function (ServerRequestInterface $request): void {
@@ -54,10 +54,10 @@ final class CurrentRequestTest extends HttpTestCase
         $middleware2 = new class($this->getContainer()) implements MiddlewareInterface {
             public function __construct(
                 private readonly ContainerInterface $container,
-            ) {
-            }
+            ) {}
 
-            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
+            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+            {
                 $initial = $this->container->get(CurrentRequest::class)->get();
 
                 return $handler->handle($request->withAttribute('second', $initial->getAttribute('first') + 5));
@@ -71,7 +71,7 @@ final class CurrentRequestTest extends HttpTestCase
                 $middleware2::class,
             ],
             'basePath' => '/',
-            'headers' => []
+            'headers' => [],
         ]));
 
         $this->setHttpHandler(function (ServerRequestInterface $request): void {
@@ -91,10 +91,10 @@ final class CurrentRequestTest extends HttpTestCase
             public function __construct(
                 private readonly string $attribute,
                 private readonly mixed $value,
-            ) {
-            }
+            ) {}
 
-            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
+            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+            {
                 return $handler->handle($request->withAttribute($this->attribute, $this->value));
             }
         };

@@ -20,12 +20,10 @@ abstract class BaseTestCase extends \Spiral\Tests\Stempler\Compiler\BaseTestCase
         CoreRenderer::class,
         HTMLRenderer::class,
     ];
-
     protected const GRAMMARS = [
         DynamicGrammar::class => DynamicSyntax::class,
-        HTMLGrammar::class    => HTMLSyntax::class
+        HTMLGrammar::class    => HTMLSyntax::class,
     ];
-
     protected const DIRECTIVES = [];
 
     protected function compile(Template $document): string

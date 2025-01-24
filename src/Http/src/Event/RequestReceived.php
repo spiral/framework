@@ -9,7 +9,6 @@ use Psr\Http\Message\ServerRequestInterface;
 final class RequestReceived
 {
     public function __construct(
-        public readonly ServerRequestInterface $request
-    ) {
-    }
+        public readonly ServerRequestInterface $request,
+    ) {}
 }

@@ -13,15 +13,14 @@ final class DefaultInvokerStrategy implements InvokerStrategyInterface
     public function __construct(
         private readonly InitializerInterface $initializer,
         private readonly InvokerInterface $invoker,
-        private readonly ResolverInterface $resolver
-    ) {
-    }
+        private readonly ResolverInterface $resolver,
+    ) {}
 
     public function invokeBootloaders(
         array $classes,
         array $bootingCallbacks,
         array $bootedCallbacks,
-        bool $useConfig = true
+        bool $useConfig = true,
     ): void {
         /** @psalm-suppress TooManyArguments */
         $bootloaders = \iterator_to_array($this->initializer->init($classes, $useConfig));

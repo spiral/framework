@@ -16,14 +16,6 @@ final class ContainerRegistryT extends TestCase
     private ContainerInterface|m\MockInterface $container;
     private ContainerRegistry $registry;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->container = m::mock(ContainerInterface::class);
-        $this->registry = new ContainerRegistry($this->container);
-    }
-
     public function testGetsHandlerByJobType(): void
     {
         $this->container->shouldReceive('get')
@@ -57,5 +49,13 @@ final class ContainerRegistryT extends TestCase
             ->andThrow(new ContainerException("Undefined class or binding 'Mail\Job'"));
 
         $this->registry->getHandler('mail.job');
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container = m::mock(ContainerInterface::class);
+        $this->registry = new ContainerRegistry($this->container);
     }
 }

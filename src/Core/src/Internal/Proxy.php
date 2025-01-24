@@ -44,7 +44,7 @@ final class Proxy
                     '%s\%s SCOPED PROXY%s',
                     $type->getNamespaceName(),
                     $type->getShortName(),
-                    $n++ > 0 ? " {$n}" : ''
+                    $n++ > 0 ? " {$n}" : '',
                 );
             } while (\class_exists($className));
 
@@ -63,7 +63,7 @@ final class Proxy
             }
 
             $instance = new $className();
-            (static fn () => $instance::$__container_proxy_alias = $interface)->bindTo(null, $instance::class)();
+            (static fn() => $instance::$__container_proxy_alias = $interface)->bindTo(null, $instance::class)();
 
             // Store in cache without context
             self::$classes[$cacheKey] = $className;

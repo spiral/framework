@@ -13,7 +13,7 @@ final class CoreTest extends TestCase
 {
     public function testCallAction(): void
     {
-        $event = new class() {};
+        $event = new class {};
 
         $dispatcher = m::mock(EventDispatcherInterface::class);
         $dispatcher

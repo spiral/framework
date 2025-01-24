@@ -7,6 +7,4 @@ namespace Spiral\Core\Exception;
 /**
  * Configuration specific exceptions.
  */
-class ConfiguratorException extends LogicException
-{
-}
+class ConfiguratorException extends LogicException {}

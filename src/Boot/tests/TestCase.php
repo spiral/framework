@@ -15,12 +15,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected Container $container;
 
-    protected function setUp(): void
-    {
-        $this->container = new Container();
-        $this->container->bindSingleton(EnvironmentInterface::class, Environment::class, true);
-    }
-
     public function getBootloadManager(): StrategyBasedBootloadManager
     {
         $initializer = new Initializer($this->container, $this->container);
@@ -28,7 +22,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         return new StrategyBasedBootloadManager(
             new DefaultInvokerStrategy($initializer, $this->container, $this->container),
             $this->container,
-            $initializer
+            $initializer,
         );
+    }
+
+    protected function setUp(): void
+    {
+        $this->container = new Container();
+        $this->container->bindSingleton(EnvironmentInterface::class, Environment::class, true);
     }
 }

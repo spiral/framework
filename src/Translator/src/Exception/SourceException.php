@@ -7,6 +7,4 @@ namespace Spiral\Translator\Exception;
 /**
  * Source related exceptions.
  */
-class SourceException extends TranslatorException
-{
-}
+class SourceException extends TranslatorException {}

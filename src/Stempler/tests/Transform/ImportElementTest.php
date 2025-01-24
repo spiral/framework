@@ -33,7 +33,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="google.com">hello world</url>'
+            '<use:element path="import" as="url"/><url href="google.com">hello world</url>',
         );
         $loader->set('import', '<a href="${href}"><block:context/></a>');
 
@@ -47,7 +47,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="<?php echo \'google.com\'?>">hello world</url>'
+            '<use:element path="import" as="url"/><url href="<?php echo \'google.com\'?>">hello world</url>',
         );
         $loader->set('import', '<a href="${href}"><block:context/></a>');
 
@@ -61,7 +61,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="{{ $url }}">hello world</url>'
+            '<use:element path="import" as="url"/><url href="{{ $url }}">hello world</url>',
         );
         $loader->set('import', '<a href="${href}"><block:context/></a>');
 
@@ -76,7 +76,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="{{ $url }}">hello world</url>'
+            '<use:element path="import" as="url"/><url href="{{ $url }}">hello world</url>',
         );
         $loader->set('import', '<a href="${href}">{{ strtoupper(inject(\'context\')) }}</a>');
 
@@ -92,7 +92,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="{{ $url }}" value="<?php echo \'bad\'?>">abc</url>'
+            '<use:element path="import" as="url"/><url href="{{ $url }}" value="<?php echo \'bad\'?>">abc</url>',
         );
         $loader->set('import', '<a href="${href}">{{ strtoupper(inject(\'value\')) }}</a>');
 
@@ -108,7 +108,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="{{ $url }}" value="{{ \'OK\' }}">abc</url>'
+            '<use:element path="import" as="url"/><url href="{{ $url }}" value="{{ \'OK\' }}">abc</url>',
         );
         $loader->set('import', '<a href="${href}">{{ strtoupper(inject(\'value\')) }}</a>');
 
@@ -124,7 +124,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="{{ $url }}" value="hello {{ \'OK\' }}">abc</url>'
+            '<use:element path="import" as="url"/><url href="{{ $url }}" value="hello {{ \'OK\' }}">abc</url>',
         );
         $loader->set('import', '<a href="${href}">{{ strtoupper(inject(\'value\')) }}</a>');
 
@@ -140,7 +140,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="{{ $url }}" value="{{ \'OK\' }}  {{ \'cool\' }}">abc</url>'
+            '<use:element path="import" as="url"/><url href="{{ $url }}" value="{{ \'OK\' }}  {{ \'cool\' }}">abc</url>',
         );
         $loader->set('import', '<a href="${href}">{{ strtoupper(inject(\'value\')) }}</a>');
 
@@ -158,7 +158,7 @@ class ImportElementTest extends BaseTestCase
         $loader->set(
             'root',
             '<use:element path="import" as="url"/>'
-            . '<url href="{{ $url }}" value=" {{ \'OK\' }} {{ \'cool\' }} ">abc</url>'
+            . '<url href="{{ $url }}" value=" {{ \'OK\' }} {{ \'cool\' }} ">abc</url>',
         );
         $loader->set('import', '<a href="${href}">{{ strtoupper(inject(\'value\')) }}</a>');
 
@@ -175,7 +175,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="{{ $url }}"></url>'
+            '<use:element path="import" as="url"/><url href="{{ $url }}"></url>',
         );
         $loader->set('import', '<a href="${href}">{{ strtoupper(inject(\'value\', \'default\'.\'xxx\')) }}</a>');
 
@@ -192,7 +192,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="url"/><url href="{{ $url }}"></url>'
+            '<use:element path="import" as="url"/><url href="{{ $url }}"></url>',
         );
         $loader->set('import', '<a href="${href}">{{ strtoupper(inject(\'value\', [\'abc\'])) }}</a>');
 
@@ -209,7 +209,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="opt"/><opt>hello world</opt>'
+            '<use:element path="import" as="opt"/><opt>hello world</opt>',
         );
 
         $loader->set('import', '@if(injected(\'header\'))<div class="header">${header}</div>@endif${context}');
@@ -227,7 +227,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="opt"/><opt><block:header>abc</block:header>hello world</opt>'
+            '<use:element path="import" as="opt"/><opt><block:header>abc</block:header>hello world</opt>',
         );
 
         $loader->set('import', '@if(injected(\'header\'))<div class="header">${header}</div>@endif${context}');
@@ -245,7 +245,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="h"/><h><block:c>a<block:parent/></block:c></h>'
+            '<use:element path="import" as="h"/><h><block:c>a<block:parent/></block:c></h>',
         );
         $loader->set('import', '<x c="${c|b}"></x>');
 
@@ -258,7 +258,7 @@ class ImportElementTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="import" as="h"/><h c="a ${parent}"/>'
+            '<use:element path="import" as="h"/><h c="a ${parent}"/>',
         );
         $loader->set('import', '<x c="${c|b}"></x>');
 
@@ -294,7 +294,7 @@ class ImportElementTest extends BaseTestCase
     {
         return [
             new DefineAttributes(),
-            new DefineBlocks()
+            new DefineBlocks(),
         ];
     }
 }

@@ -9,7 +9,7 @@ use Spiral\Stempler\Directive\PHPDirective;
 class PHPTest extends BaseTestCase
 {
     protected const DIRECTIVES = [
-        PHPDirective::class
+        PHPDirective::class,
     ];
 
     public function testPHP(): void

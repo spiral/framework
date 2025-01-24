@@ -12,7 +12,7 @@ final class ValidateVersionReleaseWorker implements ReleaseWorkerInterface
 {
     public function __construct(
         private readonly TagParserInterface $parser,
-        private ?string $gitDirectory = null
+        private ?string $gitDirectory = null,
     ) {
         if ($gitDirectory === null) {
             $this->gitDirectory = \dirname(__DIR__);
@@ -23,7 +23,7 @@ final class ValidateVersionReleaseWorker implements ReleaseWorkerInterface
     {
         return \sprintf(
             'Checking if the version [%s] is greater than the latest released version.',
-            $version->getVersionString()
+            $version->getVersionString(),
         );
     }
 
@@ -45,7 +45,7 @@ final class ValidateVersionReleaseWorker implements ReleaseWorkerInterface
         throw new InvalidGitVersionException(\sprintf(
             'Provided version "%s" must be greater than the last one: "%s"',
             $version->getVersionString(),
-            $mostRecentVersion->getVersionString()
+            $mostRecentVersion->getVersionString(),
         ));
     }
 
@@ -72,7 +72,7 @@ final class ValidateVersionReleaseWorker implements ReleaseWorkerInterface
             return null;
         }
 
-        \usort($tags, static fn (Version $a, Version $b) => $a->isGreaterThan($b) ? -1 : 1);
+        \usort($tags, static fn(Version $a, Version $b) => $a->isGreaterThan($b) ? -1 : 1);
 
         return $tags[0]->getVersionString();
     }

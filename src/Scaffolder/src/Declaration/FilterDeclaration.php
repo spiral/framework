@@ -20,6 +20,7 @@ use Spiral\Validation\Exception\ValidationException;
 class FilterDeclaration extends AbstractDeclaration implements HasInstructions
 {
     public const TYPE = 'filter';
+
     private readonly ?ValidationConfig $validationConfig;
 
     public function __construct(
@@ -52,7 +53,7 @@ class FilterDeclaration extends AbstractDeclaration implements HasInstructions
         $validation = $this->validationConfig?->getDefaultValidator();
         if ($validation === null) {
             throw new ValidationException(
-                'Default Validator is not configured. Read more at https://spiral.dev/docs/validation-factory'
+                'Default Validator is not configured. Read more at https://spiral.dev/docs/validation-factory',
             );
         }
 
@@ -61,7 +62,7 @@ class FilterDeclaration extends AbstractDeclaration implements HasInstructions
                 \sprintf(
                     'Default Validator "%s" is not class or does not exist.',
                     $validation,
-                )
+                ),
             );
         }
 
@@ -146,7 +147,7 @@ PHP,
             'server' => [Input\Server::class, 'string'],
             'uri' => [Input\Uri::class, UriInterface::class],
             'token' => [Input\BearerToken::class, 'string'],
-            default => [Input\Input::class, 'string']
+            default => [Input\Input::class, 'string'],
         };
     }
 }

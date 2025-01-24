@@ -6,8 +6,6 @@ namespace Spiral\Scaffolder\Bootloader;
 
 use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;
-use ReflectionClass;
-use ReflectionException;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\KernelInterface;
@@ -27,8 +25,7 @@ class ScaffolderBootloader extends Bootloader
     public function __construct(
         private readonly ConfiguratorInterface $config,
         private readonly KernelInterface $kernel,
-    ) {
-    }
+    ) {}
 
     public function init(ConsoleBootloader $console, DirectoriesInterface $dir): void
     {
@@ -42,8 +39,8 @@ class ScaffolderBootloader extends Bootloader
         $console->addCommand(Command\FilterCommand::class);
 
         try {
-            $defaultNamespace = (new ReflectionClass($this->kernel))->getNamespaceName();
-        } catch (ReflectionException) {
+            $defaultNamespace = (new \ReflectionClass($this->kernel))->getNamespaceName();
+        } catch (\ReflectionException) {
             $defaultNamespace = '';
         }
 

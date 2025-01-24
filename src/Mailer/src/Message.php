@@ -18,7 +18,7 @@ class Message implements MessageInterface
     public function __construct(string $subject, string|array $to, array $data = [])
     {
         $this->setSubject($subject);
-        $this->setTo(...(array)$to);
+        $this->setTo(...(array) $to);
         $this->setData($data);
     }
 

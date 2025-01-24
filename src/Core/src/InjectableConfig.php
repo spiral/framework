@@ -31,14 +31,6 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
         $this->config = $config + $this->config;
     }
 
-    /**
-     * Restoring state.
-     */
-    public static function __set_state(array $anArray): static
-    {
-        return new static($anArray['config']);
-    }
-
     public function toArray(): array
     {
         return $this->config;
@@ -64,7 +56,7 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
     public function offsetSet(mixed $offset, mixed $value): never
     {
         throw new ConfigException(
-            'Unable to change configuration data, configs are treated as immutable by default'
+            'Unable to change configuration data, configs are treated as immutable by default',
         );
     }
 
@@ -74,12 +66,20 @@ abstract class InjectableConfig implements InjectableInterface, \IteratorAggrega
     public function offsetUnset(mixed $offset): never
     {
         throw new ConfigException(
-            'Unable to change configuration data, configs are treated as immutable by default'
+            'Unable to change configuration data, configs are treated as immutable by default',
         );
     }
 
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->config);
+    }
+
+    /**
+     * Restoring state.
+     */
+    public static function __set_state(array $anArray): static
+    {
+        return new static($anArray['config']);
     }
 }

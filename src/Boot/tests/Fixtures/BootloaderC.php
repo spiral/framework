@@ -8,11 +8,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 
 final class BootloaderC extends Bootloader
 {
-    public function init(BootloaderA $a): void
-    {
-    }
+    public function init(BootloaderA $a): void {}
 
-    public function boot(BootloaderB $b): void
-    {
-    }
+    public function boot(BootloaderB $b): void {}
 }

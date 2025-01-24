@@ -18,9 +18,8 @@ final class RuleManager implements RulesInterface
     private array $rules = [];
 
     public function __construct(
-        private readonly ContainerInterface $container
-    ) {
-    }
+        private readonly ContainerInterface $container,
+    ) {}
 
     public function set(string $name, mixed $rule = null): RuleManager
     {
@@ -55,7 +54,7 @@ final class RuleManager implements RulesInterface
             // We are allowing to use class names without direct registration
             \class_exists($name) => true,
             // Relying on container binding
-            default => $this->container->has($name)
+            default => $this->container->has($name),
         };
     }
 
@@ -84,7 +83,7 @@ final class RuleManager implements RulesInterface
                 throw new RuleException(\sprintf(
                     "Rule '%s' must point to RuleInterface, '%s' given",
                     $name,
-                    !empty($rule) ? $rule::class : 'null'
+                    !empty($rule) ? $rule::class : 'null',
                 ));
             }
 

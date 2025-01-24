@@ -19,7 +19,7 @@ final class KeyCommandTest extends ConsoleTestCase
     public function testMountFileNotFound(): void
     {
         $out = $this->runCommand('encrypt:key', [
-            '-m' => __DIR__ . '/.env'
+            '-m' => __DIR__ . '/.env',
         ]);
 
         self::assertStringContainsString('Unable to find', $out);
@@ -30,7 +30,7 @@ final class KeyCommandTest extends ConsoleTestCase
         file_put_contents(__DIR__ . '/.env', '{encrypt-key}');
 
         $out = $this->runCommand('encrypt:key', [
-            '-m' => __DIR__ . '/.env'
+            '-m' => __DIR__ . '/.env',
         ]);
 
         self::assertStringContainsString('key has been updated', $out);
@@ -46,13 +46,13 @@ final class KeyCommandTest extends ConsoleTestCase
         $key = $this->getContainer()->get(EncrypterFactory::class)->generateKey();
 
         $app = $this->makeApp([
-            'ENCRYPTER_KEY' => $key
+            'ENCRYPTER_KEY' => $key,
         ]);
 
         file_put_contents(__DIR__ . '/.env', $key);
 
         $out = $app->getContainer()->get(Console::class)->run('encrypt:key', [
-            '-m' => __DIR__ . '/.env'
+            '-m' => __DIR__ . '/.env',
         ]);
 
         $out = $out->getOutput()->fetch();

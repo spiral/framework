@@ -21,9 +21,8 @@ final class SessionFactory implements SessionFactoryInterface
 {
     public function __construct(
         private readonly SessionConfig $config,
-        private readonly FactoryInterface $factory
-    ) {
-    }
+        private readonly FactoryInterface $factory,
+    ) {}
 
     public function initSession(string $clientSignature, ?string $id = null): SessionInterface
     {

@@ -23,7 +23,7 @@ final class EventsConfigTest extends TestCase
     public function testGetsProcessors(): void
     {
         $config = new EventsConfig([
-            'processors' => ['foo', 'bar']
+            'processors' => ['foo', 'bar'],
         ]);
 
         self::assertSame(['foo', 'bar'], $config->getProcessors());
@@ -42,9 +42,9 @@ final class EventsConfigTest extends TestCase
             'listeners' => [
                 'foo' => [
                     'bar',
-                    $listener = new EventListener('baz')
-                ]
-            ]
+                    $listener = new EventListener('baz'),
+                ],
+            ],
         ]);
 
         self::assertSame($listener, $config->getListeners()['foo'][1]);
@@ -65,12 +65,10 @@ final class EventsConfigTest extends TestCase
             'interceptors' => [
                 'bar',
                 new class implements CoreInterceptorInterface {
-                    public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed
-                    {
-                    }
+                    public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed {}
                 },
-                new Autowire('foo')
-            ]
+                new Autowire('foo'),
+            ],
         ]);
 
         self::assertSame('bar', $config->getInterceptors()[0]);

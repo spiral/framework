@@ -12,18 +12,6 @@ class StreamsTest extends TestCase
 {
     private const FIXTURE_DIRECTORY = __DIR__ . '/fixtures';
 
-    protected function setUp(): void
-    {
-        $files = new Files();
-        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
-    }
-
-    protected function tearDown(): void
-    {
-        $files = new Files();
-        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
-    }
-
     public function testGetUri(): void
     {
         $stream = Stream::create();
@@ -117,5 +105,17 @@ class StreamsTest extends TestCase
         self::assertSame('test', file_get_contents($file));
 
         StreamWrapper::release($file);
+    }
+
+    protected function setUp(): void
+    {
+        $files = new Files();
+        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
+    }
+
+    protected function tearDown(): void
+    {
+        $files = new Files();
+        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
     }
 }

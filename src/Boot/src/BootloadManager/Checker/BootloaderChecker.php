@@ -11,8 +11,7 @@ final class BootloaderChecker implements BootloaderCheckerInterface
 {
     public function __construct(
         private readonly CheckerRegistryInterface $registry = new CheckerRegistry(),
-    ) {
-    }
+    ) {}
 
     public function canInitialize(BootloaderInterface|string $bootloader, ?BootloadConfig $config = null): bool
     {

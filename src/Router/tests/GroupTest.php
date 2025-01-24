@@ -24,7 +24,7 @@ class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>/<action>', new Group([
                 'test' => TestController::class,
-            ]))
+            ])),
         );
 
         $router->handle(new ServerRequest('GET', ''));
@@ -37,16 +37,16 @@ class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ]))
+            ])),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test/id/900')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('900', (string)$response->getBody());
+        self::assertSame('900', (string) $response->getBody());
     }
 
     public function testRouteOther(): void
@@ -58,7 +58,7 @@ class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ]))
+            ])),
         );
 
         $router->handle(new ServerRequest('GET', new Uri('/other')));
@@ -73,7 +73,7 @@ class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ]))
+            ])),
         );
 
         $router->uri('group/test');
@@ -88,7 +88,7 @@ class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ]))
+            ])),
         );
 
         $router->getRoute('group')->uri(['controller' => 'test']);
@@ -103,7 +103,7 @@ class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ]))
+            ])),
         );
 
         $router->handle(new ServerRequest('GET', new Uri('/test/other')));

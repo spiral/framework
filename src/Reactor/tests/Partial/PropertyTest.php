@@ -22,7 +22,7 @@ final class PropertyTest extends TestCase
 
         $property->setAttributes([
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
-            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar'])
+            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
         ]);
         self::assertCount(2, $property->getAttributes());
     }

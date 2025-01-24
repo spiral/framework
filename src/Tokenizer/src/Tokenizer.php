@@ -18,12 +18,35 @@ final class Tokenizer
      * Token array constants.
      */
     public const TYPE = 0;
+
     public const CODE = 1;
     public const LINE = 2;
 
     public function __construct(
-        private readonly TokenizerConfig $config
-    ) {
+        private readonly TokenizerConfig $config,
+    ) {}
+
+    /**
+     * Get all tokes for specific file.
+     */
+    public static function getTokens(string $filename): array
+    {
+        $tokens = \token_get_all(\file_get_contents($filename));
+
+        $line = 0;
+        foreach ($tokens as &$token) {
+            if (isset($token[self::LINE])) {
+                $line = $token[self::LINE];
+            }
+
+            if (!\is_array($token)) {
+                $token = [$token, $token, $line];
+            }
+
+            unset($token);
+        }
+
+        return $tokens;
     }
 
     /**
@@ -61,7 +84,7 @@ final class Tokenizer
      */
     public function classLocator(
         array $directories = [],
-        array $exclude = []
+        array $exclude = [],
     ): ClassLocator {
         return new ClassLocator($this->makeFinder($directories, $exclude), $this->config->isDebug());
     }
@@ -71,46 +94,23 @@ final class Tokenizer
      */
     public function invocationLocator(
         array $directories = [],
-        array $exclude = []
+        array $exclude = [],
     ): InvocationLocator {
         return new InvocationLocator($this->makeFinder($directories, $exclude), $this->config->isDebug());
     }
 
     public function enumLocator(
         array $directories = [],
-        array $exclude = []
+        array $exclude = [],
     ): EnumLocator {
         return new EnumLocator($this->makeFinder($directories, $exclude), $this->config->isDebug());
     }
 
     public function interfaceLocator(
         array $directories = [],
-        array $exclude = []
+        array $exclude = [],
     ): InterfaceLocator {
         return new InterfaceLocator($this->makeFinder($directories, $exclude), $this->config->isDebug());
-    }
-
-    /**
-     * Get all tokes for specific file.
-     */
-    public static function getTokens(string $filename): array
-    {
-        $tokens = \token_get_all(\file_get_contents($filename));
-
-        $line = 0;
-        foreach ($tokens as &$token) {
-            if (isset($token[self::LINE])) {
-                $line = $token[self::LINE];
-            }
-
-            if (!\is_array($token)) {
-                $token = [$token, $token, $line];
-            }
-
-            unset($token);
-        }
-
-        return $tokens;
     }
 
     /**

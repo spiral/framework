@@ -26,8 +26,7 @@ final class SessionBootloader extends Bootloader
 {
     public function __construct(
         private readonly BinderInterface $binder,
-    ) {
-    }
+    ) {}
 
     public function defineBindings(): array
     {
@@ -59,7 +58,7 @@ final class SessionBootloader extends Bootloader
      */
     public function init(
         ConfiguratorInterface $config,
-        DirectoriesInterface $directories
+        DirectoriesInterface $directories,
     ): void {
         $config->setDefaults(
             SessionConfig::CONFIG,
@@ -73,15 +72,15 @@ final class SessionBootloader extends Bootloader
                     [
                         'directory' => $directories->get('runtime') . 'session',
                         'lifetime' => 86400,
-                    ]
+                    ],
                 ),
-            ]
+            ],
         );
     }
 
     public function boot(
         ConfiguratorInterface $config,
-        CookiesBootloader $cookies
+        CookiesBootloader $cookies,
     ): void {
         $session = $config->getConfig(SessionConfig::CONFIG);
 

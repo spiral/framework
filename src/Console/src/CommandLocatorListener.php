@@ -20,11 +20,12 @@ final class CommandLocatorListener implements TokenizationListenerInterface
 
     /** @var \ReflectionClass[] */
     private array $commands = [];
+
     private readonly \ReflectionClass $target;
 
     public function __construct(
         private readonly ConsoleBootloader $bootloader,
-        ContainerInterface $container
+        ContainerInterface $container,
     ) {
         $this->container = $container;
         $this->target = new \ReflectionClass(SymfonyCommand::class);

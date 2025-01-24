@@ -14,7 +14,7 @@ class MemoryTest extends TestCase
     {
         $core = TestCore::create([
             'root'  => __DIR__,
-            'cache' => __DIR__ . '/cache'
+            'cache' => __DIR__ . '/cache',
         ])->run();
 
         /** @var MemoryInterface $memory */
@@ -32,7 +32,7 @@ class MemoryTest extends TestCase
     {
         $core = TestCore::create([
             'root'  => __DIR__,
-            'cache' => __DIR__ . '/cache'
+            'cache' => __DIR__ . '/cache',
         ])->run();
 
         /** @var MemoryInterface $memory */

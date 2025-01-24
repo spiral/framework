@@ -35,15 +35,15 @@ final class CookieTransportTest extends BaseTestCase
                     echo ':';
                     echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
-            }
+            },
         );
 
         $response = $http->handle(
-            (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'good-token'])
+            (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'good-token']),
         );
 
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        self::assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
+        self::assertSame('good-token:{"id":"good-token"}', (string) $response->getBody());
     }
 
     public function testBadCookieToken(): void
@@ -59,15 +59,15 @@ final class CookieTransportTest extends BaseTestCase
                     echo ':';
                     echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
-            }
+            },
         );
 
         $response = $http->handle(
-            (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'bad'])
+            (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'bad']),
         );
 
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        self::assertSame('no token', (string)$response->getBody());
+        self::assertSame('no token', (string) $response->getBody());
     }
 
     public function testDeleteToken(): void
@@ -79,15 +79,15 @@ final class CookieTransportTest extends BaseTestCase
                 $request->getAttribute('authContext')->close();
 
                 echo 'closed';
-            }
+            },
         );
 
         $response = $http->handle(
-            (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'good-token'])
+            (new ServerRequest('GET', '', body: 'php://input'))->withCookieParams(['auth-token' => 'good-token']),
         );
 
         self::assertSame(['auth-token=; Path=/; HttpOnly'], $response->getHeader('Set-Cookie'));
-        self::assertSame('closed', (string)$response->getBody());
+        self::assertSame('closed', (string) $response->getBody());
     }
 
     public function testCommitToken(): void
@@ -97,9 +97,9 @@ final class CookieTransportTest extends BaseTestCase
         $http->setHandler(
             static function (ServerRequestInterface $request, ResponseInterface $response): void {
                 $request->getAttribute('authContext')->start(
-                    new TestAuthHttpToken('new-token', ['ok' => 1])
+                    new TestAuthHttpToken('new-token', ['ok' => 1]),
                 );
-            }
+            },
         );
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
@@ -110,22 +110,22 @@ final class CookieTransportTest extends BaseTestCase
     public function testCommitTokenOtherParams(): void
     {
         $http = $this->getCore(
-            new CookieTransport('auth-token', '/', 'localhost', true, false, SameSite::NONE)
+            new CookieTransport('auth-token', '/', 'localhost', true, false, SameSite::NONE),
         );
 
         $http->setHandler(
             static function (ServerRequestInterface $request, ResponseInterface $response): void {
                 $request->getAttribute('authContext')->start(
-                    new TestAuthHttpToken('new-token', ['ok' => 1])
+                    new TestAuthHttpToken('new-token', ['ok' => 1]),
                 );
-            }
+            },
         );
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
 
         self::assertSame(
             ['auth-token=new-token; Path=/; Domain=localhost; Secure; SameSite=None'],
-            $response->getHeader('Set-Cookie')
+            $response->getHeader('Set-Cookie'),
         );
     }
 
@@ -136,9 +136,9 @@ final class CookieTransportTest extends BaseTestCase
         $http->setHandler(
             static function (ServerRequestInterface $request, ResponseInterface $response): void {
                 $request->getAttribute('authContext')->start(
-                    new TestAuthHttpToken('new-token', ['ok' => 1], (new \DateTime('now'))->modify('+1 hour'))
+                    new TestAuthHttpToken('new-token', ['ok' => 1], (new \DateTime('now'))->modify('+1 hour')),
                 );
-            }
+            },
         );
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
@@ -147,17 +147,17 @@ final class CookieTransportTest extends BaseTestCase
 
         self::assertSame(
             'auth-token=new-token',
-            $cookie[0]
+            $cookie[0],
         );
 
         self::assertSame(
             'Expires=' . gmdate(DATE_COOKIE, time() + 3600),
-            $cookie[1]
+            $cookie[1],
         );
 
         self::assertSame(
             'Max-Age=3600',
-            $cookie[2]
+            $cookie[2],
         );
     }
 
@@ -167,17 +167,17 @@ final class CookieTransportTest extends BaseTestCase
             [
                 'basePath'   => '/',
                 'headers'    => [
-                    'Content-Type' => 'text/html; charset=UTF-8'
+                    'Content-Type' => 'text/html; charset=UTF-8',
                 ],
                 'middleware' => [],
-            ]
+            ],
         );
 
         $http = new Http(
             $config,
             new Pipeline($this->container),
             new ResponseFactory($config),
-            $this->container
+            $this->container,
         );
 
         $http->getPipeline()->pushMiddleware(
@@ -185,8 +185,8 @@ final class CookieTransportTest extends BaseTestCase
                 $this->container,
                 new TestAuthHttpProvider(),
                 new TestAuthHttpStorage(),
-                $reg = new TransportRegistry()
-            )
+                $reg = new TransportRegistry(),
+            ),
         );
         $reg->setDefaultTransport('transport');
         $reg->setTransport('transport', $transport);

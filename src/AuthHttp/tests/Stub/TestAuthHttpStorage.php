@@ -23,11 +23,9 @@ class TestAuthHttpStorage implements TokenStorageInterface
         return new TestAuthHttpToken(
             $payload['id'],
             $payload,
-            $expiresAt
+            $expiresAt,
         );
     }
 
-    public function delete(TokenInterface $token): void
-    {
-    }
+    public function delete(TokenInterface $token): void {}
 }

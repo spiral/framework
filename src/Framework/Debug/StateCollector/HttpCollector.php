@@ -28,7 +28,7 @@ final class HttpCollector implements MiddlewareInterface, StateCollectorInterfac
         }
 
         $state->setTag('method', $this->request->getMethod());
-        $state->setTag('url', (string)$this->request->getUri());
+        $state->setTag('url', (string) $this->request->getUri());
 
         $state->setVariable('headers', $this->request->getHeaders());
 

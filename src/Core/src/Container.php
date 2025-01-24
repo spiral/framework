@@ -85,19 +85,6 @@ final class Container implements
         ]);
     }
 
-    public function __destruct()
-    {
-        $this->closeScope();
-    }
-
-    /**
-     * Container can not be cloned.
-     */
-    public function __clone()
-    {
-        throw new LogicException('Container is not cloneable.');
-    }
-
     public function resolveArguments(
         ContextFunction $reflection,
         array $parameters = [],
@@ -122,7 +109,7 @@ final class Container implements
     {
         return ContainerScope::getContainer() === $this
             ? $this->factory->make($alias, $parameters, $context)
-            : ContainerScope::runScope($this, fn (): mixed => $this->factory->make($alias, $parameters, $context));
+            : ContainerScope::runScope($this, fn(): mixed => $this->factory->make($alias, $parameters, $context));
     }
 
     /**
@@ -148,7 +135,7 @@ final class Container implements
     {
         return ContainerScope::getContainer() === $this
             ? $this->container->get($id, $context)
-            : ContainerScope::runScope($this, fn () => $this->container->get($id, $context));
+            : ContainerScope::runScope($this, fn() => $this->container->get($id, $context));
     }
 
     public function has(string $id): bool
@@ -293,7 +280,7 @@ final class Container implements
     {
         return ContainerScope::getContainer() === $this
             ? $this->invoker->invoke($target, $parameters)
-            : ContainerScope::runScope($this, fn (): mixed => $this->invoker->invoke($target, $parameters));
+            : ContainerScope::runScope($this, fn(): mixed => $this->invoker->invoke($target, $parameters));
     }
 
     /**
@@ -312,6 +299,19 @@ final class Container implements
     public function hasInjector(string $class): bool
     {
         return $this->binder->hasInjector($class);
+    }
+
+    /**
+     * Container can not be cloned.
+     */
+    public function __clone()
+    {
+        throw new LogicException('Container is not cloneable.');
+    }
+
+    public function __destruct()
+    {
+        $this->closeScope();
     }
 
     /**
@@ -409,7 +409,7 @@ final class Container implements
                 } finally {
                     $container->closeScope();
                 }
-            }
+            },
         );
     }
 }

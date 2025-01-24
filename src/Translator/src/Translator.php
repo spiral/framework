@@ -32,6 +32,49 @@ final class Translator implements TranslatorInterface
         $this->catalogueManager->load($this->locale);
     }
 
+    /**
+     * Interpolate string with given parameters, used by many spiral components.
+     *
+     * Input: Hello {name}! Good {time}! + ['name' => 'Member', 'time' => 'day']
+     * Output: Hello Member! Good Day!
+     *
+     * @param array  $values Arguments (key => value). Will skip unknown names.
+     * @param string $prefix Placeholder prefix, "{" by default.
+     * @param string $postfix Placeholder postfix, "}" by default.
+     */
+    public static function interpolate(
+        string $string,
+        array $values,
+        string $prefix = '{',
+        string $postfix = '}',
+    ): string {
+        $replaces = [];
+        foreach ($values as $key => $value) {
+            $value = (\is_array($value) || $value instanceof \Closure) ? '' : $value;
+
+            if (\is_object($value)) {
+                if (\method_exists($value, '__toString')) {
+                    $value = $value->__toString();
+                } else {
+                    $value = '';
+                }
+            }
+
+            $replaces[$prefix . $key . $postfix] = $value;
+        }
+
+        return \strtr($string, $replaces);
+    }
+
+    /**
+     * Check if string has translation braces [[ and ]].
+     */
+    public static function isMessage(string $string): bool
+    {
+        return \substr($string, 0, 2) == self::I18N_PREFIX
+            && \substr($string, -2) == self::I18N_POSTFIX;
+    }
+
     public function getDomain(string $bundle): string
     {
         return $this->config->resolveDomain($bundle);
@@ -89,7 +132,7 @@ final class Translator implements TranslatorInterface
         string|int $number,
         array $parameters = [],
         ?string $domain = null,
-        ?string $locale = null
+        ?string $locale = null,
     ): string {
         $domain ??= $this->config->getDefaultDomain();
         $locale ??= $this->locale;
@@ -101,7 +144,7 @@ final class Translator implements TranslatorInterface
                 $message,
                 ['%count%' => $number],
                 null,
-                $locale
+                $locale,
             );
         } catch (\InvalidArgumentException $e) {
             //Wrapping into more explanatory exception
@@ -113,49 +156,6 @@ final class Translator implements TranslatorInterface
         }
 
         return self::interpolate($pluralized, $parameters);
-    }
-
-    /**
-     * Interpolate string with given parameters, used by many spiral components.
-     *
-     * Input: Hello {name}! Good {time}! + ['name' => 'Member', 'time' => 'day']
-     * Output: Hello Member! Good Day!
-     *
-     * @param array  $values Arguments (key => value). Will skip unknown names.
-     * @param string $prefix Placeholder prefix, "{" by default.
-     * @param string $postfix Placeholder postfix, "}" by default.
-     */
-    public static function interpolate(
-        string $string,
-        array $values,
-        string $prefix = '{',
-        string $postfix = '}'
-    ): string {
-        $replaces = [];
-        foreach ($values as $key => $value) {
-            $value = (\is_array($value) || $value instanceof \Closure) ? '' : $value;
-
-            if (\is_object($value)) {
-                if (\method_exists($value, '__toString')) {
-                    $value = $value->__toString();
-                } else {
-                    $value = '';
-                }
-            }
-
-            $replaces[$prefix . $key . $postfix] = $value;
-        }
-
-        return \strtr($string, $replaces);
-    }
-
-    /**
-     * Check if string has translation braces [[ and ]].
-     */
-    public static function isMessage(string $string): bool
-    {
-        return \substr($string, 0, 2) == self::I18N_PREFIX
-            && \substr($string, -2) == self::I18N_POSTFIX;
     }
 
     /**

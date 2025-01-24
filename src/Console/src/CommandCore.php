@@ -17,8 +17,7 @@ final class CommandCore implements CoreInterface, HandlerInterface
 {
     public function __construct(
         private readonly InvokerInterface $invoker,
-    ) {
-    }
+    ) {}
 
     /**
      * @param array{input: InputInterface, output: OutputInterface, command: Command}|array $parameters
@@ -27,12 +26,12 @@ final class CommandCore implements CoreInterface, HandlerInterface
     {
         $command = $parameters['command'];
 
-        return (int)$this->invoker->invoke([$command, $action]);
+        return (int) $this->invoker->invoke([$command, $action]);
     }
 
     public function handle(CallContextInterface $context): int
     {
         $callable = $context->getTarget()->getCallable() ?? throw new \RuntimeException('Command action not found');
-        return (int)$this->invoker->invoke($callable, $context->getArguments());
+        return (int) $this->invoker->invoke($callable, $context->getArguments());
     }
 }

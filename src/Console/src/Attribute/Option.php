@@ -22,7 +22,6 @@ final class Option
         public readonly string|array|null $shortcut = null,
         public readonly ?string $description = null,
         public readonly ?int $mode = null,
-        public readonly \Closure|array $suggestedValues = []
-    ) {
-    }
+        public readonly \Closure|array $suggestedValues = [],
+    ) {}
 }

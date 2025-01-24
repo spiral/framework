@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Factory;
 
-use DateTimeInterface;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\Container\ContainerException;
@@ -46,7 +45,7 @@ final class CommonCasesTest extends BaseTestCase
     {
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage(
-            'Can\'t resolve `\Foo\Bar\Class\Not\Exists`: undefined class or binding `\Foo\Bar\Class\Not\Exists`.'
+            'Can\'t resolve `\Foo\Bar\Class\Not\Exists`: undefined class or binding `\Foo\Bar\Class\Not\Exists`.',
         );
 
         $this->make('\\Foo\\Bar\\Class\\Not\\Exists');
@@ -68,7 +67,7 @@ final class CommonCasesTest extends BaseTestCase
     public function testMakeInternalClassWithOptional(): void
     {
         $this->markTestSkipped(
-            'Incorrect behavior in a test environment: second parameter defined as non-optional.'
+            'Incorrect behavior in a test environment: second parameter defined as non-optional.',
         );
 
         $object = $this->make(\DateTimeImmutable::class);
@@ -105,11 +104,11 @@ final class CommonCasesTest extends BaseTestCase
 
     public function testMakeInterfaceWithDefinition(): void
     {
-        $this->bindInjector(DateTimeInterface::class, DatetimeInjector::class);
+        $this->bindInjector(\DateTimeInterface::class, DatetimeInjector::class);
 
-        $object = $this->make(DateTimeInterface::class);
+        $object = $this->make(\DateTimeInterface::class);
 
-        $this->assertInstanceOf(DateTimeInterface::class, $object);
+        $this->assertInstanceOf(\DateTimeInterface::class, $object);
     }
 
     public function testPrivateMethodFactory(): void

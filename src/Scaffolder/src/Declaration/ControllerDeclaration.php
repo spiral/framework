@@ -21,7 +21,7 @@ class ControllerDeclaration extends AbstractDeclaration implements HasInstructio
         return $this->class
             ->addMethod($action)
             ->addComment(
-                'Please, don\'t forget to configure the Route attribute or remove it and register the route manually.'
+                'Please, don\'t forget to configure the Route attribute or remove it and register the route manually.',
             )
             ->setPublic()
             ->addAttribute(Route::class, ['route' => 'path', 'name' => 'name'])

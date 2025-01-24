@@ -11,16 +11,6 @@ final class TopicRegistryTest extends TestCase
 {
     private TopicRegistry $registry;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->registry = new TopicRegistry([
-            'bar-topic.{id}' => fn($id) => $id,
-            'foo-topic' => static fn(): string => 'foo',
-        ]);
-    }
-
     public function testRegisterTopic(): void
     {
         $this->registry->register('baz-topic', static fn(): string => 'baz');
@@ -51,5 +41,15 @@ final class TopicRegistryTest extends TestCase
         $params = [];
         self::assertNull($this->registry->findCallback('baz-topic', $params));
         self::assertSame([], $params);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->registry = new TopicRegistry([
+            'bar-topic.{id}' => fn($id) => $id,
+            'foo-topic' => static fn(): string => 'foo',
+        ]);
     }
 }

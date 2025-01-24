@@ -43,7 +43,7 @@ final class Utils
      */
     public static function trimTrailingDigits(string $name, int $number): string
     {
-        $pos = \mb_strripos($name, (string)$number);
+        $pos = \mb_strripos($name, (string) $number);
         if ($pos === false) {
             return $name;
         }

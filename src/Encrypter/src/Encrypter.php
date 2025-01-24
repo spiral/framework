@@ -79,7 +79,7 @@ final class Encrypter implements EncrypterInterface, InjectableInterface
         try {
             $result = Crypto::Decrypt(
                 \base64_decode($payload),
-                $this->key
+                $this->key,
             );
 
             return \json_decode($result, true);

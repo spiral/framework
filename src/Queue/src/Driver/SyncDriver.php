@@ -19,18 +19,16 @@ final class SyncDriver implements QueueInterface
     use QueueTrait;
 
     public function __construct(
-        private readonly Handler $coreHandler
-    ) {
-    }
+        private readonly Handler $coreHandler,
+    ) {}
 
-    /** @inheritdoc */
     public function push(string $name, mixed $payload = [], ?OptionsInterface $options = null): string
     {
         if ($options !== null && $options->getDelay()) {
             \sleep($options->getDelay());
         }
 
-        $id = (string)Uuid::uuid4();
+        $id = (string) Uuid::uuid4();
 
         $this->coreHandler->handle(
             name: $name,

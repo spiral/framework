@@ -30,10 +30,10 @@ class ResponsesTest extends TestCase
     {
         $response = $this->getWrapper()->json([
             'status'  => 300,
-            'message' => 'hi'
+            'message' => 'hi',
         ]);
 
-        self::assertSame('{"status":300,"message":"hi"}', (string)$response->getBody());
+        self::assertSame('{"status":300,"message":"hi"}', (string) $response->getBody());
         self::assertSame(300, $response->getStatusCode());
         self::assertSame('application/json', $response->getHeaderLine('Content-Type'));
     }
@@ -41,7 +41,7 @@ class ResponsesTest extends TestCase
     public function testHtml(): void
     {
         $response = $this->getWrapper()->html('hello world');
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
         self::assertSame(200, $response->getStatusCode());
         $response->getHeader('Content-Type');
         self::assertSame(['text/html; charset=utf-8'], $response->getHeader('Content-Type'));
@@ -52,7 +52,7 @@ class ResponsesTest extends TestCase
         $response = $this->getWrapper()->attachment(__FILE__);
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertStringEqualsFile(__FILE__, (string)$response->getBody());
+        self::assertStringEqualsFile(__FILE__, (string) $response->getBody());
         self::assertSame(filesize(__FILE__), $response->getBody()->getSize());
         self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
@@ -62,7 +62,7 @@ class ResponsesTest extends TestCase
         $response = $this->getWrapper()->attachment(fopen(__FILE__, 'r'), 'file.php');
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertStringEqualsFile(__FILE__, (string)$response->getBody());
+        self::assertStringEqualsFile(__FILE__, (string) $response->getBody());
         self::assertSame(filesize(__FILE__), $response->getBody()->getSize());
         self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
@@ -72,7 +72,7 @@ class ResponsesTest extends TestCase
         $response = $this->getWrapper()->attachment(Stream::create(fopen(__FILE__, 'r')), 'file.php');
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertStringEqualsFile(__FILE__, (string)$response->getBody());
+        self::assertStringEqualsFile(__FILE__, (string) $response->getBody());
         self::assertSame(filesize(__FILE__), $response->getBody()->getSize());
         self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
@@ -81,11 +81,11 @@ class ResponsesTest extends TestCase
     {
         $response = $this->getWrapper()->attachment(
             new Streamable(Stream::create(fopen(__FILE__, 'r'))),
-            'file.php'
+            'file.php',
         );
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertStringEqualsFile(__FILE__, (string)$response->getBody());
+        self::assertStringEqualsFile(__FILE__, (string) $response->getBody());
         self::assertSame(filesize(__FILE__), $response->getBody()->getSize());
         self::assertSame('application/octet-stream', $response->getHeaderLine('Content-Type'));
     }
@@ -114,7 +114,7 @@ class ResponsesTest extends TestCase
         return new ResponseWrapper(
             new ResponseFactory(new HttpConfig(['headers' => []])),
             new StreamFactory(),
-            new Files()
+            new Files(),
         );
     }
 }

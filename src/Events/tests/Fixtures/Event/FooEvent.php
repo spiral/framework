@@ -7,7 +7,6 @@ namespace Spiral\Tests\Events\Fixtures\Event;
 final class FooEvent
 {
     public function __construct(
-        public readonly string $some
-    ) {
-    }
+        public readonly string $some,
+    ) {}
 }

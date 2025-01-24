@@ -14,16 +14,16 @@ final class NullBroadcastTest extends TestCase
 
     private NullBroadcast $driver;
 
+    public function testPublishMessageToTopic(): void
+    {
+        $this->driver->publish('topic', 'message');
+        self::assertTrue(true);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->driver = new NullBroadcast();
-    }
-
-    public function testPublishMessageToTopic(): void
-    {
-        $this->driver->publish('topic', 'message');
-        self::assertTrue(true);
     }
 }

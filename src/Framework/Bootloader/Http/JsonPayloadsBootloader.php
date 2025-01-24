@@ -11,9 +11,8 @@ use Spiral\Config\Patch\Append;
 final class JsonPayloadsBootloader extends Bootloader
 {
     public function __construct(
-        private readonly ConfiguratorInterface $config
-    ) {
-    }
+        private readonly ConfiguratorInterface $config,
+    ) {}
 
     public function init(HttpBootloader $http): void
     {
@@ -23,7 +22,7 @@ final class JsonPayloadsBootloader extends Bootloader
                 'contentTypes' => [
                     'application/json',
                 ],
-            ]
+            ],
         );
     }
 

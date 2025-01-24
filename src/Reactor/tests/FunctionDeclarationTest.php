@@ -22,7 +22,10 @@ final class FunctionDeclarationTest extends TestCase
 
     public function testRender(): void
     {
-        $expect = preg_replace('/\s+/', '', '
+        $expect = preg_replace(
+            '/\s+/',
+            '',
+            '
            /**
             * Some function
             */
@@ -30,7 +33,7 @@ final class FunctionDeclarationTest extends TestCase
             function test(): string
             {
                 return \'Hello world\';
-            }'
+            }',
         );
 
         $fn = new FunctionDeclaration('test');

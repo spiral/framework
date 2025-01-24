@@ -19,8 +19,7 @@ final class Task implements TaskInterface
         private readonly string $name,
         private readonly mixed $payload,
         private readonly array $headers,
-    ) {
-    }
+    ) {}
 
     public function getPayload(): mixed
     {

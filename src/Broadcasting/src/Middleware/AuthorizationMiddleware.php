@@ -21,13 +21,12 @@ final class AuthorizationMiddleware implements MiddlewareInterface
         private readonly BroadcastInterface $broadcast,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ?string $authorizationPath = null,
-        private readonly ?EventDispatcherInterface $dispatcher = null
-    ) {
-    }
+        private readonly ?EventDispatcherInterface $dispatcher = null,
+    ) {}
 
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         if ($request->getUri()->getPath() !== $this->authorizationPath) {
             return $handler->handle($request);
@@ -38,7 +37,7 @@ final class AuthorizationMiddleware implements MiddlewareInterface
         } else {
             $status = new AuthorizationStatus(
                 success: true,
-                topics: null
+                topics: null,
             );
         }
 

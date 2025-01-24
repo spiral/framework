@@ -12,8 +12,7 @@ final class Alias extends Binding
     public function __construct(
         public readonly string $alias,
         public readonly bool $singleton = false,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

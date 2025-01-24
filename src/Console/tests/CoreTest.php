@@ -13,7 +13,7 @@ class CoreTest extends BaseTestCase
     public function testWelcome(): void
     {
         $core = $this->getCore($this->getStaticLocator([
-            TestCommand::class
+            TestCommand::class,
         ]));
 
         self::assertSame('Hello World - 0', $core->run('test')->getOutput()->fetch());
@@ -24,7 +24,7 @@ class CoreTest extends BaseTestCase
     public function testStart(): void
     {
         $core = $this->getCore($this->getStaticLocator([
-            TestCommand::class
+            TestCommand::class,
         ]));
 
         $output = new BufferedOutput();

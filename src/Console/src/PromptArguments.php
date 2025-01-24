@@ -19,9 +19,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class PromptArguments
 {
     public function __construct(
-        private readonly ReaderInterface $reader = new AttributeReader()
-    ) {
-    }
+        private readonly ReaderInterface $reader = new AttributeReader(),
+    ) {}
 
     public function promptMissedArguments(Command $command, InputInterface $input, OutputInterface $output): void
     {
@@ -36,7 +35,7 @@ final class PromptArguments
             if ($argument->isRequired() && $input->getArgument($argument->getName()) === null) {
                 $input->setArgument(
                     $argument->getName(),
-                    $io->ask($this->getQuestion($command, $argument))
+                    $io->ask($this->getQuestion($command, $argument)),
                 );
             }
         }
@@ -49,7 +48,7 @@ final class PromptArguments
         foreach ($this->reader->getClassMetadata($reflection, Question::class) as $question) {
             if ($question->argument === null) {
                 throw new ConsoleException(
-                    'When using a `Question` attribute on a console command class, the argument parameter is required.'
+                    'When using a `Question` attribute on a console command class, the argument parameter is required.',
                 );
             }
 

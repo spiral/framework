@@ -24,9 +24,8 @@ final class ResponseWrapper
     public function __construct(
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly StreamFactoryInterface $streamFactory,
-        private readonly FilesInterface $files
-    ) {
-    }
+        private readonly FilesInterface $files,
+    ) {}
 
     public function create(int $code): ResponseInterface
     {
@@ -40,9 +39,9 @@ final class ResponseWrapper
      */
     public function redirect(
         string|UriInterface $uri,
-        int $code = 302
+        int $code = 302,
     ): ResponseInterface {
-        return $this->responseFactory->createResponse($code)->withHeader('Location', (string)$uri);
+        return $this->responseFactory->createResponse($code)->withHeader('Location', (string) $uri);
     }
 
     /**
@@ -65,7 +64,7 @@ final class ResponseWrapper
     public function attachment(
         mixed $filename,
         string $name = '',
-        string $mime = 'application/octet-stream'
+        string $mime = 'application/octet-stream',
     ): ResponseInterface {
         if (empty($name)) {
             if (!\is_string($filename)) {
@@ -79,10 +78,10 @@ final class ResponseWrapper
 
         $response = $this->responseFactory->createResponse();
         $response = $response->withHeader('Content-Type', $mime);
-        $response = $response->withHeader('Content-Length', (string)$stream->getSize());
+        $response = $response->withHeader('Content-Length', (string) $stream->getSize());
         $response = $response->withHeader(
             'Content-Disposition',
-            'attachment; filename="' . \addcslashes($name, '"') . '"'
+            'attachment; filename="' . \addcslashes($name, '"') . '"',
         );
 
         return $response->withBody($stream);
@@ -94,7 +93,7 @@ final class ResponseWrapper
     public function html(
         string $html,
         int $code = 200,
-        string $contentType = 'text/html; charset=utf-8'
+        string $contentType = 'text/html; charset=utf-8',
     ): ResponseInterface {
         $response = $this->responseFactory->createResponse($code);
         $response->getBody()->write($html);
@@ -112,9 +111,9 @@ final class ResponseWrapper
             $file instanceof StreamInterface => $file,
             \is_resource($file) => $this->streamFactory->createStreamFromResource($file),
             !$this->files->isFile($file) => throw new ResponseException(
-                'Unable to allocate response body stream, file does not exist.'
+                'Unable to allocate response body stream, file does not exist.',
             ),
-            default => $this->streamFactory->createStreamFromFile($file)
+            default => $this->streamFactory->createStreamFromFile($file),
         };
     }
 }

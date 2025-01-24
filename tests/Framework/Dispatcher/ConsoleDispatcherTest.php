@@ -47,7 +47,7 @@ final class ConsoleDispatcherTest extends BaseTestCase
             new ArrayInput([
                 'command' => 'dead',
             ]),
-            $output
+            $output,
         );
         $result = $output->fetch();
 
@@ -65,9 +65,9 @@ final class ConsoleDispatcherTest extends BaseTestCase
         $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)->serve(
             new ArrayInput([
                 'command' => 'dead',
-                '-vv'
+                '-vv',
             ]),
-            $output
+            $output,
         );
         $result = $output->fetch();
 
@@ -85,9 +85,9 @@ final class ConsoleDispatcherTest extends BaseTestCase
         $serveResult = $this->getContainer()->get(ConsoleDispatcher::class)->serve(
             new ArrayInput([
                 'command' => 'dead',
-                '-vvv'
+                '-vvv',
             ]),
-            $output
+            $output,
         );
         $result = $output->fetch();
 

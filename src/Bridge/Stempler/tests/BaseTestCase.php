@@ -19,7 +19,7 @@ abstract class BaseTestCase extends TestCase
     {
         return [
             StemplerBootloader::class,
-            PrettyPrintBootloader::class
+            PrettyPrintBootloader::class,
         ];
     }
 

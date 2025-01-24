@@ -7,6 +7,4 @@ namespace Spiral\Models\Exception;
 /**
  * Property or method access exception.
  */
-class AccessException extends EntityException implements AccessExceptionInterface
-{
-}
+class AccessException extends EntityException implements AccessExceptionInterface {}

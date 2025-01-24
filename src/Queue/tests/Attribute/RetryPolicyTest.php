@@ -16,19 +16,19 @@ use Spiral\Tests\Queue\Attribute\Stub\WithRetryPolicyAttribute;
 
 final class RetryPolicyTest extends TestCase
 {
-    #[DataProvider('classesProvider')]
-    public function testRetryPolicy(string $class, ?RetryPolicy $expected): void
-    {
-        $reader = (new Factory())->create();
-
-        self::assertEquals($expected, $reader->firstClassMetadata(new \ReflectionClass($class), RetryPolicy::class));
-    }
-
     public static function classesProvider(): \Traversable
     {
         yield [WithoutRetryPolicy::class, null];
         yield [WithDefaultRetryPolicyAttribute::class, new RetryPolicy()];
         yield [WithRetryPolicyAttribute::class, new RetryPolicy(5, 3_000, 2.5)];
         yield [WithExtendedRetryPolicyAttribute::class, new ExtendedRetryPolicy()];
+    }
+
+    #[DataProvider('classesProvider')]
+    public function testRetryPolicy(string $class, ?RetryPolicy $expected): void
+    {
+        $reader = (new Factory())->create();
+
+        self::assertEquals($expected, $reader->firstClassMetadata(new \ReflectionClass($class), RetryPolicy::class));
     }
 }

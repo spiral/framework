@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Http;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Http\Config\HttpConfig;
 
 class ConfigTest extends TestCase
@@ -16,7 +12,7 @@ class ConfigTest extends TestCase
     public function testBasePath(): void
     {
         $c = new HttpConfig([
-            'basePath' => '/'
+            'basePath' => '/',
         ]);
 
         self::assertSame('/', $c->getBasePath());
@@ -26,8 +22,8 @@ class ConfigTest extends TestCase
     {
         $c = new HttpConfig([
             'headers' => [
-                'key' => 'value'
-            ]
+                'key' => 'value',
+            ],
         ]);
 
         self::assertSame(['key' => 'value'], $c->getBaseHeaders());
@@ -36,7 +32,7 @@ class ConfigTest extends TestCase
     public function testBaseMiddleware(): void
     {
         $c = new HttpConfig([
-            'middleware' => [TestMiddleware::class]
+            'middleware' => [TestMiddleware::class],
         ]);
 
         self::assertSame([TestMiddleware::class], $c->getMiddleware());

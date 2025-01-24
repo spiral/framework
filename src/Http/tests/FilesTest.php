@@ -15,14 +15,7 @@ use Nyholm\Psr7\UploadedFile;
 class FilesTest extends TestCase
 {
     private Container $container;
-
     private InputManager $input;
-
-    protected function setUp(): void
-    {
-        $this->container = new Container();
-        $this->input = new InputManager($this->container);
-    }
 
     public function testShortcut(): void
     {
@@ -32,8 +25,8 @@ class FilesTest extends TestCase
                 fopen(__FILE__, 'r'),
                 filesize(__FILE__),
                 0,
-                __FILE__
-            )
+                __FILE__,
+            ),
         ]);
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -50,8 +43,8 @@ class FilesTest extends TestCase
                 fopen(__FILE__, 'r'),
                 filesize(__FILE__),
                 0,
-                __FILE__
-            )
+                __FILE__,
+            ),
         ]);
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -63,7 +56,6 @@ class FilesTest extends TestCase
         self::assertSame(file_get_contents(__FILE__), file_get_contents($filename));
     }
 
-
     public function testGetFilenameMissing(): void
     {
         $request = new ServerRequest('GET', '');
@@ -72,13 +64,19 @@ class FilesTest extends TestCase
                 fopen(__FILE__, 'r'),
                 filesize(__FILE__),
                 0,
-                __FILE__
-            )
+                __FILE__,
+            ),
         ]);
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
         $filename = $this->input->files->getFilename('file2');
         self::assertNull($filename);
+    }
+
+    protected function setUp(): void
+    {
+        $this->container = new Container();
+        $this->input = new InputManager($this->container);
     }
 }

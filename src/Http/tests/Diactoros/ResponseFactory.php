@@ -11,9 +11,7 @@ use Nyholm\Psr7\Response;
 
 final class ResponseFactory implements ResponseFactoryInterface
 {
-    public function __construct(protected HttpConfig $config)
-    {
-    }
+    public function __construct(protected HttpConfig $config) {}
 
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {

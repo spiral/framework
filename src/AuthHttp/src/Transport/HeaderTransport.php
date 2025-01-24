@@ -15,9 +15,8 @@ final class HeaderTransport implements HttpTransportInterface
 {
     public function __construct(
         private readonly string $header = 'X-Auth-Token',
-        private readonly string $valueFormat = '%s'
-    ) {
-    }
+        private readonly string $valueFormat = '%s',
+    ) {}
 
     public function fetchToken(Request $request): ?string
     {
@@ -32,7 +31,7 @@ final class HeaderTransport implements HttpTransportInterface
         Request $request,
         Response $response,
         string $tokenID,
-        ?\DateTimeInterface $expiresAt = null
+        ?\DateTimeInterface $expiresAt = null,
     ): Response {
         if ($request->hasHeader($this->header) && $this->extractToken($request) === $tokenID) {
             return $response;

@@ -62,7 +62,7 @@ class TestController
     {
         return [
             'status' => 301,
-            'msg'    => 'redirect'
+            'msg'    => 'redirect',
         ];
     }
 

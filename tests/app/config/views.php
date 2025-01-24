@@ -7,7 +7,7 @@ use Spiral\Views\Engine\Native\NativeEngine;
 return [
     'cache' => [
         'enable' => false,
-        'directory' => directory('cache').'views',
+        'directory' => directory('cache') . 'views',
     ],
     'namespaces' => [
         'default' => [directory('views')],
@@ -17,6 +17,6 @@ return [
         NativeEngine::class,
     ],
     'globalVariables' => [
-        'foo' => 'bar'
-    ]
+        'foo' => 'bar',
+    ],
 ];

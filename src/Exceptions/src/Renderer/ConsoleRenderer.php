@@ -21,7 +21,6 @@ class ConsoleRenderer extends AbstractRenderer
     // Lines to show around targeted line.
     public const SHOW_LINES = 2;
     protected const FORMATS = ['console', 'cli'];
-
     protected const COLORS = [
         'bg:red' => Color::BG_RED,
         'bg:cyan' => Color::BG_CYAN,
@@ -37,7 +36,6 @@ class ConsoleRenderer extends AbstractRenderer
     ];
 
     private array $lines = [];
-
     private bool $colorsSupport;
 
     /**
@@ -61,7 +59,7 @@ class ConsoleRenderer extends AbstractRenderer
     public function render(
         \Throwable $exception,
         ?Verbosity $verbosity = null,
-        ?string $format = null
+        ?string $format = null,
     ): string {
         $verbosity ??= $this->defaultVerbosity;
 
@@ -81,7 +79,7 @@ class ConsoleRenderer extends AbstractRenderer
             $prefix = $currentE === $exception ? '' : 'Previous: ';
             $row = $this->renderHeader(
                 \sprintf("%s[%s]\n%s", $prefix, $exception::class, $exception->getMessage()),
-                $exception instanceof \Error ? 'bg:magenta,white' : 'bg:red,white'
+                $exception instanceof \Error ? 'bg:magenta,white' : 'bg:red,white',
             );
 
             $file = \str_starts_with($exception->getFile(), $rootDir)
@@ -91,15 +89,15 @@ class ConsoleRenderer extends AbstractRenderer
             $row .= $this->format(
                 "<yellow>in</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>\n",
                 $file,
-                $exception->getLine()
+                $exception->getLine(),
             );
 
             if ($verbosity->value >= Verbosity::DEBUG->value) {
                 $row .= $this->renderTrace(
                     $exception,
                     new Highlighter(
-                        $this->colorsSupport ? new ConsoleStyle() : new PlainStyle()
-                    )
+                        $this->colorsSupport ? new ConsoleStyle() : new PlainStyle(),
+                    ),
                 );
             } elseif ($verbosity->value >= Verbosity::VERBOSE->value) {
                 $row .= $this->renderTrace($exception);
@@ -137,7 +135,7 @@ class ConsoleRenderer extends AbstractRenderer
                 "<{$style}>%s%s%s</reset>\n",
                 \str_repeat('', $padding + 1),
                 $line,
-                \str_repeat('', $length - \mb_strlen($line) + 1)
+                \str_repeat('', $length - \mb_strlen($line) + 1),
             );
         }
 
@@ -157,7 +155,7 @@ class ConsoleRenderer extends AbstractRenderer
         $result = "\n";
         $rootDir = \getcwd();
 
-        $pad = \strlen((string)\count($stacktrace));
+        $pad = \strlen((string) \count($stacktrace));
 
         foreach ($stacktrace as $i => $trace) {
             $file = isset($trace['file']) ? (string) $trace['file'] : null;
@@ -171,22 +169,22 @@ class ConsoleRenderer extends AbstractRenderer
             if (isset($trace['type'], $trace['class'])) {
                 $line = $this->format(
                     "<$classColor>%s.</reset> <white>%s%s%s()</reset>",
-                    \str_pad((string)((int)$i + 1), $pad, ' ', \STR_PAD_LEFT),
+                    \str_pad((string) ((int) $i + 1), $pad, ' ', \STR_PAD_LEFT),
                     $trace['class'],
                     $trace['type'],
-                    $trace['function']
+                    $trace['function'],
                 );
             } else {
                 $line = $this->format(
                     ' <white>%s()</reset>',
-                    $trace['function']
+                    $trace['function'],
                 );
             }
             if ($file !== null) {
                 $line .= $this->format(
                     ' <yellow>at</reset> <green>%s</reset><yellow>:</reset><white>%s</reset>',
                     $file,
-                    $trace['line']
+                    $trace['line'],
                 );
             }
 
@@ -203,7 +201,7 @@ class ConsoleRenderer extends AbstractRenderer
                 $result .= $h->highlightLines(
                     $str,
                     $trace['line'],
-                    static::SHOW_LINES
+                    static::SHOW_LINES,
                 ) . "\n";
                 unset($str);
             }
@@ -242,7 +240,7 @@ class ConsoleRenderer extends AbstractRenderer
      */
     private function isColorsSupported(mixed $stream = STDOUT): bool
     {
-        if ('Hyper' === \getenv('TERM_PROGRAM')) {
+        if (\getenv('TERM_PROGRAM') === 'Hyper') {
             return true;
         }
 

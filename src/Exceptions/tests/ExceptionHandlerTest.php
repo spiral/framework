@@ -7,7 +7,6 @@ namespace Spiral\Tests\Exceptions;
 use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Spiral\Exceptions\ExceptionHandler;
 use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Exceptions\ExceptionReporterInterface;
@@ -21,9 +20,21 @@ use Spiral\Tests\Exceptions\Fixtures\TestException;
 
 class ExceptionHandlerTest extends TestCase
 {
-    protected function tearDown(): void
+    public static function nonReportableExceptionsDataProvider(): \Traversable
     {
-        m::close();
+        yield [new BadRequestException()];
+        yield [new class extends BadRequestException {}];
+        yield [new NotFoundException()];
+        yield [new class extends NotFoundException {}];
+        yield [new ForbiddenException()];
+        yield [new class extends ForbiddenException {}];
+        yield [new UnauthorizedException()];
+        yield [new class extends UnauthorizedException {}];
+        yield [new AuthorizationException()];
+        yield [new class extends AuthorizationException {}];
+        yield [new ValidationException([])];
+        yield [new class([]) extends ValidationException {}];
+        yield [new TestException()];
     }
 
     public function testKernelException(): void
@@ -86,7 +97,7 @@ class ExceptionHandlerTest extends TestCase
         $r2 = m::mock(ExceptionReporterInterface::class);
         $r2->shouldReceive('report')->withArgs([$exception])->once();
         $r3 = m::mock(ExceptionReporterInterface::class);
-        $r3->shouldReceive('report')->withArgs([$exception])->once()->andThrows(new RuntimeException());
+        $r3->shouldReceive('report')->withArgs([$exception])->once()->andThrows(new \RuntimeException());
         $r4 = m::mock(ExceptionReporterInterface::class);
         $r4->shouldReceive('report')->withArgs([$exception])->once();
         $handler = $this->makeEmptyErrorHandler();
@@ -133,38 +144,24 @@ class ExceptionHandlerTest extends TestCase
             UnauthorizedException::class,
             AuthorizationException::class,
             ValidationException::class,
-            \DomainException::class
+            \DomainException::class,
         ], $ref->getValue($handler));
+    }
+
+    protected function tearDown(): void
+    {
+        m::close();
     }
 
     private function makeEmptyErrorHandler(): ExceptionHandler
     {
         return new class extends ExceptionHandler {
-            protected function bootBasicHandlers(): void
-            {
-            }
+            protected function bootBasicHandlers(): void {}
         };
     }
 
     private function makeErrorHandler(): ExceptionHandler
     {
         return new ExceptionHandler();
-    }
-
-    public static function nonReportableExceptionsDataProvider(): \Traversable
-    {
-        yield [new BadRequestException()];
-        yield [new class extends BadRequestException {}];
-        yield [new NotFoundException()];
-        yield [new class extends NotFoundException {}];
-        yield [new ForbiddenException()];
-        yield [new class extends ForbiddenException {}];
-        yield [new UnauthorizedException()];
-        yield [new class extends UnauthorizedException {}];
-        yield [new AuthorizationException()];
-        yield [new class extends AuthorizationException {}];
-        yield [new ValidationException([])];
-        yield [new class([]) extends ValidationException {}];
-        yield [new TestException()];
     }
 }
